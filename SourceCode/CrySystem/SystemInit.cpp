@@ -85,67 +85,66 @@ extern HMODULE gDLLHandle;
 //////////////////////////////////////////////////////////////////////////
 #include "Validator.h"
 //////////////////////////////////////////////////////////////////////////
-bool CSystem::OpenRenderLibrary(const char *t_rend)
+bool CSystem::OpenRenderLibrary(const char* t_rend)
 {
-	#ifdef _XBOX
-		return OpenRenderLibrary(R_DX8_RENDERER);
-	#endif
+#ifdef _XBOX
+	return OpenRenderLibrary(R_DX8_RENDERER);
+#endif
 
-  int nRenderer = R_DX9_RENDERER;
+	int nRenderer = R_DX9_RENDERER;
 #if defined(LINUX)
+	if (stricmp(t_rend, "NULL") != 0)
+	{
+		return OpenRenderLibrary(R_NULL_RENDERER);
+	}
+
 	return OpenRenderLibrary(R_NULL_RENDERER);
 #else
-  if (stricmp(t_rend, "NULL") != 0)
-  {
-    char szVendor[256];
-    char szDevice[512];
-    szVendor[0] = 0;
-    szDevice[0] = 0;
-    nRenderer = AutoDetectRenderer(szVendor, szDevice);
-    if (nRenderer < 0)
-    {      
-			CryError(  "System: Error: VideoCard %s (%s) is not supported by FarCry engine", szVendor, szDevice);
-      return false;
-    }
-    GetILog()->LogToFile( "System: VideoCard Detected: %s (%s)", szVendor, szDevice);
-  }
-
 	if (stricmp(t_rend, "Auto") == 0)
-  {
-    switch(nRenderer)
-    {
-      case R_DX9_RENDERER:
-        GetILog()->LogToFile("System: Using Direct3D9 renderer...");
-    	  break;
-      case R_DX8_RENDERER:
-        GetILog()->LogToFile("System: Using Direct3D8 renderer...");
-    	  break;
-      case R_GL_RENDERER:
-        GetILog()->LogToFile("System: Using OpenGL renderer...");
-    	  break;
-      case R_NULL_RENDERER:
-        GetILog()->LogToFile("System: Using NULL renderer...");
-    	  break;
-      default:
-        GetILog()->LogToFile( "System: Error: Unknown renderer type");
-        return false;
-    }
-    return OpenRenderLibrary(nRenderer);
-  }
+	{
+		char szVendor[256];
+		char szDevice[512];
+		szVendor[0] = 0;
+		szDevice[0] = 0;
+		nRenderer = AutoDetectRenderer(szVendor, szDevice);
+		if (nRenderer < 0)
+		{
+			CryError("System: Error: VideoCard %s (%s) is not supported by FarCry engine", szVendor, szDevice);
+			return false;
+		}
+		GetILog()->LogToFile("System: VideoCard Detected: %s (%s)", szVendor, szDevice);
+
+		switch (nRenderer)
+		{
+		case R_DX9_RENDERER:
+			GetILog()->LogToFile("System: Using Direct3D9 renderer...");
+			break;
+		case R_DX8_RENDERER:
+			GetILog()->LogToFile("System: Using Direct3D8 renderer...");
+			break;
+		case R_GL_RENDERER:
+			GetILog()->LogToFile("System: Using OpenGL renderer...");
+			break;
+		case R_NULL_RENDERER:
+			GetILog()->LogToFile("System: Using NULL renderer...");
+			break;
+		default:
+			GetILog()->LogToFile("System: Error: Unknown renderer type");
+			return false;
+		}
+		return OpenRenderLibrary(nRenderer);
+	}
 
 	if (stricmp(t_rend, "OpenGL") == 0)
-    return OpenRenderLibrary(R_GL_RENDERER);
-  else
-	if (stricmp(t_rend, "Direct3D8") == 0)
+		return OpenRenderLibrary(R_GL_RENDERER);
+	else if (stricmp(t_rend, "Direct3D8") == 0)
 		return OpenRenderLibrary(R_DX8_RENDERER);
-  else
-  if (stricmp(t_rend, "Direct3D9") == 0)
-    return OpenRenderLibrary(R_DX9_RENDERER);
-  else
-  if (stricmp(t_rend, "NULL") == 0)
-    return OpenRenderLibrary(R_NULL_RENDERER);
+	else if (stricmp(t_rend, "Direct3D9") == 0)
+		return OpenRenderLibrary(R_DX9_RENDERER);
+	else if (stricmp(t_rend, "NULL") == 0)
+		return OpenRenderLibrary(R_NULL_RENDERER);
 
-	Error( "Unknown renderer type: %s", t_rend );
+	Error("Unknown renderer type: %s", t_rend);
 #endif
 	return (false);
 }
@@ -154,10 +153,10 @@ bool CSystem::OpenRenderLibrary(const char *t_rend)
 /////////////////////////////////////////////////////////////////////////////////
 bool CSystem::OpenRenderLibrary(int type)
 {
-  SCryRenderInterface sp;
+	SCryRenderInterface sp;
 
 #ifdef _XBOX
-  type = R_DX8_RENDERER;
+	type = R_DX8_RENDERER;
 #endif
 #if defined(LINUX)
 	type = R_NULL_RENDERER;
@@ -165,64 +164,64 @@ bool CSystem::OpenRenderLibrary(int type)
 
 	static int test_int = 0;
 
-  sp.ipConsole = GetIConsole();
-  sp.ipLog = GetILog();
-  sp.ipSystem = this;
-  sp.ipTest_int = &test_int;
-  sp.ipTimer = GetITimer();
+	sp.ipConsole = GetIConsole();
+	sp.ipLog = GetILog();
+	sp.ipSystem = this;
+	sp.ipTest_int = &test_int;
+	sp.ipTimer = GetITimer();
 	sp.pIPhysicalWorld = m_pIPhysicalWorld;
 
 #ifndef _XBOX
 	char libname[128];
 	if (type == R_GL_RENDERER)
-    strcpy(libname, "XRenderOGL.dll");
+		strcpy(libname, "XRenderOGL.dll");
 	else
-	if (type == R_DX8_RENDERER)
-		strcpy(libname, "XRenderD3D8.dll");
-  else
-  if (type == R_DX9_RENDERER)
-    strcpy(libname, "XRenderD3D9.dll");
-  else
-  if (type == R_NULL_RENDERER)
-    strcpy(libname, DLL_NULLRENDERER);
-	else
-	{
-		Error("No renderer specified");
-		return (false);
-	}
+		if (type == R_DX8_RENDERER)
+			strcpy(libname, "XRenderD3D8.dll");
+		else
+			if (type == R_DX9_RENDERER)
+				strcpy(libname, "XRenderD3D9.dll");
+			else
+				if (type == R_NULL_RENDERER)
+					strcpy(libname, DLL_NULLRENDERER);
+				else
+				{
+					Error("No renderer specified");
+					return (false);
+				}
 	m_dll.hRenderer = LoadDLL(libname);
 	if (!m_dll.hRenderer)
 		return false;
 
-	typedef IRenderer *(PROCREND)(int argc, char* argv[], SCryRenderInterface *sp);
-  PROCREND *Proc = (PROCREND *) CryGetProcAddress(m_dll.hRenderer, "PackageRenderConstructor");
+	typedef IRenderer* (PROCREND)(int argc, char* argv[], SCryRenderInterface* sp);
+	PROCREND* Proc = (PROCREND*)CryGetProcAddress(m_dll.hRenderer, "PackageRenderConstructor");
 	if (!Proc)
 	{
-		Error( "Error: Library '%s' isn't Crytek render library", libname);
+		Error("Error: Library '%s' isn't Crytek render library", libname);
 		FreeLib(m_dll.hRenderer);
 		return false;
 	}
- 
+
 	m_pRenderer = Proc(0, NULL, &sp);
 	if (!m_pRenderer)
 	{
-		Error( "Error: Couldn't construct render driver '%s'", libname);
+		Error("Error: Couldn't construct render driver '%s'", libname);
 		FreeLib(m_dll.hRenderer);
 		return false;
 	}
 	m_pRenderer->SetType(type);
 #else
-  m_pRenderer = (IRenderer*)PackageRenderConstructor(0, NULL, &sp);
-  m_pRenderer->SetType(type);
+	m_pRenderer = (IRenderer*)PackageRenderConstructor(0, NULL, &sp);
+	m_pRenderer->SetType(type);
 #endif
 
 	return true;
 }
 
 //////////////////////////////////////////////////////////////////////////
-IRenderer* CSystem::CreateRenderer(bool fullscreen, void* hinst, void* hWndAttach )
+IRenderer* CSystem::CreateRenderer(bool fullscreen, void* hinst, void* hWndAttach)
 {
-	IRenderer *curr = m_pRenderer;
+	IRenderer* curr = m_pRenderer;
 	if (!m_pRenderer)
 		CreateRendererVars();
 #ifdef WIN32
@@ -281,7 +280,7 @@ IRenderer* CSystem::CreateRenderer(bool fullscreen, void* hinst, void* hWndAttac
 	return m_pRenderer;
 
 #else
-//#pragma message("CreateNewRenderer NOT IMPLEMENTED (Only WIN32)")
+	//#pragma message("CreateNewRenderer NOT IMPLEMENTED (Only WIN32)")
 	return 0;
 #endif
 }
@@ -292,20 +291,20 @@ bool CSystem::InitNetwork()
 
 #ifndef _XBOX
 	PFNCREATENETWORK pfnCreateNetwork;
-	m_dll.hNetwork = LoadDLL( DLL_NETWORK );
+	m_dll.hNetwork = LoadDLL(DLL_NETWORK);
 	if (!m_dll.hNetwork)
 		return false;
 
-	pfnCreateNetwork=(PFNCREATENETWORK) CryGetProcAddress(m_dll.hNetwork,"CreateNetwork");
-	m_pNetwork=pfnCreateNetwork(this);
-	if(m_pNetwork==NULL)
+	pfnCreateNetwork = (PFNCREATENETWORK)CryGetProcAddress(m_dll.hNetwork, "CreateNetwork");
+	m_pNetwork = pfnCreateNetwork(this);
+	if (m_pNetwork == NULL)
 	{
-		Error( "Error creating Network System (CreateNetwork) !" );
+		Error("Error creating Network System (CreateNetwork) !");
 		return false;
 	}
 #else
-	m_pNetwork=CreateNetwork();
-	if(m_pNetwork==NULL)
+	m_pNetwork = CreateNetwork();
+	if (m_pNetwork == NULL)
 	{
 		Error("Error creating Network System (CreateNetwork) !");
 		return false;
@@ -324,23 +323,23 @@ bool CSystem::InitEntitySystem(WIN_HINSTANCE hInstance, WIN_HWND hWnd)
 	PFNCREATEENTITYSYSTEM pfnCreateEntitySystem;
 
 	// Load the DLL
-	m_dll.hEntitySystem = LoadDLL( DLL_ENTITYSYSTEM );
+	m_dll.hEntitySystem = LoadDLL(DLL_ENTITYSYSTEM);
 	if (!m_dll.hEntitySystem)
 		return false;
 
 	// Obtain factory pointer
-	pfnCreateEntitySystem = (PFNCREATEENTITYSYSTEM) CryGetProcAddress( m_dll.hEntitySystem, "CreateEntitySystem");
+	pfnCreateEntitySystem = (PFNCREATEENTITYSYSTEM)CryGetProcAddress(m_dll.hEntitySystem, "CreateEntitySystem");
 
 	if (!pfnCreateEntitySystem)
 	{
-		Error( "Error querying entry point of Entity System Module (CryEntitySystem.dll) !");
+		Error("Error querying entry point of Entity System Module (CryEntitySystem.dll) !");
 		return false;
 	}
 	// Create the object
 	m_pEntitySystem = pfnCreateEntitySystem(this);
 	if (!m_pEntitySystem)
 	{
-		Error( "Error creating Entity System");
+		Error("Error creating Entity System");
 		return false;
 	}
 #else
@@ -348,7 +347,7 @@ bool CSystem::InitEntitySystem(WIN_HINSTANCE hInstance, WIN_HWND hWnd)
 	m_pEntitySystem = CreateEntitySystem(this);
 	if (!m_pEntitySystem)
 	{
-		Error( "Error creating Entity System");
+		Error("Error creating Entity System");
 		return false;
 	}
 #endif
@@ -364,17 +363,17 @@ bool CSystem::InitInput(WIN_HINSTANCE hinst, WIN_HWND hwnd)
 	if (!m_dll.hInput)
 		return false;
 
-	bool bUseDirectInput = i_direct_input->GetIVal()?true:false;
+	bool bUseDirectInput = i_direct_input->GetIVal() ? true : false;
 	if (m_bEditor)
 		bUseDirectInput = false;
 
-	CRY_PTRCREATEINPUTFNC *pfnCreateInput;
-	pfnCreateInput = (CRY_PTRCREATEINPUTFNC *) CryGetProcAddress(m_dll.hInput, "CreateInput");
+	CRY_PTRCREATEINPUTFNC* pfnCreateInput;
+	pfnCreateInput = (CRY_PTRCREATEINPUTFNC*)CryGetProcAddress(m_dll.hInput, "CreateInput");
 	if (pfnCreateInput)
-		m_pIInput = pfnCreateInput( this, hinst, m_hWnd, bUseDirectInput);
+		m_pIInput = pfnCreateInput(this, hinst, m_hWnd, bUseDirectInput);
 	if (!m_pIInput)
 	{
-		Error( "Error creating Input system" );
+		Error("Error creating Input system");
 		return (false);
 	}
 
@@ -385,18 +384,18 @@ bool CSystem::InitInput(WIN_HINSTANCE hinst, WIN_HWND hwnd)
 /////////////////////////////////////////////////////////////////////////////////
 bool CSystem::InitConsole()
 {
-//	m_Console->Init(this);
+	//	m_Console->Init(this);
 
-	// Ignore when run in Editor.
+		// Ignore when run in Editor.
 	if (m_bEditor && !m_pRenderer)
 		return true;
 
-	char *filename = "Textures\\Console\\DefaultConsole.tga";
+	char* filename = "Textures\\Console\\DefaultConsole.tga";
 	if (filename)
 	{
-		ITexPic * conimage = m_pRenderer->EF_LoadTexture(filename,FT_NORESIZE,0,eTT_Base);
+		ITexPic* conimage = m_pRenderer->EF_LoadTexture(filename, FT_NORESIZE, 0, eTT_Base);
 		if (conimage)
-  		m_pConsole->SetImage(conimage,false);
+			m_pConsole->SetImage(conimage, false);
 	}
 	else
 	{
@@ -409,11 +408,11 @@ bool CSystem::InitConsole()
 //////////////////////////////////////////////////////////////////////////
 // attaches the given variable to the given container;
 // recreates the variable if necessary
-ICVar* CSystem::attachVariable (const char* szVarName, int* pContainer, const char*szComment,int dwFlags)
+ICVar* CSystem::attachVariable(const char* szVarName, int* pContainer, const char* szComment, int dwFlags)
 {
 	IConsole* pConsole = GetIConsole();
 
-	ICVar* pOldVar = pConsole->GetCVar (szVarName);
+	ICVar* pOldVar = pConsole->GetCVar(szVarName);
 	int nDefault;
 	if (pOldVar)
 	{
@@ -430,9 +429,9 @@ ICVar* CSystem::attachVariable (const char* szVarName, int* pContainer, const ch
 
 #ifdef _DEBUG
 	// test if the variable really has this container
-	assert (*pContainer == pVar->GetIVal());
+	assert(*pContainer == pVar->GetIVal());
 	++*pContainer;
-	assert (*pContainer == pVar->GetIVal());
+	assert(*pContainer == pVar->GetIVal());
 	--*pContainer;
 #endif
 
@@ -445,13 +444,13 @@ ICVar* CSystem::attachVariable (const char* szVarName, int* pContainer, const ch
 }
 
 /////////////////////////////////////////////////////////////////////////////////
-bool CSystem::InitRenderer(WIN_HINSTANCE hinst, WIN_HWND hwnd,const char *szCmdLine)
+bool CSystem::InitRenderer(WIN_HINSTANCE hinst, WIN_HWND hwnd, const char* szCmdLine)
 {
-  CreateRendererVars();
+	CreateRendererVars();
 
-	if(m_bDedicatedServer)
+	if (m_bDedicatedServer)
 	{
-		m_sSavedRDriver=m_rDriver->GetString();
+		m_sSavedRDriver = m_rDriver->GetString();
 		m_rDriver->Set("NULL");
 	}
 
@@ -460,7 +459,7 @@ bool CSystem::InitRenderer(WIN_HINSTANCE hinst, WIN_HWND hwnd,const char *szCmdL
 
 #ifdef WIN32
 
-	if(!m_bDedicatedServer)
+	if (!m_bDedicatedServer)
 	{
 		// [marco] If a previous instance is running, activate
 		// the old one and terminate the new one, depending
@@ -470,18 +469,18 @@ bool CSystem::InitRenderer(WIN_HINSTANCE hinst, WIN_HWND hwnd,const char *szCmdL
 		// executable has time to be executed - so now the game will quit
 		HWND hwndPrev;
 		static char szWndClass[] = "CryENGINE";
-		
+
 		// in devmode we don't care, we allow to run multiple instances
 		// for mp debugging
 		if (!m_bInDevMode)
 		{
-			hwndPrev = FindWindow (szWndClass, NULL);
+			hwndPrev = FindWindow(szWndClass, NULL);
 			// not in devmode and we found another window - see if the
 			// system is relaunching, in this case is fine 'cos the application
 			// will be closed immediately after
-			if (hwndPrev && (hwndPrev!=m_hWnd) && !m_bRelaunched)
+			if (hwndPrev && (hwndPrev != m_hWnd) && !m_bRelaunched)
 			{
-				SetForegroundWindow (hwndPrev);
+				SetForegroundWindow(hwndPrev);
 				//MessageBox( NULL,"You cannot start multiple instances of FarCry !\n If you are starting it from a desktop icon, do not double click on it more than once.\n The program will now quit.\n" ,"ERROR: STARTING MULTIPLE INSTANCES OF FARCRY ",MB_OK|MB_ICONERROR );
 				Quit();
 			}
@@ -516,32 +515,32 @@ bool CSystem::InitSound(WIN_HWND hwnd)
 #if !defined(LINUX)
 #ifndef _XBOX
 	m_dll.hSound = LoadDLL(DLL_SOUND);
-	if(!m_dll.hSound)
+	if (!m_dll.hSound)
 		return false;
 
-	PFNCREATESOUNDSYSTEM pfnCreateSoundSystem = (PFNCREATESOUNDSYSTEM) CryGetProcAddress(m_dll.hSound,"CreateSoundSystem");
+	PFNCREATESOUNDSYSTEM pfnCreateSoundSystem = (PFNCREATESOUNDSYSTEM)CryGetProcAddress(m_dll.hSound, "CreateSoundSystem");
 	if (!pfnCreateSoundSystem)
 	{
-		Error( "Error loading function CreateSoundSystem");
+		Error("Error loading function CreateSoundSystem");
 		return false;
 	}
 
-	m_pISound = pfnCreateSoundSystem(this,hwnd);
+	m_pISound = pfnCreateSoundSystem(this, hwnd);
 #else
-  m_pISound = CreateSoundSystem(this,hwnd);
+	m_pISound = CreateSoundSystem(this, hwnd);
 #endif
 	if (!m_pISound)
 	{
-		Error( "Error creating the sound system interface");
+		Error("Error creating the sound system interface");
 		return false;
 	}
 	m_pIMusic = m_pISound->CreateMusicSystem();
 	if (!m_pIMusic)
 	{
-		Error( "Error creating the music system interface");
+		Error("Error creating the music system interface");
 		return false;
 	}
-	
+
 #endif
 	return true;
 }
@@ -551,13 +550,13 @@ bool CSystem::InitPhysics()
 {
 #ifndef _XBOX
 	m_dll.hPhysics = LoadDLL(DLL_PHYSICS);
-	if(!m_dll.hPhysics)
+	if (!m_dll.hPhysics)
 		return false;
 
-	IPhysicalWorld *(*pfnCreatePhysicalWorld)(ISystem *pSystem) = (IPhysicalWorld*(*)(ISystem*)) CryGetProcAddress(m_dll.hPhysics,"CreatePhysicalWorld");
-	if(!pfnCreatePhysicalWorld)
+	IPhysicalWorld* (*pfnCreatePhysicalWorld)(ISystem * pSystem) = (IPhysicalWorld * (*)(ISystem*)) CryGetProcAddress(m_dll.hPhysics, "CreatePhysicalWorld");
+	if (!pfnCreatePhysicalWorld)
 	{
-		Error( "Error loading function CreatePhysicalWorld" );
+		Error("Error loading function CreatePhysicalWorld");
 		return false;
 	}
 
@@ -566,40 +565,40 @@ bool CSystem::InitPhysics()
 	m_pIPhysicalWorld = CreatePhysicalWorld(this);
 #endif
 
-	if(!m_pIPhysicalWorld)
+	if (!m_pIPhysicalWorld)
 	{
-		Error( "Error creating the physics system interface" );
+		Error("Error creating the physics system interface");
 		return false;
 	}
 	m_pIPhysicalWorld->Init();
 
 	// Register physics console variables.
-	IConsole *pConsole = GetIConsole();
+	IConsole* pConsole = GetIConsole();
 
-  PhysicsVars *pVars = m_pIPhysicalWorld->GetPhysVars();
+	PhysicsVars* pVars = m_pIPhysicalWorld->GetPhysVars();
 
-  pConsole->Register("p_fly_mode", &pVars->bFlyMode, (float)pVars->bFlyMode,VF_CHEAT,
+	pConsole->Register("p_fly_mode", &pVars->bFlyMode, (float)pVars->bFlyMode, VF_CHEAT,
 		"Toggles fly mode.\n"
 		"Usage: p_fly_mode [0/1]");
-  pConsole->Register("p_collision_mode", &pVars->iCollisionMode, (float)pVars->iCollisionMode,VF_CHEAT,
+	pConsole->Register("p_collision_mode", &pVars->iCollisionMode, (float)pVars->iCollisionMode, VF_CHEAT,
 		"This variable is obsolete.\n");
-  pConsole->Register("p_single_step_mode", &pVars->bSingleStepMode, (float)pVars->bSingleStepMode,VF_CHEAT,
+	pConsole->Register("p_single_step_mode", &pVars->bSingleStepMode, (float)pVars->bSingleStepMode, VF_CHEAT,
 		"Toggles physics system 'single step' mode."
 		"Usage: p_single_step_mode [0/1]\n"
 		"Default is 0 (off). Set to 1 to switch physics system (except\n"
 		"players) to single step mode. Each step must be explicitly\n"
 		"requested with a 'p_do_step' instruction.");
-  pConsole->Register("p_do_step", &pVars->bDoStep, (float)pVars->bDoStep,VF_CHEAT,
+	pConsole->Register("p_do_step", &pVars->bDoStep, (float)pVars->bDoStep, VF_CHEAT,
 		"Steps physics system forward when in single step mode.\n"
 		"Usage: p_do_step 1\n"
 		"Default is 0 (off). Each 'p_do_step 1' instruction allows\n"
 		"the physics system to advance a single step.");
-  pConsole->Register("p_fixed_timestep", &pVars->fixedTimestep, pVars->fixedTimestep,VF_CHEAT,
+	pConsole->Register("p_fixed_timestep", &pVars->fixedTimestep, pVars->fixedTimestep, VF_CHEAT,
 		"Toggles fixed time step mode."
 		"Usage: p_fixed_timestep [0/1]\n"
 		"Forces fixed time step when set to 1. When set to 0, the\n"
 		"time step is variable, based on the frame rate.");
-  pConsole->Register("p_draw_helpers", &pVars->iDrawHelpers, (float)pVars->iDrawHelpers,VF_CHEAT,
+	pConsole->Register("p_draw_helpers", &pVars->iDrawHelpers, (float)pVars->iDrawHelpers, VF_CHEAT,
 		"Toggles display of various physical helpers. The value is a bitmask:\n"
 		"bit 0  - show contact points\n"
 		"bit 1  - show physical geometry\n"
@@ -610,18 +609,18 @@ bool CSystem::InitPhysics()
 		"bit 12 - show helpers for independent entities (alive physical skeletons,particles,ropes)\n"
 		"bits 16-31 - level of bounding volume trees to display (if 0, it just shows geometry)\n"
 		"Examples: show static objects - 258, show active rigid bodies - 1026, show players - 2050");
-  pConsole->Register("p_max_contact_gap", &pVars->maxContactGap, pVars->maxContactGap, VF_REQUIRE_NET_SYNC,
+	pConsole->Register("p_max_contact_gap", &pVars->maxContactGap, pVars->maxContactGap, VF_REQUIRE_NET_SYNC,
 		"Sets the gap, enforced whenever possible, between\n"
 		"contacting physical objects."
 		"Usage: p_max_contact_gap 0.01\n"
 		"This variable is used for internal tweaking only.");
-  pConsole->Register("p_max_contact_gap_player", &pVars->maxContactGapPlayer, pVars->maxContactGapPlayer, 0,
+	pConsole->Register("p_max_contact_gap_player", &pVars->maxContactGapPlayer, pVars->maxContactGapPlayer, 0,
 		"Sets the safe contact gap for player collisions with\n"
 		"the physical environment."
 		"Usage: p_max_contact_gap_player 0.01\n"
 		"This variable is used for internal tweaking only.");
-  pConsole->Register("p_gravity_z", &pVars->gravity.z, pVars->gravity.z, CVAR_FLOAT);
-  pConsole->Register("p_max_substeps", &pVars->nMaxSubsteps, (float)pVars->nMaxSubsteps, VF_REQUIRE_NET_SYNC,
+	pConsole->Register("p_gravity_z", &pVars->gravity.z, pVars->gravity.z, CVAR_FLOAT);
+	pConsole->Register("p_max_substeps", &pVars->nMaxSubsteps, (float)pVars->nMaxSubsteps, VF_REQUIRE_NET_SYNC,
 		"Limits the number of substeps allowed in variable time step mode.\n"
 		"Usage: p_max_substeps 5\n"
 		"Objects that are not allowed to perform time steps\n"
@@ -697,23 +696,23 @@ bool CSystem::InitPhysics()
 		"Requested unprojection velocity is set equal to penetration depth multiplied by this number");
 	pConsole->Register("p_max_unproj_vel", &pVars->maxUnprojVel, pVars->maxUnprojVel, 0,
 		"Limits the maximum unprojection velocity request");
-	pConsole->Register("p_penalty_scale", &pVars->penaltyScale, pVars->penaltyScale, 0, 
+	pConsole->Register("p_penalty_scale", &pVars->penaltyScale, pVars->penaltyScale, 0,
 		"Scales the penalty impulse for objects that use the simple solver");
-	pConsole->Register("p_max_contact_gap_simple", &pVars->maxContactGapSimple, pVars->maxContactGapSimple, 0, 
+	pConsole->Register("p_max_contact_gap_simple", &pVars->maxContactGapSimple, pVars->maxContactGapSimple, 0,
 		"Specifies the maximum contact gap for objects that use the simple solver");
-	pConsole->Register("p_skip_redundant_colldet", &pVars->bSkipRedundantColldet, (float)pVars->bSkipRedundantColldet, 0, 
+	pConsole->Register("p_skip_redundant_colldet", &pVars->bSkipRedundantColldet, (float)pVars->bSkipRedundantColldet, 0,
 		"Specifies whether to skip furher collision checks between two convex objects using the simple solver\n"
 		"when they have enough contacts between them");
-	pConsole->Register("p_limit_simple_solver_energy", &pVars->bLimitSimpleSolverEnergy, (float)pVars->bLimitSimpleSolverEnergy, 0, 
+	pConsole->Register("p_limit_simple_solver_energy", &pVars->bLimitSimpleSolverEnergy, (float)pVars->bLimitSimpleSolverEnergy, 0,
 		"Specifies whether the energy added by the simple solver is limited (0 or 1)");
-	pConsole->Register("p_max_world_step", &pVars->maxWorldStep, pVars->maxWorldStep, 0, 
+	pConsole->Register("p_max_world_step", &pVars->maxWorldStep, pVars->maxWorldStep, 0,
 		"Specifies the maximum step physical world can make (larger steps will be truncated)");
 
 	if (m_bEditor)
 	{
 		// Setup physical grid for Editor.
 		int nCellSize = 16;
-		m_pIPhysicalWorld->SetupEntityGrid(2,vectorf(0,0,0), (2048)/nCellSize,(2048)/nCellSize, (float)nCellSize,(float)nCellSize);
+		m_pIPhysicalWorld->SetupEntityGrid(2, vectorf(0, 0, 0), (2048) / nCellSize, (2048) / nCellSize, (float)nCellSize, (float)nCellSize);
 	}
 
 	return true;
@@ -725,19 +724,19 @@ bool CSystem::InitMovieSystem()
 #if !defined(LINUX)
 #ifdef WIN32
 	m_dll.hMovie = LoadDLL(DLL_MOVIE);
-	if(!m_dll.hMovie)
+	if (!m_dll.hMovie)
 		return false;
 
-	PFNCREATEMOVIESYSTEM pfnCreateMovieSystem = (PFNCREATEMOVIESYSTEM) CryGetProcAddress(m_dll.hMovie,"CreateMovieSystem");
+	PFNCREATEMOVIESYSTEM pfnCreateMovieSystem = (PFNCREATEMOVIESYSTEM)CryGetProcAddress(m_dll.hMovie, "CreateMovieSystem");
 	if (!pfnCreateMovieSystem)
 	{
-		Error( "Error loading function CreateMovieSystem" );
+		Error("Error loading function CreateMovieSystem");
 		return false;
 	}
 
 	m_pIMovieSystem = pfnCreateMovieSystem(this);
 #else
-	m_pIMovieSystem = CreateMovieSystem( this );
+	m_pIMovieSystem = CreateMovieSystem(this);
 #endif
 
 	if (!m_pIMovieSystem)
@@ -758,15 +757,15 @@ bool CSystem::InitAISystem()
 	if (!m_dll.hAI)
 		return true;
 
-	IAISystem *(*pFnCreateAISystem)(ISystem*) = (IAISystem *(*)(ISystem*)) CryGetProcAddress(m_dll.hAI,"CreateAISystem");
+	IAISystem* (*pFnCreateAISystem)(ISystem*) = (IAISystem * (*)(ISystem*)) CryGetProcAddress(m_dll.hAI, "CreateAISystem");
 	if (!pFnCreateAISystem)
 	{
-		Error( "Cannot fins entry proc in AI system");
+		Error("Cannot fins entry proc in AI system");
 		return true;
 	}
 	m_pAISystem = pFnCreateAISystem(this);
 	if (!m_pAISystem)
-		Error( "Cannot instantiate AISystem class" );
+		Error("Cannot instantiate AISystem class");
 #else
 	m_pAISystem = CreateAISystem(this);
 	if (!m_pAISystem)
@@ -788,42 +787,42 @@ bool CSystem::InitScriptSystem()
 #else
 	m_dll.hScript = LoadDLL("CryScriptSystem.dll");
 #endif
-	if(m_dll.hScript==NULL)
+	if (m_dll.hScript == NULL)
 		return (false);
 
 	CREATESCRIPTSYSTEM_FNCPTR fncCreateScriptSystem;
-	fncCreateScriptSystem = (CREATESCRIPTSYSTEM_FNCPTR) CryGetProcAddress(m_dll.hScript,"CreateScriptSystem");
-	if(fncCreateScriptSystem==NULL)
+	fncCreateScriptSystem = (CREATESCRIPTSYSTEM_FNCPTR)CryGetProcAddress(m_dll.hScript, "CreateScriptSystem");
+	if (fncCreateScriptSystem == NULL)
 	{
-		Error( "Error initializeing ScriptSystem" );
+		Error("Error initializeing ScriptSystem");
 		return (false);
 	}
 
-	m_pScriptSink = new CScriptSink(this,m_pConsole);
-	m_pScriptSystem=fncCreateScriptSystem(this,m_pScriptSink,NULL,true);
-	if(m_pScriptSystem==NULL)
+	m_pScriptSink = new CScriptSink(this, m_pConsole);
+	m_pScriptSystem = fncCreateScriptSystem(this, m_pScriptSink, NULL, true);
+	if (m_pScriptSystem == NULL)
 	{
-		Error( "Error initializeing ScriptSystem" );
+		Error("Error initializeing ScriptSystem");
 		delete m_pScriptSink;
 		m_pScriptSink = NULL;
 		return (false);
 	}
 #else
-	m_pScriptSink = new CScriptSink(this,m_pConsole);
-	m_pScriptSystem=CreateScriptSystem(m_pScriptSink,NULL,true);
-	if (m_pScriptSystem==NULL)
+	m_pScriptSink = new CScriptSink(this, m_pConsole);
+	m_pScriptSystem = CreateScriptSystem(m_pScriptSink, NULL, true);
+	if (m_pScriptSystem == NULL)
 	{
-		Error( "Error initializeing ScriptSystem" );
+		Error("Error initializeing ScriptSystem");
 		delete m_pScriptSink;
 		m_pScriptSink = NULL;
-    return (false);
+		return (false);
 	}
 #endif
 
 	if (m_pScriptSink)
 		m_pScriptSink->Init();
 
-	assert( m_pConsole );
+	assert(m_pConsole);
 	//@HACK!
 	((CXConsole*)m_pConsole)->SetScriptSystem(m_pScriptSystem);
 
@@ -835,10 +834,10 @@ bool CSystem::InitScriptSystem()
 /////////////////////////////////////////////////////////////////////////////////
 bool CSystem::InitFileSystem()
 {
-	m_pIPak = new CCryPak(m_pLog,&m_PakVar);
+	m_pIPak = new CCryPak(m_pLog, &m_PakVar);
 
 	if (m_bEditor)
-		m_pIPak->RecordFileOpen( true );
+		m_pIPak->RecordFileOpen(true);
 
 	return(m_pIPak->Init(""));
 }
@@ -863,44 +862,44 @@ bool CSystem::InitFont()
 
 #ifndef _XBOX
 	m_dll.hFont = LoadDLL(DLL_FONT);
-	if(!m_dll.hFont)
+	if (!m_dll.hFont)
 		return (false);
 
-	PFNCREATECRYFONTINTERFACE pfnCreateCryFontInstance = (PFNCREATECRYFONTINTERFACE) CryGetProcAddress(m_dll.hFont,"CreateCryFontInterface");
-	if(!pfnCreateCryFontInstance)
+	PFNCREATECRYFONTINTERFACE pfnCreateCryFontInstance = (PFNCREATECRYFONTINTERFACE)CryGetProcAddress(m_dll.hFont, "CreateCryFontInterface");
+	if (!pfnCreateCryFontInstance)
 	{
-		Error( "Error loading CreateCryFontInstance" );
+		Error("Error loading CreateCryFontInstance");
 		return (false);
 	}
 
 	m_pICryFont = pfnCreateCryFontInstance(this);
-	if(!pfnCreateCryFontInstance)
+	if (!pfnCreateCryFontInstance)
 	{
-		Error( "Error loading CreateCryFontInstance" );
+		Error("Error loading CreateCryFontInstance");
 		return false;
 	}
 #else
 	m_pICryFont = CreateCryFontInterface(this);
-	if(!m_pICryFont)
+	if (!m_pICryFont)
 	{
-		Error( "Error loading CreateCryFontInstance" );
+		Error("Error loading CreateCryFontInstance");
 		return false;
 	}
 #endif
 
 	// Load the default font
-	IFFont *pConsoleFont = m_pICryFont->NewFont("Console");
+	IFFont* pConsoleFont = m_pICryFont->NewFont("Console");
 	m_pIFont = m_pICryFont->NewFont("Default");
-	if(!m_pIFont || !pConsoleFont)
+	if (!m_pIFont || !pConsoleFont)
 	{
-		Error( "Error creating the default fonts" );
+		Error("Error creating the default fonts");
 		return false;
 	}
 
 	//////////////////////////////////////////////////////////////////////////
 	string szFontPath = "languages/fonts/default.xml";
 
-	if(!m_pIFont->Load(szFontPath.c_str()))
+	if (!m_pIFont->Load(szFontPath.c_str()))
 	{
 		string szError = "Error loading the default font from ";
 		szError += szFontPath;
@@ -915,7 +914,7 @@ bool CSystem::InitFont()
 
 	szFontPath.replace(n, strlen("default.xml"), "console.xml");
 
-	if(!pConsoleFont->Load(szFontPath.c_str()))
+	if (!pConsoleFont->Load(szFontPath.c_str()))
 	{
 		string szError = "Error loading the console font from ";
 		szError += szFontPath;
@@ -931,30 +930,30 @@ bool CSystem::InitFont()
 //////////////////////////////////////////////////////////////////////////
 bool CSystem::Init3DEngine()
 {
-  ::SetLastError(0);
-  m_dll.h3DEngine = LoadDLL(DLL_3DENGINE);
+	::SetLastError(0);
+	m_dll.h3DEngine = LoadDLL(DLL_3DENGINE);
 	if (!m_dll.h3DEngine)
 		return false;
 
 	PFNCREATECRY3DENGINE pfnCreateCry3DEngine;
-	pfnCreateCry3DEngine = (PFNCREATECRY3DENGINE) CryGetProcAddress( m_dll.h3DEngine, "CreateCry3DEngine");
+	pfnCreateCry3DEngine = (PFNCREATECRY3DENGINE)CryGetProcAddress(m_dll.h3DEngine, "CreateCry3DEngine");
 	if (!pfnCreateCry3DEngine)
 	{
 		Error("CreateCry3DEngine is not exported api function in Cry3DEngine.dll");
 		return false;
-	} 
+	}
 
-	m_pI3DEngine = (*pfnCreateCry3DEngine)(this,g3deInterfaceVersion);
+	m_pI3DEngine = (*pfnCreateCry3DEngine)(this, g3deInterfaceVersion);
 
-  if (!m_pI3DEngine )
+	if (!m_pI3DEngine)
 	{
-    Error( "Error Creating 3D Engine interface" );
+		Error("Error Creating 3D Engine interface");
 		return false;
 	}
 
 	if (!m_pI3DEngine->Init())
 	{
-		Error( "Error Initializing 3D Engine" );
+		Error("Error Initializing 3D Engine");
 		return false;
 	}
 	m_pProcess = m_pI3DEngine;
@@ -974,29 +973,29 @@ bool CSystem::InitAnimationSystem()
 		return false;
 
 	PFNCREATECRYANIMATION pfnCreateCharManager;
-	pfnCreateCharManager = (PFNCREATECRYANIMATION) CryGetProcAddress( m_dll.hAnimation, "CreateCharManager");
+	pfnCreateCharManager = (PFNCREATECRYANIMATION)CryGetProcAddress(m_dll.hAnimation, "CreateCharManager");
 	if (!pfnCreateCharManager)
 		return false;
 
-	m_pICryCharManager = (*pfnCreateCharManager)(this,gAnimInterfaceVersion);
+	m_pICryCharManager = (*pfnCreateCharManager)(this, gAnimInterfaceVersion);
 
 	if (m_pICryCharManager)
-		GetILog()->LogPlus(" ok"); 
+		GetILog()->LogPlus(" ok");
 	else
-		GetILog()->LogPlus (" FAILED");
+		GetILog()->LogPlus(" FAILED");
 
 	return m_pICryCharManager != NULL;
-} 
+}
 
 //////////////////////////////////////////////////////////////////////////
 void CSystem::InitVTuneProfiler()
 {
 #ifdef PROFILE_WITH_VTUNE
-	HMODULE hModule = CryLoadLibrary( "VTuneApi.dll" );
+	HMODULE hModule = CryLoadLibrary("VTuneApi.dll");
 	if (hModule)
 	{
-		VTPause = (VTuneFunction) CryGetProcAddress( hModule, "VTPause");
-		VTResume = (VTuneFunction) CryGetProcAddress( hModule, "VTResume");
+		VTPause = (VTuneFunction)CryGetProcAddress(hModule, "VTPause");
+		VTResume = (VTuneFunction)CryGetProcAddress(hModule, "VTResume");
 	}
 #endif //PROFILE_WITH_VTUNE
 }
@@ -1009,25 +1008,25 @@ class CCommandLineSink_EarlyCommands :public CApplicationHelper::ICmdlineArgumen
 {
 public:
 	//! constructor
-	CCommandLineSink_EarlyCommands( CSystem &rSystem ) 
+	CCommandLineSink_EarlyCommands(CSystem& rSystem)
 		:m_rSystem(rSystem), m_bRelaunching(false), m_bDevMode(false)
 	{
 	}
 
-	virtual void ReturnArgument( const char *inszArgument )
+	virtual void ReturnArgument(const char* inszArgument)
 	{
 		// ----------------------------
 		// e.g. -IP:2.13.35.55
-		if(strnicmp(inszArgument,"IP:",3)==0)
+		if (strnicmp(inszArgument, "IP:", 3) == 0)
 		{
-			m_sLocalIP=string(&(inszArgument[3]));			// local IPAddress (needed if we have several servers on one machine)
+			m_sLocalIP = string(&(inszArgument[3]));			// local IPAddress (needed if we have several servers on one machine)
 			return;
 		}
 
 #ifdef PROFILE_WITH_VTUNE
 		// ----------------------------
 		// Init VTune Profiler DLL.
-		if(stricmp(inszArgument,"VTUNE")==0)
+		if (stricmp(inszArgument, "VTUNE") == 0)
 		{
 			m_rSystem.InitVTuneProfiler();
 			return;
@@ -1036,7 +1035,7 @@ public:
 
 		// ----------------------------
 		// e.g. -MOD:CS
-		if(strnicmp(inszArgument,"MOD:",4)==0)
+		if (strnicmp(inszArgument, "MOD:", 4) == 0)
 		{
 			m_sMod = string(&(inszArgument[4]));			// mod folder
 			return;
@@ -1044,7 +1043,7 @@ public:
 
 		// ----------------------------
 		// e.g. -LOGFILE:CS (useful for running several servers from the same directory)
-		if(strnicmp(inszArgument,"LOGFILE:",8)==0)
+		if (strnicmp(inszArgument, "LOGFILE:", 8) == 0)
 		{
 			m_sLogFile = string(&(inszArgument[8]));	// log file
 			return;
@@ -1052,24 +1051,24 @@ public:
 
 		// ----------------------------
 		// Developer mode on
-		if(stricmp(inszArgument,"DEVMODE")==0)
+		if (stricmp(inszArgument, "DEVMODE") == 0)
 		{
-			m_bDevMode=true;
+			m_bDevMode = true;
 			return;
 		}
 
 		// ----------------------------
 		// Relaunching e.g. MOD has changed
-		if(stricmp(inszArgument,"RELAUNCHING")==0)
+		if (stricmp(inszArgument, "RELAUNCHING") == 0)
 		{
-			m_bRelaunching=true;
+			m_bRelaunching = true;
 			return;
 		}
 	}
 
 	// ---------------------------------------------------------------
 
-	CSystem &						m_rSystem;				//!< reference to the system
+	CSystem& m_rSystem;				//!< reference to the system
 	string							m_sMod;						//!< -MOD
 	string							m_sLogFile;				//!< -LOGFILE
 	bool								m_bDevMode;				//!< -DEVMODE
@@ -1084,17 +1083,17 @@ public:
 /////////////////////////////////////////////////////////////////////////////////
 // INIT
 /////////////////////////////////////////////////////////////////////////////////
-bool CSystem::Init( const SSystemInitParams &params )
+bool CSystem::Init(const SSystemInitParams& params)
 {
 	// parse command line arguments minus e.g. "-IP:23.34.2.2" "-DEVMODE"
 	CCommandLineSink_EarlyCommands CmdlineSink(*this);
 
-	CApplicationHelper::ParseArguments(params.szSystemCmdLine,&CmdlineSink,0);
+	CApplicationHelper::ParseArguments(params.szSystemCmdLine, &CmdlineSink, 0);
 
 	// Get file version information.
 	QueryVersionInfo();
 
-	m_FrameProfileSystem.Init( this );
+	m_FrameProfileSystem.Init(this);
 
 	m_hInst = (WIN_HINSTANCE)params.hInstance;
 	m_hWnd = (WIN_HWND)params.hWnd;
@@ -1128,7 +1127,7 @@ bool CSystem::Init( const SSystemInitParams &params )
 		LogVersion();
 	}
 	else
-  {
+	{
 		m_pLog = params.pLog;
 	}
 
@@ -1158,36 +1157,36 @@ bool CSystem::Init( const SSystemInitParams &params )
 	//////////////////////////////////////////////////////////////////////////
 
 #if !defined(PS2) && !defined (GC)
-  m_pCpu = new CCpuFeatures;
-  m_pCpu->Detect();
+	m_pCpu = new CCpuFeatures;
+	m_pCpu->Detect();
 #endif
 
-	CryLogAlways("OS User name: '%s'",GetUserName());
+	CryLogAlways("OS User name: '%s'", GetUserName());
 
 	CryLogAlways("File System Initialization");
 
 	InitFileSystem();
 
-	if (CmdlineSink.m_sMod!="")
+	if (CmdlineSink.m_sMod != "")
 	{
 		// [marco] prevent an hack from happening
-		if (stricmp(CmdlineSink.m_sMod.c_str(),"FarCry")!=0)
-		{		
+		if (stricmp(CmdlineSink.m_sMod.c_str(), "FarCry") != 0)
+		{
 			// check for a command line MOD, before
 			// initializing the system
-			strcpy(m_szGameMOD,CmdlineSink.m_sMod.c_str());
+			strcpy(m_szGameMOD, CmdlineSink.m_sMod.c_str());
 
 			// set this as game path for IPak, BEFORE
 			// starting initializing subsystems and
 			// AFTER the pak has been initialized
-			string sMOD=string("Mods/")+string(m_szGameMOD);		
+			string sMOD = string("Mods/") + string(m_szGameMOD);
 			m_pIPak->AddMod(sMOD.c_str());
 		}
 		else
-			memset(m_szGameMOD,0,MAX_PATH);
+			memset(m_szGameMOD, 0, MAX_PATH);
 	}
 	else
-		memset(m_szGameMOD,0,MAX_PATH);
+		memset(m_szGameMOD, 0, MAX_PATH);
 
 	CryLogAlways("Stream Engine Initialization");
 	InitStreamEngine();
@@ -1197,7 +1196,7 @@ bool CSystem::Init( const SSystemInitParams &params )
 	// SCRIPT SYSTEM
 	//////////////////////////////////////////////////////////////////////////
 	CryLogAlways("Script System Initialization");
-	if(!InitScriptSystem())
+	if (!InitScriptSystem())
 		return false;
 
 	//////////////////////////////////////////////////////////////////////////
@@ -1205,9 +1204,9 @@ bool CSystem::Init( const SSystemInitParams &params )
 	CreateSystemVars();
 	//////////////////////////////////////////////////////////////////////////
 
-	if(m_bEditor || CmdlineSink.m_bDevMode)
+	if (m_bEditor || CmdlineSink.m_bDevMode)
 		SetDevMode(true);											// In Dev mode.
-	 else
+	else
 		SetDevMode(false);										// Not Dev mode.
 
 	//////////////////////////////////////////////////////////////////////////
@@ -1235,7 +1234,7 @@ bool CSystem::Init( const SSystemInitParams &params )
 		CryLogAlways("Network initialization");
 		InitNetwork();
 
-		m_pNetwork->SetLocalIP((char *)(CmdlineSink.m_sLocalIP.c_str()));
+		m_pNetwork->SetLocalIP((char*)(CmdlineSink.m_sLocalIP.c_str()));
 	}
 	//////////////////////////////////////////////////////////////////////////
 	// PHYSICS
@@ -1267,7 +1266,7 @@ bool CSystem::Init( const SSystemInitParams &params )
 		// RENDERER
 		//////////////////////////////////////////////////////////////////////////
 		CryLogAlways("Renderer initialization");
-		if (!InitRenderer(m_hInst, m_hWnd,params.szSystemCmdLine))
+		if (!InitRenderer(m_hInst, m_hWnd, params.szSystemCmdLine))
 			return false;
 	}
 
@@ -1310,7 +1309,7 @@ bool CSystem::Init( const SSystemInitParams &params )
 	//////////////////////////////////////////////////////////////////////////
 	// FONT
 	//////////////////////////////////////////////////////////////////////////
-	if(!params.bDedicatedServer)
+	if (!params.bDedicatedServer)
 	{
 		CryLogAlways("Font initialization");
 		if (!InitFont())
@@ -1329,12 +1328,12 @@ bool CSystem::Init( const SSystemInitParams &params )
 
 	m_pConsole->Init(this);
 
-//#ifndef MEM_STD
-//  CConsole::AddCommand("MemStats",::DumpAllocs);
-//#endif
-	//////////////////////////////////////////////////////////////////////////
-	// ENTITY SYSTEM
-	//////////////////////////////////////////////////////////////////////////
+	//#ifndef MEM_STD
+	//  CConsole::AddCommand("MemStats",::DumpAllocs);
+	//#endif
+		//////////////////////////////////////////////////////////////////////////
+		// ENTITY SYSTEM
+		//////////////////////////////////////////////////////////////////////////
 	if (!params.bPreview)
 	{
 		CryLogAlways("Entity system initialization");
@@ -1361,7 +1360,7 @@ bool CSystem::Init( const SSystemInitParams &params )
 		// SCRIPT BINDINGS
 		//////////////////////////////////////////////////////////////////////////
 		CryLogAlways("Initializing Script Bindings");
-		if(!InitScriptBindings())
+		if (!InitScriptBindings())
 		{
 			return false;
 		}
@@ -1377,9 +1376,9 @@ bool CSystem::Init( const SSystemInitParams &params )
 	//////////////////////////////////////////////////////////////////////////
 #if defined(_DATAPROBE) && !defined(LINUX)
 	CDataProbe probe;
-	if (!params.pCheckFunc || !probe.CheckLoader( params.pCheckFunc ))
+	if (!params.pCheckFunc || !probe.CheckLoader(params.pCheckFunc))
 	{
-		int *p = 0;
+		int* p = 0;
 		*p = 1;
 		Strange();
 	}
@@ -1393,7 +1392,7 @@ bool CSystem::Init( const SSystemInitParams &params )
 //////////////////////////////////////////////////////////////////////////
 void CSystem::CreateSystemVars()
 {
-	m_pCVarQuit = GetIConsole()->CreateVariable("ExitOnQuit","1",VF_DUMPTODISK);
+	m_pCVarQuit = GetIConsole()->CreateVariable("ExitOnQuit", "1", VF_DUMPTODISK);
 
 	i_direct_input = GetIConsole()->CreateVariable("i_direct_input", "1", VF_DUMPTODISK,
 		"Toggles direct input capability.\n"
@@ -1403,15 +1402,15 @@ void CSystem::CreateSystemVars()
 	//////////////////////////////////////////////////////////////////////////
 	// SCRIPT DEBUGGER
 	//////////////////////////////////////////////////////////////////////////
-	sys_script_debugger=m_pConsole->CreateVariable("sys_script_debugger","0",VF_DUMPTODISK|VF_CHEAT,
+	sys_script_debugger = m_pConsole->CreateVariable("sys_script_debugger", "0", VF_DUMPTODISK | VF_CHEAT,
 		"Enables the script debugger.\n"
 		"Usage: sys_script_debugger [0/1]");
 
 
-	m_cvAIUpdate = GetIConsole()->CreateVariable("ai_noupdate","0",VF_CHEAT);
+	m_cvAIUpdate = GetIConsole()->CreateVariable("ai_noupdate", "0", VF_CHEAT);
 
 	m_cvMemStats = GetIConsole()->CreateVariable("MemStats", "0", 0);
-	m_cvMemStatsThreshold = GetIConsole()->CreateVariable ("MemStatsThreshold", "32000", 0);
+	m_cvMemStatsThreshold = GetIConsole()->CreateVariable("MemStatsThreshold", "32000", 0);
 	m_cvMemStatsMaxDepth = GetIConsole()->CreateVariable("MemStatsMaxDepth", "4", 0);
 
 	m_sys_StreamCallbackTimeBudget = GetIConsole()->CreateVariable("sys_StreamCallbackTimeBudget", "50000", 0,
@@ -1419,39 +1418,39 @@ void CSystem::CreateSystemVars()
 		"Additive with cap: if more time is spent, the next frame gets less budget, and\n"
 		"there's never more than this value per frame.");
 
-	m_sys_StreamCompressionMask = GetIConsole()->CreateVariable("sys_StreamCompressionMask", "8", VF_CHEAT|VF_REQUIRE_NET_SYNC,
+	m_sys_StreamCompressionMask = GetIConsole()->CreateVariable("sys_StreamCompressionMask", "8", VF_CHEAT | VF_REQUIRE_NET_SYNC,
 		"Stream compression bit mask, used for network compression(lower bandwidth)\n");
 	// hidden information:
 	// bit 3 (8): cookies removed from network stream 1=on 0=off
 
-	m_PakVar.nPriority  = 1;
+	m_PakVar.nPriority = 1;
 	m_PakVar.nReadSlice = 0;
 	m_PakVar.nLogMissingFiles = 0;
-	m_cvPakPriority = attachVariable("sys_PakPriority", &m_PakVar.nPriority,"If set to 1, tells CryPak to try to open the file in pak first, then go to file system",VF_READONLY|VF_CHEAT);
-	m_cvPakReadSlice = attachVariable("sys_PakReadSlice", &m_PakVar.nReadSlice,"If non-0, means number of kilobytes to use to read files in portions. Should only be used on Win9x kernels");
-	m_cvPakLogMissingFiles = attachVariable("sys_PakLogMissingFiles",&m_PakVar.nLogMissingFiles, "If non-0, missing file names go to mastercd/MissingFilesX.log. 1) only resulting report  2) run-time report is ON, one entry per file  3) full run-time report");
+	m_cvPakPriority = attachVariable("sys_PakPriority", &m_PakVar.nPriority, "If set to 1, tells CryPak to try to open the file in pak first, then go to file system", VF_READONLY | VF_CHEAT);
+	m_cvPakReadSlice = attachVariable("sys_PakReadSlice", &m_PakVar.nReadSlice, "If non-0, means number of kilobytes to use to read files in portions. Should only be used on Win9x kernels");
+	m_cvPakLogMissingFiles = attachVariable("sys_PakLogMissingFiles", &m_PakVar.nLogMissingFiles, "If non-0, missing file names go to mastercd/MissingFilesX.log. 1) only resulting report  2) run-time report is ON, one entry per file  3) full run-time report");
 
-	m_sysNoUpdate = GetIConsole()->CreateVariable("sys_noupdate","0",VF_CHEAT,
+	m_sysNoUpdate = GetIConsole()->CreateVariable("sys_noupdate", "0", VF_CHEAT,
 		"Toggles updating of system with sys_script_debugger.\n"
 		"Usage: sys_noupdate [0/1]\n"
 		"Default is 0 (system updates during debug).");
 
-	m_sysWarnings = GetIConsole()->CreateVariable("sys_warnings","0",VF_DUMPTODISK,
+	m_sysWarnings = GetIConsole()->CreateVariable("sys_warnings", "0", VF_DUMPTODISK,
 		"Toggles printing system warnings.\n"
 		"Usage: sys_warnings [0/1]\n"
 		"Default is 0 (off).");
 
-	m_cvSSInfo =  GetIConsole()->CreateVariable("sys_SSInfo","0",VF_DUMPTODISK,
+	m_cvSSInfo = GetIConsole()->CreateVariable("sys_SSInfo", "0", VF_DUMPTODISK,
 		"Show SourceSafe information (Name,Comment,Date) for file errors."
 		"Usage: sys_SSInfo [0/1]\n"
 		"Default is 0 (off).");
 
-	m_cvEntitySuppressionLevel = GetIConsole()->CreateVariable("e_EntitySuppressionLevel","0",VF_DUMPTODISK,
+	m_cvEntitySuppressionLevel = GetIConsole()->CreateVariable("e_EntitySuppressionLevel", "0", VF_DUMPTODISK,
 		"Defines the level at which entities are spawned. Entities marked with lower level will not be spawned - 0 means no level."
 		"Usage: e_EntitySuppressionLevel [0-infinity]\n"
 		"Default is 0 (off).");
 
-	m_sys_profile = GetIConsole()->CreateVariable("profile","0",0,"Enable profiling.\n"
+	m_sys_profile = GetIConsole()->CreateVariable("profile", "0", 0, "Enable profiling.\n"
 		"Usage: profile #\n"
 		"Where # sets the profiling to:\n"
 		"	0: Profiling off\n"
@@ -1465,7 +1464,7 @@ void CSystem::CreateSystemVars()
 		"	8: Standart Deviation\n"
 		"	-1: Profiling enabled, but not displayed\n"
 		"Default is 0 (off).");
-	m_sys_profile_filter = GetIConsole()->CreateVariable("profile_filter","",0,
+	m_sys_profile_filter = GetIConsole()->CreateVariable("profile_filter", "", 0,
 		"Profiles a specified subsystem.\n"
 		"Usage: profile_filter subsystem\n"
 		"Where 'subsystem' may be:\n"
@@ -1481,45 +1480,45 @@ void CSystem::CreateSystemVars()
 		"Editor\n"
 		"Script\n"
 		"Network\n"
-		);
-	m_sys_profile_graph = GetIConsole()->CreateVariable("profile_graph","0",0,
+	);
+	m_sys_profile_graph = GetIConsole()->CreateVariable("profile_graph", "0", 0,
 		"Enable drawing of profiling graph.\n");
-	m_sys_profile_graphScale = GetIConsole()->CreateVariable("profile_graphScale","100",0,
+	m_sys_profile_graphScale = GetIConsole()->CreateVariable("profile_graphScale", "100", 0,
 		"Sets the scale of profiling histograms.\n"
 		"Usage: profileGraphScale 100\n");
-	m_sys_profile_pagefaultsgraph = GetIConsole()->CreateVariable("profile_pagefaults","0",0,
+	m_sys_profile_pagefaultsgraph = GetIConsole()->CreateVariable("profile_pagefaults", "0", 0,
 		"Enable drawing of page faults graph.\n");
-	m_sys_profile_network = GetIConsole()->CreateVariable("profile_network","0",0,
-		"Enables network profiling.\n" );
-	m_sys_profile_peak = GetIConsole()->CreateVariable("profile_peak","10",0,
-		"Profiler Peaks Tollerance in Milliseconds.\n" );
-	m_sys_profile_memory = GetIConsole()->CreateVariable("MemInfo","0",0,"Display memory information by modules" );
+	m_sys_profile_network = GetIConsole()->CreateVariable("profile_network", "0", 0,
+		"Enables network profiling.\n");
+	m_sys_profile_peak = GetIConsole()->CreateVariable("profile_peak", "10", 0,
+		"Profiler Peaks Tollerance in Milliseconds.\n");
+	m_sys_profile_memory = GetIConsole()->CreateVariable("MemInfo", "0", 0, "Display memory information by modules");
 
-	m_sys_skiponlowspec = GetIConsole()->CreateVariable( "sys_skiponlowspec", "0", VF_DUMPTODISK | VF_SAVEGAME,
-		"avoids loading of expendable entites.\n" );
+	m_sys_skiponlowspec = GetIConsole()->CreateVariable("sys_skiponlowspec", "0", VF_DUMPTODISK | VF_SAVEGAME,
+		"avoids loading of expendable entites.\n");
 
-	m_sys_spec=GetIConsole()->CreateVariable("sys_spec","1",VF_DUMPTODISK | VF_SAVEGAME,
-		"Tells the system cfg spec.\n" );
+	m_sys_spec = GetIConsole()->CreateVariable("sys_spec", "1", VF_DUMPTODISK | VF_SAVEGAME,
+		"Tells the system cfg spec.\n");
 
-	m_sys_firstlaunch = GetIConsole()->CreateVariable( "sys_firstlaunch", "0", VF_DUMPTODISK,
-		"Indicates that the game was run for the first time.\n" );
+	m_sys_firstlaunch = GetIConsole()->CreateVariable("sys_firstlaunch", "0", VF_DUMPTODISK,
+		"Indicates that the game was run for the first time.\n");
 }
 
 //////////////////////////////////////////////////////////////////////////
 void CSystem::InitScriptDebugger()
 {
 #ifdef WIN32
-	if(sys_script_debugger->GetIVal()!=0)
+	if (sys_script_debugger->GetIVal() != 0)
 	{
 		m_pLuaDebugger = new CLUADbg;
 		m_pScriptSystem->EnableDebugger(m_pScriptSink);
 
-		_Tiny_InitApp((HINSTANCE)::GetModuleHandle(NULL), (HINSTANCE) gDLLHandle, NULL, NULL, IDI_SMALL);
+		_Tiny_InitApp((HINSTANCE)::GetModuleHandle(NULL), (HINSTANCE)gDLLHandle, NULL, NULL, IDI_SMALL);
 
 		_TinyVerify(m_pLuaDebugger->Create(NULL, _T("Lua Debugger"), WS_OVERLAPPEDWINDOW, 0, NULL,
-			NULL, (ULONG_PTR) LoadMenu(_Tiny_GetResourceInstance(), MAKEINTRESOURCE(IDC_LUADBG))));
+			NULL, (ULONG_PTR)LoadMenu(_Tiny_GetResourceInstance(), MAKEINTRESOURCE(IDC_LUADBG))));
 
-		m_pLuaDebugger->SetSystem((ISystem *) this);
+		m_pLuaDebugger->SetSystem((ISystem*)this);
 	}
 #endif
 }
