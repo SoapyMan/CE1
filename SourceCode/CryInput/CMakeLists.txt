@@ -2,7 +2,7 @@ project(CryInput)
 
 add_definitions(-D_USRDLL -DCRYINPUT_EXPORTS)
 
-if (NOT MSVC)
+if (NOT XBOX)
 add_definitions(-DUSE_SDL_INPUT)
 endif()
 
@@ -15,7 +15,7 @@ set(SRC_FILES
     "XActionMapManager.cpp"
 )
 
-if (MSVC)
+if (XBOX)
 set (SRC_FILES ${SRC_FILES}
     "XKeyboard.cpp"
     "XMouse.cpp"
