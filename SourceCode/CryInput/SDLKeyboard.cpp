@@ -164,7 +164,7 @@ unsigned short CSDLKeyboard::SDL2XKEY(SDL_Keycode kc)
 //////////////////////////////////////////////////////////////////////////
 unsigned char CSDLKeyboard::XKEY2ASCII(unsigned short nCode, int modifiers)
 {
-	char ret = '\0';
+	unsigned char ret = '\0';
 #define HANDLE_CASE(XKEY, C) case XKEY: \
 	ret = C; \
 	break;
@@ -207,33 +207,45 @@ unsigned char CSDLKeyboard::XKEY2ASCII(unsigned short nCode, int modifiers)
 		HANDLE_CASE(XKEY_B, 'b')
 		HANDLE_CASE(XKEY_N, 'n')
 		HANDLE_CASE(XKEY_M, 'm')
+		HANDLE_CASE(XKEY_LBRACKET, '[')
+		HANDLE_CASE(XKEY_RBRACKET, ']')
 		HANDLE_CASE(XKEY_BACKSLASH, '\\')
+		HANDLE_CASE(XKEY_SLASH, '/')
 		HANDLE_CASE(XKEY_MINUS, '-')
+		HANDLE_CASE(XKEY_ADD, '+')
+		HANDLE_CASE(XKEY_EQUALS, '=')
+		HANDLE_CASE(XKEY_MULTIPLY, '*')
+		HANDLE_CASE(XKEY_COMMA, ',')
+		HANDLE_CASE(XKEY_PERIOD, '.')
+		HANDLE_CASE(XKEY_SEMICOLON, ';')
+		HANDLE_CASE(XKEY_APOSTROPHE, '\'')
+		HANDLE_CASE(XKEY_TILDE, '~')
 	default:
 		ret = '\0';
 	}
 #undef HANDLE_CASE
 
-	if ((modifiers & XKEY_MOD_CONTROL) && (modifiers & XKEY_MOD_ALT))
+	if (modifiers & (XKEY_MOD_CONTROL | XKEY_MOD_ALT))
 	{
 		//STUB
 		return 0;
 	}
-	else if ((modifiers & XKEY_MOD_CAPSLOCK) != 0)
-	{
-		//STUB
-		return 0;
-	}
+	
+	const bool shiftPressed = modifiers & (XKEY_MOD_LSHIFT | XKEY_MOD_RSHIFT);
+	bool upperCase = (modifiers & XKEY_MOD_CAPSLOCK) || shiftPressed;
+	if (modifiers & XKEY_MOD_CAPSLOCK)
+		upperCase = true;
 	else if ((modifiers & XKEY_MOD_LSHIFT) != 0)
+		upperCase = true;
+
+	const int shift = int((unsigned char)'A' - (unsigned char)'a');
+
+	if (ret == '-' && shiftPressed)
+		ret = '_';
+	if (upperCase && ret >= 'a' && ret <= 'z')
 	{
-		switch (ret)
-		{
-			case '-':
-				ret = '_';
-				break;
-			default:
-				ret += 32;
-		}
+		if(upperCase)
+			ret += shift;
 	}
 
 	return ret;
