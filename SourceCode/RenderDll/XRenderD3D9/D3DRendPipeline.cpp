@@ -1399,9 +1399,6 @@ bool CD3D9Renderer::EF_ObjectChange(SShader *Shader, SRenderShaderResources *Res
 // on ATI hardware we use native ClipPlanes : m_RP.m_ClipPlaneEnabled = 2
 void CD3D9Renderer::EF_SetClipPlane (bool bEnable, float *pPlane, bool bRefract)
 {
-  if (!CV_d3d9_clipplanes)
-    return;
-
   if (bEnable)
   {
 #ifdef DO_RENDERLOG
@@ -1428,10 +1425,11 @@ void CD3D9Renderer::EF_SetClipPlane (bool bEnable, float *pPlane, bool bRefract)
     m_RP.m_CurClipPlaneCull = m_RP.m_CurClipPlane;
     m_RP.m_CurClipPlaneCull.m_Dist = -m_RP.m_CurClipPlaneCull.m_Dist;
     int nGPU = m_Features & RFT_HW_MASK;
-    if (m_d3dCaps.MaxUserClipPlanes > 0 && nGPU != RFT_HW_GF3 && nGPU != RFT_HW_GF2 && nGPU != RFT_HW_GFFX)
+    if (CV_d3d9_clipplanes && m_d3dCaps.MaxUserClipPlanes > 0 && nGPU != RFT_HW_GF3 && nGPU != RFT_HW_GF2 && nGPU != RFT_HW_GFFX)
     {
       m_RP.m_ClipPlaneEnabled = 2;
       m_pd3dDevice->SetClipPlane(0, p);
+
       m_pd3dDevice->SetRenderState(D3DRS_CLIPPLANEENABLE, 1);
     }
     else

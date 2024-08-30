@@ -101,7 +101,7 @@ CD3D9Renderer::CD3D9Renderer()
   iConsole->Register("d3d9_Occlusion_Query", &CV_d3d9_occlusion_query, 1, VF_REQUIRE_APP_RESTART);
   iConsole->Register("d3d9_CompressedTextures", &CV_d3d9_compressedtextures, 1, VF_REQUIRE_APP_RESTART);
   iConsole->Register("d3d9_UseBumpmap", &CV_d3d9_usebumpmap, 1);
-  iConsole->Register("d3d9_ClipPlanes", &CV_d3d9_clipplanes, 1);
+  iConsole->Register("d3d9_ClipPlanes", &CV_d3d9_clipplanes, 0, VF_DUMPTODISK, "use fixed function clip planes");
   iConsole->Register("d3d9_TripleBuffering", &CV_d3d9_triplebuffering, 0, VF_REQUIRE_APP_RESTART);
   iConsole->Register("d3d9_ResetDeviceAfterLoading", &CV_d3d9_resetdeviceafterloading, 1);
   iConsole->Register("d3d9_SaveDepthmaps", &CV_d3d9_savedepthmaps, 0);
