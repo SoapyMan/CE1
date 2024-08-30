@@ -332,20 +332,31 @@ inline void *realloc(void *block, unsigned int size) { return _CryRealloc(block,
 inline void free(void *p) { _CryFree(p); };
 */
 
+#if defined(__clang__)
+#define NOEXCEPT noexcept
+#else
+#define NOEXCEPT
+#endif
+
 #define malloc				CryModuleMalloc
 #define realloc				CryModuleRealloc
 #define free				CryModuleFree
 #define realloc_size		CryModuleReallocSize
 #define free_size			CryModuleFreeSize
 
+#pragma warning(push)
+#pragma warning(disable:4595)
+
 #ifdef __cplusplus
 	#ifndef GAMECUBE //I don't know how to compile this on GC
-		inline void * __cdecl operator new   (size_t  size) { return CryModuleMalloc(size); } 
-		inline void * __cdecl operator new[](size_t size) { return CryModuleMalloc(size); }; 
-		inline void __cdecl operator delete  (void *p) { CryModuleFree(p); };
-		inline void __cdecl operator delete[](void *p) { CryModuleFree(p); };
+		inline void * operator new   (size_t  size)  { return CryModuleMalloc(size); } 
+		inline void * operator new[](size_t size) { return CryModuleMalloc(size); }; 
+		inline void operator delete  (void *p) { CryModuleFree(p); };
+		inline void operator delete[](void *p) { CryModuleFree(p); };
 	#endif //GAMECUBE
 #endif //__cplusplus
+
+#pragma warning(pop)
 
 #endif // USE_NEWPOOL
 

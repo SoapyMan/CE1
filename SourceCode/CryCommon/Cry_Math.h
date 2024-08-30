@@ -86,29 +86,29 @@ const real sqrt3	= (real)1.7320508075688772935274463415059;
 #if defined(WIN64) &&  defined(_CPU_AMD64) && !defined(LINUX)
 #define ILINE __forceinline
 
-ILINE void cry_sincosf(float angle, float* pCosSin) { pCosSin[0] = cos(angle); pCosSin[1] = sin(angle); }
+ILINE void cry_sincosf(float angle, float* pCosSin) { pCosSin[0] = cosf(angle); pCosSin[1] = sinf(angle); }
 ILINE void cry_sincos  (double angle, double* pCosSin) {	pCosSin[0] = cos(angle);	pCosSin[1] = sin(angle); }
 ILINE float cry_sinf(float x) {return sinf(x); }
 ILINE float cry_cosf(float x) {return cosf(x); }
 
-ILINE float cry_fmod(float x, float y) {return (float)fmod((double)x,(double)y);}
+ILINE float cry_fmod(float x, float y) {return fmodf(x,y);}
 
-ILINE float cry_asinf(float x) {return (float)asin((double)x);}
-ILINE float cry_acosf(float x) {return (float)acos((double)x);}
-ILINE float cry_atanf(float x) {return (float)atan((double)x);}
-ILINE float cry_atan2f(float x, float y) {return (float)atan2((double)x,(double)y);}
+ILINE float cry_asinf(float x) {return asinf(x);}
+ILINE float cry_acosf(float x) {return acosf(x);}
+ILINE float cry_atanf(float x) {return atanf(x);}
+ILINE float cry_atan2f(float x, float y) {return atan2f(x,y);}
 
-ILINE float cry_tanhf(float x) {	double expz = exp(double(x)), exp_z = exp(-double(x));	return (float)((expz-exp_z)/(expz+exp_z)); }
-ILINE float cry_tanf(float x) {return (float)tan((double)x);}
+ILINE float cry_tanhf(float x) {	double expz = exp(double(x)), exp_z = exp(-double(x));	return float((expz-exp_z)/(expz+exp_z)); }
+ILINE float cry_tanf(float x) {return tanf(x);}
 
-ILINE float cry_sqrtf(float x) {return (float)sqrt((double)x);}
-ILINE float cry_fabsf(float x) {return (float)fabs((double)x);}
-ILINE float cry_expf(float x) {return (float)exp((double)x);}
-ILINE float cry_logf(float x) {return (float)log((double)x);}
-ILINE float cry_powf(float x, float y) {return (float) pow((double)x,(double)y);}
+ILINE float cry_sqrtf(float x) {return sqrtf(x);}
+ILINE float cry_fabsf(float x) {return fabsf(x);}
+ILINE float cry_expf(float x) {return expf(x);}
+ILINE float cry_logf(float x) {return logf(x);}
+ILINE float cry_powf(float x, float y) {return  powf(x,y);}
 
-ILINE float cry_ceilf(float x) {return (float)ceil((double)x);}
-ILINE float cry_floorf(float x) {return (float)floor((double)x);}
+ILINE float cry_ceilf(float x) {return ceilf(x);}
+ILINE float cry_floorf(float x) {return floorf(x);}
 
 ILINE double cry_sinh(double z) {return (exp (z) - exp (-z)) * 0.5;}
 ILINE double cry_cosh(double z) {return (exp (z) + exp (-z)) * 0.5;}
@@ -144,7 +144,7 @@ ILINE void cry_sincos (double angle, double* pCosSin) {
 }
 ILINE float cry_sinf(float x) {return sinf(x);}
 ILINE float cry_cosf(float x) {return cosf(x);}
-ILINE float cry_fmod(float x, float y) {return (float)fmodf(x,y);}
+ILINE float cry_fmod(float x, float y) {return fmodf(x,y);}
 ILINE float cry_ceilf(float x) {return ceilf(x);}
 ILINE float cry_asinf(float x) {return asinf(x);}
 ILINE float cry_acosf(float x) {return acosf(x);}
@@ -167,11 +167,11 @@ ILINE float cry_powf(float x, float y) {return powf(x,y);}
 #if defined(LINUX)
 #define ILINE inline
 
-ILINE void cry_sincosf (float angle, float* pCosSin) { 	pCosSin[0] = (float)cos(angle);	pCosSin[1] = (float)sin(angle); 	}
-ILINE void cry_sincos (double angle, double* pCosSin) {	pCosSin[0] = cos(angle);	pCosSin[1] = sin(angle); 	}
+ILINE void cry_sincosf (float angle, float* pCosSin) { 	pCosSin[0] = cosf(angle);	pCosSin[1] = sinf(angle); 	}
+ILINE void cry_sincos (double angle, double* pCosSin) {	pCosSin[0] = cosf(angle);	pCosSin[1] = sinf(angle); 	}
 ILINE float cry_sinf(float x) {return sinf(x);}
 ILINE float cry_cosf(float x) {return cosf(x);}
-ILINE float cry_fmod(float x, float y) {return (float)fmodf(x,y);}
+ILINE float cry_fmod(float x, float y) {return fmodf(x,y);}
 ILINE float cry_ceilf(float x) {return ceilf(x);}
 ILINE float cry_asinf(float x) {return asinf(x);}
 ILINE float cry_acosf(float x) {return acosf(x);}
