@@ -142,6 +142,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_SOURCE_DIR}/SourceCode/CryCommon
     ${CMAKE_SOURCE_DIR}/SourceCode/RenderDll
     ${CMAKE_SOURCE_DIR}/SourceCode/RenderDll/Common/Shaders
+    ${CMAKE_SOURCE_DIR}/Externals/SDL/include
 )
 
 target_link_directories(${PROJECT_NAME} PRIVATE
@@ -162,4 +163,6 @@ endif()
 target_link_libraries(${PROJECT_NAME} PRIVATE
     ${ARCH_LIBS}
     ${SYSTEM_DEPS}
+
+    SDL2
 )

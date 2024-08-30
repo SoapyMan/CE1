@@ -140,6 +140,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     d3d9.lib
     d3dx9.lib
     DXErr.lib
+    legacy_stdio_definitions.lib
     cg.lib
     cgD3D9.lib
     ${ARCH_LIBS}
