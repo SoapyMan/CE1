@@ -121,7 +121,7 @@ protected:
 	// bytes/sample in output stream
 	int m_nBytesPerSample;
 	// fmod stream data
-	CS_STREAM *m_pStream;
+	FSOUND_STREAM *m_pStream;
 	int m_nChannel;
 	// states
 	bool m_bDataLoaded;
@@ -193,17 +193,9 @@ protected:
 	bool ChoosePatternSet(SMusicMood *pMood);
 	CMusicPatternInstance* ChooseBridge(SMusicTheme *pCurrTheme, SMusicTheme *pNewTheme);
 	CMusicPatternInstance* ChoosePattern(SMusicMood *pMood, int nLayer=MUSICLAYER_MAIN);
-	signed char StreamingCallback(CS_STREAM *pStream, void *pBuffer, int nLength);
+	signed char StreamingCallback(FSOUND_STREAM *pStream, void *pBuffer, int nLength);
 	//friend signed char __cdecl _StreamingCallback(CS_STREAM *pStream, void *pBuffer, int nLength, INT_PTR nParam);
-#ifndef CS_VERSION_372
-#ifdef CS_VERSION_361
-	friend signed char F_CALLBACKAPI _StreamingCallback(CS_STREAM *pStream, void *pBuffer, int nLength, int nParam);
-#else
-	friend signed char F_CALLBACKAPI _StreamingCallback(CS_STREAM *pStream, void *pBuffer, int nLength, INT_PTR nParam);
-#endif
-#else
-  friend signed char F_CALLBACKAPI _StreamingCallback(CS_STREAM *pStream, void *pBuffer, int nLength, void * nParam);
-#endif
+	friend signed char F_CALLBACKAPI _StreamingCallback(FSOUND_STREAM *pStream, void *pBuffer, int nLength, void* nParam);
   friend class CMusicLoadSink;
 public:
 	CMusicSystem(ISystem *pSystem);

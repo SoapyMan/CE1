@@ -20,8 +20,8 @@
 #include "SoundSystem.h"
 #include <IStreamEngine.h>
 
-struct CS_STREAM;
-struct CS_SAMPLE;
+struct FSOUND_STREAM;
+struct FSOUND_SAMPLE;
 struct IVisArea;
 struct ITimer;
 

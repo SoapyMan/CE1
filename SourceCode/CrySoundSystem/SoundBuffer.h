@@ -46,8 +46,8 @@ private:
 	union tagData
 	{
 		void *m_pData;
-		CS_SAMPLE *m_pSample;
-		CS_STREAM *m_pStream;
+		FSOUND_SAMPLE *m_pSample;
+		FSOUND_STREAM *m_pStream;
 	};
 protected:
 	CSoundSystem *m_pSoundSystem;
@@ -81,11 +81,11 @@ public:
 	bool WaitForLoad();
 	void AbortLoading();
 	void DestroyData();
-	void SetSample(CS_SAMPLE *pPtr);
-	void SetStream(CS_STREAM *pPtr);
+	void SetSample(FSOUND_SAMPLE *pPtr);
+	void SetStream(FSOUND_STREAM *pPtr);
 	SSoundBufferProps GetProps() { return (m_Props); }
-	CS_SAMPLE* GetSample() { return (m_Type==btSAMPLE) ? m_Data.m_pSample : NULL; }
-	CS_STREAM* GetStream() { return (m_Type==btSTREAM) ? m_Data.m_pStream : NULL; }
+	FSOUND_SAMPLE* GetSample() { return (m_Type==btSAMPLE) ? m_Data.m_pSample : NULL; }
+	FSOUND_STREAM* GetStream() { return (m_Type==btSTREAM) ? m_Data.m_pStream : NULL; }
 	BufferType GetType() { return m_Type; }
 	float GetLengthInSeconds() { return m_fLength; }
 	int GetBaseFreq() { return m_nBaseFreq; }

@@ -67,9 +67,9 @@ const char* g_szModuleGroups[][2] = {
 	{"CryInput.dll", g_szGroupCore},
 	{"CrySoundSystem.dll", g_szGroupCore},
 #ifdef WIN64
-	{"crysound64.dll", g_szGroupCore},
+	{"fmod64.dll", g_szGroupCore},
 #else
-	{"crysound.dll", g_szGroupCore},
+	{"fmod.dll", g_szGroupCore},
 #endif
 	{"CryFont.dll", g_szGroupCore},
 	{"CryAISystem.dll", g_szGroupGame},

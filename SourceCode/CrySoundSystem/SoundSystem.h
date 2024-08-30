@@ -39,11 +39,11 @@ struct	IStreamEngine;
 #define CSSPEAKERCONFIG_STEREO			0x00000005
 #define CSSPEAKERCONFIG_SURROUND		0x00000006
 
-#define SFXFILTER_PRIORITY					CS_DSP_DEFAULTPRIORITY_SFXUNIT+1
+#define SFXFILTER_PRIORITY					FSOUND_DSP_DEFAULTPRIORITY_SFXUNIT+1
 
 struct SEAXProps
 {
-	CS_REVERB_PROPERTIES EAX;
+	FSOUND_REVERB_PROPERTIES EAX;
 	int nPreset;
 };
 
@@ -116,7 +116,7 @@ public:
 	void* DSPUnit_SFXFilter_Callback(void *pOriginalBuffer, void *pNewBuffer, int nLength);
 
 	//! retrieve sfx-filter dsp unit
-	CS_DSPUNIT* GetDSPUnitFilter() { return m_pDSPUnitSFXFilter; }
+	FSOUND_DSPUNIT* GetDSPUnitFilter() { return m_pDSPUnitSFXFilter; }
 
 	bool IsOK() { return m_bOK; }
 
@@ -161,7 +161,7 @@ public:
 	void SetMasterVolume(unsigned char nVol)
 	{
 		GUARD_HEAP;
-		CS_SetSFXMasterVolume(nVol);
+		FSOUND_SetSFXMasterVolume(nVol);
 	}
 	/*! Set the volume scale for all sounds with FLAG_SOUND_SCALABLE
 	@param fScale volume scale (default 1.0)
@@ -217,9 +217,9 @@ public:
 	//! Check for EAX support.
 	bool IsEAX(int version);
 	//! Set EAX listener environment.
-	bool SetEaxListenerEnvironment(int nPreset, CS_REVERB_PROPERTIES *pProps=NULL, int nFlags=0);
+	bool SetEaxListenerEnvironment(int nPreset, FSOUND_REVERB_PROPERTIES *pProps=NULL, int nFlags=0);
 	//! Gets current EAX listener environment.
-	bool GetCurrentEaxEnvironment(int &nPreset, CS_REVERB_PROPERTIES &Props);
+	bool GetCurrentEaxEnvironment(int &nPreset, FSOUND_REVERB_PROPERTIES &Props);
 
 	bool SetGroupScale(int nGroup, float fScale);
 
@@ -293,7 +293,7 @@ public:
 	std::vector<_smart_ptr<CSoundBuffer> > m_lockedResources;
 
 	// sfx-filter stuff //////////////////////////////////////////////////////
-	CS_DSPUNIT *m_pDSPUnitSFXFilter; 
+	FSOUND_DSPUNIT *m_pDSPUnitSFXFilter;
 	float m_fDSPUnitSFXFilterCutoff;
 	float m_fDSPUnitSFXFilterResonance;
 	float m_fDSPUnitSFXFilterLowLVal;
@@ -335,7 +335,7 @@ public:
 	bool	m_bPause,m_bResetVolume;
 
 	int		m_nLastEax;
-	CS_REVERB_PROPERTIES *m_pLastEAXProps;
+	FSOUND_REVERB_PROPERTIES *m_pLastEAXProps;
 
 	SEAXProps m_EAXIndoor;
 	SEAXProps m_EAXOutdoor;

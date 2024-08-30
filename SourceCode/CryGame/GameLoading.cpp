@@ -57,7 +57,7 @@
 #endif
 
 #if defined(LINUX)
-	#include "ILog.h"
+#include "ILog.h"
 #endif
 
 //////////////////////////////////////////////////////////////////////
@@ -74,23 +74,23 @@
 
 //////////////////////////////////////////////////////////////////////
 // load level batch process
-bool CXGame::LoadLevelForEditor(const char *pszLevelDirectory, const char *pszMissionName)
+bool CXGame::LoadLevelForEditor(const char* pszLevelDirectory, const char* pszMissionName)
 {
 	if (pszMissionName)
 		m_currentMission = pszMissionName;
 
 	// start local server
-	if(!StartupServer(false,"__editor__"))
+	if (!StartupServer(false, "__editor__"))
 		return false;
 
 	//////////////////////////////////////////////////////////////////////////
 	// Init common stuff.
 	//////////////////////////////////////////////////////////////////////////
 	//init the entity registry
-	m_pServer->m_pISystem->LoadLevel( pszLevelDirectory,m_currentMission.c_str(),true );
+	m_pServer->m_pISystem->LoadLevel(pszLevelDirectory, m_currentMission.c_str(), true);
 
 	// start local client and connect
-	if(!StartupLocalClient())
+	if (!StartupLocalClient())
 		return false;
 
 	m_pClient->XConnect("localhost");
@@ -102,34 +102,34 @@ bool CXGame::LoadLevelForEditor(const char *pszLevelDirectory, const char *pszMi
 //////////////////////////////////////////////////////////////////////////
 struct PropertyWriter : IScriptObjectDumpSink
 {
-	IScriptObject *table;
-	CStream &stm;
-	IScriptSystem *m_pScriptSystem;
+	IScriptObject* table;
+	CStream& stm;
+	IScriptSystem* m_pScriptSystem;
 
-	PropertyWriter(IScriptObject *p, CStream &s, IScriptSystem *ss) : table(p), stm(s), m_pScriptSystem(ss) {};
+	PropertyWriter(IScriptObject* p, CStream& s, IScriptSystem* ss) : table(p), stm(s), m_pScriptSystem(ss) {};
 
-	void Element(const char *sName, int nIdx, ScriptVarType type, bool iskey)
+	void Element(const char* sName, int nIdx, ScriptVarType type, bool iskey)
 	{
-		switch(type)
+		switch (type)
 		{
 		case svtUserData:
 		case svtFunction: TRACE("WARNING: userdata or function found in properties table (%s)", sName);
- 		case svtNull:     break;
-		case svtString:   { const char *s = ""; _VERIFY(iskey ? table->GetValue(sName, s) : table->GetAt(nIdx, s)); stm.Write(s); }; break;
-		case svtNumber:   { float f = 0;  _VERIFY(iskey ? table->GetValue(sName, f) : table->GetAt(nIdx, f)); stm.Write(f); }; break;
-		case svtObject: 
-			{
-				_SmartScriptObject t(m_pScriptSystem, true);
-				_VERIFY(iskey ? table->GetValue(sName, t) : table->GetAt(nIdx, t));
-				t->Dump(&PropertyWriter(t, stm, m_pScriptSystem));
-				stm.Write((char)TABLE_END);
-				break;
-			};
+		case svtNull:     break;
+		case svtString: { const char* s = ""; _VERIFY(iskey ? table->GetValue(sName, s) : table->GetAt(nIdx, s)); stm.Write(s); }; break;
+		case svtNumber: { float f = 0;  _VERIFY(iskey ? table->GetValue(sName, f) : table->GetAt(nIdx, f)); stm.Write(f); }; break;
+		case svtObject:
+		{
+			_SmartScriptObject t(m_pScriptSystem, true);
+			_VERIFY(iskey ? table->GetValue(sName, t) : table->GetAt(nIdx, t));
+			t->Dump(&PropertyWriter(t, stm, m_pScriptSystem));
+			stm.Write((char)TABLE_END);
+			break;
+		};
 		};
 	};
 
 	//////////////////////////////////////////////////////////////////////////	
-	void OnElementFound(const char *sName, ScriptVarType type)
+	void OnElementFound(const char* sName, ScriptVarType type)
 	{
 		stm.Write((char)type);
 		stm.Write((char)true);
@@ -148,15 +148,15 @@ struct PropertyWriter : IScriptObjectDumpSink
 };
 
 //////////////////////////////////////////////////////////////////////////
-void LoadProperties(IScriptObject *table, CStream &stm, IScriptSystem *ss, char *parent)
+void LoadProperties(IScriptObject* table, CStream& stm, IScriptSystem* ss, char* parent)
 {
 	ASSERT(table);
 	ASSERT(ss);  // martin made me do it
-	for(;;)
+	for (;;)
 	{
 		char what;
 		stm.Read(what);
-		if(what==TABLE_END) return;     
+		if (what == TABLE_END) return;
 
 		char iskey;
 		stm.Read(iskey);
@@ -164,44 +164,44 @@ void LoadProperties(IScriptObject *table, CStream &stm, IScriptSystem *ss, char 
 		string key;
 		iskey ? stm.Read(key) : stm.Read(idx);
 
-		switch(what)
+		switch (what)
 		{
-		case svtNull:   {                             iskey ? table->SetToNull(key.c_str())           : table->SetNullAt(idx);        break; };
+		case svtNull: { iskey ? table->SetToNull(key.c_str()) : table->SetNullAt(idx);        break; };
 		case svtString: { string s; stm.Read(s); iskey ? table->SetValue(key.c_str(), s.c_str()) : table->SetAt(idx, s.c_str()); break; };
-		case svtNumber: { float f = 0;   stm.Read(f); iskey ? table->SetValue(key.c_str(), f)         : table->SetAt(idx, f);         break; }; 
-		case svtObject: { _SmartScriptObject t(ss);   iskey ? table->SetValue(key.c_str(), *t)         : table->SetAt(idx, *t);  LoadProperties(t, stm, ss, (char *)key.c_str()); break; }; 
+		case svtNumber: { float f = 0;   stm.Read(f); iskey ? table->SetValue(key.c_str(), f) : table->SetAt(idx, f);         break; };
+		case svtObject: { _SmartScriptObject t(ss);   iskey ? table->SetValue(key.c_str(), *t) : table->SetAt(idx, *t);  LoadProperties(t, stm, ss, (char*)key.c_str()); break; };
 		case svtUserData:
-		case svtFunction: TRACE("WARNING: can't restore userdata or function in properties table (%s.%s)", parent, key.c_str()); 
+		case svtFunction: TRACE("WARNING: can't restore userdata or function in properties table (%s.%s)", parent, key.c_str());
 		};
-	}; 
+	};
 };
 
 //////////////////////////////////////////////////////////////////////////
 class CCVarSerializeGameSave : public ICVarDumpSink
 {
 public:
-	CCVarSerializeGameSave(CStream *pStm, bool bSave)
+	CCVarSerializeGameSave(CStream* pStm, bool bSave)
 	{
-		m_pStm=pStm;
-		m_bSave=bSave;
-		m_nCount=0;
+		m_pStm = pStm;
+		m_bSave = bSave;
+		m_nCount = 0;
 	}
 
-	void OnElementFound(ICVar *pCVar)
+	void OnElementFound(ICVar* pCVar)
 	{
 		if (m_bSave)
-		{		
+		{
 			m_pStm->Write(pCVar->GetName());
 			m_pStm->Write(pCVar->GetString());
 		}
-		
+
 		m_nCount++;
 	}
 
 	int	GetCount() { return(m_nCount); }
-	
+
 private:
-	CStream *m_pStm;
+	CStream* m_pStm;
 	bool m_bSave;
 	int	m_nCount;
 };
@@ -209,44 +209,44 @@ private:
 // IMPORTANT: DONT FORGET TO UPDATE "SAVEVERSION" DEFINE IN GAME.H IF THE FORMAT CHANGES
 //
 //////////////////////////////////////////////////////////////////////////
-void SaveName(string &s, string &prof)
+void SaveName(string& s, string& prof)
 {
-	if(!s[0]) s = "quicksave";
-	for(unsigned int i = 0; i<s.size(); i++) if(!isalnum(s[i])) s[i] = '_';
+	if (!s[0]) s = "quicksave";
+	for (unsigned int i = 0; i < s.size(); i++) if (!isalnum(s[i])) s[i] = '_';
 	s = "profiles/player/" + prof + "/savegames/" + s + ".sav";
 };
 
 //////////////////////////////////////////////////////////////////////////
-bool CXGame::SaveToStream(CStream &stm, Vec3d *pos, Vec3d *angles,string sFilename)
+bool CXGame::SaveToStream(CStream& stm, Vec3d* pos, Vec3d* angles, string sFilename)
 {
-	IBitStream *pBitStream = GetIBitStream();
+	IBitStream* pBitStream = GetIBitStream();
 
-	if(m_bEditor)				 
+	if (m_bEditor)
 	{
 		m_pLog->Log("Skipping savegame in editor...");
 		return false;
 	};
- 
-	IEntitySystem *pEntitySystem=m_pSystem->GetIEntitySystem();
 
-	IEntity *pPlayerEnt=NULL;
+	IEntitySystem* pEntitySystem = m_pSystem->GetIEntitySystem();
+
+	IEntity* pPlayerEnt = NULL;
 	if (m_pClient)
-		pPlayerEnt=pEntitySystem->GetEntity(m_pClient->GetPlayerId());
+		pPlayerEnt = pEntitySystem->GetEntity(m_pClient->GetPlayerId());
 	//ASSERT(pPlayerEnt);
 	if (!pPlayerEnt)
 		//CryError("Saving to checkpoint - Current player not set or invalid - data error - possible reasons: \n - the first respawn point might be inside a checkpoint \n - something else other than shapes is used to trigger game events \n the trigger used to trigger checkpoint is not trigger once \n solution: check out the map and fix");
 		CryError("A checkpoint has been triggered to save data when the player is not existing yet, generally right after respawning. \n This is a data error, and must be fixed by the designer working on this map. \n Possible data errors are: \n - the first respawn point might be inside a checkpoint \n - something else other than shapes is used to trigger game events; \n - the area trigger used to trigger checkpoint is not trigger once; \n how to proceed: get the designer working on this map to fix this");
 
-	CPlayer *pPlayer=NULL;
-	if(pPlayerEnt->GetContainer()) pPlayerEnt->GetContainer()->QueryContainerInterface(CIT_IPLAYER,(void**) &pPlayer);
+	CPlayer* pPlayer = NULL;
+	if (pPlayerEnt->GetContainer()) pPlayerEnt->GetContainer()->QueryContainerInterface(CIT_IPLAYER, (void**)&pPlayer);
 	//ASSERT(pPlayer);
 	if (!pPlayer)
 		CryError("Cannot get player container");
 
-	if(pPlayer->m_stats.health<=0)
+	if (pPlayer->m_stats.health <= 0)
 	{
 		m_pLog->Log("Cannot save while player is dead");
-		return false;		
+		return false;
 	};
 
 	CScriptObjectStream scriptStream;
@@ -255,17 +255,17 @@ bool CXGame::SaveToStream(CStream &stm, Vec3d *pos, Vec3d *angles,string sFilena
 
 	//m_p3DEngine->UnRegisterAllEntities();
 	stm.Reset();
- 
+
 	// save header
 	stm.Write(SAVEMAGIC);
 	stm.Write((int)PATCH2_SAVEVERSION);
 
 	// get lowercase versions of levelname and missionname
-	char szLowerCaseStr[256] = {0};
+	char szLowerCaseStr[256] = { 0 };
 
 	strncpy(szLowerCaseStr, g_LevelName->GetString(), 255);
 	strlwr(szLowerCaseStr);
-	
+
 	// save levelname
 	stm.Write(szLowerCaseStr);
 
@@ -292,39 +292,39 @@ bool CXGame::SaveToStream(CStream &stm, Vec3d *pos, Vec3d *angles,string sFilena
 	stm.Write(sFilename);
 
 	// save the number of entities, for the loading screen bar
-	int nEnt=pEntitySystem->GetNumEntities();
+	int nEnt = pEntitySystem->GetNumEntities();
 	stm.Write(nEnt);
 
-	WRITE_COOKIE_NO(stm,0x22);
+	WRITE_COOKIE_NO(stm, 0x22);
 
 	// save current EAX preset
 	int nPreset;
-	CS_REVERB_PROPERTIES tProps;
+	FSOUND_REVERB_PROPERTIES tProps;
 	ISoundSystem* snd = m_pSystem->GetISoundSystem();
 	if (snd)
 	{
-		snd->GetCurrentEaxEnvironment(nPreset,tProps);
+		snd->GetCurrentEaxEnvironment(nPreset, tProps);
 	}
 
 	stm.Write(nPreset);
-	if (nPreset==-1)
-	{	
-		stm.WriteBits((BYTE *)&tProps,sizeof(CS_REVERB_PROPERTIES));
+	if (nPreset == -1)
+	{
+		stm.WriteBits((BYTE*)&tProps, sizeof(FSOUND_REVERB_PROPERTIES));
 	}
 
-	WRITE_COOKIE_NO(stm,0x12);
+	WRITE_COOKIE_NO(stm, 0x12);
 
 	// save saveable cvars
-	CCVarSerializeGameSave tCount(&stm,false);
-	m_pSystem->GetIConsole()->DumpCVars(&tCount,VF_SAVEGAME);
-	int nCount=tCount.GetCount(); // get the number of cvars to save
-	stm.Write(nCount);  
-	CCVarSerializeGameSave t(&stm,true); 
-	m_pSystem->GetIConsole()->DumpCVars(&t,VF_SAVEGAME); // save them
-	ASSERT(t.GetCount()==nCount);
+	CCVarSerializeGameSave tCount(&stm, false);
+	m_pSystem->GetIConsole()->DumpCVars(&tCount, VF_SAVEGAME);
+	int nCount = tCount.GetCount(); // get the number of cvars to save
+	stm.Write(nCount);
+	CCVarSerializeGameSave t(&stm, true);
+	m_pSystem->GetIConsole()->DumpCVars(&t, VF_SAVEGAME); // save them
+	ASSERT(t.GetCount() == nCount);
 
 	//[petar] save autobalancing stuff
-	IAISystem *pAISystem = m_pSystem->GetAISystem();
+	IAISystem* pAISystem = m_pSystem->GetAISystem();
 	AIBalanceStats stats;
 	pAISystem->GetAutoBalanceInterface()->GetAutobalanceStats(stats);
 	stm.Write(stats.nAllowedDeaths);
@@ -332,7 +332,7 @@ bool CXGame::SaveToStream(CStream &stm, Vec3d *pos, Vec3d *angles,string sFilena
 	WRITE_COOKIE_NO(stm,0x11);
 	// save played cutscenes
 	nCount=m_lstPlayedCutScenes.size();
-	stm.Write(nCount);  
+	stm.Write(nCount);
 	for (std::set<string>::iterator it=m_lstPlayedCutScenes.begin();it!=m_lstPlayedCutScenes.end();it++)
 	{
 		string sName=*it;
@@ -340,56 +340,56 @@ bool CXGame::SaveToStream(CStream &stm, Vec3d *pos, Vec3d *angles,string sFilena
 	} //it
 	*/
 
-	IEntityClassRegistry *pECR=GetClassRegistry();
-	IEntityItPtr pEntities=pEntitySystem->GetEntityIterator();
+	IEntityClassRegistry* pECR = GetClassRegistry();
+	IEntityItPtr pEntities = pEntitySystem->GetEntityIterator();
 	pEntities->MoveFirst();
-	
-	IEntity *pEnt=NULL; 
 
-	WRITE_COOKIE_NO(stm,0x3c);
+	IEntity* pEnt = NULL;
+
+	WRITE_COOKIE_NO(stm, 0x3c);
 
 	// [kirill] savig IDs of all dynamicaly spawn BUT saved entities
 	// so would be able to preserve IDs from being taken by other dynamic entities on loadind
-	std::vector<int>	dynSaveableEntities;	
-	while((pEnt=pEntities->Next())!=NULL)
+	std::vector<int>	dynSaveableEntities;
+	while ((pEnt = pEntities->Next()) != NULL)
 	{
-		if (!pEnt->IsSaveEnabled()) 
+		if (!pEnt->IsSaveEnabled())
 			continue;
 
-		if (pEntitySystem->IsDynamicEntityId( pEnt->GetId() ))
-			dynSaveableEntities.push_back( pEnt->GetId() );
+		if (pEntitySystem->IsDynamicEntityId(pEnt->GetId()))
+			dynSaveableEntities.push_back(pEnt->GetId());
 	}
 	stm.Write((int)dynSaveableEntities.size());
-	for(int cntr=0; cntr<(int)(dynSaveableEntities.size()); ++cntr )
-	stm.Write((int)dynSaveableEntities[cntr]);
+	for (int cntr = 0; cntr < (int)(dynSaveableEntities.size()); ++cntr)
+		stm.Write((int)dynSaveableEntities[cntr]);
 
-	WRITE_COOKIE_NO(stm,61);
+	WRITE_COOKIE_NO(stm, 61);
 
-	pEntities=pEntitySystem->GetEntityIterator();
-  while((pEnt=pEntities->Next())!=NULL)
+	pEntities = pEntitySystem->GetEntityIterator();
+	while ((pEnt = pEntities->Next()) != NULL)
 	{
-		if (!pEnt->IsSaveEnabled()) 
+		if (!pEnt->IsSaveEnabled())
 			continue;
 
-		EntityClass *pClass = pECR->GetByClass(pEnt->GetEntityClassName());
-		CPlayer *pPlayer = NULL;
+		EntityClass* pClass = pECR->GetByClass(pEnt->GetEntityClassName());
+		CPlayer* pPlayer = NULL;
 
-		if(pEnt->GetContainer()) pEnt->GetContainer()->QueryContainerInterface(CIT_IPLAYER,(void**) &pPlayer);
-		if(pPlayer && pPlayer->m_stats.health<=0) continue;
+		if (pEnt->GetContainer()) pEnt->GetContainer()->QueryContainerInterface(CIT_IPLAYER, (void**)&pPlayer);
+		if (pPlayer && pPlayer->m_stats.health <= 0) continue;
 
 		//[kirill] 
 		// fixme somtimes health of dead players somehow not 0 so let's make sure we don't save dead guy
-		if(pPlayer && pEnt->GetPhysics() && pEnt->GetPhysics()->GetType()!=PE_LIVING) 
+		if (pPlayer && pEnt->GetPhysics() && pEnt->GetPhysics()->GetType() != PE_LIVING)
 		{
-			m_pSystem->GetILog()->Log("\001 WARNING, dead player [%s] has health %d ", pEnt->GetName(), pPlayer->m_stats.health );
+			m_pSystem->GetILog()->Log("\001 WARNING, dead player [%s] has health %d ", pEnt->GetName(), pPlayer->m_stats.health);
 			continue;
 		}
 
 		stm.Write((BYTE)CHUNK_ENTITY);
 
-		pBitStream->WriteBitStream(stm,pClass->ClassId,eEntityClassId);
+		pBitStream->WriteBitStream(stm, pClass->ClassId, eEntityClassId);
 
-		if(pPlayer && pPlayer->IsMyPlayer()) 
+		if (pPlayer && pPlayer->IsMyPlayer())
 			stm.Write((EntityId)0);		// don't save id for local player - generate it on spawn, to avoid ID's collision
 		else
 			stm.Write(pEnt->GetId());
@@ -401,101 +401,101 @@ bool CXGame::SaveToStream(CStream &stm, Vec3d *pos, Vec3d *angles,string sFilena
 		// be consistent with load level!
 
 		// save relative position if bound
-		Vec3d vPos = pEnt->GetPos(!pEnt->IsBound());		
+		Vec3d vPos = pEnt->GetPos(!pEnt->IsBound());
 		Vec3d vAng = pEnt->GetAngles(pEnt->IsBound());
 
 		if (!stm.Write(vPos))
-			CryError("Error while saving entity %s, id=%d",pEnt->GetName(),(int)pClass->ClassId);
+			CryError("Error while saving entity %s, id=%d", pEnt->GetName(), (int)pClass->ClassId);
 		if (!stm.Write(vAng))
-			CryError("Error while saving entity %s, id=%d",pEnt->GetName(),(int)pClass->ClassId);
+			CryError("Error while saving entity %s, id=%d", pEnt->GetName(), (int)pClass->ClassId);
 		//////////////////////////////////////////////////////////////////////////
 
 		//////////////////////////////////////////////////////////////////////////
 		// rendering stuff
-		
+
 		stm.Write(pEnt->GetScale());
-		
+
 		stm.Write(pEnt->GetRndFlags());
 
-		unsigned char uViewDistRatio=(int)(pEnt->GetViewDistRatioNormilized()*100.0f);
-		unsigned char uLodRatio=(int)(pEnt->GetLodRatioNormilized()*100.0f);
+		unsigned char uViewDistRatio = (int)(pEnt->GetViewDistRatioNormilized() * 100.0f);
+		unsigned char uLodRatio = (int)(pEnt->GetLodRatioNormilized() * 100.0f);
 
 		stm.Write(uViewDistRatio);
 		stm.Write(uLodRatio);
 
-		IMatInfo *pMat=pEnt->GetMaterial();
+		IMatInfo* pMat = pEnt->GetMaterial();
 		string sMat;
 		if (pMat)
-			sMat=pMat->GetName();			
+			sMat = pMat->GetName();
 		stm.Write(sMat);
 
-		stm.Write(pEnt->IsHidden());				
+		stm.Write(pEnt->IsHidden());
 		//////////////////////////////////////////////////////////////////////////
 
-		WRITE_COOKIE_NO(stm,76);
+		WRITE_COOKIE_NO(stm, 76);
 
 		stm.Write(pEnt->GetName());
 
-		if (m_pLog->GetVerbosityLevel()>5)
-			m_pLog->Log("SAVED entity name %s classname %s classid=%d id=%d",pEnt->GetName(),pClass->strClassName.c_str(),(int)pClass->ClassId,pEnt->GetId());
+		if (m_pLog->GetVerbosityLevel() > 5)
+			m_pLog->Log("SAVED entity name %s classname %s classid=%d id=%d", pEnt->GetName(), pClass->strClassName.c_str(), (int)pClass->ClassId, pEnt->GetId());
 
-		IScriptObject *so = pEnt->GetScriptObject();
+		IScriptObject* so = pEnt->GetScriptObject();
 		ASSERT(so);
 
-		WRITE_COOKIE_NO(stm,77);
+		WRITE_COOKIE_NO(stm, 77);
 
 		stm.AlignWrite();
 
 		_SmartScriptObject props(m_pScriptSystem, true);
-		if(so->GetValue("Properties", props)) props->Dump(&PropertyWriter(props, stm, m_pScriptSystem));
+		if (so->GetValue("Properties", props)) props->Dump(&PropertyWriter(props, stm, m_pScriptSystem));
 		stm.Write((char)TABLE_END);
 
 		_SmartScriptObject propsi(m_pScriptSystem, true);
-		if(so->GetValue("PropertiesInstance", propsi)) propsi->Dump(&PropertyWriter(propsi, stm, m_pScriptSystem));
+		if (so->GetValue("PropertiesInstance", propsi)) propsi->Dump(&PropertyWriter(propsi, stm, m_pScriptSystem));
 		stm.Write((char)TABLE_END);
 
 		_SmartScriptObject events(m_pScriptSystem, true);
-		if(so->GetValue("Events", events)) events->Dump(&PropertyWriter(events, stm, m_pScriptSystem));
+		if (so->GetValue("Events", events)) events->Dump(&PropertyWriter(events, stm, m_pScriptSystem));
 		stm.Write((char)TABLE_END);
 
-		WRITE_COOKIE_NO(stm,78);
+		WRITE_COOKIE_NO(stm, 78);
 
-		WRITE_COOKIE_NO(stm,45);
+		WRITE_COOKIE_NO(stm, 45);
 
-		if(pPlayer)
+		if (pPlayer)
 			stm.Write(pPlayer->m_stats.health);		// int
-		 else
+		else
 			stm.Write((int)0);										// int
 
-		WRITE_COOKIE_NO(stm,46);
+		WRITE_COOKIE_NO(stm, 46);
 
-		pEnt->Save(stm,scriptStream.GetScriptObject());
+		pEnt->Save(stm, scriptStream.GetScriptObject());
 
-		if(pPlayer) 
+		if (pPlayer)
 		{
 			pPlayer->SaveGame(stm);
 			if (pEnt->GetAI())
 				stm.Write(pEnt->GetAI()->GetName());
 		}
-		
+
 	}
 
 	stm.Write((BYTE)CHUNK_PLAYER);
 
-	if(pPlayer->IsMyPlayer()) 
+	if (pPlayer->IsMyPlayer())
 		stm.Write((EntityId)0);		// don't save id for local player - generate it on spawn, to avoid ID's collision
 	else
 		stm.Write(m_pClient->GetPlayerId());
 
 	stm.Write(pPlayer->m_bFirstPerson);
 
-	IEntityCamera *pCam=pPlayerEnt->GetCamera();
+	IEntityCamera* pCam = pPlayerEnt->GetCamera();
 	ASSERT(pCam);
 
-	if(pos && angles)
+	if (pos && angles)
 	{
 		stm.Write(*pos);
-		stm.Write(*angles);        
+		stm.Write(*angles);
 	}
 	else
 	{
@@ -511,15 +511,15 @@ bool CXGame::SaveToStream(CStream &stm, Vec3d *pos, Vec3d *angles,string sFilena
 	// now loop through entities again to save their AI state
 	// it has to be done here because all entities need to be spawned when AI state is recreated
 	pEntities->MoveFirst();
-	while((pEnt=pEntities->Next())!=NULL)
+	while ((pEnt = pEntities->Next()) != NULL)
 	{
-		CPlayer *pPlayer=NULL;
-		CVehicle *pVehicle=NULL;
-		IAIObject *pAIObject = pEnt->GetAI();
-		if(pEnt->GetContainer())
+		CPlayer* pPlayer = NULL;
+		CVehicle* pVehicle = NULL;
+		IAIObject* pAIObject = pEnt->GetAI();
+		if (pEnt->GetContainer())
 		{
-			pEnt->GetContainer()->QueryContainerInterface(CIT_IPLAYER,(void**) &pPlayer);
-			pEnt->GetContainer()->QueryContainerInterface(CIT_IVEHICLE,(void**) &pVehicle);
+			pEnt->GetContainer()->QueryContainerInterface(CIT_IPLAYER, (void**)&pPlayer);
+			pEnt->GetContainer()->QueryContainerInterface(CIT_IVEHICLE, (void**)&pVehicle);
 		}
 
 		if (!pEnt->IsSaveEnabled())
@@ -533,15 +533,15 @@ bool CXGame::SaveToStream(CStream &stm, Vec3d *pos, Vec3d *angles,string sFilena
 			if (!pPlayer->IsAlive())
 				continue;
 
-//			if (pPlayer->IsMyPlayer())
-//				continue;  
+			//			if (pPlayer->IsMyPlayer())
+			//				continue;  
 
-			stm.Write((BYTE)CHUNK_AI);		
+			stm.Write((BYTE)CHUNK_AI);
 
 			// [kirill]
 			// for local player ID will be different - it will be spawn
-			if(pPlayer->IsMyPlayer()) 
-				stm.Write((int)0);			
+			if (pPlayer->IsMyPlayer())
+				stm.Write((int)0);
 			else
 				stm.Write((int)pEnt->GetId());	// for which player is this
 			pPlayer->SaveAIState(stm, scriptStream);
@@ -549,20 +549,20 @@ bool CXGame::SaveToStream(CStream &stm, Vec3d *pos, Vec3d *angles,string sFilena
 
 		if (pVehicle)
 		{
-			stm.Write((BYTE)CHUNK_AI);		
+			stm.Write((BYTE)CHUNK_AI);
 			stm.Write((int)pEnt->GetId());	// for which player is this
 			pVehicle->SaveAIState(stm, scriptStream);
 		}
 
 		if (!pPlayer && !pVehicle)
 		{
-			stm.Write((BYTE)CHUNK_AI);		
+			stm.Write((BYTE)CHUNK_AI);
 			stm.Write((int)pEnt->GetId());	// for which player is this
 			pAIObject->Save(stm);
 
-			IScriptSystem *pScriptSystem = GetSystem()->GetIScriptSystem();
-			HSCRIPTFUNCTION	saveOverallFunction=NULL;
-			if( pEnt->GetScriptObject() && pEnt->GetScriptObject()->GetValue("OnSaveOverall", saveOverallFunction) )
+			IScriptSystem* pScriptSystem = GetSystem()->GetIScriptSystem();
+			HSCRIPTFUNCTION	saveOverallFunction = NULL;
+			if (pEnt->GetScriptObject() && pEnt->GetScriptObject()->GetValue("OnSaveOverall", saveOverallFunction))
 			{
 				pScriptSystem->BeginCall(saveOverallFunction);
 				pScriptSystem->PushFuncParam(pEnt->GetScriptObject());
@@ -570,16 +570,16 @@ bool CXGame::SaveToStream(CStream &stm, Vec3d *pos, Vec3d *angles,string sFilena
 				pScriptSystem->EndCall();
 			}
 		}
-		WRITE_COOKIE_NO(stm,13);
+		WRITE_COOKIE_NO(stm, 13);
 	}
 
 	// serialize any playing cutscenes
-	
-	IMovieSystem *pMovies = m_pSystem->GetIMovieSystem();
+
+	IMovieSystem* pMovies = m_pSystem->GetIMovieSystem();
 	if (pMovies)
 	{
-		ISequenceIt *pIt = pMovies->GetSequences();
-		IAnimSequence *pSeq = pIt->first();
+		ISequenceIt* pIt = pMovies->GetSequences();
+		IAnimSequence* pSeq = pIt->first();
 		while (pSeq)
 		{
 
@@ -594,90 +594,90 @@ bool CXGame::SaveToStream(CStream &stm, Vec3d *pos, Vec3d *angles,string sFilena
 		pIt->Release();
 	}
 
-  // save required hud/clientstuff data
-  stm.Write((BYTE)CHUNK_HUD);
-  if (m_pUIHud)
-  {    
-    GetScriptSystem()->BeginCall("Hud", "OnSave");
-    GetScriptSystem()->PushFuncParam(m_pUIHud->GetScript());
-    GetScriptSystem()->PushFuncParam(scriptStream.GetScriptObject());
-    GetScriptSystem()->EndCall();
-  }
-  
-  _SmartScriptObject pClientStuff(m_pScriptSystem,true);  
-  if(m_pScriptSystem->GetGlobalValue("ClientStuff",pClientStuff))	
-  {
-    m_pScriptSystem->BeginCall("ClientStuff","OnSave");
-    m_pScriptSystem->PushFuncParam(pClientStuff);
-    m_pScriptSystem->PushFuncParam(scriptStream.GetScriptObject());
-    m_pScriptSystem->EndCall();
-  }
+	// save required hud/clientstuff data
+	stm.Write((BYTE)CHUNK_HUD);
+	if (m_pUIHud)
+	{
+		GetScriptSystem()->BeginCall("Hud", "OnSave");
+		GetScriptSystem()->PushFuncParam(m_pUIHud->GetScript());
+		GetScriptSystem()->PushFuncParam(scriptStream.GetScriptObject());
+		GetScriptSystem()->EndCall();
+	}
+
+	_SmartScriptObject pClientStuff(m_pScriptSystem, true);
+	if (m_pScriptSystem->GetGlobalValue("ClientStuff", pClientStuff))
+	{
+		m_pScriptSystem->BeginCall("ClientStuff", "OnSave");
+		m_pScriptSystem->PushFuncParam(pClientStuff);
+		m_pScriptSystem->PushFuncParam(scriptStream.GetScriptObject());
+		m_pScriptSystem->EndCall();
+	}
 
 	return true;
 };
 
 //////////////////////////////////////////////////////////////////////////
-void CXGame::Save(string sFileName, Vec3d *pos, Vec3d *angles,bool bFirstCheckpoint )
+void CXGame::Save(string sFileName, Vec3d* pos, Vec3d* angles, bool bFirstCheckpoint)
 {
-	FUNCTION_PROFILER( GetISystem(), PROFILE_GAME );
+	FUNCTION_PROFILER(GetISystem(), PROFILE_GAME);
 
 	//// Saving in Multiplayer only possible on server.
 	//if (!GetServer() && IsMultiplayer())
 	//	return;
 
   // No saving in mp
-  if(IsMultiplayer())
-  {
-    m_pLog->Log("Cannot save multiplayer game");
-  	return;    
-  }
+	if (IsMultiplayer())
+	{
+		m_pLog->Log("Cannot save multiplayer game");
+		return;
+	}
 
 	m_sLastSavedCheckpointFilename = "";
 
-	if (m_bIsLoadingLevelFromFile) 
+	if (m_bIsLoadingLevelFromFile)
 	{
 		m_pLog->Log("\001 [ERROR!!!] CANNOT SAVE WHILE LOADING!!!");
 		return;
 	}
 
-	if(!m_pClient)
+	if (!m_pClient)
 	{
 		m_pLog->Log("Cannot save game with no map loaded");
 		return;
 	};
 
-  // ?
-	if(!m_pServer)
+	// ?
+	if (!m_pServer)
 	{
 		m_pLog->Log("Cannot save multiplayer game");
 		return;
 	};
 
 	CDefaultStreamAllocator sa;
-	CStream stm(3000, &sa);   
+	CStream stm(3000, &sa);
 
-	if (SaveToStream(stm, pos, angles,sFileName))
+	if (SaveToStream(stm, pos, angles, sFileName))
 	{
 		m_strLastSaveGame = sFileName;
 		assert(g_playerprofile);
 
 		if (g_playerprofile->GetString() && strlen(g_playerprofile->GetString()))
 		{
-			string tmp( g_playerprofile->GetString() );
+			string tmp(g_playerprofile->GetString());
 			SaveName(sFileName, tmp);
 		}
 		else
 		{
-			string tmp( "default" );
+			string tmp("default");
 			SaveName(sFileName, tmp);
 		}
-		
+
 		m_pLog->LogToConsole("Level saved in %d bytes(%s)", BITS2BYTES(stm.GetSize()), sFileName.c_str());
 
 		// replace / by \ because MakeSureDirectoryPathExists does not work with unix paths
 		size_t pos = 1;
 #ifndef __linux
-		for(;;)
+		for (;;)
 		{
 			pos = sFileName.find_first_of("/", pos);
 
@@ -687,12 +687,12 @@ void CXGame::Save(string sFileName, Vec3d *pos, Vec3d *angles,bool bFirstCheckpo
 			}
 
 			sFileName.replace(pos, 1, "\\", 1);
-			pos+=1;
+			pos += 1;
 		}
 
 		if (MakeSureDirectoryPathExists(sFileName.c_str()))
 #else
-		ICryPak *pPak=m_pSystem->GetIPak();
+		ICryPak* pPak = m_pSystem->GetIPak();
 		char dname[256];
 		strcpy(dname, sFileName.c_str());
 		char* last_slash = strrchr(dname, '/');
@@ -703,7 +703,7 @@ void CXGame::Save(string sFileName, Vec3d *pos, Vec3d *angles,bool bFirstCheckpo
 		if (pPak->MakeDir(dname))
 #endif
 		{
-			if(!m_pSystem->WriteCompressedFile((char *)sFileName.c_str(), stm.GetPtr(), stm.GetSize()))
+			if (!m_pSystem->WriteCompressedFile((char*)sFileName.c_str(), stm.GetPtr(), stm.GetSize()))
 			{
 				m_pLog->Log("cannot write savegame to file %s", sFileName.c_str());
 
@@ -728,27 +728,27 @@ void CXGame::Save(string sFileName, Vec3d *pos, Vec3d *angles,bool bFirstCheckpo
 }
 
 //////////////////////////////////////////////////////////////////////////
-bool CXGame::LoadFromStream(CStream &stm, bool isdemo)
+bool CXGame::LoadFromStream(CStream& stm, bool isdemo)
 {
-	
-	if(IsMultiplayer())
+
+	if (IsMultiplayer())
 	{
 		assert(0);
 		m_pLog->LogError("ERROR: LoadFromStream IsMultiplayer=true");				// severe problem - stream is different for MP
-    return false;
+		return false;
 	}
 
 	m_bIsLoadingLevelFromFile = true;
 	// [anton] make sure physical world has the most recent IsMultiplayer flag before loading
-	m_pSystem->GetIPhysicalWorld()->GetPhysVars()->bMultiplayer = IsMultiplayer() ? 1:0;
-		
+	m_pSystem->GetIPhysicalWorld()->GetPhysVars()->bMultiplayer = IsMultiplayer() ? 1 : 0;
+
 	CScriptObjectStream scriptStream;
 	scriptStream.Create(m_pScriptSystem);
 	scriptStream.Attach(&stm);
 
 	string sMagic;
 	stm.Read(sMagic);
-	if(strcmp(sMagic.c_str(), SAVEMAGIC))
+	if (strcmp(sMagic.c_str(), SAVEMAGIC))
 	{
 		m_pLog->LogToConsole("ERROR: this is not a valid savegame file");
 		m_bIsLoadingLevelFromFile = false;
@@ -758,31 +758,31 @@ bool CXGame::LoadFromStream(CStream &stm, bool isdemo)
 	int nVersion;
 	stm.Read(nVersion);
 
-  stm.SetStreamVersion(nVersion);
+	stm.SetStreamVersion(nVersion);
 
 	switch (nVersion)
 	{
-		case SAVEVERSION:
-			return LoadFromStream_RELEASEVERSION(stm,isdemo,scriptStream);
-		case PATCH1_SAVEVERSION:
-			return LoadFromStream_PATCH_1(stm,isdemo,scriptStream);
+	case SAVEVERSION:
+		return LoadFromStream_RELEASEVERSION(stm, isdemo, scriptStream);
+	case PATCH1_SAVEVERSION:
+		return LoadFromStream_PATCH_1(stm, isdemo, scriptStream);
 		// add more here as more patches are released
 	}
 
-	if(nVersion!=PATCH1_SAVEVERSION && nVersion!=PATCH2_SAVEVERSION)
+	if (nVersion != PATCH1_SAVEVERSION && nVersion != PATCH2_SAVEVERSION)
 	{
 		m_pLog->LogToConsole("ERROR: savegame file from different version of the game");
 		m_bIsLoadingLevelFromFile = false;
 		return false;
 	};
 
-	IBitStream *pBitStream=GetIBitStream();
+	IBitStream* pBitStream = GetIBitStream();
 
-	IEntitySystem *pEntitySystem=m_pSystem->GetIEntitySystem();
-	IEntityClassRegistry *pECR=GetClassRegistry();
-	IEntity *pEnt=NULL;
+	IEntitySystem* pEntitySystem = m_pSystem->GetIEntitySystem();
+	IEntityClassRegistry* pECR = GetClassRegistry();
+	IEntity* pEnt = NULL;
 	CEntityDesc ed;
-	int			localPlayerId=0;
+	int			localPlayerId = 0;
 
 	string sLevelName;
 	string sMissionName;
@@ -807,92 +807,92 @@ bool CXGame::LoadFromStream(CStream &stm, bool isdemo)
 	int nEnt;
 	stm.Read(nEnt);
 
-	bool bS=IsServer();
-	bool bC=IsClient();
+	bool bS = IsServer();
+	bool bC = IsClient();
 
 	assert(!IsMultiplayer());
 
-	VERIFY_COOKIE_NO(stm,0x22);
+	VERIFY_COOKIE_NO(stm, 0x22);
 
 	// Load EAX preset
 	int nPreset;
-	CS_REVERB_PROPERTIES tProps;
-	m_pSystem->GetISoundSystem()->GetCurrentEaxEnvironment(nPreset,tProps);
+	FSOUND_REVERB_PROPERTIES tProps;
+	m_pSystem->GetISoundSystem()->GetCurrentEaxEnvironment(nPreset, tProps);
 	stm.Read(nPreset);
-	if (nPreset==-1)
-	{	
-		stm.ReadBits((BYTE *)&tProps,sizeof(CS_REVERB_PROPERTIES));
+	if (nPreset == -1)
+	{
+		stm.ReadBits((BYTE*)&tProps, sizeof(FSOUND_REVERB_PROPERTIES));
 	}
 
-	VERIFY_COOKIE_NO(stm,0x12);
+	VERIFY_COOKIE_NO(stm, 0x12);
 
 	// load saved cvars
-	string varname,val;
-	int nCount,i;
+	string varname, val;
+	int nCount, i;
 	stm.Read(nCount);
-	IConsole *pCon=m_pSystem->GetIConsole();	
-	for (i=0;i<nCount;i++)
+	IConsole* pCon = m_pSystem->GetIConsole();
+	for (i = 0; i < nCount; i++)
 	{
-		if(stm.Read(varname))
-		if(stm.Read(val))
-		{
-			ICVar *pCVar=m_pSystem->GetIConsole()->GetCVar(varname.c_str());
-			if (!pCVar)
+		if (stm.Read(varname))
+			if (stm.Read(val))
 			{
-				m_pSystem->GetILog()->Log("\001 WARNING, CVar %s(%s) was saved but is not present",varname.c_str(),val.c_str());
+				ICVar* pCVar = m_pSystem->GetIConsole()->GetCVar(varname.c_str());
+				if (!pCVar)
+				{
+					m_pSystem->GetILog()->Log("\001 WARNING, CVar %s(%s) was saved but is not present", varname.c_str(), val.c_str());
+				}
+				else
+					pCVar->Set(val.c_str());
 			}
 			else
-				pCVar->Set(val.c_str());
-		}
-		else
-		{
-			m_pSystem->GetILog()->LogError("CXGame::LoadFromStream %d/%d critical error",i,nCount);
-			stm.Debug();
-			m_bIsLoadingLevelFromFile = false;
-			return false;
-		}
+			{
+				m_pSystem->GetILog()->LogError("CXGame::LoadFromStream %d/%d critical error", i, nCount);
+				stm.Debug();
+				m_bIsLoadingLevelFromFile = false;
+				return false;
+			}
 	} //i
 
-  if(m_pSystem->GetISoundSystem())
-    m_pSystem->GetISoundSystem()->Silence();
+	if (m_pSystem->GetISoundSystem())
+		m_pSystem->GetISoundSystem()->Silence();
 
-	m_pSystem->GetISoundSystem()->Mute(true); 
+	m_pSystem->GetISoundSystem()->Mute(true);
 
 	bool			bLoadBar = false;
-	IConsole *pConsole = m_pSystem->GetIConsole();
+	IConsole* pConsole = m_pSystem->GetIConsole();
 
 	assert(pConsole);
 
-	if(stricmp(g_LevelName->GetString(),sLevelName.c_str()) != 0 || !m_pServer || (stricmp(m_pServer->m_GameContext.strMission.c_str(),sMissionName.c_str()) != 0))
+	if (stricmp(g_LevelName->GetString(), sLevelName.c_str()) != 0 || !m_pServer || (stricmp(m_pServer->m_GameContext.strMission.c_str(), sMissionName.c_str()) != 0))
 	{
 
 		m_pLog->LogToConsole("Loading %s / %s", sLevelName.c_str(), sMissionName.c_str());
 
-		if (m_pServer) 
+		if (m_pServer)
 			ShutdownServer();
-		
+
 		if (isdemo)
-		{			
+		{
 			//StartupClient();
 			m_pClient->DemoConnect();
-			LoadLevelCS( false,sLevelName.c_str(), sMissionName.c_str(), false);
+			LoadLevelCS(false, sLevelName.c_str(), sMissionName.c_str(), false);
 		}
 		else
-		{		
+		{
 			GetISystem()->GetIInput()->EnableEventPosting(false);
 			//m_pSystem->GetIInput()->GetIKeyboard()->ClearKeyState();
-			LoadLevelCS(false,sLevelName.c_str(), sMissionName.c_str(), false);
+			LoadLevelCS(false, sLevelName.c_str(), sMissionName.c_str(), false);
 			//m_pClient->Connect("localhost");				
 			//m_pSystem->GetIInput()->GetIKeyboard()->ClearKeyState();
-			GetISystem()->GetIInput()->EnableEventPosting(true);			
+			GetISystem()->GetIInput()->EnableEventPosting(true);
 		};
 	}
 	else
 	{
 		bLoadBar = 1;
-		
+
 		string sLoadingScreenTexture = m_currentLevelFolder + "/loadscreen_" + m_currentLevel + ".dds";
-		pConsole->SetLoadingImage( sLoadingScreenTexture.c_str() );
+		pConsole->SetLoadingImage(sLoadingScreenTexture.c_str());
 
 		pConsole->Clear();
 		pConsole->ResetProgressBar(nEnt + 3);
@@ -901,59 +901,59 @@ bool CXGame::LoadFromStream(CStream &stm, bool isdemo)
 		DeleteMessage("Switch"); // no switching during loading
 
 		// local player has to exit all areas before starting to delete entities
-		IEntity *pIMyPlayer = GetMyPlayer();
-		if( pIMyPlayer )
+		IEntity* pIMyPlayer = GetMyPlayer();
+		if (pIMyPlayer)
 		{
-			IEntityContainer *pIContainer = pIMyPlayer->GetContainer();
+			IEntityContainer* pIContainer = pIMyPlayer->GetContainer();
 			if (pIContainer)
 			{
-				CPlayer *pPlayer = NULL;
+				CPlayer* pPlayer = NULL;
 				if (pIContainer->QueryContainerInterface(CIT_IPLAYER, (void**)&pPlayer))
-					m_XAreaMgr.ExitAllAreas( pPlayer->m_AreaUser );
+					m_XAreaMgr.ExitAllAreas(pPlayer->m_AreaUser);
 			}
 		}
 
 		m_pSystem->GetI3DEngine()->RestoreTerrainFromDisk();
-		m_pSystem->GetIMovieSystem()->Reset( false );
+		m_pSystem->GetIMovieSystem()->Reset(false);
 		m_pLog->Log("REMOVING entities:");
-		IEntityItPtr pEntities=pEntitySystem->GetEntityIterator();
+		IEntityItPtr pEntities = pEntitySystem->GetEntityIterator();
 
 		pEntities->MoveFirst();
-		IEntity *pEnt=NULL;
-		while((pEnt=pEntities->Next())!=NULL)
+		IEntity* pEnt = NULL;
+		while ((pEnt = pEntities->Next()) != NULL)
 		{
-			EntityClass *pClass=pECR->GetByClass(pEnt->GetEntityClassName());
+			EntityClass* pClass = pECR->GetByClass(pEnt->GetEntityClassName());
 			if (m_pWeaponSystemEx->IsProjectileClass(pClass->ClassId)) continue;
 #ifdef _DEBUG
-			m_pLog->Log("REMOVING entity classname %s classid=%02d id=%3id ",pClass->strClassName.c_str(),(int)pClass->ClassId,pEnt->GetId());
+			m_pLog->Log("REMOVING entity classname %s classid=%02d id=%3id ", pClass->strClassName.c_str(), (int)pClass->ClassId, pEnt->GetId());
 #endif
-			pEntitySystem->RemoveEntity(pEnt->GetId());		
+			pEntitySystem->RemoveEntity(pEnt->GetId());
 		}
 
 		pConsole->TickProgressBar();	// advance progress
 
 		pEntitySystem->Update();
-		
+
 		SoftReset();
 		m_pEntitySystem->Reset();
 
 		pConsole->TickProgressBar();	// advance progress
 	}
-	
-	// PETAR lets delete all guys since they will be spawned anyway
-	m_pSystem->GetAISystem()->Reset();	
 
-	IAISystem *pAISystem = m_pSystem->GetAISystem();
+	// PETAR lets delete all guys since they will be spawned anyway
+	m_pSystem->GetAISystem()->Reset();
+
+	IAISystem* pAISystem = m_pSystem->GetAISystem();
 
 	// adaptive balancing
 	if (pAISystem)
 	{
 		if (cv_game_Difficulty->GetIVal())
 		{
-			float fAcc,fAgg,fHealth;
+			float fAcc, fAgg, fHealth;
 			if (pAISystem->GetAutoBalanceInterface())
 			{
-				pAISystem->GetAutoBalanceInterface()->GetMultipliers(fAcc,fAgg,fHealth);
+				pAISystem->GetAutoBalanceInterface()->GetMultipliers(fAcc, fAgg, fHealth);
 				cv_game_Aggression->Set(fAgg);
 				cv_game_Accuracy->Set(fAcc);
 				cv_game_Health->Set(fHealth);
@@ -971,415 +971,415 @@ bool CXGame::LoadFromStream(CStream &stm, bool isdemo)
 	// apparently these 20 updates are needed to setup everything,
 	// from hud to netwrok stream etc. do not remove it
 	// or savegame won't load
-	for (int i = 0; i<20; i++) 
+	for (int i = 0; i < 20; i++)
 		Update();
 
 	if (bLoadBar)
 	{
 		pConsole->TickProgressBar();	// advance progress
 	}
-	
-	VERIFY_COOKIE_NO(stm,0x3c);
+
+	VERIFY_COOKIE_NO(stm, 0x3c);
 
 	// loading reserver IDs for dynacally created saved entities
-	int dynReservedIDsNumber=0;
+	int dynReservedIDsNumber = 0;
 	stm.Read(dynReservedIDsNumber);
-	for( ; dynReservedIDsNumber>0; --dynReservedIDsNumber )
+	for (; dynReservedIDsNumber > 0; --dynReservedIDsNumber)
 	{
-	int reservedId;
+		int reservedId;
 		stm.Read((int&)reservedId);
-		pEntitySystem->MarkId( reservedId );
+		pEntitySystem->MarkId(reservedId);
 	}
 
-  // only load this in case of older save
-  if(nVersion<PATCH2_SAVEVERSION)
-  {
-    VERIFY_COOKIE_NO(stm,0x73);
+	// only load this in case of older save
+	if (nVersion < PATCH2_SAVEVERSION)
+	{
+		VERIFY_COOKIE_NO(stm, 0x73);
 
-    // load hud objectives
-    if (m_pUIHud)
-    {
-      GetScriptSystem()->BeginCall("Hud", "OnLoadOld");
-      GetScriptSystem()->PushFuncParam(m_pUIHud->GetScript());
-      GetScriptSystem()->PushFuncParam(scriptStream.GetScriptObject());
-      GetScriptSystem()->EndCall();
-    }
-  }
+		// load hud objectives
+		if (m_pUIHud)
+		{
+			GetScriptSystem()->BeginCall("Hud", "OnLoadOld");
+			GetScriptSystem()->PushFuncParam(m_pUIHud->GetScript());
+			GetScriptSystem()->PushFuncParam(scriptStream.GetScriptObject());
+			GetScriptSystem()->EndCall();
+		}
+	}
 
-	VERIFY_COOKIE_NO(stm,61);
+	VERIFY_COOKIE_NO(stm, 61);
 
 	while (!stm.EOS())
 	{
-		BYTE cChunk=0;
+		BYTE cChunk = 0;
 		stm.Read(cChunk);
-		switch(cChunk)
+		switch (cChunk)
 		{
 		case CHUNK_ENTITY:
+		{
+			EntityId id;
+			EntityClassId ClassID;
+
+			pBitStream->ReadBitStream(stm, ClassID, eEntityClassId);
+
+			EntityClass* pClass = pECR->GetByClassId(ClassID);
+			ASSERT(pClass);
+			ed.className = pClass->strClassName;
+			ed.ClassId = pClass->ClassId;
+
+			stm.Read(id);
+			ed.id = id;
+
+			// [kirill] if this entity was dynamicly created - ID was marked when dynReservedIDsNumber loaded, to prevent 
+			// from being taked by some other dynamically spawned non-saved entity. So now we load it and let's free the id
+			if (pEntitySystem->IsDynamicEntityId(id))
+				pEntitySystem->ClearId(id);
+
+			// position and angles are read later - 
+			// with pEnt->Load(
+			//////////////////////////////////////////////////////////////////////////				
+			//[marco] position and angles must be read before spawining the entity - must
+			// be consistent with load level!								
+			Vec3d vPos, vAngles;
+			if (!stm.Read(vPos))
+				CryError("Error while reading position for entity id=%d", id);
+			if (!stm.Read(vAngles))
+				CryError("Error while reading position for entity id=%d", id);
+			ed.pos = vPos;
+			ed.angles = vAngles;
+
+			//////////////////////////////////////////////////////////////////////////				
+			// renderer stuff
+
+			float fScale;
+			stm.Read(fScale);
+
+			int dwRendFlags;
+			stm.Read(dwRendFlags);
+			unsigned char uViewDistRatio;
+			stm.Read(uViewDistRatio);
+			unsigned char uLodRatio;
+			stm.Read(uLodRatio);
+
+			string MatName;
+			stm.Read(MatName);
+
+			bool bHidden = false;
+			stm.Read(bHidden);
+
+			//////////////////////////////////////////////////////////////////////////
+			VERIFY_COOKIE_NO(stm, 76);
+
+			string name;
+			stm.Read(name);
+
+			if (m_pLog->GetVerbosityLevel() >= 5)
+				m_pLog->Log("LOADED entity classname %s classid=%02d id=%3id ", pClass->strClassName.c_str(), (int)pClass->ClassId, id);
+
+			//////////////////////////////////////////////////////////////////////////
+
+			VERIFY_COOKIE_NO(stm, 77);
+
+			stm.AlignRead();
+
+			_SmartScriptObject props(m_pScriptSystem);
+			LoadProperties(props, stm, m_pScriptSystem, "_root");
+
+			_SmartScriptObject propsi(m_pScriptSystem);
+			LoadProperties(propsi, stm, m_pScriptSystem, "_root");
+
+			_SmartScriptObject events(m_pScriptSystem);
+			LoadProperties(events, stm, m_pScriptSystem, "_root");
+
+			VERIFY_COOKIE_NO(stm, 78);
+
+			//m_pScriptSystem->BeginCall("dump");
+			//m_pScriptSystem->PushFuncParam(props);
+			//m_pScriptSystem->EndCall();
+
+			//ASSERT(!pEntitySystem->GetEntity(id));    // entity already exists in map
+			//IEntity* dbgEnt=pEntitySystem->GetEntity(id);
+
+			if (pEntitySystem->GetEntity(id))
 			{
-				EntityId id;
-				EntityClassId ClassID;	
-				
-				pBitStream->ReadBitStream(stm,ClassID,eEntityClassId);
-
-				EntityClass *pClass=pECR->GetByClassId(ClassID);
-				ASSERT(pClass);
-				ed.className=pClass->strClassName;
-				ed.ClassId=pClass->ClassId;
-				
-				stm.Read(id);
-				ed.id=id;
-				
-				// [kirill] if this entity was dynamicly created - ID was marked when dynReservedIDsNumber loaded, to prevent 
-				// from being taked by some other dynamically spawned non-saved entity. So now we load it and let's free the id
-				if (pEntitySystem->IsDynamicEntityId( id ))
-					pEntitySystem->ClearId(id);
-
-				// position and angles are read later - 
-				// with pEnt->Load(
-				//////////////////////////////////////////////////////////////////////////				
-				//[marco] position and angles must be read before spawining the entity - must
-				// be consistent with load level!								
-				Vec3d vPos,vAngles;
-				if (!stm.Read(vPos))
-					CryError("Error while reading position for entity id=%d",id);
-				if (!stm.Read(vAngles))
-					CryError("Error while reading position for entity id=%d",id);
-				ed.pos=vPos;
-				ed.angles=vAngles;				
-
-				//////////////////////////////////////////////////////////////////////////				
-				// renderer stuff
-
-				float fScale;
-				stm.Read(fScale);
-
-				int dwRendFlags;
-				stm.Read(dwRendFlags);
-				unsigned char uViewDistRatio;
-				stm.Read(uViewDistRatio);
-				unsigned char uLodRatio;
-				stm.Read(uLodRatio);
-
-				string MatName;
-				stm.Read(MatName);
-				
-				bool bHidden=false;
-				stm.Read(bHidden);
-
-				//////////////////////////////////////////////////////////////////////////
-				VERIFY_COOKIE_NO(stm,76);
-
-				string name;
-				stm.Read(name);
-
-				if (m_pLog->GetVerbosityLevel()>=5)
-					m_pLog->Log("LOADED entity classname %s classid=%02d id=%3id ",pClass->strClassName.c_str(),(int)pClass->ClassId,id);
-
-				//////////////////////////////////////////////////////////////////////////
-
-				VERIFY_COOKIE_NO(stm,77);
-
-				stm.AlignRead(); 
-
-				_SmartScriptObject props(m_pScriptSystem);
-				LoadProperties(props, stm, m_pScriptSystem, "_root");
-
-				_SmartScriptObject propsi(m_pScriptSystem);
-				LoadProperties(propsi, stm, m_pScriptSystem, "_root");
-
-				_SmartScriptObject events(m_pScriptSystem);
-				LoadProperties(events, stm, m_pScriptSystem, "_root");
-				
-				VERIFY_COOKIE_NO(stm,78);
-
-				//m_pScriptSystem->BeginCall("dump");
-				//m_pScriptSystem->PushFuncParam(props);
-				//m_pScriptSystem->EndCall();
-
-				//ASSERT(!pEntitySystem->GetEntity(id));    // entity already exists in map
-				//IEntity* dbgEnt=pEntitySystem->GetEntity(id);
-
-				if (pEntitySystem->GetEntity(id))
-				{
-					CryError("entity classname %s classid=%d id=%d ALREADY EXISTING IN THE MAP",pClass->strClassName.c_str(),(int)pClass->ClassId,id);
-				}
-
-				ed.pProperties=props;
-				ed.pPropertiesInstance=propsi;
-				ed.name = name;
-				pEnt=pEntitySystem->SpawnEntity(ed);
-				//ASSERT(pEnt);
-				if (!pEnt)
-					CryError("entity classname %s classid=%02d id=%3id CANNOT BE SPAWNED",pClass->strClassName.c_str(),(int)pClass->ClassId,id);
-
-				if(id==0)		// it's a local player
-					localPlayerId = ed.id;
-
-				//////////////////////////////////////////////////////////////////////////
-				// render flags
-				pEnt->SetRndFlags(dwRendFlags);
-				pEnt->SetScale(fScale);
-				pEnt->SetViewDistRatio(uViewDistRatio);
-				pEnt->SetLodRatio(uLodRatio);
-
-				if (!MatName.empty())
-				{
-					IMatInfo *pMtl = GetSystem()->GetI3DEngine()->FindMaterial(MatName.c_str());
-					if (pMtl)					
-						pEnt->SetMaterial(pMtl);					
-				}
-				
-				pEnt->Hide(bHidden);
-
-				//////////////////////////////////////////////////////////////////////////				
-
-				///pEnt->SetName(name.c_str());
-
-				IScriptObject *so = pEnt->GetScriptObject();
-				ASSERT(so);
-
-				//so->SetValue("Properties", props);
-				//so->SetValue("PropertiesInstance", propsi);
-				so->SetValue("Events", events);
-
-				CPlayer *pPlayer=NULL;
-				if(pEnt->GetContainer()) pEnt->GetContainer()->QueryContainerInterface(CIT_IPLAYER,(void**) &pPlayer);
-
-
-				VERIFY_COOKIE_NO(stm,45);
-
-				int health = 0;
-				stm.Read(health);
-
-				VERIFY_COOKIE_NO(stm,46);
-
-				if(pPlayer)
-				{
-					if(health<=0)
-					{                    
-						pEnt->GetCharInterface()->KillCharacter(0);
-#ifdef _DEBUG
-						m_pLog->Log("DEAD entity classname %s classid=%02d id=%3id ",pClass->strClassName.c_str(),(int)pClass->ClassId,pEnt->GetId());
-#endif
-						//pEntitySystem->RemoveEntity(pEnt->GetId());		
-					};
-				};
-
-				bool b = pEnt->Load(stm,scriptStream.GetScriptObject());
-				if (!b)
-					CryError("entity classname %s classid=%02d id=%3id CANNOT BE LOADED",pClass->strClassName.c_str(),(int)pClass->ClassId,id);
-				//ASSERT(b);
-
-				// [anton] proper state serialization was absent BasicEntity.lua,
-				// we'll have to at least make sure that activated rigid bodies that were initially not active 
-				// don't load velocity from active state
-				IPhysicalEntity *pPhys = pEnt->GetPhysics();
-				pe_status_dynamics sd;
-				if (nVersion<=PATCH1_SAVEVERSION && pPhys && pPhys->GetType()==PE_RIGID && pPhys->GetStatus(&sd) && sd.mass==0)
-				{
-					pe_action_set_velocity asv;
-					asv.v.Set(0,0,0); asv.w.Set(0,0,0);
-					pPhys->Action(&asv);
-				}
-
-				// update position if ended up under terrain and outdoors
-
-				if(pPlayer)
-				{
-
-					if(id==0)
-					{
-						I3DEngine *pEngine = m_pSystem->GetI3DEngine();
-						if (pEngine && pAISystem)
-						{
-
-							Vec3d pos = pEnt->GetPos();
-							IVisArea *pArea;
-							int nBuildingid;
-							if (!pAISystem->CheckInside(pos,nBuildingid,pArea))
-							{
-								float newz = pEngine->GetTerrainElevation(pos.x,pos.y);
-								if (newz>pos.z)
-									pos.z=newz+0.1f;
-								pEnt->SetPos(pos);
-							}
-						}
-
-					}
-
-//[kirill] the OnReset called from OnInit which is called when entity is spawned
-//					if(health>0)
-//					{
-//						// call on reset for the spawned entity
-//						m_pScriptSystem->BeginCall(pEnt->GetEntityClassName(),"OnReset");
-//						m_pScriptSystem->PushFuncParam(pEnt->GetScriptObject());
-//						m_pScriptSystem->EndCall();
-//					};
-
-					pPlayer->LoadGame(stm);
-					if (pEnt->GetAI())
-					{
-						char sName[255];
-						stm.Read(sName,255);
-						pEnt->GetAI()->SetName(sName);
-					}
-				};
-				break;
+				CryError("entity classname %s classid=%d id=%d ALREADY EXISTING IN THE MAP", pClass->strClassName.c_str(), (int)pClass->ClassId, id);
 			}
+
+			ed.pProperties = props;
+			ed.pPropertiesInstance = propsi;
+			ed.name = name;
+			pEnt = pEntitySystem->SpawnEntity(ed);
+			//ASSERT(pEnt);
+			if (!pEnt)
+				CryError("entity classname %s classid=%02d id=%3id CANNOT BE SPAWNED", pClass->strClassName.c_str(), (int)pClass->ClassId, id);
+
+			if (id == 0)		// it's a local player
+				localPlayerId = ed.id;
+
+			//////////////////////////////////////////////////////////////////////////
+			// render flags
+			pEnt->SetRndFlags(dwRendFlags);
+			pEnt->SetScale(fScale);
+			pEnt->SetViewDistRatio(uViewDistRatio);
+			pEnt->SetLodRatio(uLodRatio);
+
+			if (!MatName.empty())
+			{
+				IMatInfo* pMtl = GetSystem()->GetI3DEngine()->FindMaterial(MatName.c_str());
+				if (pMtl)
+					pEnt->SetMaterial(pMtl);
+			}
+
+			pEnt->Hide(bHidden);
+
+			//////////////////////////////////////////////////////////////////////////				
+
+			///pEnt->SetName(name.c_str());
+
+			IScriptObject* so = pEnt->GetScriptObject();
+			ASSERT(so);
+
+			//so->SetValue("Properties", props);
+			//so->SetValue("PropertiesInstance", propsi);
+			so->SetValue("Events", events);
+
+			CPlayer* pPlayer = NULL;
+			if (pEnt->GetContainer()) pEnt->GetContainer()->QueryContainerInterface(CIT_IPLAYER, (void**)&pPlayer);
+
+
+			VERIFY_COOKIE_NO(stm, 45);
+
+			int health = 0;
+			stm.Read(health);
+
+			VERIFY_COOKIE_NO(stm, 46);
+
+			if (pPlayer)
+			{
+				if (health <= 0)
+				{
+					pEnt->GetCharInterface()->KillCharacter(0);
+#ifdef _DEBUG
+					m_pLog->Log("DEAD entity classname %s classid=%02d id=%3id ", pClass->strClassName.c_str(), (int)pClass->ClassId, pEnt->GetId());
+#endif
+					//pEntitySystem->RemoveEntity(pEnt->GetId());		
+				};
+			};
+
+			bool b = pEnt->Load(stm, scriptStream.GetScriptObject());
+			if (!b)
+				CryError("entity classname %s classid=%02d id=%3id CANNOT BE LOADED", pClass->strClassName.c_str(), (int)pClass->ClassId, id);
+			//ASSERT(b);
+
+			// [anton] proper state serialization was absent BasicEntity.lua,
+			// we'll have to at least make sure that activated rigid bodies that were initially not active 
+			// don't load velocity from active state
+			IPhysicalEntity* pPhys = pEnt->GetPhysics();
+			pe_status_dynamics sd;
+			if (nVersion <= PATCH1_SAVEVERSION && pPhys && pPhys->GetType() == PE_RIGID && pPhys->GetStatus(&sd) && sd.mass == 0)
+			{
+				pe_action_set_velocity asv;
+				asv.v.Set(0, 0, 0); asv.w.Set(0, 0, 0);
+				pPhys->Action(&asv);
+			}
+
+			// update position if ended up under terrain and outdoors
+
+			if (pPlayer)
+			{
+
+				if (id == 0)
+				{
+					I3DEngine* pEngine = m_pSystem->GetI3DEngine();
+					if (pEngine && pAISystem)
+					{
+
+						Vec3d pos = pEnt->GetPos();
+						IVisArea* pArea;
+						int nBuildingid;
+						if (!pAISystem->CheckInside(pos, nBuildingid, pArea))
+						{
+							float newz = pEngine->GetTerrainElevation(pos.x, pos.y);
+							if (newz > pos.z)
+								pos.z = newz + 0.1f;
+							pEnt->SetPos(pos);
+						}
+					}
+
+				}
+
+				//[kirill] the OnReset called from OnInit which is called when entity is spawned
+				//					if(health>0)
+				//					{
+				//						// call on reset for the spawned entity
+				//						m_pScriptSystem->BeginCall(pEnt->GetEntityClassName(),"OnReset");
+				//						m_pScriptSystem->PushFuncParam(pEnt->GetScriptObject());
+				//						m_pScriptSystem->EndCall();
+				//					};
+
+				pPlayer->LoadGame(stm);
+				if (pEnt->GetAI())
+				{
+					char sName[255];
+					stm.Read(sName, 255);
+					pEnt->GetAI()->SetName(sName);
+				}
+			};
+			break;
+		}
 
 		case CHUNK_PLAYER:
+		{
+			EntityId wPlayerID = 0;
+			bool b = stm.Read(wPlayerID);
+			ASSERT(b);
+
+			if (wPlayerID == 0)				// we write 0 for localplayer on save
+				wPlayerID = localPlayerId;
+			m_pClient->SetPlayerID(wPlayerID);
+
+			pEnt = pEntitySystem->GetEntity(wPlayerID);
+			//				if( wPlayerID==0 )
+			//					pEnt=m_pClient->m_pISystem->GetLocalPlayer();
+			if (!pEnt)
+				CryError("player id=%3id NOT FOUND", wPlayerID);
+			//ASSERT(pEnt);
+
+			CPlayer* pPlayer = NULL;
+			if (pEnt->GetContainer()) pEnt->GetContainer()->QueryContainerInterface(CIT_IPLAYER, (void**)&pPlayer);
+			ASSERT(pPlayer);
+			stm.Read(pPlayer->m_bFirstPerson);
+			SetViewMode(!pPlayer->m_bFirstPerson); // hack, but works
+
+			/* [kirill] moved this to int CScriptObjectGame::TouchCheckPoint(IFunctionHandler *pH)
+				needed to fix quickLoad restoreHealth problem
+			// do we want to overwrite health with half of maximum
+			if(p_restorehalfhealth->GetIVal())
 			{
-				EntityId wPlayerID = 0;
-				bool b = stm.Read(wPlayerID);
-				ASSERT(b);
+				pPlayer->m_stats.health = 255;	// [marco] danger! this should be set by
+												// gamerules but it gets overwritten by the save checkpoint
 
-				if(wPlayerID==0)				// we write 0 for localplayer on save
-					wPlayerID = localPlayerId;
-				m_pClient->SetPlayerID(wPlayerID);
-
-				pEnt=pEntitySystem->GetEntity(wPlayerID);
-//				if( wPlayerID==0 )
-//					pEnt=m_pClient->m_pISystem->GetLocalPlayer();
-				if (!pEnt)
-					CryError("player id=%3id NOT FOUND",wPlayerID);
-				//ASSERT(pEnt);
-
-				CPlayer *pPlayer=NULL;
-				if(pEnt->GetContainer()) pEnt->GetContainer()->QueryContainerInterface(CIT_IPLAYER,(void**) &pPlayer);
-				ASSERT(pPlayer);
-				stm.Read(pPlayer->m_bFirstPerson);
-				SetViewMode(!pPlayer->m_bFirstPerson); // hack, but works
-
-				/* [kirill] moved this to int CScriptObjectGame::TouchCheckPoint(IFunctionHandler *pH)
-					needed to fix quickLoad restoreHealth problem 
-				// do we want to overwrite health with half of maximum
-				if(p_restorehalfhealth->GetIVal())
-				{
-					pPlayer->m_stats.health = 255;	// [marco] danger! this should be set by
-													// gamerules but it gets overwritten by the save checkpoint
-
-					//m_pSystem->GetILog()->Log("player health=%d",pPlayer->m_stats.health);
-					// [kirill]
-					// this was requested by UBI. It's expected here that current health value is the maximum 
-					//Everytime Jack dies he should respawn with half of his hit points instead of full health. 
-					//Same mechanics for Val, she should get half her hit points everytime Jack respawns.
-					pPlayer->m_stats.health/=2;
-				}
-
-				if (pPlayer->m_stats.health<128)
-					pPlayer->m_stats.health = 128;
-				*/
-				IEntityCamera *pCam=pEnt->GetCamera();
-				ASSERT(pCam);
-
-				Vec3d vPos;
-				stm.Read(vPos);
-				pCam->SetPos(vPos);
-				//pEnt->SetPos(vPos);
-
-				m_pLog->Log("PLAYER %d (%f %f %f) ", wPlayerID, vPos.x, vPos.y, vPos.z);
-
-				Vec3d vAngles;
-				stm.Read(vAngles);
-				pCam->SetAngles(vAngles);
-				//[kirill]
-				//why do we do it here? entity angles are set when entity is loaded
-				//pEnt->SetAngles(vAngles);
-				m_pClient->m_PlayerProcessingCmd.SetDeltaAngles(vAngles);
-
-				GetSystem()->SetViewCamera( pCam->GetCamera() );
-
-				GetSystem()->GetISoundSystem()->SetListener(pCam->GetCamera(),Vec3(0,0,0));
-
-				if(!isdemo)
-				{
-					CXServer::XSlotMap::iterator itor;
-					ASSERT(m_pServer->GetSlotsMap().size()==1);
-					itor = m_pServer->GetSlotsMap().begin();
-
-					CXServerSlot *pSSlot=itor->second;							// serverslot associated with the player
-					
-					pSSlot->SetPlayerID(wPlayerID);
-					pSSlot->SetGameState(CGS_INPROGRESS);						// start game imediatly
-				};
-				break;
+				//m_pSystem->GetILog()->Log("player health=%d",pPlayer->m_stats.health);
+				// [kirill]
+				// this was requested by UBI. It's expected here that current health value is the maximum
+				//Everytime Jack dies he should respawn with half of his hit points instead of full health.
+				//Same mechanics for Val, she should get half her hit points everytime Jack respawns.
+				pPlayer->m_stats.health/=2;
 			}
+
+			if (pPlayer->m_stats.health<128)
+				pPlayer->m_stats.health = 128;
+			*/
+			IEntityCamera* pCam = pEnt->GetCamera();
+			ASSERT(pCam);
+
+			Vec3d vPos;
+			stm.Read(vPos);
+			pCam->SetPos(vPos);
+			//pEnt->SetPos(vPos);
+
+			m_pLog->Log("PLAYER %d (%f %f %f) ", wPlayerID, vPos.x, vPos.y, vPos.z);
+
+			Vec3d vAngles;
+			stm.Read(vAngles);
+			pCam->SetAngles(vAngles);
+			//[kirill]
+			//why do we do it here? entity angles are set when entity is loaded
+			//pEnt->SetAngles(vAngles);
+			m_pClient->m_PlayerProcessingCmd.SetDeltaAngles(vAngles);
+
+			GetSystem()->SetViewCamera(pCam->GetCamera());
+
+			GetSystem()->GetISoundSystem()->SetListener(pCam->GetCamera(), Vec3(0, 0, 0));
+
+			if (!isdemo)
+			{
+				CXServer::XSlotMap::iterator itor;
+				ASSERT(m_pServer->GetSlotsMap().size() == 1);
+				itor = m_pServer->GetSlotsMap().begin();
+
+				CXServerSlot* pSSlot = itor->second;							// serverslot associated with the player
+
+				pSSlot->SetPlayerID(wPlayerID);
+				pSSlot->SetGameState(CGS_INPROGRESS);						// start game imediatly
+			};
+			break;
+		}
 
 		case CHUNK_AI:
-			{				
-				// find for which entity this chunk is
-				int nID;
-				stm.Read(nID);
+		{
+			// find for which entity this chunk is
+			int nID;
+			stm.Read(nID);
 
-				IEntity *pEntity = m_pEntitySystem->GetEntity(nID);
-				if ( nID == 0 )	// it's local player
-					pEntity = m_pClient->m_pISystem->GetLocalPlayer();
-				if (pEntity)
-				{
-					m_pLog->Log("Now loading AICHUNK for entity %s", pEntity->GetName());
-					CPlayer *pPlayer=0;
-					CVehicle *pVehicle=0;
-					if (pEntity->GetContainer())
-					{
-						if (pEntity->GetContainer()->QueryContainerInterface(CIT_IPLAYER,(void**)&pPlayer))
-							pPlayer->LoadAIState(stm, scriptStream);
-						if (pEntity->GetContainer()->QueryContainerInterface(CIT_IVEHICLE,(void**)&pVehicle))
-							pVehicle->LoadAIState(stm, scriptStream);
-					}
-					else if( pEntity->GetAI() )
-					{
-						pEntity->GetAI()->Load(stm);
-						IScriptSystem *pScriptSystem = GetSystem()->GetIScriptSystem();
-						HSCRIPTFUNCTION	loadOverallFunction=NULL;
-						if( pEntity->GetScriptObject() && pEntity->GetScriptObject()->GetValue("OnLoadOverall", loadOverallFunction) )
-						{
-							pScriptSystem->BeginCall(loadOverallFunction);
-							pScriptSystem->PushFuncParam(pEntity->GetScriptObject());
-							pScriptSystem->PushFuncParam(scriptStream.GetScriptObject());
-							pScriptSystem->EndCall();
-						}
-					}
-				}
-
-				VERIFY_COOKIE_NO(stm,13);
-			}
-			break;
-		case CHUNK_INGAME_SEQUENCE:
+			IEntity* pEntity = m_pEntitySystem->GetEntity(nID);
+			if (nID == 0)	// it's local player
+				pEntity = m_pClient->m_pISystem->GetLocalPlayer();
+			if (pEntity)
 			{
-				IMovieSystem *pMovies = m_pSystem->GetIMovieSystem();
-				char szName[1024];
-				stm.Read(szName,1024);
-				float fTime;
-				stm.Read(fTime);
-				if (pMovies)
+				m_pLog->Log("Now loading AICHUNK for entity %s", pEntity->GetName());
+				CPlayer* pPlayer = 0;
+				CVehicle* pVehicle = 0;
+				if (pEntity->GetContainer())
 				{
-					IAnimSequence *pSeq = pMovies->FindSequence(szName);
-					pMovies->PlaySequence(pSeq,false);
-					pMovies->SetPlayingTime(pSeq,fTime);
+					if (pEntity->GetContainer()->QueryContainerInterface(CIT_IPLAYER, (void**)&pPlayer))
+						pPlayer->LoadAIState(stm, scriptStream);
+					if (pEntity->GetContainer()->QueryContainerInterface(CIT_IVEHICLE, (void**)&pVehicle))
+						pVehicle->LoadAIState(stm, scriptStream);
+				}
+				else if (pEntity->GetAI())
+				{
+					pEntity->GetAI()->Load(stm);
+					IScriptSystem* pScriptSystem = GetSystem()->GetIScriptSystem();
+					HSCRIPTFUNCTION	loadOverallFunction = NULL;
+					if (pEntity->GetScriptObject() && pEntity->GetScriptObject()->GetValue("OnLoadOverall", loadOverallFunction))
+					{
+						pScriptSystem->BeginCall(loadOverallFunction);
+						pScriptSystem->PushFuncParam(pEntity->GetScriptObject());
+						pScriptSystem->PushFuncParam(scriptStream.GetScriptObject());
+						pScriptSystem->EndCall();
+					}
 				}
 			}
-			break;
-    case CHUNK_HUD:
-      {
-        // load hud/clientstuff viewlayers data
-        if (m_pUIHud)
-        {
-          GetScriptSystem()->BeginCall("Hud", "OnLoad");
-          GetScriptSystem()->PushFuncParam(m_pUIHud->GetScript());
-          GetScriptSystem()->PushFuncParam(scriptStream.GetScriptObject());
-          GetScriptSystem()->EndCall();
-        }
 
-        _SmartScriptObject pClientStuff(m_pScriptSystem,true);  
-        if(m_pScriptSystem->GetGlobalValue("ClientStuff",pClientStuff))	
-        {
-          m_pScriptSystem->BeginCall("ClientStuff","OnLoad");
-          m_pScriptSystem->PushFuncParam(pClientStuff);
-          m_pScriptSystem->PushFuncParam(scriptStream.GetScriptObject());
-          m_pScriptSystem->EndCall();
-        }
-      }
-      break;  
+			VERIFY_COOKIE_NO(stm, 13);
+		}
+		break;
+		case CHUNK_INGAME_SEQUENCE:
+		{
+			IMovieSystem* pMovies = m_pSystem->GetIMovieSystem();
+			char szName[1024];
+			stm.Read(szName, 1024);
+			float fTime;
+			stm.Read(fTime);
+			if (pMovies)
+			{
+				IAnimSequence* pSeq = pMovies->FindSequence(szName);
+				pMovies->PlaySequence(pSeq, false);
+				pMovies->SetPlayingTime(pSeq, fTime);
+			}
+		}
+		break;
+		case CHUNK_HUD:
+		{
+			// load hud/clientstuff viewlayers data
+			if (m_pUIHud)
+			{
+				GetScriptSystem()->BeginCall("Hud", "OnLoad");
+				GetScriptSystem()->PushFuncParam(m_pUIHud->GetScript());
+				GetScriptSystem()->PushFuncParam(scriptStream.GetScriptObject());
+				GetScriptSystem()->EndCall();
+			}
+
+			_SmartScriptObject pClientStuff(m_pScriptSystem, true);
+			if (m_pScriptSystem->GetGlobalValue("ClientStuff", pClientStuff))
+			{
+				m_pScriptSystem->BeginCall("ClientStuff", "OnLoad");
+				m_pScriptSystem->PushFuncParam(pClientStuff);
+				m_pScriptSystem->PushFuncParam(scriptStream.GetScriptObject());
+				m_pScriptSystem->EndCall();
+			}
+		}
+		break;
 
 		default:
 			ASSERT(0);
@@ -1393,36 +1393,36 @@ bool CXGame::LoadFromStream(CStream &stm, bool isdemo)
 
 	{	// [Anton] - allow entities to restore pointer links between them during post load step 
 		// [kirill]	restore all the bindings
-		IEntityItPtr pEntities=pEntitySystem->GetEntityIterator();
+		IEntityItPtr pEntities = pEntitySystem->GetEntityIterator();
 
 		pEntities->MoveFirst();
-		IEntity *pEnt=NULL;
-		while((pEnt=pEntities->Next())!=NULL)
-			pEnt->PostLoad();		
+		IEntity* pEnt = NULL;
+		while ((pEnt = pEntities->Next()) != NULL)
+			pEnt->PostLoad();
 	}
 
 	pEntitySystem->Update();
 	m_pSystem->GetIMovieSystem()->PlayOnLoadSequences();	// yes, we reset this twice, the first time to remove all entity-pointers and now to restore them
 	m_pClient->Reset();
-	
+
 	m_bIsLoadingLevelFromFile = false;
-	m_pSystem->GetISoundSystem()->Mute(false); 
+	m_pSystem->GetISoundSystem()->Mute(false);
 
-	m_bMapLoadedFromCheckpoint=true;
+	m_bMapLoadedFromCheckpoint = true;
 
-	
-	m_pEntitySystem->PauseTimers(false,true);	
+
+	m_pEntitySystem->PauseTimers(false, true);
 
 	//	m_pLog->Log("HIDE CONSOLE");
-	m_pRenderer->ClearColorBuffer(Vec3(0,0,0));
+	m_pRenderer->ClearColorBuffer(Vec3(0, 0, 0));
 	m_pSystem->GetIConsole()->ResetProgressBar(0);
 	m_pSystem->GetIConsole()->ShowConsole(false);
-	m_pSystem->GetIConsole()->SetScrollMax(600/2);
+	m_pSystem->GetIConsole()->SetScrollMax(600 / 2);
 
-	if (nPreset!=-1)
-		m_pSystem->GetISoundSystem()->SetEaxListenerEnvironment(nPreset,NULL);
+	if (nPreset != -1)
+		m_pSystem->GetISoundSystem()->SetEaxListenerEnvironment(nPreset, NULL);
 	else
-		m_pSystem->GetISoundSystem()->SetEaxListenerEnvironment(nPreset,&tProps);
+		m_pSystem->GetISoundSystem()->SetEaxListenerEnvironment(nPreset, &tProps);
 
 	GotoGame(1);
 	m_nDEBUG_TIMING = 0;
@@ -1436,29 +1436,29 @@ bool CXGame::Load(string sFileName)
 	m_pSystem->VTuneResume();
 
 	assert(g_playerprofile);
-	
-	string tmp( g_playerprofile->GetString() );
+
+	string tmp(g_playerprofile->GetString());
 	SaveName(sFileName, tmp);
 
 	CDefaultStreamAllocator sa;
-	CStream stm(300, &sa); 
+	CStream stm(300, &sa);
 
-	int bitslen=m_pSystem->GetCompressedFileSize((char *)sFileName.c_str());
-	if(bitslen==0) 
+	int bitslen = m_pSystem->GetCompressedFileSize((char*)sFileName.c_str());
+	if (bitslen == 0)
 	{
 		return false;
 	}
 
-	IInput *pInput=GetSystem()->GetIInput();
-	if(pInput)
+	IInput* pInput = GetSystem()->GetIInput();
+	if (pInput)
 		pInput->SetMouseExclusive(false);
 
 	stm.Resize(bitslen);
-	int bitsread = m_pSystem->ReadCompressedFile((char *)sFileName.c_str(), stm.GetPtr(), stm.GetAllocatedSize());
-	if(!bitsread)
+	int bitsread = m_pSystem->ReadCompressedFile((char*)sFileName.c_str(), stm.GetPtr(), stm.GetAllocatedSize());
+	if (!bitsread)
 	{
 		m_pLog->Log("No such savegame: %s", sFileName.c_str());
-		if(pInput)
+		if (pInput)
 			pInput->SetMouseExclusive(true);
 
 		return false;
@@ -1490,10 +1490,10 @@ bool CXGame::Load(string sFileName)
 	//////////////////////////////////////////////////////////////////////////
 
 
-	if(ok)
+	if (ok)
 		m_strLastSaveGame = sFileName;
 
-	if(pInput)
+	if (pInput)
 		pInput->SetMouseExclusive(true);
 
 	m_pSystem->VTunePause();
@@ -1505,7 +1505,7 @@ bool CXGame::Load(string sFileName)
 		_SmartScriptObject pMissionScript(m_pScriptSystem);
 		m_pScriptSystem->GetGlobalValue("Mission", pMissionScript);
 
-		if (((IScriptObject *)pMissionScript) != 0)
+		if (((IScriptObject*)pMissionScript) != 0)
 		{
 			HSCRIPTFUNCTION pfnOnCheckpointLoaded = 0;
 
@@ -1529,25 +1529,25 @@ bool CXGame::Load(string sFileName)
 //////////////////////////////////////////////////////////////////////////
 void CXGame::LoadLatest()
 {
-	if(!m_strLastSaveGame.empty())
+	if (!m_strLastSaveGame.empty())
 	{
 		Load(m_strLastSaveGame);
 		m_pServer->m_pISystem->BindChildren();
 		//m_pSystem->GetIInput()->GetIKeyboard()->ClearKeyState();
 	}
-}; 
+};
 
 //////////////////////////////////////////////////////////////////////////
 class CCVarSaveDump : public ICVarDumpSink
 {
 private:
-	FILE *m_pFile;
+	FILE* m_pFile;
 public:
-	CCVarSaveDump(FILE *pFile)
+	CCVarSaveDump(FILE* pFile)
 	{
-		m_pFile=pFile;
+		m_pFile = pFile;
 	}
-	virtual void OnElementFound(ICVar *pCVar)
+	virtual void OnElementFound(ICVar* pCVar)
 	{
 		if (pCVar && (pCVar->GetFlags() & VF_DUMPTODISK))
 		{
@@ -1556,7 +1556,7 @@ public:
 
 			// replace \ with \\ 
 			pos = 1;
-			for(;;)
+			for (;;)
 			{
 				pos = szValue.find_first_of("\\", pos);
 
@@ -1566,12 +1566,12 @@ public:
 				}
 
 				szValue.replace(pos, 1, "\\\\", 2);
-				pos+=2;
+				pos += 2;
 			}
 
 			// replace " with \" 
 			pos = 1;
-			for(;;)
+			for (;;)
 			{
 				pos = szValue.find_first_of("\"", pos);
 
@@ -1581,7 +1581,7 @@ public:
 				}
 
 				szValue.replace(pos, 1, "\\\"", 2);
-				pos+=2;
+				pos += 2;
 			}
 
 			string szLine = pCVar->GetName();
@@ -1598,25 +1598,25 @@ public:
 class CActionMapDumpSink : public IActionMapDumpSink
 {
 private:
-	CXGame *m_pGame;
-	FILE *m_pFile;
+	CXGame* m_pGame;
+	FILE* m_pFile;
 public:
-	CActionMapDumpSink(CXGame *pGame, FILE *pFile)
+	CActionMapDumpSink(CXGame* pGame, FILE* pFile)
 	{
-		m_pGame=pGame;
-		m_pFile=pFile;
+		m_pGame = pGame;
+		m_pFile = pFile;
 		fputs("Input:ResetAllBindings();\r\n", m_pFile);
 	}
-	virtual void OnElementFound(const char *pszActionMapName, IActionMap *pActionMap)
+	virtual void OnElementFound(const char* pszActionMapName, IActionMap* pActionMap)
 	{
 		char pszKey[256];
 		char pszMod[256];
-		ActionsEnumMap &ActionsMap=m_pGame->GetActionsEnumMap();
-		ActionsEnumMapItor It=ActionsMap.begin();
-		while (It!=ActionsMap.end())
+		ActionsEnumMap& ActionsMap = m_pGame->GetActionsEnumMap();
+		ActionsEnumMapItor It = ActionsMap.begin();
+		while (It != ActionsMap.end())
 		{
-			ActionInfo &Info=It->second;
-			for (int i=0;i<MAX_BINDS_PER_ACTION;i++)
+			ActionInfo& Info = It->second;
+			for (int i = 0; i < MAX_BINDS_PER_ACTION; i++)
 			{
 				pActionMap->GetBinding(Info.nId, i, pszKey, pszMod);
 
@@ -1631,7 +1631,7 @@ public:
 						strcpy(pszKey, "\\\"");
 					}
 
-					char szLine[1024] = {0};
+					char szLine[1024] = { 0 };
 
 					sprintf(szLine, "Input:BindAction(\"%s\", \"%s\", \"%s\", %d);\r\n", It->first.c_str(), pszKey, pszActionMapName, i);
 					fputs(szLine, m_pFile);
@@ -1643,28 +1643,28 @@ public:
 };
 
 //////////////////////////////////////////////////////////////////////////
-void CXGame::SaveConfiguration( const char *pszSystemCfg,const char *pszGameCfg,const char *sProfileName)
+void CXGame::SaveConfiguration(const char* pszSystemCfg, const char* pszGameCfg, const char* sProfileName)
 {
-	if(m_pSystem->IsQuitting())
+	if (m_pSystem->IsQuitting())
 	{
 		// shutdown the client if there is one (SERVERSYNC vars get restored and SaveConfiguration() can save the right config)
 		ShutdownClient();
 	}
 	else
 	{
-		 if(IsClient() && !IsServer())		// only a client
-			 assert(0);			// shouldn't be - saving config while connected to a client means you save the server synced variables of the server
+		if (IsClient() && !IsServer())		// only a client
+			assert(0);			// shouldn't be - saving config while connected to a client means you save the server synced variables of the server
 	}
 
 	string sSystemCfg = pszSystemCfg;
 	string sGameCfg = pszGameCfg;
 	if (sProfileName)
-	{	
-		sSystemCfg=string("Profiles/Player/")+sProfileName+"_"+sSystemCfg;
-		sGameCfg=string("Profiles/Player/")+sProfileName+"_"+sGameCfg;		
+	{
+		sSystemCfg = string("Profiles/Player/") + sProfileName + "_" + sSystemCfg;
+		sGameCfg = string("Profiles/Player/") + sProfileName + "_" + sGameCfg;
 	}
 
-	FILE *pFile=fxopen(sSystemCfg.c_str(), "wb");
+	FILE* pFile = fxopen(sSystemCfg.c_str(), "wb");
 	if (pFile)
 	{
 		fputs("-- [System-Configuration]\r\n", pFile);
@@ -1672,12 +1672,12 @@ void CXGame::SaveConfiguration( const char *pszSystemCfg,const char *pszGameCfg,
 		CCVarSaveDump SaveDump(pFile);
 		m_pSystem->GetIConsole()->DumpCVars(&SaveDump);
 		//m_pConsole->DumpCVars(&SaveDump);
-		fclose(pFile); 
+		fclose(pFile);
 	}
 
 	if (m_pIActionMapManager)
 	{
-		pFile=fxopen(sGameCfg.c_str(), "wb");
+		pFile = fxopen(sGameCfg.c_str(), "wb");
 		if (pFile)
 		{
 			fputs("-- [Game-Configuration]\r\n", pFile);
@@ -1686,98 +1686,98 @@ void CXGame::SaveConfiguration( const char *pszSystemCfg,const char *pszGameCfg,
 			m_pIActionMapManager->GetActionMaps(&SaveActionMaps);
 			char sValue[32];
 			sprintf(sValue, "%4.4f", m_pSystem->GetIInput()->GetIMouse()->GetSensitvity());
-			fputs(string(string("Input:SetMouseSensitivity(")+string(sValue)+string(");\r\n")).c_str(), pFile);
+			fputs(string(string("Input:SetMouseSensitivity(") + string(sValue) + string(");\r\n")).c_str(), pFile);
 			m_pIActionMapManager->GetInvertedMouse() ? strcpy(sValue, "1") : strcpy(sValue, "nil");
-			fputs(string(string("Input:SetInvertedMouse(")+string(sValue)+string(");\r\n")).c_str(), pFile);
+			fputs(string(string("Input:SetInvertedMouse(") + string(sValue) + string(");\r\n")).c_str(), pFile);
 			//Input:BindCommandToKey("#System:ShowDebugger();", "f8", 1);
 			//fputs("Input:BindCommandToKey(\"#System:ShowDebugger();\", \"f8\", 1);\r\n" ,pFile);
 			//Input:BindCommandToKey("\\SkipCutScene","F7",1);			
-			fputs("Input:BindCommandToKey(\"\\\\SkipCutScene\",\"F7\",1);\r\n",pFile);
-			fputs("Input:BindCommandToKey(\"\\\\SkipCutScene\",\"spacebar\",1);\r\n",pFile);
-			fclose(pFile); 
+			fputs("Input:BindCommandToKey(\"\\\\SkipCutScene\",\"F7\",1);\r\n", pFile);
+			fputs("Input:BindCommandToKey(\"\\\\SkipCutScene\",\"spacebar\",1);\r\n", pFile);
+			fclose(pFile);
 		}
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CXGame::LoadConfiguration(const string &sSystemCfg,const string &sGameCfg)
-{			
+void CXGame::LoadConfiguration(const string& sSystemCfg, const string& sGameCfg)
+{
 	m_pSystem->LoadConfiguration(sSystemCfg);
 
-	FILE *pFile=fxopen(sGameCfg.c_str(), "rb");
+	FILE* pFile = fxopen(sGameCfg.c_str(), "rb");
 	if (!pFile)
 	{
 		// if for some reason the game config is not found 
 		// (first time, new installation etc.)
 		char szBuffer[512];
-		strcpy(szBuffer,"Input:BindCommandToKey(\"\\\\SkipCutScene\",\"F7\",1);");
-		m_pSystem->GetIScriptSystem()->ExecuteBuffer(szBuffer,strlen(szBuffer));
-		strcpy(szBuffer,"Input:BindCommandToKey(\"\\\\SkipCutScene\",\"spacebar\",1);");
-		m_pSystem->GetIScriptSystem()->ExecuteBuffer(szBuffer,strlen(szBuffer));
+		strcpy(szBuffer, "Input:BindCommandToKey(\"\\\\SkipCutScene\",\"F7\",1);");
+		m_pSystem->GetIScriptSystem()->ExecuteBuffer(szBuffer, strlen(szBuffer));
+		strcpy(szBuffer, "Input:BindCommandToKey(\"\\\\SkipCutScene\",\"spacebar\",1);");
+		m_pSystem->GetIScriptSystem()->ExecuteBuffer(szBuffer, strlen(szBuffer));
 		return;
 	}
-	
+
 	char szLine[512];
 	char szBuffer[512];
-	while (fgets(szLine,512,pFile))
-	{			
+	while (fgets(szLine, 512, pFile))
+	{
 		// skip comments
-		if (szLine[0]=='-')
-			continue; 
+		if (szLine[0] == '-')
+			continue;
 
 		// extract command
-		if (!strstr(szLine,";"))
+		if (!strstr(szLine, ";"))
 			continue;
 
 		// check for malicious commands
-		bool bValid=false;
-				
-		if (strstr(szLine,"#"))
+		bool bValid = false;
+
+		if (strstr(szLine, "#"))
 		{
 			// someone is trying to bind script code
 			// to a key - silently skip this line
 			continue;
 		}
 		else
-		if (strstr(szLine,"Input:ResetAllBindings"))
-		{
-			// valid command
-			bValid=true;
-		}
-		else
-		if (strstr(szLine,"Input:BindAction"))
-		{
-			// valid command
-			bValid=true;
-		}
-		else
-		if (strstr(szLine,"Input:SetMouseSensitivity"))
-		{
-			// valid command
-			bValid=true;
-		}					
-		else
-		if (strstr(szLine,"Input:SetInvertedMouse"))
-		{
-			// valid command
-			bValid=true;
-		}					
-		else
-		if (strstr(szLine,"Input:BindCommandToKey"))
-		{
-			//if (strstr(szLine,"SkipCutScene"))											
-			// valid command
-			bValid=true;
-		}					
+			if (strstr(szLine, "Input:ResetAllBindings"))
+			{
+				// valid command
+				bValid = true;
+			}
+			else
+				if (strstr(szLine, "Input:BindAction"))
+				{
+					// valid command
+					bValid = true;
+				}
+				else
+					if (strstr(szLine, "Input:SetMouseSensitivity"))
+					{
+						// valid command
+						bValid = true;
+					}
+					else
+						if (strstr(szLine, "Input:SetInvertedMouse"))
+						{
+							// valid command
+							bValid = true;
+						}
+						else
+							if (strstr(szLine, "Input:BindCommandToKey"))
+							{
+								//if (strstr(szLine,"SkipCutScene"))											
+								// valid command
+								bValid = true;
+							}
 
 		if (bValid)
-		{					
-			strcpy(szBuffer,szLine);
-			m_pSystem->GetIScriptSystem()->ExecuteBuffer(szBuffer,strlen(szBuffer));
+		{
+			strcpy(szBuffer, szLine);
+			m_pSystem->GetIScriptSystem()->ExecuteBuffer(szBuffer, strlen(szBuffer));
 		}
 		else
 		{
-			m_pSystem->GetILog()->Log("Invalid game cfg:%s",szLine);
+			m_pSystem->GetILog()->Log("Invalid game cfg:%s", szLine);
 		}
 	}
 
@@ -1785,21 +1785,21 @@ void CXGame::LoadConfiguration(const string &sSystemCfg,const string &sGameCfg)
 
 	//m_pScriptSystem->ExecuteFile(sGameCfg.c_str(), false);
 	//m_pScriptSystem->ExecuteFile("GameCfgOverride.Lua",false); //?
-} 
+}
 
 
 //////////////////////////////////////////////////////////////////////////
-void CXGame::RemoveConfiguration(string &sSystemCfg,string &sGameCfg,const char *sProfileName)
+void CXGame::RemoveConfiguration(string& sSystemCfg, string& sGameCfg, const char* sProfileName)
 {
 	if (sProfileName)
-	{	
-		sSystemCfg=string("Profiles/Player/")+sProfileName+"_"+sSystemCfg;
-		sGameCfg=string("Profiles/Player/")+sProfileName+"_"+sGameCfg;
+	{
+		sSystemCfg = string("Profiles/Player/") + sProfileName + "_" + sSystemCfg;
+		sGameCfg = string("Profiles/Player/") + sProfileName + "_" + sGameCfg;
 	}
-	
+
 #if defined(LINUX)
-	remove( sSystemCfg.c_str() ); 
-	remove( sGameCfg.c_str() );
+	remove(sSystemCfg.c_str());
+	remove(sGameCfg.c_str());
 #else
 	DeleteFile(sSystemCfg.c_str());
 	DeleteFile(sGameCfg.c_str());
@@ -1817,14 +1817,14 @@ void CXGame::RemoveConfiguration(string &sSystemCfg,string &sGameCfg,const char 
 //[PETAR]
 // DO NOT UPDATE THIS FUNCTION ITS HERE TO ENABLE THAT ALL NEWER VERSIONS
 // SUPPORT LOADING OLDER SAVEFILES
-bool CXGame::LoadFromStream_RELEASEVERSION(CStream &stm, bool isdemo, CScriptObjectStream &scriptStream)
+bool CXGame::LoadFromStream_RELEASEVERSION(CStream& stm, bool isdemo, CScriptObjectStream& scriptStream)
 {
-	IBitStream *pBitStream=GetIBitStream();
-	IEntitySystem *pEntitySystem=m_pSystem->GetIEntitySystem();
-	IEntityClassRegistry *pECR=GetClassRegistry();
-	IEntity *pEnt=NULL;
+	IBitStream* pBitStream = GetIBitStream();
+	IEntitySystem* pEntitySystem = m_pSystem->GetIEntitySystem();
+	IEntityClassRegistry* pECR = GetClassRegistry();
+	IEntity* pEnt = NULL;
 	CEntityDesc ed;
-	int			localPlayerId=0;
+	int			localPlayerId = 0;
 
 	string sLevelName;
 	string sMissionName;
@@ -1849,92 +1849,92 @@ bool CXGame::LoadFromStream_RELEASEVERSION(CStream &stm, bool isdemo, CScriptObj
 	int nEnt;
 	stm.Read(nEnt);
 
-	bool bS=IsServer();
-	bool bC=IsClient();
+	bool bS = IsServer();
+	bool bC = IsClient();
 
 	assert(!IsMultiplayer());
 
-	VERIFY_COOKIE_NO(stm,0x22);
+	VERIFY_COOKIE_NO(stm, 0x22);
 
 	// Load EAX preset
 	int nPreset;
-	CS_REVERB_PROPERTIES tProps;
-	m_pSystem->GetISoundSystem()->GetCurrentEaxEnvironment(nPreset,tProps);
+	FSOUND_REVERB_PROPERTIES tProps;
+	m_pSystem->GetISoundSystem()->GetCurrentEaxEnvironment(nPreset, tProps);
 	stm.Read(nPreset);
-	if (nPreset==-1)
-	{	
-		stm.ReadBits((BYTE *)&tProps,sizeof(CS_REVERB_PROPERTIES));
+	if (nPreset == -1)
+	{
+		stm.ReadBits((BYTE*)&tProps, sizeof(FSOUND_REVERB_PROPERTIES));
 	}
 
-	VERIFY_COOKIE_NO(stm,0x12);
+	VERIFY_COOKIE_NO(stm, 0x12);
 
 	// load saved cvars
-	string varname,val;
-	int nCount,i;
+	string varname, val;
+	int nCount, i;
 	stm.Read(nCount);
-	IConsole *pCon=m_pSystem->GetIConsole();	
-	for (i=0;i<nCount;i++)
+	IConsole* pCon = m_pSystem->GetIConsole();
+	for (i = 0; i < nCount; i++)
 	{
-		if(stm.Read(varname))
-		if(stm.Read(val))
-		{
-			ICVar *pCVar=m_pSystem->GetIConsole()->GetCVar(varname.c_str());
-			if (!pCVar)
+		if (stm.Read(varname))
+			if (stm.Read(val))
 			{
-				m_pSystem->GetILog()->Log("\001 WARNING, CVar %s(%s) was saved but is not present",varname.c_str(),val.c_str());
+				ICVar* pCVar = m_pSystem->GetIConsole()->GetCVar(varname.c_str());
+				if (!pCVar)
+				{
+					m_pSystem->GetILog()->Log("\001 WARNING, CVar %s(%s) was saved but is not present", varname.c_str(), val.c_str());
+				}
+				else
+					pCVar->Set(val.c_str());
 			}
 			else
-				pCVar->Set(val.c_str());
-		}
-		else
-		{
-			m_pSystem->GetILog()->LogError("CXGame::LoadFromStream %d/%d critical error",i,nCount);
-			stm.Debug();
-			m_bIsLoadingLevelFromFile = false;
-			return false;
-		}
+			{
+				m_pSystem->GetILog()->LogError("CXGame::LoadFromStream %d/%d critical error", i, nCount);
+				stm.Debug();
+				m_bIsLoadingLevelFromFile = false;
+				return false;
+			}
 	} //i
 
-  if(m_pSystem->GetISoundSystem())
-    m_pSystem->GetISoundSystem()->Silence();
+	if (m_pSystem->GetISoundSystem())
+		m_pSystem->GetISoundSystem()->Silence();
 
-	m_pSystem->GetISoundSystem()->Mute(true); 
+	m_pSystem->GetISoundSystem()->Mute(true);
 
 	bool			bLoadBar = false;
-	IConsole *pConsole = m_pSystem->GetIConsole();
+	IConsole* pConsole = m_pSystem->GetIConsole();
 
 	assert(pConsole);
 
-	if(stricmp(g_LevelName->GetString(),sLevelName.c_str()) != 0 || !m_pServer || (stricmp(m_pServer->m_GameContext.strMission.c_str(),sMissionName.c_str()) != 0))
+	if (stricmp(g_LevelName->GetString(), sLevelName.c_str()) != 0 || !m_pServer || (stricmp(m_pServer->m_GameContext.strMission.c_str(), sMissionName.c_str()) != 0))
 	{
 
 		m_pLog->LogToConsole("Loading %s / %s", sLevelName.c_str(), sMissionName.c_str());
 
-		if (m_pServer) 
+		if (m_pServer)
 			ShutdownServer();
-		
+
 		if (isdemo)
-		{			
+		{
 			//StartupClient();
 			m_pClient->DemoConnect();
-			LoadLevelCS( false,sLevelName.c_str(), sMissionName.c_str(), false);
+			LoadLevelCS(false, sLevelName.c_str(), sMissionName.c_str(), false);
 		}
 		else
 		{
 			GetISystem()->GetIInput()->EnableEventPosting(false);
 			m_pSystem->GetIInput()->GetIKeyboard()->ClearKeyState();
-			LoadLevelCS(false,sLevelName.c_str(), sMissionName.c_str(), false);
+			LoadLevelCS(false, sLevelName.c_str(), sMissionName.c_str(), false);
 			//m_pClient->Connect("localhost");				
 			m_pSystem->GetIInput()->GetIKeyboard()->ClearKeyState();
-			GetISystem()->GetIInput()->EnableEventPosting(true);			
+			GetISystem()->GetIInput()->EnableEventPosting(true);
 		};
 	}
 	else
 	{
 		bLoadBar = 1;
-		
+
 		string sLoadingScreenTexture = m_currentLevelFolder + "/loadscreen_" + m_currentLevel + ".dds";
-		pConsole->SetLoadingImage( sLoadingScreenTexture.c_str() );
+		pConsole->SetLoadingImage(sLoadingScreenTexture.c_str());
 
 		pConsole->Clear();
 		pConsole->ResetProgressBar(nEnt + 3);
@@ -1943,59 +1943,59 @@ bool CXGame::LoadFromStream_RELEASEVERSION(CStream &stm, bool isdemo, CScriptObj
 		DeleteMessage("Switch"); // no switching during loading
 
 		// local player has to exit all areas before starting to delete entities
-		IEntity *pIMyPlayer = GetMyPlayer();
-		if( pIMyPlayer )
+		IEntity* pIMyPlayer = GetMyPlayer();
+		if (pIMyPlayer)
 		{
-			IEntityContainer *pIContainer = pIMyPlayer->GetContainer();
+			IEntityContainer* pIContainer = pIMyPlayer->GetContainer();
 			if (pIContainer)
 			{
-				CPlayer *pPlayer = NULL;
+				CPlayer* pPlayer = NULL;
 				if (pIContainer->QueryContainerInterface(CIT_IPLAYER, (void**)&pPlayer))
-					m_XAreaMgr.ExitAllAreas( pPlayer->m_AreaUser );
+					m_XAreaMgr.ExitAllAreas(pPlayer->m_AreaUser);
 			}
 		}
 
 		m_pSystem->GetI3DEngine()->RestoreTerrainFromDisk();
-		m_pSystem->GetIMovieSystem()->Reset( false );
+		m_pSystem->GetIMovieSystem()->Reset(false);
 		m_pLog->Log("REMOVING entities:");
-		IEntityItPtr pEntities=pEntitySystem->GetEntityIterator();
+		IEntityItPtr pEntities = pEntitySystem->GetEntityIterator();
 
 		pEntities->MoveFirst();
-		IEntity *pEnt=NULL;
-		while((pEnt=pEntities->Next())!=NULL)
+		IEntity* pEnt = NULL;
+		while ((pEnt = pEntities->Next()) != NULL)
 		{
-			EntityClass *pClass=pECR->GetByClass(pEnt->GetEntityClassName());
+			EntityClass* pClass = pECR->GetByClass(pEnt->GetEntityClassName());
 			if (m_pWeaponSystemEx->IsProjectileClass(pClass->ClassId)) continue;
 #ifdef _DEBUG
-			m_pLog->Log("REMOVING entity classname %s classid=%02d id=%3id ",pClass->strClassName.c_str(),(int)pClass->ClassId,pEnt->GetId());
+			m_pLog->Log("REMOVING entity classname %s classid=%02d id=%3id ", pClass->strClassName.c_str(), (int)pClass->ClassId, pEnt->GetId());
 #endif
-			pEntitySystem->RemoveEntity(pEnt->GetId());		
+			pEntitySystem->RemoveEntity(pEnt->GetId());
 		}
 
 		pConsole->TickProgressBar();	// advance progress
 
 		pEntitySystem->Update();
-		
+
 		SoftReset();
 		m_pEntitySystem->Reset();
 
 		pConsole->TickProgressBar();	// advance progress
 	}
-	
-	// PETAR lets delete all guys since they will be spawned anyway
-	m_pSystem->GetAISystem()->Reset();	
 
-	IAISystem *pAISystem = m_pSystem->GetAISystem();
+	// PETAR lets delete all guys since they will be spawned anyway
+	m_pSystem->GetAISystem()->Reset();
+
+	IAISystem* pAISystem = m_pSystem->GetAISystem();
 
 	// adaptive balancing
 	if (pAISystem)
 	{
 		if (cv_game_Difficulty->GetIVal())
 		{
-			float fAcc,fAgg,fHealth;
+			float fAcc, fAgg, fHealth;
 			if (pAISystem->GetAutoBalanceInterface())
 			{
-				pAISystem->GetAutoBalanceInterface()->GetMultipliers(fAcc,fAgg,fHealth);
+				pAISystem->GetAutoBalanceInterface()->GetMultipliers(fAcc, fAgg, fHealth);
 				cv_game_Aggression->Set(fAgg);
 				cv_game_Accuracy->Set(fAcc);
 				cv_game_Health->Set(fHealth);
@@ -2013,26 +2013,26 @@ bool CXGame::LoadFromStream_RELEASEVERSION(CStream &stm, bool isdemo, CScriptObj
 	// apparently these 20 updates are needed to setup everything,
 	// from hud to netwrok stream etc. do not remove it
 	// or savegame won't load
-	for (int i = 0; i<20; i++) 
+	for (int i = 0; i < 20; i++)
 		Update();
 
 	if (bLoadBar)
 	{
 		pConsole->TickProgressBar();	// advance progress
 	}
-	
-	VERIFY_COOKIE_NO(stm,0x3c);
+
+	VERIFY_COOKIE_NO(stm, 0x3c);
 
 	// loading reserver IDs for dynacally created saved entities
-	int dynReservedIDsNumber=0;
+	int dynReservedIDsNumber = 0;
 	stm.Read(dynReservedIDsNumber);
-	for( ; dynReservedIDsNumber>0; --dynReservedIDsNumber )
+	for (; dynReservedIDsNumber > 0; --dynReservedIDsNumber)
 	{
-	int reservedId;
+		int reservedId;
 		stm.Read((int&)reservedId);
-		pEntitySystem->MarkId( reservedId );
+		pEntitySystem->MarkId(reservedId);
 	}
-	VERIFY_COOKIE_NO(stm,0x73);
+	VERIFY_COOKIE_NO(stm, 0x73);
 
 	// load hud objectives
 	if (m_pUIHud)
@@ -2043,292 +2043,292 @@ bool CXGame::LoadFromStream_RELEASEVERSION(CStream &stm, bool isdemo, CScriptObj
 		GetScriptSystem()->EndCall();
 	}
 
-	VERIFY_COOKIE_NO(stm,61);
+	VERIFY_COOKIE_NO(stm, 61);
 
 	while (!stm.EOS())
 	{
-		BYTE cChunk=0;
+		BYTE cChunk = 0;
 		stm.Read(cChunk);
-    
-		switch(cChunk)
+
+		switch (cChunk)
 		{
 		case CHUNK_ENTITY:
+		{
+			EntityId id;
+			EntityClassId ClassID;
+
+			pBitStream->ReadBitStream(stm, ClassID, eEntityClassId);
+
+			EntityClass* pClass = pECR->GetByClassId(ClassID);
+			ASSERT(pClass);
+			ed.className = pClass->strClassName;
+			ed.ClassId = pClass->ClassId;
+
+			stm.Read(id);
+			ed.id = id;
+
+			// [kirill] if this entity was dynamicly created - ID was marked when dynReservedIDsNumber loaded, to prevent 
+			// from being taked by some other dynamically spawned non-saved entity. So now we load it and let's free the id
+			if (pEntitySystem->IsDynamicEntityId(id))
+				pEntitySystem->ClearId(id);
+
+			// position and angles are read later - 
+			// with pEnt->Load(
+			//////////////////////////////////////////////////////////////////////////				
+			//[marco] position and angles must be read before spawining the entity - must
+			// be consistent with load level!								
+			Vec3d vPos, vAngles;
+			if (!stm.Read(vPos))
+				CryError("Error while reading position for entity id=%d", id);
+			if (!stm.Read(vAngles))
+				CryError("Error while reading position for entity id=%d", id);
+			ed.pos = vPos;
+			ed.angles = vAngles;
+
+			//////////////////////////////////////////////////////////////////////////				
+			// renderer stuff
+
+			float fScale;
+			stm.Read(fScale);
+
+			int dwRendFlags;
+			stm.Read(dwRendFlags);
+			unsigned char uViewDistRatio;
+			stm.Read(uViewDistRatio);
+			unsigned char uLodRatio;
+			stm.Read(uLodRatio);
+
+			string MatName;
+			stm.Read(MatName);
+
+			bool bHidden = false;
+			stm.Read(bHidden);
+
+			//////////////////////////////////////////////////////////////////////////
+			VERIFY_COOKIE_NO(stm, 76);
+
+			string name;
+			stm.Read(name);
+
+			if (m_pLog->GetVerbosityLevel() >= 5)
+				m_pLog->Log("LOADED entity classname %s classid=%02d id=%3id ", pClass->strClassName.c_str(), (int)pClass->ClassId, id);
+
+			//////////////////////////////////////////////////////////////////////////
+
+			VERIFY_COOKIE_NO(stm, 77);
+
+			stm.AlignRead();
+
+			_SmartScriptObject props(m_pScriptSystem);
+			LoadProperties(props, stm, m_pScriptSystem, "_root");
+
+			_SmartScriptObject propsi(m_pScriptSystem);
+			LoadProperties(propsi, stm, m_pScriptSystem, "_root");
+
+			_SmartScriptObject events(m_pScriptSystem);
+			LoadProperties(events, stm, m_pScriptSystem, "_root");
+
+			VERIFY_COOKIE_NO(stm, 78);
+
+			//m_pScriptSystem->BeginCall("dump");
+			//m_pScriptSystem->PushFuncParam(props);
+			//m_pScriptSystem->EndCall();
+
+			//ASSERT(!pEntitySystem->GetEntity(id));    // entity already exists in map
+			//IEntity* dbgEnt=pEntitySystem->GetEntity(id);
+
+			if (pEntitySystem->GetEntity(id))
 			{
-				EntityId id;
-				EntityClassId ClassID;	
-				
-				pBitStream->ReadBitStream(stm,ClassID,eEntityClassId);
-
-				EntityClass *pClass=pECR->GetByClassId(ClassID);
-				ASSERT(pClass);
-				ed.className=pClass->strClassName;
-				ed.ClassId=pClass->ClassId;
-				
-				stm.Read(id);
-				ed.id=id;
-				
-				// [kirill] if this entity was dynamicly created - ID was marked when dynReservedIDsNumber loaded, to prevent 
-				// from being taked by some other dynamically spawned non-saved entity. So now we load it and let's free the id
-				if (pEntitySystem->IsDynamicEntityId( id ))
-					pEntitySystem->ClearId(id);
-
-				// position and angles are read later - 
-				// with pEnt->Load(
-				//////////////////////////////////////////////////////////////////////////				
-				//[marco] position and angles must be read before spawining the entity - must
-				// be consistent with load level!								
-				Vec3d vPos,vAngles;
-				if (!stm.Read(vPos))
-					CryError("Error while reading position for entity id=%d",id);
-				if (!stm.Read(vAngles))
-					CryError("Error while reading position for entity id=%d",id);
-				ed.pos=vPos;
-				ed.angles=vAngles;				
-
-				//////////////////////////////////////////////////////////////////////////				
-				// renderer stuff
-
-				float fScale;
-				stm.Read(fScale);
-
-				int dwRendFlags;
-				stm.Read(dwRendFlags);
-				unsigned char uViewDistRatio;
-				stm.Read(uViewDistRatio);
-				unsigned char uLodRatio;
-				stm.Read(uLodRatio);
-
-				string MatName;
-				stm.Read(MatName);
-				
-				bool bHidden=false;
-				stm.Read(bHidden);
-
-				//////////////////////////////////////////////////////////////////////////
-				VERIFY_COOKIE_NO(stm,76);
-
-				string name;
-				stm.Read(name);
-
-				if (m_pLog->GetVerbosityLevel()>=5)
-					m_pLog->Log("LOADED entity classname %s classid=%02d id=%3id ",pClass->strClassName.c_str(),(int)pClass->ClassId,id);
-
-				//////////////////////////////////////////////////////////////////////////
-
-				VERIFY_COOKIE_NO(stm,77);
-
-				stm.AlignRead(); 
-
-				_SmartScriptObject props(m_pScriptSystem);
-				LoadProperties(props, stm, m_pScriptSystem, "_root");
-
-				_SmartScriptObject propsi(m_pScriptSystem);
-				LoadProperties(propsi, stm, m_pScriptSystem, "_root");
-
-				_SmartScriptObject events(m_pScriptSystem);
-				LoadProperties(events, stm, m_pScriptSystem, "_root");
-				
-				VERIFY_COOKIE_NO(stm,78);
-
-				//m_pScriptSystem->BeginCall("dump");
-				//m_pScriptSystem->PushFuncParam(props);
-				//m_pScriptSystem->EndCall();
-
-				//ASSERT(!pEntitySystem->GetEntity(id));    // entity already exists in map
-				//IEntity* dbgEnt=pEntitySystem->GetEntity(id);
-
-				if (pEntitySystem->GetEntity(id))
-				{
-					CryError("entity classname %s classid=%d id=%d ALREADY EXISTING IN THE MAP",pClass->strClassName.c_str(),(int)pClass->ClassId,id);
-				}
-
-				ed.pProperties=props;
-				ed.pPropertiesInstance=propsi;
-				ed.name = name;
-				pEnt=pEntitySystem->SpawnEntity(ed);
-				//ASSERT(pEnt);
-				if (!pEnt)
-					CryError("entity classname %s classid=%02d id=%3id CANNOT BE SPAWNED",pClass->strClassName.c_str(),(int)pClass->ClassId,id);
-
-				if(id==0)		// it's a local player
-					localPlayerId = ed.id;
-
-				//////////////////////////////////////////////////////////////////////////
-				// render flags
-				pEnt->SetRndFlags(dwRendFlags);
-				pEnt->SetScale(fScale);
-				pEnt->SetViewDistRatio(uViewDistRatio);
-				pEnt->SetLodRatio(uLodRatio);
-
-				if (!MatName.empty())
-				{
-					IMatInfo *pMtl = GetSystem()->GetI3DEngine()->FindMaterial(MatName.c_str());
-					if (pMtl)					
-						pEnt->SetMaterial(pMtl);					
-				}
-				
-				pEnt->Hide(bHidden);
-
-				//////////////////////////////////////////////////////////////////////////				
-
-				///pEnt->SetName(name.c_str());
-
-				IScriptObject *so = pEnt->GetScriptObject();
-				ASSERT(so);
-
-				//so->SetValue("Properties", props);
-				//so->SetValue("PropertiesInstance", propsi);
-				so->SetValue("Events", events);
-
-				CPlayer *pPlayer=NULL;
-				if(pEnt->GetContainer()) pEnt->GetContainer()->QueryContainerInterface(CIT_IPLAYER,(void**) &pPlayer);
-
-
-				VERIFY_COOKIE_NO(stm,45);
-
-				int health = 0;
-				stm.Read(health);
-
-				VERIFY_COOKIE_NO(stm,46);
-
-				if(pPlayer)
-				{
-					if(health<=0)
-					{                    
-						pEnt->GetCharInterface()->KillCharacter(0);
-#ifdef _DEBUG
-						m_pLog->Log("DEAD entity classname %s classid=%02d id=%3id ",pClass->strClassName.c_str(),(int)pClass->ClassId,pEnt->GetId());
-#endif
-						//pEntitySystem->RemoveEntity(pEnt->GetId());		
-					};
-				};
-
-				bool b = pEnt->LoadRELEASE(stm,scriptStream.GetScriptObject());
-				if (!b)
-					CryError("entity classname %s classid=%02d id=%3id CANNOT BE LOADED",pClass->strClassName.c_str(),(int)pClass->ClassId,id);
-				//ASSERT(b);
-
-				// [anton] proper state serialization was absent BasicEntity.lua,
-				// we'll have to at least make sure that activated rigid bodies that were initially not active 
-				// don't load velocity from active state
-				IPhysicalEntity *pPhys = pEnt->GetPhysics();
-				pe_status_dynamics sd;
-				if (pPhys && pPhys->GetType()==PE_RIGID && pPhys->GetStatus(&sd) && sd.mass==0)
-				{
-					pe_action_set_velocity asv;
-					asv.v.Set(0,0,0); asv.w.Set(0,0,0);
-					pPhys->Action(&asv);
-				}
-
-				if(pPlayer)
-				{
-//[kirill] the OnReset called from OnInit which is called when entity is spawned
-//					if(health>0)
-//					{
-//						// call on reset for the spawned entity
-//						m_pScriptSystem->BeginCall(pEnt->GetEntityClassName(),"OnReset");
-//						m_pScriptSystem->PushFuncParam(pEnt->GetScriptObject());
-//						m_pScriptSystem->EndCall();
-//					};
-
-					pPlayer->LoadGame_PATCH_1(stm);
-				};
-				break;
+				CryError("entity classname %s classid=%d id=%d ALREADY EXISTING IN THE MAP", pClass->strClassName.c_str(), (int)pClass->ClassId, id);
 			}
+
+			ed.pProperties = props;
+			ed.pPropertiesInstance = propsi;
+			ed.name = name;
+			pEnt = pEntitySystem->SpawnEntity(ed);
+			//ASSERT(pEnt);
+			if (!pEnt)
+				CryError("entity classname %s classid=%02d id=%3id CANNOT BE SPAWNED", pClass->strClassName.c_str(), (int)pClass->ClassId, id);
+
+			if (id == 0)		// it's a local player
+				localPlayerId = ed.id;
+
+			//////////////////////////////////////////////////////////////////////////
+			// render flags
+			pEnt->SetRndFlags(dwRendFlags);
+			pEnt->SetScale(fScale);
+			pEnt->SetViewDistRatio(uViewDistRatio);
+			pEnt->SetLodRatio(uLodRatio);
+
+			if (!MatName.empty())
+			{
+				IMatInfo* pMtl = GetSystem()->GetI3DEngine()->FindMaterial(MatName.c_str());
+				if (pMtl)
+					pEnt->SetMaterial(pMtl);
+			}
+
+			pEnt->Hide(bHidden);
+
+			//////////////////////////////////////////////////////////////////////////				
+
+			///pEnt->SetName(name.c_str());
+
+			IScriptObject* so = pEnt->GetScriptObject();
+			ASSERT(so);
+
+			//so->SetValue("Properties", props);
+			//so->SetValue("PropertiesInstance", propsi);
+			so->SetValue("Events", events);
+
+			CPlayer* pPlayer = NULL;
+			if (pEnt->GetContainer()) pEnt->GetContainer()->QueryContainerInterface(CIT_IPLAYER, (void**)&pPlayer);
+
+
+			VERIFY_COOKIE_NO(stm, 45);
+
+			int health = 0;
+			stm.Read(health);
+
+			VERIFY_COOKIE_NO(stm, 46);
+
+			if (pPlayer)
+			{
+				if (health <= 0)
+				{
+					pEnt->GetCharInterface()->KillCharacter(0);
+#ifdef _DEBUG
+					m_pLog->Log("DEAD entity classname %s classid=%02d id=%3id ", pClass->strClassName.c_str(), (int)pClass->ClassId, pEnt->GetId());
+#endif
+					//pEntitySystem->RemoveEntity(pEnt->GetId());		
+				};
+			};
+
+			bool b = pEnt->LoadRELEASE(stm, scriptStream.GetScriptObject());
+			if (!b)
+				CryError("entity classname %s classid=%02d id=%3id CANNOT BE LOADED", pClass->strClassName.c_str(), (int)pClass->ClassId, id);
+			//ASSERT(b);
+
+			// [anton] proper state serialization was absent BasicEntity.lua,
+			// we'll have to at least make sure that activated rigid bodies that were initially not active 
+			// don't load velocity from active state
+			IPhysicalEntity* pPhys = pEnt->GetPhysics();
+			pe_status_dynamics sd;
+			if (pPhys && pPhys->GetType() == PE_RIGID && pPhys->GetStatus(&sd) && sd.mass == 0)
+			{
+				pe_action_set_velocity asv;
+				asv.v.Set(0, 0, 0); asv.w.Set(0, 0, 0);
+				pPhys->Action(&asv);
+			}
+
+			if (pPlayer)
+			{
+				//[kirill] the OnReset called from OnInit which is called when entity is spawned
+				//					if(health>0)
+				//					{
+				//						// call on reset for the spawned entity
+				//						m_pScriptSystem->BeginCall(pEnt->GetEntityClassName(),"OnReset");
+				//						m_pScriptSystem->PushFuncParam(pEnt->GetScriptObject());
+				//						m_pScriptSystem->EndCall();
+				//					};
+
+				pPlayer->LoadGame_PATCH_1(stm);
+			};
+			break;
+		}
 
 		case CHUNK_PLAYER:
+		{
+			EntityId wPlayerID = 0;
+			bool b = stm.Read(wPlayerID);
+			ASSERT(b);
+
+			if (wPlayerID == 0)				// we write 0 for localplayer on save
+				wPlayerID = localPlayerId;
+			m_pClient->SetPlayerID(wPlayerID);
+
+			pEnt = pEntitySystem->GetEntity(wPlayerID);
+			//				if( wPlayerID==0 )
+			//					pEnt=m_pClient->m_pISystem->GetLocalPlayer();
+			if (!pEnt)
+				CryError("player id=%3id NOT FOUND", wPlayerID);
+			//ASSERT(pEnt);
+
+			CPlayer* pPlayer = NULL;
+			if (pEnt->GetContainer()) pEnt->GetContainer()->QueryContainerInterface(CIT_IPLAYER, (void**)&pPlayer);
+			ASSERT(pPlayer);
+			stm.Read(pPlayer->m_bFirstPerson);
+			SetViewMode(!pPlayer->m_bFirstPerson); // hack, but works
+			// do we want to overwrite health with half of maximum
+			if (p_restorehalfhealth->GetIVal())
 			{
-				EntityId wPlayerID = 0;
-				bool b = stm.Read(wPlayerID);
-				ASSERT(b);
+				pPlayer->m_stats.health = 255;	// [marco] danger! this should be set by
+				// gamerules but it gets overwritten by the save checkpoint
 
-				if(wPlayerID==0)				// we write 0 for localplayer on save
-					wPlayerID = localPlayerId;
-				m_pClient->SetPlayerID(wPlayerID);
-
-				pEnt=pEntitySystem->GetEntity(wPlayerID);
-//				if( wPlayerID==0 )
-//					pEnt=m_pClient->m_pISystem->GetLocalPlayer();
-				if (!pEnt)
-					CryError("player id=%3id NOT FOUND",wPlayerID);
-				//ASSERT(pEnt);
-
-				CPlayer *pPlayer=NULL;
-				if(pEnt->GetContainer()) pEnt->GetContainer()->QueryContainerInterface(CIT_IPLAYER,(void**) &pPlayer);
-				ASSERT(pPlayer);
-				stm.Read(pPlayer->m_bFirstPerson);
-				SetViewMode(!pPlayer->m_bFirstPerson); // hack, but works
-				// do we want to overwrite health with half of maximum
-				if(p_restorehalfhealth->GetIVal())
-				{
-					pPlayer->m_stats.health = 255;	// [marco] danger! this should be set by
-													// gamerules but it gets overwritten by the save checkpoint
-
-					//m_pSystem->GetILog()->Log("player health=%d",pPlayer->m_stats.health);
-					// [kirill]
-					// this was requested by UBI. It's expected here that current health value is the maximum 
-					//Everytime Jack dies he should respawn with half of his hit points instead of full health. 
-					//Same mechanics for Val, she should get half her hit points everytime Jack respawns.
-					pPlayer->m_stats.health/=2;
-				}
-
-				if (pPlayer->m_stats.health<128)
-					pPlayer->m_stats.health = 128;
-
-				IEntityCamera *pCam=pEnt->GetCamera();
-				ASSERT(pCam);
-
-				Vec3d vPos;
-				stm.Read(vPos);
-				pCam->SetPos(vPos);
-				pEnt->SetPos(vPos);				
-
-				m_pLog->Log("PLAYER %d (%f %f %f) ", wPlayerID, vPos.x, vPos.y, vPos.z);
-
-				Vec3d vAngles;
-				stm.Read(vAngles);
-				pCam->SetAngles(vAngles);
-				pEnt->SetAngles(vAngles);
-				m_pClient->m_PlayerProcessingCmd.SetDeltaAngles(vAngles);
-
-				GetSystem()->SetViewCamera( pCam->GetCamera() );
-
-				GetSystem()->GetISoundSystem()->SetListener(pCam->GetCamera(),Vec3(0,0,0));
-
-				if(!isdemo)
-				{
-					CXServer::XSlotMap::iterator itor;
-					ASSERT(m_pServer->GetSlotsMap().size()==1);
-					itor = m_pServer->GetSlotsMap().begin();
-
-					CXServerSlot *pSSlot=itor->second;							// serverslot associated with the player
-					
-					pSSlot->SetPlayerID(wPlayerID);
-					pSSlot->SetGameState(CGS_INPROGRESS);						// start game imediatly
-				};
-				break;
+//m_pSystem->GetILog()->Log("player health=%d",pPlayer->m_stats.health);
+// [kirill]
+// this was requested by UBI. It's expected here that current health value is the maximum 
+//Everytime Jack dies he should respawn with half of his hit points instead of full health. 
+//Same mechanics for Val, she should get half her hit points everytime Jack respawns.
+				pPlayer->m_stats.health /= 2;
 			}
+
+			if (pPlayer->m_stats.health < 128)
+				pPlayer->m_stats.health = 128;
+
+			IEntityCamera* pCam = pEnt->GetCamera();
+			ASSERT(pCam);
+
+			Vec3d vPos;
+			stm.Read(vPos);
+			pCam->SetPos(vPos);
+			pEnt->SetPos(vPos);
+
+			m_pLog->Log("PLAYER %d (%f %f %f) ", wPlayerID, vPos.x, vPos.y, vPos.z);
+
+			Vec3d vAngles;
+			stm.Read(vAngles);
+			pCam->SetAngles(vAngles);
+			pEnt->SetAngles(vAngles);
+			m_pClient->m_PlayerProcessingCmd.SetDeltaAngles(vAngles);
+
+			GetSystem()->SetViewCamera(pCam->GetCamera());
+
+			GetSystem()->GetISoundSystem()->SetListener(pCam->GetCamera(), Vec3(0, 0, 0));
+
+			if (!isdemo)
+			{
+				CXServer::XSlotMap::iterator itor;
+				ASSERT(m_pServer->GetSlotsMap().size() == 1);
+				itor = m_pServer->GetSlotsMap().begin();
+
+				CXServerSlot* pSSlot = itor->second;							// serverslot associated with the player
+
+				pSSlot->SetPlayerID(wPlayerID);
+				pSSlot->SetGameState(CGS_INPROGRESS);						// start game imediatly
+			};
+			break;
+		}
 
 		case CHUNK_AI:
-			{				
-				// find for which entity this chunk is
-				int nID;
-				stm.Read(nID);
+		{
+			// find for which entity this chunk is
+			int nID;
+			stm.Read(nID);
 
-				IEntity *pEntity = m_pEntitySystem->GetEntity(nID);
-				if (pEntity)
+			IEntity* pEntity = m_pEntitySystem->GetEntity(nID);
+			if (pEntity)
+			{
+				CPlayer* pPlayer = 0;
+				if (pEntity->GetContainer())
 				{
-					CPlayer *pPlayer=0;
-					if (pEntity->GetContainer())
-					{
-						if (pEntity->GetContainer()->QueryContainerInterface(CIT_IPLAYER,(void**)&pPlayer))
-							pPlayer->LoadAIState_RELEASE(stm);
-					}
+					if (pEntity->GetContainer()->QueryContainerInterface(CIT_IPLAYER, (void**)&pPlayer))
+						pPlayer->LoadAIState_RELEASE(stm);
 				}
-
-				VERIFY_COOKIE_NO(stm,13);
 			}
-			break;
+
+			VERIFY_COOKIE_NO(stm, 13);
+		}
+		break;
 		default:
 			ASSERT(0);
 		};
@@ -2341,36 +2341,36 @@ bool CXGame::LoadFromStream_RELEASEVERSION(CStream &stm, bool isdemo, CScriptObj
 
 	{	// [Anton] - allow entities to restore pointer links between them during post load step 
 		// [kirill]	restore all the bindings
-		IEntityItPtr pEntities=pEntitySystem->GetEntityIterator();
+		IEntityItPtr pEntities = pEntitySystem->GetEntityIterator();
 
 		pEntities->MoveFirst();
-		IEntity *pEnt=NULL;
-		while((pEnt=pEntities->Next())!=NULL)
-			pEnt->PostLoad();		
+		IEntity* pEnt = NULL;
+		while ((pEnt = pEntities->Next()) != NULL)
+			pEnt->PostLoad();
 	}
 
 	pEntitySystem->Update();
 	m_pSystem->GetIMovieSystem()->PlayOnLoadSequences();	// yes, we reset this twice, the first time to remove all entity-pointers and now to restore them
 	m_pClient->Reset();
-	
+
 	m_bIsLoadingLevelFromFile = false;
-	m_pSystem->GetISoundSystem()->Mute(false); 
+	m_pSystem->GetISoundSystem()->Mute(false);
 
-	m_bMapLoadedFromCheckpoint=true;
+	m_bMapLoadedFromCheckpoint = true;
 
-	
-	m_pEntitySystem->PauseTimers(false,true);	
+
+	m_pEntitySystem->PauseTimers(false, true);
 
 	//	m_pLog->Log("HIDE CONSOLE");
-	m_pRenderer->ClearColorBuffer(Vec3(0,0,0));
+	m_pRenderer->ClearColorBuffer(Vec3(0, 0, 0));
 	m_pSystem->GetIConsole()->ResetProgressBar(0);
 	m_pSystem->GetIConsole()->ShowConsole(false);
-	m_pSystem->GetIConsole()->SetScrollMax(600/2);
+	m_pSystem->GetIConsole()->SetScrollMax(600 / 2);
 
-	if (nPreset!=-1)
-		m_pSystem->GetISoundSystem()->SetEaxListenerEnvironment(nPreset,NULL);
+	if (nPreset != -1)
+		m_pSystem->GetISoundSystem()->SetEaxListenerEnvironment(nPreset, NULL);
 	else
-		m_pSystem->GetISoundSystem()->SetEaxListenerEnvironment(nPreset,&tProps);
+		m_pSystem->GetISoundSystem()->SetEaxListenerEnvironment(nPreset, &tProps);
 
 	GotoGame(1);
 
@@ -2382,15 +2382,15 @@ bool CXGame::LoadFromStream_RELEASEVERSION(CStream &stm, bool isdemo, CScriptObj
 //[KIRILL]
 // DO NOT UPDATE THIS FUNCTION ITS HERE TO ENABLE THAT ALL NEWER VERSIONS
 // SUPPORT LOADING OLDER SAVEFILES  -  from PATCH 1
-bool CXGame::LoadFromStream_PATCH_1(CStream &stm, bool isdemo, CScriptObjectStream &scriptStream)
+bool CXGame::LoadFromStream_PATCH_1(CStream& stm, bool isdemo, CScriptObjectStream& scriptStream)
 {
-	IBitStream *pBitStream=GetIBitStream();
+	IBitStream* pBitStream = GetIBitStream();
 
-	IEntitySystem *pEntitySystem=m_pSystem->GetIEntitySystem();
-	IEntityClassRegistry *pECR=GetClassRegistry();
-	IEntity *pEnt=NULL;
+	IEntitySystem* pEntitySystem = m_pSystem->GetIEntitySystem();
+	IEntityClassRegistry* pECR = GetClassRegistry();
+	IEntity* pEnt = NULL;
 	CEntityDesc ed;
-	int			localPlayerId=0;
+	int			localPlayerId = 0;
 
 	string sLevelName;
 	string sMissionName;
@@ -2415,84 +2415,84 @@ bool CXGame::LoadFromStream_PATCH_1(CStream &stm, bool isdemo, CScriptObjectStre
 	int nEnt;
 	stm.Read(nEnt);
 
-	bool bS=IsServer();
-	bool bC=IsClient();
+	bool bS = IsServer();
+	bool bC = IsClient();
 
 	assert(!IsMultiplayer());
 
-	VERIFY_COOKIE_NO(stm,0x22);
+	VERIFY_COOKIE_NO(stm, 0x22);
 
 	// Load EAX preset
 	int nPreset;
-	CS_REVERB_PROPERTIES tProps;
-	m_pSystem->GetISoundSystem()->GetCurrentEaxEnvironment(nPreset,tProps);
+	FSOUND_REVERB_PROPERTIES tProps;
+	m_pSystem->GetISoundSystem()->GetCurrentEaxEnvironment(nPreset, tProps);
 	stm.Read(nPreset);
-	if (nPreset==-1)
-	{	
-		stm.ReadBits((BYTE *)&tProps,sizeof(CS_REVERB_PROPERTIES));
+	if (nPreset == -1)
+	{
+		stm.ReadBits((BYTE*)&tProps, sizeof(FSOUND_REVERB_PROPERTIES));
 	}
 
-	VERIFY_COOKIE_NO(stm,0x12);
+	VERIFY_COOKIE_NO(stm, 0x12);
 
 	// load saved cvars
-	string varname,val;
-	int nCount,i;
+	string varname, val;
+	int nCount, i;
 	stm.Read(nCount);
-	IConsole *pCon=m_pSystem->GetIConsole();	
-	for (i=0;i<nCount;i++)
+	IConsole* pCon = m_pSystem->GetIConsole();
+	for (i = 0; i < nCount; i++)
 	{
-		if(stm.Read(varname))
-			if(stm.Read(val))
+		if (stm.Read(varname))
+			if (stm.Read(val))
 			{
-				ICVar *pCVar=m_pSystem->GetIConsole()->GetCVar(varname.c_str());
+				ICVar* pCVar = m_pSystem->GetIConsole()->GetCVar(varname.c_str());
 				if (!pCVar)
 				{
-					m_pSystem->GetILog()->Log("\001 WARNING, CVar %s(%s) was saved but is not present",varname.c_str(),val.c_str());
+					m_pSystem->GetILog()->Log("\001 WARNING, CVar %s(%s) was saved but is not present", varname.c_str(), val.c_str());
 				}
 				else
 					pCVar->Set(val.c_str());
 			}
 			else
 			{
-				m_pSystem->GetILog()->LogError("CXGame::LoadFromStream %d/%d critical error",i,nCount);
+				m_pSystem->GetILog()->LogError("CXGame::LoadFromStream %d/%d critical error", i, nCount);
 				stm.Debug();
 				m_bIsLoadingLevelFromFile = false;
 				return false;
 			}
 	} //i
 
-	if(m_pSystem->GetISoundSystem())
+	if (m_pSystem->GetISoundSystem())
 		m_pSystem->GetISoundSystem()->Silence();
 
-	m_pSystem->GetISoundSystem()->Mute(true); 
+	m_pSystem->GetISoundSystem()->Mute(true);
 
 	bool			bLoadBar = false;
-	IConsole *pConsole = m_pSystem->GetIConsole();
+	IConsole* pConsole = m_pSystem->GetIConsole();
 
 	assert(pConsole);
 
-	if(stricmp(g_LevelName->GetString(),sLevelName.c_str()) != 0 || !m_pServer || (stricmp(m_pServer->m_GameContext.strMission.c_str(),sMissionName.c_str()) != 0))
+	if (stricmp(g_LevelName->GetString(), sLevelName.c_str()) != 0 || !m_pServer || (stricmp(m_pServer->m_GameContext.strMission.c_str(), sMissionName.c_str()) != 0))
 	{
 
 		m_pLog->LogToConsole("Loading %s / %s", sLevelName.c_str(), sMissionName.c_str());
 
-		if (m_pServer) 
+		if (m_pServer)
 			ShutdownServer();
 
 		if (isdemo)
-		{			
+		{
 			//StartupClient();
 			m_pClient->DemoConnect();
-			LoadLevelCS( false,sLevelName.c_str(), sMissionName.c_str(), false);
+			LoadLevelCS(false, sLevelName.c_str(), sMissionName.c_str(), false);
 		}
 		else
-		{		
+		{
 			GetISystem()->GetIInput()->EnableEventPosting(false);
 			//m_pSystem->GetIInput()->GetIKeyboard()->ClearKeyState();
-			LoadLevelCS(false,sLevelName.c_str(), sMissionName.c_str(), false);
+			LoadLevelCS(false, sLevelName.c_str(), sMissionName.c_str(), false);
 			//m_pClient->Connect("localhost");				
 			//m_pSystem->GetIInput()->GetIKeyboard()->ClearKeyState();
-			GetISystem()->GetIInput()->EnableEventPosting(true);			
+			GetISystem()->GetIInput()->EnableEventPosting(true);
 		};
 	}
 	else
@@ -2500,7 +2500,7 @@ bool CXGame::LoadFromStream_PATCH_1(CStream &stm, bool isdemo, CScriptObjectStre
 		bLoadBar = 1;
 
 		string sLoadingScreenTexture = m_currentLevelFolder + "/loadscreen_" + m_currentLevel + ".dds";
-		pConsole->SetLoadingImage( sLoadingScreenTexture.c_str() );
+		pConsole->SetLoadingImage(sLoadingScreenTexture.c_str());
 
 		pConsole->Clear();
 		pConsole->ResetProgressBar(nEnt + 3);
@@ -2509,33 +2509,33 @@ bool CXGame::LoadFromStream_PATCH_1(CStream &stm, bool isdemo, CScriptObjectStre
 		DeleteMessage("Switch"); // no switching during loading
 
 		// local player has to exit all areas before starting to delete entities
-		IEntity *pIMyPlayer = GetMyPlayer();
-		if( pIMyPlayer )
+		IEntity* pIMyPlayer = GetMyPlayer();
+		if (pIMyPlayer)
 		{
-			IEntityContainer *pIContainer = pIMyPlayer->GetContainer();
+			IEntityContainer* pIContainer = pIMyPlayer->GetContainer();
 			if (pIContainer)
 			{
-				CPlayer *pPlayer = NULL;
+				CPlayer* pPlayer = NULL;
 				if (pIContainer->QueryContainerInterface(CIT_IPLAYER, (void**)&pPlayer))
-					m_XAreaMgr.ExitAllAreas( pPlayer->m_AreaUser );
+					m_XAreaMgr.ExitAllAreas(pPlayer->m_AreaUser);
 			}
 		}
 
 		m_pSystem->GetI3DEngine()->RestoreTerrainFromDisk();
-		m_pSystem->GetIMovieSystem()->Reset( false );
+		m_pSystem->GetIMovieSystem()->Reset(false);
 		m_pLog->Log("REMOVING entities:");
-		IEntityItPtr pEntities=pEntitySystem->GetEntityIterator();
+		IEntityItPtr pEntities = pEntitySystem->GetEntityIterator();
 
 		pEntities->MoveFirst();
-		IEntity *pEnt=NULL;
-		while((pEnt=pEntities->Next())!=NULL)
+		IEntity* pEnt = NULL;
+		while ((pEnt = pEntities->Next()) != NULL)
 		{
-			EntityClass *pClass=pECR->GetByClass(pEnt->GetEntityClassName());
+			EntityClass* pClass = pECR->GetByClass(pEnt->GetEntityClassName());
 			if (m_pWeaponSystemEx->IsProjectileClass(pClass->ClassId)) continue;
 #ifdef _DEBUG
-			m_pLog->Log("REMOVING entity classname %s classid=%02d id=%3id ",pClass->strClassName.c_str(),(int)pClass->ClassId,pEnt->GetId());
+			m_pLog->Log("REMOVING entity classname %s classid=%02d id=%3id ", pClass->strClassName.c_str(), (int)pClass->ClassId, pEnt->GetId());
 #endif
-			pEntitySystem->RemoveEntity(pEnt->GetId());		
+			pEntitySystem->RemoveEntity(pEnt->GetId());
 		}
 
 		pConsole->TickProgressBar();	// advance progress
@@ -2549,19 +2549,19 @@ bool CXGame::LoadFromStream_PATCH_1(CStream &stm, bool isdemo, CScriptObjectStre
 	}
 
 	// PETAR lets delete all guys since they will be spawned anyway
-	m_pSystem->GetAISystem()->Reset();	
+	m_pSystem->GetAISystem()->Reset();
 
-	IAISystem *pAISystem = m_pSystem->GetAISystem();
+	IAISystem* pAISystem = m_pSystem->GetAISystem();
 
 	// adaptive balancing
 	if (pAISystem)
 	{
 		if (cv_game_Difficulty->GetIVal())
 		{
-			float fAcc,fAgg,fHealth;
+			float fAcc, fAgg, fHealth;
 			if (pAISystem->GetAutoBalanceInterface())
 			{
-				pAISystem->GetAutoBalanceInterface()->GetMultipliers(fAcc,fAgg,fHealth);
+				pAISystem->GetAutoBalanceInterface()->GetMultipliers(fAcc, fAgg, fHealth);
 				cv_game_Aggression->Set(fAgg);
 				cv_game_Accuracy->Set(fAcc);
 				cv_game_Health->Set(fHealth);
@@ -2579,7 +2579,7 @@ bool CXGame::LoadFromStream_PATCH_1(CStream &stm, bool isdemo, CScriptObjectStre
 	// apparently these 20 updates are needed to setup everything,
 	// from hud to netwrok stream etc. do not remove it
 	// or savegame won't load
-	for (int i = 0; i<20; i++) 
+	for (int i = 0; i < 20; i++)
 		Update();
 
 	if (bLoadBar)
@@ -2587,20 +2587,20 @@ bool CXGame::LoadFromStream_PATCH_1(CStream &stm, bool isdemo, CScriptObjectStre
 		pConsole->TickProgressBar();	// advance progress
 	}
 
-	VERIFY_COOKIE_NO(stm,0x3c);
+	VERIFY_COOKIE_NO(stm, 0x3c);
 
 	// loading reserver IDs for dynacally created saved entities
-	int dynReservedIDsNumber=0;
+	int dynReservedIDsNumber = 0;
 	stm.Read(dynReservedIDsNumber);
-	for( ; dynReservedIDsNumber>0; --dynReservedIDsNumber )
+	for (; dynReservedIDsNumber > 0; --dynReservedIDsNumber)
 	{
 		int reservedId;
 		stm.Read((int&)reservedId);
-		pEntitySystem->MarkId( reservedId );
+		pEntitySystem->MarkId(reservedId);
 	}
 
 	// only load this in case of older save
-	VERIFY_COOKIE_NO(stm,0x73);
+	VERIFY_COOKIE_NO(stm, 0x73);
 	// load hud objectives
 	if (m_pUIHud)
 	{
@@ -2610,377 +2610,377 @@ bool CXGame::LoadFromStream_PATCH_1(CStream &stm, bool isdemo, CScriptObjectStre
 		GetScriptSystem()->EndCall();
 	}
 
-	VERIFY_COOKIE_NO(stm,61);
+	VERIFY_COOKIE_NO(stm, 61);
 
 	while (!stm.EOS())
 	{
-		BYTE cChunk=0;
+		BYTE cChunk = 0;
 		stm.Read(cChunk);
-		switch(cChunk)
+		switch (cChunk)
 		{
 		case CHUNK_ENTITY:
+		{
+			EntityId id;
+			EntityClassId ClassID;
+
+			pBitStream->ReadBitStream(stm, ClassID, eEntityClassId);
+
+			EntityClass* pClass = pECR->GetByClassId(ClassID);
+			ASSERT(pClass);
+			ed.className = pClass->strClassName;
+			ed.ClassId = pClass->ClassId;
+
+			stm.Read(id);
+			ed.id = id;
+
+			// [kirill] if this entity was dynamicly created - ID was marked when dynReservedIDsNumber loaded, to prevent 
+			// from being taked by some other dynamically spawned non-saved entity. So now we load it and let's free the id
+			if (pEntitySystem->IsDynamicEntityId(id))
+				pEntitySystem->ClearId(id);
+
+			// position and angles are read later - 
+			// with pEnt->Load(
+			//////////////////////////////////////////////////////////////////////////				
+			//[marco] position and angles must be read before spawining the entity - must
+			// be consistent with load level!								
+			Vec3d vPos, vAngles;
+			if (!stm.Read(vPos))
+				CryError("Error while reading position for entity id=%d", id);
+			if (!stm.Read(vAngles))
+				CryError("Error while reading position for entity id=%d", id);
+			ed.pos = vPos;
+			ed.angles = vAngles;
+
+			//////////////////////////////////////////////////////////////////////////				
+			// renderer stuff
+
+			float fScale;
+			stm.Read(fScale);
+
+			int dwRendFlags;
+			stm.Read(dwRendFlags);
+			unsigned char uViewDistRatio;
+			stm.Read(uViewDistRatio);
+			unsigned char uLodRatio;
+			stm.Read(uLodRatio);
+
+			string MatName;
+			stm.Read(MatName);
+
+			bool bHidden = false;
+			stm.Read(bHidden);
+
+			//////////////////////////////////////////////////////////////////////////
+			VERIFY_COOKIE_NO(stm, 76);
+
+			string name;
+			stm.Read(name);
+
+			if (m_pLog->GetVerbosityLevel() >= 5)
+				m_pLog->Log("LOADED entity classname %s classid=%02d id=%3id ", pClass->strClassName.c_str(), (int)pClass->ClassId, id);
+
+			//////////////////////////////////////////////////////////////////////////
+
+			VERIFY_COOKIE_NO(stm, 77);
+
+			stm.AlignRead();
+
+			_SmartScriptObject props(m_pScriptSystem);
+			LoadProperties(props, stm, m_pScriptSystem, "_root");
+
+			_SmartScriptObject propsi(m_pScriptSystem);
+			LoadProperties(propsi, stm, m_pScriptSystem, "_root");
+
+			_SmartScriptObject events(m_pScriptSystem);
+			LoadProperties(events, stm, m_pScriptSystem, "_root");
+
+			VERIFY_COOKIE_NO(stm, 78);
+
+			//m_pScriptSystem->BeginCall("dump");
+			//m_pScriptSystem->PushFuncParam(props);
+			//m_pScriptSystem->EndCall();
+
+			//ASSERT(!pEntitySystem->GetEntity(id));    // entity already exists in map
+			//IEntity* dbgEnt=pEntitySystem->GetEntity(id);
+
+			if (pEntitySystem->GetEntity(id))
 			{
-				EntityId id;
-				EntityClassId ClassID;	
-
-				pBitStream->ReadBitStream(stm,ClassID,eEntityClassId);
-
-				EntityClass *pClass=pECR->GetByClassId(ClassID);
-				ASSERT(pClass);
-				ed.className=pClass->strClassName;
-				ed.ClassId=pClass->ClassId;
-
-				stm.Read(id);
-				ed.id=id;
-
-				// [kirill] if this entity was dynamicly created - ID was marked when dynReservedIDsNumber loaded, to prevent 
-				// from being taked by some other dynamically spawned non-saved entity. So now we load it and let's free the id
-				if (pEntitySystem->IsDynamicEntityId( id ))
-					pEntitySystem->ClearId(id);
-
-				// position and angles are read later - 
-				// with pEnt->Load(
-				//////////////////////////////////////////////////////////////////////////				
-				//[marco] position and angles must be read before spawining the entity - must
-				// be consistent with load level!								
-				Vec3d vPos,vAngles;
-				if (!stm.Read(vPos))
-					CryError("Error while reading position for entity id=%d",id);
-				if (!stm.Read(vAngles))
-					CryError("Error while reading position for entity id=%d",id);
-				ed.pos=vPos;
-				ed.angles=vAngles;				
-
-				//////////////////////////////////////////////////////////////////////////				
-				// renderer stuff
-
-				float fScale;
-				stm.Read(fScale);
-
-				int dwRendFlags;
-				stm.Read(dwRendFlags);
-				unsigned char uViewDistRatio;
-				stm.Read(uViewDistRatio);
-				unsigned char uLodRatio;
-				stm.Read(uLodRatio);
-
-				string MatName;
-				stm.Read(MatName);
-
-				bool bHidden=false;
-				stm.Read(bHidden);
-
-				//////////////////////////////////////////////////////////////////////////
-				VERIFY_COOKIE_NO(stm,76);
-
-				string name;
-				stm.Read(name);
-
-				if (m_pLog->GetVerbosityLevel()>=5)
-					m_pLog->Log("LOADED entity classname %s classid=%02d id=%3id ",pClass->strClassName.c_str(),(int)pClass->ClassId,id);
-
-				//////////////////////////////////////////////////////////////////////////
-
-				VERIFY_COOKIE_NO(stm,77);
-
-				stm.AlignRead(); 
-
-				_SmartScriptObject props(m_pScriptSystem);
-				LoadProperties(props, stm, m_pScriptSystem, "_root");
-
-				_SmartScriptObject propsi(m_pScriptSystem);
-				LoadProperties(propsi, stm, m_pScriptSystem, "_root");
-
-				_SmartScriptObject events(m_pScriptSystem);
-				LoadProperties(events, stm, m_pScriptSystem, "_root");
-
-				VERIFY_COOKIE_NO(stm,78);
-
-				//m_pScriptSystem->BeginCall("dump");
-				//m_pScriptSystem->PushFuncParam(props);
-				//m_pScriptSystem->EndCall();
-
-				//ASSERT(!pEntitySystem->GetEntity(id));    // entity already exists in map
-				//IEntity* dbgEnt=pEntitySystem->GetEntity(id);
-
-				if (pEntitySystem->GetEntity(id))
-				{
-					CryError("entity classname %s classid=%d id=%d ALREADY EXISTING IN THE MAP",pClass->strClassName.c_str(),(int)pClass->ClassId,id);
-				}
-
-				ed.pProperties=props;
-				ed.pPropertiesInstance=propsi;
-				ed.name = name;
-				pEnt=pEntitySystem->SpawnEntity(ed);
-				//ASSERT(pEnt);
-				if (!pEnt)
-					CryError("entity classname %s classid=%02d id=%3id CANNOT BE SPAWNED",pClass->strClassName.c_str(),(int)pClass->ClassId,id);
-
-				if(id==0)		// it's a local player
-					localPlayerId = ed.id;
-
-				//////////////////////////////////////////////////////////////////////////
-				// render flags
-				pEnt->SetRndFlags(dwRendFlags);
-				pEnt->SetScale(fScale);
-				pEnt->SetViewDistRatio(uViewDistRatio);
-				pEnt->SetLodRatio(uLodRatio);
-
-				if (!MatName.empty())
-				{
-					IMatInfo *pMtl = GetSystem()->GetI3DEngine()->FindMaterial(MatName.c_str());
-					if (pMtl)					
-						pEnt->SetMaterial(pMtl);					
-				}
-
-				pEnt->Hide(bHidden);
-
-				//////////////////////////////////////////////////////////////////////////				
-
-				///pEnt->SetName(name.c_str());
-
-				IScriptObject *so = pEnt->GetScriptObject();
-				ASSERT(so);
-
-				//so->SetValue("Properties", props);
-				//so->SetValue("PropertiesInstance", propsi);
-				so->SetValue("Events", events);
-
-				CPlayer *pPlayer=NULL;
-				if(pEnt->GetContainer()) pEnt->GetContainer()->QueryContainerInterface(CIT_IPLAYER,(void**) &pPlayer);
-
-
-				VERIFY_COOKIE_NO(stm,45);
-
-				int health = 0;
-				stm.Read(health);
-
-				VERIFY_COOKIE_NO(stm,46);
-
-				if(pPlayer)
-				{
-					if(health<=0)
-					{                    
-						pEnt->GetCharInterface()->KillCharacter(0);
-#ifdef _DEBUG
-						m_pLog->Log("DEAD entity classname %s classid=%02d id=%3id ",pClass->strClassName.c_str(),(int)pClass->ClassId,pEnt->GetId());
-#endif
-						//pEntitySystem->RemoveEntity(pEnt->GetId());		
-					};
-				};
-
-				bool b = pEnt->LoadPATCH1(stm,scriptStream.GetScriptObject());
-				if (!b)
-					CryError("entity classname %s classid=%02d id=%3id CANNOT BE LOADED",pClass->strClassName.c_str(),(int)pClass->ClassId,id);
-				//ASSERT(b);
-
-				// [anton] proper state serialization was absent BasicEntity.lua,
-				// we'll have to at least make sure that activated rigid bodies that were initially not active 
-				// don't load velocity from active state
-				IPhysicalEntity *pPhys = pEnt->GetPhysics();
-				pe_status_dynamics sd;
-				if (pPhys && pPhys->GetType()==PE_RIGID && pPhys->GetStatus(&sd) && sd.mass==0)
-				{
-					pe_action_set_velocity asv;
-					asv.v.Set(0,0,0); asv.w.Set(0,0,0);
-					pPhys->Action(&asv);
-				}
-
-				// update position if ended up under terrain and outdoors
-
-				if(pPlayer)
-				{
-
-					if(id==0)
-					{
-						I3DEngine *pEngine = m_pSystem->GetI3DEngine();
-						if (pEngine && pAISystem)
-						{
-
-							Vec3d pos = pEnt->GetPos();
-							IVisArea *pArea;
-							int nBuildingid;
-							if (!pAISystem->CheckInside(pos,nBuildingid,pArea))
-							{
-								float newz = pEngine->GetTerrainElevation(pos.x,pos.y);
-								if (newz>pos.z)
-									pos.z=newz+0.1f;
-								pEnt->SetPos(pos);
-							}
-						}
-
-					}
-
-					//[kirill] the OnReset called from OnInit which is called when entity is spawned
-					//					if(health>0)
-					//					{
-					//						// call on reset for the spawned entity
-					//						m_pScriptSystem->BeginCall(pEnt->GetEntityClassName(),"OnReset");
-					//						m_pScriptSystem->PushFuncParam(pEnt->GetScriptObject());
-					//						m_pScriptSystem->EndCall();
-					//					};
-
-					pPlayer->LoadGame_PATCH_1(stm);
-					if (pEnt->GetAI())
-					{
-						char sName[255];
-						stm.Read(sName,255);
-						pEnt->GetAI()->SetName(sName);
-					}
-				};
-				break;
+				CryError("entity classname %s classid=%d id=%d ALREADY EXISTING IN THE MAP", pClass->strClassName.c_str(), (int)pClass->ClassId, id);
 			}
+
+			ed.pProperties = props;
+			ed.pPropertiesInstance = propsi;
+			ed.name = name;
+			pEnt = pEntitySystem->SpawnEntity(ed);
+			//ASSERT(pEnt);
+			if (!pEnt)
+				CryError("entity classname %s classid=%02d id=%3id CANNOT BE SPAWNED", pClass->strClassName.c_str(), (int)pClass->ClassId, id);
+
+			if (id == 0)		// it's a local player
+				localPlayerId = ed.id;
+
+			//////////////////////////////////////////////////////////////////////////
+			// render flags
+			pEnt->SetRndFlags(dwRendFlags);
+			pEnt->SetScale(fScale);
+			pEnt->SetViewDistRatio(uViewDistRatio);
+			pEnt->SetLodRatio(uLodRatio);
+
+			if (!MatName.empty())
+			{
+				IMatInfo* pMtl = GetSystem()->GetI3DEngine()->FindMaterial(MatName.c_str());
+				if (pMtl)
+					pEnt->SetMaterial(pMtl);
+			}
+
+			pEnt->Hide(bHidden);
+
+			//////////////////////////////////////////////////////////////////////////				
+
+			///pEnt->SetName(name.c_str());
+
+			IScriptObject* so = pEnt->GetScriptObject();
+			ASSERT(so);
+
+			//so->SetValue("Properties", props);
+			//so->SetValue("PropertiesInstance", propsi);
+			so->SetValue("Events", events);
+
+			CPlayer* pPlayer = NULL;
+			if (pEnt->GetContainer()) pEnt->GetContainer()->QueryContainerInterface(CIT_IPLAYER, (void**)&pPlayer);
+
+
+			VERIFY_COOKIE_NO(stm, 45);
+
+			int health = 0;
+			stm.Read(health);
+
+			VERIFY_COOKIE_NO(stm, 46);
+
+			if (pPlayer)
+			{
+				if (health <= 0)
+				{
+					pEnt->GetCharInterface()->KillCharacter(0);
+#ifdef _DEBUG
+					m_pLog->Log("DEAD entity classname %s classid=%02d id=%3id ", pClass->strClassName.c_str(), (int)pClass->ClassId, pEnt->GetId());
+#endif
+					//pEntitySystem->RemoveEntity(pEnt->GetId());		
+				};
+			};
+
+			bool b = pEnt->LoadPATCH1(stm, scriptStream.GetScriptObject());
+			if (!b)
+				CryError("entity classname %s classid=%02d id=%3id CANNOT BE LOADED", pClass->strClassName.c_str(), (int)pClass->ClassId, id);
+			//ASSERT(b);
+
+			// [anton] proper state serialization was absent BasicEntity.lua,
+			// we'll have to at least make sure that activated rigid bodies that were initially not active 
+			// don't load velocity from active state
+			IPhysicalEntity* pPhys = pEnt->GetPhysics();
+			pe_status_dynamics sd;
+			if (pPhys && pPhys->GetType() == PE_RIGID && pPhys->GetStatus(&sd) && sd.mass == 0)
+			{
+				pe_action_set_velocity asv;
+				asv.v.Set(0, 0, 0); asv.w.Set(0, 0, 0);
+				pPhys->Action(&asv);
+			}
+
+			// update position if ended up under terrain and outdoors
+
+			if (pPlayer)
+			{
+
+				if (id == 0)
+				{
+					I3DEngine* pEngine = m_pSystem->GetI3DEngine();
+					if (pEngine && pAISystem)
+					{
+
+						Vec3d pos = pEnt->GetPos();
+						IVisArea* pArea;
+						int nBuildingid;
+						if (!pAISystem->CheckInside(pos, nBuildingid, pArea))
+						{
+							float newz = pEngine->GetTerrainElevation(pos.x, pos.y);
+							if (newz > pos.z)
+								pos.z = newz + 0.1f;
+							pEnt->SetPos(pos);
+						}
+					}
+
+				}
+
+				//[kirill] the OnReset called from OnInit which is called when entity is spawned
+				//					if(health>0)
+				//					{
+				//						// call on reset for the spawned entity
+				//						m_pScriptSystem->BeginCall(pEnt->GetEntityClassName(),"OnReset");
+				//						m_pScriptSystem->PushFuncParam(pEnt->GetScriptObject());
+				//						m_pScriptSystem->EndCall();
+				//					};
+
+				pPlayer->LoadGame_PATCH_1(stm);
+				if (pEnt->GetAI())
+				{
+					char sName[255];
+					stm.Read(sName, 255);
+					pEnt->GetAI()->SetName(sName);
+				}
+			};
+			break;
+		}
 
 		case CHUNK_PLAYER:
+		{
+			EntityId wPlayerID = 0;
+			bool b = stm.Read(wPlayerID);
+			ASSERT(b);
+
+			if (wPlayerID == 0)				// we write 0 for localplayer on save
+				wPlayerID = localPlayerId;
+			m_pClient->SetPlayerID(wPlayerID);
+
+			pEnt = pEntitySystem->GetEntity(wPlayerID);
+			//				if( wPlayerID==0 )
+			//					pEnt=m_pClient->m_pISystem->GetLocalPlayer();
+			if (!pEnt)
+				CryError("player id=%3id NOT FOUND", wPlayerID);
+			//ASSERT(pEnt);
+
+			CPlayer* pPlayer = NULL;
+			if (pEnt->GetContainer()) pEnt->GetContainer()->QueryContainerInterface(CIT_IPLAYER, (void**)&pPlayer);
+			ASSERT(pPlayer);
+			stm.Read(pPlayer->m_bFirstPerson);
+			SetViewMode(!pPlayer->m_bFirstPerson); // hack, but works
+
+			/* [kirill] moved this to int CScriptObjectGame::TouchCheckPoint(IFunctionHandler *pH)
+			needed to fix quickLoad restoreHealth problem
+			// do we want to overwrite health with half of maximum
+			if(p_restorehalfhealth->GetIVal())
 			{
-				EntityId wPlayerID = 0;
-				bool b = stm.Read(wPlayerID);
-				ASSERT(b);
+			pPlayer->m_stats.health = 255;	// [marco] danger! this should be set by
+			// gamerules but it gets overwritten by the save checkpoint
 
-				if(wPlayerID==0)				// we write 0 for localplayer on save
-					wPlayerID = localPlayerId;
-				m_pClient->SetPlayerID(wPlayerID);
-
-				pEnt=pEntitySystem->GetEntity(wPlayerID);
-				//				if( wPlayerID==0 )
-				//					pEnt=m_pClient->m_pISystem->GetLocalPlayer();
-				if (!pEnt)
-					CryError("player id=%3id NOT FOUND",wPlayerID);
-				//ASSERT(pEnt);
-
-				CPlayer *pPlayer=NULL;
-				if(pEnt->GetContainer()) pEnt->GetContainer()->QueryContainerInterface(CIT_IPLAYER,(void**) &pPlayer);
-				ASSERT(pPlayer);
-				stm.Read(pPlayer->m_bFirstPerson);
-				SetViewMode(!pPlayer->m_bFirstPerson); // hack, but works
-
-				/* [kirill] moved this to int CScriptObjectGame::TouchCheckPoint(IFunctionHandler *pH)
-				needed to fix quickLoad restoreHealth problem 
-				// do we want to overwrite health with half of maximum
-				if(p_restorehalfhealth->GetIVal())
-				{
-				pPlayer->m_stats.health = 255;	// [marco] danger! this should be set by
-				// gamerules but it gets overwritten by the save checkpoint
-
-				//m_pSystem->GetILog()->Log("player health=%d",pPlayer->m_stats.health);
-				// [kirill]
-				// this was requested by UBI. It's expected here that current health value is the maximum 
-				//Everytime Jack dies he should respawn with half of his hit points instead of full health. 
-				//Same mechanics for Val, she should get half her hit points everytime Jack respawns.
-				pPlayer->m_stats.health/=2;
-				}
-
-				if (pPlayer->m_stats.health<128)
-				pPlayer->m_stats.health = 128;
-				*/
-				IEntityCamera *pCam=pEnt->GetCamera();
-				ASSERT(pCam);
-
-				Vec3d vPos;
-				stm.Read(vPos);
-				pCam->SetPos(vPos);
-				//pEnt->SetPos(vPos);
-
-				m_pLog->Log("PLAYER %d (%f %f %f) ", wPlayerID, vPos.x, vPos.y, vPos.z);
-
-				Vec3d vAngles;
-				stm.Read(vAngles);
-				pCam->SetAngles(vAngles);
-				//[kirill]
-				//why do we do it here? entity angles are set when entity is loaded
-				//pEnt->SetAngles(vAngles);
-				m_pClient->m_PlayerProcessingCmd.SetDeltaAngles(vAngles);
-
-				GetSystem()->SetViewCamera( pCam->GetCamera() );
-
-				GetSystem()->GetISoundSystem()->SetListener(pCam->GetCamera(),Vec3(0,0,0));
-
-				if(!isdemo)
-				{
-					CXServer::XSlotMap::iterator itor;
-					ASSERT(m_pServer->GetSlotsMap().size()==1);
-					itor = m_pServer->GetSlotsMap().begin();
-
-					CXServerSlot *pSSlot=itor->second;							// serverslot associated with the player
-
-					pSSlot->SetPlayerID(wPlayerID);
-					pSSlot->SetGameState(CGS_INPROGRESS);						// start game imediatly
-				};
-				break;
+			//m_pSystem->GetILog()->Log("player health=%d",pPlayer->m_stats.health);
+			// [kirill]
+			// this was requested by UBI. It's expected here that current health value is the maximum
+			//Everytime Jack dies he should respawn with half of his hit points instead of full health.
+			//Same mechanics for Val, she should get half her hit points everytime Jack respawns.
+			pPlayer->m_stats.health/=2;
 			}
+
+			if (pPlayer->m_stats.health<128)
+			pPlayer->m_stats.health = 128;
+			*/
+			IEntityCamera* pCam = pEnt->GetCamera();
+			ASSERT(pCam);
+
+			Vec3d vPos;
+			stm.Read(vPos);
+			pCam->SetPos(vPos);
+			//pEnt->SetPos(vPos);
+
+			m_pLog->Log("PLAYER %d (%f %f %f) ", wPlayerID, vPos.x, vPos.y, vPos.z);
+
+			Vec3d vAngles;
+			stm.Read(vAngles);
+			pCam->SetAngles(vAngles);
+			//[kirill]
+			//why do we do it here? entity angles are set when entity is loaded
+			//pEnt->SetAngles(vAngles);
+			m_pClient->m_PlayerProcessingCmd.SetDeltaAngles(vAngles);
+
+			GetSystem()->SetViewCamera(pCam->GetCamera());
+
+			GetSystem()->GetISoundSystem()->SetListener(pCam->GetCamera(), Vec3(0, 0, 0));
+
+			if (!isdemo)
+			{
+				CXServer::XSlotMap::iterator itor;
+				ASSERT(m_pServer->GetSlotsMap().size() == 1);
+				itor = m_pServer->GetSlotsMap().begin();
+
+				CXServerSlot* pSSlot = itor->second;							// serverslot associated with the player
+
+				pSSlot->SetPlayerID(wPlayerID);
+				pSSlot->SetGameState(CGS_INPROGRESS);						// start game imediatly
+			};
+			break;
+		}
 
 		case CHUNK_AI:
-			{				
-				// find for which entity this chunk is
-				int nID;
-				stm.Read(nID);
+		{
+			// find for which entity this chunk is
+			int nID;
+			stm.Read(nID);
 
-				IEntity *pEntity = m_pEntitySystem->GetEntity(nID);
-				if ( nID == 0 )	// it's local player
-					pEntity = m_pClient->m_pISystem->GetLocalPlayer();
-				if (pEntity)
+			IEntity* pEntity = m_pEntitySystem->GetEntity(nID);
+			if (nID == 0)	// it's local player
+				pEntity = m_pClient->m_pISystem->GetLocalPlayer();
+			if (pEntity)
+			{
+				m_pLog->Log("Now loading AICHUNK <PATCH_1> for entity %s", pEntity->GetName());
+				CPlayer* pPlayer = 0;
+				CVehicle* pVehicle = 0;
+				if (pEntity->GetContainer())
 				{
-					m_pLog->Log("Now loading AICHUNK <PATCH_1> for entity %s", pEntity->GetName());
-					CPlayer *pPlayer=0;
-					CVehicle *pVehicle=0;
-					if (pEntity->GetContainer())
-					{
-						if (pEntity->GetContainer()->QueryContainerInterface(CIT_IPLAYER,(void**)&pPlayer))
-							pPlayer->LoadAIState_PATCH_1(stm);
-						if (pEntity->GetContainer()->QueryContainerInterface(CIT_IVEHICLE,(void**)&pVehicle))
-							pVehicle->LoadAIState(stm, scriptStream);
-					}
-					else if( pEntity->GetAI() )
-					{
-						pEntity->GetAI()->Load(stm);
-						IScriptSystem *pScriptSystem = GetSystem()->GetIScriptSystem();
-						HSCRIPTFUNCTION	loadOverallFunction=NULL;
-//						if( pEntity->GetScriptObject() && pEntity->GetScriptObject()->GetValue("OnLoadOverall", loadOverallFunction) )
-//						{
-//							pScriptSystem->BeginCall(loadOverallFunction);
-//							pScriptSystem->PushFuncParam(pEntity->GetScriptObject());
-//							pScriptSystem->PushFuncParam(scriptStream.GetScriptObject());
-//							pScriptSystem->EndCall();
-//						}
-					}
+					if (pEntity->GetContainer()->QueryContainerInterface(CIT_IPLAYER, (void**)&pPlayer))
+						pPlayer->LoadAIState_PATCH_1(stm);
+					if (pEntity->GetContainer()->QueryContainerInterface(CIT_IVEHICLE, (void**)&pVehicle))
+						pVehicle->LoadAIState(stm, scriptStream);
 				}
-
-				VERIFY_COOKIE_NO(stm,13);
+				else if (pEntity->GetAI())
+				{
+					pEntity->GetAI()->Load(stm);
+					IScriptSystem* pScriptSystem = GetSystem()->GetIScriptSystem();
+					HSCRIPTFUNCTION	loadOverallFunction = NULL;
+					//						if( pEntity->GetScriptObject() && pEntity->GetScriptObject()->GetValue("OnLoadOverall", loadOverallFunction) )
+					//						{
+					//							pScriptSystem->BeginCall(loadOverallFunction);
+					//							pScriptSystem->PushFuncParam(pEntity->GetScriptObject());
+					//							pScriptSystem->PushFuncParam(scriptStream.GetScriptObject());
+					//							pScriptSystem->EndCall();
+					//						}
+				}
 			}
-			break;
+
+			VERIFY_COOKIE_NO(stm, 13);
+		}
+		break;
 		case CHUNK_INGAME_SEQUENCE:
-			{
-				IMovieSystem *pMovies = m_pSystem->GetIMovieSystem();
-				char szName[1024];
-				stm.Read(szName,1024);
-				float fTime;
-				stm.Read(fTime);
-				IAnimSequence *pSeq = pMovies->FindSequence(szName);
-				pMovies->PlaySequence(pSeq,false);
-				pMovies->SetPlayingTime(pSeq,fTime);
-			}
-			break;
+		{
+			IMovieSystem* pMovies = m_pSystem->GetIMovieSystem();
+			char szName[1024];
+			stm.Read(szName, 1024);
+			float fTime;
+			stm.Read(fTime);
+			IAnimSequence* pSeq = pMovies->FindSequence(szName);
+			pMovies->PlaySequence(pSeq, false);
+			pMovies->SetPlayingTime(pSeq, fTime);
+		}
+		break;
 		case CHUNK_HUD:
+		{
+			// load hud/clientstuff viewlayers data
+			if (m_pUIHud)
 			{
-				// load hud/clientstuff viewlayers data
-				if (m_pUIHud)
-				{
-					GetScriptSystem()->BeginCall("Hud", "OnLoad");
-					GetScriptSystem()->PushFuncParam(m_pUIHud->GetScript());
-					GetScriptSystem()->PushFuncParam(scriptStream.GetScriptObject());
-					GetScriptSystem()->EndCall();
-				}
-
-				_SmartScriptObject pClientStuff(m_pScriptSystem,true);  
-				if(m_pScriptSystem->GetGlobalValue("ClientStuff",pClientStuff))	
-				{
-					m_pScriptSystem->BeginCall("ClientStuff","OnLoad");
-					m_pScriptSystem->PushFuncParam(pClientStuff);
-					m_pScriptSystem->PushFuncParam(scriptStream.GetScriptObject());
-					m_pScriptSystem->EndCall();
-				}
+				GetScriptSystem()->BeginCall("Hud", "OnLoad");
+				GetScriptSystem()->PushFuncParam(m_pUIHud->GetScript());
+				GetScriptSystem()->PushFuncParam(scriptStream.GetScriptObject());
+				GetScriptSystem()->EndCall();
 			}
-			break;  
+
+			_SmartScriptObject pClientStuff(m_pScriptSystem, true);
+			if (m_pScriptSystem->GetGlobalValue("ClientStuff", pClientStuff))
+			{
+				m_pScriptSystem->BeginCall("ClientStuff", "OnLoad");
+				m_pScriptSystem->PushFuncParam(pClientStuff);
+				m_pScriptSystem->PushFuncParam(scriptStream.GetScriptObject());
+				m_pScriptSystem->EndCall();
+			}
+		}
+		break;
 
 		default:
 			ASSERT(0);
@@ -2994,12 +2994,12 @@ bool CXGame::LoadFromStream_PATCH_1(CStream &stm, bool isdemo, CScriptObjectStre
 
 	{	// [Anton] - allow entities to restore pointer links between them during post load step 
 		// [kirill]	restore all the bindings
-		IEntityItPtr pEntities=pEntitySystem->GetEntityIterator();
+		IEntityItPtr pEntities = pEntitySystem->GetEntityIterator();
 
 		pEntities->MoveFirst();
-		IEntity *pEnt=NULL;
-		while((pEnt=pEntities->Next())!=NULL)
-			pEnt->PostLoad();		
+		IEntity* pEnt = NULL;
+		while ((pEnt = pEntities->Next()) != NULL)
+			pEnt->PostLoad();
 	}
 
 	pEntitySystem->Update();
@@ -3007,23 +3007,23 @@ bool CXGame::LoadFromStream_PATCH_1(CStream &stm, bool isdemo, CScriptObjectStre
 	m_pClient->Reset();
 
 	m_bIsLoadingLevelFromFile = false;
-	m_pSystem->GetISoundSystem()->Mute(false); 
+	m_pSystem->GetISoundSystem()->Mute(false);
 
-	m_bMapLoadedFromCheckpoint=true;
+	m_bMapLoadedFromCheckpoint = true;
 
 
-	m_pEntitySystem->PauseTimers(false,true);	
+	m_pEntitySystem->PauseTimers(false, true);
 
 	//	m_pLog->Log("HIDE CONSOLE");
-	m_pRenderer->ClearColorBuffer(Vec3(0,0,0));
+	m_pRenderer->ClearColorBuffer(Vec3(0, 0, 0));
 	m_pSystem->GetIConsole()->ResetProgressBar(0);
 	m_pSystem->GetIConsole()->ShowConsole(false);
-	m_pSystem->GetIConsole()->SetScrollMax(600/2);
+	m_pSystem->GetIConsole()->SetScrollMax(600 / 2);
 
-	if (nPreset!=-1)
-		m_pSystem->GetISoundSystem()->SetEaxListenerEnvironment(nPreset,NULL);
+	if (nPreset != -1)
+		m_pSystem->GetISoundSystem()->SetEaxListenerEnvironment(nPreset, NULL);
 	else
-		m_pSystem->GetISoundSystem()->SetEaxListenerEnvironment(nPreset,&tProps);
+		m_pSystem->GetISoundSystem()->SetEaxListenerEnvironment(nPreset, &tProps);
 
 	GotoGame(1);
 	m_nDEBUG_TIMING = 0;

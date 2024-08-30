@@ -19,16 +19,12 @@ struct CryModuleMemoryInfo
 	int num_allocations;
 };
 #ifdef WIN32
-extern "C" __declspec(dllexport) void CryModuleGetMemoryInfo( CryModuleMemoryInfo *pMemInfo )
+extern "C" __declspec(dllexport) void CryModuleGetMemoryInfo(CryModuleMemoryInfo* pMemInfo)
 {
-#if (defined CS_VERSION_372) || (defined CS_VERSION_361)
-  unsigned int nCurrentAlloced;
+	unsigned int nCurrentAlloced;
 	unsigned int nMaxAlloced;
-#else
-  size_t nCurrentAlloced;
-	size_t nMaxAlloced;
-#endif
-  CS_GetMemoryStats(&nCurrentAlloced, &nMaxAlloced);
+
+	FSOUND_GetMemoryStats(&nCurrentAlloced, &nMaxAlloced);
 	pMemInfo->allocated = nMaxAlloced;
 	pMemInfo->freed = 0;
 	pMemInfo->num_allocations = 0;
@@ -69,7 +65,7 @@ extern "C" ISoundSystem* CreateSoundSystem(struct ISystem* pISystem, void* pInit
 			pSoundSystem->Release();
 #endif		
 
-		CDummySoundSystem *pDummySound=new CDummySoundSystem(pISystem, (HWND)pInitData);
+		CDummySoundSystem* pDummySound = new CDummySoundSystem(pISystem, (HWND)pInitData);
 		return pDummySound;
 
 #ifndef _XBOX		
@@ -83,9 +79,9 @@ extern "C" ISoundSystem* CreateSoundSystem(struct ISystem* pISystem, void* pInit
 #ifndef _XBOX
 #ifndef LINUX
 ///////////////////////////////////////////////
-BOOL APIENTRY DllMain(HANDLE hModule, DWORD  ul_reason_for_call,  LPVOID lpReserved)
+BOOL APIENTRY DllMain(HANDLE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved)
 {
-    return TRUE;
+	return TRUE;
 }
 #endif //LINUX
 #endif //_XBOX

@@ -112,9 +112,7 @@ static void * F_CALLBACKAPI CrySound_Realloc (void *ptr, unsigned int size)
 // File callbacks for fmod.
 //////////////////////////////////////////////////////////////////////////
 
-#ifdef CS_VERSION_372
-
-static void * F_CALLBACKAPI CrySound_fopen( const char *name )
+static void* F_CALLBACKAPI CrySound_fopen( const char *name )
 {
 	// File is opened for streaming.
 	FILE *file = GetISystem()->GetIPak()->FOpen( name,"rb",ICryPak::FOPEN_HINT_DIRECT_OPERATION );
@@ -123,113 +121,33 @@ static void * F_CALLBACKAPI CrySound_fopen( const char *name )
 	{
 		GetISystem()->Warning( VALIDATOR_MODULE_SOUNDSYSTEM,VALIDATOR_WARNING,VALIDATOR_FLAG_SOUND,"Sound %s failed to load", name );
 	}
-	return (void *)file;
+	return file;
 }
 
-static void F_CALLBACKAPI CrySound_fclose( void * nFile )
+static void F_CALLBACKAPI CrySound_fclose(void* nFile )
 {
 	FILE *file = (FILE*)nFile;
 	GetISystem()->GetIPak()->FClose( file );
 }
 
-static int F_CALLBACKAPI CrySound_fread( void *buffer, int size, void * nFile )
+static int F_CALLBACKAPI CrySound_fread( void *buffer, int size, void* nFile )
 {
 	FILE *file = (FILE*)nFile;
 	return GetISystem()->GetIPak()->FRead( buffer,1,size,file );
 }
 
-static int F_CALLBACKAPI CrySound_fseek( void * nFile, int pos, signed char mode)
+static int F_CALLBACKAPI CrySound_fseek(void* nFile, int pos, signed char mode)
 {
 	FILE *file = (FILE*)nFile;
 	return GetISystem()->GetIPak()->FSeek( file,pos,mode );
 }
 
-static int F_CALLBACKAPI CrySound_ftell( void * nFile )
+static int F_CALLBACKAPI CrySound_ftell(void* nFile )
 {
 	FILE *file = (FILE*)nFile;
 	return GetISystem()->GetIPak()->FTell( file );
 }
 
-
-#else 
-#ifdef CS_VERSION_361
-
-static unsigned int F_CALLBACKAPI CrySound_fopen( const char *name )
-{
-	// File is opened for streaming.
-	FILE *file = GetISystem()->GetIPak()->FOpen( name,"rb",ICryPak::FOPEN_HINT_DIRECT_OPERATION );
-	//FILE *file = GetISystem()->GetIPak()->FOpen( name,"rb" );
-	if (!file)
-	{
-		GetISystem()->Warning( VALIDATOR_MODULE_SOUNDSYSTEM,VALIDATOR_WARNING,VALIDATOR_FLAG_SOUND,"Sound %s failed to load", name );
-	}
-	return (unsigned int)file;
-}
-
-static void F_CALLBACKAPI CrySound_fclose( unsigned int nFile )
-{
-	FILE *file = (FILE*)nFile;
-	GetISystem()->GetIPak()->FClose( file );
-}
-
-static int F_CALLBACKAPI CrySound_fread( void *buffer, int size, unsigned int nFile )
-{
-	FILE *file = (FILE*)nFile;
-	return GetISystem()->GetIPak()->FRead( buffer,1,size,file );
-}
-
-static int F_CALLBACKAPI CrySound_fseek( unsigned int nFile, int pos, signed char mode)
-{
-	FILE *file = (FILE*)nFile;
-	return GetISystem()->GetIPak()->FSeek( file,pos,mode );
-}
-
-static int F_CALLBACKAPI CrySound_ftell( unsigned int nFile )
-{
-	FILE *file = (FILE*)nFile;
-	return GetISystem()->GetIPak()->FTell( file );
-}
-
-#else
-
-static UINT_PTR F_CALLBACKAPI CrySound_fopen( const char *name )
-{
-	// File is opened for streaming.
-	FILE *file = GetISystem()->GetIPak()->FOpen( name,"rb",ICryPak::FOPEN_HINT_DIRECT_OPERATION );
-	//FILE *file = GetISystem()->GetIPak()->FOpen( name,"rb" );
-	if (!file)
-	{
-		GetISystem()->Warning( VALIDATOR_MODULE_SOUNDSYSTEM,VALIDATOR_WARNING,VALIDATOR_FLAG_SOUND,"Sound %s failed to load", name );
-	}
-	return (UINT_PTR)file;
-}
-
-static void F_CALLBACKAPI CrySound_fclose( UINT_PTR nFile )
-{
-	FILE *file = (FILE*)nFile;
-	GetISystem()->GetIPak()->FClose( file );
-}
-
-static int F_CALLBACKAPI CrySound_fread( void *buffer, int size, UINT_PTR nFile )
-{
-	FILE *file = (FILE*)nFile;
-	return GetISystem()->GetIPak()->FRead( buffer,1,size,file );
-}
-
-static int F_CALLBACKAPI CrySound_fseek( UINT_PTR nFile, int pos, signed char mode)
-{
-	FILE *file = (FILE*)nFile;
-	return GetISystem()->GetIPak()->FSeek( file,pos,mode );
-}
-
-static int F_CALLBACKAPI CrySound_ftell( UINT_PTR nFile )
-{
-	FILE *file = (FILE*)nFile;
-	return GetISystem()->GetIPak()->FTell( file );
-}
-
-#endif
-#endif
 
 //////////////////////////////////////////////////////////////////////
 CSoundSystem::CSoundSystem(ISystem* pSystem, HWND hWnd) : CSoundSystemCommon(pSystem)
@@ -275,95 +193,95 @@ CSoundSystem::CSoundSystem(ISystem* pSystem, HWND hWnd) : CSoundSystemCommon(pSy
 	if (m_pCVARDummySound->GetIVal())		
 		return; // creates dummy sound system
 
-	if (CS_GetVersion() != CS_VERSION)
+	if (FSOUND_GetVersion() != FMOD_VERSION)
 	{
-		m_pILog->Log("Music:Init:Incorrect DLL version for CRYSOUND: Need %.2f\n",CS_VERSION);
+		m_pILog->Log("Music:Init:Incorrect DLL version for CRYSOUND: Need %.2f\n", FMOD_VERSION);
 		return;
 	}
 
 #if !defined(_DEBUG)// || defined(WIN64)
-	CS_SetMemorySystem(NULL,NULL,CrySound_Alloc,CrySound_Realloc,CrySound_Free);
+	FSOUND_SetMemorySystem(NULL,NULL,CrySound_Alloc,CrySound_Realloc,CrySound_Free);
 #endif
 
-	m_pILog->Log("------------------------------------------CRYSOUND VERSION=%f\n",CS_GetVersion());
+	m_pILog->Log("------------------------------------------CRYSOUND VERSION=%f\n", FSOUND_GetVersion());
 
 	//configure CS's stability under windows
-	//CS_SetBufferSize(CS_BUFFERSIZE);
+	//FSOUND_SetBufferSize(FSOUND_BUFFERSIZE);
 
 	//init CS
-	//CS_SetOutput(CS_OUTPUT_DSOUND);	
-	//CS_SetDriver(0);
-	//CS_SetMixer(CS_MIXER_QUALITY_AUTODETECT);
+	//FSOUND_SetOutput(FSOUND_OUTPUT_DSOUND);	
+	//FSOUND_SetDriver(0);
+	//FSOUND_SetMixer(FSOUND_MIXER_QUALITY_AUTODETECT);
 
-#if 0//defined(WIN64) || defined(CS_VERSION_3_63)
+#if 0//defined(WIN64) || defined(FSOUND_VERSION_3_63)
 
-	//CS_DSP_SetActive(CS_DSP_GetClearUnit(), FALSE);
-	//CS_DSP_SetActive(CS_DSP_GetSFXUnit(), FALSE);
-	//CS_DSP_SetActive(CS_DSP_GetMusicUnit(), FALSE);
-	//CS_DSP_SetActive(CS_DSP_GetClipAndCopyUnit(), FALSE);
+	//FSOUND_DSP_SetActive(FSOUND_DSP_GetClearUnit(), FALSE);
+	//FSOUND_DSP_SetActive(FSOUND_DSP_GetSFXUnit(), FALSE);
+	//FSOUND_DSP_SetActive(FSOUND_DSP_GetMusicUnit(), FALSE);
+	//FSOUND_DSP_SetActive(FSOUND_DSP_GetClipAndCopyUnit(), FALSE);
 
-	CS_SetOutput(CS_OUTPUT_WINMM);
-	CS_SetMaxHardwareChannels(0);
+	FSOUND_SetOutput(FSOUND_OUTPUT_WINMM);
+	FSOUND_SetMaxHardwareChannels(0);
 #else
 
 	// Defines the minimum number of hardware channels.
 	// if less than that, the sound engine will switch to software mixing.
-	CS_SetMinHardwareChannels(m_pCVarMinHWChannels->GetIVal());
-	CS_SetMaxHardwareChannels(m_pCVarMaxHWChannels->GetIVal());
+	FSOUND_SetMinHardwareChannels(m_pCVarMinHWChannels->GetIVal());
+	FSOUND_SetMaxHardwareChannels(m_pCVarMaxHWChannels->GetIVal());
 #endif
-	CS_SetHWND(hWnd);	
+	FSOUND_SetHWND(hWnd);
 
 	// Assign file access callbacks to fmod to our pak file system.
-	CS_File_SetCallbacks( CrySound_fopen,CrySound_fclose,CrySound_fread,CrySound_fseek,CrySound_ftell );
+	FSOUND_File_SetCallbacks( CrySound_fopen,CrySound_fclose,CrySound_fread,CrySound_fseek,CrySound_ftell );
  
-	for (int i=0; i < CS_GetNumDrivers(); i++) 
+	for (int i=0; i < FSOUND_GetNumDrivers(); i++)
 	{
-		m_pILog->Log("%d - %s\n", i+1, CS_GetDriverName(i));	// print driver names
+		m_pILog->Log("%d - %s\n", i+1, FSOUND_GetDriverName(i));	// print driver names
 		
 		if (m_pCVarCapsCheck->GetIVal()>0) //caps checking is slow	
 		{		
 			unsigned int caps =0;
-			CS_GetDriverCaps(i,&caps); 
+			FSOUND_GetDriverCaps(i,&caps);
 		
-			if (caps & CS_CAPS_HARDWARE)
+			if (caps & FSOUND_CAPS_HARDWARE)
 				m_pILog->Log(" Driver supports hardware 3D sound");
-			if (caps & CS_CAPS_EAX2)
+			if (caps & FSOUND_CAPS_EAX2)
 				m_pILog->Log(" Driver supports EAX 2.0 reverb");
-			if (caps & CS_CAPS_EAX3)
+			if (caps & FSOUND_CAPS_EAX3)
 				m_pILog->Log(" Driver supports EAX 3.0 reverb");
-			//if (caps & CS_CAPS_GEOMETRY_OCCLUSIONS)
+			//if (caps & FSOUND_CAPS_GEOMETRY_OCCLUSIONS)
 			//	m_pILog->Log(" Driver supports hardware 3d geometry processing with occlusions");
-			//if (caps & CS_CAPS_GEOMETRY_REFLECTIONS)
+			//if (caps & FSOUND_CAPS_GEOMETRY_REFLECTIONS)
 			//	m_pILog->Log(" Driver supports hardware 3d geometry processing with reflections");
-			//if (caps & CS_CAPS_EAX2)
+			//if (caps & FSOUND_CAPS_EAX2)
 			//	m_pILog->Log(" Driver supports EAX 2.0 reverb!");
 		}
 	}
-	//CS_SetMixer(CS_MIXER_QUALITY_FPU); 
+	//FSOUND_SetMixer(FSOUND_MIXER_QUALITY_FPU); 
 
 	if (m_pCVarCompatibleMode->GetIVal()!=0)
 	{
-		CS_SetBufferSize(200);
+		FSOUND_SetBufferSize(200);
 	}
 
-	if (!CS_Init(m_nSampleRate, 256, 0))
+	if (!FSOUND_Init(m_nSampleRate, 256, 0))
 	{
 		m_pILog->Log("Cannot init CRYSOUND\n");
-		CS_Close();
+		FSOUND_Close();
 		return;
 	}
-	//CS_3D_SetRolloffFactor(0.0);
+	//FSOUND_3D_SetRolloffFactor(0.0);
 	
-	m_pILog->Log("CRYSOUND Driver: %s", CS_GetDriverName(CS_GetDriver()));		
-	m_pILog->Log("Total number of channels available: %d\n",CS_GetMaxChannels());
+	m_pILog->Log("CRYSOUND Driver: %s", FSOUND_GetDriverName(FSOUND_GetDriver()));
+	m_pILog->Log("Total number of channels available: %d\n", FSOUND_GetMaxChannels());
 	
   // WARNING!!! Wat
-  //m_pILog->Log("Total number of hardware channels available: %d\n",CS_GetNumHardwareChannels());	
+  //m_pILog->Log("Total number of hardware channels available: %d\n",FSOUND_GetNumHardwareChannels());	
 
 	SetSpeakerConfig();
 
 	// lets create a dsp unit for the sfx-filter
-	//m_pDSPUnitSFXFilter=CS_DSP_Create(_DSPUnit_SFXFilter_Callback, SFXFILTER_PRIORITY, (INT_PTR)this);
+	//m_pDSPUnitSFXFilter=FSOUND_DSP_Create(_DSPUnit_SFXFilter_Callback, SFXFILTER_PRIORITY, (INT_PTR)this);
 	if (m_pDSPUnitSFXFilter)
 	{
 		m_fDSPUnitSFXFilterCutoff=500.0f;
@@ -372,7 +290,7 @@ CSoundSystem::CSoundSystem(ISystem* pSystem, HWND hWnd) : CSoundSystemCommon(pSy
 		m_fDSPUnitSFXFilterBandLVal=0.0f;
 		m_fDSPUnitSFXFilterLowRVal=0.0f;
 		m_fDSPUnitSFXFilterBandRVal=0.0f;
-		//CS_DSP_SetActive(m_pDSPUnitSFXFilter, TRUE);
+		//FSOUND_DSP_SetActive(m_pDSPUnitSFXFilter, TRUE);
 	}
 
 	Mute(false);
@@ -399,14 +317,14 @@ void* CSoundSystem::DSPUnit_SFXFilter_Callback(void *pOriginalBuffer, void *pNew
 	// originalbuffer = crysounds original mixbuffer.
 // newbuffer = the buffer passed from the previous DSP unit.
 // length = length in samples at this mix time.
-// param = user parameter passed through in CS_DSP_Create.
+// param = user parameter passed through in FSOUND_DSP_Create.
 //
 // modify the buffer in some fashion
-	int nMixer=CS_GetMixer();
-	if (nMixer!=CS_MIXER_QUALITY_FPU)
+	int nMixer= FSOUND_GetMixer();
+	if (nMixer!= FSOUND_MIXER_QUALITY_FPU)
 		return pNewBuffer;
 	float f, q, h;
-	f=2.0f*(float)sin(3.1415962*m_fDSPUnitSFXFilterCutoff/(float)CS_GetOutputRate());
+	f=2.0f*(float)sin(3.1415962*m_fDSPUnitSFXFilterCutoff/(float)FSOUND_GetOutputRate());
 	q=m_fDSPUnitSFXFilterResonance;
 	float fInput;
 	nLength<<=1;
@@ -442,34 +360,34 @@ void CSoundSystem::SetSpeakerConfig()
 		switch (nCurrSpeakerConfig)
 		{
 			case CSSPEAKERCONFIG_5POINT1:
-				CS_SetSpeakerMode(CS_SPEAKERMODE_DOLBYDIGITAL);
+				FSOUND_SetSpeakerMode(FSOUND_SPEAKERMODE_DOLBYDIGITAL);
 				m_pILog->Log("Set speaker mode 5.1\n");
 				break;
 			case CSSPEAKERCONFIG_HEADPHONE:
-				CS_SetSpeakerMode(CS_SPEAKERMODE_HEADPHONES);
+				FSOUND_SetSpeakerMode(FSOUND_SPEAKERMODE_HEADPHONES);
 				m_pILog->Log("Set speaker mode head phone\n");
 				break;
 			case CSSPEAKERCONFIG_MONO:
-				CS_SetSpeakerMode(CS_SPEAKERMODE_MONO);
+				FSOUND_SetSpeakerMode(FSOUND_SPEAKERMODE_MONO);
 				m_pILog->Log("Set speaker mode mono\n");
 				break;
 			case CSSPEAKERCONFIG_QUAD:
-				CS_SetSpeakerMode(CS_SPEAKERMODE_QUAD);
+				FSOUND_SetSpeakerMode(FSOUND_SPEAKERMODE_QUAD);
 				m_pILog->Log("Set speaker mode quad\n");
 				break;
 			case CSSPEAKERCONFIG_STEREO:
-				CS_SetSpeakerMode(CS_SPEAKERMODE_STEREO);
+				FSOUND_SetSpeakerMode(FSOUND_SPEAKERMODE_STEREO);
 				m_pILog->Log("Set speaker mode stereo\n");
 				break;
 			case CSSPEAKERCONFIG_SURROUND:
 				m_pILog->Log("Set speaker mode surround\n");
-				CS_SetSpeakerMode(CS_SPEAKERMODE_SURROUND);
+				FSOUND_SetSpeakerMode(FSOUND_SPEAKERMODE_SURROUND);
 				break;
 		}		
 		m_nSpeakerConfig=nCurrSpeakerConfig;
 
 		//Set the pan scalar to full pan separation 'cos cs_setspeakermode will reset it.
-		CS_SetPanSeperation(1.0f);
+		FSOUND_SetPanSeperation(1.0f);
 	}	
 }
 
@@ -499,11 +417,11 @@ CSoundSystem::~CSoundSystem()
 	Reset();
 
 	if (m_pDSPUnitSFXFilter)
-		CS_DSP_Free(m_pDSPUnitSFXFilter);
+		FSOUND_DSP_Free(m_pDSPUnitSFXFilter);
 	m_pDSPUnitSFXFilter=NULL;
 
 	if (m_bOK)
-		CS_Close();	
+		FSOUND_Close();
 
 	m_bOK = false;	
 
@@ -1023,8 +941,8 @@ void CSoundSystem::Update()
 	m_stoppedSoundToBeDeleted.resize(0);
 
 	{
-		FRAME_PROFILER( "CSoundSystem::CS_Update",GetSystem(),PROFILE_SOUND );
-		CS_Update();
+		FRAME_PROFILER( "CSoundSystem::FSOUND_Update",GetSystem(),PROFILE_SOUND );
+		FSOUND_Update();
 	}
 }
 
@@ -1461,12 +1379,12 @@ void CSoundSystem::SetListener(const CCamera &cCam,const Vec3d &vVel)
 		fVel[1]=vTempVel.z;
 		fVel[2]=vTempVel.y;        
 
-		//CS_3D_Listener_SetAttributes(pos, NULL, 0, 0, 1.0f, 0, 1.0f, 0);
-		CS_3D_Listener_SetAttributes(pos, fVel,FVec1.x,FVec1.z,FVec1.y,TVec1.x,TVec1.z,TVec1.y);
+		//FSOUND_3D_Listener_SetAttributes(pos, NULL, 0, 0, 1.0f, 0, 1.0f, 0);
+		FSOUND_3D_Listener_SetAttributes(pos, fVel,FVec1.x,FVec1.z,FVec1.y,TVec1.x,TVec1.z,TVec1.y);
 	}
 	else
 	{
-		CS_3D_Listener_SetAttributes(pos, NULL,FVec1.x,FVec1.z,FVec1.y,TVec1.x,TVec1.z,TVec1.y);
+		FSOUND_3D_Listener_SetAttributes(pos, NULL,FVec1.x,FVec1.z,FVec1.y,TVec1.x,TVec1.z,TVec1.y);
 	};
 
 	m_vPos=vPos;
@@ -1495,7 +1413,7 @@ void	CSoundSystem::Silence()
 		m_fSoundScale[i]=1.0f;
 	}
 
-	CS_StopSound(CS_FREE);
+	FSOUND_StopSound(FSOUND_FREE);
 	//if (m_vecSounds.empty()) 
 	//	return;
 	SoundListItor It=m_vecSounds.begin();
@@ -1521,11 +1439,11 @@ void	CSoundSystem::Pause(bool bPause,bool bResetVolume)
 		if (pSound->m_nChannel>=0)		
 		{			
 			if (bPause)				 
-				CS_SetPaused(pSound->m_nChannel,1);
+				FSOUND_SetPaused(pSound->m_nChannel,1);
 			else
 			{
 				pSound->m_fChannelPlayTime=GetISystem()->GetITimer()->GetCurrTime();
-				CS_SetPaused(pSound->m_nChannel,0);				
+				FSOUND_SetPaused(pSound->m_nChannel,0);
 			}
 		}
 		++It;
@@ -1569,8 +1487,8 @@ void	CSoundSystem::Mute(bool bMute)
 	if (m_nMuteRefCnt<0)
 		m_nMuteRefCnt=0;
 	bool bSetMute=m_nMuteRefCnt!=0;
-	CS_SetSFXMasterVolume(bSetMute ? 0 : 255);
-//	CS_SetMute(CS_ALL, bSetMute);
+	FSOUND_SetSFXMasterVolume(bSetMute ? 0 : 255);
+//	FSOUND_SetMute(FSOUND_ALL, bSetMute);
 }
  
 //////////////////////////////////////////////////////////////////////
@@ -1580,18 +1498,18 @@ bool CSoundSystem::IsEAX(int version)
 }
 
 //////////////////////////////////////////////////////////////////////////
-bool CSoundSystem::GetCurrentEaxEnvironment(int &nPreset, CS_REVERB_PROPERTIES &Props)
+bool CSoundSystem::GetCurrentEaxEnvironment(int &nPreset, FSOUND_REVERB_PROPERTIES &Props)
 {
 	nPreset=m_nLastEax;
 	if (m_pLastEAXProps)
-		memcpy(&Props,m_pLastEAXProps,sizeof(CS_REVERB_PROPERTIES));
+		memcpy(&Props,m_pLastEAXProps,sizeof(FSOUND_REVERB_PROPERTIES));
 	else
-		memset(&Props,0,sizeof(CS_REVERB_PROPERTIES));
+		memset(&Props,0,sizeof(FSOUND_REVERB_PROPERTIES));
 	return (true);
 }
 
 //////////////////////////////////////////////////////////////////////
-bool CSoundSystem::SetEaxListenerEnvironment(int nPreset, CS_REVERB_PROPERTIES *tpProps, int nFlags)
+bool CSoundSystem::SetEaxListenerEnvironment(int nPreset, FSOUND_REVERB_PROPERTIES *tpProps, int nFlags)
 {
 	GUARD_HEAP;
 	FUNCTION_PROFILER( GetSystem(),PROFILE_SOUND );
@@ -1654,7 +1572,7 @@ bool CSoundSystem::SetEaxListenerEnvironment(int nPreset, CS_REVERB_PROPERTIES *
 	*/
 	if (tpProps)
 	{
-		CS_Reverb_SetProperties(tpProps);
+		FSOUND_Reverb_SetProperties(tpProps);
 		m_nLastEax=-1;
 		m_pLastEAXProps=tpProps;
 	}
@@ -1666,147 +1584,147 @@ bool CSoundSystem::SetEaxListenerEnvironment(int nPreset, CS_REVERB_PROPERTIES *
 		{
 			case EAX_PRESET_GENERIC:
 			{
-				CS_REVERB_PROPERTIES pProps=CS_PRESET_GENERIC;
-				CS_Reverb_SetProperties(&pProps);
+				FSOUND_REVERB_PROPERTIES pProps= FSOUND_PRESET_GENERIC;
+				FSOUND_Reverb_SetProperties(&pProps);
 				break;
 			}
 			case EAX_PRESET_PADDEDCELL:
 			{
-				CS_REVERB_PROPERTIES pProps=CS_PRESET_PADDEDCELL;
-				CS_Reverb_SetProperties(&pProps);
+				FSOUND_REVERB_PROPERTIES pProps= FSOUND_PRESET_PADDEDCELL;
+				FSOUND_Reverb_SetProperties(&pProps);
 				break;
 			}
 			case EAX_PRESET_ROOM:
 			{
-				CS_REVERB_PROPERTIES pProps=CS_PRESET_ROOM;
-				CS_Reverb_SetProperties(&pProps);
+				FSOUND_REVERB_PROPERTIES pProps= FSOUND_PRESET_ROOM;
+				FSOUND_Reverb_SetProperties(&pProps);
 				break;
 			}
 			case EAX_PRESET_BATHROOM:
 			{
-				CS_REVERB_PROPERTIES pProps=CS_PRESET_BATHROOM;
-				CS_Reverb_SetProperties(&pProps);
+				FSOUND_REVERB_PROPERTIES pProps= FSOUND_PRESET_BATHROOM;
+				FSOUND_Reverb_SetProperties(&pProps);
 				break;
 			}
 			case EAX_PRESET_LIVINGROOM:
 			{
-				CS_REVERB_PROPERTIES pProps=CS_PRESET_LIVINGROOM;
-				CS_Reverb_SetProperties(&pProps);
+				FSOUND_REVERB_PROPERTIES pProps= FSOUND_PRESET_LIVINGROOM;
+				FSOUND_Reverb_SetProperties(&pProps);
 				break;
 			}
 			case EAX_PRESET_STONEROOM:
 			{
-				CS_REVERB_PROPERTIES pProps=CS_PRESET_STONEROOM;
-				CS_Reverb_SetProperties(&pProps);
+				FSOUND_REVERB_PROPERTIES pProps= FSOUND_PRESET_STONEROOM;
+				FSOUND_Reverb_SetProperties(&pProps);
 				break;
 			}
 			case EAX_PRESET_AUDITORIUM:
 			{
-				CS_REVERB_PROPERTIES pProps=CS_PRESET_AUDITORIUM;
-				CS_Reverb_SetProperties(&pProps);
+				FSOUND_REVERB_PROPERTIES pProps= FSOUND_PRESET_AUDITORIUM;
+				FSOUND_Reverb_SetProperties(&pProps);
 				break;
 			}
 			case EAX_PRESET_CONCERTHALL:
 			{
-				CS_REVERB_PROPERTIES pProps=CS_PRESET_CONCERTHALL;
-				CS_Reverb_SetProperties(&pProps);
+				FSOUND_REVERB_PROPERTIES pProps= FSOUND_PRESET_CONCERTHALL;
+				FSOUND_Reverb_SetProperties(&pProps);
 				break;
 			}
 			case EAX_PRESET_CAVE:
 			{
-				CS_REVERB_PROPERTIES pProps=CS_PRESET_CAVE;
-				CS_Reverb_SetProperties(&pProps);
+				FSOUND_REVERB_PROPERTIES pProps= FSOUND_PRESET_CAVE;
+				FSOUND_Reverb_SetProperties(&pProps);
 				break;
 			}
 			case EAX_PRESET_ARENA:
 			{
-				CS_REVERB_PROPERTIES pProps=CS_PRESET_ARENA;
-				CS_Reverb_SetProperties(&pProps);
+				FSOUND_REVERB_PROPERTIES pProps= FSOUND_PRESET_ARENA;
+				FSOUND_Reverb_SetProperties(&pProps);
 				break;
 			}
 			case EAX_PRESET_HANGAR:
 			{
-				CS_REVERB_PROPERTIES pProps=CS_PRESET_HANGAR;
-				CS_Reverb_SetProperties(&pProps);
+				FSOUND_REVERB_PROPERTIES pProps= FSOUND_PRESET_HANGAR;
+				FSOUND_Reverb_SetProperties(&pProps);
 				break;
 			}
 			case EAX_PRESET_CARPETTEDHALLWAY:
 			{
-				CS_REVERB_PROPERTIES pProps=CS_PRESET_CARPETTEDHALLWAY;
-				CS_Reverb_SetProperties(&pProps);
+				FSOUND_REVERB_PROPERTIES pProps= FSOUND_PRESET_CARPETTEDHALLWAY;
+				FSOUND_Reverb_SetProperties(&pProps);
 				break;
 			}
 			case EAX_PRESET_HALLWAY:
 			{
-				CS_REVERB_PROPERTIES pProps=CS_PRESET_HALLWAY;
-				CS_Reverb_SetProperties(&pProps);
+				FSOUND_REVERB_PROPERTIES pProps= FSOUND_PRESET_HALLWAY;
+				FSOUND_Reverb_SetProperties(&pProps);
 				break;
 			}
 			case EAX_PRESET_STONECORRIDOR:
 			{
-				CS_REVERB_PROPERTIES pProps=CS_PRESET_STONECORRIDOR;
-				CS_Reverb_SetProperties(&pProps);
+				FSOUND_REVERB_PROPERTIES pProps= FSOUND_PRESET_STONECORRIDOR;
+				FSOUND_Reverb_SetProperties(&pProps);
 				break;
 			}
 			case EAX_PRESET_ALLEY:
 			{
-				CS_REVERB_PROPERTIES pProps=CS_PRESET_ALLEY;
-				CS_Reverb_SetProperties(&pProps);
+				FSOUND_REVERB_PROPERTIES pProps= FSOUND_PRESET_ALLEY;
+				FSOUND_Reverb_SetProperties(&pProps);
 				break;
 			}
 			case EAX_PRESET_FOREST:
 			{
-				CS_REVERB_PROPERTIES pProps=CS_PRESET_FOREST;
-				CS_Reverb_SetProperties(&pProps);
+				FSOUND_REVERB_PROPERTIES pProps= FSOUND_PRESET_FOREST;
+				FSOUND_Reverb_SetProperties(&pProps);
 				break;
 			}
 			case EAX_PRESET_CITY:
 			{
-				CS_REVERB_PROPERTIES pProps=CS_PRESET_CITY;
-				CS_Reverb_SetProperties(&pProps);
+				FSOUND_REVERB_PROPERTIES pProps= FSOUND_PRESET_CITY;
+				FSOUND_Reverb_SetProperties(&pProps);
 				break;
 			}
 			case EAX_PRESET_MOUNTAINS:
 			{
-				CS_REVERB_PROPERTIES pProps=CS_PRESET_MOUNTAINS;
-				CS_Reverb_SetProperties(&pProps);
+				FSOUND_REVERB_PROPERTIES pProps= FSOUND_PRESET_MOUNTAINS;
+				FSOUND_Reverb_SetProperties(&pProps);
 				break;
 			}
 			case EAX_PRESET_QUARRY:
 			{
-				CS_REVERB_PROPERTIES pProps=CS_PRESET_QUARRY;
-				CS_Reverb_SetProperties(&pProps);
+				FSOUND_REVERB_PROPERTIES pProps= FSOUND_PRESET_QUARRY;
+				FSOUND_Reverb_SetProperties(&pProps);
 				break;
 			}
 			case EAX_PRESET_PLAIN:
 			{
-				CS_REVERB_PROPERTIES pProps=CS_PRESET_PLAIN;
-				CS_Reverb_SetProperties(&pProps);
+				FSOUND_REVERB_PROPERTIES pProps= FSOUND_PRESET_PLAIN;
+				FSOUND_Reverb_SetProperties(&pProps);
 				break;
 			}
 			case EAX_PRESET_PARKINGLOT:
 			{
-				CS_REVERB_PROPERTIES pProps=CS_PRESET_PARKINGLOT;
-				CS_Reverb_SetProperties(&pProps);
+				FSOUND_REVERB_PROPERTIES pProps= FSOUND_PRESET_PARKINGLOT;
+				FSOUND_Reverb_SetProperties(&pProps);
 				break;
 			}
 			case EAX_PRESET_SEWERPIPE:
 			{
-				CS_REVERB_PROPERTIES pProps=CS_PRESET_SEWERPIPE;
-				CS_Reverb_SetProperties(&pProps);
+				FSOUND_REVERB_PROPERTIES pProps= FSOUND_PRESET_SEWERPIPE;
+				FSOUND_Reverb_SetProperties(&pProps);
 				break;
 			}
 			case EAX_PRESET_UNDERWATER:
 			{
-				CS_REVERB_PROPERTIES pProps=CS_PRESET_UNDERWATER;
-				CS_Reverb_SetProperties(&pProps);
+				FSOUND_REVERB_PROPERTIES pProps= FSOUND_PRESET_UNDERWATER;
+				FSOUND_Reverb_SetProperties(&pProps);
 				break;
 			}
 			case EAX_PRESET_OFF:
 			default:
 			{
-				CS_REVERB_PROPERTIES pProps=MY_CS_PRESET_OFF;
-				CS_Reverb_SetProperties(&pProps);
+				FSOUND_REVERB_PROPERTIES pProps = MY_CS_PRESET_OFF;
+				FSOUND_Reverb_SetProperties(&pProps);
 				break;
 			}
 		}	
@@ -1870,29 +1788,25 @@ void CSoundSystem::RemoveBuffer(SSoundBufferProps &sn)
 void	CSoundSystem::GetSoundMemoryUsageInfo(size_t &nCurrentMemory,size_t &nMaxMemory)
 {
 	GUARD_HEAP;
-#if (defined CS_VERSION_372) || (defined CS_VERSION_361)
-  unsigned int tmpnCurrentMemory = nCurrentMemory;
-  unsigned int tmpnMaxMemory = nMaxMemory;
-	CS_GetMemoryStats(&tmpnCurrentMemory,&tmpnMaxMemory);
-  nCurrentMemory = tmpnCurrentMemory;
-  nMaxMemory = tmpnMaxMemory;
-#else
-  CS_GetMemoryStats(&nCurrentMemory,&nMaxMemory);
-#endif
+	unsigned int tmpnCurrentMemory = nCurrentMemory;
+	unsigned int tmpnMaxMemory = nMaxMemory;
+	FSOUND_GetMemoryStats(&tmpnCurrentMemory,&tmpnMaxMemory);
+	nCurrentMemory = tmpnCurrentMemory;
+	nMaxMemory = tmpnMaxMemory;
 }
 
 //////////////////////////////////////////////////////////////////////////
 int	CSoundSystem::GetUsedVoices()
 {
 	GUARD_HEAP;
-	return CS_GetChannelsPlaying();
+	return FSOUND_GetChannelsPlaying();
 }
 
 ///////////////////////////////////	///////////////////////////////////////
 float	CSoundSystem::GetCPUUsage()
 {
 	GUARD_HEAP;
-	return CS_GetCPUUsage();
+	return FSOUND_GetCPUUsage();
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1946,18 +1860,14 @@ void CSoundSystem::GetMemoryUsage(class ICrySizer* pSizer)
 		SIZER_COMPONENT_NAME(pSizer, "FMOD");
 		size_t nCurrentAlloced;
 		size_t nMaxAlloced;
-#if (defined CS_VERSION_372) || (defined CS_VERSION_361)
-    unsigned int tmpnCurrentMemory;
-    unsigned int tmpnMaxMemory;
-	  CS_GetMemoryStats(&tmpnCurrentMemory,&tmpnMaxMemory);
-    nCurrentAlloced = tmpnCurrentMemory;
-    nMaxAlloced = tmpnMaxMemory;
-#else
- 		CS_GetMemoryStats(&nCurrentAlloced, &nMaxAlloced);
-#endif
+		unsigned int tmpnCurrentMemory;
+		unsigned int tmpnMaxMemory;
+		FSOUND_GetMemoryStats(&tmpnCurrentMemory,&tmpnMaxMemory);
+		nCurrentAlloced = tmpnCurrentMemory;
+		nMaxAlloced = tmpnMaxMemory;
 
-		//CS_GetMemoryStats(&nCurrentAlloced, &nMaxAlloced);
-		if (!pSizer->AddObject(&CS_Init, nCurrentAlloced))
+		//FSOUND_GetMemoryStats(&nCurrentAlloced, &nMaxAlloced);
+		if (!pSizer->AddObject(&FSOUND_Init, nCurrentAlloced))
 			return;
 	}
 }

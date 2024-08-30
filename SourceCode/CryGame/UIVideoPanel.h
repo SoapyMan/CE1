@@ -17,7 +17,11 @@
 #include "UIWidget.h"
 #include "UISystem.h"
 
-#if !defined(WIN64) && !defined(LINUX) && !defined(NOT_USE_BINK_SDK)
+#if defined(WIN64) || defined(LINUX)
+#define NOT_USE_BINK_SDK
+#endif
+
+#if !defined(NOT_USE_BINK_SDK)
 #	include "../binksdk/bink.h"
 #endif
 
@@ -31,7 +35,7 @@ public:
 
 	UI_WIDGET(CUIVideoPanel)
 
-	CUIVideoPanel();
+		CUIVideoPanel();
 	~CUIVideoPanel();
 
 	CUISystem* GetUISystem() { return m_pUISystem; }
@@ -43,8 +47,8 @@ public:
 
 	int InitBink();
 
-	int LoadVideo(const string &szFileName, bool bSound);
-//	int LoadVideo_DivX(const string &szFileName, bool bSound);
+	int LoadVideo(const string& szFileName, bool bSound);
+	//	int LoadVideo_DivX(const string &szFileName, bool bSound);
 
 	int ReleaseVideo();
 	int Play();
@@ -61,36 +65,36 @@ public:
 	int EnableVideo(bool bEnable = 1);
 	int EnableAudio(bool bEnable = 1);
 
-	int OnError(const char *szError);
+	int OnError(const char* szError);
 	int OnFinished();
 
-	static void InitializeTemplate(IScriptSystem *pScriptSystem);
+	static void InitializeTemplate(IScriptSystem* pScriptSystem);
 
 	//------------------------------------------------------------------------------------------------- 
 	// Script Functions
 	//------------------------------------------------------------------------------------------------- 
-	int LoadVideo(IFunctionHandler *pH);
-	int ReleaseVideo(IFunctionHandler *pH);
+	int LoadVideo(IFunctionHandler* pH);
+	int ReleaseVideo(IFunctionHandler* pH);
 
-	int Play(IFunctionHandler *pH);
-	int Stop(IFunctionHandler *pH);
-	int Pause(IFunctionHandler *pH);
-	
-	int IsPlaying(IFunctionHandler *pH);
-	int IsPaused(IFunctionHandler *pH);
+	int Play(IFunctionHandler* pH);
+	int Stop(IFunctionHandler* pH);
+	int Pause(IFunctionHandler* pH);
 
-	int SetVolume(IFunctionHandler *pH);
-	int SetPan(IFunctionHandler *pH);
+	int IsPlaying(IFunctionHandler* pH);
+	int IsPaused(IFunctionHandler* pH);
 
-	int SetFrameRate(IFunctionHandler *pH);
+	int SetVolume(IFunctionHandler* pH);
+	int SetPan(IFunctionHandler* pH);
 
-	int EnableVideo(IFunctionHandler *pH);
-	int EnableAudio(IFunctionHandler *pH);
+	int SetFrameRate(IFunctionHandler* pH);
+
+	int EnableVideo(IFunctionHandler* pH);
+	int EnableAudio(IFunctionHandler* pH);
 
 	bool					m_DivX_Active;
 
 	string				m_szVideoFile;
-#if !defined(WIN64) && !defined(LINUX) && !defined(NOT_USE_BINK_SDK)
+#if !defined(NOT_USE_BINK_SDK)
 	HBINK					m_hBink;
 #endif
 	bool					m_bPaused;
@@ -98,8 +102,8 @@ public:
 	bool					m_bLooping;
 	bool					m_bKeepAspect;
 	int						m_iTextureID;
-	UISkinTexture m_pOverlay;
-	int						*m_pSwapBuffer;
+	UISkinTexture			m_pOverlay;
+	int* m_pSwapBuffer;
 };
 
 #endif

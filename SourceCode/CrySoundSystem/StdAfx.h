@@ -44,11 +44,7 @@
 #include <IConsole.h>
 #include <ISound.h>
 #include <ISystem.h>
-#if defined(WIN64) || defined(LINUX64)
-#include <CrySound64.h>
-#else
-#include <CrySound.h>
-#endif
+#include <fmod/fmod.h>
 #include <Cry_Math.h>
 //#include <vector.h>
 #include <set>

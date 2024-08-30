@@ -134,11 +134,7 @@ struct ISoundEventListener
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 //crysound definitions
-#if defined(WIN64) || defined(LINUX64)
-#include <CrySound64.h>
-#else
-#include <CrySound.h>
-#endif
+#include <fmod/fmod.h>
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // Sound system interface
@@ -196,11 +192,11 @@ struct ISoundSystem
 	virtual bool IsEAX( int version ) = 0;
 	//! Set EAX listener environment; one of the predefined presets
 	//! listened above or a custom environmental reverb set
-	virtual bool SetEaxListenerEnvironment(int nPreset, CS_REVERB_PROPERTIES *pProps=NULL, int nFlags=0) = 0;
+	virtual bool SetEaxListenerEnvironment(int nPreset, FSOUND_REVERB_PROPERTIES *pProps=NULL, int nFlags=0) = 0;
 
 	//! Gets current EAX listener environment or one of the predefined presets
 	//! used to save into the savegame
-	virtual bool GetCurrentEaxEnvironment(int &nPreset, CS_REVERB_PROPERTIES &Props)=0;
+	virtual bool GetCurrentEaxEnvironment(int &nPreset, FSOUND_REVERB_PROPERTIES &Props)=0;
 
 	//! Set the scaling factor for a specific scale group (0-31)
 	virtual bool SetGroupScale(int nGroup, float fScale) = 0;

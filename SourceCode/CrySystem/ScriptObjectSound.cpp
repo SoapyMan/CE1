@@ -9,11 +9,7 @@
 #include <IConsole.h>
 #include <ILog.h>
 #include <ISound.h>
-#if defined(WIN64) || defined(LINUX64)
-#include <CrySound64.h>
-#else
-#include <CrySound.h>
-#endif
+#include <fmod/fmod.h>
  
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -425,7 +421,7 @@ int CScriptObjectSound::SetEaxEnvironment(IFunctionHandler *pH)
 	    nFlags=0,			--CS_REVERB_FLAGS - modifies the behavior of above properties (win32 only) 
 	*/
 
-	CS_REVERB_PROPERTIES pProps;
+	FSOUND_REVERB_PROPERTIES pProps;
 
 	int nTemp; //cannot use unsigned int as parameter to getvaluechain function
 
@@ -1061,14 +1057,14 @@ int	CScriptObjectSound::GetDirectionalAttenuationMaxScale(IFunctionHandler *pH)
 int	CScriptObjectSound::LoadMusic(IFunctionHandler *pH)
 {
 	bool bRes = true;
-	/*
+
 	CHECK_PARAMETERS(1);
 	const char *pszFilename;
 	pH->GetParam(1, pszFilename);
 	bRes=m_pSystem->GetIMusicSystem()->LoadFromXML(pszFilename,true);
 	if (!bRes)
 		m_pSystem->GetILog()->Log("Unable to load music from %s !", pszFilename);
-		*/
+		
 	return pH->EndFunction(bRes);
 }
 
