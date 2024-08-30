@@ -213,7 +213,7 @@ CSoundSystem::CSoundSystem(ISystem* pSystem, HWND hWnd) : CSoundSystemCommon(pSy
 	//FSOUND_SetDriver(0);
 	//FSOUND_SetMixer(FSOUND_MIXER_QUALITY_AUTODETECT);
 
-#if 0//defined(WIN64) || defined(FSOUND_VERSION_3_63)
+#if defined(WIN64)
 
 	//FSOUND_DSP_SetActive(FSOUND_DSP_GetClearUnit(), FALSE);
 	//FSOUND_DSP_SetActive(FSOUND_DSP_GetSFXUnit(), FALSE);
