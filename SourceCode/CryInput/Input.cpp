@@ -45,7 +45,7 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 ///////////////////////////////////////////
-int g_nKeys[]={
+int g_nKeys[] = {
 		XKEY_BACKSPACE     ,
 		XKEY_TAB           ,
 		XKEY_RETURN        ,
@@ -182,188 +182,188 @@ int g_nKeys[]={
 		XKEY_MAXIS_X			,
 		XKEY_MAXIS_Y			,
 
-    // Gamepad
-    XKEY_GP_A,
-    XKEY_GP_B,
-    XKEY_GP_X,
-    XKEY_GP_Y,
-    XKEY_GP_WHITE,
-    XKEY_GP_BLACK,
-    XKEY_GP_LEFT_TRIGGER,
-    XKEY_GP_RIGHT_TRIGGER,
+		// Gamepad
+		XKEY_GP_A,
+		XKEY_GP_B,
+		XKEY_GP_X,
+		XKEY_GP_Y,
+		XKEY_GP_WHITE,
+		XKEY_GP_BLACK,
+		XKEY_GP_LEFT_TRIGGER,
+		XKEY_GP_RIGHT_TRIGGER,
 
-    XKEY_GP_DPAD_UP     ,
-    XKEY_GP_DPAD_DOWN   ,
-    XKEY_GP_DPAD_LEFT   ,
-    XKEY_GP_DPAD_RIGHT  ,
-    XKEY_GP_START       ,
-    XKEY_GP_BACK        ,
-    XKEY_GP_LEFT_THUMB  ,
-    XKEY_GP_RIGHT_THUMB ,
+		XKEY_GP_DPAD_UP     ,
+		XKEY_GP_DPAD_DOWN   ,
+		XKEY_GP_DPAD_LEFT   ,
+		XKEY_GP_DPAD_RIGHT  ,
+		XKEY_GP_START       ,
+		XKEY_GP_BACK        ,
+		XKEY_GP_LEFT_THUMB  ,
+		XKEY_GP_RIGHT_THUMB ,
 
-    XKEY_GP_STHUMBLUP,
-		XKEY_GP_STHUMBLDOWN,
-    XKEY_GP_STHUMBLLEFT,
-		XKEY_GP_STHUMBLRIGHT,
+		XKEY_GP_STHUMBLUP,
+			XKEY_GP_STHUMBLDOWN,
+		XKEY_GP_STHUMBLLEFT,
+			XKEY_GP_STHUMBLRIGHT,
 
-    XKEY_GP_STHUMBLX,
-		XKEY_GP_STHUMBLY,
-    XKEY_GP_STHUMBRX,
-		XKEY_GP_STHUMBRY,
+		XKEY_GP_STHUMBLX,
+			XKEY_GP_STHUMBLY,
+		XKEY_GP_STHUMBRX,
+			XKEY_GP_STHUMBRY,
 
-    XKEY_NULL
+		XKEY_NULL
 };
-bool CInput::Init(ISystem *pSystem
+bool CInput::Init(ISystem* pSystem
 #ifndef USE_SDL_INPUT
-	,HINSTANCE hinst,HWND hwnd,bool dinput
+	, HINSTANCE hinst, HWND hwnd, bool dinput
 #endif
 )
 {
 	m_pSystem = pSystem;
 
 #ifndef PS2
-	m_pLog=pSystem->GetILog();
+	m_pLog = pSystem->GetILog();
 	m_postingenable = 1;
-  
+
 #ifndef USE_SDL_INPUT
-	m_hinst=hinst;
-	m_hwnd=hwnd;
-		
+	m_hinst = hinst;
+	m_hwnd = hwnd;
+
 	//if (dinput)
 	{
 		m_pLog->Log("Initializing Direct Input\n");
 
 		HRESULT hr = DirectInput8Create(m_hinst,
-			DIRECTINPUT_VERSION, 
-			IID_IDirectInput8, 
-			(void**)&m_g_pdi, NULL); 
-		
-		
+			DIRECTINPUT_VERSION,
+			IID_IDirectInput8,
+			(void**)&m_g_pdi, NULL);
+
+
 		//HRESULT hr = DirectInputCreate(m_hinst, DIRECTINPUT_VERSION, &m_g_pdi, NULL);	
-		if (FAILED(hr) && dinput) 
+		if (FAILED(hr) && dinput)
 		{
-			m_pLog->Log("Cannot initialize Direct Input\n");		
+			m_pLog->Log("Cannot initialize Direct Input\n");
 			return (false);
-		}			
+		}
 	}
 	//else
 	//	return (true);
-	
-	m_pLog->Log("Direct Input initialized (CryInputDLL)\n");	
+
+	m_pLog->Log("Direct Input initialized (CryInputDLL)\n");
 #endif
 
 #ifndef _XBOX
 	//if (!m_Keyboard.Init(this,m_pLog,m_g_pdi,hinst,hwnd) && dinput)
 #ifndef USE_SDL_INPUT
-	if (!m_Keyboard.Init(this,m_pSystem,m_g_pdi,hinst,hwnd) && dinput)
+	if (!m_Keyboard.Init(this, m_pSystem, m_g_pdi, hinst, hwnd) && dinput)
 #else
 	if (!m_Keyboard.Init(this, m_pSystem))
 #endif
 		return (false);
-	m_pLog->LogToFile("Keyboard initialized\n");			
-	
+	m_pLog->LogToFile("Keyboard initialized\n");
+
 	m_Mouse.m_pInput = this;
 #ifndef USE_SDL_INPUT
-	if (!m_Mouse.Init(m_pSystem,m_g_pdi,hinst,hwnd,dinput) && dinput) 
+	if (!m_Mouse.Init(m_pSystem, m_g_pdi, hinst, hwnd, dinput) && dinput)
 #else
 	if (!m_Mouse.Init(m_pSystem))
 #endif
 		return (false);
-	m_pLog->Log("Mouse initialized\n");		
-	
-	if (!m_Joystick.Init(m_pLog)) 
+	m_pLog->Log("Mouse initialized\n");
+
+	if (!m_Joystick.Init(m_pLog))
 	{
 		m_pLog->Log("Cannot initialize joystick\n");
-	}		
-	else 
-		m_pLog->Log("Joystick initialized\n");		
+	}
+	else
+		m_pLog->Log("Joystick initialized\n");
 #else
 
-  if (!m_Gamepad.Init(m_pLog)) 
+	if (!m_Gamepad.Init(m_pLog))
 	{
 		m_pLog->Log("Cannot initialize Gamepad\n");
-	}		
-	else 
-		m_pLog->Log("Gamepad initialized\n");		
+	}
+	else
+		m_pLog->Log("Gamepad initialized\n");
 #ifdef DEBUG_KEYBOARD
-  if (!m_Keyboard.Init(this, m_pLog))
-  {
-    m_pLog->Log("Cannot initialize Keyboard\n");
-  }
-  else
-	  m_pLog->LogToFile("Keyboard initialized\n");
+	if (!m_Keyboard.Init(this, m_pLog))
+	{
+		m_pLog->Log("Cannot initialize Keyboard\n");
+	}
+	else
+		m_pLog->LogToFile("Keyboard initialized\n");
 #endif //DEBUG_KEYBOARD
 
 #endif //_XBOX
 
 	m_pLog->Log("initializing Key/name Mapping\n");
 
-	int n=0;
-	while(g_nKeys[n]!=0)
+	int n = 0;
+	while (g_nKeys[n] != 0)
 	{
-		m_mapKeyNames.insert(KeyNamesMapItor::value_type(GetKeyName(g_nKeys[n]),g_nKeys[n]));
+		m_mapKeyNames.insert(KeyNamesMapItor::value_type(GetKeyName(g_nKeys[n]), g_nKeys[n]));
 		//m_pLog->Log("KEY==> %s",GetKeyName(g_nKeys[n]));
 		n++;
 	}
 
-  m_bPreviousFocus = false;
+	m_bPreviousFocus = false;
 	m_exclusivelistener = 0;
 #endif
-	return (true);	
+	return (true);
 }
 
 ////////////////////Morgantini...init PS2 version ///////////////////////
 #ifdef PS2
 
-bool CInput::Init(ILog *pLog,ITimer *pTimer)
+bool CInput::Init(ILog* pLog, ITimer* pTimer)
 {
 
-	m_pLog=pLog;
+	m_pLog = pLog;
 	m_pLog->Log("Initializing PS2 Input\n");
 
-	
-	
-	if (!m_Mouse.Init(pLog,pTimer))
+
+
+	if (!m_Mouse.Init(pLog, pTimer))
 	{
 		m_pLog->Log("Cannot initialize Mouse\n");
 		//TO BE CHANGED return (false);
 	}
 	else
-		m_pLog->Log("PS2 Mouse initialized\n");		
-				
+		m_pLog->Log("PS2 Mouse initialized\n");
+
 	//Set the pad on mouse
 	m_Mouse.SetPad(&m_Joystick);
-	
-	
-	
-	
-	if (!m_Keyboard.Init(pLog)) 
+
+
+
+
+	if (!m_Keyboard.Init(pLog))
 	{
 		m_pLog->Log("Cannot initialize Keyboard\n");
 		//TO BE CHANGED return (false);
 	}
 	else
-		m_pLog->LogToFile("PS2 Keyboard initialized\n");		
-	
+		m_pLog->LogToFile("PS2 Keyboard initialized\n");
 
-	if (!m_Joystick.Init(pLog)) 
+
+	if (!m_Joystick.Init(pLog))
 	{
 		m_pLog->Log("Cannot initialize joystick\n");
 		//TO BE CHANGED return (false);
-	}		
-	else 
+	}
+	else
 	{
-		
-		if(!m_Keyboard.IsInit())
+
+		if (!m_Keyboard.IsInit())
 		{
 			m_Keyboard.SetPad(&m_Joystick);
-			
+
 		}
 
-//TiZ		m_pLog->Log("PS2 Joystick initialized\n");
-	}		
+		//TiZ		m_pLog->Log("PS2 Joystick initialized\n");
+	}
 
-	return (true);	
+	return (true);
 
 }
 
@@ -381,9 +381,9 @@ void CInput::ShutDown()
 	m_Mouse.Shutdown();
 	m_Joystick.ShutDown();
 #else //_XBOX
-  m_Gamepad.ShutDown();
+	m_Gamepad.ShutDown();
 #ifdef DEBUG_KEYBOARD
-  m_Keyboard.ShutDown();
+	m_Keyboard.ShutDown();
 #endif //DEBUG_KEYBOARD 
 #endif //_XBOX
 
@@ -393,7 +393,7 @@ void CInput::ShutDown()
 	{
 		m_g_pdi->Release();
 		m_g_pdi = NULL;
-	}	
+	}
 #endif //_XBOX
 
 	//
@@ -403,22 +403,22 @@ void CInput::ShutDown()
 ///////////////////////////////////////////
 void CInput::Update(bool bFocus)
 {
-	if(bFocus)
-  {
+	if (bFocus)
+	{
 		m_console = m_pSystem->GetIConsole();
 #ifndef _XBOX
-    m_Keyboard.Update();
-	  m_Mouse.Update(m_bPreviousFocus); // m_bPreviousFocus used to skip first mouse read after getting focus
-	  m_Joystick.Update();
+		m_Keyboard.Update();
+		m_Mouse.Update(m_bPreviousFocus); // m_bPreviousFocus used to skip first mouse read after getting focus
+		m_Joystick.Update();
 #else //_XBOX
-   m_Gamepad.Update();
+		m_Gamepad.Update();
 #ifdef DEBUG_KEYBOARD
-   m_Keyboard.Update();
+		m_Keyboard.Update();
 #endif //DEBUG_KEYBOARD 
 #endif //_XBOX
-  }
+	}
 
-  m_bPreviousFocus = bFocus;
+	m_bPreviousFocus = bFocus;
 }
 
 void CInput::ClearKeyState()
@@ -430,22 +430,22 @@ void CInput::ClearKeyState()
 ///////////////////////////////////////////////
 IActionMapManager* CInput::CreateActionMapManager()
 {
-	CXActionMapManager *pAMM = new CXActionMapManager(this);
-	if(!pAMM)
+	CXActionMapManager* pAMM = new CXActionMapManager(this);
+	if (!pAMM)
 		return NULL;
 
 	return pAMM;
 }
 ///////////////////////////////////////////////
-const char* CInput::GetKeyName(int iKey,int modifiers, bool bGUI)
+const char* CInput::GetKeyName(int iKey, int modifiers, bool bGUI)
 {
-	static char szKeyName[8];	szKeyName[0]=0;
+	static char szKeyName[8];	szKeyName[0] = 0;
 
 	if (bGUI)
 	{
 		bool bNumLock = ((GetKeyState(XKEY_NUMLOCK) & 0x01) != 0);
 
-		switch(iKey)
+		switch (iKey)
 		{
 		case XKEY_SPACE:         return " ";
 		case XKEY_MULTIPLY:      return "*";
@@ -557,7 +557,7 @@ const char* CInput::GetKeyName(int iKey,int modifiers, bool bGUI)
 			return "";
 		}
 
-		sprintf(szKeyName,"%c", m_Keyboard.XKEY2ASCII(iKey, modifiers));
+		sprintf(szKeyName, "%c", m_Keyboard.XKEY2ASCII(iKey, modifiers));
 
 		return szKeyName;
 	}
@@ -679,7 +679,7 @@ const char* CInput::GetKeyName(int iKey,int modifiers, bool bGUI)
 		case XKEY_GP_STHUMBRY:    return "gp_sthumbry";
 		}
 
-		sprintf(szKeyName,"%c", m_Keyboard.XKEY2ASCII(iKey, modifiers));
+		sprintf(szKeyName, "%c", m_Keyboard.XKEY2ASCII(iKey, modifiers));
 
 		return szKeyName;
 	}
@@ -687,7 +687,7 @@ const char* CInput::GetKeyName(int iKey,int modifiers, bool bGUI)
 	return "";
 }
 
-bool CInput::GetOSKeyName(int nKey, wchar_t *szwKeyName, int iBufSize)
+bool CInput::GetOSKeyName(int nKey, wchar_t* szwKeyName, int iBufSize)
 {
 	if (IS_KEYBOARD_KEY(nKey))
 	{
@@ -706,140 +706,140 @@ bool CInput::GetOSKeyName(int nKey, wchar_t *szwKeyName, int iBufSize)
 #ifdef _WIN32
 int CInput::VK2XKEY(int nKey)
 {
-//#ifdef DEBUG_KEYBOARD
-	switch(nKey)
-   {
-      case VK_ESCAPE:        return XKEY_ESCAPE;
-      case '1':             return XKEY_1;
-      case '2':             return XKEY_2;
-      case '3':             return XKEY_3;
-      case '4':             return XKEY_4;
-      case '5':             return XKEY_5;
-      case '6':             return XKEY_6;
-      case '7':             return XKEY_7;
-      case '8':             return XKEY_8;
-      case '9':             return XKEY_9;
-      case '10':             return XKEY_0;
-      case VK_SUBTRACT:         return XKEY_MINUS;
-      case VK_OEM_PLUS:        return XKEY_EQUALS;
-      case VK_BACK:          return XKEY_BACKSPACE;
-      case VK_TAB:           return XKEY_TAB;
-      case 'Q':             return XKEY_Q;
-      case 'W':             return XKEY_W;
-      case 'E':             return XKEY_E;
-      case 'R':             return XKEY_R;
-      case 'T':             return XKEY_T;
-      case 'Y':             return XKEY_Y;
-      case 'U':             return XKEY_U;
-      case 'I':             return XKEY_I;
-      case 'O':             return XKEY_O;
-      case 'P':             return XKEY_P;
-      case VK_OEM_4:      return XKEY_LBRACKET;
-      case VK_OEM_6:      return XKEY_RBRACKET;
-      case VK_RETURN:        return XKEY_RETURN;
-      case VK_LCONTROL:      return XKEY_LCONTROL;
-      case 'A':             return XKEY_A;
-      case 'S':             return XKEY_S;
-      case 'D':             return XKEY_D;
-      case 'F':             return XKEY_F;
-      case 'G':             return XKEY_G;
-      case 'H':             return XKEY_H;
-      case 'J':             return XKEY_J;
-      case 'K':             return XKEY_K;
-      case 'L':             return XKEY_L;
-      case VK_OEM_1:     return XKEY_SEMICOLON;
-      case VK_OEM_7:    return XKEY_APOSTROPHE;
-      case VK_OEM_3:         return XKEY_TILDE; 
-      case VK_LSHIFT:        return XKEY_LSHIFT;
-      case VK_OEM_5:     return XKEY_BACKSLASH;
-      case 'Z':             return XKEY_Z;
-      case 'X':             return XKEY_X;
-      case 'C':             return XKEY_C;
-      case 'V':             return XKEY_V;
-      case 'B':             return XKEY_B;
-      case 'N':             return XKEY_N;
-      case 'M':             return XKEY_M;
-      case VK_OEM_COMMA:         return XKEY_COMMA;
-      case VK_OEM_PERIOD:        return XKEY_PERIOD;
-      case VK_OEM_2:         return XKEY_SLASH;
-      case VK_RSHIFT:        return XKEY_RSHIFT;
-      case VK_MULTIPLY:      return XKEY_MULTIPLY;
-      case VK_LMENU:          return XKEY_LALT;
-      case VK_SPACE:         return XKEY_SPACE;
-      case VK_CAPITAL:      return XKEY_CAPSLOCK;
-      case VK_F1:            return XKEY_F1;
-      case VK_F2:            return XKEY_F2;
-      case VK_F3:            return XKEY_F3;
-      case VK_F4:            return XKEY_F4;
-      case VK_F5:            return XKEY_F5;
-      case VK_F6:            return XKEY_F6;
-      case VK_F7:            return XKEY_F7;
-      case VK_F8:            return XKEY_F8;
-      case VK_F9:            return XKEY_F9;
-      case VK_F10:           return XKEY_F10;
-      case VK_NUMLOCK:       return XKEY_NUMLOCK;
-      case VK_SCROLL:        return XKEY_SCROLLLOCK;
-      case VK_NUMPAD7:       return XKEY_NUMPAD7;
-      case VK_NUMPAD8:       return XKEY_NUMPAD8;
-      case VK_NUMPAD9:       return XKEY_NUMPAD9;
-      case VK_NUMPAD4:       return XKEY_NUMPAD4;
-      case VK_NUMPAD5:       return XKEY_NUMPAD5;
-      case VK_NUMPAD6:       return XKEY_NUMPAD6;
-      case VK_ADD:           return XKEY_ADD;
-      case VK_NUMPAD1:       return XKEY_NUMPAD1;
-      case VK_NUMPAD2:       return XKEY_NUMPAD2;
-      case VK_NUMPAD3:       return XKEY_NUMPAD3;
-      case VK_NUMPAD0:       return XKEY_NUMPAD0;
-      case VK_DECIMAL:       return XKEY_DECIMAL;
-      case VK_F11:           return XKEY_F11;
-      case VK_F12:           return XKEY_F12;
-      case VK_F13:           return XKEY_F13;
-      case VK_F14:           return XKEY_F14;
-      case VK_F15:           return XKEY_F15;
-      case VK_KANA:          return 0;
-      case VK_CONVERT:       return 0;
-      //case VK_NOCONVERT:     return 0;
-//      case VK_YEN:           return 0;
-//      case VK_NUMPADEQUALS:  return 0;
-//      case VK_CIRCUMFLEX:    return 0;
-//      case VK_AT:            return 0;
-//      case VK_COLON:         return 0;
-//      case VK_UNDERLINE:     return 0;
- //     case VK_KANJI:         return 0;
-//      case VK_STOP:          return 0;
-//      case VK_AX:            return 0;
-//      case VK_UNLABELED:     return 0;
-      //case VK_NUMPADENTER:   return XKEY_NUMPADENTER;
-      case VK_RCONTROL:      return XKEY_RCONTROL;
-//      case VK_NUMPADCOMMA:   return XKEY_SEPARATOR;
-      case VK_DIVIDE:        return XKEY_DIVIDE;
-//      case VK_SYSRQ:         return XKEY_PRINT;
-      case VK_RMENU:          return XKEY_RALT;
-      case VK_PAUSE:         return XKEY_PAUSE;
-      case VK_HOME:          return XKEY_HOME;
-      case VK_UP:            return XKEY_UP;
-      case VK_PRIOR:          return XKEY_PAGE_UP;
-      case VK_LEFT:          return XKEY_LEFT;
-      case VK_RIGHT:         return XKEY_RIGHT;
-      case VK_END:           return XKEY_END;
-      case VK_DOWN:          return XKEY_DOWN;
-      case VK_NEXT:          return XKEY_PAGE_DOWN;
-      case VK_INSERT:        return XKEY_INSERT;
-      case VK_DELETE:        return XKEY_DELETE;
-      case VK_LWIN:          return XKEY_WIN_LWINDOW;
-      case VK_RWIN:          return XKEY_WIN_RWINDOW;
-      case VK_APPS:          return XKEY_WIN_APPS;
-      case VK_OEM_102:       return XKEY_OEM_102;
-			case VK_OEM_MINUS:		 return XKEY_MINUS;	
-   };
-//#endif // DEBUG_KEYBOARD
+	//#ifdef DEBUG_KEYBOARD
+	switch (nKey)
+	{
+	case VK_ESCAPE:        return XKEY_ESCAPE;
+	case '1':             return XKEY_1;
+	case '2':             return XKEY_2;
+	case '3':             return XKEY_3;
+	case '4':             return XKEY_4;
+	case '5':             return XKEY_5;
+	case '6':             return XKEY_6;
+	case '7':             return XKEY_7;
+	case '8':             return XKEY_8;
+	case '9':             return XKEY_9;
+	case '10':             return XKEY_0;
+	case VK_SUBTRACT:         return XKEY_MINUS;
+	case VK_OEM_PLUS:        return XKEY_EQUALS;
+	case VK_BACK:          return XKEY_BACKSPACE;
+	case VK_TAB:           return XKEY_TAB;
+	case 'Q':             return XKEY_Q;
+	case 'W':             return XKEY_W;
+	case 'E':             return XKEY_E;
+	case 'R':             return XKEY_R;
+	case 'T':             return XKEY_T;
+	case 'Y':             return XKEY_Y;
+	case 'U':             return XKEY_U;
+	case 'I':             return XKEY_I;
+	case 'O':             return XKEY_O;
+	case 'P':             return XKEY_P;
+	case VK_OEM_4:      return XKEY_LBRACKET;
+	case VK_OEM_6:      return XKEY_RBRACKET;
+	case VK_RETURN:        return XKEY_RETURN;
+	case VK_LCONTROL:      return XKEY_LCONTROL;
+	case 'A':             return XKEY_A;
+	case 'S':             return XKEY_S;
+	case 'D':             return XKEY_D;
+	case 'F':             return XKEY_F;
+	case 'G':             return XKEY_G;
+	case 'H':             return XKEY_H;
+	case 'J':             return XKEY_J;
+	case 'K':             return XKEY_K;
+	case 'L':             return XKEY_L;
+	case VK_OEM_1:     return XKEY_SEMICOLON;
+	case VK_OEM_7:    return XKEY_APOSTROPHE;
+	case VK_OEM_3:         return XKEY_TILDE;
+	case VK_LSHIFT:        return XKEY_LSHIFT;
+	case VK_OEM_5:     return XKEY_BACKSLASH;
+	case 'Z':             return XKEY_Z;
+	case 'X':             return XKEY_X;
+	case 'C':             return XKEY_C;
+	case 'V':             return XKEY_V;
+	case 'B':             return XKEY_B;
+	case 'N':             return XKEY_N;
+	case 'M':             return XKEY_M;
+	case VK_OEM_COMMA:         return XKEY_COMMA;
+	case VK_OEM_PERIOD:        return XKEY_PERIOD;
+	case VK_OEM_2:         return XKEY_SLASH;
+	case VK_RSHIFT:        return XKEY_RSHIFT;
+	case VK_MULTIPLY:      return XKEY_MULTIPLY;
+	case VK_LMENU:          return XKEY_LALT;
+	case VK_SPACE:         return XKEY_SPACE;
+	case VK_CAPITAL:      return XKEY_CAPSLOCK;
+	case VK_F1:            return XKEY_F1;
+	case VK_F2:            return XKEY_F2;
+	case VK_F3:            return XKEY_F3;
+	case VK_F4:            return XKEY_F4;
+	case VK_F5:            return XKEY_F5;
+	case VK_F6:            return XKEY_F6;
+	case VK_F7:            return XKEY_F7;
+	case VK_F8:            return XKEY_F8;
+	case VK_F9:            return XKEY_F9;
+	case VK_F10:           return XKEY_F10;
+	case VK_NUMLOCK:       return XKEY_NUMLOCK;
+	case VK_SCROLL:        return XKEY_SCROLLLOCK;
+	case VK_NUMPAD7:       return XKEY_NUMPAD7;
+	case VK_NUMPAD8:       return XKEY_NUMPAD8;
+	case VK_NUMPAD9:       return XKEY_NUMPAD9;
+	case VK_NUMPAD4:       return XKEY_NUMPAD4;
+	case VK_NUMPAD5:       return XKEY_NUMPAD5;
+	case VK_NUMPAD6:       return XKEY_NUMPAD6;
+	case VK_ADD:           return XKEY_ADD;
+	case VK_NUMPAD1:       return XKEY_NUMPAD1;
+	case VK_NUMPAD2:       return XKEY_NUMPAD2;
+	case VK_NUMPAD3:       return XKEY_NUMPAD3;
+	case VK_NUMPAD0:       return XKEY_NUMPAD0;
+	case VK_DECIMAL:       return XKEY_DECIMAL;
+	case VK_F11:           return XKEY_F11;
+	case VK_F12:           return XKEY_F12;
+	case VK_F13:           return XKEY_F13;
+	case VK_F14:           return XKEY_F14;
+	case VK_F15:           return XKEY_F15;
+	case VK_KANA:          return 0;
+	case VK_CONVERT:       return 0;
+		//case VK_NOCONVERT:     return 0;
+  //      case VK_YEN:           return 0;
+  //      case VK_NUMPADEQUALS:  return 0;
+  //      case VK_CIRCUMFLEX:    return 0;
+  //      case VK_AT:            return 0;
+  //      case VK_COLON:         return 0;
+  //      case VK_UNDERLINE:     return 0;
+   //     case VK_KANJI:         return 0;
+  //      case VK_STOP:          return 0;
+  //      case VK_AX:            return 0;
+  //      case VK_UNLABELED:     return 0;
+		//case VK_NUMPADENTER:   return XKEY_NUMPADENTER;
+	case VK_RCONTROL:      return XKEY_RCONTROL;
+		//      case VK_NUMPADCOMMA:   return XKEY_SEPARATOR;
+	case VK_DIVIDE:        return XKEY_DIVIDE;
+		//      case VK_SYSRQ:         return XKEY_PRINT;
+	case VK_RMENU:          return XKEY_RALT;
+	case VK_PAUSE:         return XKEY_PAUSE;
+	case VK_HOME:          return XKEY_HOME;
+	case VK_UP:            return XKEY_UP;
+	case VK_PRIOR:          return XKEY_PAGE_UP;
+	case VK_LEFT:          return XKEY_LEFT;
+	case VK_RIGHT:         return XKEY_RIGHT;
+	case VK_END:           return XKEY_END;
+	case VK_DOWN:          return XKEY_DOWN;
+	case VK_NEXT:          return XKEY_PAGE_DOWN;
+	case VK_INSERT:        return XKEY_INSERT;
+	case VK_DELETE:        return XKEY_DELETE;
+	case VK_LWIN:          return XKEY_WIN_LWINDOW;
+	case VK_RWIN:          return XKEY_WIN_RWINDOW;
+	case VK_APPS:          return XKEY_WIN_APPS;
+	case VK_OEM_102:       return XKEY_OEM_102;
+	case VK_OEM_MINUS:		 return XKEY_MINUS;
+	};
+	//#endif // DEBUG_KEYBOARD
 
 
-   return XKEY_NULL;
+	return XKEY_NULL;
 }
 #endif
 //////////////////////////////////////////////////////////////////////////
-int CInput::GetKeyID(const char *sName)
+int CInput::GetKeyID(const char* sName)
 {
 	if (!sName)
 	{
@@ -849,13 +849,13 @@ int CInput::GetKeyID(const char *sName)
 	KeyNamesMapItor itor;
 
 	char sTemp[256];
-	strcpy(sTemp,sName);	
+	strcpy(sTemp, sName);
 
 	strlwr(sTemp);
 
-	itor=m_mapKeyNames.find(sTemp);
+	itor = m_mapKeyNames.find(sTemp);
 
-	if(itor!=m_mapKeyNames.end())
+	if (itor != m_mapKeyNames.end())
 		return itor->second;
 
 	return XKEY_NULL;
@@ -863,45 +863,45 @@ int CInput::GetKeyID(const char *sName)
 
 //think if can be better
 //////////////////////////////////////////////////////////////////////////
-const char *CInput::GetXKeyPressedName()
+const char* CInput::GetXKeyPressedName()
 {
-	if(MousePressed(XKEY_MOUSE1))
+	if (MousePressed(XKEY_MOUSE1))
 	{
 		return GetKeyName(XKEY_MOUSE1);
 	}
-	if(MousePressed(XKEY_MOUSE2))
+	if (MousePressed(XKEY_MOUSE2))
 	{
 		return GetKeyName(XKEY_MOUSE2);
 	}
-	if(MousePressed(XKEY_MOUSE3))
+	if (MousePressed(XKEY_MOUSE3))
 	{
 		return GetKeyName(XKEY_MOUSE3);
 	}
-	if(MousePressed(XKEY_MOUSE4))
+	if (MousePressed(XKEY_MOUSE4))
 	{
 		return GetKeyName(XKEY_MOUSE4);
 	}
-	if(MousePressed(XKEY_MOUSE5))
+	if (MousePressed(XKEY_MOUSE5))
 	{
 		return GetKeyName(XKEY_MOUSE5);
 	}
-	if(MousePressed(XKEY_MOUSE6))
+	if (MousePressed(XKEY_MOUSE6))
 	{
 		return GetKeyName(XKEY_MOUSE6);
 	}
-	if(MousePressed(XKEY_MOUSE7))
+	if (MousePressed(XKEY_MOUSE7))
 	{
 		return GetKeyName(XKEY_MOUSE7);
 	}
-	if(MousePressed(XKEY_MOUSE8))
+	if (MousePressed(XKEY_MOUSE8))
 	{
 		return GetKeyName(XKEY_MOUSE8);
 	}
-	if(MousePressed(XKEY_MWHEEL_DOWN))
+	if (MousePressed(XKEY_MWHEEL_DOWN))
 	{
 		return GetKeyName(XKEY_MWHEEL_DOWN);
 	}
-	if(MousePressed(XKEY_MWHEEL_UP))
+	if (MousePressed(XKEY_MWHEEL_UP))
 	{
 		return GetKeyName(XKEY_MWHEEL_UP);
 	}
@@ -909,78 +909,78 @@ const char *CInput::GetXKeyPressedName()
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CInput::AddEventListener( IInputEventListener *pListener )
+void CInput::AddEventListener(IInputEventListener* pListener)
 {
 	// Add new listener to list if not added yet.
-	if (std::find(m_listeners.begin(),m_listeners.end(),pListener) == m_listeners.end())
+	if (std::find(m_listeners.begin(), m_listeners.end(), pListener) == m_listeners.end())
 	{
-		m_listeners.push_back( pListener );
+		m_listeners.push_back(pListener);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CInput::RemoveEventListener( IInputEventListener *pListener )
+void CInput::RemoveEventListener(IInputEventListener* pListener)
 {
 	// Remove listener if it is in list.
-	Listeners::iterator it = std::find(m_listeners.begin(),m_listeners.end(),pListener);
+	Listeners::iterator it = std::find(m_listeners.begin(), m_listeners.end(), pListener);
 	if (it != m_listeners.end())
 	{
-		m_listeners.erase( it );
+		m_listeners.erase(it);
 		//m_listeners.erase( std::remove(m_listeners.begin(),m_listeners.end(),pListener),m_listeners.end() );
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CInput::AddConsoleEventListener( IInputEventListener *pListener )
+void CInput::AddConsoleEventListener(IInputEventListener* pListener)
 {
-	if (std::find(m_consolelisteners.begin(),m_consolelisteners.end(),pListener) == m_consolelisteners.end())
+	if (std::find(m_consolelisteners.begin(), m_consolelisteners.end(), pListener) == m_consolelisteners.end())
 	{
-		m_consolelisteners.push_back( pListener );
+		m_consolelisteners.push_back(pListener);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CInput::RemoveConsoleEventListener( IInputEventListener *pListener )
+void CInput::RemoveConsoleEventListener(IInputEventListener* pListener)
 {
-	Listeners::iterator it = std::find(m_consolelisteners.begin(),m_consolelisteners.end(),pListener);
+	Listeners::iterator it = std::find(m_consolelisteners.begin(), m_consolelisteners.end(), pListener);
 	if (it != m_consolelisteners.end())
 	{
-		m_consolelisteners.erase( it );
+		m_consolelisteners.erase(it);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CInput::EnableEventPosting ( bool bEnable )
+void CInput::EnableEventPosting(bool bEnable)
 {
 	m_postingenable = bEnable;
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CInput::PostInputEvent( const SInputEvent &event )
+void CInput::PostInputEvent(const SInputEvent& event)
 {
 	if (m_postingenable)
 	{
-		BroadcastEvent( event );
+		BroadcastEvent(event);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CInput::BroadcastEvent( const SInputEvent &event )
+void CInput::BroadcastEvent(const SInputEvent& event)
 {
 	if (!m_postingenable)
 	{
 		return;
 	}
-	
+
 	for (Listeners::const_iterator it = m_consolelisteners.begin(); it != m_consolelisteners.end(); ++it)
 	{
-		if ((*it)->OnInputEvent( event ))
+		if ((*it)->OnInputEvent(event))
 			break;
 	}
 
 	if (m_exclusivelistener)
 	{
-		m_exclusivelistener->OnInputEvent( event );
+		m_exclusivelistener->OnInputEvent(event);
 
 		return;
 	}
@@ -988,19 +988,19 @@ void CInput::BroadcastEvent( const SInputEvent &event )
 	// Send this event to all listeners.
 	for (Listeners::const_iterator it = m_listeners.begin(); it != m_listeners.end(); ++it)
 	{
-		if ((*it)->OnInputEvent( event ))
+		if ((*it)->OnInputEvent(event))
 			break;
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CInput::SetExclusiveListener( IInputEventListener *pListener )
+void CInput::SetExclusiveListener(IInputEventListener* pListener)
 {
 	m_exclusivelistener = pListener;
 }
 
 //////////////////////////////////////////////////////////////////////////
-IInputEventListener *CInput::GetExclusiveListener()
+IInputEventListener* CInput::GetExclusiveListener()
 {
 	return m_exclusivelistener;
 }

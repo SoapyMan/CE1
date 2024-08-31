@@ -31,7 +31,7 @@ extern "C" void PS2GDRV_AckGrabScreenshot();
 //Statics 
 
 //To use the DMA
-static u_long128 pad_dma_buf[scePadDmaBufferMax] __attribute__((aligned (64)));
+static u_long128 pad_dma_buf[scePadDmaBufferMax] __attribute__((aligned(64)));
 
 
 //MOUSE EMULATION
@@ -59,14 +59,14 @@ static char THIS_FILE[] = __FILE__;
 //////////////////////////////////////////////////////////////////////
 CJoystick::CJoystick()
 {
-	m_pLog=NULL;
-	memset(m_dirs,0,sizeof(m_dirs));
-	memset(m_buttons,0,sizeof(m_buttons));
-	memset(m_hatdirs,0,sizeof(m_hatdirs));
+	m_pLog = NULL;
+	memset(m_dirs, 0, sizeof(m_dirs));
+	memset(m_buttons, 0, sizeof(m_buttons));
+	memset(m_hatdirs, 0, sizeof(m_hatdirs));
 
-	m_numbuttons=0;
-	m_hatswitch=false;
-	m_joytime=0;
+	m_numbuttons = 0;
+	m_hatswitch = false;
+	m_joytime = 0;
 	m_numjoysticks = 0;
 
 	m_vAnalog1Dir = NULL;
@@ -76,34 +76,34 @@ CJoystick::CJoystick()
 #ifdef PS2
 
 	// No "direction" at start
-	m_RightX=m_RightY=m_LeftX=m_LeftY=0;	
-	
+	m_RightX = m_RightY = m_LeftX = m_LeftY = 0;
+
 	// Flag to keep track of different used pad (only dual analog supported right now)
-	JoyType=0;
-	
+	JoyType = 0;
+
 	// Mouse simulation
-	m_fMouseScreenX=0;
-	m_fMouseScreenY=0;
-	
-	m_fMouseDeltaX=0;
-	m_fMouseDeltaY=0;
-	
-	HasControl=false;	
+	m_fMouseScreenX = 0;
+	m_fMouseScreenY = 0;
+
+	m_fMouseDeltaX = 0;
+	m_fMouseDeltaY = 0;
+
+	HasControl = false;
 #endif
 
-	m_initialized=false;
+	m_initialized = false;
 }
 
 CJoystick::~CJoystick()
 {
-	delete [] m_vAnalog1Dir;
-	delete [] m_vAnalog2Dir;
+	delete[] m_vAnalog1Dir;
+	delete[] m_vAnalog2Dir;
 }
 
 ///////////////////////////////////////////
-bool CJoystick::Init(ILog *pLog)
+bool CJoystick::Init(ILog* pLog)
 {
-	m_pLog=pLog;
+	m_pLog = pLog;
 
 	//WINDOWS SPECIFIC INIT
 
@@ -113,10 +113,10 @@ bool CJoystick::Init(ILog *pLog)
 	JOYINFOEX	joyinfo;
 	MMRESULT	result;
 
-	/* check to see if a joystick driver is loaded */	
+	/* check to see if a joystick driver is loaded */
 	int numJoy = joyGetNumDevs();
 	m_numjoysticks = 0;
-	
+
 	if (numJoy)
 	{
 		m_pLog->LogToFile("Found %d joystick devices\n", numJoy);
@@ -144,16 +144,16 @@ bool CJoystick::Init(ILog *pLog)
 				m_pLog->LogToFile("Num joy buttons=%d\n", m_numbuttons);
 				m_pLog->LogToFile("Joystick name=%s\n", joycaps.szPname);
 
-				if (joycaps.wCaps & JOYCAPS_HASPOV) 
-					m_hatswitch=true;
-				else 
-					m_hatswitch=false;
-				if (m_hatswitch) 
+				if (joycaps.wCaps & JOYCAPS_HASPOV)
+					m_hatswitch = true;
+				else
+					m_hatswitch = false;
+				if (m_hatswitch)
 					m_pLog->LogToFile("Joystick has hatswitch\n");
 			}
 		}
 
-		m_initialized=(m_numjoysticks!=0);
+		m_initialized = (m_numjoysticks != 0);
 
 		// allocate memory for the analog sticks
 		m_vAnalog1Dir = new Vec3[m_numjoysticks];
@@ -161,78 +161,78 @@ bool CJoystick::Init(ILog *pLog)
 		return (true);
 	}
 
-	m_pLog->LogToFile("Cannot find joystick device\n");	
+	m_pLog->LogToFile("Cannot find joystick device\n");
 	return (false);
 #endif
 
-//PS2 SPECIFIC INIT
+	//PS2 SPECIFIC INIT
 
 #ifdef PS2
 
 	int valRet;
-	int JoyID,JoyExID;
+	int JoyID, JoyExID;
 
 	//Init the controller system
 	scePadInit(0);
-	
-	
+
+
 	//Open pad port.....PAD 0 in PORT 0
-	valRet = scePadPortOpen(0,0,pad_dma_buf);
-	
-	if(!valRet)
+	valRet = scePadPortOpen(0, 0, pad_dma_buf);
+
+	if (!valRet)
 	{
 		m_pLog->LogToFile("Can't open PS2 pad 0 port 0");
 		return false;
-			
+
 	}
-	
-	
+
+
 	/////////////Wait pad to be stable
 	int padState;
-	while((padState=scePadGetState(0,0))==scePadStateExecCmd);
-	
-	if(padState!=scePadStateStable)
+	while ((padState = scePadGetState(0, 0)) == scePadStateExecCmd);
+
+	if (padState != scePadStateStable)
 	{
-		m_pLog->LogToFile("The pad is not stable.......");	
+		m_pLog->LogToFile("The pad is not stable.......");
 		return false;
-	}	
+	}
 
 
-			
+
 	/////////////Get pad type
-	
-	JoyID = scePadInfoMode(0, 0, InfoModeCurID, 0 );
-	
-	if (JoyID==0)
-	{
-		m_pLog->LogToFile("Can't get pad type!!!");	
-		return false;
-			
-	}	
 
-	
-	JoyExID=0;
-	JoyExID = scePadInfoMode(0, 0, InfoModeCurExID,0);
-	if (JoyExID>0) 
+	JoyID = scePadInfoMode(0, 0, InfoModeCurID, 0);
+
+	if (JoyID == 0)
+	{
+		m_pLog->LogToFile("Can't get pad type!!!");
+		return false;
+
+	}
+
+
+	JoyExID = 0;
+	JoyExID = scePadInfoMode(0, 0, InfoModeCurExID, 0);
+	if (JoyExID > 0)
 	{
 		JoyID = JoyExID;
-		
+
 	}
-	
-	
+
+
 	//Save the joystick type in Joystick class
-	JoyType=JoyID;
-	
-	
+	JoyType = JoyID;
+
+
 	//LOCK THE ANALOG MODE
-	scePadSetMainMode(0,0,1,0);
-	
-	
-	
+	scePadSetMainMode(0, 0, 1, 0);
+
+
+
 	//INITIALIZATION WAS OK
-	m_initialized=true;
+	m_initialized = true;
 	return true;
-			
+
 
 #endif
 
@@ -241,11 +241,11 @@ bool CJoystick::Init(ILog *pLog)
 
 ///////////////////////////////////////////
 void CJoystick::Update()
-{	
+{
 
 	//Check if joystick was initialized
 
-	if (!m_initialized) 
+	if (!m_initialized)
 		return;
 
 	//WARNING remember
@@ -268,43 +268,43 @@ void CJoystick::Update()
 	joyinfo.dwFlags = JOY_RETURNALL;
 	result = joyGetPosEx(JOYSTICKID1, &joyinfo);
 
-	if (result != JOYERR_NOERROR) 
-		return;			
+	if (result != JOYERR_NOERROR)
+		return;
 
-	memset(m_dirs,0,sizeof(m_dirs));
-	memset(m_buttons,0,sizeof(m_buttons));
-	m_vAnalog1Dir[0].Set(0,0,0);
-	m_vAnalog2Dir[0].Set(0,0,0);
-		
-	if (joyinfo.dwXpos < 16384)			
+	memset(m_dirs, 0, sizeof(m_dirs));
+	memset(m_buttons, 0, sizeof(m_buttons));
+	m_vAnalog1Dir[0].Set(0, 0, 0);
+	m_vAnalog2Dir[0].Set(0, 0, 0);
+
+	if (joyinfo.dwXpos < 16384)
 		m_dirs[JOY_DIR_LEFT] = 1;
-	else 
-	if (joyinfo.dwXpos > 65535-16384)	
-		m_dirs[JOY_DIR_RIGHT] = 1;
+	else
+		if (joyinfo.dwXpos > 65535 - 16384)
+			m_dirs[JOY_DIR_RIGHT] = 1;
 
-	if (joyinfo.dwYpos < 16384)			
+	if (joyinfo.dwYpos < 16384)
 		m_dirs[JOY_DIR_UP] = 1;
-	else 
-	if(joyinfo.dwYpos > 65535-16384)	
-		m_dirs[JOY_DIR_DOWN] = 1;
+	else
+		if (joyinfo.dwYpos > 65535 - 16384)
+			m_dirs[JOY_DIR_DOWN] = 1;
 
 	if (m_hatdirs)
 	{
-		memset(m_hatdirs,0,sizeof(m_hatdirs));	
-		if (joyinfo.dwPOV == JOY_POVLEFT)		m_hatdirs[JOY_DIR_LEFT]=1;
-		if (joyinfo.dwPOV == JOY_POVRIGHT)		m_hatdirs[JOY_DIR_RIGHT]=1;
-		if (joyinfo.dwPOV == JOY_POVFORWARD)	m_hatdirs[JOY_DIR_UP]=1;		
-		if(joyinfo.dwPOV == JOY_POVBACKWARD)	m_hatdirs[JOY_DIR_DOWN]=1;		
+		memset(m_hatdirs, 0, sizeof(m_hatdirs));
+		if (joyinfo.dwPOV == JOY_POVLEFT)		m_hatdirs[JOY_DIR_LEFT] = 1;
+		if (joyinfo.dwPOV == JOY_POVRIGHT)		m_hatdirs[JOY_DIR_RIGHT] = 1;
+		if (joyinfo.dwPOV == JOY_POVFORWARD)	m_hatdirs[JOY_DIR_UP] = 1;
+		if (joyinfo.dwPOV == JOY_POVBACKWARD)	m_hatdirs[JOY_DIR_DOWN] = 1;
 	}
 
-	m_buttons[0]= (unsigned char)(joyinfo.dwButtons & JOY_BUTTON1);
-	m_buttons[1]= (unsigned char)(joyinfo.dwButtons & JOY_BUTTON2);
-	m_buttons[2]= (unsigned char)(joyinfo.dwButtons & JOY_BUTTON3);
-	m_buttons[3]= (unsigned char)(joyinfo.dwButtons & JOY_BUTTON4);
-	m_buttons[4]= (unsigned char)(joyinfo.dwButtons & JOY_BUTTON5);
-	m_buttons[5]= (unsigned char)(joyinfo.dwButtons & JOY_BUTTON6);
-	m_buttons[6]= (unsigned char)(joyinfo.dwButtons & JOY_BUTTON7);
-	m_buttons[7]= (unsigned char)(joyinfo.dwButtons & JOY_BUTTON8);
+	m_buttons[0] = (unsigned char)(joyinfo.dwButtons & JOY_BUTTON1);
+	m_buttons[1] = (unsigned char)(joyinfo.dwButtons & JOY_BUTTON2);
+	m_buttons[2] = (unsigned char)(joyinfo.dwButtons & JOY_BUTTON3);
+	m_buttons[3] = (unsigned char)(joyinfo.dwButtons & JOY_BUTTON4);
+	m_buttons[4] = (unsigned char)(joyinfo.dwButtons & JOY_BUTTON5);
+	m_buttons[5] = (unsigned char)(joyinfo.dwButtons & JOY_BUTTON6);
+	m_buttons[6] = (unsigned char)(joyinfo.dwButtons & JOY_BUTTON7);
+	m_buttons[7] = (unsigned char)(joyinfo.dwButtons & JOY_BUTTON8);
 
 	// this is a bit ugly, but the input system doesn't deserve better
 	int iAnalog1X = joyinfo.dwXpos - 32768;
@@ -317,25 +317,25 @@ void CJoystick::Update()
 	if (abs(iAnalog2X) < 100) iAnalog2X = 0;
 	if (abs(iAnalog2Y) < 100) iAnalog2Y = 0;
 
-	m_vAnalog1Dir[0].x = iAnalog1X/32768.0f;
-	m_vAnalog1Dir[0].y = iAnalog1Y/32768.0f;
+	m_vAnalog1Dir[0].x = iAnalog1X / 32768.0f;
+	m_vAnalog1Dir[0].y = iAnalog1Y / 32768.0f;
 	m_vAnalog1Dir[0].z = 0.0f;
-	m_vAnalog2Dir[0].x = iAnalog2X/32768.0f;
-	m_vAnalog2Dir[0].y = iAnalog2Y/32768.0f;
+	m_vAnalog2Dir[0].x = iAnalog2X / 32768.0f;
+	m_vAnalog2Dir[0].y = iAnalog2Y / 32768.0f;
 	m_vAnalog2Dir[0].z = 0.0f;
 
 	if (m_numjoysticks > 1)
 	{
-		m_vAnalog1Dir[1].Set(0,0,0);
-		m_vAnalog2Dir[1].Set(0,0,0);
+		m_vAnalog1Dir[1].Set(0, 0, 0);
+		m_vAnalog2Dir[1].Set(0, 0, 0);
 
 		joyinfo.dwSize = sizeof(JOYINFOEX);
 		joyinfo.dwFlags = JOY_RETURNALL;
 		result = joyGetPosEx(JOYSTICKID2, &joyinfo);
 
-		if (result != JOYERR_NOERROR) 
-			return;			
-		
+		if (result != JOYERR_NOERROR)
+			return;
+
 		iAnalog1X = joyinfo.dwXpos - 32768;
 		iAnalog1Y = joyinfo.dwYpos - 32768;
 		iAnalog2X = joyinfo.dwZpos - 32768;
@@ -346,230 +346,230 @@ void CJoystick::Update()
 		if (abs(iAnalog2X) < 100) iAnalog2X = 0;
 		if (abs(iAnalog2Y) < 100) iAnalog2Y = 0;
 
-		m_vAnalog1Dir[1].x = iAnalog1X/32768.0f;
-		m_vAnalog1Dir[1].y = iAnalog1Y/32768.0f;
+		m_vAnalog1Dir[1].x = iAnalog1X / 32768.0f;
+		m_vAnalog1Dir[1].y = iAnalog1Y / 32768.0f;
 		m_vAnalog1Dir[1].z = 0.0f;
-		m_vAnalog2Dir[1].x = iAnalog2X/32768.0f;
-		m_vAnalog2Dir[1].y = iAnalog2Y/32768.0f;
+		m_vAnalog2Dir[1].x = iAnalog2X / 32768.0f;
+		m_vAnalog2Dir[1].y = iAnalog2Y / 32768.0f;
 		m_vAnalog2Dir[1].z = 0.0f;
 	}
 #endif	
 
-//PS2 SPECIFIC UPDATE FUNCTION
+	//PS2 SPECIFIC UPDATE FUNCTION
 
 #ifdef PS2
 
-	int readReturn=0;
+	int readReturn = 0;
 	unsigned char JoyData[32];
 	int PadState;
-	
-	
+
+
 	//Check that the pad is connected
-	PadState=scePadGetState(0,0);
-	
-	
+	PadState = scePadGetState(0, 0);
+
+
 	//Elaborate the input only if the pad is connected
-	if(PadState==scePadStateStable)
+	if (PadState == scePadStateStable)
 	{
-	
+
 		//Read the joypad information
-		readReturn=scePadRead(0,0, JoyData );
-		if(readReturn!=0)
+		readReturn = scePadRead(0, 0, JoyData);
+		if (readReturn != 0)
 		{
 			//Check what kind of joystick is plugged...now just Dual Analog is supported
-		
-			switch(JoyType)
-			{
-			
-				///////NOT SUPPORTED PAD//////////////////
-				
-				case 2:  //"NeGi-CON"
-					
-					break;
 
-				case 3: //"GunCON(Konami)"
-				
-					break;
-					
+			switch (JoyType)
+			{
+
+				///////NOT SUPPORTED PAD//////////////////
+
+			case 2:  //"NeGi-CON"
+
+				break;
+
+			case 3: //"GunCON(Konami)"
+
+				break;
+
 				///////////////////////////////////////////
 
-				
-				
-				
-				//N.B: Only ANALOG AND STANDARD SUPPORTED!!!!!
-				
-				case 4: //"STANDARD"
-				case 7: //"ANALOG"
-				
-					//Just for now...do the same for STANDARD AND ANALOG.....
-					
-					GetAnalog(JoyData);
-					GetDigital(JoyData);
-					GetButton(JoyData);
-					
-					ConvertPadInformation();
-			
-					if(m_TriggerR && m_TriggerL)	
-						PS2GDRV_AckGrabScreenshot();
-			
-					break;
-				
-				
-				
-				
-					
-					
-				///////NOT SUPPORTED PAD//////////////////
-					
-				case 5: //"JOYSTICK"
-					
-					break;
 
-				case 6: //"GunCON(NAMCO)"
-			
-					break;
-				
-				case 0x100: //"TSURI-CON"
-					
-					break;
-					
-				case 0x300: //"JOG-CON"
-					
-					break;
-					
+
+
+				//N.B: Only ANALOG AND STANDARD SUPPORTED!!!!!
+
+			case 4: //"STANDARD"
+			case 7: //"ANALOG"
+
+				//Just for now...do the same for STANDARD AND ANALOG.....
+
+				GetAnalog(JoyData);
+				GetDigital(JoyData);
+				GetButton(JoyData);
+
+				ConvertPadInformation();
+
+				if (m_TriggerR && m_TriggerL)
+					PS2GDRV_AckGrabScreenshot();
+
+				break;
+
+
+
+
+
+
+				///////NOT SUPPORTED PAD//////////////////
+
+			case 5: //"JOYSTICK"
+
+				break;
+
+			case 6: //"GunCON(NAMCO)"
+
+				break;
+
+			case 0x100: //"TSURI-CON"
+
+				break;
+
+			case 0x300: //"JOG-CON"
+
+				break;
+
 				///////////////////////////////////////////
 
 			}
-			
+
 		}
 		else
 		{
-			 m_pLog->LogToFile("Joystick ERROR!!! Can't read Joystick information\n");
+			m_pLog->LogToFile("Joystick ERROR!!! Can't read Joystick information\n");
 		}
-			
-		
-		
+
+
+
 	}
 	else
 	{
-		 m_pLog->LogToFile("Joystick ERROR!!! Pad not connected\n");
+		m_pLog->LogToFile("Joystick ERROR!!! Pad not connected\n");
 	}
-		
-	
-	
-	
+
+
+
+
 	//////////////////////////////////////////////////////////////////////////////////////////
 	//////// N.B: MOUSE SIMULATION USED (By game & menu) OLY IF MOUSE NOT CONNECTED //////////
 	//////////////////////////////////////////////////////////////////////////////////////////
 
 
 	//////////////MOUSE SIMULATION ///////////////////////////////////////////////////////////
-	
-	m_MouseDeltaX=0;
-	m_MouseDeltaY=0;
 
-	
+	m_MouseDeltaX = 0;
+	m_MouseDeltaY = 0;
+
+
 	//Use left stick to simulate the mouse
-	
-	
+
+
 	////Pointer contro false
-	HasControl=false;
-	
-	
-	if(m_LeftX> 127+MOUSE_THRESOLD)
-	{
-		//The pad ()instead of mouse) has the control over the "movement"
-		HasControl=true;
-	
-		m_fMouseScreenX+=DELTA_SCREEN;
-		
-		if(m_fMouseScreenX > 800)
-			m_fMouseScreenX=800;
-	}
-	
+	HasControl = false;
 
-	if(m_LeftX< 127-MOUSE_THRESOLD)
-	{
-		//The pad ()instead of mouse) has the control over the "movement"
-		HasControl=true;
-	
-	
-		m_fMouseScreenX-=DELTA_SCREEN;
-		
-		if(m_fMouseScreenX<0)
-			m_fMouseScreenX=0;			
-	}
-	
-	
-	if(m_LeftY> 127+MOUSE_THRESOLD )
-	{
-		//The pad ()instead of mouse) has the control over the "movement"
-		HasControl=true;
-		
-		m_fMouseScreenY+=DELTA_SCREEN;
-		
-		if(m_fMouseScreenY>600)
-			m_fMouseScreenY=600;
-	}
-	
-	if(m_LeftY< 127-MOUSE_THRESOLD)
-	{
-		//The pad ()instead of mouse) has the control over the "movement"
-		HasControl=true;
-	
-		if(m_fMouseScreenY<0)
-			m_fMouseScreenY=0;
-		m_fMouseScreenY-=DELTA_SCREEN;		
-	}
-	
 
-	
+	if (m_LeftX > 127 + MOUSE_THRESOLD)
+	{
+		//The pad ()instead of mouse) has the control over the "movement"
+		HasControl = true;
+
+		m_fMouseScreenX += DELTA_SCREEN;
+
+		if (m_fMouseScreenX > 800)
+			m_fMouseScreenX = 800;
+	}
+
+
+	if (m_LeftX < 127 - MOUSE_THRESOLD)
+	{
+		//The pad ()instead of mouse) has the control over the "movement"
+		HasControl = true;
+
+
+		m_fMouseScreenX -= DELTA_SCREEN;
+
+		if (m_fMouseScreenX < 0)
+			m_fMouseScreenX = 0;
+	}
+
+
+	if (m_LeftY > 127 + MOUSE_THRESOLD)
+	{
+		//The pad ()instead of mouse) has the control over the "movement"
+		HasControl = true;
+
+		m_fMouseScreenY += DELTA_SCREEN;
+
+		if (m_fMouseScreenY > 600)
+			m_fMouseScreenY = 600;
+	}
+
+	if (m_LeftY < 127 - MOUSE_THRESOLD)
+	{
+		//The pad ()instead of mouse) has the control over the "movement"
+		HasControl = true;
+
+		if (m_fMouseScreenY < 0)
+			m_fMouseScreenY = 0;
+		m_fMouseScreenY -= DELTA_SCREEN;
+	}
+
+
+
 	//////////////////MOSUE DELTA SIMULATION///////////////////////////////////
-	
-	
+
+
 	float factor;
-	float finalDelta=MOUSE_DELTA_SPEED_MAX;
-	
-	
+	float finalDelta = MOUSE_DELTA_SPEED_MAX;
 
-	
-	if(m_RightX> 127+MOUSE_THRESOLD)
-	{
-	
-	
-		factor=(((float)m_RightX)-127.0f)/127;
-		m_MouseDeltaX= finalDelta*factor;	
-	
-		
-	}
-	
 
-	if(m_RightX< 127-MOUSE_THRESOLD)
-	{	
-		factor=(127.0f-((float)m_RightX))/127;
-		m_MouseDeltaX= -finalDelta*factor;
-	}
-	
-	
-	if(m_RightY> 127+MOUSE_THRESOLD )
+
+
+	if (m_RightX > 127 + MOUSE_THRESOLD)
 	{
-	
-		factor=(((float)m_RightY)-127.0f)/127;
-		
-		m_MouseDeltaY= finalDelta*factor;
-			
+
+
+		factor = (((float)m_RightX) - 127.0f) / 127;
+		m_MouseDeltaX = finalDelta * factor;
+
+
 	}
-	
-	if(m_RightY< 127-MOUSE_THRESOLD)
+
+
+	if (m_RightX < 127 - MOUSE_THRESOLD)
 	{
-	
-		factor=(127.0f-((float)m_RightY))/127;
-		m_MouseDeltaY= -finalDelta*factor;
-		
+		factor = (127.0f - ((float)m_RightX)) / 127;
+		m_MouseDeltaX = -finalDelta * factor;
 	}
-	
-	
-	
+
+
+	if (m_RightY > 127 + MOUSE_THRESOLD)
+	{
+
+		factor = (((float)m_RightY) - 127.0f) / 127;
+
+		m_MouseDeltaY = finalDelta * factor;
+
+	}
+
+	if (m_RightY < 127 - MOUSE_THRESOLD)
+	{
+
+		factor = (127.0f - ((float)m_RightY)) / 127;
+		m_MouseDeltaY = -finalDelta * factor;
+
+	}
+
+
+
 
 	//////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////  END MOUSE SIMULATION /////////////////////////////////////////
@@ -585,26 +585,26 @@ void CJoystick::Update()
 ///////////////////////////////////////////
 int CJoystick::GetDir()
 {
-	if (!m_initialized) 
+	if (!m_initialized)
 		return (JOY_DIR_NONE);
-	
-	for (int k=0;k<4;k++) 
-		if (m_dirs[k]) 
+
+	for (int k = 0; k < 4; k++)
+		if (m_dirs[k])
 			return (k);
-		
+
 	return (JOY_DIR_NONE);
 }
 
 ///////////////////////////////////////////
 int CJoystick::GetHatDir()
 {
-	if (!m_initialized) 
+	if (!m_initialized)
 		return (JOY_DIR_NONE);
-	
-	for (int k=0;k<4;k++) 
-		if (m_hatdirs[k]) 
+
+	for (int k = 0; k < 4; k++)
+		if (m_hatdirs[k])
 			return (k);
-		
+
 	return (JOY_DIR_NONE);
 }
 
@@ -614,7 +614,7 @@ Vec3 CJoystick::GetAnalog1Dir(unsigned int joystickID) const
 	if (joystickID < m_numjoysticks)
 		return m_vAnalog1Dir[joystickID];
 	else
-		return Vec3(0,0,0);
+		return Vec3(0, 0, 0);
 }
 ///////////////////////////////////////////
 Vec3 CJoystick::GetAnalog2Dir(unsigned int joystickID) const
@@ -622,7 +622,7 @@ Vec3 CJoystick::GetAnalog2Dir(unsigned int joystickID) const
 	if (joystickID < m_numjoysticks)
 		return m_vAnalog2Dir[joystickID];
 	else
-		return Vec3(0,0,0);
+		return Vec3(0, 0, 0);
 }
 
 
@@ -635,9 +635,9 @@ int CJoystick::GetNumButtons()
 ///////////////////////////////////////////
 bool CJoystick::IsButtonPressed(int buttonnum)
 {
-	if (!m_initialized || buttonnum>m_numbuttons) 
-		return (false);	
-	if (m_buttons[buttonnum]) 
+	if (!m_initialized || buttonnum > m_numbuttons)
+		return (false);
+	if (m_buttons[buttonnum])
 		return (true);
 	return (false);
 }
@@ -646,14 +646,14 @@ bool CJoystick::IsButtonPressed(int buttonnum)
 void CJoystick::ShutDown()
 {
 	m_pLog->LogToFile("Joystick Shutdown\n");
-	m_initialized=false;
+	m_initialized = false;
 
 #ifdef PS2
-	
+
 	//Close Pad 0 port 0
-	scePadPortClose(0,0);
-	
-	
+	scePadPortClose(0, 0);
+
+
 #endif
 
 }
@@ -665,159 +665,159 @@ void CJoystick::ShutDown()
 
 #ifdef PS2
 
-void CJoystick::GetAnalog(unsigned char *pData)
+void CJoystick::GetAnalog(unsigned char* pData)
 {
 
 	//Get Joystick analog values
-	
+
 	//Left stick
-	m_RightX=pData[4];
-	m_RightY=pData[5];
-	
-	
+	m_RightX = pData[4];
+	m_RightY = pData[5];
+
+
 	//Right stick
-	m_LeftX=pData[6];
-	m_LeftY=pData[7];
-	
+	m_LeftX = pData[6];
+	m_LeftY = pData[7];
+
 
 }
 
-void CJoystick::GetDigital(unsigned char *pData)
+void CJoystick::GetDigital(unsigned char* pData)
 {
 	//get Joystick digital "cross" values
 
-	m_Left=m_Right=m_Up=m_Down=false;
+	m_Left = m_Right = m_Up = m_Down = false;
 	unsigned char tempFlags;
-	
-	
-	tempFlags=pData[2];	
-	tempFlags= ~tempFlags;
-	
-	if(tempFlags&1<<7)
+
+
+	tempFlags = pData[2];
+	tempFlags = ~tempFlags;
+
+	if (tempFlags & 1 << 7)
 	{
-		m_Left=true;	
+		m_Left = true;
 	}
-	
-	if(tempFlags&1<<5)
+
+	if (tempFlags & 1 << 5)
 	{
-		m_Right=true;	
+		m_Right = true;
 	}
-	
-	if(tempFlags&1<<4)
+
+	if (tempFlags & 1 << 4)
 	{
-		m_Up=true;	
+		m_Up = true;
 	}
-	
-	if(tempFlags&1<<6)
+
+	if (tempFlags & 1 << 6)
 	{
-		m_Down=true;	
+		m_Down = true;
 	}
 
 
 }
 
-void CJoystick::GetButton(unsigned char *pData)
+void CJoystick::GetButton(unsigned char* pData)
 {
 
 	//Get PS2 button pression (digital not analog...)
 	unsigned int tempFlags;
-	
 
-	
+
+
 	///SWAP BUTTON STATUS
-	
-	m_old_L1=m_L1;
-	m_old_L2=m_L2;
-	m_old_R1=m_R1;
-	m_old_R2=m_R2;
-	
-	m_old_Square=m_Square;
-	m_old_Circle=m_Circle;
-	m_old_Triangle=m_Triangle;
-	m_old_Cross=m_Cross;
-	
-	m_old_Start=m_Start;
-	m_old_Select=m_Select;
-	
-	m_old_TriggerL=m_TriggerL;
-	m_old_TriggerR=m_TriggerR;
-	
+
+	m_old_L1 = m_L1;
+	m_old_L2 = m_L2;
+	m_old_R1 = m_R1;
+	m_old_R2 = m_R2;
+
+	m_old_Square = m_Square;
+	m_old_Circle = m_Circle;
+	m_old_Triangle = m_Triangle;
+	m_old_Cross = m_Cross;
+
+	m_old_Start = m_Start;
+	m_old_Select = m_Select;
+
+	m_old_TriggerL = m_TriggerL;
+	m_old_TriggerR = m_TriggerR;
 
 
 
-	m_L1=m_L2=m_R1=m_R2=m_Square=m_Circle=m_Triangle=m_Cross=m_Start=m_Select=m_TriggerR=m_TriggerR=false;
-	
 
-	tempFlags=0xffff ^ ( ( pData[2] << 8 ) | pData[3] );
-	
+	m_L1 = m_L2 = m_R1 = m_R2 = m_Square = m_Circle = m_Triangle = m_Cross = m_Start = m_Select = m_TriggerR = m_TriggerR = false;
+
+
+	tempFlags = 0xffff ^ ((pData[2] << 8) | pData[3]);
+
 	//Changed all this "if" to be SONY compilant
-	if(tempFlags&SCE_PADL1)
+	if (tempFlags & SCE_PADL1)
 	{
-		m_L1=true;	
+		m_L1 = true;
 	}
-	
-	if(tempFlags&SCE_PADL2)
+
+	if (tempFlags & SCE_PADL2)
 	{
-		m_L2=true;	
+		m_L2 = true;
 	}
-	
-	if(tempFlags&SCE_PADR1)
+
+	if (tempFlags & SCE_PADR1)
 	{
-		m_R1=true;	
+		m_R1 = true;
 	}
-	
-	if(tempFlags&SCE_PADR2)
+
+	if (tempFlags & SCE_PADR2)
 	{
-		m_R2=true;	
+		m_R2 = true;
 	}
-	
-	
-	
-	
-	
-	if(tempFlags&SCE_PADRleft)
+
+
+
+
+
+	if (tempFlags & SCE_PADRleft)
 	{
-		m_Square=true;	
+		m_Square = true;
 	}
-	
-	if(tempFlags&SCE_PADRright)
+
+	if (tempFlags & SCE_PADRright)
 	{
-		m_Circle=true;	
+		m_Circle = true;
 	}
-	
-	if(tempFlags&SCE_PADRup)
+
+	if (tempFlags & SCE_PADRup)
 	{
-		m_Triangle=true;	
+		m_Triangle = true;
 	}
-	
-	if(tempFlags&SCE_PADRdown)
+
+	if (tempFlags & SCE_PADRdown)
 	{
-		m_Cross=true;	
+		m_Cross = true;
 	}
-	
-	
+
+
 	//Start and select
 //?!?!	tempFlags=pData[2];
 //?!?!?	tempFlags=~tempFlags;
-	
-	
-	if(tempFlags&SCE_PADstart)
+
+
+	if (tempFlags & SCE_PADstart)
 	{
-		m_Start=true;	
+		m_Start = true;
 	}
-	
-	if(tempFlags&SCE_PADi)
+
+	if (tempFlags & SCE_PADi)
 	{
-		m_TriggerL=true;	
+		m_TriggerL = true;
 	}
-	
-	
-	if(tempFlags&SCE_PADj)
+
+
+	if (tempFlags & SCE_PADj)
 	{
-		m_TriggerR=true;	
+		m_TriggerR = true;
 	}
-	
-	
+
+
 
 
 }
@@ -829,89 +829,89 @@ void CJoystick::ConvertPadInformation()
 
 
 	//Init arrys
-	memset(m_dirs,0,sizeof(m_dirs));
-	memset(m_buttons,0,sizeof(m_buttons));
-	
+	memset(m_dirs, 0, sizeof(m_dirs));
+	memset(m_buttons, 0, sizeof(m_buttons));
+
 	//This is not supported by PS2 - always false -
-	memset(m_hatdirs,0,sizeof(m_hatdirs));
+	memset(m_hatdirs, 0, sizeof(m_hatdirs));
 
 
 	//Digital directions
-	
+
 	//Left
-	if(m_Left)
+	if (m_Left)
 	{
 		m_dirs[JOY_DIR_LEFT] = 1;
 	}
-	else if(m_LeftX<(125-TRESHOLD))
+	else if (m_LeftX < (125 - TRESHOLD))
 	{
-		m_dirs[JOY_DIR_LEFT] = 1;	
-	
+		m_dirs[JOY_DIR_LEFT] = 1;
+
 	}
-	
+
 	//Right
-	if(m_Right)
+	if (m_Right)
 	{
 		m_dirs[JOY_DIR_RIGHT] = 1;
 	}
-	else if(m_LeftX>(125+TRESHOLD))
+	else if (m_LeftX > (125 + TRESHOLD))
 	{
-		m_dirs[JOY_DIR_RIGHT] = 1;	
-	
+		m_dirs[JOY_DIR_RIGHT] = 1;
+
 	}
-	
-	
+
+
 	//UP
-	if(m_Up)
+	if (m_Up)
 	{
 		m_dirs[JOY_DIR_UP] = 1;
 	}
-	else if(m_LeftY<(125-TRESHOLD))
+	else if (m_LeftY < (125 - TRESHOLD))
 	{
-		m_dirs[JOY_DIR_UP] = 1;	
-	
+		m_dirs[JOY_DIR_UP] = 1;
+
 	}
-	
+
 	//DOWN
-	if(m_Down)
+	if (m_Down)
 	{
 		m_dirs[JOY_DIR_DOWN] = 1;
 	}
-	else if(m_LeftY>(125+TRESHOLD))
+	else if (m_LeftY > (125 + TRESHOLD))
 	{
-		m_dirs[JOY_DIR_DOWN] = 1;	
-	
-	}
-	
-	
-	//NOW THE BUTTONS
-	
+		m_dirs[JOY_DIR_DOWN] = 1;
 
-	if(m_Circle)
-		m_buttons[0]=1;
-		
-	if(m_Triangle)
-		m_buttons[1]=1;
-	
-	if(m_Square)
-		m_buttons[2]=1;
-		
-	if(m_Cross)
-		m_buttons[3]=1;
-		
-	if(m_L1)
-		m_buttons[4]=1;
-		
-	if(m_L2)
-		m_buttons[5]=1;
-		
-	if(m_R1)
-		m_buttons[6]=1;
-		
-	if(m_R2)
-		m_buttons[7]=1;
-		 
-	
+	}
+
+
+	//NOW THE BUTTONS
+
+
+	if (m_Circle)
+		m_buttons[0] = 1;
+
+	if (m_Triangle)
+		m_buttons[1] = 1;
+
+	if (m_Square)
+		m_buttons[2] = 1;
+
+	if (m_Cross)
+		m_buttons[3] = 1;
+
+	if (m_L1)
+		m_buttons[4] = 1;
+
+	if (m_L2)
+		m_buttons[5] = 1;
+
+	if (m_R1)
+		m_buttons[6] = 1;
+
+	if (m_R2)
+		m_buttons[7] = 1;
+
+
 }
 
 
@@ -920,53 +920,53 @@ void CJoystick::ConvertPadInformation()
 
 bool CJoystick::ButtonHasBeenPressed(int Type)
 {
-	
+
 	switch (Type)
 	{
-	
-		case PS2_BUTTON_SQUARE:
-			return (m_Square&&!m_old_Square);
+
+	case PS2_BUTTON_SQUARE:
+		return (m_Square && !m_old_Square);
 		break;
-		
-		case PS2_BUTTON_CROSS:
-			return (m_Cross&&!m_old_Cross);
+
+	case PS2_BUTTON_CROSS:
+		return (m_Cross && !m_old_Cross);
 		break;
-		
-		case PS2_BUTTON_TRIANGLE:
-			return (m_Triangle&&!m_old_Triangle);
+
+	case PS2_BUTTON_TRIANGLE:
+		return (m_Triangle && !m_old_Triangle);
 		break;
-		
-		case PS2_BUTTON_CIRCLE:
-			return (m_Circle&&!m_old_Circle);
+
+	case PS2_BUTTON_CIRCLE:
+		return (m_Circle && !m_old_Circle);
 		break;
-		
-		case PS2_BUTTON_L1:
-			return (m_L1&&!m_old_L1);
+
+	case PS2_BUTTON_L1:
+		return (m_L1 && !m_old_L1);
 		break;
-		
-		case PS2_BUTTON_L2:
-			return (m_L2&&!m_old_L2);
+
+	case PS2_BUTTON_L2:
+		return (m_L2 && !m_old_L2);
 		break;
-		
-		case PS2_BUTTON_R1:
-			return (m_R1&&!m_old_R1);
+
+	case PS2_BUTTON_R1:
+		return (m_R1 && !m_old_R1);
 		break;
-		
-		case PS2_BUTTON_R2:
-			return (m_R2&&!m_old_R2);
+
+	case PS2_BUTTON_R2:
+		return (m_R2 && !m_old_R2);
 		break;
-		
-		case PS2_BUTTON_START:
-			return (m_Start&&!m_old_Start);
+
+	case PS2_BUTTON_START:
+		return (m_Start && !m_old_Start);
 		break;
-		
-		case PS2_BUTTON_SELECT :
-			return (m_Select&&!m_old_Select);
+
+	case PS2_BUTTON_SELECT:
+		return (m_Select && !m_old_Select);
 		break;
-	
-	
+
+
 	}
-		
+
 	return false;
 }
 
@@ -976,57 +976,57 @@ bool CJoystick::ButtonHasBeenPressed(int Type)
 
 bool CJoystick::ButtonPressed(int Type)
 {
-	
+
 	switch (Type)
 	{
-	
-		case PS2_BUTTON_SQUARE:
-			return m_Square;
+
+	case PS2_BUTTON_SQUARE:
+		return m_Square;
 		break;
-		
-		case PS2_BUTTON_CROSS:
-			return m_Cross;
+
+	case PS2_BUTTON_CROSS:
+		return m_Cross;
 		break;
-		
-		case PS2_BUTTON_TRIANGLE:
-			return m_Triangle;
+
+	case PS2_BUTTON_TRIANGLE:
+		return m_Triangle;
 		break;
-		
-		case PS2_BUTTON_CIRCLE:
-			return m_Circle;
+
+	case PS2_BUTTON_CIRCLE:
+		return m_Circle;
 		break;
-		
-		case PS2_BUTTON_L1:
-			return m_L1;
+
+	case PS2_BUTTON_L1:
+		return m_L1;
 		break;
-		
-		case PS2_BUTTON_L2:
-			return m_L2;
+
+	case PS2_BUTTON_L2:
+		return m_L2;
 		break;
-		
-		case PS2_BUTTON_R1:
-			return m_R1;
+
+	case PS2_BUTTON_R1:
+		return m_R1;
 		break;
-		
-		case PS2_BUTTON_R2:
-			return m_R2;
+
+	case PS2_BUTTON_R2:
+		return m_R2;
 		break;
-		
-		case PS2_BUTTON_START:
-			return m_Start;
+
+	case PS2_BUTTON_START:
+		return m_Start;
 		break;
-		
-		case PS2_BUTTON_SELECT :
-			return m_Select;
+
+	case PS2_BUTTON_SELECT:
+		return m_Select;
 		break;
-	
-	
+
+
 	}
-	
-	
-	
+
+
+
 	return false;
-		
+
 
 }
 
@@ -1035,25 +1035,25 @@ bool CJoystick::DigitalCrossDirection(int Type)
 {
 	switch (Type)
 	{
-	
-	
-		case PS2_DIR_LEFT:
-			return m_Left;	
-		break;  
-		
-		case PS2_DIR_RIGHT:
-			return m_Right;
-		break; 
-		
-		case PS2_DIR_UP:
-			return m_Up;
-		break;    
-		
-		case PS2_DIR_DOWN:
-			return m_Down;
-		break;  
+
+
+	case PS2_DIR_LEFT:
+		return m_Left;
+		break;
+
+	case PS2_DIR_RIGHT:
+		return m_Right;
+		break;
+
+	case PS2_DIR_UP:
+		return m_Up;
+		break;
+
+	case PS2_DIR_DOWN:
+		return m_Down;
+		break;
 	}
-	
+
 
 }
 
@@ -1088,13 +1088,13 @@ unsigned char CJoystick::RightStickY()
 
 float CJoystick::GetVScreenX()
 {
-	return m_fMouseScreenX+0.5f;
-}		 
+	return m_fMouseScreenX + 0.5f;
+}
 
 float CJoystick::GetVScreenY()
 {
-	return m_fMouseScreenY+0.5f;
-}			 
+	return m_fMouseScreenY + 0.5f;
+}
 
 
 float  CJoystick::GetDeltaX()
@@ -1116,31 +1116,31 @@ float  CJoystick::GetDeltaY()
 bool CJoystick::KeyDown(int p_key)
 {
 
-	switch(p_key)
+	switch (p_key)
 	{
-		case FORWARD_KEY:
-		
-		if(m_LeftY<127-MOUSE_THRESOLD)
+	case FORWARD_KEY:
+
+		if (m_LeftY < 127 - MOUSE_THRESOLD)
 			return true;
 		else
 			return false;
-		
+
 		break;
-		
-		case BACKWARD_KEY:
-		
-		if(m_LeftY>127+MOUSE_THRESOLD)
+
+	case BACKWARD_KEY:
+
+		if (m_LeftY > 127 + MOUSE_THRESOLD)
 			return true;
 		else
 			return false;
-		
+
 		break;
-	
-		default:
-			return false;
+
+	default:
+		return false;
 	}
 
-	
+
 }
 
 
@@ -1149,34 +1149,34 @@ bool CJoystick::KeyPressed(int p_key)
 {
 
 
-	switch(p_key)
+	switch (p_key)
 	{
-		case FORWARD_KEY:
-		
-		if(m_LeftY<127-MOUSE_THRESOLD)
+	case FORWARD_KEY:
+
+		if (m_LeftY < 127 - MOUSE_THRESOLD)
 			return true;
 		else
 			return false;
-		
-		break;
-		
-		case BACKWARD_KEY:
-	
-		
-		if(m_LeftY>127+MOUSE_THRESOLD)
-			return true;
-		else
-			return false;
-		
+
 		break;
 
-	
-		default:
+	case BACKWARD_KEY:
+
+
+		if (m_LeftY > 127 + MOUSE_THRESOLD)
+			return true;
+		else
 			return false;
+
+		break;
+
+
+	default:
+		return false;
 
 	}
 
-	
+
 
 
 }

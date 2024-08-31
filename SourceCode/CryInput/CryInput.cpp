@@ -31,12 +31,12 @@ ISystem* GetISystem()
 
 
 #ifndef _XBOX
-BOOL APIENTRY DllMain( HANDLE hModule, 
-                       DWORD  ul_reason_for_call, 
-                       LPVOID lpReserved
-					 )
+BOOL APIENTRY DllMain(HANDLE hModule,
+	DWORD  ul_reason_for_call,
+	LPVOID lpReserved
+)
 {
-    return TRUE;
+	return TRUE;
 }
 #endif //_XBOX
 
@@ -44,10 +44,10 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 #include <SDL_syswm.h>
 #endif
 
-IInput *CreateInput( ISystem *pSystem,void* hinst, void* hwnd, bool usedinput)
+IInput* CreateInput(ISystem* pSystem, void* hinst, void* hwnd, bool usedinput)
 {
 	gISystem = pSystem;
-	CInput *pInput=new CInput;
+	CInput* pInput = new CInput;
 
 	// #TODO: properly HWND gettings, and remove 
 #ifndef USE_SDL_INPUT
@@ -56,7 +56,7 @@ IInput *CreateInput( ISystem *pSystem,void* hinst, void* hwnd, bool usedinput)
 	SDL_GetWindowWMInfo((SDL_Window*)hwnd, &wmInfo);
 	HWND realhwnd = wmInfo.info.win.window;
 
-	if (!pInput->Init(pSystem,(HINSTANCE)hinst, realhwnd,usedinput))
+	if (!pInput->Init(pSystem, (HINSTANCE)hinst, realhwnd, usedinput))
 #else
 	if (!pInput->Init(pSystem))
 #endif
