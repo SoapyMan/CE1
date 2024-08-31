@@ -1,4 +1,4 @@
-	// CryAISystem.cpp : Defines the entry point for the DLL application.
+// CryAISystem.cpp : Defines the entry point for the DLL application.
 //
 
 #include "StdAfx.h"
@@ -19,9 +19,9 @@ _ACCESS_POOL;
 //#endif//LINUX 
 #endif //_XBOX
 
-CAISystem *g_pAISystem;
+CAISystem* g_pAISystem;
 
-CAISystem *GetAISystem()
+CAISystem* GetAISystem()
 {
 	return g_pAISystem;
 }
@@ -36,20 +36,20 @@ ISystem* GetISystem()
 //////////////////////////////////////////////////////////////////////////
 
 #if !defined( _XBOX ) && !defined( PS2 ) && !defined( LINUX )
-BOOL APIENTRY DllMain( HANDLE hModule, 
-                       DWORD  ul_reason_for_call, 
-                       LPVOID lpReserved )
+BOOL APIENTRY DllMain(HANDLE hModule,
+	DWORD  ul_reason_for_call,
+	LPVOID lpReserved)
 {
-    return TRUE;
+	return TRUE;
 }
 #endif
 
 struct ISystem;
 
 #ifndef _XBOX
-CRYAIAPI IAISystem *CreateAISystem( ISystem *pSystem)
+CRYAIAPI IAISystem* CreateAISystem(ISystem* pSystem)
 #else
-IAISystem *CreateAISystem( ISystem *pSystem)
+IAISystem* CreateAISystem(ISystem* pSystem)
 #endif
 {
 	gISystem = pSystem;
@@ -57,25 +57,25 @@ IAISystem *CreateAISystem( ISystem *pSystem)
 }
 
 //! Reports an AI Warning to validator with WARNING severity.
-void AIWarning( const char *format,... )
+void AIWarning(const char* format, ...)
 {
 	char buffer[MAX_WARNING_LENGTH];
 	va_list args;
 	va_start(args, format);
 	vsprintf(buffer, format, args);
 	va_end(args);
-	GetAISystem()->m_pSystem->Warning( VALIDATOR_MODULE_AI,VALIDATOR_WARNING,VALIDATOR_FLAG_AI,0,"%s",buffer );
+	GetAISystem()->m_pSystem->Warning(VALIDATOR_MODULE_AI, VALIDATOR_WARNING, VALIDATOR_FLAG_AI, 0, "%s", buffer);
 }
 
 //! Reports an AI Warning to validator with ERROR severity.
-void AIError( const char *format,... )
+void AIError(const char* format, ...)
 {
 	char buffer[MAX_WARNING_LENGTH];
 	va_list args;
 	va_start(args, format);
 	vsprintf(buffer, format, args);
 	va_end(args);
-	GetAISystem()->m_pSystem->Warning( VALIDATOR_MODULE_AI,VALIDATOR_ERROR,VALIDATOR_FLAG_AI,0,"%s",buffer );
+	GetAISystem()->m_pSystem->Warning(VALIDATOR_MODULE_AI, VALIDATOR_ERROR, VALIDATOR_FLAG_AI, 0, "%s", buffer);
 }
 //////////////////////////////////////////////////////////////////////////
 

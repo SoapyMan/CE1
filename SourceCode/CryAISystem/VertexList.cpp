@@ -12,29 +12,29 @@ CVertexList::~CVertexList(void)
 {
 }
 
-int CVertexList::AddVertex(const ObstacleData & od)
+int CVertexList::AddVertex(const ObstacleData& od)
 {
 
-	int index=FindVertex(od);
-	if (index<0)
+	int index = FindVertex(od);
+	if (index < 0)
 	{
 		m_vList.push_back(od);
-		index = (int)m_vList.size()-1;
+		index = (int)m_vList.size() - 1;
 	}
 
 	return index;
 }
 
 
-int CVertexList::FindVertex(const ObstacleData & od)
+int CVertexList::FindVertex(const ObstacleData& od)
 {
 
-	Obstacles::iterator oi,oiend = m_vList.end();
-	int index=0;
+	Obstacles::iterator oi, oiend = m_vList.end();
+	int index = 0;
 
-	for (oi=m_vList.begin();oi!=oiend;++oi,index++)
+	for (oi = m_vList.begin(); oi != oiend; ++oi, index++)
 	{
-		if ( (*oi) == od )
+		if ((*oi) == od)
 			return index;
 	}
 
@@ -43,39 +43,39 @@ int CVertexList::FindVertex(const ObstacleData & od)
 
 const ObstacleData CVertexList::GetVertex(int index)
 {
-	if ((index<0) || (index >= (int)(m_vList.size())))
+	if ((index < 0) || (index >= (int)(m_vList.size())))
 		CryError("[AISYSTEM] Tried to retrieve a non existing vertex from vertex list.Please regenerate the triangulation and re-export the map.");
 
 	return m_vList[index];
 }
 
-ObstacleData &CVertexList::ModifyVertex(int index)
+ObstacleData& CVertexList::ModifyVertex(int index)
 {
-	if ((index<0) || (index >= (int)(m_vList.size())))
+	if ((index < 0) || (index >= (int)(m_vList.size())))
 		CryError("[AISYSTEM] Tried to retrieve a non existing vertex from vertex list.Please regenerate the triangulation and re-export the map.");
 
 	return m_vList[index];
 }
 
 
-void CVertexList::WriteToFile( CCryFile& file )
+void CVertexList::WriteToFile(CCryFile& file)
 {
 	int iNumber = (int)m_vList.size();
-	file.Write( &iNumber, sizeof( int ) );
+	file.Write(&iNumber, sizeof(int));
 	if (!iNumber)
 		return;
-	file.Write( &m_vList[ 0 ], iNumber * sizeof( ObstacleData ) );
+	file.Write(&m_vList[0], iNumber * sizeof(ObstacleData));
 }
 
-void CVertexList::ReadFromFile( CCryFile &file )
+void CVertexList::ReadFromFile(CCryFile& file)
 {
 	int iNumber;
-	file.Read( &iNumber, sizeof(int) );
+	file.Read(&iNumber, sizeof(int));
 
-	if (iNumber>0) 
+	if (iNumber > 0)
 	{
 		m_vList.resize(iNumber);
-		file.Read( &m_vList[0], iNumber*sizeof(ObstacleData) );
+		file.Read(&m_vList[0], iNumber * sizeof(ObstacleData));
 	}
 
 }

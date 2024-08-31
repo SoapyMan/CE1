@@ -15,19 +15,19 @@ CAIPlayer::~CAIPlayer(void)
 	}
 }
 
-void CAIPlayer::ParseParameters(const AIObjectParameters & params)
+void CAIPlayer::ParseParameters(const AIObjectParameters& params)
 {
 	m_Parameters = params.m_sParamStruct;
 	SetEyeHeight(params.fEyeHeight);
-	
+
 	m_pProxy = params.pProxy;
 }
 
-bool CAIPlayer::CanBeConvertedTo(unsigned short type, void ** pConverted)
+bool CAIPlayer::CanBeConvertedTo(unsigned short type, void** pConverted)
 {
 	if (type == AIOBJECT_PLAYER)
 	{
-		*pConverted = (CAIPlayer *) this;
+		*pConverted = (CAIPlayer*)this;
 		return true;
 	}
 
@@ -36,7 +36,7 @@ bool CAIPlayer::CanBeConvertedTo(unsigned short type, void ** pConverted)
 
 void CAIPlayer::RegisterPerception(float fValue)
 {
-	if (fValue > m_fMaxPerception) 
+	if (fValue > m_fMaxPerception)
 		SetPerception(fValue);
 }
 
@@ -52,7 +52,7 @@ float CAIPlayer::GetPerception(void)
 	{
 		if (m_fLastPerceptionSnapshot < 0.01f)
 		{
-			SetSignal(1,"PERCEPTION_RESET",0);
+			SetSignal(1, "PERCEPTION_RESET", 0);
 			m_bSendPerceptionResetNotification = false;
 			m_pProxy->Update(&m_State);
 		}

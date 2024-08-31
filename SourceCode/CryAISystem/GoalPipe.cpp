@@ -22,12 +22,12 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CGoalPipe::CGoalPipe(const string &name, CAISystem *pAISystem)
+CGoalPipe::CGoalPipe(const string& name, CAISystem* pAISystem)
 {
 	m_sName = name;
 	m_pAISystem = pAISystem;
 	m_nPosition = 0;
-	m_pSubPipe = 0; 
+	m_pSubPipe = 0;
 	m_pArgument = 0;
 }
 
@@ -35,14 +35,14 @@ CGoalPipe::~CGoalPipe()
 {
 	if (!m_qGoalPipe.empty())
 	{
-//		GoalQueue::iterator gi;
-/*		for (gi=m_qGoalPipe.begin();gi!=m_qGoalPipe.end();gi++)
-		{
-			QGoal goal = (*gi);
-			if (goal.pGoalOp)
-				delete goal.pGoalOp;
-		}
-		*/
+		//		GoalQueue::iterator gi;
+		/*		for (gi=m_qGoalPipe.begin();gi!=m_qGoalPipe.end();gi++)
+				{
+					QGoal goal = (*gi);
+					if (goal.pGoalOp)
+						delete goal.pGoalOp;
+				}
+				*/
 		m_qGoalPipe.clear();
 	}
 
@@ -53,54 +53,54 @@ CGoalPipe::~CGoalPipe()
 	}
 }
 
-void CGoalPipe::PushGoal(const string &Name, bool bBlocking, GoalParameters &params)
+void CGoalPipe::PushGoal(const string& Name, bool bBlocking, GoalParameters& params)
 {
 	QGoal newgoal;
 
 	if (Name == AIOP_ACQUIRETARGET)
 	{
-		newgoal.pGoalOp = new COPAcqTarget((CAIObject *) params.m_pTarget);
+		newgoal.pGoalOp = new COPAcqTarget((CAIObject*)params.m_pTarget);
 	}
 	else if (Name == AIOP_APPROACH)
 	{
-		newgoal.pGoalOp = new COPApproach(params.fValue, params.nValue!=0, params.bValue);
+		newgoal.pGoalOp = new COPApproach(params.fValue, params.nValue != 0, params.bValue);
 	}
 	else if (Name == AIOP_BACKOFF)
 	{
-		newgoal.pGoalOp = new COPBackoff(params.fValue, params.nValue !=0);
+		newgoal.pGoalOp = new COPBackoff(params.fValue, params.nValue != 0);
 	}
 	else if (Name == AIOP_FIRECMD)
 	{
 		bool allowed = (params.fValue > 0);
 		bool smart = !(params.fValue > 1);
-		newgoal.pGoalOp = new COPFireCmd(allowed,smart);
+		newgoal.pGoalOp = new COPFireCmd(allowed, smart);
 	}
 	else if (Name == AIOP_BODYPOS)
 	{
-		int thepos = (int) params.fValue;
+		int thepos = (int)params.fValue;
 		newgoal.pGoalOp = new COPBodyCmd(thepos);
 	}
 	else if (Name == AIOP_STRAFE)
 	{
-		 newgoal.pGoalOp = new COPStrafe(params.fValue);	
+		newgoal.pGoalOp = new COPStrafe(params.fValue);
 	}
 	else if (Name == AIOP_TIMEOUT)
-	{	
+	{
 		if (!m_pAISystem->m_pSystem)
 			CryError("[AISYSTEM ERROR] Pushing goals without a valid System instance");
 		if (!m_pAISystem->m_pSystem->GetITimer())
 			CryError("[AISYSTEM ERROR] Pushing goals without a valid Timer instance");
 
-		newgoal.pGoalOp = new COPTimeout(params.fValue, m_pAISystem->m_pSystem->GetITimer(),params.fValueAux);
+		newgoal.pGoalOp = new COPTimeout(params.fValue, m_pAISystem->m_pSystem->GetITimer(), params.fValueAux);
 	}
 	else if (Name == AIOP_RUN)
 	{
-		newgoal.pGoalOp = new COPRunCmd((params.fValue>0));
+		newgoal.pGoalOp = new COPRunCmd((params.fValue > 0));
 	}
-/*	else if (Name == AIOP_JUMP)
-	{
-		newgoal.pGoalOp = new COPJumpCmd();
-	}*/
+	/*	else if (Name == AIOP_JUMP)
+		{
+			newgoal.pGoalOp = new COPJumpCmd();
+		}*/
 	else if (Name == AIOP_LOOKAROUND)
 	{
 		newgoal.pGoalOp = new COPLookAround(params.fValue);
@@ -111,12 +111,12 @@ void CGoalPipe::PushGoal(const string &Name, bool bBlocking, GoalParameters &par
 	}
 	else if (Name == AIOP_PATHFIND)
 	{
-		newgoal.pGoalOp = new COPPathFind(params.szString.c_str(),params.m_pTarget);
+		newgoal.pGoalOp = new COPPathFind(params.szString.c_str(), params.m_pTarget);
 	}
 	else if (Name == AIOP_TRACE)
 	{
 		bool bParam = (params.nValue > 0);
-		newgoal.pGoalOp = new COPTrace(bParam,0,(params.fValue>0));
+		newgoal.pGoalOp = new COPTrace(bParam, 0, (params.fValue > 0));
 	}
 	else if (Name == AIOP_IGNOREALL)
 	{
@@ -125,9 +125,9 @@ void CGoalPipe::PushGoal(const string &Name, bool bBlocking, GoalParameters &par
 	}
 	else if (Name == AIOP_SIGNAL)
 	{
-		int nParam = (int) params.fValue;
-		unsigned char cFilter = (unsigned char) params.nValue;
-		newgoal.pGoalOp = new COPSignal(nParam,params.szString.c_str(),cFilter);
+		int nParam = (int)params.fValue;
+		unsigned char cFilter = (unsigned char)params.nValue;
+		newgoal.pGoalOp = new COPSignal(nParam, params.szString.c_str(), cFilter);
 	}
 	else if (Name == AIOP_DEVALUE)
 	{
@@ -139,19 +139,19 @@ void CGoalPipe::PushGoal(const string &Name, bool bBlocking, GoalParameters &par
 	}
 	else if (Name == AIOP_HIDE)
 	{
-		newgoal.pGoalOp = new COPHide(params.fValue,params.nValue,params.bValue);
+		newgoal.pGoalOp = new COPHide(params.fValue, params.nValue, params.bValue);
 	}
 	else if (Name == AIOP_JUMP)
 	{
-		newgoal.pGoalOp = new COPJumpCmd(params.fValue,params.nValue,params.bValue,params.fValueAux);
+		newgoal.pGoalOp = new COPJumpCmd(params.fValue, params.nValue, params.bValue, params.fValueAux);
 	}
 	else if (Name == AIOP_STICK)
 	{
-		newgoal.pGoalOp = new COPStick(params.fValue,false);
+		newgoal.pGoalOp = new COPStick(params.fValue, false);
 	}
 	else if (Name == AIOP_FORM)
 	{
-    newgoal.pGoalOp = new COPForm(params.szString.c_str());
+		newgoal.pGoalOp = new COPForm(params.szString.c_str());
 	}
 	else if (Name == AIOP_CLEAR)
 	{
@@ -164,7 +164,7 @@ void CGoalPipe::PushGoal(const string &Name, bool bBlocking, GoalParameters &par
 	}
 	else if (Name == AIOP_LOOKAT)
 	{
-		newgoal.pGoalOp = new COPLookAt(params.fValue, (float) params.nValue);
+		newgoal.pGoalOp = new COPLookAt(params.fValue, (float)params.nValue);
 	}
 	else if (Name == AIOP_HELIADV)
 	{
@@ -179,18 +179,18 @@ void CGoalPipe::PushGoal(const string &Name, bool bBlocking, GoalParameters &par
 }
 
 
-GoalPointer CGoalPipe::PopGoal(bool &blocking, string &name, GoalParameters &params, CPipeUser *pOperand)
+GoalPointer CGoalPipe::PopGoal(bool& blocking, string& name, GoalParameters& params, CPipeUser* pOperand)
 {
 
 	// if we are processing a subpipe
 	if (m_pSubPipe)
 	{
-		GoalPointer anymore = m_pSubPipe->PopGoal(blocking, name,params,pOperand);
+		GoalPointer anymore = m_pSubPipe->PopGoal(blocking, name, params, pOperand);
 		if (!anymore)
 		{
 			if (m_pSubPipe)
 				delete m_pSubPipe;
-			
+
 			m_pSubPipe = 0; // this subpipe is finished
 
 			if (m_pArgument)
@@ -201,16 +201,16 @@ GoalPointer CGoalPipe::PopGoal(bool &blocking, string &name, GoalParameters &par
 			return anymore;
 	}
 
-	if (m_nPosition < m_qGoalPipe.size() )
+	if (m_nPosition < m_qGoalPipe.size())
 	{
 		QGoal current = m_qGoalPipe[m_nPosition++];
 
-		CGoalPipe *pPipe;
+		CGoalPipe* pPipe;
 		if (pPipe = m_pAISystem->IsGoalPipe(current.name))
 		{
 			// this goal is a subpipe of goals, get that one until it is finished
 			m_pSubPipe = pPipe;
-			return m_pSubPipe->PopGoal(blocking,name,params,pOperand);
+			return m_pSubPipe->PopGoal(blocking, name, params, pOperand);
 		}
 		else
 		{
@@ -230,18 +230,18 @@ GoalPointer CGoalPipe::PopGoal(bool &blocking, string &name, GoalParameters &par
 	return 0;
 }
 
-CGoalPipe * CGoalPipe::Clone()
+CGoalPipe* CGoalPipe::Clone()
 {
 
-	CGoalPipe *pClone = new CGoalPipe(m_sName, m_pAISystem);
+	CGoalPipe* pClone = new CGoalPipe(m_sName, m_pAISystem);
 
 	// copy goal queue
 	GoalQueue::iterator gi;
 
-	for (gi=m_qGoalPipe.begin();gi!=m_qGoalPipe.end();gi++)
+	for (gi = m_qGoalPipe.begin(); gi != m_qGoalPipe.end(); gi++)
 	{
 		QGoal gl = (*gi);
-		pClone->PushGoal(gl.name,gl.bBlocking,gl.params);
+		pClone->PushGoal(gl.name, gl.bBlocking, gl.params);
 	}
 
 	return pClone;
@@ -258,10 +258,10 @@ void CGoalPipe::Reset()
 // Makes the IP of this pipe jump to the desired position
 void CGoalPipe::Jump(int position)
 {
-	if (position<0)
+	if (position < 0)
 		position--;
 	if (m_nPosition)
-		m_nPosition+=position;
+		m_nPosition += position;
 }
 
 bool CGoalPipe::IsInSubpipe(void)
@@ -269,12 +269,12 @@ bool CGoalPipe::IsInSubpipe(void)
 	return (m_pSubPipe != 0);
 }
 
-CGoalPipe * CGoalPipe::GetSubpipe(void)
+CGoalPipe* CGoalPipe::GetSubpipe(void)
 {
 	return m_pSubPipe;
 }
 
-void CGoalPipe::SetSubpipe(CGoalPipe * pPipe)
+void CGoalPipe::SetSubpipe(CGoalPipe* pPipe)
 {
 	m_pSubPipe = pPipe;
 }
