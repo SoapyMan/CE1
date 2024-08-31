@@ -21,13 +21,13 @@ CryBoneDesc::~CryBoneDesc()
 //   pEntity - the chunk data to load the bone info from
 // RETURNS:
 //   false if the bone couldn't be loaded
-bool CryBoneDesc::LoadRaw (const BONE_ENTITY* pEntity)
+bool CryBoneDesc::LoadRaw(const BONE_ENTITY* pEntity)
 {
-  //read  bone info
-	assert(pEntity->nChildren<200);
+	//read  bone info
+	assert(pEntity->nChildren < 200);
 
 	// update the lod 0 physics of this bone
-	UpdatePhysics (*pEntity, 0);
+	UpdatePhysics(*pEntity, 0);
 
 	//get bone info
 	m_nControllerID = pEntity->ControllerID;
@@ -38,22 +38,22 @@ bool CryBoneDesc::LoadRaw (const BONE_ENTITY* pEntity)
 
 //////////////////////////////////////////////////////////////////////////
 // updates this bone physics, from the given entity descriptor, and of the given lod
-void CryBoneDesc::UpdatePhysics (const BONE_ENTITY& entity, int nLod)
+void CryBoneDesc::UpdatePhysics(const BONE_ENTITY& entity, int nLod)
 {
-	assert (nLod >= 0 && nLod < SIZEOF_ARRAY(m_PhysInfo));
+	assert(nLod >= 0 && nLod < SIZEOF_ARRAY(m_PhysInfo));
 	CopyPhysInfo(m_PhysInfo[nLod], entity.phys);
 
 	int nFlags = 0;
 	if (entity.prop[0])
 	{
-		nFlags = joint_no_gravity|joint_isolated_accelerations;
+		nFlags = joint_no_gravity | joint_isolated_accelerations;
 	}
 	else
 	{
-		if (!strnstr(entity.prop,"gravity", sizeof(entity.prop)))
+		if (!strnstr(entity.prop, "gravity", sizeof(entity.prop)))
 			nFlags |= joint_no_gravity;
-		
-		if (!strnstr(entity.prop,"physical",sizeof(entity.prop)))
+
+		if (!strnstr(entity.prop, "physical", sizeof(entity.prop)))
 			nFlags |= joint_isolated_accelerations;
 	}
 
@@ -71,17 +71,17 @@ void CryBoneDesc::UpdatePhysics (const BONE_ENTITY& entity, int nLod)
 //    true if the corresponding physical geometry object has been found
 //!	NOTE:
 //!	The entries of the map that were used are deleted
-bool CryBoneDesc::PostInitPhysGeom (ChunkIdToPhysGeomMap& mapChunkIdToPhysGeom, int nLodLevel)
+bool CryBoneDesc::PostInitPhysGeom(ChunkIdToPhysGeomMap& mapChunkIdToPhysGeom, int nLodLevel)
 {
 	phys_geometry*& pPhysGeom = m_PhysInfo[nLodLevel].pPhysGeom;
-	ChunkIdToPhysGeomMap::iterator it = mapChunkIdToPhysGeom.find ((INT_PTR)pPhysGeom);
-	if (it != mapChunkIdToPhysGeom.end()) 
+	ChunkIdToPhysGeomMap::iterator it = mapChunkIdToPhysGeom.find((INT_PTR)pPhysGeom);
+	if (it != mapChunkIdToPhysGeom.end())
 	{
 		// remap the chunk id to the actual pointer to the geometry
 		pPhysGeom = it->second;
-		mapChunkIdToPhysGeom.erase (it);
+		mapChunkIdToPhysGeom.erase(it);
 		return true;
-	} 
+	}
 	else
 	{
 		pPhysGeom = NULL;
@@ -90,14 +90,14 @@ bool CryBoneDesc::PostInitPhysGeom (ChunkIdToPhysGeomMap& mapChunkIdToPhysGeom, 
 }
 
 // sets the name of the bone out of the given buffer of the given max size
-void CryBoneDesc::setName (const char* szName)
+void CryBoneDesc::setName(const char* szName)
 {
-	m_strName.assign (szName);
+	m_strName.assign(szName);
 
-	static const char *g_arrLimbNames[4] = { "L UpperArm","R UpperArm","L Thigh","R Thigh" };
+	static const char* g_arrLimbNames[4] = { "L UpperArm","R UpperArm","L Thigh","R Thigh" };
 	m_nLimbId = -1;
-	for (int j=0; j < SIZEOF_ARRAY(g_arrLimbNames) ;j++)
-		if (strstr(szName,g_arrLimbNames[j]))
+	for (int j = 0; j < SIZEOF_ARRAY(g_arrLimbNames); j++)
+		if (strstr(szName, g_arrLimbNames[j]))
 		{
 			m_nLimbId = j;
 			break;
@@ -117,7 +117,7 @@ const string& CryBoneDesc::getName()const
 
 // compares two bone descriptions and returns true if they're the same bone
 // (the same name and the same position in the hierarchy)
-bool CryBoneDesc::isEqual (const CryBoneDesc& desc)const
+bool CryBoneDesc::isEqual(const CryBoneDesc& desc)const
 {
 	return m_strName == desc.m_strName
 		&& m_nControllerID == desc.m_nControllerID
@@ -127,33 +127,33 @@ bool CryBoneDesc::isEqual (const CryBoneDesc& desc)const
 }
 
 
-inline size_t align4 (size_t x)
+inline size_t align4(size_t x)
 {
-	return (x + 3)&~3;
+	return (x + 3) & ~3;
 }
 
 // Serializes the description:
 // returns the number of required bytes for serialization, if the data pointer is NULL
 // returns 0 (if the buffer size is not enough) or the number of bytes written, if the data pointer is given
-unsigned CryBoneDesc::Serialize (bool bSave, void *pStream, unsigned nSize)
+unsigned CryBoneDesc::Serialize(bool bSave, void* pStream, unsigned nSize)
 {
 	if (bSave)
 	{
-		unsigned nSizeRequired = (unsigned)(sizeof(CryBoneDescData_Comp) + align4 (m_strName.length()+1));
+		unsigned nSizeRequired = (unsigned)(sizeof(CryBoneDescData_Comp) + align4(m_strName.length() + 1));
 		if (!pStream)
 			return nSizeRequired;
 		if (nSize < nSizeRequired)
 			return 0;
 
 		CopyCryBone(*(CryBoneDescData_Comp*)pStream, *this);
-		memcpy ((CryBoneDescData_Comp*)pStream+1,m_strName.c_str(),m_strName.length()+1);
+		memcpy((CryBoneDescData_Comp*)pStream + 1, m_strName.c_str(), m_strName.length() + 1);
 		return nSizeRequired;
 	}
 	else
 	{
 		if (!pStream)
 			return 0;
-		if (nSize < sizeof(CryBoneDescData_Comp)+1)
+		if (nSize < sizeof(CryBoneDescData_Comp) + 1)
 			return 0;
 		if (nSize & 3)
 			return 0; // alignment error
@@ -161,26 +161,26 @@ unsigned CryBoneDesc::Serialize (bool bSave, void *pStream, unsigned nSize)
 		// end of the stream
 		const char* pEnd = (const char*)pStream + nSize;
 		// the start byte of the bone name
-		const char* pName = (const char*)((CryBoneDescData_Comp*)pStream+1);
+		const char* pName = (const char*)((CryBoneDescData_Comp*)pStream + 1);
 
 		// scan until the end of the name (\0 char) or the stream (pEnd address)
-		const char *pNameEnd;
+		const char* pNameEnd;
 		for (pNameEnd = pName; pNameEnd < pEnd && *pNameEnd; ++pNameEnd);
-		m_strName.assign (pName, pNameEnd);
+		m_strName.assign(pName, pNameEnd);
 		// return aligned size of the chunk including the string 0 terminator, but
 		// no more than the declared size of the stream
-		return min(nSize, (unsigned)align4 (pNameEnd+1-(const char*)pStream));
+		return min(nSize, (unsigned)align4(pNameEnd + 1 - (const char*)pStream));
 	}
 }
 
 void CryBoneDesc::setDefaultGlobal(const Matrix44& matDefault)
 {
-	m_matInvDefGlobal=OrthoUniformGetInverted (matDefault);
+	m_matInvDefGlobal = OrthoUniformGetInverted(matDefault);
 }
 
 
 // scales the bone with the given multiplier
-void CryBoneDesc::scale (float fScale)
+void CryBoneDesc::scale(float fScale)
 {
-	m_matInvDefGlobal.SetTranslationOLD(m_matInvDefGlobal.GetTranslationOLD()*fScale);
+	m_matInvDefGlobal.SetTranslationOLD(m_matInvDefGlobal.GetTranslationOLD() * fScale);
 }

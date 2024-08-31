@@ -4,14 +4,14 @@
 #include "NvTriStrip/NvTriStrip.h"
 
 // constructs everything for the render mesh out of the given mesh
-void CRenderMeshBuilder::build (const CryChunkedFile::MeshDesc* pMeshDesc)
+void CRenderMeshBuilder::build(const CryChunkedFile::MeshDesc* pMeshDesc)
 {
 	clear();
 	m_pMeshDesc = pMeshDesc;
 	// build the tangent bases
 	MeshProxy Proxy;
 	Proxy.init(pMeshDesc);
-	m_TangBaseBuilder.CalculateTangentSpace (Proxy);
+	m_TangBaseBuilder.CalculateTangentSpace(Proxy);
 
 	buildExtToIntMaps();
 
@@ -29,7 +29,7 @@ void CRenderMeshBuilder::build (const CryChunkedFile::MeshDesc* pMeshDesc)
 }
 
 // increases all indices of materials by the given offset
-void CRenderMeshBuilder::addMaterialOffset (unsigned nOffset)
+void CRenderMeshBuilder::addMaterialOffset(unsigned nOffset)
 {
 	for (MaterialGroupArray::iterator it = m_arrPrimGroups.begin(); it != m_arrPrimGroups.end(); ++it)
 		it->nMaterial += nOffset;
@@ -61,14 +61,14 @@ unsigned CRenderMeshBuilder::numVertices()const
 }
 
 // prepares the m_arrExtTangents, m_arrExtToTBBMap, m_arrExtTangMap and m_arrExtUVMap
-void CRenderMeshBuilder::prepareExtToIntMapping ()
+void CRenderMeshBuilder::prepareExtToIntMapping()
 {
 	unsigned numTBBTangents = m_TangBaseBuilder.GetBaseCount();
-	unsigned numTBBTangents_Reserve = numTBBTangents*9/7;
+	unsigned numTBBTangents_Reserve = numTBBTangents * 9 / 7;
 	// prepare ext->TBB and the table of actual tangents
-	m_arrExtToTBBMap.reserve (numTBBTangents_Reserve);
+	m_arrExtToTBBMap.reserve(numTBBTangents_Reserve);
 	//m_arrExtToTBBMap.resize (numTBBTangents);
-	m_arrExtTangents.reserve (numTBBTangents_Reserve);
+	m_arrExtTangents.reserve(numTBBTangents_Reserve);
 	//m_arrExtTangents.resize (numTBBTangents);
 	//for (i = 0; i < numTBBTangents; ++i)
 	//{
@@ -76,29 +76,29 @@ void CRenderMeshBuilder::prepareExtToIntMapping ()
 	//	TangData& rBase = m_arrExtTangents[i];
 	//	m_TangBaseBuilder.GetBase(i, &rBase.tangent.x, &rBase.binormal.x, &rBase.tnormal.x);
 	//}
-	
+
 	// create the indexation map new->old
 	m_arrExtTangMap.reserve(numTBBTangents_Reserve);
 	//m_arrExtTangMap.resize (numTBBTangents,-1);
 	if (m_pMeshDesc->numTexFaces())
-	{	
+	{
 		m_arrExtUVMap.reserve(numTBBTangents_Reserve);
 		//m_arrExtUVMap.resize (numTBBTangents, -1);
 	}
 
-	m_arrExtFaces.reserve (m_pMeshDesc->numFaces());
+	m_arrExtFaces.reserve(m_pMeshDesc->numFaces());
 }
 
 
 // adds an entry to all required maps - m_arrExtTangents, m_arrExtToTBBMap, m_arrExtTangMap and m_arrExtUVMap
-bool CRenderMeshBuilder::addExtToIntMapEntry (DWORD FaceExt[3], const CryFace& FaceInt, const CryTexFace& TexFaceInt)
+bool CRenderMeshBuilder::addExtToIntMapEntry(DWORD FaceExt[3], const CryFace& FaceInt, const CryTexFace& TexFaceInt)
 {
 	unsigned numTBBTangents = m_TangBaseBuilder.GetBaseCount();
-	assert (m_arrExtTangMap.size() == m_arrExtUVMap.size() || m_arrExtUVMap.empty());
-	assert (m_arrExtTangMap.size() == m_arrExtTangents.size());
+	assert(m_arrExtTangMap.size() == m_arrExtUVMap.size() || m_arrExtUVMap.empty());
+	assert(m_arrExtTangMap.size() == m_arrExtTangents.size());
 
 	CryFace NewExtFace = FaceInt;
-	
+
 	if (FaceExt[0] == FaceExt[1] || FaceExt[1] == FaceExt[2] || FaceExt[2] == FaceExt[0])
 	{
 		return false;
@@ -106,23 +106,23 @@ bool CRenderMeshBuilder::addExtToIntMapEntry (DWORD FaceExt[3], const CryFace& F
 
 	for (unsigned i = 0; i < 3; ++i)
 	{
-		VertexUVPair VUVPair((ushort)FaceInt[i],(ushort)TexFaceInt[i], (ushort)FaceExt[i]);
-		VertexUVPairMap::iterator itVUVPair = m_mapVUVP.find (VUVPair);
+		VertexUVPair VUVPair((ushort)FaceInt[i], (ushort)TexFaceInt[i], (ushort)FaceExt[i]);
+		VertexUVPairMap::iterator itVUVPair = m_mapVUVP.find(VUVPair);
 		unsigned nExtEntry;
 		if (itVUVPair == m_mapVUVP.end())
 		{
 			// no such pair, add a new one.
 			nExtEntry = m_arrExtTangents.size();
 			TangData rBase;
-			m_TangBaseBuilder.GetBase (FaceExt[i], &rBase.tangent.x, &rBase.binormal.x, &rBase.tnormal.x);
+			m_TangBaseBuilder.GetBase(FaceExt[i], &rBase.tangent.x, &rBase.binormal.x, &rBase.tnormal.x);
 			AdjustBase(rBase);
-			m_arrExtTangents.push_back (rBase);
+			m_arrExtTangents.push_back(rBase);
 
 			m_arrExtTangMap.push_back(FaceInt[i]);
 			m_arrExtToTBBMap.push_back((ushort)FaceExt[i]);
 			if (m_pMeshDesc->numTexFaces())
 				m_arrExtUVMap.push_back(TexFaceInt[i]);
-			m_mapVUVP.insert (VertexUVPairMap::value_type(VUVPair, nExtEntry));
+			m_mapVUVP.insert(VertexUVPairMap::value_type(VUVPair, nExtEntry));
 		}
 		else
 		{
@@ -143,25 +143,25 @@ bool CRenderMeshBuilder::addExtToIntMapEntry (DWORD FaceExt[3], const CryFace& F
 // creates the mapping from the external to internal indices
 void CRenderMeshBuilder::buildExtToIntMaps()
 {
-	unsigned i,numTBBTangents = m_TangBaseBuilder.GetBaseCount();
+	unsigned i, numTBBTangents = m_TangBaseBuilder.GetBaseCount();
 	prepareExtToIntMapping();
-	
+
 	unsigned numDegenerate = 0;
-	
-	CryTexFace TexFaceInt (0,0,0);
+
+	CryTexFace TexFaceInt(0, 0, 0);
 	DWORD FaceExt[3];
 	for (i = 0; i < m_pMeshDesc->numFaces(); ++i)
 	{
 		// internal indexation face
 		const CryFace& FaceInt = m_pMeshDesc->pFaces[i];
 		// external indexation face
-		
+
 		m_TangBaseBuilder.GetTriangleBaseIndices(i, FaceExt);
 
 		if (m_pMeshDesc->numTexFaces())
-      TexFaceInt = m_pMeshDesc->pTexFaces[i];
+			TexFaceInt = m_pMeshDesc->pTexFaces[i];
 
-		if (!addExtToIntMapEntry (FaceExt, FaceInt, TexFaceInt))
+		if (!addExtToIntMapEntry(FaceExt, FaceInt, TexFaceInt))
 		{
 			++numDegenerate;
 			continue; // degenerate face
@@ -171,8 +171,8 @@ void CRenderMeshBuilder::buildExtToIntMaps()
 		CryFace& NewExtFace = m_arrExtFaces.back();
 		for (int j = 0; j < 3; ++j)
 		{
-			assert (m_arrExtUVMap[NewExtFace[j]] == TexFaceInt[j]);
-			assert (m_arrExtTangMap[NewExtFace[j]] == FaceInt[j]);
+			assert(m_arrExtUVMap[NewExtFace[j]] == TexFaceInt[j]);
+			assert(m_arrExtTangMap[NewExtFace[j]] == FaceInt[j]);
 		}
 #endif
 	}
@@ -195,7 +195,7 @@ void CRenderMeshBuilder::buildMtlFaces()
 	// SKIPPED NOW
 	const unsigned nMaxMatID = 0x400;
 	// pass 2: create the face groups and reserve space for the faces
-	m_arrMtlFaces.reserve (nMaxMatID/4);
+	m_arrMtlFaces.reserve(nMaxMatID / 4);
 
 	unsigned numSkippedFaces = 0;
 
@@ -212,14 +212,14 @@ void CRenderMeshBuilder::buildMtlFaces()
 			++numSkippedFaces;
 			continue;
 		}
-		assert (!rExtFace.isDegenerate());
+		assert(!rExtFace.isDegenerate());
 		if (m_arrMtlFaces.size() <= (unsigned)nMatID)
-			m_arrMtlFaces.resize (nMatID+1);
-		m_arrMtlFaces[nMatID].push_back (Face(rExtFace));
+			m_arrMtlFaces.resize(nMatID + 1);
+		m_arrMtlFaces[nMatID].push_back(Face(rExtFace));
 	}
 
 	if (numSkippedFaces)
-		LogWarning ("%d faces skipped: no material or material id is out of range", numSkippedFaces);
+		LogWarning("%d faces skipped: no material or material id is out of range", numSkippedFaces);
 }
 
 
@@ -227,8 +227,8 @@ void CRenderMeshBuilder::buildMtlFaces()
 // create the indices and the array m_arrMaterials out of m_arrMtlFaces
 void CRenderMeshBuilder::buildIndexBuffer()
 {
-	m_arrIndices.reserve (m_pMeshDesc->numFaces()*3);
-  SetListsOnly (true);
+	m_arrIndices.reserve(m_pMeshDesc->numFaces() * 3);
+	SetListsOnly(true);
 
 	for (unsigned nMaterial = 0; nMaterial < m_arrMtlFaces.size(); ++nMaterial)
 	{
@@ -241,7 +241,7 @@ void CRenderMeshBuilder::buildIndexBuffer()
 		GenerateStrips((unsigned short*)&arrFaces[0], arrFaces.size() * 3, &pGroup, &numGroups);
 
 		for (unsigned nGroup = 0; nGroup < numGroups; ++nGroup)
-			appendNvidiaStrip (pGroup[nGroup], nMaterial);
+			appendNvidiaStrip(pGroup[nGroup], nMaterial);
 
 		delete[numGroups] pGroup;
 	}
@@ -254,7 +254,7 @@ void CRenderMeshBuilder::remapIndicesForVBCache()
 {
 	// this is the old->new indexation
 	std::vector<unsigned> arrVCache;
-	arrVCache.resize (m_arrExtTangents.size(), -1);
+	arrVCache.resize(m_arrExtTangents.size(), -1);
 	unsigned nNextVertex = 0;
 	for (unsigned i = 0; i < m_arrIndices.size(); ++i)
 	{
@@ -269,11 +269,11 @@ void CRenderMeshBuilder::remapIndicesForVBCache()
 
 // permutate the contents of the array with a permutation old->new
 template <class T>
-void Permutate (std::vector<T>& arrOld, unsigned* pPermutation, unsigned newSize)
+void Permutate(std::vector<T>& arrOld, unsigned* pPermutation, unsigned newSize)
 {
-	assert (newSize <= arrOld.size());
+	assert(newSize <= arrOld.size());
 	std::vector<T> arrNew;
-	arrNew.resize (newSize);
+	arrNew.resize(newSize);
 	for (unsigned nEntry = 0; nEntry < arrOld.size(); ++nEntry)
 	{
 		if (pPermutation[nEntry] < arrNew.size())
@@ -281,22 +281,22 @@ void Permutate (std::vector<T>& arrOld, unsigned* pPermutation, unsigned newSize
 			arrNew[pPermutation[nEntry]] = arrOld[nEntry];
 		}
 		else
-			assert (pPermutation[nEntry] == -1);
+			assert(pPermutation[nEntry] == -1);
 	}
 	arrOld.swap(arrNew);
 }
 
 
 // remaps external indices according to the given permutation old->new
-void CRenderMeshBuilder::remapExtIndices (unsigned* pPermutation, unsigned numNewVertices)
+void CRenderMeshBuilder::remapExtIndices(unsigned* pPermutation, unsigned numNewVertices)
 {
 	unsigned numVertices = this->numVertices();
 	// remap the indices
 	for (unsigned nIndex = 0; nIndex < m_arrIndices.size(); ++nIndex)
 	{
-		assert (m_arrIndices[nIndex] < numVertices);
+		assert(m_arrIndices[nIndex] < numVertices);
 		m_arrIndices[nIndex] = pPermutation[m_arrIndices[nIndex]];
-		assert (m_arrIndices[nIndex] < numNewVertices);
+		assert(m_arrIndices[nIndex] < numNewVertices);
 	}
 
 	for (unsigned nFace = 0; nFace < m_arrExtFaces.size(); ++nFace)
@@ -307,19 +307,19 @@ void CRenderMeshBuilder::remapExtIndices (unsigned* pPermutation, unsigned numNe
 	}
 
 	// remap the ExtToInt mappings
-	assert (m_arrExtTangMap.size() == numVertices);
+	assert(m_arrExtTangMap.size() == numVertices);
 	Permutate(m_arrExtTangMap, pPermutation, numNewVertices);
 
 	if (m_pMeshDesc->numTexFaces())
 	{
-		assert (m_arrExtUVMap.size() == numVertices);
+		assert(m_arrExtUVMap.size() == numVertices);
 		Permutate(m_arrExtUVMap, pPermutation, numNewVertices);
 	}
 
-	assert (m_arrExtTangents.size() == numVertices);
+	assert(m_arrExtTangents.size() == numVertices);
 	// remap the tangent bases
 	Permutate(m_arrExtTangents, pPermutation, numNewVertices);
-	assert (m_arrExtTangents.size() == numNewVertices);
+	assert(m_arrExtTangents.size() == numNewVertices);
 
 }
 
@@ -327,16 +327,16 @@ void CRenderMeshBuilder::remapExtIndices (unsigned* pPermutation, unsigned numNe
 //////////////////////////////////////////////////////////////////////////
 // add the primitive group(s) and indices (m_arrPrimGroups and m_arrIndices)
 // from the given primitives generated by Nvidia Stripifier
-void CRenderMeshBuilder::appendNvidiaStrip (const struct PrimitiveGroup& rGroup, unsigned nMaterial)
+void CRenderMeshBuilder::appendNvidiaStrip(const struct PrimitiveGroup& rGroup, unsigned nMaterial)
 {
 	int j;
-	
+
 	// in case we'll add this material group, collect info in it
 	MaterialGroup MatGroup;
-	MatGroup.nMaterial  = nMaterial;
-	MatGroup.nIndexBase	= m_arrIndices.size();
+	MatGroup.nMaterial = nMaterial;
+	MatGroup.nIndexBase = m_arrIndices.size();
 	MatGroup.numIndices = 0;
-	
+
 	for (int nIndex = 0; nIndex < (int)rGroup.numIndices - 2; )
 	{
 		int v[3];
@@ -350,7 +350,7 @@ void CRenderMeshBuilder::appendNvidiaStrip (const struct PrimitiveGroup& rGroup,
 			nIndex += 3;
 			break;
 		case PT_STRIP:
-			if (nIndex&1)
+			if (nIndex & 1)
 			{
 				v[0] = src[1];
 				v[1] = src[0];
@@ -391,7 +391,7 @@ void CRenderMeshBuilder::appendNvidiaStrip (const struct PrimitiveGroup& rGroup,
 
 void CRenderMeshBuilder::selfValidate()
 {
-	assert (m_arrExtFaces.size() <= m_pMeshDesc->numFaces());
+	assert(m_arrExtFaces.size() <= m_pMeshDesc->numFaces());
 	unsigned numFaces = m_arrExtFaces.size();
 	for (unsigned nFace = 0; nFace < numFaces; ++nFace)
 	{
@@ -402,8 +402,8 @@ void CRenderMeshBuilder::selfValidate()
 		for (int i = 0; i < 3; ++i)
 		{
 			// this is only applicable to a normal manifold mesh
-			assert (m_arrExtUVMap[ExtFace[i]] == TexFace[i]);
-			assert (m_arrExtTangMap[ExtFace[i]] == IntFace[i]);
+			assert(m_arrExtUVMap[ExtFace[i]] == TexFace[i]);
+			assert(m_arrExtTangMap[ExtFace[i]] == IntFace[i]);
 		}
 	}
 }
@@ -411,49 +411,49 @@ void CRenderMeshBuilder::selfValidate()
 // adjusts the base - converts from Martin's algorithm's requirements to the engine requirements
 void CRenderMeshBuilder::AdjustBase(TangData& rBase)
 {
-/*
-	float fBinormal = rBase.binormal * rBase.tnormal;
-	float fTangent = rBase.tangent * rBase.tnormal;
-	assert (fabs(fBinormal) < 1e-2 && fabs(fTangent) < 1e-2);
-/*	// normalize the normal
-	float fEpsilon = 0.0005f;
-	float fSqrt1_2 = 0.70710678118654752440084436210485f; // square root of 1/2
-	float fNormalLen = rBase.tnormal.Length();
-	if (fNormalLen < fEpsilon)
+	/*
+		float fBinormal = rBase.binormal * rBase.tnormal;
+		float fTangent = rBase.tangent * rBase.tnormal;
+		assert (fabs(fBinormal) < 1e-2 && fabs(fTangent) < 1e-2);
+	/*	// normalize the normal
+		float fEpsilon = 0.0005f;
+		float fSqrt1_2 = 0.70710678118654752440084436210485f; // square root of 1/2
+		float fNormalLen = rBase.tnormal.Length();
+		if (fNormalLen < fEpsilon)
+			rBase.tnormal /= fNormalLen;
 		rBase.tnormal /= fNormalLen;
-	rBase.tnormal /= fNormalLen;
 
-	// make the bisect that
-	Vec3d vBisect = rBase.binormal+rBase.tangent;
-	vBisect -= (vBisect * rBase.tnormal) * rBase.tnormal; // make it orthogonal to the normal
-	float fBisectLen = vBisect.Length();
-	if (fBisectLen < fEpsilon)
-		return;
-	vBisect /= fBisectLen;
+		// make the bisect that
+		Vec3d vBisect = rBase.binormal+rBase.tangent;
+		vBisect -= (vBisect * rBase.tnormal) * rBase.tnormal; // make it orthogonal to the normal
+		float fBisectLen = vBisect.Length();
+		if (fBisectLen < fEpsilon)
+			return;
+		vBisect /= fBisectLen;
 
-	Vec3d vBase = vBisect ^ rBase.tnormal;
+		Vec3d vBase = vBisect ^ rBase.tnormal;
 
-	if (rBase.binormal * vBase > rBase.tangent * vBase)
-	{
-		assert (rBase.binormal * vBase > 0 && rBase.tangent * vBase < 0);
-		rBase.binormal = (vBisect + vBase) * fSqrt1_2;
-		rBase.tangent  = (vBisect - vBase) * fSqrt1_2;
-	}
-	else
-	{
-		assert (rBase.binormal * vBase < 0 && rBase.tangent * vBase > 0);
-		rBase.binormal = (vBisect - vBase) * fSqrt1_2;
-		rBase.tangent  = (vBisect + vBase) * fSqrt1_2;
-	}
-	*/
-	//std::swap(rBase.binormal, rBase.tangent);
+		if (rBase.binormal * vBase > rBase.tangent * vBase)
+		{
+			assert (rBase.binormal * vBase > 0 && rBase.tangent * vBase < 0);
+			rBase.binormal = (vBisect + vBase) * fSqrt1_2;
+			rBase.tangent  = (vBisect - vBase) * fSqrt1_2;
+		}
+		else
+		{
+			assert (rBase.binormal * vBase < 0 && rBase.tangent * vBase > 0);
+			rBase.binormal = (vBisect - vBase) * fSqrt1_2;
+			rBase.tangent  = (vBisect + vBase) * fSqrt1_2;
+		}
+		*/
+		//std::swap(rBase.binormal, rBase.tangent);
 	rBase.binormal = -rBase.binormal;
 }
 
-void CRenderMeshBuilder::MeshProxy::GetPos( const DWORD indwPos, float outfPos[3] ) const
+void CRenderMeshBuilder::MeshProxy::GetPos(const DWORD indwPos, float outfPos[3]) const
 {
 	const Vec3d ptPos = m_pMeshDesc->pVertices[indwPos].p;
 	// unrotate the object
 	for (int i = 0; i < 3; ++i)
-		outfPos[i] = m_tm(0,i)*ptPos.x + m_tm(1,i)*ptPos.y + m_tm(2,i)*ptPos.z;
+		outfPos[i] = m_tm(0, i) * ptPos.x + m_tm(1, i) * ptPos.y + m_tm(2, i) * ptPos.z;
 }

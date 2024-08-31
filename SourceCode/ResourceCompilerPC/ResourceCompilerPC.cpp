@@ -9,31 +9,31 @@
 
 IRCLog* g_pLog = NULL;
 
-void LogWarning (const char* szFormat, ...)
+void LogWarning(const char* szFormat, ...)
 {
 	va_list args;
-	va_start (args, szFormat);
+	va_start(args, szFormat);
 	if (g_pLog)
-		g_pLog->LogV (IMiniLog::eWarning, szFormat, args);
+		g_pLog->LogV(IMiniLog::eWarning, szFormat, args);
 	else
-		vprintf (szFormat, args);
+		vprintf(szFormat, args);
 	va_end(args);
 }
-void Log (const char* szFormat, ...)
+void Log(const char* szFormat, ...)
 {
 	va_list args;
-	va_start (args, szFormat);
+	va_start(args, szFormat);
 	if (g_pLog)
-		g_pLog->LogV (IMiniLog::eMessage, szFormat, args);
+		g_pLog->LogV(IMiniLog::eMessage, szFormat, args);
 	else
-		vprintf (szFormat, args);
+		vprintf(szFormat, args);
 	va_end(args);
 }
 
-BOOL APIENTRY DllMain( HANDLE hModule, 
-                       DWORD  ul_reason_for_call, 
-                       LPVOID lpReserved
-					 )
+BOOL APIENTRY DllMain(HANDLE hModule,
+	DWORD  ul_reason_for_call,
+	LPVOID lpReserved
+)
 {
 	switch (ul_reason_for_call)
 	{
@@ -45,11 +45,11 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 	case DLL_PROCESS_DETACH:
 		break;
 	}
-    return TRUE;
+	return TRUE;
 }
 
 // This is an example of an exported function.
-void __stdcall RegisterConvertors(IResourceCompiler*pRC)
+void __stdcall RegisterConvertors(IResourceCompiler* pRC)
 {
 	pRC->RegisterConvertor(new CGFConvertor());
 	//pRC->RegisterConvertor(new GC_CGFConvertor());

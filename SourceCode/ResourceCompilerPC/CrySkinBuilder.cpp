@@ -4,9 +4,9 @@
 
 
 // initializes the builder for usage
-CrySkinBuilder::CrySkinBuilder (const ICrySkinSource*pGeometry):
-	m_arrSmoothVertHitCount ("CrySkinBuilder.arrSmoothVertHitCount"),
-	CrySkinBuilderBase (pGeometry)
+CrySkinBuilder::CrySkinBuilder(const ICrySkinSource* pGeometry) :
+	m_arrSmoothVertHitCount("CrySkinBuilder.arrSmoothVertHitCount"),
+	CrySkinBuilderBase(pGeometry)
 {
 	makeFullBoneVertexArrays();
 
@@ -19,7 +19,7 @@ CrySkinBuilder::CrySkinBuilder (const ICrySkinSource*pGeometry):
 	//  0 numbers for the rigid vertices
 	//  1 number for each smooth vertex
 	// we don't count the bones that are skipped
-	m_numAuxInts = 3 * (m_numBones-m_numSkipBones) + m_numSmoothLinks;
+	m_numAuxInts = 3 * (m_numBones - m_numSkipBones) + m_numSmoothLinks;
 }
 
 // initializes a new skin
@@ -29,33 +29,33 @@ void CrySkinBuilder::initSkinFull(CrySkinFull* pSkin)
 	pSkin->m_numDests = m_pGeometry->numVertices();
 
 	// this will hold the number of times a smooth vertex is hit
-	m_arrSmoothVertHitCount.reinit (m_pGeometry->numVertices(), 0);
+	m_arrSmoothVertHitCount.reinit(m_pGeometry->numVertices(), 0);
 
 	CrySkinStreams stream, streamBegin, streamEnd;
-	streamBegin.pAux  = pSkin->m_arrAux.begin();
+	streamBegin.pAux = pSkin->m_arrAux.begin();
 	streamBegin.pVert = pSkin->m_arrVertices.begin();
 	stream = streamBegin;
-	streamEnd.pAux  = streamBegin.pAux  + m_numAuxInts;
-	streamEnd.pVert = streamBegin.pVert	+ m_numLinks;
+	streamEnd.pAux = streamBegin.pAux + m_numAuxInts;
+	streamEnd.pVert = streamBegin.pVert + m_numLinks;
 
 	for (unsigned nBone = m_numSkipBones; nBone < m_numBones; ++nBone)
 	{
 		// for each bone, fill the three groups
 		// we start from the rigid vertices
-		fillRigidGroup (stream, nBone);
-		assert (stream.pAux <= streamEnd.pAux);
-		assert (stream.pVert <= streamEnd.pVert);
-		fillSmoothGroups (stream, nBone);
+		fillRigidGroup(stream, nBone);
+		assert(stream.pAux <= streamEnd.pAux);
+		assert(stream.pVert <= streamEnd.pVert);
+		fillSmoothGroups(stream, nBone);
 		// only when we processed the last bone, we should have the pAux pointing to the end
-		assert (stream.pAux <= streamEnd.pAux);
-		assert (stream.pVert <= streamEnd.pVert);
+		assert(stream.pAux <= streamEnd.pAux);
+		assert(stream.pVert <= streamEnd.pVert);
 	}
 	m_arrSmoothVertHitCount.clear();
-	assert (stream.pAux == streamEnd.pAux);
-	assert (stream.pVert == streamEnd.pVert);
+	assert(stream.pAux == streamEnd.pAux);
+	assert(stream.pVert == streamEnd.pVert);
 #ifdef _DEBUG
-	validate (pSkin);
-	pSkin->validate (m_pGeometry);
+	validate(pSkin);
+	pSkin->validate(m_pGeometry);
 #endif
 }
 
@@ -66,7 +66,7 @@ void CrySkinBuilder::initSkinFull(CrySkinFull* pSkin)
 // returns the pointer to the next available auxint after the groups
 // IMPLEMENTATION NOTE:
 //  there are TWO groups filled in here
-void CrySkinBuilder::fillSmoothGroups (CrySkinStreams& streams, unsigned nBone)
+void CrySkinBuilder::fillSmoothGroups(CrySkinStreams& streams, unsigned nBone)
 {
 	// the group starts with the number of smooth vertices met the first time, belonging to this bone
 	CrySkinAuxInt& numSmooth1Verts = *streams.pAux++;
@@ -79,7 +79,7 @@ void CrySkinBuilder::fillSmoothGroups (CrySkinStreams& streams, unsigned nBone)
 	// this will be the array of vertices met not for the first time -
 	// we'll fill it in during processing of the Smooth1 group
 	std::vector<CrySkinSmoothVertexArray::const_iterator> arrSmooth2Verts;
-	arrSmooth2Verts.reserve (arrSmooth.size());
+	arrSmooth2Verts.reserve(arrSmooth.size());
 
 	// iterate through the smooth vertices, picking up Smooth1 vertices and memorizing Smooth2 vertices
 	// hit each vertex, either smooth1 or smooth2
@@ -89,20 +89,20 @@ void CrySkinBuilder::fillSmoothGroups (CrySkinStreams& streams, unsigned nBone)
 #ifdef _DEBUG
 		const CryVertexBinding& rLink = m_pGeometry->getLink(it->nDest);
 		float fLegacyWeight = rLink.getBoneWeight(nBone);
-		assert (rLink.hasBoneWeight(nBone, it->fWeight));
+		assert(rLink.hasBoneWeight(nBone, it->fWeight));
 #endif
 		// check which time the vertex is met
 		if (nVertHitCount == 0)
 		{
 			// this vertex is met for the first time
 			*streams.pAux++ = it->nDest;
-			it->build (*streams.pVert++);
+			it->build(*streams.pVert++);
 			++numSmooth1Verts;
 		}
 		else
 			// this vertex is met not for the first time  - to be gone to the group Smooth2
 			arrSmooth2Verts.push_back(it);
-		
+
 		// hit the vertex anyway
 		++nVertHitCount;
 	}
@@ -114,17 +114,17 @@ void CrySkinBuilder::fillSmoothGroups (CrySkinStreams& streams, unsigned nBone)
 	// now iterate through the smooth2 vertices
 	for (unsigned i = 0; i < arrSmooth2Verts.size(); ++i)
 	{
-		arrSmooth2Verts[i]->build (*streams.pVert++);
+		arrSmooth2Verts[i]->build(*streams.pVert++);
 		*streams.pAux++ = arrSmooth2Verts[i]->nDest;
 	}
 }
 
 
 // validates the created skin
-void CrySkinBuilder::validate (CrySkinFull *pSkin)
+void CrySkinBuilder::validate(CrySkinFull* pSkin)
 {
 	CrySkinStreams stream;
-	stream.pAux  = &pSkin->m_arrAux[0];
+	stream.pAux = &pSkin->m_arrAux[0];
 	stream.pVert = &pSkin->m_arrVertices[0];
 
 	for (unsigned nBone = m_numSkipBones; nBone < pSkin->m_numBones; ++nBone)
