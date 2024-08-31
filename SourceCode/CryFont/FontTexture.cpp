@@ -14,9 +14,9 @@
 
 //-------------------------------------------------------------------------------------------------
 CFontTexture::CFontTexture()
-: m_dwUsage(1), m_iWidth(0), m_iHeight(0), m_iCellWidth(0), m_iCellHeight(0), m_fTextureCellWidth(0),
-  m_fTextureCellHeight(0), m_iWidthCellCount(0), m_iHeightCellCount(0), m_nTextureSlotCount(0), m_pBuffer(0),
-  m_iSmoothMethod(FONT_SMOOTH_NONE), m_iSmoothAmount(FONT_SMOOTH_AMOUNT_NONE)
+	: m_dwUsage(1), m_iWidth(0), m_iHeight(0), m_iCellWidth(0), m_iCellHeight(0), m_fTextureCellWidth(0),
+	m_fTextureCellHeight(0), m_iWidthCellCount(0), m_iHeightCellCount(0), m_nTextureSlotCount(0), m_pBuffer(0),
+	m_iSmoothMethod(FONT_SMOOTH_NONE), m_iSmoothAmount(FONT_SMOOTH_AMOUNT_NONE)
 {
 	m_pSlotList.clear();
 	m_pSlotTable.clear();
@@ -29,7 +29,7 @@ CFontTexture::~CFontTexture()
 }
 
 //-------------------------------------------------------------------------------------------------
-int CFontTexture::CreateFromFile(const string &szFileName, int iWidth, int iHeight, int iSmoothMethod, int iSmoothAmount, float fSizeRatio, int iWidthCellCount, int iHeightCellCount)
+int CFontTexture::CreateFromFile(const string& szFileName, int iWidth, int iHeight, int iSmoothMethod, int iSmoothAmount, float fSizeRatio, int iWidthCellCount, int iHeightCellCount)
 {
 	if (!m_pGlyphCache.LoadFontFromFile(szFileName))
 	{
@@ -47,7 +47,7 @@ int CFontTexture::CreateFromFile(const string &szFileName, int iWidth, int iHeig
 }
 
 //------------------------------------------------------------------------------------------------- 
-int CFontTexture::CreateFromMemory(unsigned char *pFileData, int iDataSize, int iWidth, int iHeight, int iSmoothMethod, int iSmoothAmount, float fSizeRatio, int iWidthCellCount, int iHeightCellCount)
+int CFontTexture::CreateFromMemory(unsigned char* pFileData, int iDataSize, int iWidth, int iHeight, int iSmoothMethod, int iSmoothAmount, float fSizeRatio, int iWidthCellCount, int iHeightCellCount)
 {
 	if (!m_pGlyphCache.LoadFontFromMemory(pFileData, iDataSize))
 	{
@@ -166,7 +166,7 @@ wchar_t CFontTexture::GetSlotChar(int iSlot)
 }
 
 //-------------------------------------------------------------------------------------------------
-CTextureSlot *CFontTexture::GetCharSlot(wchar_t cChar)
+CTextureSlot* CFontTexture::GetCharSlot(wchar_t cChar)
 {
 	CTextureSlotTableItor pItor = m_pSlotTable.find(cChar);
 
@@ -179,11 +179,11 @@ CTextureSlot *CFontTexture::GetCharSlot(wchar_t cChar)
 }
 
 //-------------------------------------------------------------------------------------------------
-CTextureSlot *CFontTexture::GetLRUSlot()
+CTextureSlot* CFontTexture::GetLRUSlot()
 {
 	unsigned int	dwMinUsage = 0xffffffff;
-	CTextureSlot	*pLRUSlot = 0;
-	CTextureSlot	*pSlot;
+	CTextureSlot* pLRUSlot = 0;
+	CTextureSlot* pSlot;
 
 	CTextureSlotListItor pItor = m_pSlotList.begin();
 
@@ -211,11 +211,11 @@ CTextureSlot *CFontTexture::GetLRUSlot()
 }
 
 //-------------------------------------------------------------------------------------------------
-CTextureSlot *CFontTexture::GetMRUSlot()
+CTextureSlot* CFontTexture::GetMRUSlot()
 {
 	unsigned int	dwMaxUsage = 0;
-	CTextureSlot	*pMRUSlot = 0;
-	CTextureSlot	*pSlot;
+	CTextureSlot* pMRUSlot = 0;
+	CTextureSlot* pSlot;
 
 	CTextureSlotListItor pItor = m_pSlotList.begin();
 
@@ -239,7 +239,7 @@ CTextureSlot *CFontTexture::GetMRUSlot()
 }
 
 //------------------------------------------------------------------------------------------------- 
-int CFontTexture::PreCacheString(const wchar_t *szString, int *pUpdated)
+int CFontTexture::PreCacheString(const wchar_t* szString, int* pUpdated)
 {
 	unsigned int dwUsage = m_dwUsage++;
 	int iLength = wcslen(szString);
@@ -249,7 +249,7 @@ int CFontTexture::PreCacheString(const wchar_t *szString, int *pUpdated)
 	{
 		wchar_t cChar = szString[i];
 
-		CTextureSlot *pSlot = GetCharSlot(cChar);
+		CTextureSlot* pSlot = GetCharSlot(cChar);
 
 		if (!pSlot)
 		{
@@ -287,7 +287,7 @@ int CFontTexture::PreCacheString(const wchar_t *szString, int *pUpdated)
 }
 
 //------------------------------------------------------------------------------------------------- 
-int CFontTexture::GetTextureCoord(wchar_t cChar, float *fU, float *fV)
+int CFontTexture::GetTextureCoord(wchar_t cChar, float* fU, float* fV)
 {
 	CTextureSlotTableItor pItor = m_pSlotTable.find(cChar);
 
@@ -336,11 +336,11 @@ int CFontTexture::GetCharHeight(wchar_t cChar)
 }
 
 //------------------------------------------------------------------------------------------------- 
-int CFontTexture::WriteToFile(const string &szFileName)
+int CFontTexture::WriteToFile(const string& szFileName)
 {
-	FILE *hFile = fopen(szFileName.c_str(), "wb");
+	FILE* hFile = fopen(szFileName.c_str(), "wb");
 
-	if(!hFile)
+	if (!hFile)
 	{
 		return 0;
 	}
@@ -350,7 +350,7 @@ int CFontTexture::WriteToFile(const string &szFileName)
 
 	memset(&pHeader, 0, sizeof(BITMAPFILEHEADER));
 	memset(&pInfoHeader, 0, sizeof(BITMAPINFOHEADER));
-	
+
 	pHeader.bfType = 0x4D42;
 	pHeader.bfSize = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + m_iWidth * m_iHeight * 3;
 	pHeader.bfOffBits = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
@@ -368,12 +368,12 @@ int CFontTexture::WriteToFile(const string &szFileName)
 
 	unsigned char cRGB[3];
 
-	for(int i = m_iHeight - 1; i >= 0; i--)
+	for (int i = m_iHeight - 1; i >= 0; i--)
 	{
-		for(int j = 0; j < m_iWidth; j++)
+		for (int j = 0; j < m_iWidth; j++)
 		{
 #ifdef FONT_USE_32BIT_TEXTURE
-			cRGB[0] = ((char *)(m_pBuffer + i * m_iWidth + j))[3];
+			cRGB[0] = ((char*)(m_pBuffer + i * m_iWidth + j))[3];
 #else
 			cRGB[0] = m_pBuffer[(i * m_iWidth) + j];
 #endif
@@ -398,7 +398,7 @@ int CFontTexture::CreateSlotList(int iListSize)
 
 	for (int i = 0; i < iListSize; i++)
 	{
-		CTextureSlot *pTextureSlot = new CTextureSlot;
+		CTextureSlot* pTextureSlot = new CTextureSlot;
 
 		if (!pTextureSlot)
 		{
@@ -438,7 +438,7 @@ int CFontTexture::ReleaseSlotList()
 //-------------------------------------------------------------------------------------------------
 int CFontTexture::UpdateSlot(int iSlot, unsigned int dwUsage, wchar_t cChar)
 {
-	CTextureSlot *pSlot = m_pSlotList[iSlot];
+	CTextureSlot* pSlot = m_pSlotList[iSlot];
 
 	if (!pSlot)
 	{
@@ -452,19 +452,19 @@ int CFontTexture::UpdateSlot(int iSlot, unsigned int dwUsage, wchar_t cChar)
 		m_pSlotTable.erase(pItor);
 	}
 
-	m_pSlotTable.insert(std::pair<wchar_t, CTextureSlot *>(cChar, pSlot));
+	m_pSlotTable.insert(std::pair<wchar_t, CTextureSlot*>(cChar, pSlot));
 
 	pSlot->dwUsage = dwUsage;
 	pSlot->cCurrentChar = cChar;
 
 	int iWidth = 0;
 	int iHeight = 0;
-	
+
 	// blit the char glyph into the texture
 	int x = pSlot->iTextureSlot % m_iWidthCellCount;
 	int y = pSlot->iTextureSlot / m_iWidthCellCount;
 
-	CGlyphBitmap *pGlyphBitmap;
+	CGlyphBitmap* pGlyphBitmap;
 
 	if (!m_pGlyphCache.GetGlyph(&pGlyphBitmap, &iWidth, &iHeight, cChar))
 	{

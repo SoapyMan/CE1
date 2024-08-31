@@ -18,8 +18,8 @@
 
 //------------------------------------------------------------------------------------------------- 
 CFontRenderer::CFontRenderer()
-: m_pLibrary(0), m_pFace(0), m_pGlyph(0), m_fSizeRatio(0.8f), m_pEncoding(FONT_ENCODING_UNICODE),
-  m_iGlyphBitmapWidth(0), m_iGlyphBitmapHeight(0)
+	: m_pLibrary(0), m_pFace(0), m_pGlyph(0), m_fSizeRatio(0.8f), m_pEncoding(FONT_ENCODING_UNICODE),
+	m_iGlyphBitmapWidth(0), m_iGlyphBitmapHeight(0)
 {
 }
 
@@ -33,7 +33,7 @@ CFontRenderer::~CFontRenderer()
 }
 
 //------------------------------------------------------------------------------------------------- 
-int CFontRenderer::LoadFromFile(const string &szFileName)
+int CFontRenderer::LoadFromFile(const string& szFileName)
 {
 	int iError = FT_Init_FreeType(&m_pLibrary);
 
@@ -47,7 +47,7 @@ int CFontRenderer::LoadFromFile(const string &szFileName)
 		FT_Done_Face(m_pFace);
 		m_pFace = 0;
 	}
-	
+
 	iError = FT_New_Face(m_pLibrary, szFileName.c_str(), 0, &m_pFace);
 
 	if (iError)
@@ -61,7 +61,7 @@ int CFontRenderer::LoadFromFile(const string &szFileName)
 }
 
 //------------------------------------------------------------------------------------------------- 
-int CFontRenderer::LoadFromMemory(unsigned char *pBuffer, int iBufferSize)
+int CFontRenderer::LoadFromMemory(unsigned char* pBuffer, int iBufferSize)
 {
 	int iError = FT_Init_FreeType(&m_pLibrary);
 
@@ -110,7 +110,7 @@ int CFontRenderer::SetGlyphBitmapSize(int iWidth, int iHeight)
 }
 
 //------------------------------------------------------------------------------------------------- 
-int	CFontRenderer::GetGlyphBitmapSize(int *pWidth, int *pHeight)
+int	CFontRenderer::GetGlyphBitmapSize(int* pWidth, int* pHeight)
 {
 	if (pWidth)
 	{
@@ -145,7 +145,7 @@ int CFontRenderer::SetEncoding(FT_Encoding pEncoding)
 /*int CFontRenderer::CreateFontBitmap(CFBitmap **pFontBitmap, Vec3d *pTexCoord, int iWidth, int iHeight)
 {
 	CFBitmap *pBitmap = new CFBitmap;
-	
+
 	if ((!pBitmap) || (!pBitmap->Create(iWidth, iHeight)))
 	{
 		if (pBitmap)
@@ -155,7 +155,7 @@ int CFontRenderer::SetEncoding(FT_Encoding pEncoding)
 
 		return 0;
 	}
-	
+
 	memset(pBitmap->GetData(), 0, pBitmap->GetWidth() * pBitmap->GetHeight());
 
 	int iGlyphWidth = iWidth >> 4;
@@ -191,7 +191,7 @@ int CFontRenderer::SetEncoding(FT_Encoding pEncoding)
 				continue;
 			}
 
-            pTexCoord[i * 16 + j].z = ((float)iCharWidth / (float)iGlyphWidth);
+			pTexCoord[i * 16 + j].z = ((float)iCharWidth / (float)iGlyphWidth);
 			pBitmap->BlitFrom(pGlyph, 0, 0, j * iGlyphWidth, i * iGlyphHeight, iGlyphWidth, iGlyphHeight);
 		}
 	}
@@ -207,66 +207,66 @@ int CFontRenderer::SetEncoding(FT_Encoding pEncoding)
 
 //------------------------------------------------------------------------------------------------- 
 //------------------------------------------------------------------------------------------------- 
-int CFontRenderer::GetGlyph(CGlyphBitmap *pGlyphBitmap, int *iGlyphWidth, int *iGlyphHeight, int iX, int iY, int iCharCode)
+int CFontRenderer::GetGlyph(CGlyphBitmap* pGlyphBitmap, int* iGlyphWidth, int* iGlyphHeight, int iX, int iY, int iCharCode)
 {
 #if defined(WIN64) && defined(_DEBUG)
 	{
 		char szBuf[0x100];
-		sprintf (szBuf, "GetGlyph(%p,%p->%d,%p->%d,x=%d,y=%d,char=%d)\n", pGlyphBitmap, iGlyphWidth, *iGlyphWidth, iGlyphHeight, *iGlyphHeight, iX, iY, iCharCode);
-		OutputDebugString (szBuf);
+		sprintf(szBuf, "GetGlyph(%p,%p->%d,%p->%d,x=%d,y=%d,char=%d)\n", pGlyphBitmap, iGlyphWidth, *iGlyphWidth, iGlyphHeight, *iGlyphHeight, iX, iY, iCharCode);
+		OutputDebugString(szBuf);
 	}
 #endif
-	int iError = FT_Load_Char(m_pFace, iCharCode, FT_LOAD_DEFAULT);
+int iError = FT_Load_Char(m_pFace, iCharCode, FT_LOAD_DEFAULT);
 
-	if (iError)
-	{
-		return 0;
-	}
-
-	m_pGlyph = m_pFace->glyph;
-
-	iError = FT_Render_Glyph(m_pGlyph, FT_RENDER_MODE_NORMAL);
-
-	if (iError)
-	{
-		return 0;
-	}
-
-	if (iGlyphWidth)
-	{
-		*iGlyphWidth = (m_pGlyph->metrics.width >> 6) + 1;
-	}
-
-	if (iGlyphHeight)
-	{
-		*iGlyphHeight = (m_pGlyph->metrics.height >> 6);
-	}
-
-	int				iTopOffset = (m_iGlyphBitmapHeight - (int)(m_iGlyphBitmapHeight * m_fSizeRatio)) + m_pGlyph->bitmap_top;
-	unsigned char	*pBuffer = pGlyphBitmap->GetBuffer();
-
-	for (int i = 0; i < m_pGlyph->bitmap.rows; i++)
-	{
-		int iNewY = i + (iY + m_iGlyphBitmapHeight - iTopOffset);
-
-		for (int j = 0; j < m_pGlyph->bitmap.width; j++)
-		{
-			unsigned char	cColor = m_pGlyph->bitmap.buffer[(i * m_pGlyph->bitmap.width) + j];
-			int				iOffset = iNewY * m_iGlyphBitmapWidth + iX + j;
-
-			if ((iOffset >= m_iGlyphBitmapWidth * m_iGlyphBitmapHeight) || ( iOffset < 0))
-			{
-				continue;
-			}
-
-			pBuffer[iOffset] = cColor;
-		}
-	}
-
-	return 1;
+if (iError)
+{
+	return 0;
 }
 
-int	CFontRenderer::GetGlyphScaled(CGlyphBitmap *pGlyphBitmap, int *iGlyphWidth, int *iGlyphHeight, int iX, int iY, float fScaleX, float fScaleY, int iCharCode)
+m_pGlyph = m_pFace->glyph;
+
+iError = FT_Render_Glyph(m_pGlyph, FT_RENDER_MODE_NORMAL);
+
+if (iError)
+{
+	return 0;
+}
+
+if (iGlyphWidth)
+{
+	*iGlyphWidth = (m_pGlyph->metrics.width >> 6) + 1;
+}
+
+if (iGlyphHeight)
+{
+	*iGlyphHeight = (m_pGlyph->metrics.height >> 6);
+}
+
+int				iTopOffset = (m_iGlyphBitmapHeight - (int)(m_iGlyphBitmapHeight * m_fSizeRatio)) + m_pGlyph->bitmap_top;
+unsigned char* pBuffer = pGlyphBitmap->GetBuffer();
+
+for (int i = 0; i < m_pGlyph->bitmap.rows; i++)
+{
+	int iNewY = i + (iY + m_iGlyphBitmapHeight - iTopOffset);
+
+	for (int j = 0; j < m_pGlyph->bitmap.width; j++)
+	{
+		unsigned char	cColor = m_pGlyph->bitmap.buffer[(i * m_pGlyph->bitmap.width) + j];
+		int				iOffset = iNewY * m_iGlyphBitmapWidth + iX + j;
+
+		if ((iOffset >= m_iGlyphBitmapWidth * m_iGlyphBitmapHeight) || (iOffset < 0))
+		{
+			continue;
+		}
+
+		pBuffer[iOffset] = cColor;
+	}
+}
+
+return 1;
+}
+
+int	CFontRenderer::GetGlyphScaled(CGlyphBitmap* pGlyphBitmap, int* iGlyphWidth, int* iGlyphHeight, int iX, int iY, float fScaleX, float fScaleY, int iCharCode)
 {
 	return 1;
 }

@@ -25,9 +25,9 @@
 #undef GetCharHeight
 #endif
 ///////////////////////////////////////////////
-CFFont::CFFont(struct ISystem *pISystem, class CCryFont *pCryFont, const char *pszName)
+CFFont::CFFont(struct ISystem* pISystem, class CCryFont* pCryFont, const char* pszName)
 {
-	m_bRealPixels=false;
+	m_bRealPixels = false;
 	m_fWidthScale = 1.0f;
 	m_bSameSize = false;
 	//	m_pBitmap = NULL;
@@ -36,7 +36,7 @@ CFFont::CFFont(struct ISystem *pISystem, class CCryFont *pCryFont, const char *p
 	m_szName = pszName;
 	m_vSize.set(16, 16);
 	m_iTextureID = -1;
-	m_vCharSize=vector2f(-1,-1);
+	m_vCharSize = vector2f(-1, -1);
 
 	m_fClipX = m_fClipY = 0.0f;
 	m_fClipR = m_fClipB = 0.0f;
@@ -44,19 +44,19 @@ CFFont::CFFont(struct ISystem *pISystem, class CCryFont *pCryFont, const char *p
 	m_bClipEnabled = 0;
 	m_pFontBuffer = 0;
 
-	m_vColorTable[0]=0xff000000;
-	m_vColorTable[1]=0xffffffff;
-	m_vColorTable[2]=0xffff0000;
-	m_vColorTable[3]=0xff00ff00;
-	m_vColorTable[4]=0xff0000ff;
-	m_vColorTable[5]=0xffffff00;
-	m_vColorTable[6]=0xff00ffff;
-	m_vColorTable[7]=0xffff00ff;
-	m_vColorTable[8]=0xff0080ff;
-	m_vColorTable[9]=0xff8f8f8f;
+	m_vColorTable[0] = 0xff000000;
+	m_vColorTable[1] = 0xffffffff;
+	m_vColorTable[2] = 0xffff0000;
+	m_vColorTable[3] = 0xff00ff00;
+	m_vColorTable[4] = 0xff0000ff;
+	m_vColorTable[5] = 0xffffff00;
+	m_vColorTable[6] = 0xff00ffff;
+	m_vColorTable[7] = 0xffff00ff;
+	m_vColorTable[8] = 0xff0080ff;
+	m_vColorTable[9] = 0xff8f8f8f;
 
 	// create the default effect
-	SEffect *pEffect = NewEffect();
+	SEffect* pEffect = NewEffect();
 	pEffect->strName = "default";
 	pEffect->NewPass();
 	SetEffect("default");
@@ -81,7 +81,7 @@ void CFFont::Reset()
 	m_fWidthScale = 1.0f;
 	m_bClipEnabled = 0;
 	m_vSize = vector2f(16.0f, 16.0f);
-	
+
 	m_bSameSize = 0;
 	m_bRealPixels = 0;
 	m_vCharSize = vector2f(-1.0f, -1.0f);
@@ -113,16 +113,16 @@ return RenderInit();
 
 ///////////////////////////////////////////////
 // Load a font from a TTF file
-bool CFFont::Load(const char *szFile, unsigned long nWidth, unsigned long nHeight, unsigned long nTTFFlags)
+bool CFFont::Load(const char* szFile, unsigned long nWidth, unsigned long nHeight, unsigned long nTTFFlags)
 {
 	Free();
 
 	int i = 0;
-	
+
 #ifdef PS2
 	// [marco] for ps2 use the game path to prepend 
 	// the file name or load from pack as shown below	
-	if((m_pBitmap=LoadXtfFont(szFile, &m_TexCooMap[0])))
+	if ((m_pBitmap = LoadXtfFont(szFile, &m_TexCooMap[0])))
 	{
 		m_bOK = true;
 		return RenderInit();
@@ -133,25 +133,25 @@ bool CFFont::Load(const char *szFile, unsigned long nWidth, unsigned long nHeigh
 	int iSmoothMethod = (nTTFFlags & TTFFLAG_SMOOTH_MASK) >> TTFFLAG_SMOOTH_SHIFT;
 	int iSmoothAmount = (nTTFFlags & TTFFLAG_SMOOTH_AMOUNT_MASK) >> TTFFLAG_SMOOTH_AMOUNT_SHIFT;
 
-	ICryPak *pPak = m_pISystem->GetIPak();
+	ICryPak* pPak = m_pISystem->GetIPak();
 
-	FILE *pFile = pPak->FOpen(szFile,"rb");
+	FILE* pFile = pPak->FOpen(szFile, "rb");
 
 	if (!pFile)
 		return false;
 
-	pPak->FSeek(pFile, 0, SEEK_END); 
-	int nSize = pPak->FTell(pFile); 
-	pPak->FSeek(pFile, 0, SEEK_SET); 
+	pPak->FSeek(pFile, 0, SEEK_END);
+	int nSize = pPak->FTell(pFile);
+	pPak->FSeek(pFile, 0, SEEK_SET);
 
 	if (!nSize)
 	{
-		pPak->FClose(pFile); 
+		pPak->FClose(pFile);
 
 		return false;
-	}	
+	}
 
-	unsigned char *pBuffer = new unsigned char[nSize];
+	unsigned char* pBuffer = new unsigned char[nSize];
 
 	if (!pPak->FRead(pBuffer, nSize, 1, pFile))
 	{
@@ -177,8 +177,8 @@ bool CFFont::Load(const char *szFile, unsigned long nWidth, unsigned long nHeigh
 
 	m_bOK = true;
 #ifdef PS2
-	ConvertXtfFont(m_pBitmap, m_pBitmap->GetWidth(),m_pBitmap->GetHeight(), (uchar *)m_pBitmap->m_pData);
-	SaveXtfFont(szFile, m_pBitmap, &m_TexCooMap[0], m_pBitmap->GetWidth(),m_pBitmap->GetHeight());
+	ConvertXtfFont(m_pBitmap, m_pBitmap->GetWidth(), m_pBitmap->GetHeight(), (uchar*)m_pBitmap->m_pData);
+	SaveXtfFont(szFile, m_pBitmap, &m_TexCooMap[0], m_pBitmap->GetWidth(), m_pBitmap->GetHeight());
 #endif	
 	return RenderInit();
 }
@@ -200,22 +200,22 @@ void CFFont::Free()
 
 ///////////////////////////////////////////////
 // Set the current effect to use
-void CFFont::SetEffect(const char *szEffect)
+void CFFont::SetEffect(const char* szEffect)
 {
 	m_pCurrentEffect = NULL;
-	if(!szEffect)
+	if (!szEffect)
 		szEffect = "default";
 
-	for(int i = 0; i < (int)m_vEffects.size(); ++i)
+	for (int i = 0; i < (int)m_vEffects.size(); ++i)
 	{
-		if(strcmp(m_vEffects[i].strName.c_str(), szEffect) == 0)
+		if (strcmp(m_vEffects[i].strName.c_str(), szEffect) == 0)
 		{
 			m_pCurrentEffect = &m_vEffects[i];
 			return;
 		}
 	}
 
-	if(!m_pCurrentEffect)
+	if (!m_pCurrentEffect)
 	{
 		m_pCurrentEffect = &m_vEffects[0];
 	}
@@ -240,10 +240,10 @@ void CFFont::EnableClipping(bool bEnable)
 ///////////////////////////////////////////////
 void CFFont::SetColor(const color4f& col, int nPass)
 {
-	SRenderingPass *pPass;
-	if(nPass < 0)
+	SRenderingPass* pPass;
+	if (nPass < 0)
 	{
-		for(std::vector<SRenderingPass>::iterator i = m_pCurrentEffect->vPass.begin();
+		for (std::vector<SRenderingPass>::iterator i = m_pCurrentEffect->vPass.begin();
 			i != m_pCurrentEffect->vPass.end(); ++i)
 		{
 			pPass = &(*i);
@@ -252,7 +252,7 @@ void CFFont::SetColor(const color4f& col, int nPass)
 	}
 	else
 	{
-		if(nPass >= (int)m_pCurrentEffect->vPass.size())
+		if (nPass >= (int)m_pCurrentEffect->vPass.size())
 			return;
 		pPass = &m_pCurrentEffect->vPass[nPass];
 		pPass->SetColor(col);
@@ -261,7 +261,7 @@ void CFFont::SetColor(const color4f& col, int nPass)
 
 ///////////////////////////////////////////////
 // Set the characters base size
-void CFFont::SetSize(const vector2f &vSize)
+void CFFont::SetSize(const vector2f& vSize)
 {
 	m_vCharSize = vector2f(-1.0f, -1.0f);
 	m_vSize = vSize;
@@ -285,7 +285,7 @@ bool CFFont::GetSameSize()
 
 ///////////////////////////////////////////////
 // Return the seted size
-vector2f &CFFont::GetSize()
+vector2f& CFFont::GetSize()
 {
 	return m_vSize;
 }
@@ -295,7 +295,7 @@ vector2f &CFFont::GetSize()
 // Return the char width
 float CFFont::GetCharWidth()
 {
-	IRenderer *pRenderer = m_pISystem->GetIRenderer();
+	IRenderer* pRenderer = m_pISystem->GetIRenderer();
 	assert(pRenderer);
 
 	if (m_vCharSize.x == -1.0f)
@@ -304,10 +304,10 @@ float CFFont::GetCharWidth()
 
 		if (m_pCurrentEffect)
 		{
-			
-			for(int i = m_pCurrentEffect->vPass.size()-1; i >= 0; --i)
+
+			for (int i = m_pCurrentEffect->vPass.size() - 1; i >= 0; --i)
 			{
-				SRenderingPass *Pass = &m_pCurrentEffect->vPass[i];
+				SRenderingPass* Pass = &m_pCurrentEffect->vPass[i];
 
 				float fScale = Pass->vSizeScale.x;
 				float fOffset = Pass->vPosOffset.x;
@@ -325,10 +325,10 @@ float CFFont::GetCharWidth()
 
 				if (m_bRealPixels)
 
-				if (fPassW > fMaxW)
-				{
-					fMaxW = fPassW;
-				}
+					if (fPassW > fMaxW)
+					{
+						fMaxW = fPassW;
+					}
 			}
 		}
 
@@ -342,7 +342,7 @@ float CFFont::GetCharWidth()
 // Return the char height
 float CFFont::GetCharHeight()
 {
-	IRenderer *pRenderer = m_pISystem->GetIRenderer();
+	IRenderer* pRenderer = m_pISystem->GetIRenderer();
 	assert(pRenderer);
 
 	if (m_vCharSize.y == -1.0f)
@@ -352,9 +352,9 @@ float CFFont::GetCharHeight()
 		if (m_pCurrentEffect)
 		{
 
-			for(int i = m_pCurrentEffect->vPass.size()-1; i >= 0; --i)
+			for (int i = m_pCurrentEffect->vPass.size() - 1; i >= 0; --i)
 			{
-				SRenderingPass *Pass = &m_pCurrentEffect->vPass[i];
+				SRenderingPass* Pass = &m_pCurrentEffect->vPass[i];
 
 				float fScale = Pass->vSizeScale.y;
 				float fOffset = Pass->vPosOffset.y;
@@ -402,15 +402,15 @@ float CFFont::GetCharWidthScale()
 	|   (((long)((g) * 255)) << 8) | (long)((r) * 255) \
 	)
 
-_inline DWORD COLCONV (DWORD clr)
+_inline DWORD COLCONV(DWORD clr)
 {
-	return ((clr & 0xff00ff00) | ((clr & 0xff0000)>>16) | ((clr & 0xff)<<16));
+	return ((clr & 0xff00ff00) | ((clr & 0xff0000) >> 16) | ((clr & 0xff) << 16));
 }
 
 ///////////////////////////////////////////////
 // Draw a formated string
 
-void CFFont::DrawString( float fBaseX, float fBaseY, const char *szMsg, const bool bASCIIMultiLine )
+void CFFont::DrawString(float fBaseX, float fBaseY, const char* szMsg, const bool bASCIIMultiLine)
 {
 	if (!szMsg)
 	{
@@ -430,14 +430,14 @@ void CFFont::DrawString( float fBaseX, float fBaseY, const char *szMsg, const bo
 	DrawStringW(fBaseX, fBaseY, szwMsg, bASCIIMultiLine);
 }
 
-void CFFont::DrawStringW(float fBaseX, float fBaseY, const wchar_t *szMsg, const bool bASCIIMultiLine)
+void CFFont::DrawStringW(float fBaseX, float fBaseY, const wchar_t* szMsg, const bool bASCIIMultiLine)
 {
 	// please terminate your strings with a '\0'
 	// if you want to draw a string with more than 682 char, tell me (marcio)
 	// and will allocate two buffers
 	//assert(wcslen(szMsg) <= 682);
 
-	IRenderer *pRenderer = m_pISystem->GetIRenderer();
+	IRenderer* pRenderer = m_pISystem->GetIRenderer();
 	assert(pRenderer);
 
 	if (!szMsg)
@@ -450,22 +450,22 @@ void CFFont::DrawStringW(float fBaseX, float fBaseY, const wchar_t *szMsg, const
 	float fTexHeight = m_pFontTexture.GetCellHeight() / (float)m_pFontTexture.GetHeight();
 	bool	bRGB = (pRenderer->GetFeatures() & RFT_RGBA) != 0;
 	float fAlpha = m_pCurrentEffect->vPass[0].cColor.v[3];
-	struct_VERTEX_FORMAT_P3F_COL4UB_TEX2F *pVertex = 0;
+	struct_VERTEX_FORMAT_P3F_COL4UB_TEX2F* pVertex = 0;
 	int		iVertexOffset = 0;
 	int		iTextLength = GetTextLengthW(szMsg);
 
 	pRenderer->FontSetTexture(m_iTextureID, FILTER_TRILINEAR);
 	pRenderer->FontSetRenderingState(0, 0);
 
-	for(int i = m_pCurrentEffect->vPass.size()-1; i >= 0; --i)
+	for (int i = m_pCurrentEffect->vPass.size() - 1; i >= 0; --i)
 	{
 		if (!i)
 		{
 			fAlpha = 1.0f;
-		}		
+		}
 
-		SRenderingPass *Pass = &m_pCurrentEffect->vPass[i];
-		
+		SRenderingPass* Pass = &m_pCurrentEffect->vPass[i];
+
 		// gather pass data
 		vector2f	vBaseXY = vector2f(fBaseX, fBaseY);
 		vector2f	vOffset = Pass->vPosOffset;
@@ -473,7 +473,7 @@ void CFFont::DrawStringW(float fBaseX, float fBaseY, const wchar_t *szMsg, const
 		DWORD			dwPassColor = 0;
 		DWORD			dwColor = 0;
 		int				iVBLen = 0;
-		
+
 		if (!m_bRealPixels)
 		{
 			vSize.x = pRenderer->ScaleCoordX(vSize.x);
@@ -496,119 +496,119 @@ void CFFont::DrawStringW(float fBaseX, float fBaseY, const wchar_t *szMsg, const
 		}
 
 		dwColor = dwPassColor;
-		
+
 		pRenderer->FontSetBlending(Pass->blendSrc, Pass->blendDest);
-		pVertex = (struct_VERTEX_FORMAT_P3F_COL4UB_TEX2F *)pRenderer->GetDynVBPtr(iTextLength * 6, iVertexOffset, 0);
+		pVertex = (struct_VERTEX_FORMAT_P3F_COL4UB_TEX2F*)pRenderer->GetDynVBPtr(iTextLength * 6, iVertexOffset, 0);
 		assert(pVertex);
 
-		wchar_t *pcChar = (wchar_t *)szMsg;
+		wchar_t* pcChar = (wchar_t*)szMsg;
 		wchar_t ch;
 
 		// parse the string, ignoring control characters
 		while (ch = *pcChar++)
 		{
-			switch(ch)
+			switch (ch)
 			{
 			case L'\\':
+			{
+				if (*pcChar != L'n' || !bASCIIMultiLine)
 				{
-					if (*pcChar != L'n' || !bASCIIMultiLine)
-					{
-						break;
-					}
+					break;
+				}
+				++pcChar;
+			}
+			case L'\n':
+			{
+				fCharX = vBaseXY.x + vOffset.x;
+				fCharY += vSize.y;
+				continue;
+			}
+			break;
+			case L'\r':
+			{
+				fCharX = vBaseXY.x + vOffset.x;
+
+				continue;
+			}
+			break;
+			case L'\t':
+			{
+				if (m_bSameSize)
+				{
+					fCharX += 4 * vSize.x * m_fWidthScale;
+				}
+				else
+				{
+					fCharX += FONT_SPACE_SIZE * 4 * vSize.x;
+				}
+
+				continue;
+			}
+			break;
+			case L' ':
+			{
+				if (m_bSameSize)
+				{
+					fCharX += vSize.x * m_fWidthScale;
+				}
+				else
+				{
+					fCharX += FONT_SPACE_SIZE * vSize.x;
+				}
+
+				continue;
+			}
+			break;
+			case L'$':
+			{
+				if (*pcChar == L'$')
+				{
 					++pcChar;
 				}
-			case L'\n':
+				else if (isdigit(*pcChar))
 				{
-					fCharX = vBaseXY.x + vOffset.x;
-					fCharY += vSize.y;
-					continue;
-				}
-				break;
-			case L'\r':
-				{
-					fCharX = vBaseXY.x + vOffset.x;
+					if (!i)
+					{
+						int iColorIndex = (*pcChar) - L'0';
 
-					continue;
-				}
-				break;
-			case L'\t':
-				{
-					if (m_bSameSize)
-					{
-						fCharX += 4 * vSize.x * m_fWidthScale;
-					}
-					else
-					{
-						fCharX += FONT_SPACE_SIZE * 4 * vSize.x;
-					}
+						dwColor = m_vColorTable[iColorIndex];
 
-					continue;
-				}
-				break;
-			case L' ':
-				{
-					if (m_bSameSize)
-					{
-						fCharX += vSize.x * m_fWidthScale;
-					}
-					else
-					{
-						fCharX += FONT_SPACE_SIZE * vSize.x;
-					}
-					
-					continue;
-				}
-				break;
-			case L'$':
-				{
-					if (*pcChar == L'$')
-					{
-						++pcChar;
-					}
-					else if(isdigit(*pcChar))
-					{
-						if (!i)
+						if (bRGB)
 						{
-							int iColorIndex = (*pcChar) - L'0';
-
 							dwColor = m_vColorTable[iColorIndex];
-
-							if (bRGB)
-							{
-								dwColor = m_vColorTable[iColorIndex];
-							}
-							else
-							{
-								dwColor = COLCONV(m_vColorTable[iColorIndex]);
-							}
-
-							// apply the correct alpha
-							dwColor = (dwColor & 0x00ffffff) | ((long)((Pass->cColor.a * fAlpha) * 255.0f)) << 24;
 						}
-
-						++pcChar;
-
-						continue;
-					}
-					else if ((*pcChar == L'O' || *pcChar == L'o') && !i)
-					{
-						if (!i)
+						else
 						{
-							dwColor = dwPassColor;
+							dwColor = COLCONV(m_vColorTable[iColorIndex]);
 						}
 
-						++pcChar;
-
-						continue;
+						// apply the correct alpha
+						dwColor = (dwColor & 0x00ffffff) | ((long)((Pass->cColor.a * fAlpha) * 255.0f)) << 24;
 					}
-					else if (*pcChar)
-					{
-						++pcChar;
 
-						continue;
-					}
+					++pcChar;
+
+					continue;
 				}
-				break;
+				else if ((*pcChar == L'O' || *pcChar == L'o') && !i)
+				{
+					if (!i)
+					{
+						dwColor = dwPassColor;
+					}
+
+					++pcChar;
+
+					continue;
+				}
+				else if (*pcChar)
+				{
+					++pcChar;
+
+					continue;
+				}
+			}
+			break;
 			default:
 				break;
 			}
@@ -630,7 +630,7 @@ void CFFont::DrawStringW(float fBaseX, float fBaseY, const wchar_t *szMsg, const
 			float fY = fCharY;
 
 			if (m_bSameSize)
-			{						
+			{
 				fX = fCharX + ((vSize.x * m_fWidthScale) - fWidth) * 0.5f;
 				fAdvance = vSize.x * m_fWidthScale;
 			}
@@ -643,7 +643,7 @@ void CFFont::DrawStringW(float fBaseX, float fBaseY, const wchar_t *szMsg, const
 			float fNewY = fY;
 			float fNewR = fR;
 			float fNewB = fB;
-			
+
 			if (m_bClipEnabled)
 			{
 				// clip non visible
@@ -745,10 +745,10 @@ void CFFont::DrawStringW(float fBaseX, float fBaseY, const wchar_t *szMsg, const
 	}
 
 	// restore the old states	
-	pRenderer->FontRestoreRenderingState();	
+	pRenderer->FontRestoreRenderingState();
 }
 
-void CFFont::DrawWrappedStringW( float fBaseX, float fBaseY, float w, const wchar_t *szMsg, const bool bASCIIMultiLine )
+void CFFont::DrawWrappedStringW(float fBaseX, float fBaseY, float w, const wchar_t* szMsg, const bool bASCIIMultiLine)
 {
 	wstring szWrapped;
 
@@ -756,7 +756,7 @@ void CFFont::DrawWrappedStringW( float fBaseX, float fBaseY, float w, const wcha
 	DrawStringW(fBaseX, fBaseY, szWrapped.c_str(), bASCIIMultiLine);
 }
 
-vector2f CFFont::GetWrappedTextSizeW(const wchar_t *swStr, float w, const bool bASCIIMultiLine)
+vector2f CFFont::GetWrappedTextSizeW(const wchar_t* swStr, float w, const bool bASCIIMultiLine)
 {
 	wstring szWrapped;
 
@@ -764,7 +764,7 @@ vector2f CFFont::GetWrappedTextSizeW(const wchar_t *swStr, float w, const bool b
 	return GetTextSizeW(szWrapped.c_str(), bASCIIMultiLine);
 }
 
-vector2f CFFont::GetTextSize(const char *szMsg, const bool bASCIIMultiLine)
+vector2f CFFont::GetTextSize(const char* szMsg, const bool bASCIIMultiLine)
 {
 	if (!szMsg)
 	{
@@ -781,14 +781,14 @@ vector2f CFFont::GetTextSize(const char *szMsg, const bool bASCIIMultiLine)
 		szwMsg[iSize] = (unsigned char)szMsg[iSize];
 	}
 
-	return GetTextSizeW(szwMsg,bASCIIMultiLine);
+	return GetTextSizeW(szwMsg, bASCIIMultiLine);
 }
 
 ///////////////////////////////////////////////
 // Compute the text size
-vector2f CFFont::GetTextSizeW(const wchar_t *szMsg, const bool bASCIIMultiLine)
+vector2f CFFont::GetTextSizeW(const wchar_t* szMsg, const bool bASCIIMultiLine)
 {
-	IRenderer *pRenderer = m_pISystem->GetIRenderer();
+	IRenderer* pRenderer = m_pISystem->GetIRenderer();
 	assert(pRenderer);
 
 	if (wcslen(szMsg) == 1 && *szMsg == L'$')
@@ -798,7 +798,7 @@ vector2f CFFont::GetTextSizeW(const wchar_t *szMsg, const bool bASCIIMultiLine)
 
 	if (!szMsg)
 	{
-		return vector2f(0,0);
+		return vector2f(0, 0);
 	}
 
 	Prepare(szMsg);
@@ -806,9 +806,9 @@ vector2f CFFont::GetTextSizeW(const wchar_t *szMsg, const bool bASCIIMultiLine)
 	float fMaxW = 0.0f;
 	float fMaxH = 0.0f;
 
-	for(int i = m_pCurrentEffect->vPass.size()-1; i >= 0; --i)
+	for (int i = m_pCurrentEffect->vPass.size() - 1; i >= 0; --i)
 	{
-		SRenderingPass *Pass = &m_pCurrentEffect->vPass[i];
+		SRenderingPass* Pass = &m_pCurrentEffect->vPass[i];
 
 		// gather pass data
 		vector2f	vOffset = Pass->vPosOffset;
@@ -829,80 +829,80 @@ vector2f CFFont::GetTextSizeW(const wchar_t *szMsg, const bool bASCIIMultiLine)
 			fMaxH = fCharY;
 		}
 
-		wchar_t *pcChar = (wchar_t *)szMsg;
+		wchar_t* pcChar = (wchar_t*)szMsg;
 		wchar_t ch;
 
 		// parse the string, ignoring control characters
 		while (ch = *pcChar++)
 		{
-			switch(ch)
+			switch (ch)
 			{
 			case L'\\':
+			{
+				if (*pcChar != L'n' || !bASCIIMultiLine)
 				{
-					if (*pcChar != L'n' || !bASCIIMultiLine)
-					{
-						break;
-					}
+					break;
+				}
+				++pcChar;
+			}
+			case L'\n':
+			{
+				if (fCharX > fMaxW)
+				{
+					fMaxW = fCharX;
+				}
+
+				fCharX = vOffset.x;
+				fCharY += vSize.y;
+
+				if (fCharY > fMaxH)
+				{
+					fMaxH = fCharY;
+				}
+
+				continue;
+			}
+			break;
+			case L'\r':
+			{
+				if (fCharX > fMaxW)
+				{
+					fMaxW = fCharX;
+				}
+
+				fCharX = vOffset.x;
+
+				continue;
+			}
+			break;
+			case L'\t':
+			{
+				fCharX += FONT_SPACE_SIZE * 4 * vSize.x;
+
+				continue;
+			}
+			break;
+			case L' ':
+			{
+				fCharX += FONT_SPACE_SIZE * vSize.x;
+
+				continue;
+			}
+			break;
+			case L'$':
+			{
+				if (*pcChar == L'$')
+				{
 					++pcChar;
 				}
-			case L'\n':
+				else if (*pcChar)
 				{
-					if (fCharX > fMaxW)
-					{
-						fMaxW = fCharX;
-					}
-
-					fCharX = vOffset.x;
-					fCharY += vSize.y;
-
-					if (fCharY > fMaxH)
-					{
-						fMaxH = fCharY;
-					}
+					++pcChar;
 
 					continue;
 				}
-				break;
-			case L'\r':
-				{
-					if (fCharX > fMaxW)
-					{
-						fMaxW = fCharX;
-					}
-
-					fCharX = vOffset.x;
-
-					continue;
-				}
-				break;
-			case L'\t':
-				{
-					fCharX += FONT_SPACE_SIZE * 4 * vSize.x;
-
-					continue;
-				}
-				break;
-			case L' ':
-				{
-					fCharX += FONT_SPACE_SIZE * vSize.x;
-
-					continue;
-				}
-				break;
-			case L'$':
-				{
-					if (*pcChar == L'$')
-					{
-						++pcChar;
-					}
-					else if (*pcChar)
-					{
-						++pcChar;
-
-						continue;
-					}
-				}
-				break;
+			}
+			break;
 			default:
 				break;
 			}
@@ -923,47 +923,47 @@ vector2f CFFont::GetTextSizeW(const wchar_t *szMsg, const bool bASCIIMultiLine)
 }
 
 ///////////////////////////////////////////////
-int CFFont::GetTextLengthW(const wchar_t *szMsg, const bool bASCIIMultiLine)
+int CFFont::GetTextLengthW(const wchar_t* szMsg, const bool bASCIIMultiLine)
 {
 	int iLength = 0;
 
-	wchar_t *pcChar = (wchar_t *)szMsg;
+	wchar_t* pcChar = (wchar_t*)szMsg;
 	wchar_t ch;
 
 	// parse the string, ignoring control characters
 	while (ch = *pcChar++)
 	{
-		switch(ch)
+		switch (ch)
 		{
 		case L'\\':
+		{
+			if (*pcChar != L'n' || !bASCIIMultiLine)
 			{
-				if (*pcChar != L'n' || !bASCIIMultiLine)
-				{
-					break;
-				}
-				++pcChar;
+				break;
 			}
+			++pcChar;
+		}
 		case L'\n':
 		case L'\r':
 		case L'\t':
+		{
+			continue;
+		}
+		break;
+		case L'$':
+		{
+			if (*pcChar == L'$')
 			{
+				++pcChar;
+			}
+			else if (*pcChar)
+			{
+				++pcChar;
+
 				continue;
 			}
-			break;
-		case L'$':
-			{
-				if (*pcChar == L'$')
-				{
-					++pcChar;
-				}
-				else if (*pcChar)
-				{
-					++pcChar;
-
-					continue;
-				}
-			}
-			break;
+		}
+		break;
 		default:
 			break;
 		}
@@ -974,47 +974,47 @@ int CFFont::GetTextLengthW(const wchar_t *szMsg, const bool bASCIIMultiLine)
 }
 
 ///////////////////////////////////////////////
-int CFFont::GetTextLength(const char *szMsg, const bool bASCIIMultiLine)
+int CFFont::GetTextLength(const char* szMsg, const bool bASCIIMultiLine)
 {
 	int iLength = 0;
 
-	char *pcChar = (char *)szMsg;
+	char* pcChar = (char*)szMsg;
 	char ch;
 
 	// parse the string, ignoring control characters
 	while (ch = *pcChar++)
 	{
-		switch(ch)
+		switch (ch)
 		{
 		case '\\':
+		{
+			if (*pcChar != L'n' || !bASCIIMultiLine)
 			{
-				if (*pcChar != L'n' || !bASCIIMultiLine)
-				{
-					break;
-				}
-				++pcChar;
+				break;
 			}
+			++pcChar;
+		}
 		case '\n':
 		case '\r':
 		case '\t':
+		{
+			continue;
+		}
+		break;
+		case '$':
+		{
+			if (*pcChar == L'$')
 			{
+				++pcChar;
+			}
+			else if (*pcChar)
+			{
+				++pcChar;
+
 				continue;
 			}
-			break;
-		case '$':
-			{
-				if (*pcChar == L'$')
-				{
-					++pcChar;
-				}
-				else if (*pcChar)
-				{
-					++pcChar;
-
-					continue;
-				}
-			}
-			break;
+		}
+		break;
 		default:
 			break;
 		}
@@ -1030,7 +1030,7 @@ CFFont::SEffect* CFFont::NewEffect()
 {
 	SEffect effect;
 	m_vEffects.push_back(effect);
-	return &m_vEffects[m_vEffects.size()-1];
+	return &m_vEffects[m_vEffects.size() - 1];
 }
 
 ///////////////////////////////////////////////
@@ -1044,7 +1044,7 @@ CFFont::SEffect* CFFont::GetCurrentEffect()
 bool CFFont::RenderInit()
 {
 #ifdef FONT_USE_32BIT_TEXTURE
-	m_iTextureID = m_pISystem->GetIRenderer()->FontCreateTexture(m_pFontTexture.GetWidth(), m_pFontTexture.GetHeight(), (unsigned char *)m_pFontTexture.GetBuffer(), eTF_8888);
+	m_iTextureID = m_pISystem->GetIRenderer()->FontCreateTexture(m_pFontTexture.GetWidth(), m_pFontTexture.GetHeight(), (unsigned char*)m_pFontTexture.GetBuffer(), eTF_8888);
 #else
 	m_iTextureID = m_pISystem->GetIRenderer()->FontCreateTexture(m_pFontTexture.GetWidth(), m_pFontTexture.GetHeight(), m_pFontTexture.GetBuffer(), eTF_8000);
 #endif
@@ -1068,36 +1068,36 @@ void CFFont::RenderCleanup()
 	m_pFontTexture.Release();
 }
 
-void CFFont::GetMemoryUsage (class ICrySizer* pSizer)
+void CFFont::GetMemoryUsage(class ICrySizer* pSizer)
 {
-	if (!pSizer->Add (*this))
+	if (!pSizer->Add(*this))
 		return;
 
 	pSizer->AddObject(&m_pFontTexture, m_pFontTexture.GetWidth() * m_pFontTexture.GetHeight() * 4);
 
 	// <<FIXME>> glyph cache bitmaps should also be added here
 
-	pSizer->AddString (m_szName);
-	pSizer->Add (&m_vEffects[0],m_vEffects.size());
+	pSizer->AddString(m_szName);
+	pSizer->Add(&m_vEffects[0], m_vEffects.size());
 	for (VecEffect::iterator it = m_vEffects.begin(); it != m_vEffects.end(); ++it)
 	{
-		pSizer->Add (it->strName.c_str(), it->strName.capacity()+1);
-		pSizer->Add (&it->vPass[0], it->vPass.size());
+		pSizer->Add(it->strName.c_str(), it->strName.capacity() + 1);
+		pSizer->Add(&it->vPass[0], it->vPass.size());
 	}
 }
 
 //------------------------------------------------------------------------------------------------- 
-void CFFont::Prepare(const wchar_t *szString)
+void CFFont::Prepare(const wchar_t* szString)
 {
 	static int n = 0;
 	if (m_pFontTexture.PreCacheString(szString) == 1)
 	{
-		m_pISystem->GetIRenderer()->FontUpdateTexture(m_iTextureID, 0, 0, m_pFontTexture.GetWidth(), m_pFontTexture.GetHeight(), (unsigned char *)m_pFontTexture.GetBuffer());
+		m_pISystem->GetIRenderer()->FontUpdateTexture(m_iTextureID, 0, 0, m_pFontTexture.GetWidth(), m_pFontTexture.GetHeight(), (unsigned char*)m_pFontTexture.GetBuffer());
 	}
 }
 
 //------------------------------------------------------------------------------------------------- 
-void CFFont::WrapText(wstring &szResult, float fMaxWidth, const wchar_t *szString)
+void CFFont::WrapText(wstring& szResult, float fMaxWidth, const wchar_t* szString)
 {
 	szResult = szString;
 
@@ -1122,10 +1122,10 @@ void CFFont::WrapText(wstring &szResult, float fMaxWidth, const wchar_t *szStrin
 	float fWidthSum = 0.0f;
 
 	int				iCurrentChar = 0;
-	wchar_t		*pChar = (wchar_t *)szResult.c_str();
-	wchar_t		szChar[2] = {0, 0};
+	wchar_t* pChar = (wchar_t*)szResult.c_str();
+	wchar_t		szChar[2] = { 0, 0 };
 
-	while(szChar[0] = *pChar++)
+	while (szChar[0] = *pChar++)
 	{
 		// ignore color codes
 		if (szChar[0] == L'$')
@@ -1164,7 +1164,7 @@ void CFFont::WrapText(wstring &szResult, float fMaxWidth, const wchar_t *szStrin
 				szResult.insert(iLastSpace + 1, 1, L'\n');
 
 				++iCurrentChar;
-				pChar = (wchar_t *)(szResult.c_str() + iCurrentChar + 1);
+				pChar = (wchar_t*)(szResult.c_str() + iCurrentChar + 1);
 
 				if (fLastSpaceWidth > fBiggestLineWidth)
 				{
@@ -1179,7 +1179,7 @@ void CFFont::WrapText(wstring &szResult, float fMaxWidth, const wchar_t *szStrin
 				szResult.insert(iCurrentChar, 1, L'\n');
 
 				++iCurrentChar;
-				pChar = (wchar_t *)(szResult.c_str() + iCurrentChar + 1);
+				pChar = (wchar_t*)(szResult.c_str() + iCurrentChar + 1);
 
 				if (fCurrentLineWidth > fBiggestLineWidth)
 				{

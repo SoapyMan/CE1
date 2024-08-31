@@ -16,7 +16,7 @@
 
 //------------------------------------------------------------------------------------------------- 
 CGlyphCache::CGlyphCache()
-: m_dwUsage(1), m_iGlyphBitmapWidth(0), m_iGlyphBitmapHeight(0), m_fSizeRatio(0.8f), m_pScaleBitmap(0)
+	: m_dwUsage(1), m_iGlyphBitmapWidth(0), m_iGlyphBitmapHeight(0), m_fSizeRatio(0.8f), m_pScaleBitmap(0)
 {
 	m_pCacheTable.clear();
 	m_pSlotList.clear();
@@ -49,23 +49,23 @@ int CGlyphCache::Create(int iChacheSize, int iGlyphBitmapWidth, int iGlyphBitmap
 	int iScaledGlyphWidth = 0;
 	int iScaledGlyphHeight = 0;
 
-	switch(m_iSmoothMethod)
+	switch (m_iSmoothMethod)
 	{
 	case FONT_SMOOTH_SUPERSAMPLE:
+	{
+		switch (m_iSmoothAmount)
 		{
-			switch (m_iSmoothAmount)
-			{
-			case FONT_SMOOTH_AMOUNT_2X:
-				iScaledGlyphWidth = m_iGlyphBitmapWidth << 1;
-				iScaledGlyphHeight = m_iGlyphBitmapHeight << 1;
-				break;
-			case FONT_SMOOTH_AMOUNT_4X:
-				iScaledGlyphWidth = m_iGlyphBitmapWidth << 2;
-				iScaledGlyphHeight = m_iGlyphBitmapHeight << 2;
-				break;
-			}
+		case FONT_SMOOTH_AMOUNT_2X:
+			iScaledGlyphWidth = m_iGlyphBitmapWidth << 1;
+			iScaledGlyphHeight = m_iGlyphBitmapHeight << 1;
+			break;
+		case FONT_SMOOTH_AMOUNT_4X:
+			iScaledGlyphWidth = m_iGlyphBitmapWidth << 2;
+			iScaledGlyphHeight = m_iGlyphBitmapHeight << 2;
+			break;
 		}
-		break;
+	}
+	break;
 	}
 
 	if (iScaledGlyphWidth)
@@ -120,13 +120,13 @@ int CGlyphCache::Release()
 }
 
 //------------------------------------------------------------------------------------------------- 
-int CGlyphCache::LoadFontFromFile(const string &szFileName)
+int CGlyphCache::LoadFontFromFile(const string& szFileName)
 {
 	return m_pFontRenderer.LoadFromFile(szFileName);
 }
 
 //------------------------------------------------------------------------------------------------- 
-int CGlyphCache::LoadFontFromMemory(unsigned char *pFileBuffer, int iDataSize)
+int CGlyphCache::LoadFontFromMemory(unsigned char* pFileBuffer, int iDataSize)
 {
 	return m_pFontRenderer.LoadFromMemory(pFileBuffer, iDataSize);
 }
@@ -140,7 +140,7 @@ int CGlyphCache::ReleaseFont()
 }
 
 //------------------------------------------------------------------------------------------------- 
-int CGlyphCache::GetGlyphBitmapSize(int *pWidth, int *pHeight)
+int CGlyphCache::GetGlyphBitmapSize(int* pWidth, int* pHeight)
 {
 	if (pWidth)
 	{
@@ -167,7 +167,7 @@ int CGlyphCache::PreCacheGlyph(wchar_t cChar)
 		return 1;
 	}
 
-	CCacheSlot *pSlot = GetLRUSlot();
+	CCacheSlot* pSlot = GetLRUSlot();
 
 	if (!pSlot)
 	{
@@ -221,7 +221,7 @@ int CGlyphCache::PreCacheGlyph(wchar_t cChar)
 	pSlot->dwUsage = m_dwUsage;
 	pSlot->cCurrentChar = cChar;
 
-	m_pCacheTable.insert(std::pair<wchar_t, CCacheSlot *>(cChar, pSlot));
+	m_pCacheTable.insert(std::pair<wchar_t, CCacheSlot*>(cChar, pSlot));
 
 	return 1;
 }
@@ -232,7 +232,7 @@ int CGlyphCache::UnCacheGlyph(wchar_t cChar)
 
 	if (pItor != m_pCacheTable.end())
 	{
-		CCacheSlot *pSlot = pItor->second;
+		CCacheSlot* pSlot = pItor->second;
 
 		pSlot->Reset();
 
@@ -251,11 +251,11 @@ int CGlyphCache::GlyphCached(wchar_t cChar)
 }
 
 //------------------------------------------------------------------------------------------------- 
-CCacheSlot *CGlyphCache::GetLRUSlot()
+CCacheSlot* CGlyphCache::GetLRUSlot()
 {
 	unsigned int	dwMinUsage = 0xffffffff;
-	CCacheSlot		*pLRUSlot = 0;
-	CCacheSlot		*pSlot;
+	CCacheSlot* pLRUSlot = 0;
+	CCacheSlot* pSlot;
 
 	CCacheSlotListItor pItor = m_pSlotList.begin();
 
@@ -283,11 +283,11 @@ CCacheSlot *CGlyphCache::GetLRUSlot()
 }
 
 //------------------------------------------------------------------------------------------------- 
-CCacheSlot *CGlyphCache::GetMRUSlot()
+CCacheSlot* CGlyphCache::GetMRUSlot()
 {
 	unsigned int	dwMaxUsage = 0;
-	CCacheSlot		*pMRUSlot = 0;
-	CCacheSlot		*pSlot;
+	CCacheSlot* pMRUSlot = 0;
+	CCacheSlot* pSlot;
 
 	CCacheSlotListItor pItor = m_pSlotList.begin();
 
@@ -311,7 +311,7 @@ CCacheSlot *CGlyphCache::GetMRUSlot()
 }
 
 //------------------------------------------------------------------------------------------------- 
-int CGlyphCache::GetGlyph(CGlyphBitmap **pGlyph, int *piWidth, int *piHeight, wchar_t cChar)
+int CGlyphCache::GetGlyph(CGlyphBitmap** pGlyph, int* piWidth, int* piHeight, wchar_t cChar)
 {
 	CCacheTableItor pItor = m_pCacheTable.find(cChar);
 
@@ -348,7 +348,7 @@ int	CGlyphCache::CreateSlotList(int iListSize)
 {
 	for (int i = 0; i < iListSize; i++)
 	{
-		CCacheSlot *pCacheSlot = new CCacheSlot;
+		CCacheSlot* pCacheSlot = new CCacheSlot;
 
 		if (!pCacheSlot)
 		{
@@ -363,7 +363,7 @@ int	CGlyphCache::CreateSlotList(int iListSize)
 		}
 
 		pCacheSlot->Reset();
-		
+
 		pCacheSlot->iCacheSlot = i;
 
 		m_pSlotList.push_back(pCacheSlot);
@@ -385,7 +385,7 @@ int	CGlyphCache::ReleaseSlotList()
 
 		pItor = m_pSlotList.erase(pItor);
 	}
-	
+
 	return 1;
 }
 

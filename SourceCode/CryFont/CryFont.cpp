@@ -16,13 +16,13 @@
 #include "FBitmap.h"
 #include "FFont.h"
 
-static ICVar *r_DumpFontTexture = 0;
-static ICVar *r_DumpFontNames = 0;
+static ICVar* r_DumpFontTexture = 0;
+static ICVar* r_DumpFontNames = 0;
 
 ///////////////////////////////////////////////
-CCryFont::CCryFont(ISystem *pSystem)
+CCryFont::CCryFont(ISystem* pSystem)
 {
-  m_pISystem = pSystem;
+	m_pISystem = pSystem;
 	m_mapFonts.clear();
 
 	// CVar added by marcio
@@ -46,9 +46,9 @@ CCryFont::~CCryFont()
 	r_DumpFontTexture = 0;
 	r_DumpFontNames = 0;
 
-	for (FontMapItor itor=m_mapFonts.begin();itor!=m_mapFonts.end(); itor++)
+	for (FontMapItor itor = m_mapFonts.begin(); itor != m_mapFonts.end(); itor++)
 	{
-		IFFont *pFont=itor->second;
+		IFFont* pFont = itor->second;
 		pFont->Release();
 	}
 	m_mapFonts.clear();
@@ -59,29 +59,29 @@ void CCryFont::Release()
 {
 	delete this;
 }
-	
+
 
 ///////////////////////////////////////////////
-IFFont* CCryFont::NewFont(const char *pszName)
+IFFont* CCryFont::NewFont(const char* pszName)
 {
-	string sName=pszName;
-	for (int i=0;i<(int)sName.size();i++) sName[i]=tolower(sName[i]);
+	string sName = pszName;
+	for (int i = 0; i < (int)sName.size(); i++) sName[i] = tolower(sName[i]);
 	// check if font already created, if so return it
 	FontMapItor itor;
-	itor=m_mapFonts.find(sName.c_str());
-	if (itor!=m_mapFonts.end())
+	itor = m_mapFonts.find(sName.c_str());
+	if (itor != m_mapFonts.end())
 		return itor->second;
-	CFFont *pFont=new CFFont(m_pISystem, this, sName.c_str());
+	CFFont* pFont = new CFFont(m_pISystem, this, sName.c_str());
 	m_mapFonts.insert(FontMapItor::value_type(sName.c_str(), pFont));
 	return (IFFont*)pFont;
 }
 
 ///////////////////////////////////////////////
-IFFont* CCryFont::GetFont(const char *pszName)
+IFFont* CCryFont::GetFont(const char* pszName)
 {
 	if (r_DumpFontTexture)
 	{
-		const char *pValue = r_DumpFontTexture->GetString();
+		const char* pValue = r_DumpFontTexture->GetString();
 
 		if ((pValue) && (*pValue != 0) && (*pValue != '0'))
 		{
@@ -90,7 +90,7 @@ IFFont* CCryFont::GetFont(const char *pszName)
 			szFontFile += ".bmp";
 
 			r_DumpFontTexture->Set("0"); // must be here, to avoid recursion
-			CFFont *pFont = (CFFont *)GetFont(szFontName.c_str());
+			CFFont* pFont = (CFFont*)GetFont(szFontName.c_str());
 
 			if (pFont)
 			{
@@ -106,13 +106,13 @@ IFFont* CCryFont::GetFont(const char *pszName)
 		if (r_DumpFontNames->GetIVal())
 		{
 			FontMapItor pItor;
-			CFFont *pFont;
+			CFFont* pFont;
 
 			m_pISystem->GetILog()->LogToConsole("\1Currently Loaded Fonts:");
 
-			for (pItor=m_mapFonts.begin(); pItor != m_mapFonts.end(); ++pItor)
+			for (pItor = m_mapFonts.begin(); pItor != m_mapFonts.end(); ++pItor)
 			{
-				pFont = (CFFont *)pItor->second;		
+				pFont = (CFFont*)pItor->second;
 
 				m_pISystem->GetILog()->LogToConsole("\1  - %s", pFont->m_szName.c_str());
 			}
@@ -121,11 +121,11 @@ IFFont* CCryFont::GetFont(const char *pszName)
 		}
 	}
 
-	string sName=pszName;
-	for (int i=0;i<(int)sName.size();i++) sName[i]=tolower(sName[i]);
+	string sName = pszName;
+	for (int i = 0; i < (int)sName.size(); i++) sName[i] = tolower(sName[i]);
 	FontMapItor itor;
-	itor=m_mapFonts.find(sName.c_str());
-	if (itor!=m_mapFonts.end())
+	itor = m_mapFonts.find(sName.c_str());
+	if (itor != m_mapFonts.end())
 		return itor->second;
 	else
 		return NULL;
@@ -133,13 +133,13 @@ IFFont* CCryFont::GetFont(const char *pszName)
 
 void CCryFont::GetMemoryUsage(class ICrySizer* pSizer)
 {
-	if (!pSizer->Add (*this))
+	if (!pSizer->Add(*this))
 		return;
 	FontMapItor it = m_mapFonts.begin(), itEnd = m_mapFonts.end();
 	for (; it != itEnd; ++it)
 	{
-		pSizer->AddObject(&*it,sizeof(*it)+it->first.capacity()+1);
-		it->second->GetMemoryUsage (pSizer);
+		pSizer->AddObject(&*it, sizeof(*it) + it->first.capacity() + 1);
+		it->second->GetMemoryUsage(pSizer);
 	}
 }
 

@@ -18,15 +18,15 @@ _ACCESS_POOL;
 
 #include "CryFont.h"
 
-ISystem *gISystem = 0;
+ISystem* gISystem = 0;
 //! Get the system interface 
-ISystem	*GetISystem()
+ISystem* GetISystem()
 {
 	return gISystem;
 }
 
 ///////////////////////////////////////////////
-extern "C" ICryFont* CreateCryFontInterface(ISystem *pSystem)
+extern "C" ICryFont* CreateCryFontInterface(ISystem* pSystem)
 {
 	gISystem = pSystem;
 	return new CCryFont(pSystem);
@@ -38,7 +38,7 @@ extern "C" ICryFont* CreateCryFontInterface(ISystem *pSystem)
 #ifndef LINUX
 BOOL APIENTRY DllMain(HANDLE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved)
 {
-    return TRUE;
+	return TRUE;
 }
 #endif
 #endif

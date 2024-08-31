@@ -17,7 +17,7 @@
 
 //-------------------------------------------------------------------------------------------------
 CGlyphBitmap::CGlyphBitmap()
-:m_iWidth(0), m_iHeight(0), m_pBuffer(0)
+	:m_iWidth(0), m_iHeight(0), m_pBuffer(0)
 {
 }
 
@@ -30,7 +30,7 @@ CGlyphBitmap::~CGlyphBitmap()
 int CGlyphBitmap::Create(int iWidth, int iHeight)
 {
 	Release();
-	
+
 	m_pBuffer = new unsigned char[iWidth * iHeight];
 
 	if (!m_pBuffer)
@@ -73,20 +73,20 @@ int CGlyphBitmap::Blur(int iIterations)
 
 			if (y - 1 >= 0)
 			{
-				yupOffset = (y-1) * m_iWidth;
+				yupOffset = (y - 1) * m_iWidth;
 			}
 			else
 			{
-				yupOffset = (y) * m_iWidth;
+				yupOffset = (y)*m_iWidth;
 			}
 
 			if (y + 1 < m_iHeight)
 			{
-				ydownOffset = (y+1) * m_iWidth;
+				ydownOffset = (y + 1) * m_iWidth;
 			}
 			else
 			{
-				ydownOffset = (y) * m_iWidth;
+				ydownOffset = (y)*m_iWidth;
 			}
 
 			for (int x = 0; x < m_iWidth; x++)
@@ -125,7 +125,7 @@ int CGlyphBitmap::Scale(float fScaleX, float fScaleY)
 	int iNewWidth = (int)(m_iWidth * fScaleX);
 	int iNewHeight = (int)(m_iHeight * fScaleY);
 
-	unsigned char *pNewBuffer = new unsigned char[iNewWidth * iNewHeight];
+	unsigned char* pNewBuffer = new unsigned char[iNewWidth * iNewHeight];
 
 	if (!pNewBuffer)
 	{
@@ -200,7 +200,7 @@ int CGlyphBitmap::Clear()
 }
 
 //-------------------------------------------------------------------------------------------------
-int CGlyphBitmap::BlitTo8(unsigned char *pBuffer, int iSrcX, int iSrcY, int iSrcWidth, int iSrcHeight, int iDestX, int iDestY, int iDestWidth)
+int CGlyphBitmap::BlitTo8(unsigned char* pBuffer, int iSrcX, int iSrcY, int iSrcWidth, int iSrcHeight, int iDestX, int iDestY, int iDestWidth)
 {
 	int ySrcOffset, yDestOffset;
 
@@ -219,7 +219,7 @@ int CGlyphBitmap::BlitTo8(unsigned char *pBuffer, int iSrcX, int iSrcY, int iSrc
 }
 
 //-------------------------------------------------------------------------------------------------
-int CGlyphBitmap::BlitTo32(unsigned int *pBuffer, int iSrcX, int iSrcY, int iSrcWidth, int iSrcHeight, int iDestX, int iDestY, int iDestWidth)
+int CGlyphBitmap::BlitTo32(unsigned int* pBuffer, int iSrcX, int iSrcY, int iSrcWidth, int iSrcHeight, int iDestX, int iDestY, int iDestWidth)
 {
 	int ySrcOffset, yDestOffset;
 	char cColor;
@@ -241,12 +241,12 @@ int CGlyphBitmap::BlitTo32(unsigned int *pBuffer, int iSrcX, int iSrcY, int iSrc
 }
 
 //-------------------------------------------------------------------------------------------------
-int CGlyphBitmap::BlitScaledTo8(unsigned char *pBuffer, int iSrcX, int iSrcY, int iSrcWidth, int iSrcHeight, int iDestX, int iDestY, int iDestWidth, int iDestHeight, int iDestBufferWidth)
+int CGlyphBitmap::BlitScaledTo8(unsigned char* pBuffer, int iSrcX, int iSrcY, int iSrcWidth, int iSrcHeight, int iDestX, int iDestY, int iDestWidth, int iDestHeight, int iDestBufferWidth)
 {
 	int iNewWidth = (int)iDestWidth;
 	int iNewHeight = (int)iDestHeight;
 
-	unsigned char *pNewBuffer = pBuffer;
+	unsigned char* pNewBuffer = pBuffer;
 
 	float xFactor = iSrcWidth / (float)iNewWidth;
 	float yFactor = iSrcHeight / (float)iNewHeight;
@@ -308,13 +308,13 @@ int CGlyphBitmap::BlitScaledTo8(unsigned char *pBuffer, int iSrcX, int iSrcY, in
 }
 
 //------------------------------------------------------------------------------------------------- 
-int CGlyphBitmap::BlitScaledTo32(unsigned char *pBuffer, int iSrcX, int iSrcY, int iSrcWidth, int iSrcHeight, int iDestX, int iDestY, int iDestWidth, int iDestHeight, int iDestBufferWidth)
+int CGlyphBitmap::BlitScaledTo32(unsigned char* pBuffer, int iSrcX, int iSrcY, int iSrcWidth, int iSrcHeight, int iDestX, int iDestY, int iDestWidth, int iDestHeight, int iDestBufferWidth)
 {
 	int iNewWidth = (int)iDestWidth;
 	int iNewHeight = (int)iDestHeight;
 
-	unsigned char *pNewBuffer = pBuffer;
-	
+	unsigned char* pNewBuffer = pBuffer;
+
 	float xFactor = iSrcWidth / (float)iNewWidth;
 	float yFactor = iSrcHeight / (float)iNewHeight;
 
