@@ -16,22 +16,22 @@
 #include "ChunkFileReader.h"
 #include "CgfUtils.h"
 
-CryBoneHierarchyLoader::CryBoneHierarchyLoader ():
+CryBoneHierarchyLoader::CryBoneHierarchyLoader() :
 #ifdef DEBUG_STD_CONTAINERS
 	m_arrBones("CryBoneHierarchyLoader.Bones"),
-	m_arrIdToIndex ("CryBoneHierarchyLoader.indexidmaps"),
-	m_arrIndexToId ("CryBoneHierarchyLoader.indexidmaps"),
+	m_arrIdToIndex("CryBoneHierarchyLoader.indexidmaps"),
+	m_arrIndexToId("CryBoneHierarchyLoader.indexidmaps"),
 #endif
 	m_pChunkBoneAnim(NULL),
 	m_pChunkBoneAnimSize(0),
 
-	m_pBoneAnimRawData (NULL),
-	m_pBoneAnimRawDataEnd (NULL),
-	m_szLastError ("")
+	m_pBoneAnimRawData(NULL),
+	m_pBoneAnimRawDataEnd(NULL),
+	m_szLastError("")
 {
 }
 
-unsigned CryBoneHierarchyLoader::load (const BONEANIM_CHUNK_DESC* pChunk, unsigned nChunkSize)
+unsigned CryBoneHierarchyLoader::load(const BONEANIM_CHUNK_DESC* pChunk, unsigned nChunkSize)
 {
 	m_arrBones.clear();
 	m_arrIndexToId.clear();
@@ -40,12 +40,12 @@ unsigned CryBoneHierarchyLoader::load (const BONEANIM_CHUNK_DESC* pChunk, unsign
 	m_pChunkBoneAnim = pChunk;
 	m_pChunkBoneAnimSize = nChunkSize;
 
-	m_pBoneAnimRawData = pChunk+1;
-	m_pBoneAnimRawDataEnd = ((const char*) pChunk) + nChunkSize;
+	m_pBoneAnimRawData = pChunk + 1;
+	m_pBoneAnimRawDataEnd = ((const char*)pChunk) + nChunkSize;
 
 	if (nChunkSize < sizeof(*pChunk))
 	{
-		m_szLastError = "Couldn't read the data."	;
+		m_szLastError = "Couldn't read the data.";
 		m_pBoneAnimRawData = pChunk;
 		return 0;
 	}
@@ -57,7 +57,7 @@ unsigned CryBoneHierarchyLoader::load (const BONEANIM_CHUNK_DESC* pChunk, unsign
 		return 0;
 	}
 
-	const BONE_ENTITY* pBones = (const BONE_ENTITY*) (pChunk+1);
+	const BONE_ENTITY* pBones = (const BONE_ENTITY*)(pChunk + 1);
 	if (m_pBoneAnimRawDataEnd < (const byte*)(pBones + pChunk->nBones))
 	{
 		m_szLastError = "Premature end of data.";
@@ -80,12 +80,12 @@ unsigned CryBoneHierarchyLoader::load (const BONEANIM_CHUNK_DESC* pChunk, unsign
 		}
 	}
 
-	m_arrBones.resize (numBones());
-	m_arrIndexToId.resize (numBones(), -1);
-	m_arrIdToIndex.resize (numBones(), -1);
+	m_arrBones.resize(numBones());
+	m_arrIndexToId.resize(numBones(), -1);
+	m_arrIdToIndex.resize(numBones(), -1);
 	m_nNextBone = 0;
 
-	int nRootBoneIndex = (int)allocateBones (1);
+	int nRootBoneIndex = (int)allocateBones(1);
 
 	if (nRootBoneIndex < 0 || !load(nRootBoneIndex, nRootBoneIndex))
 		m_pBoneAnimRawData = pChunk;
@@ -104,7 +104,7 @@ void CryBoneHierarchyLoader::updateInvDefGlobalMatrices()
 	if (m_arrInitPose.size() != m_arrBones.size())
 	{
 #ifdef _CRY_ANIMATION_BASE_HEADER_
-		g_GetLog()->LogError ("\003there are %d bones and %d initial pose matrices. ignoring matrices.", m_arrBones.size(), m_arrInitPose.size());
+		g_GetLog()->LogError("\003there are %d bones and %d initial pose matrices. ignoring matrices.", m_arrBones.size(), m_arrInitPose.size());
 #endif
 		return;
 	}
@@ -112,7 +112,7 @@ void CryBoneHierarchyLoader::updateInvDefGlobalMatrices()
 	for (unsigned nBone = 0; nBone < m_arrBones.size(); ++nBone)
 	{
 		unsigned nBoneID = mapIndexToId(nBone);
-		m_arrBones[nBone].setDefaultGlobal (m_arrInitPose[nBoneID]);
+		m_arrBones[nBone].setDefaultGlobal(m_arrInitPose[nBoneID]);
 	}
 }
 
@@ -120,23 +120,23 @@ void CryBoneHierarchyLoader::updateInvDefGlobalMatrices()
 // loads the default positions of each bone; if the bone chunk is loaded,
 // updates the bone inverse default pose matrices
 // returns number of bytes read if successful, 0 if not
-unsigned CryBoneHierarchyLoader::load (const BONEINITIALPOS_CHUNK_DESC_0001*pChunk, unsigned nChunkSize)
+unsigned CryBoneHierarchyLoader::load(const BONEINITIALPOS_CHUNK_DESC_0001* pChunk, unsigned nChunkSize)
 {
 	if (nChunkSize < sizeof(*pChunk) || pChunk->numBones < 0 || pChunk->numBones > 0x10000)
 		return 0;
 	const char* pChunkEnd = ((const char*)pChunk) + nChunkSize;
-	const SBoneInitPosMatrix* pDefMatrix = (const SBoneInitPosMatrix*)(pChunk+1);
+	const SBoneInitPosMatrix* pDefMatrix = (const SBoneInitPosMatrix*)(pChunk + 1);
 
 	// the end of utilized data in the chunk
 	const char* pUtilizedEnd = (const char*)(pDefMatrix + pChunk->numBones);
 	if (pUtilizedEnd > pChunkEnd)
 		return 0;
 
-	m_arrInitPose.resize (pChunk->numBones);
+	m_arrInitPose.resize(pChunk->numBones);
 	for (unsigned nBone = 0; nBone < pChunk->numBones; ++nBone)
 	{
 		Matrix44& matBone = m_arrInitPose[nBone];
-		copyMatrix (matBone,pDefMatrix[nBone]);
+		copyMatrix(matBone, pDefMatrix[nBone]);
 		// for some reason Max supplies unnormalized matrices.
 		matBone.NoScale();
 	}
@@ -145,12 +145,12 @@ unsigned CryBoneHierarchyLoader::load (const BONEINITIALPOS_CHUNK_DESC_0001*pChu
 	return pUtilizedEnd - (const char*)pChunk;
 }
 
-void CryBoneHierarchyLoader::scale (float fScale)
+void CryBoneHierarchyLoader::scale(float fScale)
 {
 	unsigned i;
 	for (i = 0; i < m_arrInitPose.size(); ++i)
-		m_arrInitPose[i].ScaleTranslationOLD (fScale);
-	
+		m_arrInitPose[i].ScaleTranslationOLD(fScale);
+
 	updateInvDefGlobalMatrices();
 }
 
@@ -163,14 +163,14 @@ int CryBoneHierarchyLoader::allocateBones(int numBones)
 
 	int nResult = m_nNextBone;
 	m_nNextBone += numBones;
-	assert (m_nNextBone <= (int)this->numBones());
+	assert(m_nNextBone <= (int)this->numBones());
 	return nResult;
 }
 
 
 // loads the whole hierarchy of bones, using the state machine
 // when this funciton is called, the bone is already allocated
-bool CryBoneHierarchyLoader::load (int nBoneParentIndex, int nBoneIndex)
+bool CryBoneHierarchyLoader::load(int nBoneParentIndex, int nBoneIndex)
 {
 	const BONE_ENTITY* pEntity;
 	if (!EatRawDataPtr(pEntity, 1, m_pBoneAnimRawData, m_pBoneAnimRawDataEnd))
@@ -178,7 +178,7 @@ bool CryBoneHierarchyLoader::load (int nBoneParentIndex, int nBoneIndex)
 
 	// initialize the next bone
 	CryBoneDesc& rBoneDesc = m_arrBones[nBoneIndex];
-	if (!rBoneDesc.LoadRaw (pEntity))
+	if (!rBoneDesc.LoadRaw(pEntity))
 		return false;
 
 	// set the mapping entries
@@ -215,7 +215,7 @@ bool CryBoneHierarchyLoader::load (int nBoneParentIndex, int nBoneIndex)
 
 // compares the two bone structures. Returns true if they're equal
 // (e.g. for validation of different lods)
-bool CryBoneHierarchyLoader::isEqual (const CryBoneHierarchyLoader& right)const
+bool CryBoneHierarchyLoader::isEqual(const CryBoneHierarchyLoader& right)const
 {
 	if (m_arrBones.size() != right.m_arrBones.size())
 		return false;

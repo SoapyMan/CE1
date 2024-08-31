@@ -26,13 +26,13 @@ CAnimObjectManager::CAnimObjectManager()
 }
 
 //////////////////////////////////////////////////////////////////////////
-ICryCharInstance* CAnimObjectManager::MakeAnimObject( const char *animFile )
+ICryCharInstance* CAnimObjectManager::MakeAnimObject(const char* animFile)
 {
 	CAnimObject* obj = new CAnimObject;
 	obj->SetFileName(animFile);
 
 	CAnimObjectLoader loader;
-	if (!loader.Load( obj,animFile,animFile ))
+	if (!loader.Load(obj, animFile, animFile))
 	{
 		// loading failed.
 		delete obj;
@@ -41,18 +41,18 @@ ICryCharInstance* CAnimObjectManager::MakeAnimObject( const char *animFile )
 	m_objects.insert(obj);
 	m_animObjects.insert(obj);
 	if (m_bResourcesLocked)
-		m_lockArray.push_back( obj );
+		m_lockArray.push_back(obj);
 	return obj;
 }
 
-bool CAnimObjectManager::RemoveCharacter( ICryCharInstance* obj )
+bool CAnimObjectManager::RemoveCharacter(ICryCharInstance* obj)
 {
 	ObjectsSet::iterator it = m_objects.find(obj);
 	if (it != m_objects.end())
 	{
 		// This is our character.
-		m_objects.erase( it );
-		m_animObjects.erase( (CAnimObject*)obj );
+		m_objects.erase(it);
+		m_animObjects.erase((CAnimObject*)obj);
 		return true;
 	}
 	return false;
@@ -69,10 +69,10 @@ void CAnimObjectManager::GetMemoryUsage(class ICrySizer* pSizer)const
 void CAnimObjectManager::LockResources()
 {
 	m_bResourcesLocked = true;
-	m_lockArray.reserve( m_animObjects.size() );
+	m_lockArray.reserve(m_animObjects.size());
 	for (AnimObjectsSet::iterator it = m_animObjects.begin(); it != m_animObjects.end(); ++it)
 	{
-		m_lockArray.push_back( *it );
+		m_lockArray.push_back(*it);
 	}
 }
 

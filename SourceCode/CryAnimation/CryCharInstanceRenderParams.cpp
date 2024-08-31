@@ -3,12 +3,12 @@
 #include "CryCharInstanceRenderParams.h"
 
 // creates a new CCObject with the most common parameters
-CCObject* CryCharInstanceRenderParams::NewCryCharCCObject(const struct SRendParams & RendParams, const Matrix44& mtxObjMatrix, IDeformableRenderMesh* pCharInstance)
+CCObject* CryCharInstanceRenderParams::NewCryCharCCObject(const struct SRendParams& RendParams, const Matrix44& mtxObjMatrix, IDeformableRenderMesh* pCharInstance)
 {
 	IRenderer* pRenderer = g_GetIRenderer();
-	CCObject * pObj = pRenderer->EF_GetObject(true);
+	CCObject* pObj = pRenderer->EF_GetObject(true);
 
-  pObj->m_ObjFlags |= FOB_TRANS_MASK;
+	pObj->m_ObjFlags |= FOB_TRANS_MASK;
 
 	// set scissor
 	//pObj->m_nScissorX1 = RendParams.nScissorX1;
@@ -17,12 +17,12 @@ CCObject* CryCharInstanceRenderParams::NewCryCharCCObject(const struct SRendPara
 	//pObj->m_nScissorY2 = RendParams.nScissorY2;
 
 	//checl if it should be drawn close to the player
-  if ((RendParams.dwFObjFlags & FOB_NEAREST) || (m_nFlags & CS_FLAG_DRAW_NEAR))
+	if ((RendParams.dwFObjFlags & FOB_NEAREST) || (m_nFlags & CS_FLAG_DRAW_NEAR))
 	{
-		pObj->m_ObjFlags|=FOB_NEAREST;
+		pObj->m_ObjFlags |= FOB_NEAREST;
 	}
 	else
-		pObj->m_ObjFlags&=~FOB_NEAREST;
+		pObj->m_ObjFlags &= ~FOB_NEAREST;
 
 	pObj->m_Color = m_Color;
 	pObj->m_Color.a *= RendParams.fAlpha;
@@ -38,7 +38,7 @@ CCObject* CryCharInstanceRenderParams::NewCryCharCCObject(const struct SRendPara
 
 	pObj->m_pShadowCasters = RendParams.pShadowMapCasters;
 
-	if(RendParams.pShadowMapCasters && RendParams.pShadowMapCasters->size())
+	if (RendParams.pShadowMapCasters && RendParams.pShadowMapCasters->size())
 		pObj->m_ObjFlags |= FOB_INSHADOW;
 	else
 		pObj->m_ObjFlags &= ~FOB_INSHADOW;
@@ -51,7 +51,7 @@ CCObject* CryCharInstanceRenderParams::NewCryCharCCObject(const struct SRendPara
 
 
 	pObj->m_Matrix = mtxObjMatrix;
-//	pObj->m_Matrix = mtxObjMatrix;
+	//	pObj->m_Matrix = mtxObjMatrix;
 	pObj->m_pCharInstance = pCharInstance;
 
 	return pObj;

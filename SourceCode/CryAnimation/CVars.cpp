@@ -15,7 +15,7 @@
 #include "CryAnimationBase.h"
 #include "CVars.h"
 
-CryAnimVars::CryAnimVars ()
+CryAnimVars::CryAnimVars()
 {
 	IConsole* pConsole = g_GetConsole();
 	// if you get an assertion here, it means some variable couldn't be registered
@@ -34,7 +34,7 @@ CryAnimVars::CryAnimVars ()
 #undef DECLARE_INT_VARIABLE_IMMEDIATE_DUMP
 }
 
-CryAnimVars::~CryAnimVars ()
+CryAnimVars::~CryAnimVars()
 {
 #define DECLARE_INT_VARIABLE_IMMEDIATE(_var, _default, _comment) detach((#_var),&(m_##_var));
 #define DECLARE_INT_VARIABLE_IMMEDIATE_DUMP(_var, _default, _comment) DECLARE_INT_VARIABLE_IMMEDIATE(_var, _default, _comment)
@@ -51,20 +51,20 @@ CryAnimVars::~CryAnimVars ()
 #undef DECLARE_INT_VARIABLE_IMMEDIATE_DUMP
 }
 
-float CryAnimVars::ca_MinVertexWeightLOD (unsigned nLOD)
+float CryAnimVars::ca_MinVertexWeightLOD(unsigned nLOD)
 {
 	switch (nLOD)
 	{
-		case 0:
-			return ca_MinVertexWeightLOD0();
-		case 1:
-			return ca_MinVertexWeightLOD1();
-		default:
-			return ca_MinVertexWeightLOD2();
-	}	
+	case 0:
+		return ca_MinVertexWeightLOD0();
+	case 1:
+		return ca_MinVertexWeightLOD1();
+	default:
+		return ca_MinVertexWeightLOD2();
+	}
 }
 
-float CryAnimVars::ca_UpdateSpeed (unsigned nLayer)
+float CryAnimVars::ca_UpdateSpeed(unsigned nLayer)
 {
 	switch (nLayer)
 	{
@@ -88,16 +88,16 @@ float CryAnimVars::ca_UpdateSpeed (unsigned nLayer)
 // declares or retrieves the pointer to the console variable
 // with the given default value (used only in case the variable doesn't exist now)
 // returns the pointer to the preexisting or newly created variable.
-ICVar* CryAnimVars::declare (const char* szVarName, int nDefault,int nFlags)
+ICVar* CryAnimVars::declare(const char* szVarName, int nDefault, int nFlags)
 {
 	IConsole* pConsole = g_GetConsole();
 	ICVar* pVar;
 	{
 		char szDefault[32];
-		sprintf (szDefault, "%d", nDefault);
+		sprintf(szDefault, "%d", nDefault);
 		pVar = pConsole->CreateVariable(szVarName, szDefault, nFlags);
 	}
-	assert (pVar);
+	assert(pVar);
 	return pVar;
 }
 
@@ -105,7 +105,7 @@ ICVar* CryAnimVars::declare (const char* szVarName, int nDefault,int nFlags)
 //////////////////////////////////////////////////////////////////////////
 // attaches the given variable to the given container;
 // recreates the variable if necessary
-ICVar* CryAnimVars::attach (const char* szVarName, int* pContainer, const char*szComment, int nFlags)
+ICVar* CryAnimVars::attach(const char* szVarName, int* pContainer, const char* szComment, int nFlags)
 {
 #ifndef WIN32
 	// to economize memory ... :(
@@ -113,9 +113,9 @@ ICVar* CryAnimVars::attach (const char* szVarName, int* pContainer, const char*s
 #endif
 
 	IConsole* pConsole = g_GetConsole();
-	
 
-	ICVar* pOldVar = pConsole->GetCVar (szVarName);
+
+	ICVar* pOldVar = pConsole->GetCVar(szVarName);
 	int nDefault;
 	if (pOldVar)
 	{
@@ -132,13 +132,13 @@ ICVar* CryAnimVars::attach (const char* szVarName, int* pContainer, const char*s
 
 #ifdef _DEBUG
 	// test if the variable really has this container
-	assert (*pContainer == pVar->GetIVal());
+	assert(*pContainer == pVar->GetIVal());
 	++*pContainer;
-	assert (*pContainer == pVar->GetIVal());	
+	assert(*pContainer == pVar->GetIVal());
 	--*pContainer;
 #endif
 
-	if (pOldVar && pVar && !(pVar->GetFlags()&VF_CHEAT))
+	if (pOldVar && pVar && !(pVar->GetFlags() & VF_CHEAT))
 	{
 		// carry on the default value from the old variable anyway
 		pVar->Set(nDefault);
@@ -151,23 +151,23 @@ ICVar* CryAnimVars::attach (const char* szVarName, int* pContainer, const char*s
 //////////////////////////////////////////////////////////////////////////
 // detaches the given variable from the container;
 // recreates the variable with new value
-void CryAnimVars::detach (const char* szVarName, int* pContainer)
+void CryAnimVars::detach(const char* szVarName, int* pContainer)
 {
 	IConsole* pConsole = g_GetConsole();
-	ICVar* pVar = pConsole->GetCVar (szVarName);
+	ICVar* pVar = pConsole->GetCVar(szVarName);
 	if (pVar)
 	{
 #ifdef _DEBUG
 		// test if the variable really has this container
-		assert (*pContainer == pVar->GetIVal());
+		assert(*pContainer == pVar->GetIVal());
 		++*pContainer;
-		assert (*pContainer == pVar->GetIVal());
+		assert(*pContainer == pVar->GetIVal());
 		--*pContainer;
 #endif
-		*pContainer = pVar->GetIVal();
+		* pContainer = pVar->GetIVal();
 		pConsole->UnregisterVariable(szVarName, true);
 		char szDefault[32];
-		sprintf (szDefault, "%d", *pContainer);
+		sprintf(szDefault, "%d", *pContainer);
 		pVar = pConsole->CreateVariable(szVarName, szDefault, 0);
 	}
 }

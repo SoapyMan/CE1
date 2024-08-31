@@ -26,34 +26,34 @@ using namespace CryStringUtils;
 // CryCharBody
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-CryCharBody::CryCharBody (CryCharManager* pManager, const string& strFileName):
-	m_pCryModel (NULL),
-	m_fAnimationFrameRate (30), // the default animation rate
-	m_strFilePath (strFileName), // we're optimistic and think that the object will be loaded successfully
-	m_pManager (pManager)
+CryCharBody::CryCharBody(CryCharManager* pManager, const string& strFileName) :
+	m_pCryModel(NULL),
+	m_fAnimationFrameRate(30), // the default animation rate
+	m_strFilePath(strFileName), // we're optimistic and think that the object will be loaded successfully
+	m_pManager(pManager)
 {
 	string strGeom = strFileName;
-	ReplaceExtension (strGeom, "cgf");
+	ReplaceExtension(strGeom, "cgf");
 
 	string strCid = strFileName;
-	ReplaceExtension (strCid, "cid");
+	ReplaceExtension(strCid, "cid");
 
-	CryModelLoader ModelLoader (pManager->GetControllerManager()); //GetRenderer()->CreateModel();
+	CryModelLoader ModelLoader(pManager->GetControllerManager()); //GetRenderer()->CreateModel();
 
 	//m_fAnimationFrameRate = GetConsoleVariable ("FrameRate", strCid, m_fAnimationFrameRate);
 	float fScale = g_fDefaultAnimationScale; //GetConsoleVariable ("Scale", strCid, g_fDefaultAnimationScale);
 
 	m_pCryModel = ModelLoader.loadNew(this, strGeom, fScale);
-	
+
 #if 0
 	// needed for XBox development
-	extern void exportTestModel(CryGeometryInfo* pGeometry, CLeafBuffer* pLeafBuffer);
+	extern void exportTestModel(CryGeometryInfo * pGeometry, CLeafBuffer * pLeafBuffer);
 	// on this stage, if m_pCryModel == NULL, it means the loader couldn't load the model
-	if (m_pCryModel) 
-		exportTestModel( m_pCryModel->getGeometryInfo(), m_pCryModel->m_pDefaultModelState->m_pLeafBuffers[0]);
+	if (m_pCryModel)
+		exportTestModel(m_pCryModel->getGeometryInfo(), m_pCryModel->m_pDefaultModelState->m_pLeafBuffers[0]);
 #endif
 
-	pManager->RegisterBody (this);
+	pManager->RegisterBody(this);
 }
 
 
@@ -73,10 +73,10 @@ CryCharBody::~CryCharBody()
 		m_pCryModel = NULL;
 	}
 
-	m_pManager->UnregisterBody (this);
+	m_pManager->UnregisterBody(this);
 }
 
-CryModel *CryCharBody::GetModel()
+CryModel* CryCharBody::GetModel()
 {
 	return m_pCryModel;
 }
@@ -96,17 +96,17 @@ const char* CryCharBody::GetNameCStr()const
 	return FindFileNameInPath(m_strFilePath.c_str());
 }
 
-float CryCharBody::GetFrameRate ()const
+float CryCharBody::GetFrameRate()const
 {
 	return m_fAnimationFrameRate;
 }
 
-void CryCharBody::RegisterInstance (CryCharInstance* pInstance)
+void CryCharBody::RegisterInstance(CryCharInstance* pInstance)
 {
-	m_setInstances.insert (pInstance);
+	m_setInstances.insert(pInstance);
 }
 
-void CryCharBody::UnregisterInstance (CryCharInstance* pInstance)
+void CryCharBody::UnregisterInstance(CryCharInstance* pInstance)
 {
 #ifdef _DEBUG
 	if (m_setInstances.find(pInstance) == m_setInstances.end())
@@ -124,29 +124,29 @@ void CryCharBody::CleanupInstances()
 	// since after each instance deletion the body may be destructed itself,
 	// we'll lock it for this time
 	if (!m_setInstances.empty())
-		g_GetISystem()->Warning (VALIDATOR_MODULE_ANIMATION, VALIDATOR_WARNING, 0, "CryCharBody.CleanupInstances", "Forcing deletion of %d instances for body %s. CRASH POSSIBLE because other subsystems may have stored dangling pointer(s).", NumRefs(), m_strFilePath.c_str());
+		g_GetISystem()->Warning(VALIDATOR_MODULE_ANIMATION, VALIDATOR_WARNING, 0, "CryCharBody.CleanupInstances", "Forcing deletion of %d instances for body %s. CRASH POSSIBLE because other subsystems may have stored dangling pointer(s).", NumRefs(), m_strFilePath.c_str());
 	CryCharBody_AutoPtr pLock = this; // don't remove this line, it's for locking the body in memory untill every instance is finished.
 	while (!m_setInstances.empty())
-		delete *m_setInstances.begin();
+		delete* m_setInstances.begin();
 }
 
 // Returns the scale of the model - not used now
 float CryCharBody::GetScale() const
 {
-  return 1.0f;
+	return 1.0f;
 }
 
 // Returns the interface for animations applicable to this model
-ICryAnimationSet* CryCharBody::GetAnimationSet ()
+ICryAnimationSet* CryCharBody::GetAnimationSet()
 {
 	return m_pCryModel->GetAnimationSet();
 }
 
 // Return name of bone from bone table, return zero id nId is out of range (the game gets this id from physics)
-const char * CryCharBody::GetBoneName(int nId) const
+const char* CryCharBody::GetBoneName(int nId) const
 {
 	if ((unsigned)nId < m_pCryModel->numBoneInfos())
-		return m_pCryModel->getBoneInfo (nId).getNameCStr();
+		return m_pCryModel->getBoneInfo(nId).getNameCStr();
 	else
 		return ""; // invalid bone id
 }
@@ -160,11 +160,11 @@ int CryCharBody::NumBones() const
 void CryCharBody::GetSize(ICrySizer* pSizer)
 {
 #if ENABLE_GET_MEMORY_USAGE
-	if (!pSizer->Add (*this))
+	if (!pSizer->Add(*this))
 		return;
-	pSizer->AddString (m_strFilePath);
+	pSizer->AddString(m_strFilePath);
 	m_pCryModel->GetSize(pSizer);
-	pSizer->AddContainer (m_setInstances);
+	pSizer->AddContainer(m_setInstances);
 	CryCharInstanceRegistry::const_iterator it = m_setInstances.begin(), itEnd = m_setInstances.end();
 	for (; it != itEnd; ++it)
 		(*it)->GetMemoryUsage(pSizer);
@@ -180,30 +180,30 @@ void CryCharBody::SpawnTestParticles(bool bStart)
 	params.fSize = 0.02f;
 	params.fSizeSpeed = 0;
 	params.fSpeed = 1.f;
-	params.vGravity(0,0,-5.f);
+	params.vGravity(0, 0, -5.f);
 	params.nCount = 15;
 	params.eBlendType = ParticleBlendType_ColorBased;
 	params.nTexId = g_GetIRenderer()->LoadTexture("cloud");
 	float fAlpha = 1;
-	params.vColorStart(fAlpha,fAlpha,fAlpha);
-	params.vColorEnd(fAlpha,fAlpha,fAlpha);
-	params.vDirection(0,0,1);
-	params.vPosition = Vec3d (1,0.85f,0.75f);
+	params.vColorStart(fAlpha, fAlpha, fAlpha);
+	params.vColorEnd(fAlpha, fAlpha, fAlpha);
+	params.vDirection(0, 0, 1);
+	params.vPosition = Vec3d(1, 0.85f, 0.75f);
 	params.fTailLenght = 0.25;
 
 	CryParticleSpawnInfo spawn;
 	spawn.fSpawnRate = 30;
 	spawn.nFlags = CryParticleSpawnInfo::FLAGS_SPAWN_FROM_BONE;
 	spawn.nBone = GetBoneByName("weapon_bone");
-	spawn.vBonePos = Vec3d(0,0,0);
+	spawn.vBonePos = Vec3d(0, 0, 0);
 
 	CryCharInstanceRegistry::iterator it = m_setInstances.begin(), itEnd = m_setInstances.end();
 	for (; it != itEnd; ++it)
 	{
 		if (bStart)
 			(*it)->AddParticleEmitter(params, spawn);
-		else 
-			(*it)->RemoveParticleEmitter (-1);
+		else
+			(*it)->RemoveParticleEmitter(-1);
 	}
 }
 
@@ -216,18 +216,18 @@ const char* CryCharBody::GetFileName()
 // dumps the model info into the log, one line
 void CryCharBody::DumpModel()
 {
-	g_GetLog()->LogToFile    ("\001%60s  %3d instance%s, %3d animations (%3d unique)", m_strFilePath.c_str(), m_setInstances.size(), m_setInstances.size()==1?"":"s", m_pCryModel->numAnimations(), m_pCryModel->numUniqueAnimations());
-	g_GetLog()->LogToConsole ("\001%60s  %3d instance%s, %3d animations (%3d unique)", m_strFilePath.c_str(), m_setInstances.size(), m_setInstances.size()==1?"":"s", m_pCryModel->numAnimations(), m_pCryModel->numUniqueAnimations());
+	g_GetLog()->LogToFile("\001%60s  %3d instance%s, %3d animations (%3d unique)", m_strFilePath.c_str(), m_setInstances.size(), m_setInstances.size() == 1 ? "" : "s", m_pCryModel->numAnimations(), m_pCryModel->numUniqueAnimations());
+	g_GetLog()->LogToConsole("\001%60s  %3d instance%s, %3d animations (%3d unique)", m_strFilePath.c_str(), m_setInstances.size(), m_setInstances.size() == 1 ? "" : "s", m_pCryModel->numAnimations(), m_pCryModel->numUniqueAnimations());
 }
 
 //! Returns the index of the bone by its name or -1 if no such bone exists; this is Case-Sensitive
-int CryCharBody::GetBoneByName (const char* szName)
+int CryCharBody::GetBoneByName(const char* szName)
 {
 	return GetModel()->findBone(szName);
 }
 
 //Executes a per-body script command
-bool CryCharBody::ExecScriptCommand (int nCommand, void* pParams, void* pResult)
+bool CryCharBody::ExecScriptCommand(int nCommand, void* pParams, void* pResult)
 {
 	if (CASCMD_DUMP_MODELS == nCommand)
 	{
@@ -245,7 +245,7 @@ bool CryCharBody::ExecScriptCommand (int nCommand, void* pParams, void* pResult)
 	{
 	case CASCMD_DUMP_DECALS:
 	case CASCMD_DUMP_STATES:
-		g_GetLog()->Log    ("\001%60s  %3d instance%s", m_strFilePath.c_str(), m_setInstances.size(), m_setInstances.size()==1?"":"s");
+		g_GetLog()->Log("\001%60s  %3d instance%s", m_strFilePath.c_str(), m_setInstances.size(), m_setInstances.size() == 1 ? "" : "s");
 		break;
 	}
 

@@ -15,12 +15,12 @@
  * it converts the light angles into the matrix
  */
 
-// initializes this object out of the given DLight structure and bone index
-// this is one-time call that is only required for construction out of the DLight
-// to initialize the constant parameters
-void CBoneLightDynamicBind::init (ICryCharInstance* pParent, CDLight* pDLight, unsigned nBone, const Matrix44& matBone, bool bCopyLight)
+ // initializes this object out of the given DLight structure and bone index
+ // this is one-time call that is only required for construction out of the DLight
+ // to initialize the constant parameters
+void CBoneLightDynamicBind::init(ICryCharInstance* pParent, CDLight* pDLight, unsigned nBone, const Matrix44& matBone, bool bCopyLight)
 {
-	m_pDLight = bCopyLight?new CDLight(*pDLight):pDLight;
+	m_pDLight = bCopyLight ? new CDLight(*pDLight) : pDLight;
 	m_bDeleteLight = bCopyLight;
 	m_nBone = nBone;
 	m_fRadius = pDLight->m_fRadius;
@@ -32,14 +32,14 @@ void CBoneLightDynamicBind::init (ICryCharInstance* pParent, CDLight* pDLight, u
 	// at this point, we have the m_matLight in character object coordinates
 	// now let's transform it into the bone coordinates
 	m_matLight = m_matLight * OrthoUniformGetInverted(matBone);
-/*
-	pDLight->m_Orientation.m_vForward = Vec3d(1,0,0);
-	pDLight->m_Orientation.m_vUp = Vec3d(0,1,0);
-	pDLight->m_Orientation.m_vRight = Vec3d(0,0,1);
-	pDLight->m_Orientation.rotate(Vec3d(1,0,0), pDLight->m_ProjAngles.x);
-	pDLight->m_Orientation.rotate(Vec3d(0,1,0), pDLight->m_ProjAngles.y);
-	pDLight->m_Orientation.rotate(Vec3d(0,0,1), pDLight->m_ProjAngles.z);
-*/
+	/*
+		pDLight->m_Orientation.m_vForward = Vec3d(1,0,0);
+		pDLight->m_Orientation.m_vUp = Vec3d(0,1,0);
+		pDLight->m_Orientation.m_vRight = Vec3d(0,0,1);
+		pDLight->m_Orientation.rotate(Vec3d(1,0,0), pDLight->m_ProjAngles.x);
+		pDLight->m_Orientation.rotate(Vec3d(0,1,0), pDLight->m_ProjAngles.y);
+		pDLight->m_Orientation.rotate(Vec3d(0,0,1), pDLight->m_ProjAngles.z);
+	*/
 }
 
 // deletes the light object, if needed
@@ -51,7 +51,7 @@ void CBoneLightDynamicBind::done()
 }
 
 // per-frame update of the DLight structure. Updates the light position and radius
-void CBoneLightDynamicBind::updateDLight (const Matrix44& matBone, const Matrix44& matModel, float fRadiusMultiplier)
+void CBoneLightDynamicBind::updateDLight(const Matrix44& matBone, const Matrix44& matModel, float fRadiusMultiplier)
 {
 	Matrix44 matLightObject = m_matLight * matBone;
 	Matrix44 matLightWorld = matLightObject * matModel;
@@ -69,9 +69,9 @@ void CBoneLightDynamicBind::updateDLight (const Matrix44& matBone, const Matrix4
 	if (g_GetCVars()->ca_DrawLHelpers())
 	{
 		float fTripodScale = 1;
-		debugDrawLine (m_pDLight->m_Origin, matLightWorld.TransformPointOLD(Vec3d(fTripodScale,0,0)), fColor[0]);
-		debugDrawLine (m_pDLight->m_Origin, matLightWorld.TransformPointOLD(Vec3d(0,fTripodScale,0)), fColor[1]);
-		debugDrawLine (m_pDLight->m_Origin, matLightWorld.TransformPointOLD(Vec3d(0,0,fTripodScale)), fColor[2]);
+		debugDrawLine(m_pDLight->m_Origin, matLightWorld.TransformPointOLD(Vec3d(fTripodScale, 0, 0)), fColor[0]);
+		debugDrawLine(m_pDLight->m_Origin, matLightWorld.TransformPointOLD(Vec3d(0, fTripodScale, 0)), fColor[1]);
+		debugDrawLine(m_pDLight->m_Origin, matLightWorld.TransformPointOLD(Vec3d(0, 0, fTripodScale)), fColor[2]);
 	}
 }
 

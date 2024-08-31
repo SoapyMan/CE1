@@ -19,12 +19,12 @@ CAnimObject::CAnimObject()
 	m_characterModel.animSet.obj = this;
 	m_characterModel.pAnimObject = this;
 
-	m_bbox[0]=SetMaxBB();
-	m_bbox[1]=SetMinBB();
+	m_bbox[0] = SetMaxBB();
+	m_bbox[1] = SetMinBB();
 
-	m_angles(0,0,0);
+	m_angles(0, 0, 0);
 
-	m_nFlags = CS_FLAG_UPDATE|CS_FLAG_DRAW_MODEL;
+	m_nFlags = CS_FLAG_UPDATE | CS_FLAG_DRAW_MODEL;
 	m_bNoTimeUpdate = false;
 	m_currAnimation = 0;
 
@@ -48,12 +48,12 @@ CAnimObject::~CAnimObject()
 //////////////////////////////////////////////////////////////////////////
 void CAnimObject::ReleaseNodes()
 {
-	I3DEngine *engine = Get3DEngine();
+	I3DEngine* engine = Get3DEngine();
 	for (unsigned int i = 0; i < m_nodes.size(); i++)
 	{
-		Node *pNode = m_nodes[i];
+		Node* pNode = m_nodes[i];
 		if (pNode->m_object)
-			engine->ReleaseObject( pNode->m_object );
+			engine->ReleaseObject(pNode->m_object);
 
 		delete pNode;
 	}
@@ -73,25 +73,25 @@ void CAnimObject::ReleaseAnims()
 
 //////////////////////////////////////////////////////////////////////////
 //! set name of geometry for this animated object.
-void CAnimObject::SetFileName( const char *szFileName )
+void CAnimObject::SetFileName(const char* szFileName)
 {
 	m_fileName = szFileName;
-	UnifyFilePath( m_fileName );
+	UnifyFilePath(m_fileName);
 }
 
 //////////////////////////////////////////////////////////////////////////
-CAnimObject::Node* CAnimObject::CreateNode( const char *szNodeName )
+CAnimObject::Node* CAnimObject::CreateNode(const char* szNodeName)
 {
 	// Try to create object.
-	I3DEngine *engine = Get3DEngine();
-	IStatObj *obj = engine->MakeObject( m_fileName.c_str(),szNodeName,evs_ShareAndSortForCache,true,true );
+	I3DEngine* engine = Get3DEngine();
+	IStatObj* obj = engine->MakeObject(m_fileName.c_str(), szNodeName, evs_ShareAndSortForCache, true, true);
 	if (obj)
 	{
-		AddToBounds( obj->GetBoxMin(), m_bbox[0],m_bbox[1] );
-		AddToBounds( obj->GetBoxMax(), m_bbox[0],m_bbox[1] );
+		AddToBounds(obj->GetBoxMin(), m_bbox[0], m_bbox[1]);
+		AddToBounds(obj->GetBoxMax(), m_bbox[0], m_bbox[1]);
 	}
 
-	Node *node = new Node;
+	Node* node = new Node;
 	node->m_name = szNodeName;
 	node->m_object = obj;
 	node->m_id = (int)m_nodes.size();
@@ -102,13 +102,13 @@ CAnimObject::Node* CAnimObject::CreateNode( const char *szNodeName )
 }
 
 //! Render object ( register render elements into renderer )
-void CAnimObject::Render(const struct SRendParams & rParams,const Vec3& t, int nLodLevel)
+void CAnimObject::Render(const struct SRendParams& rParams, const Vec3& t, int nLodLevel)
 {
-	Draw (rParams,Vec3(123,123,123));
+	Draw(rParams, Vec3(123, 123, 123));
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CAnimObject::Draw( const SRendParams &rp, const Vec3& t )
+void CAnimObject::Draw(const SRendParams& rp, const Vec3& t)
 {
 	SRendParams nodeRP = rp;
 	Matrix44 renderTM;
@@ -124,31 +124,31 @@ void CAnimObject::Draw( const SRendParams &rp, const Vec3& t )
 		//renderTM=GetScale33(Vec3(rp.fScale,rp.fScale,rp.fScale))*renderTM;
 
 		//OPTIMISED_BY_IVO  
-		Matrix33diag diag	=	Vec3(rp.fScale,rp.fScale,rp.fScale);	//use diag-matrix for scaling
-		Matrix34 rt34			=	Matrix34::CreateRotationXYZ( Deg2Rad(rp.vAngles),rp.vPos );	//set rotation and translation in one function call
-		renderTM					=	rt34*diag;	//optimised concatenation: m34*diag
-		renderTM=GetTransposed44(renderTM);			//TODO: remove this after E3 and use Matrix34 instead of Matrix44
+		Matrix33diag diag = Vec3(rp.fScale, rp.fScale, rp.fScale);	//use diag-matrix for scaling
+		Matrix34 rt34 = Matrix34::CreateRotationXYZ(Deg2Rad(rp.vAngles), rp.vPos);	//set rotation and translation in one function call
+		renderTM = rt34 * diag;	//optimised concatenation: m34*diag
+		renderTM = GetTransposed44(renderTM);			//TODO: remove this after E3 and use Matrix34 instead of Matrix44
 	}
 	for (unsigned int i = 0; i < m_nodes.size(); i++)
 	{
-		Node *node = m_nodes[i];
+		Node* node = m_nodes[i];
 		if (node->m_object)
 		{
 			Matrix44 tm = GetNodeMatrix(node) * renderTM;
 			nodeRP.pMatrix = &tm;
 			nodeRP.dwFObjFlags |= FOB_TRANS_MASK;
-			m_nodes[i]->m_object->Render(nodeRP,Vec3(zero),0);
+			m_nodes[i]->m_object->Render(nodeRP, Vec3(zero), 0);
 		}
 	}
-	DrawBoundObjects( rp,renderTM,0 );
+	DrawBoundObjects(rp, renderTM, 0);
 }
 
 //////////////////////////////////////////////////////////////////////////
 //! Draw the character shadow volumes into the stencil buffer using a set of specified 
 //! rendering parameters ( for indoors )
-void CAnimObject::RenderShadowVolumes(const SRendParams *rParams, int nLimitLOD)
+void CAnimObject::RenderShadowVolumes(const SRendParams* rParams, int nLimitLOD)
 {
-	const SRendParams &rp = *rParams;
+	const SRendParams& rp = *rParams;
 
 	SRendParams nodeRP = rp;
 	Matrix44 renderTM;
@@ -164,15 +164,15 @@ void CAnimObject::RenderShadowVolumes(const SRendParams *rParams, int nLimitLOD)
 		//renderTM=GetScale33(Vec3(rp.fScale,rp.fScale,rp.fScale))*renderTM;
 
 		//OPTIMISED_BY_IVO  
-		Matrix33diag diag	=	Vec3(rp.fScale,rp.fScale,rp.fScale);	//use diag-matrix for scaling
-		Matrix34 rt34			=	Matrix34::CreateRotationXYZ(Deg2Rad(rp.vAngles),rp.vPos);	//set rotation and translation in one function call
-		renderTM					=	rt34*diag;	//optimised concatenation: m34*diag
-		renderTM=GetTransposed44(renderTM);			//TODO: remove this after E3 and use Matrix34 instead of Matrix44
+		Matrix33diag diag = Vec3(rp.fScale, rp.fScale, rp.fScale);	//use diag-matrix for scaling
+		Matrix34 rt34 = Matrix34::CreateRotationXYZ(Deg2Rad(rp.vAngles), rp.vPos);	//set rotation and translation in one function call
+		renderTM = rt34 * diag;	//optimised concatenation: m34*diag
+		renderTM = GetTransposed44(renderTM);			//TODO: remove this after E3 and use Matrix34 instead of Matrix44
 
 	}
 	for (unsigned int i = 0; i < m_nodes.size(); i++)
 	{
-		Node *node = m_nodes[i];
+		Node* node = m_nodes[i];
 		if (node->m_object)
 		{
 			Matrix44 tm = GetNodeMatrix(node) * renderTM;
@@ -183,7 +183,7 @@ void CAnimObject::RenderShadowVolumes(const SRendParams *rParams, int nLimitLOD)
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CAnimObject::Animate( float time )
+void CAnimObject::Animate(float time)
 {
 	if (!m_currAnimation)
 		return;
@@ -192,7 +192,7 @@ void CAnimObject::Animate( float time )
 	if (m_currAnimation->loop)
 	{
 		float timelen = m_currAnimation->endTime - m_currAnimation->startTime;
-		time = m_currAnimation->startTime + cry_fmod( time,timelen );
+		time = m_currAnimation->startTime + cry_fmod(time, timelen);
 	}
 	else
 	{
@@ -206,8 +206,8 @@ void CAnimObject::Animate( float time )
 
 	for (unsigned int i = 0; i < m_nodes.size(); i++)
 	{
-		Node *node = m_nodes[i];
-		NodeAnim *nodeAnim = GetNodeAnim(node);
+		Node* node = m_nodes[i];
+		NodeAnim* nodeAnim = GetNodeAnim(node);
 		if (node->m_object && nodeAnim)
 		{
 			if (!m_bAllNodesValid)
@@ -219,20 +219,20 @@ void CAnimObject::Animate( float time )
 			}
 			if (nodeAnim->m_posTrack)
 			{
-				node->m_pos = nodeAnim->m_posTrack->GetPosition( time );
+				node->m_pos = nodeAnim->m_posTrack->GetPosition(time);
 				node->m_bMatrixValid = false;
 				// Bounding box can change.
 				m_bboxValid = false;
 			}
 			if (nodeAnim->m_rotTrack)
 			{
-				node->m_rotate = nodeAnim->m_rotTrack->GetOrientation( time );
+				node->m_rotate = nodeAnim->m_rotTrack->GetOrientation(time);
 				node->m_bMatrixValid = false;
 				m_bboxValid = false;
 			}
 			if (nodeAnim->m_scaleTrack)
 			{
-				node->m_scale = nodeAnim->m_scaleTrack->GetScale( time );
+				node->m_scale = nodeAnim->m_scaleTrack->GetScale(time);
 				node->m_bMatrixValid = false;
 				m_bboxValid = false;
 			}
@@ -247,27 +247,27 @@ void CAnimObject::Animate( float time )
 void CAnimObject::RecalcBBox()
 {
 	AABB box;
-	m_bbox[0]=SetMaxBB();
-	m_bbox[1]=SetMinBB();
+	m_bbox[0] = SetMaxBB();
+	m_bbox[1] = SetMinBB();
 	// Re calc bbox.
 	for (unsigned int i = 0; i < m_nodes.size(); i++)
 	{
-		Node *node = m_nodes[i];
-		Matrix44 &tm = GetNodeMatrix(node);
+		Node* node = m_nodes[i];
+		Matrix44& tm = GetNodeMatrix(node);
 		if (node->m_object)
 		{
 			box.min = node->m_object->GetBoxMin();
 			box.max = node->m_object->GetBoxMax();
-			box.Transform( tm );
-			AddToBounds( box.min, m_bbox[0],m_bbox[1] );
-			AddToBounds( box.max, m_bbox[0],m_bbox[1] );
+			box.Transform(tm);
+			AddToBounds(box.min, m_bbox[0], m_bbox[1]);
+			AddToBounds(box.max, m_bbox[0], m_bbox[1]);
 		}
 	}
 	m_bboxValid = true;
 }
 
 //////////////////////////////////////////////////////////////////////////
-Matrix44& CAnimObject::GetNodeMatrix( Node *node )
+Matrix44& CAnimObject::GetNodeMatrix(Node* node)
 {
 	// fixme.
 	node->m_bMatrixValid = false;
@@ -285,15 +285,15 @@ Matrix44& CAnimObject::GetNodeMatrix( Node *node )
 
 		//SCALE_CHANGED_BY_IVO
 		//node->m_tm.ScaleMatrix( node->m_scale.x,node->m_scale.y,node->m_scale.z );
-		node->m_tm = Matrix33::CreateScale( Vec3(node->m_scale.x,node->m_scale.y,node->m_scale.z) ) * node->m_tm;
+		node->m_tm = Matrix33::CreateScale(Vec3(node->m_scale.x, node->m_scale.y, node->m_scale.z)) * node->m_tm;
 
-		node->m_tm.SetTranslationOLD( node->m_pos );
+		node->m_tm.SetTranslationOLD(node->m_pos);
 		node->m_bMatrixValid = true;
 
 		if (node->m_parent)
 		{
 			// Combine with parent matrix.
-			Matrix44 &parentTM = GetNodeMatrix(node->m_parent);
+			Matrix44& parentTM = GetNodeMatrix(node->m_parent);
 			node->m_tm = node->m_tm * parentTM;
 		}
 	}
@@ -302,7 +302,7 @@ Matrix44& CAnimObject::GetNodeMatrix( Node *node )
 }
 
 //////////////////////////////////////////////////////////////////////////
-CAnimObject::NodeAnim* CAnimObject::GetNodeAnim( Node *node )
+CAnimObject::NodeAnim* CAnimObject::GetNodeAnim(Node* node)
 {
 	if (!m_currAnimation)
 		return 0;
@@ -314,7 +314,7 @@ CAnimObject::NodeAnim* CAnimObject::GetNodeAnim( Node *node )
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CAnimObject::AddAnimation( Animation* anim )
+void CAnimObject::AddAnimation(Animation* anim)
 {
 	m_animations.push_back(anim);
 	if (m_animations.size() == 1)
@@ -325,9 +325,9 @@ void CAnimObject::AddAnimation( Animation* anim )
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CAnimObject::RemoveAnimation( Animation* anim )
+void CAnimObject::RemoveAnimation(Animation* anim)
 {
-	m_animations.erase( std::remove(m_animations.begin(),m_animations.end(),anim),m_animations.end() );
+	m_animations.erase(std::remove(m_animations.begin(), m_animations.end(), anim), m_animations.end());
 	if (m_currAnimation = anim)
 	{
 		if (!m_animations.empty())
@@ -338,11 +338,11 @@ void CAnimObject::RemoveAnimation( Animation* anim )
 }
 
 //////////////////////////////////////////////////////////////////////////
-CAnimObject::Animation* CAnimObject::FindAnimation( const char *szAnimationName )
+CAnimObject::Animation* CAnimObject::FindAnimation(const char* szAnimationName)
 {
 	for (unsigned int i = 0; i < m_animations.size(); i++)
 	{
-		if (stricmp(m_animations[i]->name.c_str(),szAnimationName)==0)
+		if (stricmp(m_animations[i]->name.c_str(), szAnimationName) == 0)
 		{
 			return m_animations[i];
 		}
@@ -351,11 +351,11 @@ CAnimObject::Animation* CAnimObject::FindAnimation( const char *szAnimationName 
 }
 
 //////////////////////////////////////////////////////////////////////////
-int CAnimObject::FindNodeByName( const char *szNodeName )
+int CAnimObject::FindNodeByName(const char* szNodeName)
 {
 	for (unsigned int i = 0; i < m_nodes.size(); i++)
 	{
-		if (stricmp(m_nodes[i]->m_name.c_str(),szNodeName)==0)
+		if (stricmp(m_nodes[i]->m_name.c_str(), szNodeName) == 0)
 		{
 			return i;
 		}
@@ -364,7 +364,7 @@ int CAnimObject::FindNodeByName( const char *szNodeName )
 }
 
 //////////////////////////////////////////////////////////////////////////
-const char* CAnimObject::GetNodeName( int nodeId )
+const char* CAnimObject::GetNodeName(int nodeId)
 {
 	if (nodeId > 0 && nodeId < (int)m_nodes.size())
 		return m_nodes[nodeId]->m_name.c_str();
@@ -372,7 +372,7 @@ const char* CAnimObject::GetNodeName( int nodeId )
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CAnimObject::SetCurrent( Animation *anim )
+void CAnimObject::SetCurrent(Animation* anim)
 {
 	if (anim != m_currAnimation)
 	{
@@ -397,18 +397,18 @@ void CAnimObject::ResetAnimations()
 		Animate(m_currAnimation->startTime);
 	}
 	SetCurrent(0);
-	UpdatePhysics( m_lastScale );
+	UpdatePhysics(m_lastScale);
 };
 
 //////////////////////////////////////////////////////////////////////////
-const CDLight* CAnimObject::GetBoundLight (int nIndex)
+const CDLight* CAnimObject::GetBoundLight(int nIndex)
 {
 	return 0;
 }
 
 
 //////////////////////////////////////////////////////////////////////////
-void CAnimObject::Update( Vec3 vPos, float fRadius, unsigned uFlags)
+void CAnimObject::Update(Vec3 vPos, float fRadius, unsigned uFlags)
 {
 	if (!(m_nFlags & CS_FLAG_UPDATE))
 		return;
@@ -417,7 +417,7 @@ void CAnimObject::Update( Vec3 vPos, float fRadius, unsigned uFlags)
 	if (!m_bNoTimeUpdate)
 	{
 		float dt = g_GetTimer()->GetFrameTime();
-		m_time = m_time + dt*m_animSpeed;
+		m_time = m_time + dt * m_animSpeed;
 
 		if (m_currAnimation)
 		{
@@ -431,28 +431,28 @@ void CAnimObject::Update( Vec3 vPos, float fRadius, unsigned uFlags)
 		}
 	}
 	if (m_lastAnimTime != m_time)
-		Animate( m_time );
+		Animate(m_time);
 }
 
 //! Set the current time of the given layer, in seconds
-void CAnimObject::SetLayerTime (int nLayer, float fTimeSeconds)
+void CAnimObject::SetLayerTime(int nLayer, float fTimeSeconds)
 {
 	m_time = fTimeSeconds;
 	m_fAnimTime = fTimeSeconds;
 
 	if (m_lastAnimTime != m_time)
-		Animate( m_time );
+		Animate(m_time);
 
 	m_lastAnimTime = m_time;
 };
 
 //////////////////////////////////////////////////////////////////////////
-bool CAnimObject::IsModelFileEqual (const char* szFileName)
+bool CAnimObject::IsModelFileEqual(const char* szFileName)
 {
 	string strPath = szFileName;
 	UnifyFilePath(strPath);
 
-	return stricmp(strPath.c_str(),m_fileName.c_str()) == 0;
+	return stricmp(strPath.c_str(), m_fileName.c_str()) == 0;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -463,16 +463,16 @@ void CAnimObject::CreateDecal(CryEngineDecalInfo& Decal)
 //////////////////////////////////////////////////////////////////////////
 // Physics.
 //////////////////////////////////////////////////////////////////////////
-IPhysicalEntity* CAnimObject::CreateCharacterPhysics(IPhysicalEntity *pHost, float mass,int surface_idx,float stiffness_scale, int nLod)
+IPhysicalEntity* CAnimObject::CreateCharacterPhysics(IPhysicalEntity* pHost, float mass, int surface_idx, float stiffness_scale, int nLod)
 {
 	//m_physic = GetPhysicalWorld()->CreatePhysicalEntity(PE_STATIC,&partpos,(IEntity*)this);
-	assert( pHost );
+	assert(pHost);
 	m_physic = pHost;
 	return 0;
 }
 
 //////////////////////////////////////////////////////////////////////////
-int CAnimObject::CreateAuxilaryPhysics(IPhysicalEntity *pHost, int nLod)
+int CAnimObject::CreateAuxilaryPhysics(IPhysicalEntity* pHost, int nLod)
 {
 	//assert( pHost );
 	//m_physic = pHost;
@@ -480,9 +480,9 @@ int CAnimObject::CreateAuxilaryPhysics(IPhysicalEntity *pHost, int nLod)
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CAnimObject::BuildPhysicalEntity( IPhysicalEntity *pent,float mass,int surface_idx,float stiffness_scale,int nLod )
+void CAnimObject::BuildPhysicalEntity(IPhysicalEntity* pent, float mass, int surface_idx, float stiffness_scale, int nLod)
 {
-	assert( pent );
+	assert(pent);
 
 	m_physic = pent;
 
@@ -491,21 +491,21 @@ void CAnimObject::BuildPhysicalEntity( IPhysicalEntity *pent,float mass,int surf
 
 	for (i = 0; i < m_nodes.size(); i++)
 	{
-		Node *node = m_nodes[i];
+		Node* node = m_nodes[i];
 		if (!node->m_object)
 			continue;
-		phys_geometry *geom = node->m_object->GetPhysGeom(0);
+		phys_geometry* geom = node->m_object->GetPhysGeom(0);
 		if (geom)
 		{
 			totalVolume += geom->V;
 		}
 	}
-	float density = mass/totalVolume;
+	float density = mass / totalVolume;
 
 	pe_geomparams params;
 	for (i = 0; i < m_nodes.size(); i++)
 	{
-		Node *node = m_nodes[i];
+		Node* node = m_nodes[i];
 		if (!node->m_object)
 			continue;
 
@@ -513,10 +513,10 @@ void CAnimObject::BuildPhysicalEntity( IPhysicalEntity *pent,float mass,int surf
 
 		// Add collision geometry.
 		params.flags = geom_collides;
-		phys_geometry *geom = node->m_object->GetPhysGeom(0);
+		phys_geometry* geom = node->m_object->GetPhysGeom(0);
 		if (geom)
 		{
-			m_physic->AddGeometry( geom, &params, node->m_id );
+			m_physic->AddGeometry(geom, &params, node->m_id);
 			node->bPhysics = true;
 		}
 
@@ -525,14 +525,14 @@ void CAnimObject::BuildPhysicalEntity( IPhysicalEntity *pent,float mass,int surf
 		geom = node->m_object->GetPhysGeom(1);
 		if (geom)
 		{
-			m_physic->AddGeometry( geom, &params, node->m_id );
+			m_physic->AddGeometry(geom, &params, node->m_id);
 			node->bPhysics = true;
 		}
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CAnimObject::UpdatePhysics( float fScale )
+void CAnimObject::UpdatePhysics(float fScale)
 {
 	if (!m_physic)
 		return;
@@ -544,13 +544,13 @@ void CAnimObject::UpdatePhysics( float fScale )
 
 	//SCALE_CHANGED_BY_IVO
 	//parentTM.ScaleMatrix( fScale,fScale,fScale );
-	parentTM=Matrix33::CreateScale( Vec3(fScale,fScale,fScale) )*parentTM;
+	parentTM = Matrix33::CreateScale(Vec3(fScale, fScale, fScale)) * parentTM;
 
 	int numNodes = (int)m_nodes.size();
 	pe_params_part params;
 	for (int i = 0; i < numNodes; i++)
 	{
-		Node *node = m_nodes[i];
+		Node* node = m_nodes[i];
 		if (!node->bPhysics)
 			continue;
 
@@ -558,16 +558,16 @@ void CAnimObject::UpdatePhysics( float fScale )
 		params.bRecalcBBox = true;
 		//if (i == numNodes-1) // last node.
 			//params.bRecalcBBox = true;
-		
+
 		Matrix44 tm = GetNodeMatrix(node) * parentTM;
 		params.pMtx4x4T = tm.GetData();
 
-		m_physic->SetParams( &params );
+		m_physic->SetParams(&params);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CAnimObject::AddImpact(int partid, vectorf point,vectorf impact)
+void CAnimObject::AddImpact(int partid, vectorf point, vectorf impact)
 {
 	//
 }
@@ -576,18 +576,18 @@ void CAnimObject::AddImpact(int partid, vectorf point,vectorf impact)
 void CAnimObject::GetMemoryUsage(class ICrySizer* pSizer)const
 {
 #if ENABLE_GET_MEMORY_USAGE
-	if (!pSizer->Add (*this))
+	if (!pSizer->Add(*this))
 		return;
-	pSizer->AddString (m_fileName);
+	pSizer->AddString(m_fileName);
 #endif
 }
 
-void CAnimObject::Node::GetSize (ICrySizer* pSizer)const
+void CAnimObject::Node::GetSize(ICrySizer* pSizer)const
 {
 #if ENABLE_GET_MEMORY_USAGE
-	if (!pSizer->Add (*this))
+	if (!pSizer->Add(*this))
 		return;
-	pSizer->AddString (m_name);
+	pSizer->AddString(m_name);
 	m_parent->GetSize(pSizer);
 
 	if (pSizer->GetFlags() & CSF_RecurseSubsystems)
@@ -599,30 +599,30 @@ void CAnimObject::Node::GetSize (ICrySizer* pSizer)const
 }
 
 //////////////////////////////////////////////////////////////////////////
-ICryBone* CAnimObject::GetBoneByName(const char * szName)
+ICryBone* CAnimObject::GetBoneByName(const char* szName)
 {
 	for (unsigned int i = 0; i < m_nodes.size(); i++)
 	{
-		if (m_nodes[i] != NULL && stricmp(m_nodes[i]->m_name.c_str(),szName) == 0)
+		if (m_nodes[i] != NULL && stricmp(m_nodes[i]->m_name.c_str(), szName) == 0)
 			return m_nodes[i];
 	}
 	return 0;
 }
 
 //////////////////////////////////////////////////////////////////////////
-CAnimObject::ObjectBindingHandle CAnimObject::AttachObjectToBone(IBindable * pWeaponModel, const char *szBoneName, bool bUseRelativeToDefPoseMatrix , unsigned nFlags )
+CAnimObject::ObjectBindingHandle CAnimObject::AttachObjectToBone(IBindable* pWeaponModel, const char* szBoneName, bool bUseRelativeToDefPoseMatrix, unsigned nFlags)
 {
-	if(!szBoneName)
+	if (!szBoneName)
 	{
 		// if you find this assert, this means someone passed here a model and NO bone to attach it to. What should it mean anyway??
-		assert (!pWeaponModel);
+		assert(!pWeaponModel);
 		// just detach everything
 		DetachAll();
 		return nInvalidObjectBindingHandle;
 	}
 
 	int nBone = FindNodeByName(szBoneName);
-	if(nBone < 0)
+	if (nBone < 0)
 	{
 		if (!pWeaponModel)
 		{
@@ -633,7 +633,7 @@ CAnimObject::ObjectBindingHandle CAnimObject::AttachObjectToBone(IBindable * pWe
 			//m_arrBoundObjects.clear();
 			//m_arrBoundObjectIndices.clear();
 
-			g_GetLog()->LogError ("\002AttachObjectToBone is called for bone \"%s\", which is not in the model \"%s\". Ignoring, but this may cause a crash because the corresponding object won't be detached after it's destroyed", szBoneName, GetFileName() );
+			g_GetLog()->LogError("\002AttachObjectToBone is called for bone \"%s\", which is not in the model \"%s\". Ignoring, but this may cause a crash because the corresponding object won't be detached after it's destroyed", szBoneName, GetFileName());
 #ifdef _DEBUG
 			// this assert will only happen if the ca_NoAttachAssert is off
 			// assert (GetCVars()->ca_NoAttachAssert());
@@ -645,7 +645,7 @@ CAnimObject::ObjectBindingHandle CAnimObject::AttachObjectToBone(IBindable * pWe
 	// detach all objects from this bone before creating a new one
 	DetachAllFromBone(nBone);
 
-	if(pWeaponModel == NULL)
+	if (pWeaponModel == NULL)
 	{
 		// we didn't create a new binding, so return invalid handle
 		return nInvalidObjectBindingHandle;
@@ -657,9 +657,9 @@ CAnimObject::ObjectBindingHandle CAnimObject::AttachObjectToBone(IBindable * pWe
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CAnimObject::PreloadResources ( float fDistance, float fTime, int nFlags)
+void CAnimObject::PreloadResources(float fDistance, float fTime, int nFlags)
 {
-	CryCharInstanceBase::PreloadResources( fDistance,fTime,nFlags );
+	CryCharInstanceBase::PreloadResources(fDistance, fTime, nFlags);
 
 	for (unsigned int i = 0; i < m_nodes.size(); i++)
 		if (m_nodes[i] != NULL && m_nodes[i]->m_object)
@@ -667,9 +667,9 @@ void CAnimObject::PreloadResources ( float fDistance, float fTime, int nFlags)
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CAnimObject::DrawBoundObjects(const SRendParams & rRendParams, Matrix44 &inmatTranRotMatrix, int nLOD)
+void CAnimObject::DrawBoundObjects(const SRendParams& rRendParams, Matrix44& inmatTranRotMatrix, int nLOD)
 {
-	static const float fColorBBoxAttached[4] = {0.5,1,1,0.75};
+	static const float fColorBBoxAttached[4] = { 0.5,1,1,0.75 };
 
 	if (g_GetCVars()->ca_NoDrawBound())
 		return;
@@ -678,7 +678,7 @@ void CAnimObject::DrawBoundObjects(const SRendParams & rRendParams, Matrix44 &in
 		return;
 
 	Matrix44 matAttachedObjectMatrix;
-	SRendParams rParams (rRendParams);
+	SRendParams rParams(rRendParams);
 	// this is required to avoid the attachments using the parent character material (this is the material that overrides the default material in the attachment)
 	rParams.pMaterial = NULL;
 
@@ -694,23 +694,23 @@ void CAnimObject::DrawBoundObjects(const SRendParams & rRendParams, Matrix44 &in
 		if (!pBoundObject)
 			continue;
 
-		int nBone =	(*it)->nBone;
+		int nBone = (*it)->nBone;
 		if (nBone < 0 || nBone >= (int)m_nodes.size())
 			continue;
 
-		Matrix44 &boneTM = GetNodeMatrix(m_nodes[nBone]);
+		Matrix44& boneTM = GetNodeMatrix(m_nodes[nBone]);
 		matAttachedObjectMatrix = boneTM * inmatTranRotMatrix;
 		rParams.pMatrix = &matAttachedObjectMatrix;
 
-		if (g_GetCVars()->ca_DrawBBox()>1){
-			Matrix34 m34=Matrix34(GetTransposed44(matAttachedObjectMatrix));
+		if (g_GetCVars()->ca_DrawBBox() > 1) {
+			Matrix34 m34 = Matrix34(GetTransposed44(matAttachedObjectMatrix));
 
 			CryAABB caabb;
 			pBoundObject->GetBBox(caabb.vMin, caabb.vMax);
 
-			debugDrawBBox (m34, caabb, g_GetCVars()->ca_DrawBBox()-1,fColorBBoxAttached);
+			debugDrawBBox(m34, caabb, g_GetCVars()->ca_DrawBBox() - 1, fColorBBoxAttached);
 		}
 		//pBoundObject->SetShaderTemplate( rParams.nShaderTemplate, 0] ,0 );
-		pBoundObject->Render(rParams,Vec3(zero), nLOD);
-	}  
+		pBoundObject->Render(rParams, Vec3(zero), nLOD);
+	}
 }

@@ -1,10 +1,10 @@
 #include "StdAfx.h"
 #include "CrySkinBuilderBase.h"
 
-CrySkinBuilderBase::CrySkinBuilderBase(const ICrySkinSource* pGeometry):
-	CrySkinBuilderBase0 (pGeometry)
+CrySkinBuilderBase::CrySkinBuilderBase(const ICrySkinSource* pGeometry) :
+	CrySkinBuilderBase0(pGeometry)
 #ifdef DEBUG_STD_CONTAINERS
-	,m_arrBoneVerts ("CrySkinBuilder.arrBoneVerts")
+	, m_arrBoneVerts("CrySkinBuilder.arrBoneVerts")
 #endif
 {
 	preprocess();
@@ -16,7 +16,7 @@ CrySkinBuilderBase::CrySkinBuilderBase(const ICrySkinSource* pGeometry):
 // returns the pointer to the next available auxint after the group
 // IMPLEMENTATION NOTE:
 //  actually, the rigid group is empty in the auxiliary stream, so we just set the number of vertices
-void CrySkinBuilderBase::fillRigidGroup (CrySkinStreams& streams, unsigned nBone)
+void CrySkinBuilderBase::fillRigidGroup(CrySkinStreams& streams, unsigned nBone)
 {
 	CrySkinRigidVertexArray& arrRigid = m_arrBoneVerts[nBone].arrRigid;
 
@@ -25,8 +25,8 @@ void CrySkinBuilderBase::fillRigidGroup (CrySkinStreams& streams, unsigned nBone
 
 	CrySkinRigidVertexArray::const_iterator it = arrRigid.begin(), itEnd = it + arrRigid.size();
 
-  for (; it != itEnd; ++it)
-		it->build (*streams.pVert++);
+	for (; it != itEnd; ++it)
+		it->build(*streams.pVert++);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -56,7 +56,7 @@ void CrySkinBuilderBase::preprocess()
 			m_numSmoothLinks += numVertexLinks;
 
 		m_numBones = crymax(m_pGeometry->getLink(nVert).maxBoneID(), m_numBones);
-		
+
 		m_numLinks += numVertexLinks;
 	}
 	++m_numBones;
@@ -68,24 +68,24 @@ void CrySkinBuilderBase::preprocess()
 void CrySkinBuilderBase::makeFullBoneVertexArrays()
 {
 	m_arrBoneVerts.clear();
-	m_arrBoneVerts.resize (m_numBones);
+	m_arrBoneVerts.resize(m_numBones);
 
 	unsigned numVertices = m_pGeometry->numVertices();
 	// preallocate memory for the vertices in bones
 	for (unsigned i = 0; i < m_numBones; ++i)
 		// assume approximately uniform distribution
-		m_arrBoneVerts[i].reserve (numVertices / m_numBones);
+		m_arrBoneVerts[i].reserve(numVertices / m_numBones);
 
 	for (unsigned nVert = 0; nVert < numVertices; ++nVert)
 	{
 		// the number of links for this vertex
-		const CryVertexBinding& rLinks = m_pGeometry->getLink (nVert);
+		const CryVertexBinding& rLinks = m_pGeometry->getLink(nVert);
 		if (rLinks.size() == 1)
-			m_arrBoneVerts[rLinks[0].BoneID].arrRigid.push_back(CrySkinRigidVertex (rLinks[0].offset, nVert));
+			m_arrBoneVerts[rLinks[0].BoneID].arrRigid.push_back(CrySkinRigidVertex(rLinks[0].offset, nVert));
 		else
-		for (unsigned i = 0; i < rLinks.size(); ++i)
-		{
-			m_arrBoneVerts[rLinks[i].BoneID].arrSmooth.push_back(CrySkinSmoothVertex (rLinks[i], nVert));
-		}
+			for (unsigned i = 0; i < rLinks.size(); ++i)
+			{
+				m_arrBoneVerts[rLinks[i].BoneID].arrSmooth.push_back(CrySkinSmoothVertex(rLinks[i], nVert));
+			}
 	}
 }

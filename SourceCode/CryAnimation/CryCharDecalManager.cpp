@@ -15,32 +15,32 @@
 #include "MathUtils.h"
 
 // nVertexAllocStep == 2^nVertexAllocStepLog2 is the step with which the vertex buffer will be enlarged when needed
-enum {nVertexAllocStepLog2 = 8};
-enum {nVertexAllocStep = (1 << nVertexAllocStepLog2)};
-enum {nMaterialAllocStep = 1};
+enum { nVertexAllocStepLog2 = 8 };
+enum { nVertexAllocStep = (1 << nVertexAllocStepLog2) };
+enum { nMaterialAllocStep = 1 };
 // the max number of vertices used for the character until the decals start to disappear
 // note: this must be a multiple of nVertexAllocStep
-enum {nMaxDecalVertices = (nVertexAllocStep * 6u)};
+enum { nMaxDecalVertices = (nVertexAllocStep * 6u) };
 
 CryCharDecalManager::CStatistics CryCharDecalManager::g_Statistics;
 
 
-CryCharDecalManager::CryCharDecalManager (class CryGeometryInfo* pGeomInfo):
-	m_pGeometry (pGeomInfo),
-	m_bNeedUpdateIndices (false)
+CryCharDecalManager::CryCharDecalManager(class CryGeometryInfo* pGeomInfo) :
+	m_pGeometry(pGeomInfo),
+	m_bNeedUpdateIndices(false)
 {
 	m_pShader = g_GetIRenderer()->EF_LoadShader("DecalCharacter", eSH_World, EF_SYSTEM);
 }
 
-CryCharDecalManager::~CryCharDecalManager ()
+CryCharDecalManager::~CryCharDecalManager()
 {
 	DeleteLeafBuffer();
 	DeleteOldRenderElements();
-	
+
 	if (!m_arrOldRE.empty())
 	{
 		if (!g_GetISystem()->IsQuitting())
-			g_LogToFile ("Warning: ~CryCharDecalManager: There are still %d render elements present that may be in rendering queue. But since destruction was requested, attempting to destruct those elements", m_arrOldRE.size());
+			g_LogToFile("Warning: ~CryCharDecalManager: There are still %d render elements present that may be in rendering queue. But since destruction was requested, attempting to destruct those elements", m_arrOldRE.size());
 		for (unsigned i = 0; i < m_arrOldRE.size(); ++i)
 			m_arrOldRE[i].destruct();
 	}
@@ -65,7 +65,7 @@ void CryCharDecalManager::DeleteOldRenderElements()
 // If needed, recreates the current leaf buffer so that it contains the given
 // number of vertices and reserved indices, both uninitialized.
 // There are 0 used indices initially
-void CryCharDecalManager::ReserveVertexBufferVertices (const Vec3d* pInPositions)
+void CryCharDecalManager::ReserveVertexBufferVertices(const Vec3d* pInPositions)
 {
 	// first, calculate how many vertices we'll need
 	unsigned i, numDecals = (unsigned)m_arrDecals.size(), numVertices = 0;
@@ -79,12 +79,12 @@ void CryCharDecalManager::ReserveVertexBufferVertices (const Vec3d* pInPositions
 
 	while (numVertices > nMaxDecalVertices && !m_arrDecals.empty())
 	{
-		unsigned nDecalToDelete = (unsigned)(rand()%m_arrDecals.size());
+		unsigned nDecalToDelete = (unsigned)(rand() % m_arrDecals.size());
 		numVertices -= m_arrDecals[nDecalToDelete].numVertices();
 #if DECAL_USE_HELPERS
 		numVertices -= m_arrDecals[nDecalToDelete].numHelperVertices();
 #endif
-    m_arrDecals.erase (m_arrDecals.begin()+nDecalToDelete);
+		m_arrDecals.erase(m_arrDecals.begin() + nDecalToDelete);
 	}
 
 	unsigned numMaterials = groupMaterials();
@@ -97,16 +97,16 @@ void CryCharDecalManager::ReserveVertexBufferVertices (const Vec3d* pInPositions
 	DeleteLeafBuffer();
 
 	// construct the data to initialize the new system buffer
-	unsigned numVerticesToReserve = (numVertices + (nVertexAllocStep-1)) & ~(nVertexAllocStep-1);
-	TElementaryArray<struct_VERTEX_FORMAT_P3F_COL4UB_TEX2F> arrSourceVerts (numVerticesToReserve);
-	RefreshVertexBufferVertices (pInPositions, &arrSourceVerts[0]);
+	unsigned numVerticesToReserve = (numVertices + (nVertexAllocStep - 1)) & ~(nVertexAllocStep - 1);
+	TElementaryArray<struct_VERTEX_FORMAT_P3F_COL4UB_TEX2F> arrSourceVerts(numVerticesToReserve);
+	RefreshVertexBufferVertices(pInPositions, &arrSourceVerts[0]);
 
 	unsigned numMaterialsToReserve = numMaterials + nMaterialAllocStep;
 
 	if (numVerticesToReserve > numVertices)
-		memset (&arrSourceVerts[numVertices], 0, sizeof(struct_VERTEX_FORMAT_P3F_COL4UB_TEX2F) * (numVerticesToReserve - numVertices));
-	
-	m_RE.create (numVerticesToReserve, &arrSourceVerts[0], "AnimDecals", numMaterialsToReserve);
+		memset(&arrSourceVerts[numVertices], 0, sizeof(struct_VERTEX_FORMAT_P3F_COL4UB_TEX2F) * (numVerticesToReserve - numVertices));
+
+	m_RE.create(numVerticesToReserve, &arrSourceVerts[0], "AnimDecals", numMaterialsToReserve);
 }
 
 
@@ -124,11 +124,11 @@ void CryCharDecalManager::initDefaultMaterial (CMatInfo& rMat)
 
 
 // Request (add) a new decal to the character
-void CryCharDecalManager::Add (CryEngineDecalInfo& Decal)
+void CryCharDecalManager::Add(CryEngineDecalInfo& Decal)
 {
 	//if (m_arrDecalRequests.empty())
 		// only 1 decal per frame is supported
-		m_arrDecalRequests.push_back(Decal);
+	m_arrDecalRequests.push_back(Decal);
 }
 
 // discards the decal request queue (not yet realized decals added through Add())
@@ -148,7 +148,7 @@ void CryCharDecalManager::clear()
 
 
 // deletes the leaf buffer
-void CryCharDecalManager::DeleteLeafBuffer ()
+void CryCharDecalManager::DeleteLeafBuffer()
 {
 	if (m_RE.canDestruct())
 		m_RE.destruct();
@@ -172,7 +172,7 @@ void CryCharDecalManager::DeleteOldDecals()
 		if (it->isDead())
 		{
 			m_bNeedUpdateIndices = true;
-			it = m_arrDecals.erase (it);
+			it = m_arrDecals.erase(it);
 		}
 		else
 			++it;
@@ -182,7 +182,7 @@ void CryCharDecalManager::DeleteOldDecals()
 //////////////////////////////////////////////////////////////////////////
 // realizes (creates geometry for) unrealized(requested) decals
 // NOTE: this also fills  the UVs in for the vertex stream
-void CryCharDecalManager::Realize (const Vec3d* pPositions)
+void CryCharDecalManager::Realize(const Vec3d* pPositions)
 {
 	DeleteOldRenderElements();
 
@@ -197,22 +197,22 @@ void CryCharDecalManager::Realize (const Vec3d* pPositions)
 	//assert (!m_RE.getLeafBuffer() || GetRenderer()->GetFrameID() == m_RE.getLastRenderFrameID());
 
 	if (!m_arrDecalRequests.empty())
-  {
-    int nnn = 0;
-  }
-	RefreshVertexBufferVertices (pPositions);
+	{
+		int nnn = 0;
+	}
+	RefreshVertexBufferVertices(pPositions);
 	if (m_bNeedUpdateIndices)
-		RefreshVertexBufferIndices ();
+		RefreshVertexBufferIndices();
 
 	DeleteOldDecals();
-	RealizeNewDecalRequests (pPositions);
+	RealizeNewDecalRequests(pPositions);
 }
 
 
 // if there are decal requests, then converts them into the decal objects
 // reserves the vertex/updates the index buffers, if need to be
 // sets m_bNeedUpdateIndices to true if it has added something (and therefore refresh of indices is required)
-void CryCharDecalManager::RealizeNewDecalRequests (const Vec3d* pPositions)
+void CryCharDecalManager::RealizeNewDecalRequests(const Vec3d* pPositions)
 {
 	if (m_arrDecalRequests.empty())
 		return; // nothing to udpate
@@ -221,18 +221,18 @@ void CryCharDecalManager::RealizeNewDecalRequests (const Vec3d* pPositions)
 	for (unsigned nDecal = 0; nDecal < m_arrDecalRequests.size(); ++nDecal)
 	{
 		CryEngineDecalInfo& Decal = m_arrDecalRequests[nDecal];
-		CryCharDecalBuilder builder (Decal, m_pGeometry, pPositions);
+		CryCharDecalBuilder builder(Decal, m_pGeometry, pPositions);
 		if (!builder.numDecalFaces())
 			continue; // we're not interested in this decal: we don't have any decals
 
 		// starts fading out all decals that are very close to this new one
 		//fadeOutCloseDecals (builder.getSourceLCS(), sqr(Decal.fSize/4));
 
-		g_Statistics.onDecalAdd (builder.numDecalVertices(), builder.numDecalFaces());
+		g_Statistics.onDecalAdd(builder.numDecalVertices(), builder.numDecalFaces());
 
 		CryCharDecal NewDecal;
-		NewDecal.buildFrom (builder);
-		m_arrDecals.insert (std::lower_bound(m_arrDecals.begin(), m_arrDecals.end(), NewDecal), NewDecal);
+		NewDecal.buildFrom(builder);
+		m_arrDecals.insert(std::lower_bound(m_arrDecals.begin(), m_arrDecals.end(), NewDecal), NewDecal);
 		//m_arrDecals.resize(m_arrDecals.size()+1);
 		//m_arrDecals.back().buildFrom (builder);
 	}
@@ -250,12 +250,12 @@ void CryCharDecalManager::RealizeNewDecalRequests (const Vec3d* pPositions)
 
 // starts fading out all decals that are close enough to the given point
 // NOTE: the radius is m^2 - it's the square of the radius of the sphere
-void CryCharDecalManager::fadeOutCloseDecals (const Vec3d& ptCenter, float fRadius2)
+void CryCharDecalManager::fadeOutCloseDecals(const Vec3d& ptCenter, float fRadius2)
 {
 	for (unsigned i = 0; i < m_arrDecals.size(); ++i)
 	{
-		if ( GetLengthSquared((m_arrDecals[i].getSourceLCS()-ptCenter)) < fRadius2)
-			m_arrDecals[i].startFadeOut (2);
+		if (GetLengthSquared((m_arrDecals[i].getSourceLCS() - ptCenter)) < fRadius2)
+			m_arrDecals[i].startFadeOut(2);
 	}
 }
 
@@ -263,7 +263,7 @@ void CryCharDecalManager::fadeOutCloseDecals (const Vec3d& ptCenter, float fRadi
 // returns true if the Realize() needs to be called
 // Since the Realize() updates the vertex buffers, creates decals from requests,
 // it's always needed when there are decals
-bool CryCharDecalManager::NeedRealize () const
+bool CryCharDecalManager::NeedRealize() const
 {
 	return !m_arrDecals.empty() || !m_arrDecalRequests.empty()
 		// we don't actually need the vertices that Realize() receives in this case,
@@ -271,17 +271,17 @@ bool CryCharDecalManager::NeedRealize () const
 		|| !m_arrOldRE.empty();
 }
 
-void CopyVertex (Vec3d& vDst, const Vec3d& vSrc)
+void CopyVertex(Vec3d& vDst, const Vec3d& vSrc)
 {
-	struct XYZ {unsigned x,y,z;};
-	assert (sizeof(XYZ) == 12 && sizeof(Vec3d) == 12);
+	struct XYZ { unsigned x, y, z; };
+	assert(sizeof(XYZ) == 12 && sizeof(Vec3d) == 12);
 	(XYZ&)vDst = (XYZ&)vSrc;
 }
 
 
 // put the deformed vertices into the videobuffer of the given format,
 // using the deformed character skin
-void CryCharDecalManager::RefreshVertexBufferVertices (const Vec3d* pInPositions, struct_VERTEX_FORMAT_P3F_TEX2F* pDst)
+void CryCharDecalManager::RefreshVertexBufferVertices(const Vec3d* pInPositions, struct_VERTEX_FORMAT_P3F_TEX2F* pDst)
 {
 	// scan through all decals
 	CDecalArray::const_iterator itDecal = m_arrDecals.begin(), itDecalEnd = itDecal + m_arrDecals.size();
@@ -305,8 +305,8 @@ void CryCharDecalManager::RefreshVertexBufferVertices (const Vec3d* pInPositions
 		unsigned numHelperVertices = itDecal->numHelperVertices();
 		for (unsigned nHelperVertex = 0; nHelperVertex < numHelperVertices; ++nHelperVertex)
 		{
-			Vec3d vCharPosition = itDecal->getHelperVertex (nHelperVertex);
-			CryUV uvCharUV = itDecal->getHelperUV (nHelperVertex);
+			Vec3d vCharPosition = itDecal->getHelperVertex(nHelperVertex);
+			CryUV uvCharUV = itDecal->getHelperUV(nHelperVertex);
 			pDst->xyz = vCharPosition;
 			pDst->st[0] = uvCharUV.u;
 			pDst->st[1] = uvCharUV.v;
@@ -318,7 +318,7 @@ void CryCharDecalManager::RefreshVertexBufferVertices (const Vec3d* pInPositions
 }
 
 // put the deformed vertices into the videobuffer of the given format
-void CryCharDecalManager::RefreshVertexBufferVertices (const Vec3d* pInPositions, struct_VERTEX_FORMAT_P3F_COL4UB_TEX2F* pDst)
+void CryCharDecalManager::RefreshVertexBufferVertices(const Vec3d* pInPositions, struct_VERTEX_FORMAT_P3F_COL4UB_TEX2F* pDst)
 {
 	// scan through all decals
 	CDecalArray::const_iterator itDecal = m_arrDecals.begin(), itDecalEnd = itDecal + m_arrDecals.size();
@@ -338,8 +338,8 @@ void CryCharDecalManager::RefreshVertexBufferVertices (const Vec3d* pInPositions
 			const Vec3d& vCharPosition = pInPositions[rDecalVertex.nVertex];
 			pDst->xyz = vCharPosition;
 			pDst->color.dcolor = dwColor;
-			pDst->st[0] = (rDecalVertex.uvNew.u-0.5f) / fIntensity + 0.5f;
-			pDst->st[1] = (rDecalVertex.uvNew.v-0.5f) / fIntensity + 0.5f;
+			pDst->st[0] = (rDecalVertex.uvNew.u - 0.5f) / fIntensity + 0.5f;
+			pDst->st[1] = (rDecalVertex.uvNew.v - 0.5f) / fIntensity + 0.5f;
 			++pDst;
 		}
 
@@ -347,8 +347,8 @@ void CryCharDecalManager::RefreshVertexBufferVertices (const Vec3d* pInPositions
 		unsigned numHelperVertices = itDecal->numHelperVertices();
 		for (unsigned nHelperVertex = 0; nHelperVertex < numHelperVertices; ++nHelperVertex)
 		{
-			Vec3d vCharPosition = itDecal->getHelperVertex (nHelperVertex);
-			CryUV uvCharUV = itDecal->getHelperUV (nHelperVertex);
+			Vec3d vCharPosition = itDecal->getHelperVertex(nHelperVertex);
+			CryUV uvCharUV = itDecal->getHelperUV(nHelperVertex);
 			pDst->xyz = vCharPosition;
 			pDst->color.decolor = 0xFFFFFFFF;
 			pDst->st[0] = uvCharUV.u;
@@ -364,7 +364,7 @@ void CryCharDecalManager::RefreshVertexBufferVertices (const Vec3d* pInPositions
 // put the vertices out of the vertex/normal array (that belongs to the character) to the
 // decal vertex array. Decal vertices are a bit shifted toward the vertex normals (extruded)
 // to ensure the decals are above the character skin
-void CryCharDecalManager::RefreshVertexBufferVertices (const Vec3d* pInPositions)
+void CryCharDecalManager::RefreshVertexBufferVertices(const Vec3d* pInPositions)
 {
 	CLeafBuffer* pLB = m_RE.getLeafBuffer();
 	if (!pLB)
@@ -376,7 +376,7 @@ void CryCharDecalManager::RefreshVertexBufferVertices (const Vec3d* pInPositions
 	if (pVertexContainer->m_pVertexBuffer == NULL)
 		m_RE.recreate();
 
-	m_RE.lock (true);
+	m_RE.lock(true);
 
 	bool bNeedCopy = true;
 
@@ -393,7 +393,7 @@ void CryCharDecalManager::RefreshVertexBufferVertices (const Vec3d* pInPositions
 			bNeedCopy = false;
 			break;
 		default:
-			assert (0);
+			assert(0);
 			break;
 		}
 	}
@@ -404,8 +404,8 @@ void CryCharDecalManager::RefreshVertexBufferVertices (const Vec3d* pInPositions
 		CDecalArray::const_iterator itDecal = m_arrDecals.begin(), itDecalEnd = itDecal + m_arrDecals.size();
 
 		// fill out the following sparse arrays found inthe leaf buffer
-		CVertexBufferPosArrayDriver pOutPosition (m_RE.getLeafBuffer(), 0, false);
-		CVertexBufferUVArrayDriver pOutUV (m_RE.getLeafBuffer(), 0, false);
+		CVertexBufferPosArrayDriver pOutPosition(m_RE.getLeafBuffer(), 0, false);
+		CVertexBufferUVArrayDriver pOutUV(m_RE.getLeafBuffer(), 0, false);
 		//CVertexBufferColorArrayDriver pOutColor (m_RE.getLeafBuffer(), 0, false);
 
 		for (; itDecal != itDecalEnd; ++itDecal)
@@ -427,12 +427,12 @@ void CryCharDecalManager::RefreshVertexBufferVertices (const Vec3d* pInPositions
 				++pOutUV;
 			}
 
-	#if DECAL_USE_HELPERS
+#if DECAL_USE_HELPERS
 			unsigned numHelperVertices = itDecal->numHelperVertices();
 			for (unsigned nHelperVertex = 0; nHelperVertex < numHelperVertices; ++nHelperVertex)
 			{
-				Vec3d vCharPosition = itDecal->getHelperVertex (nHelperVertex);
-				CryUV uvCharUV = itDecal->getHelperUV (nHelperVertex);
+				Vec3d vCharPosition = itDecal->getHelperVertex(nHelperVertex);
+				CryUV uvCharUV = itDecal->getHelperUV(nHelperVertex);
 				*pOutPosition = vCharPosition;
 				++pOutPosition;
 				//*pOutColor = 0xFFFFFFFF;
@@ -441,7 +441,7 @@ void CryCharDecalManager::RefreshVertexBufferVertices (const Vec3d* pInPositions
 				++pOutUV;
 			}
 
-	#endif
+#endif
 		}
 	}
 
@@ -452,7 +452,7 @@ void CryCharDecalManager::RefreshVertexBufferVertices (const Vec3d* pInPositions
 //////////////////////////////////////////////////////////////////////////
 // recalculates the index array for the vertex buffer and replaces it (so that the vertex buffer is prepared for rendering)
 // also makes sure the vertex buffer contains enough vertices to draw all the current decals (from m_arrDecals)
-void CryCharDecalManager::RefreshVertexBufferIndices ()
+void CryCharDecalManager::RefreshVertexBufferIndices()
 {
 	m_bNeedUpdateIndices = false;
 
@@ -464,13 +464,13 @@ void CryCharDecalManager::RefreshVertexBufferIndices ()
 
 	// calculate the number of required indices in the arrIndices array
 	unsigned numDecals = (unsigned)m_arrDecals.size();
-	unsigned numMaterials = groupMaterials ();
+	unsigned numMaterials = groupMaterials();
 
 	// now we know the number of indices required
 	if (g_MeshInfo.numIndices)
 	{
 		TElementaryArray<unsigned short> arrIndices;
-		arrIndices.reinit (g_MeshInfo.numIndices);
+		arrIndices.reinit(g_MeshInfo.numIndices);
 		unsigned short* pIndex = &arrIndices[0];
 
 		// for each face, put the 3 indices referring to the vertex in the char decal manager
@@ -481,15 +481,15 @@ void CryCharDecalManager::RefreshVertexBufferIndices ()
 		for (unsigned i = 0; i < m_arrDecals.size(); ++i)
 		{
 			const CryCharDecal& rDecal = m_arrDecals[i];
-			const CryCharDecalFace* pDecalFace = rDecal.getFaces(), *pDecalFaceEnd = pDecalFace + rDecal.numFaces();
-			
+			const CryCharDecalFace* pDecalFace = rDecal.getFaces(), * pDecalFaceEnd = pDecalFace + rDecal.numFaces();
+
 			// scan through decal faces, and add 3 indices for each face
 			for (; pDecalFace != pDecalFaceEnd; ++pDecalFace)
 			{
 				for (unsigned nVertexIndex = 0; nVertexIndex < 3; ++nVertexIndex)
 					*(pIndex++) = nBaseVertexIndex + (*pDecalFace)[nVertexIndex];
 			}
-			
+
 			// after scanning the decal faces, update the vertex base - we'll keep vertices in sequence:
 			// 0th decal vertices first, then 1st decal vertices, etc. to the last decal.
 			nBaseVertexIndex += rDecal.numVertices();
@@ -511,14 +511,14 @@ void CryCharDecalManager::RefreshVertexBufferIndices ()
 
 		// we scanned through all decals, and vertex indices must be in the range and coinside
 		// with the number that we calculated beforehand
-		assert (g_MeshInfo.numVertices == nBaseVertexIndex);
+		assert(g_MeshInfo.numVertices == nBaseVertexIndex);
 		m_RE.updateIndices(&arrIndices[0], g_MeshInfo.numIndices);
 	}
 
 	// now assign the materials from submesh infos
 	m_RE.resizeMaterials(numMaterials, m_pShader);
 	for (unsigned nMaterial = 0; nMaterial < numMaterials; ++nMaterial)
-		assignMaterial (nMaterial, g_SubmeshInfo[nMaterial].nTextureId, g_SubmeshInfo[nMaterial].nFirstIndex, g_SubmeshInfo[nMaterial].numIndices, g_SubmeshInfo[nMaterial].nFirstVertex, g_SubmeshInfo[nMaterial].numVertices);
+		assignMaterial(nMaterial, g_SubmeshInfo[nMaterial].nTextureId, g_SubmeshInfo[nMaterial].nFirstIndex, g_SubmeshInfo[nMaterial].numIndices, g_SubmeshInfo[nMaterial].nFirstVertex, g_SubmeshInfo[nMaterial].numVertices);
 }
 
 // temporary locations for groupMaterials results
@@ -529,7 +529,7 @@ CryCharDecalManager::SubmeshInfo CryCharDecalManager::g_SubmeshInfo[CryCharDecal
 
 
 // returns the number of materials in g_SubmeshInfo
-unsigned CryCharDecalManager::groupMaterials ()
+unsigned CryCharDecalManager::groupMaterials()
 {
 	// scan through all decals, grouping them by texture ids and
 	// watching the max number of types not reaching  g_numSubmeshInfos
@@ -546,30 +546,30 @@ unsigned CryCharDecalManager::groupMaterials ()
 			&& pNext < pEnd) // we don't support more than the given amount of decal types
 		{
 			// add a new material group
-			pNext->nFirstIndex  = g_MeshInfo.numIndices;
-			pNext->numIndices   = 0;
+			pNext->nFirstIndex = g_MeshInfo.numIndices;
+			pNext->numIndices = 0;
 			pNext->nFirstVertex = g_MeshInfo.numVertices;
-			pNext->numVertices  = 0;
-			pNext->nTextureId   = rDecal.getTextureId();
+			pNext->numVertices = 0;
+			pNext->nTextureId = rDecal.getTextureId();
 			++pNext;
 		}
 
-		g_MeshInfo.numIndices  += rDecal.numFaces() * 3;
+		g_MeshInfo.numIndices += rDecal.numFaces() * 3;
 		g_MeshInfo.numVertices += rDecal.numVertices();
 #if DECAL_USE_HELPERS
-		g_MeshInfo.numIndices  += rDecal.numHelperFaces() * 3;
+		g_MeshInfo.numIndices += rDecal.numHelperFaces() * 3;
 		g_MeshInfo.numVertices += rDecal.numHelperVertices();
 #endif
-		pNext[-1].numIndices  = g_MeshInfo.numIndices  - pNext[-1].nFirstIndex;
+		pNext[-1].numIndices = g_MeshInfo.numIndices - pNext[-1].nFirstIndex;
 		pNext[-1].numVertices = g_MeshInfo.numVertices - pNext[-1].nFirstVertex;
 	}
 	return pNext - g_SubmeshInfo;
 }
 
 // assigns the given material to the given range of indices/vertices
-void CryCharDecalManager::assignMaterial (unsigned nMaterial, int nTextureId, int nFirstIndex, int numIndices, int nFirstVertex, int numVertices)
+void CryCharDecalManager::assignMaterial(unsigned nMaterial, int nTextureId, int nFirstIndex, int numIndices, int nFirstVertex, int numVertices)
 {
-	m_RE.assignMaterial (nMaterial, m_pShader, g_GetCVars()->ca_DefaultDecalTexture()?0x1000:nTextureId, nFirstIndex, numIndices, nFirstVertex, numVertices);
+	m_RE.assignMaterial(nMaterial, m_pShader, g_GetCVars()->ca_DefaultDecalTexture() ? 0x1000 : nTextureId, nFirstIndex, numIndices, nFirstVertex, numVertices);
 	/*if (!m_RE.getLeafBuffer())
 		return;
 	CMatInfo& rMatInfo = (*m_RE.getLeafBuffer()->m_pMats)[nMaterial];
@@ -579,11 +579,11 @@ void CryCharDecalManager::assignMaterial (unsigned nMaterial, int nTextureId, in
 }
 
 // adds the render data to the renderer, so that the current decals can be rendered
-void CryCharDecalManager::AddRenderData (CCObject *pObj, const SRendParams & rRendParams)
+void CryCharDecalManager::AddRenderData(CCObject* pObj, const SRendParams& rRendParams)
 {
-	if(!m_RE.getLeafBuffer() || !m_RE.getLeafBuffer()->m_pVertexBuffer || m_arrDecals.empty())
+	if (!m_RE.getLeafBuffer() || !m_RE.getLeafBuffer()->m_pVertexBuffer || m_arrDecals.empty())
 		return; // we don't add render data if there's no vertex buffer or no decals
-	m_RE.render (pObj);
+	m_RE.render(pObj);
 #if DECAL_USE_HELPERS
 	Vec3d vPos = rRendParams.vPos;
 	Vec3d vAngles = rRendParams.vAngles;
@@ -597,7 +597,7 @@ void CryCharDecalManager::AddRenderData (CCObject *pObj, const SRendParams & rRe
 		//matTranRotMatrix = GetRotationZYX44(-gf_DEGTORAD*vAngles )*matTranRotMatrix; //NOTE: angles in radians and negated 
 
 		//OPTIMIZED_BY_IVO
-		matTranRotMatrix = Matrix34::GetRotationXYZ34( Deg2Rad(vAngles), vPos );
+		matTranRotMatrix = Matrix34::GetRotationXYZ34(Deg2Rad(vAngles), vPos);
 		matTranRotMatrix = GetTransposed44(matTranRotMatrix); //TODO: remove this after E3 and use Matrix34 instead of Matrix44
 	}
 	for (CDecalArray::iterator it = m_arrDecals.begin(); it != m_arrDecals.end(); ++it)
@@ -610,12 +610,12 @@ void CryCharDecalManager::AddRenderData (CCObject *pObj, const SRendParams & rRe
 void CryCharDecalManager::LogStatistics()
 {
 	if (!g_Statistics.empty())
-		g_GetLog()->LogToFile ("%d decals created, %d total vertices, %d faces, %.1f vers/decal, %.1f faces/decal",
-		g_Statistics.numDecals, g_Statistics.numDecalVertices, g_Statistics.numDecalFaces,
-		g_Statistics.getAveVertsPerDecal(), g_Statistics.getAveFacesPerDecal());
+		g_GetLog()->LogToFile("%d decals created, %d total vertices, %d faces, %.1f vers/decal, %.1f faces/decal",
+			g_Statistics.numDecals, g_Statistics.numDecalVertices, g_Statistics.numDecalFaces,
+			g_Statistics.getAveVertsPerDecal(), g_Statistics.getAveFacesPerDecal());
 }
 
-void CryCharDecalManager::CStatistics::onDecalAdd (unsigned numVertices, unsigned numFaces)
+void CryCharDecalManager::CStatistics::onDecalAdd(unsigned numVertices, unsigned numFaces)
 {
 	++numDecals;
 	numDecalVertices += numVertices;
@@ -624,43 +624,43 @@ void CryCharDecalManager::CStatistics::onDecalAdd (unsigned numVertices, unsigne
 	if (g_GetCVars()->ca_Debug())
 	{
 		char szBuf[1024];
-		sprintf (szBuf, "Decal added (%d vert, %d faces)\n", numVertices, numFaces);
+		sprintf(szBuf, "Decal added (%d vert, %d faces)\n", numVertices, numFaces);
 
-		#ifdef WIN32
-		OutputDebugString (szBuf);
-		#endif
+#ifdef WIN32
+		OutputDebugString(szBuf);
+#endif
 
-		#ifdef GAMECUBE
-			OSReport(szBuf);
-		#endif
+#ifdef GAMECUBE
+		OSReport(szBuf);
+#endif
 
 	}
 #endif
 }
 
 // returns the memory usage by this object into the sizer
-void CryCharDecalManager::GetMemoryUsage (ICrySizer* pSizer)
+void CryCharDecalManager::GetMemoryUsage(ICrySizer* pSizer)
 {
 	unsigned nSize = sizeof(*this);
-	nSize += capacityofArray (m_arrDecalRequests);
-	nSize += capacityofArray (m_arrDecals);
-	nSize += capacityofArray (m_arrOldRE);
-	pSizer->AddObject (this, nSize);
+	nSize += capacityofArray(m_arrDecalRequests);
+	nSize += capacityofArray(m_arrDecals);
+	nSize += capacityofArray(m_arrOldRE);
+	pSizer->AddObject(this, nSize);
 }
 
 void CryCharDecalManager::debugDump()
 {
-	unsigned numMaterials = groupMaterials ();
-	g_GetLog()->Log ("\001   %d decals: %d chunks used, mesh is %d verts %d indices", m_arrDecals.size(), numMaterials, g_MeshInfo.numVertices, g_MeshInfo.numIndices);
+	unsigned numMaterials = groupMaterials();
+	g_GetLog()->Log("\001   %d decals: %d chunks used, mesh is %d verts %d indices", m_arrDecals.size(), numMaterials, g_MeshInfo.numVertices, g_MeshInfo.numIndices);
 	unsigned i;
 	for (i = 0; i < m_arrDecals.size(); ++i)
 	{
 		CryCharDecal& rDecal = m_arrDecals[i];
-		g_GetLog()->Log("\001      decal %3d: %d verts, %d faces, \"%s\" (texId=%d)",i, rDecal.numVertices(), rDecal.numFaces(), g_GetIRenderer()->EF_GetTextureByID(rDecal.getTextureId())->GetName(), rDecal.getTextureId());
+		g_GetLog()->Log("\001      decal %3d: %d verts, %d faces, \"%s\" (texId=%d)", i, rDecal.numVertices(), rDecal.numFaces(), g_GetIRenderer()->EF_GetTextureByID(rDecal.getTextureId())->GetName(), rDecal.getTextureId());
 	}
 	for (i = 0; i < numMaterials; ++i)
 	{
-    SubmeshInfo &rSubmesh = g_SubmeshInfo[i];
-		g_GetLog()->Log ("\001      chunk %d: %d verts @%d, %d indices @%d, texture %d \"%s\"", i, rSubmesh.numVertices, rSubmesh.nFirstVertex, rSubmesh.numIndices, rSubmesh.nFirstIndex, rSubmesh.nTextureId, g_GetIRenderer()->EF_GetTextureByID(rSubmesh.nTextureId)->GetName());
+		SubmeshInfo& rSubmesh = g_SubmeshInfo[i];
+		g_GetLog()->Log("\001      chunk %d: %d verts @%d, %d indices @%d, texture %d \"%s\"", i, rSubmesh.numVertices, rSubmesh.nFirstVertex, rSubmesh.numIndices, rSubmesh.nFirstIndex, rSubmesh.nTextureId, g_GetIRenderer()->EF_GetTextureByID(rSubmesh.nTextureId)->GetName());
 	}
 }

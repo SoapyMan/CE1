@@ -5,12 +5,12 @@
 #include "CryCharReShadowManager.h"
 
 
-CryCharReShadowManager::CryCharReShadowManager ()
+CryCharReShadowManager::CryCharReShadowManager()
 {
-	
+
 }
 
-CryCharReShadowManager::~CryCharReShadowManager ()
+CryCharReShadowManager::~CryCharReShadowManager()
 {
 	for (unsigned i = 0; i < m_arrPool.size(); ++i)
 		delete m_arrPool[i];
@@ -20,7 +20,7 @@ CryCharReShadowManager::~CryCharReShadowManager ()
 // creates a new shadow volume object or retrieves an old one from the pool
 // May return NULL, if insufficient resources; in this case, no further action on
 // creating shadow volumes must be attempted
-CryCharReShadowVolume* CryCharReShadowManager::newShadow ()
+CryCharReShadowVolume* CryCharReShadowManager::newShadow()
 {
 	// first try to find already existing resource:
 	// the one with age > 1. If the age is:
@@ -30,17 +30,17 @@ CryCharReShadowVolume* CryCharReShadowManager::newShadow ()
 	// 1: this is a shadow that was rendered in the previous frame and may still
 	//    be being rendered, which means we'd have to wait the fences.
 	for (unsigned i = 0; i < m_arrPool.size(); ++i)
-		if (m_arrPool[i]->getAgeFrames() > (unsigned)(g_GetCVars()->ca_ShadowDoubleBuffer()&1))
+		if (m_arrPool[i]->getAgeFrames() > (unsigned)(g_GetCVars()->ca_ShadowDoubleBuffer() & 1))
 		{
 			return m_arrPool[i];
 		}
 
 	// we didn't find any in the pool, so create a new one, if we didn't yet exceed the limit
-	if (m_arrPool.size() > (unsigned) g_GetCVars()->ca_ShadowBufferLimit())
+	if (m_arrPool.size() > (unsigned)g_GetCVars()->ca_ShadowBufferLimit())
 		return NULL; // we exceeded the limit
 
 	CryCharReShadowVolume* pNewShadow = new CryCharReShadowVolume();
-	m_arrPool.push_back(pNewShadow );
+	m_arrPool.push_back(pNewShadow);
 	return pNewShadow;
 }
 
@@ -55,9 +55,9 @@ void CryCharReShadowManager::shrink()
 
 	// 1 in case of single-buffer
 	// 2 in case of double-buffer
-	unsigned nMinPoolSize = 1 + (g_GetCVars()->ca_ShadowDoubleBuffer()&1);
+	unsigned nMinPoolSize = 1 + (g_GetCVars()->ca_ShadowDoubleBuffer() & 1);
 
-	if (nMinPoolSize > (unsigned) g_GetCVars()->ca_ShadowBufferLimit())
+	if (nMinPoolSize > (unsigned)g_GetCVars()->ca_ShadowBufferLimit())
 		nMinPoolSize = g_GetCVars()->ca_ShadowBufferLimit();
 
 	// delete the extra unused buffers.
@@ -78,9 +78,9 @@ void CryCharReShadowManager::shrink()
 
 
 
-void CryCharReShadowManager::GetMemoryUsage (ICrySizer* pSizer)
+void CryCharReShadowManager::GetMemoryUsage(ICrySizer* pSizer)
 {
-	pSizer->Add (*this);
+	pSizer->Add(*this);
 	for (unsigned i = 0; i < m_arrPool.size(); ++i)
 		m_arrPool[i]->GetMemoryUsage(pSizer);
 }

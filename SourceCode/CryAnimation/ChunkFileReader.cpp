@@ -9,7 +9,7 @@ static char THIS_FILE[] = __FILE__;
 
 const char* CChunkFileReader::gLastError = "";
 
-CChunkFileReader::CChunkFileReader():
+CChunkFileReader::CChunkFileReader() :
 	m_pChunks(NULL)
 	//,m_arrChunkSize ("CChunkFileReader.ChunkSize")
 {
@@ -20,9 +20,9 @@ CChunkFileReader::~CChunkFileReader()
 	close();
 }
 
-bool CChunkFileReader::open (const string& strFileName, unsigned nFlags)
+bool CChunkFileReader::open(const string& strFileName, unsigned nFlags)
 {
-	return open (strFileName.c_str(), nFlags);
+	return open(strFileName.c_str(), nFlags);
 }
 
 
@@ -36,19 +36,19 @@ bool CChunkFileReader::open(CFileMapping* pFile)
 
 	bool bSuccess = false;
 
-	if ( (m_pFile != (CFileMapping*)NULL) && (m_pFile->getData() != NULL) )
+	if ((m_pFile != (CFileMapping*)NULL) && (m_pFile->getData() != NULL))
 	{
 		if (m_pFile->getSize() >= sizeof(FileHeader))
 		{// the file must contain the header
 			const FileHeader& fileHeader = getFileHeader();
 			if (m_pFile->getSize() >= fileHeader.ChunkTableOffset + sizeof(int)
-					&& (int)fileHeader.ChunkTableOffset > (int)sizeof(fileHeader)
+				&& (int)fileHeader.ChunkTableOffset > (int)sizeof(fileHeader)
 				)
 			{// there must be room for the chunk table header
 				unsigned numChunks = *static_cast<const unsigned*>(m_pFile->getData(fileHeader.ChunkTableOffset));
 				unsigned nChunk;
-				if (m_pFile->getSize() >= fileHeader.ChunkTableOffset + sizeof(int) + numChunks*sizeof(ChunkHeader)
-					&& numChunks <= (pFile->getSize () - fileHeader.ChunkTableOffset - sizeof(int)) / sizeof(ChunkHeader))
+				if (m_pFile->getSize() >= fileHeader.ChunkTableOffset + sizeof(int) + numChunks * sizeof(ChunkHeader)
+					&& numChunks <= (pFile->getSize() - fileHeader.ChunkTableOffset - sizeof(int)) / sizeof(ChunkHeader))
 				{
 					// the file must contain the full chunk table
 					m_pChunks = (const ChunkHeader*)m_pFile->getData(fileHeader.ChunkTableOffset + sizeof(int));
@@ -70,7 +70,7 @@ bool CChunkFileReader::open(CFileMapping* pFile)
 						setOffsets.insert(nOffset);
 					}
 					m_arrChunkSize.clear();
-					m_arrChunkSize.resize (numChunks);
+					m_arrChunkSize.resize(numChunks);
 					for (nChunk = 0; nChunk < numChunks; ++nChunk)
 					{
 						int nOffset = m_pChunks[nChunk].FileOffset;
@@ -78,14 +78,14 @@ bool CChunkFileReader::open(CFileMapping* pFile)
 						if (nOffset >= sizeof(FileHeader) && nOffset < fileHeader.ChunkTableOffset)
 						{
 							// find the next offset
-							std::set<int>::const_iterator it = setOffsets.find (nOffset);
-							assert (it != setOffsets.end());
-							assert (*it == nOffset);
+							std::set<int>::const_iterator it = setOffsets.find(nOffset);
+							assert(it != setOffsets.end());
+							assert(*it == nOffset);
 							++it;
-							nSize = (it==setOffsets.end()?fileHeader.ChunkTableOffset:*it) - nOffset;
+							nSize = (it == setOffsets.end() ? fileHeader.ChunkTableOffset : *it) - nOffset;
 						}
-							
-						assert (nSize >= 0);
+
+						assert(nSize >= 0);
 						m_arrChunkSize[nChunk] = nSize;
 					}
 
@@ -123,7 +123,7 @@ bool CChunkFileReader::open(const char* szFileName, unsigned nFlags)
 		gLastError = "Cannot open file";
 		return false;
 	}
-	return open (pFileMapping);
+	return open(pFileMapping);
 }
 
 void CChunkFileReader::close()
@@ -137,7 +137,7 @@ void CChunkFileReader::close()
 const void* CChunkFileReader::getRawData(unsigned nOffset)const
 {
 	if ((m_pFile != (CFileMapping*)NULL) && m_pFile->getData())
-		return ((char*)m_pFile->getData())+nOffset;
+		return ((char*)m_pFile->getData()) + nOffset;
 	else
 		return NULL;
 }
@@ -152,7 +152,7 @@ const CChunkFileReader::ChunkHeader& CChunkFileReader::getChunkHeader(int nChunk
 // returns the raw data of the i-th chunk
 const void* CChunkFileReader::getChunkData(int nChunkIdx)const
 {
-	if (nChunkIdx>= 0 && nChunkIdx < numChunks())
+	if (nChunkIdx >= 0 && nChunkIdx < numChunks())
 	{
 		int nOffset = m_pChunks[nChunkIdx].FileOffset;
 		if (nOffset < sizeof(FileHeader) || nOffset >= getFileHeader().ChunkTableOffset)
@@ -171,7 +171,7 @@ int CChunkFileReader::numChunks()const
 }
 
 // number of chunks of the specified type
-int CChunkFileReader::numChunksOfType (ChunkTypes nChunkType)const
+int CChunkFileReader::numChunksOfType(ChunkTypes nChunkType)const
 {
 	int nResult = 0;
 	for (int i = 0; i < numChunks(); ++i)
@@ -186,10 +186,10 @@ int CChunkFileReader::numChunksOfType (ChunkTypes nChunkType)const
 // returns the file headers
 const CChunkFileReader::FileHeader& CChunkFileReader::getFileHeader() const
 {
-	return m_pFile?*((const FileHeader*)(m_pFile->getData())):*(const FileHeader*)NULL;
+	return m_pFile ? *((const FileHeader*)(m_pFile->getData())) : *(const FileHeader*)NULL;
 }
 
-bool CChunkFileReader::isValid () const
+bool CChunkFileReader::isValid() const
 {
 	return m_pFile != (CFileMapping*)NULL;
 }
@@ -199,7 +199,7 @@ bool CChunkFileReader::isValid () const
 // or the end of the raw data portion of the file
 int CChunkFileReader::getChunkSize(int nChunkIdx) const
 {
-	assert (nChunkIdx >= 0 && nChunkIdx < numChunks());
+	assert(nChunkIdx >= 0 && nChunkIdx < numChunks());
 	return m_arrChunkSize[nChunkIdx];
 }
 

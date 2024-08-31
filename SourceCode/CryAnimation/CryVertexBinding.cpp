@@ -18,9 +18,9 @@ void CryVertexBinding::normalizeBlendWeights()
 	for (j = 0; j < size(); j++)
 		fBlendSumm += (*this)[j].Blending;
 
-	assert (fBlendSumm > 0.1f && fBlendSumm <=1.001f);
+	assert(fBlendSumm > 0.1f && fBlendSumm <= 1.001f);
 
-	for (j=0; j<size(); j++)
+	for (j = 0; j < size(); j++)
 		(*this)[j].Blending /= fBlendSumm;
 }
 
@@ -29,12 +29,12 @@ void CryVertexBinding::normalizeBlendWeights()
 // ASSUMES: that the links are already sorted by the blending factors in descending order
 void CryVertexBinding::pruneSmallWeights(float fMinBlending, unsigned numMinLinks)
 {
-  // remove 0 blending links and merge the links to the same bones
+	// remove 0 blending links and merge the links to the same bones
 	unsigned j;
-  for (j = numMinLinks; j < size(); j++)
+	for (j = numMinLinks; j < size(); j++)
 	{
-		assert (j == 0 || (*this)[j].Blending <= (*this)[j-1].Blending);
-		if((*this)[j].Blending <= fMinBlending)
+		assert(j == 0 || (*this)[j].Blending <= (*this)[j - 1].Blending);
+		if ((*this)[j].Blending <= fMinBlending)
 		{
 			resize(j);
 			assert(j);
@@ -57,18 +57,18 @@ void CryVertexBinding::pruneSmallWeights(float fMinBlending, unsigned numMinLink
 
 
 // remaps the bone ids
-void CryVertexBinding::remapBoneIds (const unsigned* arrBoneIdMap, unsigned numBoneIds)
+void CryVertexBinding::remapBoneIds(const unsigned* arrBoneIdMap, unsigned numBoneIds)
 {
 	for (iterator it = begin(); it != end(); ++it)
 	{
 		// if you get this assert, most probably there is dissynchronization between different LODs of the same model
 		// - all of them must be exported with exactly the same skeletons.
-		if(it->BoneID >= 0 && it->BoneID < (int)numBoneIds)
+		if (it->BoneID >= 0 && it->BoneID < (int)numBoneIds)
 			it->BoneID = arrBoneIdMap[it->BoneID];
 		else
 		{
 #ifdef _CRY_ANIMATION_BASE_HEADER_
-			g_GetLog()->LogError ("\001bone index is out of range");
+			g_GetLog()->LogError("\001bone index is out of range");
 #endif
 			it->BoneID = 0;
 		}
@@ -88,11 +88,11 @@ void CryVertexBinding::scaleOffsets(float fScale)
 void CryVertexBinding::sortByBlendingDescending()
 {
 	// sort the links by blend factor to allow skip unimportant ones
-	std::sort (begin(), end(), CryLinkOrderByBlending());
+	std::sort(begin(), end(), CryLinkOrderByBlending());
 }
 
 // returns the maximum BoneID in the array of links
-unsigned CryVertexBinding::maxBoneID ()const
+unsigned CryVertexBinding::maxBoneID()const
 {
 	unsigned nResult = 0;
 	for (unsigned i = 0; i < this->size(); ++i)
@@ -101,7 +101,7 @@ unsigned CryVertexBinding::maxBoneID ()const
 }
 
 // returns the minimal BoneID in the array of links
-unsigned CryVertexBinding::minBoneID () const
+unsigned CryVertexBinding::minBoneID() const
 {
 	unsigned nResult = (unsigned)(*this)[0].BoneID;
 	for (unsigned i = 1; i < this->size(); ++i)
@@ -110,7 +110,7 @@ unsigned CryVertexBinding::minBoneID () const
 }
 
 // returns the link weight to the given bone
-float CryVertexBinding::getBoneWeight (int nBoneID)const
+float CryVertexBinding::getBoneWeight(int nBoneID)const
 {
 	for (unsigned i = 0; i < this->size(); ++i)
 		if ((*this)[i].BoneID == nBoneID)
@@ -119,7 +119,7 @@ float CryVertexBinding::getBoneWeight (int nBoneID)const
 }
 
 // returns true if there is such bone weight
-bool CryVertexBinding::hasBoneWeight (int nBoneID, float fWeight) const
+bool CryVertexBinding::hasBoneWeight(int nBoneID, float fWeight) const
 {
 	for (unsigned i = 0; i < this->size(); ++i)
 		if ((*this)[i].BoneID == nBoneID && (*this)[i].Blending == fWeight)

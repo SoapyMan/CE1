@@ -12,10 +12,10 @@
 #include "CrySkinMorph.h"
 using namespace CryStringUtils;
 
-CryModelAnimationContainer::CryModelAnimationContainer (CControllerManager * pControllerManager):
+CryModelAnimationContainer::CryModelAnimationContainer(CControllerManager* pControllerManager) :
 	m_pControllerManager(pControllerManager),
-	m_arrBones ("CryModelAnimationContainer.BoneInfo"),
-	m_arrMorphTargets ("CryModelAnimationContainer.MorphTargets")
+	m_arrBones("CryModelAnimationContainer.BoneInfo"),
+	m_arrMorphTargets("CryModelAnimationContainer.MorphTargets")
 {
 	m_pControllerManager->Register(this);
 }
@@ -32,91 +32,91 @@ CryModelAnimationContainer::~CryModelAnimationContainer()
 
 void CryModelAnimationContainer::OnAnimationGlobalUnload(int nGlobalAnimId)
 {
-	std::vector<LocalAnimId>::iterator it = std::lower_bound (m_arrAnimByGlobalId.begin(), m_arrAnimByGlobalId.end(), nGlobalAnimId, AnimationGlobIdPred(m_arrAnimations));
-	
-	assert (it == m_arrAnimByGlobalId.begin() || m_arrAnimations[(it-1)->nAnimId].nGlobalAnimId < nGlobalAnimId);
+	std::vector<LocalAnimId>::iterator it = std::lower_bound(m_arrAnimByGlobalId.begin(), m_arrAnimByGlobalId.end(), nGlobalAnimId, AnimationGlobIdPred(m_arrAnimations));
 
-	for (;it != m_arrAnimByGlobalId.end() && m_arrAnimations[it->nAnimId].nGlobalAnimId == nGlobalAnimId; ++it)
+	assert(it == m_arrAnimByGlobalId.begin() || m_arrAnimations[(it - 1)->nAnimId].nGlobalAnimId < nGlobalAnimId);
+
+	for (; it != m_arrAnimByGlobalId.end() && m_arrAnimations[it->nAnimId].nGlobalAnimId == nGlobalAnimId; ++it)
 	{
 		AUTO_PROFILE_SECTION(g_dTimeAnimBindControllers);
 		// bind loaded controllers to the bones
 		for (unsigned nBone = 0; nBone < numBoneInfos(); ++nBone)
 		{
 			CryBoneInfo& rBoneInfo = getBoneInfo(nBone);
-			rBoneInfo.UnbindController (it->nAnimId);
+			rBoneInfo.UnbindController(it->nAnimId);
 		}
 	}
 }
 
-void CryModelAnimationContainer::OnAnimationGlobalLoad (int nGlobalAnimId)
+void CryModelAnimationContainer::OnAnimationGlobalLoad(int nGlobalAnimId)
 {
-	std::vector<LocalAnimId>::iterator it = std::lower_bound (m_arrAnimByGlobalId.begin(), m_arrAnimByGlobalId.end(), nGlobalAnimId, AnimationGlobIdPred(m_arrAnimations));
+	std::vector<LocalAnimId>::iterator it = std::lower_bound(m_arrAnimByGlobalId.begin(), m_arrAnimByGlobalId.end(), nGlobalAnimId, AnimationGlobIdPred(m_arrAnimations));
 
-	assert (it == m_arrAnimByGlobalId.begin() || m_arrAnimations[(it-1)->nAnimId].nGlobalAnimId < nGlobalAnimId);
+	assert(it == m_arrAnimByGlobalId.begin() || m_arrAnimations[(it - 1)->nAnimId].nGlobalAnimId < nGlobalAnimId);
 
 	// scan through the sequence of animations with the given Global AnimId
 	// and bind each of them to the bones
 	if (it != m_arrAnimByGlobalId.end() && m_arrAnimations[it->nAnimId].nGlobalAnimId == nGlobalAnimId)
 	{
 		AUTO_PROFILE_SECTION(g_dTimeAnimBindControllers);
-		GlobalAnimation& GlobalAnim = m_pControllerManager->GetAnimation (nGlobalAnimId);
+		GlobalAnimation& GlobalAnim = m_pControllerManager->GetAnimation(nGlobalAnimId);
 
-		m_fTicksPerFrame  = (float)GlobalAnim.nTicksPerFrame;
-		m_fSecsPerTick  = (float)GlobalAnim.fSecsPerTick;
+		m_fTicksPerFrame = (float)GlobalAnim.nTicksPerFrame;
+		m_fSecsPerTick = (float)GlobalAnim.fSecsPerTick;
 		float fSecsPerFrame = m_fSecsPerTick * m_fTicksPerFrame;
 		float fStart = GlobalAnim.rangeGlobal.start * fSecsPerFrame;
 		float fStop = GlobalAnim.rangeGlobal.end * fSecsPerFrame;
 
 		do {
-			AnimData &LocalAnim = m_arrAnimations[it->nAnimId];  
-			assert (LocalAnim.nGlobalAnimId == nGlobalAnimId);
+			AnimData& LocalAnim = m_arrAnimations[it->nAnimId];
+			assert(LocalAnim.nGlobalAnimId == nGlobalAnimId);
 			LocalAnim.fStart = fStart;
-			LocalAnim.fStop  = fStop;
+			LocalAnim.fStop = fStop;
 
 			if (GlobalAnim.IsLoaded())
-			// bind loaded controllers (if any) to the bones
-			for (unsigned nBone = 0; nBone < numBoneInfos(); ++nBone)
-			{
-				CryBoneInfo& rBoneInfo = getBoneInfo(nBone);
-				rBoneInfo.BindController (GlobalAnim, it->nAnimId);
-			}
-		} while(++it != m_arrAnimByGlobalId.end() && m_arrAnimations[it->nAnimId].nGlobalAnimId == nGlobalAnimId);
+				// bind loaded controllers (if any) to the bones
+				for (unsigned nBone = 0; nBone < numBoneInfos(); ++nBone)
+				{
+					CryBoneInfo& rBoneInfo = getBoneInfo(nBone);
+					rBoneInfo.BindController(GlobalAnim, it->nAnimId);
+				}
+		} while (++it != m_arrAnimByGlobalId.end() && m_arrAnimations[it->nAnimId].nGlobalAnimId == nGlobalAnimId);
 	}
 }
 
 // adds an animation record to the animation set
-void CryModelAnimationContainer::RegisterAnimation(const char * szFileName, int nGlobalAnimId, const char* szAnimName)
+void CryModelAnimationContainer::RegisterAnimation(const char* szFileName, int nGlobalAnimId, const char* szAnimName)
 {
-	const CControllerManager::Animation& GlobalAnim = m_pControllerManager->GetAnimation (nGlobalAnimId);
-	m_fTicksPerFrame  = (float)GlobalAnim.nTicksPerFrame;
-	m_fSecsPerTick  = (float)GlobalAnim.fSecsPerTick;
+	const CControllerManager::Animation& GlobalAnim = m_pControllerManager->GetAnimation(nGlobalAnimId);
+	m_fTicksPerFrame = (float)GlobalAnim.nTicksPerFrame;
+	m_fSecsPerTick = (float)GlobalAnim.fSecsPerTick;
 	float fSecsPerFrame = m_fSecsPerTick * m_fTicksPerFrame;
 	float fStart = GlobalAnim.rangeGlobal.start * fSecsPerFrame;
 	float fStop = GlobalAnim.rangeGlobal.end * fSecsPerFrame;
-	
-	AnimData LocalAnim; 
-  LocalAnim.fStart = fStart;
-  LocalAnim.fStop  = fStop;
 
-  LocalAnim.bLoop = stristr(szFileName, "loop") != NULL;
+	AnimData LocalAnim;
+	LocalAnim.fStart = fStart;
+	LocalAnim.fStop = fStop;
+
+	LocalAnim.bLoop = stristr(szFileName, "loop") != NULL;
 	LocalAnim.nGlobalAnimId = nGlobalAnimId;
 	LocalAnim.strName = szAnimName;
-  
-	// hack to fix random goto default pose problem
-  if(LocalAnim.fStop <= LocalAnim.fStart) 
-    LocalAnim.fStop = LocalAnim.fStart+1.0f/30.0f;
 
-  if(LocalAnim.fStart > LocalAnim.fStop)
-  {
-		g_GetLog()->LogToFile ("  Invalid start(%g) > stop(%g) values in animation: %s", LocalAnim.fStart, LocalAnim.fStop, LocalAnim.strName.c_str());
+	// hack to fix random goto default pose problem
+	if (LocalAnim.fStop <= LocalAnim.fStart)
+		LocalAnim.fStop = LocalAnim.fStart + 1.0f / 30.0f;
+
+	if (LocalAnim.fStart > LocalAnim.fStop)
+	{
+		g_GetLog()->LogToFile("  Invalid start(%g) > stop(%g) values in animation: %s", LocalAnim.fStart, LocalAnim.fStop, LocalAnim.strName.c_str());
 		return;
 	}
 	int nLocalAnimId = m_arrAnimations.size();
-  m_arrAnimations.push_back(LocalAnim);
-	m_arrAnimByGlobalId.insert (std::lower_bound(m_arrAnimByGlobalId.begin(), m_arrAnimByGlobalId.end(), nGlobalAnimId, AnimationGlobIdPred(m_arrAnimations)), LocalAnimId(nLocalAnimId));
-	m_arrAnimByLocalName.insert (std::lower_bound(m_arrAnimByLocalName.begin(), m_arrAnimByLocalName.end(), szAnimName, AnimationNamePred(m_arrAnimations)), nLocalAnimId);
+	m_arrAnimations.push_back(LocalAnim);
+	m_arrAnimByGlobalId.insert(std::lower_bound(m_arrAnimByGlobalId.begin(), m_arrAnimByGlobalId.end(), nGlobalAnimId, AnimationGlobIdPred(m_arrAnimations)), LocalAnimId(nLocalAnimId));
+	m_arrAnimByLocalName.insert(std::lower_bound(m_arrAnimByLocalName.begin(), m_arrAnimByLocalName.end(), szAnimName, AnimationNamePred(m_arrAnimations)), nLocalAnimId);
 	selfValidate();
- 
+
 	// The caller MUST TAKE CARE to bind the animation if it's already loaded before it has registered itself within this manager
 	m_pControllerManager->AnimationAddRef(nGlobalAnimId, this);
 }
@@ -126,17 +126,17 @@ void CryModelAnimationContainer::RegisterAnimation(const char * szFileName, int 
 // SIDE EFFECT NOTES:
 //  THis function does not put up a warning in the case the animation couldn't be loaded.
 //  It returns an error (false) and the caller must process it.
-int CryModelAnimationContainer::LoadCAF(const char * szFileName, float fScale, int nAnimID, const char * szAnimName, unsigned nGlobalAnimFlags)
+int CryModelAnimationContainer::LoadCAF(const char* szFileName, float fScale, int nAnimID, const char* szAnimName, unsigned nGlobalAnimFlags)
 {
 	int nGlobalAnimID;
- 
-	int nLocalAnimId = findAnimation (szAnimName);
- 
-	if (nLocalAnimId == -1) 
+
+	int nLocalAnimId = findAnimation(szAnimName);
+
+	if (nLocalAnimId == -1)
 	{
 		AUTO_PROFILE_SECTION(g_dTimeAnimLoadFile);
 		// find already loaded controllers
-		nGlobalAnimID = m_pControllerManager->StartLoadAnimation (szFileName, fScale, nGlobalAnimFlags);
+		nGlobalAnimID = m_pControllerManager->StartLoadAnimation(szFileName, fScale, nGlobalAnimFlags);
 
 		if (nGlobalAnimID < 0)
 			return nGlobalAnimID;
@@ -145,70 +145,70 @@ int CryModelAnimationContainer::LoadCAF(const char * szFileName, float fScale, i
 
 		RegisterAnimation(szFileName, nGlobalAnimID, szAnimName);
 
-		if (!g_GetCVars()->ca_AnimationDeferredLoad() || (nGlobalAnimFlags&GlobalAnimation::FLAGS_DISABLE_DELAY_LOAD))
+		if (!g_GetCVars()->ca_AnimationDeferredLoad() || (nGlobalAnimFlags & GlobalAnimation::FLAGS_DISABLE_DELAY_LOAD))
 		{
-			if (g_GetCVars()->ca_Debug() && (g_GetCVars()->ca_AnimationUnloadDelay()>0 || !(nGlobalAnimFlags&GlobalAnimation::FLAGS_DISABLE_AUTO_UNLOAD)))
-				g_GetLog()->LogWarning ("\003Performance penalty: animation deferred load is disabled, but automatic animation unload is enabled. This will most surely lead to poor performance upon loading the level (because everything is loaded, more memory is used and massive precalculations are needed) and even some time after (because of animation controllers trashing) (animation %s)", szAnimName);
+			if (g_GetCVars()->ca_Debug() && (g_GetCVars()->ca_AnimationUnloadDelay() > 0 || !(nGlobalAnimFlags & GlobalAnimation::FLAGS_DISABLE_AUTO_UNLOAD)))
+				g_GetLog()->LogWarning("\003Performance penalty: animation deferred load is disabled, but automatic animation unload is enabled. This will most surely lead to poor performance upon loading the level (because everything is loaded, more memory is used and massive precalculations are needed) and even some time after (because of animation controllers trashing) (animation %s)", szAnimName);
 			// deferred load is disabled, try to load this animation immediately
 
-			m_pControllerManager->LoadAnimation (nGlobalAnimID);
+			m_pControllerManager->LoadAnimation(nGlobalAnimID);
 		}
 	}
 	else
 	{
 		nGlobalAnimID = m_arrAnimations[nLocalAnimId].nGlobalAnimId;
-		g_GetLog()->LogError ("\003Trying to load animation with alias \"%s\" from file \"%s\" into the animation container. Such animation alias already exists and uses file \"%s\". Please use another animation alias.",
+		g_GetLog()->LogError("\003Trying to load animation with alias \"%s\" from file \"%s\" into the animation container. Such animation alias already exists and uses file \"%s\". Please use another animation alias.",
 			szAnimName,
 			szFileName,
 			m_pControllerManager->GetAnimation(nGlobalAnimID).strFileName.c_str());
 	}
 
-  return nGlobalAnimID;
+	return nGlobalAnimID;
 }
 
 // Returns the index of the animation in the set, -1 if there's no such animation
-int CryModelAnimationContainer::Find (const char* szAnimationName)
+int CryModelAnimationContainer::Find(const char* szAnimationName)
 {
 	if (szAnimationName[0] == '#')
-		return int(m_arrAnimations.size() + findMorphTarget (szAnimationName));
+		return int(m_arrAnimations.size() + findMorphTarget(szAnimationName));
 	else
 		return findAnimation(szAnimationName);
 }
 
 
 //! Returns the index of the morph target in the set, -1 if there's no such morph target
-int CryModelAnimationContainer::FindMorphTarget (const char* szMorphTarget)
+int CryModelAnimationContainer::FindMorphTarget(const char* szMorphTarget)
 {
 	return findMorphTarget(szMorphTarget);
 }
 
 // returns the index of the animation
-int CryModelAnimationContainer::findAnimation (const char*szAnimationName)
+int CryModelAnimationContainer::findAnimation(const char* szAnimationName)
 {
 	int nResult = -1;
 	std::vector<int>::iterator it = std::lower_bound(m_arrAnimByLocalName.begin(), m_arrAnimByLocalName.end(), szAnimationName, AnimationNamePred(m_arrAnimations));
-	if (it != m_arrAnimByLocalName.end() && !stricmp(m_arrAnimations[*it].strName.c_str(),szAnimationName))
+	if (it != m_arrAnimByLocalName.end() && !stricmp(m_arrAnimations[*it].strName.c_str(), szAnimationName))
 		nResult = *it;
 
 #ifdef _DEBUG
 	int nTestResult = -1;
 	AnimationArray::iterator itTest = m_arrAnimations.begin(), itTestEnd = m_arrAnimations.end();
 
-  for (; itTest != itTestEnd; ++itTest)
-    if(!stricmp(szAnimationName, itTest->strName.c_str()))
+	for (; itTest != itTestEnd; ++itTest)
+		if (!stricmp(szAnimationName, itTest->strName.c_str()))
 		{
-      nTestResult = itTest - m_arrAnimations.begin();
+			nTestResult = itTest - m_arrAnimations.begin();
 			break;
 		}
 
-	assert (nTestResult == nResult);
+	assert(nTestResult == nResult);
 #endif
 
-  return nResult;
+	return nResult;
 }
 
 // returns the index of the morph target, in the indexation of the array of morph targets
-int CryModelAnimationContainer::findMorphTarget (const char* szMorphTargetName)
+int CryModelAnimationContainer::findMorphTarget(const char* szMorphTargetName)
 {
 	for (int i = 0; i < (int)m_arrMorphTargets.size(); ++i)
 		if (!stricmp(m_arrMorphTargets[i].getNameCStr(), szMorphTargetName))
@@ -231,7 +231,7 @@ int CryModelAnimationContainer::CountMorphTargets()
 
 
 // Returns the given animation length, in seconds
-float CryModelAnimationContainer::GetLength (int nAnimationId)
+float CryModelAnimationContainer::GetLength(int nAnimationId)
 {
 	if ((unsigned)nAnimationId < numAnimations())
 	{
@@ -243,7 +243,7 @@ float CryModelAnimationContainer::GetLength (int nAnimationId)
 }
 
 //! Returns the given animation's start, in seconds; 0 if the id is invalid
-float CryModelAnimationContainer::GetStart (int nAnimationId)
+float CryModelAnimationContainer::GetStart(int nAnimationId)
 {
 	if ((unsigned)nAnimationId < numAnimations())
 	{
@@ -256,9 +256,9 @@ float CryModelAnimationContainer::GetStart (int nAnimationId)
 
 
 // Returns the given animation name
-const char* CryModelAnimationContainer::GetName (int nAnimationId)
+const char* CryModelAnimationContainer::GetName(int nAnimationId)
 {
-	if (nAnimationId >=0)
+	if (nAnimationId >= 0)
 	{
 		if (nAnimationId < (int)m_arrAnimations.size())
 			return m_arrAnimations[nAnimationId].strName.c_str();
@@ -272,9 +272,9 @@ const char* CryModelAnimationContainer::GetName (int nAnimationId)
 }
 
 //! Returns the name of the morph target
-const char* CryModelAnimationContainer::GetNameMorphTarget (int nMorphTargetId)
+const char* CryModelAnimationContainer::GetNameMorphTarget(int nMorphTargetId)
 {
-	if (nMorphTargetId< 0)
+	if (nMorphTargetId < 0)
 		return "!NEGATIVE MORPH TARGET ID!";
 	if ((unsigned)nMorphTargetId >= m_arrMorphTargets.size())
 		return "!MORPH TARGET ID OUT OF RANGE!";
@@ -283,7 +283,7 @@ const char* CryModelAnimationContainer::GetNameMorphTarget (int nMorphTargetId)
 
 
 // Retrieves the animation loop flag
-bool CryModelAnimationContainer::IsLoop (int nAnimationId)
+bool CryModelAnimationContainer::IsLoop(int nAnimationId)
 {
 	if ((unsigned)nAnimationId < numAnimations())
 	{
@@ -296,15 +296,15 @@ bool CryModelAnimationContainer::IsLoop (int nAnimationId)
 
 
 // updates the physics info of the given lod from the given bone animation descriptor
-void CryModelAnimationContainer::UpdateRootBonePhysics (const BONEANIM_CHUNK_DESC* pChunk, unsigned nChunkSize, int nLodLevel)
+void CryModelAnimationContainer::UpdateRootBonePhysics(const BONEANIM_CHUNK_DESC* pChunk, unsigned nChunkSize, int nLodLevel)
 {
 	if (numBoneInfos())
-		getRootBoneInfo().UpdateHierarchyPhysics (pChunk, nChunkSize, nLodLevel);
+		getRootBoneInfo().UpdateHierarchyPhysics(pChunk, nChunkSize, nLodLevel);
 }
 
 // finds the bone by its name; returns the index of the bone, or -1 if not found
 // TODO: for performance, we could once build a map name->index
-int CryModelAnimationContainer::findBone (const char* szName)const
+int CryModelAnimationContainer::findBone(const char* szName)const
 {
 #ifdef _DEBUG
 	int nTestResult = -1;
@@ -321,7 +321,7 @@ int CryModelAnimationContainer::findBone (const char* szName)const
 
 	int nResult = find_in_map(m_mapBoneNameIndex, szName, -1);
 #ifdef _DEBUG
-	assert (nResult == nTestResult);
+	assert(nResult == nTestResult);
 #endif
 	return nResult;
 }
@@ -347,14 +347,14 @@ void CryModelAnimationContainer::onBonePhysicsChanged()
 //! call this function to replace pPhysGeom chunk ids with the actual physical geometry object pointers.
 //!	NOTE:
 //!	The entries of the map that were used are deleted upon exit
-bool CryModelAnimationContainer::PostInitBonePhysGeom (ChunkIdToPhysGeomMap& mapChunkIdToPhysGeom, int nLodLevel)
+bool CryModelAnimationContainer::PostInitBonePhysGeom(ChunkIdToPhysGeomMap& mapChunkIdToPhysGeom, int nLodLevel)
 {
 	// map each bone,
 	// and set the hasphysics to 1 if at least one bone has recognized and mapped its physical geometry
 	bool bHasPhysics = false;
-	for (unsigned i=0; i < numBoneInfos(); ++i)
+	for (unsigned i = 0; i < numBoneInfos(); ++i)
 	{
-		if (getBoneInfo(i).PostInitPhysGeom (mapChunkIdToPhysGeom, nLodLevel))
+		if (getBoneInfo(i).PostInitPhysGeom(mapChunkIdToPhysGeom, nLodLevel))
 			// yes, this model has the physics
 			bHasPhysics = true;
 	}
@@ -363,7 +363,7 @@ bool CryModelAnimationContainer::PostInitBonePhysGeom (ChunkIdToPhysGeomMap& map
 
 
 //! Modifies the animation loop flag
-void CryModelAnimationContainer::SetLoop (int nAnimationId, bool bIsLooped)
+void CryModelAnimationContainer::SetLoop(int nAnimationId, bool bIsLooped)
 {
 	if ((unsigned)nAnimationId < numAnimations())
 	{
@@ -374,7 +374,7 @@ void CryModelAnimationContainer::SetLoop (int nAnimationId, bool bIsLooped)
 
 // returns the reference to the given animation , or the default animation, if the animation
 // id is out of range
-const AnimData &CryModelAnimationContainer::getAnimation (int nAnimationId) const
+const AnimData& CryModelAnimationContainer::getAnimation(int nAnimationId) const
 {
 	if ((size_t)nAnimationId < m_arrAnimations.size())
 		return m_arrAnimations[nAnimationId];
@@ -405,13 +405,13 @@ void CryModelAnimationContainer::OnAnimationStart(int nAnimationId)
 
 // returns the reference to the given morph target, or the default morph target if the
 // morph target id is out of range
-const CryGeomMorphTarget& CryModelAnimationContainer::getMorphTarget (int nMorphTargetId) const
+const CryGeomMorphTarget& CryModelAnimationContainer::getMorphTarget(int nMorphTargetId) const
 {
 	if ((size_t)nMorphTargetId < m_arrMorphTargets.size())
 		return m_arrMorphTargets[nMorphTargetId];
 	else
 	{
-		assert (0);// this will lead to a memory leak, if it is called
+		assert(0);// this will lead to a memory leak, if it is called
 		static const CryGeomMorphTarget DefaultMorphTarget;
 		return DefaultMorphTarget;
 	}
@@ -420,41 +420,41 @@ const CryGeomMorphTarget& CryModelAnimationContainer::getMorphTarget (int nMorph
 // returns the number of morph targets
 unsigned CryModelAnimationContainer::numMorphTargets() const
 {
-	return (unsigned)m_arrMorphTargets.size(); 
+	return (unsigned)m_arrMorphTargets.size();
 }
 
 // resets the morph target array, and allocates the given number of targets, with the given number of LODs each
-void CryModelAnimationContainer::reinitMorphTargets (unsigned numMorphTargets, unsigned numLODs)
+void CryModelAnimationContainer::reinitMorphTargets(unsigned numMorphTargets, unsigned numLODs)
 {
 	m_arrMorphTargets.reinit(numMorphTargets);
 }
 
 // prepares to load the specified number of CAFs by reserving the space for the controller pointers
-void CryModelAnimationContainer::prepareLoadCAFs (unsigned nReserveAnimations)
+void CryModelAnimationContainer::prepareLoadCAFs(unsigned nReserveAnimations)
 {
 	nReserveAnimations += (unsigned)m_arrAnimations.size();
 	for (unsigned i = 0; i < numBoneInfos(); ++i)
 	{
 		CryBoneInfo::ControllerArray& arrControllers = getBoneInfo(i).m_arrControllers;
-		arrControllers.reserve (nReserveAnimations);
+		arrControllers.reserve(nReserveAnimations);
 	}
-	m_arrAnimations.reserve (nReserveAnimations);
-	m_arrAnimByGlobalId.reserve (nReserveAnimations);
-	m_arrAnimByLocalName.reserve (nReserveAnimations);
+	m_arrAnimations.reserve(nReserveAnimations);
+	m_arrAnimByGlobalId.reserve(nReserveAnimations);
+	m_arrAnimByLocalName.reserve(nReserveAnimations);
 }
 
 //! Deserializes the bones from the CCF chunk using serialization function from CryBoneInfo
 //! THe serialized data follows the given header; the total size (including the header) is passed
-bool CryModelAnimationContainer::loadCCGBones (const CCFBoneDescArrayHeader*pHeader, unsigned nSize)
+bool CryModelAnimationContainer::loadCCGBones(const CCFBoneDescArrayHeader* pHeader, unsigned nSize)
 {
 	unsigned nBone, numBones = pHeader->numBones;
 	if (numBones > 1000)
 		return false; // too many bones
 
-	m_arrBones.reinit (numBones);
+	m_arrBones.reinit(numBones);
 
-	const char* pBoneData = (const char*)(pHeader+1);
-	const char* pDataEnd = (const char*)pHeader+ nSize;
+	const char* pBoneData = (const char*)(pHeader + 1);
+	const char* pDataEnd = (const char*)pHeader + nSize;
 
 	for (nBone = 0; nBone < numBones; ++nBone)
 	{
@@ -478,29 +478,29 @@ bool CryModelAnimationContainer::loadCCGBones (const CCFBoneDescArrayHeader*pHea
 	}
 
 	if (pBoneData != pDataEnd)
-		g_GetLog()->LogWarning ("\003CryModelAnimationContainer::deserializeBones: %d bytes left unread in the bone chunk", pDataEnd - pBoneData);
+		g_GetLog()->LogWarning("\003CryModelAnimationContainer::deserializeBones: %d bytes left unread in the bone chunk", pDataEnd - pBoneData);
 
 	return true;
 }
 
 
 // scales the skeleton (its initial pose)
-void CryModelAnimationContainer::scaleBones (float fScale)
+void CryModelAnimationContainer::scaleBones(float fScale)
 {
 	for (unsigned nBone = 0; nBone < numBoneInfos(); ++nBone)
-		m_arrBones[nBone].scale (fScale);
+		m_arrBones[nBone].scale(fScale);
 }
 
 
 void CryModelAnimationContainer::selfValidate()
 {
 #ifdef _DEBUG
-	assert (m_arrAnimByGlobalId.size() == m_arrAnimations.size());
-	assert (m_arrAnimByLocalName.size() == m_arrAnimations.size());
-	for (unsigned i = 0; i < m_arrAnimByGlobalId.size()-1; ++i)
+	assert(m_arrAnimByGlobalId.size() == m_arrAnimations.size());
+	assert(m_arrAnimByLocalName.size() == m_arrAnimations.size());
+	for (unsigned i = 0; i < m_arrAnimByGlobalId.size() - 1; ++i)
 	{
-		assert (m_arrAnimations[m_arrAnimByGlobalId[i].nAnimId].nGlobalAnimId <= m_arrAnimations[m_arrAnimByGlobalId[i+1].nAnimId].nGlobalAnimId);
-		assert (stricmp(m_arrAnimations[m_arrAnimByLocalName[i]].strName.c_str(), m_arrAnimations[m_arrAnimByLocalName[i+1]].strName.c_str())<0);
+		assert(m_arrAnimations[m_arrAnimByGlobalId[i].nAnimId].nGlobalAnimId <= m_arrAnimations[m_arrAnimByGlobalId[i + 1].nAnimId].nGlobalAnimId);
+		assert(stricmp(m_arrAnimations[m_arrAnimByLocalName[i]].strName.c_str(), m_arrAnimations[m_arrAnimByLocalName[i + 1]].strName.c_str()) < 0);
 	}
 #endif
 }
@@ -531,7 +531,7 @@ size_t CryModelAnimationContainer::sizeofThis()const
 // returns the number of animations that aren't shared
 unsigned CryModelAnimationContainer::numUniqueAnimations()
 {
-	unsigned numResult =0;
+	unsigned numResult = 0;
 	for (AnimationArray::const_iterator it = m_arrAnimations.begin(); it != m_arrAnimations.end(); ++it)
 		if (m_pControllerManager->GetAnimation(it->nGlobalAnimId).nRefCount == 1)
 			++numResult;
@@ -541,7 +541,7 @@ unsigned CryModelAnimationContainer::numUniqueAnimations()
 
 const AnimData* CryModelAnimationContainer::getAnimationInfo(unsigned i)
 {
-	if(m_pControllerManager->LoadAnimationInfo(m_arrAnimations[i].nGlobalAnimId))
+	if (m_pControllerManager->LoadAnimationInfo(m_arrAnimations[i].nGlobalAnimId))
 		return &m_arrAnimations[i];
 	else
 		return NULL;
@@ -550,7 +550,7 @@ const AnimData* CryModelAnimationContainer::getAnimationInfo(unsigned i)
 //! Unloads animation from memory
 //! The client must take into account that the animation can be shared and, if unloaded, the other
 //! character models (animation sets) will have to load it back to use.
-void CryModelAnimationContainer::UnloadAnimation (int nAnimId)
+void CryModelAnimationContainer::UnloadAnimation(int nAnimId)
 {
 	if ((unsigned)nAnimId < m_arrAnimations.size())
 	{
@@ -560,7 +560,7 @@ void CryModelAnimationContainer::UnloadAnimation (int nAnimId)
 
 //! Loads the animation data in memory. fWhenRequired is the timeout in seconds from current moment when
 //! the animation data will actually be required
-void CryModelAnimationContainer::StartLoadAnimation (int nAnimId, float fWhenRequired)
+void CryModelAnimationContainer::StartLoadAnimation(int nAnimId, float fWhenRequired)
 {
 	if ((unsigned)nAnimId < m_arrAnimations.size())
 	{

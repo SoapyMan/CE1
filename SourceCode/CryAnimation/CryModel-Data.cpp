@@ -21,7 +21,7 @@
 
 // the following string tables are for recognition of different parts of the body
 // by the bone name. depending on this recognition, the damage will be calculated.
-const char *CryModel::g_szDamageBonesHead[]	=
+const char* CryModel::g_szDamageBonesHead[] =
 {
 	"Bip01 Neck",
 	"Bip01 Neck1",
@@ -31,7 +31,7 @@ const char *CryModel::g_szDamageBonesHead[]	=
 
 // the following string tables are for recognition of different parts of the body
 // by the bone name. depending on this recognition, the damage will be calculated.
-const char *CryModel::g_szDamageBonesTorso[]	=
+const char* CryModel::g_szDamageBonesTorso[] =
 {
 	"Bip01 Pelvis",
 	"Bip01 Spine",
@@ -42,9 +42,9 @@ const char *CryModel::g_szDamageBonesTorso[]	=
 
 // the following string tables are for recognition of different parts of the body
 // by the bone name. depending on this recognition, the damage will be calculated.
-const char *CryModel::g_szDamageBonesArmL[]	=
+const char* CryModel::g_szDamageBonesArmL[] =
 {
-	"Bip01 L Clavicle",	
+	"Bip01 L Clavicle",
 	"Bip01 L UpperArm",
 	"Bip01 L Forearm",
 	"Bip01 L Hand",
@@ -60,7 +60,7 @@ const char *CryModel::g_szDamageBonesArmL[]	=
 
 // the following string tables are for recognition of different parts of the body
 // by the bone name. depending on this recognition, the damage will be calculated.
-const char *CryModel::g_szDamageBonesArmR[]	=
+const char* CryModel::g_szDamageBonesArmR[] =
 {
 	"Bip01 R Clavicle",
 	"Bip01 R UpperArm",
@@ -79,7 +79,7 @@ const char *CryModel::g_szDamageBonesArmR[]	=
 
 // the following string tables are for recognition of different parts of the body
 // by the bone name. depending on this recognition, the damage will be calculated.
-const char *CryModel::g_szDamageBonesLegL[]	=
+const char* CryModel::g_szDamageBonesLegL[] =
 {
 	"Bip01 L Thigh",
 	"Bip01 L Calf",
@@ -90,7 +90,7 @@ const char *CryModel::g_szDamageBonesLegL[]	=
 
 // the following string tables are for recognition of different parts of the body
 // by the bone name. depending on this recognition, the damage will be calculated.
-const char *CryModel::g_szDamageBonesLegR[]	=
+const char* CryModel::g_szDamageBonesLegR[] =
 {
 	"Bip01 R Thigh",
 	"Bip01 R Calf",

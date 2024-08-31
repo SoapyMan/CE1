@@ -44,24 +44,24 @@ _ACCESS_POOL;
 //#endif 
 
 #ifdef WIN32
-BOOL APIENTRY DllMain( HANDLE hModule, DWORD  ul_reason_for_call,	LPVOID lpReserved )
+BOOL APIENTRY DllMain(HANDLE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved)
 {
 	return TRUE;
 }
 #endif
 
-float g_YLine=0.0f;
+float g_YLine = 0.0f;
 
 //////////////////////////////////////////////////////////////////////////
 // The main symbol exported from CryAnimation: creator of the main (root) interface/object
-ICryCharManager * CreateCharManager(ISystem	* pSystem, const char * szInterfaceVersion)
+ICryCharManager* CreateCharManager(ISystem* pSystem, const char* szInterfaceVersion)
 {
 	// check the interface timestamp
 #if !defined(LINUX)
-	if(strcmp(szInterfaceVersion,gAnimInterfaceVersion))
+	if (strcmp(szInterfaceVersion, gAnimInterfaceVersion))
 		pSystem->GetILog()->LogError("CreateCharManager(): CryAnimation interface version error");
 #endif
-	CryCharManager * pCryCharManager = new CryCharManager(pSystem);
+	CryCharManager* pCryCharManager = new CryCharManager(pSystem);
 
 	g_CpuFlags = pSystem->GetCPUFlags();
 	g_SecondsPerCycle = pSystem->GetSecondsPerCycle();
@@ -75,9 +75,9 @@ ICryCharManager * CreateCharManager(ISystem	* pSystem, const char * szInterfaceV
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // CryCharManager
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
-CryCharManager::CryCharManager (ISystem * pSystem)
+CryCharManager::CryCharManager(ISystem* pSystem)
 #ifdef DEBUG_STD_CONTAINERS
-:m_arrBodyCache ("CryCharManager.BodyCache")
+	:m_arrBodyCache("CryCharManager.BodyCache")
 #endif
 {
 	cpu::detect();
@@ -87,7 +87,7 @@ CryCharManager::CryCharManager (ISystem * pSystem)
 
 #if ENABLE_FRAME_PROFILER	
 	if (!cpu::hasRDTSC())
-		pSystem->GetILog()->LogToFile ("\002Error: (Critical) this is development version of animation system, with the profiling enabled. Built-in profiler uses RDTSC function for precise time profiling. This machine doesn't seem to have RDTSC instruction implemented. Please recompile with ENABLE_FRAME_PROFILER 0. Don't use ca_Profile 1");
+		pSystem->GetILog()->LogToFile("\002Error: (Critical) this is development version of animation system, with the profiling enabled. Built-in profiler uses RDTSC function for precise time profiling. This machine doesn't seem to have RDTSC instruction implemented. Please recompile with ENABLE_FRAME_PROFILER 0. Don't use ca_Profile 1");
 #endif
 
 	//g_ProfilerTimer.init();
@@ -110,7 +110,7 @@ CryCharManager::CryCharManager (ISystem * pSystem)
 }
 
 // returns the controller manager used by this character manager
-CControllerManager * CryCharManager::GetControllerManager()
+CControllerManager* CryCharManager::GetControllerManager()
 {
 	return m_pControllerManager;
 }
@@ -131,50 +131,50 @@ CryCharManager::~CryCharManager()
 	delete m_pAnimObjectManager;
 	delete m_pControllerManager;
 
-	g_GetLog()->LogToFile ("\004CryAnimation profile statistics:");
-	g_GetLog()->LogToFile ("\004load.model         (Loading character models)       : %4.2f sec (this is the TOTAL)", g_dTimeGeomLoad);
-	g_GetLog()->LogToFile ("\004load.model.grarr   (Generating Render Arrays)         : %4.2f sec", g_dTimeGenRenderArrays);
-	g_GetLog()->LogToFile ("\004load.model.shaders (Shader loading)                     : %4.2f sec", g_dTimeShaderLoad);
-	g_GetLog()->LogToFile ("\004load.model.geom_prepare(Geometry (cgf) Preparing)     : %4.2f sec", g_dTimeGeomChunkLoad);
-	g_GetLog()->LogToFile ("\004load.model.geom_fileio                                : %4.2f sec", g_dTimeGeomChunkLoadFileIO);
-	g_GetLog()->LogToFile ("\004load.model.anim    (Animation (caf) Loading/Binding)  : %4.2f sec", g_dTimeAnimLoadBind);
-	g_GetLog()->LogToFile ("\004load.model.anim.nocal    (scan for animation files)     : %4.2f sec", g_dTimeAnimLoadBindNoCal);
-	g_GetLog()->LogToFile ("\004load.model.anim.withcal  (parse CAL file)               : %4.2f sec", g_dTimeAnimLoadBindWithCal);
-	g_GetLog()->LogToFile ("\004load.model.anim.prepare (preallocating)                 : %4.2f sec", g_dTimeAnimLoadBindPreallocate);
-	g_GetLog()->LogToFile ("\004load.model.anim.fileio  (Animation (caf) File i/o)      : %4.2f sec",g_dTimeAnimLoadFile);
-	g_GetLog()->LogToFile ("\004load.model.anim.bind    (Animation (caf) Binding)       : %4.2f sec", g_dTimeAnimBindControllers);
-	g_GetLog()->LogToFile ("\004load.model.anim.postinit (Post-initialization)          : %4.2f sec", g_dTimeGeomPostInit);
-	g_GetLog()->LogToFile ("\004test.1: %4.2f sec", g_dTimeTest1);
-	g_GetLog()->LogToFile ("\004test.2: %4.2f sec", g_dTimeTest2);
-	g_GetLog()->LogToFile ("\004test.3: %4.2f sec", g_dTimeTest3);
-	g_GetLog()->LogToFile ("\004test.4: %4.2f sec", g_dTimeTest4);
-	g_dTimeGeomLoad        = 0;
-	g_dTimeAnimLoadBind    = 0;
-	g_dTimeAnimLoadBindNoCal    = 0;
-	g_dTimeAnimLoadBindWithCal    = 0;
-	g_dTimeAnimLoadBindPreallocate    = 0;
-	g_dTimeShaderLoad      = 0;
-	g_dTimeGeomChunkLoad   = 0;
+	g_GetLog()->LogToFile("\004CryAnimation profile statistics:");
+	g_GetLog()->LogToFile("\004load.model         (Loading character models)       : %4.2f sec (this is the TOTAL)", g_dTimeGeomLoad);
+	g_GetLog()->LogToFile("\004load.model.grarr   (Generating Render Arrays)         : %4.2f sec", g_dTimeGenRenderArrays);
+	g_GetLog()->LogToFile("\004load.model.shaders (Shader loading)                     : %4.2f sec", g_dTimeShaderLoad);
+	g_GetLog()->LogToFile("\004load.model.geom_prepare(Geometry (cgf) Preparing)     : %4.2f sec", g_dTimeGeomChunkLoad);
+	g_GetLog()->LogToFile("\004load.model.geom_fileio                                : %4.2f sec", g_dTimeGeomChunkLoadFileIO);
+	g_GetLog()->LogToFile("\004load.model.anim    (Animation (caf) Loading/Binding)  : %4.2f sec", g_dTimeAnimLoadBind);
+	g_GetLog()->LogToFile("\004load.model.anim.nocal    (scan for animation files)     : %4.2f sec", g_dTimeAnimLoadBindNoCal);
+	g_GetLog()->LogToFile("\004load.model.anim.withcal  (parse CAL file)               : %4.2f sec", g_dTimeAnimLoadBindWithCal);
+	g_GetLog()->LogToFile("\004load.model.anim.prepare (preallocating)                 : %4.2f sec", g_dTimeAnimLoadBindPreallocate);
+	g_GetLog()->LogToFile("\004load.model.anim.fileio  (Animation (caf) File i/o)      : %4.2f sec", g_dTimeAnimLoadFile);
+	g_GetLog()->LogToFile("\004load.model.anim.bind    (Animation (caf) Binding)       : %4.2f sec", g_dTimeAnimBindControllers);
+	g_GetLog()->LogToFile("\004load.model.anim.postinit (Post-initialization)          : %4.2f sec", g_dTimeGeomPostInit);
+	g_GetLog()->LogToFile("\004test.1: %4.2f sec", g_dTimeTest1);
+	g_GetLog()->LogToFile("\004test.2: %4.2f sec", g_dTimeTest2);
+	g_GetLog()->LogToFile("\004test.3: %4.2f sec", g_dTimeTest3);
+	g_GetLog()->LogToFile("\004test.4: %4.2f sec", g_dTimeTest4);
+	g_dTimeGeomLoad = 0;
+	g_dTimeAnimLoadBind = 0;
+	g_dTimeAnimLoadBindNoCal = 0;
+	g_dTimeAnimLoadBindWithCal = 0;
+	g_dTimeAnimLoadBindPreallocate = 0;
+	g_dTimeShaderLoad = 0;
+	g_dTimeGeomChunkLoad = 0;
 	g_dTimeGeomChunkLoadFileIO = 0;
 	g_dTimeGenRenderArrays = 0;
 	g_dTimeAnimBindControllers = 0;
-	g_dTimeAnimLoadFile    = 0;
-	g_dTimeGeomPostInit    = 0;
+	g_dTimeAnimLoadFile = 0;
+	g_dTimeGeomPostInit = 0;
 	g_dTimeTest1 = g_dTimeTest2 = g_dTimeTest3 = g_dTimeTest4 = 0;
 
 	if (g_nAsyncAnimCounter)
-		g_GetLog()->LogToFile ("\003%d async anim loads; %d (ave %.2f) frame-skips", g_nAsyncAnimCounter, g_nAsyncAnimFrameDelays, double(g_nAsyncAnimFrameDelays)/g_nAsyncAnimCounter);
+		g_GetLog()->LogToFile("\003%d async anim loads; %d (ave %.2f) frame-skips", g_nAsyncAnimCounter, g_nAsyncAnimFrameDelays, double(g_nAsyncAnimFrameDelays) / g_nAsyncAnimCounter);
 	g_nAsyncAnimFrameDelays = 0;
 	g_nAsyncAnimCounter = 0;
 
-	g_GetLog()->LogToFile ("Memory usage dump:");
-	g_GetLog()->LogToFile ("Scratchpad (temporary storage): %d kbytes", g_Temp.size()/1024);
+	g_GetLog()->LogToFile("Memory usage dump:");
+	g_GetLog()->LogToFile("Scratchpad (temporary storage): %d kbytes", g_Temp.size() / 1024);
 
 	CryCharDecalManager::LogStatistics();
 
 	g_DeleteInterfaces();
 	CCryModEffAnimation::deinitClass();
-	
+
 	g_Temp.done();
 }
 
@@ -182,36 +182,36 @@ CryCharManager::~CryCharManager()
 //////////////////////////////////////////////////////////////////////////
 // Loads a cgf and the corresponding caf file and creates an animated object,
 // or returns an existing object.
-ICryCharInstance * CryCharManager::MakeCharacter (const char * szCharacterFileName, unsigned nFlags)
+ICryCharInstance* CryCharManager::MakeCharacter(const char* szCharacterFileName, unsigned nFlags)
 {
 
-	g_pIRenderer			= g_pISystem->GetIRenderer();
-	g_pIPhysicalWorld	= g_pISystem->GetIPhysicalWorld();
-	g_pI3DEngine			=	g_pISystem->GetI3DEngine();
+	g_pIRenderer = g_pISystem->GetIRenderer();
+	g_pIPhysicalWorld = g_pISystem->GetIPhysicalWorld();
+	g_pI3DEngine = g_pISystem->GetI3DEngine();
 
 	if (!szCharacterFileName)
 		return (NULL);	// to prevent a crash in the frequent case the designers will mess 
-										// around with the entity parameters in the editor
+	// around with the entity parameters in the editor
 
 	string strPath = szCharacterFileName;
 	UnifyFilePath(strPath);
 
-	if (strstr(strPath.c_str(),".cga") || (nFlags & nMakeAnimObject))
+	if (strstr(strPath.c_str(), ".cga") || (nFlags & nMakeAnimObject))
 	{
 		// Loading cga file.
-		return m_pAnimObjectManager->MakeAnimObject( szCharacterFileName );
+		return m_pAnimObjectManager->MakeAnimObject(szCharacterFileName);
 	}
 
 	// try to find already loaded model, or load a new one
-	CryCharBody* pCryCharBody = FetchBody (strPath);
+	CryCharBody* pCryCharBody = FetchBody(strPath);
 
-	if(!pCryCharBody)
+	if (!pCryCharBody)
 	{
 		// the model has not been loaded
 		return NULL;
 	}
 
-	CryCharInstance * pCryCharInstance = new CryCharInstance (pCryCharBody);
+	CryCharInstance* pCryCharInstance = new CryCharInstance(pCryCharBody);
 
 	DecideModelLockStatus(pCryCharBody, nFlags);
 
@@ -227,14 +227,14 @@ ICryCharModel* CryCharManager::LoadModel(const char* szFileName, unsigned nFlags
 	string strPath = szFileName;
 	UnifyFilePath(strPath);
 
-	if (strstr(strPath.c_str(),".cga") || (nFlags & nMakeAnimObject))
+	if (strstr(strPath.c_str(), ".cga") || (nFlags & nMakeAnimObject))
 	{
 		// Loading cga file: not supported at this time
 		return NULL;
 	}
 
 	// try to find already loaded model, or load a new one
-	CryCharBody* pCryCharBody = FetchBody (strPath);
+	CryCharBody* pCryCharBody = FetchBody(strPath);
 
 	return pCryCharBody;
 }
@@ -250,35 +250,35 @@ void CryCharManager::DecideModelLockStatus(CryCharBody* pCryCharBody, unsigned n
 	//    if the model should be kept in memory all the time (ca_KeepModels 1) or not (0)
 	//  Note: changing ca_KeepModels won't immediately lock or unlock all models. It will only affect
 	//  models which are actively used to create new characters or destroy old ones.
-	if (nHints & nHintModelTransient) 
-		m_setLockedBodies.erase (pCryCharBody);
+	if (nHints & nHintModelTransient)
+		m_setLockedBodies.erase(pCryCharBody);
 	else
-	if (nHints & nHintModelPersistent) 
-		m_setLockedBodies.insert (pCryCharBody);
-	else
-	if (g_GetCVars()->ca_KeepModels())
-		m_setLockedBodies.insert (pCryCharBody);
-	else
-		m_setLockedBodies.erase (pCryCharBody);
+		if (nHints & nHintModelPersistent)
+			m_setLockedBodies.insert(pCryCharBody);
+		else
+			if (g_GetCVars()->ca_KeepModels())
+				m_setLockedBodies.insert(pCryCharBody);
+			else
+				m_setLockedBodies.erase(pCryCharBody);
 }
 
 
 /////////////////////////////////////////////////////////////////////////////
 // Reduces reference counter for object and deletes object if counter is 0
-void CryCharManager::RemoveCharacter (ICryCharInstance * pCryCharInstance, unsigned nFlags)
+void CryCharManager::RemoveCharacter(ICryCharInstance* pCryCharInstance, unsigned nFlags)
 {
-	if (pCryCharInstance && !m_pAnimObjectManager->RemoveCharacter( pCryCharInstance ))
+	if (pCryCharInstance && !m_pAnimObjectManager->RemoveCharacter(pCryCharInstance))
 	{
 		// check if the character exists (maybe it's a dangling pointer)
 		bool bFound = false;
 		for (CryCharBodyCache::iterator it = m_arrBodyCache.begin(); !bFound && it != m_arrBodyCache.end(); ++it)
 		{
-			bFound = (*it)->DoesInstanceExist (static_cast<CryCharInstance*>(pCryCharInstance));
+			bFound = (*it)->DoesInstanceExist(static_cast<CryCharInstance*>(pCryCharInstance));
 		}
 
 		if (!bFound)
 		{
-			g_GetLog()->LogError ("\001attempt to delete invalid character pointer 0x%08X. Perhaps it was auto-deleted during Forced Resource Cleanup upon level reloading, see the log for details.", pCryCharInstance);
+			g_GetLog()->LogError("\001attempt to delete invalid character pointer 0x%08X. Perhaps it was auto-deleted during Forced Resource Cleanup upon level reloading, see the log for details.", pCryCharInstance);
 			return;
 		}
 
@@ -298,24 +298,24 @@ void CryCharManager::Release()
 
 
 // adds the body to the cache from which it can be reused if another instance of that model is to be created
-void CryCharManager::RegisterBody (CryCharBody* pBody)
+void CryCharManager::RegisterBody(CryCharBody* pBody)
 {
-	m_arrBodyCache.insert (std::lower_bound(m_arrBodyCache.begin(), m_arrBodyCache.end(), pBody->GetFilePath(), OrderByFileName()), pBody);
+	m_arrBodyCache.insert(std::lower_bound(m_arrBodyCache.begin(), m_arrBodyCache.end(), pBody->GetFilePath(), OrderByFileName()), pBody);
 }
 
 
 // Deletes the given body from the model cache. This is done when there are no instances using this body info.
-void CryCharManager::UnregisterBody (CryCharBody* pBody)
+void CryCharManager::UnregisterBody(CryCharBody* pBody)
 {
 	ValidateBodyCache();
-	CryCharBodyCache::iterator itCache = std::lower_bound (m_arrBodyCache.begin(), m_arrBodyCache.end(), pBody, OrderByFileName());
+	CryCharBodyCache::iterator itCache = std::lower_bound(m_arrBodyCache.begin(), m_arrBodyCache.end(), pBody, OrderByFileName());
 	if (itCache != m_arrBodyCache.end())
 	{
 		if (*itCache == pBody)
-			m_arrBodyCache.erase (itCache);
+			m_arrBodyCache.erase(itCache);
 		else
 		{
-			assert (false); // there must be no duplicate name pointers here
+			assert(false); // there must be no duplicate name pointers here
 			while (++itCache != m_arrBodyCache.end())
 				if (*itCache == pBody)
 				{
@@ -325,7 +325,7 @@ void CryCharManager::UnregisterBody (CryCharBody* pBody)
 		}
 	}
 	else
-		assert (false); // this pointer must always be in the cache
+		assert(false); // this pointer must always be in the cache
 	ValidateBodyCache();
 }
 
@@ -333,12 +333,12 @@ void CryCharManager::UnregisterBody (CryCharBody* pBody)
 //////////////////////////////////////////////////////////////////////////
 // Finds a cached or creates a new CryCharBody instance and returns it
 // returns NULL if the construction failed
-CryCharBody* CryCharManager::FetchBody (const string& strFileName)
+CryCharBody* CryCharManager::FetchBody(const string& strFileName)
 {
 	ValidateBodyCache();
 
 	{
-		CryCharBodyCache::iterator it = std::lower_bound (m_arrBodyCache.begin(), m_arrBodyCache.end(), strFileName, OrderByFileName());
+		CryCharBodyCache::iterator it = std::lower_bound(m_arrBodyCache.begin(), m_arrBodyCache.end(), strFileName, OrderByFileName());
 
 		if (it != m_arrBodyCache.end())
 		{
@@ -348,7 +348,7 @@ CryCharBody* CryCharManager::FetchBody (const string& strFileName)
 		}
 	}
 
-	CryCharBody* pBody = new CryCharBody (this, strFileName);
+	CryCharBody* pBody = new CryCharBody(this, strFileName);
 	if (pBody->GetModel())
 		return pBody;
 	else
@@ -362,7 +362,7 @@ CryCharBody* CryCharManager::FetchBody (const string& strFileName)
 // don't call this too frequently
 void CryCharManager::GetStatistics(Statistics& rStats)
 {
-	memset (&rStats, 0, sizeof(rStats));
+	memset(&rStats, 0, sizeof(rStats));
 	rStats.numCharModels = (unsigned)m_arrBodyCache.size();
 	for (CryCharBodyCache::const_iterator it = m_arrBodyCache.begin(); it != m_arrBodyCache.end(); ++it)
 		rStats.numCharacters += (*it)->NumInstances();
@@ -378,7 +378,7 @@ void CryCharManager::ValidateBodyCache()
 	for (CryCharBodyCache::iterator it = m_arrBodyCache.begin(); it != m_arrBodyCache.end(); ++it)
 	{
 		if (itPrev != m_arrBodyCache.end())
-			assert ((*itPrev)->GetFilePath() < (*it)->GetFilePath());
+			assert((*itPrev)->GetFilePath() < (*it)->GetFilePath());
 	}
 #endif
 }
@@ -434,11 +434,11 @@ void CryCharManager::GetMemoryUsage(class ICrySizer* pSizer)const
 	if (!m_arrBodyCache.empty())
 	{
 		for (CryCharBodyCache::const_iterator it = m_arrBodyCache.begin(); it != m_arrBodyCache.end(); ++it)
-			(*it)->GetSize (pSizer);
-		pSizer->Add (&m_arrBodyCache[0], m_arrBodyCache.size());
+			(*it)->GetSize(pSizer);
+		pSizer->Add(&m_arrBodyCache[0], m_arrBodyCache.size());
 	}
-	m_pControllerManager->GetSize (pSizer);
-	m_pAnimObjectManager->GetMemoryUsage (pSizer);
+	m_pControllerManager->GetSize(pSizer);
+	m_pAnimObjectManager->GetMemoryUsage(pSizer);
 	/*
 	{
 		SIZER_COMPONENT_NAME(pSizer, "Test1M");
@@ -475,28 +475,28 @@ void CryCharManager::GetMemoryUsage(class ICrySizer* pSizer)const
 //! All the possible values for nCommand are in the CryAnimationScriptCommands.h
 //! file in the CryAnimationScriptCommandEnum enumeration. All the parameter/result
 //! structures are also there.
-bool CryCharManager::ExecScriptCommand (int nCommand, void* pParams, void* pResult)
+bool CryCharManager::ExecScriptCommand(int nCommand, void* pParams, void* pResult)
 {
 	switch (nCommand)
 	{
 	case CASCMD_TEST_PARTICLES:
 	case CASCMD_STOP_PARTICLES:
-		{
-			for (CryCharBodyCache::iterator it = m_arrBodyCache.begin(); it != m_arrBodyCache.end(); ++it)
-				(*it)->SpawnTestParticles (nCommand == CASCMD_TEST_PARTICLES);
-		}
-		break;
+	{
+		for (CryCharBodyCache::iterator it = m_arrBodyCache.begin(); it != m_arrBodyCache.end(); ++it)
+			(*it)->SpawnTestParticles(nCommand == CASCMD_TEST_PARTICLES);
+	}
+	break;
 
 	case CASCMD_DUMP_ANIMATIONS:
 		m_pControllerManager->DumpAnims();
 		break;
 
 	case CASCMD_TRASH_ANIMATIONS:
-		UnloadOldAnimations(pParams?*(int*)pParams:100);
+		UnloadOldAnimations(pParams ? *(int*)pParams : 100);
 		break;
 
 	case CASCMD_UNLOAD_ANIMATION:
-		UnloadAnimation ((char*)pParams);
+		UnloadAnimation((char*)pParams);
 		break;
 
 	case CASCMD_DUMP_MODELS:
@@ -506,11 +506,11 @@ bool CryCharManager::ExecScriptCommand (int nCommand, void* pParams, void* pResu
 	case CASCMD_START_MANY_ANIMS:
 	case CASCMD_DEBUG_DRAW:
 	case CASCMD_DUMP_STATES:
-		{
-			for (CryCharBodyCache::iterator it = m_arrBodyCache.begin(); it != m_arrBodyCache.end(); ++it)
-				(*it)->ExecScriptCommand(nCommand, pParams, pResult);
-		}
-		break;
+	{
+		for (CryCharBodyCache::iterator it = m_arrBodyCache.begin(); it != m_arrBodyCache.end(); ++it)
+			(*it)->ExecScriptCommand(nCommand, pParams, pResult);
+	}
+	break;
 
 	default:
 		return false; // unknown command
@@ -534,37 +534,37 @@ void CryCharManager::ClearResources(void)
 void CryCharManager::Update()
 {
 	//update interfaces every frame
-	g_YLine=16.0f;
-	g_pIRenderer			= g_pISystem->GetIRenderer();
-	g_pIPhysicalWorld	= g_pISystem->GetIPhysicalWorld();
-	g_pI3DEngine			=	g_pISystem->GetI3DEngine();
+	g_YLine = 16.0f;
+	g_pIRenderer = g_pISystem->GetIRenderer();
+	g_pIPhysicalWorld = g_pISystem->GetIPhysicalWorld();
+	g_pI3DEngine = g_pISystem->GetI3DEngine();
 
 	g_nFrameID = g_GetIRenderer()->GetFrameID();
 	g_bProfilerOn = g_GetISystem()->GetIProfileSystem()->IsProfiling();
-	
+
 	IGame* pGame = g_GetISystem()->GetIGame();
-	g_bUpdateBonesAlways = pGame? (pGame->GetModuleState(EGameServer) && pGame->GetModuleState(EGameMultiplayer)) : false;
+	g_bUpdateBonesAlways = pGame ? (pGame->GetModuleState(EGameServer) && pGame->GetModuleState(EGameMultiplayer)) : false;
 
 	m_pControllerManager->Update();
 	CryCharDecal::setGlobalTime(g_GetTimer()->GetCurrTime());
 
-	if (g_GetCVars()->ca_DrawBones() > 1) 
+	if (g_GetCVars()->ca_DrawBones() > 1)
 		ExecScriptCommand(CASCMD_DEBUG_DRAW);
 }
 
 //! The specified animation will be unloaded from memory; it will be loaded back upon the first invokation (via StartAnimation())
-void CryCharManager::UnloadAnimation (const char* szFileName)
+void CryCharManager::UnloadAnimation(const char* szFileName)
 {
 	int nAnimId = m_pControllerManager->FindAnimationByFile(szFileName);
 	if (nAnimId < 0)
-		g_GetLog()->LogWarning ("\004CryCharManager::UnloadAnimation(%s): animation not loaded", szFileName);
+		g_GetLog()->LogWarning("\004CryCharManager::UnloadAnimation(%s): animation not loaded", szFileName);
 	else
 		m_pControllerManager->UnloadAnimation(nAnimId);
 }
 
 //! Starts loading the specified animation. fWhenRequired is the timeout, in seconds, from the current moment,
 //! when the animation data will actually be needed
-void CryCharManager::StartLoadAnimation (const char* szFileName, float fWhenRequired)
+void CryCharManager::StartLoadAnimation(const char* szFileName, float fWhenRequired)
 {
 	m_pControllerManager->StartLoadAnimation(szFileName, g_fDefaultAnimationScale);
 }
@@ -591,7 +591,7 @@ void CryCharManager::UnloadOldAnimations(int numFrames)
 void CryCharManager::LockResources()
 {
 	m_arrTempLock.clear();
-	m_arrTempLock.resize (m_arrBodyCache.size());
+	m_arrTempLock.resize(m_arrBodyCache.size());
 	for (size_t i = 0; i < m_arrBodyCache.size(); ++i)
 		m_arrTempLock[i] = m_arrBodyCache[i];
 

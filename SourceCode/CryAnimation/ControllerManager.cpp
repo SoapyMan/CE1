@@ -21,27 +21,27 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-CControllerManager::CControllerManager():
+CControllerManager::CControllerManager() :
 #ifdef DEBUG_STD_CONTAINERS
-	m_arrAnims ("CControllerManager.Anims"),
-	m_arrAnimByFile ("CControllerManager.AnimByFile"),
+	m_arrAnims("CControllerManager.Anims"),
+	m_arrAnimByFile("CControllerManager.AnimByFile"),
 #endif
-	m_nCachedSizeofThis (0),
+	m_nCachedSizeofThis(0),
 	m_nLastCheckedUnloadCandidate(0)
-{ 
+{
 	// we reserve the place for future animations. The best performance will be
 	// archived when this number is >= actual number of animations that can be used,
 	// and not much greater
-	m_arrAnims.reserve (0x100);
+	m_arrAnims.reserve(0x100);
 }
 
 /////////////////////////////////////////////////////////////////////
 // finds the animation by name. Returns -1 if no animation was found
 // Returns the animation ID if it was found
-int CControllerManager::FindAnimationByFile (const string& sAnimFileName)
+int CControllerManager::FindAnimationByFile(const string& sAnimFileName)
 {
 	std::vector<int>::iterator it = std::lower_bound(m_arrAnimByFile.begin(), m_arrAnimByFile.end(), sAnimFileName.c_str(), AnimationIdPred(m_arrAnims));
-	if (it != m_arrAnimByFile.end() && !stricmp(m_arrAnims[*it].strFileName.c_str(),sAnimFileName.c_str()))
+	if (it != m_arrAnimByFile.end() && !stricmp(m_arrAnims[*it].strFileName.c_str(), sAnimFileName.c_str()))
 		return *it;
 	else
 		return -1;
@@ -51,16 +51,16 @@ int CControllerManager::FindAnimationByFile (const string& sAnimFileName)
 CControllerManager::~CControllerManager()
 {
 #ifdef _DEBUG
-	for (AnimationArray::iterator it = m_arrAnims.begin(); it!= m_arrAnims.end(); ++it)
-		assert (it->nRefCount == 0);
+	for (AnimationArray::iterator it = m_arrAnims.begin(); it != m_arrAnims.end(); ++it)
+		assert(it->nRefCount == 0);
 #endif
-	for(int nAttempt = 0; nAttempt < 40 && !m_setPendingAnimLoads.empty(); ++nAttempt)
+	for (int nAttempt = 0; nAttempt < 40 && !m_setPendingAnimLoads.empty(); ++nAttempt)
 	{
 		g_GetLog()->LogToFile("\003%d asynch loading are pending, waiting...", m_setPendingAnimLoads.size());
-		g_GetStreamEngine()->Wait(200,IStreamEngine::FLAGS_DISABLE_CALLBACK_TIME_QUOTA);
+		g_GetStreamEngine()->Wait(200, IStreamEngine::FLAGS_DISABLE_CALLBACK_TIME_QUOTA);
 	}
 	if (!m_setPendingAnimLoads.empty())
-		g_GetLog()->LogWarning ("\002%d asynchronous operations are left; destructing the controller manager anyway, because they seem to be dangling.If a crash happens after this, perhaps this is because some async operation took _very_ long to complete.", m_setPendingAnimLoads.size());
+		g_GetLog()->LogWarning("\002%d asynchronous operations are left; destructing the controller manager anyway, because they seem to be dangling.If a crash happens after this, perhaps this is because some async operation took _very_ long to complete.", m_setPendingAnimLoads.size());
 }
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -74,9 +74,9 @@ CControllerManager::~CControllerManager()
 //   This function does not put up a warning in the case the file was not found.
 //   The caller must do so. But if the file was found and was corrupted, more detailed
 //   error information (like where the error occured etc.) may be put into the log
-int CControllerManager::StartLoadAnimation (const string& strFileName, float fScale, unsigned nFlags)
+int CControllerManager::StartLoadAnimation(const string& strFileName, float fScale, unsigned nFlags)
 {
-	int nAnimId = FindAnimationByFile (strFileName);
+	int nAnimId = FindAnimationByFile(strFileName);
 	bool bRecordExists = (nAnimId >= 0);
 	if (bRecordExists && m_arrAnims[nAnimId].IsLoaded())
 	{
@@ -91,7 +91,7 @@ int CControllerManager::StartLoadAnimation (const string& strFileName, float fSc
 			// add a new animation structure that will hold the info about the new animation.
 			// the new animation id is the index of this structure in the array
 			nAnimId = (int)m_arrAnims.size();
-			m_arrAnims.resize (nAnimId + 1);
+			m_arrAnims.resize(nAnimId + 1);
 		}
 
 		Animation& Anim = m_arrAnims[nAnimId];
@@ -101,17 +101,17 @@ int CControllerManager::StartLoadAnimation (const string& strFileName, float fSc
 			Anim.strFileName = strFileName;
 
 		Anim.fScale = fScale;
-		
+
 		if (!bRecordExists)// no need to insert if we reload the file
 		{
-			m_arrAnimByFile.insert (std::lower_bound(m_arrAnimByFile.begin(), m_arrAnimByFile.end(), nAnimId, AnimationIdPred(m_arrAnims)), nAnimId);
+			m_arrAnimByFile.insert(std::lower_bound(m_arrAnimByFile.begin(), m_arrAnimByFile.end(), nAnimId, AnimationIdPred(m_arrAnims)), nAnimId);
 		}
 		selfValidate();
 	}
 
 	return nAnimId;
 }
- 
+
 // loads the animation info, if not loaded yet
 bool CControllerManager::LoadAnimationInfo(int nGlobalAnimId)
 {
@@ -131,7 +131,7 @@ bool CControllerManager::LoadAnimationInfo(int nGlobalAnimId)
 // Does nothing if there are already controls in the existing animation record.
 bool CControllerManager::LoadAnimation(int nAnimId)
 {
-	FUNCTION_PROFILER( g_GetISystem(),PROFILE_ANIMATION );
+	FUNCTION_PROFILER(g_GetISystem(), PROFILE_ANIMATION);
 
 	Animation& Anim = m_arrAnims[nAnimId];
 	if (Anim.IsLoaded())
@@ -148,7 +148,7 @@ bool CControllerManager::LoadAnimation(int nAnimId)
 	if (!nFileSize) // no such file
 	{
 		if (!(Anim.nFlags & GlobalAnimation::FLAGS_DISABLE_LOAD_ERROR_LOG))
-			g_GetLog()->LogError ("\003CControllerManager::LoadAnimation: file loading %s file not found", Anim.strFileName.c_str());
+			g_GetLog()->LogError("\003CControllerManager::LoadAnimation: file loading %s file not found", Anim.strFileName.c_str());
 		return false;
 	}
 
@@ -158,9 +158,9 @@ bool CControllerManager::LoadAnimation(int nAnimId)
 		PendingAnimLoad_AutoPtr pAnimLoad = new PendingAnimLoad;
 		pAnimLoad->nAnimId = nAnimId;
 		pAnimLoad->pFile = new CFileMapping;
-		pAnimLoad->pFile->attach (malloc (nFileSize), nFileSize);
+		pAnimLoad->pFile->attach(malloc(nFileSize), nFileSize);
 		pAnimLoad->nFrameId = g_nFrameID;
-		
+
 		// these parameters tell that the file must be read directly into the file mapping object
 		// the file mapping object will be passed to the chunk reader that will parse the data
 		StreamReadParams params;
@@ -169,7 +169,7 @@ bool CControllerManager::LoadAnimation(int nAnimId)
 		params.pBuffer = pAnimLoad->pFile->getData();
 
 		// now we're prepared to read, register the pending operation and start reading
-		m_setPendingAnimLoads.insert (pAnimLoad);
+		m_setPendingAnimLoads.insert(pAnimLoad);
 		// mark the animation as being loaded
 		Anim.nFlags |= Animation::FLAGS_LOAD_PENDING;
 		// we're not interested in the pointer to the read stream - we only need to know when it's finished
@@ -181,20 +181,20 @@ bool CControllerManager::LoadAnimation(int nAnimId)
 		// if the info hasn't still been loaded, we need to load synchronously
 		// try to read the file
 		CChunkFileReader Reader;
-		if (!Reader.open (Anim.strFileName))
+		if (!Reader.open(Anim.strFileName))
 		{
 			if (!(Anim.nFlags & GlobalAnimation::FLAGS_DISABLE_LOAD_ERROR_LOG))
-				g_GetLog()->LogError ("\003CControllerManager::LoadAnimation: file loading %s, last error is: %s", Anim.strFileName.c_str(), Reader.getLastError());
+				g_GetLog()->LogError("\003CControllerManager::LoadAnimation: file loading %s, last error is: %s", Anim.strFileName.c_str(), Reader.getLastError());
 			return false;
 		}
 		return LoadAnimation(nAnimId, &Reader);
 	}
 }
 
-void CControllerManager::StreamOnComplete (IReadStream* pStream, unsigned nError)
+void CControllerManager::StreamOnComplete(IReadStream* pStream, unsigned nError)
 {
 	PendingAnimLoad_AutoPtr pAnimLoad = (PendingAnimLoad*)pStream->GetUserData();
-	assert (m_setPendingAnimLoads.find (pAnimLoad) != m_setPendingAnimLoads.end());
+	assert(m_setPendingAnimLoads.find(pAnimLoad) != m_setPendingAnimLoads.end());
 	Animation& Anim = m_arrAnims[pAnimLoad->nAnimId];
 	m_setPendingAnimLoads.erase(pAnimLoad);
 	// flag the animation as being loaded
@@ -202,23 +202,23 @@ void CControllerManager::StreamOnComplete (IReadStream* pStream, unsigned nError
 	if (nError)
 	{
 #if defined(LINUX)
-		g_GetLog()->LogError ("\003Asynchronous load of file %s has failed, error code 0x%X", Anim.strFileName.c_str(), nError);
+		g_GetLog()->LogError("\003Asynchronous load of file %s has failed, error code 0x%X", Anim.strFileName.c_str(), nError);
 #else
-		g_GetLog()->LogError ("\003Asynchronous load of file %s has failed (%d of %d bytes read), error code 0x%X", Anim.strFileName.c_str(), pStream->GetBytesRead(), pAnimLoad->pFile->getSize(), nError);
+		g_GetLog()->LogError("\003Asynchronous load of file %s has failed (%d of %d bytes read), error code 0x%X", Anim.strFileName.c_str(), pStream->GetBytesRead(), pAnimLoad->pFile->getSize(), nError);
 #endif
 	}
 	else
 	{
 		CChunkFileReader Reader;
-		if (!Reader.open (pAnimLoad->pFile))
+		if (!Reader.open(pAnimLoad->pFile))
 #if defined(LINUX)
-			g_GetLog()->LogError ("\003Error: Asynchronous load of file %s has completed successfully, but the data can't be parsed. The last \"%s\".", Anim.strFileName.c_str(), Reader.getLastError());
+			g_GetLog()->LogError("\003Error: Asynchronous load of file %s has completed successfully, but the data can't be parsed. The last \"%s\".", Anim.strFileName.c_str(), Reader.getLastError());
 #else
-			g_GetLog()->LogError ("\003Error: Asynchronous load of file %s has completed successfully (%d of expected %d bytes read), but the data can't be parsed. The last \"%s\".", Anim.strFileName.c_str(), pStream->GetBytesRead(), pAnimLoad->pFile->getSize(), Reader.getLastError());
+			g_GetLog()->LogError("\003Error: Asynchronous load of file %s has completed successfully (%d of expected %d bytes read), but the data can't be parsed. The last \"%s\".", Anim.strFileName.c_str(), pStream->GetBytesRead(), pAnimLoad->pFile->getSize(), Reader.getLastError());
 #endif
 		else
 		{
-			if (LoadAnimation (pAnimLoad->nAnimId, &Reader))
+			if (LoadAnimation(pAnimLoad->nAnimId, &Reader))
 			{
 				++g_nAsyncAnimCounter;
 				g_nAsyncAnimFrameDelays += g_nFrameID - pAnimLoad->nFrameId;
@@ -228,33 +228,33 @@ void CControllerManager::StreamOnComplete (IReadStream* pStream, unsigned nError
 }
 
 // immediately load the given animation from the already opened reader
-bool CControllerManager::LoadAnimation (int nAnimId, CChunkFileReader* pReader)
+bool CControllerManager::LoadAnimation(int nAnimId, CChunkFileReader* pReader)
 {
-	FUNCTION_PROFILER( g_GetISystem(),PROFILE_ANIMATION );
+	FUNCTION_PROFILER(g_GetISystem(), PROFILE_ANIMATION);
 
 	Animation& Anim = m_arrAnims[nAnimId];
 
 	// check the file header for validity
 	const FILE_HEADER& fh = pReader->getFileHeader();
 
-	if(fh.Version != AnimFileVersion || fh.FileType != FileType_Anim) 
+	if (fh.Version != AnimFileVersion || fh.FileType != FileType_Anim)
 	{
-		g_GetLog()->LogError ("\003CControllerManager::LoadAnimation: file version error or not an animation file: %s", Anim.strFileName.c_str());
+		g_GetLog()->LogError("\003CControllerManager::LoadAnimation: file version error or not an animation file: %s", Anim.strFileName.c_str());
 		return false;
 	}
 
 	// prepare the array of controllers and the counter for them
-	Anim.arrCtrls.resize(pReader->numChunksOfType (ChunkType_Controller));
+	Anim.arrCtrls.resize(pReader->numChunksOfType(ChunkType_Controller));
 	unsigned nController = 0;
 
 	m_nCachedSizeofThis = 0;
 	// scan the chunks and load all controllers and time data into the animation structure
-	for (int nChunk = 0; nChunk < pReader->numChunks (); ++nChunk)
+	for (int nChunk = 0; nChunk < pReader->numChunks(); ++nChunk)
 	{
 		// this is the chunk header in the chunk table at the end of the file
 		const CHUNK_HEADER& chunkHeader = pReader->getChunkHeader(nChunk);
 		// this is the chunk raw data, starts with the chunk header/descriptor structure
-		const void* pChunk = pReader->getChunkData (nChunk);
+		const void* pChunk = pReader->getChunkData(nChunk);
 		unsigned nChunkSize = pReader->getChunkSize(nChunk);
 
 		switch (chunkHeader.ChunkType)
@@ -263,67 +263,67 @@ bool CControllerManager::LoadAnimation (int nAnimId, CChunkFileReader* pReader)
 			switch (chunkHeader.ChunkVersion)
 			{
 			case CONTROLLER_CHUNK_DESC_0826::VERSION:
+			{
+				// load and add a controller constructed from the controller chunk
+				const CONTROLLER_CHUNK_DESC_0826* pCtrlChunk = static_cast<const CONTROLLER_CHUNK_DESC_0826*>(pChunk);
+				IController_AutoPtr pController = LoadController(Anim.fScale, pCtrlChunk, nChunkSize);
+				if (!pController)
 				{
-					// load and add a controller constructed from the controller chunk
-					const CONTROLLER_CHUNK_DESC_0826* pCtrlChunk = static_cast<const CONTROLLER_CHUNK_DESC_0826*>(pChunk);
-					IController_AutoPtr pController = LoadController (Anim.fScale, pCtrlChunk, nChunkSize);
-					if (!pController)
-					{
-						g_GetLog()->LogError ("\002CControllerManager::LoadAnimation: error loading v826 controller: %s", Anim.strFileName.c_str());
-						return false;
-					}
-
-					assert (nController < Anim.arrCtrls.size());
-					Anim.arrCtrls[nController++] = pController;
+					g_GetLog()->LogError("\002CControllerManager::LoadAnimation: error loading v826 controller: %s", Anim.strFileName.c_str());
+					return false;
 				}
-				break;
+
+				assert(nController < Anim.arrCtrls.size());
+				Anim.arrCtrls[nController++] = pController;
+			}
+			break;
 
 			case CONTROLLER_CHUNK_DESC_0827::VERSION:
+			{
+				const CONTROLLER_CHUNK_DESC_0827* pCtrlChunk = static_cast<const CONTROLLER_CHUNK_DESC_0827*>(pChunk);
+				CControllerCryBone_AutoPtr pController = new CControllerCryBone();
+				if (pController->Load(pCtrlChunk, nChunkSize, Anim.fScale))
 				{
-					const CONTROLLER_CHUNK_DESC_0827* pCtrlChunk = static_cast<const CONTROLLER_CHUNK_DESC_0827*>(pChunk);
-					CControllerCryBone_AutoPtr pController = new CControllerCryBone ();
-					if (pController->Load (pCtrlChunk, nChunkSize, Anim.fScale))
-					{
-						assert (nController < Anim.arrCtrls.size());
-						Anim.arrCtrls[nController++] = static_cast<IController*>(pController);
-					}
-					else
-					{
-						g_GetLog()->LogError ("\002CControllerManager::LoadAnimation: error loading v827 controller: %s", Anim.strFileName.c_str());
-						return false;
-					}
+					assert(nController < Anim.arrCtrls.size());
+					Anim.arrCtrls[nController++] = static_cast<IController*>(pController);
 				}
-				break;
+				else
+				{
+					g_GetLog()->LogError("\002CControllerManager::LoadAnimation: error loading v827 controller: %s", Anim.strFileName.c_str());
+					return false;
+				}
+			}
+			break;
 			default:
-				g_GetLog()->LogError ("\003Unsupported controller chunk 0x%08X version 0x%08X in file %s. Please re-export the file.", chunkHeader.ChunkID, chunkHeader.ChunkVersion, Anim.strFileName.c_str());
+				g_GetLog()->LogError("\003Unsupported controller chunk 0x%08X version 0x%08X in file %s. Please re-export the file.", chunkHeader.ChunkID, chunkHeader.ChunkVersion, Anim.strFileName.c_str());
 				return false;
 				break;
 			}
 			break;
 
 		case ChunkType_Timing:
-			{
-				// memorize the timing info
-				const TIMING_CHUNK_DESC* pTimingChunk = static_cast<const TIMING_CHUNK_DESC*> (pChunk);
-				Anim.nTicksPerFrame  = pTimingChunk->TicksPerFrame;
-				Anim.fSecsPerTick    = pTimingChunk->SecsPerTick;
-				Anim.rangeGlobal      = pTimingChunk->global_range;
-			}
-			break;
+		{
+			// memorize the timing info
+			const TIMING_CHUNK_DESC* pTimingChunk = static_cast<const TIMING_CHUNK_DESC*> (pChunk);
+			Anim.nTicksPerFrame = pTimingChunk->TicksPerFrame;
+			Anim.fSecsPerTick = pTimingChunk->SecsPerTick;
+			Anim.rangeGlobal = pTimingChunk->global_range;
+		}
+		break;
 		}
 	}
 
 	if (nController != Anim.arrCtrls.size())
 	{
-		g_GetLog()->LogError ("\003%d controllers (%d expected) loaded from file %s. Please re-export the file. The animations will be discarded.",
+		g_GetLog()->LogError("\003%d controllers (%d expected) loaded from file %s. Please re-export the file. The animations will be discarded.",
 			nController, Anim.arrCtrls.size(), Anim.strFileName.c_str());
 	}
 
 	std::sort(
-		Anim.arrCtrls.begin(), 
-		Anim.arrCtrls.end(), 
+		Anim.arrCtrls.begin(),
+		Anim.arrCtrls.end(),
 		AnimCtrlSortPred()
-		);
+	);
 
 	Anim.OnInfoLoaded();
 	FireAnimationGlobalLoad(nAnimId);
@@ -333,7 +333,7 @@ bool CControllerManager::LoadAnimation (int nAnimId, CChunkFileReader* pReader)
 
 
 // updates the animation from the chunk of AnimInfo
-bool CControllerManager::UpdateAnimation (int nGlobalAnimId, const CCFAnimInfo* pAnimInfo)
+bool CControllerManager::UpdateAnimation(int nGlobalAnimId, const CCFAnimInfo* pAnimInfo)
 {
 	if ((unsigned)nGlobalAnimId >= m_arrAnims.size())
 		return false;
@@ -341,39 +341,39 @@ bool CControllerManager::UpdateAnimation (int nGlobalAnimId, const CCFAnimInfo* 
 	GlobalAnimation& Anim = m_arrAnims[nGlobalAnimId];
 
 #if !defined(LINUX)
-/*	if (Anim.IsInfoLoaded())
-	{
-		assert (Anim.fSecsPerTick      == pAnimInfo->fSecsPerTick);
-		assert (Anim.nTicksPerFrame    == pAnimInfo->nTicksPerFrame);
-		assert (Anim.rangeGlobal.start == pAnimInfo->nRangeStart);
-		assert (Anim.rangeGlobal.end   == pAnimInfo->nRangeEnd);
-		return true;
-	}*/
+	/*	if (Anim.IsInfoLoaded())
+		{
+			assert (Anim.fSecsPerTick      == pAnimInfo->fSecsPerTick);
+			assert (Anim.nTicksPerFrame    == pAnimInfo->nTicksPerFrame);
+			assert (Anim.rangeGlobal.start == pAnimInfo->nRangeStart);
+			assert (Anim.rangeGlobal.end   == pAnimInfo->nRangeEnd);
+			return true;
+		}*/
 #endif
 
-	Anim.fSecsPerTick      = pAnimInfo->fSecsPerTick;
-	Anim.nTicksPerFrame    = pAnimInfo->nTicksPerFrame;
+	Anim.fSecsPerTick = pAnimInfo->fSecsPerTick;
+	Anim.nTicksPerFrame = pAnimInfo->nTicksPerFrame;
 	Anim.rangeGlobal.start = pAnimInfo->nRangeStart;
-	Anim.rangeGlobal.end   = pAnimInfo->nRangeEnd;
+	Anim.rangeGlobal.end = pAnimInfo->nRangeEnd;
 	Anim.nFlags |= pAnimInfo->nAnimFlags;
 	Anim.OnInfoLoaded();
-	
+
 	FireAnimationGlobalLoad(nGlobalAnimId);
 	return true;
 }
 
 // notify everybody that the given animation OR its info has been just loaded
-void CControllerManager::FireAnimationGlobalLoad (int nAnimId)
+void CControllerManager::FireAnimationGlobalLoad(int nAnimId)
 {
 	for (std::vector<CryModelAnimationContainer*>::iterator it = m_arrClients.begin(); it != m_arrClients.end(); ++it)
 		(*it)->OnAnimationGlobalLoad(nAnimId);
-} 
+}
 
 // notifies the controller manager that another client uses the given animation.
 // these calls must be balanced with AnimationRelease() calls
-void CControllerManager::AnimationAddRef (int nGlobalAnimId, CryModelAnimationContainer* pClient)
+void CControllerManager::AnimationAddRef(int nGlobalAnimId, CryModelAnimationContainer* pClient)
 {
-	assert ((unsigned)nGlobalAnimId< m_arrAnims.size());
+	assert((unsigned)nGlobalAnimId < m_arrAnims.size());
 	// the new client, though it might have received "OnLoad" events from this global animation,
 	// might have missed it because it wasn't interested in them; now we re-send this event if needed
 	m_arrAnims[nGlobalAnimId].AddRef();
@@ -383,9 +383,9 @@ void CControllerManager::AnimationAddRef (int nGlobalAnimId, CryModelAnimationCo
 
 // notifies the controller manager that this client doesn't use the given animation any more.
 // these calls must be balanced with AnimationAddRef() calls
-void CControllerManager::AnimationRelease (int nGlobalAnimId, CryModelAnimationContainer* pClient)
+void CControllerManager::AnimationRelease(int nGlobalAnimId, CryModelAnimationContainer* pClient)
 {
-	assert ((unsigned)nGlobalAnimId< m_arrAnims.size());
+	assert((unsigned)nGlobalAnimId < m_arrAnims.size());
 	// if the given client is still interested in unload events, it will receive them all anyway,
 	// so we don't force anything but pure release. Normally during this call the client doesn't need
 	// any information about the animation being released
@@ -405,7 +405,7 @@ unsigned CControllerManager::NumAnimations()
 // Loads the controller from the chunk, returns the result in the autopointer
 // It is important that the return type is autoptr: it lets the procedure gracefully destruct 
 // half-constructed animation in case of an error.
-IController_AutoPtr CControllerManager::LoadController (float fScale, const CONTROLLER_CHUNK_DESC_0826* pChunk, int nSize)
+IController_AutoPtr CControllerManager::LoadController(float fScale, const CONTROLLER_CHUNK_DESC_0826* pChunk, int nSize)
 {
 	// different controllers are constructed depending on the representation of the raw data:
 	// spline or original crybone
@@ -416,22 +416,22 @@ IController_AutoPtr CControllerManager::LoadController (float fScale, const CONT
 	case CTRL_BSPLINE_1O:
 	case CTRL_BSPLINE_2C:
 	case CTRL_BSPLINE_1C:
-		{
-			// one of the fixed-point spline formats
-			CControllerPackedBSpline_AutoPtr pCtrl = new CControllerPackedBSpline();
-			if (pCtrl->Load(pChunk, nSize, fScale))
-				pController = static_cast<IController*>(static_cast<CControllerPackedBSpline*>(pCtrl));
-		}
-		break;
+	{
+		// one of the fixed-point spline formats
+		CControllerPackedBSpline_AutoPtr pCtrl = new CControllerPackedBSpline();
+		if (pCtrl->Load(pChunk, nSize, fScale))
+			pController = static_cast<IController*>(static_cast<CControllerPackedBSpline*>(pCtrl));
+	}
+	break;
 
 	case CTRL_CRYBONE:
-		{
-			// the old bone format
-		  CControllerCryBone_AutoPtr pCtrl = new CControllerCryBone ();
-			if (pCtrl->Load(pChunk, fScale))
-				pController = static_cast<IController*>(static_cast<CControllerCryBone*>(pCtrl));
-		}
-		break;
+	{
+		// the old bone format
+		CControllerCryBone_AutoPtr pCtrl = new CControllerCryBone();
+		if (pCtrl->Load(pChunk, fScale))
+			pController = static_cast<IController*>(static_cast<CControllerCryBone*>(pCtrl));
+	}
+	break;
 	}
 
 	return pController;
@@ -440,7 +440,7 @@ IController_AutoPtr CControllerManager::LoadController (float fScale, const CONT
 /////////////////////////////////////////////////////////////////////////////////////
 // finds controller with the given nControllerID among controller in the animation
 // identified by nGlobalAnimID
-IController* CControllerManager::GetController (int nGlobalAnimID, unsigned nControllerID)
+IController* CControllerManager::GetController(int nGlobalAnimID, unsigned nControllerID)
 {
 	Animation& Anim = m_arrAnims[nGlobalAnimID];
 	return Anim.GetController(nControllerID);
@@ -465,24 +465,24 @@ void CControllerManager::LogUsageStats()
 			if (pCtrl->NumRefs() == 1)
 				++nCtrlUnused;
 			else
-				nCtrlUsage += pCtrl->NumRefs()-1;
+				nCtrlUsage += pCtrl->NumRefs() - 1;
 		}
 	}
 
-	g_GetLog()->LogToFile ("%u controllers, %u (%.1f percent) unused, %.2f average refs per used controller",
-		nCtrlTotal, nCtrlUnused, (nCtrlUnused*100.0f/nCtrlTotal),
-		float(nCtrlUsage)/(nCtrlTotal-nCtrlUnused));
+	g_GetLog()->LogToFile("%u controllers, %u (%.1f percent) unused, %.2f average refs per used controller",
+		nCtrlTotal, nCtrlUnused, (nCtrlUnused * 100.0f / nCtrlTotal),
+		float(nCtrlUsage) / (nCtrlTotal - nCtrlUnused));
 }
 
 
 // returns the structure describing the animation data, given the global anim id
-CControllerManager::Animation& CControllerManager::GetAnimation (int nAnimID)
+CControllerManager::Animation& CControllerManager::GetAnimation(int nAnimID)
 {
 	if ((unsigned)nAnimID < m_arrAnims.size())
 		return m_arrAnims[nAnimID];
 	else
 	{
-		assert (0);
+		assert(0);
 		static Animation dummy;
 		return dummy;
 	}
@@ -494,7 +494,7 @@ void CControllerManager::DumpAnims()
 	std::vector<int>::const_iterator it;
 	const std::vector<int>::const_iterator itBegin = m_arrAnimByFile.begin(), itEnd = m_arrAnimByFile.end();
 	unsigned nMaxNameLength = 0;
-	for (it=itBegin; it != itEnd; ++it)
+	for (it = itBegin; it != itEnd; ++it)
 	{
 		unsigned nNameLength = (unsigned)m_arrAnims[*it].strFileName.length();
 		if (nNameLength > nMaxNameLength)
@@ -503,8 +503,8 @@ void CControllerManager::DumpAnims()
 
 	nMaxNameLength += 2;
 
-	g_GetLog()->LogToFile    ("\001%*s   kbytes    started    ticks", nMaxNameLength, "Animation Memory Usage Dump");
-	g_GetLog()->LogToConsole ("\001%*s   kbytes    started    ticks", nMaxNameLength, "Animation Memory Usage Dump");
+	g_GetLog()->LogToFile("\001%*s   kbytes    started    ticks", nMaxNameLength, "Animation Memory Usage Dump");
+	g_GetLog()->LogToConsole("\001%*s   kbytes    started    ticks", nMaxNameLength, "Animation Memory Usage Dump");
 
 	// the size of the array of controllers
 	size_t nSize = 0;
@@ -515,7 +515,7 @@ void CControllerManager::DumpAnims()
 	{
 		size_t nSizeAnimation = m_arrAnims[nAnim].sizeofThis();
 		nSize += nSizeAnimation;
-		mapSizes.insert (SizeMap::value_type(nSizeAnimation, nAnim));
+		mapSizes.insert(SizeMap::value_type(nSizeAnimation, nAnim));
 	}
 
 	for (SizeMap::reverse_iterator itSize = mapSizes.rbegin(); itSize != mapSizes.rend(); ++itSize)
@@ -523,22 +523,22 @@ void CControllerManager::DumpAnims()
 		int nAnim = itSize->second;
 		Animation& anim = m_arrAnims[nAnim];
 
-		g_GetLog()->LogToFile    ("\001%*s : %6.1f%10u%10u%s%s %d refs", nMaxNameLength, anim.strFileName.c_str(), itSize->first/1024.0f, anim.nTickCount, anim.nStartCount, anim.IsLoaded()?"":anim.IsInfoLoaded()?",Unloaded":",Not Loaded",anim.nRefCount?"":",Not Used:", anim.nRefCount);
-		g_GetLog()->LogToConsole ("\001%*s : %6.1f%10u%10u%s%s %d refs", nMaxNameLength, anim.strFileName.c_str(), itSize->first/1024.0f, anim.nTickCount, anim.nStartCount, anim.IsLoaded()?"":anim.IsInfoLoaded()?",Unloaded":",Not Loaded",anim.nRefCount?"":",Not Used:", anim.nRefCount);
+		g_GetLog()->LogToFile("\001%*s : %6.1f%10u%10u%s%s %d refs", nMaxNameLength, anim.strFileName.c_str(), itSize->first / 1024.0f, anim.nTickCount, anim.nStartCount, anim.IsLoaded() ? "" : anim.IsInfoLoaded() ? ",Unloaded" : ",Not Loaded", anim.nRefCount ? "" : ",Not Used:", anim.nRefCount);
+		g_GetLog()->LogToConsole("\001%*s : %6.1f%10u%10u%s%s %d refs", nMaxNameLength, anim.strFileName.c_str(), itSize->first / 1024.0f, anim.nTickCount, anim.nStartCount, anim.IsLoaded() ? "" : anim.IsInfoLoaded() ? ",Unloaded" : ",Not Loaded", anim.nRefCount ? "" : ",Not Used:", anim.nRefCount);
 	}
 
-	g_GetLog()->LogToFile    ("\001%*s : %6.1f", nMaxNameLength, "TOTAL", nSize / 1024.0f);
-	g_GetLog()->LogToConsole ("\001%*s : %6.1f", nMaxNameLength, "TOTAL", nSize / 1024.0f);
+	g_GetLog()->LogToFile("\001%*s : %6.1f", nMaxNameLength, "TOTAL", nSize / 1024.0f);
+	g_GetLog()->LogToConsole("\001%*s : %6.1f", nMaxNameLength, "TOTAL", nSize / 1024.0f);
 }
 
 // unreferences the controllers and makes the animation unloaded
 // before this operation, all bones must be unbound
 // returns true if the animation was really unloaded (if it had been unloaded before, returns false)
-bool CControllerManager::UnloadAnimation (int nGlobAnimId)
+bool CControllerManager::UnloadAnimation(int nGlobAnimId)
 {
-	FUNCTION_PROFILER( g_GetISystem(),PROFILE_ANIMATION );
+	FUNCTION_PROFILER(g_GetISystem(), PROFILE_ANIMATION);
 
-	if ((unsigned)nGlobAnimId>= m_arrAnims.size())
+	if ((unsigned)nGlobAnimId >= m_arrAnims.size())
 		return false;
 
 	if (m_arrAnims[nGlobAnimId].arrCtrls.empty())
@@ -546,10 +546,10 @@ bool CControllerManager::UnloadAnimation (int nGlobAnimId)
 	else
 	{
 		m_nCachedSizeofThis = 0;
-		for (std::vector<CryModelAnimationContainer*>::iterator it = m_arrClients.begin(); it!= m_arrClients.end(); ++it)
-			(*it)->OnAnimationGlobalUnload (nGlobAnimId);
+		for (std::vector<CryModelAnimationContainer*>::iterator it = m_arrClients.begin(); it != m_arrClients.end(); ++it)
+			(*it)->OnAnimationGlobalUnload(nGlobAnimId);
 #if !defined(LINUX)
-		assert (m_arrAnims[nGlobAnimId].MaxControllerRefCount()==1);
+		assert(m_arrAnims[nGlobAnimId].MaxControllerRefCount() == 1);
 #endif
 		m_arrAnims[nGlobAnimId].arrCtrls.clear();
 		return true;
@@ -557,23 +557,23 @@ bool CControllerManager::UnloadAnimation (int nGlobAnimId)
 }
 
 
-void CControllerManager::OnStartAnimation (int nGlobalAnimId)
+void CControllerManager::OnStartAnimation(int nGlobalAnimId)
 {
-	assert ((unsigned)nGlobalAnimId < m_arrAnims.size());
+	assert((unsigned)nGlobalAnimId < m_arrAnims.size());
 	LoadAnimation(nGlobalAnimId);
 	m_arrAnims[nGlobalAnimId].OnStart();
 }
 
 void CControllerManager::OnTickAnimation(int nGlobalAnimId)
 {
-	assert ((unsigned)nGlobalAnimId < m_arrAnims.size());
+	assert((unsigned)nGlobalAnimId < m_arrAnims.size());
 	LoadAnimation(nGlobalAnimId);
 	m_arrAnims[nGlobalAnimId].OnTick();
 }
 
 void CControllerManager::OnApplyAnimation(int nGlobalAnimId)
 {
-	assert ((unsigned)nGlobalAnimId < m_arrAnims.size());
+	assert((unsigned)nGlobalAnimId < m_arrAnims.size());
 	LoadAnimation(nGlobalAnimId);
 	m_arrAnims[nGlobalAnimId].OnApply();
 }
@@ -592,7 +592,7 @@ void CControllerManager::GetSize(class ICrySizer* pSizer)
 	{
 		// approximately calculating the size of the map
 		unsigned nMaxNameLength = 0;
-		nSize += sizeofArray (m_arrAnimByFile);
+		nSize += sizeofArray(m_arrAnimByFile);
 		for (AnimationArray::const_iterator it = m_arrAnims.begin(); it != m_arrAnims.end(); ++it)
 			nSize += it->sizeofThis();
 
@@ -603,9 +603,9 @@ void CControllerManager::GetSize(class ICrySizer* pSizer)
 #endif
 }
 
-size_t CControllerManager::Animation::sizeofThis ()const
+size_t CControllerManager::Animation::sizeofThis()const
 {
-	size_t nSize = sizeof(*this) + sizeofArray (arrCtrls)+ strFileName.capacity() + 1;
+	size_t nSize = sizeof(*this) + sizeofArray(arrCtrls) + strFileName.capacity() + 1;
 	ControllerArray::const_iterator it = arrCtrls.begin(), itEnd = it + arrCtrls.size();
 	for (; it != itEnd; ++it)
 		nSize += (*it)->sizeofThis();
@@ -615,9 +615,9 @@ size_t CControllerManager::Animation::sizeofThis ()const
 void CControllerManager::selfValidate()
 {
 #ifdef _DEBUG
-	assert (m_arrAnimByFile.size()==m_arrAnims.size());
-	for (int i = 0; i < (int)m_arrAnimByFile.size()-1; ++i)
-		assert (stricmp(m_arrAnims[m_arrAnimByFile[i]].strFileName.c_str(), m_arrAnims[m_arrAnimByFile[i+1]].strFileName.c_str()) < 0);
+	assert(m_arrAnimByFile.size() == m_arrAnims.size());
+	for (int i = 0; i < (int)m_arrAnimByFile.size() - 1; ++i)
+		assert(stricmp(m_arrAnims[m_arrAnimByFile[i]].strFileName.c_str(), m_arrAnims[m_arrAnimByFile[i + 1]].strFileName.c_str()) < 0);
 #endif
 }
 
@@ -629,7 +629,7 @@ void CControllerManager::Update()
 
 	if (m_nLastCheckedUnloadCandidate < m_arrAnims.size())
 	{
-		Animation &GlobalAnim = m_arrAnims[m_nLastCheckedUnloadCandidate];
+		Animation& GlobalAnim = m_arrAnims[m_nLastCheckedUnloadCandidate];
 		if (
 			GlobalAnim.IsAutoUnload() &&
 			GlobalAnim.nLastAccessFrameId + g_GetCVars()->ca_AnimationUnloadDelay() < g_nFrameID
@@ -637,7 +637,7 @@ void CControllerManager::Update()
 		{
 			if (UnloadAnimation(m_nLastCheckedUnloadCandidate))
 				if (g_GetCVars()->ca_Debug())
-					g_GetLog()->LogToFile ("\004Unloaded animation %s", GlobalAnim.strFileName.c_str());
+					g_GetLog()->LogToFile("\004Unloaded animation %s", GlobalAnim.strFileName.c_str());
 		}
 		++m_nLastCheckedUnloadCandidate;
 	}

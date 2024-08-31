@@ -2,8 +2,8 @@
 #include "CrySkinMorphBuilder.h"
 #include "CrySkinMorph.h"
 
-CrySkinMorphBuilder::CrySkinMorphBuilder(const ICrySkinSource* pGeometry, const Matrix44* pMatInvDef, unsigned numBones):
-	CrySkinBuilderBase (pGeometry),
+CrySkinMorphBuilder::CrySkinMorphBuilder(const ICrySkinSource* pGeometry, const Matrix44* pMatInvDef, unsigned numBones) :
+	CrySkinBuilderBase(pGeometry),
 	m_pMatInvDef(pMatInvDef),
 	m_numBones(numBones)
 {
@@ -12,7 +12,7 @@ CrySkinMorphBuilder::CrySkinMorphBuilder(const ICrySkinSource* pGeometry, const 
 
 //////////////////////////////////////////////////////////////////////////
 // initializes the given skin out of the given morph target
-void CrySkinMorphBuilder::initSkinMorph (const SMeshMorphTargetVertex* pMorphVerts, unsigned numMorphVerts, class CrySkinMorph* pSkin)
+void CrySkinMorphBuilder::initSkinMorph(const SMeshMorphTargetVertex* pMorphVerts, unsigned numMorphVerts, class CrySkinMorph* pSkin)
 {
 	m_pMorphVerts = pMorphVerts;
 	m_numMorphVerts = numMorphVerts;
@@ -39,29 +39,29 @@ void CrySkinMorphBuilder::initSkinMorph (const SMeshMorphTargetVertex* pMorphVer
 	// 1 int for index of the target vertex
 	unsigned numAuxInts = 2 * (m_numAffectingBones - m_nFirstAffectingBone) + m_numMorphSmoothLinks;
 
-	pSkin->init (m_numMorphRigidLinks + m_numMorphSmoothLinks,
+	pSkin->init(m_numMorphRigidLinks + m_numMorphSmoothLinks,
 		numAuxInts,
 		m_nFirstAffectingBone,
 		m_numAffectingBones);
 
 	CrySkinStreams stream, streamBegin, streamEnd;
-	streamBegin.pAux  = pSkin->m_arrAux.begin();
+	streamBegin.pAux = pSkin->m_arrAux.begin();
 	streamBegin.pVert = pSkin->m_arrVertices.begin();
 	stream = streamBegin;
-	streamEnd.pAux  = streamBegin.pAux  + numAuxInts;
-	streamEnd.pVert = streamBegin.pVert	+ m_numMorphRigidLinks + m_numMorphSmoothLinks;
+	streamEnd.pAux = streamBegin.pAux + numAuxInts;
+	streamEnd.pVert = streamBegin.pVert + m_numMorphRigidLinks + m_numMorphSmoothLinks;
 
 	for (unsigned nBone = m_nFirstAffectingBone; nBone < m_numAffectingBones; ++nBone)
 	{
 		// for each bone, fill the three groups
 		// we start from the rigid vertices
-		fillRigidGroup (stream, nBone);
-		assert (stream.pAux <= streamEnd.pAux);
-		assert (stream.pVert <= streamEnd.pVert);
-		fillSmoothGroup (stream, nBone);
+		fillRigidGroup(stream, nBone);
+		assert(stream.pAux <= streamEnd.pAux);
+		assert(stream.pVert <= streamEnd.pVert);
+		fillSmoothGroup(stream, nBone);
 		// only when we processed the last bone, we should have the pAux pointing to the end
-		assert (stream.pAux <= streamEnd.pAux);
-		assert (stream.pVert <= streamEnd.pVert);
+		assert(stream.pAux <= streamEnd.pAux);
+		assert(stream.pVert <= streamEnd.pVert);
 	}
 }
 
@@ -74,7 +74,7 @@ void CrySkinMorphBuilder::findAffectingBoneRange()
 	// init - find the first vertex binding info
 	const CryVertexBinding* pLinks = &m_pGeometry->getLink(m_pMorphVerts[0].nVertexId);
 	m_nFirstAffectingBone = pLinks->minBoneID();
-	m_numAffectingBones = pLinks->maxBoneID()+1;
+	m_numAffectingBones = pLinks->maxBoneID() + 1;
 
 	// find all the other vertex binding info and init the bone range
 	for (unsigned nMorphVert = 1; nMorphVert < m_numMorphVerts; ++nMorphVert)
@@ -82,11 +82,11 @@ void CrySkinMorphBuilder::findAffectingBoneRange()
 		unsigned nGeomVert = m_pMorphVerts[nMorphVert].nVertexId;
 		pLinks = &m_pGeometry->getLink(nGeomVert);
 		m_nFirstAffectingBone = crymin(m_nFirstAffectingBone, pLinks->minBoneID());
-		m_numAffectingBones = crymax(m_numAffectingBones, pLinks->maxBoneID()+1);
+		m_numAffectingBones = crymax(m_numAffectingBones, pLinks->maxBoneID() + 1);
 	}
 
-	assert (m_nFirstAffectingBone < m_numAffectingBones);
-	assert (m_numAffectingBones <= m_numBones);
+	assert(m_nFirstAffectingBone < m_numAffectingBones);
+	assert(m_numAffectingBones <= m_numBones);
 }
 
 
@@ -95,7 +95,7 @@ void CrySkinMorphBuilder::findAffectingBoneRange()
 // m_numMorphRigidLinks and m_numMorphSmoothLinks
 void CrySkinMorphBuilder::calculateNumMorphLinks()
 {
-	m_numMorphRigidLinks  = 0;
+	m_numMorphRigidLinks = 0;
 	m_numMorphSmoothLinks = 0;
 	for (unsigned nMorphVert = 0; nMorphVert < m_numMorphVerts; ++nMorphVert)
 	{
@@ -116,14 +116,14 @@ void CrySkinMorphBuilder::calculateNumMorphLinks()
 void CrySkinMorphBuilder::makeMorphBoneVertexArray()
 {
 	m_arrBoneVerts.clear();
-	m_arrBoneVerts.resize (m_numAffectingBones);
+	m_arrBoneVerts.resize(m_numAffectingBones);
 	for (unsigned nMorphVert = 0; nMorphVert < m_numMorphVerts; ++nMorphVert)
 	{
 		unsigned nGeomVert = m_pMorphVerts[nMorphVert].nVertexId;
 		const CryVertexBinding* pLinks = &m_pGeometry->getLink(nGeomVert);
 		// the morph vertex target in the object coordinates
 		Vec3d ptMorphOffset = m_pMorphVerts[nMorphVert].ptVertex - m_pGeometry->getVertex(nGeomVert);
-		
+
 		if (pLinks->size() == 1)
 		{
 			unsigned nBone = (*pLinks)[0].BoneID;
@@ -132,7 +132,7 @@ void CrySkinMorphBuilder::makeMorphBoneVertexArray()
 			// transform the point into the bone coordinates
 
 			//CHANGED_BY_IVO - INVALID CHANGE, PLEASE REVISE
-			v.pt = m_pMatInvDef[nBone].TransformVectorOLD (ptMorphOffset);
+			v.pt = m_pMatInvDef[nBone].TransformVectorOLD(ptMorphOffset);
 			//v.pt = GetTransposed44(m_pMatInvDef[nBone])*(ptMorphOffset);
 
 			m_arrBoneVerts[nBone].arrRigid.push_back(v);
@@ -146,7 +146,7 @@ void CrySkinMorphBuilder::makeMorphBoneVertexArray()
 				v.fWeight = (*pLinks)[nLink].Blending;
 				v.nDest = nGeomVert;
 
-				v.pt = m_pMatInvDef[nBone].TransformVectorOLD (ptMorphOffset);
+				v.pt = m_pMatInvDef[nBone].TransformVectorOLD(ptMorphOffset);
 
 				m_arrBoneVerts[nBone].arrSmooth.push_back(v);
 			}
@@ -159,16 +159,16 @@ void CrySkinMorphBuilder::validate()
 {
 #ifdef _DEBUG
 	unsigned nBone;
-	for (nBone = 0; nBone < m_nFirstAffectingBone;++nBone)
-		assert (m_arrBoneVerts[nBone].empty());
-	assert (!m_arrBoneVerts[m_nFirstAffectingBone].empty());
+	for (nBone = 0; nBone < m_nFirstAffectingBone; ++nBone)
+		assert(m_arrBoneVerts[nBone].empty());
+	assert(!m_arrBoneVerts[m_nFirstAffectingBone].empty());
 #endif
 }
 
 
 // fills in the group of aux ints for the given bone (the smooth vertex group)
 // returns the pointer to the next available auxint after the group
-void CrySkinMorphBuilder::fillSmoothGroup (CrySkinStreams& streams, unsigned nBone)
+void CrySkinMorphBuilder::fillSmoothGroup(CrySkinStreams& streams, unsigned nBone)
 {
 	CrySkinSmoothVertexArray& arrSmooth = m_arrBoneVerts[nBone].arrSmooth;
 
@@ -177,9 +177,9 @@ void CrySkinMorphBuilder::fillSmoothGroup (CrySkinStreams& streams, unsigned nBo
 
 	CrySkinSmoothVertexArray::const_iterator it = arrSmooth.begin(), itEnd = it + arrSmooth.size();
 
-  for (; it != itEnd; ++it)
+	for (; it != itEnd; ++it)
 	{
-		it->build (*streams.pVert++);
+		it->build(*streams.pVert++);
 		*streams.pAux++ = it->nDest;
 	}
 }

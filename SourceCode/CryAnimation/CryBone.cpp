@@ -26,118 +26,118 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
-CryBone::CryBone():
-	m_bUseMatPlus (false),
-	m_bUseReadyRelativeToParentMatrix (false),
+CryBone::CryBone() :
+	m_bUseMatPlus(false),
+	m_bUseReadyRelativeToParentMatrix(false),
 	m_pParent(NULL)
 {
-  //m_MatPlus.Identity();
-  m_matRelativeToParent.SetIdentity();; // current result of animation
+	//m_MatPlus.Identity();
+	m_matRelativeToParent.SetIdentity();; // current result of animation
 
 	// zero orientation and rotation
-  m_pqTransform.reset();
+	m_pqTransform.reset();
 }
 
-void CryBone::setParent (CryModelState*pParent)
+void CryBone::setParent(CryModelState* pParent)
 {
 	m_pParent = pParent;
 }
 
-static inline bool isone (float x)
+static inline bool isone(float x)
 {
 	return x >= 0.98f && x < 1.02f;
 }
 
 //////////////////////////////////////////////////////////////////////////
 // builds the relative to parent matrix
-void CryBone::BuildRelToParentFromQP (const IController::PQLog& pqNew)
+void CryBone::BuildRelToParentFromQP(const IController::PQLog& pqNew)
 {
 	if (m_bUseMatPlus)
-		pqNew.buildMatrixPlusRot (m_matRelativeToParent, m_qRotPlus);
+		pqNew.buildMatrixPlusRot(m_matRelativeToParent, m_qRotPlus);
 	else
-		pqNew.buildMatrix (m_matRelativeToParent);
+		pqNew.buildMatrix(m_matRelativeToParent);
 
 	if (_isnan(m_matRelativeToParent[0][0]))
-		g_GetLog()->LogWarning ("\001CryBone::BuildRelToParentFromQP: Invalid QP(q=%g,%g,%g;p=%g,%g,%g)", pqNew.vRotLog.x,pqNew.vRotLog.y,pqNew.vRotLog.z,pqNew.vPos.x,pqNew.vPos.y,pqNew.vPos.z);
+		g_GetLog()->LogWarning("\001CryBone::BuildRelToParentFromQP: Invalid QP(q=%g,%g,%g;p=%g,%g,%g)", pqNew.vRotLog.x, pqNew.vRotLog.y, pqNew.vRotLog.z, pqNew.vPos.x, pqNew.vPos.y, pqNew.vPos.z);
 #ifdef _DEBUG
 	if (g_GetCVars()->ca_Debug())
 	{
 		// we don't have translations that are millions of kilometers away
-		assert (GetLengthSquared(m_matRelativeToParent.GetTranslationOLD()) < 1e22);
+		assert(GetLengthSquared(m_matRelativeToParent.GetTranslationOLD()) < 1e22);
 		// we should have the normal orthogonal and unitary matrix
-		assert (isone(GetLengthSquared(m_matRelativeToParent.GetRow(0))));
-		assert (isone(GetLengthSquared(m_matRelativeToParent.GetRow(1))));
-		assert (isone(GetLengthSquared(m_matRelativeToParent.GetRow(2))));
+		assert(isone(GetLengthSquared(m_matRelativeToParent.GetRow(0))));
+		assert(isone(GetLengthSquared(m_matRelativeToParent.GetRow(1))));
+		assert(isone(GetLengthSquared(m_matRelativeToParent.GetRow(2))));
 	}
 #endif
 }
 
 // builds the m_pqTransform from the internal relative to parent matrix
-void CryBone::BuildQPFromRelToParent ()
+void CryBone::BuildQPFromRelToParent()
 {
 	m_pqTransform.assignFromMatrix(m_matRelativeToParent);
 }
 
 // adds an offset to the bone relative to parent matrix
-void CryBone::AddOffsetRelToParent (const Vec3d& vOffset)
+void CryBone::AddOffsetRelToParent(const Vec3d& vOffset)
 {
 	m_matRelativeToParent.AddTranslationOLD(vOffset);
 }
 
-void CryBone::ScaleRelToParent (const Vec3d& vScale)
+void CryBone::ScaleRelToParent(const Vec3d& vScale)
 {
-  //m_matRelativeToParent *= fScale;
+	//m_matRelativeToParent *= fScale;
 	Vec3d vPos = m_matRelativeToParent.GetRow(3);
 	for (int i = 0; i < 3; ++i)
 	{
-		m_matRelativeToParent.SetRow(i, vScale[i]*m_matRelativeToParent.GetRow(i));
-		vPos[i] = vScale[i]*vPos[i];
+		m_matRelativeToParent.SetRow(i, vScale[i] * m_matRelativeToParent.GetRow(i));
+		vPos[i] = vScale[i] * vPos[i];
 	}
-	m_matRelativeToParent.SetRow(3,vPos);
+	m_matRelativeToParent.SetRow(3, vPos);
 }
 
 
 
 Vec3d CryBone::GetBonePosition()
 {
-  return *(Vec3d*) (getMatrixGlobal()[3]);
+	return *(Vec3d*)(getMatrixGlobal()[3]);
 }
 
 
 Vec3d CryBone::GetBoneAxis(char cAxis)
 {
-	assert (cAxis == 'x' || cAxis == 'y' || cAxis == 'z');
-  switch(cAxis)
-  {
-    case 'x':
-		case 'y':
-		case 'z':
-      return Vec3d(getMatrixGlobal()[cAxis - 'x']);
-			break;
-  }
+	assert(cAxis == 'x' || cAxis == 'y' || cAxis == 'z');
+	switch (cAxis)
+	{
+	case 'x':
+	case 'y':
+	case 'z':
+		return Vec3d(getMatrixGlobal()[cAxis - 'x']);
+		break;
+	}
 
-  return Vec3d(0,0,0);
+	return Vec3d(0, 0, 0);
 }
 
 // checks for possible memory corruptions in this object and its children
-void CryBone::SelfValidate ()const
+void CryBone::SelfValidate()const
 {
 #ifdef _DEBUG
 #endif
 }
 
 
-CryQuat quatAxis (int nAxis, float fDegrees)
+CryQuat quatAxis(int nAxis, float fDegrees)
 {
-	struct  {
+	struct {
 		double cos;
 		double sin;
 	} x;
-	cry_sincos( DEG2RAD(fDegrees)/2, &x.cos);
+	cry_sincos(DEG2RAD(fDegrees) / 2, &x.cos);
 	CryQuat q;
 	q.w = float(x.cos);
 	switch (nAxis)
-	{ 
+	{
 	case 0: //x
 		q.v.x = float(x.sin); q.v.y = q.v.z = 0;
 		break;
@@ -165,22 +165,22 @@ void CryBone::SetPlusRotation(float dX, float dY, float dZ)
 		m_bUseMatPlus = false;
 		return;
 	}
-	
+
 	if (!isSane(dX) || !isSane(dY) || !isSane(dZ))
 	{
 		m_bUseMatPlus = false;
-		g_GetLog()->LogError ("\003CryBone::SetPlusRotation: insane value passed as an angle(%g,%g,%g); ignoring.",dX, dY,dZ);
+		g_GetLog()->LogError("\003CryBone::SetPlusRotation: insane value passed as an angle(%g,%g,%g); ignoring.", dX, dY, dZ);
 		return;
 	}
 
 	m_bUseMatPlus = true;
-	m_qRotPlus = 
-		quatAxis (0, -dX) * quatAxis(1, -dY) * quatAxis(2, -dZ);
+	m_qRotPlus =
+		quatAxis(0, -dX) * quatAxis(1, -dY) * quatAxis(2, -dZ);
 
 	if (g_GetCVars()->ca_MatPlusDebug())
 	{
 		if (fabs(dX) > 5 || fabs(dY) > 5 || fabs(dZ) > 5)
-			g_GetLog()->LogToFile ("\005 MatPlus(%s, %s)(%.1f,%.1f,%.1f)", getBoneInfo()->getNameCStr(), m_bUseReadyRelativeToParentMatrix?"TM<-outside":"normal TM", dX,dY,dZ);
+			g_GetLog()->LogToFile("\005 MatPlus(%s, %s)(%.1f,%.1f,%.1f)", getBoneInfo()->getNameCStr(), m_bUseReadyRelativeToParentMatrix ? "TM<-outside" : "normal TM", dX, dY, dZ);
 	}
 }
 
@@ -197,18 +197,18 @@ void CryBone::SetPlusRotation(const CryQuat& qRot)
 		m_bUseMatPlus = false;
 		return;
 	}
-	
+
 	if (!isSane(qRot.v) || !isSane(qRot.w))
 	{
-		g_GetLog()->LogError ("\001CryBone::SetPlusRotation: insane quaternion{%g,%g,%g,%g}",qRot.w,qRot.v.x,qRot.v.y,qRot.v.z);
+		g_GetLog()->LogError("\001CryBone::SetPlusRotation: insane quaternion{%g,%g,%g,%g}", qRot.w, qRot.v.x, qRot.v.y, qRot.v.z);
 		return;
 	}
 
-	float fUnit = qRot|qRot;
+	float fUnit = qRot | qRot;
 	if (fUnit < 0.9f || fUnit > 1.1f)
 	{
 		m_bUseMatPlus = false;
-		g_GetLog()->LogError ("\003CryBone::SetPlusRotation(CryQuat): non-normalized quaternion {%g,%g,%g,%g} passed; ignoring.",qRot.w,qRot.v.x,qRot.v.y,qRot.v.z);
+		g_GetLog()->LogError("\003CryBone::SetPlusRotation(CryQuat): non-normalized quaternion {%g,%g,%g,%g} passed; ignoring.", qRot.w, qRot.v.x, qRot.v.y, qRot.v.z);
 		return;
 	}
 
@@ -217,14 +217,14 @@ void CryBone::SetPlusRotation(const CryQuat& qRot)
 }
 
 // returns the parent world coordinate system rotation as a quaternion
-CryQuat CryBone::GetParentWQuat ()
+CryQuat CryBone::GetParentWQuat()
 {
 	if (!getBoneInfo()->hasParent())
-		return CryQuat (1,0,0,0);
+		return CryQuat(1, 0, 0, 0);
 
 	const Matrix44& matParent = getParent()->getMatrixGlobal();
-  //M2Q_CHANGED_BY_IVO
-	//CryQuat qResult = CovertMatToQuat<float>(matParent);
+	//M2Q_CHANGED_BY_IVO
+	  //CryQuat qResult = CovertMatToQuat<float>(matParent);
 	CryQuat qResult = Quat(matParent);
 
 #ifdef _DEBUG
@@ -238,7 +238,7 @@ CryQuat CryBone::GetParentWQuat ()
 
 		for (int i = 0; i < 3; i++)
 			for (int j = 0; j < 3; ++j)
-				assert (fabs(matTest(i,j) - matParent(i,j)) < 0.02f);
+				assert(fabs(matTest(i, j) - matParent(i, j)) < 0.02f);
 	}
 #endif
 
@@ -249,21 +249,21 @@ CryQuat CryBone::GetParentWQuat ()
 //////////////////////////////////////////////////////////////////////////
 // resets the plus-matrix to identity, so that the body is not rotated
 // additionally to the currently played animation.
-void CryBone::ResetPlusRotation() 
+void CryBone::ResetPlusRotation()
 {
 	m_bUseMatPlus = false;
 	//m_MatPlus.Identity();
-	m_qRotPlus = CryQuat(1, 0,0,0);
+	m_qRotPlus = CryQuat(1, 0, 0, 0);
 }
 
-Matrix44& CryBone::getMatrixGlobal ()
+Matrix44& CryBone::getMatrixGlobal()
 {
-	return m_pParent->getBoneMatrixGlobal (this);
+	return m_pParent->getBoneMatrixGlobal(this);
 }
 
-const Matrix44& CryBone::getMatrixGlobal ()const
+const Matrix44& CryBone::getMatrixGlobal()const
 {
-	return m_pParent->getBoneMatrixGlobal (this);
+	return m_pParent->getBoneMatrixGlobal(this);
 }
 
 CryBoneInfo* CryBone::getBoneInfo()
@@ -278,13 +278,13 @@ const CryBoneInfo* CryBone::getBoneInfo()const
 // fixes the bone matrix to the given position in world coordinates,
 // assuming the character position and orientation are given by the vCharPos and vCharAngles
 // vCharAngles are the same as in the entity and in the Draw call to ICryCharInstance
-void CryBone::FixBoneOriginInWorld (const Vec3d& vCharPos, const Vec3d& vCharAngles, const Vec3d& vTargetOrigin)
+void CryBone::FixBoneOriginInWorld(const Vec3d& vCharPos, const Vec3d& vCharAngles, const Vec3d& vTargetOrigin)
 {
 	using namespace CryStringUtils;
 	m_bUseReadyRelativeToParentMatrix = false; // assume the safety checks won't pass
 	if (!isSane(vCharPos) || !isSane(vCharAngles) || !isSane(vTargetOrigin))
 	{
-		g_GetLog()->LogError ("\001CryBone::FixBoneOriginInWorld: insane input vCharPos = %s, vCharAngles = %s, vTargetOrigin = %s", toString(vCharPos).c_str(), toString(vCharAngles).c_str(), toString(vTargetOrigin).c_str());
+		g_GetLog()->LogError("\001CryBone::FixBoneOriginInWorld: insane input vCharPos = %s, vCharAngles = %s, vTargetOrigin = %s", toString(vCharPos).c_str(), toString(vCharAngles).c_str(), toString(vTargetOrigin).c_str());
 		return;
 	}
 
@@ -296,15 +296,15 @@ void CryBone::FixBoneOriginInWorld (const Vec3d& vCharPos, const Vec3d& vCharAng
 	//matChar = GetRotationZYX44(-gf_DEGTORAD*vCharAngles )*matChar; //NOTE: angles in radians and negated 
 
 	//OPTIMIZED_BY_IVO
-	Matrix44 matChar=Matrix34::CreateRotationXYZ( Deg2Rad(vCharAngles),vCharPos );
-	matChar	=	GetTransposed44(matChar); //TODO: remove this after E3 and use Matrix34 instead of Matrix44
+	Matrix44 matChar = Matrix34::CreateRotationXYZ(Deg2Rad(vCharAngles), vCharPos);
+	matChar = GetTransposed44(matChar); //TODO: remove this after E3 and use Matrix34 instead of Matrix44
 
 	Matrix44 matParentBone;
 	matParentBone.SetIdentity();
 	for (CryBone* pParent = getParent(); pParent; pParent = pParent->getParent())
 		matParentBone = matParentBone * pParent->m_matRelativeToParent;
 
-	Matrix44 matInvParentBone = OrthoUniformGetInverted(matParentBone/*getParent()->getMatrixGlobal()*/*matChar);
+	Matrix44 matInvParentBone = OrthoUniformGetInverted(matParentBone/*getParent()->getMatrixGlobal()*/ * matChar);
 	m_matRelativeToParent.SetTranslationOLD(matInvParentBone.TransformPointOLD(vTargetOrigin));
 	m_bUseReadyRelativeToParentMatrix = true;
 }
@@ -312,53 +312,53 @@ void CryBone::FixBoneOriginInWorld (const Vec3d& vCharPos, const Vec3d& vCharAng
 // Sets the bone matrix to the given position in world coordinates, only for this frame
 // assuming the character position and orientation are given by the vCharPos and vCharAngles
 // vCharAngles are the same as in the entity and in the Draw call to ICryCharInstance
-void CryBone::SetBoneOriginInWorld (const Vec3d& vCharPos, const Vec3d& vCharAngles, const Vec3d& vTargetOrigin)
+void CryBone::SetBoneOriginInWorld(const Vec3d& vCharPos, const Vec3d& vCharAngles, const Vec3d& vTargetOrigin)
 {
 	using namespace CryStringUtils;
 	if (!isSane(vCharPos) || !isSane(vCharAngles) || !isSane(vTargetOrigin))
 	{
-		g_GetLog()->LogError ("\001CryBone::SetBoneOriginInWorld: insane input vCharPos = %s, vCharAngles = %s, vTargetOrigin = %s", toString(vCharPos).c_str(), toString(vCharAngles).c_str(), toString(vTargetOrigin).c_str());
+		g_GetLog()->LogError("\001CryBone::SetBoneOriginInWorld: insane input vCharPos = %s, vCharAngles = %s, vTargetOrigin = %s", toString(vCharPos).c_str(), toString(vCharAngles).c_str(), toString(vTargetOrigin).c_str());
 		return;
 	}
-// make tran&rot matrix		
-//	Matrix44 matChar;
-//	matChar.Identity();
-//	matChar = GetTranslationMat(vCharPos)*matChar;
-//	matChar = GetRotationZYX44(-gf_DEGTORAD*vCharAngles )*matChar; //NOTE: angles in radians and negated 
+	// make tran&rot matrix		
+	//	Matrix44 matChar;
+	//	matChar.Identity();
+	//	matChar = GetTranslationMat(vCharPos)*matChar;
+	//	matChar = GetRotationZYX44(-gf_DEGTORAD*vCharAngles )*matChar; //NOTE: angles in radians and negated 
 
-	//OPTIMIZED_BY_IVO
-	Matrix44 matChar=Matrix34::CreateRotationXYZ( Deg2Rad(vCharAngles),vCharPos );
-	matChar	=	GetTransposed44(matChar); //TODO: remove this after E3 and use Matrix34 instead of Matrix44
+		//OPTIMIZED_BY_IVO
+	Matrix44 matChar = Matrix34::CreateRotationXYZ(Deg2Rad(vCharAngles), vCharPos);
+	matChar = GetTransposed44(matChar); //TODO: remove this after E3 and use Matrix34 instead of Matrix44
 
 	Matrix44 matInvChar = OrthoUniformGetInverted(matChar);
 	getMatrixGlobal().SetTranslationOLD(matInvChar.TransformPointOLD(vTargetOrigin));
 }
 
 
-void CryBone::FixBoneMatrix (const Matrix44& mtxBone)
+void CryBone::FixBoneMatrix(const Matrix44& mtxBone)
 {
 	using namespace CryStringUtils;
 	// suppose we won't accept this matrix
 	m_bUseReadyRelativeToParentMatrix = false;
-	if (!(mtxBone(0,3)==0 && mtxBone(1,3)==0 && mtxBone(2,3)==0 && mtxBone(3,3)==1))
+	if (!(mtxBone(0, 3) == 0 && mtxBone(1, 3) == 0 && mtxBone(2, 3) == 0 && mtxBone(3, 3) == 1))
 	{
-		g_GetLog()->LogError ("\001CryBone::FixBoneMatrix: invalid matrix last column {%g,%g,%g,%g}; expected{0,0,0,1}",mtxBone(0,3),mtxBone(1,3),mtxBone(2,3),mtxBone(3,3));
+		g_GetLog()->LogError("\001CryBone::FixBoneMatrix: invalid matrix last column {%g,%g,%g,%g}; expected{0,0,0,1}", mtxBone(0, 3), mtxBone(1, 3), mtxBone(2, 3), mtxBone(3, 3));
 		return;
 	}
 
 	Vec3d vTrans = mtxBone.GetRow(3);
 	if (!isSane(vTrans))
 	{
-		g_GetLog()->LogError ("\001CryBone::FixBoneMatrix: insane translation vector %s",toString(vTrans).c_str());
+		g_GetLog()->LogError("\001CryBone::FixBoneMatrix: insane translation vector %s", toString(vTrans).c_str());
 		return;
 	}
 
 	for (int i = 0; i < 3; ++i)
 	{
 		Vec3d v = mtxBone.GetRow(i);
-		if (!isUnit(v,0.5f))
+		if (!isUnit(v, 0.5f))
 		{
-			g_GetLog()->LogError ("\001CryBone::FixBoneMatrix: matrix is not orthonormal, row %d :%s", i, toString(v).c_str());
+			g_GetLog()->LogError("\001CryBone::FixBoneMatrix: matrix is not orthonormal, row %d :%s", i, toString(v).c_str());
 			return;
 		}
 	}

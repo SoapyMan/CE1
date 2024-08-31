@@ -15,30 +15,30 @@
 #include "StdAfx.h"
 #include "VertexBufferArrayDrivers.h"
 
-CVertexBufferPosArrayDriver::CVertexBufferPosArrayDriver (CLeafBuffer* pVertexBuffer, int nId, bool bSystemMemory)
+CVertexBufferPosArrayDriver::CVertexBufferPosArrayDriver(CLeafBuffer* pVertexBuffer, int nId, bool bSystemMemory)
 {
-	m_pData = pVertexBuffer->GetPosPtr (m_nStride, nId, bSystemMemory);
+	m_pData = pVertexBuffer->GetPosPtr(m_nStride, nId, bSystemMemory);
 }
-CVertexBufferTangentArrayDriver::CVertexBufferTangentArrayDriver (CLeafBuffer* pVertexBuffer, int nId, bool bSystemMemory)
+CVertexBufferTangentArrayDriver::CVertexBufferTangentArrayDriver(CLeafBuffer* pVertexBuffer, int nId, bool bSystemMemory)
 {
-	m_pData = pVertexBuffer->GetTangentPtr (m_nStride, nId, bSystemMemory);
+	m_pData = pVertexBuffer->GetTangentPtr(m_nStride, nId, bSystemMemory);
 }
-CVertexBufferBinormalArrayDriver::CVertexBufferBinormalArrayDriver (CLeafBuffer* pVertexBuffer, int nId, bool bSystemMemory)
+CVertexBufferBinormalArrayDriver::CVertexBufferBinormalArrayDriver(CLeafBuffer* pVertexBuffer, int nId, bool bSystemMemory)
 {
-	m_pData = pVertexBuffer->GetBinormalPtr (m_nStride, nId, bSystemMemory);
-}
-
-CVertexBufferTNormalArrayDriver::CVertexBufferTNormalArrayDriver (CLeafBuffer* pVertexBuffer, int nId, bool bSystemMemory)
-{
-	m_pData = pVertexBuffer->GetTNormalPtr (m_nStride, nId, bSystemMemory);
+	m_pData = pVertexBuffer->GetBinormalPtr(m_nStride, nId, bSystemMemory);
 }
 
-CVertexBufferUVArrayDriver::CVertexBufferUVArrayDriver (CLeafBuffer* pVertexBuffer, int nId, bool bSystemMemory)
+CVertexBufferTNormalArrayDriver::CVertexBufferTNormalArrayDriver(CLeafBuffer* pVertexBuffer, int nId, bool bSystemMemory)
 {
-	m_pData = pVertexBuffer->GetUVPtr (m_nStride, nId, bSystemMemory);
+	m_pData = pVertexBuffer->GetTNormalPtr(m_nStride, nId, bSystemMemory);
 }
 
-CVertexBufferColorArrayDriver::CVertexBufferColorArrayDriver (CLeafBuffer* pVertexBuffer, int nId, bool bSystemMemory)
+CVertexBufferUVArrayDriver::CVertexBufferUVArrayDriver(CLeafBuffer* pVertexBuffer, int nId, bool bSystemMemory)
 {
-	m_pData = pVertexBuffer->GetColorPtr (m_nStride, nId, bSystemMemory);
+	m_pData = pVertexBuffer->GetUVPtr(m_nStride, nId, bSystemMemory);
+}
+
+CVertexBufferColorArrayDriver::CVertexBufferColorArrayDriver(CLeafBuffer* pVertexBuffer, int nId, bool bSystemMemory)
+{
+	m_pData = pVertexBuffer->GetColorPtr(m_nStride, nId, bSystemMemory);
 }
