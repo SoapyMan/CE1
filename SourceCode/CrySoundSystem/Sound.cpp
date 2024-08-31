@@ -24,7 +24,7 @@
 #include <I3DEngine.h> //needed to check if the listener is in indoor or outdoor
 
 #pragma warning(disable:4003)	// warning C4003: not enough actual parameters for macro 'CHECK_LOADED'
- 
+
 #define CRYSOUND_MAXDIST	10000.0f
 
 //////////////////////////////////////////////////////////////////////////
@@ -34,61 +34,61 @@
 int CSound::m_PlayingChannels = 0;
 
 //////////////////////////////////////////////////////////////////////
-CSound::CSound(CSoundSystem *pSSys,const char *szFile)
+CSound::CSound(CSoundSystem* pSSys, const char* szFile)
 {
 	ASSERT(pSSys);
 	ASSERT(pSSys->m_pISystem);
 	m_pSSys = pSSys;
-	m_pTimer=pSSys->m_pISystem->GetITimer();
-//	m_refCount = 0;
+	m_pTimer = pSSys->m_pISystem->GetITimer();
+	//	m_refCount = 0;
 
-	//SetName( "Sound not loaded" );
-//	m_nId = soundId;
-	m_nChannel=0;
-	m_bPlaying=false;
-	m_position(0,0,0);
-	m_speed(0,0,0);
-	m_orient(0,0,0);
+		//SetName( "Sound not loaded" );
+	//	m_nId = soundId;
+	m_nChannel = 0;
+	m_bPlaying = false;
+	m_position(0, 0, 0);
+	m_speed(0, 0, 0);
+	m_orient(0, 0, 0);
 
-	m_State=eSoundState_None;
-	m_fLastPlayTime=0.0f;
-	
-	m_nChannel= FSOUND_FREE;
+	m_State = eSoundState_None;
+	m_fLastPlayTime = 0.0f;
 
-	m_nSoundScaleGroups=SETSCALEBIT(SOUNDSCALE_MASTER) | SETSCALEBIT(SOUNDSCALE_SCALEABLE) | SETSCALEBIT(SOUNDSCALE_DEAFNESS) | SETSCALEBIT(SOUNDSCALE_MISSIONHINT);
-	m_nStartOffset=0;
-	m_nVolume=-1;
-	m_nPlayingVolume=-1;
-	m_nPan=127;
-	m_fPitching=-1;
-	m_nCurrPitch=0;
+	m_nChannel = FSOUND_FREE;
+
+	m_nSoundScaleGroups = SETSCALEBIT(SOUNDSCALE_MASTER) | SETSCALEBIT(SOUNDSCALE_SCALEABLE) | SETSCALEBIT(SOUNDSCALE_DEAFNESS) | SETSCALEBIT(SOUNDSCALE_MISSIONHINT);
+	m_nStartOffset = 0;
+	m_nVolume = -1;
+	m_nPlayingVolume = -1;
+	m_nPan = 127;
+	m_fPitching = -1;
+	m_nCurrPitch = 0;
 	//m_nBaseFreq=44100;
-	m_nRelativeFreq=1000;
-	m_nFxChannel=-1;
-	m_bLoop=false;
-	m_fRatio=1.0f;
+	m_nRelativeFreq = 1000;
+	m_nFxChannel = -1;
+	m_bLoop = false;
+	m_fRatio = 1.0f;
 
 	//m_nLastId=0;
 	//m_nFadeType=0;
-	m_fMaxRadius2=m_fMinRadius2=m_fDiffRadius2=0;
-	m_fPreloadRadius2=0;
-	m_nMaxVolume=255;
-	m_fMinDist=m_fMaxDist=1;
+	m_fMaxRadius2 = m_fMinRadius2 = m_fDiffRadius2 = 0;
+	m_fPreloadRadius2 = 0;
+	m_nMaxVolume = 255;
+	m_fMinDist = m_fMaxDist = 1;
 	m_fSoundLengthSec = 0;
 
-//	m_fMaxSoundDistance2=500*500;
-	m_refCount=0;
-	m_pArea=NULL;
-	m_fFadingValue=1.0f; ///5.0f; // by default 
+	//	m_fMaxSoundDistance2=500*500;
+	m_refCount = 0;
+	m_pArea = NULL;
+	m_fFadingValue = 1.0f; ///5.0f; // by default 
 	//m_fCurrentFade=1.0f; 	
-	m_fCurrentFade=1.0f; 
+	m_fCurrentFade = 1.0f;
 
-	m_nSoundPriority=0;
+	m_nSoundPriority = 0;
 
-	m_bPlayAfterLoad=false;
-	m_fPostLoadRatio=0;
-	m_bPostLoadForceActiveState=false;
-	m_bPostLoadSetRatio=false;
+	m_bPlayAfterLoad = false;
+	m_fPostLoadRatio = 0;
+	m_bPostLoadForceActiveState = false;
+	m_bPostLoadSetRatio = false;
 	m_bAutoStop = false;
 	m_bAlreadyLoaded = false;
 
@@ -105,12 +105,12 @@ CSound::~CSound()
 	if (m_pSound)
 		m_pSound->RemoveFromLoadReqList(this);
 	//stop the sound
-	if (m_nChannel>=0)  
+	if (m_nChannel >= 0)
 		Stop();
 
-	if (m_pSSys->m_pCVarDebugSound->GetIVal()==1)
+	if (m_pSSys->m_pCVarDebugSound->GetIVal() == 1)
 	{
-		m_pSSys->m_pILog->Log("<Sound> Destroying sound %s \n",GetName());		
+		m_pSSys->m_pILog->Log("<Sound> Destroying sound %s \n", GetName());
 	}
 
 	m_pSSys->RemoveReference(this);
@@ -120,15 +120,15 @@ CSound::~CSound()
 int CSound::Release()
 {
 	//reset the reference
-	int ref=0;
-	if((ref=--m_refCount)<=0)
+	int ref = 0;
+	if ((ref = --m_refCount) <= 0)
 	{
 #if defined(WIN64)// && defined(_DEBUG)
 		// Win64 has a special variable to disable deleting all the sounds
 		ICVar* pVar = m_pSSys->GetSystem()->GetIConsole()->GetCVar("s_EnableRelease");
 		if (!pVar || pVar->GetIVal())
 #endif
-		delete this;
+			delete this;
 	}
 	return (ref);
 };
@@ -139,7 +139,7 @@ bool CSound::Preload()
 {
 	if (!m_pSSys->IsEnabled())
 	{
-		OnEvent( SOUND_EVENT_ON_LOADED );
+		OnEvent(SOUND_EVENT_ON_LOADED);
 		return true;
 	}
 	return m_pSound->Load(m_bLoop, this);
@@ -148,15 +148,15 @@ bool CSound::Preload()
 //////////////////////////////////////////////////////////////////////////
 void CSound::SetSoundPriority(unsigned char nSoundPriority)
 {
-	m_nSoundPriority=nSoundPriority;
+	m_nSoundPriority = nSoundPriority;
 
-	if (nSoundPriority==255)
+	if (nSoundPriority == 255)
 	{
 		// keep in memory all sounds with highest priority
 		// Not needed.
 		//m_nFlags|=FLAG_SOUND_LOAD_SYNCHRONOUSLY;
 		//Preload(); 
-	}	
+	}
 }
 /*
 //////////////////////////////////////////////////////////////////////
@@ -169,30 +169,30 @@ void CSound::SetMaxSoundDistance(float fMaxSoundDistance)
 //calc the sound volume takiing into account gaem sound attenuation,
 //reduction ratio, sound system sfx volume, master volume (concentration feature)
 //////////////////////////////////////////////////////////////////////
-int CSound::CalcSoundVolume(int nSoundValue,float fRatio)
+int CSound::CalcSoundVolume(int nSoundValue, float fRatio)
 {
 	//FRAME_PROFILER( "CSound:CalcSoundVolume",m_pSSys->GetSystem(),PROFILE_SOUND );
 
 	int nVolume;
 
-	for (int i=0;i<MAX_SOUNDSCALE_GROUPS;i++)
+	for (int i = 0; i < MAX_SOUNDSCALE_GROUPS; i++)
 	{
 		if (m_nSoundScaleGroups & SETSCALEBIT(i))
-			fRatio*=m_pSSys->m_fSoundScale[i];
+			fRatio *= m_pSSys->m_fSoundScale[i];
 	}
 
-/*	if (m_pSound->m_btType==SoundBuffer::btSTREAM)
-	{
-		//straming sounds use music volume
-		nVolume=(int)((float)nSoundValue*fRatio*m_pSSys->m_fMusicVolume);
-	}
-	else 
-	{*/
-	//if (m_nFlags & FLAG_SOUND_MUSIC)
-	//	nVolume=(int)((((float)nSoundValue*m_pSSys->m_fMusicVolume)*fRatio));
-	//else			
-		nVolume=(int)((((float)nSoundValue*m_pSSys->m_fSFXVolume)*fRatio));
-//	}
+	/*	if (m_pSound->m_btType==SoundBuffer::btSTREAM)
+		{
+			//straming sounds use music volume
+			nVolume=(int)((float)nSoundValue*fRatio*m_pSSys->m_fMusicVolume);
+		}
+		else
+		{*/
+		//if (m_nFlags & FLAG_SOUND_MUSIC)
+		//	nVolume=(int)((((float)nSoundValue*m_pSSys->m_fMusicVolume)*fRatio));
+		//else			
+	nVolume = (int)((((float)nSoundValue * m_pSSys->m_fSFXVolume) * fRatio));
+	//	}
 
 	return (nVolume);
 }
@@ -214,16 +214,16 @@ bool CSound::IsPlayingOnChannel()
 	if (m_nChannel == FSOUND_FREE)
 		return false;
 	GUARD_HEAP;
-	signed char bRes= FSOUND_IsPlaying(m_nChannel);
+	signed char bRes = FSOUND_IsPlaying(m_nChannel);
 
-	if (bRes==TRUE)
+	if (bRes == TRUE)
 	{
 		//m_pSSys->m_pILog->LogToConsole("channel %d IS playing!!",m_nChannel);
 		return (true);
 	}
 
 	//m_pSSys->m_pILog->LogToConsole("channel %d,not playing!!",m_nChannel);
-	return (false);	
+	return (false);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -231,27 +231,27 @@ bool CSound::IsPlayingVirtual()
 {
 	return m_bPlaying && m_bLoop;
 }
- 
+
 //////////////////////////////////////////////////////////////////////
 void CSound::PlayFadeUnderwater(float fRatio, bool bForceActiveState, bool bSetRatio)
 {
 	m_pSSys->m_lstFadeUnderwaterSounds.insert(this);
-	Play(fRatio,bForceActiveState,bSetRatio);
-	m_nFlags|=FLAG_SOUND_FADE_OUT_UNDERWATER;
+	Play(fRatio, bForceActiveState, bSetRatio);
+	m_nFlags |= FLAG_SOUND_FADE_OUT_UNDERWATER;
 }
 
 //////////////////////////////////////////////////////////////////////
 void CSound::Play(float fRatio, bool bForceActiveState, bool bSetRatio)
 {
 	GUARD_HEAP;
-	FUNCTION_PROFILER( m_pSSys->GetSystem(),PROFILE_SOUND );
+	FUNCTION_PROFILER(m_pSSys->GetSystem(), PROFILE_SOUND);
 
 	if (!m_pSSys->IsEnabled())
 	{
 		// Simulate that sound is played for disabled sound system.
-		OnEvent( SOUND_EVENT_ON_LOADED );
-		OnEvent( SOUND_EVENT_ON_PLAY );
-		OnEvent( SOUND_EVENT_ON_STOP );
+		OnEvent(SOUND_EVENT_ON_LOADED);
+		OnEvent(SOUND_EVENT_ON_PLAY);
+		OnEvent(SOUND_EVENT_ON_STOP);
 		return;
 	}
 
@@ -270,7 +270,7 @@ void CSound::Play(float fRatio, bool bForceActiveState, bool bSetRatio)
 		if (!m_bLoop)
 		{
 			// For not looping sounds stop previous if after minimal repeat timeout.
-			if (m_pSSys->m_pCVarMinRepeatSoundTimeout->GetIVal() > timeSinceLastPlay*1000.0f)
+			if (m_pSSys->m_pCVarMinRepeatSoundTimeout->GetIVal() > timeSinceLastPlay * 1000.0f)
 			{
 				return;
 			}
@@ -289,29 +289,29 @@ void CSound::Play(float fRatio, bool bForceActiveState, bool bSetRatio)
 	{
 		FreeChannel();
 	}
-	
+
 	//////////////////////////////////////////////////////////////////////////
 	// Sounds with lower priority then current minimum set by sound system are ignored.
 	if (m_nSoundPriority < m_pSSys->GetMinSoundPriority())
 		return;
 	//////////////////////////////////////////////////////////////////////////
 
-	bool bStartSound=true;
+	bool bStartSound = true;
 	if (m_nFlags & FLAG_SOUND_OUTDOOR)
 	{
 		if (m_pSSys->m_bInside)
-			bStartSound=false;
+			bStartSound = false;
 	}
-	
-	if (m_nFlags & FLAG_SOUND_INDOOR)		
-	{	
+
+	if (m_nFlags & FLAG_SOUND_INDOOR)
+	{
 		if (!m_pSSys->m_bInside)
-			bStartSound=false;
+			bStartSound = false;
 	}
 
 	// if there are already too many sounds playing, this one
 	// should not be started
-	bool bCanPlay = ((int)(m_pSSys->m_lstSoundSpotsActive.size())<m_pSSys->m_pCVarMaxSoundSpots->GetIVal());
+	bool bCanPlay = ((int)(m_pSSys->m_lstSoundSpotsActive.size()) < m_pSSys->m_pCVarMaxSoundSpots->GetIVal());
 
 	//////////////////////////////////////////////////////////////////////////
 	// For Not looping sounds too far away, stop immidiatly not even preload sound if too far.
@@ -323,14 +323,14 @@ void CSound::Play(float fRatio, bool bForceActiveState, bool bSetRatio)
 			// Dont try to start non looping sounds at all.
 			return;
 		}
-		if (m_nFlags & (FLAG_SOUND_3D|FLAG_SOUND_RADIUS))
+		if (m_nFlags & (FLAG_SOUND_3D | FLAG_SOUND_RADIUS))
 		{
 			if (!m_pSSys->m_bValidPos)
 			{
 				return; //too far
 			}
 			//check the distance from the listener
-			float fDist2 = GetSquaredDistance(m_pSSys->m_cCam.GetPos(),m_RealPos);//position);
+			float fDist2 = GetSquaredDistance(m_pSSys->m_cCam.GetPos(), m_RealPos);//position);
 
 			if (fDist2 > m_fMaxRadius2)
 			{
@@ -353,15 +353,15 @@ void CSound::Play(float fRatio, bool bForceActiveState, bool bSetRatio)
 	if (m_pSound->Loading())
 	{
 
-		if (m_pSSys->m_pCVarDebugSound->GetIVal()==3)
+		if (m_pSSys->m_pCVarDebugSound->GetIVal() == 3)
 			m_pSSys->m_pILog->Log("<Sound> Warning: %s, Play() called before loading was finished", GetName());
-		
+
 		// save the state, will be played later
-		m_bPlayAfterLoad=true;
-		m_fPostLoadRatio=fRatio;
-		m_bPostLoadForceActiveState=bForceActiveState;
-		m_bPostLoadSetRatio=bSetRatio;
-		return; 
+		m_bPlayAfterLoad = true;
+		m_fPostLoadRatio = fRatio;
+		m_bPostLoadForceActiveState = bForceActiveState;
+		m_bPostLoadSetRatio = bSetRatio;
+		return;
 
 		/*
 		float fTime;
@@ -373,137 +373,137 @@ void CSound::Play(float fRatio, bool bForceActiveState, bool bSetRatio)
 		if (m_pSSys->m_pCVarDebugSound->GetIVal())
 			m_pSSys->m_pILog->Log("Warning: Synchroneous reading of %s due to Play() call before loading was finished stalled for %1.3f milliseconds !", GetName(), (m_pTimer->GetAsyncCurTime()-fTime)*1000.0f);
 		*/
-	} 
+	}
 	//CHECK_LOADED(Play);
 	//UpdatePosition();
-	bool bStarted=false;
+	bool bStarted = false;
 
-	int nVolume=CalcSoundVolume(m_nVolume,fRatio);
+	int nVolume = CalcSoundVolume(m_nVolume, fRatio);
 
 	if (bStartSound)
 	{
 		switch (m_pSound->GetType())
 		{
-			case btSTREAM:
+		case btSTREAM:
+			if ((!m_bLoop) || (!IsPlayingOnChannel()))
+			{
+				if (bCanPlay)
+				{
+					m_nChannel = FSOUND_Stream_PlayEx(FSOUND_FREE, m_pSound->GetStream(), NULL, true);
+					m_PlayingChannels++;
+					m_fChannelPlayTime = currTime;
+					m_fSoundLengthSec = GetLengthMs() / 1000.0f;
+					bAllocatedChannel = true;
+				}
+				bStarted = true;
+			}
+			SetLoopMode(m_bLoop);
+			break;
+		case btSAMPLE:
+		{
+			if (m_nFlags & FLAG_SOUND_3D)
+			{
+				if (!m_pSSys->m_bValidPos)
+				{
+					if (m_bLoop)
+						bCanPlay = false;
+					else
+						return;
+				}
+
+				//check the distance from the listener
+				float fDist = GetSquaredDistance(m_pSSys->m_cCam.GetPos(), m_RealPos);//position);
+
+				if (fDist > m_fMaxRadius2)
+				{
+					if (!m_bLoop)
+					{
+						FreeChannel(); //free a channel
+						return; //too far
+					}
+					bCanPlay = false;
+				}
+
+				//min max distance and loop mode must be set before 'cos it operates
+				//on a per-sound basis
+				SetMinMaxDistance(m_fMinDist, m_fMaxDist);
+				SetLoopMode(m_bLoop);
+
+				FRAME_PROFILER("CSound:FSOUND_PlaySoundEX", m_pSSys->GetSystem(), PROFILE_SOUND);
 				if ((!m_bLoop) || (!IsPlayingOnChannel()))
 				{
 					if (bCanPlay)
 					{
-						m_nChannel= FSOUND_Stream_PlayEx(FSOUND_FREE, m_pSound->GetStream(), NULL, true);
+						m_nChannel = FSOUND_PlaySoundEx(FSOUND_FREE, m_pSound->GetSample(), NULL, true);//,m_pSSys->GetDSPUnitFilter(),FALSE);
 						m_PlayingChannels++;
 						m_fChannelPlayTime = currTime;
-						m_fSoundLengthSec = GetLengthMs()/1000.0f;
+						m_fSoundLengthSec = GetLengthMs() / 1000.0f;
 						bAllocatedChannel = true;
 					}
-					bStarted=true;
+					bStarted = true;
 				}
+				SetPosition(m_position);
+				//SetFrequency(m_nBaseFreq);
+			}
+			else
+			{
+				//loop mode must be set before 'cos it operates
+				//on a per-sound basis
 				SetLoopMode(m_bLoop);
-				break;
-			case btSAMPLE:
-				{										
-					if (m_nFlags & FLAG_SOUND_3D)
+				if ((!m_bLoop) || (!IsPlayingOnChannel()))
+				{
+					if (bCanPlay)
 					{
-						if (!m_pSSys->m_bValidPos)
-						{
-							if (m_bLoop)
-								bCanPlay = false;
-							else
-								return;
-						}
-												
-						//check the distance from the listener
-						float fDist=GetSquaredDistance(m_pSSys->m_cCam.GetPos(),m_RealPos);//position);
-
-						if (fDist>m_fMaxRadius2)
-						{
-							if (!m_bLoop)
-							{
-								FreeChannel(); //free a channel
-								return; //too far
-							}
-							bCanPlay = false;
-						}
-						
-						//min max distance and loop mode must be set before 'cos it operates
-						//on a per-sound basis
-						SetMinMaxDistance(m_fMinDist,m_fMaxDist);
-						SetLoopMode(m_bLoop);
-
-						FRAME_PROFILER( "CSound:FSOUND_PlaySoundEX",m_pSSys->GetSystem(),PROFILE_SOUND );						
-						if ((!m_bLoop) || (!IsPlayingOnChannel()))
-						{						
-							if (bCanPlay)
-							{
-								m_nChannel= FSOUND_PlaySoundEx(FSOUND_FREE, m_pSound->GetSample(), NULL, true);//,m_pSSys->GetDSPUnitFilter(),FALSE);
-								m_PlayingChannels++;
-								m_fChannelPlayTime = currTime;
-								m_fSoundLengthSec = GetLengthMs()/1000.0f;
-								bAllocatedChannel = true;
-							}
-							bStarted=true;
-						}
-						SetPosition(m_position);
-						//SetFrequency(m_nBaseFreq);
+						m_nChannel = FSOUND_PlaySoundEx(FSOUND_FREE, m_pSound->GetSample(), NULL, true);//,m_pSSys->GetDSPUnitFilter(),FALSE);													
+						m_PlayingChannels++;
+						m_fChannelPlayTime = currTime;
+						m_fSoundLengthSec = GetLengthMs() / 1000.0f;
+						bAllocatedChannel = true;
 					}
-					else			
-					{
-						//loop mode must be set before 'cos it operates
-						//on a per-sound basis
-						SetLoopMode(m_bLoop);
-						if ((!m_bLoop) || (!IsPlayingOnChannel()))
-						{
-							if (bCanPlay)
-							{
-								m_nChannel= FSOUND_PlaySoundEx(FSOUND_FREE, m_pSound->GetSample(), NULL, true);//,m_pSSys->GetDSPUnitFilter(),FALSE);													
-								m_PlayingChannels++;
-								m_fChannelPlayTime = currTime;
-								m_fSoundLengthSec = GetLengthMs()/1000.0f;
-								bAllocatedChannel = true;
-							}
-							bStarted=true;
-						}
-						//SetFrequency(m_nRelativeFreq);			
-					}
+					bStarted = true;
 				}
-				if (bStarted)
-				{					
-					if (m_fPitching>0.0f)
-					{			
-						float fRand=(float)rand()/(float)RAND_MAX;
-						fRand=fRand*2.0f-1.0f;
-						m_nCurrPitch=(int)(fRand*m_fPitching);
-					}
-					else
-						m_nCurrPitch=0;
+				//SetFrequency(m_nRelativeFreq);			
+			}
+		}
+		if (bStarted)
+		{
+			if (m_fPitching > 0.0f)
+			{
+				float fRand = (float)rand() / (float)RAND_MAX;
+				fRand = fRand * 2.0f - 1.0f;
+				m_nCurrPitch = (int)(fRand * m_fPitching);
+			}
+			else
+				m_nCurrPitch = 0;
 
-					SetFrequency(m_nRelativeFreq);
-					if (m_nStartOffset)
-						FSOUND_SetCurrentPosition(m_nChannel, m_nStartOffset);
-					m_nStartOffset=0;
-				}
-				break;
+			SetFrequency(m_nRelativeFreq);
+			if (m_nStartOffset)
+				FSOUND_SetCurrentPosition(m_nChannel, m_nStartOffset);
+			m_nStartOffset = 0;
+		}
+		break;
 		}
 	}
-	
+
 	//set volume (after we got the channel)
 	ChangeVolume(nVolume);
 	//set panning as well (after we got the channel)
-	if (bCanPlay && m_nChannel!=-1)
+	if (bCanPlay && m_nChannel != -1)
 	{
 		FSOUND_SetPan(m_nChannel, m_nPan);
 		FSOUND_SetPriority(m_nChannel, m_nSoundPriority);
 		if (bStarted)
-			FSOUND_SetPaused(m_nChannel,false);
+			FSOUND_SetPaused(m_nChannel, false);
 	}
 
 	bool bAddedToList = false;
 	if (m_bLoop && bForceActiveState && (!m_pSound->LoadFailure()))
 	{
 		if (m_nFlags & FLAG_SOUND_ACTIVELIST)
-		{		
+		{
 			if (bCanPlay)
 			{
-				m_pSSys->SetSoundActiveState(this, eSoundState_Active);			
+				m_pSSys->SetSoundActiveState(this, eSoundState_Active);
 				bAddedToList = true;
 			}
 			else
@@ -520,19 +520,19 @@ void CSound::Play(float fRatio, bool bForceActiveState, bool bSetRatio)
 	if (IsUsingChannel() && !m_bLoop)
 	{
 		m_bAutoStop = true;
-		m_pSSys->RegisterAutoStopSound( this );
+		m_pSSys->RegisterAutoStopSound(this);
 	}
 
 	m_fLastPlayTime = currTime;
-		
-	if (bAllocatedChannel && m_pSSys->m_pCVarDebugSound->GetIVal()==1)
+
+	if (bAllocatedChannel && m_pSSys->m_pCVarDebugSound->GetIVal() == 1)
 	{
-		m_pSSys->m_pILog->Log("<Sound> Playing sound: %s,channel %d,volume=%d,pan=%d, priority=%d Snd:%X, TimeDiff:%.2f",GetName(),m_nChannel,m_nPlayingVolume,m_nPan,m_nSoundPriority,this,timeSinceLastPlay);
+		m_pSSys->m_pILog->Log("<Sound> Playing sound: %s,channel %d,volume=%d,pan=%d, priority=%d Snd:%X, TimeDiff:%.2f", GetName(), m_nChannel, m_nPlayingVolume, m_nPan, m_nSoundPriority, this, timeSinceLastPlay);
 	}
 
 	if (bAllocatedChannel)
 	{
-		OnEvent( SOUND_EVENT_ON_PLAY );
+		OnEvent(SOUND_EVENT_ON_PLAY);
 	}
 }
 
@@ -543,7 +543,7 @@ void CSound::FreeChannel()
 		return;
 	m_nPlayingVolume = -1;
 	if (m_pSound->Loaded())
-	{ 
+	{
 		switch (m_pSound->GetType())
 		{
 		case btSTREAM:
@@ -563,10 +563,10 @@ void CSound::FreeChannel()
 //////////////////////////////////////////////////////////////////////
 void CSound::Stop()
 {
-	FUNCTION_PROFILER( m_pSSys->GetSystem(),PROFILE_SOUND );
+	FUNCTION_PROFILER(m_pSSys->GetSystem(), PROFILE_SOUND);
 	GUARD_HEAP;
 	// don't play after finishing with loading - if still loading yet...
-	m_bPlayAfterLoad=false; 
+	m_bPlayAfterLoad = false;
 	if (!m_bPlaying)
 		return;
 
@@ -576,24 +576,24 @@ void CSound::Stop()
 
 	m_bPlaying = false;
 	m_nPlayingVolume = -1;
-	if (bUsedChannel && (m_pSSys->m_pCVarDebugSound->GetIVal()==1))
-		m_pSSys->m_pILog->Log("<Sound> Stop sound: %s",GetName());
+	if (bUsedChannel && (m_pSSys->m_pCVarDebugSound->GetIVal() == 1))
+		m_pSSys->m_pILog->Log("<Sound> Stop sound: %s", GetName());
 
 	if (m_nFlags & FLAG_SOUND_FADE_OUT_UNDERWATER)
 	{
-		SoundListItor It=m_pSSys->m_lstFadeUnderwaterSounds.find(this);
-		if (It!=m_pSSys->m_lstFadeUnderwaterSounds.end())
+		SoundListItor It = m_pSSys->m_lstFadeUnderwaterSounds.find(this);
+		if (It != m_pSSys->m_lstFadeUnderwaterSounds.end())
 			m_pSSys->m_lstFadeUnderwaterSounds.erase(It);
 	}
 	if (bUsedChannel)
-		OnEvent( SOUND_EVENT_ON_STOP );
+		OnEvent(SOUND_EVENT_ON_STOP);
 
 	// Must be last.
 	if (m_bAutoStop)
 	{
 		m_bAutoStop = false;
 		// This can deallocate the sound.
-		m_pSSys->UnregisterAutoStopSound( this );
+		m_pSSys->UnregisterAutoStopSound(this);
 	}
 }
 
@@ -601,8 +601,8 @@ void CSound::Stop()
 //////////////////////////////////////////////////////////////////////
 void CSound::SetName(const char *szName)
 {
-	if (szName)		
-	{		
+	if (szName)
+	{
 		m_strName = szName;
 	}
 	else
@@ -611,7 +611,7 @@ void CSound::SetName(const char *szName)
 */
 
 //////////////////////////////////////////////////////////////////////
-const char *CSound::GetName()
+const char* CSound::GetName()
 {
 	//return (m_strName.c_str());
 	if (m_pSound)
@@ -636,15 +636,15 @@ void CSound::SetLoopMode(bool bLoop)
 		switch (m_pSound->GetType())
 		{
 			//case btSAMPLE:	FSOUND_Sample_SetMode(m_pSound->GetSample(), bLoop ? FSOUND_LOOP_NORMAL : FSOUND_LOOP_OFF);	break;
-      case btSAMPLE:	FSOUND_Sample_SetMode(m_pSound->GetSample(), m_pSound->GetFModFlags(bLoop));	break;
+		case btSAMPLE:	FSOUND_Sample_SetMode(m_pSound->GetSample(), m_pSound->GetFModFlags(bLoop));	break;
 			//case btSTREAM:	if (m_nChannel>=0) FSOUND_SetLoopMode(m_nChannel, bLoop ? FSOUND_LOOP_NORMAL : FSOUND_LOOP_OFF); break;	// [Lennert] this call screws up ! Always set loopmode before playing the stream-sound !		
 		}
 	}
 	if (bLoop)
-		m_nFlags|=FLAG_SOUND_LOOP;
+		m_nFlags |= FLAG_SOUND_LOOP;
 	else
-		m_nFlags&=~FLAG_SOUND_LOOP;
-	if ((m_nFlags & FLAG_SOUND_STREAM) && (m_bLoop!=bLoop))
+		m_nFlags &= ~FLAG_SOUND_LOOP;
+	if ((m_nFlags & FLAG_SOUND_STREAM) && (m_bLoop != bLoop))
 	{	// this is kinda unfortunate, but we have to reload the stream when we the change loop-mode because changing it runtime doesnt seem to work...
 		if (!m_pSound->NotLoaded())
 		{
@@ -653,7 +653,7 @@ void CSound::SetLoopMode(bool bLoop)
 			m_pSound->Load(bLoop, NULL);
 		}
 	}
-	m_bLoop=bLoop;
+	m_bLoop = bLoop;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -679,14 +679,14 @@ int	 CSound::GetBaseFrequency(int nFreq)
 //////////////////////////////////////////////////////////////////////
 void CSound::SetPan(int nPan)
 {
-	if (m_nChannel>=0) 
+	if (m_nChannel >= 0)
 	{
 		if (nPan != m_nPan)
 		{
-			FSOUND_SetPan(m_nChannel,nPan);
+			FSOUND_SetPan(m_nChannel, nPan);
 		}
 	}
-	m_nPan=nPan;
+	m_nPan = nPan;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -696,9 +696,9 @@ void CSound::SetFrequency(int nFreq)
 
 	m_nRelativeFreq = nFreq;
 
-	if ((m_nChannel>=0) && (m_pSound->GetType()==btSAMPLE))
+	if ((m_nChannel >= 0) && (m_pSound->GetType() == btSAMPLE))
 	{
-		float fFreq=(float)m_pSound->GetBaseFreq()*((float)(m_nRelativeFreq+m_nCurrPitch)/1000.0f);
+		float fFreq = (float)m_pSound->GetBaseFreq() * ((float)(m_nRelativeFreq + m_nCurrPitch) / 1000.0f);
 		FSOUND_SetFrequency(m_nChannel, (int)fFreq);
 	}
 }
@@ -710,22 +710,22 @@ void CSound::SetMinMaxDistance(float fMinDist, float fMaxDist)
 
 	// increasing mindistnace makes it louder in 3d space	
 
-	m_fMinDist=fMinDist;
-	m_fMaxDist=fMaxDist;
+	m_fMinDist = fMinDist;
+	m_fMaxDist = fMaxDist;
 
-	m_fMaxRadius2=fMaxDist*fMaxDist;
-	m_fMinRadius2=fMinDist*fMinDist;
-	float fPreloadRadius=fMaxDist+SOUND_PRELOAD_DISTANCE;
-	m_fPreloadRadius2=fPreloadRadius*fPreloadRadius;
+	m_fMaxRadius2 = fMaxDist * fMaxDist;
+	m_fMinRadius2 = fMinDist * fMinDist;
+	float fPreloadRadius = fMaxDist + SOUND_PRELOAD_DISTANCE;
+	m_fPreloadRadius2 = fPreloadRadius * fPreloadRadius;
 
 #ifdef _DEBUG
-	if(fMinDist<0.1f)
+	if (fMinDist < 0.1f)
 	{
-		m_pSSys->m_pILog->LogToConsole("SOUND[%s] min out of range %f",GetName(),fMinDist);
+		m_pSSys->m_pILog->LogToConsole("SOUND[%s] min out of range %f", GetName(), fMinDist);
 	}
-	if(fMaxDist>1000000000.0f)
+	if (fMaxDist > 1000000000.0f)
 	{
-		m_pSSys->m_pILog->LogToConsole("SOUND[%s] max out of range %f",GetName(),fMaxDist);
+		m_pSSys->m_pILog->LogToConsole("SOUND[%s] max out of range %f", GetName(), fMaxDist);
 	}
 #endif
 	if (m_pSound->GetSample())
@@ -738,34 +738,34 @@ void CSound::SetMinMaxDistance(float fMinDist, float fMaxDist)
 //////////////////////////////////////////////////////////////////////
 void CSound::SetAttrib(int nVolume, float fRatio, int nPan, int nFreq, bool bSetRatio)
 {
-	ASSERT(nFreq==1000);
+	ASSERT(nFreq == 1000);
 	if (bSetRatio)
-		m_fRatio=fRatio;
-	m_nVolume=nVolume;
+		m_fRatio = fRatio;
+	m_nVolume = nVolume;
 
-	if (m_nChannel>=0) 
+	if (m_nChannel >= 0)
 	{
-		ChangeVolume( CalcSoundVolume(m_nVolume,fRatio) );
+		ChangeVolume(CalcSoundVolume(m_nVolume, fRatio));
 		if (m_nPan != nPan)
 		{
-			FSOUND_SetPan(m_nChannel,nPan);
+			FSOUND_SetPan(m_nChannel, nPan);
 		}
 	}
-	m_nPan=nPan;
+	m_nPan = nPan;
 }
-	
+
 //////////////////////////////////////////////////////////////////////
-void CSound::SetAttrib(const Vec3d &pos, const Vec3d &speed)
+void CSound::SetAttrib(const Vec3d& pos, const Vec3d& speed)
 {
-  m_position=pos;
-  m_speed=speed;
+	m_position = pos;
+	m_speed = speed;
 }
 
 //////////////////////////////////////////////////////////////////////////
 void CSound::SetRatio(float fRatio)
 {
-	m_fRatio=fRatio;
-	ChangeVolume(CalcSoundVolume(m_nVolume,m_fRatio));
+	m_fRatio = fRatio;
+	ChangeVolume(CalcSoundVolume(m_nVolume, m_fRatio));
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -775,12 +775,12 @@ void CSound::UpdatePosition()
 }
 
 //////////////////////////////////////////////////////////////////////
-void CSound::SetPosition(const Vec3d &pos)
+void CSound::SetPosition(const Vec3d& pos)
 {
 
-	m_position=pos; 
-	m_RealPos=m_position;
-	
+	m_position = pos;
+	m_RealPos = m_position;
+
 	if (!(m_nFlags & FLAG_SOUND_3D))
 		return;
 
@@ -793,42 +793,42 @@ void CSound::SetPosition(const Vec3d &pos)
 
 	float fPos[3];
 
-	fPos[0]=m_position.x;
-	fPos[1]=m_position.z;
-	fPos[2]=m_position.y;   	
+	fPos[0] = m_position.x;
+	fPos[1] = m_position.z;
+	fPos[2] = m_position.y;
 
-	if ((m_pSSys->m_fDirAttCone>0.0f) && (m_pSSys->m_fDirAttCone<1.0f))
+	if ((m_pSSys->m_fDirAttCone > 0.0f) && (m_pSSys->m_fDirAttCone < 1.0f))
 	{
-		Vec3d DirToPlayer=m_position-m_pSSys->m_DirAttPos;
+		Vec3d DirToPlayer = m_position - m_pSSys->m_DirAttPos;
 		DirToPlayer.Normalize();
-		float fScale=((1.0f-(DirToPlayer*m_pSSys->m_DirAttDir))/(1.0f-m_pSSys->m_fDirAttCone));
-		if ((fScale>0.0f) && (fScale<=1.0f))	// inside cone
+		float fScale = ((1.0f - (DirToPlayer * m_pSSys->m_DirAttDir)) / (1.0f - m_pSSys->m_fDirAttCone));
+		if ((fScale > 0.0f) && (fScale <= 1.0f))	// inside cone
 		{
-			if ((1.0f-fScale)>m_pSSys->m_fDirAttMaxScale)
-				m_pSSys->m_fDirAttMaxScale=1.0f-fScale;
-			m_RealPos=m_position*fScale+(m_pSSys->m_DirAttPos+(m_pSSys->m_DirAttDir*0.1f))*(1.0f-fScale);
-			fPos[0]=m_RealPos.x;
-			fPos[1]=m_RealPos.z;
-			fPos[2]=m_RealPos.y;   	
+			if ((1.0f - fScale) > m_pSSys->m_fDirAttMaxScale)
+				m_pSSys->m_fDirAttMaxScale = 1.0f - fScale;
+			m_RealPos = m_position * fScale + (m_pSSys->m_DirAttPos + (m_pSSys->m_DirAttDir * 0.1f)) * (1.0f - fScale);
+			fPos[0] = m_RealPos.x;
+			fPos[1] = m_RealPos.z;
+			fPos[2] = m_RealPos.y;
 			//TRACE("Sound-Proj: %s, %1.3f, %1.3f, %1.3f, (%5.3f, %5.3f, %5.3f)", m_strName.c_str(), fScale, DirToPlayer*m_pSSys->m_DirAttDir, m_pSSys->m_fDirAttCone, m_RealPos.x, m_RealPos.y, m_RealPos.z);
 		}
 	}
-	
+
 	if (m_pSSys->m_pCVarDopplerEnable->GetIVal() && (m_nFlags & FLAG_SOUND_DOPPLER))
 	{
-		Vec3d vVel=(pos-m_position);
-		float fTimeDelta=m_pSSys->m_pISystem->GetITimer()->GetFrameTime();
+		Vec3d vVel = (pos - m_position);
+		float fTimeDelta = m_pSSys->m_pISystem->GetITimer()->GetFrameTime();
 
-		vVel=vVel*(m_pSSys->m_pCVarDopplerEnable->GetFVal()/fTimeDelta);
+		vVel = vVel * (m_pSSys->m_pCVarDopplerEnable->GetFVal() / fTimeDelta);
 
 		float fVel[3];
-		fVel[0]=vVel.x;
-		fVel[1]=vVel.z;
-		fVel[2]=vVel.y;        
+		fVel[0] = vVel.x;
+		fVel[1] = vVel.z;
+		fVel[2] = vVel.y;
 
 		GUARD_HEAP;
 		FSOUND_3D_SetAttributes(m_nChannel, fPos, fVel);
-	}	
+	}
 	else
 	{
 		GUARD_HEAP;
@@ -839,21 +839,21 @@ void CSound::SetPosition(const Vec3d &pos)
 	// check if the sound must be considered 
 	// for sound occlusion 
 	if (m_nFlags & FLAG_SOUND_OCCLUSION)
-	{		
+	{
 		//check where the position is 	
-		I3DEngine			*p3dEngine=m_pSSys->m_pISystem->GetI3DEngine();
+		I3DEngine* p3dEngine = m_pSSys->m_pISystem->GetI3DEngine();
 
-		if (p3dEngine)		
-			m_pArea=p3dEngine->GetVisAreaFromPos(pos);		
+		if (p3dEngine)
+			m_pArea = p3dEngine->GetVisAreaFromPos(pos);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////
-const bool CSound::GetPosition(Vec3d &vPos)
+const bool CSound::GetPosition(Vec3d& vPos)
 {
 	if (m_nFlags & FLAG_SOUND_3D)
 	{
-		vPos=m_position;
+		vPos = m_position;
 		return (true);
 	}
 
@@ -861,22 +861,22 @@ const bool CSound::GetPosition(Vec3d &vPos)
 }
 
 //////////////////////////////////////////////////////////////////////
-void CSound::SetVelocity(const Vec3d &speed)
-{  
-  m_speed=speed;  
+void CSound::SetVelocity(const Vec3d& speed)
+{
+	m_speed = speed;
 }
 
 //////////////////////////////////////////////////////////////////////
-void CSound::SetDirection(const Vec3d &vDir)
+void CSound::SetDirection(const Vec3d& vDir)
 {
-	m_orient=vDir;
+	m_orient = vDir;
 }
 
 //////////////////////////////////////////////////////////////////////
 void CSound::ChangeVolume(int nVolume)
 {
-	if (m_nChannel>=0 && nVolume != m_nPlayingVolume)
-//	if (m_nChannel>=0)
+	if (m_nChannel >= 0 && nVolume != m_nPlayingVolume)
+		//	if (m_nChannel>=0)
 	{
 		FSOUND_SetVolume(m_nChannel, nVolume);
 		m_nPlayingVolume = nVolume;
@@ -886,21 +886,21 @@ void CSound::ChangeVolume(int nVolume)
 //////////////////////////////////////////////////////////////////////
 void CSound::SetVolume(int nVolume)
 {
-	if (nVolume>255)
-		nVolume=255;
+	if (nVolume > 255)
+		nVolume = 255;
 
-	m_nVolume=m_nMaxVolume=nVolume;			
+	m_nVolume = m_nMaxVolume = nVolume;
 
-	nVolume=CalcSoundVolume(m_nVolume,1.0f);
+	nVolume = CalcSoundVolume(m_nVolume, 1.0f);
 	//if (m_pSSys->m_pCVarDebugSound->GetIVal()==5)
 	//	m_pSSys->m_pILog->LogToConsole("VOL:%s,ch=%d,Set vol=%d",GetName(),m_nChannel,nVolume);
 	ChangeVolume(nVolume);
 }
 
 //////////////////////////////////////////////////////////////////////
-void CSound::SetConeAngles(float fInnerAngle,float fOuterAngle) 
+void CSound::SetConeAngles(float fInnerAngle, float fOuterAngle)
 {
-	
+
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -911,8 +911,8 @@ void CSound::SetPitch(int nValue)
 	iReScaledValue = (int)((float)nValue / 1000.0f * (float)m_pSound->GetBaseFreq());
 	iReScaledValue = crymax(iReScaledValue, 100);
 	// channel = The channel number/handle to change the frequency for. FSOUND_ALL can also be used (see remarks).
-    // freq = The frequency to set. Valid ranges are from 100 to 705600.
-	if ((m_nChannel>=0) && (m_pSound->GetType()==btSAMPLE))
+	// freq = The frequency to set. Valid ranges are from 100 to 705600.
+	if ((m_nChannel >= 0) && (m_pSound->GetType() == btSAMPLE))
 	{
 		GUARD_HEAP;
 		FSOUND_SetFrequency(m_nChannel, iReScaledValue);
@@ -937,21 +937,21 @@ void CSound::FXEnable(int nFxNumber)
 {
 	if (!m_pSSys->m_pCVarEnableSoundFX->GetIVal())
 		return;
-	if ((m_pSound->GetType()==btSAMPLE) && (m_nChannel!=-1))
+	if ((m_pSound->GetType() == btSAMPLE) && (m_nChannel != -1))
 	{
 		GUARD_HEAP;
-		m_nFxChannel= FSOUND_FX_Enable(m_nChannel, nFxNumber);
+		m_nFxChannel = FSOUND_FX_Enable(m_nChannel, nFxNumber);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////
-void CSound::FXSetParamEQ(float fCenter,float fBandwidth,float fGain)
+void CSound::FXSetParamEQ(float fCenter, float fBandwidth, float fGain)
 {
 
 	if (!m_pSSys->m_pCVarEnableSoundFX->GetIVal())
 		return;
 
-	if ((m_pSound->GetType()==btSAMPLE) && (m_nFxChannel>=0))
+	if ((m_pSound->GetType() == btSAMPLE) && (m_nFxChannel >= 0))
 	{
 		GUARD_HEAP;
 		FSOUND_FX_SetParamEQ(m_nFxChannel, fCenter, fBandwidth, fGain);
@@ -963,22 +963,22 @@ void CSound::FXSetParamEQ(float fCenter,float fBandwidth,float fGain)
 int CSound::GetLengthMs()
 {
 	GUARD_HEAP;
-	if (m_pSound->NotLoaded())		
+	if (m_pSound->NotLoaded())
 	{
-		m_nFlags|=FLAG_SOUND_LOAD_SYNCHRONOUSLY; // force to load the sound
+		m_nFlags |= FLAG_SOUND_LOAD_SYNCHRONOUSLY; // force to load the sound
 
-    if (!Preload())
-    {
-      //the sound buffer cannot be loaded
-      if (!m_pSound->WaitForLoad())
-        return (0);
-    }
+		if (!Preload())
+		{
+			//the sound buffer cannot be loaded
+			if (!m_pSound->WaitForLoad())
+				return (0);
+		}
 	}
 	//CHECK_LOADED(GetLengthMs, 0);
 	switch (m_pSound->GetType())
 	{
-		case btSTREAM:	return FSOUND_Stream_GetLengthMs(m_pSound->GetStream());
-		case btSAMPLE:	return (int)((float)FSOUND_Sample_GetLength(m_pSound->GetSample())/(float)m_pSound->GetBaseFreq()*1000.0f);
+	case btSTREAM:	return FSOUND_Stream_GetLengthMs(m_pSound->GetStream());
+	case btSAMPLE:	return (int)((float)FSOUND_Sample_GetLength(m_pSound->GetSample()) / (float)m_pSound->GetBaseFreq() * 1000.0f);
 	}
 	return 0;
 }
@@ -986,9 +986,9 @@ int CSound::GetLengthMs()
 //////////////////////////////////////////////////////////////////////
 //! returns the size of the stream in bytes
 int CSound::GetLength()
-{  
+{
 	GUARD_HEAP;
-	if (m_pSound->NotLoaded())		
+	if (m_pSound->NotLoaded())
 	{
 		if (!Preload())
 			return (0); //the sound buffer cannot be loaded
@@ -997,8 +997,8 @@ int CSound::GetLength()
 	if (m_pSound->GetStream())
 		return FSOUND_Stream_GetLength(m_pSound->GetStream());
 	return 0;
-  
-//  return (GetLengthMs()*1000.0f);
+
+	//  return (GetLengthMs()*1000.0f);
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -1014,31 +1014,32 @@ unsigned int CSound::GetCurrentSamplePos(bool bMilliSeconds)
 	//CHECK_LOADED(GetCurrentSamplePos, 0);
 	switch (m_pSound->GetType())
 	{
-		case btSAMPLE:
-			if (bMilliSeconds)
-			{
-				int nFreq;
-				FSOUND_Sample_GetDefaults(m_pSound->GetSample(), &nFreq, NULL, NULL, NULL);
-				return (unsigned int)((float)FSOUND_GetCurrentPosition(m_nChannel)/(float)nFreq*1000.0f);
-			}else
-			{
-				return ((unsigned int)FSOUND_GetCurrentPosition(m_nChannel));
-			}
-		case btSTREAM:
-			if (bMilliSeconds)
-				return ((unsigned int)FSOUND_Stream_GetTime(m_pSound->GetStream()));
-			else
-				return ((unsigned int)FSOUND_Stream_GetPosition(m_pSound->GetStream()));
+	case btSAMPLE:
+		if (bMilliSeconds)
+		{
+			int nFreq;
+			FSOUND_Sample_GetDefaults(m_pSound->GetSample(), &nFreq, NULL, NULL, NULL);
+			return (unsigned int)((float)FSOUND_GetCurrentPosition(m_nChannel) / (float)nFreq * 1000.0f);
+		}
+		else
+		{
+			return ((unsigned int)FSOUND_GetCurrentPosition(m_nChannel));
+		}
+	case btSTREAM:
+		if (bMilliSeconds)
+			return ((unsigned int)FSOUND_Stream_GetTime(m_pSound->GetStream()));
+		else
+			return ((unsigned int)FSOUND_Stream_GetPosition(m_pSound->GetStream()));
 	}
 	return (0);
 }
 
 //! set the currently played sample-pos in bytes or milliseconds
 //////////////////////////////////////////////////////////////////////
-void CSound::SetCurrentSamplePos(unsigned int nPos,bool bMilliSeconds)
+void CSound::SetCurrentSamplePos(unsigned int nPos, bool bMilliSeconds)
 {
 	GUARD_HEAP;
-	if (m_pSound->NotLoaded())		
+	if (m_pSound->NotLoaded())
 	{
 		if (!Preload())
 			return; //the sound buffer cannot be loaded
@@ -1046,28 +1047,29 @@ void CSound::SetCurrentSamplePos(unsigned int nPos,bool bMilliSeconds)
 	//CHECK_LOADED(SetCurrentSamplePos);
 	switch (m_pSound->GetType())
 	{
-		case btSAMPLE:
-			if (bMilliSeconds)
-			{
-				unsigned int nSample=(unsigned int)(((float)nPos/1000.0f)*(float)m_pSound->GetBaseFreq());
-				if (IsPlayingOnChannel())
-					FSOUND_SetCurrentPosition(m_nChannel, nSample);
-				else
-					m_nStartOffset=nSample;
-			}else
-			{
-				if (IsPlayingOnChannel())
-					FSOUND_SetCurrentPosition(m_nChannel,nPos);
-				else
-					m_nStartOffset=nPos;
-			}
-			break;
-		case btSTREAM:
-			if (bMilliSeconds)
-				FSOUND_Stream_SetTime(m_pSound->GetStream(),nPos);
+	case btSAMPLE:
+		if (bMilliSeconds)
+		{
+			unsigned int nSample = (unsigned int)(((float)nPos / 1000.0f) * (float)m_pSound->GetBaseFreq());
+			if (IsPlayingOnChannel())
+				FSOUND_SetCurrentPosition(m_nChannel, nSample);
 			else
-				FSOUND_Stream_SetPosition(m_pSound->GetStream(),nPos);
-			break;
+				m_nStartOffset = nSample;
+		}
+		else
+		{
+			if (IsPlayingOnChannel())
+				FSOUND_SetCurrentPosition(m_nChannel, nPos);
+			else
+				m_nStartOffset = nPos;
+		}
+		break;
+	case btSTREAM:
+		if (bMilliSeconds)
+			FSOUND_Stream_SetTime(m_pSound->GetStream(), nPos);
+		else
+			FSOUND_Stream_SetPosition(m_pSound->GetStream(), nPos);
+		break;
 	}
 }
 
@@ -1087,16 +1089,16 @@ bool CSound::FadeIn()
 	}
 
 	// this type of fading is purely framerate dependent
-	m_fCurrentFade += m_fFadingValue*m_pSSys->m_pISystem->GetITimer()->GetFrameTime(); 
-	
+	m_fCurrentFade += m_fFadingValue * m_pSSys->m_pISystem->GetITimer()->GetFrameTime();
+
 	//m_pSSys->m_pILog->LogToConsole("Fade IN, current fade=%f",m_fCurrentFade);
-	if (m_fCurrentFade<0)
-		m_fCurrentFade=0; 
+	if (m_fCurrentFade < 0)
+		m_fCurrentFade = 0;
 	else
 	{
-		if (m_fCurrentFade>1.0f)
+		if (m_fCurrentFade > 1.0f)
 		{
-			m_fCurrentFade=1.0f;		
+			m_fCurrentFade = 1.0f;
 			//m_nFadeType=0;
 			return (true);
 		}
@@ -1106,22 +1108,22 @@ bool CSound::FadeIn()
 
 //////////////////////////////////////////////////////////////////////////
 bool CSound::FadeOut()
-{	
+{
 	// this type of fading is purely framerate dependent
-	m_fCurrentFade-=m_fFadingValue*m_pSSys->m_pISystem->GetITimer()->GetFrameTime(); 
+	m_fCurrentFade -= m_fFadingValue * m_pSSys->m_pISystem->GetITimer()->GetFrameTime();
 
 	//m_pSSys->m_pILog->LogToConsole("Fade OUT, current fade=%f",m_fCurrentFade);
 
-	if (m_fCurrentFade<0)
+	if (m_fCurrentFade < 0)
 	{
-		m_fCurrentFade=0;		
+		m_fCurrentFade = 0;
 		if (IsUsingChannel())
 			FreeChannel();
 		return (true);
 	}
 	else
-		if (m_fCurrentFade>1.0f)
-			m_fCurrentFade=1.0f;
+		if (m_fCurrentFade > 1.0f)
+			m_fCurrentFade = 1.0f;
 
 	return (false);
 }
@@ -1131,12 +1133,12 @@ void CSound::OnBufferLoaded()
 {
 	if (!m_bAlreadyLoaded)
 	{
-		OnEvent( SOUND_EVENT_ON_LOADED );
+		OnEvent(SOUND_EVENT_ON_LOADED);
 
 		if (m_bPlayAfterLoad)
-		{		
-			m_bPlayAfterLoad=false;
-			Play(m_fPostLoadRatio,m_bPostLoadForceActiveState,m_bPostLoadSetRatio);
+		{
+			m_bPlayAfterLoad = false;
+			Play(m_fPostLoadRatio, m_bPostLoadForceActiveState, m_bPostLoadSetRatio);
 		}
 	}
 	m_bAlreadyLoaded = true;
@@ -1145,7 +1147,7 @@ void CSound::OnBufferLoaded()
 //////////////////////////////////////////////////////////////////////////
 void CSound::OnBufferLoadFailed()
 {
-	OnEvent( SOUND_EVENT_ON_LOAD_FAILED );
+	OnEvent(SOUND_EVENT_ON_LOAD_FAILED);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1153,7 +1155,7 @@ void CSound::GetMemoryUsage(class ICrySizer* pSizer)
 {
 	if (!pSizer->Add(*this))
 		return;
-	CSoundBuffer *pBuffer=m_pSound;
+	CSoundBuffer* pBuffer = m_pSound;
 	pSizer->Add(*pBuffer);
 }
 
@@ -1175,81 +1177,81 @@ bool CSound::IsLoaded()
 
 bool CSound::IsUsingChannel()
 {
-	if (m_nChannel >=0)
+	if (m_nChannel >= 0)
 		return true;
 	return false;
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CSound::AddEventListener( ISoundEventListener *pListener )
+void CSound::AddEventListener(ISoundEventListener* pListener)
 {
-	m_listeners.insert(pListener );
+	m_listeners.insert(pListener);
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CSound::RemoveEventListener( ISoundEventListener *pListener )
+void CSound::RemoveEventListener(ISoundEventListener* pListener)
 {
-	m_listeners.erase(pListener );
+	m_listeners.erase(pListener);
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CSound::OnEvent( ESoundCallbackEvent event )
+void CSound::OnEvent(ESoundCallbackEvent event)
 {
-	enum {THRESHOLD = 8};
+	enum { THRESHOLD = 8 };
 	if (!m_listeners.empty())
 	{
 		size_t numListeners = m_listeners.size(); // set size is cached both in MS STL and STLPORT	
 		if (numListeners == 1)
-			(*m_listeners.begin())->OnSoundEvent (event, this); // single listener
+			(*m_listeners.begin())->OnSoundEvent(event, this); // single listener
 		else
-		if (numListeners < THRESHOLD)
-		{
-			// a small number of listeners
-			ISoundEventListener* arrListeners[THRESHOLD];
-			unsigned i = 0;
-			for (Listeners::iterator it = m_listeners.begin(); it != m_listeners.end(); ++it, ++i)
-				arrListeners[i] = *it;
+			if (numListeners < THRESHOLD)
+			{
+				// a small number of listeners
+				ISoundEventListener* arrListeners[THRESHOLD];
+				unsigned i = 0;
+				for (Listeners::iterator it = m_listeners.begin(); it != m_listeners.end(); ++it, ++i)
+					arrListeners[i] = *it;
 
-			// iterate through all callbacks
-			for (i = 0; i < numListeners;++i)
-			{
-				ISoundEventListener* pListener = arrListeners[i];
-				if (m_listeners.find(pListener) != m_listeners.end()) // this listener is still alive
-					pListener->OnSoundEvent( event, this );
+				// iterate through all callbacks
+				for (i = 0; i < numListeners; ++i)
+				{
+					ISoundEventListener* pListener = arrListeners[i];
+					if (m_listeners.find(pListener) != m_listeners.end()) // this listener is still alive
+						pListener->OnSoundEvent(event, this);
+				}
 			}
-		}
-		else
-		{
-			// copy the current array of listeners and iterate through it
-			// during each OnSoundEvent, the listener set may change, so validate
-			// if the next listener is still in the set before calling upon it
-			std::vector<ISoundEventListener*> arrListeners;
-			arrListeners.reserve (numListeners);
+			else
 			{
-				// copy the array
-				for (Listeners::iterator it = m_listeners.begin(); it != m_listeners.end(); ++it)
-					arrListeners.push_back(*it);
-			}
+				// copy the current array of listeners and iterate through it
+				// during each OnSoundEvent, the listener set may change, so validate
+				// if the next listener is still in the set before calling upon it
+				std::vector<ISoundEventListener*> arrListeners;
+				arrListeners.reserve(numListeners);
+				{
+					// copy the array
+					for (Listeners::iterator it = m_listeners.begin(); it != m_listeners.end(); ++it)
+						arrListeners.push_back(*it);
+				}
 
-			// iterate through all callbacks
-			for (std::vector<ISoundEventListener*>::iterator it = arrListeners.begin(); it != arrListeners.end(); ++it)
-			{
-				ISoundEventListener* pListener = *it;
-				if (m_listeners.find(pListener) != m_listeners.end()) // this listener is still alive
-					pListener->OnSoundEvent( event, this );
+				// iterate through all callbacks
+				for (std::vector<ISoundEventListener*>::iterator it = arrListeners.begin(); it != arrListeners.end(); ++it)
+				{
+					ISoundEventListener* pListener = *it;
+					if (m_listeners.find(pListener) != m_listeners.end()) // this listener is still alive
+						pListener->OnSoundEvent(event, this);
+				}
 			}
-		}
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
-bool CSound::IsPlayLengthExpired( float fCurrTime  )
+bool CSound::IsPlayLengthExpired(float fCurrTime)
 {
 	if (m_fChannelPlayTime < 0 || m_bLoop || m_pSSys->m_bPause)
 		return false;
 
 	// Take few additional seconds precaution, (10 secs).
-	if (fCurrTime > m_fChannelPlayTime+m_fSoundLengthSec + 10)
+	if (fCurrTime > m_fChannelPlayTime + m_fSoundLengthSec + 10)
 	{
 		return true;
 	}
