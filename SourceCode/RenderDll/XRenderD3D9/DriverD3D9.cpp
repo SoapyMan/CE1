@@ -3184,6 +3184,16 @@ int CD3D9Renderer::SetPolygonMode(int mode)
 ///////////////////////////////////////////
 void CD3D9Renderer::EnableVSync(bool enable)
 {
+	if (enable)
+	{
+		m_d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_ONE;
+		m_d3dpp.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;
+	}
+	else
+	{
+		m_d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
+		m_d3dpp.FullScreen_RefreshRateInHz = 0;
+	}
 }
 
 void CD3D9Renderer::DrawQuad(const Vec3d& right, const Vec3d& up, const Vec3d& origin, int nFlipMode/*=0*/)
