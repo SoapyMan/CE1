@@ -18,15 +18,15 @@
 #include "I3DEngine.h"
 
 // render depth/shadow map into texture from light source position
-void CNULLRenderer::PrepareDepthMap(ShadowMapFrustum * lof, bool make_new_tid)
+void CNULLRenderer::PrepareDepthMap(ShadowMapFrustum* lof, bool make_new_tid)
 {
 }
 
-void CNULLRenderer::SetupShadowOnlyPass(int Num, ShadowMapFrustum * pFrustum, Vec3d * vShadowTrans, const float fShadowScale, Vec3d vObjTrans, float fObjScale, const Vec3d vObjAngles, Matrix44 * pObjMat)
+void CNULLRenderer::SetupShadowOnlyPass(int Num, ShadowMapFrustum* pFrustum, Vec3d* vShadowTrans, const float fShadowScale, Vec3d vObjTrans, float fObjScale, const Vec3d vObjAngles, Matrix44* pObjMat)
 {
 }
 
-void CNULLRenderer::OnEntityDeleted(IEntityRender * pEntityRender)
+void CNULLRenderer::OnEntityDeleted(IEntityRender* pEntityRender)
 {
 }
 

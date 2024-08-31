@@ -3,7 +3,7 @@
   Copyright 2001 Crytek Studios. All Rights Reserved.
 
   Revision history:
-    * Created by Honitch Andrey
+	* Created by Honitch Andrey
 
 =============================================================================*/
 
@@ -18,149 +18,149 @@ static char THIS_FILE[] = __FILE__;
 //============================================================================
 
 
-void CShader::mfCompileVarsPak(char *scr, TArray<CVarCond>& Vars, SShader *ef)
+void CShader::mfCompileVarsPak(char* scr, TArray<CVarCond>& Vars, SShader* ef)
 {
-  char *var;
-  char *val;
+	char* var;
+	char* val;
 
-  while ((shGetVar (&scr, &var, &val)) >= 0)
-  {
-    if (!var)
-      continue;
+	while ((shGetVar(&scr, &var, &val)) >= 0)
+	{
+		if (!var)
+			continue;
 
-    ICVar *vr = iConsole->GetCVar(var);
-    if (!vr)
-    {
-      iLog->Log("Warning: Couldn't find console variable '%s' in shader '%s'\n", var, ef->m_Name.c_str());
-      continue;
-    }
-    float v = shGetFloat(val);
-    CVarCond vc;
-    vc.m_Var = vr;
-    vc.m_Val = v;
-    Vars.AddElem(vc);
-  }
+		ICVar* vr = iConsole->GetCVar(var);
+		if (!vr)
+		{
+			iLog->Log("Warning: Couldn't find console variable '%s' in shader '%s'\n", var, ef->m_Name.c_str());
+			continue;
+		}
+		float v = shGetFloat(val);
+		CVarCond vc;
+		vc.m_Var = vr;
+		vc.m_Val = v;
+		Vars.AddElem(vc);
+	}
 }
 
-bool CShader::mfCompileHWShadeLayer(SShader *ef, char *scr, TArray<SShaderPassHW>& Layers)
+bool CShader::mfCompileHWShadeLayer(SShader* ef, char* scr, TArray<SShaderPassHW>& Layers)
 {
-  return true;
+	return true;
 }
 
-void CShader::mfCompileLayers(SShader *ef, char *scr, TArray<SShaderPassHW>& Layers, EShaderPassType eType)
-{
-}
-
-void CShader::mfCompileHWConditions(SShader *ef, char *scr, SShaderTechnique *hs, int Id)
+void CShader::mfCompileLayers(SShader* ef, char* scr, TArray<SShaderPassHW>& Layers, EShaderPassType eType)
 {
 }
 
-SShaderTechnique *CShader::mfCompileHW(SShader *ef, char *scr, int Id)
+void CShader::mfCompileHWConditions(SShader* ef, char* scr, SShaderTechnique* hs, int Id)
 {
-  return NULL;
+}
+
+SShaderTechnique* CShader::mfCompileHW(SShader* ef, char* scr, int Id)
+{
+	return NULL;
 }
 
 //===================================================================
 
 //====================================================================
 
-SGenTC *SGenTC_NormalMap::mfCopy()
+SGenTC* SGenTC_NormalMap::mfCopy()
 {
-  return NULL;
+	return NULL;
 }
 
 bool SGenTC_NormalMap::mfSet(bool bEnable)
 {
-  return true;
+	return true;
 }
 
 
-void SGenTC_NormalMap::mfCompile(char *params, SShader *ef)
+void SGenTC_NormalMap::mfCompile(char* params, SShader* ef)
 {
 }
 
-SGenTC *SGenTC_ReflectionMap::mfCopy()
+SGenTC* SGenTC_ReflectionMap::mfCopy()
 {
-  return NULL;
+	return NULL;
 }
 
 bool SGenTC_ReflectionMap::mfSet(bool bEnable)
 {
-  return true;
+	return true;
 }
 
-void SGenTC_ReflectionMap::mfCompile(char *params, SShader *ef)
+void SGenTC_ReflectionMap::mfCompile(char* params, SShader* ef)
 {
 }
 
-SGenTC *SGenTC_ObjectLinear::mfCopy()
+SGenTC* SGenTC_ObjectLinear::mfCopy()
 {
-  return NULL;
+	return NULL;
 }
 
 bool SGenTC_ObjectLinear::mfSet(bool bEnable)
 {
-  return true;
+	return true;
 }
 
-void SGenTC_ObjectLinear::mfCompile(char *scr, SShader *ef)
+void SGenTC_ObjectLinear::mfCompile(char* scr, SShader* ef)
 {
 }
 
-SGenTC *SGenTC_EyeLinear::mfCopy()
+SGenTC* SGenTC_EyeLinear::mfCopy()
 {
-  return NULL;
+	return NULL;
 }
 
 bool SGenTC_EyeLinear::mfSet(bool bEnable)
 {
-  return true;
+	return true;
 }
 
-void SGenTC_EyeLinear::mfCompile(char *scr, SShader *ef)
+void SGenTC_EyeLinear::mfCompile(char* scr, SShader* ef)
 {
 }
 
-SGenTC *SGenTC_SphereMap::mfCopy()
+SGenTC* SGenTC_SphereMap::mfCopy()
 {
-  return NULL;
+	return NULL;
 }
 
 bool SGenTC_SphereMap::mfSet(bool bEnable)
 {
-  return true;
+	return true;
 }
 
-void SGenTC_SphereMap::mfCompile(char *params, SShader *ef)
+void SGenTC_SphereMap::mfCompile(char* params, SShader* ef)
 {
 }
 
 
-SGenTC *SGenTC_EmbossMap::mfCopy()
+SGenTC* SGenTC_EmbossMap::mfCopy()
 {
-  return NULL;
+	return NULL;
 }
 
 
 bool SGenTC_EmbossMap::mfSet(bool bEnable)
 {
-  return true;
+	return true;
 }
 
-void SGenTC_EmbossMap::mfCompile(char *params, SShader *ef)
+void SGenTC_EmbossMap::mfCompile(char* params, SShader* ef)
 {
 }
 
-bool CShader::mfCompileTexGen(char *name, char *params, SShader *ef, SShaderTexUnit *ml)
+bool CShader::mfCompileTexGen(char* name, char* params, SShader* ef, SShaderTexUnit* ml)
 {
-  return true;
+	return true;
 }
 
 //====================================================================
 // Matrix operations
 
 
-void CShader::mfCompileMatrixOp(TArray<SMatrixTransform>* List, char *scr, char *nmMat, SShader *ef)
+void CShader::mfCompileMatrixOp(TArray<SMatrixTransform>* List, char* scr, char* nmMat, SShader* ef)
 {
 }
 
@@ -177,7 +177,7 @@ void SMatrixTransform_Identity::mfSet(bool bSet)
 }
 void SMatrixTransform_Identity::mfSet(Matrix44& matr)
 {
-  matr.SetIdentity();
+	matr.SetIdentity();
 }
 
 void SMatrixTransform_Translate::mfSet(bool bSet)
@@ -244,6 +244,6 @@ void SArrayPointer_SecColor::mfSet(int Id)
 
 float SParamComp_Fog::mfGet()
 {
-  return 0;
+	return 0;
 }
 

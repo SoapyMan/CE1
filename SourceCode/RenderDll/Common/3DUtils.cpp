@@ -15,127 +15,127 @@ static void utlMtx2Quat(float m[3][3], float quat[4]);
 //      Decompose a matrix to it's components, translate,
 //      rotate ( a quaternion) and scale.
 //
-static void utlDecompMatrix( const float *mat, DECOMP_MAT *dmat, char *rotOrder)
+static void utlDecompMatrix(const float* mat, DECOMP_MAT* dmat, char* rotOrder)
 {
-    int         i, j,
-    order;
-    static float       Sxy, Sxz,
-    rot[3], quat[4],
-    det,
-        m[3][3];
+	int         i, j,
+		order;
+	static float       Sxy, Sxz,
+		rot[3], quat[4],
+		det,
+		m[3][3];
 
-    dmat->translate[0] = mat[3*4+0];
-    dmat->translate[1] = mat[3*4+1];
-    dmat->translate[2] = mat[3*4+2];
+	dmat->translate[0] = mat[3 * 4 + 0];
+	dmat->translate[1] = mat[3 * 4 + 1];
+	dmat->translate[2] = mat[3 * 4 + 2];
 
-    m[0][0] = mat[0*4+0];
-    m[0][1] = mat[0*4+1];
-    m[0][2] = mat[0*4+2];
+	m[0][0] = mat[0 * 4 + 0];
+	m[0][1] = mat[0 * 4 + 1];
+	m[0][2] = mat[0 * 4 + 2];
 
-    dmat->scale[0] = sqrt_tpl( m[0][0]*m[0][0] + m[0][1]*m[0][1] + m[0][2]*m[0][2]);
+	dmat->scale[0] = sqrt_tpl(m[0][0] * m[0][0] + m[0][1] * m[0][1] + m[0][2] * m[0][2]);
 
-    /* Normalize second row */
-    m[0][0] /= dmat->scale[0];
-    m[0][1] /= dmat->scale[0];
-    m[0][2] /= dmat->scale[0];
+	/* Normalize second row */
+	m[0][0] /= dmat->scale[0];
+	m[0][1] /= dmat->scale[0];
+	m[0][2] /= dmat->scale[0];
 
-    /* Determine xy shear */
-    Sxy = mat[0*4+0] * mat[1*4+0] + 
-    mat[0*4+1] * mat[1*4+1] +
-    mat[0*4+2] * mat[1*4+2];
+	/* Determine xy shear */
+	Sxy = mat[0 * 4 + 0] * mat[1 * 4 + 0] +
+		mat[0 * 4 + 1] * mat[1 * 4 + 1] +
+		mat[0 * 4 + 2] * mat[1 * 4 + 2];
 
-    m[1][0] = mat[1*4+0] - Sxy * mat[0*4+0];
-    m[1][1] = mat[1*4+1] - Sxy * mat[0*4+1];
-    m[1][2] = mat[1*4+2] - Sxy * mat[0*4+2];
+	m[1][0] = mat[1 * 4 + 0] - Sxy * mat[0 * 4 + 0];
+	m[1][1] = mat[1 * 4 + 1] - Sxy * mat[0 * 4 + 1];
+	m[1][2] = mat[1 * 4 + 2] - Sxy * mat[0 * 4 + 2];
 
-    dmat->scale[1] = sqrt_tpl( m[1][0]*m[1][0] + m[1][1]*m[1][1] + m[1][2]*m[1][2]);
+	dmat->scale[1] = sqrt_tpl(m[1][0] * m[1][0] + m[1][1] * m[1][1] + m[1][2] * m[1][2]);
 
-    /* Normalize second row */
-    m[1][0] /= dmat->scale[1];
-    m[1][1] /= dmat->scale[1];
-    m[1][2] /= dmat->scale[1];
+	/* Normalize second row */
+	m[1][0] /= dmat->scale[1];
+	m[1][1] /= dmat->scale[1];
+	m[1][2] /= dmat->scale[1];
 
-    /* Determine xz shear */
-    Sxz = mat[0*4+0] * mat[2*4+0] + 
-    mat[0*4+1] * mat[2*4+1] +
-    mat[0*4+2] * mat[2*4+2];
+	/* Determine xz shear */
+	Sxz = mat[0 * 4 + 0] * mat[2 * 4 + 0] +
+		mat[0 * 4 + 1] * mat[2 * 4 + 1] +
+		mat[0 * 4 + 2] * mat[2 * 4 + 2];
 
-    m[2][0] = mat[2*4+0] - Sxz * mat[0*4+0];
-    m[2][1] = mat[2*4+1] - Sxz * mat[0*4+1];
-    m[2][2] = mat[2*4+2] - Sxz * mat[0*4+2];
+	m[2][0] = mat[2 * 4 + 0] - Sxz * mat[0 * 4 + 0];
+	m[2][1] = mat[2 * 4 + 1] - Sxz * mat[0 * 4 + 1];
+	m[2][2] = mat[2 * 4 + 2] - Sxz * mat[0 * 4 + 2];
 
-    dmat->scale[2] = sqrt_tpl( m[2][0]*m[2][0] + m[2][1]*m[2][1] + m[2][2]*m[2][2]);
+	dmat->scale[2] = sqrt_tpl(m[2][0] * m[2][0] + m[2][1] * m[2][1] + m[2][2] * m[2][2]);
 
-    /* Normalize third row */
-    m[2][0] /= dmat->scale[2];
-    m[2][1] /= dmat->scale[2];
-    m[2][2] /= dmat->scale[2];
+	/* Normalize third row */
+	m[2][0] /= dmat->scale[2];
+	m[2][1] /= dmat->scale[2];
+	m[2][2] /= dmat->scale[2];
 
-    det = (m[0][0]*m[1][1]*m[2][2]) + (m[0][1]*m[1][2]*m[2][0]) + (m[0][2]*m[1][0]*m[2][1]) -
-    (m[0][2]*m[1][1]*m[2][0]) - (m[0][0]*m[1][2]*m[2][1]) - (m[0][1]*m[1][0]*m[2][2]);
+	det = (m[0][0] * m[1][1] * m[2][2]) + (m[0][1] * m[1][2] * m[2][0]) + (m[0][2] * m[1][0] * m[2][1]) -
+		(m[0][2] * m[1][1] * m[2][0]) - (m[0][0] * m[1][2] * m[2][1]) - (m[0][1] * m[1][0] * m[2][2]);
 
-    /* If the determinant of the rotation matrix is negative, */
-    /* negate the matrix and scale factors.                   */
-    
-    if ( det < 0.0) {
-    for ( i = 0; i < 3; i++) {
-      for ( j = 0; j < 3; j++) 
-        m[i][j] *= -1.0;
-      dmat->scale[i] *= -1.0;
-    }
-    }
+	/* If the determinant of the rotation matrix is negative, */
+	/* negate the matrix and scale factors.                   */
 
-    // Copy the 3x3 rotation matrix into the decomposition 
-    // structure.
-    //
-    memcpy( dmat->rotMatrix, m, sizeof( float)*9);
+	if (det < 0.0) {
+		for (i = 0; i < 3; i++) {
+			for (j = 0; j < 3; j++)
+				m[i][j] *= -1.0;
+			dmat->scale[i] *= -1.0;
+		}
+	}
 
-    /*rot[1] = asin( -m[0][2]);
-    if ( fabsf( cos( rot[1])) > 0.0001) {
-        rot[0] = asin( m[1][2]/cos( rot[1]));
-        rot[2] = asin( m[0][1]/cos( rot[1]));
-    } else {
-        rot[0] = acos( m[1][1]);
-        rot[2] = 0.0;
-    }*/
+	// Copy the 3x3 rotation matrix into the decomposition 
+	// structure.
+	//
+	memcpy(dmat->rotMatrix, m, sizeof(float) * 9);
 
-    switch( rotOrder[2]) {
-    case XROT:
-      if ( rotOrder[1] == YROT) 
-        order = UTL_ROT_XYZ;
-      else
-        order = UTL_ROT_XZY;
-            break;
+	/*rot[1] = asin( -m[0][2]);
+	if ( fabsf( cos( rot[1])) > 0.0001) {
+		rot[0] = asin( m[1][2]/cos( rot[1]));
+		rot[2] = asin( m[0][1]/cos( rot[1]));
+	} else {
+		rot[0] = acos( m[1][1]);
+		rot[2] = 0.0;
+	}*/
 
-    case YROT:
-      if ( rotOrder[1] == XROT) 
-        order = UTL_ROT_YXZ;
-      else
-        order = UTL_ROT_YZX;
-            break;
+	switch (rotOrder[2]) {
+	case XROT:
+		if (rotOrder[1] == YROT)
+			order = UTL_ROT_XYZ;
+		else
+			order = UTL_ROT_XZY;
+		break;
 
-    case ZROT:
-      if ( rotOrder[1] == XROT) 
-        order = UTL_ROT_ZXY;
-      else
-        order = UTL_ROT_ZYX;
-            break;
+	case YROT:
+		if (rotOrder[1] == XROT)
+			order = UTL_ROT_YXZ;
+		else
+			order = UTL_ROT_YZX;
+		break;
 
-    default:
-      order = UTL_ROT_XYZ;
-      break;
-    }
+	case ZROT:
+		if (rotOrder[1] == XROT)
+			order = UTL_ROT_ZXY;
+		else
+			order = UTL_ROT_ZYX;
+		break;
 
-    utlMtx2Euler( order, m, rot);
-    dmat->rotation[0] = rot[0];
-    dmat->rotation[1] = rot[1];
-    dmat->rotation[2] = rot[2];
+	default:
+		order = UTL_ROT_XYZ;
+		break;
+	}
 
-    utlMtx2Quat(m,quat);
-    dmat->quaternion[0] = quat[0];
-    dmat->quaternion[1] = quat[1];
-    dmat->quaternion[2] = quat[2];
-    dmat->quaternion[3] = quat[3];
+	utlMtx2Euler(order, m, rot);
+	dmat->rotation[0] = rot[0];
+	dmat->rotation[1] = rot[1];
+	dmat->rotation[2] = rot[2];
+
+	utlMtx2Quat(m, quat);
+	dmat->quaternion[0] = quat[0];
+	dmat->quaternion[1] = quat[1];
+	dmat->quaternion[2] = quat[2];
+	dmat->quaternion[3] = quat[3];
 }
 
 
@@ -147,7 +147,7 @@ static void utlDecompMatrix( const float *mat, DECOMP_MAT *dmat, char *rotOrder)
  *
  *  PARAMETERS
  *      int                     The order of rotations
- *      float   mat[3][3]       rotation matrix  
+ *      float   mat[3][3]       rotation matrix
  *      float   rot[3]          xyz-rotation values
  *
  *  DESCRIPTION
@@ -168,158 +168,164 @@ static void utlDecompMatrix( const float *mat, DECOMP_MAT *dmat, char *rotOrder)
 
 void utlMtx2Euler(int ord, float m[3][3], float rot[3])
 {
-  /*
-   *  Ken Shoemake's recommended algorithm is to convert the
-   *  quaternion to a matrix and the matrix to Euler angles.
-   *  We do this, of course, without generating unused matrix
-   *  elements.
-   */
-    float        zr, sxr, cxr,
-    yr, syr, cyr,
-    xr, szr, czr;
-    static float epsilon = 1.0e-5f;
+	/*
+	 *  Ken Shoemake's recommended algorithm is to convert the
+	 *  quaternion to a matrix and the matrix to Euler angles.
+	 *  We do this, of course, without generating unused matrix
+	 *  elements.
+	 */
+	float        zr, sxr, cxr,
+		yr, syr, cyr,
+		xr, szr, czr;
+	static float epsilon = 1.0e-5f;
 
-    switch ( ord) {
+	switch (ord) {
 
-        case UTL_ROT_ZYX:
-            syr = -m[0][2];
-            cyr = sqrt_tpl(1 - syr * syr);
+	case UTL_ROT_ZYX:
+		syr = -m[0][2];
+		cyr = sqrt_tpl(1 - syr * syr);
 
-            if (cyr < epsilon) {
-                /* Insufficient accuracy, assume that yr = PI/2 && zr = 0 */
-                xr = cry_atan2f(-m[2][1], m[1][1]);
-                yr = (syr > 0) ? M_PI_2 : -M_PI_2;      /* +/- 90 deg */
-                zr = 0.0;
-            } else {
-                xr = cry_atan2f(m[1][2], m[2][2]);
-                yr = cry_atan2f(syr, cyr);
-                zr = cry_atan2f(m[0][1], m[0][0]);
-            }
-            break;
+		if (cyr < epsilon) {
+			/* Insufficient accuracy, assume that yr = PI/2 && zr = 0 */
+			xr = cry_atan2f(-m[2][1], m[1][1]);
+			yr = (syr > 0) ? M_PI_2 : -M_PI_2;      /* +/- 90 deg */
+			zr = 0.0;
+		}
+		else {
+			xr = cry_atan2f(m[1][2], m[2][2]);
+			yr = cry_atan2f(syr, cyr);
+			zr = cry_atan2f(m[0][1], m[0][0]);
+		}
+		break;
 
-        case UTL_ROT_YZX:
-            szr = m[0][1];
-            czr = sqrt_tpl(1 - szr * szr);
-            if (czr < epsilon) {
-                /* Insufficient accuracy, assume that zr = +/- PI/2 && yr = 0 */
-                xr = cry_atan2f(m[1][2], m[2][2]);
-                yr = 0.0;
-                zr = (szr > 0) ? M_PI_2 : -M_PI_2;
-            } else {
-                xr = cry_atan2f(-m[2][1], m[1][1]);
-                yr = cry_atan2f(-m[0][2], m[0][0]);
-                zr = cry_atan2f(szr,  czr);
-            }
-            break;
+	case UTL_ROT_YZX:
+		szr = m[0][1];
+		czr = sqrt_tpl(1 - szr * szr);
+		if (czr < epsilon) {
+			/* Insufficient accuracy, assume that zr = +/- PI/2 && yr = 0 */
+			xr = cry_atan2f(m[1][2], m[2][2]);
+			yr = 0.0;
+			zr = (szr > 0) ? M_PI_2 : -M_PI_2;
+		}
+		else {
+			xr = cry_atan2f(-m[2][1], m[1][1]);
+			yr = cry_atan2f(-m[0][2], m[0][0]);
+			zr = cry_atan2f(szr, czr);
+		}
+		break;
 
-        case UTL_ROT_ZXY:
-            sxr = m[1][2];
-            cxr = sqrt_tpl(1 - sxr * sxr);
+	case UTL_ROT_ZXY:
+		sxr = m[1][2];
+		cxr = sqrt_tpl(1 - sxr * sxr);
 
-            if (cxr < epsilon) {
-                /* Insufficient accuracy, assume that xr = PI/2 && zr = 0 */
-                xr = (sxr > 0) ? M_PI_2 : -M_PI_2;
-                yr = cry_atan2f(m[2][0], m[0][0]);
-                zr = 0.0;
-            } else {
-                xr = cry_atan2f( sxr, cxr);
-                yr = cry_atan2f(-m[0][2], m[2][2]);
-                zr = cry_atan2f(-m[1][0], m[1][1]);
-            }
-            break;
+		if (cxr < epsilon) {
+			/* Insufficient accuracy, assume that xr = PI/2 && zr = 0 */
+			xr = (sxr > 0) ? M_PI_2 : -M_PI_2;
+			yr = cry_atan2f(m[2][0], m[0][0]);
+			zr = 0.0;
+		}
+		else {
+			xr = cry_atan2f(sxr, cxr);
+			yr = cry_atan2f(-m[0][2], m[2][2]);
+			zr = cry_atan2f(-m[1][0], m[1][1]);
+		}
+		break;
 
-        case UTL_ROT_XZY:
-            szr = -m[1][0];
-            czr = sqrt_tpl(1 - szr * szr);
-            if (czr < epsilon) {
-                /* Insufficient accuracy, assume that zr = PI / 2 && xr = 0 */
-                xr = 0.0;
-                yr = cry_atan2f(-m[0][2], m[2][2]);
-                zr = (szr > 0) ? M_PI_2 : -M_PI_2;
-            } else {
-                xr = cry_atan2f(m[0][2], m[1][1]);
-                yr = cry_atan2f(m[2][0], m[0][0]);
-                zr = cry_atan2f(szr, czr);
-            }
-            break;
+	case UTL_ROT_XZY:
+		szr = -m[1][0];
+		czr = sqrt_tpl(1 - szr * szr);
+		if (czr < epsilon) {
+			/* Insufficient accuracy, assume that zr = PI / 2 && xr = 0 */
+			xr = 0.0;
+			yr = cry_atan2f(-m[0][2], m[2][2]);
+			zr = (szr > 0) ? M_PI_2 : -M_PI_2;
+		}
+		else {
+			xr = cry_atan2f(m[0][2], m[1][1]);
+			yr = cry_atan2f(m[2][0], m[0][0]);
+			zr = cry_atan2f(szr, czr);
+		}
+		break;
 
-        case UTL_ROT_YXZ:
-            sxr = -m[2][1];
-            cxr = sqrt_tpl(1 - sxr * sxr);
+	case UTL_ROT_YXZ:
+		sxr = -m[2][1];
+		cxr = sqrt_tpl(1 - sxr * sxr);
 
-            if (cxr < epsilon) {
-                /* Insufficient accuracy, assume that xr = PI/2 && yr = 0 */
-                xr = (sxr > 0) ? M_PI_2 : -M_PI_2;
-                yr = 0.0;
-                zr = cry_atan2f(-m[1][0], m[0][0]);
-            } else {
-                xr = cry_atan2f(sxr, cxr);
-                yr = cry_atan2f(m[2][0], m[2][2]);
-                zr = cry_atan2f(m[0][1], m[1][1]);
-            }
-            break;
+		if (cxr < epsilon) {
+			/* Insufficient accuracy, assume that xr = PI/2 && yr = 0 */
+			xr = (sxr > 0) ? M_PI_2 : -M_PI_2;
+			yr = 0.0;
+			zr = cry_atan2f(-m[1][0], m[0][0]);
+		}
+		else {
+			xr = cry_atan2f(sxr, cxr);
+			yr = cry_atan2f(m[2][0], m[2][2]);
+			zr = cry_atan2f(m[0][1], m[1][1]);
+		}
+		break;
 
-        case UTL_ROT_XYZ:
-            syr = m[2][0];
-            cyr = sqrt_tpl(1 - syr * syr);
-            if (cyr < epsilon) {
-                /* Insufficient accuracy, assume that yr = PI / 2 && xr = 0 */
-                xr = 0.0;
-                yr = (syr > 0) ? M_PI_2 : -M_PI_2;
-                zr = cry_atan2f(m[0][1], m[1][1]);
-            } else {
-                xr = cry_atan2f(-m[2][1], m[2][2]);
-                yr = cry_atan2f( syr, cyr);
-                zr = cry_atan2f(-m[1][1], m[0][0]);
-            }
-            break;
-    }
+	case UTL_ROT_XYZ:
+		syr = m[2][0];
+		cyr = sqrt_tpl(1 - syr * syr);
+		if (cyr < epsilon) {
+			/* Insufficient accuracy, assume that yr = PI / 2 && xr = 0 */
+			xr = 0.0;
+			yr = (syr > 0) ? M_PI_2 : -M_PI_2;
+			zr = cry_atan2f(m[0][1], m[1][1]);
+		}
+		else {
+			xr = cry_atan2f(-m[2][1], m[2][2]);
+			yr = cry_atan2f(syr, cyr);
+			zr = cry_atan2f(-m[1][1], m[0][0]);
+		}
+		break;
+	}
 
-    rot[0] = xr;
-    rot[1] = yr;
-    rot[2] = zr;
+	rot[0] = xr;
+	rot[1] = yr;
+	rot[2] = zr;
 }
 
 /*
  *  ========= utlMtx2Quat ====================
- * 
+ *
  *  SYNOPSIS
  *  Returns the w,x,y,z coordinates of the quaternion
  *  given the rotation matrix.
  */
 static void utlMtx2Quat(float m[3][3], float quat[4])
 {
-    // m stores the 3x3 rotation matrix.
-    // Convert it to quaternion.
-    float trace = m[0][0] + m[1][1] + m[2][2];
-    float s;
-    if (trace > 0.0) {
-        s = sqrt_tpl(trace + 1.0);
-        quat[0] = s*0.5;
-        s = 0.5/s;
-        quat[1] = (m[1][2] - m[2][1])*s;
-        quat[2] = (m[2][0] - m[0][2])*s;
-        quat[3] = (m[0][1] - m[1][0])*s;
+	// m stores the 3x3 rotation matrix.
+	// Convert it to quaternion.
+	float trace = m[0][0] + m[1][1] + m[2][2];
+	float s;
+	if (trace > 0.0) {
+		s = sqrt_tpl(trace + 1.0);
+		quat[0] = s * 0.5;
+		s = 0.5 / s;
+		quat[1] = (m[1][2] - m[2][1]) * s;
+		quat[2] = (m[2][0] - m[0][2]) * s;
+		quat[3] = (m[0][1] - m[1][0]) * s;
 
-    }
-    else {
-        int i = 0; // i represents index of quaternion, so 0=scalar, 1=xaxis, etc.
-        int nxt[3] = {1,2,0}; // next index for each component.
-        if (m[1][1] > m[0][0]) i = 1;
-        if (m[2][2] > m[i][i]) i = 2;
-        int j = nxt[i]; int k = nxt[j];
-        s = sqrt_tpl( (m[i][i] - (m[j][j] + m[k][k])) + 1.0);
-        float q[4];
-        q[i+1] = s*0.5;
-        s=0.5/s;
-        q[0] = (m[j][k] - m[k][j])*s;
-        q[j+1] = (m[i][j]+m[j][i])*s;
-        q[k+1] = (m[i][k]+m[k][i])*s;
-        quat[0] = q[0];
-        quat[1] = q[1];
-        quat[2] = q[2];
-        quat[3] = q[3];
-    }
+	}
+	else {
+		int i = 0; // i represents index of quaternion, so 0=scalar, 1=xaxis, etc.
+		int nxt[3] = { 1,2,0 }; // next index for each component.
+		if (m[1][1] > m[0][0]) i = 1;
+		if (m[2][2] > m[i][i]) i = 2;
+		int j = nxt[i]; int k = nxt[j];
+		s = sqrt_tpl((m[i][i] - (m[j][j] + m[k][k])) + 1.0);
+		float q[4];
+		q[i + 1] = s * 0.5;
+		s = 0.5 / s;
+		q[0] = (m[j][k] - m[k][j]) * s;
+		q[j + 1] = (m[i][j] + m[j][i]) * s;
+		q[k + 1] = (m[i][k] + m[k][i]) * s;
+		quat[0] = q[0];
+		quat[1] = q[1];
+		quat[2] = q[2];
+		quat[3] = q[3];
+	}
 }
 
 /*
@@ -330,21 +336,21 @@ static void utlMtx2Quat(float m[3][3], float quat[4])
  *  given matrix. The priority order is assumed to be ---.
  */
 
-int  DtMatrixGetTranslation( float *matrix, float *xTrans, float *yTrans, float *zTrans)
+int  DtMatrixGetTranslation(float* matrix, float* xTrans, float* yTrans, float* zTrans)
 {
-    DECOMP_MAT dmat;
-    if (matrix)
-    {
-        utlDecompMatrix( matrix, &dmat, "xyz" );
-        *xTrans = dmat.translate[0];
-        *yTrans = dmat.translate[1];
-        *zTrans = dmat.translate[2];
-    }
-    else
-    {
-        *xTrans = *yTrans = *zTrans = 0.0;
-    }
-    return(1);
+	DECOMP_MAT dmat;
+	if (matrix)
+	{
+		utlDecompMatrix(matrix, &dmat, "xyz");
+		*xTrans = dmat.translate[0];
+		*yTrans = dmat.translate[1];
+		*zTrans = dmat.translate[2];
+	}
+	else
+	{
+		*xTrans = *yTrans = *zTrans = 0.0;
+	}
+	return(1);
 
 }  /* DtMatrixGetTranslation */
 
@@ -355,22 +361,22 @@ int  DtMatrixGetTranslation( float *matrix, float *xTrans, float *yTrans, float 
  *  Return the quaternion (scalar, xAxis, yAxis, zAxis)
  *  defining the orientation represented in the given matrix.
  */
-int  DtMatrixGetQuaternion(float *matrix, float *scalar, float *xAxis, float *yAxis, float *zAxis)
+int  DtMatrixGetQuaternion(float* matrix, float* scalar, float* xAxis, float* yAxis, float* zAxis)
 {
-    DECOMP_MAT dmat;
-    if (matrix)
-    {
-    utlDecompMatrix( matrix, &dmat, "xyz" );
-    *scalar = dmat.quaternion[0];
-    *xAxis = dmat.quaternion[1];
-    *yAxis = dmat.quaternion[2];
-    *zAxis = dmat.quaternion[3];
-    } 
-    else
-    {
-    *scalar = 1.0; *xAxis = *yAxis = *zAxis = 0.0;
-    }
-    return(1);
+	DECOMP_MAT dmat;
+	if (matrix)
+	{
+		utlDecompMatrix(matrix, &dmat, "xyz");
+		*scalar = dmat.quaternion[0];
+		*xAxis = dmat.quaternion[1];
+		*yAxis = dmat.quaternion[2];
+		*zAxis = dmat.quaternion[3];
+	}
+	else
+	{
+		*scalar = 1.0; *xAxis = *yAxis = *zAxis = 0.0;
+	}
+	return(1);
 }  /* DtMatrixGetQuaternion */
 
 /*
@@ -381,22 +387,22 @@ int  DtMatrixGetQuaternion(float *matrix, float *scalar, float *xAxis, float *yA
  *  given matrix. The priority order is assumed to be ---.
  */
 
-int  DtMatrixGetRotation(float *matrix, float *xRotation, float *yRotation, float *zRotation)
+int  DtMatrixGetRotation(float* matrix, float* xRotation, float* yRotation, float* zRotation)
 {
 
-    DECOMP_MAT dmat;
-    if (matrix)
-    {
-        utlDecompMatrix( matrix, &dmat, "xyz" );
-        *xRotation = dmat.rotation[0];
-        *yRotation = dmat.rotation[1];
-        *zRotation = dmat.rotation[2];
-    }
-    else
-    {
-        *xRotation = *yRotation = *zRotation = 0.0;
-    }
-    return(1);
+	DECOMP_MAT dmat;
+	if (matrix)
+	{
+		utlDecompMatrix(matrix, &dmat, "xyz");
+		*xRotation = dmat.rotation[0];
+		*yRotation = dmat.rotation[1];
+		*zRotation = dmat.rotation[2];
+	}
+	else
+	{
+		*xRotation = *yRotation = *zRotation = 0.0;
+	}
+	return(1);
 
 }  /* DtMatrixGetRotation */
 
@@ -409,23 +415,23 @@ int  DtMatrixGetRotation(float *matrix, float *xRotation, float *yRotation, floa
  *  matrix. The priority order is assumed to be ---.
  */
 
-int  DtMatrixGetScale(float *matrix, float *xScale, float *yScale, float *zScale)
+int  DtMatrixGetScale(float* matrix, float* xScale, float* yScale, float* zScale)
 {
 
-    DECOMP_MAT dmat;
-    
-    if (matrix)
-    {
-        utlDecompMatrix( matrix, &dmat, "xyz" );
-        *xScale = dmat.scale[0];
-        *yScale = dmat.scale[1];
-        *zScale = dmat.scale[2];
-    }
-    else
-    {
-        *xScale = *yScale = *zScale = 1.0;
-    }
-    return(1);
+	DECOMP_MAT dmat;
+
+	if (matrix)
+	{
+		utlDecompMatrix(matrix, &dmat, "xyz");
+		*xScale = dmat.scale[0];
+		*yScale = dmat.scale[1];
+		*zScale = dmat.scale[2];
+	}
+	else
+	{
+		*xScale = *yScale = *zScale = 1.0;
+	}
+	return(1);
 
 }  /* DtMatrixGetScale */
 /*
@@ -434,42 +440,42 @@ int  DtMatrixGetScale(float *matrix, float *xScale, float *yScale, float *zScale
  *  SYNOPSIS
  *  Return the x,y,z translation, scale quaternion and
  *  Euler angles in "xyz" order of the given
- *  matrix. 
+ *  matrix.
  */
 
-int DtMatrixGetTransforms(float *matrix, float *translate, 
-                          float *scale, float *quaternion, float *rotation)
+int DtMatrixGetTransforms(float* matrix, float* translate,
+	float* scale, float* quaternion, float* rotation)
 {
-    DECOMP_MAT dmat;
+	DECOMP_MAT dmat;
 
-    if (matrix)
-    {
-        utlDecompMatrix( matrix, &dmat, "xyz" );
+	if (matrix)
+	{
+		utlDecompMatrix(matrix, &dmat, "xyz");
 
-  if (translate) {
-      translate[0] = dmat.translate[0];
-      translate[1] = dmat.translate[1];
-      translate[2] = dmat.translate[2];
-  }
-  if (scale) {
-      scale[0] = dmat.scale[0];
-      scale[1] = dmat.scale[1];
-      scale[2] = dmat.scale[2];
-  }
-  if (quaternion) {
-      quaternion[0] = dmat.quaternion[0];
-      quaternion[1] = dmat.quaternion[1];
-      quaternion[2] = dmat.quaternion[2];
-      quaternion[3] = dmat.quaternion[3];
-  }
-  if (rotation) {
-      rotation[0] = dmat.rotation[0];
-      rotation[1] = dmat.rotation[1];
-      rotation[2] = dmat.rotation[2];
-  }
-  return(1);
-  }
-  return(0);
+		if (translate) {
+			translate[0] = dmat.translate[0];
+			translate[1] = dmat.translate[1];
+			translate[2] = dmat.translate[2];
+		}
+		if (scale) {
+			scale[0] = dmat.scale[0];
+			scale[1] = dmat.scale[1];
+			scale[2] = dmat.scale[2];
+		}
+		if (quaternion) {
+			quaternion[0] = dmat.quaternion[0];
+			quaternion[1] = dmat.quaternion[1];
+			quaternion[2] = dmat.quaternion[2];
+			quaternion[3] = dmat.quaternion[3];
+		}
+		if (rotation) {
+			rotation[0] = dmat.rotation[0];
+			rotation[1] = dmat.rotation[1];
+			rotation[2] = dmat.rotation[2];
+		}
+		return(1);
+	}
+	return(0);
 }
 
 //==============================================================================
@@ -607,39 +613,39 @@ float gSinTable[1024] = {
 
 typedef union FastSqrtUnion
 {
-  float f;
-  unsigned int i;
+	float f;
+	unsigned int i;
 } FastSqrtUnion;
 
 unsigned int gFastSqrtTable[0x10000];  // declare table of square roots 
 
 void  build_sqrt_table()
 {
-  unsigned int i;
-  FastSqrtUnion s;
+	unsigned int i;
+	FastSqrtUnion s;
 
-  for (i = 0; i <= 0x7FFF; i++)
-  {
+	for (i = 0; i <= 0x7FFF; i++)
+	{
 
-    // Build a float with the bit pattern i as mantissa
-    //  and an exponent of 0, stored as 127
+		// Build a float with the bit pattern i as mantissa
+		//  and an exponent of 0, stored as 127
 
-    s.i = (i << 8) | (0x7F << 23);
-    s.f = (float)sqrt_tpl(s.f);
+		s.i = (i << 8) | (0x7F << 23);
+		s.f = (float)sqrt_tpl(s.f);
 
-    // Take the square root then strip the first 7 bits of
-    //  the mantissa into the table
+		// Take the square root then strip the first 7 bits of
+		//  the mantissa into the table
 
-    gFastSqrtTable[i + 0x8000] = (s.i & 0x7FFFFF);
+		gFastSqrtTable[i + 0x8000] = (s.i & 0x7FFFFF);
 
-    // Repeat the process, this time with an exponent of 1, 
-    //  stored as 128
+		// Repeat the process, this time with an exponent of 1, 
+		//  stored as 128
 
-    s.i = (i << 8) | (0x80 << 23);
-    s.f = (float)sqrt_tpl(s.f);
+		s.i = (i << 8) | (0x80 << 23);
+		s.f = (float)sqrt_tpl(s.f);
 
-    gFastSqrtTable[i] = (s.i & 0x7FFFFF);
-  }
+		gFastSqrtTable[i] = (s.i & 0x7FFFFF);
+	}
 }
 
 #include <float.h>
@@ -650,13 +656,13 @@ void  build_sqrt_table()
 */
 void init_math(void)
 {
-  static bool initialized = false;
+	static bool initialized = false;
 
-  if (!initialized)
-  {
-    build_sqrt_table();
-    initialized = true;
-  }
+	if (!initialized)
+	{
+		build_sqrt_table();
+		initialized = true;
+	}
 }
 
 #pragma warning(pop)

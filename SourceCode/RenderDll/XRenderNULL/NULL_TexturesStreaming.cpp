@@ -3,7 +3,7 @@
   Copyright (c) 2001 Crytek Studios. All Rights Reserved.
 
   Revision history:
-    * Created by Honitch Andrey
+	* Created by Honitch Andrey
 
 =============================================================================*/
 
@@ -18,18 +18,18 @@ void STexPic::BuildMips()
 
 bool STexPic::UploadMips(int nStartMip, int nEndMip)
 {
-  return true;
+	return true;
 }
 
 void STexPic::RemoveFromPool()
 {
 }
 
-void CTexMan::UnloadOldTextures(STexPic *pExclude)
+void CTexMan::UnloadOldTextures(STexPic* pExclude)
 {
 }
 
-void CTexMan::CheckTexLimits(STexPic *pExclude)
+void CTexMan::CheckTexLimits(STexPic* pExclude)
 {
 }
 

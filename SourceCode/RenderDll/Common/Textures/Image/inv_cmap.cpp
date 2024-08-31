@@ -13,18 +13,18 @@
 static int bcenter, gcenter, rcenter;
 static long gdist, rdist, cdist;
 static long cbinc, cginc, crinc;
-static unsigned long *gdp, *rdp, *cdp;
-static unsigned char *grgbp, *rrgbp, *crgbp;
+static unsigned long* gdp, * rdp, * cdp;
+static unsigned char* grgbp, * rrgbp, * crgbp;
 static long gstride, rstride;
 static long rx, gx, bx;
 static long rxsqr, gxsqr, bxsqr;
 static long rcolormax, gcolormax, bcolormax;
 static int cindex;
 
-static void maxfill (unsigned long *, long, long, long);
-static int redloop (void);
-static int greenloop (int);
-static int blueloop (int);
+static void maxfill(unsigned long*, long, long, long);
+static int redloop(void);
+static int greenloop(int);
+static int blueloop(int);
 
 /*
 * Here's the idea:  scan from the "center" of each cell "out"
@@ -135,320 +135,320 @@ static int blueloop (int);
  * changed.
  */
 
-void shInverseColormap (int colors, SRGBPixel *colormap,
-  int rbits, int gbits, int bbits, byte *&rgbmap, unsigned long *dist_buf)
+void shInverseColormap(int colors, SRGBPixel* colormap,
+	int rbits, int gbits, int bbits, byte*& rgbmap, unsigned long* dist_buf)
 {
-  int rnbits = 8 - rbits;
-  int gnbits = 8 - gbits;
-  int bnbits = 8 - bbits;
+	int rnbits = 8 - rbits;
+	int gnbits = 8 - gbits;
+	int bnbits = 8 - bbits;
 
-  rcolormax = 1 << rbits;
-  gcolormax = 1 << gbits;
-  bcolormax = 1 << bbits;
-  rx = 1 << rnbits;
-  gx = 1 << gnbits;
-  bx = 1 << bnbits;
-  rxsqr = 1 << (2 * rnbits);
-  gxsqr = 1 << (2 * gnbits);
-  bxsqr = 1 << (2 * bnbits);
+	rcolormax = 1 << rbits;
+	gcolormax = 1 << gbits;
+	bcolormax = 1 << bbits;
+	rx = 1 << rnbits;
+	gx = 1 << gnbits;
+	bx = 1 << bnbits;
+	rxsqr = 1 << (2 * rnbits);
+	gxsqr = 1 << (2 * gnbits);
+	bxsqr = 1 << (2 * bnbits);
 
-  /* Compute "strides" for accessing the arrays. */
-  gstride = bcolormax;
-  rstride = gcolormax * bcolormax;
+	/* Compute "strides" for accessing the arrays. */
+	gstride = bcolormax;
+	rstride = gcolormax * bcolormax;
 
-  bool free_dist_buf = false;
-  if (!dist_buf)
-  {
-    free_dist_buf = true;
-    dist_buf = new unsigned long [rcolormax * gcolormax * bcolormax];
-  }
-  maxfill (dist_buf, rcolormax, gcolormax, bcolormax);
+	bool free_dist_buf = false;
+	if (!dist_buf)
+	{
+		free_dist_buf = true;
+		dist_buf = new unsigned long[rcolormax * gcolormax * bcolormax];
+	}
+	maxfill(dist_buf, rcolormax, gcolormax, bcolormax);
 
-  // Allocate inverse colormap if not already done
-  if (!rgbmap)
-    rgbmap = new byte [rcolormax * gcolormax * bcolormax];
+	// Allocate inverse colormap if not already done
+	if (!rgbmap)
+		rgbmap = new byte[rcolormax * gcolormax * bcolormax];
 
-  for (cindex = 0; cindex < colors; cindex++)
-  {
-    /*
-     * Distance formula is
-     * (red - map[0])^2 + (green - map[1])^2 + (blue - map[2])^2
-     *
-     * Because of quantization, we will measure from the center of
-     * each quantized "cube", so blue distance is
-     * 	(blue + x/2 - map[2])^2,
-     * where x = 2^(8 - bits).
-     * The step size is x, so the blue increment is
-     * 	2*x*blue - 2*x*map[2] + 2*x^2
-     *
-     * Now, b in the code below is actually blue/x, so our
-     * increment will be 2*(b*x^2 + x^2 - x*map[2]).  For
-     * efficiency, we will maintain this quantity in a separate variable
-     * that will be updated incrementally by adding 2*x^2 each time.
-     */
+	for (cindex = 0; cindex < colors; cindex++)
+	{
+		/*
+		 * Distance formula is
+		 * (red - map[0])^2 + (green - map[1])^2 + (blue - map[2])^2
+		 *
+		 * Because of quantization, we will measure from the center of
+		 * each quantized "cube", so blue distance is
+		 * 	(blue + x/2 - map[2])^2,
+		 * where x = 2^(8 - bits).
+		 * The step size is x, so the blue increment is
+		 * 	2*x*blue - 2*x*map[2] + 2*x^2
+		 *
+		 * Now, b in the code below is actually blue/x, so our
+		 * increment will be 2*(b*x^2 + x^2 - x*map[2]).  For
+		 * efficiency, we will maintain this quantity in a separate variable
+		 * that will be updated incrementally by adding 2*x^2 each time.
+		 */
 
-    /* The initial position is the cell containing the colormap
-     * entry.  We get this by quantizing the colormap values.
-     */
-    rcenter = colormap [cindex].red   >> rnbits;
-    gcenter = colormap [cindex].green >> gnbits;
-    bcenter = colormap [cindex].blue  >> bnbits;
+		 /* The initial position is the cell containing the colormap
+		  * entry.  We get this by quantizing the colormap values.
+		  */
+		rcenter = colormap[cindex].red >> rnbits;
+		gcenter = colormap[cindex].green >> gnbits;
+		bcenter = colormap[cindex].blue >> bnbits;
 
-    rdist = colormap [cindex].red   - (rcenter * rx + rx / 2);
-    gdist = colormap [cindex].green - (gcenter * gx + gx / 2);
-    cdist = colormap [cindex].blue  - (bcenter * bx + bx / 2);
-    cdist = rdist * rdist + gdist * gdist + cdist * cdist;
+		rdist = colormap[cindex].red - (rcenter * rx + rx / 2);
+		gdist = colormap[cindex].green - (gcenter * gx + gx / 2);
+		cdist = colormap[cindex].blue - (bcenter * bx + bx / 2);
+		cdist = rdist * rdist + gdist * gdist + cdist * cdist;
 
-    crinc = 2 * ((rcenter + 1) * rxsqr - (colormap [cindex].red   * rx));
-    cginc = 2 * ((gcenter + 1) * gxsqr - (colormap [cindex].green * gx));
-    cbinc = 2 * ((bcenter + 1) * bxsqr - (colormap [cindex].blue  * bx));
+		crinc = 2 * ((rcenter + 1) * rxsqr - (colormap[cindex].red * rx));
+		cginc = 2 * ((gcenter + 1) * gxsqr - (colormap[cindex].green * gx));
+		cbinc = 2 * ((bcenter + 1) * bxsqr - (colormap[cindex].blue * bx));
 
-    /* Array starting points. */
-    cdp = dist_buf + rcenter * rstride + gcenter * gstride + bcenter;
-    crgbp = rgbmap + rcenter * rstride + gcenter * gstride + bcenter;
+		/* Array starting points. */
+		cdp = dist_buf + rcenter * rstride + gcenter * gstride + bcenter;
+		crgbp = rgbmap + rcenter * rstride + gcenter * gstride + bcenter;
 
-    (void) redloop ();
-  }
+		(void)redloop();
+	}
 
-  if (free_dist_buf)
-    delete [] dist_buf;
+	if (free_dist_buf)
+		delete[] dist_buf;
 }
 
 /* redloop -- loop up and down from red center. */
-static int redloop ()
+static int redloop()
 {
-  int detect;
-  int r;
-  int first;
-  long txsqr = rxsqr + rxsqr;
-  static long rxx;
+	int detect;
+	int r;
+	int first;
+	long txsqr = rxsqr + rxsqr;
+	static long rxx;
 
-  detect = 0;
+	detect = 0;
 
-  /* Basic loop up. */
-  for (r = rcenter, rdist = cdist, rxx = crinc,
-    rdp = cdp, rrgbp = crgbp, first = 1;
-    r < rcolormax;
-    r++, rdp += rstride, rrgbp += rstride,
-    rdist += rxx, rxx += txsqr, first = 0)
-  {
-    if (greenloop (first))
-      detect = 1;
-    else if (detect)
-      break;
-  }
+	/* Basic loop up. */
+	for (r = rcenter, rdist = cdist, rxx = crinc,
+		rdp = cdp, rrgbp = crgbp, first = 1;
+		r < rcolormax;
+		r++, rdp += rstride, rrgbp += rstride,
+		rdist += rxx, rxx += txsqr, first = 0)
+	{
+		if (greenloop(first))
+			detect = 1;
+		else if (detect)
+			break;
+	}
 
-  /* Basic loop down. */
-  for (r = rcenter - 1, rxx = crinc - txsqr, rdist = cdist - rxx,
-    rdp = cdp - rstride, rrgbp = crgbp - rstride, first = 1;
-    r >= 0;
-    r--, rdp -= rstride, rrgbp -= rstride,
-    rxx -= txsqr, rdist -= rxx, first = 0)
-  {
-    if (greenloop (first))
-      detect = 1;
-    else if (detect)
-      break;
-  }
+	/* Basic loop down. */
+	for (r = rcenter - 1, rxx = crinc - txsqr, rdist = cdist - rxx,
+		rdp = cdp - rstride, rrgbp = crgbp - rstride, first = 1;
+		r >= 0;
+		r--, rdp -= rstride, rrgbp -= rstride,
+		rxx -= txsqr, rdist -= rxx, first = 0)
+	{
+		if (greenloop(first))
+			detect = 1;
+		else if (detect)
+			break;
+	}
 
-  return detect;
+	return detect;
 }
 
 /* greenloop -- loop up and down from green center. */
-static int greenloop (int restart)
+static int greenloop(int restart)
 {
-  int detect;
-  int g;
-  int first;
-  long txsqr = gxsqr + gxsqr;
-  static int here, min, max;
-  static long ginc, gxx, gcdist;        /* "gc" variables maintain correct */
-  static unsigned long *gcdp;           /* values for bcenter position, */
-  static unsigned char *gcrgbp;         /* despite modifications by blueloop */
+	int detect;
+	int g;
+	int first;
+	long txsqr = gxsqr + gxsqr;
+	static int here, min, max;
+	static long ginc, gxx, gcdist;        /* "gc" variables maintain correct */
+	static unsigned long* gcdp;           /* values for bcenter position, */
+	static unsigned char* gcrgbp;         /* despite modifications by blueloop */
 
-  /* to gdist, gdp, grgbp. */
+	/* to gdist, gdp, grgbp. */
 
-  if (restart)
-  {
-    here = gcenter;
-    min = 0;
-    max = gcolormax - 1;
-    ginc = cginc;
-  }
+	if (restart)
+	{
+		here = gcenter;
+		min = 0;
+		max = gcolormax - 1;
+		ginc = cginc;
+	}
 
-  detect = 0;
+	detect = 0;
 
-  /* Basic loop up. */
-  for (g = here, gcdist = gdist = rdist, gxx = ginc,
-    gcdp = gdp = rdp, gcrgbp = grgbp = rrgbp, first = 1;
-    g <= max;
-    g++, gdp += gstride, gcdp += gstride, grgbp += gstride, gcrgbp += gstride,
-    gdist += gxx, gcdist += gxx, gxx += txsqr, first = 0)
-  {
-    if (blueloop (first))
-    {
-      if (!detect)
-      {
-        /* Remember here and associated data! */
-        if (g > here)
-        {
-          here = g;
-          rdp = gcdp;
-          rrgbp = gcrgbp;
-          rdist = gcdist;
-          ginc = gxx;
-        }
-        detect = 1;
-      }
-    }
-    else if (detect)
-      break;
-  }
+	/* Basic loop up. */
+	for (g = here, gcdist = gdist = rdist, gxx = ginc,
+		gcdp = gdp = rdp, gcrgbp = grgbp = rrgbp, first = 1;
+		g <= max;
+		g++, gdp += gstride, gcdp += gstride, grgbp += gstride, gcrgbp += gstride,
+		gdist += gxx, gcdist += gxx, gxx += txsqr, first = 0)
+	{
+		if (blueloop(first))
+		{
+			if (!detect)
+			{
+				/* Remember here and associated data! */
+				if (g > here)
+				{
+					here = g;
+					rdp = gcdp;
+					rrgbp = gcrgbp;
+					rdist = gcdist;
+					ginc = gxx;
+				}
+				detect = 1;
+			}
+		}
+		else if (detect)
+			break;
+	}
 
-  /* Basic loop down. */
-  for (g = here - 1, gxx = ginc - txsqr, gcdist = gdist = rdist - gxx,
-    gcdp = gdp = rdp - gstride, gcrgbp = grgbp = rrgbp - gstride,
-    first = 1;
-    g >= min;
-    g--, gdp -= gstride, gcdp -= gstride, grgbp -= gstride, gcrgbp -= gstride,
-    gxx -= txsqr, gdist -= gxx, gcdist -= gxx, first = 0)
-  {
-    if (blueloop (first))
-    {
-      if (!detect)
-      {
-        /* Remember here! */
-        here = g;
-        rdp = gcdp;
-        rrgbp = gcrgbp;
-        rdist = gcdist;
-        ginc = gxx;
-        detect = 1;
-      }
-    }
-    else if (detect)
-      break;
-  }
+	/* Basic loop down. */
+	for (g = here - 1, gxx = ginc - txsqr, gcdist = gdist = rdist - gxx,
+		gcdp = gdp = rdp - gstride, gcrgbp = grgbp = rrgbp - gstride,
+		first = 1;
+		g >= min;
+		g--, gdp -= gstride, gcdp -= gstride, grgbp -= gstride, gcrgbp -= gstride,
+		gxx -= txsqr, gdist -= gxx, gcdist -= gxx, first = 0)
+	{
+		if (blueloop(first))
+		{
+			if (!detect)
+			{
+				/* Remember here! */
+				here = g;
+				rdp = gcdp;
+				rrgbp = gcrgbp;
+				rdist = gcdist;
+				ginc = gxx;
+				detect = 1;
+			}
+		}
+		else if (detect)
+			break;
+	}
 
-  return detect;
+	return detect;
 }
 
 /* blueloop -- loop up and down from blue center. */
-static int blueloop (int restart)
+static int blueloop(int restart)
 {
-  int detect;
-  register unsigned long *dp;
-  register unsigned char *rgbp;
-  register unsigned long bdist, bxx;
-  register int b, i = cindex;
-  register long txsqr = bxsqr + bxsqr;
-  register int lim;
-  static int here, min, max;
-  static long binc;
+	int detect;
+	register unsigned long* dp;
+	register unsigned char* rgbp;
+	register unsigned long bdist, bxx;
+	register int b, i = cindex;
+	register long txsqr = bxsqr + bxsqr;
+	register int lim;
+	static int here, min, max;
+	static long binc;
 
-  if (restart)
-  {
-    here = bcenter;
-    min = 0;
-    max = bcolormax - 1;
-    binc = cbinc;
-  }
+	if (restart)
+	{
+		here = bcenter;
+		min = 0;
+		max = bcolormax - 1;
+		binc = cbinc;
+	}
 
-  detect = 0;
+	detect = 0;
 
-  /* Basic loop up. */
-  /* First loop just finds first applicable cell. */
-  for (b = here, bdist = gdist, bxx = binc, dp = gdp, rgbp = grgbp, lim = max;
-    b <= lim;
-    b++, dp++, rgbp++,
-    bdist += bxx, bxx += txsqr)
-  {
-    if (*dp > bdist)
-    {
-      /* Remember new 'here' and associated data! */
-      if (b > here)
-      {
-        here = b;
-        gdp = dp;
-        grgbp = rgbp;
-        gdist = bdist;
-        binc = bxx;
-      }
-      detect = 1;
-      break;
-    }
-  }
-  /* Second loop fills in a run of closer cells. */
-  for (;
-    b <= lim;
-    b++, dp++, rgbp++,
-    bdist += bxx, bxx += txsqr)
-  {
-    if (*dp > bdist)
-    {
-      *dp = bdist;
-      *rgbp = i;
-    }
-    else
-    {
-      break;
-    }
-  }
+	/* Basic loop up. */
+	/* First loop just finds first applicable cell. */
+	for (b = here, bdist = gdist, bxx = binc, dp = gdp, rgbp = grgbp, lim = max;
+		b <= lim;
+		b++, dp++, rgbp++,
+		bdist += bxx, bxx += txsqr)
+	{
+		if (*dp > bdist)
+		{
+			/* Remember new 'here' and associated data! */
+			if (b > here)
+			{
+				here = b;
+				gdp = dp;
+				grgbp = rgbp;
+				gdist = bdist;
+				binc = bxx;
+			}
+			detect = 1;
+			break;
+		}
+	}
+	/* Second loop fills in a run of closer cells. */
+	for (;
+		b <= lim;
+		b++, dp++, rgbp++,
+		bdist += bxx, bxx += txsqr)
+	{
+		if (*dp > bdist)
+		{
+			*dp = bdist;
+			*rgbp = i;
+		}
+		else
+		{
+			break;
+		}
+	}
 
-  /* Basic loop down. */
-  /* Do initializations here, since the 'find' loop might not get executed. */
-  lim = min;
-  b = here - 1;
-  bxx = binc - txsqr;
-  bdist = gdist - bxx;
-  dp = gdp - 1;
-  rgbp = grgbp - 1;
-  /* The 'find' loop is executed only if we didn't already find something. */
-  if (!detect)
-    for (;
-      b >= lim;
-      b--, dp--, rgbp--,
-      bxx -= txsqr, bdist -= bxx)
-    {
-      if (*dp > bdist)
-      {
-        /* Remember here! */
-        /* No test for b against here necessary because b < here by definition. */
-        here = b;
-        gdp = dp;
-        grgbp = rgbp;
-        gdist = bdist;
-        binc = bxx;
-        detect = 1;
-        break;
-      }
-    }
-  /* The 'update' loop. */
-  for (;
-    b >= lim;
-    b--, dp--, rgbp--,
-    bxx -= txsqr, bdist -= bxx)
-  {
-    if (*dp > bdist)
-    {
-      *dp = bdist;
-      *rgbp = i;
-    }
-    else
-      break;
-  }
+	/* Basic loop down. */
+	/* Do initializations here, since the 'find' loop might not get executed. */
+	lim = min;
+	b = here - 1;
+	bxx = binc - txsqr;
+	bdist = gdist - bxx;
+	dp = gdp - 1;
+	rgbp = grgbp - 1;
+	/* The 'find' loop is executed only if we didn't already find something. */
+	if (!detect)
+		for (;
+			b >= lim;
+			b--, dp--, rgbp--,
+			bxx -= txsqr, bdist -= bxx)
+	{
+		if (*dp > bdist)
+		{
+			/* Remember here! */
+			/* No test for b against here necessary because b < here by definition. */
+			here = b;
+			gdp = dp;
+			grgbp = rgbp;
+			gdist = bdist;
+			binc = bxx;
+			detect = 1;
+			break;
+		}
+	}
+	/* The 'update' loop. */
+	for (;
+		b >= lim;
+		b--, dp--, rgbp--,
+		bxx -= txsqr, bdist -= bxx)
+	{
+		if (*dp > bdist)
+		{
+			*dp = bdist;
+			*rgbp = i;
+		}
+		else
+			break;
+	}
 
-  /* If we saw something, update the edge trackers. */
+	/* If we saw something, update the edge trackers. */
 
-  return detect;
+	return detect;
 }
 
-static void maxfill (unsigned long *buffer, long rside, long gside, long bside)
+static void maxfill(unsigned long* buffer, long rside, long gside, long bside)
 {
-  register unsigned long maxv = ~0UL;
-  register long i;
-  register unsigned long *bp;
+	register unsigned long maxv = ~0UL;
+	register long i;
+	register unsigned long* bp;
 
-  for (i = rside * gside * bside, bp = buffer; i > 0; i--, bp++)
-    *bp = maxv;
+	for (i = rside * gside * bside, bp = buffer; i > 0; i--, bp++)
+		*bp = maxv;
 }

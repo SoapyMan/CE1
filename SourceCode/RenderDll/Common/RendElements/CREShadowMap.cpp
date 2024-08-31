@@ -15,8 +15,8 @@ CREShadowMap::~CREShadowMap()
 {
   if(m_CustomData)
   {
-    delete m_CustomData;
-    m_CustomData=0;
+	delete m_CustomData;
+	m_CustomData=0;
   }
 }
 */

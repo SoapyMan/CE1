@@ -3,7 +3,7 @@
   Copyright (c) 2001 Crytek Studios. All Rights Reserved.
 
   Revision history:
-    * Created by Honitch Andrey
+	* Created by Honitch Andrey
 
 =============================================================================*/
 
@@ -18,7 +18,7 @@ static char THIS_FILE[] = __FILE__;
 
 //=======================================================================
 
-void CREFlareGeom::mfCheckVis(CFColor &col, CCObject *obj)
+void CREFlareGeom::mfCheckVis(CFColor& col, CCObject* obj)
 {
 }
 
@@ -34,29 +34,29 @@ void CREOcclusionQuery::mfReset()
 {
 }
 
-bool CREScreenProcess::mfDrawLowSpec(SShader *ef, SShaderPass *sfm)
+bool CREScreenProcess::mfDrawLowSpec(SShader* ef, SShaderPass* sfm)
 {
-  return 1;
+	return 1;
 }
 
-bool CREOcclusionQuery::mfDraw(SShader *ef, SShaderPass *sfm)
-{ 
-  return true;
-}
-
-bool CREOcLeaf::mfPreDraw(SShaderPass *sl)
+bool CREOcclusionQuery::mfDraw(SShader* ef, SShaderPass* sfm)
 {
-  return true;
+	return true;
 }
 
-bool CREGlare::mfDraw(SShader *ef, SShaderPass *sfm)
-{ 
-  return true;
-}
-
-bool CREOcLeaf::mfDraw(SShader *ef, SShaderPass *sl)
+bool CREOcLeaf::mfPreDraw(SShaderPass* sl)
 {
-  return (true);
+	return true;
+}
+
+bool CREGlare::mfDraw(SShader* ef, SShaderPass* sfm)
+{
+	return true;
+}
+
+bool CREOcLeaf::mfDraw(SShader* ef, SShaderPass* sl)
+{
+	return (true);
 }
 
 ///////////////////////////////////////////////////////////////////
@@ -70,19 +70,19 @@ void CRE2DQuad::mfPrepare()
 {
 }
 
-bool CRE2DQuad::mfDraw(SShader *ef, SShaderPass *sfm)
-{ 
-  return 1;
+bool CRE2DQuad::mfDraw(SShader* ef, SShaderPass* sfm)
+{
+	return 1;
 }
 //===============================================================================
 
-bool CRETempMesh::mfDraw(SShader *ef, SShaderPass *sl)
+bool CRETempMesh::mfDraw(SShader* ef, SShaderPass* sl)
 {
-  return true;
+	return true;
 }
-bool CRETempMesh::mfPreDraw(SShaderPass *sl)
+bool CRETempMesh::mfPreDraw(SShaderPass* sl)
 {
-  return true;
+	return true;
 }
 void CRETempMesh::mfReset()
 {
@@ -90,51 +90,51 @@ void CRETempMesh::mfReset()
 
 //=========================================================================================
 
-bool CREFlare::mfCheckVis(CCObject *obj)
+bool CREFlare::mfCheckVis(CCObject* obj)
 {
-  return false;
+	return false;
 }
 
-void CREFlare::mfDrawFlares(SShader *ef, CFColor &col)
-{
-}
-
-void CREFlare::mfDrawCorona(SShader *ef, CFColor &col)
+void CREFlare::mfDrawFlares(SShader* ef, CFColor& col)
 {
 }
 
-bool CREFlare::mfDraw(SShader *ef, SShaderPass *sfm)
+void CREFlare::mfDrawCorona(SShader* ef, CFColor& col)
 {
-  return true;
 }
 
-bool CREFlashBang::mfDraw(SShader *ef, SShaderPass *sfm)
-{   
-  return true;
+bool CREFlare::mfDraw(SShader* ef, SShaderPass* sfm)
+{
+	return true;
+}
+
+bool CREFlashBang::mfDraw(SShader* ef, SShaderPass* sfm)
+{
+	return true;
 }
 void CREFlashBang::mfPrepare()
-{   
+{
 }
 
 // screen process 
-bool CREScreenProcess:: mfDraw(SShader *ef, SShaderPass *sfm)
+bool CREScreenProcess::mfDraw(SShader* ef, SShaderPass* sfm)
 {
-  return 1;
+	return 1;
 }
 
 //=====================================================================================
 
-bool CREClearStencil::mfDraw(SShader *ef, SShaderPass *sfm)
-{    
-  return true;
-}
-
-bool CRETriMeshShadow::mfDraw(SShader *ef, SShaderPass *sfm)
-{    
-  return true;
-}
-
-bool CREHDRProcess::mfDraw(SShader *ef, SShaderPass *sfm)
+bool CREClearStencil::mfDraw(SShader* ef, SShaderPass* sfm)
 {
-  return true;
+	return true;
+}
+
+bool CRETriMeshShadow::mfDraw(SShader* ef, SShaderPass* sfm)
+{
+	return true;
+}
+
+bool CREHDRProcess::mfDraw(SShader* ef, SShaderPass* sfm)
+{
+	return true;
 }

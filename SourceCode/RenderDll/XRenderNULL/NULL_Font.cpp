@@ -3,7 +3,7 @@
   Copyright (c) 2001 Crytek Studios. All Rights Reserved.
 
   Revision history:
-    * Created by Honitch Andrey
+	* Created by Honitch Andrey
 
 =============================================================================*/
 
@@ -16,16 +16,16 @@ static char THIS_FILE[] = __FILE__;
 
 #include "../CryFont/FBitmap.h"
 
-bool CNULLRenderer::FontUpdateTexture(int nTexId, int X, int Y, int USize, int VSize, byte *pData)
+bool CNULLRenderer::FontUpdateTexture(int nTexId, int X, int Y, int USize, int VSize, byte* pData)
 {
-  return true;
+	return true;
 }
 
-bool CNULLRenderer::FontUploadTexture(class CFBitmap* pBmp, ETEX_Format eTF) 
+bool CNULLRenderer::FontUploadTexture(class CFBitmap* pBmp, ETEX_Format eTF)
 {
-  return true;
+	return true;
 }
-void CNULLRenderer::FontReleaseTexture(class CFBitmap *pBmp)
+void CNULLRenderer::FontReleaseTexture(class CFBitmap* pBmp)
 {
 }
 
@@ -49,6 +49,6 @@ void CNULLRenderer::FontSetState(bool bRestore)
 {
 }
 
-void CNULLRenderer::PrintToScreen(float x, float y, float size, const char *buf)
+void CNULLRenderer::PrintToScreen(float x, float y, float size, const char* buf)
 {
 }
