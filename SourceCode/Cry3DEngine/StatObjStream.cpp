@@ -22,7 +22,7 @@
 #include <CrySizer.h>
 
 
-void CStatObj::StreamOnProgress (IReadStream* pStream) 
+void CStatObj::StreamOnProgress(IReadStream* pStream)
 {
 }
 
@@ -35,7 +35,7 @@ void CStatObj::ProcessStreamOnCompleteError()
 	{
 		char szCompiledFileName[MAX_PATH_LENGTH];
 		MakeCompiledFileName(szCompiledFileName,MAX_PATH_LENGTH);
-		bool bCompRes = CompileObject(szCompiledFileName, m_szFileName, m_szGeomName, 
+		bool bCompRes = CompileObject(szCompiledFileName, m_szFileName, m_szGeomName,
 			m_eVertsSharing, m_bLoadAdditinalInfo, m_bKeepInLocalSpace);
 
 		// load new compiled file
@@ -66,36 +66,36 @@ void CStatObj::StreamOnComplete(IReadStream* pStream, unsigned nError)
 {
 	m_pReadStream = 0;
 
-	if(pStream->IsError())
+	if (pStream->IsError())
 	{ // file was not loaded successfully
 		ProcessStreamOnCompleteError();
 		return;
 	}
 
 	// load header
-	CCGFHeader * pFileHeader = (CCGFHeader *)pStream->GetBuffer();
+	CCGFHeader* pFileHeader = (CCGFHeader*)pStream->GetBuffer();
 #if !defined(LINUX)
-	assert(pFileHeader->nDataSize == pStream->GetBytesRead()-sizeof(CCGFHeader));
+	assert(pFileHeader->nDataSize == pStream->GetBytesRead() - sizeof(CCGFHeader));
 #endif
 
-	if(!pFileHeader->nDataSize)
+	if (!pFileHeader->nDataSize)
 	{ // should happend only in case of sync loading
 		assert(m_szGeomName[0]);
 		m_eCCGFStreamingStatus = ecss_GeomNotFound;
 		return; // geom name was specified but not found in source sgf during compilation
 	}
 
-  int nChecksum = CCGFHeader::GetStructuresCheckSummm();
-	if(pFileHeader->nStructuresCheckSummm != nChecksum)
-	{ 
+	int nChecksum = CCGFHeader::GetStructuresCheckSummm();
+	if (pFileHeader->nStructuresCheckSummm != nChecksum)
+	{
 		m_eCCGFStreamingStatus = ecss_LoadingError;
 		GetConsole()->Exit("Error: CStatObj::StreamOnComplete: version of " RC_EXECUTABLE " is not compatible with engine: %s", m_szFileName);
 		return; // geom name was specified but not found in source sgf during compilation
 	}
 
 	// load data
-	uchar * pData = ((uchar *)pStream->GetBuffer()+sizeof(CCGFHeader));
-	int nPos=0;
+	uchar* pData = ((uchar*)pStream->GetBuffer() + sizeof(CCGFHeader));
+	int nPos = 0;
 	Serialize(nPos, pData, false, m_szFolderName);
 	assert(nPos == pFileHeader->nDataSize);
 
@@ -114,22 +114,22 @@ void CStatObj::StreamOnComplete(IReadStream* pStream, unsigned nError)
 
 	m_eCCGFStreamingStatus = ecss_Ready;
 
-	if(GetCVars()->e_stream_cgf)
+	if (GetCVars()->e_stream_cgf)
 		GetLog()->Log("CStatObj::StreamOnComplete: %s", m_szFileName);
 }
 
 void CStatObj::StreamCCGF(bool bFinishNow)
 {
-//	if(strstr(m_szFileName,"de_bind.cgf"))
-	//	int t=0;
+	//	if(strstr(m_szFileName,"de_bind.cgf"))
+		//	int t=0;
 
-	if(m_eCCGFStreamingStatus != ecss_NotLoaded)
+	if (m_eCCGFStreamingStatus != ecss_NotLoaded)
 		return;
 
 	char szCompiledFileName[MAX_PATH_LENGTH];
-	MakeCompiledFileName(szCompiledFileName,MAX_PATH_LENGTH);
+	MakeCompiledFileName(szCompiledFileName, MAX_PATH_LENGTH);
 
-	if(bFinishNow)
+	if (bFinishNow)
 		GetLog()->UpdateLoadingScreen("\003Load compiled object: %s", szCompiledFileName);
 	else
 		GetLog()->UpdateLoadingScreen("\003Start streaming compiled object: %s", szCompiledFileName);
@@ -146,27 +146,27 @@ void CStatObj::StreamCCGF(bool bFinishNow)
 	m_eCCGFStreamingStatus = ecss_LoadingInProgress;
 	m_pReadStream = m_pSys->GetStreamEngine()->StartRead("3DEngine", szCompiledFileName, this, &params);
 
-	if(bFinishNow)
+	if (bFinishNow)
 		m_pReadStream->Wait();
 }
 
 void CStatObj::CheckLoaded()
 {
-	if(!m_bUseStreaming)
+	if (!m_bUseStreaming)
 		return;
 
-	m_nMarkedForStreamingFrameId = GetFrameID()+100;
+	m_nMarkedForStreamingFrameId = GetFrameID() + 100;
 
-	if(m_eCCGFStreamingStatus == ecss_NotLoaded)
+	if (m_eCCGFStreamingStatus == ecss_NotLoaded)
 	{ // load now
 		assert(m_bUseStreaming == true);
 		m_fStreamingTimePerFrame -= GetTimer()->GetAsyncCurTime();
-		bool bRes = Load(m_szFileName, m_szGeomName[0] ? m_szGeomName : 0, m_eVertsSharing, 
+		bool bRes = Load(m_szFileName, m_szGeomName[0] ? m_szGeomName : 0, m_eVertsSharing,
 			m_bLoadAdditinalInfo, m_bKeepInLocalSpace, false, m_bMakePhysics);
 		m_bUseStreaming = true;
 		m_fStreamingTimePerFrame += GetTimer()->GetAsyncCurTime();
 	}
-	else if(m_eCCGFStreamingStatus == ecss_LoadingInProgress)		
+	else if (m_eCCGFStreamingStatus == ecss_LoadingInProgress)
 	{ // finish now
 		m_pReadStream->Wait();
 	}
@@ -182,27 +182,29 @@ void CStatObj::CheckLoaded()
 #pragma warning( disable : 4267 )
 #endif
 
-void CStatObj::MakeCompiledFileName(char * szCompiledFileName, int nMaxLen)
+void CStatObj::MakeCompiledFileName(char* szCompiledFileName, int nMaxLen)
 {
 	// make ccgf name
-	char szFileNameNoExt[512]="";
-	strcpy(szFileNameNoExt,m_szFileName);
+	char szFileNameNoExt[512] = "";
+	strcpy(szFileNameNoExt, m_szFileName);
 
 	// remove extension
-	for(int i=strlen(szFileNameNoExt)-1; i>0; i--) if(szFileNameNoExt[i]=='.')
-	{	szFileNameNoExt[i]=0; break; }
+	for (int i = strlen(szFileNameNoExt) - 1; i > 0; i--) if (szFileNameNoExt[i] == '.')
+	{
+		szFileNameNoExt[i] = 0; break;
+	}
 
 	// replace slashes in geom name
-	char szGeomName[sizeof(m_szGeomName)]="";
-	strncpy(szGeomName,m_szGeomName,sizeof(szGeomName));
+	char szGeomName[sizeof(m_szGeomName)] = "";
+	strncpy(szGeomName, m_szGeomName, sizeof(szGeomName));
 	int nLen = strlen(szGeomName);
-	for(int i=0; i<nLen; i++)
-		if (szGeomName[i]=='/' || szGeomName[i]=='\\')
+	for (int i = 0; i < nLen; i++)
+		if (szGeomName[i] == '/' || szGeomName[i] == '\\')
 			szGeomName[i] = '_';
 
 	_snprintf(szCompiledFileName, nMaxLen,
 		"%s\\%s_%s_%d_%d_%d.ccgf",
-		CCGF_CACHE_DIR_NAME, szFileNameNoExt, szGeomName, 
+		CCGF_CACHE_DIR_NAME, szFileNameNoExt, szGeomName,
 		int(m_eVertsSharing == evs_ShareAndSortForCache), (int)m_bLoadAdditinalInfo, (int)m_bKeepInLocalSpace);
 }
 

@@ -23,27 +23,27 @@
 
 CHelper::CHelper() : CBaseObj()
 {
-	memset(&m_Chunk,0,sizeof(m_Chunk));
+	memset(&m_Chunk, 0, sizeof(m_Chunk));
 }
 
 CHelper::~CHelper()
 {
 }
 
-bool CHelper::Load(CXFile *f, int pos)
+bool CHelper::Load(CXFile* f, int pos)
 {
-	if(f->FSeek(pos,SEEK_SET)) return true;
+	if (f->FSeek(pos, SEEK_SET)) return true;
 
-	int res=f->FRead(&m_Chunk,sizeof(m_Chunk),1);
-	if(res!=1) return true;
-	
-	if(m_Chunk.chdr.ChunkType != ChunkType_Helper || m_Chunk.chdr.ChunkVersion != HELPER_CHUNK_DESC_VERSION)
+	int res = f->FRead(&m_Chunk, sizeof(m_Chunk), 1);
+	if (res != 1) return true;
+
+	if (m_Chunk.chdr.ChunkType != ChunkType_Helper || m_Chunk.chdr.ChunkVersion != HELPER_CHUNK_DESC_VERSION)
 	{
-		memset(&m_Chunk,0,sizeof(m_Chunk));
+		memset(&m_Chunk, 0, sizeof(m_Chunk));
 		return true;
 	}
 
-	m_ChunkHeader=m_Chunk.chdr;
+	m_ChunkHeader = m_Chunk.chdr;
 
 	return false;
 }

@@ -44,19 +44,19 @@ ISystem* GetISystem()
 //////////////////////////////////////////////////////////////////////////
 
 #if !defined(GAMECUBE) && !defined(PS2) && !defined(_XBOX) && !defined(LINUX)
-BOOL APIENTRY DllMain( HANDLE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved	) 
+BOOL APIENTRY DllMain(HANDLE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved)
 {
-  return TRUE;
+	return TRUE;
 }
 #endif
 
 //#include <time.h>
 
-I3DEngine * CreateCry3DEngine(ISystem	* pSystem, const char * szInterfaceVersion)
+I3DEngine* CreateCry3DEngine(ISystem* pSystem, const char* szInterfaceVersion)
 {/*
 	__time64_t ltime1, ltime2;
 	_time64( &ltime1 );
-	
+
 	int nElemNum = 100000*64/sizeof(float);
 	unsigned short * pShorts = new unsigned short[nElemNum];
 	float * pFloats = new float[nElemNum];
@@ -82,36 +82,36 @@ I3DEngine * CreateCry3DEngine(ISystem	* pSystem, const char * szInterfaceVersion
 	return 0;
 */
 #if !defined(LINUX)
-  if(strcmp(szInterfaceVersion,g3deInterfaceVersion))
-    pSystem->GetIConsole()->Exit("Error: CreateCry3DEngine(): 3dengine interface version error");
+	if (strcmp(szInterfaceVersion, g3deInterfaceVersion))
+		pSystem->GetIConsole()->Exit("Error: CreateCry3DEngine(): 3dengine interface version error");
 #endif
-  C3DEngine * p3DEngine = new C3DEngine(pSystem);
+	C3DEngine* p3DEngine = new C3DEngine(pSystem);
 	return p3DEngine;
 }
 
-void Cry3DEngineBase::UpdateLoadingScreen(const char *command,...)
+void Cry3DEngineBase::UpdateLoadingScreen(const char* command, ...)
 {
-  if(command)
-  {
-    va_list		arglist;
-    char		buf[512];
-    va_start(arglist, command);
-    vsnprintf(buf, sizeof(buf), command, arglist);
-    va_end(arglist);	
-    GetLog()->UpdateLoadingScreen(buf);
-  }
-  else
-    GetLog()->UpdateLoadingScreen(0);
+	if (command)
+	{
+		va_list		arglist;
+		char		buf[512];
+		va_start(arglist, command);
+		vsnprintf(buf, sizeof(buf), command, arglist);
+		va_end(arglist);
+		GetLog()->UpdateLoadingScreen(buf);
+	}
+	else
+		GetLog()->UpdateLoadingScreen(0);
 }
 
-void Cry3DEngineBase::UpdateLoadingScreenPlus(const char *command,...)
+void Cry3DEngineBase::UpdateLoadingScreenPlus(const char* command, ...)
 {
-  va_list		arglist;
-  char		buf[512];
-  va_start(arglist, command);
-  vsnprintf(buf, sizeof(buf), command, arglist);
-  va_end(arglist);	
-  GetLog()->UpdateLoadingScreenPlus(buf);
+	va_list		arglist;
+	char		buf[512];
+	va_start(arglist, command);
+	vsnprintf(buf, sizeof(buf), command, arglist);
+	va_end(arglist);
+	GetLog()->UpdateLoadingScreenPlus(buf);
 }
 
 //IRenderer	*Cry3DEngineBase::GetRenderer()             
@@ -126,14 +126,20 @@ void Cry3DEngineBase::UpdateLoadingScreenPlus(const char *command,...)
 //IPhysicalWorld  *Cry3DEngineBase::GetPhysicalWorld()  
 //{ return GetSystem()->GetIPhysicalWorld(); }
 
-CCamera & Cry3DEngineBase::GetViewCamera() 
-{ return m_pSys->GetViewCamera(); }
+CCamera& Cry3DEngineBase::GetViewCamera()
+{
+	return m_pSys->GetViewCamera();
+}
 
-float Cry3DEngineBase::GetCurTimeSec() 
-{ return (m_pSys->GetITimer()->GetCurrTime()); }
+float Cry3DEngineBase::GetCurTimeSec()
+{
+	return (m_pSys->GetITimer()->GetCurrTime());
+}
 
-float Cry3DEngineBase::GetCurAsyncTimeSec() 
-{ return (m_pSys->GetITimer()->GetAsyncCurTime()); }
+float Cry3DEngineBase::GetCurAsyncTimeSec()
+{
+	return (m_pSys->GetITimer()->GetAsyncCurTime());
+}
 
 //IConsole * Cry3DEngineBase::GetConsole()
 //{ return GetSystem()->GetIConsole(); }
@@ -144,11 +150,13 @@ float Cry3DEngineBase::GetCurAsyncTimeSec()
 //CVars * Cry3DEngineBase::GetCVars()
 //{ return ((C3DEngine*)GetSystem()->GetI3DEngine())->GetCVars(); }
 
-CVisAreaManager * Cry3DEngineBase::GetVisAreaManager()
-{ return ((C3DEngine*)m_pSys->GetI3DEngine())->GetVisAreaManager(); }
+CVisAreaManager* Cry3DEngineBase::GetVisAreaManager()
+{
+	return ((C3DEngine*)m_pSys->GetI3DEngine())->GetVisAreaManager();
+}
 
 //////////////////////////////////////////////////////////////////////////
-void Cry3DEngineBase::Warning( int flags,const char *file,const char *format,... )
+void Cry3DEngineBase::Warning(int flags, const char* file, const char* format, ...)
 {
 	va_list	ArgList;
 	char		szBuffer[MAX_ERROR_STRING];
@@ -157,7 +165,7 @@ void Cry3DEngineBase::Warning( int flags,const char *file,const char *format,...
 	va_end(ArgList);
 
 	// Call to validating warning of system.
-	m_pSys->Warning( VALIDATOR_MODULE_3DENGINE,VALIDATOR_WARNING,flags,file,"%s",szBuffer );
+	m_pSys->Warning(VALIDATOR_MODULE_3DENGINE, VALIDATOR_WARNING, flags, file, "%s", szBuffer);
 }
 
 #include <CrtDebugStats.h>

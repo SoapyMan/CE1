@@ -47,7 +47,7 @@ void CParticleEmitter::ReleaseParams()
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CParticleEmitter::SetParams( const ParticleParams &params )
+void CParticleEmitter::SetParams(const ParticleParams& params)
 {
 	ReleaseParams();
 
@@ -84,44 +84,44 @@ void CParticleEmitter::SetParams( const ParticleParams &params )
 		m_pChildParams->pStatObj->RegisterUser();
 	//////////////////////////////////////////////////////////////////////////
 
-	InitTexture( m_pParams );
+	InitTexture(m_pParams);
 	if (m_pChildParams)
-		InitTexture( m_pChildParams );
+		InitTexture(m_pChildParams);
 
 	CalculateWaterLevel();
 }
 
-void CParticleEmitter::InitTexture( ParticleParams *pParams )
+void CParticleEmitter::InitTexture(ParticleParams* pParams)
 {
 	//////////////////////////////////////////////////////////////////////////
 	// Initialize texure ids.
 	//////////////////////////////////////////////////////////////////////////
-	if (pParams->nTexAnimFramesCount>1 && pParams->nTexId)
+	if (pParams->nTexAnimFramesCount > 1 && pParams->nTexId)
 	{
-		AnimTexInfo *p = Cry3DEngineBase::GetRenderer()->GetAnimTexInfoFromId(pParams->nTexId);
-		if(!p)
+		AnimTexInfo* p = Cry3DEngineBase::GetRenderer()->GetAnimTexInfoFromId(pParams->nTexId);
+		if (!p)
 		{
 #if !defined(LINUX)
-			Cry3DEngineBase::Warning( 0,0,"Invalid Animated Texture Id %d for Particles",pParams->nTexId );
+			Cry3DEngineBase::Warning(0, 0, "Invalid Animated Texture Id %d for Particles", pParams->nTexId);
 #endif
 			return;
 		}
 		pParams->pAnimTex = p;
 	}
-	else if(!pParams->nTexId && !pParams->pStatObj)
+	else if (!pParams->nTexId && !pParams->pStatObj)
 	{
 		pParams->nTexId = m_pPartManager->GetGlowTexID();
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CParticleEmitter::SetEffect( IParticleEffect *pEffect )
+void CParticleEmitter::SetEffect(IParticleEffect* pEffect)
 {
-	AssignEffect( pEffect,true );
+	AssignEffect(pEffect, true);
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CParticleEmitter::AssignEffect( IParticleEffect *pEffect,bool bChildEffects )
+void CParticleEmitter::AssignEffect(IParticleEffect* pEffect, bool bChildEffects)
 {
 	ReleaseParams();
 	m_bOwnParams = false;
@@ -173,11 +173,11 @@ void CParticleEmitter::AssignEffect( IParticleEffect *pEffect,bool bChildEffects
 		for (int i = 0; i < pEffect->GetChildCount(); i++)
 		{
 			// Create child emitter.
-			CParticleEmitter *pEmitter = new CParticleEmitter(m_pPartManager);
+			CParticleEmitter* pEmitter = new CParticleEmitter(m_pPartManager);
 			pEmitter->m_bChildEmitter = true;
 			pEmitter->m_bPermament = true;
-			m_childEmitters.push_back( pEmitter );
-			CParticleEffect *pChildEffect = (CParticleEffect*)pEffect->GetChild(i);
+			m_childEmitters.push_back(pEmitter);
+			CParticleEffect* pChildEffect = (CParticleEffect*)pEffect->GetChild(i);
 			pEmitter->SetEffect(pChildEffect);
 			pEmitter->m_bbox.min = pEmitter->m_bbox.max = m_pos;
 			// If uncommented Sounds of child emitters not playing then.. 
@@ -187,11 +187,11 @@ void CParticleEmitter::AssignEffect( IParticleEffect *pEffect,bool bChildEffects
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CParticleEmitter::UpdateChildSpawnTimes( float fCurrTime )
+void CParticleEmitter::UpdateChildSpawnTimes(float fCurrTime)
 {
 	for (int i = 0; i < (int)m_childEmitters.size(); i++)
 	{
-		CParticleEmitter *pEmitter = m_childEmitters[i];
+		CParticleEmitter* pEmitter = m_childEmitters[i];
 		if (pEmitter && pEmitter->m_pParams)
 		{
 			pEmitter->m_bActiveChild = true;
@@ -208,7 +208,7 @@ const ParticleParams& CParticleEmitter::GetParams() const
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CParticleEmitter::SetPos( const Vec3 &vPos,const Vec3 &vDir,float fScale )
+void CParticleEmitter::SetPos(const Vec3& vPos, const Vec3& vDir, float fScale)
 {
 	bool bPosChanged = false;
 	if (m_pos != vPos)
@@ -217,7 +217,7 @@ void CParticleEmitter::SetPos( const Vec3 &vPos,const Vec3 &vDir,float fScale )
 	m_dir = vDir;
 	m_fScale = fScale;
 	m_lastActiveTime = m_pPartManager->GetParticlesTime();
-	
+
 	if (bPosChanged)
 	{
 		if (!m_bActive)
@@ -229,15 +229,15 @@ void CParticleEmitter::SetPos( const Vec3 &vPos,const Vec3 &vDir,float fScale )
 		if (m_pSound)
 		{
 			// Update sound position.
-			m_pSound->SetPosition( m_pos + m_pParams->vPositionOffset );
+			m_pSound->SetPosition(m_pos + m_pParams->vPositionOffset);
 		}
 
 		for (int i = 0; i < (int)m_childEmitters.size(); i++)
 		{
-			CParticleEmitter *pEmitter = m_childEmitters[i];
+			CParticleEmitter* pEmitter = m_childEmitters[i];
 			if (pEmitter)
 			{
-				pEmitter->SetPos(vPos,vDir,fScale);
+				pEmitter->SetPos(vPos, vDir, fScale);
 			}
 		}
 
@@ -247,30 +247,30 @@ void CParticleEmitter::SetPos( const Vec3 &vPos,const Vec3 &vDir,float fScale )
 	if (!m_bChildEmitter)
 	{
 		// Make sure this emitter is active.
-		m_pPartManager->ActivateEmitter( this );
+		m_pPartManager->ActivateEmitter(this);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CParticleEmitter::SetSpawnPeriod( float fSpawnPeriod )
+void CParticleEmitter::SetSpawnPeriod(float fSpawnPeriod)
 {
 	m_spawnPeriod = fSpawnPeriod;
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CParticleEmitter::SetLifeTime( float fLifeTime )
+void CParticleEmitter::SetLifeTime(float fLifeTime)
 {
-	m_endTime = m_startTime + crymax(fLifeTime,0);
-	m_bUseEndTime=true;
+	m_endTime = m_startTime + crymax(fLifeTime, 0);
+	m_bUseEndTime = true;
 }
 
 //////////////////////////////////////////////////////////////////////////
 void CParticleEmitter::SetUnlimitedLife()
 {
-	m_bUseEndTime=false;		// Unlimited life time.
+	m_bUseEndTime = false;		// Unlimited life time.
 }
 //////////////////////////////////////////////////////////////////////////
-void CParticleEmitter::SetEntity( IEntityRender *pEntity )
+void CParticleEmitter::SetEntity(IEntityRender* pEntity)
 {
 	m_pSpawnerEntity = pEntity;
 
@@ -278,31 +278,31 @@ void CParticleEmitter::SetEntity( IEntityRender *pEntity )
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CParticleEmitter::SetMaterial( IMatInfo *pMaterial )
+void CParticleEmitter::SetMaterial(IMatInfo* pMaterial)
 {
 	m_pMaterial = pMaterial;
 	m_pShader = NULL;
 	if (m_pMaterial)
 	{
-		IShader *pContainerShader = m_pMaterial->GetShaderItem().m_pShader;
+		IShader* pContainerShader = m_pMaterial->GetShaderItem().m_pShader;
 		m_pShader = pContainerShader->GetTemplate(-1);
 	}
 
-	if(m_pMaterial)
-		m_pMaterial->SetFlags(m_pMaterial->GetFlags()|MIF_WASUSED);
+	if (m_pMaterial)
+		m_pMaterial->SetFlags(m_pMaterial->GetFlags() | MIF_WASUSED);
 }
 
 void CParticleEmitter::CalculateWaterLevel()
 {
 	// remember water level to avoid calculating it for each particle
-	if(m_pSpawnerEntity)
+	if (m_pSpawnerEntity)
 		m_fWaterLevel = Cry3DEngineBase::Get3DEngine()->GetWaterLevel(m_pSpawnerEntity);
 	else
 		m_fWaterLevel = Cry3DEngineBase::Get3DEngine()->GetWaterLevel(&m_pos);
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CParticleEmitter::OnActivate( bool bActive )
+void CParticleEmitter::OnActivate(bool bActive)
 {
 	if (bActive == m_bActive)
 		return;
@@ -312,7 +312,7 @@ void CParticleEmitter::OnActivate( bool bActive )
 	{
 		// Effect is activated.
 		// Play sound if have.
-		ISoundSystem *pISoundSystem = GetISystem()->GetISoundSystem();
+		ISoundSystem* pISoundSystem = GetISystem()->GetISoundSystem();
 #if !defined(LINUX64)
 		if (pISoundSystem != NULL && m_pEffect != NULL)
 #else
@@ -321,7 +321,7 @@ void CParticleEmitter::OnActivate( bool bActive )
 		{
 			// Check if effect needs to play sounds.
 			IParticleEffect::SoundParams soundParams;
-			m_pEffect->GetSoundParams( soundParams );
+			m_pEffect->GetSoundParams(soundParams);
 			if (strlen(soundParams.szSound) > 0)
 			{
 				int nSndFlags = FLAG_SOUND_3D | FLAG_SOUND_RADIUS | FLAG_SOUND_OCCLUSION;
@@ -333,7 +333,7 @@ void CParticleEmitter::OnActivate( bool bActive )
 				else
 					m_bLoopSound = false;
 
-				m_pSound = pISoundSystem->LoadSound( soundParams.szSound,nSndFlags );
+				m_pSound = pISoundSystem->LoadSound(soundParams.szSound, nSndFlags);
 #if !defined(LINUX64)
 				if (m_pSound != NULL && !soundParams.bOnEverySpawn)
 #else
@@ -358,10 +358,10 @@ void CParticleEmitter::OnActivate( bool bActive )
 	// Activate/deactivate childs.
 	for (int i = 0; i < (int)m_childEmitters.size(); i++)
 	{
-		CParticleEmitter *pEmitter = m_childEmitters[i];
+		CParticleEmitter* pEmitter = m_childEmitters[i];
 		if (pEmitter)
 		{
-			pEmitter->OnActivate( bActive );
+			pEmitter->OnActivate(bActive);
 		}
 	}
 }
@@ -371,21 +371,21 @@ void CParticleEmitter::PlaySound()
 {
 	if (!m_pEffect || !m_pSound)
 		return;
-	
-	IParticleEffect::SoundParams soundParams;
-	m_pEffect->GetSoundParams( soundParams );
 
-	m_pSound->SetVolume( (int)soundParams.volume );
-	m_pSound->SetMinMaxDistance( soundParams.minRadius,soundParams.maxRadius );
+	IParticleEffect::SoundParams soundParams;
+	m_pEffect->GetSoundParams(soundParams);
+
+	m_pSound->SetVolume((int)soundParams.volume);
+	m_pSound->SetMinMaxDistance(soundParams.minRadius, soundParams.maxRadius);
 	Vec3 vOffset = m_pParams->vPositionOffset;
-	m_pSound->SetPosition( m_pos + vOffset );
+	m_pSound->SetPosition(m_pos + vOffset);
 	m_pSound->Play();
 }
 
 //////////////////////////////////////////////////////////////////////////
 // Called when particles are spawned.
 //////////////////////////////////////////////////////////////////////////
-void CParticleEmitter::OnSpawnParticles( bool bChildProcess )
+void CParticleEmitter::OnSpawnParticles(bool bChildProcess)
 {
 #if !defined(LINUX64)
 	if (!bChildProcess && m_pSound != NULL && m_pEffect != NULL)
@@ -394,7 +394,7 @@ void CParticleEmitter::OnSpawnParticles( bool bChildProcess )
 #endif
 	{
 		IParticleEffect::SoundParams soundParams;
-		m_pEffect->GetSoundParams( soundParams );
+		m_pEffect->GetSoundParams(soundParams);
 		if (soundParams.bOnEverySpawn)
 		{
 			PlaySound();

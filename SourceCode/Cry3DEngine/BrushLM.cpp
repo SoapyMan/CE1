@@ -27,21 +27,21 @@
 #include "Brush.h"
 #include "IEntitySystem.h"
 
-void CBrush::SetLightmap(RenderLMData *pLMData, float *pTexCoords, UINT iNumTexCoords, const unsigned char cucOcclIDCount, const std::vector<std::pair<EntityId, EntityId> >& aIDs)
+void CBrush::SetLightmap(RenderLMData* pLMData, float* pTexCoords, UINT iNumTexCoords, const unsigned char cucOcclIDCount, const std::vector<std::pair<EntityId, EntityId> >& aIDs)
 {
 	assert(cucOcclIDCount <= 4);
 
-	memset(m_arrOcclusionLightOwners,0,sizeof(m_arrOcclusionLightOwners));
+	memset(m_arrOcclusionLightOwners, 0, sizeof(m_arrOcclusionLightOwners));
 
-	if(GetCVars()->e_light_maps_occlusion)
+	if (GetCVars()->e_light_maps_occlusion)
 	{
-		if(m_bEditorMode)
+		if (m_bEditorMode)
 		{
-			for(int i=0; i<4 && i<cucOcclIDCount; ++i)
+			for (int i = 0; i < 4 && i < cucOcclIDCount; ++i)
 			{
 				EntityId nEntId = aIDs[i].first;
-				IEntityRender * pEnt;
-				if(nEntId == (EntityId)-1)
+				IEntityRender* pEnt;
+				if (nEntId == (EntityId)-1)
 					pEnt = (IEntityRender*)-1; // sun
 				else
 					pEnt = GetSystem()->GetIEntitySystem()->GetEntity(nEntId);
@@ -51,12 +51,12 @@ void CBrush::SetLightmap(RenderLMData *pLMData, float *pTexCoords, UINT iNumTexC
 		}
 		else
 		{
-			const list2<CDLight*> * pStaticLights = Get3DEngine()->GetStaticLightSources();
-			for(int i=0; (i<4) && (i<cucOcclIDCount) && (pStaticLights->Count()); ++i)
+			const list2<CDLight*>* pStaticLights = Get3DEngine()->GetStaticLightSources();
+			for (int i = 0; (i < 4) && (i < cucOcclIDCount) && (pStaticLights->Count()); ++i)
 			{
 				EntityId nEntId = aIDs[i].second;
-				IEntityRender * pEnt;
-				if(nEntId == (EntityId)-1)
+				IEntityRender* pEnt;
+				if (nEntId == (EntityId)-1)
 					pEnt = (IEntityRender*)-1; // sun
 				else
 					pEnt = pStaticLights->GetAt(nEntId)->m_pOwner;
@@ -69,13 +69,13 @@ void CBrush::SetLightmap(RenderLMData *pLMData, float *pTexCoords, UINT iNumTexC
 	SetLightmap(pLMData, pTexCoords, iNumTexCoords, 0);
 }
 
-void CBrush::SetLightmap(RenderLMData *pLMData, float *pTexCoords, UINT iNumTexCoords, int nLod)
+void CBrush::SetLightmap(RenderLMData* pLMData, float* pTexCoords, UINT iNumTexCoords, int nLod)
 {
 	// ---------------------------------------------------------------------------------------------
 	// Set a referenece of a DOT3 Lightmap object for this GLM
 	// ---------------------------------------------------------------------------------------------
 
-	IRenderer *pIRenderer = GetRenderer();
+	IRenderer* pIRenderer = GetRenderer();
 
 	assert(iNumTexCoords);
 #ifndef __linux
@@ -89,15 +89,15 @@ void CBrush::SetLightmap(RenderLMData *pLMData, float *pTexCoords, UINT iNumTexC
 		m_arrLMData[nLod].m_pLMTCBuffer = NULL;
 	}
 
-	IStatObj *pIStatObj = GetEntityStatObj(0, NULL);									
+	IStatObj* pIStatObj = GetEntityStatObj(0, NULL);
 
 	if (pIStatObj == NULL)
 		return;
 
-  if(!pIStatObj->EnableLightamapSupport())
-    return;
+	if (!pIStatObj->EnableLightamapSupport())
+		return;
 
-	CLeafBuffer *pLeafBuffer = pIStatObj->GetLeafBuffer();			
+	CLeafBuffer* pLeafBuffer = pIStatObj->GetLeafBuffer();
 
 	if (pLeafBuffer == NULL)
 		return;
@@ -106,7 +106,7 @@ void CBrush::SetLightmap(RenderLMData *pLMData, float *pTexCoords, UINT iNumTexC
 	std::vector<float> vTexCoord2;
 	vTexCoord2.reserve(iNumTexCoords * 2);
 	UINT i;
-	for (i=0; i<iNumTexCoords; i++)
+	for (i = 0; i < iNumTexCoords; i++)
 	{
 		vTexCoord2.push_back(pTexCoords[i * 2 + 0]); // S
 		vTexCoord2.push_back(pTexCoords[i * 2 + 1]); // T
@@ -117,20 +117,20 @@ void CBrush::SetLightmap(RenderLMData *pLMData, float *pTexCoords, UINT iNumTexC
 		char szBuffer[1024];
 		sprintf(szBuffer, "Error: CBrush::SetLightmap: Object at position (%f, %f, %f) has" \
 			" texture mismatch (%i coordinates supplied, %i required)\r\n",
-			GetPos().x, GetPos().y, GetPos().z, 
+			GetPos().x, GetPos().y, GetPos().z,
 			iNumTexCoords, pLeafBuffer->m_SecVertCount);
-		Warning(0,pIStatObj->GetFileName(),szBuffer);
+		Warning(0, pIStatObj->GetFileName(), szBuffer);
 		// assert(pLeafBuffer->m_SecVertCount == iNumTexCoords);
 		return;
 	}
 
 	// Make leafbuffer and fill it with texture coordinates
 	m_arrLMData[nLod].m_pLMTCBuffer = GetRenderer()->CreateLeafBufferInitialized(
-		&vTexCoord2[0], pLeafBuffer->m_SecVertCount, VERTEX_FORMAT_TEX2F, 
-		0/*pLeafBuffer->GetIndices(0)*/, 0/*pLeafBuffer->m_Indices.m_nItems*/, 
+		&vTexCoord2[0], pLeafBuffer->m_SecVertCount, VERTEX_FORMAT_TEX2F,
+		0/*pLeafBuffer->GetIndices(0)*/, 0/*pLeafBuffer->m_Indices.m_nItems*/,
 		R_PRIMV_TRIANGLES, "LMapTexCoords", eBT_Static, 1, 0, NULL, NULL, false, false);
 
-  C3DEngine *pEng = (C3DEngine *)Get3DEngine();
+	C3DEngine* pEng = (C3DEngine*)Get3DEngine();
 	m_arrLMData[nLod].m_pLMTCBuffer->SetChunk(pEng->m_pSHDefault,
-		0,pLeafBuffer->m_SecVertCount, 0,pLeafBuffer->m_Indices.m_nItems);
+		0, pLeafBuffer->m_SecVertCount, 0, pLeafBuffer->m_Indices.m_nItems);
 }
