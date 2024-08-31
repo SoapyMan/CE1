@@ -5,7 +5,7 @@
 #define PACKET_SIZE_COMPRESSION_LIMIT 100
 
 
-CCTPEndpointGNB::CCTPEndpointGNB( CNetwork *pNetwork )
+CCTPEndpointGNB::CCTPEndpointGNB(CNetwork* pNetwork)
 {
 	m_pNetwork = pNetwork;
 	Reset();
@@ -17,39 +17,39 @@ CCTPEndpointGNB::CCTPEndpointGNB( CNetwork *pNetwork )
 	m_nEncryptKey[3] = 3389628651u;
 }
 
-CCTPEndpointGNB::~CCTPEndpointGNB(void) 
+CCTPEndpointGNB::~CCTPEndpointGNB(void)
 {
 }
 
-void CCTPEndpointGNB::SetPublicCryptKey( unsigned int key )
+void CCTPEndpointGNB::SetPublicCryptKey(unsigned int key)
 {
 	m_nEncryptKey[2] = key;
 }
 
-static bool Between(LONG a, LONG b, LONG c) 
+static bool Between(LONG a, LONG b, LONG c)
 {
-	return ((a <= b) &&(b < c)) ||((c < a) &&(a <= b)) ||((b < c) &&(c < a));
+	return ((a <= b) && (b < c)) || ((c < a) && (a <= b)) || ((b < c) && (c < a));
 }
 
 void CCTPEndpointGNB::Reset()
 {
-	m_nFrameExpected=0;
-	m_nNextFrameToSend=0;
-	m_nAckExpected=0;
-	m_nBuffered=0;	//number of output buffers currently used
-	m_nCurrentTime=0;
-	m_dwOutAckTimer=0;
-	m_dwPingTime=0;
-	m_nLostPackets=0;
-	m_nUnreliableLostPackets=0;
-	m_nBuffered=0;
+	m_nFrameExpected = 0;
+	m_nNextFrameToSend = 0;
+	m_nAckExpected = 0;
+	m_nBuffered = 0;	//number of output buffers currently used
+	m_nCurrentTime = 0;
+	m_dwOutAckTimer = 0;
+	m_dwPingTime = 0;
+	m_nLostPackets = 0;
+	m_nUnreliableLostPackets = 0;
+	m_nBuffered = 0;
 	for (long n = 0; n < NUM_OF_BUFS; n++)
 	{
 		m_OutBuffers[n].dwTimeout = 0;
 		m_OutBuffers[n].nSeq = 0;
-//		m_nArrived[n]=false;
+		//		m_nArrived[n]=false;
 	}
-	
+
 	while (!m_qOutgoingReliableData.empty())
 	{
 		m_qOutgoingReliableData.pop();
@@ -61,34 +61,34 @@ void CCTPEndpointGNB::Reset()
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CCTPEndpointGNB::CryptPacket( CTPData &data )
+void CCTPEndpointGNB::CryptPacket(CTPData& data)
 {
 	// Write 1 bit of compressed packed info.
 	data.m_bCompressed = false;
-	CStream &stm = data.m_stmData;
+	CStream& stm = data.m_stmData;
 	unsigned int* pBuffer = (unsigned int*)stm.GetPtr();
-	unsigned int srclen = (stm.GetSize()+7)/8; // Always cover last byte.
+	unsigned int srclen = (stm.GetSize() + 7) / 8; // Always cover last byte.
 	unsigned int destlen = srclen;
 	// Try to compress big packets.
 	if (srclen > PACKET_SIZE_COMPRESSION_LIMIT && m_pNetwork->IsPacketCompressionEnabled())
 	{
-		BYTE temp[DEFAULT_STREAM_BYTESIZE*2];
+		BYTE temp[DEFAULT_STREAM_BYTESIZE * 2];
 		destlen = sizeof(temp);
-		IDataProbe *pProbe = GetISystem()->GetIDataProbe();
-		pProbe->Compress( temp,destlen,pBuffer,srclen,1 );
+		IDataProbe* pProbe = GetISystem()->GetIDataProbe();
+		pProbe->Compress(temp, destlen, pBuffer, srclen, 1);
 		if (destlen < srclen)
 		{
 			data.m_bCompressed = true;
 			data.m_nUncompressedSize = stm.GetSize(); // In bits.
-			TEA_ENCODE( (unsigned int*)temp,(unsigned int*)temp,TEA_GETSIZE(destlen),m_nEncryptKey );
+			TEA_ENCODE((unsigned int*)temp, (unsigned int*)temp, TEA_GETSIZE(destlen), m_nEncryptKey);
 			stm.Reset();
-			stm.WriteBits(temp,destlen*8);
+			stm.WriteBits(temp, destlen * 8);
 		}
 	}
 	if (data.m_bCompressed)
 	{
 		//@TOOD: remove log.
-		float f1 = 100.0f/srclen;
+		float f1 = 100.0f / srclen;
 		float f2 = f1 * destlen;
 		int prc = (int)(100 - f2);
 		//if (m_pNetwork->GetLogLevel() > 1)
@@ -96,62 +96,62 @@ void CCTPEndpointGNB::CryptPacket( CTPData &data )
 	}
 	else
 	{
-		int len = stm.GetSize()/8;
+		int len = stm.GetSize() / 8;
 		if (len >= 8)
 		{
-			TEA_ENCODE( pBuffer,pBuffer,TEA_GETSIZE(len),m_nEncryptKey );
+			TEA_ENCODE(pBuffer, pBuffer, TEA_GETSIZE(len), m_nEncryptKey);
 		}
-	} 
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CCTPEndpointGNB::UncryptPacket( CTPData &data )
+void CCTPEndpointGNB::UncryptPacket(CTPData& data)
 {
-	CStream &stm = data.m_stmData;
+	CStream& stm = data.m_stmData;
 	if (data.m_bCompressed)
 	{
 		// Compressed data packet.
-		BYTE temp[DEFAULT_STREAM_BYTESIZE*2];
+		BYTE temp[DEFAULT_STREAM_BYTESIZE * 2];
 		unsigned int* pBuffer = (unsigned int*)stm.GetPtr();
-		int srclen = (stm.GetSize()+7)/8; // Always cover last byte.
-		TEA_DECODE( pBuffer,pBuffer,TEA_GETSIZE(srclen),m_nEncryptKey );
+		int srclen = (stm.GetSize() + 7) / 8; // Always cover last byte.
+		TEA_DECODE(pBuffer, pBuffer, TEA_GETSIZE(srclen), m_nEncryptKey);
 		unsigned int destLen = sizeof(temp);
-		IDataProbe *pProbe = GetISystem()->GetIDataProbe();
-		pProbe->Uncompress( temp,destLen,pBuffer,srclen );
+		IDataProbe* pProbe = GetISystem()->GetIDataProbe();
+		pProbe->Uncompress(temp, destLen, pBuffer, srclen);
 
 		stm.Reset();
-		stm.WriteBits( temp,data.m_nUncompressedSize );
+		stm.WriteBits(temp, data.m_nUncompressedSize);
 
 	}
 	else
 	{
 		// Uncompressed data packet.
 		unsigned int* pBuffer = (unsigned int*)stm.GetPtr();
-		int len = stm.GetSize()/8;
+		int len = stm.GetSize() / 8;
 		if (len >= 8)
 		{
-			TEA_DECODE( pBuffer,pBuffer,TEA_GETSIZE(len),m_nEncryptKey );
+			TEA_DECODE(pBuffer, pBuffer, TEA_GETSIZE(len), m_nEncryptKey);
 		}
 	}
 }
 
 
-bool CCTPEndpointGNB::SendUnreliable(CStream &stmData)
+bool CCTPEndpointGNB::SendUnreliable(CStream& stmData)
 {
 	m_qOutgoingUnreliableData.push(stmData);
 	return true;
 }
 
-bool CCTPEndpointGNB::SendReliable(CStream &stmData)
+bool CCTPEndpointGNB::SendReliable(CStream& stmData)
 {
 	m_qOutgoingReliableData.push(stmData);
 	return true;
 }
 
-void CCTPEndpointGNB::Update(unsigned int nTime,unsigned char cFrameType,CStream *pStm)
+void CCTPEndpointGNB::Update(unsigned int nTime, unsigned char cFrameType, CStream* pStm)
 {
 	m_nCurrentTime = nTime;
-	CTP *pFrame = NULL;
+	CTP* pFrame = NULL;
 	CTPAck ack;
 	CTPData data;
 	CTPPong pong;
@@ -160,24 +160,24 @@ void CCTPEndpointGNB::Update(unsigned int nTime,unsigned char cFrameType,CStream
 		switch (cFrameType)
 		{
 		case FT_CTP_DATA:
-			{
-				data.Load(*pStm);
-				pFrame = &data;
-				HandleDataFrame(data);
-			}
-			break;
+		{
+			data.Load(*pStm);
+			pFrame = &data;
+			HandleDataFrame(data);
+		}
+		break;
 		case FT_CTP_ACK:
-			{
-				pFrame = &ack;
-				ack.Load(*pStm);
-			}
-			break;
+		{
+			pFrame = &ack;
+			ack.Load(*pStm);
+		}
+		break;
 		case FT_CTP_PONG:
-			{
-				pong.Load(*pStm);
-				m_LatencyCalculator.AddSample((float)m_nCurrentTime - m_dwPingTime, m_nCurrentTime, pong.m_nTimestamp);
-			}
-			break;
+		{
+			pong.Load(*pStm);
+			m_LatencyCalculator.AddSample((float)m_nCurrentTime - m_dwPingTime, m_nCurrentTime, pong.m_nTimestamp);
+		}
+		break;
 		default:
 			NET_ASSERT(0);
 			break;
@@ -200,12 +200,12 @@ void CCTPEndpointGNB::Update(unsigned int nTime,unsigned char cFrameType,CStream
 
 			NET_TRACE("--->>>[CTP] SEQ %02d ACK %02d\n", pFrame->m_cSequenceNumber, pFrame->m_cAck);
 
-			if(!pFrame->m_bUnreliable)
+			if (!pFrame->m_bUnreliable)
 				while (Between(m_nAckExpected, pFrame->m_cAck, m_nNextFrameToSend))
-				{	
+				{
 					m_nBuffered = m_nBuffered - 1;
-					NET_TRACE("Ack [%02d] STOPPING TIMER m_nBuffered=%02d\n",pFrame->m_cAck,m_nBuffered);
-					StopTimer(m_nAckExpected%NUM_OF_BUFS);
+					NET_TRACE("Ack [%02d] STOPPING TIMER m_nBuffered=%02d\n", pFrame->m_cAck, m_nBuffered);
+					StopTimer(m_nAckExpected % NUM_OF_BUFS);
 					INC(m_nAckExpected);
 				}
 		}
@@ -217,7 +217,7 @@ void CCTPEndpointGNB::Update(unsigned int nTime,unsigned char cFrameType,CStream
 	// and if the network layer is ready(enough bandwith) ...send outgoing frames
 	if (IsTimeToSend())
 	{
-		BuildOutgoingFrame();	
+		BuildOutgoingFrame();
 	}
 	// handle ack timer
 	ProcessAckTimer();
@@ -247,26 +247,26 @@ unsigned int CCTPEndpointGNB::GetPing()
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void CCTPEndpointGNB::HandleDataFrame(CTPData &f)
+void CCTPEndpointGNB::HandleDataFrame(CTPData& f)
 {
 	CStream stmUncompressed;
-	if(f.m_bUnreliable)
+	if (f.m_bUnreliable)
 	{
 		////////////////////////////////////////////////////////////////////////////////////////////
 		//UNRELIABLE PACKET
 		////////////////////////////////////////////////////////////////////////////////////////////
 		//if the packet is out of sequence will be discarded
-		if(f.m_cSequenceNumber==m_nFrameExpected)
+		if (f.m_cSequenceNumber == m_nFrameExpected)
 		{
-//			CStream stmUncompressed=UncompressStream(f.m_stmData);
-//			m_pParent->OnData(stmUncompressed);
-			UncryptPacket( f  );
-			m_pParent->OnData( f.m_stmData );
+			//			CStream stmUncompressed=UncompressStream(f.m_stmData);
+			//			m_pParent->OnData(stmUncompressed);
+			UncryptPacket(f);
+			m_pParent->OnData(f.m_stmData);
 		}
 		else
 		{
 			m_nUnreliableLostPackets++;
-			NET_TRACE("[%02d]expected-[%02d]received Packet discarded\n",m_nFrameExpected,f.m_cSequenceNumber);
+			NET_TRACE("[%02d]expected-[%02d]received Packet discarded\n", m_nFrameExpected, f.m_cSequenceNumber);
 		}
 
 	}
@@ -275,14 +275,14 @@ void CCTPEndpointGNB::HandleDataFrame(CTPData &f)
 		////////////////////////////////////////////////////////////////////////////////////////////
 		//RELIABLE PACKET
 		////////////////////////////////////////////////////////////////////////////////////////////
-		if(f.m_cSequenceNumber==m_nFrameExpected)
+		if (f.m_cSequenceNumber == m_nFrameExpected)
 		{
-//			CStream stmUncompressed=UncompressStream(f.m_stmData);
-//			m_pParent->OnData(stmUncompressed);
-			//UncryptStream( f.m_stmData );
-			//m_pParent->OnData(f.m_stmData);
-			UncryptPacket( f );
-			m_pParent->OnData( f.m_stmData );
+			//			CStream stmUncompressed=UncompressStream(f.m_stmData);
+			//			m_pParent->OnData(stmUncompressed);
+						//UncryptStream( f.m_stmData );
+						//m_pParent->OnData(f.m_stmData);
+			UncryptPacket(f);
+			m_pParent->OnData(f.m_stmData);
 
 			INC(m_nFrameExpected);
 			SetAckTimer();
@@ -290,14 +290,14 @@ void CCTPEndpointGNB::HandleDataFrame(CTPData &f)
 		else
 		{
 			SetAckTimer();
-			
-			NET_TRACE("[%02d]expected-[%02d]received Packet discarded\n",m_nFrameExpected,f.m_cSequenceNumber);
+
+			NET_TRACE("[%02d]expected-[%02d]received Packet discarded\n", m_nFrameExpected, f.m_cSequenceNumber);
 		}
 
-		while(Between(m_nAckExpected,f.m_cAck,m_nNextFrameToSend))
+		while (Between(m_nAckExpected, f.m_cAck, m_nNextFrameToSend))
 		{
-			m_nBuffered=m_nBuffered-1;
-			StopTimer(m_nAckExpected%NUM_OF_BUFS);
+			m_nBuffered = m_nBuffered - 1;
+			StopTimer(m_nAckExpected % NUM_OF_BUFS);
 			INC(m_nAckExpected);
 		}
 	}
@@ -314,7 +314,7 @@ void CCTPEndpointGNB::ProcessBufferTimers()
 	// search for the oldest timer
 	for (long n = 0; n < NUM_OF_BUFS; n++)
 	{
-		if ((m_OutBuffers[n].dwTimeout != 0) &&(m_OutBuffers[n].dwTimeout < nLowest))
+		if ((m_OutBuffers[n].dwTimeout != 0) && (m_OutBuffers[n].dwTimeout < nLowest))
 		{
 			bFound = true;
 			nLowest = m_OutBuffers[n].dwTimeout;
@@ -324,23 +324,23 @@ void CCTPEndpointGNB::ProcessBufferTimers()
 	// test the oldest timer
 	if (bFound)
 	{
-	/*	if ((ulTick - nLowest)>(TM_BUFFER + m_LatencyCalculator.GetAverageLatency()))
+		/*	if ((ulTick - nLowest)>(TM_BUFFER + m_LatencyCalculator.GetAverageLatency()))
+			{
+				/////////////////////////////////
+				m_OutBuffers[nLowestIdx].dwTimeout = 0;
+				HandleTimeout(m_OutBuffers[nLowestIdx].nSeq);
+			}
+		}*/
+		DWORD dwTO = TM_BUFFER + (DWORD)(m_LatencyCalculator.GetAverageLatency());
+		for (int n = 0; n < NUM_OF_BUFS; n++)
 		{
-			/////////////////////////////////
-			m_OutBuffers[nLowestIdx].dwTimeout = 0;
-			HandleTimeout(m_OutBuffers[nLowestIdx].nSeq);
+			if ((m_OutBuffers[nLowestIdx].dwTimeout != 0) && ((ulTick - m_OutBuffers[nLowestIdx].dwTimeout) > dwTO))
+			{
+				m_OutBuffers[nLowestIdx].dwTimeout = 0;
+				HandleTimeout(m_OutBuffers[nLowestIdx].nSeq);
+			}
+			nLowestIdx = (nLowestIdx + 1) % NUM_OF_BUFS;
 		}
-	}*/
-	DWORD dwTO=TM_BUFFER + (DWORD)(m_LatencyCalculator.GetAverageLatency());
-	for (int n = 0; n < NUM_OF_BUFS; n++)
-	{
-		if((m_OutBuffers[nLowestIdx].dwTimeout!=0) && ((ulTick-m_OutBuffers[nLowestIdx].dwTimeout)>dwTO))
-		{
-			m_OutBuffers[nLowestIdx].dwTimeout = 0;
-			HandleTimeout(m_OutBuffers[nLowestIdx].nSeq);
-		}
-		nLowestIdx=(nLowestIdx+1)%NUM_OF_BUFS;
-	}
 	}
 }
 
@@ -351,7 +351,7 @@ void CCTPEndpointGNB::ProcessAckTimer()
 	/////////////////////////////////
 	if (m_dwOutAckTimer)
 	{
-		if ((ulTick - m_dwOutAckTimer)>(TM_ACK + m_LatencyCalculator.GetAverageLatency()))
+		if ((ulTick - m_dwOutAckTimer) > (TM_ACK + m_LatencyCalculator.GetAverageLatency()))
 		{
 			HandleAckTimeout();
 			m_dwOutAckTimer = 0;
@@ -422,7 +422,7 @@ CStream CCTPEndpointGNB::CompressStream(CStream &stmUncompressed)
 		stmCompressed.Write(false);
 		stmCompressed.WriteBits(stmUncompressed.GetPtr(),stmUncompressed.GetSize());
 	}
-	
+
 #else
 	stmCompressed=stmUncompressed;
 #endif
@@ -467,39 +467,39 @@ CStream CCTPEndpointGNB::UncompressStream(CStream &stmCompressed)
 	return stmUncompressed;
 }
 */
-void CCTPEndpointGNB::SendFrame(LONG nType, LONG nFrameNum, LONG nFrameExpected, CStream *pUnreliable,bool bUnreliable)
+void CCTPEndpointGNB::SendFrame(LONG nType, LONG nFrameNum, LONG nFrameExpected, CStream* pUnreliable, bool bUnreliable)
 {
 	static BYTE cUncompressed[1000];
 	CTPData data;
 	CTPAck ack;
 	CTPNak nak;
-	CTP *pFrame;
+	CTP* pFrame;
 	switch (nType)
 	{
-		case FT_CTP_DATA:
-			pFrame = &data;
-			break;
-		case FT_CTP_ACK:
-			pFrame = &ack;
-			break;
-		default:
-			NET_ASSERT(0);
-			break;
+	case FT_CTP_DATA:
+		pFrame = &data;
+		break;
+	case FT_CTP_ACK:
+		pFrame = &ack;
+		break;
+	default:
+		NET_ASSERT(0);
+		break;
 	}
-	pFrame->m_cFrameType=(BYTE)nType;
-	pFrame->m_bSecondaryTC=m_bSecondary;
-//////////////////////////////////////////////////////////////////
-//DATA
-//////////////////////////////////////////////////////////////////
+	pFrame->m_cFrameType = (BYTE)nType;
+	pFrame->m_bSecondaryTC = m_bSecondary;
+	//////////////////////////////////////////////////////////////////
+	//DATA
+	//////////////////////////////////////////////////////////////////
 	if (nType == FT_CTP_DATA)
 	{
-		if(!bUnreliable)
+		if (!bUnreliable)
 		{
-			data.m_stmData = m_OutBuffers[nFrameNum%NUM_OF_BUFS].stmData;
-			m_OutBuffers[nFrameNum%NUM_OF_BUFS].nSeq = nFrameNum;
+			data.m_stmData = m_OutBuffers[nFrameNum % NUM_OF_BUFS].stmData;
+			m_OutBuffers[nFrameNum % NUM_OF_BUFS].nSeq = nFrameNum;
 			if (pUnreliable)
 			{
-				if(pUnreliable->GetSize())
+				if (pUnreliable->GetSize())
 					data.m_stmData.Write(*pUnreliable);
 			}
 		}
@@ -507,46 +507,46 @@ void CCTPEndpointGNB::SendFrame(LONG nType, LONG nFrameNum, LONG nFrameExpected,
 		{
 			data.m_stmData = *pUnreliable;
 		}
-		CryptPacket( data );
+		CryptPacket(data);
 	}
 
-//////////////////////////////////////////////////////////////////
-//SEQ AND ACK
+	//////////////////////////////////////////////////////////////////
+	//SEQ AND ACK
 	pFrame->m_bUnreliable = bUnreliable;
-	
-	pFrame->m_cSequenceNumber =(BYTE) nFrameNum;
-	
-	pFrame->m_cAck =(BYTE) (nFrameExpected + MAX_SEQ_NUM)%(MAX_SEQ_NUM + 1);
 
-	if(nType == FT_CTP_DATA)
+	pFrame->m_cSequenceNumber = (BYTE)nFrameNum;
+
+	pFrame->m_cAck = (BYTE)(nFrameExpected + MAX_SEQ_NUM) % (MAX_SEQ_NUM + 1);
+
+	if (nType == FT_CTP_DATA)
 	{
-		NET_TRACE("SEND [CTP] %s FRAME SEQ [%02d] ACK [%02d] \n",pFrame->m_bUnreliable?"unreliable":"reliable",pFrame->m_cSequenceNumber,pFrame->m_cAck);
+		NET_TRACE("SEND [CTP] %s FRAME SEQ [%02d] ACK [%02d] \n", pFrame->m_bUnreliable ? "unreliable" : "reliable", pFrame->m_cSequenceNumber, pFrame->m_cAck);
 	}
 
-//////////////////////////////////////////////////////////////////
-//CHECK IF A PING REQUEST IS NEEDED
+	//////////////////////////////////////////////////////////////////
+	//CHECK IF A PING REQUEST IS NEEDED
 	if ((!m_bSecondary) && m_LatencyCalculator.IsTimeToPing(m_nCurrentTime))
 	{
 		m_dwPingTime = m_nCurrentTime;
 		// set a piggybacked pong request
 		pFrame->m_bPingRequest = true;
 	}
-//////////////////////////////////////////////////////////////////
-//SERIALIZE THE FRAME
+	//////////////////////////////////////////////////////////////////
+	//SERIALIZE THE FRAME
 	CStream stm;
 	pFrame->Save(stm);
 	m_pParent->Send(stm);
-	
+
 	// Update the rate control
 	m_nAllowedBytes -= BITS2BYTES(stm.GetSize());
 	m_nLastPacketSent = m_nCurrentTime;
 	//	NET_TRACE(">>m_nAllowedBytes=%d\n",m_nAllowedBytes);
-	
+
 	//////////////////////////////////////////
 	if (nType == FT_CTP_DATA && (!bUnreliable))
-		SetTimer(nFrameNum%NUM_OF_BUFS);
+		SetTimer(nFrameNum % NUM_OF_BUFS);
 
-	if(!bUnreliable)
+	if (!bUnreliable)
 		StopAckTimer();
 }
 
@@ -567,15 +567,15 @@ void CCTPEndpointGNB::StopAckTimer()
 void CCTPEndpointGNB::SetTimer(LONG nIndex)
 {
 	m_OutBuffers[nIndex].dwTimeout = m_nCurrentTime;
-	NET_TRACE("SETTIMER %02d %d\n",nIndex,m_nCurrentTime);
+	NET_TRACE("SETTIMER %02d %d\n", nIndex, m_nCurrentTime);
 }
 //////////////////////////////////////////////////////////////////////
 //! stop packet retrasmisson timeout
 void CCTPEndpointGNB::StopTimer(LONG nIndex)
 {
 	DWORD nTimeout = m_OutBuffers[nIndex].dwTimeout;
-	m_OutBuffers[nIndex].dwTimeout=0;
-	NET_TRACE("STOPTIMER %02d %d\n",nIndex,nTimeout);
+	m_OutBuffers[nIndex].dwTimeout = 0;
+	NET_TRACE("STOPTIMER %02d %d\n", nIndex, nTimeout);
 }
 
 
@@ -585,44 +585,44 @@ void CCTPEndpointGNB::BuildOutgoingFrame()
 	{
 		CStream stmUnreliable;
 
-		CStream &stm=m_OutBuffers[m_nNextFrameToSend%NUM_OF_BUFS].stmData;
+		CStream& stm = m_OutBuffers[m_nNextFrameToSend % NUM_OF_BUFS].stmData;
 		stm.Reset();
-		while ((!m_qOutgoingReliableData.empty()) 
+		while ((!m_qOutgoingReliableData.empty())
 			&& ((stm.GetSize() + m_qOutgoingReliableData.front().GetSize()) < MAX_PLAYLOAD_SIZE_IN_BITS))
 		{
 			stm.Write(m_qOutgoingReliableData.front());
 			m_qOutgoingReliableData.pop();
 		}
-		while ((!m_qOutgoingUnreliableData.empty()) 
+		while ((!m_qOutgoingUnreliableData.empty())
 			&& ((stm.GetSize() + m_qOutgoingUnreliableData.front().GetSize()) < MAX_PLAYLOAD_SIZE_IN_BITS))
 		{
 			stmUnreliable.Write(m_qOutgoingUnreliableData.front());
 			m_qOutgoingUnreliableData.pop();
 		}
 		//CHECK IF THERE IS RELIABLE DATA IN THE QUEUE
-		if(stm.GetSize()>0)
+		if (stm.GetSize() > 0)
 		{
-			SendFrame(FT_CTP_DATA, m_nNextFrameToSend, m_nFrameExpected, &stmUnreliable,false);
+			SendFrame(FT_CTP_DATA, m_nNextFrameToSend, m_nFrameExpected, &stmUnreliable, false);
 			INC(m_nNextFrameToSend);
 			m_nBuffered += 1;
-			NET_ASSERT(m_nBuffered<=NUM_OF_BUFS);
-			NET_TRACE("SEND RELIABLE m_nBuffered=%02d\n",m_nBuffered);
+			NET_ASSERT(m_nBuffered <= NUM_OF_BUFS);
+			NET_TRACE("SEND RELIABLE m_nBuffered=%02d\n", m_nBuffered);
 		}
 		else
 		{
 			//IF THERE ISN'T RELIABLE DATA SEND A UNRELIABLE ONLY PACKET
 			//IF THERE IS UNRELIABLE DATA
-			if(stmUnreliable.GetSize()>0)
+			if (stmUnreliable.GetSize() > 0)
 			{
-				SendFrame(FT_CTP_DATA, m_nNextFrameToSend, m_nFrameExpected, &stmUnreliable,true);
+				SendFrame(FT_CTP_DATA, m_nNextFrameToSend, m_nFrameExpected, &stmUnreliable, true);
 				NET_TRACE("SEND UNRELIABLE\n");
-			} 
+			}
 		}
 	}
 }
 
-void CCTPEndpointGNB::GetMemoryStatistics(ICrySizer *pSizer)
+void CCTPEndpointGNB::GetMemoryStatistics(ICrySizer* pSizer)
 {
-	pSizer->AddObject(&m_qOutgoingReliableData,m_qOutgoingReliableData.size()*sizeof(CStream));
-	pSizer->AddObject(&m_qOutgoingUnreliableData,m_qOutgoingUnreliableData.size()*sizeof(CStream));
+	pSizer->AddObject(&m_qOutgoingReliableData, m_qOutgoingReliableData.size() * sizeof(CStream));
+	pSizer->AddObject(&m_qOutgoingUnreliableData, m_qOutgoingUnreliableData.size() * sizeof(CStream));
 }

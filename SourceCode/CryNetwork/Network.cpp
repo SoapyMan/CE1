@@ -18,8 +18,8 @@
 #include "ITimer.h"
 
 #ifndef NOT_USE_UBICOM_SDK
-	#include "NewUbisoftClient.h"								// NewUbisoftClient
-	#include "ScriptObjectNewUbisoftClient.h"		// CScriptObjectNewUbisoftClient
+#include "NewUbisoftClient.h"								// NewUbisoftClient
+#include "ScriptObjectNewUbisoftClient.h"		// CScriptObjectNewUbisoftClient
 #endif // NOT_USE_UBICOM_SDK
 
 #define ANTI_CHEATS
@@ -34,7 +34,7 @@
 //////////////////////////////////////////////////////////////////////
 unsigned int CNetwork::m_nCryNetInitialized = 0;
 
-struct CryNetError CNetwork::m_neNetErrors[]=
+struct CryNetError CNetwork::m_neNetErrors[] =
 {
 	{NET_OK, "No Error"},
 	{NET_FAIL, "Generic Error"},
@@ -103,7 +103,7 @@ struct CryNetError CNetwork::m_neNetErrors[]=
 
 CNetwork::CNetwork()
 {
-	m_dwLocalIP=0;
+	m_dwLocalIP = 0;
 	m_pNetCompressPackets = 0;
 	m_pNetLog = 0;
 	m_pDefenceWall = 0;
@@ -114,12 +114,12 @@ CNetwork::CNetwork()
 	m_bHaveClient = false;
 
 #ifndef NOT_USE_UBICOM_SDK
-	m_pScriptObjectNewUbisoftClient=0;
-	m_pUbiSoftClient=0;
+	m_pScriptObjectNewUbisoftClient = 0;
+	m_pUbiSoftClient = 0;
 #endif // NOT_USE_UBICOM_SDK
 
-	m_pScriptSystem=0;
-	m_pClient=0;
+	m_pScriptSystem = 0;
+	m_pClient = 0;
 }
 
 CNetwork::~CNetwork()
@@ -130,39 +130,39 @@ CNetwork::~CNetwork()
 	CScriptObjectNewUbisoftClient::ReleaseTemplate();
 #endif // NOT_USE_UBICOM_SDK
 
-	SAFE_RELEASE( m_pNetCompressPackets );
-	SAFE_RELEASE( m_pNetLog );
-	SAFE_DELETE( m_pDefenceWall );
+	SAFE_RELEASE(m_pNetCompressPackets);
+	SAFE_RELEASE(m_pNetLog);
+	SAFE_DELETE(m_pDefenceWall);
 #if !defined(NOT_USE_PUNKBUSTER_SDK)
-	SAFE_DELETE( m_pPunkBuster );
+	SAFE_DELETE(m_pPunkBuster);
 #endif
 }
 
 
-ICompressionHelper *CNetwork::GetCompressionHelper()
+ICompressionHelper* CNetwork::GetCompressionHelper()
 {
 	return &m_Compressor;
 }
 
 
-void CNetwork::SetLocalIP( const char *szLocalIP )
+void CNetwork::SetLocalIP(const char* szLocalIP)
 {
 	CIPAddress ip;
 
-	ip.Set(0,(char *)szLocalIP);
+	ip.Set(0, (char*)szLocalIP);
 
-	m_dwLocalIP=ip.GetAsUINT();
-	
+	m_dwLocalIP = ip.GetAsUINT();
+
 #ifndef NOT_USE_UBICOM_SDK
 	// Ubi.com cannot change the IP later than creation
 	{
 		CIPAddress localip;
-		localip.Set(0,GetLocalIP());
-		m_pUbiSoftClient=new NewUbisoftClient(localip.GetAsString());
+		localip.Set(0, GetLocalIP());
+		m_pUbiSoftClient = new NewUbisoftClient(localip.GetAsString());
 
-		m_pScriptObjectNewUbisoftClient=new CScriptObjectNewUbisoftClient;
+		m_pScriptObjectNewUbisoftClient = new CScriptObjectNewUbisoftClient;
 		CScriptObjectNewUbisoftClient::InitializeTemplate(m_pScriptSystem);
-		m_pScriptObjectNewUbisoftClient->Init(m_pScriptSystem,m_pSystem,m_pUbiSoftClient);
+		m_pScriptObjectNewUbisoftClient->Init(m_pScriptSystem, m_pSystem, m_pUbiSoftClient);
 	}
 #endif // NOT_USE_UBICOM_SDK
 }
@@ -172,15 +172,15 @@ DWORD CNetwork::GetLocalIP() const
 	return m_dwLocalIP;
 }
 
-bool CNetwork::Init( IScriptSystem *pScriptSystem )
+bool CNetwork::Init(IScriptSystem* pScriptSystem)
 {
 	assert(pScriptSystem);
-	
+
 	m_pScriptSystem = pScriptSystem;
 
-	if(CNetwork::m_nCryNetInitialized)
+	if (CNetwork::m_nCryNetInitialized)
 		return true;
-	
+
 #if !defined(PS2) && !defined(LINUX)
 	WORD wVersionRequested;
 	WSADATA wsaData;
@@ -189,25 +189,25 @@ bool CNetwork::Init( IScriptSystem *pScriptSystem )
 	//			a WS2's specific one
 	//			not compatible with other platforms
 	wVersionRequested = MAKEWORD(1, 1);
-	
+
 	err = WSAStartup(wVersionRequested, &wsaData);
 	if (err != 0)
 	{
 		return false;
 	}
-	
+
 	if (LOBYTE(wsaData.wVersion) != 1 ||
 		HIBYTE(wsaData.wVersion) != 1)
 	{
 		WSACleanup();
-		return false; 
+		return false;
 	}
 #endif	
 
-	CNetwork::m_nCryNetInitialized+=1;
-	int n=0;
-	while(m_neNetErrors[n].sErrorDescription!='\0'){
-		m_mapErrors[m_neNetErrors[n].nrErrorCode]=m_neNetErrors[n].sErrorDescription;
+	CNetwork::m_nCryNetInitialized += 1;
+	int n = 0;
+	while (m_neNetErrors[n].sErrorDescription != '\0') {
+		m_mapErrors[m_neNetErrors[n].nrErrorCode] = m_neNetErrors[n].sErrorDescription;
 		n++;
 	}
 
@@ -221,7 +221,7 @@ bool CNetwork::Init( IScriptSystem *pScriptSystem )
 #endif //ANTI_CHEATS
 #if !defined(NOT_USE_PUNKBUSTER_SDK)
 	m_pPunkBuster = new CPunkBusterInterface(this);
-	PBsdk_SetPointers ( m_pPunkBuster ) ;
+	PBsdk_SetPointers(m_pPunkBuster);
 #endif
 	LogNetworkInfo();
 	return true;
@@ -230,45 +230,45 @@ bool CNetwork::Init( IScriptSystem *pScriptSystem )
 //////////////////////////////////////////////////////////////////////////
 void CNetwork::CreateConsoleVars()
 {
-	m_pNetCompressPackets = m_pSystem->GetIConsole()->CreateVariable( "net_compress_packets","1",0 );
-	m_pNetLog = m_pSystem->GetIConsole()->CreateVariable( "net_log","0",0 );
+	m_pNetCompressPackets = m_pSystem->GetIConsole()->CreateVariable("net_compress_packets", "1", 0);
+	m_pNetLog = m_pSystem->GetIConsole()->CreateVariable("net_log", "0", 0);
 	//m_pNetCheatProtection = m_pSystem->GetIConsole()->CreateVariable( "net_cheatprotection","0",VF_DUMPTODISK );
-	m_pNetCheatProtection = m_pSystem->GetIConsole()->CreateVariable( "net_cheatprotection","0",VF_READONLY );
+	m_pNetCheatProtection = m_pSystem->GetIConsole()->CreateVariable("net_cheatprotection", "0", VF_READONLY);
 	m_pNetCheatProtection->ForceSet("0");
 
-	m_pSystem->GetIConsole()->CreateVariable("sv_ServerType", "LAN",0,
+	m_pSystem->GetIConsole()->CreateVariable("sv_ServerType", "LAN", 0,
 		"Specifies the server connection type (next server creation, not case sensitive) 'UBI', 'LAN' or 'NET'\n"
 		"Usage: sv_ServerType UBI\n");
-	m_pSystem->GetIConsole()->CreateVariable("sv_regserver_port","",0,
+	m_pSystem->GetIConsole()->CreateVariable("sv_regserver_port", "", 0,
 		"Sets the local port for a registering the server on Ubi.com GS.\n"
 		"Usage: sv_regserver_port portnumber\n"
 		"Default is '0' (first free).");
-	m_pSystem->GetIConsole()->CreateVariable("sv_authport","",0,
+	m_pSystem->GetIConsole()->CreateVariable("sv_authport", "", 0,
 		"Sets the local port for a CDKey authentication comunications.\n"
 		"Usage: sv_auth_port portnumber\n"
 		"Default is '0' (first free).");
 }
 
 //////////////////////////////////////////////////////////////////////////
-IClient *CNetwork::CreateClient(IClientSink *pSink, bool bLocal)
+IClient* CNetwork::CreateClient(IClientSink* pSink, bool bLocal)
 {
 	assert(!m_pClient);			// only one client at a time is allowed
 
 	m_bHaveClient = true;
-	
-	if(bLocal)
-	{
-		CClientLocal *pClient=new CClientLocal(this,pSink);
 
-		m_pClient=pClient;
+	if (bLocal)
+	{
+		CClientLocal* pClient = new CClientLocal(this, pSink);
+
+		m_pClient = pClient;
 
 		return pClient;
 	}
 	else
 	{
-		CClient *pClient = new CClient( this );
+		CClient* pClient = new CClient(this);
 
-		if(!pClient->Init(pSink))
+		if (!pClient->Init(pSink))
 		{
 			delete pClient;
 			return NULL;
@@ -279,7 +279,7 @@ IClient *CNetwork::CreateClient(IClientSink *pSink, bool bLocal)
 				m_pDefenceWall->SetClient(pClient);
 		}
 
-		m_pClient=pClient;
+		m_pClient = pClient;
 
 		return pClient;
 	}
@@ -287,10 +287,10 @@ IClient *CNetwork::CreateClient(IClientSink *pSink, bool bLocal)
 	return NULL;
 }
 
-IServer *CNetwork::CreateServer(IServerSlotFactory *pFactory, WORD nPort, bool listen)
+IServer* CNetwork::CreateServer(IServerSlotFactory* pFactory, WORD nPort, bool listen)
 {
 	m_bHaveServer = true;
-	CServer *pServer = new CServer(this);
+	CServer* pServer = new CServer(this);
 	if (!pServer->Init(pFactory, nPort, listen))
 	{
 		delete pServer;
@@ -304,17 +304,17 @@ IServer *CNetwork::CreateServer(IServerSlotFactory *pFactory, WORD nPort, bool l
 			m_pDefenceWall->SetServer(pServer);
 	}
 
-	IConsole *pConsole = GetISystem()->GetIConsole();
+	IConsole* pConsole = GetISystem()->GetIConsole();
 	assert(pConsole);
 
-	ICVar *sv_punkbuster = pConsole->GetCVar("sv_punkbuster");
+	ICVar* sv_punkbuster = pConsole->GetCVar("sv_punkbuster");
 
 	if (sv_punkbuster && sv_punkbuster->GetIVal() != 0)
 	{
 		InitPunkbusterServer(listen, pServer);
 
 		// if this is a lan server
-		if(pServer->GetServerType()==eMPST_LAN)
+		if (pServer->GetServerType() == eMPST_LAN)
 		{
 			// set pb variables to lan defaults
 			pConsole->ExecuteString("pb_sv_lan 1", 0, 1);
@@ -331,9 +331,9 @@ IServer *CNetwork::CreateServer(IServerSlotFactory *pFactory, WORD nPort, bool l
 	return pServer;
 }
 
-INETServerSnooper *CNetwork::CreateNETServerSnooper(INETServerSnooperSink *pSink)
+INETServerSnooper* CNetwork::CreateNETServerSnooper(INETServerSnooperSink* pSink)
 {
-	CNETServerSnooper *pSnooper = new CNETServerSnooper;
+	CNETServerSnooper* pSnooper = new CNETServerSnooper;
 
 	if (!pSnooper->Create(GetISystem(), pSink))
 	{
@@ -344,11 +344,11 @@ INETServerSnooper *CNetwork::CreateNETServerSnooper(INETServerSnooperSink *pSink
 	return pSnooper;
 }
 
-IRConSystem *CNetwork::CreateRConSystem()
+IRConSystem* CNetwork::CreateRConSystem()
 {
-	CRConSystem *pRCon = new CRConSystem;
+	CRConSystem* pRCon = new CRConSystem;
 
-	if(!pRCon->Create(GetISystem()))
+	if (!pRCon->Create(GetISystem()))
 	{
 		delete pRCon;
 		return 0;
@@ -358,10 +358,10 @@ IRConSystem *CNetwork::CreateRConSystem()
 }
 
 
-IServerSnooper *CNetwork::CreateServerSnooper(IServerSnooperSink *pSink)
+IServerSnooper* CNetwork::CreateServerSnooper(IServerSnooperSink* pSink)
 {
-	CServerSnooper *pSnooper=new CServerSnooper;
-	if(!pSnooper->Init(pSink))
+	CServerSnooper* pSnooper = new CServerSnooper;
+	if (!pSnooper->Init(pSink))
 	{
 		delete pSnooper;
 		return NULL;
@@ -369,29 +369,29 @@ IServerSnooper *CNetwork::CreateServerSnooper(IServerSnooperSink *pSink)
 	return pSnooper;
 }
 
-CServerSlotLocal *CNetwork::ConnectToLocalServerSlot(CClientLocal *pClient, WORD wPort)
+CServerSlotLocal* CNetwork::ConnectToLocalServerSlot(CClientLocal* pClient, WORD wPort)
 {
 	MapServersItor itor;
-	
-	if(m_mapServers.empty())
+
+	if (m_mapServers.empty())
 		return NULL;
 	//check if the local server exists
-	itor=m_mapServers.find(wPort);
+	itor = m_mapServers.find(wPort);
 
-	if(itor==m_mapServers.end()){
-		itor=m_mapServers.begin();
+	if (itor == m_mapServers.end()) {
+		itor = m_mapServers.begin();
 	}
 	//<<FIXME>> make the port variable
-	CIPAddress ip(0,"127.0.0.1");
+	CIPAddress ip(0, "127.0.0.1");
 
-	CServerSlotLocal *pServerSlot=new CServerSlotLocal(itor->second,pClient,ip,this);
-	
-	itor->second->RegisterLocalServerSlot(pServerSlot,ip);
+	CServerSlotLocal* pServerSlot = new CServerSlotLocal(itor->second, pClient, ip, this);
+
+	itor->second->RegisterLocalServerSlot(pServerSlot, ip);
 
 	return pServerSlot;
 }
 
-const char *CNetwork::EnumerateError(NRESULT err)
+const char* CNetwork::EnumerateError(NRESULT err)
 {
 	ERROR_MAPItor itor;
 	itor = m_mapErrors.find(err);
@@ -405,28 +405,28 @@ const char *CNetwork::EnumerateError(NRESULT err)
 void CNetwork::Release()
 {
 	CNetwork::m_nCryNetInitialized -= 1;
-	
+
 	if (CNetwork::m_nCryNetInitialized)
 		return;
 #if !defined(LINUX)
-	#if !defined(PS2)
-		else	
-			WSACleanup();
-	#else
-		CSocketManager::releaseImpl();
-		delete &ISocketManagerImplementation::getInstance();
-	#endif		
+#if !defined(PS2)
+	else
+		WSACleanup();
+#else
+	CSocketManager::releaseImpl();
+	delete& ISocketManagerImplementation::getInstance();
+#endif		
 #endif		
 	delete this;
 }
 
 
-IServer *CNetwork::GetServerByPort( const WORD wPort )
+IServer* CNetwork::GetServerByPort(const WORD wPort)
 {
 	//check if the local server exists
-	MapServersItor itor=m_mapServers.find(wPort);
+	MapServersItor itor = m_mapServers.find(wPort);
 
-	if(itor==m_mapServers.end())
+	if (itor == m_mapServers.end())
 		return 0;											// not found
 
 	return itor->second;
@@ -440,7 +440,7 @@ void CNetwork::UnregisterServer(WORD wPort)
 	m_pUbiSoftClient->Client_LeaveGameServer();
 #endif // NOT_USE_UBICOM_SDK
 
-	if(m_bHaveServer)
+	if (m_bHaveServer)
 	{
 #if !defined(NOT_USE_PUNKBUSTER_SDK)
 		if (m_pPunkBuster)
@@ -451,14 +451,14 @@ void CNetwork::UnregisterServer(WORD wPort)
 	m_mapServers.erase(wPort);
 }
 
-void CNetwork::UnregisterClient( IClient *pClient )
+void CNetwork::UnregisterClient(IClient* pClient)
 {
 	assert(pClient);
-	assert(m_pClient==pClient);
+	assert(m_pClient == pClient);
 
-	m_pClient=0;
+	m_pClient = 0;
 
-	if(m_bHaveClient)
+	if (m_bHaveClient)
 	{
 #if !defined(NOT_USE_PUNKBUSTER_SDK)
 		if (m_pPunkBuster)
@@ -467,12 +467,12 @@ void CNetwork::UnregisterClient( IClient *pClient )
 	}
 }
 
-void CNetwork::GetMemoryStatistics(ICrySizer *pSizer)
+void CNetwork::GetMemoryStatistics(ICrySizer* pSizer)
 {
-	pSizer->AddObject(m_neNetErrors,sizeof(m_neNetErrors));
-	
+	pSizer->AddObject(m_neNetErrors, sizeof(m_neNetErrors));
+
 #ifndef NOT_USE_UBICOM_SDK
-	pSizer->AddObject( m_pScriptObjectNewUbisoftClient, sizeof *m_pScriptObjectNewUbisoftClient);
+	pSizer->AddObject(m_pScriptObjectNewUbisoftClient, sizeof * m_pScriptObjectNewUbisoftClient);
 #endif // NOT_USE_UBICOM_SDK
 }
 
@@ -488,14 +488,14 @@ CTimeValue CNetwork::GetCurrentTime()
 }
 
 //////////////////////////////////////////////////////////////////////////
-u32 CNetwork::GetStringHash( const char *szString )
+u32 CNetwork::GetStringHash(const char* szString)
 {
 #if defined(LINUX)
 	return 0;
 #else
 
 #ifdef _DATAPROBE
-	return m_pSystem->GetIDataProbe()->GetHash( szString );
+	return m_pSystem->GetIDataProbe()->GetHash(szString);
 #else
 	return 0;
 #endif
@@ -504,7 +504,7 @@ u32 CNetwork::GetStringHash( const char *szString )
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CNetwork::PunkDetected( CIPAddress &ip )
+void CNetwork::PunkDetected(CIPAddress& ip)
 {
 	// Disconnect.
 }
@@ -548,14 +548,14 @@ void CNetwork::ClearProtectedFiles()
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CNetwork::AddProtectedFile( const char *sFilename )
+void CNetwork::AddProtectedFile(const char* sFilename)
 {
 	if (m_pDefenceWall)
-		m_pDefenceWall->AddProtectedFile( sFilename );
+		m_pDefenceWall->AddProtectedFile(sFilename);
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CNetwork::AddClientToDefenceWall( CIPAddress &clientIP )
+void CNetwork::AddClientToDefenceWall(CIPAddress& clientIP)
 {
 #if !defined(NOT_USE_PUNKBUSTER_SDK)
 	//we want PB to work on devmode servers so handle this first
@@ -567,14 +567,14 @@ void CNetwork::AddClientToDefenceWall( CIPAddress &clientIP )
 		return;
 
 	if (m_pDefenceWall && GetCheatProtectionLevel() > 0)
-		m_pDefenceWall->OnAddClient( clientIP );
+		m_pDefenceWall->OnAddClient(clientIP);
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CNetwork::RemoveClientFromDefenceWall( CIPAddress &clientIP )
+void CNetwork::RemoveClientFromDefenceWall(CIPAddress& clientIP)
 {
 	if (m_pDefenceWall)
-		m_pDefenceWall->OnDisconnectClient( clientIP );
+		m_pDefenceWall->OnDisconnectClient(clientIP);
 #if !defined(NOT_USE_PUNKBUSTER_SDK)
 	if (m_pPunkBuster)
 		m_pPunkBuster->OnDisconnectClient(clientIP);
@@ -582,25 +582,25 @@ void CNetwork::RemoveClientFromDefenceWall( CIPAddress &clientIP )
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CNetwork::OnSecurityMsgResponse( CIPAddress &ipAddress,CStream &stm )
+void CNetwork::OnSecurityMsgResponse(CIPAddress& ipAddress, CStream& stm)
 {
 	if (m_pDefenceWall)
-		m_pDefenceWall->OnClientResponse(ipAddress,stm);
+		m_pDefenceWall->OnClientResponse(ipAddress, stm);
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CNetwork::OnSecurityMsgQuery( CStream &stm )
+void CNetwork::OnSecurityMsgQuery(CStream& stm)
 {
 	if (m_pDefenceWall)
 		m_pDefenceWall->OnServerRequest(stm);
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CNetwork::OnCCPPunkBusterMsg( CIPAddress &ipAddress,CStream &stm )
+void CNetwork::OnCCPPunkBusterMsg(CIPAddress& ipAddress, CStream& stm)
 {
 #if !defined(NOT_USE_PUNKBUSTER_SDK)
 	if (m_pPunkBuster)
-		m_pPunkBuster->OnCCPPunkBusterMsg( ipAddress,stm );
+		m_pPunkBuster->OnCCPPunkBusterMsg(ipAddress, stm);
 #endif
 }
 
@@ -618,26 +618,26 @@ int CNetwork::GetCheatProtectionLevel()
 }
 
 //////////////////////////////////////////////////////////////////////////
-bool CNetwork::CheckPBPacket(CStream &stmPacket,CIPAddress &ip)
+bool CNetwork::CheckPBPacket(CStream& stmPacket, CIPAddress& ip)
 {
 #if !defined(NOT_USE_PUNKBUSTER_SDK)
 	if (m_pPunkBuster)
-		return m_pPunkBuster->CheckPBPacket(stmPacket,ip);
+		return m_pPunkBuster->CheckPBPacket(stmPacket, ip);
 #endif
 	return true;
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CNetwork::ValidateClient( CServerSlot *pSlot )
+void CNetwork::ValidateClient(CServerSlot* pSlot)
 {
 #if !defined(NOT_USE_PUNKBUSTER_SDK)
 	if (m_pPunkBuster)
-		return m_pPunkBuster->ValidateClient( pSlot );
+		return m_pPunkBuster->ValidateClient(pSlot);
 #endif
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CNetwork::InitPunkbusterClient(CClient *pClient)
+void CNetwork::InitPunkbusterClient(CClient* pClient)
 {
 #if !defined(NOT_USE_PUNKBUSTER_SDK)
 	if (m_pPunkBuster)
@@ -649,7 +649,7 @@ void CNetwork::InitPunkbusterClient(CClient *pClient)
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CNetwork::InitPunkbusterClientLocal(CClientLocal *pClientLocal)
+void CNetwork::InitPunkbusterClientLocal(CClientLocal* pClientLocal)
 {
 #if !defined(NOT_USE_PUNKBUSTER_SDK)
 	if (m_pPunkBuster)
@@ -661,7 +661,7 @@ void CNetwork::InitPunkbusterClientLocal(CClientLocal *pClientLocal)
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CNetwork::InitPunkbusterServer(bool bLocal, CServer *pServer)
+void CNetwork::InitPunkbusterServer(bool bLocal, CServer* pServer)
 {
 #if !defined(NOT_USE_PUNKBUSTER_SDK)
 	if (m_pPunkBuster)
@@ -686,20 +686,20 @@ void CNetwork::LockPunkbusterCVars()
 //////////////////////////////////////////////////////////////////////////
 void CNetwork::LogNetworkInfo()
 {
-	DWORD i; 
+	DWORD i;
 	char	buf[256];
-	struct	hostent *hp;
+	struct	hostent* hp;
 
-	if(!gethostname(buf, sizeof(buf))) 
+	if (!gethostname(buf, sizeof(buf)))
 	{
 		hp = gethostbyname(buf);
-		if (hp) 
-		{			
-			CryLogAlways("network hostname: %s",hp->h_name);
-			
+		if (hp)
+		{
+			CryLogAlways("network hostname: %s", hp->h_name);
+
 			i = 0;
 
-			while(hp->h_aliases[i]) 
+			while (hp->h_aliases[i])
 			{
 				CryLogAlways("  alias: %s\n", hp->h_aliases[i]);
 				i++;
@@ -707,14 +707,14 @@ void CNetwork::LogNetworkInfo()
 
 			i = 0;
 
-			while(hp->h_addr_list[i])
+			while (hp->h_addr_list[i])
 			{
 				sockaddr_in temp;
 
 				memcpy(&(temp.sin_addr), hp->h_addr_list[i], hp->h_length);
 
 #if defined(LINUX)
-				const in_addr_windows *pin_addr_win = reinterpret_cast<const in_addr_windows*>(&temp.sin_addr);
+				const in_addr_windows* pin_addr_win = reinterpret_cast<const in_addr_windows*>(&temp.sin_addr);
 				CryLogAlways("  ip:%d.%d.%d.%d",		//  port:%d  family:%x",	
 					(int)(pin_addr_win->S_un.S_un_b.s_b1),
 					(int)(pin_addr_win->S_un.S_un_b.s_b2),
@@ -726,44 +726,44 @@ void CNetwork::LogNetworkInfo()
 					(int)(temp.sin_addr.S_un.S_un_b.s_b2),
 					(int)(temp.sin_addr.S_un.S_un_b.s_b3),
 					(int)(temp.sin_addr.S_un.S_un_b.s_b4));
-			//		(int)temp.sin_port,(unsigned int)temp.sin_family);
+				//		(int)temp.sin_port,(unsigned int)temp.sin_family);
 #endif
 				i++;
-			}		
+			}
 		}
 	}
 }
 
 
 //////////////////////////////////////////////////////////////////////////
-IClient *CNetwork::GetClient()
+IClient* CNetwork::GetClient()
 {
 	return m_pClient;
 }
 
 
 //////////////////////////////////////////////////////////////////////////
-void CNetwork::OnAfterServerLoadLevel( const char *szServerName, const uint32 dwPlayerCount, const WORD wPort )
+void CNetwork::OnAfterServerLoadLevel(const char* szServerName, const uint32 dwPlayerCount, const WORD wPort)
 {
 	assert(szServerName);
-	assert(dwPlayerCount>0);
+	assert(dwPlayerCount > 0);
 
-//	m_pSystem->GetILog()->Log("Ubi.com DEBUG OnAfterServerLoadLevel() 1");
+	//	m_pSystem->GetILog()->Log("Ubi.com DEBUG OnAfterServerLoadLevel() 1");
 
-	IServer *pServer=GetServerByPort(wPort);
+	IServer* pServer = GetServerByPort(wPort);
 
-	if(!pServer)
+	if (!pServer)
 	{
 		assert(pServer);		// internal error
 		return;
 	}
 
 #ifndef NOT_USE_UBICOM_SDK
-	if(m_pSystem->GetIGame()->GetModuleState(EGameMultiplayer) && pServer->GetServerType()!=eMPST_LAN)
+	if (m_pSystem->GetIGame()->GetModuleState(EGameMultiplayer) && pServer->GetServerType() != eMPST_LAN)
 	{
 		// if it's a ubi-server, publish the server
-		if(pServer->GetServerType()==eMPST_UBI)
-			m_pUbiSoftClient->Server_CreateServer(szServerName,dwPlayerCount);
+		if (pServer->GetServerType() == eMPST_UBI)
+			m_pUbiSoftClient->Server_CreateServer(szServerName, dwPlayerCount);
 
 		// if it's a internet server, check CDKey
 //		m_pSystem->GetILog()->Log("Ubi.com DEBUG OnAfterServerLoadLevel() 2");
@@ -771,7 +771,7 @@ void CNetwork::OnAfterServerLoadLevel( const char *szServerName, const uint32 dw
 	}
 	else
 	{
-//		m_pSystem->GetILog()->Log("Ubi.com DEBUG OnAfterServerLoadLevel() 3");
+		//		m_pSystem->GetILog()->Log("Ubi.com DEBUG OnAfterServerLoadLevel() 3");
 		m_pUbiSoftClient->Server_DestroyServer();
 		m_pUbiSoftClient->Server_CheckCDKeys(0);
 	}
@@ -781,7 +781,7 @@ void CNetwork::OnAfterServerLoadLevel( const char *szServerName, const uint32 dw
 bool CNetwork::VerifyMultiplayerOverInternet()
 {
 #ifndef NOT_USE_UBICOM_SDK
-	if(!m_pUbiSoftClient->Client_IsConnected())
+	if (!m_pUbiSoftClient->Client_IsConnected())
 	{
 		// if this is a ubi.com server, and we don't have a ubi.com connection
 		// disconnect, login, and retry
@@ -791,8 +791,8 @@ bool CNetwork::VerifyMultiplayerOverInternet()
 
 		if (pfnOnConnectNeedUbi)
 		{
-			_SmartScriptObject pGameScriptObject(m_pScriptSystem,true);
-			m_pScriptSystem->GetGlobalValue("Game",*pGameScriptObject);
+			_SmartScriptObject pGameScriptObject(m_pScriptSystem, true);
+			m_pScriptSystem->GetGlobalValue("Game", *pGameScriptObject);
 
 			m_pScriptSystem->BeginCall(pfnOnConnectNeedUbi);
 			m_pScriptSystem->PushFuncParam(pGameScriptObject);

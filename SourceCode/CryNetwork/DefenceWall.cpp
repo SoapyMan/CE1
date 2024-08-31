@@ -48,7 +48,7 @@ enum EDefenceWallRequestCode
 };
 
 //////////////////////////////////////////////////////////////////////////
-CDefenceWall::CDefenceWall( CNetwork *pNetwork )
+CDefenceWall::CDefenceWall(CNetwork* pNetwork)
 {
 	m_pNetwork = pNetwork;
 	m_pSystem = GetISystem();
@@ -80,7 +80,7 @@ CDefenceWall::~CDefenceWall()
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CDefenceWall::SetServer( CServer *pServer )
+void CDefenceWall::SetServer(CServer* pServer)
 {
 	m_pServer = pServer;
 	m_pClient = 0;
@@ -88,7 +88,7 @@ void CDefenceWall::SetServer( CServer *pServer )
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CDefenceWall::SetClient( CClient *pClient )
+void CDefenceWall::SetClient(CClient* pClient)
 {
 	m_pServer = 0;
 	m_pClient = pClient;
@@ -100,7 +100,7 @@ void CDefenceWall::ClearClients()
 {
 	for (Clients::iterator it = m_clients.begin(); it != m_clients.end(); ++it)
 	{
-		delete *it;
+		delete* it;
 	}
 	m_clients.clear();
 }
@@ -121,7 +121,7 @@ void CDefenceWall::FillStdServerProbes()
 {
 	m_stdServerProbes.clear();
 	m_stdServerProbes.reserve(30);
-	IDataProbe *pProbe = GetISystem()->GetIDataProbe();
+	IDataProbe* pProbe = GetISystem()->GetIDataProbe();
 	ICryPak::PakInfo* pPakInfo = m_pSystem->GetIPak()->GetPakInfo();
 
 	unsigned int i;
@@ -133,12 +133,12 @@ void CDefenceWall::FillStdServerProbes()
 	{
 		SClientCheckContext ctx;
 		ctx.nNumOpenedPaks = pPakInfo->numOpenPaks;
-		if (ServerCreateFileProbe( pPakInfo->arrPaks[i].szFilePath,ctx,true ))
+		if (ServerCreateFileProbe(pPakInfo->arrPaks[i].szFilePath, ctx, true))
 		{
 			m_stdServerProbes.push_back(ctx);
 		}
 	}
-	m_pSystem->GetIPak()->FreePakInfo( pPakInfo );
+	m_pSystem->GetIPak()->FreePakInfo(pPakInfo);
 
 	// Do not compare user DLL`s.
 	/*
@@ -160,20 +160,20 @@ void CDefenceWall::FillStdServerProbes()
 }
 
 //////////////////////////////////////////////////////////////////////////
-bool CDefenceWall::ServerCreateModuleProbe( const char *sFilename,SClientCheckContext &ctx )
+bool CDefenceWall::ServerCreateModuleProbe(const char* sFilename, SClientCheckContext& ctx)
 {
 	char sModule[_MAX_PATH];
 	char fname[_MAX_FNAME];
 	char ext[_MAX_EXT];
-	_splitpath( sFilename,0,0,fname,ext );
-	_makepath( sModule,0,0,fname,ext );
-	strlwr( sModule );
+	_splitpath(sFilename, 0, 0, fname, ext);
+	_makepath(sModule, 0, 0, fname, ext);
+	strlwr(sModule);
 
 	// Skip comparing render dll code. (Can be OGL,D3D or NULL)
-	if (strstr(sModule,"render"))
+	if (strstr(sModule, "render"))
 		return false;
 
-	AddProtectedFile( (string("b")+"i"+"n"+"3"+"2"+"/"+sFilename).c_str() );
+	AddProtectedFile((string("b") + "i" + "n" + "3" + "2" + "/" + sFilename).c_str());
 
 	if (m_pNetwork->GetCheatProtectionLevel() >= CHEAT_LEVEL_CODE)
 	{
@@ -181,15 +181,15 @@ bool CDefenceWall::ServerCreateModuleProbe( const char *sFilename,SClientCheckCo
 		ctx.bExecutableCode = true;
 		ctx.probe.sFilename = sModule;
 #if !defined(LINUX)
-		ctx.nFilenameHash = m_pSystem->GetIDataProbe()->GetHash( sModule );
-		ctx.probe.nCodeInfo = rand()%3;
-		if (!m_pSystem->GetIDataProbe()->GetRandomModuleProbe( ctx.probe ))
+		ctx.nFilenameHash = m_pSystem->GetIDataProbe()->GetHash(sModule);
+		ctx.probe.nCodeInfo = rand() % 3;
+		if (!m_pSystem->GetIDataProbe()->GetRandomModuleProbe(ctx.probe))
 			return false;
-		if (!m_pSystem->GetIDataProbe()->GetCode( ctx.probe ))
+		if (!m_pSystem->GetIDataProbe()->GetCode(ctx.probe))
 			return false;
 #endif
 #ifdef LOGEVENTS
-		if (m_bLog) CryLog( "<DefenceWall> CreatedExeProbe[%d] %s %I64x",ctx.nRequestId,ctx.probe.sFilename.c_str(),ctx.probe.nCode );
+		if (m_bLog) CryLog("<DefenceWall> CreatedExeProbe[%d] %s %I64x", ctx.nRequestId, ctx.probe.sFilename.c_str(), ctx.probe.nCode);
 #endif
 	}
 	else
@@ -202,17 +202,17 @@ bool CDefenceWall::ServerCreateModuleProbe( const char *sFilename,SClientCheckCo
 }
 
 //////////////////////////////////////////////////////////////////////////
-bool CDefenceWall::ServerCreateFileProbe( const char *sFilename,SClientCheckContext &ctx,bool bRandomPart )
+bool CDefenceWall::ServerCreateFileProbe(const char* sFilename, SClientCheckContext& ctx, bool bRandomPart)
 {
 #if !defined(LINUX)
 	// Get current language.
-	ICVar *pLanguage=m_pSystem->GetIConsole()->GetCVar("g_language");
+	ICVar* pLanguage = m_pSystem->GetIConsole()->GetCVar("g_language");
 	if (pLanguage && pLanguage->GetString())
 	{
 		// Skip validation of language specific paks.
 		char fname[_MAX_FNAME];
-		_splitpath( sFilename,NULL,NULL,fname,NULL );
-		if (strnicmp(fname,pLanguage->GetString(),strlen(pLanguage->GetString())) == 0)
+		_splitpath(sFilename, NULL, NULL, fname, NULL);
+		if (strnicmp(fname, pLanguage->GetString(), strlen(pLanguage->GetString())) == 0)
 		{
 			// This is language pak... skip checking it.
 			return false;
@@ -225,47 +225,47 @@ bool CDefenceWall::ServerCreateFileProbe( const char *sFilename,SClientCheckCont
 	ctx.nRequestCode = DEFWALL_CHECK_PAK;
 	ctx.bExecutableCode = false;
 	ctx.probe.sFilename = file;
-	ctx.nFilenameHash = m_pSystem->GetIDataProbe()->GetHash( file.c_str() );
+	ctx.nFilenameHash = m_pSystem->GetIDataProbe()->GetHash(file.c_str());
 	if (bRandomPart)
 	{
-		ctx.probe.nCodeInfo = rand()%3;
-		if (!m_pSystem->GetIDataProbe()->GetRandomFileProbe( ctx.probe,true ))
+		ctx.probe.nCodeInfo = rand() % 3;
+		if (!m_pSystem->GetIDataProbe()->GetRandomFileProbe(ctx.probe, true))
 			return false;
-		if (!m_pSystem->GetIDataProbe()->GetCode( ctx.probe ))
+		if (!m_pSystem->GetIDataProbe()->GetCode(ctx.probe))
 			return false;
 	}
 	else
 	{
-		ctx.probe.nCodeInfo = rand()%3;
+		ctx.probe.nCodeInfo = rand() % 3;
 		ctx.probe.nSize = 0xFFFFFFFF;
-		if (!m_pSystem->GetIDataProbe()->GetCode( ctx.probe ))
+		if (!m_pSystem->GetIDataProbe()->GetCode(ctx.probe))
 			return false;
 	}
 #ifdef LOGEVENTS
-	if (m_bLog) CryLog( "<DefenceWall> CreatedFileProbe[%d] %s %I64x",ctx.nRequestId,ctx.probe.sFilename.c_str(),ctx.probe.nCode );
+	if (m_bLog) CryLog("<DefenceWall> CreatedFileProbe[%d] %s %I64x", ctx.nRequestId, ctx.probe.sFilename.c_str(), ctx.probe.nCode);
 #endif
 #endif
 	return true;
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CDefenceWall::FirstTimeClientValidation( ClientInfo *pClientInfo )
+void CDefenceWall::FirstTimeClientValidation(ClientInfo* pClientInfo)
 {
 	CStream outstream;
 
 	for (unsigned int i = 0; i < m_stdServerProbes.size(); i++)
 	{
-		SClientCheckContext &ctx = m_stdServerProbes[i];
+		SClientCheckContext& ctx = m_stdServerProbes[i];
 		if (ctx.bExecutableCode && pClientInfo->b64bit != m_b64bit) // Cannot compare clients with 32/64bit difference.
 			continue;
-		IssueRequest( pClientInfo,outstream,ctx );
+		IssueRequest(pClientInfo, outstream, ctx);
 	}
 	// Send network request to this client IP.
-	SendSecurityQueryToClient( pClientInfo->ip,outstream );
+	SendSecurityQueryToClient(pClientInfo->ip, outstream);
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CDefenceWall::RandomClientValidation( ClientInfo *pClientInfo )
+void CDefenceWall::RandomClientValidation(ClientInfo* pClientInfo)
 {
 	CStream outstream;
 	unsigned int n = 0;
@@ -278,30 +278,30 @@ void CDefenceWall::RandomClientValidation( ClientInfo *pClientInfo )
 	while (bRepeat) {
 		bRepeat = false;
 		n = rand() % m_stdServerProbes.size();
-		assert( n < m_stdServerProbes.size() );
+		assert(n < m_stdServerProbes.size());
 		if (n >= m_stdServerProbes.size())
 			bRepeat = true;
 		if (m_stdServerProbes[n].bExecutableCode && pClientInfo->b64bit != m_b64bit) // Cannot compare clients with 32/64bit difference.
 			bRepeat = true;
 	}
 
-	SClientCheckContext &ctx = m_stdServerProbes[n];
-	IssueRequest( pClientInfo,outstream,ctx );
+	SClientCheckContext& ctx = m_stdServerProbes[n];
+	IssueRequest(pClientInfo, outstream, ctx);
 
 	// Send network request to this client IP.
-	SendSecurityQueryToClient( pClientInfo->ip,outstream );
+	SendSecurityQueryToClient(pClientInfo->ip, outstream);
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CDefenceWall::IssueRequest( ClientInfo *pClientInfo,CStream &outstream,SClientCheckContext &ctx )
+void CDefenceWall::IssueRequest(ClientInfo* pClientInfo, CStream& outstream, SClientCheckContext& ctx)
 {
 	CTimeValue currTime = m_pNetwork->GetCurrentTime();
 	//////////////////////////////////////////////////////////////////////////
 	// Schedule new random check time for this client.
 	CTimeValue timediff;
-	timediff.SetSeconds( RANDOM_CHECK_PERIOD + (RANDOM_CHECK_PERIOD*rand())/RAND_MAX );
+	timediff.SetSeconds(RANDOM_CHECK_PERIOD + (RANDOM_CHECK_PERIOD * rand()) / RAND_MAX);
 	if (m_pNetwork->GetCheatProtectionLevel() == 5)
-		timediff.SetSeconds( 2 );
+		timediff.SetSeconds(2);
 	pClientInfo->nextRandomCheckTime = currTime + timediff;
 	//////////////////////////////////////////////////////////////////////////
 
@@ -312,7 +312,7 @@ void CDefenceWall::IssueRequest( ClientInfo *pClientInfo,CStream &outstream,SCli
 	}
 	ctx.requestTime = currTime;
 	pClientInfo->lastRequestTime = currTime;
-	SClientCheckContext *pCtx = new SClientCheckContext;
+	SClientCheckContext* pCtx = new SClientCheckContext;
 	*pCtx = ctx;
 
 	if (ctx.nRetries == 0)
@@ -321,60 +321,60 @@ void CDefenceWall::IssueRequest( ClientInfo *pClientInfo,CStream &outstream,SCli
 	}
 
 #ifdef LOGEVENTS
-	if (m_bLog) CryLog( "<DefenceWall> IssueRequest[%d] %s %I64x (ofs=%d,size=%d)",pCtx->nRequestId,pCtx->probe.sFilename.c_str(),pCtx->probe.nCode,pCtx->probe.nOffset,pCtx->probe.nSize );
+	if (m_bLog) CryLog("<DefenceWall> IssueRequest[%d] %s %I64x (ofs=%d,size=%d)", pCtx->nRequestId, pCtx->probe.sFilename.c_str(), pCtx->probe.nCode, pCtx->probe.nOffset, pCtx->probe.nSize);
 #endif
 
 	CStream stm;
-	WriteStreamRequest( *pCtx,stm );
+	WriteStreamRequest(*pCtx, stm);
 
-	outstream.Write( stm );
+	outstream.Write(stm);
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CDefenceWall::WriteStreamRequest( SClientCheckContext &ctx,CStream &stm )
+void CDefenceWall::WriteStreamRequest(SClientCheckContext& ctx, CStream& stm)
 {
-	stm.Write( ctx.nRequestCode );
-	stm.WritePacked( ctx.nRequestId );
-	stm.WritePacked( ctx.nFilenameHash );
-	stm.WritePacked( ctx.probe.nCodeInfo );
-	stm.WritePacked( ctx.probe.nOffset );
-	stm.WritePacked( ctx.probe.nSize );
+	stm.Write(ctx.nRequestCode);
+	stm.WritePacked(ctx.nRequestId);
+	stm.WritePacked(ctx.nFilenameHash);
+	stm.WritePacked(ctx.probe.nCodeInfo);
+	stm.WritePacked(ctx.probe.nOffset);
+	stm.WritePacked(ctx.probe.nSize);
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CDefenceWall::ReadStreamRequest( SClientCheckContext &ctx,CStream &stm )
+void CDefenceWall::ReadStreamRequest(SClientCheckContext& ctx, CStream& stm)
 {
-	stm.Read( ctx.nRequestCode );
-	stm.ReadPacked( ctx.nRequestId );
-	stm.ReadPacked( ctx.nFilenameHash );
-	stm.ReadPacked( ctx.probe.nCodeInfo );
-	stm.ReadPacked( ctx.probe.nOffset );
-	stm.ReadPacked( ctx.probe.nSize );
+	stm.Read(ctx.nRequestCode);
+	stm.ReadPacked(ctx.nRequestId);
+	stm.ReadPacked(ctx.nFilenameHash);
+	stm.ReadPacked(ctx.probe.nCodeInfo);
+	stm.ReadPacked(ctx.probe.nOffset);
+	stm.ReadPacked(ctx.probe.nSize);
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CDefenceWall::WriteStreamResponse( SClientCheckContext &ctx,CStream &stm )
+void CDefenceWall::WriteStreamResponse(SClientCheckContext& ctx, CStream& stm)
 {
 	// Also crypt stream here.
-	stm.Write( ctx.nRequestCode );
-	stm.WritePacked( ctx.nRequestId );
-	stm.WritePacked( ctx.nNumOpenedPaks );
-	stm.WritePacked( ctx.nClientStatusFlags );
-	stm.WriteBits( (BYTE*)&ctx.probe.nCode,64 ); // write int64
+	stm.Write(ctx.nRequestCode);
+	stm.WritePacked(ctx.nRequestId);
+	stm.WritePacked(ctx.nNumOpenedPaks);
+	stm.WritePacked(ctx.nClientStatusFlags);
+	stm.WriteBits((BYTE*)&ctx.probe.nCode, 64); // write int64
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CDefenceWall::ReadStreamResponse( SClientCheckContext &ctx,CStream &stm )
+void CDefenceWall::ReadStreamResponse(SClientCheckContext& ctx, CStream& stm)
 {
-	stm.Read( ctx.nRequestCode );
-	stm.ReadPacked( ctx.nRequestId );
-	stm.ReadPacked( ctx.nNumOpenedPaks );
-	stm.ReadPacked( ctx.nClientStatusFlags );
-	stm.ReadBits( (BYTE*)&ctx.probe.nCode,64 ); // read int64
+	stm.Read(ctx.nRequestCode);
+	stm.ReadPacked(ctx.nRequestId);
+	stm.ReadPacked(ctx.nNumOpenedPaks);
+	stm.ReadPacked(ctx.nClientStatusFlags);
+	stm.ReadBits((BYTE*)&ctx.probe.nCode, 64); // read int64
 }
 
 //////////////////////////////////////////////////////////////////////////
-SClientCheckContext* CDefenceWall::FindRequest( int nRequestId )
+SClientCheckContext* CDefenceWall::FindRequest(int nRequestId)
 {
 	for (PendingChecks::iterator it = m_pendingChecks.begin(); it != m_pendingChecks.end(); it++)
 	{
@@ -388,7 +388,7 @@ SClientCheckContext* CDefenceWall::FindRequest( int nRequestId )
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CDefenceWall::RemoveRequest( SClientCheckContext* pCtx )
+void CDefenceWall::RemoveRequest(SClientCheckContext* pCtx)
 {
 	for (PendingChecks::iterator it = m_pendingChecks.begin(); it != m_pendingChecks.end(); it++)
 	{
@@ -401,66 +401,66 @@ void CDefenceWall::RemoveRequest( SClientCheckContext* pCtx )
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CDefenceWall::UnifyFilename( string &sFilename )
+void CDefenceWall::UnifyFilename(string& sFilename)
 {
 	string file = sFilename;
-	std::replace( file.begin(),file.end(),'\\','/' );
-	strlwr( const_cast<char*>(file.c_str()) );
+	std::replace(file.begin(), file.end(), '\\', '/');
+	strlwr(const_cast<char*>(file.c_str()));
 	sFilename = file;
 }
 
-void CDefenceWall::GetRelativeFilename( string &sFilename )
+void CDefenceWall::GetRelativeFilename(string& sFilename)
 {
 	UnifyFilename(sFilename);
 
 	// Get current folder.
 	char szCurrDir[_MAX_PATH];
-	GetCurrentDirectory( sizeof(szCurrDir),szCurrDir );
+	GetCurrentDirectory(sizeof(szCurrDir), szCurrDir);
 	string sCurDir = szCurrDir;
 
 	UnifyFilename(sCurDir);
 
 	// Get relative path.
-	if (strncmp(sFilename.c_str(),sCurDir.c_str(),sCurDir.size()) == 0 && sFilename.size()+1 >= sCurDir.size())
+	if (strncmp(sFilename.c_str(), sCurDir.c_str(), sCurDir.size()) == 0 && sFilename.size() + 1 >= sCurDir.size())
 	{
 		// First part of file name is current dir.
-		sFilename = sFilename.substr(sCurDir.size()+1);
+		sFilename = sFilename.substr(sCurDir.size() + 1);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CDefenceWall::EncryptStream( CStream &stm )
+void CDefenceWall::EncryptStream(CStream& stm)
 {
 	unsigned int* pBuffer = (unsigned int*)stm.GetPtr();
-	int len = stm.GetSize()/8;
+	int len = stm.GetSize() / 8;
 	if (len >= 8)
 	{
-		TEA_ENCODE( pBuffer,pBuffer,TEA_GETSIZE(len),m_nEncryptKey );
+		TEA_ENCODE(pBuffer, pBuffer, TEA_GETSIZE(len), m_nEncryptKey);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CDefenceWall::DecryptStream( CStream &stm )
+void CDefenceWall::DecryptStream(CStream& stm)
 {
 	unsigned int* pBuffer = (unsigned int*)stm.GetPtr();
-	int len = stm.GetSize()/8;
+	int len = stm.GetSize() / 8;
 	if (len >= 8)
 	{
-		TEA_DECODE( pBuffer,pBuffer,TEA_GETSIZE(len),m_nEncryptKey );
+		TEA_DECODE(pBuffer, pBuffer, TEA_GETSIZE(len), m_nEncryptKey);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CDefenceWall::SendSecurityQueryToClient( CIPAddress &clientIP,CStream &stm )
+void CDefenceWall::SendSecurityQueryToClient(CIPAddress& clientIP, CStream& stm)
 {
 	if (m_pServer)
 	{
-		CServerSlot *pSlot = m_pServer->GetPacketOwner( clientIP );
+		CServerSlot* pSlot = m_pServer->GetPacketOwner(clientIP);
 		if (pSlot)
 		{
 			EncryptStream(stm);
 #ifdef LOGEVENTS
-			if (m_bLog) CryLog( "<DefenceWall> Sending Stream to Client %d bytes",stm.GetSize()/8 );
+			if (m_bLog) CryLog("<DefenceWall> Sending Stream to Client %d bytes", stm.GetSize() / 8);
 #endif
 			pSlot->SendSecurityQuery(stm);
 		}
@@ -468,7 +468,7 @@ void CDefenceWall::SendSecurityQueryToClient( CIPAddress &clientIP,CStream &stm 
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CDefenceWall::SendSecurityRespToServer( CStream &stm )
+void CDefenceWall::SendSecurityRespToServer(CStream& stm)
 {
 	if (m_pClient)
 	{
@@ -478,7 +478,7 @@ void CDefenceWall::SendSecurityRespToServer( CStream &stm )
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CDefenceWall::OnServerRequest( CStream &stm )
+void CDefenceWall::OnServerRequest(CStream& stm)
 {
 	DecryptStream(stm);
 	m_clientOutputStream.Reset();
@@ -486,7 +486,7 @@ void CDefenceWall::OnServerRequest( CStream &stm )
 	{
 		// When client recieves server request.
 		SClientCheckContext ctx;
-		ReadStreamRequest( ctx,stm );
+		ReadStreamRequest(ctx, stm);
 
 		// Perform required check on client.
 		switch (ctx.nRequestCode)
@@ -494,12 +494,12 @@ void CDefenceWall::OnServerRequest( CStream &stm )
 		case DEFWALL_CHECK_PAK:
 		case DEFWALL_CHECK_PROTECTED_FILE:
 		case DEFWALL_CHECK_DLL_CODE:
-			OnValidateClientContext( ctx );
+			OnValidateClientContext(ctx);
 			break;
 		default:
 			// Unknown server request.
 #ifdef LOGEVENTS
-			if (m_bLog) CryLog( "Unknown Server Request Code" );
+			if (m_bLog) CryLog("Unknown Server Request Code");
 #endif
 			break;
 		}
@@ -507,59 +507,59 @@ void CDefenceWall::OnServerRequest( CStream &stm )
 	if (m_clientOutputStream.GetSize() > 0)
 	{
 		// Send client Outputstring back to server.
-		SendSecurityRespToServer( m_clientOutputStream );
+		SendSecurityRespToServer(m_clientOutputStream);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CDefenceWall::OnClientResponse( CIPAddress &clientIP,CStream &stm )
+void CDefenceWall::OnClientResponse(CIPAddress& clientIP, CStream& stm)
 {
 	// When server recieves client response.
 	DecryptStream(stm);
 
 	int nServerStatusFlags = GetSystemStatusFlags();
-	
+
 	while (!stm.EOS())
 	{
 		SClientCheckContext clientResponse;
-		ReadStreamResponse( clientResponse,stm );
+		ReadStreamResponse(clientResponse, stm);
 
-		SClientCheckContext &ctx = clientResponse;
+		SClientCheckContext& ctx = clientResponse;
 #ifdef LOGEVENTS
-		if (m_bLog) CryLog( "<DefenceWall> OnClientResponse[%d] %s %I64x",ctx.nRequestId,ctx.probe.sFilename.c_str(),ctx.probe.nCode );
+		if (m_bLog) CryLog("<DefenceWall> OnClientResponse[%d] %s %I64x", ctx.nRequestId, ctx.probe.sFilename.c_str(), ctx.probe.nCode);
 #endif
 
 		if (clientResponse.nClientStatusFlags != nServerStatusFlags)
 		{
 #ifdef LOGEVENTS
-			if (m_bLog) CryLog( "<DefenceWall> Wrong Vars! %d!=%d",clientResponse.nClientStatusFlags,nServerStatusFlags );
+			if (m_bLog) CryLog("<DefenceWall> Wrong Vars! %d!=%d", clientResponse.nClientStatusFlags, nServerStatusFlags);
 #endif
 			// Client have different vars set.
-			PunkDetected( clientIP,IServerSecuritySink::CHEAT_MODIFIED_VARS );
+			PunkDetected(clientIP, IServerSecuritySink::CHEAT_MODIFIED_VARS);
 			return;
 		}
 
 		// Server here checks that client response is valid and validation code match the one stored on server.
-		SClientCheckContext *pServerCtx = FindRequest( clientResponse.nRequestId );
+		SClientCheckContext* pServerCtx = FindRequest(clientResponse.nRequestId);
 		if (pServerCtx)
 		{
 			// Compare client code.
 			if (pServerCtx->probe.nCode != clientResponse.probe.nCode)
 			{
 #ifdef LOGEVENTS
-				if (m_bLog) CryLog( "<DefenceWall> Wrong Code! %d!=%d",clientResponse.probe.nCode,pServerCtx->probe.nCode );
+				if (m_bLog) CryLog("<DefenceWall> Wrong Code! %d!=%d", clientResponse.probe.nCode, pServerCtx->probe.nCode);
 #endif
 				// Wrong Code!
-				PunkDetected( clientIP,(pServerCtx->bExecutableCode)?IServerSecuritySink::CHEAT_MODIFIED_CODE:IServerSecuritySink::CHEAT_MODIFIED_FILE );
+				PunkDetected(clientIP, (pServerCtx->bExecutableCode) ? IServerSecuritySink::CHEAT_MODIFIED_CODE : IServerSecuritySink::CHEAT_MODIFIED_FILE);
 				return;
 			}
 			else if (pServerCtx->nRequestCode == DEFWALL_CHECK_PAK && pServerCtx->nNumOpenedPaks != clientResponse.nNumOpenedPaks)
 			{
 #ifdef LOGEVENTS
-				if (m_bLog) CryLog( "<DefenceWall> Wrong Num Paks! %d!=%d",clientResponse.nNumOpenedPaks,pServerCtx->nNumOpenedPaks );
+				if (m_bLog) CryLog("<DefenceWall> Wrong Num Paks! %d!=%d", clientResponse.nNumOpenedPaks, pServerCtx->nNumOpenedPaks);
 #endif
 				// Client have different number of open packs then server!
-				PunkDetected( clientIP,IServerSecuritySink::CHEAT_MODIFIED_FILE );
+				PunkDetected(clientIP, IServerSecuritySink::CHEAT_MODIFIED_FILE);
 				return;
 			}
 		}
@@ -569,10 +569,10 @@ void CDefenceWall::OnClientResponse( CIPAddress &clientIP,CStream &stm )
 			if (clientResponse.nRequestId >= m_nNextRequestId)
 			{
 #ifdef LOGEVENTS
-				if (m_bLog) CryLog( "<DefenceWall> Too Big Request Id! %d!=%d",clientResponse.nClientStatusFlags,nServerStatusFlags );
+				if (m_bLog) CryLog("<DefenceWall> Too Big Request Id! %d!=%d", clientResponse.nClientStatusFlags, nServerStatusFlags);
 #endif
 				// Possible cheating with the protocol... Client cannot recieve such a big request id before server issues it.
-				PunkDetected( clientIP,IServerSecuritySink::CHEAT_NET_PROTOCOL );
+				PunkDetected(clientIP, IServerSecuritySink::CHEAT_NET_PROTOCOL);
 				return;
 			}
 			else
@@ -581,12 +581,12 @@ void CDefenceWall::OnClientResponse( CIPAddress &clientIP,CStream &stm )
 			}
 		}
 		// Remove request from list.
-		RemoveRequest( pServerCtx );
+		RemoveRequest(pServerCtx);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CDefenceWall::OnValidateClientContext( SClientCheckContext &ctx )
+void CDefenceWall::OnValidateClientContext(SClientCheckContext& ctx)
 {
 #if defined(LINUX)
 	return;
@@ -596,79 +596,79 @@ void CDefenceWall::OnValidateClientContext( SClientCheckContext &ctx )
 	switch (ctx.nRequestCode)
 	{
 	case DEFWALL_CHECK_PAK:
+	{
+		// Find out which filename to check.
+		ICryPak::PakInfo* pPakInfo = m_pSystem->GetIPak()->GetPakInfo();
+		ctx.nNumOpenedPaks = pPakInfo->numOpenPaks;
+		for (unsigned int i = 0; i < pPakInfo->numOpenPaks; i++)
 		{
-			// Find out which filename to check.
-			ICryPak::PakInfo* pPakInfo = m_pSystem->GetIPak()->GetPakInfo();
-			ctx.nNumOpenedPaks = pPakInfo->numOpenPaks;
-			for (unsigned int i = 0; i < pPakInfo->numOpenPaks; i++)
-			{
 #ifdef LOGEVENTS
-				if (m_bLog) CryLog( "<DefenceWall> PAK: %s",pPakInfo->arrPaks[i].szFilePath );
+			if (m_bLog) CryLog("<DefenceWall> PAK: %s", pPakInfo->arrPaks[i].szFilePath);
 #endif
 
-				string file = pPakInfo->arrPaks[i].szFilePath;
-				GetRelativeFilename(file);
-				u32 nFilenameHash = m_pNetwork->GetStringHash(file.c_str());
-				if (nFilenameHash == ctx.nFilenameHash)
-				{
-					// Refering to the same file.
-					ctx.probe.sFilename = file;
-					break;
-				}
+			string file = pPakInfo->arrPaks[i].szFilePath;
+			GetRelativeFilename(file);
+			u32 nFilenameHash = m_pNetwork->GetStringHash(file.c_str());
+			if (nFilenameHash == ctx.nFilenameHash)
+			{
+				// Refering to the same file.
+				ctx.probe.sFilename = file;
+				break;
 			}
-			m_pSystem->GetIPak()->FreePakInfo( pPakInfo );
 		}
-		break;
+		m_pSystem->GetIPak()->FreePakInfo(pPakInfo);
+	}
+	break;
 	case DEFWALL_CHECK_PROTECTED_FILE:
+	{
+		for (unsigned int i = 0; i < m_protectedFiles.size(); i++)
 		{
-			for (unsigned int i = 0; i < m_protectedFiles.size(); i++)
+			ProtectedFile& pf = m_protectedFiles[i];
+			if (pf.nFilenameHash == ctx.nFilenameHash)
 			{
-				ProtectedFile &pf = m_protectedFiles[i];
-				if (pf.nFilenameHash == ctx.nFilenameHash)
-				{
-					// We are refering to the same file.
-					ctx.probe.sFilename = pf.filename;
-					break;
-				}
+				// We are refering to the same file.
+				ctx.probe.sFilename = pf.filename;
+				break;
 			}
 		}
-		break;
+	}
+	break;
 	case DEFWALL_CHECK_DLL_CODE:
+	{
+		// Create module probe for all DLL modules.
+		IDataProbe::SModuleInfo* pModules;
+		int numModules = m_pSystem->GetIDataProbe()->GetLoadedModules(&pModules);
+		for (int i = 0; i < numModules; i++)
 		{
-			// Create module probe for all DLL modules.
-			IDataProbe::SModuleInfo *pModules;
-			int numModules = m_pSystem->GetIDataProbe()->GetLoadedModules( &pModules );
-			for (int i = 0; i < numModules; i++)
-			{
-				char sModule[_MAX_PATH];
-				char fname[_MAX_FNAME];
-				char ext[_MAX_EXT];
-				_splitpath( pModules[i].filename.c_str(),0,0,fname,ext );
-				_makepath( sModule,0,0,fname,ext );
-				strlwr( sModule );
+			char sModule[_MAX_PATH];
+			char fname[_MAX_FNAME];
+			char ext[_MAX_EXT];
+			_splitpath(pModules[i].filename.c_str(), 0, 0, fname, ext);
+			_makepath(sModule, 0, 0, fname, ext);
+			strlwr(sModule);
 
-				u32 nFilenameHash = m_pSystem->GetIDataProbe()->GetHash( sModule );
-				if (ctx.nFilenameHash == nFilenameHash)
-				{
-					ctx.probe.sFilename = sModule;
-					bGotProbe = m_pSystem->GetIDataProbe()->GetModuleProbe(ctx.probe);
-				}
+			u32 nFilenameHash = m_pSystem->GetIDataProbe()->GetHash(sModule);
+			if (ctx.nFilenameHash == nFilenameHash)
+			{
+				ctx.probe.sFilename = sModule;
+				bGotProbe = m_pSystem->GetIDataProbe()->GetModuleProbe(ctx.probe);
 			}
 		}
-		break;
+	}
+	break;
 	default:
 		// Unknown request...
 #ifdef LOGEVENTS
-		if (m_bLog) CryLog( "Server Sent Unknown request" );
+		if (m_bLog) CryLog("Server Sent Unknown request");
 #endif
 		return;
 	}
 
 	// initialize code to be random.
-	ctx.probe.nCode = ((u64)rand()) | (((u64)rand())<<16)  | (((u64)rand())<<32) | (((u64)rand())<<48);
+	ctx.probe.nCode = ((u64)rand()) | (((u64)rand()) << 16) | (((u64)rand()) << 32) | (((u64)rand()) << 48);
 
 	// Calc hash code of this file.
-	if (bGotProbe && m_pSystem->GetIDataProbe()->GetCode( ctx.probe ))
+	if (bGotProbe && m_pSystem->GetIDataProbe()->GetCode(ctx.probe))
 	{
 		// Code retrieved.
 	}
@@ -679,12 +679,12 @@ void CDefenceWall::OnValidateClientContext( SClientCheckContext &ctx )
 	// Send code back to server.
 
 #ifdef LOGEVENTS
-	if (m_bLog) CryLog( "<DefenceWall> OnServerRequest[%d] %s %I64x (ofs=%d,size=%d)",ctx.nRequestId,ctx.probe.sFilename.c_str(),ctx.probe.nCode,ctx.probe.nOffset,ctx.probe.nSize );
+	if (m_bLog) CryLog("<DefenceWall> OnServerRequest[%d] %s %I64x (ofs=%d,size=%d)", ctx.nRequestId, ctx.probe.sFilename.c_str(), ctx.probe.nCode, ctx.probe.nOffset, ctx.probe.nSize);
 #endif
 
 	// Every response should contain these.
 	ctx.nClientStatusFlags = GetSystemStatusFlags();
-	WriteStreamResponse( ctx,m_clientOutputStream );
+	WriteStreamResponse(ctx, m_clientOutputStream);
 #endif //LINUX
 }
 
@@ -714,11 +714,11 @@ void CDefenceWall::ClearProtectedFiles()
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CDefenceWall::AddProtectedFile( const char *sFilename )
+void CDefenceWall::AddProtectedFile(const char* sFilename)
 {
 #if !defined(LINUX)
 	string file = sFilename;
-	UnifyFilename( file );
+	UnifyFilename(file);
 
 	ProtectedFile pf;
 	pf.filename = file;
@@ -729,13 +729,13 @@ void CDefenceWall::AddProtectedFile( const char *sFilename )
 	{
 		// Calc hash code of this file.
 		SDataProbeContext probe;
-		probe.nCodeInfo = rand()%3;
+		probe.nCodeInfo = rand() % 3;
 		probe.nOffset = 0;
 		probe.nSize = 0xFFFFFFFF; // all file.
 		probe.sFilename = file;
-		if (!m_pSystem->GetIDataProbe()->GetRandomFileProbe( probe,false ))
+		if (!m_pSystem->GetIDataProbe()->GetRandomFileProbe(probe, false))
 			return;
-		if (!m_pSystem->GetIDataProbe()->GetCode( probe ))
+		if (!m_pSystem->GetIDataProbe()->GetCode(probe))
 			return;
 		pf.nHashCode = probe.nCode;
 
@@ -747,7 +747,7 @@ void CDefenceWall::AddProtectedFile( const char *sFilename )
 		m_stdServerProbes.push_back(ctx);
 
 #ifdef LOGEVENTS
-		if (m_bLog) CryLog( "<DefenceWall> CreatedFileProbe[%d] %s %I64x",ctx.nRequestId,ctx.probe.sFilename.c_str(),ctx.probe.nCode );
+		if (m_bLog) CryLog("<DefenceWall> CreatedFileProbe[%d] %s %I64x", ctx.nRequestId, ctx.probe.sFilename.c_str(), ctx.probe.nCode);
 #endif
 	}
 
@@ -761,9 +761,9 @@ void CDefenceWall::ServerUpdate()
 	if (!m_bServer)
 		return;
 
-//	m_bLog = m_pNetwork->GetLogLevel() == 1024;
+	//	m_bLog = m_pNetwork->GetLogLevel() == 1024;
 
-	// Ignore if no standart probes yet.
+		// Ignore if no standart probes yet.
 	if (m_stdServerProbes.empty())
 		return;
 
@@ -773,12 +773,12 @@ void CDefenceWall::ServerUpdate()
 	std::vector<CIPAddress> notRespondingClients;
 	notRespondingClients.clear();
 
-	PendingChecks::iterator it,next;
+	PendingChecks::iterator it, next;
 	// See if any requests expired and were not responded.
 	for (it = m_pendingChecks.begin(); it != m_pendingChecks.end(); it = next)
 	{
 		next = it; next++;
-		SClientCheckContext &ctx = *(*it);
+		SClientCheckContext& ctx = *(*it);
 		// Check how long request is pending already.
 		float fRequestTime = ctx.requestTime.GetSeconds();
 		if (fCurrSeconds - fRequestTime > WAIT_FOR_RESPONSE_TIME)
@@ -787,21 +787,21 @@ void CDefenceWall::ServerUpdate()
 			if (ctx.nRetries < MAX_CHECK_RETRIES)
 			{
 #ifdef LOGEVENTS
-				if (m_bLog) CryLog( "<DefenceWall> Repeat Request[%d] (Retry:%d)",ctx.nRequestId,ctx.nRetries );
+				if (m_bLog) CryLog("<DefenceWall> Repeat Request[%d] (Retry:%d)", ctx.nRequestId, ctx.nRetries);
 #endif
 				ctx.nRetries++;
-				ClientInfo *pClientInfo = FindClientInfo(ctx.clientIP);
+				ClientInfo* pClientInfo = FindClientInfo(ctx.clientIP);
 				if (pClientInfo)
 				{
 					// Try to issue the same request again.
 					CStream outstream;
-					IssueRequest( pClientInfo,outstream,ctx );
-					SendSecurityQueryToClient( ctx.clientIP,outstream );
+					IssueRequest(pClientInfo, outstream, ctx);
+					SendSecurityQueryToClient(ctx.clientIP, outstream);
 				}
 				else
 				{
 #ifdef LOGEVENTS
-					if (m_bLog) CryLog( "<DefenceWall> Delete Request[%d] Unknown Client!",ctx.nRequestId );
+					if (m_bLog) CryLog("<DefenceWall> Delete Request[%d] Unknown Client!", ctx.nRequestId);
 #endif
 					m_pendingChecks.erase(it); // something wrong with this request, not client for this ip.
 				}
@@ -809,10 +809,10 @@ void CDefenceWall::ServerUpdate()
 			else
 			{
 #ifdef LOGEVENTS
-				if (m_bLog) CryLog( "<DefenceWall> No Resonse from Client for Request(%d)",ctx.nRequestId);
+				if (m_bLog) CryLog("<DefenceWall> No Resonse from Client for Request(%d)", ctx.nRequestId);
 #endif
 				// 3 Requests without an answer.... (assume cheating client).
-				notRespondingClients.push_back( ctx.clientIP );
+				notRespondingClients.push_back(ctx.clientIP);
 				m_pendingChecks.erase(it);
 			}
 		}
@@ -824,7 +824,7 @@ void CDefenceWall::ServerUpdate()
 		// If any client not responding.
 		for (unsigned int i = 0; i < notRespondingClients.size(); i++)
 		{
-			PunkDetected( notRespondingClients[i],IServerSecuritySink::CHEAT_NOT_RESPONDING );
+			PunkDetected(notRespondingClients[i], IServerSecuritySink::CHEAT_NOT_RESPONDING);
 		}
 	}
 
@@ -834,18 +834,18 @@ void CDefenceWall::ServerUpdate()
 		// Go over clients and check if they need random check yet.
 		for (Clients::const_iterator clit = m_clients.begin(); clit != m_clients.end(); ++clit)
 		{
-			ClientInfo *ci = *clit;
+			ClientInfo* ci = *clit;
 			if (currTime > ci->nextRandomCheckTime)
 			{
 				// Make random request to this client.
-				RandomClientValidation( ci );
+				RandomClientValidation(ci);
 			}
 		}
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CDefenceWall::OnAddClient( CIPAddress &clientIP )
+void CDefenceWall::OnAddClient(CIPAddress& clientIP)
 {
 	// Check if this client already added.
 	for (Clients::iterator it = m_clients.begin(); it != m_clients.end(); ++it)
@@ -856,27 +856,27 @@ void CDefenceWall::OnAddClient( CIPAddress &clientIP )
 	}
 
 	bool b64bit = false;
-	CServerSlot *pSlot = m_pServer->GetPacketOwner( clientIP );
+	CServerSlot* pSlot = m_pServer->GetPacketOwner(clientIP);
 	if (pSlot)
 	{
 		if (pSlot->IsLocalSlot())
 			return;
 		b64bit = pSlot->GetClientFlags() & CLIENT_FLAGS_64BIT;
 	}
-	ClientInfo *ci = new ClientInfo;
+	ClientInfo* ci = new ClientInfo;
 	ci->lastRequestTime = 0;
 	ci->nextRandomCheckTime = 0;
 	ci->ip = clientIP;
 	ci->b64bit = b64bit;
-	
-	m_clients.push_back( ci );
+
+	m_clients.push_back(ci);
 
 	// Start Validation.
-	FirstTimeClientValidation( ci );
+	FirstTimeClientValidation(ci);
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CDefenceWall::OnDisconnectClient( CIPAddress &clientIP )
+void CDefenceWall::OnDisconnectClient(CIPAddress& clientIP)
 {
 	// Remove all requests to this ip.
 	PendingChecks::iterator next;
@@ -893,7 +893,7 @@ void CDefenceWall::OnDisconnectClient( CIPAddress &clientIP )
 	}
 	for (Clients::iterator clit = m_clients.begin(); clit != m_clients.end(); ++clit)
 	{
-		ClientInfo *ci = *clit;
+		ClientInfo* ci = *clit;
 		if (ci->ip == clientIP)
 		{
 			m_clients.erase(clit);
@@ -904,11 +904,11 @@ void CDefenceWall::OnDisconnectClient( CIPAddress &clientIP )
 }
 
 //////////////////////////////////////////////////////////////////////////
-CDefenceWall::ClientInfo* CDefenceWall::FindClientInfo( CIPAddress &clientIP  ) const
+CDefenceWall::ClientInfo* CDefenceWall::FindClientInfo(CIPAddress& clientIP) const
 {
 	for (Clients::const_iterator clit = m_clients.begin(); clit != m_clients.end(); ++clit)
 	{
-		ClientInfo *ci = *clit;
+		ClientInfo* ci = *clit;
 		if (ci->ip == clientIP)
 		{
 			return ci;
@@ -918,29 +918,29 @@ CDefenceWall::ClientInfo* CDefenceWall::FindClientInfo( CIPAddress &clientIP  ) 
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CDefenceWall::PunkDetected( CIPAddress &clientIP,int type )
+void CDefenceWall::PunkDetected(CIPAddress& clientIP, int type)
 {
-	ClientInfo *ci = FindClientInfo(clientIP);
+	ClientInfo* ci = FindClientInfo(clientIP);
 	if (ci)
 	{
 		ci->bSuspectedPunk = true;
 	}
-	m_pNetwork->PunkDetected( clientIP );
+	m_pNetwork->PunkDetected(clientIP);
 	if (m_pServer)
 	{
 		if (m_pServer->GetSecuritySink())
 		{
-			m_pServer->GetSecuritySink()->CheaterFound( clientIP.GetAsUINT(),type,"" );
+			m_pServer->GetSecuritySink()->CheaterFound(clientIP.GetAsUINT(), type, "");
 		}
 	}
 }
 
 enum EDFSystemStatusFlags
 {
-	SYS_STATUS_FORCE_NONDEVMODE		= 0x0001,
-	SYS_STATUS_IN_DEVMODE					= 0x0002,
-	SYS_STATUS_WAS_IN_DEVMODE			= 0x0004,
-	SYS_STATUS_PAK_PRIORITY				= 0x0008,
+	SYS_STATUS_FORCE_NONDEVMODE = 0x0001,
+	SYS_STATUS_IN_DEVMODE = 0x0002,
+	SYS_STATUS_WAS_IN_DEVMODE = 0x0004,
+	SYS_STATUS_PAK_PRIORITY = 0x0008,
 };
 //////////////////////////////////////////////////////////////////////////
 int CDefenceWall::GetSystemStatusFlags()
@@ -954,7 +954,7 @@ int CDefenceWall::GetSystemStatusFlags()
 	// Check if was started in dev mode.
 	if (GetISystem()->WasInDevMode())
 		flags |= SYS_STATUS_WAS_IN_DEVMODE;
-	ICVar *pVar = GetISystem()->GetIConsole()->GetCVar("sys_PakPriority");
+	ICVar* pVar = GetISystem()->GetIConsole()->GetCVar("sys_PakPriority");
 	if (pVar && pVar->GetIVal() != 0)
 		flags |= SYS_STATUS_PAK_PRIORITY;
 

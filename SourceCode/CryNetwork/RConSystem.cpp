@@ -4,7 +4,7 @@
 #include "CNP.h"						// CQPRConCommand
 #include "IConsole.h"				// IConsole
 //#if !defined(LINUX)
-	#include "IDataProbe.h"				// IConsole
+#include "IDataProbe.h"				// IConsole
 //#endif
 
 
@@ -14,33 +14,33 @@ class CRConConsoleSink :public IOutputPrintSink
 {
 public:
 	// constructor
-	CRConConsoleSink( CRConSystem &inRef, const CIPAddress &ip ) :m_Ref(inRef), m_ip(ip)
+	CRConConsoleSink(CRConSystem& inRef, const CIPAddress& ip) :m_Ref(inRef), m_ip(ip)
 	{
 	}
 
 	// interface IOutputPrintSink ------------------------------------
 
-	virtual void Print( const char *inszText )
+	virtual void Print(const char* inszText)
 	{
 		CStream					stmPacket;
 		CQPRConResponse	RConResponse;
 
-		RConResponse.m_sText=inszText;
+		RConResponse.m_sText = inszText;
 
-		RConResponse.Save(stmPacket);	
-		NRESULT hRes=m_Ref.m_sSocket.Send(stmPacket.GetPtr(), BITS2BYTES(stmPacket.GetSize()), &m_ip);
+		RConResponse.Save(stmPacket);
+		NRESULT hRes = m_Ref.m_sSocket.Send(stmPacket.GetPtr(), BITS2BYTES(stmPacket.GetSize()), &m_ip);
 
-		if(hRes==SOCKET_ERROR)
+		if (hRes == SOCKET_ERROR)
 		{
-			INetwork *pNetwork=m_Ref.m_pSystem->GetINetwork();			assert(pNetwork);
+			INetwork* pNetwork = m_Ref.m_pSystem->GetINetwork();			assert(pNetwork);
 
-			const char *szErrorRes=pNetwork->EnumerateError(hRes);
+			const char* szErrorRes = pNetwork->EnumerateError(hRes);
 
-			CryLogAlways("$4RConError: %s",szErrorRes);
+			CryLogAlways("$4RConError: %s", szErrorRes);
 		}
 	}
 
-	CRConSystem	&			m_Ref;		//!<
+	CRConSystem& m_Ref;		//!<
 	CIPAddress				m_ip;			//!<
 };
 // *****************************************************************
@@ -48,10 +48,10 @@ public:
 
 CRConSystem::CRConSystem()
 {
-	m_pSystem=0;
-	m_pIServer=0;
-	
-	GetPassCode( "CNPNetworkKeyNode",m_nDevPassCode );
+	m_pSystem = 0;
+	m_pIServer = 0;
+
+	GetPassCode("CNPNetworkKeyNode", m_nDevPassCode);
 }
 
 CRConSystem::~CRConSystem()
@@ -59,20 +59,20 @@ CRConSystem::~CRConSystem()
 }
 
 
-bool CRConSystem::Create( ISystem *pSystem )
+bool CRConSystem::Create(ISystem* pSystem)
 {
 	assert(pSystem);
 
 	m_pSystem = pSystem;
 
-	if(NET_FAILED(m_sSocket.Create()))
+	if (NET_FAILED(m_sSocket.Create()))
 		return false;
 
 	return true;
 }
 
 
-void CRConSystem::Update( unsigned int dwTime,IClient *pClient )
+void CRConSystem::Update(unsigned int dwTime, IClient* pClient)
 {
 	static CStream			stmBuffer;
 	static CIPAddress		ipFrom;
@@ -90,19 +90,19 @@ void CRConSystem::Update( unsigned int dwTime,IClient *pClient )
 
 		m_sSocket.Receive(stmBuffer.GetPtr(), stmBuffer.GetAllocatedSize(), iReceived, ipFrom);
 
-		if(iReceived > 0)
+		if (iReceived > 0)
 		{
 			stmBuffer.SetSize(BYTES2BITS(iReceived));
 
 			CNP cnpPacket;
 			cnpPacket.LoadAndSeekToZero(stmBuffer);
 
-			if(cnpPacket.m_cFrameType == FT_CQP_RCON_RESPONSE)		// from Server back to Client
+			if (cnpPacket.m_cFrameType == FT_CQP_RCON_RESPONSE)		// from Server back to Client
 			{
 				CQPRConResponse cqpRConResponse;
 				cqpRConResponse.Load(stmBuffer);
 
-				CryLogAlways("$5RCon Response: %s",cqpRConResponse.m_sText.c_str());
+				CryLogAlways("$5RCon Response: %s", cqpRConResponse.m_sText.c_str());
 			}
 			else
 			{
@@ -110,46 +110,46 @@ void CRConSystem::Update( unsigned int dwTime,IClient *pClient )
 				return;
 			}
 		}
-	} while(iReceived > 0);
+	} while (iReceived > 0);
 
 
-	while(!m_DeferredConsoleCommands.empty())
+	while (!m_DeferredConsoleCommands.empty())
 	{
-		SDeferredCommand &defCmd( m_DeferredConsoleCommands.front() );
+		SDeferredCommand& defCmd(m_DeferredConsoleCommands.front());
 
-		CRConConsoleSink sink( *this, defCmd.m_ip );
+		CRConConsoleSink sink(*this, defCmd.m_ip);
 
-		IConsole *pConsole( m_pSystem->GetIConsole() );			
-		assert( pConsole );
+		IConsole* pConsole(m_pSystem->GetIConsole());
+		assert(pConsole);
 
-		pConsole->AddOutputPrintSink( &sink);
-		pConsole->ExecuteString( defCmd.m_sCommand.c_str() );
-		pConsole->RemoveOutputPrintSink( &sink );
+		pConsole->AddOutputPrintSink(&sink);
+		pConsole->ExecuteString(defCmd.m_sCommand.c_str());
+		pConsole->RemoveOutputPrintSink(&sink);
 
 		m_DeferredConsoleCommands.pop_front();
 	}
 }
 
 
-void CRConSystem::OnServerCreated( IServer *inpServer )
+void CRConSystem::OnServerCreated(IServer* inpServer)
 {
 	assert(inpServer);
 
-	inpServer->RegisterPacketSink(FT_CQP_RCON_COMMAND,this);
+	inpServer->RegisterPacketSink(FT_CQP_RCON_COMMAND, this);
 	m_pIServer = inpServer;
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CRConSystem::GetPassCode( const char *szString,unsigned int *nOutCode )
+void CRConSystem::GetPassCode(const char* szString, unsigned int* nOutCode)
 {
-//#if !defined(LINUX)
+	//#if !defined(LINUX)
 
 #ifdef _DATAPROBE
 	char md5[16];
-	GetISystem()->GetIDataProbe()->GetMD5( szString,strlen(szString),md5 );
-	memcpy( nOutCode,md5,16 ); // 16 byte.
+	GetISystem()->GetIDataProbe()->GetMD5(szString, strlen(szString), md5);
+	memcpy(nOutCode, md5, 16); // 16 byte.
 #endif
-	
+
 	//#endif
 /*
 #define POLY64REV	0xd800000000000000ULL
@@ -198,14 +198,14 @@ void CRConSystem::GetPassCode( const char *szString,unsigned int *nOutCode )
 */
 }
 
-void CRConSystem::OnReceivingPacket( const unsigned char inPacketID, CStream &stmPacket, CIPAddress &ip )
+void CRConSystem::OnReceivingPacket(const unsigned char inPacketID, CStream& stmPacket, CIPAddress& ip)
 {
-  IConsole *pConsole=m_pSystem->GetIConsole();			assert(pConsole);
+	IConsole* pConsole = m_pSystem->GetIConsole();			assert(pConsole);
 
-	ICVar *pVar = pConsole->GetCVar("sv_rcon_password");			assert(pVar);
+	ICVar* pVar = pConsole->GetCVar("sv_rcon_password");			assert(pVar);
 	string sv_RConPassword = pVar->GetString();
 
-	if(sv_RConPassword=="")
+	if (sv_RConPassword == "")
 		return;											// RCon is not activated
 
 	CQPRConCommand pccp;
@@ -215,10 +215,10 @@ void CRConSystem::OnReceivingPacket( const unsigned char inPacketID, CStream &st
 
 	// Get code for server password, must match code recieved from client.
 	unsigned int nServerPassCode[4];
-	GetPassCode( sv_RConPassword.c_str(),nServerPassCode );
+	GetPassCode(sv_RConPassword.c_str(), nServerPassCode);
 
-	if (memcmp(nServerPassCode,pccp.m_nRConPasswordCode,sizeof(nServerPassCode)) != 0
-			&& memcmp(m_nDevPassCode,pccp.m_nRConPasswordCode,sizeof(nServerPassCode)) != 0)
+	if (memcmp(nServerPassCode, pccp.m_nRConPasswordCode, sizeof(nServerPassCode)) != 0
+		&& memcmp(m_nDevPassCode, pccp.m_nRConPasswordCode, sizeof(nServerPassCode)) != 0)
 	{
 		unsigned int dwIP = ip.GetAsUINT();
 
@@ -232,7 +232,7 @@ void CRConSystem::OnReceivingPacket( const unsigned char inPacketID, CStream &st
 		}
 		else
 		{
-			CryLogAlways( "$4%s used a bad rcon password!.", ip.GetAsString(0) );
+			CryLogAlways("$4%s used a bad rcon password!.", ip.GetAsString(0));
 
 			int iTry = ++it->second;
 
@@ -242,12 +242,12 @@ void CRConSystem::OnReceivingPacket( const unsigned char inPacketID, CStream &st
 				m_hmRconAttempts.erase(it);
 				m_pIServer->BanIP(dwIP);
 
-				
+
 				CryLogAlways("$4Banned %s after 3 attempts with a bad rcon password.", ip.GetAsString(0));
 			}
 		}
 
-//		pLog->Log("DEBUG: Password does not match");
+		//		pLog->Log("DEBUG: Password does not match");
 		return;																											// rcon password does not match
 	}
 	else
@@ -261,67 +261,67 @@ void CRConSystem::OnReceivingPacket( const unsigned char inPacketID, CStream &st
 		}
 	}
 
-	
+
 	char tempCmd[512];
-	strncpy(tempCmd,pccp.m_sRConCommand.c_str(),sizeof(tempCmd)-1);
-	tempCmd[sizeof(tempCmd)-1] = 0;
+	strncpy(tempCmd, pccp.m_sRConCommand.c_str(), sizeof(tempCmd) - 1);
+	tempCmd[sizeof(tempCmd) - 1] = 0;
 
-	char *szIP = ip.GetAsString();
+	char* szIP = ip.GetAsString();
 
-	CryLogAlways("$5Incoming RCon(%s): %s",szIP,tempCmd);
+	CryLogAlways("$5Incoming RCon(%s): %s", szIP, tempCmd);
 
 
-	m_DeferredConsoleCommands.push_back(SDeferredCommand(tempCmd,ip));
+	m_DeferredConsoleCommands.push_back(SDeferredCommand(tempCmd, ip));
 
-/*
-	{
-		CRConConsoleSink sink(*this,ip);
+	/*
+		{
+			CRConConsoleSink sink(*this,ip);
 
-		pConsole->AddOutputPrintSink(&sink);
-			pConsole->ExecuteString(tempCmd);
-		pConsole->RemoveOutputPrintSink(&sink);
-	}
-	*/
+			pConsole->AddOutputPrintSink(&sink);
+				pConsole->ExecuteString(tempCmd);
+			pConsole->RemoveOutputPrintSink(&sink);
+		}
+		*/
 }
 
-void CRConSystem::ExecuteRConCommand( const char *inszCommand )
+void CRConSystem::ExecuteRConCommand(const char* inszCommand)
 {
 	// get parameters
 
-	IConsole *pConsole=m_pSystem->GetIConsole();							assert(pConsole);
+	IConsole* pConsole = m_pSystem->GetIConsole();							assert(pConsole);
 
-	ICVar *pVar1 = pConsole->GetCVar("cl_rcon_serverip");			assert(pVar1);
+	ICVar* pVar1 = pConsole->GetCVar("cl_rcon_serverip");			assert(pVar1);
 	string serverip = pVar1->GetString();
 
-	ICVar *pVar2 = pConsole->GetCVar("cl_rcon_port");					assert(pVar2);
+	ICVar* pVar2 = pConsole->GetCVar("cl_rcon_port");					assert(pVar2);
 	WORD wPort = pVar2->GetIVal();
 
-	ICVar *pVar3 = pConsole->GetCVar("cl_rcon_password");			assert(pVar3);
+	ICVar* pVar3 = pConsole->GetCVar("cl_rcon_password");			assert(pVar3);
 	string sPasswd = pVar3->GetString();
 
 	// send packet
 	CQPRConCommand cqpRConCommand;
 	CStream	stmPacket;
-	CIPAddress ip(wPort,serverip.c_str());
-	
+	CIPAddress ip(wPort, serverip.c_str());
+
 	// If server ip not specified use, current server.
 	if (serverip.empty())
 	{
-		ip.Set( m_ipServer );
+		ip.Set(m_ipServer);
 	}
 
 	unsigned int nClientCode[4];
-	GetPassCode( sPasswd.c_str(),nClientCode );
-	memcpy( cqpRConCommand.m_nRConPasswordCode,nClientCode,sizeof(nClientCode) );
+	GetPassCode(sPasswd.c_str(), nClientCode);
+	memcpy(cqpRConCommand.m_nRConPasswordCode, nClientCode, sizeof(nClientCode));
 
 	char tempCmd[256];
-	strncpy(tempCmd,inszCommand,sizeof(tempCmd)-1);
-	tempCmd[sizeof(tempCmd)-1] = 0;
+	strncpy(tempCmd, inszCommand, sizeof(tempCmd) - 1);
+	tempCmd[sizeof(tempCmd) - 1] = 0;
 	cqpRConCommand.m_sRConCommand = tempCmd;
 
-	cqpRConCommand.Save(stmPacket);	
-	m_sSocket.Send(stmPacket.GetPtr(),BITS2BYTES(stmPacket.GetSize()),&ip);
+	cqpRConCommand.Save(stmPacket);
+	m_sSocket.Send(stmPacket.GetPtr(), BITS2BYTES(stmPacket.GetSize()), &ip);
 
 	// prinout
-	CryLogAlways("$5RCon (%s:%d)'%s'",serverip.c_str(),(int)wPort,tempCmd );
+	CryLogAlways("$5RCon (%s:%d)'%s'", serverip.c_str(), (int)wPort, tempCmd);
 }

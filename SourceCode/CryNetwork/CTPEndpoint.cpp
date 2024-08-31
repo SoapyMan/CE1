@@ -26,9 +26,9 @@ static char THIS_FILE[] = __FILE__;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-static bool Between(LONG a, LONG b, LONG c) 
+static bool Between(LONG a, LONG b, LONG c)
 {
-	return ((a <= b) &&(b < c)) ||((c < a) &&(a <= b)) ||((b < c) &&(c < a));
+	return ((a <= b) && (b < c)) || ((c < a) && (a <= b)) || ((b < c) && (c < a));
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -50,7 +50,7 @@ CCTPEndpoint::~CCTPEndpoint()
 {
 }
 
-void CCTPEndpoint::SetPublicCryptKey( unsigned int key )
+void CCTPEndpoint::SetPublicCryptKey(unsigned int key)
 {
 	m_nEncryptKey[1] = key;
 }
@@ -60,7 +60,7 @@ void CCTPEndpoint::SetPublicCryptKey( unsigned int key )
 void CCTPEndpoint::SetRate(unsigned int nBytePerSec)
 {
 	m_nRate = nBytePerSec;
-	m_fBytePerMillisec = ((float)m_nRate)/1000.0f;
+	m_fBytePerMillisec = ((float)m_nRate) / 1000.0f;
 	NET_TRACE("BYTES per MILLISEC=%f\n", m_fBytePerMillisec);
 	m_nAllowedBytes = m_nRate;
 }
@@ -78,14 +78,14 @@ void CCTPEndpoint::Reset()
 	m_nBuffered = 0;
 	m_nLostPackets = 0;
 	m_dwOutAckTimer = 0;
-  //memset(m_dwTimers, 0, sizeof(m_dwTimers));
+	//memset(m_dwTimers, 0, sizeof(m_dwTimers));
 	for (int n = 0; n < NUM_OF_BUFS; n++)
 	{
 		m_OutBuffers[n].dwTimeout = 0;
 		m_OutBuffers[n].nSeq = 0;
-		m_nArrived[n]=false;
+		m_nArrived[n] = false;
 	}
-	
+
 	while (!m_qOutgoingReliableData.empty())
 	{
 		m_qOutgoingReliableData.pop();
@@ -98,25 +98,25 @@ void CCTPEndpoint::Reset()
 
 //////////////////////////////////////////////////////////////////////
 //! called for every FT_DATA (CTPData)
-void CCTPEndpoint::HandleDataFrame(CTPData &f)
+void CCTPEndpoint::HandleDataFrame(CTPData& f)
 {
 	CStream stmUncompressed;
-	if(f.m_bUnreliable)
+	if (f.m_bUnreliable)
 	{
 		////////////////////////////////////////////////////////////////////////////////////////////
 		//UNRELIABLE PACKET
 		////////////////////////////////////////////////////////////////////////////////////////////
 		//if the packet is out of sequence will be discarded
-		if(f.m_cSequenceNumber==m_nFrameExpected)
+		if (f.m_cSequenceNumber == m_nFrameExpected)
 		{
-//			CStream stmUncompressed=UncompressStream(f.m_stmData);
-//			m_pParent->OnData(stmUncompressed);
-			UncyptStream( f.m_stmData );
+			//			CStream stmUncompressed=UncompressStream(f.m_stmData);
+			//			m_pParent->OnData(stmUncompressed);
+			UncyptStream(f.m_stmData);
 
 			m_pParent->OnData(f.m_stmData);
 		}
-		else{
-			NET_TRACE("[%02d]expected-[%02d]received Packet discarded\n",m_nFrameExpected,f.m_cSequenceNumber);
+		else {
+			NET_TRACE("[%02d]expected-[%02d]received Packet discarded\n", m_nFrameExpected, f.m_cSequenceNumber);
 		}
 
 	}
@@ -134,26 +134,26 @@ void CCTPEndpoint::HandleDataFrame(CTPData &f)
 		}
 		else
 			SetAckTimer();
-		if (Between(m_nFrameExpected, f.m_cSequenceNumber, m_nTooFar) &&(m_nArrived[f.m_cSequenceNumber%NUM_OF_BUFS] == false))
+		if (Between(m_nFrameExpected, f.m_cSequenceNumber, m_nTooFar) && (m_nArrived[f.m_cSequenceNumber % NUM_OF_BUFS] == false))
 		{
 			// FRAME ACCEPTED
-			NET_TRACE("FRAME ACCEPTED %02d\n",f.m_cSequenceNumber);
-			m_nArrived[f.m_cSequenceNumber%NUM_OF_BUFS] = true;
-			m_stmInBuffers[f.m_cSequenceNumber%NUM_OF_BUFS] = f.m_stmData;
+			NET_TRACE("FRAME ACCEPTED %02d\n", f.m_cSequenceNumber);
+			m_nArrived[f.m_cSequenceNumber % NUM_OF_BUFS] = true;
+			m_stmInBuffers[f.m_cSequenceNumber % NUM_OF_BUFS] = f.m_stmData;
 
-			while (m_nArrived[m_nFrameExpected%NUM_OF_BUFS])
+			while (m_nArrived[m_nFrameExpected % NUM_OF_BUFS])
 			{
-				NET_TRACE("ARRIVED %02d\n",m_nFrameExpected%NUM_OF_BUFS);
-//				CStream stmUncompressed=UncompressStream(m_stmInBuffers[m_nFrameExpected%NUM_OF_BUFS]);
-//				m_pParent->OnData(stmUncompressed);
-				UncyptStream( m_stmInBuffers[m_nFrameExpected%NUM_OF_BUFS] );
-				m_pParent->OnData(m_stmInBuffers[m_nFrameExpected%NUM_OF_BUFS]);
+				NET_TRACE("ARRIVED %02d\n", m_nFrameExpected % NUM_OF_BUFS);
+				//				CStream stmUncompressed=UncompressStream(m_stmInBuffers[m_nFrameExpected%NUM_OF_BUFS]);
+				//				m_pParent->OnData(stmUncompressed);
+				UncyptStream(m_stmInBuffers[m_nFrameExpected % NUM_OF_BUFS]);
+				m_pParent->OnData(m_stmInBuffers[m_nFrameExpected % NUM_OF_BUFS]);
 
 				/////////////////////////////////////////////////
 				m_bNoNak = true;
-				m_nArrived[m_nFrameExpected%NUM_OF_BUFS] = false; // set buffer flag to false
+				m_nArrived[m_nFrameExpected % NUM_OF_BUFS] = false; // set buffer flag to false
 
-				NET_TRACE("m_nFrameExpected=%02d\n",m_nFrameExpected);
+				NET_TRACE("m_nFrameExpected=%02d\n", m_nFrameExpected);
 				INC(m_nFrameExpected);
 				INC(m_nTooFar);
 				SetAckTimer();
@@ -161,19 +161,19 @@ void CCTPEndpoint::HandleDataFrame(CTPData &f)
 		}
 		else
 		{
-			NET_TRACE("received out of window frame (%d)\n",f.m_cSequenceNumber);
+			NET_TRACE("received out of window frame (%d)\n", f.m_cSequenceNumber);
 		}
 	}
 }
 
 //////////////////////////////////////////////////////////////////////
 //! called every incoming NAK (this code perform packet retrasmission)
-void CCTPEndpoint::HandleNak(CTPNak &f)
+void CCTPEndpoint::HandleNak(CTPNak& f)
 {
-	if (Between(m_nAckExpected, (f.m_cAck + 1)%(MAX_SEQ_NUM + 1), m_nNextFrameToSend))
+	if (Between(m_nAckExpected, (f.m_cAck + 1) % (MAX_SEQ_NUM + 1), m_nNextFrameToSend))
 	{
 		m_nLostPackets++;
-		SendFrame(FT_CTP_DATA, (f.m_cAck + 1)%(MAX_SEQ_NUM + 1), m_nNextFrameToSend);
+		SendFrame(FT_CTP_DATA, (f.m_cAck + 1) % (MAX_SEQ_NUM + 1), m_nNextFrameToSend);
 	}
 }
 
@@ -191,90 +191,90 @@ void CCTPEndpoint::Dump()
 
 //////////////////////////////////////////////////////////////////////
 //! main loop of the class
-void CCTPEndpoint::Update(unsigned int nTime, unsigned char cFrameType, CStream *pStm)
+void CCTPEndpoint::Update(unsigned int nTime, unsigned char cFrameType, CStream* pStm)
 {
-		m_nCurrentTime = nTime;
-		// if there is a incoming frame
-		CTP *pFrame = NULL;
-		CTPAck ack;
-		CTPData data;
-		CTPNak nak;
-		CTPPong pong;
-		
-		if (cFrameType)
+	m_nCurrentTime = nTime;
+	// if there is a incoming frame
+	CTP* pFrame = NULL;
+	CTPAck ack;
+	CTPData data;
+	CTPNak nak;
+	CTPPong pong;
+
+	if (cFrameType)
+	{
+		switch (cFrameType)
 		{
-			switch (cFrameType)
+		case FT_CTP_DATA:
+		{
+			data.Load(*pStm);
+			pFrame = &data;
+			HandleDataFrame(data);
+		}
+		break;
+		case FT_CTP_NAK:
+		{
+			nak.Load(*pStm);
+			pFrame = &nak;
+			HandleNak(nak);
+		}
+		break;
+		case FT_CTP_ACK:
+		{
+			pFrame = &ack;
+			ack.Load(*pStm);
+		}
+		break;
+		case FT_CTP_PONG:
+		{
+			pong.Load(*pStm);
+			m_LatencyCalculator.AddSample((float)m_nCurrentTime - m_dwPingTime, m_nCurrentTime, pong.m_nTimestamp);
+		}
+		break;
+		default:
+			NET_ASSERT(0);
+			break;
+		}
+		///////////////////////////////////////////////////////////
+		if (pFrame)
+		{
+			if (pFrame->m_bPingRequest == true)
 			{
-				case FT_CTP_DATA:
-					{
-						data.Load(*pStm);
-						pFrame = &data;
-						HandleDataFrame(data);
-					}
-					break;
-				case FT_CTP_NAK:
-					{
-						nak.Load(*pStm);
-						pFrame = &nak;
-						HandleNak(nak);
-					}
-					break;
-				case FT_CTP_ACK:
-					{
-						pFrame = &ack;
-						ack.Load(*pStm);
-					}
-					break;
-				case FT_CTP_PONG:
-					{
-						pong.Load(*pStm);
-						m_LatencyCalculator.AddSample((float)m_nCurrentTime - m_dwPingTime, m_nCurrentTime, pong.m_nTimestamp);
-					}
-					break;
-				default:
-					NET_ASSERT(0);
-					break;
+				CStream stm;
+				CTPPong pong;
+				//					pong.m_cClientID = m_pParent->GetID();
+				pong.m_nTimestamp = m_nCurrentTime;
+				pong.Save(stm);
+				m_pParent->Send(stm);
 			}
 			///////////////////////////////////////////////////////////
-			if (pFrame)
-			{
-				if (pFrame->m_bPingRequest == true)
+
+			// manage piggybacked ack (all frames hold a piggybacked ack)
+
+			NET_TRACE("--->>>[CTP] SEQ %02d ACK %02d\n", pFrame->m_cSequenceNumber, pFrame->m_cAck);
+
+			if (!pFrame->m_bUnreliable)
+				while (Between(m_nAckExpected, pFrame->m_cAck, m_nNextFrameToSend))
 				{
-					CStream stm;
-					CTPPong pong;
-//					pong.m_cClientID = m_pParent->GetID();
-					pong.m_nTimestamp = m_nCurrentTime;
-					pong.Save(stm);
-					m_pParent->Send(stm);
+
+					m_nBuffered = m_nBuffered - 1;
+					NET_TRACE("Ack [%02d] STOPPING TIMER m_nBuffered=%02d\n", pFrame->m_cAck, m_nBuffered);
+					StopTimer(m_nAckExpected % NUM_OF_BUFS);
+					INC(m_nAckExpected);
 				}
-				///////////////////////////////////////////////////////////
-				
-				// manage piggybacked ack (all frames hold a piggybacked ack)
-				
-				NET_TRACE("--->>>[CTP] SEQ %02d ACK %02d\n", pFrame->m_cSequenceNumber, pFrame->m_cAck);
-				
-				if(!pFrame->m_bUnreliable)
-					while (Between(m_nAckExpected, pFrame->m_cAck, m_nNextFrameToSend))
-					{	
-					
-						m_nBuffered = m_nBuffered - 1;
-						NET_TRACE("Ack [%02d] STOPPING TIMER m_nBuffered=%02d\n",pFrame->m_cAck,m_nBuffered);
-						StopTimer(m_nAckExpected%NUM_OF_BUFS);
-						INC(m_nAckExpected);
-					}
-			}
 		}
-		// handle outgoing buffer timers
-		ProcessBufferTimers();
-		
-		// if there is some out-buffer free, I retrive some new data to send
-		// and if the network layer is ready(enough bandwith) ...send outgoing frames
-		if (IsTimeToSend())
-		{
-			BuildOutgoingFrame();	
-		}
-		// handle ack timer
-		ProcessAckTimer();
+	}
+	// handle outgoing buffer timers
+	ProcessBufferTimers();
+
+	// if there is some out-buffer free, I retrive some new data to send
+	// and if the network layer is ready(enough bandwith) ...send outgoing frames
+	if (IsTimeToSend())
+	{
+		BuildOutgoingFrame();
+	}
+	// handle ack timer
+	ProcessAckTimer();
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -297,17 +297,17 @@ void CCTPEndpoint::StopAckTimer()
 //!	set packet retrasmisson timeout
 void CCTPEndpoint::SetTimer(LONG nIndex)
 {
-//	if(m_OutBuffers[nIndex].dwTimeout!=0)
-//		DEBUG_BREAK;
+	//	if(m_OutBuffers[nIndex].dwTimeout!=0)
+	//		DEBUG_BREAK;
 	m_OutBuffers[nIndex].dwTimeout = m_nCurrentTime;
-	NET_TRACE("SETTIMER %02d %d\n",nIndex,m_nCurrentTime);
+	NET_TRACE("SETTIMER %02d %d\n", nIndex, m_nCurrentTime);
 }
 //////////////////////////////////////////////////////////////////////
 //! stop packet retrasmisson timeout
 void CCTPEndpoint::StopTimer(LONG nIndex)
 {
 	DWORD nTimeout = m_OutBuffers[nIndex].dwTimeout;
-	m_OutBuffers[nIndex].dwTimeout=0;
+	m_OutBuffers[nIndex].dwTimeout = 0;
 	// PING STUFF
 	//	m_ulPingCounter+=m_nCurrentTime-m_OutBuffers[nIndex].dwTimeout;
 	// m_ulSamplesNum++;
@@ -317,10 +317,10 @@ void CCTPEndpoint::StopTimer(LONG nIndex)
 		if (m_OutBuffers[n].dwTimeout <= nTimeout)
 			m_OutBuffers[n].dwTimeout = 0;
 	}*/
-	NET_TRACE("STOPTIMER %02d %d\n",nIndex,nTimeout);
+	NET_TRACE("STOPTIMER %02d %d\n", nIndex, nTimeout);
 }
 
-void CCTPEndpoint::CryptStream( CStream &stm )
+void CCTPEndpoint::CryptStream(CStream& stm)
 {
 	/*
 	IDataProbe *pProbe = GetISystem()->GetIDataProbe();
@@ -336,7 +336,7 @@ void CCTPEndpoint::CryptStream( CStream &stm )
 	*/
 }
 
-void CCTPEndpoint::UncyptStream( CStream &stm )
+void CCTPEndpoint::UncyptStream(CStream& stm)
 {
 	/*
 	unsigned int* pBuffer = (unsigned int*)stm.GetPtr();
@@ -347,21 +347,21 @@ void CCTPEndpoint::UncyptStream( CStream &stm )
 
 //////////////////////////////////////////////////////////////////////
 //! push a reliable stream in the outgoing queue
-bool CCTPEndpoint::SendReliable(CStream &stmData)
+bool CCTPEndpoint::SendReliable(CStream& stmData)
 {
 	//if(m_qOutgoingReliableData.size()>MAX_QUEUED_PACKET_PER_CHANNEL)
 	//	return false;
-	CryptStream( stmData );
+	CryptStream(stmData);
 	m_qOutgoingReliableData.push(stmData);
 	return true;
 }
 //////////////////////////////////////////////////////////////////////
 //! push an UNreliable stream in the outgoing queue
-bool CCTPEndpoint::SendUnreliable(CStream &stmData)
+bool CCTPEndpoint::SendUnreliable(CStream& stmData)
 {
 	//if(m_qOutgoingUnreliableData.size()>MAX_QUEUED_PACKET_PER_CHANNEL)
 	//	return false;
-	CryptStream( stmData );
+	CryptStream(stmData);
 	m_qOutgoingUnreliableData.push(stmData);
 	return true;
 }
@@ -380,7 +380,7 @@ void MTFEncode(BYTE *pDest,BYTE *pSource,int nSize)
 	for(count=0;count<nSize;count++)
 	{
 		c=pSource[count];
-		
+
 		//
 		// Find the char, and output it
 		//
@@ -404,7 +404,7 @@ void MTFEncode(BYTE *pDest,BYTE *pSource,int nSize)
 
 void MTFDecode(BYTE *pDest,BYTE *pSource,int nSize)
 {
-	
+
 	 unsigned char order[ 256 ];
 	 int i,c,count;
 
@@ -413,10 +413,10 @@ void MTFDecode(BYTE *pDest,BYTE *pSource,int nSize)
 		 order[ i ] = (unsigned char) i;
 	 }
 
-	 for(count=0;count<nSize;count++) 
+	 for(count=0;count<nSize;count++)
 	 {
 		 i=pSource[count];
-		 
+
 		 //
 		 // Find the char
 		 //
@@ -450,7 +450,7 @@ CStream CCTPEndpoint::CompressStream(CStream &stmUncompressed)
 	while(n<nUncompressedSize)
 	{
 		BYTE b;
-		
+
 		b=pUncompressed[n];
 		if(b==0)
 		{
@@ -466,7 +466,7 @@ CStream CCTPEndpoint::CompressStream(CStream &stmUncompressed)
 		}
 		n++;
 	}
-	
+
 #else
 	stmCompressed=stmUncompressed;
 #endif
@@ -497,7 +497,7 @@ CStream CCTPEndpoint::UncompressStream(CStream &stmCompressed)
 				if(stmUncompressed.GetSize()==nUncompressedSize)
 					break;
 			}
-	
+
 #else
 	stmUncompressed=stmCompressed;
 #endif
@@ -507,99 +507,99 @@ CStream CCTPEndpoint::UncompressStream(CStream &stmCompressed)
 
 //////////////////////////////////////////////////////////////////////
 //! format and send a frame(FT_DATA or FT_ACK or FT_NAK)
-void CCTPEndpoint::SendFrame(LONG nType, LONG nFrameNum, LONG nFrameExpected, CStream *pUnreliable,bool bUnreliable)
+void CCTPEndpoint::SendFrame(LONG nType, LONG nFrameNum, LONG nFrameExpected, CStream* pUnreliable, bool bUnreliable)
 {
 	//	Dump();
 	CStream stmUncompressed;
-	
+
 	static BYTE cUncompressed[1000];
 	CStream stm;
 	CTPData data;
 	CTPAck ack;
 	CTPNak nak;
-	CTP *pFrame;
+	CTP* pFrame;
 	switch (nType)
 	{
-		case FT_CTP_DATA:
-			pFrame = &data;
-			break;
-		case FT_CTP_ACK:
-			pFrame = &ack;
-			break;
-		case FT_CTP_NAK:
-			pFrame = &nak;
-			break;
-		default:
-			NET_ASSERT(0);
-			break;
+	case FT_CTP_DATA:
+		pFrame = &data;
+		break;
+	case FT_CTP_ACK:
+		pFrame = &ack;
+		break;
+	case FT_CTP_NAK:
+		pFrame = &nak;
+		break;
+	default:
+		NET_ASSERT(0);
+		break;
 	}
-//	pFrame->m_cClientID = m_pParent->GetID();
-	pFrame->m_cFrameType =(BYTE) nType;
+	//	pFrame->m_cClientID = m_pParent->GetID();
+	pFrame->m_cFrameType = (BYTE)nType;
 
-//////////////////////////////////////////////////////////////////
-//DATA
-//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////
+	//DATA
+	//////////////////////////////////////////////////////////////////
 	if (nType == FT_CTP_DATA)
 	{
-		if(!bUnreliable)
+		if (!bUnreliable)
 		{
-			stmUncompressed = m_OutBuffers[nFrameNum%NUM_OF_BUFS].stmData;
-			m_OutBuffers[nFrameNum%NUM_OF_BUFS].nSeq = nFrameNum;
+			stmUncompressed = m_OutBuffers[nFrameNum % NUM_OF_BUFS].stmData;
+			m_OutBuffers[nFrameNum % NUM_OF_BUFS].nSeq = nFrameNum;
 			if (pUnreliable)
 			{
-				if(pUnreliable->GetSize())
+				if (pUnreliable->GetSize())
 					stmUncompressed.Write(*pUnreliable);
 			}
 		}
 		else
 		{
-			stmUncompressed=*pUnreliable;
+			stmUncompressed = *pUnreliable;
 		}
 		//pack the stream with RLE
 //		data.m_stmData=CompressStream(stmUncompressed);
-		data.m_stmData=stmUncompressed;
+		data.m_stmData = stmUncompressed;
 	}
 
-//////////////////////////////////////////////////////////////////
-//SEQ AND ACK
+	//////////////////////////////////////////////////////////////////
+	//SEQ AND ACK
 	pFrame->m_bUnreliable = bUnreliable;
-	
-	pFrame->m_cSequenceNumber =(BYTE) nFrameNum;
-	
-	pFrame->m_cAck =(BYTE) (nFrameExpected + MAX_SEQ_NUM)%(MAX_SEQ_NUM + 1);
 
-	if(nType == FT_CTP_DATA)
+	pFrame->m_cSequenceNumber = (BYTE)nFrameNum;
+
+	pFrame->m_cAck = (BYTE)(nFrameExpected + MAX_SEQ_NUM) % (MAX_SEQ_NUM + 1);
+
+	if (nType == FT_CTP_DATA)
 	{
-		NET_TRACE("SEND [CTP] %s FRAME SEQ [%02d] ACK [%02d] \n",pFrame->m_bUnreliable?"unreliable":"reliable",pFrame->m_cSequenceNumber,pFrame->m_cAck);
+		NET_TRACE("SEND [CTP] %s FRAME SEQ [%02d] ACK [%02d] \n", pFrame->m_bUnreliable ? "unreliable" : "reliable", pFrame->m_cSequenceNumber, pFrame->m_cAck);
 	}
-//////////////////////////////////////////////////////////////////
-//NAK
+	//////////////////////////////////////////////////////////////////
+	//NAK
 	if (nType == FT_CTP_NAK)
 		m_bNoNak = false;
 
-//////////////////////////////////////////////////////////////////
-//CHECK IF A PING REQUEST IS NEEDED
+	//////////////////////////////////////////////////////////////////
+	//CHECK IF A PING REQUEST IS NEEDED
 	if (m_LatencyCalculator.IsTimeToPing(m_nCurrentTime))
 	{
 		m_dwPingTime = m_nCurrentTime;
 		// set a piggybacked pong request
 		pFrame->m_bPingRequest = true;
 	}
-//////////////////////////////////////////////////////////////////
-//SERIALIZE THE FRAME
+	//////////////////////////////////////////////////////////////////
+	//SERIALIZE THE FRAME
 	pFrame->Save(stm);
 	m_pParent->Send(stm);
-	
+
 	// Update the rate control
 	m_nAllowedBytes -= BITS2BYTES(stm.GetSize());
 	m_nLastPacketSent = m_nCurrentTime;
 	//	NET_TRACE(">>m_nAllowedBytes=%d\n",m_nAllowedBytes);
-	
+
 	//////////////////////////////////////////
 	if (nType == FT_CTP_DATA && (!bUnreliable))
-		SetTimer(nFrameNum%NUM_OF_BUFS);
+		SetTimer(nFrameNum % NUM_OF_BUFS);
 
-	if(!bUnreliable)
+	if (!bUnreliable)
 		StopAckTimer();
 }
 //////////////////////////////////////////////////////////////////////
@@ -631,7 +631,7 @@ void CCTPEndpoint::ProcessBufferTimers()
 	// search for the oldest timer
 	for (int n = 0; n < NUM_OF_BUFS; n++)
 	{
-		if ((m_OutBuffers[n].dwTimeout != 0) &&(m_OutBuffers[n].dwTimeout < nLowest))
+		if ((m_OutBuffers[n].dwTimeout != 0) && (m_OutBuffers[n].dwTimeout < nLowest))
 		{
 			bFound = true;
 			nLowest = m_OutBuffers[n].dwTimeout;
@@ -641,7 +641,7 @@ void CCTPEndpoint::ProcessBufferTimers()
 	// test the oldest timer
 	if (bFound)
 	{
-		if ((ulTick - nLowest)>(TM_BUFFER + m_LatencyCalculator.GetAverageLatency()))
+		if ((ulTick - nLowest) > (TM_BUFFER + m_LatencyCalculator.GetAverageLatency()))
 		{
 			/////////////////////////////////
 			m_OutBuffers[nLowestIdx].dwTimeout = 0;
@@ -658,7 +658,7 @@ void CCTPEndpoint::ProcessAckTimer()
 	/////////////////////////////////
 	if (m_dwOutAckTimer)
 	{
-		if ((ulTick - m_dwOutAckTimer)>(TM_ACK + m_LatencyCalculator.GetAverageLatency()))
+		if ((ulTick - m_dwOutAckTimer) > (TM_ACK + m_LatencyCalculator.GetAverageLatency()))
 		{
 			HandleAckTimeout();
 			m_dwOutAckTimer = 0;
@@ -702,37 +702,38 @@ void CCTPEndpoint::BuildOutgoingFrame()
 	if (m_qOutgoingReliableData.empty() == false || m_qOutgoingUnreliableData.empty() == false)
 	{
 		CStream stmUnreliable;
-		
-		m_OutBuffers[m_nNextFrameToSend%NUM_OF_BUFS].stmData.Reset();
-		while ((m_OutBuffers[m_nNextFrameToSend%NUM_OF_BUFS].stmData.GetSize() < MAX_PLAYLOAD_SIZE_IN_BITS) && (!m_qOutgoingReliableData.empty()))
+
+		m_OutBuffers[m_nNextFrameToSend % NUM_OF_BUFS].stmData.Reset();
+		while ((m_OutBuffers[m_nNextFrameToSend % NUM_OF_BUFS].stmData.GetSize() < MAX_PLAYLOAD_SIZE_IN_BITS) && (!m_qOutgoingReliableData.empty()))
 		{
-			m_OutBuffers[m_nNextFrameToSend%NUM_OF_BUFS].stmData.Write(m_qOutgoingReliableData.front());
+			m_OutBuffers[m_nNextFrameToSend % NUM_OF_BUFS].stmData.Write(m_qOutgoingReliableData.front());
 			m_qOutgoingReliableData.pop();
 		}
-		while ((m_OutBuffers[m_nNextFrameToSend%NUM_OF_BUFS].stmData.GetSize() < MAX_PLAYLOAD_SIZE_IN_BITS) && (!m_qOutgoingUnreliableData.empty()))
+		while ((m_OutBuffers[m_nNextFrameToSend % NUM_OF_BUFS].stmData.GetSize() < MAX_PLAYLOAD_SIZE_IN_BITS) && (!m_qOutgoingUnreliableData.empty()))
 		{
 			stmUnreliable.Write(m_qOutgoingUnreliableData.front());
 			m_qOutgoingUnreliableData.pop();
 		}
 		//CHECK IF THERE IS RELIABLE DATA IN THE QUEUE
-		if(m_OutBuffers[m_nNextFrameToSend%NUM_OF_BUFS].stmData.GetSize()>0)
+		if (m_OutBuffers[m_nNextFrameToSend % NUM_OF_BUFS].stmData.GetSize() > 0)
 		{
-			SendFrame(FT_CTP_DATA, m_nNextFrameToSend, m_nFrameExpected, &stmUnreliable,false);
+			SendFrame(FT_CTP_DATA, m_nNextFrameToSend, m_nFrameExpected, &stmUnreliable, false);
 			INC(m_nNextFrameToSend);
 			m_nBuffered += 1;
-			NET_ASSERT(m_nBuffered<=NUM_OF_BUFS);
-			NET_TRACE("SEND RELIABLE m_nBuffered=%02d\n",m_nBuffered);
+			NET_ASSERT(m_nBuffered <= NUM_OF_BUFS);
+			NET_TRACE("SEND RELIABLE m_nBuffered=%02d\n", m_nBuffered);
 		}
 		else
 		{
 			//IF THERE ISN'T RELIABLE DATA SEND A UNRELIABLE ONLY PACKET
 			//IF THERE IS UNRELIABLE DATA
-			if(stmUnreliable.GetSize()>0)
+			if (stmUnreliable.GetSize() > 0)
 			{
-				SendFrame(FT_CTP_DATA, m_nNextFrameToSend, m_nFrameExpected, &stmUnreliable,true);
+				SendFrame(FT_CTP_DATA, m_nNextFrameToSend, m_nFrameExpected, &stmUnreliable, true);
 				NET_TRACE("SEND UNRELIABLE\n");
-			} }
-		
+			}
+		}
+
 	}
 	//<<FIXME>> write some stuff to polulate a packet
 	//<<FIXME>> remember never put unreliable data in the retrasmission buffer(m_OutBuffer)
@@ -751,14 +752,14 @@ bool CCTPServer::IsTimeToSend()
 {
 #ifdef RATE_CONTROL
 	static dwTimer = 0;
-	
-	m_nAllowedBytes += (int)((m_fBytePerMillisec)*(m_nCurrentTime - m_nLastPacketSent));
-	if (m_nAllowedBytes>(int)m_nRate)
-		m_nAllowedBytes =(int)m_nRate;
-	 
-	
-	if (m_nAllowedBytes>((int)(m_nRate/m_nSnaps)))
-	{ 
+
+	m_nAllowedBytes += (int)((m_fBytePerMillisec) * (m_nCurrentTime - m_nLastPacketSent));
+	if (m_nAllowedBytes > (int)m_nRate)
+		m_nAllowedBytes = (int)m_nRate;
+
+
+	if (m_nAllowedBytes > ((int)(m_nRate / m_nSnaps)))
+	{
 		return true;
 	}//<<FIXME>>
 	return false;
@@ -787,7 +788,7 @@ void CCTPServer::BuildOutgoingFrame()
 	if (m_qOutgoingReliableData.empty() == false || m_qOutgoingUnreliableData.empty() == false)
 	{
 		CStream stmUnreliable;
-		
+
 		m_OutBuffers[m_nNextFrameToSend%NUM_OF_BUFS].stmData.Reset();
 		while ((m_OutBuffers[m_nNextFrameToSend%NUM_OF_BUFS].stmData.GetSize() < MAX_PLAYLOAD_SIZE_IN_BITS) && (!m_qOutgoingReliableData.empty()))
 		{
@@ -818,7 +819,7 @@ void CCTPServer::BuildOutgoingFrame()
 				NET_TRACE("SEND UNRELIABLE\n");
 			}
 		}
-		
+
 	}
 	//<<FIXME>> write some stuff to polulate a packet
 	//<<FIXME>> remember never put unreliable data in the retrasmission buffer(m_OutBuffer)

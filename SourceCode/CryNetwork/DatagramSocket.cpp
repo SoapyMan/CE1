@@ -31,9 +31,9 @@ static char THIS_FILE[] = __FILE__;
 NRESULT CDatagramSocket::Create(SocketType st)
 {
 	int nErr = 0;
-	m_nStartTick=::GetTickCount();
+	m_nStartTick = ::GetTickCount();
 #if defined(LINUX)
-	if ((m_hSocket = socket(AF_INET, SOCK_DGRAM, 0)) < 0) 
+	if ((m_hSocket = socket(AF_INET, SOCK_DGRAM, 0)) < 0)
 #else
 	if ((m_hSocket = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) == INVALID_SOCKET)
 #endif
@@ -45,7 +45,7 @@ NRESULT CDatagramSocket::Create(SocketType st)
 	if (m_stSocketType == NonBlocking)
 	{
 #if defined(LINUX)
-		if(fcntl( m_hSocket, F_SETFL, O_NONBLOCK ) < 0)
+		if (fcntl(m_hSocket, F_SETFL, O_NONBLOCK) < 0)
 #else
 		unsigned long nTrue = 1;
 		if (ioctlsocket(m_hSocket, FIONBIO, &nTrue) == SOCKET_ERROR)
@@ -65,7 +65,7 @@ void CDatagramSocket::Close()
 		return;
 	// disable receiving 
 #if defined(LINUX)
-	setsockopt(m_hSocket,IPPROTO_IP,IP_DROP_MEMBERSHIP,(char *)&m_imMulticastReq, sizeof(m_imMulticastReq));
+	setsockopt(m_hSocket, IPPROTO_IP, IP_DROP_MEMBERSHIP, (char*)&m_imMulticastReq, sizeof(m_imMulticastReq));
 #endif
 	shutdown(m_hSocket, 0x00);
 	// should be chnaged for BSD socket close() instead closesocket()
@@ -73,14 +73,14 @@ void CDatagramSocket::Close()
 	m_hSocket = INVALID_SOCKET;
 }
 
-NRESULT CDatagramSocket::Listen(WORD wPort, CIPAddress *xaMulticastAddress, CIPAddress *ipLocalAddress)
+NRESULT CDatagramSocket::Listen(WORD wPort, CIPAddress* xaMulticastAddress, CIPAddress* ipLocalAddress)
 {
 	int nErr = 0;
 	if (m_hSocket == INVALID_SOCKET)
 		return NET_SOCKET_NOT_CREATED;
 	sockaddr_in saLocalAddr;
 	saLocalAddr.sin_family = AF_INET;
-	saLocalAddr.sin_port = htons(wPort);  
+	saLocalAddr.sin_port = htons(wPort);
 	// check if we need to bind to a specific interface
 	if (ipLocalAddress && ipLocalAddress->GetAsUINT())
 	{
@@ -96,24 +96,24 @@ NRESULT CDatagramSocket::Listen(WORD wPort, CIPAddress *xaMulticastAddress, CIPA
 	// allow many servers on the same machine to list to the 
 	if (xaMulticastAddress)
 	{
-		BOOL bReuse=true;
+		BOOL bReuse = true;
 #if defined(LINUX)
-		if(setsockopt(m_hSocket,SOL_SOCKET,SO_REUSEADDR,(const char *)&bReuse,sizeof(BOOL)) < 0)
+		if (setsockopt(m_hSocket, SOL_SOCKET, SO_REUSEADDR, (const char*)&bReuse, sizeof(BOOL)) < 0)
 #else
-		if(setsockopt(m_hSocket,SOL_SOCKET,SO_REUSEADDR,(const char *)&bReuse,sizeof(BOOL)) == SOCKET_ERROR)
+		if (setsockopt(m_hSocket, SOL_SOCKET, SO_REUSEADDR, (const char*)&bReuse, sizeof(BOOL)) == SOCKET_ERROR)
 #endif
 		{
 			nErr = WSAGetLastError();
 
-			GetISystem()->GetILog()->Log("setsockopt 1 failed with registering multicast (WSAGetLastError returned %d)",nErr);
+			GetISystem()->GetILog()->Log("setsockopt 1 failed with registering multicast (WSAGetLastError returned %d)", nErr);
 		}
 	}
 #if defined(LINUX)
-	BOOL bReuse=true;
-	if(setsockopt(m_hSocket,SOL_SOCKET,SO_REUSEADDR,(const char *)&bReuse,sizeof(BOOL)) < 0)
+	BOOL bReuse = true;
+	if (setsockopt(m_hSocket, SOL_SOCKET, SO_REUSEADDR, (const char*)&bReuse, sizeof(BOOL)) < 0)
 	{
 		nErr = WSAGetLastError();
-		GetISystem()->GetILog()->Log("setsockopt 1 failed with setting reusablity to socket (WSAGetLastError returned %d)",nErr);
+		GetISystem()->GetILog()->Log("setsockopt 1 failed with setting reusablity to socket (WSAGetLastError returned %d)", nErr);
 	}
 	if (bind(m_hSocket, (struct sockaddr*)&saLocalAddr, sizeof(saLocalAddr)) < 0)
 #else
@@ -121,7 +121,7 @@ NRESULT CDatagramSocket::Listen(WORD wPort, CIPAddress *xaMulticastAddress, CIPA
 #endif
 	{
 		nErr = WSAGetLastError();
-		GetISystem()->GetILog()->Log("Registering Multicast: bind failed(%d)",nErr);
+		GetISystem()->GetILog()->Log("Registering Multicast: bind failed(%d)", nErr);
 		Close();
 		return MAKE_NRESULT(NET_FAIL, NET_FACILITY_SOCKET, nErr);
 	}
@@ -132,7 +132,7 @@ NRESULT CDatagramSocket::Listen(WORD wPort, CIPAddress *xaMulticastAddress, CIPA
 #else
 	int size = sizeof(sockaddr_in);
 #endif
-	getsockname(m_hSocket, (sockaddr *)&sockname, &size);
+	getsockname(m_hSocket, (sockaddr*)&sockname, &size);
 
 	CIPAddress local(&saLocalAddr);
 	CIPAddress bound(&sockname);
@@ -140,7 +140,7 @@ NRESULT CDatagramSocket::Listen(WORD wPort, CIPAddress *xaMulticastAddress, CIPA
 	GetISystem()->GetILog()->Log("NAMES Local %s   Bind %s", local.GetAsString(), bound.GetAsString());
 
 	// Setup Multicast registration
-	
+
 	if (xaMulticastAddress)
 	{
 #ifdef _XBOX
@@ -151,7 +151,7 @@ NRESULT CDatagramSocket::Listen(WORD wPort, CIPAddress *xaMulticastAddress, CIPA
 		if (ipLocalAddress && ipLocalAddress->GetAsUINT())
 		{
 			imMulticastReq.imr_interface.s_addr = inet_addr(ipLocalAddress->GetAsString());
-			GetISystem()->GetILog()->Log("Registering Multicast: %s",ipLocalAddress->GetAsString());
+			GetISystem()->GetILog()->Log("Registering Multicast: %s", ipLocalAddress->GetAsString());
 		}
 		else
 		{
@@ -161,9 +161,9 @@ NRESULT CDatagramSocket::Listen(WORD wPort, CIPAddress *xaMulticastAddress, CIPA
 
 		imMulticastReq.imr_multiaddr.s_addr = xaMulticastAddress->GetAsUINT();
 #if defined(LINUX)
-		if (setsockopt(m_hSocket,IPPROTO_IP,IP_ADD_MEMBERSHIP,(char *)&imMulticastReq, sizeof(ip_mreq))  < 0) 
+		if (setsockopt(m_hSocket, IPPROTO_IP, IP_ADD_MEMBERSHIP, (char*)&imMulticastReq, sizeof(ip_mreq)) < 0)
 #else
-		if(setsockopt(m_hSocket, IPPROTO_IP, IP_ADD_MEMBERSHIP, (char *)&imMulticastReq, sizeof(ip_mreq)) == SOCKET_ERROR)
+		if (setsockopt(m_hSocket, IPPROTO_IP, IP_ADD_MEMBERSHIP, (char*)&imMulticastReq, sizeof(ip_mreq)) == SOCKET_ERROR)
 #endif
 		{
 			// Problem: http://support.microsoft.com/default.aspx?scid=kb;en-us;Q257460
@@ -172,19 +172,19 @@ NRESULT CDatagramSocket::Listen(WORD wPort, CIPAddress *xaMulticastAddress, CIPA
 
 			nErr = WSAGetLastError();
 
-			GetISystem()->GetILog()->Log("setsockopt 2 failed with registering multicast (WSAGetLastError returned %d)",nErr);
+			GetISystem()->GetILog()->Log("setsockopt 2 failed with registering multicast (WSAGetLastError returned %d)", nErr);
 
 			//NET_TRACE(EnumerateError(MAKE_NRESULT(NET_FAIL, NET_FACILITY_SOCKET, nErr)));
 			Close();
 			return MAKE_NRESULT(NET_FAIL, NET_FACILITY_SOCKET, nErr);
 		}
 #if defined(LINUX)
-		const int TTL=255; 
-		if(setsockopt(m_hSocket, IPPROTO_IP, IP_MULTICAST_TTL, &TTL, sizeof(TTL)) < 0)
+		const int TTL = 255;
+		if (setsockopt(m_hSocket, IPPROTO_IP, IP_MULTICAST_TTL, &TTL, sizeof(TTL)) < 0)
 		{
 			nErr = WSAGetLastError();
 
-			GetISystem()->GetILog()->Log("setsockopt 2 failed with setting TTL for multicast (WSAGetLastError returned %d)",nErr);
+			GetISystem()->GetILog()->Log("setsockopt 2 failed with setting TTL for multicast (WSAGetLastError returned %d)", nErr);
 
 			//NET_TRACE(EnumerateError(MAKE_NRESULT(NET_FAIL, NET_FACILITY_SOCKET, nErr)));
 			Close();
@@ -198,7 +198,7 @@ NRESULT CDatagramSocket::Listen(WORD wPort, CIPAddress *xaMulticastAddress, CIPA
 	return NET_OK;
 }
 
-NRESULT CDatagramSocket::GetSocketAddresses(CIPAddress *pAddr, DWORD nMaCIPAddresses)
+NRESULT CDatagramSocket::GetSocketAddresses(CIPAddress* pAddr, DWORD nMaCIPAddresses)
 {
 #ifdef _XBOX
 	return NET_FAIL;
@@ -207,7 +207,7 @@ NRESULT CDatagramSocket::GetSocketAddresses(CIPAddress *pAddr, DWORD nMaCIPAddre
 		return NET_SOCKET_NOT_CREATED;
 	DWORD i;
 	char	buf[256];
-	struct	hostent *hp;
+	struct	hostent* hp;
 	sockaddr_in port;
 #if defined(LINUX)	
 	socklen_t n;
@@ -215,21 +215,21 @@ NRESULT CDatagramSocket::GetSocketAddresses(CIPAddress *pAddr, DWORD nMaCIPAddre
 	int n;
 #endif
 #ifndef PS2	
-	getsockname(m_hSocket, (sockaddr *)&port, &n);
+	getsockname(m_hSocket, (sockaddr*)&port, &n);
 #else	//PS2
-	getsockname((int)m_hSocket, (sockaddr *)&port, (unsigned int *)&n);
+	getsockname((int)m_hSocket, (sockaddr*)&port, (unsigned int*)&n);
 #endif	//PS2
-	if (!gethostname(buf, sizeof(buf))) 
+	if (!gethostname(buf, sizeof(buf)))
 	{
 		hp = gethostbyname(buf);
-		if (hp) 
+		if (hp)
 		{
 			//			if (hp->h_addrtype != AF_INET) 
 			//				CLog::Log("gethostbyname: address type was not AF_INET\n");
 			// CLog::Log("Hostname: %s\n", hp->h_name);
-			
+
 			i = 0;
-			while (hp->h_aliases[i]) 
+			while (hp->h_aliases[i])
 			{
 				//	CLog::Log("Alias: %s\n", hp->h_aliases[i]);
 				i++;
@@ -243,47 +243,47 @@ NRESULT CDatagramSocket::GetSocketAddresses(CIPAddress *pAddr, DWORD nMaCIPAddre
 				pAddr[i].Set(&temp);
 				i++;
 			}
-			
-			return NET_OK;			
+
+			return NET_OK;
 		}
 	}
-	
+
 	return NET_FAIL;
 #endif
 }
 
 //////////////////////////////////////////////////////////////////////////
-NRESULT CDatagramSocket::Send(BYTE *pBuffer, int nLenBytes, CIPAddress *saAddress)
+NRESULT CDatagramSocket::Send(BYTE* pBuffer, int nLenBytes, CIPAddress* saAddress)
 {
 	if (m_hSocket == INVALID_SOCKET)
 		return NET_SOCKET_NOT_CREATED;
 	if (!saAddress)
 		saAddress = &m_saDefaultAddress;
-	if (sendto(m_hSocket, (const char *)pBuffer, nLenBytes, 0, (sockaddr*)&saAddress->m_Address, sizeof(sockaddr)) == SOCKET_ERROR)
+	if (sendto(m_hSocket, (const char*)pBuffer, nLenBytes, 0, (sockaddr*)&saAddress->m_Address, sizeof(sockaddr)) == SOCKET_ERROR)
 	{
 		int nErr = WSAGetLastError();
 		//			Close();
 		return MAKE_NRESULT(NET_FAIL, NET_FACILITY_SOCKET, nErr);
 	}
 	/// compute the bandwitdh///////////////////////
-	if ((::GetTickCount() - m_nStartTick)>1000)
+	if ((::GetTickCount() - m_nStartTick) > 1000)
 		ComputeBandwidth();
 
 	m_nSentBytesInThisSec += nLenBytes;
 	m_nSentPacketsInThisSec++;
 	///////////////////////////////////////////////
 
-	CNetwork *pNetwork = (CNetwork*)GetISystem()->GetINetwork();
+	CNetwork* pNetwork = (CNetwork*)GetISystem()->GetINetwork();
 	if (pNetwork && pNetwork->GetLogLevel() == 1)
 	{
-		CryLog( "[NET] Send to %s, PacketSize=%d bytes",saAddress->GetAsString(),nLenBytes );
+		CryLog("[NET] Send to %s, PacketSize=%d bytes", saAddress->GetAsString(), nLenBytes);
 	}
 
 	return NET_OK;
 }
 
 //////////////////////////////////////////////////////////////////////////
-NRESULT CDatagramSocket::Receive(unsigned char *pBuf/*[MAX_UDP_PACKET_SIZE]*/, int nBufLen, int &nRecvBytes, CIPAddress &pFrom)
+NRESULT CDatagramSocket::Receive(unsigned char* pBuf/*[MAX_UDP_PACKET_SIZE]*/, int nBufLen, int& nRecvBytes, CIPAddress& pFrom)
 {
 	if (m_hSocket == INVALID_SOCKET)
 		return NET_SOCKET_NOT_CREATED;
@@ -294,9 +294,9 @@ NRESULT CDatagramSocket::Receive(unsigned char *pBuf/*[MAX_UDP_PACKET_SIZE]*/, i
 	int n = sizeof(sockaddr_in);
 #endif
 #if defined(LINUX)
-	if ((nRetValue = recvfrom(m_hSocket, (char *)pBuf, nBufLen, 0, (sockaddr*)&pFrom.m_Address, &n)) < 0)
+	if ((nRetValue = recvfrom(m_hSocket, (char*)pBuf, nBufLen, 0, (sockaddr*)&pFrom.m_Address, &n)) < 0)
 #else
-	if ((nRetValue = recvfrom(m_hSocket, (char *)pBuf, nBufLen, 0, (sockaddr*)&pFrom.m_Address, &n)) == SOCKET_ERROR)
+	if ((nRetValue = recvfrom(m_hSocket, (char*)pBuf, nBufLen, 0, (sockaddr*)&pFrom.m_Address, &n)) == SOCKET_ERROR)
 #endif
 	{
 #if !defined(LINUX)
@@ -305,7 +305,7 @@ NRESULT CDatagramSocket::Receive(unsigned char *pBuf/*[MAX_UDP_PACKET_SIZE]*/, i
 		{
 		case WSAEWOULDBLOCK:
 			nRecvBytes = 0;
-			return NET_OK; 
+			return NET_OK;
 			break;
 		case WSAEMSGSIZE:
 			//<<FIXME>> warning message "packet oversize"
@@ -314,33 +314,33 @@ NRESULT CDatagramSocket::Receive(unsigned char *pBuf/*[MAX_UDP_PACKET_SIZE]*/, i
 		default:
 			return MAKE_NRESULT(NET_FAIL, NET_FACILITY_SOCKET, nErr);
 #else
-			return MAKE_NRESULT(NET_FAIL, NET_FACILITY_SOCKET, errno);
+		return MAKE_NRESULT(NET_FAIL, NET_FACILITY_SOCKET, errno);
 #endif
 
 #if !defined(LINUX)
-			break;
+		break;
 		}
 #endif
 	}
-	nRecvBytes = nRetValue;
-	/// compute the bandwith///////////////////////
-	if ((::GetTickCount() - m_nStartTick)>1000)
-	{
-		ComputeBandwidth();
-	}
-	m_nReceivedBytesInThisSec += nRecvBytes;
-	m_nReceivedPacketsInThisSec++;
-	///////////////////////////////////////////////
-
-	CNetwork *pNetwork = (CNetwork*)GetISystem()->GetINetwork();
-	if (pNetwork && pNetwork->GetLogLevel() == 1)
-	{
-		CryLog( "[NET] Recv from %s, PacketSize=%d bytes",pFrom.GetAsString(),nRecvBytes );
-	}
-
-	return NET_OK;
+nRecvBytes = nRetValue;
+/// compute the bandwith///////////////////////
+if ((::GetTickCount() - m_nStartTick) > 1000)
+{
+	ComputeBandwidth();
 }
-const char *GetHostName()
+m_nReceivedBytesInThisSec += nRecvBytes;
+m_nReceivedPacketsInThisSec++;
+///////////////////////////////////////////////
+
+CNetwork* pNetwork = (CNetwork*)GetISystem()->GetINetwork();
+if (pNetwork && pNetwork->GetLogLevel() == 1)
+{
+	CryLog("[NET] Recv from %s, PacketSize=%d bytes", pFrom.GetAsString(), nRecvBytes);
+}
+
+return NET_OK;
+}
+const char* GetHostName()
 {
 #ifdef _XBOX
 	//DEBUG_BREAK;
@@ -370,12 +370,12 @@ const char* CDatagramSocket::GetHostName()
 //////////////////////////////////////////////////////////////////////////
 void CDatagramSocket::ComputeBandwidth()
 {
-	m_fOutgoingKbPerSec = ((float)(m_nSentBytesInThisSec*8))/1024.f;
-	m_fIncomingKbPerSec = ((float)(m_nReceivedBytesInThisSec*8))/1024.f;
+	m_fOutgoingKbPerSec = ((float)(m_nSentBytesInThisSec * 8)) / 1024.f;
+	m_fIncomingKbPerSec = ((float)(m_nReceivedBytesInThisSec * 8)) / 1024.f;
 	m_nOutgoingPacketsPerSec = m_nSentPacketsInThisSec;
 	m_nIncomingPacketsPerSec = m_nReceivedPacketsInThisSec;
 
-	m_nStartTick=::GetTickCount();
+	m_nStartTick = ::GetTickCount();
 
 	m_nSentBytesInThisSec = 0;
 	m_nReceivedBytesInThisSec = 0;

@@ -29,28 +29,28 @@ ISystem* GetISystem()
 _ACCESS_POOL;
 #if !defined(LINUX)
 
-BOOL APIENTRY DllMain( HANDLE hModule, 
-                       DWORD  ul_reason_for_call, 
-                       LPVOID lpReserved
-					 )
+BOOL APIENTRY DllMain(HANDLE hModule,
+	DWORD  ul_reason_for_call,
+	LPVOID lpReserved
+)
 {
 
 
-    return TRUE;
+	return TRUE;
 }
 #endif
 #endif
 
 #ifndef _XBOX
-CRYNETWORK_API INetwork *CreateNetwork(ISystem *pSystem)
+CRYNETWORK_API INetwork* CreateNetwork(ISystem* pSystem)
 #else
-INetwork *CreateNetwork(ISystem *pSystem)
+INetwork* CreateNetwork(ISystem* pSystem)
 #endif
 {
 	gISystem = pSystem;
-	CNetwork *pNetwork=new CNetwork;
+	CNetwork* pNetwork = new CNetwork;
 
-	if(!pNetwork->Init(gISystem->GetIScriptSystem()))
+	if (!pNetwork->Init(gISystem->GetIScriptSystem()))
 	{
 		delete pNetwork;
 		return NULL;

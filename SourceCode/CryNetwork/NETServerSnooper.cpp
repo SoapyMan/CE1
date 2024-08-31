@@ -7,12 +7,12 @@
 
 //------------------------------------------------------------------------------------------------- 
 CNETServerSnooper::CNETServerSnooper()
-: m_iWaitingCount(0),
+	: m_iWaitingCount(0),
 	m_pSink(0),
 	m_pSystem(0),
 	cl_snooptimeout(0),
-  cl_snoopretries(0),
-  cl_snoopcount(0)
+	cl_snoopretries(0),
+	cl_snoopcount(0)
 {
 }
 
@@ -22,7 +22,7 @@ CNETServerSnooper::~CNETServerSnooper()
 }
 
 //------------------------------------------------------------------------------------------------- 
-bool CNETServerSnooper::Create(ISystem *pSystem, INETServerSnooperSink *pSink)
+bool CNETServerSnooper::Create(ISystem* pSystem, INETServerSnooperSink* pSink)
 {
 	assert(pSystem);
 	assert(pSink);
@@ -70,13 +70,13 @@ void CNETServerSnooper::Update(unsigned int dwTime)
 
 		m_sSocket.Receive(stmBuffer.GetPtr(), stmBuffer.GetAllocatedSize(), iReceived, ipFrom);
 
-		if(iReceived > 0)
+		if (iReceived > 0)
 		{
 			stmBuffer.SetSize(BYTES2BITS(iReceived));
-		
+
 			ProcessPacket(stmBuffer, ipFrom);
 		}
-	} while(iReceived > 0);
+	} while (iReceived > 0);
 
 	// if we have waiting servers
 	if (m_iWaitingCount > 0)
@@ -101,13 +101,13 @@ void CNETServerSnooper::Update(unsigned int dwTime)
 	}
 }
 
-void CNETServerSnooper::OnReceivingPacket( const unsigned char inPacketID, CStream &stmPacket, CIPAddress &ip )
+void CNETServerSnooper::OnReceivingPacket(const unsigned char inPacketID, CStream& stmPacket, CIPAddress& ip)
 {
 
 }
 
 //------------------------------------------------------------------------------------------------- 
-void CNETServerSnooper::AddServer(const CIPAddress &ip)
+void CNETServerSnooper::AddServer(const CIPAddress& ip)
 {
 	NETSnooperServer Server;
 
@@ -121,7 +121,7 @@ void CNETServerSnooper::AddServer(const CIPAddress &ip)
 }
 
 //------------------------------------------------------------------------------------------------- 
-void CNETServerSnooper::AddServerList(const std::vector<CIPAddress> &vIP)
+void CNETServerSnooper::AddServerList(const std::vector<CIPAddress>& vIP)
 {
 	for (std::vector<CIPAddress>::const_iterator it = vIP.begin(); it != vIP.end(); ++it)
 	{
@@ -137,17 +137,17 @@ void CNETServerSnooper::ClearList()
 }
 
 //------------------------------------------------------------------------------------------------- 
-void CNETServerSnooper::QueryServer(CIPAddress &ip)
+void CNETServerSnooper::QueryServer(CIPAddress& ip)
 {
 	CStream					stmPacket;
 	CQPInfoRequest	cqpInfoRequest("status");
 
-	cqpInfoRequest.Save(stmPacket);	
-	m_sSocket.Send(stmPacket.GetPtr(), BITS2BYTES(stmPacket.GetSize()), (CIPAddress *)&ip);
+	cqpInfoRequest.Save(stmPacket);
+	m_sSocket.Send(stmPacket.GetPtr(), BITS2BYTES(stmPacket.GetSize()), (CIPAddress*)&ip);
 }
 
 //------------------------------------------------------------------------------------------------- 
-void CNETServerSnooper::ProcessPacket(CStream &stmPacket, CIPAddress &ip)
+void CNETServerSnooper::ProcessPacket(CStream& stmPacket, CIPAddress& ip)
 {
 	// since we are not expecting any response
 	// since is either a timedout server,
@@ -162,7 +162,7 @@ void CNETServerSnooper::ProcessPacket(CStream &stmPacket, CIPAddress &ip)
 
 	if (cnpPacket.m_cFrameType == FT_CQP_INFO_RESPONSE)
 	{
-		NETSnooperServer *pServer = 0;
+		NETSnooperServer* pServer = 0;
 		HMServerTableItor it = m_hmServerTable.find(ip);
 
 		if (it == m_hmServerTable.end())
@@ -182,7 +182,7 @@ void CNETServerSnooper::ProcessPacket(CStream &stmPacket, CIPAddress &ip)
 		CQPInfoResponse cqpInfoResponse;
 		cqpInfoResponse.Load(stmPacket);
 
-		if(m_pSink)
+		if (m_pSink)
 		{
 			m_pSink->OnNETServerFound(ip, cqpInfoResponse.szResponse, m_dwCurrentTime - pServer->dwStartTime);
 		}
@@ -198,7 +198,7 @@ void CNETServerSnooper::ProcessPacket(CStream &stmPacket, CIPAddress &ip)
 //------------------------------------------------------------------------------------------------- 
 void CNETServerSnooper::ProcessTimeout()
 {
-	NETSnooperServer *pServer = 0;
+	NETSnooperServer* pServer = 0;
 	HMServerTableItor it = m_hmServerTable.begin();
 
 	unsigned int dwRetry = NET_SNOOPER_RETRY;
@@ -214,7 +214,7 @@ void CNETServerSnooper::ProcessTimeout()
 		dwTimeDelta = (unsigned int)(cl_snooptimeout->GetFVal() * 1000.0f);
 	}
 
-	while(it != m_hmServerTable.end())
+	while (it != m_hmServerTable.end())
 	{
 		pServer = &(it->second);
 
@@ -256,7 +256,7 @@ void CNETServerSnooper::ProcessTimeout()
 //------------------------------------------------------------------------------------------------- 
 bool CNETServerSnooper::ProcessNext()
 {
-	NETSnooperServer *pServer = 0;
+	NETSnooperServer* pServer = 0;
 	HMServerTableItor it = m_hmServerTable.begin();
 
 	unsigned int dwTimeDelta = NET_SNOOPER_TIMEOUT;
@@ -265,7 +265,7 @@ bool CNETServerSnooper::ProcessNext()
 		dwTimeDelta = (unsigned int)(cl_snooptimeout->GetFVal() * 1000.0f);
 	}
 
-	while(it != m_hmServerTable.end())
+	while (it != m_hmServerTable.end())
 	{
 		pServer = &(it->second);
 
@@ -281,7 +281,7 @@ bool CNETServerSnooper::ProcessNext()
 		pServer->bDoing = 1;
 
 		QueryServer(pServer->ipAddress);
-  
+
 		m_iWaitingCount++;
 
 		return 1;
