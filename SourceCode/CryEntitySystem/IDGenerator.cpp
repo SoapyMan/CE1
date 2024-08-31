@@ -23,7 +23,7 @@ static char THIS_FILE[] = __FILE__;
 ///////////////////////////////////////////////
 CIDGenerator::CIDGenerator()
 {
-	m_vUsedIDs.resize(0xFFFF+1,false);
+	m_vUsedIDs.resize(0xFFFF + 1, false);
 	Reset();
 }
 
@@ -35,10 +35,10 @@ CIDGenerator::~CIDGenerator()
 ///////////////////////////////////////////////
 void CIDGenerator::Reset()
 {
-	BitVectorItor itor=m_vUsedIDs.begin();
-	int nSize=m_vUsedIDs.size();
-	int n=0;
-	while(n<nSize)
+	BitVectorItor itor = m_vUsedIDs.begin();
+	int nSize = m_vUsedIDs.size();
+	int n = 0;
+	while (n < nSize)
 	{
 		m_vUsedIDs[n] = false;
 		n++;
@@ -53,7 +53,7 @@ void CIDGenerator::Reset()
 WORD CIDGenerator::GetNewDynamic()
 {
 	WORD i = 0xffff;		// to be able to have different ID range for dynamically generated entities
-	
+
 	while (m_vUsedIDs[i])
 		--i;										// WORD is cycling through the whole buffer
 
@@ -61,17 +61,17 @@ WORD CIDGenerator::GetNewDynamic()
 	return i;
 }
 
-bool CIDGenerator::IsDynamicEntityId( WORD nID )
+bool CIDGenerator::IsDynamicEntityId(WORD nID)
 {
-	return (nID&0x8000)!=0;
+	return (nID & 0x8000) != 0;
 }
 
 ///////////////////////////////////////////////
 WORD CIDGenerator::GetNewStatic()
 {
 	WORD i = 0;		// to be able to have different ID range for dynamically generated entities
-	
-	while(m_vUsedIDs[i])
+
+	while (m_vUsedIDs[i])
 		++i;										// WORD is cycling through the whole buffer
 
 	m_vUsedIDs[i] = true;
@@ -80,15 +80,15 @@ WORD CIDGenerator::GetNewStatic()
 
 ///////////////////////////////////////////////
 void CIDGenerator::Remove(WORD nID)
-{	
-	assert(m_vUsedIDs[nID]==true);
+{
+	assert(m_vUsedIDs[nID] == true);
 	m_vUsedIDs[nID] = false;
 }
 
 ////////////////////////////////////////////
 void CIDGenerator::Mark(WORD nID)
 {
-	assert(m_vUsedIDs[nID]==false);
+	assert(m_vUsedIDs[nID] == false);
 	m_vUsedIDs[nID] = true;
 }
 

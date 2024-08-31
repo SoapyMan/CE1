@@ -31,27 +31,27 @@ bool g_bProfilerEnabled = false;
 //////////////////////////////////////////////////////////////////////////
 
 #if !defined(_XBOX)
- _ACCESS_POOL;
+_ACCESS_POOL;
 #if !defined(LINUX)
-BOOL APIENTRY DllMain( HANDLE hModule,
-                       DWORD  ul_reason_for_call,
-                       LPVOID lpReserved
-					 )
+BOOL APIENTRY DllMain(HANDLE hModule,
+	DWORD  ul_reason_for_call,
+	LPVOID lpReserved
+)
 {
-    return TRUE;
+	return TRUE;
 }
 #endif
 #endif
 
 #if !defined(_XBOX) && !defined(LINUX) && !defined(PS2)
-CRYENTITYDLL_API struct IEntitySystem * CreateEntitySystem(ISystem *pISystem)
+CRYENTITYDLL_API struct IEntitySystem* CreateEntitySystem(ISystem* pISystem)
 #else
-struct IEntitySystem * CreateEntitySystem(ISystem *pISystem)
+struct IEntitySystem* CreateEntitySystem(ISystem* pISystem)
 #endif
 {
 	gISystem = pISystem;
-	CEntitySystem *pEntitySystem= new CEntitySystem(pISystem);
-	if(!pEntitySystem->Init(pISystem))
+	CEntitySystem* pEntitySystem = new CEntitySystem(pISystem);
+	if (!pEntitySystem->Init(pISystem))
 	{
 		pEntitySystem->Release();
 		return NULL;
@@ -64,13 +64,13 @@ struct IEntitySystem * CreateEntitySystem(ISystem *pISystem)
 #ifdef GERMAN_GORE_CHECK
 
 #if !defined(_XBOX) && !defined(LINUX) && !defined(PS2)
-CRYENTITYDLL_API struct IEntitySystem * CreateMainEntitySystem(ISystem *pISystem)
+CRYENTITYDLL_API struct IEntitySystem* CreateMainEntitySystem(ISystem* pISystem)
 #else
-struct IEntitySystem * CreateMainEntitySystem(ISystem *pISystem)
+struct IEntitySystem* CreateMainEntitySystem(ISystem* pISystem)
 #endif
 {
 	gISystem = pISystem;
-	return (IEntitySystem *) gISystem;
+	return (IEntitySystem*)gISystem;
 }
 
 #endif

@@ -57,12 +57,12 @@ static char THIS_FILE[] = __FILE__;
 CEntity::EntPartEmitter::~EntPartEmitter()
 {
 	if (pEmitter)
-		GetISystem()->GetI3DEngine()->DeleteParticleEmitter( pEmitter );
+		GetISystem()->GetI3DEngine()->DeleteParticleEmitter(pEmitter);
 }
 
 //////////////////////////////////////////////////////////////////////////
 //! This structure must 100% match EScriptStateFunctions enum.
-static const char*	s_ScriptStateFunctions[] = 
+static const char* s_ScriptStateFunctions[] =
 {
 	"OnBeginState",
 	"OnEndState",
@@ -98,29 +98,29 @@ inline Vec3d ValidateAngles(Vec3d v)
 }
 
 //////////////////////////////////////////////////////////////////////
-CEntity::CEntity(CEntitySystem *pEntitySystem,  ISystem * pISystem,IScriptSystem *pSS):m_pAnimationEventParams(pSS),
-m_pObjectCollide(pSS),m_vObjPosCollide(pSS),m_vObjVelCollide(pSS),m_pSplashList(pSS) //,m_vNormDirCollide(pSS)
+CEntity::CEntity(CEntitySystem* pEntitySystem, ISystem* pISystem, IScriptSystem* pSS) :m_pAnimationEventParams(pSS),
+m_pObjectCollide(pSS), m_vObjPosCollide(pSS), m_vObjVelCollide(pSS), m_pSplashList(pSS) //,m_vNormDirCollide(pSS)
 {
 	// m_pCurrIndoorSector = (CIndoorSector*)-1; // not defined at begining
 	//bigger slot with a character	
 	m_nLastVisibleFrameID = 0;
 	m_bRecalcBBox = true;
 	//[kirill]  no slipping entities for MP game - on client it can never wakeup
-	if(GetISystem()->GetIGame()->GetModuleState(EGameMultiplayer))
+	if (GetISystem()->GetIGame()->GetModuleState(EGameMultiplayer))
 		m_bSleeping = false;
 	else
 		m_bSleeping = true;
 	m_matParentMatrix.SetIdentity();
 	m_bForceBindCalculation = false;
-	m_nMaxCharNum=0;
-	m_bHidden=false;
-	m_cLastStateID=0;
-	m_bTrackable=false;
-	m_fLastSubMergeFracion=0.0f;
+	m_nMaxCharNum = 0;
+	m_bHidden = false;
+	m_cLastStateID = 0;
+	m_bTrackable = false;
+	m_fLastSubMergeFracion = 0.0f;
 	m_flags = 0;
-	m_nTimer=-1;
+	m_nTimer = -1;
 	//m_nStartTimer=0;
-	m_pLipSync=NULL;
+	m_pLipSync = NULL;
 	m_center(0, 0, 0);
 	m_angles(0, 0, 0);
 	m_physic = m_physPlaceholder = NULL;
@@ -128,8 +128,8 @@ m_pObjectCollide(pSS),m_vObjPosCollide(pSS),m_vObjVelCollide(pSS),m_pSplashList(
 	m_iPhysStateSize = 0;
 	m_iPhysType = PHYS_NONE;
 	m_physicEnabled = true;
-	m_fRollTimeout=0.0f;
-	m_fSlideTimeout=0.0f;
+	m_fRollTimeout = 0.0f;
+	m_fSlideTimeout = 0.0f;
 	//m_static = false;
 	for (int k = 0; k < MAX_ANIMATED_MODELS; k++)
 	{
@@ -155,8 +155,8 @@ m_pObjectCollide(pSS),m_vObjPosCollide(pSS),m_vObjVelCollide(pSS),m_pSplashList(
 
 	//m_vBoxMin(0,0,0);
 	//m_vBoxMax(0,0,0);	
-	m_vBoxMin=m_vForceBBoxMin=SetMaxBB();
-	m_vBoxMax=m_vForceBBoxMax=SetMinBB();
+	m_vBoxMin = m_vForceBBoxMin = SetMaxBB();
+	m_vBoxMax = m_vForceBBoxMax = SetMinBB();
 
 
 	m_fUpdateRadius = 0;
@@ -176,7 +176,7 @@ m_pObjectCollide(pSS),m_vObjPosCollide(pSS),m_vObjVelCollide(pSS),m_pSplashList(
 	m_nID = 0;
 	m_netPresence = true;
 
-//	m_dirtyFlags = 0;
+	//	m_dirtyFlags = 0;
 
 	m_pCamera = NULL;
 
@@ -185,11 +185,11 @@ m_pObjectCollide(pSS),m_vObjPosCollide(pSS),m_vObjVelCollide(pSS),m_pSplashList(
 	//m_nLastNameUpdate=0;
 
 	m_pEntitySystem = pEntitySystem;
-	m_pScriptSystem =pSS;
+	m_pScriptSystem = pSS;
 	m_pContainer = NULL;
 
 	m_pISystem = pISystem;
-	
+
 	m_bSave = true;
 	m_pHeadBone = 0;
 
@@ -199,30 +199,30 @@ m_pObjectCollide(pSS),m_vObjPosCollide(pSS),m_vObjVelCollide(pSS),m_pSplashList(
 	RegisterState("");
 	m_bForceBBox = false;
 
-  m_vPrevDrawCenter(-1000,-1000,-1000);
-  m_vPrevDrawAngles(-1000,-1000,-1000);
+	m_vPrevDrawCenter(-1000, -1000, -1000);
+	m_vPrevDrawAngles(-1000, -1000, -1000);
 
 	m_pDynLight = NULL;
 	m_pEntityRenderState = 0;//m_pISystem->GetI3DEngine()->MakeEntityRenderState();
-	m_nSteeringWheelSlot=-1; // not found yet
-	m_pOnCollide=NULL;
-	m_pOnStopRollSlideContact=NULL;
+	m_nSteeringWheelSlot = -1; // not found yet
+	m_pOnCollide = NULL;
+	m_pOnStopRollSlideContact = NULL;
 	m_pParticleEmitters = NULL;
-	m_dwRndFlags=0;
+	m_dwRndFlags = 0;
 
-	m_fWaterDensity=1000.0f;
-  m_eUpdateVisLevel = eUT_Always;
+	m_fWaterDensity = 1000.0f;
+	m_eUpdateVisLevel = eUT_Always;
 
-//  memset(m_narrDrawFrames,0,sizeof(m_narrDrawFrames));
+	//  memset(m_narrDrawFrames,0,sizeof(m_narrDrawFrames));
 	m_bHandIK = false;
-	m_fLastCollideTime=0;
+	m_fLastCollideTime = 0;
 	m_fLastSplashTime = 0;
-	m_bInitialized=false;
+	m_bInitialized = false;
 	m_fTimeRolling = m_fTimeNotRolling = 0;
 	m_PrevVertVel = 0.0f;
-	m_vPrevVel.Set(0,0,0);
+	m_vPrevVel.Set(0, 0, 0);
 
-	m_pBBox=NULL;
+	m_pBBox = NULL;
 	m_pColliders = NULL;
 	m_bTrackColliders = false;
 	m_bUpdateSounds = false;
@@ -237,7 +237,7 @@ m_pObjectCollide(pSS),m_vObjPosCollide(pSS),m_vObjVelCollide(pSS),m_pSplashList(
 	m_bEntityLightsOn = 1;
 	m_bVisible = m_bWasVisible = 0;
 	m_idBoundTo = 0;
-	m_bStateClientside=false;
+	m_bStateClientside = false;
 
 	m_fScriptUpdateRate = 0;
 	m_fScriptUpdateTimer = 0;
@@ -263,12 +263,12 @@ CEntity::~CEntity()
 
 //////////////////////////////////////////////////////////////////////
 void CEntity::ShutDown()
-{		
+{
 	std::vector < CEntityObject>::iterator it;
 
 	ShutDownScript();
 
-	SAFE_RELEASE( m_pContainer );
+	SAFE_RELEASE(m_pContainer);
 	m_bUpdateContainer = false;
 
 	if (m_pScriptObject)
@@ -277,7 +277,7 @@ void CEntity::ShutDown()
 	//if (HaveCamera() && m_lstBindings.empty())
 	//SetCamera(0);
 
-	SAFE_RELEASE( m_pCamera );
+	SAFE_RELEASE(m_pCamera);
 	m_bUpdateCamera = false;
 
 	if (m_pDynLight)
@@ -292,11 +292,11 @@ void CEntity::ShutDown()
 	// prev line should be enough
 	m_pISystem->GetI3DEngine()->UnRegisterInAllSectors(this);
 
-	for (it = m_objects.begin(); it < m_objects.end(); it++) 
+	for (it = m_objects.begin(); it < m_objects.end(); it++)
 	{
-		if ((* it).object)
-		{			
-			m_pISystem->GetI3DEngine()->ReleaseObject((* it).object);// NOTE
+		if ((*it).object)
+		{
+			m_pISystem->GetI3DEngine()->ReleaseObject((*it).object);// NOTE
 		}
 		/*		if ((* it).image)
 		{
@@ -313,7 +313,7 @@ void CEntity::ShutDown()
 	for (int k = 0; k < MAX_ANIMATED_MODELS; k++)
 	{
 		if (m_pCryCharInstance[k])
-			m_pISystem->GetIAnimationSystem()->RemoveCharacter(m_pCryCharInstance[k]);  
+			m_pISystem->GetIAnimationSystem()->RemoveCharacter(m_pCryCharInstance[k]);
 		if (m_pCharPhysPlaceholders[k])
 			m_pISystem->GetIPhysicalWorld()->DestroyPhysicalEntity(m_pCharPhysPlaceholders[k]);
 		m_pCryCharInstance[k] = NULL;
@@ -333,7 +333,7 @@ void CEntity::ShutDown()
 	if (m_pBBox)
 	{
 		m_pISystem->GetIPhysicalWorld()->DestroyPhysicalEntity(m_pBBox);
-		m_pBBox=NULL;
+		m_pBBox = NULL;
 	}
 	if (m_pPhysState)
 	{
@@ -354,9 +354,9 @@ void CEntity::ShutDown()
 	if (!m_lstBindings.empty())
 	{
 		BINDLISTItor bi;
-		for (bi=m_lstBindings.begin();bi!=m_lstBindings.end();bi++)
+		for (bi = m_lstBindings.begin(); bi != m_lstBindings.end(); bi++)
 		{
-			m_pEntitySystem->ReleaseMark( (*bi) );
+			m_pEntitySystem->ReleaseMark((*bi));
 		}
 	}
 	m_bUpdateBinds = false;
@@ -366,7 +366,7 @@ void CEntity::ShutDown()
 	//////////////////////////////////////////////////////////////////////////
 	for (SoundsList::iterator sndit = m_lstAttachedSounds.begin(); sndit != m_lstAttachedSounds.end(); ++sndit)
 	{
-		SAttachedSound &snd = *sndit;
+		SAttachedSound& snd = *sndit;
 		if (snd.pSound)
 			snd.pSound->Stop();
 	}
@@ -375,11 +375,11 @@ void CEntity::ShutDown()
 	//////////////////////////////////////////////////////////////////////////
 
 	// free part emitters
-	SAFE_DELETE( m_pParticleEmitters );
+	SAFE_DELETE(m_pParticleEmitters);
 	m_bUpdateEmitters = false;
 
-	SAFE_RELEASE( m_pLipSync );
-	SAFE_RELEASE( m_pCamera );
+	SAFE_RELEASE(m_pLipSync);
+	SAFE_RELEASE(m_pCamera);
 
 	//////////////////////////////////////////////////////////////////////////
 	// Delete colliders list.
@@ -395,10 +395,10 @@ void CEntity::ShutDownScript()
 	{
 		// Call Client.OnShutDown
 		_SmartScriptObject pClient(m_pScriptSystem, true);
-		if (m_pScriptObject->GetValue(SCRIPT_CLIENT_STATE,pClient))
+		if (m_pScriptObject->GetValue(SCRIPT_CLIENT_STATE, pClient))
 		{
 			HSCRIPTFUNCTION pOnInitFunc = 0;
-			if (pClient->GetValue( SCRIPT_SHUTDOWN,pOnInitFunc ))
+			if (pClient->GetValue(SCRIPT_SHUTDOWN, pOnInitFunc))
 			{
 				m_pScriptSystem->BeginCall(pOnInitFunc);
 				m_pScriptSystem->PushFuncParam(m_pScriptObject);
@@ -411,10 +411,10 @@ void CEntity::ShutDownScript()
 	{
 		// Call Server.OnShutDown
 		_SmartScriptObject pServer(m_pScriptSystem, true);
-		if (m_pScriptObject->GetValue(SCRIPT_SERVER_STATE,pServer))
+		if (m_pScriptObject->GetValue(SCRIPT_SERVER_STATE, pServer))
 		{
 			HSCRIPTFUNCTION pOnInitFunc = 0;
-			if (pServer->GetValue( SCRIPT_SHUTDOWN,pOnInitFunc ))
+			if (pServer->GetValue(SCRIPT_SHUTDOWN, pOnInitFunc))
 			{
 				m_pScriptSystem->BeginCall(pOnInitFunc);
 				m_pScriptSystem->PushFuncParam(m_pScriptObject);
@@ -427,7 +427,7 @@ void CEntity::ShutDownScript()
 			// Call OnShutDown
 			HSCRIPTFUNCTION pOnInitFunc = 0;
 			// Default fallback if Server table not exist.
-			if (m_pScriptObject->GetValue(SCRIPT_SHUTDOWN,pOnInitFunc))
+			if (m_pScriptObject->GetValue(SCRIPT_SHUTDOWN, pOnInitFunc))
 			{
 				m_pScriptSystem->BeginCall(pOnInitFunc);
 				m_pScriptSystem->PushFuncParam(m_pScriptObject);
@@ -446,8 +446,8 @@ void CEntity::ShutDownScript()
 		ReleaseStateTable(*m_pServerState);
 	}
 
-	SAFE_DELETE( m_pServerState );
-	SAFE_DELETE( m_pClientState );
+	SAFE_DELETE(m_pServerState);
+	SAFE_DELETE(m_pClientState);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -462,16 +462,16 @@ void CEntity::SetContainer(IEntityContainer* pContainer)
 
 // set the bbox of the entity
 //////////////////////////////////////////////////////////////////////
-void CEntity::SetBBox(const Vec3d &mins, const Vec3d &maxs)
+void CEntity::SetBBox(const Vec3d& mins, const Vec3d& maxs)
 {
 	UnregisterInSector();
-	m_vForceBBoxMin=m_vBoxMin = mins;
-	m_vForceBBoxMax=m_vBoxMax = maxs;
+	m_vForceBBoxMin = m_vBoxMin = mins;
+	m_vForceBBoxMax = m_vBoxMax = maxs;
 
-	if ((m_vBoxMin-m_center).Length() > (m_vBoxMax-m_center).Length())
-		m_fRadius = (m_vBoxMin-m_center).Length();
+	if ((m_vBoxMin - m_center).Length() > (m_vBoxMax - m_center).Length())
+		m_fRadius = (m_vBoxMin - m_center).Length();
 	else
-		m_fRadius = (m_vBoxMax-m_center).Length();
+		m_fRadius = (m_vBoxMax - m_center).Length();
 
 	if (m_bTrackColliders)
 		CreatePhysicsBBox();
@@ -481,55 +481,55 @@ void CEntity::SetBBox(const Vec3d &mins, const Vec3d &maxs)
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CEntity::GetBBox(Vec3d &mins, Vec3d &maxs)
+void CEntity::GetBBox(Vec3d& mins, Vec3d& maxs)
 {
 	mins = m_vBoxMin + m_center;
 	maxs = m_vBoxMax + m_center;
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CEntity::GetRenderBBox(Vec3d &mins, Vec3d &maxs)
+void CEntity::GetRenderBBox(Vec3d& mins, Vec3d& maxs)
 {
 	mins = m_vBoxMin + m_center;
 	maxs = m_vBoxMax + m_center;
 
 	// include attached light into bbox
-	if(m_pDynLight)
-	{ 
-		mins.CheckMin(m_center-Vec3d(m_pDynLight->m_fRadius,m_pDynLight->m_fRadius,m_pDynLight->m_fRadius));
-		maxs.CheckMax(m_center+Vec3d(m_pDynLight->m_fRadius,m_pDynLight->m_fRadius,m_pDynLight->m_fRadius));
+	if (m_pDynLight)
+	{
+		mins.CheckMin(m_center - Vec3d(m_pDynLight->m_fRadius, m_pDynLight->m_fRadius, m_pDynLight->m_fRadius));
+		maxs.CheckMax(m_center + Vec3d(m_pDynLight->m_fRadius, m_pDynLight->m_fRadius, m_pDynLight->m_fRadius));
 	}
 
 	// include container lights into bbox
-	if(m_pContainer)
+	if (m_pContainer)
 	{
 		float fContainerLightRadius = m_pContainer->GetLightRadius();
-		mins.CheckMin(m_center-Vec3d(fContainerLightRadius,fContainerLightRadius,fContainerLightRadius));
-		maxs.CheckMax(m_center+Vec3d(fContainerLightRadius,fContainerLightRadius,fContainerLightRadius));
+		mins.CheckMin(m_center - Vec3d(fContainerLightRadius, fContainerLightRadius, fContainerLightRadius));
+		maxs.CheckMax(m_center + Vec3d(fContainerLightRadius, fContainerLightRadius, fContainerLightRadius));
 	}
 
 	// make bbox at least 2 meter size particle system to make lighting calculations more stable
-	if(m_pParticleEmitters && m_pParticleEmitters->size())
+	if (m_pParticleEmitters && m_pParticleEmitters->size())
 	{
-		mins-=Vec3d(1,1,1);
-		maxs+=Vec3d(1,1,1);
+		mins -= Vec3d(1, 1, 1);
+		maxs += Vec3d(1, 1, 1);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
 float CEntity::GetRenderRadius() const
-{ 
-	return m_pDynLight ? crymax(m_fRadius,m_pDynLight->m_fRadius) : m_fRadius ;
+{
+	return m_pDynLight ? crymax(m_fRadius, m_pDynLight->m_fRadius) : m_fRadius;
 }
 
 // set the position of the entity
 //////////////////////////////////////////////////////////////////////
-void CEntity::SetPos(const Vec3d &pos, bool	bWorldOnly /* = true */)
+void CEntity::SetPos(const Vec3d& pos, bool	bWorldOnly /* = true */)
 {
 	// if flag calc physic is set then force this new position
 	// to the physic system
 
-	if (!bWorldOnly && (m_bIsBound||m_bForceBindCalculation))
+	if (!bWorldOnly && (m_bIsBound || m_bForceBindCalculation))
 	{
 		if (m_realcenter != pos)
 		{
@@ -548,10 +548,10 @@ void CEntity::SetPos(const Vec3d &pos, bool	bWorldOnly /* = true */)
 
 //set entity's scale
 //////////////////////////////////////////////////////////////////////
-void CEntity::SetScale( float scale )
+void CEntity::SetScale(float scale)
 {
-	if(scale<0)
-		scale=0;
+	if (scale < 0)
+		scale = 0;
 
 	m_fScale = scale;
 
@@ -567,20 +567,20 @@ void CEntity::SetScale( float scale )
 }
 
 
-void CEntity::SetPhysAngles(const Vec3d &angl)
+void CEntity::SetPhysAngles(const Vec3d& angl)
 {
-	if (m_physic &&(m_flags & ETY_FLAG_CALC_PHYSICS) && !(m_flags&ETY_FLAG_IGNORE_PHYSICS_UPDATE))
+	if (m_physic && (m_flags & ETY_FLAG_CALC_PHYSICS) && !(m_flags & ETY_FLAG_IGNORE_PHYSICS_UPDATE))
 	{
 		pe_params_pos pp;
 
 		//pp.q = quaternionf((vectorf)angl*(gf_PI/180.0f));
-		pp.q.SetRotationXYZ( (vectorf)angl*(gf_PI/180.0f) );
+		pp.q.SetRotationXYZ((vectorf)angl * (gf_PI / 180.0f));
 
 		m_physic->SetParams(&pp);
 	}
 }
 
-void CEntity::SetAngles(const Vec3d &sAngle, bool bNotifyContainer, bool bUpdatePhysics,bool forceInWorld)
+void CEntity::SetAngles(const Vec3d& sAngle, bool bNotifyContainer, bool bUpdatePhysics, bool forceInWorld)
 {
 	/*
 	// we filter out NaNs here
@@ -595,7 +595,7 @@ void CEntity::SetAngles(const Vec3d &sAngle, bool bNotifyContainer, bool bUpdate
 		return;
 	}
 	else
-		if (m_bIsBound||m_bForceBindCalculation)
+		if (m_bIsBound || m_bForceBindCalculation)
 		{
 			m_realangles = sAngle;
 			CalculateInWorld();
@@ -609,9 +609,9 @@ void CEntity::SetAngles(const Vec3d &sAngle, bool bNotifyContainer, bool bUpdate
 			{
 				m_angles += diff;
 
-				if (bUpdatePhysics && m_physic &&(m_flags & ETY_FLAG_CALC_PHYSICS))
+				if (bUpdatePhysics && m_physic && (m_flags & ETY_FLAG_CALC_PHYSICS))
 				{
-					SetPhysAngles( m_angles );
+					SetPhysAngles(m_angles);
 					//				pe_params_pos pp;
 					//				pp.q = quaternionf(m_angles.z*(PI/180.0f),m_angles.y*(PI/180.0f),m_angles.x*(PI/180.0f));
 					//				m_physic->SetParams(&pp);
@@ -619,28 +619,28 @@ void CEntity::SetAngles(const Vec3d &sAngle, bool bNotifyContainer, bool bUpdate
 			}
 		}
 
-		// just in case :)
-		//CalcWholeBBox(); {petar} its done in update now
-		m_bRecalcBBox = true;
+	// just in case :)
+	//CalcWholeBBox(); {petar} its done in update now
+	m_bRecalcBBox = true;
 
-		if (m_pContainer && bNotifyContainer)
-			m_pContainer->OnSetAngles(sAngle);	// m_angles);
+	if (m_pContainer && bNotifyContainer)
+		m_pContainer->OnSetAngles(sAngle);	// m_angles);
 }
 
 //////////////////////////////////////////////////////////////////////
-const Vec3d & CEntity::GetPos(bool bWorldOnly /* = false */) const
+const Vec3d& CEntity::GetPos(bool bWorldOnly /* = false */) const
 {
-	if (!bWorldOnly && (m_bIsBound||m_bForceBindCalculation))
+	if (!bWorldOnly && (m_bIsBound || m_bForceBindCalculation))
 		return m_realcenter;
 	else
-		return (m_center); 
+		return (m_center);
 }
 
-const Vec3d & CEntity::GetAngles(int realA) const
-{	
+const Vec3d& CEntity::GetAngles(int realA) const
+{
 
 	Vec3d	angle;
-	if( realA && (m_bIsBound||m_bForceBindCalculation))
+	if (realA && (m_bIsBound || m_bForceBindCalculation))
 		return m_realangles;
 	else
 		return m_angles;
@@ -659,7 +659,7 @@ const Vec3d & CEntity::GetAngles(int realA) const
 
 // init the entity
 //////////////////////////////////////////////////////////////////////
-bool CEntity::Init(CEntityDesc &ed)
+bool CEntity::Init(CEntityDesc& ed)
 {
 	m_nID = ed.id;
 	m_netPresence = ed.netPresence;
@@ -697,10 +697,10 @@ bool CEntity::Init(CEntityDesc &ed)
 	{
 		// Call Server.OnInit
 		_SmartScriptObject pServer(m_pScriptSystem, true);
-		if (m_pScriptObject->GetValue(SCRIPT_SERVER_STATE,pServer))
+		if (m_pScriptObject->GetValue(SCRIPT_SERVER_STATE, pServer))
 		{
 			HSCRIPTFUNCTION pOnInitFunc = 0;
-			if (pServer->GetValue( SCRIPT_INIT,pOnInitFunc ))
+			if (pServer->GetValue(SCRIPT_INIT, pOnInitFunc))
 			{
 				m_pScriptSystem->BeginCall(pOnInitFunc);
 				m_pScriptSystem->PushFuncParam(m_pScriptObject);
@@ -708,7 +708,7 @@ bool CEntity::Init(CEntityDesc &ed)
 				m_pScriptSystem->ReleaseFunc(pOnInitFunc);
 			}
 		}
-		else 
+		else
 		{
 			// Default Fallback.
 			m_pScriptSystem->BeginCall(m_sClassName.c_str(), SCRIPT_INIT);
@@ -720,10 +720,10 @@ bool CEntity::Init(CEntityDesc &ed)
 	{
 		// Call Client.OnInit
 		_SmartScriptObject pClient(m_pScriptSystem, true);
-		if (m_pScriptObject->GetValue(SCRIPT_CLIENT_STATE,pClient))
+		if (m_pScriptObject->GetValue(SCRIPT_CLIENT_STATE, pClient))
 		{
 			HSCRIPTFUNCTION pOnInitFunc = 0;
-			if (pClient->GetValue( SCRIPT_INIT,pOnInitFunc ))
+			if (pClient->GetValue(SCRIPT_INIT, pOnInitFunc))
 			{
 				m_pScriptSystem->BeginCall(pOnInitFunc);
 				m_pScriptSystem->PushFuncParam(m_pScriptObject);
@@ -735,7 +735,7 @@ bool CEntity::Init(CEntityDesc &ed)
 
 	//////////////////////////////////////////////////////////////////////////	
 	if (m_pScriptObject)
-		m_pScriptObject->SetValue("type",m_sClassName.c_str());
+		m_pScriptObject->SetValue("type", m_sClassName.c_str());
 
 	//////////////////////////////////////////////////////////////////////////	
 	if (m_pContainer)
@@ -745,7 +745,7 @@ bool CEntity::Init(CEntityDesc &ed)
 
 	//if (strcmp("Pig1", m_name.c_str())==0) DEBUG_BREAK;
 
-	m_bTrackable=false;
+	m_bTrackable = false;
 	if (m_pScriptObject)
 	{
 		bool bTrackable = false;
@@ -764,7 +764,7 @@ bool CEntity::Init(CEntityDesc &ed)
 
 	CalcWholeBBox();	// here its ok because its on init
 
-	m_bInitialized=true;
+	m_bInitialized = true;
 
 	// If anything during init, changed it.
 	if (!m_bTrackColliders)
@@ -778,17 +778,17 @@ bool CEntity::Init(CEntityDesc &ed)
 
 
 //////////////////////////////////////////////////////////////////////////
-void CEntity::SetScriptObject(IScriptObject *pObject)
+void CEntity::SetScriptObject(IScriptObject* pObject)
 {
 	m_pScriptObject = pObject;
 
-	if(m_pServerState){
+	if (m_pServerState) {
 		ReleaseStateTable(*m_pServerState);
 		delete m_pServerState;
 		m_pServerState = 0;
 	}
 
-	if(m_pClientState){
+	if (m_pClientState) {
 		ReleaseStateTable(*m_pClientState);
 		delete m_pClientState;
 		m_pClientState = 0;
@@ -798,34 +798,34 @@ void CEntity::SetScriptObject(IScriptObject *pObject)
 		return;
 
 	// Cache script callbacks.
-	HSCRIPTFUNCTION temp=0;
-	m_pScriptObject->GetValue( "OnSave",temp );
-	m_pSaveFunc.Init(m_pScriptSystem,temp);
-	temp=0;
-	m_pScriptObject->GetValue( "OnLoad",temp );
-	m_pLoadFunc.Init(m_pScriptSystem,temp);
-	temp=0;
-	m_pScriptObject->GetValue( "OnLoadRELEASE",temp );
-	m_pLoadRELEASEFunc.Init(m_pScriptSystem,temp);
-	m_pScriptObject->GetValue( "OnLoadPATCH1",temp );
-	m_pLoadPATCH1Func.Init(m_pScriptSystem,temp);
+	HSCRIPTFUNCTION temp = 0;
+	m_pScriptObject->GetValue("OnSave", temp);
+	m_pSaveFunc.Init(m_pScriptSystem, temp);
+	temp = 0;
+	m_pScriptObject->GetValue("OnLoad", temp);
+	m_pLoadFunc.Init(m_pScriptSystem, temp);
+	temp = 0;
+	m_pScriptObject->GetValue("OnLoadRELEASE", temp);
+	m_pLoadRELEASEFunc.Init(m_pScriptSystem, temp);
+	m_pScriptObject->GetValue("OnLoadPATCH1", temp);
+	m_pLoadPATCH1Func.Init(m_pScriptSystem, temp);
 	bool bOnClient = m_pEntitySystem->ClientEnabled();
 	bool bOnServer = m_pEntitySystem->ServerEnabled();
 
-	_SmartScriptObject pServerTable(m_pScriptSystem,true);
-	_SmartScriptObject pClientTable(m_pScriptSystem,true);
+	_SmartScriptObject pServerTable(m_pScriptSystem, true);
+	_SmartScriptObject pClientTable(m_pScriptSystem, true);
 
 	// Get Server table if exist.
-	bool bServerTable = m_pScriptObject->GetValue( SCRIPT_SERVER_STATE,pServerTable );
+	bool bServerTable = m_pScriptObject->GetValue(SCRIPT_SERVER_STATE, pServerTable);
 	// Get Client table if exist.
-	bool bClientTable = m_pScriptObject->GetValue( SCRIPT_CLIENT_STATE,pClientTable );
+	bool bClientTable = m_pScriptObject->GetValue(SCRIPT_CLIENT_STATE, pClientTable);
 
 	// Analyze script object for Client/Server states.
 	if (bOnClient && bClientTable)
 	{
 		// Client state exist only on client and only if have Client table.
 		m_pClientState = new SScriptState;
-		InitializeStateTable( pClientTable,*m_pClientState );
+		InitializeStateTable(pClientTable, *m_pClientState);
 	}
 
 	// If Neither Client neither Server states exist, fallback to single server state.
@@ -836,27 +836,27 @@ void CEntity::SetScriptObject(IScriptObject *pObject)
 		// Server state always exist on server (have it Server table or not).
 		m_pServerState = new SScriptState;
 		if (bServerTable)
-			InitializeStateTable( pServerTable,*m_pServerState );
+			InitializeStateTable(pServerTable, *m_pServerState);
 		else
-			InitializeStateTable( m_pScriptObject,*m_pServerState );
+			InitializeStateTable(m_pScriptObject, *m_pServerState);
 	}
 }
 
 /* it sets common callback functions for those entities
 without a script, by calling a common script function
-for materials / sounds etc. 
+for materials / sounds etc.
 Client side only.
 @param pScriptSystem pointer to script system
 */
 //////////////////////////////////////////////////////////////////////////
-void CEntity::SetCommonCallbacks(IScriptSystem *pScriptSystem)
+void CEntity::SetCommonCallbacks(IScriptSystem* pScriptSystem)
 {
-	m_pOnCollide.Init(pScriptSystem,pScriptSystem->GetFunctionPtr("CommonCallbacks", "OnCollide"));
-	m_pOnStopRollSlideContact.Init(pScriptSystem,pScriptSystem->GetFunctionPtr("CommonCallbacks", "OnStopRollSlideContact"));
+	m_pOnCollide.Init(pScriptSystem, pScriptSystem->GetFunctionPtr("CommonCallbacks", "OnCollide"));
+	m_pOnStopRollSlideContact.Init(pScriptSystem, pScriptSystem->GetFunctionPtr("CommonCallbacks", "OnStopRollSlideContact"));
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CEntity::SetName(const char*name)
+void CEntity::SetName(const char* name)
 {
 	m_name = name;
 }
@@ -865,19 +865,19 @@ void CEntity::SetName(const char*name)
 Vec3d CEntity::GetSoundPos()
 {
 	Vec3d vPos;
-	IEntityContainer *pICnt=GetContainer();
+	IEntityContainer* pICnt = GetContainer();
 	if (pICnt)
-		vPos=pICnt->CalcSoundPos();
+		vPos = pICnt->CalcSoundPos();
 	else
-		vPos=GetPos();
+		vPos = GetPos();
 	return vPos;
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CEntity::PlaySound(ISound *pSound, float fSoundScale, Vec3d &Offset)
-{	
+void CEntity::PlaySound(ISound* pSound, float fSoundScale, Vec3d& Offset)
+{
 	m_bUpdateSounds = true;
-	if (m_lstAttachedSounds.size()<15)
+	if (m_lstAttachedSounds.size() < 15)
 	{
 		bool bWasPlaying = pSound->IsPlaying();
 		pSound->SetPosition(GetSoundPos());
@@ -890,13 +890,13 @@ void CEntity::PlaySound(ISound *pSound, float fSoundScale, Vec3d &Offset)
 	}
 	else
 	{
-		m_pISystem->GetILog()->Log("\001 warning trying to attach more than 15 sounds to %s",m_name.c_str());	
-		int ddd=1;
-		for(SoundsList::iterator sItr = m_lstAttachedSounds.begin();sItr!=m_lstAttachedSounds.end(); ++sItr,++ddd)
+		m_pISystem->GetILog()->Log("\001 warning trying to attach more than 15 sounds to %s", m_name.c_str());
+		int ddd = 1;
+		for (SoundsList::iterator sItr = m_lstAttachedSounds.begin(); sItr != m_lstAttachedSounds.end(); ++sItr, ++ddd)
 		{
-			ISound *pDbg = (*sItr).pSound;
+			ISound* pDbg = (*sItr).pSound;
 
-			m_pISystem->GetILog()->Log("\005   %d. %s",ddd,pDbg->GetName());
+			m_pISystem->GetILog()->Log("\005   %d. %s", ddd, pDbg->GetName());
 		}
 		// let's clear it, to restore from an erroneous situation
 		m_lstAttachedSounds.clear();
@@ -904,18 +904,18 @@ void CEntity::PlaySound(ISound *pSound, float fSoundScale, Vec3d &Offset)
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CEntity::MoveTo(const Vec3d &pos, bool moveObjects, bool bUpdatePhysics)
+void CEntity::MoveTo(const Vec3d& pos, bool moveObjects, bool bUpdatePhysics)
 {
 
 	// move physics
-	if (bUpdatePhysics && m_physic &&(m_flags & ETY_FLAG_CALC_PHYSICS))
+	if (bUpdatePhysics && m_physic && (m_flags & ETY_FLAG_CALC_PHYSICS))
 	{
 		pe_params_pos temp;
 		temp.pos = vectorf(pos.x, pos.y, pos.z);
 		m_physic->SetParams(&temp);
 	}
 
-	if (fabs(pos.x-m_center.x) < POS_EPSILON && fabs(pos.y-m_center.y) < POS_EPSILON && fabs(pos.z-m_center.z) < POS_EPSILON)
+	if (fabs(pos.x - m_center.x) < POS_EPSILON && fabs(pos.y - m_center.y) < POS_EPSILON && fabs(pos.z - m_center.z) < POS_EPSILON)
 		return;
 
 	// assign the new position
@@ -932,7 +932,7 @@ void CEntity::MoveTo(const Vec3d &pos, bool moveObjects, bool bUpdatePhysics)
 	// Must be already initialized to call OnMove callback.
 	if (m_bInitialized)
 	{
-		CallStateFunction( ScriptState_OnMove );
+		CallStateFunction(ScriptState_OnMove);
 	}
 }
 
@@ -946,15 +946,15 @@ void CEntity::Reset()
 	m_bSleeping = true;
 	m_awakeCounter = 0;
 
-	m_fRollTimeout=0.0f;
-	m_fSlideTimeout=0.0f;
-	m_fLastSubMergeFracion=0.0f;
+	m_fRollTimeout = 0.0f;
+	m_fSlideTimeout = 0.0f;
+	m_fLastSubMergeFracion = 0.0f;
 
 	// Call script OnReset.
 	if (m_pScriptObject)
 	{
 		HSCRIPTFUNCTION pOnResetFunc = 0;
-		if (m_pScriptObject->GetValue( SCRIPT_ONRESET,pOnResetFunc ))
+		if (m_pScriptObject->GetValue(SCRIPT_ONRESET, pOnResetFunc))
 		{
 			m_pScriptSystem->BeginCall(pOnResetFunc);
 			m_pScriptSystem->PushFuncParam(m_pScriptObject);
@@ -983,10 +983,10 @@ void CEntity::Reset()
 	*/
 
 	m_PrevVertVel = 0.0f;
-	m_vPrevVel.Set(0,0,0);
+	m_vPrevVel.Set(0, 0, 0);
 
 	// This is for testing only (at least now): to find out if anybody starts animations after the character dies
-	for (int i =0; i < MAX_ANIMATED_MODELS; ++i) 
+	for (int i = 0; i < MAX_ANIMATED_MODELS; ++i)
 		if (m_pCryCharInstance[i])
 		{
 			m_pCryCharInstance[i]->EnableStartAnimation(true);
@@ -1002,7 +1002,7 @@ void CEntity::Reset()
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CEntity::SetDestroyable( bool b )
+void CEntity::SetDestroyable(bool b)
 {
 
 	if (b)
@@ -1020,13 +1020,13 @@ bool CEntity::IsDestroyable() const
 // update the entity-this is called every frame and
 // updtae a bunch of various stuff
 //////////////////////////////////////////////////////////////////////
-void CEntity::Update( SEntityUpdateContext &ctx )
+void CEntity::Update(SEntityUpdateContext& ctx)
 {
 	ENTITY_PROFILER
 
-	// Decrease awake counter.
-	if (m_awakeCounter > 0)
-		m_awakeCounter--;
+		// Decrease awake counter.
+		if (m_awakeCounter > 0)
+			m_awakeCounter--;
 
 	/*
 	//[Timur] This is not optimal to do for every entity every frame.
@@ -1055,15 +1055,15 @@ void CEntity::Update( SEntityUpdateContext &ctx )
 	//	bool bEntityVisible = (ctx.nFrameID == m_nLastVisibleFrameID);
 	//	m_bWasVisible = bEntityVisible;
 	m_bWasVisible = m_bVisible;
-	m_bVisible = (m_eUpdateVisLevel==eUT_Unconditional) ? true : ((ctx.nFrameID - m_nLastVisibleFrameID)<MAX_FRAME_ID_STEP_PER_FRAME);
+	m_bVisible = (m_eUpdateVisLevel == eUT_Unconditional) ? true : ((ctx.nFrameID - m_nLastVisibleFrameID) < MAX_FRAME_ID_STEP_PER_FRAME);
 
 	if (m_bVisible != m_bWasVisible)
 		OnVisibilityChange(m_bVisible);
 
 	// check if entity logic passes selected visibility test
-	if (m_eUpdateVisLevel && m_eUpdateVisLevel!=eUT_PhysicsPostStep && m_pEntitySystem->m_pVisCheckForUpdate->GetIVal())
+	if (m_eUpdateVisLevel && m_eUpdateVisLevel != eUT_PhysicsPostStep && m_pEntitySystem->m_pVisCheckForUpdate->GetIVal())
 	{
-		if (!CheckUpdateVisLevel( ctx,m_eUpdateVisLevel ))
+		if (!CheckUpdateVisLevel(ctx, m_eUpdateVisLevel))
 		{
 			return;
 		}
@@ -1073,7 +1073,7 @@ void CEntity::Update( SEntityUpdateContext &ctx )
 	ctx.numUpdatedEntities++;
 
 	if (m_bUpdateSounds)
-		UpdateSounds( ctx );
+		UpdateSounds(ctx);
 
 	// should be called before any rendering
 	if (m_bVisible)
@@ -1081,7 +1081,7 @@ void CEntity::Update( SEntityUpdateContext &ctx )
 		ctx.numVisibleEntities++;
 
 		if (m_pLipSync)
-			UpdateLipSync( ctx );
+			UpdateLipSync(ctx);
 
 		if (m_bEntityHasLights && m_bEntityLightsOn)
 		{
@@ -1091,7 +1091,7 @@ void CEntity::Update( SEntityUpdateContext &ctx )
 
 	if (m_bUpdateEmitters)
 	{
-		UpdateParticleEmitters( ctx );
+		UpdateParticleEmitters(ctx);
 	}
 
 	//////////////////////////////////////////////////////////////////////////
@@ -1133,14 +1133,14 @@ void CEntity::Update( SEntityUpdateContext &ctx )
 			if (m_fScriptUpdateTimer <= 0)
 			{
 				m_fScriptUpdateTimer = m_fScriptUpdateRate;
-				ENTITY_PROFILER_NAME( "CEntity:Update:Script" )
+				ENTITY_PROFILER_NAME("CEntity:Update:Script")
 
 					//////////////////////////////////////////////////////////////////////////
 					// Script Update.
 					if (ctx.pScriptUpdateParams)
-						CallStateFunction( ScriptState_OnUpdate,ctx.fFrameTime,ctx.pScriptUpdateParams );
+						CallStateFunction(ScriptState_OnUpdate, ctx.fFrameTime, ctx.pScriptUpdateParams);
 					else
-						CallStateFunction( ScriptState_OnUpdate,ctx.fFrameTime );
+						CallStateFunction(ScriptState_OnUpdate, ctx.fFrameTime);
 				//
 				//////////////////////////////////////////////////////////////////////////
 			}
@@ -1155,7 +1155,7 @@ void CEntity::Update( SEntityUpdateContext &ctx )
 	{
 		if (m_pContainer && m_pEntitySystem->m_pUpdateContainer->GetIVal())
 		{
-			ENTITY_PROFILER_NAME( "CEntity:Update:Container" )
+			ENTITY_PROFILER_NAME("CEntity:Update:Container")
 				m_pContainer->Update();
 		}
 	}
@@ -1164,7 +1164,7 @@ void CEntity::Update( SEntityUpdateContext &ctx )
 	// Update Characters.
 	if (m_bUpdateCharacters || m_physPlaceholder)
 	{
-		UpdateCharacters( ctx );
+		UpdateCharacters(ctx);
 	}
 
 	// update camera
@@ -1184,65 +1184,65 @@ void CEntity::Update( SEntityUpdateContext &ctx )
 
 	if (m_bUpdateCharacters || m_physPlaceholder)
 	{
-		UpdatePhysPlaceholders( ctx );
+		UpdatePhysPlaceholders(ctx);
 	}
 
 	if (m_bTrackColliders)
 		CheckColliders();
- 
+
 	return;
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CEntity::UpdateCharacters( SEntityUpdateContext &ctx )
+void CEntity::UpdateCharacters(SEntityUpdateContext& ctx)
 {
-	if(!m_pEntitySystem->m_pUpdateBonePositions->GetIVal())
+	if (!m_pEntitySystem->m_pUpdateBonePositions->GetIVal())
 		return;
 
-	bool bProcess=m_bVisible;
+	bool bProcess = m_bVisible;
 
-	IGame *pGame = GetISystem()->GetIGame();
+	IGame* pGame = GetISystem()->GetIGame();
 
 	// ensure update to  collision detection in multiplayer
 	// (only done on the server so the client decal might be produced
 	// wrong if you don't look at the target but this way we can save computation time)
-	if(pGame && pGame->GetModuleState(EGameMultiplayer) && pGame->GetModuleState(EGameServer))
+	if (pGame && pGame->GetModuleState(EGameMultiplayer) && pGame->GetModuleState(EGameServer))
 		bProcess = true;
 
-	if(m_eUpdateVisLevel == eUT_Physics)
+	if (m_eUpdateVisLevel == eUT_Physics)
 		bProcess = true;
 
-	if(bProcess)
+	if (bProcess)
 	{
 		ENTITY_PROFILER
 
-		for(int k = 0; k < m_nMaxCharNum; k++) 
-		{
-			if(m_pCryCharInstance[k] && (m_pCryCharInstance[k]->GetFlags() & CS_FLAG_UPDATE))
+			for (int k = 0; k < m_nMaxCharNum; k++)
 			{
-				m_pCryCharInstance[k]->Update(m_center,m_fRadius);  
+				if (m_pCryCharInstance[k] && (m_pCryCharInstance[k]->GetFlags() & CS_FLAG_UPDATE))
+				{
+					m_pCryCharInstance[k]->Update(m_center, m_fRadius);
 
-				// recalc bbox if animated
-				if(m_pCryCharInstance[k]->IsCharacterActive())
-					//CalcWholeBBox(); look further down for actual call
-					m_bRecalcBBox = true;
+					// recalc bbox if animated
+					if (m_pCryCharInstance[k]->IsCharacterActive())
+						//CalcWholeBBox(); look further down for actual call
+						m_bRecalcBBox = true;
+				}
 			}
-		}
 	}
 	else
 	{
-		for(int k = 0; k < m_nMaxCharNum; k++)
+		for (int k = 0; k < m_nMaxCharNum; k++)
 		{
-			if(m_pCryCharInstance[k] && (m_pCryCharInstance[k]->GetFlags() & CS_FLAG_UPDATE))
-				m_pCryCharInstance[k]->Update( m_center,m_fRadius, ICryCharInstance::flagDontUpdateBones);
+			if (m_pCryCharInstance[k] && (m_pCryCharInstance[k]->GetFlags() & CS_FLAG_UPDATE))
+				m_pCryCharInstance[k]->Update(m_center, m_fRadius, ICryCharInstance::flagDontUpdateBones);
 		}
 	}
 
-	if(bProcess)
+	if (bProcess)
 	{
-		UpdateCharacterPhysicsAndIK( ctx );
+		UpdateCharacterPhysicsAndIK(ctx);
 	}
-	else if(m_physic)
+	else if (m_physic)
 	{
 		pe_params_sensors ps;
 		ps.nSensors = 0;
@@ -1251,7 +1251,7 @@ void CEntity::UpdateCharacters( SEntityUpdateContext &ctx )
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CEntity::UpdateLipSync( SEntityUpdateContext &ctx )
+void CEntity::UpdateLipSync(SEntityUpdateContext& ctx)
 {
 	if (!m_pLipSync)
 		return;
@@ -1259,8 +1259,8 @@ void CEntity::UpdateLipSync( SEntityUpdateContext &ctx )
 	ENTITY_PROFILER
 
 		// if we're too far away we dont do facial-animation
-		bool bAnimate=false;
-	IRenderer *pRenderer=m_pISystem->GetIRenderer();
+		bool bAnimate = false;
+	IRenderer* pRenderer = m_pISystem->GetIRenderer();
 	if (pRenderer)
 	{
 		//[Timur] This code have no place here, it is hack and must be removed (to inside lip sync for example)
@@ -1268,14 +1268,14 @@ void CEntity::UpdateLipSync( SEntityUpdateContext &ctx )
 		// we project the top and bottom to screen-space and check if the character is visible enough to update the face...
 		Vec3d Min, Max;
 		GetBBox(Min, Max);
-		Vec3d Center=(Max-Min)*0.5f+Min;
+		Vec3d Center = (Max - Min) * 0.5f + Min;
 		Vec3d TopCenter(Center.x, Center.y, Max.z);
 		Vec3d BotCenter(Center.x, Center.y, Min.z);
 		Vec3d TopCenterProj, BotCenterProj;
 		pRenderer->ProjectToScreen(TopCenter.x, TopCenter.y, TopCenter.z, &TopCenterProj.x, &TopCenterProj.y, &TopCenterProj.z);
 		pRenderer->ProjectToScreen(BotCenter.x, BotCenter.y, BotCenter.z, &BotCenterProj.x, &BotCenterProj.y, &BotCenterProj.z);
-		if (fabs(TopCenterProj.y-BotCenterProj.y)>50.0f)	// lets animate the face if the character  is higher than 50 pixels
-			bAnimate=true;
+		if (fabs(TopCenterProj.y - BotCenterProj.y) > 50.0f)	// lets animate the face if the character  is higher than 50 pixels
+			bAnimate = true;
 	}
 	//		if (!bAnimate)
 	//			TRACE("Skipping lipsync for entity %s", m_name.c_str());
@@ -1287,28 +1287,28 @@ void CEntity::OnCollide(float fDeltaTime)
 {
 	//m_pISystem->GetILog()->LogToConsole("diff=%0.2f",m_pISystem->GetITimer()->GetCurrTime()-m_fLastCollideTime);
 	int bAwake = m_physic ? m_physic->GetStatus(&pe_status_awake()) : 0;
-	float fFreq = m_physic && (m_physic->GetType()==PE_RIGID || m_physic->GetType()==PE_WHEELEDVEHICLE) && (bAwake+m_bWasAwake) ? 0.01f : 0.3f;
-	float fFrameTime = m_pISystem->GetITimer()->GetCurrTime()-m_fLastCollideTime;
-	if (!m_physic || fFrameTime<=fFreq && bAwake==m_bWasAwake)
+	float fFreq = m_physic && (m_physic->GetType() == PE_RIGID || m_physic->GetType() == PE_WHEELEDVEHICLE) && (bAwake + m_bWasAwake) ? 0.01f : 0.3f;
+	float fFrameTime = m_pISystem->GetITimer()->GetCurrTime() - m_fLastCollideTime;
+	if (!m_physic || fFrameTime <= fFreq && bAwake == m_bWasAwake)
 		// avoid to create a rolling sound for impact, and avoid to call the
 		// script function every frame
-		return; 
+		return;
 
 	m_fLastCollideTime = m_pISystem->GetITimer()->GetCurrTime();
 
-	coll_history_item contacts[32];	
+	coll_history_item contacts[32];
 	int nColls;
-	float velImpact=0,velSlide2=0,velRoll2=0,velImpactCur,velSlide2Cur,velRoll2Cur;
+	float velImpact = 0, velSlide2 = 0, velRoll2 = 0, velImpactCur, velSlide2Cur, velRoll2Cur;
 	bool bCallOnCollide = false;
-	IEntity	*pColliderEntity=NULL;
+	IEntity* pColliderEntity = NULL;
 
-	pe_status_collisions sc;	
+	pe_status_collisions sc;
 	pe_status_dynamics sd;
 	//some lazy values to get only the latest collider from physics
-	sc.age = 0.3f; 
-	sc.bClearHistory = 1; 
-	sc.pHistory = contacts;	
-	sc.len = sizeof(contacts)/sizeof(contacts[0]);
+	sc.age = 0.3f;
+	sc.bClearHistory = 1;
+	sc.pHistory = contacts;
+	sc.len = sizeof(contacts) / sizeof(contacts[0]);
 	m_physic->GetStatus(&sd);
 
 	float	velVertDelta = (sd.v - m_vPrevVel).len();
@@ -1318,44 +1318,44 @@ void CEntity::OnCollide(float fDeltaTime)
 	//	float	velVertDelta = sd.v.z - m_PrevVertVel;
 	//	m_PrevVertVel = sd.v.z;
 
-	Vec3	vVel(0,0,0);
-	float	fVelSz=0;
-	if ((bAwake+m_bWasAwake) && (nColls = m_physic->GetStatus(&sc)))
+	Vec3	vVel(0, 0, 0);
+	float	fVelSz = 0;
+	if ((bAwake + m_bWasAwake) && (nColls = m_physic->GetStatus(&sc)))
 	{
-	IPhysicalWorld *pWorld = m_pISystem->GetIPhysicalWorld();
-		for(nColls--;nColls>=0;nColls--)
+		IPhysicalWorld* pWorld = m_pISystem->GetIPhysicalWorld();
+		for (nColls--; nColls >= 0; nColls--)
 		{
 			// finding max contact velocity
-			float fTmp=contacts[nColls].v[0].len2();
-			if(fTmp>fVelSz)
+			float fTmp = contacts[nColls].v[0].len2();
+			if (fTmp > fVelSz)
 			{
 				fVelSz = fTmp;
 				vVel = contacts[nColls].v[0];
 			}
 
-			Vec3d vrel = contacts[nColls].v[1]-contacts[nColls].v[0], r = contacts[nColls].pt-sd.centerOfMass;
-			if (sd.w.len2()>0.01f)
-				r -= sd.w*((r*sd.w)/sd.w.len2());
-			velImpactCur = fabs(vrel*contacts[nColls].n);
-			velSlide2Cur = (vrel-contacts[nColls].n*velImpactCur).len2();
-			velRoll2Cur = (sd.w^r).len2();
+			Vec3d vrel = contacts[nColls].v[1] - contacts[nColls].v[0], r = contacts[nColls].pt - sd.centerOfMass;
+			if (sd.w.len2() > 0.01f)
+				r -= sd.w * ((r * sd.w) / sd.w.len2());
+			velImpactCur = fabs(vrel * contacts[nColls].n);
+			velSlide2Cur = (vrel - contacts[nColls].n * velImpactCur).len2();
+			velRoll2Cur = (sd.w ^ r).len2();
 
-			if(velImpact<velImpactCur)
+			if (velImpact < velImpactCur)
 			{
-				IPhysicalEntity *pCollider = pWorld->GetPhysicalEntityById(contacts[nColls].idCollider);
-				if(pCollider)
-					pColliderEntity = (IEntity *)pCollider->GetForeignData();
+				IPhysicalEntity* pCollider = pWorld->GetPhysicalEntityById(contacts[nColls].idCollider);
+				if (pCollider)
+					pColliderEntity = (IEntity*)pCollider->GetForeignData();
 				velImpact = velImpactCur;
 			}
-//			velImpact = max(velImpact,velImpactCur);
-			velSlide2 = crymax(velSlide2,velSlide2Cur);
+			//			velImpact = max(velImpact,velImpactCur);
+			velSlide2 = crymax(velSlide2, velSlide2Cur);
 			//m_pISystem->GetILog()->LogToConsole("test=%0.4f", (r*contacts[nColls].n)/r.len());
-			if (sqr(r*contacts[nColls].n)>r.len2()*sqr(0.97f))
-				velRoll2 = crymax(velRoll2,velRoll2Cur);
+			if (sqr(r * contacts[nColls].n) > r.len2() * sqr(0.97f))
+				velRoll2 = crymax(velRoll2, velRoll2Cur);
 		}
-		if (velRoll2<0.1f)
+		if (velRoll2 < 0.1f)
 		{
-			if ((m_fTimeNotRolling+=fFrameTime)>0.15f)
+			if ((m_fTimeNotRolling += fFrameTime) > 0.15f)
 				m_fTimeRolling = 0;
 		}
 		else
@@ -1363,7 +1363,7 @@ void CEntity::OnCollide(float fDeltaTime)
 			m_fTimeRolling += fFrameTime;
 			m_fTimeNotRolling = 0;
 		}
-		if (m_fTimeRolling<0.2f)
+		if (m_fTimeRolling < 0.2f)
 			velRoll2 = 0;
 
 		//if (velImpact>2.0f)
@@ -1375,7 +1375,7 @@ void CEntity::OnCollide(float fDeltaTime)
 		//			return;
 
 		//*
-		float fSpeed=(contacts[0].v[0]-contacts[0].v[1]).len();
+		float fSpeed = (contacts[0].v[0] - contacts[0].v[1]).len();
 		//m_pISystem->GetILog()->LogToConsole("Speed=%0.2f",fSpeed);
 
 		//if (fSpeed<1.5f)
@@ -1383,50 +1383,51 @@ void CEntity::OnCollide(float fDeltaTime)
 		//*/
 		bCallOnCollide = true;
 		m_pObjectCollide->BeginSetGetChain();
-		m_pObjectCollide->SetValueChain("fSpeed",fSpeed);		
-		m_pObjectCollide->SetValueChain("matId",contacts[0].idmat[1]);
+		m_pObjectCollide->SetValueChain("fSpeed", fSpeed);
+		m_pObjectCollide->SetValueChain("matId", contacts[0].idmat[1]);
 		//pObject->SetValueChain("matId",tCollider.idmat[0]);
-	
+
 		// collision position
 		m_vObjPosCollide->BeginSetGetChain();
-		m_vObjPosCollide->SetValueChain("x",contacts[0].pt.x);
-		m_vObjPosCollide->SetValueChain("y",contacts[0].pt.y);
-		m_vObjPosCollide->SetValueChain("z",contacts[0].pt.z);
+		m_vObjPosCollide->SetValueChain("x", contacts[0].pt.x);
+		m_vObjPosCollide->SetValueChain("y", contacts[0].pt.y);
+		m_vObjPosCollide->SetValueChain("z", contacts[0].pt.z);
 		m_vObjPosCollide->EndSetGetChain();
 
-		m_pObjectCollide->SetValueChain("vPos",m_vObjPosCollide);
+		m_pObjectCollide->SetValueChain("vPos", m_vObjPosCollide);
 
 		// collision velocity
 		m_vObjVelCollide->BeginSetGetChain();
-		m_vObjVelCollide->SetValueChain("x",vVel.x);
-		m_vObjVelCollide->SetValueChain("y",vVel.y);
-		m_vObjVelCollide->SetValueChain("z",vVel.z);
+		m_vObjVelCollide->SetValueChain("x", vVel.x);
+		m_vObjVelCollide->SetValueChain("y", vVel.y);
+		m_vObjVelCollide->SetValueChain("z", vVel.z);
 		m_vObjVelCollide->EndSetGetChain();
 
-		m_pObjectCollide->SetValueChain("vVel",m_vObjVelCollide);
+		m_pObjectCollide->SetValueChain("vVel", m_vObjVelCollide);
 
 
-		m_pObjectCollide->SetValueChain("impactVert",velVertDelta); // vertical impact contact
+		m_pObjectCollide->SetValueChain("impactVert", velVertDelta); // vertical impact contact
 
 		m_pObjectCollide->SetToNullChain("impact");
 		m_pObjectCollide->SetToNullChain("roll");
 		m_pObjectCollide->SetToNullChain("slide");
 
 		float velImpactThresh = 1.5f;
-		if (velRoll2>0.1f)
+		if (velRoll2 > 0.1f)
 		{
-			m_fRollTimeout=0.5f;	// adjust if needed
-			m_pObjectCollide->SetValueChain("roll",cry_sqrtf(velRoll2)); // roll contact
+			m_fRollTimeout = 0.5f;	// adjust if needed
+			m_pObjectCollide->SetValueChain("roll", cry_sqrtf(velRoll2)); // roll contact
 			velImpactThresh = 3.5f;
-		} else if (velSlide2>0.1f)
-		{
-			m_fSlideTimeout=0.5f;	// adjust if needed
-			m_pObjectCollide->SetValueChain("slide",cry_sqrtf(velSlide2)); // slide contact
 		}
-		if (velImpact>velImpactThresh)
-			m_pObjectCollide->SetValueChain("impact",velImpact); // impact contact
-		if(pColliderEntity)
-			m_pObjectCollide->SetValueChain("collider",pColliderEntity->GetScriptObject());
+		else if (velSlide2 > 0.1f)
+		{
+			m_fSlideTimeout = 0.5f;	// adjust if needed
+			m_pObjectCollide->SetValueChain("slide", cry_sqrtf(velSlide2)); // slide contact
+		}
+		if (velImpact > velImpactThresh)
+			m_pObjectCollide->SetValueChain("impact", velImpact); // impact contact
+		if (pColliderEntity)
+			m_pObjectCollide->SetValueChain("collider", pColliderEntity->GetScriptObject());
 		else
 			m_pObjectCollide->SetToNullChain("collider");
 
@@ -1443,62 +1444,62 @@ void CEntity::OnCollide(float fDeltaTime)
 
 	int nCircles = 0;
 	//_SmartScriptObject pSplashList(m_pScriptSystem);
-	IScriptObject *psoSplashes[32],*psoCenters[32];
+	IScriptObject* psoSplashes[32], * psoCenters[32];
 
-	if (m_fLastSplashTime>m_pEntitySystem->m_pSplashTimeout->GetFVal() && 
-		sd.waterResistance>m_pEntitySystem->m_pSplashThreshold->GetFVal()) // now test if the object hit the water hard enough
+	if (m_fLastSplashTime > m_pEntitySystem->m_pSplashTimeout->GetFVal() &&
+		sd.waterResistance > m_pEntitySystem->m_pSplashThreshold->GetFVal()) // now test if the object hit the water hard enough
 	{
 		pe_status_pos sp; sp.flags = 0;
 		geom_world_data gwd;
-		geom_contact *pContacts;
-		IPhysicalWorld *pWorld = m_pISystem->GetIPhysicalWorld();
-		int iCont,iCircle;
-		Vec2 *pCenters;
-		float *pRadii;
+		geom_contact* pContacts;
+		IPhysicalWorld* pWorld = m_pISystem->GetIPhysicalWorld();
+		int iCont, iCircle;
+		Vec2* pCenters;
+		float* pRadii;
 		Vec3 v;
 		primitives::box boxWater;
 		pe_params_bbox pbb;
 		m_physic->GetParams(&pbb);
 
 		boxWater.Basis.SetIdentity();
-		boxWater.center = (pbb.BBox[0]+pbb.BBox[1])*0.5f;
-		boxWater.size = pbb.BBox[1]-pbb.BBox[0];
-		boxWater.center.z += m_pISystem->GetI3DEngine()->GetWaterLevel(this,&v) - (boxWater.center.z-boxWater.size.z);
-		IGeometry *pWaterSurface = pWorld->GetGeomManager()->CreatePrimitive(primitives::box::type, &boxWater);
+		boxWater.center = (pbb.BBox[0] + pbb.BBox[1]) * 0.5f;
+		boxWater.size = pbb.BBox[1] - pbb.BBox[0];
+		boxWater.center.z += m_pISystem->GetI3DEngine()->GetWaterLevel(this, &v) - (boxWater.center.z - boxWater.size.z);
+		IGeometry* pWaterSurface = pWorld->GetGeomManager()->CreatePrimitive(primitives::box::type, &boxWater);
 		m_pSplashList->Clear();
 
-		for(sp.ipart=m_physic->GetStatus(&pe_status_nparts())-1; sp.ipart>=0; sp.ipart--)
+		for (sp.ipart = m_physic->GetStatus(&pe_status_nparts()) - 1; sp.ipart >= 0; sp.ipart--)
 		{
 			m_physic->GetStatus(&sp);
 			gwd.offset = sp.pos;
 			gwd.R = matrix3x3f(sp.q);
 			gwd.scale = sp.scale;
-			for(iCont=sp.pGeomProxy->Intersect(pWaterSurface, &gwd,0,0, pContacts)-1; iCont>=0; iCont--)
-				for(iCircle = pWorld->GetPhysUtils()->CoverPolygonWithCircles(strided_pointer<Vec2>((Vec2*)pContacts[iCont].ptborder,sizeof(Vec3)),
-					pContacts[iCont].nborderpt,pContacts[iCont].bBorderConsecutive, (const Vec2&)pContacts[iCont].center, pCenters,pRadii, 0.5f)-1; 
-					iCircle>=0; iCircle--)
+			for (iCont = sp.pGeomProxy->Intersect(pWaterSurface, &gwd, 0, 0, pContacts) - 1; iCont >= 0; iCont--)
+				for (iCircle = pWorld->GetPhysUtils()->CoverPolygonWithCircles(strided_pointer<Vec2>((Vec2*)pContacts[iCont].ptborder, sizeof(Vec3)),
+					pContacts[iCont].nborderpt, pContacts[iCont].bBorderConsecutive, (const Vec2&)pContacts[iCont].center, pCenters, pRadii, 0.5f) - 1;
+					iCircle >= 0; iCircle--)
 				{
 					psoCenters[nCircles] = m_pScriptSystem->CreateObject();
 					psoCenters[nCircles]->BeginSetGetChain();
-					psoCenters[nCircles]->SetValueChain("x",pCenters[iCircle].x);
-					psoCenters[nCircles]->SetValueChain("y",pCenters[iCircle].y);
-					psoCenters[nCircles]->SetValueChain("z",boxWater.center.z-boxWater.size.z);
+					psoCenters[nCircles]->SetValueChain("x", pCenters[iCircle].x);
+					psoCenters[nCircles]->SetValueChain("y", pCenters[iCircle].y);
+					psoCenters[nCircles]->SetValueChain("z", boxWater.center.z - boxWater.size.z);
 					psoCenters[nCircles]->EndSetGetChain();
 
 					psoSplashes[nCircles] = m_pScriptSystem->CreateObject();
 					psoSplashes[nCircles]->BeginSetGetChain();
-					psoSplashes[nCircles]->SetValueChain("center",psoCenters[nCircles]);
-					psoSplashes[nCircles]->SetValueChain("radius",pRadii[iCircle]);
-					psoSplashes[nCircles]->SetValueChain("intensity",sd.waterResistance);
+					psoSplashes[nCircles]->SetValueChain("center", psoCenters[nCircles]);
+					psoSplashes[nCircles]->SetValueChain("radius", pRadii[iCircle]);
+					psoSplashes[nCircles]->SetValueChain("intensity", sd.waterResistance);
 					psoSplashes[nCircles]->EndSetGetChain();
 
-					m_pSplashList->SetAt(nCircles+1, psoSplashes[nCircles]);
-					if (++nCircles==6)
+					m_pSplashList->SetAt(nCircles + 1, psoSplashes[nCircles]);
+					if (++nCircles == 6)
 						goto CirclesNoMore;
 				}
 		}
 
-CirclesNoMore:
+	CirclesNoMore:
 		pWorld->GetGeomManager()->DestroyGeometry(pWaterSurface);
 	}
 
@@ -1524,20 +1525,21 @@ CirclesNoMore:
 	m_fLastSplashTime += fFrameTime;
 
 	bool bSplash;
-	if ((sd.waterResistance>10.0f) && (sd.submergedFraction>0.0f) && (m_fLastSubMergeFracion<=0.0f))
+	if ((sd.waterResistance > 10.0f) && (sd.submergedFraction > 0.0f) && (m_fLastSubMergeFracion <= 0.0f))
 	{
 		if (!bCallOnCollide)
 			m_pObjectCollide->BeginSetGetChain();
-		bCallOnCollide=true;
-		m_fLastSubMergeFracion=sd.submergedFraction;
-		bSplash=true;
-	}else
+		bCallOnCollide = true;
+		m_fLastSubMergeFracion = sd.submergedFraction;
+		bSplash = true;
+	}
+	else
 	{
 		if (bCallOnCollide)
 			m_pObjectCollide->SetToNullChain("waterresistance");
-		if (sd.submergedFraction==0.0f)
-			m_fLastSubMergeFracion=0.0f;
-		bSplash=false;
+		if (sd.submergedFraction == 0.0f)
+			m_fLastSubMergeFracion = 0.0f;
+		bSplash = false;
 	}
 
 	if (bCallOnCollide)
@@ -1548,46 +1550,46 @@ CirclesNoMore:
 
 		if (m_pOnCollide)
 		{
-			m_pScriptSystem->BeginCall(m_pOnCollide);			
+			m_pScriptSystem->BeginCall(m_pOnCollide);
 			m_pScriptSystem->PushFuncParam(false);
 			m_pScriptSystem->PushFuncParam(m_pObjectCollide);
 			m_pScriptSystem->EndCall();
 		}
 		else
 		{
-			IScriptObject *pScriptObject = m_pObjectCollide;
-			CallStateFunction( ScriptState_OnCollide,pScriptObject );
+			IScriptObject* pScriptObject = m_pObjectCollide;
+			CallStateFunction(ScriptState_OnCollide, pScriptObject);
 		}
 	}
 
-	for(nCircles--;nCircles>=0;nCircles--)
-		psoSplashes[nCircles]->Release(),psoCenters[nCircles]->Release();
+	for (nCircles--; nCircles >= 0; nCircles--)
+		psoSplashes[nCircles]->Release(), psoCenters[nCircles]->Release();
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CEntity::UpdateSounds( SEntityUpdateContext &ctx )
+void CEntity::UpdateSounds(SEntityUpdateContext& ctx)
 {
 	if (!m_lstAttachedSounds.empty())
 	{
 		ENTITY_PROFILER
 
-		SoundsListItor itor = m_lstAttachedSounds.begin();
-		Vec3d vPos= GetSoundPos();
-		while(itor!=m_lstAttachedSounds.end())
+			SoundsListItor itor = m_lstAttachedSounds.begin();
+		Vec3d vPos = GetSoundPos();
+		while (itor != m_lstAttachedSounds.end())
 		{
-			SAttachedSound &Sound=(*itor);			
+			SAttachedSound& Sound = (*itor);
 #if !defined(LINUX64)
-			if((Sound.pSound!=NULL) && (Sound.pSound->IsPlaying() || Sound.pSound->IsPlayingVirtual()))
+			if ((Sound.pSound != NULL) && (Sound.pSound->IsPlaying() || Sound.pSound->IsPlayingVirtual()))
 #else
-			if((Sound.pSound!=0) && (Sound.pSound->IsPlaying() || Sound.pSound->IsPlayingVirtual()))
+			if ((Sound.pSound != 0) && (Sound.pSound->IsPlaying() || Sound.pSound->IsPlayingVirtual()))
 #endif
 			{
-				Sound.pSound->SetPosition(vPos+Sound.Offset);
+				Sound.pSound->SetPosition(vPos + Sound.Offset);
 				++itor;
 			}
 			else
 			{
-				itor=m_lstAttachedSounds.erase(itor);
+				itor = m_lstAttachedSounds.erase(itor);
 			}
 		}
 	}
@@ -1595,7 +1597,7 @@ void CEntity::UpdateSounds( SEntityUpdateContext &ctx )
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CEntity::UpdatePhysics( SEntityUpdateContext &ctx )
+void CEntity::UpdatePhysics(SEntityUpdateContext& ctx)
 {
 	ENTITY_PROFILER
 
@@ -1603,7 +1605,7 @@ void CEntity::UpdatePhysics( SEntityUpdateContext &ctx )
 			return;
 
 	float fDeltaTime = ctx.fFrameTime;
-	if (m_physic && (m_flags & ETY_FLAG_CALC_PHYSICS) && !(m_flags&ETY_FLAG_IGNORE_PHYSICS_UPDATE))
+	if (m_physic && (m_flags & ETY_FLAG_CALC_PHYSICS) && !(m_flags & ETY_FLAG_IGNORE_PHYSICS_UPDATE))
 	{
 		// get the new position from the physics system
 		pe_status_pos pos;
@@ -1620,12 +1622,12 @@ void CEntity::UpdatePhysics( SEntityUpdateContext &ctx )
 		//pos.q.get_Euler_angles_xyz(new_angles.z, new_angles.y, new_angles.x);
 		//EULER_IVO
 		//Vec3 TempAng; new_angles=pos.q.GetEulerAngles_XYZ(TempAng);
-		new_angles=Ang3::GetAnglesXYZ(matrix3x3f(pos.q));
+		new_angles = Ang3::GetAnglesXYZ(matrix3x3f(pos.q));
 
 
-		new_angles *= 180.0f/gf_PI;
+		new_angles *= 180.0f / gf_PI;
 
-		MoveTo(new_pos, new_pos.x!=m_center.x || new_pos.y!=m_center.y || new_pos.z!=m_center.z, false);
+		MoveTo(new_pos, new_pos.x != m_center.x || new_pos.y != m_center.y || new_pos.z != m_center.z, false);
 
 		if (m_physic->GetType() != PE_LIVING)
 		{
@@ -1634,9 +1636,9 @@ void CEntity::UpdatePhysics( SEntityUpdateContext &ctx )
 			//			m_angles = new_angles;
 		}
 
-		if (m_physic->GetType()==PE_SOFT && GetEntityStatObj(0))
+		if (m_physic->GetType() == PE_SOFT && GetEntityStatObj(0))
 		{
-			SetBBox(pos.BBox[0],pos.BBox[1]);
+			SetBBox(pos.BBox[0], pos.BBox[1]);
 
 			pe_params_softbody psb;
 			m_physic->GetParams(&psb);
@@ -1646,13 +1648,13 @@ void CEntity::UpdatePhysics( SEntityUpdateContext &ctx )
 			if (m_bVisible)
 			{
 				pe_status_softvtx ssv;
-				CLeafBuffer *pLB = GetEntityStatObj(0)->GetLeafBuffer();
-				if (pLB && pLB->m_arrVtxMap && m_physic->GetStatus(&ssv)) 
+				CLeafBuffer* pLB = GetEntityStatObj(0)->GetLeafBuffer();
+				if (pLB && pLB->m_arrVtxMap && m_physic->GetStatus(&ssv))
 				{
-					strided_pointer<Vec3d> pVtx,pNormals,pBinormals,pTangents;
+					strided_pointer<Vec3d> pVtx, pNormals, pBinormals, pTangents;
 					bool bHasTangents = false;
 					pVtx.data = (Vec3*)pLB->GetPosPtr(pVtx.iStride);
-					if (g_VertFormatNormalOffsets[pLB->m_nVertexFormat]!=-1)
+					if (g_VertFormatNormalOffsets[pLB->m_nVertexFormat] != -1)
 						pNormals.data = (Vec3*)pLB->GetNormalPtr(pNormals.iStride);
 					else
 					{
@@ -1661,21 +1663,21 @@ void CEntity::UpdatePhysics( SEntityUpdateContext &ctx )
 						pTangents.data = (Vec3*)pLB->GetTangentPtr(pTangents.iStride);
 						bHasTangents = true;
 					}
-					for(int i=0; i<pLB->m_SecVertCount; i++)
+					for (int i = 0; i < pLB->m_SecVertCount; i++)
 					{
 						pVtx[i] = ssv.pVtx[pLB->m_arrVtxMap[i]];
 						pNormals[i] = ssv.pNormals[pLB->m_arrVtxMap[i]];
 						if (bHasTangents)
 						{
 							pBinormals[i] = GetOrthogonal(pNormals[i]).normalized();
-							pTangents[i] = pNormals[i]^pBinormals[i];
+							pTangents[i] = pNormals[i] ^ pBinormals[i];
 						}
 					}
 					pLB->InvalidateVideoBuffer();
 				}
 			}
 			//TODO: Check if replacing psb.wind with (*psb.wind) works fine here
-			if ((m_bVisible^m_bWasVisible) && (!m_bVisible || (*psb.wind) * psb.airResistance > 0))
+			if ((m_bVisible ^ m_bWasVisible) && (!m_bVisible || (*psb.wind) * psb.airResistance > 0))
 				m_physic->Action(&aa);
 		}
 
@@ -1685,10 +1687,10 @@ void CEntity::UpdatePhysics( SEntityUpdateContext &ctx )
 
 		bool bOnCollideImplemented = false;
 		if (m_pServerState && m_pServerState->pFunction[ScriptState_OnCollide])
-			bOnCollideImplemented=true;
-		else 
+			bOnCollideImplemented = true;
+		else
 			if (m_pClientState && m_pClientState->pFunction[ScriptState_OnCollide])
-				bOnCollideImplemented=true;
+				bOnCollideImplemented = true;
 
 		// call the OnCollide function only if the oncollide is implemented OR
 		// if there is not script object AND the entity is a rigid body entity, in
@@ -1696,12 +1698,12 @@ void CEntity::UpdatePhysics( SEntityUpdateContext &ctx )
 		if ((bOnCollideImplemented) || (m_pOnCollide))
 			OnCollide(fDeltaTime);
 
-		for (unsigned int j = 0; j < m_objects.size(); j++) 
+		for (unsigned int j = 0; j < m_objects.size(); j++)
 		{
-			pos.partid = j; 
-			if (m_physic->GetStatus(&pos)) 
+			pos.partid = j;
+			if (m_physic->GetStatus(&pos))
 			{
-				m_objects[j].pos =(Vec3d)pos.pos;
+				m_objects[j].pos = (Vec3d)pos.pos;
 				q[j] = pos.q;
 
 				//CHANGED_BY_IVO (NOTE: order of angles is flipped!!!!)
@@ -1710,63 +1712,64 @@ void CEntity::UpdatePhysics( SEntityUpdateContext &ctx )
 				//Vec3 TempAng;	m_objects[j].angles=pos.q.GetEulerAngles_XYZ(TempAng);
 				m_objects[j].angles = Ang3::GetAnglesXYZ(matrix3x3f(pos.q));
 
-				m_objects[j].angles *= 180.0f/gf_PI;
+				m_objects[j].angles *= 180.0f / gf_PI;
 			}
 
-			if (m_objects[j].flags & ETY_OBJ_IS_A_LINK) 
+			if (m_objects[j].flags & ETY_OBJ_IS_A_LINK)
 			{
 				float len0, len;
-				matrix3x3in4x4Tf &mtx(*(matrix3x3in4x4Tf*)&m_objects[j].mtx);
-				matrix3x3f R0,R1;
+				matrix3x3in4x4Tf& mtx(*(matrix3x3in4x4Tf*)&m_objects[j].mtx);
+				matrix3x3f R0, R1;
 				m_objects[j].mtx.SetIdentity();
 				Vec3d link_start, link_end, link_offset;
 
 				// calculate current link start, link end in entity coordinates
-				link_start = q[m_objects[j].ipart0]*m_objects[j].link_start0 + m_objects[m_objects[j].ipart0].pos;
-				link_end = q[m_objects[j].ipart1]*m_objects[j].link_end0 + m_objects[m_objects[j].ipart1].pos;
-				len0 =(m_objects[j].link_end0 - m_objects[j].link_start0).Length();
-				len =(link_end - link_start).Length();
+				link_start = q[m_objects[j].ipart0] * m_objects[j].link_start0 + m_objects[m_objects[j].ipart0].pos;
+				link_end = q[m_objects[j].ipart1] * m_objects[j].link_end0 + m_objects[m_objects[j].ipart1].pos;
+				len0 = (m_objects[j].link_end0 - m_objects[j].link_start0).Length();
+				len = (link_end - link_start).Length();
 
 				mtx = matrix3x3in4x4Tf(qmaster);
-				m_objects[j].mtx.SetRow(3,m_center); // initialize object matrix to entity world matrix
+				m_objects[j].mtx.SetRow(3, m_center); // initialize object matrix to entity world matrix
 				link_offset = m_objects[j].mtx.TransformPointOLD(link_start);
 
 				// build (rotate to previous orientation)*(scale along z axis) matrix
-				R1 = matrix3x3f(GetRotationV0V1(vectorf(0,0,1), (link_end-link_start)/len ));
-				R1.SetColumn(2,R1.GetColumn(2)*(len/len0));
+				R1 = matrix3x3f(GetRotationV0V1(vectorf(0, 0, 1), (link_end - link_start) / len));
+				R1.SetColumn(2, R1.GetColumn(2) * (len / len0));
 				// build (rotate so that link axis becomes z axis) matrix
-				R0 = matrix3x3f( GetRotationV0V1(vectorf(m_objects[j].link_end0-m_objects[j].link_start0)/len0, vectorf(0, 0, 1)));
-				mtx *= (R1*R0);
+				R0 = matrix3x3f(GetRotationV0V1(vectorf(m_objects[j].link_end0 - m_objects[j].link_start0) / len0, vectorf(0, 0, 1)));
+				mtx *= (R1 * R0);
 
 				// offset matrix by difference between current and required staring points
 				link_offset -= m_objects[j].mtx.TransformPointOLD(m_objects[j].link_start0);
-				m_objects[j].mtx.SetRow(3,m_objects[j].mtx.GetRow(3)+link_offset);
+				m_objects[j].mtx.SetRow(3, m_objects[j].mtx.GetRow(3) + link_offset);
 				m_objects[j].flags |= ETY_OBJ_USE_MATRIX;
-			} else 
+			}
+			else
 				m_objects[j].flags &= ~ETY_OBJ_USE_MATRIX;
 		}
 
 		// Set water level to any physic entity (Ignore for soft invisible entity).
-		if (m_bVisible || m_physic->GetType()!=PE_SOFT)
+		if (m_bVisible || m_physic->GetType() != PE_SOFT)
 		{
 			// set water level
 			pe_params_buoyancy pb;
 
 			//pb.waterDensity = m_fWaterDensity; 
-			pb.waterPlane.n.Set(0,0,1);
-			Vec3d vWaterFlowSpeed(0,0,0);
+			pb.waterPlane.n.Set(0, 0, 1);
+			Vec3d vWaterFlowSpeed(0, 0, 0);
 			//float fWaterLevel = m_pISystem->GetI3DEngine()->GetWaterLevel(&GetPos(), &vWaterFlowSpeed);
 			float fWaterLevel = m_pISystem->GetI3DEngine()->GetWaterLevel(this, &vWaterFlowSpeed);
-			pb.waterPlane.origin.Set(0,0,fWaterLevel);
+			pb.waterPlane.origin.Set(0, 0, fWaterLevel);
 			pb.waterFlow = vWaterFlowSpeed;
 			m_physic->SetParams(&pb);
 		}
 	}
 
-	if (m_fRollTimeout>0)
+	if (m_fRollTimeout > 0)
 	{
 		m_fRollTimeout -= fDeltaTime;
-		if (m_fRollTimeout<=0.0f)
+		if (m_fRollTimeout <= 0.0f)
 		{
 			if (m_pOnStopRollSlideContact)
 			{
@@ -1774,17 +1777,18 @@ void CEntity::UpdatePhysics( SEntityUpdateContext &ctx )
 				m_pScriptSystem->PushFuncParam(false);
 				m_pScriptSystem->PushFuncParam("roll");
 				m_pScriptSystem->EndCall();
-			}else
+			}
+			else
 			{
 				CallStateFunction(ScriptState_OnStopRollSlideContact, "roll");
 			}
 		}
 	}
 
-	if (m_fSlideTimeout>0)
+	if (m_fSlideTimeout > 0)
 	{
 		m_fSlideTimeout -= fDeltaTime;
-		if (m_fSlideTimeout<=0.0f)
+		if (m_fSlideTimeout <= 0.0f)
 		{
 			if (m_pOnStopRollSlideContact)
 			{
@@ -1792,7 +1796,8 @@ void CEntity::UpdatePhysics( SEntityUpdateContext &ctx )
 				m_pScriptSystem->PushFuncParam(false);
 				m_pScriptSystem->PushFuncParam("slide");
 				m_pScriptSystem->EndCall();
-			}else
+			}
+			else
 			{
 				CallStateFunction(ScriptState_OnStopRollSlideContact, "slide");
 			}
@@ -1801,14 +1806,14 @@ void CEntity::UpdatePhysics( SEntityUpdateContext &ctx )
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CEntity::UpdateCharacterPhysicsAndIK( SEntityUpdateContext &ctx )
+void CEntity::UpdateCharacterPhysicsAndIK(SEntityUpdateContext& ctx)
 {
 	ENTITY_PROFILER
 
 		//	for (int k = 0; k < m_nMaxCharNum; k++) if (m_pCryCharInstance[k] )
 		for (int k = 0; k < m_nMaxCharNum; k++) if (m_pCryCharInstance[k] && (m_pCryCharInstance[k]->GetFlags() & CS_FLAG_UPDATE))
 		{
-			m_pCryCharInstance[k]->SetOffset(vectorf(0,0,0));
+			m_pCryCharInstance[k]->SetOffset(vectorf(0, 0, 0));
 			if (m_physic && m_pEntitySystem->m_pUpdatePhysics->GetIVal())
 			{
 				pe_status_living livstat;
@@ -1816,10 +1821,10 @@ void CEntity::UpdateCharacterPhysicsAndIK( SEntityUpdateContext &ctx )
 				pe_status_sensors sensors;
 
 
-				if(m_bHandIK)
+				if (m_bHandIK)
 				{
-					m_pCryCharInstance[k]->SetLimbIKGoal(LIMB_LEFT_ARM, m_vHandIKTarget, ik_arm, 0, Vec3d(1,0,0) );
-					m_pCryCharInstance[k]->SetLimbIKGoal(LIMB_RIGHT_ARM, m_vHandIKTarget, ik_arm, 0, Vec3d(1,0,0) );
+					m_pCryCharInstance[k]->SetLimbIKGoal(LIMB_LEFT_ARM, m_vHandIKTarget, ik_arm, 0, Vec3d(1, 0, 0));
+					m_pCryCharInstance[k]->SetLimbIKGoal(LIMB_RIGHT_ARM, m_vHandIKTarget, ik_arm, 0, Vec3d(1, 0, 0));
 					m_bHandIK = false;		// has to be reset before next update
 				}
 				else
@@ -1828,15 +1833,15 @@ void CEntity::UpdateCharacterPhysicsAndIK( SEntityUpdateContext &ctx )
 					m_pCryCharInstance[k]->SetLimbIKGoal(LIMB_RIGHT_ARM);
 				}
 
-				if (!m_bIsBound && m_pEntitySystem->m_pCharacterIK->GetIVal() && m_physic->GetType()==PE_LIVING && 
-					!(livstat.bFlying && livstat.timeFlying>0.2f) &&
-					m_physic->GetStatus(&sensors) && sensors.flags) 
+				if (!m_bIsBound && m_pEntitySystem->m_pCharacterIK->GetIVal() && m_physic->GetType() == PE_LIVING &&
+					!(livstat.bFlying && livstat.timeFlying > 0.2f) &&
+					m_physic->GetStatus(&sensors) && sensors.flags)
 				{
 					pe_player_dimensions livdim;
 					m_physic->GetParams(&livdim);
 					float fCharZOffsetBase = 0, fOffsetSpeed = m_pEntitySystem->m_pCharZOffsetSpeed->GetFVal();
-					if (livstat.timeSinceStanceChange>3.0f) // don't offset character during stance changes, since it's done by animation blending
-						fCharZOffsetBase = livstat.camOffset.z-livdim.heightEye;
+					if (livstat.timeSinceStanceChange > 3.0f) // don't offset character during stance changes, since it's done by animation blending
+						fCharZOffsetBase = livstat.camOffset.z - livdim.heightEye;
 					m_fCharZOffsetTarget = 0;
 					//m_pCryCharInstance[k]->SetOffset(livstat.camOffset-vectorf(0,0,livdim.heightEye));
 
@@ -1844,35 +1849,37 @@ void CEntity::UpdateCharacterPhysicsAndIK( SEntityUpdateContext &ctx )
 					int i, ikflags = ik_leg;
 					//if (livstat.vel.len2()>0.01f)
 					ikflags |= ik_avoid_stretching;
-					for(i=0; i<2; i++)	if (sensors.pPoints[i].z > livdim.heightCollider*0.7f)
-						sensors.pPoints[i].z = livdim.heightCollider*0.7f;
-					m_nFlyingFrames = m_nFlyingFrames+livstat.bFlying & -livstat.bFlying;
-					if (m_nFlyingFrames<4 && livstat.vel.len2()<16 && (livstat.vel.len2()<0.01f || !livstat.bOnStairs))	
-						for(i=0; i<2; i++) if (sensors.pPoints[i].z - fCharZOffsetBase/*m_pCryCharInstance[k]->GetOffset().z*/ < -0.02f && sensors.flags&1<<i)
-							m_fCharZOffsetTarget = sensors.pPoints[i].z-fCharZOffsetBase;
-							//m_pCryCharInstance[k]->SetOffset(m_pCryCharInstance[k]->GetOffset()+
-							//vectorf(0, 0, sensors.pPoints[i].z - m_pCryCharInstance[k]->GetOffset().z));// + 0.02f));
-					if (fabs_tpl(m_fCharZOffsetCur-m_fCharZOffsetTarget) < fOffsetSpeed*ctx.fFrameTime)
+					for (i = 0; i < 2; i++)	if (sensors.pPoints[i].z > livdim.heightCollider * 0.7f)
+						sensors.pPoints[i].z = livdim.heightCollider * 0.7f;
+					m_nFlyingFrames = m_nFlyingFrames + livstat.bFlying & -livstat.bFlying;
+					if (m_nFlyingFrames < 4 && livstat.vel.len2() < 16 && (livstat.vel.len2() < 0.01f || !livstat.bOnStairs))
+						for (i = 0; i < 2; i++) if (sensors.pPoints[i].z - fCharZOffsetBase/*m_pCryCharInstance[k]->GetOffset().z*/ < -0.02f && sensors.flags & 1 << i)
+							m_fCharZOffsetTarget = sensors.pPoints[i].z - fCharZOffsetBase;
+					//m_pCryCharInstance[k]->SetOffset(m_pCryCharInstance[k]->GetOffset()+
+					//vectorf(0, 0, sensors.pPoints[i].z - m_pCryCharInstance[k]->GetOffset().z));// + 0.02f));
+					if (fabs_tpl(m_fCharZOffsetCur - m_fCharZOffsetTarget) < fOffsetSpeed * ctx.fFrameTime)
 						m_fCharZOffsetCur = m_fCharZOffsetTarget;
 					else
-						m_fCharZOffsetCur += fOffsetSpeed*sgnnz(m_fCharZOffsetTarget-m_fCharZOffsetCur)*ctx.fFrameTime;
-					m_pCryCharInstance[k]->SetOffset(Vec3(0,0,fCharZOffsetBase+m_fCharZOffsetCur));
-					for(i=0; i<2; i++)
+						m_fCharZOffsetCur += fOffsetSpeed * sgnnz(m_fCharZOffsetTarget - m_fCharZOffsetCur) * ctx.fFrameTime;
+					m_pCryCharInstance[k]->SetOffset(Vec3(0, 0, fCharZOffsetBase + m_fCharZOffsetCur));
+					for (i = 0; i < 2; i++)
 					{
 						feet[i].Set(IK_NOT_USED, IK_NOT_USED, sensors.pPoints[i].z - m_pCryCharInstance[k]->GetOffset().z);
-						if (feet[i].z > livdim.heightCollider*0.5f)
-							feet[i].z = livdim.heightCollider*0.5f;
-						if (sensors.flags&1<<i)
+						if (feet[i].z > livdim.heightCollider * 0.5f)
+							feet[i].z = livdim.heightCollider * 0.5f;
+						if (sensors.flags & 1 << i)
 							m_pCryCharInstance[k]->SetLimbIKGoal(LIMB_LEFT_LEG + i, feet[i], ikflags, 0, sensors.pNormals[i]);
 						else
 							m_pCryCharInstance[k]->SetLimbIKGoal(LIMB_LEFT_LEG + i);
 					}
-				} else 
+				}
+				else
 				{
 					m_pCryCharInstance[k]->SetLimbIKGoal(LIMB_LEFT_LEG);
 					m_pCryCharInstance[k]->SetLimbIKGoal(LIMB_RIGHT_LEG);
 				}
-			}	else 
+			}
+			else
 			{
 				m_pCryCharInstance[k]->SetLimbIKGoal(LIMB_LEFT_LEG);
 				m_pCryCharInstance[k]->SetLimbIKGoal(LIMB_RIGHT_LEG);
@@ -1881,25 +1888,25 @@ void CEntity::UpdateCharacterPhysicsAndIK( SEntityUpdateContext &ctx )
 #ifdef DEBUG_BONES_SYNC
 			if (m_pEntitySystem->m_bServer)
 #endif
-			m_pCryCharInstance[k]->UpdatePhysics(m_fScale);
-			m_pCryCharInstance[k]->SynchronizeWithPhysicalEntity(m_physic, m_center, GetRotationXYZ<float>(m_angles*(gf_PI/180.0f)));
+				m_pCryCharInstance[k]->UpdatePhysics(m_fScale);
+			m_pCryCharInstance[k]->SynchronizeWithPhysicalEntity(m_physic, m_center, GetRotationXYZ<float>(m_angles * (gf_PI / 180.0f)));
 
 			pe_params_sensors sensors;
-			if (!m_bIsBound && m_physic && m_pEntitySystem->m_pCharacterIK->GetIVal() && m_physic->GetType()==PE_LIVING) 
+			if (!m_bIsBound && m_physic && m_pEntitySystem->m_pCharacterIK->GetIVal() && m_physic->GetType() == PE_LIVING)
 			{
 				Vec3 feet[2], offset = m_pCryCharInstance[k]->GetOffset(); // generally should be transformed into local coordinates
-				offset.z = crymax(offset.z,0.0f); 
+				offset.z = crymax(offset.z, 0.0f);
 				sensors.nSensors = 2;
 				sensors.pOrigins = feet;
 				feet[0] = m_pCryCharInstance[k]->GetLimbEndPos(LIMB_LEFT_LEG);
 				feet[1] = m_pCryCharInstance[k]->GetLimbEndPos(LIMB_RIGHT_LEG) + offset;
-				if (!(feet[0].x*feet[0].x>=0) || !(feet[1].x*feet[1].x>=0))	// temporary validity check
-					sensors.nSensors = 0; 
+				if (!(feet[0].x * feet[0].x >= 0) || !(feet[1].x * feet[1].x >= 0))	// temporary validity check
+					sensors.nSensors = 0;
 				feet[0].z -= 0.4f;
 				feet[1].z -= 0.4f;
 				m_physic->SetParams(&sensors);
-			}	
-			else if (m_physic	&& m_physic->GetType()==PE_LIVING) 
+			}
+			else if (m_physic && m_physic->GetType() == PE_LIVING)
 			{
 				sensors.nSensors = 0;
 				m_physic->SetParams(&sensors);
@@ -1909,25 +1916,25 @@ void CEntity::UpdateCharacterPhysicsAndIK( SEntityUpdateContext &ctx )
 			if (m_pCryCharInstance[k]->IsCharacterActive())
 				//CalcWholeBBox(); [Petar] moved to Update
 				m_bRecalcBBox = true;
-		}	
+		}
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CEntity::UpdatePhysPlaceholders( SEntityUpdateContext &ctx )
+void CEntity::UpdatePhysPlaceholders(SEntityUpdateContext& ctx)
 {
 	ENTITY_PROFILER
 
-		if (m_vBoxMin.x>=m_vBoxMax.x || m_vBoxMin.y>=m_vBoxMax.y || m_vBoxMin.z>=m_vBoxMax.z)
+		if (m_vBoxMin.x >= m_vBoxMax.x || m_vBoxMin.y >= m_vBoxMax.y || m_vBoxMin.z >= m_vBoxMax.z)
 			return;
 
 	pe_params_bbox pbb;
 	pe_status_placeholder spc;
-	pbb.BBox[0] = m_vBoxMin+m_center;
-	pbb.BBox[1] = m_vBoxMax+m_center;
+	pbb.BBox[0] = m_vBoxMin + m_center;
+	pbb.BBox[1] = m_vBoxMax + m_center;
 
 	if (m_bUpdateCharacters)
 	{
-		for(int i=0;i<m_nMaxCharNum;i++) 
+		for (int i = 0; i < m_nMaxCharNum; i++)
 		{
 			if (m_pCharPhysPlaceholders[i])
 			{
@@ -1943,7 +1950,7 @@ void CEntity::UpdatePhysPlaceholders( SEntityUpdateContext &ctx )
 }
 
 
-void CEntity::UpdateAIObject( bool bEntityVisible )
+void CEntity::UpdateAIObject(bool bEntityVisible)
 {
 	// reflect changes in position or orientation to the AI object
 	ENTITY_PROFILER
@@ -1954,7 +1961,7 @@ void CEntity::UpdateAIObject( bool bEntityVisible )
 	if (!m_pEntitySystem->m_pUpdateAI->GetIVal())
 		return;
 
-	if ( m_pHeadBone )
+	if (m_pHeadBone)
 		//	if (m_pHeadBone && (m_pCryCharInstance[0]->GetFlags() & CS_FLAG_DRAW_MODEL))
 	{
 		Vec3d pos;
@@ -1962,15 +1969,15 @@ void CEntity::UpdateAIObject( bool bEntityVisible )
 		pos = m_pHeadBone->GetBonePosition();
 
 
-//		// if bound - in vehicle - force eyeheight to make it more noticable
-//		if(IsBound())
-//			m_pAIObject->SetEyeHeight(pos.z+1);
-//		else
+		//		// if bound - in vehicle - force eyeheight to make it more noticable
+		//		if(IsBound())
+		//			m_pAIObject->SetEyeHeight(pos.z+1);
+		//		else
 		m_pAIObject->SetEyeHeight(pos.z);
 
 		bool bWorldSpace = false;
 		if (m_pAIObject->GetProxy())
-			bWorldSpace = m_pAIObject->GetProxy()->CustomUpdate(pos,angles);
+			bWorldSpace = m_pAIObject->GetProxy()->CustomUpdate(pos, angles);
 
 		if (!bWorldSpace)
 		{
@@ -1982,28 +1989,28 @@ void CEntity::UpdateAIObject( bool bEntityVisible )
 			mat.SetIdentity();
 
 			//mat.RotateMatrix_fix(angles);
-			mat=Matrix44::CreateRotationZYX(-gf_DEGTORAD*angles)*mat; //NOTE: angles in radians and negated 
+			mat = Matrix44::CreateRotationZYX(-gf_DEGTORAD * angles) * mat; //NOTE: angles in radians and negated 
 
 			pos = mat.TransformPointOLD(pos);
 
-			m_pAIObject->SetPos(pos+m_center,false);
+			m_pAIObject->SetPos(pos + m_center, false);
 			m_pAIObject->SetAngles(m_angles);
 		}
 		else
 		{
-			m_pAIObject->SetPos(pos,false);
+			m_pAIObject->SetPos(pos, false);
 			m_pAIObject->SetAngles(m_angles);
 		}
 
 	}
 	else
 	{
-		m_pAIObject->SetPos(m_center, m_pAIObject->GetType()!=AIOBJECT_SNDSUPRESSOR && m_pAIObject->GetType()!=AIOBJECT_VEHICLE );
+		m_pAIObject->SetPos(m_center, m_pAIObject->GetType() != AIOBJECT_SNDSUPRESSOR && m_pAIObject->GetType() != AIOBJECT_VEHICLE);
 		m_pAIObject->SetAngles(m_angles);
 	}
 
 	if (bEntityVisible)
-		m_pAIObject->Event(AIEVENT_WAKEUP,0);
+		m_pAIObject->Event(AIEVENT_WAKEUP, 0);
 }
 
 IEntityCamera* CEntity::GetCamera() const
@@ -2019,7 +2026,7 @@ IEntityCamera* CEntity::GetCamera() const
 	return 0;
 }
 
-void CEntity::SetThirdPersonCameraMode(const Vec3d &center, const Vec3d &angles, int mode, float frameTime, float range, int dangleAmmount, IPhysicalEntity *physic)
+void CEntity::SetThirdPersonCameraMode(const Vec3d& center, const Vec3d& angles, int mode, float frameTime, float range, int dangleAmmount, IPhysicalEntity* physic)
 {
 	if (m_pCamera)
 	{
@@ -2056,12 +2063,12 @@ void CEntity::DestroyPhysics()
 		m_physicEnabled = false;
 		ClearFlags(ETY_FLAG_CALC_PHYSICS);
 		m_pISystem->GetIPhysicalWorld()->DestroyPhysicalEntity(m_physic);
-		m_physic=NULL;
+		m_physic = NULL;
 	}
 	if (m_physPlaceholder)
 	{
 		m_pISystem->GetIPhysicalWorld()->DestroyPhysicalEntity(m_physPlaceholder);
-		m_physPlaceholder=NULL;
+		m_physPlaceholder = NULL;
 	}
 	if (m_pPhysState)
 	{
@@ -2074,55 +2081,55 @@ void CEntity::DestroyPhysics()
 
 int CEntity::CreatePhysicalEntityCallback(int iForeignFlags)
 {
-	if (iForeignFlags & 1<<15)
+	if (iForeignFlags & 1 << 15)
 	{
-		int iPos = iForeignFlags>>12 & 7;
-		PhysicalizeCharacter(iPos, m_charPhysData[iPos].mass,m_charPhysData[iPos].surface_idx,m_charPhysData[iPos].stiffness_scale, true);
-		SendScriptEvent(ScriptEvent_PhysicalizeOnDemand,0);
+		int iPos = iForeignFlags >> 12 & 7;
+		PhysicalizeCharacter(iPos, m_charPhysData[iPos].mass, m_charPhysData[iPos].surface_idx, m_charPhysData[iPos].stiffness_scale, true);
+		SendScriptEvent(ScriptEvent_PhysicalizeOnDemand, 0);
 	}
 	else switch (m_iPhysType)
 	{
-		case PHYS_RIGID: 
-			{
-				CreateRigidBody(m_PhysData.RigidBody.type,m_PhysData.RigidBody.density,m_PhysData.RigidBody.mass,
-					m_PhysData.RigidBody.surface_idx,0,m_PhysData.RigidBody.slot,true);
-				SendScriptEvent(ScriptEvent_PhysicalizeOnDemand,0);
-				if (m_pPhysState && m_physic)
-				{
-					CStream stm(m_iPhysStateSize,m_pPhysState);
-					m_physic->SetStateFromSnapshot(stm);
-					m_physic->PostSetStateFromSnapshot();
-					delete[] m_pPhysState; m_pPhysState = 0;
-				}
-			}
-			break;
+	case PHYS_RIGID:
+	{
+		CreateRigidBody(m_PhysData.RigidBody.type, m_PhysData.RigidBody.density, m_PhysData.RigidBody.mass,
+			m_PhysData.RigidBody.surface_idx, 0, m_PhysData.RigidBody.slot, true);
+		SendScriptEvent(ScriptEvent_PhysicalizeOnDemand, 0);
+		if (m_pPhysState && m_physic)
+		{
+			CStream stm(m_iPhysStateSize, m_pPhysState);
+			m_physic->SetStateFromSnapshot(stm);
+			m_physic->PostSetStateFromSnapshot();
+			delete[] m_pPhysState; m_pPhysState = 0;
+		}
+	}
+	break;
 
-		case PHYS_STATIC:
-			CreateStaticEntity(0,m_PhysData.Static.surface_idx,m_PhysData.Static.slot,true);
+	case PHYS_STATIC:
+		CreateStaticEntity(0, m_PhysData.Static.surface_idx, m_PhysData.Static.slot, true);
 	}
 	SetUpdateVisLevel(m_eUpdateVisLevel);
 	return 1;
 }
 
-int CEntity::DestroyPhysicalEntityCallback(IPhysicalEntity *pent)
+int CEntity::DestroyPhysicalEntityCallback(IPhysicalEntity* pent)
 {
 	pe_params_foreign_data pfd;
 	pent->GetParams(&pfd);
-	if (pfd.iForeignFlags & 1<<15)
-		m_pCryCharInstance[pfd.iForeignFlags>>12 & 7]->DestroyCharacterPhysics();
-	else 
+	if (pfd.iForeignFlags & 1 << 15)
+		m_pCryCharInstance[pfd.iForeignFlags >> 12 & 7]->DestroyCharacterPhysics();
+	else
 	{
-		if (m_iPhysType==PHYS_RIGID)
+		if (m_iPhysType == PHYS_RIGID)
 		{
 			static CStream stm;
 			stm.SetSize(0);
 			m_physic->GetStateSnapshot(stm);
-			m_iPhysStateSize = ((stm.GetSize()-1)>>3)+1;
-			if (m_pPhysState)	{
+			m_iPhysStateSize = ((stm.GetSize() - 1) >> 3) + 1;
+			if (m_pPhysState) {
 				delete[] m_pPhysState; m_pPhysState = 0;
 			}
 			if (m_iPhysStateSize)
-				memcpy(m_pPhysState = new unsigned char[m_iPhysStateSize],stm.GetPtr(),m_iPhysStateSize);
+				memcpy(m_pPhysState = new unsigned char[m_iPhysStateSize], stm.GetPtr(), m_iPhysStateSize);
 			ClearFlags(ETY_FLAG_CALC_PHYSICS);
 		}
 		m_physic = 0;
@@ -2138,24 +2145,24 @@ void CEntity::EnablePhysics(bool enable)
 		m_pISystem->GetIPhysicalWorld()->DestroyPhysicalEntity(m_physPlaceholder);
 		m_physPlaceholder = 0; m_physic = 0;
 		m_physicEnabled = false;
-		if (m_pPhysState)	{
+		if (m_pPhysState) {
 			delete[] m_pPhysState; m_pPhysState = 0;
 		}
 		return;
 	}
-	else if (enable && !m_physic && m_iPhysType!=PHYS_NONE)
+	else if (enable && !m_physic && m_iPhysType != PHYS_NONE)
 	{
 		switch (m_iPhysType)
 		{
-		case PHYS_RIGID: 
-			CreateRigidBody(m_PhysData.RigidBody.type,m_PhysData.RigidBody.density,m_PhysData.RigidBody.mass,
-				m_PhysData.RigidBody.surface_idx,0,m_PhysData.RigidBody.slot);
+		case PHYS_RIGID:
+			CreateRigidBody(m_PhysData.RigidBody.type, m_PhysData.RigidBody.density, m_PhysData.RigidBody.mass,
+				m_PhysData.RigidBody.surface_idx, 0, m_PhysData.RigidBody.slot);
 			break;
 		case PHYS_STATIC:
-			CreateStaticEntity(0,m_PhysData.Static.surface_idx,m_PhysData.Static.slot);
+			CreateStaticEntity(0, m_PhysData.Static.surface_idx, m_PhysData.Static.slot);
 		}
 		m_physicEnabled = true;
-	} 
+	}
 	else
 	{
 		if (!m_physic)
@@ -2167,7 +2174,7 @@ void CEntity::EnablePhysics(bool enable)
 			SetFlags(ETY_FLAG_CALC_PHYSICS);
 			m_pISystem->GetIPhysicalWorld()->DestroyPhysicalEntity(m_physic, 2);
 		}
-		else 
+		else
 		{
 			m_physicEnabled = false;
 			ClearFlags(ETY_FLAG_CALC_PHYSICS);
@@ -2177,57 +2184,57 @@ void CEntity::EnablePhysics(bool enable)
 }
 
 
-void CEntity::AddImpulse(int ipart, Vec3d pos, Vec3d impulse,bool bPos,float fAuxScale)
+void CEntity::AddImpulse(int ipart, Vec3d pos, Vec3d impulse, bool bPos, float fAuxScale)
 {
 #ifndef _ISNOTFARCRY
-	IXGame *pXGame = (IXGame*) GetISystem()->GetIGame();
+	IXGame* pXGame = (IXGame*)GetISystem()->GetIGame();
 #endif
 
-	IPhysicalEntity *physic = GetPhysics();
-	if (physic && (!m_bIsADeadBody 
+	IPhysicalEntity* physic = GetPhysics();
+	if (physic && (!m_bIsADeadBody
 #ifndef GERMAN_GORE_CHECK
-		|| (m_pEntitySystem->m_pHitDeadBodies->GetIVal() 
-	#ifndef _ISNOTFARCRY
-		&& pXGame->GoreOn()
-	#endif
-		)
+		|| (m_pEntitySystem->m_pHitDeadBodies->GetIVal()
+#ifndef _ISNOTFARCRY
+			&& pXGame->GoreOn()
+#endif
+			)
 #endif
 		))
 	{
 		Vec3d mod_impulse = impulse;
-		if (!(physic->GetStatus(&pe_status_nparts())>5 && physic->GetType()==PE_ARTICULATED))
+		if (!(physic->GetStatus(&pe_status_nparts()) > 5 && physic->GetType() == PE_ARTICULATED))
 		{	// don't scale impulse for complex articulated entities
 			pe_status_dynamics sd;
 			float minVel = m_pEntitySystem->m_pMinImpulseVel->GetFVal();
-			if (minVel>0 && physic->GetStatus(&sd) && mod_impulse*mod_impulse<sqr(sd.mass*minVel))
+			if (minVel > 0 && physic->GetStatus(&sd) && mod_impulse * mod_impulse < sqr(sd.mass * minVel))
 			{
 				float fScale = m_pEntitySystem->m_pImpulseScale->GetFVal();
-				if (fScale>0)
+				if (fScale > 0)
 					mod_impulse *= fScale;
-				else if (sd.mass<m_pEntitySystem->m_pMaxImpulseAdjMass->GetFVal())
-					mod_impulse = mod_impulse.normalized()*(minVel*sd.mass);
+				else if (sd.mass < m_pEntitySystem->m_pMaxImpulseAdjMass->GetFVal())
+					mod_impulse = mod_impulse.normalized() * (minVel * sd.mass);
 			}
 		}
 		pe_action_impulse ai;
 		ai.partid = ipart;
-		if(bPos)
+		if (bPos)
 			ai.point = pos;
 		ai.impulse = mod_impulse;
 		physic->Action(&ai);
 	}
 
-	if (m_bVisible && (!m_physic || m_physic->GetType()!=PE_LIVING 
+	if (m_bVisible && (!m_physic || m_physic->GetType() != PE_LIVING
 #ifndef GERMAN_GORE_CHECK
-		|| (m_pEntitySystem->m_pHitCharacters->GetIVal() 
-	#ifndef _ISNOTFARCRY
-		&& pXGame->GoreOn()
-	#endif
-		)
+		|| (m_pEntitySystem->m_pHitCharacters->GetIVal()
+#ifndef _ISNOTFARCRY
+			&& pXGame->GoreOn()
+#endif
+			)
 #endif
 		))
 		if (bPos) for (int i = 0; i < MAX_ANIMATED_MODELS; i++)
 			if (m_pCryCharInstance[i])
-				m_pCryCharInstance[i]->AddImpact(ipart, pos, impulse*fAuxScale);
+				m_pCryCharInstance[i]->AddImpact(ipart, pos, impulse * fAuxScale);
 }
 
 void CEntity::SetRegisterInSectors(bool needToRegister)
@@ -2252,21 +2259,21 @@ void CEntity::SetRegisterInSectors(bool needToRegister)
 	}
 }
 
-void CEntity::GetEntityDesc(CEntityDesc &desc) const
+void CEntity::GetEntityDesc(CEntityDesc& desc) const
 {
 	desc.id = m_nID;
 	desc.ClassId = m_ClassId;
 	desc.name = m_name.c_str();
 	desc.netPresence = m_netPresence;
-	desc.angles=GetAngles();
-	desc.pos=GetPos();
+	desc.angles = GetAngles();
+	desc.pos = GetPos();
 	desc.scale = m_fScale;
-	if(m_pContainer)
+	if (m_pContainer)
 		m_pContainer->GetEntityDesc(desc);
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CEntity::GetHelperPosition(const char *helper, Vec3d &vPos, bool objectspace)
+void CEntity::GetHelperPosition(const char* helper, Vec3d& vPos, bool objectspace)
 {
 	if (m_objects.empty())
 		return;
@@ -2276,32 +2283,32 @@ void CEntity::GetHelperPosition(const char *helper, Vec3d &vPos, bool objectspac
 	bool bDone = false;
 	for (oi = m_objects.begin(); !bDone && oi != m_objects.end(); oi++)
 	{
-		CEntityObject eo =(*oi);
+		CEntityObject eo = (*oi);
 		if (!eo.object)
 			continue;
 
-		vPos=eo.object->GetHelperPos(helper); 
+		vPos = eo.object->GetHelperPos(helper);
 
-		bDone = !IsEquivalent(vPos,Vec3d(0, 0, 0));
+		bDone = !IsEquivalent(vPos, Vec3d(0, 0, 0));
 	}
 
 	// the character might also contain a helper we'd like
 	if (!bDone)
 	{
-		ICryCharInstance *character = GetCharInterface()->GetCharacter(PLAYER_MODEL_IDX);	
+		ICryCharInstance* character = GetCharInterface()->GetCharacter(PLAYER_MODEL_IDX);
 
 		if (character)
 			vPos = character->GetHelperPos(helper);
 
-		bDone = !IsEquivalent(vPos,Vec3d(0, 0, 0));
+		bDone = !IsEquivalent(vPos, Vec3d(0, 0, 0));
 	}
 
 	// found...
-	if (bDone && !objectspace)		
+	if (bDone && !objectspace)
 	{
 		//OPTIMISED_BY_IVO  
-		Matrix44 mtx=Matrix34::CreateRotationXYZ( Deg2Rad(m_angles),m_center);
-		mtx=GetTransposed44(mtx);	//TODO: remove this after E3 and use Matrix34 instead of Matrix44
+		Matrix44 mtx = Matrix34::CreateRotationXYZ(Deg2Rad(m_angles), m_center);
+		mtx = GetTransposed44(mtx);	//TODO: remove this after E3 and use Matrix34 instead of Matrix44
 
 		vPos = mtx.TransformPointOLD(vPos);
 	}
@@ -2318,7 +2325,7 @@ bool CEntity::IsObjectLoaded(unsigned int slot)
 	return false;
 }
 
-bool CEntity::SetEntityObject(unsigned int slot, const CEntityObject &object)
+bool CEntity::SetEntityObject(unsigned int slot, const CEntityObject& object)
 {
 	if (slot < m_objects.size())
 	{
@@ -2338,7 +2345,7 @@ bool CEntity::SetEntityObject(unsigned int slot, const CEntityObject &object)
 	return false;
 }
 
-bool CEntity::GetEntityObject(unsigned int slot, CEntityObject &object)
+bool CEntity::GetEntityObject(unsigned int slot, CEntityObject& object)
 {
 	if (slot < m_objects.size())
 	{
@@ -2352,11 +2359,11 @@ bool CEntity::GetEntityObject(unsigned int slot, CEntityObject &object)
 void CEntity::RegisterInSector()
 {
 	// register this entity for rendering
-	if (!m_registeredInSector && 
-		GetRadius() && 
-		!IsHidden() && 
-		m_pEntityRenderState /*&& 
-												 IsEntityHasSomethingToRender()*/) 
+	if (!m_registeredInSector &&
+		GetRadius() &&
+		!IsHidden() &&
+		m_pEntityRenderState /*&&
+												 IsEntityHasSomethingToRender()*/)
 	{
 		m_pISystem->GetI3DEngine()->RegisterEntity(this);
 		m_registeredInSector = true;
@@ -2384,22 +2391,22 @@ void CEntity::ForceRegisterInSectors()
 
 
 // 
-void CEntity::SinkRebind(IEntitySystemSink *pSink)
+void CEntity::SinkRebind(IEntitySystemSink* pSink)
 {
-	for( BINDLIST::iterator iCurBind=m_lstBindings.begin(); iCurBind!=m_lstBindings.end(); ++iCurBind)
+	for (BINDLIST::iterator iCurBind = m_lstBindings.begin(); iCurBind != m_lstBindings.end(); ++iCurBind)
 	{
-	CEntity *pChild =(CEntity *) m_pEntitySystem->GetEntity((*iCurBind));	
-		if(pChild)
-			pSink->OnBind(GetId(),(*iCurBind),pChild->m_cBind);
+		CEntity* pChild = (CEntity*)m_pEntitySystem->GetEntity((*iCurBind));
+		if (pChild)
+			pSink->OnBind(GetId(), (*iCurBind), pChild->m_cBind);
 	}
 }
 
 // bSetPos -- needed to be able to set position before OnBind is called (it can set some other position)
 // 
-void CEntity::Bind(EntityId id,unsigned char cBind, const bool bClientOnly, const bool bSetPos ) 
+void CEntity::Bind(EntityId id, unsigned char cBind, const bool bClientOnly, const bool bSetPos)
 {
 	// safe upcast since we know what the entity system holds
-	CEntity *pEntity =(CEntity *) m_pEntitySystem->GetEntity(id);
+	CEntity* pEntity = (CEntity*)m_pEntitySystem->GetEntity(id);
 	if (!pEntity)
 		return;
 
@@ -2413,22 +2420,22 @@ void CEntity::Bind(EntityId id,unsigned char cBind, const bool bClientOnly, cons
 		pEntity->m_bForceBindCalculation = 0;
 		// [kirill] makes problem for network
 		// so just set position after you bind something
-		if(bSetPos)
+		if (bSetPos)
 			pEntity->m_realcenter = pEntity->m_center;
 		pEntity->m_realangles = pEntity->m_angles;
 		pEntity->m_idBoundTo = GetId();
 		pEntity->m_cBind = cBind;
 
-		if(!bClientOnly)																				// to prevent circular loop between client and server
-			m_pEntitySystem->OnBind(GetId(),id,cBind);
+		if (!bClientOnly)																				// to prevent circular loop between client and server
+			m_pEntitySystem->OnBind(GetId(), id, cBind);
 
-		OnBind( pEntity, cBind); 
+		OnBind(pEntity, cBind);
 	}
 }
 
-void CEntity::Unbind(EntityId id,unsigned char cBind, const bool bClientOnly)
+void CEntity::Unbind(EntityId id, unsigned char cBind, const bool bClientOnly)
 {
-	CEntity *pEntity =(CEntity *) m_pEntitySystem->GetEntity(id);
+	CEntity* pEntity = (CEntity*)m_pEntitySystem->GetEntity(id);
 
 	//if (std::find(m_lstBindings.begin(), m_lstBindings.end(), pEntity) != m_lstBindings.end())
 	if (std::find(m_lstBindings.begin(), m_lstBindings.end(), id) != m_lstBindings.end())
@@ -2437,11 +2444,11 @@ void CEntity::Unbind(EntityId id,unsigned char cBind, const bool bClientOnly)
 		if (pEntity)
 		{
 			pEntity->m_bIsBound = false;
-	
-			if(!bClientOnly)																			// to prevent circular loop between client and server
-				m_pEntitySystem->OnUnbind(GetId(),id,cBind);
 
-			OnUnBind( pEntity, cBind); 
+			if (!bClientOnly)																			// to prevent circular loop between client and server
+				m_pEntitySystem->OnUnbind(GetId(), id, cBind);
+
+			OnUnBind(pEntity, cBind);
 		}
 	}
 	m_bUpdateBinds = !m_lstBindings.empty();
@@ -2449,15 +2456,15 @@ void CEntity::Unbind(EntityId id,unsigned char cBind, const bool bClientOnly)
 
 //////////////////////////////////////////////////////////////////////////
 void CEntity::ResolveCollision()
-{	
+{
 	ENTITY_PROFILER
 
 		if (!m_pEntitySystem->m_pUpdateCollision->GetIVal())
 			return;
 
 	// resolve collisions
-	IPhysicalWorld *pWorld = m_pISystem->GetIPhysicalWorld();
-	IPhysicalEntity **ppColliders;
+	IPhysicalWorld* pWorld = m_pISystem->GetIPhysicalWorld();
+	IPhysicalEntity** ppColliders;
 	int cnt = 0;
 
 	Vec3d mins, maxs;
@@ -2469,38 +2476,38 @@ void CEntity::ResolveCollision()
 		return;
 	}
 
-	cnt = pWorld->GetEntitiesInBox(mins, maxs, ppColliders, 14 );
+	cnt = pWorld->GetEntitiesInBox(mins, maxs, ppColliders, 14);
 	if (cnt > 0)
 	{
 		static std::vector<IPhysicalEntity*> s_colliders;
 		s_colliders.resize(cnt);
-		memcpy( &s_colliders[0],ppColliders,cnt*sizeof(IPhysicalEntity*) );
+		memcpy(&s_colliders[0], ppColliders, cnt * sizeof(IPhysicalEntity*));
 
 		// execute on collide for all of the entities
 		for (int i = 0; i < cnt; i++)
 		{
-			CEntity *pEntity = (CEntity *)s_colliders[i]->GetForeignData();
+			CEntity* pEntity = (CEntity*)s_colliders[i]->GetForeignData();
 			//IStatObj *pStatObj = (IStatObj *) ppColliders[i]->GetForeignData(1);
 
-			if (pEntity) 
+			if (pEntity)
 			{
 				if (pEntity->IsGarbage())
 					continue;
 
-				if (pEntity->GetId() == m_nID) 
+				if (pEntity->GetId() == m_nID)
 					continue;
 
 				if (!m_pEntitySystem->m_pUpdateCollisionScript->GetIVal())
 					continue;
 
-				CallStateFunction( ScriptState_OnContact,pEntity->GetScriptObject() );
+				CallStateFunction(ScriptState_OnContact, pEntity->GetScriptObject());
 			}
 		}
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
-IStatObj *CEntity::GetIStatObj(unsigned int pos)
+IStatObj* CEntity::GetIStatObj(unsigned int pos)
 {
 	CEntityObject object;
 
@@ -2514,10 +2521,10 @@ IStatObj *CEntity::GetIStatObj(unsigned int pos)
 }
 
 
-void CEntity::SendScriptEvent(enum EScriptEventId Event, IScriptObject *pParamters, bool *pRet)
+void CEntity::SendScriptEvent(enum EScriptEventId Event, IScriptObject* pParamters, bool* pRet)
 {
 	// Server side always first.
-	bool bClientReturn=true;
+	bool bClientReturn = true;
 	if (m_pServerState && m_pServerState->pFunction[ScriptState_OnEvent])
 	{
 		m_pScriptSystem->BeginCall(m_pServerState->pFunction[ScriptState_OnEvent]);
@@ -2527,13 +2534,13 @@ void CEntity::SendScriptEvent(enum EScriptEventId Event, IScriptObject *pParamte
 			m_pScriptSystem->PushFuncParam(pParamters);
 		else
 			m_pScriptSystem->PushFuncParam(false);
-		if (pRet){
+		if (pRet) {
 			m_pScriptSystem->EndCall(*pRet);
 		}
 		else
 			m_pScriptSystem->EndCall();
 		// Only use return value if we ain't got a server event
-		bClientReturn=false;
+		bClientReturn = false;
 	}
 	// Client side always second.
 	if (m_pClientState && m_pClientState->pFunction[ScriptState_OnEvent])
@@ -2554,24 +2561,24 @@ void CEntity::SendScriptEvent(enum EScriptEventId Event, IScriptObject *pParamte
 	}
 }
 
-void CEntity::SendScriptEvent(enum EScriptEventId Event, const char *str, bool *pRet )
+void CEntity::SendScriptEvent(enum EScriptEventId Event, const char* str, bool* pRet)
 {
 	// Server side always first.
-	bool bClientReturn=true;
+	bool bClientReturn = true;
 	if (m_pServerState && m_pServerState->pFunction[ScriptState_OnEvent])
 	{
 		m_pScriptSystem->BeginCall(m_pServerState->pFunction[ScriptState_OnEvent]);
 		m_pScriptSystem->PushFuncParam(m_pScriptObject);
 		m_pScriptSystem->PushFuncParam((int)Event);
 		if (str)
-			m_pScriptSystem->PushFuncParam( str );
+			m_pScriptSystem->PushFuncParam(str);
 		else
-			m_pScriptSystem->PushFuncParam( "" );
+			m_pScriptSystem->PushFuncParam("");
 		if (pRet)
 			m_pScriptSystem->EndCall(*pRet);
 		else
 			m_pScriptSystem->EndCall();
-		bool bClientReturn=false;
+		bool bClientReturn = false;
 	}
 	// Client side always second.
 	if (m_pClientState && m_pClientState->pFunction[ScriptState_OnEvent])
@@ -2580,7 +2587,7 @@ void CEntity::SendScriptEvent(enum EScriptEventId Event, const char *str, bool *
 		m_pScriptSystem->PushFuncParam(m_pScriptObject);
 		m_pScriptSystem->PushFuncParam((int)Event);
 		if (str)
-			m_pScriptSystem->PushFuncParam( str );
+			m_pScriptSystem->PushFuncParam(str);
 		else
 			m_pScriptSystem->PushFuncParam(false);
 
@@ -2592,10 +2599,10 @@ void CEntity::SendScriptEvent(enum EScriptEventId Event, const char *str, bool *
 }
 
 
-void CEntity::SendScriptEvent(enum EScriptEventId Event, int nParam, bool *pRet )
+void CEntity::SendScriptEvent(enum EScriptEventId Event, int nParam, bool* pRet)
 {
 	// Server side always first.
-	bool bClientReturn=true;
+	bool bClientReturn = true;
 	if (m_pServerState && m_pServerState->pFunction[ScriptState_OnEvent])
 	{
 		m_pScriptSystem->BeginCall(m_pServerState->pFunction[ScriptState_OnEvent]);
@@ -2615,14 +2622,14 @@ void CEntity::SendScriptEvent(enum EScriptEventId Event, int nParam, bool *pRet 
 		m_pScriptSystem->PushFuncParam(m_pScriptObject);
 		m_pScriptSystem->PushFuncParam((int)Event);
 		m_pScriptSystem->PushFuncParam(nParam);
-		if (pRet&&bClientReturn)
+		if (pRet && bClientReturn)
 			m_pScriptSystem->EndCall(*pRet);
 		else
 			m_pScriptSystem->EndCall();
 	}
 }
 
-void CEntity::RotateTo(const Vec3d &angles, bool bUpdatePhysics)
+void CEntity::RotateTo(const Vec3d& angles, bool bUpdatePhysics)
 {
 	//	Vec3d diff;
 	//	diff = angles - m_angles;
@@ -2634,86 +2641,86 @@ void CEntity::RotateTo(const Vec3d &angles, bool bUpdatePhysics)
 	if (fabs(diff.x) < ANGLES_EPSILON && fabs(diff.y) < ANGLES_EPSILON && fabs(diff.z) < ANGLES_EPSILON)
 		return;
 
-	m_angles += diff;  
+	m_angles += diff;
 	m_angles.Snap360();
 	//	SetAngles( angles );
 	//	SetAngles(m_angles + diff);
 
-	if (bUpdatePhysics && m_physic &&(m_flags & ETY_FLAG_CALC_PHYSICS))
+	if (bUpdatePhysics && m_physic && (m_flags & ETY_FLAG_CALC_PHYSICS))
 	{
-		SetPhysAngles( m_angles );
+		SetPhysAngles(m_angles);
 		//		pe_params_pos pp;
 		//		pp.q = quaternionf(m_angles.z*(PI/180.0f),m_angles.y*(PI/180.0f),m_angles.x*(PI/180.0f));
 		//		m_physic->SetParams(&pp);
 	}
 }
 
-IAIObject * CEntity::GetAI()
+IAIObject* CEntity::GetAI()
 {
 	if (m_pAIObject)
 		return m_pAIObject;
-	return 0; 
+	return 0;
 }
 
-void CEntity::LoadBreakableObject(const char *pFileName)
+void CEntity::LoadBreakableObject(const char* pFileName)
 {
-std::vector < CEntityObject>::iterator it;
-	for (it = m_objects.begin(); it < m_objects.end(); it++) 
+	std::vector < CEntityObject>::iterator it;
+	for (it = m_objects.begin(); it < m_objects.end(); it++)
 	{
-		if ((* it).object)
-			m_pISystem->GetI3DEngine()->ReleaseObject((* it).object);
+		if ((*it).object)
+			m_pISystem->GetI3DEngine()->ReleaseObject((*it).object);
 	}
 	m_objects.clear();
 
 	{ // load unbreaked (initial) version
-		IStatObj * cobj;
-		cobj = m_pISystem->GetI3DEngine()->MakeObject(pFileName,"unbreaked");
-		if (!cobj)	
+		IStatObj* cobj;
+		cobj = m_pISystem->GetI3DEngine()->MakeObject(pFileName, "unbreaked");
+		if (!cobj)
 			m_pISystem->GetILog()->Log("CEntity::LoadBreakableObject: Could not load unbreaked version of object %s", pFileName);
 		else
 		{
 			CEntityObject ceo;
 			ceo.object = cobj;
-			ceo.pos = Vec3d(0,0,0);
+			ceo.pos = Vec3d(0, 0, 0);
 			m_objects.push_back(ceo);
 		}
 	}
 
 	// load broken version
 	{
-		IStatObj * cobj;
-		cobj = m_pISystem->GetI3DEngine()->MakeObject(pFileName,"broken");
-		if (!cobj)	
+		IStatObj* cobj;
+		cobj = m_pISystem->GetI3DEngine()->MakeObject(pFileName, "broken");
+		if (!cobj)
 			m_pISystem->GetILog()->Log("CEntity::LoadBreakableObject: Could not load unbreaked version of object %s", pFileName);
 		else
 		{
 			CEntityObject ceo;
 			ceo.object = cobj;
-			ceo.pos = Vec3d(0,0,0);
+			ceo.pos = Vec3d(0, 0, 0);
 			m_objects.push_back(ceo);
 		}
 	}
 
 	// load pieces of object
 	char geomname[50];
-	int i=1;
+	int i = 1;
 
-	sprintf(geomname,"piece%02d",i);
-	IStatObj * cobj;
-	while (cobj = m_pISystem->GetI3DEngine()->MakeObject(pFileName,geomname))	
+	sprintf(geomname, "piece%02d", i);
+	IStatObj* cobj;
+	while (cobj = m_pISystem->GetI3DEngine()->MakeObject(pFileName, geomname))
 	{
 		if (cobj->IsDefaultObject())
 			break;
 
 		CEntityObject ceo;
 		ceo.object = cobj;
-		ceo.pos = Vec3d(0,0,0);
+		ceo.pos = Vec3d(0, 0, 0);
 		m_objects.push_back(ceo);
 		i++;
-		sprintf(geomname,"piece%02d",i);
+		sprintf(geomname, "piece%02d", i);
 	}
 
-	if (i==1)	
+	if (i == 1)
 		m_pISystem->GetILog()->Log("CEntity::LoadBreakableObject: Could not load pieces of breakable object %s", pFileName);
 
 	m_pISystem->GetI3DEngine()->FreeEntityRenderState(this);
@@ -2722,40 +2729,40 @@ std::vector < CEntityObject>::iterator it;
 
 	//UnregisterInSector();
 	// leave this call... it will cause the geometry to be properly registered
-	CalcWholeBBox(); 
+	CalcWholeBBox();
 
 	//	RegisterInSector();
 }
 
 
-void CEntity::OnStartAnimation(const char *sAnimation)
+void CEntity::OnStartAnimation(const char* sAnimation)
 {
 	ENTITY_PROFILER
 		//char sTemp[200];
 		//sprintf(sTemp,"OnStartAnimation(%s)\n",sAnimation);
 		//::OutputDebugString(sTemp);
 
-		SendScriptEvent( ScriptEvent_StartAnimation,sAnimation );
+		SendScriptEvent(ScriptEvent_StartAnimation, sAnimation);
 }
 
-void CEntity::OnAnimationEvent(const char *sAnimation,AnimSinkEventData UserData)
+void CEntity::OnAnimationEvent(const char* sAnimation, AnimSinkEventData UserData)
 {
 	ENTITY_PROFILER
 
-	USER_DATA udUserData=(USER_DATA)UserData.p;
+		USER_DATA udUserData = (USER_DATA)UserData.p;
 	//_SmartScriptObject pObject(m_pScriptSystem);
-	m_pAnimationEventParams->SetValue("animation",sAnimation);
+	m_pAnimationEventParams->SetValue("animation", sAnimation);
 
-//	if(udUserData>0)
+	//	if(udUserData>0)
 	m_pAnimationEventParams->SetToNull("number");
 	m_pAnimationEventParams->SetToNull("userdata");
 	if (UserData.n == svtUserData)
 	{
-		m_pAnimationEventParams->SetValue("userdata",udUserData);
+		m_pAnimationEventParams->SetValue("userdata", udUserData);
 	}
 	else if (UserData.n == svtNumber)
 	{
-		m_pAnimationEventParams->SetValue("number", (int) udUserData);
+		m_pAnimationEventParams->SetValue("number", (int)udUserData);
 	}
 	// add other types as necessary
 
@@ -2766,31 +2773,31 @@ void CEntity::OnAnimationEvent(const char *sAnimation,AnimSinkEventData UserData
 		m_pAnimationEventParams->SetToNull("userdata");
 */
 
-	SendScriptEvent( ScriptEvent_AnimationKey,m_pAnimationEventParams );
+	SendScriptEvent(ScriptEvent_AnimationKey, m_pAnimationEventParams);
 }
 
-void CEntity::OnEndAnimation(const char *sAnimation)
+void CEntity::OnEndAnimation(const char* sAnimation)
 {
 	ENTITY_PROFILER
-	//char sTemp[200];
-	//sprintf(sTemp,"OnEndAnimation(%s)\n",sAnimation);
-	//OutputDebugString(sTemp);
+		//char sTemp[200];
+		//sprintf(sTemp,"OnEndAnimation(%s)\n",sAnimation);
+		//OutputDebugString(sTemp);
 
-	SendScriptEvent( ScriptEvent_EndAnimation,sAnimation );
+		SendScriptEvent(ScriptEvent_EndAnimation, sAnimation);
 }
 
 //////////////////////////////////////////////////////////////////////////
 // Calls Event_##sEvent function from script.
-void CEntity::CallEventHandler( const char *sEvent )
+void CEntity::CallEventHandler(const char* sEvent)
 {
 	if (m_pScriptObject)
 	{
 		char funcName[1024];
-		strcpy( funcName,"Event_" );
-		strcat( funcName,sEvent );
+		strcpy(funcName, "Event_");
+		strcat(funcName, sEvent);
 
 		HSCRIPTFUNCTION pEventFunc = 0;
-		if (m_pScriptObject->GetValue( funcName,pEventFunc ))
+		if (m_pScriptObject->GetValue(funcName, pEventFunc))
 		{
 			m_pScriptSystem->BeginCall(pEventFunc);
 			// Pass itself as a sender.
@@ -2811,18 +2818,18 @@ const char* CEntity::GetState()
 int CEntity::GetStateIdx()
 {
 	EntityStateMapItor itor;
-	itor=m_mapStates.find(m_sStateName);
-	if(itor!=m_mapStates.end())
+	itor = m_mapStates.find(m_sStateName);
+	if (itor != m_mapStates.end())
 		return itor->second;
 	return 0;
 }
 //////////////////////////////////////////////////////////////////////////
-bool CEntity::IsInState( int nState )
+bool CEntity::IsInState(int nState)
 {
-	EntityStateMapItor itor=m_mapStates.begin();
-	while(itor!=m_mapStates.end())
+	EntityStateMapItor itor = m_mapStates.begin();
+	while (itor != m_mapStates.end())
 	{
-		if(itor->second==nState)
+		if (itor->second == nState)
 		{
 			return true;
 		}
@@ -2831,12 +2838,12 @@ bool CEntity::IsInState( int nState )
 	return false;
 }
 //////////////////////////////////////////////////////////////////////////
-bool CEntity::GotoState( int nState )
+bool CEntity::GotoState(int nState)
 {
-	EntityStateMapItor itor=m_mapStates.begin();
-	while(itor!=m_mapStates.end())
+	EntityStateMapItor itor = m_mapStates.begin();
+	while (itor != m_mapStates.end())
 	{
-		if(itor->second==nState)
+		if (itor->second == nState)
 		{
 			GotoState(itor->first.c_str());
 			return true;
@@ -2846,26 +2853,26 @@ bool CEntity::GotoState( int nState )
 	return false;
 }
 //////////////////////////////////////////////////////////////////////////
-bool CEntity::GotoState( const char *sState )
+bool CEntity::GotoState(const char* sState)
 {
 	if (!m_pScriptObject)
 		return false;
 
 	// State name is case sensetive.
-	if (m_sStateName==sState)
+	if (m_sStateName == sState)
 	{
 		// Entity is already in this state, so ignore this call.
 		return true;
 	}
 
-	_SmartScriptObject pServerTable(m_pScriptSystem,true);
-	_SmartScriptObject pClientTable(m_pScriptSystem,true);
+	_SmartScriptObject pServerTable(m_pScriptSystem, true);
+	_SmartScriptObject pClientTable(m_pScriptSystem, true);
 
 	// Get Server table if exist.
-	bool bServerTable = m_pScriptObject->GetValue( SCRIPT_SERVER_STATE,pServerTable );
+	bool bServerTable = m_pScriptObject->GetValue(SCRIPT_SERVER_STATE, pServerTable);
 
 	// Get Client table if exist.
-	bool bClientTable = m_pScriptObject->GetValue( SCRIPT_CLIENT_STATE,pClientTable );
+	bool bClientTable = m_pScriptObject->GetValue(SCRIPT_CLIENT_STATE, pClientTable);
 
 	SScriptState newServerState;
 	SScriptState newClientState;
@@ -2881,11 +2888,11 @@ bool CEntity::GotoState( const char *sState )
 		// Check for table in Server part.
 		if (m_pServerState && bServerTable)
 		{
-			_SmartScriptObject pStateTable(m_pScriptSystem,true);
-			if (pServerTable->GetValue( sState,pStateTable ))
+			_SmartScriptObject pStateTable(m_pScriptSystem, true);
+			if (pServerTable->GetValue(sState, pStateTable))
 			{
 				// If state table found initialize it
-				InitializeStateTable( pStateTable,newServerState );
+				InitializeStateTable(pStateTable, newServerState);
 				bStateFound = true;
 			}
 		}
@@ -2893,34 +2900,34 @@ bool CEntity::GotoState( const char *sState )
 		// Check for table in Client part.
 		if (m_pClientState && bClientTable)
 		{
-			_SmartScriptObject pStateTable(m_pScriptSystem,true);
-			if (pClientTable->GetValue( sState,pStateTable ))
+			_SmartScriptObject pStateTable(m_pScriptSystem, true);
+			if (pClientTable->GetValue(sState, pStateTable))
 			{
 				// If state table found initialize it
-				InitializeStateTable( pStateTable,newClientState );
+				InitializeStateTable(pStateTable, newClientState);
 				bStateFound = true;
 			}
 		}
 
 		if (!bStateFound)
 		{
-			_SmartScriptObject pStateTable(m_pScriptSystem,true);
-			if (m_pScriptObject->GetValue( sState,pStateTable ))
+			_SmartScriptObject pStateTable(m_pScriptSystem, true);
+			if (m_pScriptObject->GetValue(sState, pStateTable))
 			{
 				// If state table found in entity table initialize it for both client and server states.
 				bStateFound = true;
 				if (m_pServerState)
-					InitializeStateTable( pStateTable,newServerState );
+					InitializeStateTable(pStateTable, newServerState);
 
 				// Initialize Client State table only if no server state also exist.
 				if (m_pClientState && !m_pServerState)
-					InitializeStateTable( pStateTable,newClientState );
+					InitializeStateTable(pStateTable, newClientState);
 			}
 		}
 
 		if (!bStateFound)
 		{
-			m_pISystem->GetILog()->Log("[ENTITYWARNING] GotoState of name='%s' called with unknown State: %s",GetName(),sState );
+			m_pISystem->GetILog()->Log("[ENTITYWARNING] GotoState of name='%s' called with unknown State: %s", GetName(), sState);
 			return false;
 		}
 	}
@@ -2930,20 +2937,20 @@ bool CEntity::GotoState( const char *sState )
 		{
 			if (bServerTable)
 				// If Have Server table initialize state to this Table.
-				InitializeStateTable( pServerTable,newServerState );
+				InitializeStateTable(pServerTable, newServerState);
 			else
 				// If Server table not exist use Entity mail table.
-				InitializeStateTable( m_pScriptObject,newServerState );
+				InitializeStateTable(m_pScriptObject, newServerState);
 		}
 
 		if (m_pClientState && bClientTable)
 		{
-			InitializeStateTable( pClientTable,newClientState );
+			InitializeStateTable(pClientTable, newClientState);
 		}
 	}
 
 	// Call End state event.
-	CallStateFunction( ScriptState_OnEndState );
+	CallStateFunction(ScriptState_OnEndState);
 
 	// If state changed kill old timer.
 	KillTimer();
@@ -2958,13 +2965,13 @@ bool CEntity::GotoState( const char *sState )
 		ReleaseStateTable(*m_pServerState);
 		*m_pServerState = newServerState;
 	}
-	if (m_pClientState){
+	if (m_pClientState) {
 		ReleaseStateTable(*m_pClientState);
 		*m_pClientState = newClientState;
 	}
 
 	// Call BeginState event.
-	CallStateFunction( ScriptState_OnBeginState );
+	CallStateFunction(ScriptState_OnBeginState);
 
 	//////////////////////////////////////////////////////////////////////////
 	// Repeat check if update script function is implemented.
@@ -2978,36 +2985,36 @@ bool CEntity::GotoState( const char *sState )
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CEntity::ReleaseStateTable(SScriptState &scriptState )
+void CEntity::ReleaseStateTable(SScriptState& scriptState)
 {
 	// Query state table for supported functions.
-	for (int stateFunc = 0; stateFunc < sizeof(scriptState.pFunction)/sizeof(scriptState.pFunction[0]); stateFunc++)
+	for (int stateFunc = 0; stateFunc < sizeof(scriptState.pFunction) / sizeof(scriptState.pFunction[0]); stateFunc++)
 	{
-		assert( stateFunc < sizeof(s_ScriptStateFunctions)/sizeof(s_ScriptStateFunctions[0]) );
-		if(scriptState.pFunction[stateFunc])
+		assert(stateFunc < sizeof(s_ScriptStateFunctions) / sizeof(s_ScriptStateFunctions[0]));
+		if (scriptState.pFunction[stateFunc])
 			m_pScriptSystem->ReleaseFunc(scriptState.pFunction[stateFunc]);
 	}
 }
 //////////////////////////////////////////////////////////////////////////
-void CEntity::InitializeStateTable( IScriptObject *pStateTable,SScriptState &scriptState )
+void CEntity::InitializeStateTable(IScriptObject* pStateTable, SScriptState& scriptState)
 {
 	// Query state table for supported functions.
-	for (int stateFunc = 0; stateFunc < sizeof(scriptState.pFunction)/sizeof(scriptState.pFunction[0]); stateFunc++)
+	for (int stateFunc = 0; stateFunc < sizeof(scriptState.pFunction) / sizeof(scriptState.pFunction[0]); stateFunc++)
 	{
-		assert( stateFunc < sizeof(s_ScriptStateFunctions)/sizeof(s_ScriptStateFunctions[0]) );
+		assert(stateFunc < sizeof(s_ScriptStateFunctions) / sizeof(s_ScriptStateFunctions[0]));
 		scriptState.pFunction[stateFunc] = 0;
-		pStateTable->GetValue( s_ScriptStateFunctions[stateFunc],scriptState.pFunction[stateFunc] );
+		pStateTable->GetValue(s_ScriptStateFunctions[stateFunc], scriptState.pFunction[stateFunc]);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
-bool CEntity::IsInState( const char *sState )
+bool CEntity::IsInState(const char* sState)
 {
 	// State name is case sensetive.
 #if defined(LINUX)
-	if (strcasecmp(sState,m_sStateName.c_str()) == 0)
+	if (strcasecmp(sState, m_sStateName.c_str()) == 0)
 #else
-	if (strcmp(sState,m_sStateName.c_str()) == 0)
+	if (strcmp(sState, m_sStateName.c_str()) == 0)
 #endif
 	{
 		return true;
@@ -3016,59 +3023,59 @@ bool CEntity::IsInState( const char *sState )
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CEntity::OnTimer( int nTimerId )
+void CEntity::OnTimer(int nTimerId)
 {
 	ENTITY_PROFILER
-	if (m_pEntitySystem->m_pDebugTimer->GetIVal())
-	{
-		CryLog( "OnTimer: %d ms for Entity: %s (%s)",nTimerId,m_name.c_str(),m_sClassName.c_str() );
-	}
+		if (m_pEntitySystem->m_pDebugTimer->GetIVal())
+		{
+			CryLog("OnTimer: %d ms for Entity: %s (%s)", nTimerId, m_name.c_str(), m_sClassName.c_str());
+		}
 	if (m_pEntitySystem->m_pUpdateTimer->GetIVal())
-		CallStateFunction( ScriptState_OnTimer,nTimerId );
+		CallStateFunction(ScriptState_OnTimer, nTimerId);
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CEntity::OnDamage( IScriptObject *pObj )
+void CEntity::OnDamage(IScriptObject* pObj)
 {
-	if(m_bGarbage)
+	if (m_bGarbage)
 		return;
 
 	//
 	//	store hit parameters
 	//	to use by CPlayer::StartDeathAnimation()
 //	CScriptObjectVector deathDir(m_pScriptSystem,true);
-	if(!pObj->GetValue("weapon_death_anim_id", m_DeathType))
-	    m_DeathType = 100;
+	if (!pObj->GetValue("weapon_death_anim_id", m_DeathType))
+		m_DeathType = 100;
 	pObj->GetValue("dir", m_DeathDirection);
-	if(pObj->GetValue("ipart", m_DeathZone))
-	    m_DeathZone = GetBoneHitZone(m_DeathZone);
+	if (pObj->GetValue("ipart", m_DeathZone))
+		m_DeathZone = GetBoneHitZone(m_DeathZone);
 	else
-	    m_DeathZone = 100;
+		m_DeathZone = 100;
 
-	CallStateFunction( ScriptState_OnDamage,pObj );
+	CallStateFunction(ScriptState_OnDamage, pObj);
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CEntity::OnEnterArea( IEntity* entity, const int areaID )
+void CEntity::OnEnterArea(IEntity* entity, const int areaID)
 {
-	CallStateFunction( ScriptState_OnEnterArea,entity->GetScriptObject(),areaID );
+	CallStateFunction(ScriptState_OnEnterArea, entity->GetScriptObject(), areaID);
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CEntity::OnLeaveArea( IEntity* entity, const int areaID )
+void CEntity::OnLeaveArea(IEntity* entity, const int areaID)
 {
-	CallStateFunction( ScriptState_OnLeaveArea,entity->GetScriptObject(),areaID );
+	CallStateFunction(ScriptState_OnLeaveArea, entity->GetScriptObject(), areaID);
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CEntity::OnProceedFadeArea( IEntity* entity, const int areaID, const float fadeCoeff )
+void CEntity::OnProceedFadeArea(IEntity* entity, const int areaID, const float fadeCoeff)
 {
 	// Server side always first.
-	CallStateFunction( ScriptState_OnProceedFadeArea,entity->GetScriptObject(),areaID,fadeCoeff );
+	CallStateFunction(ScriptState_OnProceedFadeArea, entity->GetScriptObject(), areaID, fadeCoeff);
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CEntity::OnBind( IEntity* entity, const char par )
+void CEntity::OnBind(IEntity* entity, const char par)
 {
 	// don't call it on server - client only
 	if (m_pClientState && m_pClientState->pFunction[ScriptState_OnBind])
@@ -3082,7 +3089,7 @@ void CEntity::OnBind( IEntity* entity, const char par )
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CEntity::OnUnBind( IEntity* entity, const char par )
+void CEntity::OnUnBind(IEntity* entity, const char par)
 {
 	// don't call it on server - client only
 	if (m_pClientState && m_pClientState->pFunction[ScriptState_OnUnBind])
@@ -3097,10 +3104,10 @@ void CEntity::OnUnBind( IEntity* entity, const char par )
 
 //////////////////////////////////////////////////////////////////////////
 void CEntity::SetTimer(int msec)
-{	
+{
 	// Remove old timer.
 	if (m_nTimer > 0)
-		m_pEntitySystem->RemoveTimerEvent( m_nID );
+		m_pEntitySystem->RemoveTimerEvent(m_nID);
 
 	//m_nStartTimer = (int)(m_pISystem->GetITimer()->GetCurrTime()*1000);
 	m_nTimer = msec;
@@ -3111,7 +3118,7 @@ void CEntity::SetTimer(int msec)
 		SEntityTimerEvent event;
 		event.timerId = msec;
 		event.entityId = m_nID;
-		m_pEntitySystem->AddTimerEvent( msec,event );
+		m_pEntitySystem->AddTimerEvent(msec, event);
 	}
 }
 
@@ -3119,24 +3126,24 @@ void CEntity::SetTimer(int msec)
 void CEntity::KillTimer()
 {
 	//if (m_nTimer > 0)
-	m_pEntitySystem->RemoveTimerEvent( m_nID );
+	m_pEntitySystem->RemoveTimerEvent(m_nID);
 	m_nTimer = -1;
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CEntity::RegisterState(const char *sState)
+void CEntity::RegisterState(const char* sState)
 {
-	EntityStateMapItor itor=m_mapStates.find(sState);
-	if(itor!=m_mapStates.end())
+	EntityStateMapItor itor = m_mapStates.find(sState);
+	if (itor != m_mapStates.end())
 		return;
-	m_mapStates.insert(EntityStateMapItor::value_type(sState,m_cLastStateID));
+	m_mapStates.insert(EntityStateMapItor::value_type(sState, m_cLastStateID));
 	m_cLastStateID++;
 }
 
 
 void CEntity::ApplyForceToEnvironment(const float radius, const float force)
 {
-	m_pISystem->GetI3DEngine()->ApplyForceToEnvironment( m_center, radius, force);
+	m_pISystem->GetI3DEngine()->ApplyForceToEnvironment(m_center, radius, force);
 
 }
 
@@ -3151,20 +3158,20 @@ int CEntity::GetSide(const Vec3d& direction)
 	// Get our current orientation angles
 	Vec3d playerDir = GetAngles();
 	// Convert to a direction vector
-	playerDir=ConvertToRadAngles(playerDir);
+	playerDir = ConvertToRadAngles(playerDir);
 	// don't need vertical component to determin left/right direction
 	playerDir.z = 0;
 	playerDir = GetNormalized(playerDir);
 	// Create a working copy of the direction vector
 	Vec3d playerRight = playerDir;
 	// Create a vector pointing up
-	Vec3d up(0,0,1);
+	Vec3d up(0, 0, 1);
 	// Create a vector perpendicular to both the direction vector and the up vector
 	// This vector will point to the players right
 	playerRight = playerRight.Cross(up);
 	// Generate the Cos of the angle between the player facing 
 	// direction and the current player velocity
-	float dotDir = playerDir.Dot( direction );
+	float dotDir = playerDir.Dot(direction);
 	// Determine if the velocity vector and the facing vector differ by less than 90 degrees
 	if (dotDir <= 0.0)
 		// We have determined that the player's general direction 
@@ -3173,7 +3180,7 @@ int CEntity::GetSide(const Vec3d& direction)
 	else
 		forward = false;
 
-	if(forward)
+	if (forward)
 		return 1;
 	else
 		return 2;
@@ -3181,24 +3188,24 @@ int CEntity::GetSide(const Vec3d& direction)
 //
 //------------------------------------------------------------------
 
-void CEntity::AttachToBone(EntityId id,const char* boneName)
+void CEntity::AttachToBone(EntityId id, const char* boneName)
 {
 	// safe upcast since we know what the entity system holds
-	CEntity *pEntity =(CEntity *) m_pEntitySystem->GetEntity(id);
-	ICryCharInstance *character = GetCharInterface()->GetCharacter(PLAYER_MODEL_IDX);	
+	CEntity* pEntity = (CEntity*)m_pEntitySystem->GetEntity(id);
+	ICryCharInstance* character = GetCharInterface()->GetCharacter(PLAYER_MODEL_IDX);
 
 	if (character)
 	{
 		//		m_pSelectedInfo->pBindInfo = 
-		character->AttachObjectToBone( pEntity->GetIStatObj(0),boneName, false );
+		character->AttachObjectToBone(pEntity->GetIStatObj(0), boneName, false);
 	}
 }
 
 //
 //------------------------------------------------------------------
-BoneBindHandle CEntity::AttachObjectToBone(int slot,const char* boneName,bool bMultipleAttachments, bool bUseZOffset )
+BoneBindHandle CEntity::AttachObjectToBone(int slot, const char* boneName, bool bMultipleAttachments, bool bUseZOffset)
 {
-	ICryCharInstance *character = GetCharInterface()->GetCharacter(PLAYER_MODEL_IDX);	
+	ICryCharInstance* character = GetCharInterface()->GetCharacter(PLAYER_MODEL_IDX);
 
 	if (character)
 	{
@@ -3206,7 +3213,7 @@ BoneBindHandle CEntity::AttachObjectToBone(int slot,const char* boneName,bool bM
 		{
 			// Old way.
 			//		m_pSelectedInfo->pBindInfo = 
-			return character->AttachObjectToBone( GetIStatObj(slot),boneName, false, bUseZOffset ? ICryCharInstance::FLAGS_ATTACH_ZOFFSET : 0 );
+			return character->AttachObjectToBone(GetIStatObj(slot), boneName, false, bUseZOffset ? ICryCharInstance::FLAGS_ATTACH_ZOFFSET : 0);
 		}
 		else
 		{
@@ -3214,7 +3221,7 @@ BoneBindHandle CEntity::AttachObjectToBone(int slot,const char* boneName,bool bM
 			int boneid = character->GetModel()->GetBoneByName(boneName);
 			if (boneid >= 0)
 			{
-				return character->AttachToBone( GetIStatObj(slot),boneid, bUseZOffset ? ICryCharInstance::FLAGS_ATTACH_ZOFFSET : 0);
+				return character->AttachToBone(GetIStatObj(slot), boneid, bUseZOffset ? ICryCharInstance::FLAGS_ATTACH_ZOFFSET : 0);
 			}
 		}
 	}
@@ -3223,9 +3230,9 @@ BoneBindHandle CEntity::AttachObjectToBone(int slot,const char* boneName,bool bM
 
 //
 //------------------------------------------------------------------
-void CEntity::DetachObjectToBone( const char* boneName,BoneBindHandle objectBindHandle/* =-1  */ )
+void CEntity::DetachObjectToBone(const char* boneName, BoneBindHandle objectBindHandle/* =-1  */)
 {
-	ICryCharInstance *character = GetCharInterface()->GetCharacter(PLAYER_MODEL_IDX);	
+	ICryCharInstance* character = GetCharInterface()->GetCharacter(PLAYER_MODEL_IDX);
 
 	if (character)
 	{
@@ -3233,11 +3240,11 @@ void CEntity::DetachObjectToBone( const char* boneName,BoneBindHandle objectBind
 		{
 			// Old way.
 			//		m_pSelectedInfo->pBindInfo = 
-			character->AttachObjectToBone( NULL, boneName, false );
+			character->AttachObjectToBone(NULL, boneName, false);
 		}
 		else
 		{
-			character->Detach( objectBindHandle );
+			character->Detach(objectBindHandle);
 		}
 	}
 }
@@ -3247,36 +3254,36 @@ void CEntity::DetachObjectToBone( const char* boneName,BoneBindHandle objectBind
 
 bool CEntity::HasChanged(void)
 {
-	if (m_pCryCharInstance[0]) 
+	if (m_pCryCharInstance[0])
 		if (m_pCryCharInstance[0]->IsCharacterActive())
 			return true;
-	
+
 	return IsMoving();
 }
 
 void CEntity::CalculateInWorld(void)
 {
 
-		// rotate the point offset
-		Vec3d vBpos = m_matParentMatrix.TransformPointOLD(m_realcenter);		
+	// rotate the point offset
+	Vec3d vBpos = m_matParentMatrix.TransformPointOLD(m_realcenter);
 
-		MoveTo(vBpos);
+	MoveTo(vBpos);
 
-		Matrix44 tempMat = GetTransposed44(m_matParentMatrix);
-		tempMat.NoScale();
-		//M2Q_CHANGED_BY_IVO
-		//CryQuat cxquat(m_matParentMatrix);
-		//CryQuat cxquat = CovertMatToQuat<float>( GetTransposed44(m_matParentMatrix) );
-		CryQuat cxquat = Quat( tempMat );
+	Matrix44 tempMat = GetTransposed44(m_matParentMatrix);
+	tempMat.NoScale();
+	//M2Q_CHANGED_BY_IVO
+	//CryQuat cxquat(m_matParentMatrix);
+	//CryQuat cxquat = CovertMatToQuat<float>( GetTransposed44(m_matParentMatrix) );
+	CryQuat cxquat = Quat(tempMat);
 
-		CryQuat rxquat;
-		rxquat.SetRotationXYZ(DEG2RAD(m_realangles));
+	CryQuat rxquat;
+	rxquat.SetRotationXYZ(DEG2RAD(m_realangles));
 
-		CryQuat result = cxquat*rxquat;
+	CryQuat result = cxquat * rxquat;
 
-		Vec3d finalangles = Ang3::GetAnglesXYZ(Matrix33(result));
+	Vec3d finalangles = Ang3::GetAnglesXYZ(Matrix33(result));
 
-		RotateTo(RAD2DEG(finalangles));
+	RotateTo(RAD2DEG(finalangles));
 }
 
 void CEntity::ForceBindCalculation(bool bEnable)
@@ -3287,44 +3294,44 @@ void CEntity::ForceBindCalculation(bool bEnable)
 	//@FIXME: Real scale..
 }
 
-void CEntity::SetParentLocale(const Matrix44 & matParent)
+void CEntity::SetParentLocale(const Matrix44& matParent)
 {
 	// If matrices differ, entity moved so update it.
-	if (memcmp(&m_matParentMatrix,&matParent,sizeof(matParent)) != 0)
+	if (memcmp(&m_matParentMatrix, &matParent, sizeof(matParent)) != 0)
 		m_awakeCounter = 1; // Awake for at least one frame.
 	m_matParentMatrix = matParent;
 }
 
 //
 //--------------------------------------------------------------------------------------
-bool	CEntity::InitLight( const char* sImg, const char* sShader, bool bUseAsCube, float fAnimSpeed, int nLightStyle, float fCoronaScale )
+bool	CEntity::InitLight(const char* sImg, const char* sShader, bool bUseAsCube, float fAnimSpeed, int nLightStyle, float fCoronaScale)
 {
 	if (m_pDynLight)
 		delete m_pDynLight;
 	m_pDynLight = new CDLight();
 
-	if(sImg && sImg[0])
+	if (sImg && sImg[0])
 	{
-    m_pDynLight->m_fAnimSpeed = fAnimSpeed;
-    int nFlags2 = FT2_FORCECUBEMAP;
-    if (bUseAsCube)
-      nFlags2 |= FT2_REPLICATETOALLSIDES;
-    if (fAnimSpeed)
-      nFlags2 |= FT2_CHECKFORALLSEQUENCES;
+		m_pDynLight->m_fAnimSpeed = fAnimSpeed;
+		int nFlags2 = FT2_FORCECUBEMAP;
+		if (bUseAsCube)
+			nFlags2 |= FT2_REPLICATETOALLSIDES;
+		if (fAnimSpeed)
+			nFlags2 |= FT2_CHECKFORALLSEQUENCES;
 		m_pDynLight->m_pLightImage = m_pISystem->GetIRenderer()->EF_LoadTexture(sImg, 0, nFlags2, eTT_Cubemap);
-		if(!m_pDynLight->m_pLightImage || !m_pDynLight->m_pLightImage->IsTextureLoaded())
-			CryWarning(VALIDATOR_MODULE_ENTITYSYSTEM,VALIDATOR_WARNING,"Light projector texture not found: %s", sImg);
+		if (!m_pDynLight->m_pLightImage || !m_pDynLight->m_pLightImage->IsTextureLoaded())
+			CryWarning(VALIDATOR_MODULE_ENTITYSYSTEM, VALIDATOR_WARNING, "Light projector texture not found: %s", sImg);
 		m_pDynLight->m_Flags = DLF_PROJECT;
 	}
 	else
 		m_pDynLight->m_Flags = DLF_POINT;
-  m_pDynLight->m_nLightStyle = nLightStyle;
-  m_pDynLight->m_fCoronaScale = fCoronaScale;
+	m_pDynLight->m_nLightStyle = nLightStyle;
+	m_pDynLight->m_fCoronaScale = fCoronaScale;
 
-	if(sShader && sShader[0])
+	if (sShader && sShader[0])
 		m_pDynLight->m_pShader = m_pISystem->GetIRenderer()->EF_LoadShader((char*)sShader, eSH_World);
 
-  InitEntityRenderState();
+	InitEntityRenderState();
 
 	return true;
 }
@@ -3332,7 +3339,7 @@ bool	CEntity::InitLight( const char* sImg, const char* sShader, bool bUseAsCube,
 
 //
 //--------------------------------------------------------------------------------------
-CDLight	*CEntity::GetLight( )
+CDLight* CEntity::GetLight()
 {
 	return m_pDynLight;
 }
@@ -3340,18 +3347,18 @@ CDLight	*CEntity::GetLight( )
 
 //----------------------------------------------------------------------------------------------------
 //
-int CEntity::GetBoneHitZone( int boneIdx ) const
+int CEntity::GetBoneHitZone(int boneIdx) const
 {
-	ICryCharInstance *pIChar = GetCharInterface()->GetCharacter(0);
+	ICryCharInstance* pIChar = GetCharInterface()->GetCharacter(0);
 
 	if (!pIChar)
 		return 0;
 
 	int hitZone = pIChar->GetDamageTableValue(boneIdx);
 #ifdef _DEBUG
-	const char *szBoneName = pIChar->GetModel()->GetBoneName(boneIdx);
+	const char* szBoneName = pIChar->GetModel()->GetBoneName(boneIdx);
 #endif
-//	TRACE( "%s hit", name );
+	//	TRACE( "%s hit", name );
 
 	return  pIChar->GetDamageTableValue(boneIdx);
 
@@ -3362,9 +3369,9 @@ int CEntity::GetBoneHitZone( int boneIdx ) const
 //	hit parameters
 //	set by OnDamage()
 //	used by CPlayer::StartDeathAnimation()
-void CEntity::GetHitParms( int &deathType, int &deathDir, int &deathZone ) const
+void CEntity::GetHitParms(int& deathType, int& deathDir, int& deathZone) const
 {
-	deathType = m_DeathType;				
+	deathType = m_DeathType;
 	deathDir = m_DeathDirection;
 	deathZone = m_DeathZone;
 }
@@ -3373,62 +3380,62 @@ void CEntity::GetHitParms( int &deathType, int &deathDir, int &deathZone ) const
 //--------------------------------------------------------------------------------------
 
 //////////////////////////////////////////////////////////////////////////
-void CEntity::Hide( bool bHide)
+void CEntity::Hide(bool bHide)
 {
 	if (m_bHidden != bHide)// && m_physic != NULL)
 	{
-		SetRndFlags(ERF_HIDDEN,bHide);
+		SetRndFlags(ERF_HIDDEN, bHide);
 
 		bool bEnablePhysics = !bHide;
 		if (m_physicEnabled != bEnablePhysics)
-			EnablePhysics( bEnablePhysics );
+			EnablePhysics(bEnablePhysics);
 
 		m_bHidden = bHide;
 
-		if(!bHide)
-			ForceRegisterInSectors();
-		
 		if (!bHide)
-			CryLogComment( "Entity %s Unhidden",m_name.c_str() );
+			ForceRegisterInSectors();
+
+		if (!bHide)
+			CryLogComment("Entity %s Unhidden", m_name.c_str());
 		else
-			CryLogComment( "Entity %s Hidden",m_name.c_str() );
+			CryLogComment("Entity %s Hidden", m_name.c_str());
 	}
 	m_bHidden = bHide;
 }
 
 
-void CEntity::UpdateHierarchy( SEntityUpdateContext &ctx )
+void CEntity::UpdateHierarchy(SEntityUpdateContext& ctx)
 {
 
 	if (!m_lstBindings.empty())
 	{
-	ENTITY_PROFILER
+		ENTITY_PROFILER
 
-	//[kirill] 
-	//	when we update child - it can unbind itself - so m_lstBindings changes - let's keep a copy
-		static std::vector<EntityId> binds;
+			//[kirill] 
+			//	when we update child - it can unbind itself - so m_lstBindings changes - let's keep a copy
+			static std::vector<EntityId> binds;
 		binds.resize(0);
-	//this does not work on AMD64
-	//	binds.insert( binds.end(),m_lstBindings.begin(),m_lstBindings.end() );
+		//this does not work on AMD64
+		//	binds.insert( binds.end(),m_lstBindings.begin(),m_lstBindings.end() );
 
 		BINDLISTItor bi;
 		for (bi = m_lstBindings.begin(); bi != m_lstBindings.end(); ++bi)
 			binds.push_back((*bi));
 
-		for(std::vector<EntityId>::iterator bndItr=binds.begin();bndItr!=binds.end();++bndItr )
+		for (std::vector<EntityId>::iterator bndItr = binds.begin(); bndItr != binds.end(); ++bndItr)
 		{
-		
-			CEntity *pEntity =(CEntity *)m_pEntitySystem->GetEntity((*bndItr));
-			
+
+			CEntity* pEntity = (CEntity*)m_pEntitySystem->GetEntity((*bndItr));
+
 			if (pEntity)
 			{
 				//OPTIMISED_BY_IVO  
-				Matrix44 mat=Matrix34::CreateRotationXYZ( Deg2Rad(m_angles),m_center);
-				mat=GetTransposed44(mat);	//TODO: remove this after E3 and use Matrix34 instead of Matrix44
+				Matrix44 mat = Matrix34::CreateRotationXYZ(Deg2Rad(m_angles), m_center);
+				mat = GetTransposed44(mat);	//TODO: remove this after E3 and use Matrix34 instead of Matrix44
 
 				//pEntity->SetParentLocale(m_center, m_angles);
 				pEntity->SetParentLocale(mat);
-				
+
 				bool bNeedUpdate = (pEntity->m_bUpdate && !pEntity->m_bSleeping) || (pEntity->m_awakeCounter > 0);
 				if (bNeedUpdate)
 				{
@@ -3438,89 +3445,89 @@ void CEntity::UpdateHierarchy( SEntityUpdateContext &ctx )
 				if (pEntity->m_bUpdateBinds)
 				{
 					// If not updated.
-					pEntity->UpdateHierarchy( ctx );
+					pEntity->UpdateHierarchy(ctx);
 				}
 			}
 			else
 			{
 				// this entity was deleted. Lets release its ID so it can be reused
 				//	m_pEntitySystem->ReleaseMark((*bi));
-				GetISystem()->GetILog()->LogToFile( "UpdateHierarchy <%s> has dead bind id >> %d",GetName(), (*bndItr) );
+				GetISystem()->GetILog()->LogToFile("UpdateHierarchy <%s> has dead bind id >> %d", GetName(), (*bndItr));
 			}
 		}
 	}
 
-/*
-	if (!m_lstBindings.empty())
-	{
-		ENTITY_PROFILER
-
-		BINDLISTItor bi,next;
-	//[kirill] 
-	//	when we update child - it can unbind itself - so m_lstBindings changes
-		for (bi = m_lstBindings.begin(); bi != m_lstBindings.end() && !m_lstBindings.empty(); bi = next)
+	/*
+		if (!m_lstBindings.empty())
 		{
-			next = bi; ++next;
-			CEntity *pEntity =(CEntity *)m_pEntitySystem->GetEntity((*bi));
-			
-			if (pEntity)
+			ENTITY_PROFILER
+
+			BINDLISTItor bi,next;
+		//[kirill]
+		//	when we update child - it can unbind itself - so m_lstBindings changes
+			for (bi = m_lstBindings.begin(); bi != m_lstBindings.end() && !m_lstBindings.empty(); bi = next)
 			{
-				//Matrix44 mat;
-				//mat.Identity();
-				//mat=GetTranslationMat(m_center)*mat;
-				//mat=GetRotationZYX44(-gf_DEGTORAD*m_angles)*mat; //NOTE: angles in radians and negated 
+				next = bi; ++next;
+				CEntity *pEntity =(CEntity *)m_pEntitySystem->GetEntity((*bi));
 
-				//OPTIMISED_BY_IVO  
-				Matrix44 mat=Matrix34::GetRotationXYZ34( Deg2Rad(m_angles),m_center);
-				mat=GetTransposed44(mat);	//TODO: remove this after E3 and use Matrix34 instead of Matrix44
-
-				//pEntity->SetParentLocale(m_center, m_angles);
-				pEntity->SetParentLocale(mat);
-				
-				bool bNeedUpdate = (pEntity->m_bUpdate && !pEntity->m_bSleeping) || (pEntity->m_awakeCounter > 0);
-				if (bNeedUpdate)
+				if (pEntity)
 				{
-					pEntity->Update(ctx);
+					//Matrix44 mat;
+					//mat.Identity();
+					//mat=GetTranslationMat(m_center)*mat;
+					//mat=GetRotationZYX44(-gf_DEGTORAD*m_angles)*mat; //NOTE: angles in radians and negated
+
+					//OPTIMISED_BY_IVO
+					Matrix44 mat=Matrix34::GetRotationXYZ34( Deg2Rad(m_angles),m_center);
+					mat=GetTransposed44(mat);	//TODO: remove this after E3 and use Matrix34 instead of Matrix44
+
+					//pEntity->SetParentLocale(m_center, m_angles);
+					pEntity->SetParentLocale(mat);
+
+					bool bNeedUpdate = (pEntity->m_bUpdate && !pEntity->m_bSleeping) || (pEntity->m_awakeCounter > 0);
+					if (bNeedUpdate)
+					{
+						pEntity->Update(ctx);
+					}
+					// If have childs.
+					if (pEntity->m_bUpdateBinds)
+					{
+						// If not updated.
+						pEntity->UpdateHierarchy( ctx );
+					}
 				}
-				// If have childs.
-				if (pEntity->m_bUpdateBinds)
+				else
 				{
-					// If not updated.
-					pEntity->UpdateHierarchy( ctx );
+					// this entity was deleted. Lets release its ID so it can be reused
+					//	m_pEntitySystem->ReleaseMark((*bi));
+
+	GetISystem()->GetILog()->LogToFile( "UpdateHierarchy <%s> has dead bind id >> %d",GetName(), (*bi) );
+
+	//				m_lstBindings.erase(bi);
+					m_lstBindings.remove((*bi));
 				}
-			}
-			else
-			{
-				// this entity was deleted. Lets release its ID so it can be reused
-				//	m_pEntitySystem->ReleaseMark((*bi));
 
-GetISystem()->GetILog()->LogToFile( "UpdateHierarchy <%s> has dead bind id >> %d",GetName(), (*bi) );
-
-//				m_lstBindings.erase(bi);
-				m_lstBindings.remove((*bi));
 			}
-			
 		}
-	}
-*/
+	*/
 }
 
 //
 // gets radius from physics bounding box	
 float	CEntity::GetRadiusPhys() const
 {
-	IPhysicalEntity *physic = GetPhysics();
+	IPhysicalEntity* physic = GetPhysics();
 	if (physic)
 	{
 		Vec3d	min, max;
 		pe_params_bbox pbb;
 		physic->GetParams(&pbb);
-		min = pbb.BBox[0]-m_center;
-		max = pbb.BBox[1]-m_center;
-    //pe_status_pos status_pos;
-    //m_physic->GetStatus(&status_pos);
-		//min = status_pos.BBox[0];
-		//max = status_pos.BBox[1];
+		min = pbb.BBox[0] - m_center;
+		max = pbb.BBox[1] - m_center;
+		//pe_status_pos status_pos;
+		//m_physic->GetStatus(&status_pos);
+			//min = status_pos.BBox[0];
+			//max = status_pos.BBox[1];
 		if (min.Length() > max.Length())
 			return min.Length();
 		return max.Length();
@@ -3530,9 +3537,9 @@ float	CEntity::GetRadiusPhys() const
 
 //! 
 //
-void CEntity::ActivatePhysics( bool activate )
+void CEntity::ActivatePhysics(bool activate)
 {
-	if(!m_physic)
+	if (!m_physic)
 		return;
 	pe_player_dynamics pd;
 	pd.bActive = activate;
@@ -3549,45 +3556,45 @@ void CEntity::CheckBBox(void)
 }
 
 #define sizeof_std_string(m_sClassName) ((m_sClassName.length()<16)?sizeof(string):m_sClassName.length()+1+sizeof(string))
-void CEntity::GetMemoryStatistics(ICrySizer *pSizer)
+void CEntity::GetMemoryStatistics(ICrySizer* pSizer)
 {
 	size_t nSize = sizeof(CEntity)
 		+ sizeof_std_string(m_sClassName)
 		+ sizeof_std_string(m_name)
 		+ sizeof_std_string(m_sStateName);
 
-	if (!pSizer->AddObject(this,nSize))
+	if (!pSizer->AddObject(this, nSize))
 		return;
 
 	pSizer->Add(*m_pCamera);
 	pSizer->Add(*m_pDynLight);
 	pSizer->Add(*m_pClientState);
 	pSizer->Add(*m_pServerState);
-	if (m_pPhysState && m_iPhysStateSize>0)
-		pSizer->AddObject(m_pPhysState,m_iPhysStateSize);
+	if (m_pPhysState && m_iPhysStateSize > 0)
+		pSizer->AddObject(m_pPhysState, m_iPhysStateSize);
 }
 
 
-void CEntity::SetHandsIKTarget( const Vec3d* target )
+void CEntity::SetHandsIKTarget(const Vec3d* target)
 {
-	if(target)
+	if (target)
 	{
 		m_vHandIKTarget = *target;
 
 		m_vHandIKTarget -= m_center;
 
-/*
-		Matrix44	mat;
-		Matrix44	matInv;
-		mat.Identity();
-//		mat.SetRotationXYZ44(-gf_DEGTORAD*GetAngles());
-//		matInv = mat.GetInverted44( mat );
-//		m_vHandIKTarget = matInv.TransformVector(m_vHandIKTarget);
-		mat.SetRotationZ44(gf_DEGTORAD*(GetAngles().z));
-		m_vHandIKTarget = mat.TransformVector(m_vHandIKTarget);
-*/
+		/*
+				Matrix44	mat;
+				Matrix44	matInv;
+				mat.Identity();
+		//		mat.SetRotationXYZ44(-gf_DEGTORAD*GetAngles());
+		//		matInv = mat.GetInverted44( mat );
+		//		m_vHandIKTarget = matInv.TransformVector(m_vHandIKTarget);
+				mat.SetRotationZ44(gf_DEGTORAD*(GetAngles().z));
+				m_vHandIKTarget = mat.TransformVector(m_vHandIKTarget);
+		*/
 
-		Matrix44	mat = Matrix33::CreateRotationZ( DEG2RAD(GetAngles().z) );
+		Matrix44	mat = Matrix33::CreateRotationZ(DEG2RAD(GetAngles().z));
 		m_vHandIKTarget = mat.TransformVectorOLD(m_vHandIKTarget);
 
 
@@ -3600,7 +3607,7 @@ void CEntity::SetHandsIKTarget( const Vec3d* target )
 }
 
 //////////////////////////////////////////////////////////////////////////
-bool CEntity::IsStateFunctionImplemented( EScriptStateFunctions function )
+bool CEntity::IsStateFunctionImplemented(EScriptStateFunctions function)
 {
 	bool bRes = false;
 	if (m_pServerState && m_pServerState->pFunction[function])
@@ -3611,7 +3618,7 @@ bool CEntity::IsStateFunctionImplemented( EScriptStateFunctions function )
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CEntity::CallStateFunction( EScriptStateFunctions function )
+void CEntity::CallStateFunction(EScriptStateFunctions function)
 {
 	HSCRIPTFUNCTION funcServer = 0;
 	HSCRIPTFUNCTION funcClient = 0;
@@ -3637,13 +3644,13 @@ void CEntity::CallStateFunction( EScriptStateFunctions function )
 //////////////////////////////////////////////////////////////////////////
 void CEntity::MarkAsGarbage()
 {
-	m_bGarbage = true;	
+	m_bGarbage = true;
 	if (m_registeredInSector)
 		UnregisterInSector();
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CEntity::SetGarbageFlag( bool bGarbage )
+void CEntity::SetGarbageFlag(bool bGarbage)
 {
 	m_bGarbage = bGarbage;
 	if (m_bGarbage && m_registeredInSector)
@@ -3651,7 +3658,7 @@ void CEntity::SetGarbageFlag( bool bGarbage )
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CEntity::AddCollider( EntityId id )
+void CEntity::AddCollider(EntityId id)
 {
 	if (!m_bTrackColliders)
 		return;
@@ -3660,21 +3667,21 @@ void CEntity::AddCollider( EntityId id )
 		m_pColliders = new Colliders;
 
 	// Try to insert new colliding entity to our colliders set.
-	std::pair<Colliders::iterator,bool> result = m_pColliders->insert(id);
+	std::pair<Colliders::iterator, bool> result = m_pColliders->insert(id);
 	if (result.second == true)
 	{
 		// New collider was successfully added.
-		IEntity *pEntity = m_pEntitySystem->GetEntity(id);
+		IEntity* pEntity = m_pEntitySystem->GetEntity(id);
 		if (pEntity)
 		{
 			//GetISystem()->GetILog()->Log( "Add Collider %s",pEntity->GetName() );
-			OnEnterArea( pEntity,0 );
+			OnEnterArea(pEntity, 0);
 		}
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CEntity::RemoveCollider( EntityId id )
+void CEntity::RemoveCollider(EntityId id)
 {
 	if (!m_pColliders)
 		return;
@@ -3685,11 +3692,11 @@ void CEntity::RemoveCollider( EntityId id )
 	if (m_pColliders->size() != prevSize)
 	{
 		// If anything was erased.
-		IEntity *pEntity = m_pEntitySystem->GetEntity(id);
+		IEntity* pEntity = m_pEntitySystem->GetEntity(id);
 		if (pEntity)
 		{
 			//GetISystem()->GetILog()->Log( "Remove Collider %s",pEntity->GetName() );
-			OnLeaveArea( pEntity,0 );
+			OnLeaveArea(pEntity, 0);
 		}
 	}
 }
@@ -3699,17 +3706,17 @@ void CEntity::CheckColliders()
 {
 	ENTITY_PROFILER
 
-	if (!m_bTrackColliders)
-		return;
+		if (!m_bTrackColliders)
+			return;
 
 	Vec3d mins, maxs;
-	GetBBox(mins,maxs);
-	if (maxs.x<=mins.x || maxs.y<=mins.y || maxs.z<=mins.z)
+	GetBBox(mins, maxs);
+	if (maxs.x <= mins.x || maxs.y <= mins.y || maxs.z <= mins.z)
 		return; // something wrong
 
 	// resolve collisions
-	IPhysicalWorld *pWorld = m_pISystem->GetIPhysicalWorld();
-	IPhysicalEntity **ppColliders;
+	IPhysicalWorld* pWorld = m_pISystem->GetIPhysicalWorld();
+	IPhysicalEntity** ppColliders;
 	int nCount = 0;
 
 	// Prepare temporary set of colliders.
@@ -3719,25 +3726,25 @@ void CEntity::CheckColliders()
 	if (m_pColliders)
 		tempSet = *m_pColliders;
 
-	if (nCount = pWorld->GetEntitiesInBox(mins,maxs, ppColliders, 14 ))
+	if (nCount = pWorld->GetEntitiesInBox(mins, maxs, ppColliders, 14))
 	{
 		static std::vector<IPhysicalEntity*> s_colliders;
 		s_colliders.resize(nCount);
-		memcpy( &s_colliders[0],ppColliders,nCount*sizeof(IPhysicalEntity*) );
+		memcpy(&s_colliders[0], ppColliders, nCount * sizeof(IPhysicalEntity*));
 
 		// Check if colliding entities are in list.
 		for (int i = 0; i < nCount; i++)
 		{
-			CEntity *pEntity = (CEntity *)s_colliders[i]->GetForeignData(0);
+			CEntity* pEntity = (CEntity*)s_colliders[i]->GetForeignData(0);
 			if (!pEntity)
 				continue;
 			int id = pEntity->GetId();
 			int prevSize = tempSet.size();
-			tempSet.erase( id );
+			tempSet.erase(id);
 			if (tempSet.size() == prevSize)
 			{
 				// pEntity is a new entity not in list.
-				AddCollider( id );
+				AddCollider(id);
 			}
 		}
 	}
@@ -3746,25 +3753,25 @@ void CEntity::CheckColliders()
 	{
 		for (Colliders::iterator it = tempSet.begin(); it != tempSet.end(); ++it)
 		{
-			RemoveCollider( *it );
+			RemoveCollider(*it);
 		}
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CEntity::OnPhysicsBBoxOverlap(IEntity *pOther)
+void CEntity::OnPhysicsBBoxOverlap(IEntity* pOther)
 {
-//#ifdef USE_PHYSICS_EVENT_CALLBACK
+	//#ifdef USE_PHYSICS_EVENT_CALLBACK
 	if (!m_bTrackColliders)
 		return;
 
 	// Awake entity for at least 5 frames.
 	m_awakeCounter = 5;
-//#endif
+	//#endif
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CEntity::OnPhysicsStateChange( int nNewSymClass,int nPrevSymClass )
+void CEntity::OnPhysicsStateChange(int nNewSymClass, int nPrevSymClass)
 {
 	// If its update depends on physics, physics state defines if this entity is to be updated.
 	if (m_eUpdateVisLevel == eUT_Physics || m_eUpdateVisLevel == eUT_PhysicsVisible)
@@ -3774,13 +3781,13 @@ void CEntity::OnPhysicsStateChange( int nNewSymClass,int nPrevSymClass )
 		if (nNewSymClass == SC_ACTIVE_RIGID)
 		{
 			//m_pISystem->GetILog()->Log("Phys AWAKE" );
-			SetNeedUpdate( true );
+			SetNeedUpdate(true);
 		}
 		else if (nNewSymClass == SC_SLEEPING_RIGID)
 		{
 			// Entity must go to sleep.
 			//m_pISystem->GetILog()->Log("Phys SLEEP" );
-			SetNeedUpdate( false );
+			SetNeedUpdate(false);
 			CallStateFunction(ScriptState_OnStopRollSlideContact, "roll");
 			CallStateFunction(ScriptState_OnStopRollSlideContact, "slide");
 		}
@@ -3799,7 +3806,7 @@ void CEntity::CreatePhysicsBBox()
 		return;
 
 	if (!m_pBBox)
-	{	
+	{
 		//////////////////////////////////////////////////////////////////////////
 		// Create a physics bbox to get the callback from physics when a move event happens.
 		m_pBBox = m_pISystem->GetIPhysicalWorld()->CreatePhysicalEntity(PE_STATIC);
@@ -3810,16 +3817,16 @@ void CEntity::CreatePhysicsBBox()
 		m_pBBox->GetParams(&foreignData);
 		foreignData.pForeignData = (IEntity*)this;
 		foreignData.iForeignFlags |= ent_rigid | ent_living;
-		m_pBBox->SetParams(&foreignData);		
+		m_pBBox->SetParams(&foreignData);
 	}
 
 	if (m_pBBox)
 	{
-		Vec3 min,max;
-		GetBBox(min,max);
+		Vec3 min, max;
+		GetBBox(min, max);
 
 		// Check for invalid bounding box.
-		if (GetLengthSquared(max-min) < 10000*10000)
+		if (GetLengthSquared(max - min) < 10000 * 10000)
 		{
 			pe_params_bbox parBBox;
 			parBBox.BBox[0] = min;
@@ -3831,7 +3838,7 @@ void CEntity::CreatePhysicsBBox()
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CEntity::TrackColliders( bool bEnable )
+void CEntity::TrackColliders(bool bEnable)
 {
 	if (bEnable && bEnable != m_bTrackColliders)
 	{
@@ -3843,17 +3850,17 @@ void CEntity::TrackColliders( bool bEnable )
 }
 
 
-void	CEntity::Remove( )
+void	CEntity::Remove()
 {
-	m_pEntitySystem->RemoveEntity( GetId(), false );
+	m_pEntitySystem->RemoveEntity(GetId(), false);
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CEntity::SetPhysicsState( const char *sPhysicsState )
+void CEntity::SetPhysicsState(const char* sPhysicsState)
 {
 	if (m_physic)
 	{
-		m_physic->SetStateFromSnapshotTxt( sPhysicsState,strlen(sPhysicsState) );
+		m_physic->SetStateFromSnapshotTxt(sPhysicsState, strlen(sPhysicsState));
 		// Update entity few times to get physics data to character.
 		m_awakeCounter = 5;
 	}
@@ -3868,13 +3875,13 @@ void CEntity::InvalidateBBox()
 
 
 //////////////////////////////////////////////////////////////////////////
-void CEntity::SetUpdateVisLevel(EEntityUpdateVisLevel nUpdateVisLevel) 
-{ 
-	m_eUpdateVisLevel = nUpdateVisLevel; 
+void CEntity::SetUpdateVisLevel(EEntityUpdateVisLevel nUpdateVisLevel)
+{
+	m_eUpdateVisLevel = nUpdateVisLevel;
 	if (m_physic)
 	{
 		pe_params_flags pf;
-		if (m_eUpdateVisLevel==eUT_PhysicsPostStep)
+		if (m_eUpdateVisLevel == eUT_PhysicsPostStep)
 			pf.flagsOR = pef_custom_poststep;
 		else
 			pf.flagsAND = ~pef_custom_poststep;
@@ -3883,12 +3890,12 @@ void CEntity::SetUpdateVisLevel(EEntityUpdateVisLevel nUpdateVisLevel)
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CEntity::OnVisibilityChange( bool bVisible )
+void CEntity::OnVisibilityChange(bool bVisible)
 {
 	if (!bVisible)
 	{
 		// Turn off cloth update.
-		if (m_physic && (m_flags & ETY_FLAG_CALC_PHYSICS) && !(m_flags&ETY_FLAG_IGNORE_PHYSICS_UPDATE) && m_physic->GetType()==PE_SOFT)
+		if (m_physic && (m_flags & ETY_FLAG_CALC_PHYSICS) && !(m_flags & ETY_FLAG_IGNORE_PHYSICS_UPDATE) && m_physic->GetType() == PE_SOFT)
 		{
 			pe_action_awake aa;
 			aa.bAwake = false;
