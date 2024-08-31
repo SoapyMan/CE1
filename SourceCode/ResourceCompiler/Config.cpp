@@ -27,13 +27,13 @@ Config::~Config()
 //////////////////////////////////////////////////////////////////////////
 IConfig* Config::Clone() const
 {
-	Config *cfg = new Config;
+	Config* cfg = new Config;
 	cfg->m_map = m_map;
 	return cfg;
 }
 
 //////////////////////////////////////////////////////////////////////////
-bool Config::HasKey( const char *key ) const
+bool Config::HasKey(const char* key) const
 {
 	if (m_map.find(key) != m_map.end())
 		return true;
@@ -41,13 +41,13 @@ bool Config::HasKey( const char *key ) const
 }
 
 //////////////////////////////////////////////////////////////////////////
-bool Config::Get( const char *key,float &value ) const
+bool Config::Get(const char* key, float& value) const
 {
 	Map::const_iterator it = m_map.find(key);
 	if (it != m_map.end())
 	{
 		const char* szValue = it->second.GetString();
-		if (1 == sscanf (szValue, "%f", &value))
+		if (1 == sscanf(szValue, "%f", &value))
 			return true;
 		else
 			return false;
@@ -56,13 +56,13 @@ bool Config::Get( const char *key,float &value ) const
 }
 
 //////////////////////////////////////////////////////////////////////////
-bool Config::Get( const char *key,int &value ) const
+bool Config::Get(const char* key, int& value) const
 {
 	Map::const_iterator it = m_map.find(key);
 	if (it != m_map.end())
 	{
 		const char* szValue = it->second.GetString();
-		if (1 == sscanf (szValue, "%d", &value))
+		if (1 == sscanf(szValue, "%d", &value))
 			return true;
 		else
 			return false;
@@ -71,34 +71,34 @@ bool Config::Get( const char *key,int &value ) const
 }
 
 //////////////////////////////////////////////////////////////////////////
-bool Config::Get( const char *key,bool &value ) const
+bool Config::Get(const char* key, bool& value) const
 {
 	Map::const_iterator it = m_map.find(key);
 	if (it != m_map.end())
 	{
 		const char* szValue = it->second.GetString();
 		int nTryInt;
-		if (1 == sscanf (szValue, "%d", &nTryInt))
+		if (1 == sscanf(szValue, "%d", &nTryInt))
 		{
 			value = nTryInt != 0;
 			return true;
 		}
 
 		if (!stricmp(szValue, "true")
-			||!stricmp(szValue, "yes")
-			||!stricmp(szValue, "enable")
-			||!stricmp(szValue, "y")
-			||!stricmp(szValue, "t"))
+			|| !stricmp(szValue, "yes")
+			|| !stricmp(szValue, "enable")
+			|| !stricmp(szValue, "y")
+			|| !stricmp(szValue, "t"))
 		{
 			value = true;
 			return true;
 		}
 
 		if (!stricmp(szValue, "false")
-			||!stricmp(szValue, "no")
-			||!stricmp(szValue, "disable")
-			||!stricmp(szValue, "n")
-			||!stricmp(szValue, "f"))
+			|| !stricmp(szValue, "no")
+			|| !stricmp(szValue, "disable")
+			|| !stricmp(szValue, "n")
+			|| !stricmp(szValue, "f"))
 		{
 			value = false;
 			return true;
@@ -107,33 +107,33 @@ bool Config::Get( const char *key,bool &value ) const
 	return false;
 }
 
-void Config::Merge( IConfig *inpConfig )
+void Config::Merge(IConfig* inpConfig)
 {
-	Config *pConfig=inpConfig->GetInternalRepresentation();
+	Config* pConfig = inpConfig->GetInternalRepresentation();
 
-	assert(pConfig);if(!pConfig)return;
+	assert(pConfig); if (!pConfig)return;
 
 	Map::iterator it;
 
-	for(it=pConfig->m_map.begin();it!=pConfig->m_map.end();++it)
+	for (it = pConfig->m_map.begin(); it != pConfig->m_map.end(); ++it)
 	{
-		CString key=(*it).first;
-		CString value=(*it).second;
+		CString key = (*it).first;
+		CString value = (*it).second;
 
-		Set(key.GetString(),value.GetString());
+		Set(key.GetString(), value.GetString());
 	}
 }
 
 
 
-Config *Config::GetInternalRepresentation( void )
+Config* Config::GetInternalRepresentation(void)
 {
-	return(this);	
+	return(this);
 }
 
 
 //////////////////////////////////////////////////////////////////////////
-bool Config::Get( const char *key,CString &value ) const
+bool Config::Get(const char* key, CString& value) const
 {
 	Map::const_iterator it = m_map.find(key);
 	if (it != m_map.end())
@@ -145,7 +145,7 @@ bool Config::Get( const char *key,CString &value ) const
 }
 
 //////////////////////////////////////////////////////////////////////////
-void Config::Set( const char *key,const char* value )
+void Config::Set(const char* key, const char* value)
 {
 	m_map[key] = value;
 }

@@ -30,26 +30,26 @@ ExtensionManager::~ExtensionManager()
 {
 	for (int i = 0; i < (int)m_convertors.size(); i++)
 	{
-		IConvertor *conv = m_convertors[i];
+		IConvertor* conv = m_convertors[i];
 		conv->Release();
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
-IConvertor* ExtensionManager::FindConvertor( Platform platform,const char *ext ) const
+IConvertor* ExtensionManager::FindConvertor(Platform platform, const char* ext) const
 {
-	const ExtMap *extMap = &(m_extMap[platform]);
+	const ExtMap* extMap = &(m_extMap[platform]);
 
 
 	ExtMap::const_iterator it;
-	for (it=extMap->begin(); it!=extMap->end(); it++)
+	for (it = extMap->begin(); it != extMap->end(); it++)
 	{
-		CString strExtName = (* it).first;
-		assert((* it).second != NULL);
+		CString strExtName = (*it).first;
+		assert((*it).second != NULL);
 	}
 
 
-	IConvertor *foundConvertor = 0;
+	IConvertor* foundConvertor = 0;
 	ExtMap::const_iterator low = extMap->find(ext);
 	if (low != extMap->end())
 	{
@@ -77,14 +77,14 @@ IConvertor* ExtensionManager::FindConvertor( Platform platform,const char *ext )
 }
 
 //////////////////////////////////////////////////////////////////////////
-void ExtensionManager::RegisterConvertor( IConvertor *conv, IResourceCompiler *rc )
+void ExtensionManager::RegisterConvertor(IConvertor* conv, IResourceCompiler* rc)
 {
 	assert(conv);
 	assert(rc);
 
-	IRCLog *log=rc->GetIRCLog();				assert(log);
+	IRCLog* log = rc->GetIRCLog();				assert(log);
 
-	m_convertors.push_back( conv );
+	m_convertors.push_back(conv);
 
 	string strExt;
 	for (int i = 0; i < conv->GetNumExt(); ++i)
@@ -99,21 +99,21 @@ void ExtensionManager::RegisterConvertor( IConvertor *conv, IResourceCompiler *r
 	if (nTime)
 	{
 		szTime = asctime(localtime(&nTime));
-		szTime[strlen(szTime)-1] = '\0';
+		szTime[strlen(szTime) - 1] = '\0';
 	}
 
-//	Info ("timestamp %s", szTime);
+	//	Info ("timestamp %s", szTime);
 	log->Log("    Registered convertor for %s", strExt.c_str());
 
-	assert( conv );
+	assert(conv);
 	for (int k = 0; k < conv->GetNumPlatforms(); k++)
 	{
 		Platform platform = conv->GetPlatform(k);
 		for (int i = 0; i < conv->GetNumExt(); i++)
 		{
-			const char *ext = conv->GetExt(i);
+			const char* ext = conv->GetExt(i);
 			assert(ext);
-			m_extMap[platform].insert( ExtMap::value_type(ext,conv) );
+			m_extMap[platform].insert(ExtMap::value_type(ext, conv));
 		}
 	}
 }

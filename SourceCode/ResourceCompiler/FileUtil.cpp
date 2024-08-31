@@ -20,7 +20,7 @@
 
 //////////////////////////////////////////////////////////////////////////
 // the paths must have trailing slash
-static bool ScanDirectoryRecursive( const CString &root,const CString &path,const CString &file,std::vector<CString> &files, bool recursive )
+static bool ScanDirectoryRecursive(const CString& root, const CString& path, const CString& file, std::vector<CString>& files, bool recursive)
 {
 	__finddata64_t c_file;
 	intptr_t hFile;
@@ -28,23 +28,23 @@ static bool ScanDirectoryRecursive( const CString &root,const CString &path,cons
 	bool anyFound = false;
 
 	CString fullPath = root + path + file;
-	if ( (hFile = _findfirst64( fullPath.GetString(), &c_file )) != -1L )
+	if ((hFile = _findfirst64(fullPath.GetString(), &c_file)) != -1L)
 	{
 		// Find the rest of the files.
 		do {
 			if (!(c_file.attrib & _A_SUBDIR))
 			{
 				anyFound = true;
-				files.push_back( path + c_file.name );
+				files.push_back(path + c_file.name);
 			}
-		}	while (_findnext64( hFile, &c_file ) == 0);
-		_findclose( hFile );
+		} while (_findnext64(hFile, &c_file) == 0);
+		_findclose(hFile);
 	}
 
 	if (recursive)
 	{
 		fullPath = root + path + "*.*";
-		if( (hFile = _findfirst64( fullPath.GetString(), &c_file )) != -1L )
+		if ((hFile = _findfirst64(fullPath.GetString(), &c_file)) != -1L)
 		{
 			// Find directories.
 			do {
@@ -53,12 +53,12 @@ static bool ScanDirectoryRecursive( const CString &root,const CString &path,cons
 					// If recursive.
 					if (c_file.name[0] != '.')
 					{
-						if (ScanDirectoryRecursive( root,path + c_file.name + "\\",file,files,recursive ))
+						if (ScanDirectoryRecursive(root, path + c_file.name + "\\", file, files, recursive))
 							anyFound = true;
 					}
 				}
-			}	while (_findnext64( hFile, &c_file ) == 0);
-			_findclose( hFile );
+			} while (_findnext64(hFile, &c_file) == 0);
+			_findclose(hFile);
 		}
 	}
 
@@ -66,9 +66,9 @@ static bool ScanDirectoryRecursive( const CString &root,const CString &path,cons
 }
 
 //////////////////////////////////////////////////////////////////////////
-bool FileUtil::ScanDirectory( const CString &path,const CString &file,std::vector<CString> &files, bool recursive )
+bool FileUtil::ScanDirectory(const CString& path, const CString& file, std::vector<CString>& files, bool recursive)
 {
-	return ScanDirectoryRecursive(path,"",file,files,recursive );
+	return ScanDirectoryRecursive(path, "", file, files, recursive);
 }
 
 

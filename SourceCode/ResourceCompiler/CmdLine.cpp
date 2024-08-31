@@ -26,12 +26,12 @@ CmdLine::CmdLine()
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CmdLine::Parse( int argc, char **argv,Config *config )
+void CmdLine::Parse(int argc, char** argv, Config* config)
 {
 	m_config = config;
 	for (int i = 1; i < argc; i++)
 	{
-		const char *param = argv[i];
+		const char* param = argv[i];
 		bool bFlag = false;
 		bool bLast = ((i + 1) == argc);
 		if (param[0] == '-' || param[0] == '/')
@@ -40,12 +40,12 @@ void CmdLine::Parse( int argc, char **argv,Config *config )
 			bFlag = true;
 			++param;
 		}
-		ParseParam(param,bFlag,bLast);
+		ParseParam(param, bFlag, bLast);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CmdLine::ParseParam( const char* param, bool bFlag,bool bLast )
+void CmdLine::ParseParam(const char* param, bool bFlag, bool bLast)
 {
 	if (!bFlag)
 	{
@@ -56,7 +56,7 @@ void CmdLine::ParseParam( const char* param, bool bFlag,bool bLast )
 	{
 		// Flag.
 		// Split on key/value pair.
-		if (stricmp("h",param) == 0)
+		if (stricmp("h", param) == 0)
 			m_bHelp = true;
 		else
 		{
@@ -64,15 +64,15 @@ void CmdLine::ParseParam( const char* param, bool bFlag,bool bLast )
 			int splitter = prm.Find('=');
 			if (splitter >= 0)
 			{
-				CString key = prm.Mid(0,splitter);
-				CString value = prm.Mid(splitter+1);
+				CString key = prm.Mid(0, splitter);
+				CString value = prm.Mid(splitter + 1);
 				// Put key/value pair to config.
 				if (!key.IsEmpty() && m_config)
-					m_config->Set( key.GetString(),value.GetString() );
+					m_config->Set(key.GetString(), value.GetString());
 			}
 			else
 			{
-				m_config->Set (prm.GetString(), "");
+				m_config->Set(prm.GetString(), "");
 			}
 		}
 	}
