@@ -21,7 +21,7 @@ _ACCESS_POOL;
 #include "physicalentity.h"
 #include "physicalworld.h"
 
-float g_costab[SINCOSTABSZ],g_sintab[SINCOSTABSZ];
+float g_costab[SINCOSTABSZ], g_sintab[SINCOSTABSZ];
 
 //////////////////////////////////////////////////////////////////////////
 // Pointer to Global ISystem.
@@ -40,16 +40,16 @@ BOOL APIENTRY DllMain(HANDLE hModule, DWORD ul_reason_for_call, LPVOID lpReserve
 #endif
 
 #ifndef _XBOX
-CRYPHYSICS_API IPhysicalWorld *CreatePhysicalWorld(ISystem *pSystem)
+CRYPHYSICS_API IPhysicalWorld* CreatePhysicalWorld(ISystem* pSystem)
 #else
-IPhysicalWorld *CreatePhysicalWorld(ISystem *pSystem)
+IPhysicalWorld* CreatePhysicalWorld(ISystem* pSystem)
 #endif
 {
 	gISystem = pSystem;
-	g_bHasSSE = (pSystem->GetCPUFlags() & CPUF_SSE)!=0;
-	for(int i=0; i<SINCOSTABSZ; i++) {
-		g_costab[i] = cosf(i*(pi*0.5f/SINCOSTABSZ));
-		g_sintab[i] = sinf(i*(pi*0.5f/SINCOSTABSZ));
+	g_bHasSSE = (pSystem->GetCPUFlags() & CPUF_SSE) != 0;
+	for (int i = 0; i < SINCOSTABSZ; i++) {
+		g_costab[i] = cosf(i * (pi * 0.5f / SINCOSTABSZ));
+		g_sintab[i] = sinf(i * (pi * 0.5f / SINCOSTABSZ));
 	}
 	//_controlfp(_EM_ZERODIVIDE,_MCW_EM);
 	return new CPhysicalWorld(pSystem->GetILog());
