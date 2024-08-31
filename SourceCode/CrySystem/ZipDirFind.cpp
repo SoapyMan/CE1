@@ -7,9 +7,9 @@
 #include "ZipDirFind.h"
 #include "StringUtils.h"
 
-bool ZipDir::FindFile::FindFirst (const char* szWildcard)
+bool ZipDir::FindFile::FindFirst(const char* szWildcard)
 {
-	if (!PreFind (szWildcard))
+	if (!PreFind(szWildcard))
 		return false;
 
 	// finally, this is the name of the file
@@ -17,9 +17,9 @@ bool ZipDir::FindFile::FindFirst (const char* szWildcard)
 	return SkipNonMatchingFiles();
 }
 
-bool ZipDir::FindDir::FindFirst (const char* szWildcard)
+bool ZipDir::FindDir::FindFirst(const char* szWildcard)
 {
-	if (!PreFind (szWildcard))
+	if (!PreFind(szWildcard))
 		return false;
 
 	// finally, this is the name of the file
@@ -36,31 +36,31 @@ bool ZipDir::FindData::MatchWildcard(const char* szName)
 
 	// check if the file object name contains extension sign (.)
 	const char* p;
-	for (p = szName; *p && *p!='.'; ++p)
+	for (p = szName; *p && *p != '.'; ++p)
 		continue;
 
 	if (*p)
 	{
 		// there's an extension sign in the object, but it wasn't matched.. 
-		assert (*p == '.');
+		assert(*p == '.');
 		return false;
 	}
 
 	// no extension sign - add it
-	char szAlias[_MAX_PATH+2];
+	char szAlias[_MAX_PATH + 2];
 	unsigned nLength = p - szName;
 	if (nLength > _MAX_PATH)
 		nLength = _MAX_PATH;
-	memcpy (szAlias, szName, nLength);
-	szAlias[nLength]   = '.'; // add the alias
-	szAlias[nLength+1] = '\0'; // terminate the string
+	memcpy(szAlias, szName, nLength);
+	szAlias[nLength] = '.'; // add the alias
+	szAlias[nLength + 1] = '\0'; // terminate the string
 	return CryStringUtils::MatchWildcard(szAlias, m_szWildcard);
 }
 
 
-ZipDir::FileEntry* ZipDir::FindFile::FindExact (const char* szPath)
+ZipDir::FileEntry* ZipDir::FindFile::FindExact(const char* szPath)
 {
-	if (!PreFind (szPath))
+	if (!PreFind(szPath))
 		return NULL;
 
 	FileEntry* pFileEntry = m_pDirHeader->FindFileEntry(m_szWildcard);
@@ -76,7 +76,7 @@ ZipDir::FileEntry* ZipDir::FindFile::FindExact (const char* szPath)
 // after this call returns successfully (with true returned), the m_szWildcard
 // contains the file name/wildcard and m_pDirHeader contains the directory where
 // the file (s) are to be found
-bool ZipDir::FindData::PreFind (const char* szWildcard)
+bool ZipDir::FindData::PreFind(const char* szWildcard)
 {
 	if (!m_pRoot)
 		return false;
@@ -91,7 +91,7 @@ bool ZipDir::FindData::PreFind (const char* szWildcard)
 		char* pName = m_szWildcard;
 
 		// at first we'll use the wildcard memory to save the directory names
-		for (; *pPath && *pPath != '/' && *pPath != '\\' && pName < m_szWildcard+sizeof(m_szWildcard)-1; ++pPath, ++pName)
+		for (; *pPath && *pPath != '/' && *pPath != '\\' && pName < m_szWildcard + sizeof(m_szWildcard) - 1; ++pPath, ++pName)
 			*pName = ::tolower(*pPath);
 		*pName = '\0';
 
@@ -120,7 +120,7 @@ bool ZipDir::FindData::PreFind (const char* szWildcard)
 }
 
 // goes on to the next entry
-bool ZipDir::FindFile::FindNext ()
+bool ZipDir::FindFile::FindNext()
 {
 	if (m_pDirHeader && m_nFileEntry < m_pDirHeader->numFiles)
 	{
@@ -132,7 +132,7 @@ bool ZipDir::FindFile::FindNext ()
 }
 
 // goes on to the next entry
-bool ZipDir::FindDir::FindNext ()
+bool ZipDir::FindDir::FindNext()
 {
 	if (m_pDirHeader && m_nDirEntry < m_pDirHeader->numDirs)
 	{
@@ -147,7 +147,7 @@ bool ZipDir::FindFile::SkipNonMatchingFiles()
 {
 	assert(m_pDirHeader && m_nFileEntry <= m_pDirHeader->numFiles);
 
-	for(;m_nFileEntry < m_pDirHeader->numFiles;++m_nFileEntry)
+	for (; m_nFileEntry < m_pDirHeader->numFiles; ++m_nFileEntry)
 	{
 		if (MatchWildcard(GetFileName()))
 			return true;
@@ -160,7 +160,7 @@ bool ZipDir::FindDir::SkipNonMatchingDirs()
 {
 	assert(m_pDirHeader && m_nDirEntry <= m_pDirHeader->numDirs);
 
-	for(;m_nDirEntry < m_pDirHeader->numDirs;++m_nDirEntry)
+	for (; m_nDirEntry < m_pDirHeader->numDirs; ++m_nDirEntry)
 	{
 		if (MatchWildcard(GetDirName()))
 			return true;
@@ -172,14 +172,14 @@ bool ZipDir::FindDir::SkipNonMatchingDirs()
 
 ZipDir::FileEntry* ZipDir::FindFile::GetFileEntry()
 {
-	return m_pDirHeader && m_nFileEntry < m_pDirHeader->numFiles? m_pDirHeader->GetFileEntry(m_nFileEntry) : NULL;
+	return m_pDirHeader && m_nFileEntry < m_pDirHeader->numFiles ? m_pDirHeader->GetFileEntry(m_nFileEntry) : NULL;
 }
 ZipDir::DirEntry* ZipDir::FindDir::GetDirEntry()
 {
-	return m_pDirHeader && m_nDirEntry < m_pDirHeader->numDirs? m_pDirHeader->GetSubdirEntry(m_nDirEntry) : NULL;
+	return m_pDirHeader && m_nDirEntry < m_pDirHeader->numDirs ? m_pDirHeader->GetSubdirEntry(m_nDirEntry) : NULL;
 }
 
-const char* ZipDir::FindFile::GetFileName ()
+const char* ZipDir::FindFile::GetFileName()
 {
 	if (m_pDirHeader && m_nFileEntry < m_pDirHeader->numFiles)
 	{
@@ -190,7 +190,7 @@ const char* ZipDir::FindFile::GetFileName ()
 		return ""; // default name
 }
 
-const char* ZipDir::FindDir::GetDirName ()
+const char* ZipDir::FindDir::GetDirName()
 {
 	if (m_pDirHeader && m_nDirEntry < m_pDirHeader->numDirs)
 	{

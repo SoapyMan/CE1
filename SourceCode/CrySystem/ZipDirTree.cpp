@@ -7,14 +7,14 @@
 
 // Adds or finds the file. Returns non-initialized structure if it was added,
 // or an IsInitialized() structure if it was found
-ZipDir::FileEntry* ZipDir::FileEntryTree::Add (const char* szPath)
+ZipDir::FileEntry* ZipDir::FileEntryTree::Add(const char* szPath)
 {
 	// find the slash; if we found it, it's a subdirectory - add a subdirectory and
 	// add the file to it.
 	// if we didn't find it, it's a file - add the file to this dir
 
 	const char* pSlash;
-	for (pSlash = szPath; *pSlash && *pSlash !='/' && *pSlash != '\\'; ++pSlash)
+	for (pSlash = szPath; *pSlash && *pSlash != '/' && *pSlash != '\\'; ++pSlash)
 		continue; // find the next slash
 
 	if (*pSlash)
@@ -22,19 +22,19 @@ ZipDir::FileEntry* ZipDir::FileEntryTree::Add (const char* szPath)
 		FileEntryTree* pSubdir;
 		// we have a subdirectory here - create the file in it
 		{
-			string strDirName (szPath, pSlash - szPath);
-			assert (strDirName.length() == pSlash - szPath);
-			assert (strlen(strDirName.c_str()) == pSlash - szPath);
+			string strDirName(szPath, pSlash - szPath);
+			assert(strDirName.length() == pSlash - szPath);
+			assert(strlen(strDirName.c_str()) == pSlash - szPath);
 			tolower(strDirName);
 
-			SubdirMap::iterator it = m_mapDirs.find (strDirName);
+			SubdirMap::iterator it = m_mapDirs.find(strDirName);
 			if (it == m_mapDirs.end())
-				m_mapDirs.insert (SubdirMap::value_type(strDirName, pSubdir = new FileEntryTree));
+				m_mapDirs.insert(SubdirMap::value_type(strDirName, pSubdir = new FileEntryTree));
 			else
 				pSubdir = it->second;
 		}
 
-		return pSubdir->Add(pSlash+1);
+		return pSubdir->Add(pSlash + 1);
 	}
 	else
 	{
@@ -45,9 +45,9 @@ ZipDir::FileEntry* ZipDir::FileEntryTree::Add (const char* szPath)
 }
 
 // adds a file to this directory
-ZipDir::ErrorEnum ZipDir::FileEntryTree::Add (const char* szPath, const FileEntry& file)
+ZipDir::ErrorEnum ZipDir::FileEntryTree::Add(const char* szPath, const FileEntry& file)
 {
-	FileEntry* pFile = Add (szPath);
+	FileEntry* pFile = Add(szPath);
 	if (!pFile)
 		return ZD_ERROR_INVALID_PATH;
 	if (pFile->IsInitialized())
@@ -81,7 +81,7 @@ size_t ZipDir::FileEntryTree::GetSizeSerialized()const
 	for (SubdirMap::const_iterator itDir = m_mapDirs.begin(); itDir != m_mapDirs.end(); ++itDir)
 	{
 		nSizeOfDirEntries += sizeof(DirEntry);
-		nSizeOfNamePool += itDir->first.length()+1;
+		nSizeOfNamePool += itDir->first.length() + 1;
 		nSizeOfSubdirs += itDir->second->GetSizeSerialized();
 	}
 
@@ -89,7 +89,7 @@ size_t ZipDir::FileEntryTree::GetSizeSerialized()const
 	for (FileMap::const_iterator itFile = m_mapFiles.begin(); itFile != m_mapFiles.end(); ++itFile)
 	{
 		nSizeOfFileEntries += sizeof(FileEntry);
-		nSizeOfNamePool += itFile->first.length()+1;
+		nSizeOfNamePool += itFile->first.length() + 1;
 	}
 
 	if (nSizeOfNamePool > 0xFFFF)
@@ -107,7 +107,7 @@ size_t ZipDir::FileEntryTree::GetSizeSerialized()const
 }
 
 // serializes into the memory
-size_t ZipDir::FileEntryTree::Serialize (DirHeader* pDirHeader)const
+size_t ZipDir::FileEntryTree::Serialize(DirHeader* pDirHeader)const
 {
 	pDirHeader->numDirs = (ZipFile::ushort)m_mapDirs.size();
 	pDirHeader->numFiles = (ZipFile::ushort)m_mapFiles.size();
@@ -124,12 +124,12 @@ size_t ZipDir::FileEntryTree::Serialize (DirHeader* pDirHeader)const
 	{
 		pDirEntry->nNameOffset = pName - pNamePool;
 		size_t nNameLen = itDir->first.length();
-		memcpy (pName, itDir->first.c_str(), nNameLen+1);
-		pName += nNameLen+1;
+		memcpy(pName, itDir->first.c_str(), nNameLen + 1);
+		pName += nNameLen + 1;
 		++pDirEntry;
 	}
 
-	assert ((FileEntry*)pDirEntry == pFileEntry);
+	assert((FileEntry*)pDirEntry == pFileEntry);
 
 	// for each file, we need to have an entry in the name pool and in the file list
 	for (FileMap::const_iterator itFile = m_mapFiles.begin(); itFile != m_mapFiles.end(); ++itFile)
@@ -137,14 +137,14 @@ size_t ZipDir::FileEntryTree::Serialize (DirHeader* pDirHeader)const
 		*pFileEntry = itFile->second;
 		pFileEntry->nNameOffset = pName - pNamePool;
 		size_t nNameLen = itFile->first.length();
-		memcpy (pName, itFile->first.c_str(), nNameLen+1);
-		pName += nNameLen+1;
+		memcpy(pName, itFile->first.c_str(), nNameLen + 1);
+		pName += nNameLen + 1;
 		++pFileEntry;
 	}
-	assert ((const char*)pFileEntry == pNamePool);
+	assert((const char*)pFileEntry == pNamePool);
 
 	// now the name pool is full. Go on and fill the other directories
-	const char* pSubdirHeader = (const char*)(((UINT_PTR)(pName+3))&~3);
+	const char* pSubdirHeader = (const char*)(((UINT_PTR)(pName + 3)) & ~3);
 
 #ifdef _TEST_
 	g_nSF += pDirHeader->numFiles * sizeof(FileEntry);
@@ -158,7 +158,7 @@ size_t ZipDir::FileEntryTree::Serialize (DirHeader* pDirHeader)const
 	for (itDir = m_mapDirs.begin(); itDir != m_mapDirs.end(); ++itDir)
 	{
 		pDirEntry->nDirHeaderOffset = pSubdirHeader - (const char*)pDirEntry;
-		pSubdirHeader += itDir->second->Serialize ((DirHeader*)pSubdirHeader);
+		pSubdirHeader += itDir->second->Serialize((DirHeader*)pSubdirHeader);
 		++pDirEntry;
 	}
 
@@ -188,60 +188,60 @@ size_t ZipDir::FileEntryTree::GetSize() const
 	return nSize;
 }
 
-bool ZipDir::FileEntryTree::IsOwnerOf (const FileEntry* pFileEntry)const
+bool ZipDir::FileEntryTree::IsOwnerOf(const FileEntry* pFileEntry)const
 {
 	for (FileMap::const_iterator itFile = m_mapFiles.begin(); itFile != m_mapFiles.end(); ++itFile)
 		if (pFileEntry == &itFile->second)
 			return true;
 
 	for (SubdirMap::const_iterator itDir = m_mapDirs.begin(); itDir != m_mapDirs.end(); ++itDir)
-		if (itDir->second->IsOwnerOf (pFileEntry))
+		if (itDir->second->IsOwnerOf(pFileEntry))
 			return true;
-	
+
 	return false;
 }
 
 ZipDir::FileEntryTree* ZipDir::FileEntryTree::FindDir(const char* szDirName)
 {
-	SubdirMap::iterator it = m_mapDirs.find (szDirName);
+	SubdirMap::iterator it = m_mapDirs.find(szDirName);
 	if (it == m_mapDirs.end())
 		return NULL;
 	else
 		return it->second;
 }
 
-ZipDir::FileEntryTree::FileMap::iterator ZipDir::FileEntryTree::FindFile (const char* szFileName)
+ZipDir::FileEntryTree::FileMap::iterator ZipDir::FileEntryTree::FindFile(const char* szFileName)
 {
-	return m_mapFiles.find (szFileName);
+	return m_mapFiles.find(szFileName);
 }
 
-ZipDir::FileEntry* ZipDir::FileEntryTree::GetFileEntry (FileMap::iterator it)
+ZipDir::FileEntry* ZipDir::FileEntryTree::GetFileEntry(FileMap::iterator it)
 {
 	return it == GetFileEnd() ? NULL : &it->second;
 }
 
-ZipDir::FileEntryTree* ZipDir::FileEntryTree::GetDirEntry (SubdirMap::iterator it)
+ZipDir::FileEntryTree* ZipDir::FileEntryTree::GetDirEntry(SubdirMap::iterator it)
 {
 	return it == GetDirEnd() ? NULL : it->second;
 }
 
-ZipDir::ErrorEnum ZipDir::FileEntryTree::RemoveDir (const char* szDirName)
+ZipDir::ErrorEnum ZipDir::FileEntryTree::RemoveDir(const char* szDirName)
 {
-	SubdirMap::iterator itRemove = m_mapDirs.find (szDirName);
+	SubdirMap::iterator itRemove = m_mapDirs.find(szDirName);
 	if (itRemove != m_mapDirs.end())
 		return ZD_ERROR_FILE_NOT_FOUND;
 
 	delete itRemove->second;
-	m_mapDirs.erase (itRemove);
+	m_mapDirs.erase(itRemove);
 	return ZD_ERROR_SUCCESS;
 }
 
-ZipDir::ErrorEnum ZipDir::FileEntryTree::RemoveFile (const char* szFileName)
+ZipDir::ErrorEnum ZipDir::FileEntryTree::RemoveFile(const char* szFileName)
 {
-	FileMap::iterator itRemove = m_mapFiles.find (szFileName);
+	FileMap::iterator itRemove = m_mapFiles.find(szFileName);
 	if (itRemove == m_mapFiles.end())
 		return ZD_ERROR_FILE_NOT_FOUND;
 
-	m_mapFiles.erase (itRemove);
+	m_mapFiles.erase(itRemove);
 	return ZD_ERROR_SUCCESS;
 }

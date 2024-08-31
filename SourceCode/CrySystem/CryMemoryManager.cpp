@@ -36,7 +36,7 @@ extern bool g_bProfilerEnabled;
 #undef realloc
 #undef free
 
- 
+
 #ifndef _XBOX
 
 #define GLOBALPOOLSIZE (32*1025*1025+16)
@@ -58,7 +58,7 @@ extern bool g_bProfilerEnabled;
 
 
 #define MAXPOOLS 128
-void *poolbufs[MAXPOOLS];
+void* poolbufs[MAXPOOLS];
 int poolsizes[MAXPOOLS];
 int numpools = 0;
 
@@ -91,7 +91,7 @@ PoolContext *AllocPool(PoolContext *pCtx, int size)
 	}
 	poolsizes[numpools] = size;
 	poolbufs[numpools++] = buf;
-	return pCtx; 
+	return pCtx;
 };
 */
 
@@ -120,62 +120,62 @@ class PageBucketAllocator
 	- very good cache locality (page aligned, same size objects)
 	*/
 	enum { PAGESIZE = 4096 };
-	enum { PAGEMASK = (~(PAGESIZE-1)) };
+	enum { PAGEMASK = (~(PAGESIZE - 1)) };
 	//enum { PAGESATONCE = 64 };
 	enum { PAGESATONCE = 32 };
-	enum { PAGEBLOCKSIZE = PAGESIZE*PAGESATONCE };
-	enum { PTRSIZE = sizeof(char *) };
-	enum { MAXBUCKETS = BUCKETQUANT/4+1 }; // meaning up to size 512 on 32bit pointer systems
-	enum { MAXREUSESIZE = MAXBUCKETS*PTRSIZE-PTRSIZE };
-	int bucket(int s) { return (s+PTRSIZE-1)>>PTRBITS; };
-	int *ppage(void *p) { return (int *)(((INT_PTR)p)&PAGEMASK); };
-	enum { PTRBITS = PTRSIZE==2 ? 1 : PTRSIZE==4 ? 2 : 3 };
+	enum { PAGEBLOCKSIZE = PAGESIZE * PAGESATONCE };
+	enum { PTRSIZE = sizeof(char*) };
+	enum { MAXBUCKETS = BUCKETQUANT / 4 + 1 }; // meaning up to size 512 on 32bit pointer systems
+	enum { MAXREUSESIZE = MAXBUCKETS * PTRSIZE - PTRSIZE };
+	int bucket(int s) { return (s + PTRSIZE - 1) >> PTRBITS; };
+	int* ppage(void* p) { return (int*)(((INT_PTR)p) & PAGEMASK); };
+	enum { PTRBITS = PTRSIZE == 2 ? 1 : PTRSIZE == 4 ? 2 : 3 };
 
-	void *reuse[MAXBUCKETS];
-	void **pages;
+	void* reuse[MAXBUCKETS];
+	void** pages;
 	//! Total allocated size.
 
-	void putinbuckets(char *start, char *end, int bsize)
+	void putinbuckets(char* start, char* end, int bsize)
 	{
-		int size = bsize*PTRSIZE;        
-		for(end -= size; start<=end; start += size)
+		int size = bsize * PTRSIZE;
+		for (end -= size; start <= end; start += size)
 		{
-			*((void **)start) = reuse[bsize];
+			*((void**)start) = reuse[bsize];
 			reuse[bsize] = start;
 		};
 	};
 
 	void newpageblocks()
 	{
-		char *b = (char *)::malloc(PAGEBLOCKSIZE); // if we could get page aligned memory here, that would be even better
-		char *first = ((char *)ppage(b))+PAGESIZE;
-		for(int i = 0; i<PAGESATONCE-1; i++)
+		char* b = (char*)::malloc(PAGEBLOCKSIZE); // if we could get page aligned memory here, that would be even better
+		char* first = ((char*)ppage(b)) + PAGESIZE;
+		for (int i = 0; i < PAGESATONCE - 1; i++)
 		{
-			void **p = (void **)(first+i*PAGESIZE);
+			void** p = (void**)(first + i * PAGESIZE);
 			*p = pages;
 			pages = p;
 		};
 		//if(b-first+PAGESIZE>BUCKETQUANT) bpool(g_pool, first+PAGEBLOCKSIZE-PAGESIZE, b-first+PAGESIZE);
 	};
 
-	void *newpage(unsigned int bsize)
+	void* newpage(unsigned int bsize)
 	{
-		if(!pages) newpageblocks();
-		void **page = pages;
-		pages = (void **)*pages;
+		if (!pages) newpageblocks();
+		void** page = pages;
+		pages = (void**)*pages;
 		*page = 0;
-		putinbuckets((char *)(page+1), ((char *)page)+PAGESIZE, bsize);
-		return alloc(bsize*PTRSIZE);
+		putinbuckets((char*)(page + 1), ((char*)page) + PAGESIZE, bsize);
+		return alloc(bsize * PTRSIZE);
 	};
 
-	void freepage(int *page, int bsize) // worst case if very large amounts of objects get deallocated in random order from when they were allocated
+	void freepage(int* page, int bsize) // worst case if very large amounts of objects get deallocated in random order from when they were allocated
 	{
-		for(void **r = &reuse[bsize]; *r; )
+		for (void** r = &reuse[bsize]; *r; )
 		{
-			if(page == ppage(*r)) *r = *((void **)*r);
-			else r = (void **)*r;
+			if (page == ppage(*r)) *r = *((void**)*r);
+			else r = (void**)*r;
 		};
-		void **p = (void **)page;
+		void** p = (void**)page;
 		*p = pages;
 		pages = p;
 	};
@@ -185,28 +185,28 @@ public:
 	PageBucketAllocator()
 	{
 		pages = NULL;
-		for(int i = 0; i<MAXBUCKETS; i++) reuse[i] = NULL;
+		for (int i = 0; i < MAXBUCKETS; i++) reuse[i] = NULL;
 	};
 
-	void *alloc(unsigned int size)
+	void* alloc(unsigned int size)
 	{
-		if(size>biggestalloc)
+		if (size > biggestalloc)
 		{
 			biggestalloc = size;
 		};
-		if(size>MAXREUSESIZE) return ::malloc(size);
+		if (size > MAXREUSESIZE) return ::malloc(size);
 		size = bucket(size);
-		void **r = (void **)reuse[size];
-		if(!r) return newpage(size);
+		void** r = (void**)reuse[size];
+		if (!r) return newpage(size);
 		reuse[size] = *r;
-		int *page = ppage(r);
+		int* page = ppage(r);
 		(*page)++;
-		return (void *)r;
+		return (void*)r;
 	};
 
-	void dealloc(void *p, unsigned int size)
+	void dealloc(void* p, unsigned int size)
 	{
-		if(size>MAXREUSESIZE)
+		if (size > MAXREUSESIZE)
 		{
 			::free(p);
 			//brel(g_pool, p);
@@ -214,10 +214,10 @@ public:
 		else
 		{
 			size = bucket(size);
-			*((void **)p) = reuse[size];
+			*((void**)p) = reuse[size];
 			reuse[size] = p;
-			int *page = ppage(p);
-			if(!--(*page)) freepage(page, size);
+			int* page = ppage(p);
+			if (!--(*page)) freepage(page, size);
 		};
 	};
 
@@ -225,63 +225,63 @@ public:
 	{
 		int totalwaste = 0;
 		char buf[100];
-		for(int i = 0; i<MAXBUCKETS; i++)
+		for (int i = 0; i < MAXBUCKETS; i++)
 		{
 			int n = 0;
-			for(void **r = (void **)reuse[i]; r; r = (void **)*r) n++;
-			if(n)
+			for (void** r = (void**)reuse[i]; r; r = (void**)*r) n++;
+			if (n)
 			{
-				int waste = i*4*n/1024;
+				int waste = i * 4 * n / 1024;
 				totalwaste += waste;
-				sprintf(buf, "bucket %d -> %d (%d k)\n", i*4, n, waste);
-				::OutputDebugString(buf); 
+				sprintf(buf, "bucket %d -> %d (%d k)\n", i * 4, n, waste);
+				::OutputDebugString(buf);
 			};
 		};
 		sprintf(buf, "totalwaste %d k\n", totalwaste);
-		::OutputDebugString(buf); 
+		::OutputDebugString(buf);
 	};
 };
 
 PageBucketAllocator g_GlobPageBucketAllocator;
 
-CRYMEMORYMANAGER_API void *CryMalloc(size_t size)
+CRYMEMORYMANAGER_API void* CryMalloc(size_t size)
 {
 	if (!g_bProfilerEnabled)
 	{
-		g_TotalAllocatedMemory += size+sizeof(int);
-		int *p = (int *)g_GlobPageBucketAllocator.alloc(size+sizeof(int));
+		g_TotalAllocatedMemory += size + sizeof(int);
+		int* p = (int*)g_GlobPageBucketAllocator.alloc(size + sizeof(int));
 		*p++ = size;  // stores 2 sizes for big objects!
 		return p;
 	}
 	else
 	{
-		FUNCTION_PROFILER_FAST( g_System,PROFILE_SYSTEM,g_bProfilerEnabled );
-		g_TotalAllocatedMemory += size+sizeof(int);
-		int *p = (int *)g_GlobPageBucketAllocator.alloc(size+sizeof(int));
+		FUNCTION_PROFILER_FAST(g_System, PROFILE_SYSTEM, g_bProfilerEnabled);
+		g_TotalAllocatedMemory += size + sizeof(int);
+		int* p = (int*)g_GlobPageBucketAllocator.alloc(size + sizeof(int));
 		*p++ = size;  // stores 2 sizes for big objects!
 		return p;
 	}
 }
 
-CRYMEMORYMANAGER_API void CryFree(void *p) 
+CRYMEMORYMANAGER_API void CryFree(void* p)
 {
 	if (!g_bProfilerEnabled)
 	{
 		if (p != NULL)
 		{
-			unsigned int *t = (unsigned int *)p;
-			unsigned int size = *--t;	
+			unsigned int* t = (unsigned int*)p;
+			unsigned int size = *--t;
 
 #ifdef MINIMALDEBUG
-			if (size>=100000000)
+			if (size >= 100000000)
 			{
-				CryError( "\001[CRYMANAGER ERROR](CryFree): illegal size 0x%X - block header was corrupted",size);
+				CryError("\001[CRYMANAGER ERROR](CryFree): illegal size 0x%X - block header was corrupted", size);
 			}
 #endif
 
 			size += sizeof(int);
 #ifdef GARBAGEMEMORY     //FIXME: *disabling* memset caused random crash???
-			memset(t, 0xBA, size); 
+			memset(t, 0xBA, size);
 #endif
 			g_TotalAllocatedMemory -= size;
 			g_GlobPageBucketAllocator.dealloc(t, size);
@@ -292,20 +292,20 @@ CRYMEMORYMANAGER_API void CryFree(void *p)
 		// With profiler.
 		if (p != NULL)
 		{
-			FUNCTION_PROFILER_FAST( g_System,PROFILE_SYSTEM,g_bProfilerEnabled );
-			unsigned int *t = (unsigned int *)p;
-			unsigned int size = *--t;	
+			FUNCTION_PROFILER_FAST(g_System, PROFILE_SYSTEM, g_bProfilerEnabled);
+			unsigned int* t = (unsigned int*)p;
+			unsigned int size = *--t;
 
 #ifdef MINIMALDEBUG
-			if (size>=100000000)
+			if (size >= 100000000)
 			{
-				CryError( "\001[CRYMANAGER ERROR](CryFree): illegal size 0x%X - block header was corrupted",size);
+				CryError("\001[CRYMANAGER ERROR](CryFree): illegal size 0x%X - block header was corrupted", size);
 			}
 #endif
 
 			size += sizeof(int);
 #ifdef GARBAGEMEMORY     //FIXME: *disabling* memset caused random crash???
-			memset(t, 0xBA, size); 
+			memset(t, 0xBA, size);
 #endif
 			g_TotalAllocatedMemory -= size;
 			g_GlobPageBucketAllocator.dealloc(t, size);
@@ -313,7 +313,7 @@ CRYMEMORYMANAGER_API void CryFree(void *p)
 	}
 }
 
-CRYMEMORYMANAGER_API void CryFreeSize(void *p, size_t size)
+CRYMEMORYMANAGER_API void CryFreeSize(void* p, size_t size)
 {
 	g_ScriptAllocatedMemory -= size;
 	g_TotalAllocatedMemory -= size;
@@ -322,14 +322,14 @@ CRYMEMORYMANAGER_API void CryFreeSize(void *p, size_t size)
 		if (p != NULL)
 		{
 #ifdef MINIMALDEBUG
-			if (size>=100000000)
+			if (size >= 100000000)
 			{
-				CryError("[CRYMANAGER ERROR](CryFreeSize): illegal size 0x%X - block header was corrupted",size );
+				CryError("[CRYMANAGER ERROR](CryFreeSize): illegal size 0x%X - block header was corrupted", size);
 			}
 #endif
 
 #ifdef GARBAGEMEMORY      //FIXME: idem
-			memset(p, 0xBB, size); 
+			memset(p, 0xBB, size);
 #endif
 			g_GlobPageBucketAllocator.dealloc(p, size);
 		}
@@ -339,34 +339,34 @@ CRYMEMORYMANAGER_API void CryFreeSize(void *p, size_t size)
 		// With profiler.
 		if (p != NULL)
 		{
-			FUNCTION_PROFILER_FAST( g_System,PROFILE_SYSTEM,g_bProfilerEnabled );
+			FUNCTION_PROFILER_FAST(g_System, PROFILE_SYSTEM, g_bProfilerEnabled);
 #ifdef MINIMALDEBUG
-			if (size>=100000000)
+			if (size >= 100000000)
 			{
-				CryError("[CRYMANAGER ERROR](CryFreeSize): illegal size 0x%X - block header was corrupted",size );
+				CryError("[CRYMANAGER ERROR](CryFreeSize): illegal size 0x%X - block header was corrupted", size);
 			}
 #endif
 
 #ifdef GARBAGEMEMORY      //FIXME: idem
-			memset(p, 0xBB, size); 
+			memset(p, 0xBB, size);
 #endif
 			g_GlobPageBucketAllocator.dealloc(p, size);
 		}
 	}
 }
 
-CRYMEMORYMANAGER_API void *CryRealloc(void *memblock, size_t size)
+CRYMEMORYMANAGER_API void* CryRealloc(void* memblock, size_t size)
 {
 	if (!g_bProfilerEnabled)
 	{
 		// Without profiler.
-		if(memblock==NULL)
+		if (memblock == NULL)
 			return CryMalloc(size);
 		else
 		{
-			void *np = CryMalloc(size);
-			size_t oldsize = ((int *)memblock)[-1];
-			memcpy(np, memblock, size>oldsize ? oldsize : size);
+			void* np = CryMalloc(size);
+			size_t oldsize = ((int*)memblock)[-1];
+			memcpy(np, memblock, size > oldsize ? oldsize : size);
 			CryFree(memblock);
 			return np;
 		}
@@ -374,49 +374,49 @@ CRYMEMORYMANAGER_API void *CryRealloc(void *memblock, size_t size)
 	else
 	{
 		// With Profiler.
-		FUNCTION_PROFILER_FAST( g_System,PROFILE_SYSTEM,g_bProfilerEnabled );
-		if(memblock==NULL)
+		FUNCTION_PROFILER_FAST(g_System, PROFILE_SYSTEM, g_bProfilerEnabled);
+		if (memblock == NULL)
 			return CryMalloc(size);
 		else
 		{
-			void *np = CryMalloc(size);
-			size_t oldsize = ((int *)memblock)[-1];
-			memcpy(np, memblock, size>oldsize ? oldsize : size);
+			void* np = CryMalloc(size);
+			size_t oldsize = ((int*)memblock)[-1];
+			memcpy(np, memblock, size > oldsize ? oldsize : size);
 			CryFree(memblock);
 			return np;
 		}
 	}
 }
 
-CRYMEMORYMANAGER_API void *CryReallocSize(void *memblock, size_t oldsize, size_t size)
+CRYMEMORYMANAGER_API void* CryReallocSize(void* memblock, size_t oldsize, size_t size)
 {
 	g_ScriptAllocatedMemory += size; // -old size done in CryFreeSize
 	g_TotalAllocatedMemory += size;
 	if (!g_bProfilerEnabled)
 	{
-		if(memblock==NULL)
+		if (memblock == NULL)
 		{
 			return (char*)g_GlobPageBucketAllocator.alloc(size) + g_nPrecaution;
 		}
 		else
 		{
-			void *np = (char*)g_GlobPageBucketAllocator.alloc(size) + g_nPrecaution;
-			memcpy(np, memblock, size>oldsize ? oldsize : size);
+			void* np = (char*)g_GlobPageBucketAllocator.alloc(size) + g_nPrecaution;
+			memcpy(np, memblock, size > oldsize ? oldsize : size);
 			CryFreeSize(memblock, oldsize);
 			return np;
 		}
 	}
 	else
 	{
-		FUNCTION_PROFILER_FAST( g_System,PROFILE_SYSTEM,g_bProfilerEnabled );
-		if(memblock==NULL)
+		FUNCTION_PROFILER_FAST(g_System, PROFILE_SYSTEM, g_bProfilerEnabled);
+		if (memblock == NULL)
 		{
 			return (char*)g_GlobPageBucketAllocator.alloc(size) + g_nPrecaution;
 		}
 		else
 		{
-			void *np = (char*)g_GlobPageBucketAllocator.alloc(size) + g_nPrecaution;
-			memcpy(np, memblock, size>oldsize ? oldsize : size);
+			void* np = (char*)g_GlobPageBucketAllocator.alloc(size) + g_nPrecaution;
+			memcpy(np, memblock, size > oldsize ? oldsize : size);
 			CryFreeSize(memblock, oldsize);
 			return np;
 		}
@@ -427,7 +427,7 @@ CRYMEMORYMANAGER_API void CryFlushAll()  // releases/resets ALL memory... this i
 {
 	/*
 	InitPoolContext(g_pool);
-	for(int i = 0; i<numpools; i++) 
+	for(int i = 0; i<numpools; i++)
 		bpool(g_pool, poolbufs[i], poolsizes[i]);
 		*/
 	new (&g_GlobPageBucketAllocator) PageBucketAllocator();
@@ -438,7 +438,7 @@ CRYMEMORYMANAGER_API void CryFlushAll()  // releases/resets ALL memory... this i
 /* MarcoK: This is never used anywhere ... commented out (LINUX port)
 extern "C" CRYMEMORYMANAGER_API void CryFreeMemoryPools()  // releases/resets ALL memory... this is useful for restarting the game
 {
-	for(int i = 0; i<numpools; i++) 
+	for(int i = 0; i<numpools; i++)
 	{
 		void *pBuf = poolbufs[i];
 		VirtualFree( pBuf,0,MEM_RELEASE );
@@ -467,34 +467,34 @@ CRYMEMORYMANAGER_API int CryMemoryGetAllocatedInScriptSize()
 CRYMEMORYMANAGER_API int CryMemoryGetPoolSize()
 {
 	int totalsize = 0;
-	for(int i = 0; i<numpools; i++) 
+	for (int i = 0; i < numpools; i++)
 		totalsize += poolsizes[i];
 	return totalsize;
 }
 
 //////////////////////////////////////////////////////////////////////////
-CRYMEMORYMANAGER_API int CryStats(char *buf)
+CRYMEMORYMANAGER_API int CryStats(char* buf)
 {
-	long curalloc=0, totfree=0, maxfree=0, nget=0, nrel=0;
+	long curalloc = 0, totfree = 0, maxfree = 0, nget = 0, nrel = 0;
 	//bstats(g_pool, &curalloc, &totfree, &maxfree, &nget, &nrel);
-	if(buf)
+	if (buf)
 	{
 		int poolsize = CryMemoryGetPoolSize();
 		int scriptalloc = CryMemoryGetAllocatedInScriptSize();
 		sprintf(buf, "Memory Allocated = %d K, totfree = %d K , maxfree = %d K, nmalloc = %d, nfree = %d, biggestalloc = %d, Pool Size = %d K, Lua Allocated = %d K",
-			curalloc/1024, totfree/1024, maxfree/1024, nget, nrel, biggestalloc,poolsize/1024,scriptalloc/1024);
+			curalloc / 1024, totfree / 1024, maxfree / 1024, nget, nrel, biggestalloc, poolsize / 1024, scriptalloc / 1024);
 		//printstats();
 		g_GlobPageBucketAllocator.stats();
 	};
-	return curalloc/1024;
+	return curalloc / 1024;
 }
 
 /*
 extern "C" void debug(int n)
 {
 	char buf[100];
-	sprintf(buf, "BESTFIT: %d\n", n);  
-	::OutputDebugString(buf); 
+	sprintf(buf, "BESTFIT: %d\n", n);
+	::OutputDebugString(buf);
 };
 */// CryMemoryManager.cpp : Defines the entry point for the DLL application.
 //#endif //LINUX

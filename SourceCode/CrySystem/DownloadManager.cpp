@@ -6,7 +6,7 @@
 
 //------------------------------------------------------------------------------------------------- 
 CDownloadManager::CDownloadManager()
-: m_pSystem(0)
+	: m_pSystem(0)
 {
 }
 
@@ -16,15 +16,15 @@ CDownloadManager::~CDownloadManager()
 }
 
 //------------------------------------------------------------------------------------------------- 
-void CDownloadManager::Create(ISystem *pSystem)
+void CDownloadManager::Create(ISystem* pSystem)
 {
 	m_pSystem = pSystem;
 }
 
 //------------------------------------------------------------------------------------------------- 
-CHTTPDownloader *CDownloadManager::CreateDownload()
+CHTTPDownloader* CDownloadManager::CreateDownload()
 {
-	CHTTPDownloader *pDL = new CHTTPDownloader;
+	CHTTPDownloader* pDL = new CHTTPDownloader;
 
 	m_lDownloadList.push_back(pDL);
 
@@ -34,9 +34,9 @@ CHTTPDownloader *CDownloadManager::CreateDownload()
 }
 
 //------------------------------------------------------------------------------------------------- 
-void CDownloadManager::RemoveDownload(CHTTPDownloader *pDownload)
+void CDownloadManager::RemoveDownload(CHTTPDownloader* pDownload)
 {
-	std::list<CHTTPDownloader *>::iterator it = std::find(m_lDownloadList.begin(), m_lDownloadList.end(), pDownload);
+	std::list<CHTTPDownloader*>::iterator it = std::find(m_lDownloadList.begin(), m_lDownloadList.end(), pDownload);
 
 	if (it != m_lDownloadList.end())
 	{
@@ -47,11 +47,11 @@ void CDownloadManager::RemoveDownload(CHTTPDownloader *pDownload)
 //------------------------------------------------------------------------------------------------- 
 void CDownloadManager::Update()
 {
-	std::list<CHTTPDownloader *>::iterator it = m_lDownloadList.begin();
+	std::list<CHTTPDownloader*>::iterator it = m_lDownloadList.begin();
 
-	while(it != m_lDownloadList.end())
+	while (it != m_lDownloadList.end())
 	{
-		CHTTPDownloader *pDL = *it;
+		CHTTPDownloader* pDL = *it;
 
 		switch (pDL->GetState())
 		{
@@ -79,9 +79,9 @@ void CDownloadManager::Update()
 //------------------------------------------------------------------------------------------------- 
 void CDownloadManager::Release()
 {
-	for (std::list<CHTTPDownloader *>::iterator it = m_lDownloadList.begin(); it != m_lDownloadList.end();)
+	for (std::list<CHTTPDownloader*>::iterator it = m_lDownloadList.begin(); it != m_lDownloadList.end();)
 	{
-		CHTTPDownloader *pDL = *it;
+		CHTTPDownloader* pDL = *it;
 
 		it = m_lDownloadList.erase(it);
 

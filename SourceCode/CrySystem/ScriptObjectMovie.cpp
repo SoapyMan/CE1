@@ -21,53 +21,53 @@ CScriptObjectMovie::~CScriptObjectMovie()
 		@param pGame Pointer to the Game
 */
 //////////////////////////////////////////////////////////////////////////
-void CScriptObjectMovie::Init(IScriptSystem *pScriptSystem, ISystem *pSystem)
+void CScriptObjectMovie::Init(IScriptSystem* pScriptSystem, ISystem* pSystem)
 {
-	m_pSystem=pSystem;
-	m_pMovieSystem=m_pSystem->GetIMovieSystem();	
+	m_pSystem = pSystem;
+	m_pMovieSystem = m_pSystem->GetIMovieSystem();
 	InitGlobal(pScriptSystem, "Movie", this);
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CScriptObjectMovie::InitializeTemplate(IScriptSystem *pSS)
+void CScriptObjectMovie::InitializeTemplate(IScriptSystem* pSS)
 {
 	_ScriptableEx<CScriptObjectMovie>::InitializeTemplate(pSS);
-	REG_FUNC(CScriptObjectMovie,PlaySequence);
-	REG_FUNC(CScriptObjectMovie,StopSequence);
-	REG_FUNC(CScriptObjectMovie,StopAllSequences);
-	REG_FUNC(CScriptObjectMovie,StopAllCutScenes);
-	REG_FUNC(CScriptObjectMovie,PauseSequences);
-	REG_FUNC(CScriptObjectMovie,ResumeSequences);
+	REG_FUNC(CScriptObjectMovie, PlaySequence);
+	REG_FUNC(CScriptObjectMovie, StopSequence);
+	REG_FUNC(CScriptObjectMovie, StopAllSequences);
+	REG_FUNC(CScriptObjectMovie, StopAllCutScenes);
+	REG_FUNC(CScriptObjectMovie, PauseSequences);
+	REG_FUNC(CScriptObjectMovie, ResumeSequences);
 }
 
 /*! Start a sequence
 		@param pszName Name of sequence
 */
 //////////////////////////////////////////////////////////////////////////
-int CScriptObjectMovie::PlaySequence(IFunctionHandler *pH)
+int CScriptObjectMovie::PlaySequence(IFunctionHandler* pH)
 {
 	//CHECK_PARAMETERS(1);
-	if (pH->GetParamCount()<1)
+	if (pH->GetParamCount() < 1)
 		return pH->EndFunction();
 
-	const char *pszName;
+	const char* pszName;
 	pH->GetParam(1, pszName);
 
-	IGame *pGame=m_pSystem->GetIGame();
-	if (!pGame) 
+	IGame* pGame = m_pSystem->GetIGame();
+	if (!pGame)
 	{
 		// can this happen?
 		return pH->EndFunction();
 	}
 
-	bool bResetFx=true;
-	if (pH->GetParamCount()==2)
+	bool bResetFx = true;
+	if (pH->GetParamCount() == 2)
 		pH->GetParam(2, bResetFx);
 
-	IMovieSystem *pMovieSystem=m_pSystem->GetIMovieSystem();
+	IMovieSystem* pMovieSystem = m_pSystem->GetIMovieSystem();
 	if (pMovieSystem)
 	{
-		pMovieSystem->PlaySequence(pszName,bResetFx);
+		pMovieSystem->PlaySequence(pszName, bResetFx);
 	}
 
 
@@ -78,33 +78,33 @@ int CScriptObjectMovie::PlaySequence(IFunctionHandler *pH)
 		@param pszName Name of sequence
 */
 //////////////////////////////////////////////////////////////////////////
-int CScriptObjectMovie::StopSequence(IFunctionHandler *pH)
+int CScriptObjectMovie::StopSequence(IFunctionHandler* pH)
 {
 	CHECK_PARAMETERS(1);
-	const char *pszName;
+	const char* pszName;
 	pH->GetParam(1, pszName);
 	m_pMovieSystem->StopSequence(pszName);
 	return pH->EndFunction();
 }
 
 //////////////////////////////////////////////////////////////////////////
-int CScriptObjectMovie::StopAllSequences(IFunctionHandler *pH)
+int CScriptObjectMovie::StopAllSequences(IFunctionHandler* pH)
 {
 	CHECK_PARAMETERS(0);
 	m_pMovieSystem->StopAllSequences();
 	return pH->EndFunction();
 }
- 
+
 //////////////////////////////////////////////////////////////////////////
-int CScriptObjectMovie::StopAllCutScenes(IFunctionHandler *pH)
+int CScriptObjectMovie::StopAllCutScenes(IFunctionHandler* pH)
 {
-	CHECK_PARAMETERS(0);	
-	IGame *pGame=m_pSystem->GetIGame();
+	CHECK_PARAMETERS(0);
+	IGame* pGame = m_pSystem->GetIGame();
 	IMovieSystem* mov = m_pSystem->GetIMovieSystem();
-	if (!pGame) 
+	if (!pGame)
 	{
 		// can this happen?
-		return pH->EndFunction();		
+		return pH->EndFunction();
 	}
 
 	//pGame->StopCurrentCutscene();
@@ -118,15 +118,15 @@ int CScriptObjectMovie::StopAllCutScenes(IFunctionHandler *pH)
 	return pH->EndFunction();
 }
 
-int CScriptObjectMovie::PauseSequences(IFunctionHandler *pH)
+int CScriptObjectMovie::PauseSequences(IFunctionHandler* pH)
 {
-	CHECK_PARAMETERS(0);	
+	CHECK_PARAMETERS(0);
 
 	m_pMovieSystem->Pause();
 	return pH->EndFunction();
 }
 
-int CScriptObjectMovie::ResumeSequences(IFunctionHandler *pH)
+int CScriptObjectMovie::ResumeSequences(IFunctionHandler* pH)
 {
 	CHECK_PARAMETERS(0);
 

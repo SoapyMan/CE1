@@ -15,59 +15,59 @@ struct CScriptBindings
 {
 
 	CScriptBindings();
-	
-	~CScriptBindings(){}
-	bool Init(CSystem *pSystem);
+
+	~CScriptBindings() {}
+	bool Init(CSystem* pSystem);
 	bool ShutDown();
 private:
-	CScriptObjectSystem *m_pScriptObjectSystem;
-	CScriptObjectParticle *m_pScriptObjectParticle;
-	CScriptObjectAnimation *m_pScriptObjectAnimation;
-	CScriptObjectSound *m_pScriptObjectSound;
-	CScriptObjectMovie *m_pScriptObjectMovie;
-	CScriptObjectScript *m_pScriptObjectScript;
+	CScriptObjectSystem* m_pScriptObjectSystem;
+	CScriptObjectParticle* m_pScriptObjectParticle;
+	CScriptObjectAnimation* m_pScriptObjectAnimation;
+	CScriptObjectSound* m_pScriptObjectSound;
+	CScriptObjectMovie* m_pScriptObjectMovie;
+	CScriptObjectScript* m_pScriptObjectScript;
 };
 
 CScriptBindings::CScriptBindings()
 {
-	m_pScriptObjectSystem=NULL;
-	m_pScriptObjectParticle=NULL;
-	m_pScriptObjectAnimation=NULL;
-	m_pScriptObjectSound=NULL;
-	m_pScriptObjectMovie=NULL;
-	m_pScriptObjectScript=NULL;
+	m_pScriptObjectSystem = NULL;
+	m_pScriptObjectParticle = NULL;
+	m_pScriptObjectAnimation = NULL;
+	m_pScriptObjectSound = NULL;
+	m_pScriptObjectMovie = NULL;
+	m_pScriptObjectScript = NULL;
 }
 
-bool CScriptBindings::Init(CSystem *pSystem)
+bool CScriptBindings::Init(CSystem* pSystem)
 {
-	IScriptSystem *pSS=pSystem->GetIScriptSystem();
-//SYSTEM
+	IScriptSystem* pSS = pSystem->GetIScriptSystem();
+	//SYSTEM
 	CScriptObjectSystem::InitializeTemplate(pSS);
-	m_pScriptObjectSystem=new CScriptObjectSystem;
-	m_pScriptObjectSystem->Init(pSS,pSystem);
-//PARTICLE
+	m_pScriptObjectSystem = new CScriptObjectSystem;
+	m_pScriptObjectSystem->Init(pSS, pSystem);
+	//PARTICLE
 	CScriptObjectParticle::InitializeTemplate(pSS);
-	m_pScriptObjectParticle=new CScriptObjectParticle;
-	m_pScriptObjectParticle->Init(pSS,pSystem);
-//ANIMATION
+	m_pScriptObjectParticle = new CScriptObjectParticle;
+	m_pScriptObjectParticle->Init(pSS, pSystem);
+	//ANIMATION
 	CScriptObjectAnimation::InitializeTemplate(pSS);
-	m_pScriptObjectAnimation=new CScriptObjectAnimation;
-	m_pScriptObjectAnimation->Init(pSS,pSystem);
-//SOUND	
+	m_pScriptObjectAnimation = new CScriptObjectAnimation;
+	m_pScriptObjectAnimation->Init(pSS, pSystem);
+	//SOUND	
 	CScriptObjectSound::InitializeTemplate(pSS);
-	m_pScriptObjectSound=new CScriptObjectSound;
-	m_pScriptObjectSound->Init(pSS,pSystem);
-//MOVIE
+	m_pScriptObjectSound = new CScriptObjectSound;
+	m_pScriptObjectSound->Init(pSS, pSystem);
+	//MOVIE
 	CScriptObjectMovie::InitializeTemplate(pSS);
-	m_pScriptObjectMovie=new CScriptObjectMovie;
-	m_pScriptObjectMovie->Init(pSS,pSystem);
-//SCRIPT
+	m_pScriptObjectMovie = new CScriptObjectMovie;
+	m_pScriptObjectMovie->Init(pSS, pSystem);
+	//SCRIPT
 	CScriptObjectScript::InitializeTemplate(pSS);
-	m_pScriptObjectScript=new CScriptObjectScript;
+	m_pScriptObjectScript = new CScriptObjectScript;
 	m_pScriptObjectScript->Init(pSS);
-//ENTITY
+	//ENTITY
 	CScriptObjectEntity::InitializeTemplate(pSS);
-//DOWNLOAD
+	//DOWNLOAD
 #if !defined(LINUX)
 	CHTTPDownloader::InitializeTemplate(pSS);
 #endif
@@ -100,29 +100,29 @@ bool CScriptBindings::ShutDown()
 /////////////////////////////////////////////////////////////////////////////
 bool CSystem::InitScriptBindings()
 {
-	m_pScriptBindings=new CScriptBindings;
+	m_pScriptBindings = new CScriptBindings;
 	return m_pScriptBindings->Init(this);
 }
 
 bool CSystem::ShutDownScriptBindings()
 {
-	if(m_pScriptBindings)
+	if (m_pScriptBindings)
 	{
-		bool bres=m_pScriptBindings->ShutDown();
+		bool bres = m_pScriptBindings->ShutDown();
 		delete m_pScriptBindings;
 		return bres;
 	}
 	return false;
 }
 
-void CSystem::CreateEntityScriptBinding(IEntity *ent)
+void CSystem::CreateEntityScriptBinding(IEntity* ent)
 {
-	CScriptObjectEntity *pSEntity = new CScriptObjectEntity();
+	CScriptObjectEntity* pSEntity = new CScriptObjectEntity();
 	pSEntity->Create(m_pScriptSystem, this);
 	assert(pSEntity->GetScriptObject());
-	if (ent->GetContainer()){
-		IScriptObject *pObj=ent->GetContainer()->GetScriptObject();
-		if(pObj)
+	if (ent->GetContainer()) {
+		IScriptObject* pObj = ent->GetContainer()->GetScriptObject();
+		if (pObj)
 			pSEntity->SetContainer(pObj);
 	}
 	assert(pSEntity->GetScriptObject());

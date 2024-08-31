@@ -13,38 +13,38 @@ CrySizerImpl::~CrySizerImpl()
 {
 }
 
-void CrySizerImpl::Push (const char* szComponentName)
+void CrySizerImpl::Push(const char* szComponentName)
 {
-	m_stackNames.push_back (getNameIndex(getCurrentName(), szComponentName));
+	m_stackNames.push_back(getNameIndex(getCurrentName(), szComponentName));
 	// if the depth is too deep, something is wrong, perhaps an infinite loop
-	assert (m_stackNames.size() < 128);
+	assert(m_stackNames.size() < 128);
 }
 
-void CrySizerImpl::PushSubcomponent (const char* szSubcomponentName)
+void CrySizerImpl::PushSubcomponent(const char* szSubcomponentName)
 {
-	Push (szSubcomponentName);
+	Push(szSubcomponentName);
 }
 
 
-void CrySizerImpl::Pop ()
+void CrySizerImpl::Pop()
 {
 	if (!m_stackNames.empty())
 		m_stackNames.pop_back();
 	else
-		assert (0);
+		assert(0);
 }
 
 // returns the index of the current name on the top of the name stack
 size_t CrySizerImpl::getCurrentName()const
 {
 	assert(!m_stackNames.empty());
-	return m_stackNames.empty()?0:m_stackNames.back();
+	return m_stackNames.empty() ? 0 : m_stackNames.back();
 }
 
 
 
 // searches for the name in the name array; adds the name if it's not there and returns the index
-size_t CrySizerImpl::getNameIndex (size_t nParent, const char* szComponentName)
+size_t CrySizerImpl::getNameIndex(size_t nParent, const char* szComponentName)
 {
 	NameArray::const_iterator it = m_arrNames.begin(), itEnd = it + m_arrNames.size();
 	for (; it != itEnd; ++it)
@@ -53,10 +53,10 @@ size_t CrySizerImpl::getNameIndex (size_t nParent, const char* szComponentName)
 #else
 		if (!strcmp(it->strName.c_str(), szComponentName) && it->nParent == nParent)
 #endif
-			return it-m_arrNames.begin();
+			return it - m_arrNames.begin();
 
 	size_t nNewName = m_arrNames.size();
-	m_arrNames.resize(nNewName+1);
+	m_arrNames.resize(nNewName + 1);
 
 	m_arrNames[nNewName].assign(szComponentName, nParent);
 
@@ -71,28 +71,28 @@ size_t CrySizerImpl::getNameIndex (size_t nParent, const char* szComponentName)
 // but it must be unique throughout the system and unchanging for this object)
 // RETURNS: true if the object has actually been added (for the first time)
 //          and calculated
-bool CrySizerImpl::AddObject (const void* pIdentifier, size_t sizeBytes)
+bool CrySizerImpl::AddObject(const void* pIdentifier, size_t sizeBytes)
 {
 	if (!pIdentifier || !sizeBytes)
 		return false; // we don't add the NULL objects
 
 	//return true;
-	
+
 	Object NewObject(pIdentifier, sizeBytes, getCurrentName());
 
 	// check if the last object was the same
 	if (NewObject == m_LastObject)
 	{
-		assert (m_LastObject.nSize == sizeBytes);
+		assert(m_LastObject.nSize == sizeBytes);
 		return false;
 	}
 
 	ObjectSet& rSet = m_setObjects[getHash(pIdentifier)];
-	ObjectSet::iterator it = rSet.find (NewObject);
+	ObjectSet::iterator it = rSet.find(NewObject);
 	if (it == rSet.end())
 	{
 		// there's no such object in the map, add it
-		rSet.insert (NewObject);
+		rSet.insert(NewObject);
 		ComponentName& CompName = m_arrNames[getCurrentName()];
 		++CompName.numObjects;
 		CompName.sizeObjects += sizeBytes;
@@ -101,14 +101,14 @@ bool CrySizerImpl::AddObject (const void* pIdentifier, size_t sizeBytes)
 	else
 	{
 		// there's such object in the map, don't add it
-		
+
 		if (sizeBytes != it->nSize)
 		{
 			// if the following assert fails:
-			assert (0);
+			assert(0);
 			// .. it means we have one object that's added two times with different sizes; that's screws up the whole idea
 			// we assume there are two different objects that are for some reason assigned the same id
-			Object *pObj = const_cast<Object*>(&(*it));
+			Object* pObj = const_cast<Object*>(&(*it));
 			pObj->nSize += sizeBytes; // anyway it's an invalid situation
 			ComponentName& CompName = m_arrNames[getCurrentName()];
 			CompName.sizeObjects += sizeBytes;
@@ -127,7 +127,7 @@ void CrySizerImpl::end()
 	size_t i;
 	for (i = 0; i < m_arrNames.size(); ++i)
 	{
-		assert (i == 0 || (m_arrNames[i].nParent < i && m_arrNames[i].nParent >=0));
+		assert(i == 0 || (m_arrNames[i].nParent < i && m_arrNames[i].nParent >= 0));
 		m_arrNames[i].sizeObjectsTotal = m_arrNames[i].sizeObjects;
 	}
 
@@ -144,7 +144,7 @@ void CrySizerImpl::end()
 
 void CrySizerImpl::clear()
 {
-	for (unsigned i = 0 ; i < g_nHashSize; ++i)
+	for (unsigned i = 0; i < g_nHashSize; ++i)
 		m_setObjects[i].clear();
 
 	m_arrNames.clear();
@@ -155,15 +155,15 @@ void CrySizerImpl::clear()
 }
 
 // hash function for an address; returns value 0..1<<g_nHashSize
-unsigned CrySizerImpl::getHash (const void* pId)
+unsigned CrySizerImpl::getHash(const void* pId)
 {
 	//return (((unsigned)pId) >> 4) & (g_nHashSize-1);
-	
+
 	// pseudorandomizing transform
 	ldiv_t _Qrem = ldiv(((UINT_PTR)pId >> 2), 127773);
 	_Qrem.rem = 16807 * _Qrem.rem - 2836 * _Qrem.quot;
 	if (_Qrem.rem < 0)
 		_Qrem.rem += 2147483647; // 0x7FFFFFFF
-	return ((unsigned)_Qrem.rem) & (g_nHashSize-1);
-	
+	return ((unsigned)_Qrem.rem) & (g_nHashSize - 1);
+
 }

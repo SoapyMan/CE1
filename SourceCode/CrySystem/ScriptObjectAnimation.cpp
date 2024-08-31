@@ -32,15 +32,15 @@ CScriptObjectAnimation::~CScriptObjectAnimation(void)
 		@param pGame Pointer to the Game
 		@param pSystem Pointer to the System-interface
 */
-void CScriptObjectAnimation::Init(IScriptSystem *pScriptSystem,  ISystem *pSystem)
+void CScriptObjectAnimation::Init(IScriptSystem* pScriptSystem, ISystem* pSystem)
 {
 	m_pSystem = pSystem;
 
 	m_pScriptSystem = pScriptSystem;
-	InitGlobal(pScriptSystem,"Animation",this);
+	InitGlobal(pScriptSystem, "Animation", this);
 }
 
-void CScriptObjectAnimation::InitializeTemplate(IScriptSystem *pSS)
+void CScriptObjectAnimation::InitializeTemplate(IScriptSystem* pSS)
 {
 	_ScriptableEx<CScriptObjectAnimation>::InitializeTemplate(pSS);
 	REG_FUNC(DumpAnims);
@@ -67,22 +67,22 @@ ICryCharManager* CScriptObjectAnimation::getAnimationManager()
 		@param nSort first operand (int) 0: sort by memory size 1: sort by name (not implemented)
 		@return result of the operation (int)
 */
-int CScriptObjectAnimation::DumpAnims(IFunctionHandler *pH)
+int CScriptObjectAnimation::DumpAnims(IFunctionHandler* pH)
 {
 	GET_ANIM_MANAGER(pAnimationManager);
 	switch (pH->GetParamCount())
 	{
 	case 0:
-		{
-			pAnimationManager->ExecScriptCommand(CASCMD_DUMP_ANIMATIONS);
-		}
-		break;
+	{
+		pAnimationManager->ExecScriptCommand(CASCMD_DUMP_ANIMATIONS);
+	}
+	break;
 	case 1:
-		{
-			int nSort;
-			pH->GetParam(1,nSort);
-		}
-		break;
+	{
+		int nSort;
+		pH->GetParam(1, nSort);
+	}
+	break;
 	default:
 		m_pScriptSystem->RaiseError("System.DumpAnims wrong number of arguments (%d)", pH->GetParamCount());
 		return pH->EndFunctionNull();
@@ -91,25 +91,25 @@ int CScriptObjectAnimation::DumpAnims(IFunctionHandler *pH)
 }
 
 
-int CScriptObjectAnimation::TrashAnims(IFunctionHandler *pH)
+int CScriptObjectAnimation::TrashAnims(IFunctionHandler* pH)
 {
 	GET_ANIM_MANAGER(pAnimationManager);
 	switch (pH->GetParamCount())
 	{
 	case 0:
-		{
-			pAnimationManager->ExecScriptCommand(CASCMD_TRASH_ANIMATIONS);
-		}
-		break;
+	{
+		pAnimationManager->ExecScriptCommand(CASCMD_TRASH_ANIMATIONS);
+	}
+	break;
 
 	case 1:
-		{
-			int numFrames;
-			if (pH->GetParam(1,numFrames))
-				pAnimationManager->ExecScriptCommand(CASCMD_TRASH_ANIMATIONS, &numFrames);
-			else
-				pAnimationManager->ExecScriptCommand(CASCMD_TRASH_ANIMATIONS);
-		}
+	{
+		int numFrames;
+		if (pH->GetParam(1, numFrames))
+			pAnimationManager->ExecScriptCommand(CASCMD_TRASH_ANIMATIONS, &numFrames);
+		else
+			pAnimationManager->ExecScriptCommand(CASCMD_TRASH_ANIMATIONS);
+	}
 
 	default:
 		m_pScriptSystem->RaiseError("System.TrashAnims wrong number of arguments (%d)", pH->GetParamCount());
@@ -154,20 +154,20 @@ int CScriptObjectAnimation::Start2Anims(IFunctionHandler* pH)
 	switch (pH->GetParamCount())
 	{
 	case 5:
-		{
-			CASCmdStartAnim sa[2];
-			CASCmdStartMultiAnims ma;
-			if (!pH->GetParam (1, sa[0].nLayer)
-				||!pH->GetParam (2, sa[0].szAnimName)
-				||!pH->GetParam (3, sa[1].nLayer)
-				||!pH->GetParam (4, sa[1].szAnimName)
-				||!pH->GetParam (5, ma.fBlendTime))
-				m_pScriptSystem->RaiseError("System.UnloadAnim wrong argument type");
-			ma.numAnims = 2;
-			ma.pAnims = sa;
-			pAnimationManager->ExecScriptCommand(CASCMD_START_MANY_ANIMS, &ma);
-		}
-		break;
+	{
+		CASCmdStartAnim sa[2];
+		CASCmdStartMultiAnims ma;
+		if (!pH->GetParam(1, sa[0].nLayer)
+			|| !pH->GetParam(2, sa[0].szAnimName)
+			|| !pH->GetParam(3, sa[1].nLayer)
+			|| !pH->GetParam(4, sa[1].szAnimName)
+			|| !pH->GetParam(5, ma.fBlendTime))
+			m_pScriptSystem->RaiseError("System.UnloadAnim wrong argument type");
+		ma.numAnims = 2;
+		ma.pAnims = sa;
+		pAnimationManager->ExecScriptCommand(CASCMD_START_MANY_ANIMS, &ma);
+	}
+	break;
 	default:
 		m_pScriptSystem->RaiseError("System.Start2Anims wrong number of arguments (%d), use: Start2Anims(layer,anim,layer,anim,blendin)", pH->GetParamCount());
 		return pH->EndFunctionNull();
@@ -199,22 +199,22 @@ int CScriptObjectAnimation::ExportModels(IFunctionHandler* pH)
 }
 
 
-int CScriptObjectAnimation::UnloadAnim(IFunctionHandler *pH)
+int CScriptObjectAnimation::UnloadAnim(IFunctionHandler* pH)
 {
 	GET_ANIM_MANAGER(pAnimationManager);
 	switch (pH->GetParamCount())
 	{
 	case 1:
+	{
+		const char* pName;
+		if (pH->GetParam(1, pName))
+			pAnimationManager->ExecScriptCommand(CASCMD_UNLOAD_ANIMATION, (void*)pName);
+		else
 		{
-			const char* pName;
-			if (pH->GetParam(1,pName))
-				pAnimationManager->ExecScriptCommand(CASCMD_UNLOAD_ANIMATION, (void*)pName);
-			else
-			{
-				m_pScriptSystem->RaiseError("System.UnloadAnim wrong argument type (%d) - must be a string", pH->GetParamType(1));
-				return pH->EndFunctionNull();
-			}
+			m_pScriptSystem->RaiseError("System.UnloadAnim wrong argument type (%d) - must be a string", pH->GetParamType(1));
+			return pH->EndFunctionNull();
 		}
+	}
 
 	default:
 		m_pScriptSystem->RaiseError("System.UnloadAnim wrong number of arguments (%d)", pH->GetParamCount());
@@ -224,7 +224,7 @@ int CScriptObjectAnimation::UnloadAnim(IFunctionHandler *pH)
 }
 
 
-int CScriptObjectAnimation::DumpModels(IFunctionHandler *pH)
+int CScriptObjectAnimation::DumpModels(IFunctionHandler* pH)
 {
 	GET_ANIM_MANAGER(pAnimationManager);
 	pAnimationManager->ExecScriptCommand(CASCMD_DUMP_MODELS);
@@ -235,10 +235,10 @@ int CScriptObjectAnimation::DumpModels(IFunctionHandler *pH)
 		@param fSpawnRate first operand (float) rate of particle spawn
 		@return result of the operation (int)
 */
-int CScriptObjectAnimation::TestParticles(IFunctionHandler *pH)
+int CScriptObjectAnimation::TestParticles(IFunctionHandler* pH)
 {
 	GET_ANIM_MANAGER(pAnimationManager);
-	pAnimationManager->ExecScriptCommand (CASCMD_TEST_PARTICLES);
+	pAnimationManager->ExecScriptCommand(CASCMD_TEST_PARTICLES);
 	return pH->EndFunction(0);
 }
 
@@ -246,10 +246,10 @@ int CScriptObjectAnimation::TestParticles(IFunctionHandler *pH)
 		@param fSpawnRate first operand (float) rate of particle spawn
 		@return result of the operation (int)
 */
-int CScriptObjectAnimation::StopParticles(IFunctionHandler *pH)
+int CScriptObjectAnimation::StopParticles(IFunctionHandler* pH)
 {
 	GET_ANIM_MANAGER(pAnimationManager);
-	pAnimationManager->ExecScriptCommand (CASCMD_STOP_PARTICLES);
+	pAnimationManager->ExecScriptCommand(CASCMD_STOP_PARTICLES);
 	return pH->EndFunction(0);
 }
 

@@ -8,17 +8,17 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-XDOM::IXMLDOMNode *CXMLDOMNodeListImpl::getNamedItem(const XMLCHAR *sName)
+XDOM::IXMLDOMNode* CXMLDOMNodeListImpl::getNamedItem(const XMLCHAR* sName)
 {
-	XDOM::IXMLDOMNode *pNode=NULL;
-	DOMNodeListItor itor=m_lstNodes.begin();
-	while(itor!=m_lstNodes.end())
+	XDOM::IXMLDOMNode* pNode = NULL;
+	DOMNodeListItor itor = m_lstNodes.begin();
+	while (itor != m_lstNodes.end())
 	{
-		pNode=(*itor);
+		pNode = (*itor);
 #if defined(LINUX)
-		if(compareTextFileStrings(pNode->getName(),sName)==0)
+		if (compareTextFileStrings(pNode->getName(), sName) == 0)
 #else
-		if(strcmp(pNode->getName(),sName)==0)
+		if (strcmp(pNode->getName(), sName) == 0)
 #endif
 		{
 			return pNode;

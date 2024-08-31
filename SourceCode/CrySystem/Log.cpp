@@ -1,4 +1,4 @@
-	
+
 //////////////////////////////////////////////////////////////////////
 //
 //	Crytek CryENGINE Source code
@@ -32,11 +32,11 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-CLog::CLog( ISystem *pSystem )
+CLog::CLog(ISystem* pSystem)
 {
-	memset(m_szFilename,0,MAX_FILENAME_SIZE);	
-	memset(m_szTemp,0,MAX_TEMP_LENGTH_SIZE);
-	m_pSystem=pSystem;
+	memset(m_szFilename, 0, MAX_FILENAME_SIZE);
+	memset(m_szTemp, 0, MAX_TEMP_LENGTH_SIZE);
+	m_pSystem = pSystem;
 	m_pLogVerbosity = 0;
 	m_pLogFileVerbosity = 0;
 	m_pLogIncludeTime = 0;
@@ -59,7 +59,7 @@ void CLog::Done()
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CLog::EnableVerbosity( bool bEnable )
+void CLog::EnableVerbosity(bool bEnable)
 {
 	RETURN;
 
@@ -70,11 +70,11 @@ void CLog::EnableVerbosity( bool bEnable )
 			if (m_pSystem->GetIConsole())
 			{
 #if defined(DEBUG) || (defined(LINUX) && !defined(NDEBUG))
-				m_pLogVerbosity = m_pSystem->GetIConsole()->CreateVariable("log_Verbosity","5",VF_DUMPTODISK);
+				m_pLogVerbosity = m_pSystem->GetIConsole()->CreateVariable("log_Verbosity", "5", VF_DUMPTODISK);
 #else
-				m_pLogVerbosity = m_pSystem->GetIConsole()->CreateVariable("log_Verbosity","3",VF_DUMPTODISK);
+				m_pLogVerbosity = m_pSystem->GetIConsole()->CreateVariable("log_Verbosity", "3", VF_DUMPTODISK);
 #endif
-				m_pLogFileVerbosity = m_pSystem->GetIConsole()->CreateVariable("log_FileVerbosity","3",VF_DUMPTODISK);
+				m_pLogFileVerbosity = m_pSystem->GetIConsole()->CreateVariable("log_FileVerbosity", "3", VF_DUMPTODISK);
 			}
 		}
 	}
@@ -83,8 +83,8 @@ void CLog::EnableVerbosity( bool bEnable )
 		m_pLogIncludeTime = 0; // otherwise may not work in debug mode.
 		if (m_pSystem->GetIConsole())
 		{
-			m_pSystem->GetIConsole()->UnregisterVariable("log_Verbosity",true);
-			m_pSystem->GetIConsole()->UnregisterVariable("log_FileVerbosity",true);
+			m_pSystem->GetIConsole()->UnregisterVariable("log_Verbosity", true);
+			m_pSystem->GetIConsole()->UnregisterVariable("log_FileVerbosity", true);
 		}
 		m_pLogVerbosity = 0;
 		m_pLogFileVerbosity = 0;
@@ -92,7 +92,7 @@ void CLog::EnableVerbosity( bool bEnable )
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CLog::SetVerbosity( int verbosity )
+void CLog::SetVerbosity(int verbosity)
 {
 	RETURN;
 	EnableVerbosity(true);
@@ -101,7 +101,7 @@ void CLog::SetVerbosity( int verbosity )
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CLog::LogWarning(const char *szFormat,...)
+void CLog::LogWarning(const char* szFormat, ...)
 {
 	va_list	ArgList;
 	char		szBuffer[MAX_WARNING_LENGTH];
@@ -109,11 +109,11 @@ void CLog::LogWarning(const char *szFormat,...)
 	vsprintf(szBuffer, szFormat, ArgList);
 	va_end(ArgList);
 
-	m_pSystem->Warning( VALIDATOR_MODULE_SYSTEM,VALIDATOR_WARNING,0,NULL,"%s",szBuffer );
+	m_pSystem->Warning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, 0, NULL, "%s", szBuffer);
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CLog::LogError(const char *szFormat,...)
+void CLog::LogError(const char* szFormat, ...)
 {
 	va_list	ArgList;
 	char		szBuffer[MAX_WARNING_LENGTH];
@@ -121,11 +121,11 @@ void CLog::LogError(const char *szFormat,...)
 	vsprintf(szBuffer, szFormat, ArgList);
 	va_end(ArgList);
 
-	m_pSystem->Warning( VALIDATOR_MODULE_SYSTEM,VALIDATOR_ERROR,0,NULL,"%s",szBuffer );
+	m_pSystem->Warning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_ERROR, 0, NULL, "%s", szBuffer);
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CLog::Log(const char *szFormat,...)
+void CLog::Log(const char* szFormat, ...)
 {
 	if (m_pLogVerbosity && !m_pLogVerbosity->GetIVal())
 	{
@@ -138,13 +138,13 @@ void CLog::Log(const char *szFormat,...)
 	RETURN;
 	va_list arg;
 	va_start(arg, szFormat);
-	LogV (eMessage, szFormat, arg);
+	LogV(eMessage, szFormat, arg);
 	va_end(arg);
 }
 
 //will log the text both to file and console
 //////////////////////////////////////////////////////////////////////
-void CLog::LogV( const ELogType type, const char* szFormat, va_list args )
+void CLog::LogV(const ELogType type, const char* szFormat, va_list args)
 {
 	RETURN;
 	if (!szFormat)
@@ -152,7 +152,7 @@ void CLog::LogV( const ELogType type, const char* szFormat, va_list args )
 
 	bool bfile = false, bconsole = false;
 	const char* szCommand = szFormat;
-	if (type != eAlways && type != eWarningAlways && type != eErrorAlways  && type != eInput)
+	if (type != eAlways && type != eWarningAlways && type != eErrorAlways && type != eInput)
 	{
 		szCommand = CheckAgainstVerbosity(szFormat, bfile, bconsole);
 		if (!bfile && !bconsole)
@@ -170,64 +170,64 @@ void CLog::LogV( const ELogType type, const char* szFormat, va_list args )
 		}
 		bconsole = true; // console always true.
 	}
-	
-	char szBuffer[MAX_WARNING_LENGTH+32];
-	char *szString = szBuffer;
 
-	switch(type)
+	char szBuffer[MAX_WARNING_LENGTH + 32];
+	char* szString = szBuffer;
+
+	switch (type)
 	{
 	case eWarningAlways:
-		strcpy( szString,"$6" ); // yellow color.
+		strcpy(szString, "$6"); // yellow color.
 		szString += 2;
 		break;
 	case eErrorAlways:
-		strcpy( szString,"$4" ); // red color.
+		strcpy(szString, "$4"); // red color.
 		szString += 2;
 		break;
 	case eWarning:
-		strcpy( szString,"[WARNING]" );
+		strcpy(szString, "[WARNING]");
 		szString += strlen("[WARNING]");
 		break;
 
 	case eError:
-		strcpy( szString,"[ERROR]" );
+		strcpy(szString, "[ERROR]");
 		szString += strlen("[ERROR]");
 		break;
 	}
-	
-	_vsnprintf( szString, sizeof(szBuffer)-32, szCommand, args );
-	szBuffer[sizeof(szBuffer)-8]=0;
+
+	_vsnprintf(szString, sizeof(szBuffer) - 32, szCommand, args);
+	szBuffer[sizeof(szBuffer) - 8] = 0;
 
 	if (bfile)
-		LogStringToFile( szString );
+		LogStringToFile(szString);
 	if (bconsole)
-		LogStringToConsole( szString );	
+		LogStringToConsole(szString);
 
-  // in case of error - update screen and make a sound to wake up artists (in testing)
-  /*if(strstr(szCommand,"rror"))
-  { 
-		IConsole *console=m_pSystem->GetIConsole();
-		IRenderer *renderer=m_pSystem->GetIRenderer();
+	// in case of error - update screen and make a sound to wake up artists (in testing)
+	/*if(strstr(szCommand,"rror"))
+	{
+		  IConsole *console=m_pSystem->GetIConsole();
+		  IRenderer *renderer=m_pSystem->GetIRenderer();
 
-		if(console)
-		if(renderer)
-		{
-			console->Update();
-			renderer->BeginFrame();		
-			console->Draw();	
-			renderer->Update();
-		}
+		  if(console)
+		  if(renderer)
+		  {
+			  console->Update();
+			  renderer->BeginFrame();
+			  console->Draw();
+			  renderer->Update();
+		  }
 
 
-    ///MessageBeep(MB_ICONHAND);
+	  ///MessageBeep(MB_ICONHAND);
 
-////    Sleep(500);
-  }	*/
+  ////    Sleep(500);
+	}	*/
 }
 
 //will log the text both to the end of file and console
 //////////////////////////////////////////////////////////////////////
-void CLog::LogPlus(const char *szFormat,...)
+void CLog::LogPlus(const char* szFormat, ...)
 {
 	if (m_pLogVerbosity && !m_pLogVerbosity->GetIVal())
 	{
@@ -246,104 +246,73 @@ void CLog::LogPlus(const char *szFormat,...)
 	if (!bfile && !bconsole)
 		return;
 
-	va_list		arglist;	
+	va_list		arglist;
 
 	va_start(arglist, szFormat);
 	_vsnprintf(m_szTemp, sizeof(m_szTemp), szCommand, arglist);
-	m_szTemp[sizeof(m_szTemp)-8]=0;
-	va_end(arglist);	
+	m_szTemp[sizeof(m_szTemp) - 8] = 0;
+	va_end(arglist);
 
 	if (bfile)
-		LogToFilePlus(m_szTemp);		
+		LogToFilePlus(m_szTemp);
 	if (bconsole)
-		LogToConsolePlus(m_szTemp);	
+		LogToConsolePlus(m_szTemp);
 }
 
 //log to console only
 //////////////////////////////////////////////////////////////////////
-void CLog::LogStringToConsole( const char *szString,bool bAdd )
+void CLog::LogStringToConsole(const char* szString, bool bAdd)
 {
 	if (!szString || !szString[0])
 		return;
 
 	if (!m_pSystem)
 		return;
-	IConsole *console = m_pSystem->GetIConsole();
+	IConsole* console = m_pSystem->GetIConsole();
 	if (!console)
 		return;
 
 	char szTemp[MAX_WARNING_LENGTH];
-	strncpy( szTemp,szString,sizeof(szTemp)-32 ); // leave space for additional text data.
-	szTemp[sizeof(szTemp)-32] = 0;
+	strncpy(szTemp, szString, sizeof(szTemp) - 32); // leave space for additional text data.
+	szTemp[sizeof(szTemp) - 32] = 0;
 
 	size_t len = strlen(szTemp);
-	const char * mptr=szTemp+len-1;
-	if (*mptr!='\n') 
-		strcat(szTemp,"\n");
+	const char* mptr = szTemp + len - 1;
+	if (*mptr != '\n')
+		strcat(szTemp, "\n");
 
 	size_t nLen = strlen(szTemp);
 
-	assert(nLen<sizeof(szTemp));
+	assert(nLen < sizeof(szTemp));
 
 	//check if Tony wanna output only wanrning or error messages
-	if (strstr(szTemp,"rror") || strstr(szTemp,"ERROR"))
+	if (strstr(szTemp, "rror") || strstr(szTemp, "ERROR"))
 	{ // make error message red
-		memmove(szTemp+2,szTemp,nLen+1);
-		nLen+=2;
+		memmove(szTemp + 2, szTemp, nLen + 1);
+		nLen += 2;
 		szTemp[0] = '$';
 		szTemp[1] = '4';
 	}
-	else 
+	else
 	{
-		if (strstr(szTemp,"arning") || strstr(szTemp,"WARNING"))
+		if (strstr(szTemp, "arning") || strstr(szTemp, "WARNING"))
 		{ // make error message blue
-			memmove(szTemp+2,szTemp,nLen+1);
-			nLen+=2;
+			memmove(szTemp + 2, szTemp, nLen + 1);
+			nLen += 2;
 			szTemp[0] = '$';
 			szTemp[1] = '6';
 		}
 	}
 
 	if (bAdd)
-		console->PrintLinePlus(szTemp);	
+		console->PrintLinePlus(szTemp);
 	else
 		console->PrintLine(szTemp);
 }
 
 //log to console only
 //////////////////////////////////////////////////////////////////////
-void CLog::LogToConsole(const char *szFormat,...)
-{
-	if (m_pLogVerbosity && !m_pLogVerbosity->GetIVal())
-	{
-		if (m_pLogFileVerbosity && !m_pLogFileVerbosity->GetIVal())
-		{
-			return;
-		}
-	}
-
-	RETURN;
-	if (!szFormat)
-		return;
-
-	bool bfile = false, bconsole = false;
-	const char* szCommand = CheckAgainstVerbosity(szFormat, bfile, bconsole);
-	if (!bconsole)
-		return;
-
-	va_list		arglist;	
-
-	char szBuffer[MAX_WARNING_LENGTH];
-	va_start(arglist, szFormat);
-	_vsnprintf(szBuffer, sizeof(szBuffer), szCommand, arglist);
-	szBuffer[sizeof(szBuffer)-8]=0;
-	va_end(arglist);
-
-	LogStringToConsole( szBuffer );
-}
-
-//////////////////////////////////////////////////////////////////////
-void CLog::LogToConsolePlus(const char *szFormat,...)
+void CLog::LogToConsole(const char* szFormat, ...)
 {
 	if (m_pLogVerbosity && !m_pLogVerbosity->GetIVal())
 	{
@@ -363,40 +332,71 @@ void CLog::LogToConsolePlus(const char *szFormat,...)
 		return;
 
 	va_list		arglist;
-	
+
+	char szBuffer[MAX_WARNING_LENGTH];
+	va_start(arglist, szFormat);
+	_vsnprintf(szBuffer, sizeof(szBuffer), szCommand, arglist);
+	szBuffer[sizeof(szBuffer) - 8] = 0;
+	va_end(arglist);
+
+	LogStringToConsole(szBuffer);
+}
+
+//////////////////////////////////////////////////////////////////////
+void CLog::LogToConsolePlus(const char* szFormat, ...)
+{
+	if (m_pLogVerbosity && !m_pLogVerbosity->GetIVal())
+	{
+		if (m_pLogFileVerbosity && !m_pLogFileVerbosity->GetIVal())
+		{
+			return;
+		}
+	}
+
+	RETURN;
+	if (!szFormat)
+		return;
+
+	bool bfile = false, bconsole = false;
+	const char* szCommand = CheckAgainstVerbosity(szFormat, bfile, bconsole);
+	if (!bconsole)
+		return;
+
+	va_list		arglist;
+
 	va_start(arglist, szFormat);
 	_vsnprintf(m_szTemp, sizeof(m_szTemp), szCommand, arglist);
-	m_szTemp[sizeof(m_szTemp)-8]=0;
-	va_end(arglist);	
+	m_szTemp[sizeof(m_szTemp) - 8] = 0;
+	va_end(arglist);
 
 	if (!m_pSystem)
 		return;
 
-	LogStringToConsole( m_szTemp,true );
+	LogStringToConsole(m_szTemp, true);
 }
 
 
 //////////////////////////////////////////////////////////////////////
-void CLog::LogStringToFile( const char *szString,bool bAdd )
+void CLog::LogStringToFile(const char* szString, bool bAdd)
 {
 	if (!szString || !szString[0])
 		return;
 
 	if (!m_pSystem)
 		return;
-	IConsole * console = m_pSystem->GetIConsole();
+	IConsole* console = m_pSystem->GetIConsole();
 
 	char szTemp[MAX_TEMP_LENGTH_SIZE];
-	strncpy( szTemp,szString,sizeof(szTemp)-32 ); // leave space for additional text data.
-	szTemp[sizeof(szTemp)-32] = 0;
+	strncpy(szTemp, szString, sizeof(szTemp) - 32); // leave space for additional text data.
+	szTemp[sizeof(szTemp) - 32] = 0;
 
 	size_t len = strlen(szTemp);
-	const char * mptr=szTemp+len-1;
-	if (*mptr!='\n') 
-		strcat(szTemp,"\n");
+	const char* mptr = szTemp + len - 1;
+	if (*mptr != '\n')
+		strcat(szTemp, "\n");
 
 	if (szTemp[0] == '$')
-		strcpy(szTemp, szTemp+2);
+		strcpy(szTemp, szTemp + 2);
 
 #ifdef _WIN32
 	if (!m_pLogIncludeTime)
@@ -409,12 +409,12 @@ void CLog::LogStringToFile( const char *szString,bool bAdd )
 	}
 	if (m_pLogIncludeTime && m_pLogIncludeTime->GetIVal())
 	{
-		memmove( szTemp+8, szTemp, strlen(szTemp)+1 );
+		memmove(szTemp + 8, szTemp, strlen(szTemp) + 1);
 		time_t ltime;
-		time( &ltime );
-		struct tm *today = localtime( &ltime );
+		time(&ltime);
+		struct tm* today = localtime(&ltime);
 		memset(szTemp, ' ', 8);
-		strftime( szTemp, 8, "<%M:%S> ", today );
+		strftime(szTemp, 8, "<%M:%S> ", today);
 	}
 
 	OutputDebugStringA(szTemp);
@@ -422,32 +422,32 @@ void CLog::LogStringToFile( const char *szString,bool bAdd )
 
 	if (bAdd)
 	{
-		FILE *fp=fxopen(m_szFilename,"r+t");
+		FILE* fp = fxopen(m_szFilename, "r+t");
 		if (fp)
 		{
 			int p1 = ftell(fp);
-			fseek(fp,0,SEEK_END);
+			fseek(fp, 0, SEEK_END);
 			p1 = ftell(fp);
-			fseek(fp,-2,SEEK_CUR);
+			fseek(fp, -2, SEEK_CUR);
 			p1 = ftell(fp);
 
-			fputs(szTemp,fp);		
+			fputs(szTemp, fp);
 			fclose(fp);
 		}
 	}
 	else
 	{
-		if(FILE * fp = fxopen(m_szFilename,"at"))
+		if (FILE* fp = fxopen(m_szFilename, "at"))
 		{
-			fputs(szTemp,fp);
+			fputs(szTemp, fp);
 			fclose(fp);
-		}  
+		}
 	}
 }
 
 //same as above but to a file
 //////////////////////////////////////////////////////////////////////
-void CLog::LogToFilePlus(const char *szFormat,...)
+void CLog::LogToFilePlus(const char* szFormat, ...)
 {
 	if (m_pLogVerbosity && !m_pLogVerbosity->GetIVal())
 	{
@@ -458,7 +458,7 @@ void CLog::LogToFilePlus(const char *szFormat,...)
 	}
 
 	RETURN;
-	if (!m_szFilename[0] || !szFormat) 
+	if (!m_szFilename[0] || !szFormat)
 		return;
 
 	bool bfile = false, bconsole = false;
@@ -466,18 +466,18 @@ void CLog::LogToFilePlus(const char *szFormat,...)
 	if (!bfile)
 		return;
 
-	va_list		arglist;	
+	va_list		arglist;
 	va_start(arglist, szFormat);
 	_vsnprintf(m_szTemp, sizeof(m_szTemp), szCommand, arglist);
-	m_szTemp[sizeof(m_szTemp)-8]=0;
-	va_end(arglist);	
+	m_szTemp[sizeof(m_szTemp) - 8] = 0;
+	va_end(arglist);
 
-	LogStringToFile( m_szTemp,true );
+	LogStringToFile(m_szTemp, true);
 }
 
 //log to the file specified in setfilename
 //////////////////////////////////////////////////////////////////////
-void CLog::LogToFile(const char *szFormat,...)
+void CLog::LogToFile(const char* szFormat, ...)
 {
 	if (m_pLogVerbosity && !m_pLogVerbosity->GetIVal())
 	{
@@ -488,37 +488,37 @@ void CLog::LogToFile(const char *szFormat,...)
 	}
 
 	RETURN;
-	if (!m_szFilename[0] || !szFormat) 
-		return;	 
+	if (!m_szFilename[0] || !szFormat)
+		return;
 
 	bool bfile = false, bconsole = false;
 	const char* szCommand = CheckAgainstVerbosity(szFormat, bfile, bconsole);
 	if (!bfile)
 		return;
 
-	va_list		arglist;  	
+	va_list		arglist;
 	va_start(arglist, szFormat);
 	_vsnprintf(m_szTemp, sizeof(m_szTemp), szCommand, arglist);
-	m_szTemp[sizeof(m_szTemp)-16]=0;
-	va_end(arglist);	
+	m_szTemp[sizeof(m_szTemp) - 16] = 0;
+	va_end(arglist);
 
-	LogStringToFile( m_szTemp );
+	LogStringToFile(m_szTemp);
 }
 
 //set the file used to log to disk
 //////////////////////////////////////////////////////////////////////
-void CLog::SetFileName(const char *command)
+void CLog::SetFileName(const char* command)
 {
 	RETURN;
-	if (!command) 
-    return;
+	if (!command)
+		return;
 
-	strcpy(m_szFilename,command); 
+	strcpy(m_szFilename, command);
 
 #ifndef _XBOX
-		FILE *fp=fxopen(m_szFilename,"wt");
-    if (fp)
-		  fclose(fp);
+	FILE* fp = fxopen(m_szFilename, "wt");
+	if (fp)
+		fclose(fp);
 #endif
 }
 
@@ -529,12 +529,12 @@ const char* CLog::GetFileName()
 }
 
 //////////////////////////////////////////////////////////////////////
-void CLog::UpdateLoadingScreen(const char *szFormat,...)
+void CLog::UpdateLoadingScreen(const char* szFormat, ...)
 {
 	if ((!m_pLogVerbosity) || (m_pLogVerbosity && m_pLogVerbosity->GetIVal()) || ((!m_pLogFileVerbosity) || (m_pLogFileVerbosity && m_pLogFileVerbosity->GetIVal())))
 	{
 		RETURN;
-		if (szFormat) 
+		if (szFormat)
 		{
 			bool bfile = false, bconsole = false;
 			CheckAgainstVerbosity(szFormat, bfile, bconsole);
@@ -544,7 +544,7 @@ void CLog::UpdateLoadingScreen(const char *szFormat,...)
 				va_list args;
 				va_start(args, szFormat);
 				_vsnprintf(m_szTemp, sizeof(m_szTemp), szFormat, args);
-				m_szTemp[sizeof(m_szTemp)-8]=0;
+				m_szTemp[sizeof(m_szTemp) - 8] = 0;
 				va_end(args);
 
 				if (bconsole)
@@ -563,12 +563,12 @@ void CLog::UpdateLoadingScreen(const char *szFormat,...)
 }
 
 //////////////////////////////////////////////////////////////////////
-void CLog::UpdateLoadingScreenPlus(const char *szFormat,...)
+void CLog::UpdateLoadingScreenPlus(const char* szFormat, ...)
 {
 	if ((!m_pLogVerbosity) || (m_pLogVerbosity && m_pLogVerbosity->GetIVal()) || ((!m_pLogFileVerbosity) || (m_pLogFileVerbosity && m_pLogFileVerbosity->GetIVal())))
 	{
-		RETURN; 
-		if (szFormat) 
+		RETURN;
+		if (szFormat)
 		{
 			bool bfile = false, bconsole = false;
 			CheckAgainstVerbosity(szFormat, bfile, bconsole);
@@ -576,14 +576,14 @@ void CLog::UpdateLoadingScreenPlus(const char *szFormat,...)
 			va_list args;
 			va_start(args, szFormat);
 			_vsnprintf(m_szTemp, sizeof(m_szTemp), szFormat, args);
-			m_szTemp[sizeof(m_szTemp)-8]=0;
+			m_szTemp[sizeof(m_szTemp) - 8] = 0;
 			va_end(args);
 
 			if (bconsole)
 				LogToConsolePlus(m_szTemp);
 			if (bfile)
 				LogToFilePlus(m_szTemp);
-			
+
 			if (bconsole)
 			{
 				((CSystem*)m_pSystem)->UpdateLoadingScreen();
@@ -609,19 +609,19 @@ int	CLog::GetVerbosityLevel()
 //    the first verbosity character may be cut off)
 //    This is done in order to avoid modification of const char*, which may cause GPF
 //    sometimes, or kill the verbosity qualifier in the text that's gonna be passed next time.
-const char* CLog::CheckAgainstVerbosity(const char * pText, bool &logtofile, bool &logtoconsole)
+const char* CLog::CheckAgainstVerbosity(const char* pText, bool& logtofile, bool& logtoconsole)
 {
 	RETURN;
 	// the max verbosity (most detailed level)
 	const unsigned char nMaxVerbosity = 8;
-	
+
 	// the current verbosity of the log
 	int nLogVerbosity = m_pLogVerbosity ? m_pLogVerbosity->GetIVal() : nMaxVerbosity;
 	int nLogFileVerbosity = m_pLogFileVerbosity ? m_pLogFileVerbosity->GetIVal() : nMaxVerbosity;
 
-	nLogFileVerbosity=max(nLogFileVerbosity,nLogVerbosity);		// file verbosity depends on usual log_verbosity as well
+	nLogFileVerbosity = max(nLogFileVerbosity, nLogVerbosity);		// file verbosity depends on usual log_verbosity as well
 
-	const char *pStartText;
+	const char* pStartText;
 	int textVerbosity;
 
 	// Empty string
@@ -632,17 +632,17 @@ const char* CLog::CheckAgainstVerbosity(const char * pText, bool &logtofile, boo
 		return 0;
 	}
 
-	if((unsigned char)pText[0]>=' ')
+	if ((unsigned char)pText[0] >= ' ')
 	{
 		// verbosity is not defined in the text
-		pStartText=pText;
-		textVerbosity=nMaxVerbosity;
+		pStartText = pText;
+		textVerbosity = nMaxVerbosity;
 	}
 	else
 	{
 		// verbosity is defined in the text
-		pStartText=pText+1;
-		textVerbosity=(unsigned char)pText[0];
+		pStartText = pText + 1;
+		textVerbosity = (unsigned char)pText[0];
 	}
 
 	logtoconsole = (nLogVerbosity >= textVerbosity);
@@ -654,27 +654,27 @@ const char* CLog::CheckAgainstVerbosity(const char * pText, bool &logtofile, boo
 /*
 //////////////////////////////////////////////////////////////////////////
 int CLog::CheckVerbosity( const char * pText )
-{	
+{
 	RETURN;
 	// the max verbosity (most detailed level)
 	const unsigned char nMaxVerbosity = 5;
 
-	// set message verbosity for error and warning messages	
-	char sBuff[256]; 
-	strncpy(sBuff,pText,255);			
-	sBuff[255]=0; 
+	// set message verbosity for error and warning messages
+	char sBuff[256];
+	strncpy(sBuff,pText,255);
+	sBuff[255]=0;
 	strlwr(sBuff);
 	if(strstr(pText,"error"))
 		return 1;
 	if(strstr(pText,"warning"))
-		return 3;	
-	
+		return 3;
+
 	int textVerbosity = (unsigned char)pText[0];
-	if (textVerbosity > nMaxVerbosity) 
+	if (textVerbosity > nMaxVerbosity)
 	{
 		return nMaxVerbosity;
 	}
 	else
-		return textVerbosity;	
+		return textVerbosity;
 }
 */

@@ -27,15 +27,15 @@ HMODULE gDLLHandle = NULL;
 
 #ifdef USING_CRY_MEMORY_MANAGER
 //#if !defined(LINUX)
-	_ACCESS_POOL
+_ACCESS_POOL
 //#endif
 #endif
 
 
-BOOL APIENTRY DllMain( HANDLE hModule,
-                       DWORD  ul_reason_for_call,
-                       LPVOID lpReserved
-											)
+BOOL APIENTRY DllMain(HANDLE hModule,
+	DWORD  ul_reason_for_call,
+	LPVOID lpReserved
+)
 {
 	gDLLHandle = (HMODULE)hModule;
 	switch (ul_reason_for_call)
@@ -43,11 +43,11 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 	case DLL_PROCESS_ATTACH:
 		break;
 	case DLL_THREAD_ATTACH:
-	
-		
+
+
 		break;
 	case DLL_THREAD_DETACH:
-	case DLL_PROCESS_DETACH: 
+	case DLL_PROCESS_DETACH:
 		break;
 	}
 	return TRUE;
@@ -56,9 +56,9 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 
 extern "C"
 {
-	CRYSYSTEM_API ISystem* CreateSystemInterface( SSystemInitParams &initParams )
+	CRYSYSTEM_API ISystem* CreateSystemInterface(SSystemInitParams& initParams)
 	{
-		CSystem *pSystem = NULL;
+		CSystem* pSystem = NULL;
 		if (!initParams.pSystem)
 		{
 			pSystem = new CSystem;
@@ -67,15 +67,15 @@ extern "C"
 		{
 			pSystem = (CSystem*)initParams.pSystem;
 		}
-		
+
 #ifndef _DEBUG
 #ifdef WIN32
 		// Install exception handler in Release modes.
-		DebugCallStack::instance()->installErrorHandler( pSystem );
+		DebugCallStack::instance()->installErrorHandler(pSystem);
 #endif
 #endif
 
-		if (!pSystem->Init( initParams ))
+		if (!pSystem->Init(initParams))
 		{
 			delete pSystem;
 			return 0;

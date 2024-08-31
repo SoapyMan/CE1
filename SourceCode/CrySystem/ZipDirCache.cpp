@@ -26,14 +26,14 @@ void ZipDir::Cache::Construct(FILE* fNew, CMTSafeHeap* pHeap, size_t nDataSizeIn
 void ZipDir::Cache::Delete()
 {
 	if (m_pFile)
-		fclose (m_pFile);
+		fclose(m_pFile);
 	m_pHeap->Free(this);
 }
 
 
 // initializes this object from the given Zip file: caches the central directory
 // returns 0 if successfully parsed, error code if an error has occured
-ZipDir::CachePtr ZipDir::NewCache (const char* szFileName, CMTSafeHeap* pHeap, InitMethodEnum nInitMethod)
+ZipDir::CachePtr ZipDir::NewCache(const char* szFileName, CMTSafeHeap* pHeap, InitMethodEnum nInitMethod)
 {
 	// try .. catch(Error)
 	CacheFactory factory(pHeap, nInitMethod);
@@ -46,17 +46,17 @@ ZipDir::CachePtr ZipDir::NewCache (const char* szFileName, CMTSafeHeap* pHeap, I
 // if there is some, returns the pointer to it.
 // the Path must be the relative path to the file inside the Zip
 // if the file handle is passed, it will be used to find the file data offset, if one hasn't been initialized yet
-ZipDir::FileEntry* ZipDir::Cache::FindFile (const char* szPath, bool bRefresh)
+ZipDir::FileEntry* ZipDir::Cache::FindFile(const char* szPath, bool bRefresh)
 {
 	if (!this)
 		return NULL;
-	ZipDir::FindFile fd (this);
+	ZipDir::FindFile fd(this);
 	if (!fd.FindExact(szPath))
 	{
-		assert (!fd.GetFileEntry());
+		assert(!fd.GetFileEntry());
 		return NULL;
 	}
-	assert (fd.GetFileEntry());
+	assert(fd.GetFileEntry());
 	return fd.GetFileEntry();
 
 }
@@ -66,24 +66,24 @@ ZipDir::FileEntry* ZipDir::Cache::FindFile (const char* szPath, bool bRefresh)
 // buffers must have enough memory allocated, according to the info in the FileEntry
 // NOTE: there's no need to decompress if the method is 0 (store)
 // returns 0 if successful or error code if couldn't do something
-ZipDir::ErrorEnum ZipDir::Cache::ReadFile (FileEntry* pFileEntry, void* pCompressed, void* pUncompressed)
+ZipDir::ErrorEnum ZipDir::Cache::ReadFile(FileEntry* pFileEntry, void* pCompressed, void* pUncompressed)
 {
 	if (!pFileEntry)
 		return ZD_ERROR_INVALID_CALL;
 
 	if (pFileEntry->desc.lSizeUncompressed == 0)
 	{
-		assert (pFileEntry->desc.lSizeCompressed == 0);
+		assert(pFileEntry->desc.lSizeCompressed == 0);
 		return ZD_ERROR_SUCCESS;
 	}
 
-	assert (pFileEntry->desc.lSizeCompressed > 0);
+	assert(pFileEntry->desc.lSizeCompressed > 0);
 
 	ErrorEnum nError = Refresh(pFileEntry);
 	if (nError != ZD_ERROR_SUCCESS)
 		return nError;
 
-	if (fseek (m_pFile, pFileEntry->nFileDataOffset, SEEK_SET))
+	if (fseek(m_pFile, pFileEntry->nFileDataOffset, SEEK_SET))
 		return ZD_ERROR_IO_FAILED;
 
 	SmartPtr pBufferDestroyer(m_pHeap);
@@ -99,14 +99,14 @@ ZipDir::ErrorEnum ZipDir::Cache::ReadFile (FileEntry* pFileEntry, void* pCompres
 	if (!pBuffer)
 	{
 		if (!pUncompressed)
-		// what's the sense of it - no buffers at all?
+			// what's the sense of it - no buffers at all?
 			return ZD_ERROR_INVALID_CALL;
 
 		pBuffer = m_pHeap->Alloc(pFileEntry->desc.lSizeCompressed, "ZipDir::Cache::ReadFile");
 		pBufferDestroyer.Attach(pBuffer); // we want it auto-freed once we return
 	}
 
-	if (fread (pBuffer, pFileEntry->desc.lSizeCompressed, 1, m_pFile) != 1)
+	if (fread(pBuffer, pFileEntry->desc.lSizeCompressed, 1, m_pFile) != 1)
 		return ZD_ERROR_IO_FAILED;
 
 	// if there's a buffer for uncompressed data, uncompress it to that buffer
@@ -114,7 +114,7 @@ ZipDir::ErrorEnum ZipDir::Cache::ReadFile (FileEntry* pFileEntry, void* pCompres
 	{
 		if (pFileEntry->nMethod == 0)
 		{
-			assert (pBuffer == pUncompressed);
+			assert(pBuffer == pUncompressed);
 			//assert (pFileEntry->desc.lSizeCompressed == pFileEntry->nSizeUncompressed);
 			//memcpy (pUncompressed, pBuffer, pFileEntry->desc.lSizeCompressed);
 		}
@@ -131,7 +131,7 @@ ZipDir::ErrorEnum ZipDir::Cache::ReadFile (FileEntry* pFileEntry, void* pCompres
 
 // loads and unpacks the file into a newly created buffer (that must be subsequently freed with
 // Free()) Returns NULL if failed
-void* ZipDir::Cache::AllocAndReadFile (FileEntry* pFileEntry)
+void* ZipDir::Cache::AllocAndReadFile(FileEntry* pFileEntry)
 {
 	if (!pFileEntry)
 		return NULL;
@@ -139,9 +139,9 @@ void* ZipDir::Cache::AllocAndReadFile (FileEntry* pFileEntry)
 	void* pData = m_pHeap->Alloc(pFileEntry->desc.lSizeUncompressed, "ZipDir::Cache::AllocAndReadFile");
 	if (pData)
 	{
-		if (ZD_ERROR_SUCCESS != ReadFile (pFileEntry, NULL, pData))
+		if (ZD_ERROR_SUCCESS != ReadFile(pFileEntry, NULL, pData))
 		{
-			m_pHeap->Free (pData);
+			m_pHeap->Free(pData);
 			pData = NULL;
 		}
 	}
@@ -149,13 +149,13 @@ void* ZipDir::Cache::AllocAndReadFile (FileEntry* pFileEntry)
 }
 
 // frees the memory block that was previously allocated by AllocAndReadFile
-void ZipDir::Cache::Free (void* pData)
+void ZipDir::Cache::Free(void* pData)
 {
 	m_pHeap->Free(pData);
 }
 
 // refreshes information about the given file entry into this file entry
-ZipDir::ErrorEnum ZipDir::Cache::Refresh (FileEntry* pFileEntry)
+ZipDir::ErrorEnum ZipDir::Cache::Refresh(FileEntry* pFileEntry)
 {
 	if (!pFileEntry)
 		return ZD_ERROR_INVALID_CALL;
@@ -181,13 +181,13 @@ size_t ZipDir::Cache::GetSize()const
 
 
 // QUICK check to determine whether the file entry belongs to this object
-bool ZipDir::Cache::IsOwnerOf (const FileEntry*pFileEntry)const
+bool ZipDir::Cache::IsOwnerOf(const FileEntry* pFileEntry)const
 {
 	if (this)
 	{
 		// just check whether the pointer is within the memory block of this cache instance
-		return ((ULONG_PTR)pFileEntry >= (ULONG_PTR)(GetRoot()+1)
-			&&(ULONG_PTR)pFileEntry <= ((ULONG_PTR)GetRoot()) + m_nDataSize - sizeof(FileEntry));
+		return ((ULONG_PTR)pFileEntry >= (ULONG_PTR)(GetRoot() + 1)
+			&& (ULONG_PTR)pFileEntry <= ((ULONG_PTR)GetRoot()) + m_nDataSize - sizeof(FileEntry));
 	}
 	else
 		return false;

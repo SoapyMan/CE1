@@ -11,9 +11,9 @@ _DECLARE_SCRIPTABLEEX(CHTTPDownloader)
 //------------------------------------------------------------------------------------------------- 
 CHTTPDownloader::CHTTPDownloader()
 #if defined(LINUX)
-: m_hThread(INVALID_HANDLE_VALUE),
+	: m_hThread(INVALID_HANDLE_VALUE),
 #else
-: m_hThread(NULL),
+	: m_hThread(NULL),
 #endif
 	m_hINET(0),
 	m_hUrl(0),
@@ -31,7 +31,7 @@ CHTTPDownloader::~CHTTPDownloader()
 }
 
 //------------------------------------------------------------------------------------------------- 
-void CHTTPDownloader::InitializeTemplate(IScriptSystem *pSS)
+void CHTTPDownloader::InitializeTemplate(IScriptSystem* pSS)
 {
 	_ScriptableEx<CHTTPDownloader>::InitializeTemplate(pSS);
 
@@ -44,17 +44,17 @@ void CHTTPDownloader::InitializeTemplate(IScriptSystem *pSS)
 }
 
 //------------------------------------------------------------------------------------------------- 
-int CHTTPDownloader::Create(ISystem *pISystem, CDownloadManager *pParent)
+int CHTTPDownloader::Create(ISystem* pISystem, CDownloadManager* pParent)
 {
 	m_pSystem = pISystem;
-	m_pParent = pParent; 
+	m_pParent = pParent;
 	Init(m_pSystem->GetIScriptSystem(), this);
 
 	return 1;
 }
 
 //------------------------------------------------------------------------------------------------- 
-int CHTTPDownloader::Download(const char *szURL, const char *szDestination)
+int CHTTPDownloader::Download(const char* szURL, const char* szDestination)
 {
 	m_szURL = szURL;
 	m_szDstFile = szDestination;
@@ -72,7 +72,7 @@ void CHTTPDownloader::Cancel()
 }
 
 //------------------------------------------------------------------------------------------------- 
-DWORD CHTTPDownloader::DownloadProc(CHTTPDownloader *_this)
+DWORD CHTTPDownloader::DownloadProc(CHTTPDownloader* _this)
 {
 	_this->DoDownload();
 
@@ -125,7 +125,7 @@ DWORD CHTTPDownloader::DoDownload()
 		return 1;
 	}
 
-	char	szBuffer[64] = {0};
+	char	szBuffer[64] = { 0 };
 	DWORD dwSize = 64;
 	int bQuery = HttpQueryInfo(m_hUrl, HTTP_QUERY_CONTENT_LENGTH, szBuffer, &dwSize, 0);
 
@@ -147,7 +147,7 @@ DWORD CHTTPDownloader::DoDownload()
 
 	PrepareBuffer();
 
-	FILE *hFile = fopen(m_szDstFile.c_str(), "wb");
+	FILE* hFile = fopen(m_szDstFile.c_str(), "wb");
 
 	if (!hFile)
 	{
@@ -188,7 +188,7 @@ DWORD CHTTPDownloader::DoDownload()
 	fclose(hFile);
 
 	m_iState = HTTP_STATE_ERROR;
-	
+
 	return 1;
 }
 
@@ -243,7 +243,7 @@ void CHTTPDownloader::OnError()
 {
 	m_pSystem->GetILog()->Log("\004 DOWNLOAD ERROR: %s", CHTTPDownloader::GetURL().c_str());
 
-	IScriptObject *pScriptObject = GetScriptObject();
+	IScriptObject* pScriptObject = GetScriptObject();
 
 	HSCRIPTFUNCTION pScriptFunction = 0;
 
@@ -262,7 +262,7 @@ void CHTTPDownloader::OnComplete()
 {
 	m_pSystem->GetILog()->Log("\004 DOWNLOAD COMPLETE: %s", CHTTPDownloader::GetURL().c_str());
 
-	IScriptObject *pScriptObject = GetScriptObject();
+	IScriptObject* pScriptObject = GetScriptObject();
 
 	HSCRIPTFUNCTION pScriptFunction = 0;
 
@@ -281,7 +281,7 @@ void CHTTPDownloader::OnCancel()
 {
 	m_pSystem->GetILog()->Log("\004 DOWNLOAD CANCELED: %s", CHTTPDownloader::GetURL().c_str());
 
-	IScriptObject *pScriptObject = GetScriptObject();
+	IScriptObject* pScriptObject = GetScriptObject();
 
 	HSCRIPTFUNCTION pScriptFunction = 0;
 
@@ -298,12 +298,12 @@ void CHTTPDownloader::OnCancel()
 //------------------------------------------------------------------------------------------------- 
 // Script Functions
 //------------------------------------------------------------------------------------------------- 
-int CHTTPDownloader::Download(IFunctionHandler *pH)
+int CHTTPDownloader::Download(IFunctionHandler* pH)
 {
 	CHECK_PARAMETERS(2);
 
-	char *szURL = 0;
-	char *szFileName = 0;
+	char* szURL = 0;
+	char* szFileName = 0;
 
 	// #TODO: Uncomment !!!
 	//pH->GetParam(1, szURL);
@@ -318,7 +318,7 @@ int CHTTPDownloader::Download(IFunctionHandler *pH)
 }
 
 //------------------------------------------------------------------------------------------------- 
-int CHTTPDownloader::Cancel(IFunctionHandler *pH)
+int CHTTPDownloader::Cancel(IFunctionHandler* pH)
 {
 	CHTTPDownloader::Cancel();
 
@@ -326,7 +326,7 @@ int CHTTPDownloader::Cancel(IFunctionHandler *pH)
 }
 
 //------------------------------------------------------------------------------------------------- 
-int CHTTPDownloader::Release(IFunctionHandler *pH)
+int CHTTPDownloader::Release(IFunctionHandler* pH)
 {
 	CHTTPDownloader::Release();
 
@@ -334,19 +334,19 @@ int CHTTPDownloader::Release(IFunctionHandler *pH)
 }
 
 //------------------------------------------------------------------------------------------------- 
-int CHTTPDownloader::GetURL(IFunctionHandler *pH)
+int CHTTPDownloader::GetURL(IFunctionHandler* pH)
 {
 	return pH->EndFunction(CHTTPDownloader::GetURL().c_str());
 }
 
 //------------------------------------------------------------------------------------------------- 
-int CHTTPDownloader::GetFileSize(IFunctionHandler *pH)
+int CHTTPDownloader::GetFileSize(IFunctionHandler* pH)
 {
 	return pH->EndFunction(CHTTPDownloader::GetFileSize());
 }
 
 //------------------------------------------------------------------------------------------------- 
-int CHTTPDownloader::GetFileName(IFunctionHandler *pH)
+int CHTTPDownloader::GetFileName(IFunctionHandler* pH)
 {
 	return pH->EndFunction(CHTTPDownloader::GetDstFileName().c_str());
 }

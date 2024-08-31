@@ -92,16 +92,16 @@ extern HMODULE gDLLHandle;
 
 extern "C"
 {
-	IRenderer* PackageRenderConstructor(int argc, char* argv[], SCryRenderInterface *sp);
-	IAISystem* CreateAISystem( ISystem *pSystem );
-	IMovieSystem* CreateMovieSystem( ISystem *pSystem );
-  //struct IXMLDOMDocument *CreateDOMDocument();
+	IRenderer* PackageRenderConstructor(int argc, char* argv[], SCryRenderInterface* sp);
+	IAISystem* CreateAISystem(ISystem* pSystem);
+	IMovieSystem* CreateMovieSystem(ISystem* pSystem);
+	//struct IXMLDOMDocument *CreateDOMDocument();
 }
 
 #endif
 
 // extern.
-extern XDOM::IXMLDOMDocument *CreateDOMDocument();
+extern XDOM::IXMLDOMDocument* CreateDOMDocument();
 extern int g_nPrecaution;
 
 
@@ -121,7 +121,7 @@ enum {
 /////////////////////////////////////////////////////////////////////////////////
 // System Implementation.
 //////////////////////////////////////////////////////////////////////////
-CSystem::CSystem():
+CSystem::CSystem() :
 	m_SmallHeap(0x1000, nSmallHeapSize), // allocate 1 page, grow max to 64 kbytes
 	m_BigHeap(0, 0) // perhaps we won't use this, so don't commit initially; grow up to 16 meg - we shouldn't need more at a time just for allocating memory to read pieces of files
 {
@@ -137,51 +137,51 @@ CSystem::CSystem():
 #ifdef WIN32	
 	m_hInst = NULL;
 	m_hWnd = NULL;
-	
+
 #endif
 
 	//////////////////////////////////////////////////////////////////////////
 	// Reset handles.
-	memset( &m_dll,0,sizeof(m_dll) );
+	memset(&m_dll, 0, sizeof(m_dll));
 	//////////////////////////////////////////////////////////////////////////
 
 	m_pLuaDebugger = NULL;
 	m_pLog = NULL;
 	m_pStreamEngine = NULL;
-  m_pIPak = NULL;
+	m_pIPak = NULL;
 	m_pIInput = NULL;
-	m_pRenderer = NULL;	
+	m_pRenderer = NULL;
 	m_pISound = NULL;
 	m_pIMusic = NULL;
 	m_pICryFont = NULL;
 	m_pIFont = NULL;
-	m_pScriptSystem=NULL;
+	m_pScriptSystem = NULL;
 	m_pIMovieSystem = NULL;
-	m_pI3DEngine=NULL;
+	m_pI3DEngine = NULL;
 	m_pICryCharManager = NULL;
-	m_pAISystem=NULL;
+	m_pAISystem = NULL;
 	m_pEntitySystem = NULL;
 	m_pConsole = NULL;
 	m_pNetwork = NULL;
-	m_rWidth=NULL;
-	m_rHeight=NULL;
-	m_rColorBits=NULL;
-	m_rDepthBits=NULL;
-	m_cvSSInfo=NULL;
-	m_rStencilBits=NULL;
-	m_rFullscreen=NULL;
-	m_rDriver=NULL;
-	m_sysNoUpdate=NULL;
+	m_rWidth = NULL;
+	m_rHeight = NULL;
+	m_rColorBits = NULL;
+	m_rDepthBits = NULL;
+	m_cvSSInfo = NULL;
+	m_rStencilBits = NULL;
+	m_rFullscreen = NULL;
+	m_rDriver = NULL;
+	m_sysNoUpdate = NULL;
 	m_pMemoryManager = NULL;
 	m_pProcess = NULL;
 	m_pGame = NULL;
-	m_pIPhysicalWorld=NULL;
+	m_pIPhysicalWorld = NULL;
 	m_pValidator = NULL;
 	m_pDefaultValidator = NULL;
-	m_sys_StreamCallbackTimeBudget=0;
-	m_sys_StreamCompressionMask=0;
+	m_sys_StreamCallbackTimeBudget = 0;
+	m_sys_StreamCompressionMask = 0;
 
-	m_pScriptBindings=NULL;
+	m_pScriptBindings = NULL;
 	//[Timur] m_CreateDOMDocument = NULL;
 
 	m_cvAIUpdate = NULL;
@@ -206,8 +206,8 @@ CSystem::CSystem():
 	m_profile_old = 0;
 
 	m_bQuit = false;
-	m_bRelaunch=false;
-	m_bRelaunched=false;
+	m_bRelaunch = false;
+	m_bRelaunched = false;
 	m_bTestMode = false;
 	m_bEditor = false;
 	m_bIgnoreUpdates = false;
@@ -217,16 +217,16 @@ CSystem::CSystem():
 	m_pMemStats = NULL;
 	m_pSizer = NULL;
 
-	m_pCVarQuit=NULL;
+	m_pCVarQuit = NULL;
 #ifndef __linux
 	m_pDownloadManager = 0;
 #endif
 	// default game MOD is root
-	memset(m_szGameMOD,0,256);
+	memset(m_szGameMOD, 0, 256);
 #if defined( _DATAPROBE )
 	m_pDataProbe = new CDataProbe;
 #endif
-	m_bForceNonDevMode=false;
+	m_bForceNonDevMode = false;
 	m_bWasInDevMode = false;
 	m_bInDevMode = false;
 }
@@ -267,45 +267,45 @@ void CSystem::Release()
 //////////////////////////////////////////////////////////////////////////
 void CSystem::FreeLib(IN OUT HMODULE hLibModule)
 {
-	if (hLibModule) 
-	{ 
-		CryFreeLibrary(hLibModule);
-		(hLibModule)=NULL; 
-	} 
-}
-
-//////////////////////////////////////////////////////////////////////////
-void CSystem::SetGCFrequency( const float fRate )
-{
-	if(m_pScriptSink)
-		m_pScriptSink->SetGCFreq( fRate );
-	else
+	if (hLibModule)
 	{
-		assert(0);  
+		CryFreeLibrary(hLibModule);
+		(hLibModule) = NULL;
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
-WIN_HMODULE CSystem::LoadDLL( const char *dllName,bool bQuitIfNotFound)
-{ 
-	WIN_HMODULE handle = CryLoadLibrary( dllName ); 
+void CSystem::SetGCFrequency(const float fRate)
+{
+	if (m_pScriptSink)
+		m_pScriptSink->SetGCFreq(fRate);
+	else
+	{
+		assert(0);
+	}
+}
 
-	if (!handle)      
+//////////////////////////////////////////////////////////////////////////
+WIN_HMODULE CSystem::LoadDLL(const char* dllName, bool bQuitIfNotFound)
+{
+	WIN_HMODULE handle = CryLoadLibrary(dllName);
+
+	if (!handle)
 	{
 #if defined(LINUX)
-		printf ("Error loading DLL: %s, error :  %s\n", dllName, dlerror());
+		printf("Error loading DLL: %s, error :  %s\n", dllName, dlerror());
 		if (bQuitIfNotFound)
 			Quit();
 		else
 			return 0;
 #else
 		if (bQuitIfNotFound)
-		{		
-			Error( "Error loading DLL: %s, error code %d",dllName, GetLastError());
+		{
+			Error("Error loading DLL: %s, error code %d", dllName, GetLastError());
 			Quit();
 		}
 		return 0;
-	#endif //LINUX
+#endif //LINUX
 	}
 #if defined(_DATAPROBE) && !defined(LINUX)
 	IDataProbe::SModuleInfo module;
@@ -317,11 +317,11 @@ WIN_HMODULE CSystem::LoadDLL( const char *dllName,bool bQuitIfNotFound)
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CSystem::ShowDebugger(const char *pszSourceFile, int iLine, const char *pszReason)
+void CSystem::ShowDebugger(const char* pszSourceFile, int iLine, const char* pszReason)
 {
 #ifdef WIN32
 	if (m_bInDevMode)
-	{	
+	{
 		if (GetLuaDebugger() != NULL)
 			::InvokeDebugger(GetLuaDebugger(), pszSourceFile, iLine, pszReason);
 	}
@@ -329,15 +329,15 @@ void CSystem::ShowDebugger(const char *pszSourceFile, int iLine, const char *psz
 }
 
 //////////////////////////////////////////////////////////////////////////
-IConsole *CSystem::GetIConsole()
+IConsole* CSystem::GetIConsole()
 {
 	return m_pConsole;
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CSystem::SetForceNonDevMode( const bool bValue )
+void CSystem::SetForceNonDevMode(const bool bValue)
 {
-	m_bForceNonDevMode=bValue;
+	m_bForceNonDevMode = bValue;
 	if (bValue)
 		SetDevMode(false);
 }
@@ -349,7 +349,7 @@ bool CSystem::GetForceNonDevMode() const
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CSystem::SetDevMode( bool bEnable )
+void CSystem::SetDevMode(bool bEnable)
 {
 	if (!bEnable)
 	{
@@ -372,9 +372,9 @@ void CSystem::SetDevMode( bool bEnable )
 
 ///////////////////////////////////////////////////
 void CSystem::ShutDown(bool bRelaunch)
-{		
+{
 	CryLogAlways("System Shutdown");
-	
+
 	if (m_pISound)
 	{
 		// turn EAX off otherwise it affects all Windows sounds!
@@ -384,7 +384,7 @@ void CSystem::ShutDown(bool bRelaunch)
 	m_FrameProfileSystem.Done();
 
 	if (m_sys_firstlaunch)
-		m_sys_firstlaunch->Set( "0" );
+		m_sys_firstlaunch->Set("0");
 
 	if (m_bEditor)
 	{
@@ -404,20 +404,20 @@ void CSystem::ShutDown(bool bRelaunch)
 		SaveConfiguration();
 		/*
 		// Release threads.
-		SAFE_RELEASE(m_pGame); 
+		SAFE_RELEASE(m_pGame);
 		SAFE_RELEASE(m_pIMusic);
 		SAFE_RELEASE(m_pISound);
 		SAFE_RELEASE(m_pNetwork);
 		SAFE_DELETE(m_pStreamEngine);
-		SAFE_RELEASE(m_pRenderer); 
+		SAFE_RELEASE(m_pRenderer);
 		*/
 		return;
 	}
 
 	//if (!m_bEditor && !bRelaunch)
 	if (!m_bEditor)
-	{	 		
-		if (m_pCVarQuit && m_pCVarQuit->GetIVal())		
+	{
+		if (m_pCVarQuit && m_pCVarQuit->GetIVal())
 		{
 			SaveConfiguration();
 
@@ -425,14 +425,14 @@ void CSystem::ShutDown(bool bRelaunch)
 			FreeLib(m_dll.hGame);
 
 			SAFE_RELEASE(m_pRenderer);
-      FreeLib(m_dll.hRenderer);
+			FreeLib(m_dll.hRenderer);
 
 			if (!bRelaunch)
 			{
 #if defined(LINUX)
 				return;//safe clean return
 #else
-				exit(EXIT_SUCCESS);	
+				exit(EXIT_SUCCESS);
 #endif
 			}
 		}
@@ -442,8 +442,8 @@ void CSystem::ShutDown(bool bRelaunch)
 	// Release Game.
 	//////////////////////////////////////////////////////////////////////////	
 	if (m_pEntitySystem)
-	  m_pEntitySystem->Reset();
-	SAFE_RELEASE(m_pGame); 
+		m_pEntitySystem->Reset();
+	SAFE_RELEASE(m_pGame);
 	if (m_pIPhysicalWorld)
 	{
 		m_pIPhysicalWorld->SetPhysicsStreamer(0);
@@ -466,7 +466,7 @@ void CSystem::ShutDown(bool bRelaunch)
 	//////////////////////////////////////////////////////////////////////////
 
 	// Release console variables.
-	
+
 	SAFE_RELEASE(m_pCVarQuit);
 	SAFE_RELEASE(m_rWidth);
 	SAFE_RELEASE(m_rHeight);
@@ -515,15 +515,15 @@ void CSystem::ShutDown(bool bRelaunch)
 	SAFE_RELEASE(m_pICryCharManager);
 	SAFE_RELEASE(m_pI3DEngine);
 	SAFE_RELEASE(m_pIPhysicalWorld);
-  if (m_pConsole)
-    m_pConsole->FreeRenderResources();
+	if (m_pConsole)
+		m_pConsole->FreeRenderResources();
 	SAFE_RELEASE(m_pRenderer);
 
 	SAFE_DELETE(m_pIPak);
 
 	SAFE_RELEASE(m_pConsole);
 	SAFE_RELEASE(m_pScriptSystem);
-	SAFE_DELETE( m_pScriptSink );
+	SAFE_DELETE(m_pScriptSink);
 
 	SAFE_DELETE(m_pMemStats);
 	SAFE_DELETE(m_pSizer);
@@ -534,7 +534,7 @@ void CSystem::ShutDown(bool bRelaunch)
 #endif
 	if (m_pLog)
 		m_pLog->EnableVerbosity(false);	// in order for the logs after this line to work
-	
+
 	DebugStats(false, false);//true);
 	CryLogAlways("");
 	CryLogAlways("release mode memory manager stats:");
@@ -549,7 +549,7 @@ void CSystem::ShutDown(bool bRelaunch)
 /////////////////////////////////////////////////////////////////////////////////
 void CSystem::Quit()
 {
-	m_bQuit=true;
+	m_bQuit = true;
 #ifdef WIN32
 	if (m_bEditor)
 	{
@@ -563,7 +563,7 @@ bool CSystem::IsQuitting()
 {
 	return (m_bQuit);
 }
- 
+
 
 
 
@@ -573,25 +573,25 @@ class CCommandLineSink_ConsoleCommands :public CApplicationHelper::ICmdlineArgum
 {
 public:
 	//! constructor
-	CCommandLineSink_ConsoleCommands( CSystem &rSystem ) :m_rSystem(rSystem)
+	CCommandLineSink_ConsoleCommands(CSystem& rSystem) :m_rSystem(rSystem)
 	{
 	}
 
-	virtual void ReturnArgument( const char *inszArgument )
+	virtual void ReturnArgument(const char* inszArgument)
 	{
 		m_rSystem.GetIConsole()->ExecuteString(inszArgument);
 	}
 
 	// ---------------------------------------------------------------
 
-	CSystem &						m_rSystem;				//!< reference to the system
+	CSystem& m_rSystem;				//!< reference to the system
 };
 
 
 
 
 //////////////////////////////////////////////////////////////////////////
-bool CSystem::CreateGame( const SGameInitParams &params )
+bool CSystem::CreateGame(const SGameInitParams& params)
 {
 #if defined(WIN32) || defined(LINUX)
 	if (m_bEditor)
@@ -600,7 +600,7 @@ bool CSystem::CreateGame( const SGameInitParams &params )
 		// SCRIPT BINDINGS
 		//////////////////////////////////////////////////////////////////////////
 		CryLogAlways("Initializing Script Bindings");
-		if(!InitScriptBindings())
+		if (!InitScriptBindings())
 		{
 			return false;
 		}
@@ -614,51 +614,51 @@ bool CSystem::CreateGame( const SGameInitParams &params )
 
 	if (!params.sGameDLL)
 	{
-		Error( "Error in CSystem::CreateGame, Game DLL filename not specified" );
+		Error("Error in CSystem::CreateGame, Game DLL filename not specified");
 		return false;
 	}
 
 	char szDLLname[256];
-	strcpy(szDLLname,params.sGameDLL);
-	
+	strcpy(szDLLname, params.sGameDLL);
+
 	// try to load a game.dll from the MOD folder
-	if (m_szGameMOD[0]) 
+	if (m_szGameMOD[0])
 	{
 		char szFolderName[256];
 #if defined(WIN64)
-		sprintf(szFolderName,"mods\\%s\\bin64\\%s",m_szGameMOD,szDLLname);
+		sprintf(szFolderName, "mods\\%s\\bin64\\%s", m_szGameMOD, szDLLname);
 #elif defined(LINUX32)
-		sprintf(szFolderName,"../mods/%s/bin32linux/%s",m_szGameMOD,szDLLname);
+		sprintf(szFolderName, "../mods/%s/bin32linux/%s", m_szGameMOD, szDLLname);
 #elif defined(LINUX64)
-		sprintf(szFolderName,"../mods/%s/bin64linux/%s",m_szGameMOD,szDLLname);
+		sprintf(szFolderName, "../mods/%s/bin64linux/%s", m_szGameMOD, szDLLname);
 #else
-		sprintf(szFolderName,"mods\\%s\\bin32\\%s",m_szGameMOD,szDLLname);
+		sprintf(szFolderName, "mods\\%s\\bin32\\%s", m_szGameMOD, szDLLname);
 #endif
-		strcpy(szDLLname,szFolderName); 
-		m_dll.hGame = LoadDLL(szDLLname,false);
+		strcpy(szDLLname, szFolderName);
+		m_dll.hGame = LoadDLL(szDLLname, false);
 		if (!m_dll.hGame)
 		{
-			strcpy(szDLLname,params.sGameDLL);
+			strcpy(szDLLname, params.sGameDLL);
 			m_dll.hGame = LoadDLL(szDLLname);
 		}
 	}
 	else
-	{	
+	{
 		m_dll.hGame = LoadDLL(szDLLname);
 	}
 
 	if (!m_dll.hGame)
 		return false;
-	
+
 
 	PFNCREATEGAMEINSTANCE pfCreateGameInstance;
-	pfCreateGameInstance = (PFNCREATEGAMEINSTANCE) CryGetProcAddress(m_dll.hGame,DLL_GAME_ENTRANCE_FUNCTION);
-	if ( pfCreateGameInstance == NULL )
+	pfCreateGameInstance = (PFNCREATEGAMEINSTANCE)CryGetProcAddress(m_dll.hGame, DLL_GAME_ENTRANCE_FUNCTION);
+	if (pfCreateGameInstance == NULL)
 		return false;
 
 	m_pGame = pfCreateGameInstance();
 
-	m_pGame->Init(this, params.bDedicatedServer,m_bEditor,m_szGameMOD);
+	m_pGame->Init(this, params.bDedicatedServer, m_bEditor, m_szGameMOD);
 	/*
 	if (m_szGameMOD[0])
 	{
@@ -678,15 +678,15 @@ bool CSystem::CreateGame( const SGameInitParams &params )
 		m_bWasInDevMode = true;
 		CryLogAlways("DEVMODE is Enabled");
 
-		ICVar	*pCVar=m_pConsole->GetCVar("zz0x067MD4");
+		ICVar* pCVar = m_pConsole->GetCVar("zz0x067MD4");
 		if (pCVar)
-		{ 
+		{
 			pCVar->Set("DEVMODE");
-			if(m_pScriptSystem->ExecuteFile("DevMode.Lua",false))
+			if (m_pScriptSystem->ExecuteFile("DevMode.Lua", false))
 				CryLogAlways("   Loading DevMode.lua: Ok!");
 		}
 	}
-			
+
 #else
 	if (params.pGame)
 	{
@@ -707,14 +707,14 @@ bool CSystem::CreateGame( const SGameInitParams &params )
 
 	if (!m_pGame)
 	{
-		Error( "Error Creating Game Interface" );
+		Error("Error Creating Game Interface");
 		return false;
 	}
 
 	/*
 	// set log verbosity to 8 if dev mode enabled
 	if (m_pGame->IsDevModeEnable())
-	{	
+	{
 		ICVar *pCVar=m_pConsole->GetCVar("log_Verbosity");
 		if (pCVar)
 			pCVar->Set("8");
@@ -724,7 +724,7 @@ bool CSystem::CreateGame( const SGameInitParams &params )
 	}
 	*/
 
-	if (!m_bEditor && m_szGameMOD[0] && (stricmp(m_szGameMOD,"FarCry")!=0))
+	if (!m_bEditor && m_szGameMOD[0] && (stricmp(m_szGameMOD, "FarCry") != 0))
 	{
 		// execute modexe.lua, to for instance launch a map immediately
 		// for an sp game or a Total Conversion
@@ -737,7 +737,7 @@ bool CSystem::CreateGame( const SGameInitParams &params )
 	{
 		CCommandLineSink_ConsoleCommands CmdlineSink(*this);
 
-		CApplicationHelper::ParseArguments(params.szGameCmdLine,0,&CmdlineSink);
+		CApplicationHelper::ParseArguments(params.szGameCmdLine, 0, &CmdlineSink);
 	}
 
 
@@ -746,9 +746,9 @@ bool CSystem::CreateGame( const SGameInitParams &params )
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CSystem::SetIProcess(IProcess *process)
+void CSystem::SetIProcess(IProcess* process)
 {
-	m_pProcess = process; 
+	m_pProcess = process;
 	//if (m_pProcess)
 		//m_pProcess->SetPMessage("");
 }
@@ -759,7 +759,7 @@ void CSystem::UpdateScriptSink()
 {
 	assert(m_pScriptSink);
 
-	if(m_pScriptSink)
+	if (m_pScriptSink)
 		m_pScriptSink->Update(false);		// LUA Garbage collection might be called in here
 }
 
@@ -769,25 +769,25 @@ bool g_bWindowInFocus = false;
 // nPauseMode: 1=menu/pause
 // nPauseMode: 2=cutscene
 //////////////////////////////////////////////////////////////////////
-bool CSystem::Update( int updateFlags, int nPauseMode )
+bool CSystem::Update(int updateFlags, int nPauseMode)
 {
-	FUNCTION_PROFILER( this,PROFILE_SYSTEM );
+	FUNCTION_PROFILER(this, PROFILE_SYSTEM);
 
 	if (m_pGame)
 	{
-		bool bDevMode = m_pGame->GetModuleState( EGameDevMode );
+		bool bDevMode = m_pGame->GetModuleState(EGameDevMode);
 		if (bDevMode != m_bInDevMode)
 			SetDevMode(bDevMode);
 	}
 #ifdef PROFILE_WITH_VTUNE
 	if (m_bInDevMode)
-	{	
+	{
 		if (VTPause != NULL && VTResume != NULL)
 		{
 			static bool bVtunePaused = true;
-			
+
 			bool bPaused = false;
-			
+
 			if (GetISystem()->GetIInput())
 			{
 				bPaused = !(GetISystem()->GetIInput()->GetKeyState(XKEY_SCROLLLOCK) & 1);
@@ -810,12 +810,12 @@ bool CSystem::Update( int updateFlags, int nPauseMode )
 	}
 #endif //PROFILE_WITH_VTUNE
 
-	m_Time.MeasureTime("Enter SysUp");	
+	m_Time.MeasureTime("Enter SysUp");
 	if (m_pStreamEngine)
 		m_pStreamEngine->Update(0);
-	
-	m_pStreamEngine->SetCallbackTimeQuota( m_sys_StreamCallbackTimeBudget->GetIVal() );
-	m_pStreamEngine->SetStreamCompressionMask( m_sys_StreamCompressionMask->GetIVal() );
+
+	m_pStreamEngine->SetCallbackTimeQuota(m_sys_StreamCallbackTimeBudget->GetIVal());
+	m_pStreamEngine->SetStreamCompressionMask(m_sys_StreamCompressionMask->GetIVal());
 
 	if (m_pICryCharManager)
 		m_pICryCharManager->Update();
@@ -823,11 +823,11 @@ bool CSystem::Update( int updateFlags, int nPauseMode )
 	if (m_bIgnoreUpdates)
 		return true;
 
-  //static bool sbPause = false; 
-	//bool bPause = false;
+	//static bool sbPause = false; 
+	  //bool bPause = false;
 
-	//check what is the current process 
-	IProcess *pProcess=GetIProcess();
+	  //check what is the current process 
+	IProcess* pProcess = GetIProcess();
 	if (!pProcess)
 		return (true); //should never happen
 
@@ -844,20 +844,20 @@ bool CSystem::Update( int updateFlags, int nPauseMode )
 	//check if we are quitting from the game
 	if (IsQuitting())
 		return (false);
-	
-	
+
+
 
 #ifndef _XBOX
 #ifdef WIN32
-  // process window messages
+	// process window messages
 	{
-		FRAME_PROFILER( "SysUpdate:PeekMessage",this,PROFILE_SYSTEM );
+		FRAME_PROFILER("SysUpdate:PeekMessage", this, PROFILE_SYSTEM);
 
 #if 0
 		if (m_hWnd && ::IsWindow((HWND)m_hWnd))
 		{
 			MSG msg;
-			while (PeekMessage(&msg, (HWND)m_hWnd, 0, 0, PM_REMOVE))       
+			while (PeekMessage(&msg, (HWND)m_hWnd, 0, 0, PM_REMOVE))
 			{
 				TranslateMessage(&msg);
 				DispatchMessage(&msg);
@@ -903,7 +903,7 @@ bool CSystem::Update( int updateFlags, int nPauseMode )
 		}
 		events.clear();
 #endif
-  }
+	}
 #endif
 #endif
 
@@ -919,14 +919,14 @@ bool CSystem::Update( int updateFlags, int nPauseMode )
 	// Update script system.
 	if (m_pScriptSink)
 	{
-		FRAME_PROFILER( "SysUpdate:ScriptSink",this,PROFILE_SYSTEM );
+		FRAME_PROFILER("SysUpdate:ScriptSink", this, PROFILE_SYSTEM);
 
 		UpdateScriptSink();
 	}
-	
+
 	if (m_pIInput)
 	{
-		if (!(updateFlags&ESYSUPDATE_EDITOR))
+		if (!(updateFlags & ESYSUPDATE_EDITOR))
 		{
 			//////////////////////////////////////////////////////////////////////
 			//update input system
@@ -945,9 +945,9 @@ bool CSystem::Update( int updateFlags, int nPauseMode )
 	//update console system
 	if (m_pConsole)
 	{
-		FRAME_PROFILER( "SysUpdate:Console",this,PROFILE_SYSTEM );
+		FRAME_PROFILER("SysUpdate:Console", this, PROFILE_SYSTEM);
 
-		if (!(updateFlags&ESYSUPDATE_EDITOR))
+		if (!(updateFlags & ESYSUPDATE_EDITOR))
 		{
 			m_pConsole->Update();
 			m_Time.MeasureTime("TmInConUp");
@@ -957,54 +957,54 @@ bool CSystem::Update( int updateFlags, int nPauseMode )
 	//////////////////////////////////////////////////////////////////////	
 	// update physic system	
 	//static float time_zero = 0;
-	if ((nPauseMode!=1) && !(updateFlags&ESYSUPDATE_IGNORE_PHYSICS))
+	if ((nPauseMode != 1) && !(updateFlags & ESYSUPDATE_IGNORE_PHYSICS))
 	{
-		FRAME_PROFILER( "SysUpdate:physics",this,PROFILE_SYSTEM );
+		FRAME_PROFILER("SysUpdate:physics", this, PROFILE_SYSTEM);
 
 		float fCurTime = m_Time.GetCurrTime();
 		float fPrevTime = m_pIPhysicalWorld->GetPhysicsTime();
 
-		int iPrevTime=m_pIPhysicalWorld->GetiPhysicsTime(), iCurTime;
-		if (!(updateFlags&ESYSUPDATE_MULTIPLAYER))
+		int iPrevTime = m_pIPhysicalWorld->GetiPhysicsTime(), iCurTime;
+		if (!(updateFlags & ESYSUPDATE_MULTIPLAYER))
 			m_pIPhysicalWorld->TimeStep(fFrameTime);
 		else
 		{
 			if (m_pGame->UseFixedStep())
 			{
-				m_pIPhysicalWorld->TimeStep(fCurTime-fPrevTime, 0);
+				m_pIPhysicalWorld->TimeStep(fCurTime - fPrevTime, 0);
 				iCurTime = m_pIPhysicalWorld->GetiPhysicsTime();
 
 				m_pIPhysicalWorld->SetiPhysicsTime(m_pGame->SnapTime(iPrevTime));
-				int i,iInterval, iStep=m_pGame->GetiFixedStep();
+				int i, iInterval, iStep = m_pGame->GetiFixedStep();
 				float fFixedStep = m_pGame->GetFixedStep();
-				iInterval = min(20*iStep,m_pGame->SnapTime(iCurTime)-m_pGame->SnapTime(iPrevTime));
-				for(i=iInterval; i>0; i-=iStep)
+				iInterval = min(20 * iStep, m_pGame->SnapTime(iCurTime) - m_pGame->SnapTime(iPrevTime));
+				for (i = iInterval; i > 0; i -= iStep)
 				{
 					m_pGame->ExecuteScheduledEvents();
-					m_pIPhysicalWorld->TimeStep(fFixedStep, ent_rigid|ent_skip_flagged);
+					m_pIPhysicalWorld->TimeStep(fFixedStep, ent_rigid | ent_skip_flagged);
 				}
 
 				m_pIPhysicalWorld->SetiPhysicsTime(iPrevTime);
-				m_pIPhysicalWorld->TimeStep(fCurTime-fPrevTime, ent_rigid|ent_flagged_only);
+				m_pIPhysicalWorld->TimeStep(fCurTime - fPrevTime, ent_rigid | ent_flagged_only);
 
 				m_pIPhysicalWorld->SetiPhysicsTime(iPrevTime);
-				m_pIPhysicalWorld->TimeStep(fCurTime-fPrevTime, ent_living|ent_independent|(iInterval>0 ? ent_deleted:0));
+				m_pIPhysicalWorld->TimeStep(fCurTime - fPrevTime, ent_living | ent_independent | (iInterval > 0 ? ent_deleted : 0));
 			}
 			else
-				m_pIPhysicalWorld->TimeStep(fCurTime-fPrevTime);
+				m_pIPhysicalWorld->TimeStep(fCurTime - fPrevTime);
 
-			if (fabsf(m_pIPhysicalWorld->GetPhysicsTime()-fCurTime)>0.01f)
+			if (fabsf(m_pIPhysicalWorld->GetPhysicsTime() - fCurTime) > 0.01f)
 			{
-				GetILog()->LogToConsole("Adjusting physical world clock by %.5f", fCurTime-m_pIPhysicalWorld->GetPhysicsTime());
+				GetILog()->LogToConsole("Adjusting physical world clock by %.5f", fCurTime - m_pIPhysicalWorld->GetPhysicsTime());
 				m_pIPhysicalWorld->SetPhysicsTime(fCurTime);
 			}
 		}
 		m_Time.MeasureTime("PhysicsUp");
 	}
 
-	if ((nPauseMode==0) && !(updateFlags&ESYSUPDATE_IGNORE_AI))
+	if ((nPauseMode == 0) && !(updateFlags & ESYSUPDATE_IGNORE_AI))
 	{
-		FRAME_PROFILER( "SysUpdate:AI",this,PROFILE_SYSTEM );
+		FRAME_PROFILER("SysUpdate:AI", this, PROFILE_SYSTEM);
 		//////////////////////////////////////////////////////////////////////
 		//update AI system
 		if (m_pAISystem && !m_cvAIUpdate->GetIVal())
@@ -1012,7 +1012,7 @@ bool CSystem::Update( int updateFlags, int nPauseMode )
 		m_Time.MeasureTime("AISys Up");
 	}
 
-	if ((nPauseMode!=1))
+	if ((nPauseMode != 1))
 	{
 		//////////////////////////////////////////////////////////////////////
 		//update entity system	
@@ -1026,7 +1026,7 @@ bool CSystem::Update( int updateFlags, int nPauseMode )
 	//////////////////////////////////////////////////////////////////////////	
 	// the movie system already disables AI physics etc.
 	{
-		if (m_pIMovieSystem && !(updateFlags&ESYSUPDATE_EDITOR) && !bNoUpdate)
+		if (m_pIMovieSystem && !(updateFlags & ESYSUPDATE_EDITOR) && !bNoUpdate)
 		{
 			float fMovieFrameTime = fFrameTime;
 			if (fMovieFrameTime > 0.1f) // Slow frame rate fix.
@@ -1038,33 +1038,33 @@ bool CSystem::Update( int updateFlags, int nPauseMode )
 
 	//////////////////////////////////////////////////////////////////////
 	//update process (3D engine)
-	if (!(updateFlags&ESYSUPDATE_EDITOR) && !bNoUpdate)
+	if (!(updateFlags & ESYSUPDATE_EDITOR) && !bNoUpdate)
 	{
 		if (m_pProcess && (m_pProcess->GetFlags() & PROC_3DENGINE))
 		{
-			if ((nPauseMode!=1))
-			if (!IsEquivalent(m_ViewCamera.GetPos(),Vec3(0,0,0),VEC_EPSILON))
-			{			
-				if (m_pI3DEngine)
+			if ((nPauseMode != 1))
+				if (!IsEquivalent(m_ViewCamera.GetPos(), Vec3(0, 0, 0), VEC_EPSILON))
 				{
-					m_pI3DEngine->SetCamera(m_ViewCamera);			
-					m_pProcess->Update();
-
-					//////////////////////////////////////////////////////////////////////////
-					// Strange, !do not remove... ask Timur for the meaning of this.
-					//////////////////////////////////////////////////////////////////////////
-					if (m_nStrangeRatio > 32767)
+					if (m_pI3DEngine)
 					{
-						g_nPrecaution = 1 + (rand()%3); // lets get nasty.
+						m_pI3DEngine->SetCamera(m_ViewCamera);
+						m_pProcess->Update();
+
+						//////////////////////////////////////////////////////////////////////////
+						// Strange, !do not remove... ask Timur for the meaning of this.
+						//////////////////////////////////////////////////////////////////////////
+						if (m_nStrangeRatio > 32767)
+						{
+							g_nPrecaution = 1 + (rand() % 3); // lets get nasty.
+						}
+						//////////////////////////////////////////////////////////////////////////
 					}
-					//////////////////////////////////////////////////////////////////////////
 				}
-			}
 		}
 		else
 		{
 			if (m_pProcess)
-				m_pProcess->Update();	    
+				m_pProcess->Update();
 		}
 	}
 
@@ -1073,23 +1073,23 @@ bool CSystem::Update( int updateFlags, int nPauseMode )
 
 	//////////////////////////////////////////////////////////////////////
 	//update sound system
-  if ((nPauseMode!=1) && m_pISound && !bNoUpdate)
+	if ((nPauseMode != 1) && m_pISound && !bNoUpdate)
 	{
-		FRAME_PROFILER( "SysUpdate:Sound",this,PROFILE_SYSTEM );
+		FRAME_PROFILER("SysUpdate:Sound", this, PROFILE_SYSTEM);
 
-		if (updateFlags&ESYSUPDATE_EDITOR)
+		if (updateFlags & ESYSUPDATE_EDITOR)
 		{
 			// Only In Editor mode also update listener position.
-			m_pISound->SetListener(m_ViewCamera,Vec3(0,0,0));
+			m_pISound->SetListener(m_ViewCamera, Vec3(0, 0, 0));
 		}
 
-    m_pISound->Update();
+		m_pISound->Update();
 		m_Time.MeasureTime("SoundSysUp");
 	}
 
 	if (m_pIMusic && !bNoUpdate)
 	{
-		FRAME_PROFILER( "SysUpdate:Music",this,PROFILE_SYSTEM );
+		FRAME_PROFILER("SysUpdate:Music", this, PROFILE_SYSTEM);
 
 		m_pIMusic->Update();
 		m_Time.MeasureTime("MusicSysUp");
@@ -1103,13 +1103,13 @@ bool CSystem::Update( int updateFlags, int nPauseMode )
 	//////////////////////////////////////////////////////////////////////////
 	// Strange, !do not remove... ask Timur for the meaning of this.
 	//////////////////////////////////////////////////////////////////////////
-	if (!(updateFlags&ESYSUPDATE_EDITOR) && !bNoUpdate && m_nStrangeRatio > 1000)
+	if (!(updateFlags & ESYSUPDATE_EDITOR) && !bNoUpdate && m_nStrangeRatio > 1000)
 	{
 		if (m_pProcess && (m_pProcess->GetFlags() & PROC_3DENGINE))
-			m_nStrangeRatio += (1 + (10*rand())/RAND_MAX);
+			m_nStrangeRatio += (1 + (10 * rand()) / RAND_MAX);
 	}
 
-	return !m_bQuit;	
+	return !m_bQuit;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1117,35 +1117,35 @@ bool CSystem::Update( int updateFlags, int nPauseMode )
 //////////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////////
-XDOM::IXMLDOMDocument *CSystem::CreateXMLDocument()
+XDOM::IXMLDOMDocument* CSystem::CreateXMLDocument()
 {
 	return CreateDOMDocument();
 }
 
 //////////////////////////////////////////////////////////////////////////
-XmlNodeRef CSystem::CreateXmlNode( const char *sNodeName )
+XmlNodeRef CSystem::CreateXmlNode(const char* sNodeName)
 {
-	return new CXmlNode( sNodeName );
+	return new CXmlNode(sNodeName);
 }
 
 //////////////////////////////////////////////////////////////////////////
-XmlNodeRef CSystem::LoadXmlFile( const char *sFilename )
+XmlNodeRef CSystem::LoadXmlFile(const char* sFilename)
 {
 	XmlParser parser;
-	XmlNodeRef node = parser.parse( sFilename );
+	XmlNodeRef node = parser.parse(sFilename);
 	return node;
 }
 
 //////////////////////////////////////////////////////////////////////////
-XmlNodeRef CSystem::LoadXmlFromString( const char *sXmlString )
+XmlNodeRef CSystem::LoadXmlFromString(const char* sXmlString)
 {
 	XmlParser parser;
-	XmlNodeRef node = parser.parseBuffer( sXmlString );
+	XmlNodeRef node = parser.parseBuffer(sXmlString);
 	return node;
 }
 
 //////////////////////////////////////////////////////////////////////////
-bool CSystem::CheckLogVerbosity( int verbosity )
+bool CSystem::CheckLogVerbosity(int verbosity)
 {
 	if (verbosity <= m_pLog->GetVerbosityLevel())
 		return true;
@@ -1153,7 +1153,7 @@ bool CSystem::CheckLogVerbosity( int verbosity )
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CSystem::Warning( EValidatorModule module,EValidatorSeverity severity,int flags,const char *file,const char *format,... )
+void CSystem::Warning(EValidatorModule module, EValidatorSeverity severity, int flags, const char* file, const char* format, ...)
 {
 	va_list	ArgList;
 	char		szBuffer[MAX_WARNING_LENGTH];
@@ -1167,26 +1167,26 @@ void CSystem::Warning( EValidatorModule module,EValidatorSeverity severity,int f
 	record.module = module;
 	record.severity = severity;
 	record.flags = flags;
-	m_pValidator->Report( record );
+	m_pValidator->Report(record);
 }
 
 //////////////////////////////////////////////////////////////////////////
-ISystem *GetISystem()
+ISystem* GetISystem()
 {
 	return (g_System);
 }
 
 #ifdef USE_FRAME_PROFILER
 //////////////////////////////////////////////////////////////////////////
-void CSystem::StartProfilerSection( CFrameProfilerSection *pProfileSection )
+void CSystem::StartProfilerSection(CFrameProfilerSection* pProfileSection)
 {
-	m_FrameProfileSystem.StartProfilerSection( pProfileSection );
+	m_FrameProfileSystem.StartProfilerSection(pProfileSection);
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CSystem::EndProfilerSection( CFrameProfilerSection *pProfileSection )
+void CSystem::EndProfilerSection(CFrameProfilerSection* pProfileSection)
 {
-	m_FrameProfileSystem.EndProfilerSection( pProfileSection );
+	m_FrameProfileSystem.EndProfilerSection(pProfileSection);
 }
 #endif //USE_FRAME_PROFILER
 
@@ -1209,7 +1209,7 @@ void CSystem::VTunePause()
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CSystem::Deltree(const char *szFolder, bool bRecurse)
+void CSystem::Deltree(const char* szFolder, bool bRecurse)
 {
 	__finddata64_t fd;
 	string filespec = szFolder;
@@ -1242,13 +1242,13 @@ void CSystem::Deltree(const char *szFolder, bool bRecurse)
 		else
 		{
 			string name = szFolder;
-			
+
 			name += fd.name;
 
 			DeleteFile(name.c_str());
 		}
 
-	} while(!_findnext64(hfil, &fd));
+	} while (!_findnext64(hfil, &fd));
 
 	_findclose(hfil);
 
@@ -1260,60 +1260,60 @@ void CSystem::Deltree(const char *szFolder, bool bRecurse)
 void CSystem::OpenBasicPaks()
 {
 
-	const char *szLanguage = NULL;
+	const char* szLanguage = NULL;
 	m_pScriptSystem->GetGlobalValue("g_language", szLanguage);
 	//////////////////////////////////////////////////////////////////////////
 	// load language pak
 	if (!szLanguage)
 	{
 		// if the language value cannot be found, let's default to the english pak
-		OpenLanguagePak("english"); 
+		OpenLanguagePak("english");
 	}
 	else
-	{ 
+	{
 		OpenLanguagePak(szLanguage);
 	}
-	
-	string paksFolder = string(DATA_FOLDER)+"/*.pak";
+
+	string paksFolder = string(DATA_FOLDER) + "/*.pak";
 	// Open all *.pak files in root folder.
-	m_pIPak->OpenPacks( "*.pak" );
-	m_pIPak->OpenPacks( "",paksFolder.c_str() );
+	m_pIPak->OpenPacks("*.pak");
+	m_pIPak->OpenPacks("", paksFolder.c_str());
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CSystem::OpenLanguagePak( const char *sLanguage )
-{	
+void CSystem::OpenLanguagePak(const char* sLanguage)
+{
 	// load language pak
 	char szPakName[_MAX_PATH];
-	sprintf(szPakName,"%s/Localized/%s.pak",DATA_FOLDER,sLanguage );
-	if (!m_pIPak->OpenPack( "",szPakName ))
+	sprintf(szPakName, "%s/Localized/%s.pak", DATA_FOLDER, sLanguage);
+	if (!m_pIPak->OpenPack("", szPakName))
 	{
 		// make sure the localized language is found - not really necessary, for TC		
-		CryLogAlways("Localized language content(%s - %s) not available or modified from the original installation.",sLanguage,szPakName);
+		CryLogAlways("Localized language content(%s - %s) not available or modified from the original installation.", sLanguage, szPakName);
 	}
 
 	// load patch language data
-	memset(szPakName,0,_MAX_PATH);
-	sprintf(szPakName,"%s/Localized/%s1.pak",DATA_FOLDER,sLanguage );
-	m_pIPak->OpenPack("",szPakName);
+	memset(szPakName, 0, _MAX_PATH);
+	sprintf(szPakName, "%s/Localized/%s1.pak", DATA_FOLDER, sLanguage);
+	m_pIPak->OpenPack("", szPakName);
 
 	// load patch language data
-	memset(szPakName,0,_MAX_PATH);
-	sprintf(szPakName,"%s/Localized/%s2.pak",DATA_FOLDER,sLanguage );
-	m_pIPak->OpenPack("",szPakName);
+	memset(szPakName, 0, _MAX_PATH);
+	sprintf(szPakName, "%s/Localized/%s2.pak", DATA_FOLDER, sLanguage);
+	m_pIPak->OpenPack("", szPakName);
 }
 
 //////////////////////////////////////////////////////////////////////////
 void CSystem::Strange()
 {
-	m_nStrangeRatio += (1 + (100*rand())/RAND_MAX);
+	m_nStrangeRatio += (1 + (100 * rand()) / RAND_MAX);
 }
 
 //////////////////////////////////////////////////////////////////////////
 void CSystem::Relaunch(bool bRelaunch)
 {
 	if (m_sys_firstlaunch)
-		m_sys_firstlaunch->Set( "0" );
+		m_sys_firstlaunch->Set("0");
 
 	m_bRelaunch = bRelaunch;
 	SaveConfiguration();

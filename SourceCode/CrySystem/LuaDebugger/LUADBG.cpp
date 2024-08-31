@@ -31,20 +31,20 @@ CLUADbg::~CLUADbg()
 {
 	_TinyRegistry cTReg;
 	_TinyVerify(cTReg.WriteNumber("Software\\Tiny\\LuaDebugger\\", "MainHorzSplitter", m_wndMainHorzSplitter.GetSplitterPos()));
- 	_TinyVerify(cTReg.WriteNumber("Software\\Tiny\\LuaDebugger\\", "SrcEditSplitter", m_wndSrcEditSplitter.GetSplitterPos()));
+	_TinyVerify(cTReg.WriteNumber("Software\\Tiny\\LuaDebugger\\", "SrcEditSplitter", m_wndSrcEditSplitter.GetSplitterPos()));
 	_TinyVerify(cTReg.WriteNumber("Software\\Tiny\\LuaDebugger\\", "WatchSplitter", m_wndWatchSplitter.GetSplitterPos()));
 	_TinyVerify(cTReg.WriteNumber("Software\\Tiny\\LuaDebugger\\", "WatchCallstackSplitter", m_wndWatchCallstackSplitter.GetSplitterPos()));
 	_TinyVerify(cTReg.WriteNumber("Software\\Tiny\\LuaDebugger\\", "Fullscreen", ::IsZoomed(m_hWnd) ? 1 : 0));
 }
 
-TBBUTTON tbButtonsAdd [] = 
+TBBUTTON tbButtonsAdd[] =
 {
 	{ 0, ID_DEBUG_RUN, TBSTATE_ENABLED, BTNS_BUTTON, { 0 }, 0L, 0 },
 	{ 1, ID_DEBUG_BREAK, 0, BTNS_BUTTON, { 0 }, 0L, 0 },
 	{ 2, ID_DEBUG_STOP, 0, BTNS_BUTTON, { 0 }, 0L, 0 },
 
 	{ 0, 0, TBSTATE_ENABLED, BTNS_SEP, { 0 }, 0L, 0 },
-	
+
 	{ 3, ID_DEBUG_STEPINTO, TBSTATE_ENABLED, BTNS_BUTTON, { 0 }, 0L, 0 },
 	{ 4, ID_DEBUG_STEPOVER, TBSTATE_ENABLED, BTNS_BUTTON, { 0 }, 0L, 0 },
 	{ 5, ID_DEBUG_TOGGLEBREAKPOINT, TBSTATE_ENABLED, BTNS_BUTTON, { 0 }, 0L, 0 },
@@ -57,24 +57,24 @@ TBBUTTON tbButtonsAdd [] =
 
 
 //! add a backslash if needed
-inline void MyPathAddBackslash( char* szPath )
+inline void MyPathAddBackslash(char* szPath)
 {
-	if(szPath[0]==0) 
+	if (szPath[0] == 0)
 		return;
 
 	size_t nLen = strlen(szPath);
 
-	if (szPath[nLen-1] == '\\')
+	if (szPath[nLen - 1] == '\\')
 		return;
 
-	if (szPath[nLen-1] == '/')
+	if (szPath[nLen - 1] == '/')
 	{
-		szPath[nLen-1] = '\\';
+		szPath[nLen - 1] = '\\';
 		return;
 	}
 
 	szPath[nLen] = '\\';
-	szPath[nLen+1] = '\0';
+	szPath[nLen + 1] = '\0';
 }
 
 
@@ -85,30 +85,30 @@ LRESULT CLUADbg::OnCreate(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	_TinyRect wrect;
 	_TinyRegistry cTReg;
 
-	DWORD dwXOrigin=0,dwYOrigin=0,dwXSize=800,dwYSize=600;
-	if(cTReg.WriteNumber("Software\\Tiny\\LuaDebugger\\", "XOrigin",dwXOrigin))
+	DWORD dwXOrigin = 0, dwYOrigin = 0, dwXSize = 800, dwYSize = 600;
+	if (cTReg.WriteNumber("Software\\Tiny\\LuaDebugger\\", "XOrigin", dwXOrigin))
 	{
-		cTReg.WriteNumber("Software\\Tiny\\LuaDebugger\\", "YOrigin",dwYOrigin);
-		cTReg.WriteNumber("Software\\Tiny\\LuaDebugger\\", "XSize",dwXSize);
-		cTReg.WriteNumber("Software\\Tiny\\LuaDebugger\\", "YSize",dwYSize);
+		cTReg.WriteNumber("Software\\Tiny\\LuaDebugger\\", "YOrigin", dwYOrigin);
+		cTReg.WriteNumber("Software\\Tiny\\LuaDebugger\\", "XSize", dwXSize);
+		cTReg.WriteNumber("Software\\Tiny\\LuaDebugger\\", "YSize", dwYSize);
 	}
-	
+
 	SetWindowPos(dwXOrigin, dwYOrigin, dwXSize, dwYSize, SWP_NOZORDER | SWP_NOMOVE);
 	// TODO: Make sure fullscreen flag is loaded and used
 	// WS_MAXIMIZE
 	// DWORD dwFullscreen = 0;
 	// cTReg.ReadNumber("Software\\Tiny\\LuaDebugger\\", "Fullscreen", dwFullscreen);
 	// if (dwFullscreen == 1)
-    // ShowWindow(SW_MAXIMIZE);
+	// ShowWindow(SW_MAXIMIZE);
 	CenterOnScreen();
 	GetClientRect(&wrect);
 
-	erect=wrect;
-	erect.top=0;
-	erect.bottom=32;
-	m_wToolbar.Create((ULONG_PTR) GetMenu(m_hWnd), WS_CHILD | WS_VISIBLE | TBSTYLE_TOOLTIPS, 0, &erect, this);	//AMD Port
+	erect = wrect;
+	erect.top = 0;
+	erect.bottom = 32;
+	m_wToolbar.Create((ULONG_PTR)GetMenu(m_hWnd), WS_CHILD | WS_VISIBLE | TBSTYLE_TOOLTIPS, 0, &erect, this);	//AMD Port
 	m_wToolbar.AddButtons(IDC_LUADBG, tbButtonsAdd, 10);
-	
+
 	m_wndStatus.Create(0, NULL, this);
 
 	// Client area window
@@ -126,7 +126,7 @@ LRESULT CLUADbg::OnCreate(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	// Divides the watch window and the cllstack
 	m_wndWatchCallstackSplitter.Create(&m_wndWatchSplitter);
-	
+
 	// Add all scripts to the file tree
 	m_wFilesTree.Create(erect, &m_wndSrcEditSplitter, IDC_FILES);
 	char szRootPath[_MAX_PATH];
@@ -135,18 +135,18 @@ LRESULT CLUADbg::OnCreate(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	strcat(szRootPath, "SCRIPTS\\");
 	m_wFilesTree.ScanFiles(szRootPath);
 
-	_TinyVerify(m_wScriptWindow.Create(WS_VISIBLE | WS_CHILD | ES_WANTRETURN | WS_HSCROLL | WS_VSCROLL | 
+	_TinyVerify(m_wScriptWindow.Create(WS_VISIBLE | WS_CHILD | ES_WANTRETURN | WS_HSCROLL | WS_VSCROLL |
 		ES_AUTOHSCROLL | ES_AUTOVSCROLL | ES_MULTILINE, 0, &erect, &m_wndSrcEditSplitter));
-	m_wScriptWindow.SendMessage(EM_SETEVENTMASK,0,ENM_SCROLL);
+	m_wScriptWindow.SendMessage(EM_SETEVENTMASK, 0, ENM_SCROLL);
 
 	m_wndFileViewCaption.Create("Scripts", &m_wFilesTree, &m_wndSrcEditSplitter);
 	m_wndSourceCaption.Create("Source", &m_wScriptWindow, &m_wndSrcEditSplitter);
 	m_wndSrcEditSplitter.SetFirstPan(&m_wndFileViewCaption);
 	m_wndSrcEditSplitter.SetSecondPan(&m_wndSourceCaption);
 
-	m_wLocals.Create(IDC_LOCALS,WS_CHILD|TVS_HASLINES|TVS_HASBUTTONS|TVS_LINESATROOT|WS_VISIBLE,WS_EX_CLIENTEDGE,&erect, &m_wndWatchSplitter);
-	m_wWatch.Create(IDC_WATCH,WS_CHILD|WS_VISIBLE|TVS_HASLINES|TVS_HASBUTTONS|TVS_LINESATROOT,WS_EX_CLIENTEDGE,&erect, &m_wndWatchSplitter);
-	m_wCallstack.Create(0,WS_CHILD|WS_VISIBLE|LVS_REPORT,WS_EX_CLIENTEDGE,&erect, &m_wndWatchSplitter);
+	m_wLocals.Create(IDC_LOCALS, WS_CHILD | TVS_HASLINES | TVS_HASBUTTONS | TVS_LINESATROOT | WS_VISIBLE, WS_EX_CLIENTEDGE, &erect, &m_wndWatchSplitter);
+	m_wWatch.Create(IDC_WATCH, WS_CHILD | WS_VISIBLE | TVS_HASLINES | TVS_HASBUTTONS | TVS_LINESATROOT, WS_EX_CLIENTEDGE, &erect, &m_wndWatchSplitter);
+	m_wCallstack.Create(0, WS_CHILD | WS_VISIBLE | LVS_REPORT, WS_EX_CLIENTEDGE, &erect, &m_wndWatchSplitter);
 
 	m_wndLocalsCaption.Create("Locals", &m_wLocals, &m_wndWatchSplitter);
 	m_wndWatchCaption.Create("Watch", &m_wWatch, &m_wndWatchCallstackSplitter);
@@ -162,7 +162,7 @@ LRESULT CLUADbg::OnCreate(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	m_wndMainHorzSplitter.SetFirstPan(&m_wndSrcEditSplitter);
 	m_wndMainHorzSplitter.SetSecondPan(&m_wndWatchSplitter);
 
-	Reshape(wrect.right-wrect.left,wrect.bottom-wrect.top);
+	Reshape(wrect.right - wrect.left, wrect.bottom - wrect.top);
 
 	// Read splitter window locations from registry
 	DWORD dwVal;
@@ -186,14 +186,14 @@ LRESULT CLUADbg::OnCreate(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	//_TinyVerify(LoadFile("C:\\MASTERCD\\SCRIPTS\\Default\\Entities\\PLAYER\\BasicPlayer.lua"));
 	//_TinyVerify(LoadFile("C:\\MASTERCD\\SCRIPTS\\Default\\Entities\\PLAYER\\player.lua"));
 	// _TINY_CHECK_LAST_ERROR
-	
+
 	return 0;
 }
 
-bool CLUADbg::LoadFile(const char *pszFile, bool bForceReload)
+bool CLUADbg::LoadFile(const char* pszFile, bool bForceReload)
 {
-	FILE *hFile = NULL;
-	char *pszScript = NULL, *pszFormattedScript = NULL;
+	FILE* hFile = NULL;
+	char* pszScript = NULL, * pszFormattedScript = NULL;
 	UINT iLength, iCmpBufPos, iSrcBufPos, iDestBufPos, iNumChars, iStrStartPos, iCurKWrd, i;
 	char szCmpBuf[2048];
 	bool bIsKeyWord;
@@ -205,10 +205,10 @@ bool CLUADbg::LoadFile(const char *pszFile, bool bForceReload)
 	if (strncmp(szMasterCD, pszFile, strlen(szMasterCD) - 1) == 0)
 	{
 		strLuaFormatFileName += &pszFile[strlen(szMasterCD) + 1];
-		for (i=0; i<strLuaFormatFileName.length(); i++)
+		for (i = 0; i < strLuaFormatFileName.length(); i++)
 			if (strLuaFormatFileName[i] == '\\')
 				strLuaFormatFileName[i] = '/';
-		std::transform(strLuaFormatFileName.begin(), strLuaFormatFileName.end(), 
+		std::transform(strLuaFormatFileName.begin(), strLuaFormatFileName.end(),
 			strLuaFormatFileName.begin(), (int (*) (int)) tolower);
 	}
 	else
@@ -219,7 +219,7 @@ bool CLUADbg::LoadFile(const char *pszFile, bool bForceReload)
 
 	m_wScriptWindow.SetSourceFile(strLuaFormatFileName.c_str());
 
-	
+
 	// hFile = fopen(pszFile, "rb");
 	hFile = m_pIPak->FOpen(pszFile, "rb");
 
@@ -230,7 +230,7 @@ bool CLUADbg::LoadFile(const char *pszFile, bool bForceReload)
 	{
 		char str[_MAX_PATH];
 
-		sprintf(str,"Lua Debugger [%s]",pszFile);
+		sprintf(str, "Lua Debugger [%s]", pszFile);
 		SetWindowText(str);
 	}
 
@@ -242,8 +242,8 @@ bool CLUADbg::LoadFile(const char *pszFile, bool bForceReload)
 	// fseek(hFile, 0, SEEK_SET);
 	m_pIPak->FSeek(hFile, 0, SEEK_SET);
 
-    pszScript = new char [iLength + 1];
-	pszFormattedScript = new char [512 + iLength * 3];
+	pszScript = new char[iLength + 1];
+	pszFormattedScript = new char[512 + iLength * 3];
 
 	// _TinyVerify(fread(pszScript, iLength, 1, hFile) == 1);
 	_TinyVerify(m_pIPak->FRead(pszScript, iLength, 1, hFile) == 1);
@@ -288,30 +288,30 @@ bool CLUADbg::LoadFile(const char *pszFile, bool bForceReload)
 		// Scan next token
 		iNumChars = 1;
 		iStrStartPos = iSrcBufPos;
-		while (pszScript[iSrcBufPos] != ' '  &&
-			   pszScript[iSrcBufPos] != '\n' &&
-			   pszScript[iSrcBufPos] != '\r' &&
-			   pszScript[iSrcBufPos] != '\t' &&
-			   pszScript[iSrcBufPos] != '\0' &&
-			   pszScript[iSrcBufPos] != '('  &&
-			   pszScript[iSrcBufPos] != ')'  &&
-			   pszScript[iSrcBufPos] != '['  &&
-			   pszScript[iSrcBufPos] != ']'  &&
-			   pszScript[iSrcBufPos] != '{'  &&
-			   pszScript[iSrcBufPos] != '}'  &&
-			   pszScript[iSrcBufPos] != ','  &&
-			   pszScript[iSrcBufPos] != '.'  &&
-			   pszScript[iSrcBufPos] != ';'  &&
-			   pszScript[iSrcBufPos] != ':'  &&
-			   pszScript[iSrcBufPos] != '='  &&
-			   pszScript[iSrcBufPos] != '==' &&
-			   pszScript[iSrcBufPos] != '*'  &&
-			   pszScript[iSrcBufPos] != '+'  &&
-			   pszScript[iSrcBufPos] != '/'  &&
-			   pszScript[iSrcBufPos] != '~'  &&
-			   pszScript[iSrcBufPos] != '"')
+		while (pszScript[iSrcBufPos] != ' ' &&
+			pszScript[iSrcBufPos] != '\n' &&
+			pszScript[iSrcBufPos] != '\r' &&
+			pszScript[iSrcBufPos] != '\t' &&
+			pszScript[iSrcBufPos] != '\0' &&
+			pszScript[iSrcBufPos] != '(' &&
+			pszScript[iSrcBufPos] != ')' &&
+			pszScript[iSrcBufPos] != '[' &&
+			pszScript[iSrcBufPos] != ']' &&
+			pszScript[iSrcBufPos] != '{' &&
+			pszScript[iSrcBufPos] != '}' &&
+			pszScript[iSrcBufPos] != ',' &&
+			pszScript[iSrcBufPos] != '.' &&
+			pszScript[iSrcBufPos] != ';' &&
+			pszScript[iSrcBufPos] != ':' &&
+			pszScript[iSrcBufPos] != '=' &&
+			pszScript[iSrcBufPos] != '==' &&
+			pszScript[iSrcBufPos] != '*' &&
+			pszScript[iSrcBufPos] != '+' &&
+			pszScript[iSrcBufPos] != '/' &&
+			pszScript[iSrcBufPos] != '~' &&
+			pszScript[iSrcBufPos] != '"')
 		{
-			iSrcBufPos++;	
+			iSrcBufPos++;
 			iNumChars++;
 
 			// Special treatment of '-' to allow parsing of '--'
@@ -325,7 +325,7 @@ bool CLUADbg::LoadFile(const char *pszFile, bool bForceReload)
 
 		// Copy token and add escapes
 		iCmpBufPos = 0;
-		for (i=iStrStartPos; i<iStrStartPos + iNumChars; i++)
+		for (i = iStrStartPos; i < iStrStartPos + iNumChars; i++)
 		{
 			_TinyAssert(i - iStrStartPos < sizeof(szCmpBuf));
 
@@ -348,9 +348,9 @@ bool CLUADbg::LoadFile(const char *pszFile, bool bForceReload)
 		{
 			// Green
 			strcat(pszFormattedScript, "\\cf2 ");
-			
+
 			iDestBufPos += 5;
-			
+
 			strcpy(&pszFormattedScript[iDestBufPos], szCmpBuf);
 			iDestBufPos += strlen(szCmpBuf);
 
@@ -370,14 +370,14 @@ bool CLUADbg::LoadFile(const char *pszFile, bool bForceReload)
 
 			continue;
 		}
-		
+
 		// String
 		if (strncmp(szCmpBuf, "\"", 2) == 0)
 		{
 			// Gray
 			strcat(pszFormattedScript, "\\cf3 ");
 			iDestBufPos += 5;
-			
+
 			strcpy(&pszFormattedScript[iDestBufPos], szCmpBuf);
 			iDestBufPos += strlen(szCmpBuf);
 
@@ -402,7 +402,7 @@ bool CLUADbg::LoadFile(const char *pszFile, bool bForceReload)
 
 		// Have we parsed a keyword ?
 		bIsKeyWord = false;
-		for (iCurKWrd=0; iCurKWrd<sizeof(szKeywords) / sizeof(szKeywords[0]); iCurKWrd++)
+		for (iCurKWrd = 0; iCurKWrd < sizeof(szKeywords) / sizeof(szKeywords[0]); iCurKWrd++)
 		{
 			if (strcmp(szKeywords[iCurKWrd], szCmpBuf) == 0)
 			{
@@ -436,68 +436,68 @@ bool CLUADbg::LoadFile(const char *pszFile, bool bForceReload)
 
 	if (pszScript)
 	{
-		delete [] pszScript;
+		delete[] pszScript;
 		pszScript = NULL;
 	}
 
-	/*	
+	/*
 	hFile = fopen("C:\\Debug.txt", "w");
 	fwrite(pszFormattedScript, 1, strlen(pszFormattedScript), hFile);
 	fclose(hFile);
 	*/
 
 	m_wScriptWindow.SetText(pszFormattedScript);
-	
+
 	if (pszFormattedScript)
 	{
-		delete [] pszFormattedScript;
+		delete[] pszFormattedScript;
 		pszFormattedScript = NULL;
 	}
 
 	return true;
 }
 
-LRESULT CLUADbg::OnEraseBkGnd(HWND hWnd,UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CLUADbg::OnEraseBkGnd(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	return 1;
 }
 
 extern bool g_bDone; // From LuaDbgInterface.cpp
-LRESULT CLUADbg::OnClose(HWND hWnd,UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CLUADbg::OnClose(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	// Quit();
 	WINDOWINFO wi;
-	if(::GetWindowInfo(m_hWnd,&wi))
+	if (::GetWindowInfo(m_hWnd, &wi))
 	{
 		_TinyRegistry cTReg;
 		_TinyVerify(cTReg.WriteNumber("Software\\Tiny\\LuaDebugger\\", "XOrigin", wi.rcWindow.left));
 		_TinyVerify(cTReg.WriteNumber("Software\\Tiny\\LuaDebugger\\", "YOrigin", wi.rcWindow.top));
-		_TinyVerify(cTReg.WriteNumber("Software\\Tiny\\LuaDebugger\\", "XSize", wi.rcWindow.right-wi.rcWindow.left));
-		_TinyVerify(cTReg.WriteNumber("Software\\Tiny\\LuaDebugger\\", "YSize", wi.rcWindow.bottom-wi.rcWindow.top));
+		_TinyVerify(cTReg.WriteNumber("Software\\Tiny\\LuaDebugger\\", "XSize", wi.rcWindow.right - wi.rcWindow.left));
+		_TinyVerify(cTReg.WriteNumber("Software\\Tiny\\LuaDebugger\\", "YSize", wi.rcWindow.bottom - wi.rcWindow.top));
 	}
-	g_bDone=true;
+	g_bDone = true;
 	return 0;
 }
 
 
-LRESULT CLUADbg::OnSize(HWND hWnd,UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CLUADbg::OnSize(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 
-	int w=LOWORD(lParam);
-	int h=HIWORD(lParam);
-	Reshape(w,h);
+	int w = LOWORD(lParam);
+	int h = HIWORD(lParam);
+	Reshape(w, h);
 
 	return 0;
 }
 
-LRESULT CLUADbg::OnAbout(HWND hWnd,UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CLUADbg::OnAbout(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	CAboutWnd wndAbout;
 	wndAbout.DoModal(this);
 	return 0;
 }
 
-LRESULT CLUADbg::OnToggleBreakpoint(HWND hWnd,UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT CLUADbg::OnToggleBreakpoint(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	m_wScriptWindow.AddBreakpoint();
 	return 0;
@@ -506,7 +506,7 @@ LRESULT CLUADbg::OnToggleBreakpoint(HWND hWnd,UINT message, WPARAM wParam, LPARA
 #define TOOLBAR_HEIGHT 28
 #define STATUS_BAR_HEIGHT 20
 
-bool CLUADbg::Reshape(int w,int h)
+bool CLUADbg::Reshape(int w, int h)
 {
 	/*
 	int nWatchHeight=(((float)h)*WATCH_HEIGHT_MULTIPLIER);
@@ -520,19 +520,19 @@ bool CLUADbg::Reshape(int w,int h)
 	m_wndClient.Reshape(w, h - TOOLBAR_HEIGHT - STATUS_BAR_HEIGHT);
 	m_wndClient.SetWindowPos(0, TOOLBAR_HEIGHT, 0, 0, SWP_NOZORDER | SWP_NOSIZE);
 	m_wndMainHorzSplitter.Reshape(w, h - TOOLBAR_HEIGHT - STATUS_BAR_HEIGHT);
-	m_wToolbar.SetWindowPos(0,0,w,TOOLBAR_HEIGHT,0);
-	m_wndStatus.SetWindowPos(0, h -  STATUS_BAR_HEIGHT, w, STATUS_BAR_HEIGHT, NULL);
+	m_wToolbar.SetWindowPos(0, 0, w, TOOLBAR_HEIGHT, 0);
+	m_wndStatus.SetWindowPos(0, h - STATUS_BAR_HEIGHT, w, STATUS_BAR_HEIGHT, NULL);
 
 	return true;
 }
- 
+
 void CLUADbg::PlaceLineMarker(UINT iLine)
 {
 	m_wScriptWindow.SetLineMarker(iLine);
 	m_wScriptWindow.ScrollToLine(iLine);
 }
 
-void CLUADbg::SetStatusBarText(const char *pszText)
+void CLUADbg::SetStatusBarText(const char* pszText)
 {
 	// TODO: Find out why setting the panel text using the
 	//       dedicated message doesn't work. For some reason the
@@ -549,13 +549,13 @@ void CLUADbg::GetStackAndLocals()
 	///////////
 
 	{
-		IScriptObject *pICallstack = m_pIScriptSystem->GetCallsStack();
+		IScriptObject* pICallstack = m_pIScriptSystem->GetCallsStack();
 		_SmartScriptObject pIEntry(m_pIScriptSystem, true);
-		const char *pszText = NULL;
-		int iItem=0;
+		const char* pszText = NULL;
+		int iItem = 0;
 		m_wCallstack.Clear();
 		int i;
-		for (i=pICallstack->Count() - 1; i>=1; i--)
+		for (i = pICallstack->Count() - 1; i >= 1; i--)
 		{
 			pICallstack->GetAt(i, pIEntry);
 
@@ -593,7 +593,7 @@ void CLUADbg::GetStackAndLocals()
 	{
 		m_hRoot = NULL;
 		m_iRecursionLevel = 0;
-		m_pIVariable->Dump((IScriptObjectDumpSink *) this);
+		m_pIVariable->Dump((IScriptObjectDumpSink*)this);
 		m_pIVariable->Release();
 		m_pIVariable = NULL;
 	}
@@ -601,15 +601,15 @@ void CLUADbg::GetStackAndLocals()
 		m_wLocals.AddItemToTree("No Locals Available");
 	m_pTreeToAdd = NULL;
 
-	
+
 	///////////
 	// Watch //
 	///////////
 
-	const char *pszText = NULL;
+	const char* pszText = NULL;
 
 	m_wWatch.Clear();
-	IScriptObject *pIScriptObj = m_pIScriptSystem->GetLocalVariables(1);
+	IScriptObject* pIScriptObj = m_pIScriptSystem->GetLocalVariables(1);
 
 	string strWatchVar = "self";
 
@@ -636,7 +636,7 @@ void CLUADbg::GetStackAndLocals()
 
 					// Dump only works for tables, in case of values call the sink directly
 					if (m_pIVariable->GetCurrentType() == svtObject)
-						m_pIVariable->Dump((IScriptObjectDumpSink *) this);
+						m_pIVariable->Dump((IScriptObjectDumpSink*)this);
 					else
 					{
 						m_pIVariable = pIScriptObj; // Value needs to be retrieved from parent table
@@ -648,7 +648,7 @@ void CLUADbg::GetStackAndLocals()
 
 					m_pIVariable = NULL;
 				}
-				
+
 				m_pTreeToAdd = NULL;
 			}
 		}
@@ -657,20 +657,20 @@ void CLUADbg::GetStackAndLocals()
 
 	if (!bVarFound)
 		m_wWatch.AddItemToTree(const_cast<LPSTR>((strWatchVar + " = ?").c_str())); // TODO: Cast...
-	
+
 }
 
-HTREEITEM CLUADbg::AddVariableToTree(const char *sName, ScriptVarType type, HTREEITEM hParent)
+HTREEITEM CLUADbg::AddVariableToTree(const char* sName, ScriptVarType type, HTREEITEM hParent)
 {
 	char szBuf[2048];
 	char szType[32];
-	const char *pszContent = NULL;
+	const char* pszContent = NULL;
 	bool bRetrieved = false;
 	int iIdx;
 
 	if (m_pTreeToAdd == NULL)
 	{
-		_TinyAssert(m_pTreeToAdd !=	NULL);
+		_TinyAssert(m_pTreeToAdd != NULL);
 		return 0;
 	}
 
@@ -725,15 +725,15 @@ HTREEITEM CLUADbg::AddVariableToTree(const char *sName, ScriptVarType type, HTRE
 	return hNewItem;
 }
 
-void CLUADbg::OnElementFound(const char *sName, ScriptVarType type)
+void CLUADbg::OnElementFound(const char* sName, ScriptVarType type)
 {
 	HTREEITEM hRoot = NULL;
 	UINT iRecursionLevel = 0;
 	_SmartScriptObject pTable(m_pIScriptSystem, true);
-	IScriptObject *pIOldTbl = NULL;
+	IScriptObject* pIOldTbl = NULL;
 	HTREEITEM hOldRoot = NULL;
 
-	if(!sName)sName="[table idx]";
+	if (!sName)sName = "[table idx]";
 	hRoot = AddVariableToTree(sName, type, m_hRoot);
 
 	if (type == svtObject && m_iRecursionLevel < 5)
@@ -745,7 +745,7 @@ void CLUADbg::OnElementFound(const char *sName, ScriptVarType type)
 			m_pIVariable = pTable;
 			m_hRoot = hRoot;
 			m_iRecursionLevel++;
-			pTable->Dump((IScriptObjectDumpSink *) this);
+			pTable->Dump((IScriptObjectDumpSink*)this);
 			m_iRecursionLevel--;
 			m_pIVariable = pIOldTbl;
 			m_hRoot = hOldRoot;
@@ -753,7 +753,7 @@ void CLUADbg::OnElementFound(const char *sName, ScriptVarType type)
 	}
 }
 
-void CLUADbg::OnElementFound(int nIdx,ScriptVarType type)
+void CLUADbg::OnElementFound(int nIdx, ScriptVarType type)
 {
 	char szBuf[32];
 	sprintf(szBuf, "[%i]", nIdx);

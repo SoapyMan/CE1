@@ -16,35 +16,35 @@ extern ISystem* g_System;
 extern CMTSafeHeap* g_pSmallHeap;
 extern CMTSafeHeap* g_pBigHeap;
 
-CRefReadStreamProxy::CRefReadStreamProxy (const char* szSource, CRefReadStream* pStream, IStreamCallback* pCallback, StreamReadParams* pParams):
+CRefReadStreamProxy::CRefReadStreamProxy(const char* szSource, CRefReadStream* pStream, IStreamCallback* pCallback, StreamReadParams* pParams) :
 	m_strClient(szSource),
-	m_pStream (pStream),
+	m_pStream(pStream),
 	m_pCallback(pCallback),
 	m_bError(false),
-	m_bFinished (false),
-	m_bFreeBuffer (false),
-	m_bPending (false),
-	m_pBuffer (NULL),
-	m_numBytesRead (0),
-	m_numRetries (0)
+	m_bFinished(false),
+	m_bFreeBuffer(false),
+	m_bPending(false),
+	m_pBuffer(NULL),
+	m_numBytesRead(0),
+	m_numRetries(0)
 {
 	if (pParams)
 		m_Params = *pParams;
 	m_pBuffer = m_Params.pBuffer;
 #if LOG_IO
-	g_System->GetILog()->LogToFile ("\006io:CRefReadStreamProxy %p(%s, %p)", this, szSource, pCallback);
+	g_System->GetILog()->LogToFile("\006io:CRefReadStreamProxy %p(%s, %p)", this, szSource, pCallback);
 #endif
 	pStream->Register(this);
 }
 
-CRefReadStreamProxy::~CRefReadStreamProxy ()
+CRefReadStreamProxy::~CRefReadStreamProxy()
 {
 	if (!m_bFinished && !m_bError)
 		OnFinishRead(ERROR_UNEXPECTED_DESTRUCTION);
 	if (m_bFreeBuffer && m_pBuffer)
-		g_pBigHeap->Free (m_pBuffer);
+		g_pBigHeap->Free(m_pBuffer);
 #if LOG_IO
-	g_System->GetILog()->LogToFile ("\006io:~CRefReadStreamProxy %p(%s, %p)", this, m_strClient.c_str(), m_pCallback);
+	g_System->GetILog()->LogToFile("\006io:~CRefReadStreamProxy %p(%s, %p)", this, m_strClient.c_str(), m_pCallback);
 #endif
 	m_pStream->Unregister(this);
 }
@@ -63,7 +63,7 @@ bool CRefReadStreamProxy::IsFinished()
 }
 
 // returns the number of bytes read so far (the whole buffer size if IsFinished())
-unsigned int CRefReadStreamProxy::GetBytesRead (bool bWait)
+unsigned int CRefReadStreamProxy::GetBytesRead(bool bWait)
 {
 	if (m_bPending)
 	{
@@ -73,7 +73,7 @@ unsigned int CRefReadStreamProxy::GetBytesRead (bool bWait)
 			if (GetOverlappedResult(m_pStream->GetFile(), &m_Overlapped, &dwBytesRead, bWait))
 			{
 				m_numBytesRead = m_nPieceOffset + dwBytesRead;
-				assert (dwBytesRead <= m_nPieceLength);
+				assert(dwBytesRead <= m_nPieceLength);
 			}
 		}
 	}
@@ -83,7 +83,7 @@ unsigned int CRefReadStreamProxy::GetBytesRead (bool bWait)
 
 // returns the buffer into which the data has been or will be read
 // at least GetBytesRead() bytes in this buffer are guaranteed to be already read
-const void* CRefReadStreamProxy::GetBuffer ()
+const void* CRefReadStreamProxy::GetBuffer()
 {
 	return m_pBuffer;
 }
@@ -94,7 +94,7 @@ const void* CRefReadStreamProxy::GetBuffer ()
 void CRefReadStreamProxy::Abort()
 {
 	// lock this object to avoid preliminary destruction
-	CRefReadStreamProxy_AutoPtr pLock (this);
+	CRefReadStreamProxy_AutoPtr pLock(this);
 	if (m_bPending)
 	{
 		m_pStream->Abort(this);
@@ -114,7 +114,7 @@ void CRefReadStreamProxy::Abort()
 }
 
 // tries to raise the priority of the read; this is advisory and may have no effect
-void CRefReadStreamProxy::RaisePriority (unsigned nPriority)
+void CRefReadStreamProxy::RaisePriority(unsigned nPriority)
 {
 	if (m_Params.nPriority != nPriority)
 	{
@@ -129,7 +129,7 @@ void CRefReadStreamProxy::RaisePriority (unsigned nPriority)
 void CRefReadStreamProxy::Wait()
 {
 	// lock this object to avoid preliminary destruction
-	CRefReadStreamProxy_AutoPtr pLock (this);
+	CRefReadStreamProxy_AutoPtr pLock(this);
 	// move it to the top of the corresponding queues
 	RaisePriority(INT_MAX);
 
@@ -145,7 +145,7 @@ void CRefReadStreamProxy::Wait()
 // returns false if couldn't start,and retry is required
 // nMemQuota is the max number of bytes to allocate from the Engine's "Big Heap" for the piece of file
 // that is read. Pass a big value to let it allocate as much as it wants.
-bool CRefReadStreamProxy::StartRead (unsigned nMemQuota)
+bool CRefReadStreamProxy::StartRead(unsigned nMemQuota)
 {
 	if (m_bError || m_bFinished || m_bPending)
 	{
@@ -153,12 +153,12 @@ bool CRefReadStreamProxy::StartRead (unsigned nMemQuota)
 		//---------------------------
 		// THe stream read was automatically initiated, while the stream is marked as
 		// having been read, being read, or failed, i.e. it can't be restarted again.
-		
+
 		// This can generally happen when the read has been started, and immediately aborted,
 		// while being put on hold. When there are enough IO resources to start reading it,
 		// we detect that it's been already aborted and don't restart it.
 		// This is the only known reason for that.
-		assert (m_nIOError == ERROR_USER_ABORT);
+		assert(m_nIOError == ERROR_USER_ABORT);
 		return true; // invalid call, no need to retry
 	}
 
@@ -193,12 +193,12 @@ bool CRefReadStreamProxy::StartRead (unsigned nMemQuota)
 		m_Params.nSize = m_pStream->GetFileSize() - m_Params.nOffset;
 	}
 	else
-	if (m_Params.nOffset + m_Params.nSize > m_pStream->GetFileSize())
-	{
-		// it's impossible to read the specified region of the file
-		OnFinishRead(ERROR_REGION_OUT_OF_RANGE);
-		return true;
-	}
+		if (m_Params.nOffset + m_Params.nSize > m_pStream->GetFileSize())
+		{
+			// it's impossible to read the specified region of the file
+			OnFinishRead(ERROR_REGION_OUT_OF_RANGE);
+			return true;
+		}
 
 	if (!m_pBuffer)
 	{
@@ -230,18 +230,18 @@ bool CRefReadStreamProxy::StartRead (unsigned nMemQuota)
 	unsigned nMaxBlockLength = m_pStream->GetEngine()->GetPak()->GetPakVars()->nReadSlice * 1024;
 	if (!nMaxBlockLength)
 		nMaxBlockLength = g_nBlockLength;
-	m_nPieceLength = m_pStream->isOverlapped() ? min (m_Params.nSize, nMaxBlockLength) : m_Params.nSize;
+	m_nPieceLength = m_pStream->isOverlapped() ? min(m_Params.nSize, nMaxBlockLength) : m_Params.nSize;
 	m_numBytesRead = 0;
 
 	// lock the object for the time of read operation
 	this->AddRef();
-	
+
 	if ((m_Params.nFlags & SRP_FLAGS_ASYNC_PROGRESS) && m_pCallback)
 		m_pCallback->StreamOnProgress(this);
 
 	m_bPending = true;
 	++g_numPendingOperations;
-	DWORD dwError = CallReadFileEx ();
+	DWORD dwError = CallReadFileEx();
 	if (dwError)
 	{
 		m_bPending = false;
@@ -271,11 +271,11 @@ bool CRefReadStreamProxy::StartRead (unsigned nMemQuota)
 
 unsigned CRefReadStreamProxy::g_numPendingOperations = 0;
 
-VOID CALLBACK CRefReadStreamProxy::FileIOCompletionRoutine (
+VOID CALLBACK CRefReadStreamProxy::FileIOCompletionRoutine(
 	DWORD dwErrorCode,                // completion code
 	DWORD dwNumberOfBytesTransfered,  // number of bytes transferred
 	LPOVERLAPPED lpOverlapped         // I/O information buffer
-	)
+)
 {
 #if defined(LINUX)
 	assert(lpOverlapped->pCaller != 0);
@@ -285,8 +285,8 @@ VOID CALLBACK CRefReadStreamProxy::FileIOCompletionRoutine (
 	CRefReadStreamProxy* pThis = (CRefReadStreamProxy*)((LONG_PTR)lpOverlapped - nOOffset);
 #endif
 	// this is only called when the stream is overlapped
-	assert (pThis->m_pStream->isOverlapped());
-	pThis->OnIOComplete (dwErrorCode, dwNumberOfBytesTransfered);
+	assert(pThis->m_pStream->isOverlapped());
+	pThis->OnIOComplete(dwErrorCode, dwNumberOfBytesTransfered);
 }
 
 void CRefReadStreamProxy::OnIOComplete(unsigned nError, unsigned numBytesRead)
@@ -302,14 +302,14 @@ void CRefReadStreamProxy::OnIOComplete(unsigned nError, unsigned numBytesRead)
 
 	// calculate the next piece offset/length
 	m_nPieceOffset = m_numBytesRead;
-	assert (m_Params.nSize>=m_numBytesRead);
+	assert(m_Params.nSize >= m_numBytesRead);
 
 	unsigned nMaxBlockLength = m_pStream->GetEngine()->GetPak()->GetPakVars()->nReadSlice * 1024;
 	if (!nMaxBlockLength)
 		nMaxBlockLength = g_nBlockLength;
 
-	m_nPieceLength = min (m_Params.nSize-m_numBytesRead,nMaxBlockLength);
-	
+	m_nPieceLength = min(m_Params.nSize - m_numBytesRead, nMaxBlockLength);
+
 	// if there's nothing more to read,
 	// or there's an error, finish reading
 	if (nError || !m_nPieceLength)
@@ -345,7 +345,7 @@ void CRefReadStreamProxy::OnIOComplete(unsigned nError, unsigned numBytesRead)
 
 // on the platforms that support overlapped IO, calls ReadFileEx.
 // on other platforms merely reads the file, calling OnIOComplete()
-DWORD CRefReadStreamProxy::CallReadFileEx ()
+DWORD CRefReadStreamProxy::CallReadFileEx()
 {
 	HANDLE hFile = m_pStream->GetFile();
 
@@ -355,22 +355,22 @@ DWORD CRefReadStreamProxy::CallReadFileEx ()
 		void* pSource = m_pStream->GetFileData();
 		if (!pSource)
 		{
-			OnIOComplete(ERROR_ZIP_CACHE_FAILURE,0);
+			OnIOComplete(ERROR_ZIP_CACHE_FAILURE, 0);
 			return 0;
 		}
-		memcpy (((char*)m_pBuffer) + m_nPieceOffset, ((char*)pSource) + m_Params.nOffset + m_nPieceOffset, m_nPieceLength);
+		memcpy(((char*)m_pBuffer) + m_nPieceOffset, ((char*)pSource) + m_Params.nOffset + m_nPieceOffset, m_nPieceLength);
 		OnIOComplete(0, m_nPieceLength);
 		return 0;
 	}
 
 	if (m_pStream->isOverlapped())
 	{
-		memset (&m_Overlapped, 0, sizeof(m_Overlapped));
+		memset(&m_Overlapped, 0, sizeof(m_Overlapped));
 		m_Overlapped.Offset = m_Params.nOffset + m_nPieceOffset + m_pStream->GetArchiveOffset();
 #if defined(LINUX)
 		m_Overlapped.pCaller = (void*)this;//store caller address here
 #endif
-		if (!ReadFileEx (hFile, ((char*)m_pBuffer) + m_nPieceOffset, m_nPieceLength, &m_Overlapped, FileIOCompletionRoutine))
+		if (!ReadFileEx(hFile, ((char*)m_pBuffer) + m_nPieceOffset, m_nPieceLength, &m_Overlapped, FileIOCompletionRoutine))
 		{
 			DWORD dwError = GetLastError();
 			if (!dwError)
@@ -386,14 +386,14 @@ DWORD CRefReadStreamProxy::CallReadFileEx ()
 		// the actual number of bytes read
 		DWORD dwRead = 0;
 		unsigned newOffset = m_Params.nOffset + m_nPieceOffset + m_pStream->GetArchiveOffset();
-		if (SetFilePointer (hFile, newOffset, NULL, FILE_BEGIN) != newOffset)
+		if (SetFilePointer(hFile, newOffset, NULL, FILE_BEGIN) != newOffset)
 		{
 			// the positioning error is strange, we should examine it and perhaps retry (in case the file write wasn't finished.)
 			DWORD dwError = GetLastError();
 			return dwError;
 		}
 		// just read the file
-		if (!ReadFile (hFile, ((char*)m_pBuffer) + m_nPieceOffset, m_nPieceLength, &dwRead, NULL))
+		if (!ReadFile(hFile, ((char*)m_pBuffer) + m_nPieceOffset, m_nPieceLength, &dwRead, NULL))
 		{
 			// we failed to read; we don't call the callback, but we could as well call OnIOComplete()
 			// with this error code and return 0 as success flag emulating error during load
@@ -405,7 +405,7 @@ DWORD CRefReadStreamProxy::CallReadFileEx ()
 		}
 		else
 		{
-			OnIOComplete (0,dwRead);
+			OnIOComplete(0, dwRead);
 			return 0;
 		}
 	}
@@ -440,19 +440,19 @@ void CRefReadStreamProxy::FinalizeIO()
 		IStreamCallback* pCallback = m_pCallback;
 		m_pCallback = NULL;	// don't call this callback any more as it may have been deallocated
 #if LOG_IO
-		g_System->GetILog()->LogToFile ("\006io(%s) err %d%s%s%s%s piece(%d:%d) read %d %s userdata %d, pri %d, flags %x, offs %d, size %d", m_strClient.c_str(), m_nIOError, 
-			m_bError?" Error":"", m_bFinished?" Finished":"", m_bFreeBuffer?" FreeBuffer":"", m_bPending?" Pending":"",
+		g_System->GetILog()->LogToFile("\006io(%s) err %d%s%s%s%s piece(%d:%d) read %d %s userdata %d, pri %d, flags %x, offs %d, size %d", m_strClient.c_str(), m_nIOError,
+			m_bError ? " Error" : "", m_bFinished ? " Finished" : "", m_bFreeBuffer ? " FreeBuffer" : "", m_bPending ? " Pending" : "",
 			m_nPieceOffset, m_nPieceLength,
 			m_numBytesRead,
 			m_pStream->GetFileName().c_str(),
 			m_Params.dwUserData,
 			m_Params.nPriority,
 			m_Params.nFlags,
-			m_Params.nOffset,m_Params.nSize);
+			m_Params.nOffset, m_Params.nSize);
 #endif
-		pCallback->StreamOnComplete(this, m_bError?m_nIOError:0);
+		pCallback->StreamOnComplete(this, m_bError ? m_nIOError : 0);
 #if LOG_IO
-		g_System->GetILog()->LogToFile ("\006io callback %p returned", pCallback);
+		g_System->GetILog()->LogToFile("\006io callback %p returned", pCallback);
 #endif
 	}
 }
@@ -460,12 +460,12 @@ void CRefReadStreamProxy::FinalizeIO()
 string CRefReadStreamProxy::Dump()
 {
 	char szDump[0x300];
-	_snprintf (szDump, sizeof(szDump), "%s: callback %p, %s%s%s %d bytes read, offset=%d, size=%d, flags=%x",
+	_snprintf(szDump, sizeof(szDump), "%s: callback %p, %s%s%s %d bytes read, offset=%d, size=%d, flags=%x",
 		m_strClient.c_str(),
 		m_pCallback,
-		m_bPending?"PENDING ":"",
-		m_bFinished?"FINISHED ":"",
-		m_bError?"ERROR ":"",
+		m_bPending ? "PENDING " : "",
+		m_bFinished ? "FINISHED " : "",
+		m_bError ? "ERROR " : "",
 		m_numBytesRead,
 		m_Params.nOffset,
 		m_Params.nSize,

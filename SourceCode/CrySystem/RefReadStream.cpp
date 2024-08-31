@@ -7,15 +7,15 @@
 // creates a read stream from the file, in the engine, 
 // with the given default principal client
 // the path is always the real path, it shouldn't undergo MOD path adjustments
-CRefReadStream::CRefReadStream (const string& strFileName, CRefStreamEngine* pEngine):
-	m_pEngine (pEngine), 
-	m_bError (false),    // no error yet because we didn't try to do anything
-	m_strFileName (strFileName),
-	m_nFileSize (0),
+CRefReadStream::CRefReadStream(const string& strFileName, CRefStreamEngine* pEngine) :
+	m_pEngine(pEngine),
+	m_bError(false),    // no error yet because we didn't try to do anything
+	m_strFileName(strFileName),
+	m_nFileSize(0),
 	m_nSectorSize(0),
-	m_hFile (INVALID_HANDLE_VALUE),
-	m_bOverlapped ( false),
-	m_pZipEntry (NULL)
+	m_hFile(INVALID_HANDLE_VALUE),
+	m_bOverlapped(false),
+	m_pZipEntry(NULL)
 {
 	pEngine->Register(this);
 }
@@ -34,8 +34,8 @@ bool CRefReadStream::Activate()
 #else
 	if (m_pZipEntry == 0 && m_hFile == INVALID_HANDLE_VALUE)
 #endif
-		m_hFile = CreateFile (m_strFileName.c_str(), GENERIC_READ, FILE_SHARE_READ|FILE_SHARE_WRITE, NULL, OPEN_EXISTING,
-			m_bOverlapped?FILE_FLAG_OVERLAPPED:0,
+		m_hFile = CreateFile(m_strFileName.c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING,
+			m_bOverlapped ? FILE_FLAG_OVERLAPPED : 0,
 			NULL);
 #if !defined(LINUX64)
 	if (m_pZipEntry == NULL && m_hFile == INVALID_HANDLE_VALUE)
@@ -49,7 +49,7 @@ bool CRefReadStream::Activate()
 		{
 			m_nFileSize = m_pZipEntry->GetFileEntry()->desc.lSizeUncompressed;
 			m_bError = false;
-	
+
 			// try to open the actual file if can be done - this is only worthy
 			// if the data isn't yet in the cache AND the actual file is big enough
 			// AND it's uncompressed in the zip file
@@ -61,8 +61,8 @@ bool CRefReadStream::Activate()
 				// try to open the file - this should really be not often the case
 				const char* szPakFile = m_pZipEntry->GetZip()->GetFilePath();
 				// even if we can't open it, it doesn't matter: we automatically resort to using the cache
-				m_hFile = CreateFile (szPakFile, GENERIC_READ, FILE_SHARE_READ|FILE_SHARE_WRITE, NULL, OPEN_EXISTING,
-					m_bOverlapped?FILE_FLAG_OVERLAPPED:0,
+				m_hFile = CreateFile(szPakFile, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING,
+					m_bOverlapped ? FILE_FLAG_OVERLAPPED : 0,
 					NULL);
 			}
 
@@ -85,8 +85,8 @@ bool CRefReadStream::Activate()
 			if (m_pZipEntry)
 				m_nFileSize = m_pZipEntry->GetFileEntry()->desc.lSizeUncompressed;
 			else
-				m_nFileSize = ::GetFileSize (m_hFile, NULL);
-	
+				m_nFileSize = ::GetFileSize(m_hFile, NULL);
+
 			if (m_nFileSize == INVALID_FILE_SIZE)
 			{
 				m_bError = true;
@@ -115,12 +115,12 @@ void CRefReadStream::Abort(CRefReadStreamProxy* pProxy)
 	{
 		// there's only one proxy that uses this object; so we can safely cancel io
 		// on this file
-		CancelIo (m_hFile);
+		CancelIo(m_hFile);
 	}
 }
 
 // Client (through the given Proxy) has requested priority rise
-void CRefReadStream::OnRaisePriority (CRefReadStreamProxy* pProxy, unsigned nPriority)
+void CRefReadStream::OnRaisePriority(CRefReadStreamProxy* pProxy, unsigned nPriority)
 {
 	if (!pProxy->IsIOExecuted())
 		m_pEngine->SortIOJobs();
@@ -151,7 +151,7 @@ string CRefReadStream::Dump()
 			strClients += ",";
 		strClients += (*it)->Dump();
 	}
-	return "{"+strClients+"}";
+	return "{" + strClients + "}";
 }
 
 // returns the size of allocated memory for this object and all subobjects (Proxies)
@@ -160,7 +160,7 @@ size_t CRefReadStream::GetSize()
 	size_t nSize = sizeof(*this);
 	nSize += m_strFileName.capacity();
 
-	for (ProxySet::iterator it = m_setProxies.begin();  it != m_setProxies.end(); ++it)
+	for (ProxySet::iterator it = m_setProxies.begin(); it != m_setProxies.end(); ++it)
 		nSize += sizeof(ProxySet::value_type) + (*it)->GetSize();
 	return nSize;
 }

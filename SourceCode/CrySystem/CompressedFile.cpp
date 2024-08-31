@@ -16,14 +16,14 @@
 
 //#define USE_COMPRESSION
 
-bool CSystem::WriteCompressedFile(char *filename, void *data, unsigned int bitlen)
+bool CSystem::WriteCompressedFile(char* filename, void* data, unsigned int bitlen)
 {
-	FILE *pFile = fxopen(filename, "wb+");
+	FILE* pFile = fxopen(filename, "wb+");
 	if (!pFile)
 		return false;
 
 #ifdef USE_COMPRESSION
-  gzFile f = gzdopen(fileno(pFile), "wb9");
+	gzFile f = gzdopen(fileno(pFile), "wb9");
 	gzwrite(f, &bitlen, sizeof(int));
 	gzwrite(f, data, BITS2BYTES(bitlen));
 	gzclose(f);
@@ -32,30 +32,30 @@ bool CSystem::WriteCompressedFile(char *filename, void *data, unsigned int bitle
 	fwrite(data, BITS2BYTES(bitlen), 1, pFile);
 	fclose(pFile);
 #endif
-    
+
 	return true;
 };
 
-unsigned int CSystem::GetCompressedFileSize(char *filename)
+unsigned int CSystem::GetCompressedFileSize(char* filename)
 {
-	FILE *pFile=fxopen(filename, "rb");
-	if (!pFile) 
+	FILE* pFile = fxopen(filename, "rb");
+	if (!pFile)
 		return 0;
 
 #ifdef USE_COMPRESSION
-	fseek(pFile,0,SEEK_END);
-	long nLen=ftell(pFile);
-	fseek(pFile,0,SEEK_SET);
-	if (nLen<=0)
+	fseek(pFile, 0, SEEK_END);
+	long nLen = ftell(pFile);
+	fseek(pFile, 0, SEEK_SET);
+	if (nLen <= 0)
 	{
 		// gzread works incorrectly if the filesize is 0
 		fclose(pFile);
 		return (0);
-	}	
+	}
 
 	fclose(pFile);
-	pFile=fxopen(filename, "rb");
-	if (!pFile) 
+	pFile = fxopen(filename, "rb");
+	if (!pFile)
 		return 0;
 
 	unsigned int bitlen;
@@ -81,29 +81,29 @@ unsigned int CSystem::GetCompressedFileSize(char *filename)
 	return bitlen;
 }
 
-unsigned int CSystem::ReadCompressedFile(char *filename, void *data, unsigned int maxbitlen)
+unsigned int CSystem::ReadCompressedFile(char* filename, void* data, unsigned int maxbitlen)
 {
-	FILE * pFile=fxopen(filename, "rb");
-	if (!pFile) 
+	FILE* pFile = fxopen(filename, "rb");
+	if (!pFile)
 		return 0;
 
 	/*
 	fseek(pFile,0,SEEK_END);
 	long nLen=ftell(pFile);
 	fseek(pFile,0,SEEK_SET);
-	*/ 
-	
+	*/
+
 	unsigned int bitlen;
-	
+
 #ifdef USE_COMPRESSION
-  gzFile f = gzdopen(fileno(pFile), "rb9");
+	gzFile f = gzdopen(fileno(pFile), "rb9");
 	gzread(f, &bitlen, sizeof(int));
-	assert(bitlen<=maxbitlen);  // FIXME: nicer if caller doesn't need to know buffer size in advance
+	assert(bitlen <= maxbitlen);  // FIXME: nicer if caller doesn't need to know buffer size in advance
 	gzread(f, data, BITS2BYTES(bitlen));
 	gzclose(f);
 #else	
 	fread(&bitlen, sizeof(int), 1, pFile);
-	assert(bitlen<=maxbitlen);  // FIXME: nicer if caller doesn't need to know buffer size in advance
+	assert(bitlen <= maxbitlen);  // FIXME: nicer if caller doesn't need to know buffer size in advance
 	fread(data, BITS2BYTES(bitlen), 1, pFile);
 	fclose(pFile);
 #endif

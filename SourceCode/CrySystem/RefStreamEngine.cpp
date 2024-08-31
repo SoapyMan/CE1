@@ -15,22 +15,22 @@ extern CMTSafeHeap* g_pBigHeap;
 // useWorkerThreads is the number of worker threads  to use;
 // currently only values 0 and 1 are supported: 0 - overlapped IO in the main thread, and 1 - overlapped IO in the worker thread
 // MT: Main thread only
-CRefStreamEngine::CRefStreamEngine (CCryPak* pPak, IMiniLog* pLog, unsigned useWorkerThreads, bool bOverlappedIO):
+CRefStreamEngine::CRefStreamEngine(CCryPak* pPak, IMiniLog* pLog, unsigned useWorkerThreads, bool bOverlappedIO) :
 	m_pPak(pPak),
 	m_pLog(pLog),
-	m_nMaxReadDepth (16),
-	m_nMaxQueueLength (4*1024),
-	m_nMaxIOMemPool (128*1024*1024),
+	m_nMaxReadDepth(16),
+	m_nMaxQueueLength(4 * 1024),
+	m_nMaxIOMemPool(128 * 1024 * 1024),
 #if defined(LINUX)
-	m_hIOWorker (INVALID_HANDLE_VALUE),//only diff is here, but what can i do?
+	m_hIOWorker(INVALID_HANDLE_VALUE),//only diff is here, but what can i do?
 #else
-	m_hIOWorker (NULL),
+	m_hIOWorker(NULL),
 #endif
 	m_dwWorkerThreadId(0),
 	m_queIOJobs(ProxyPtrAllocator(g_pSmallHeap)),
 	m_setIOPending(ProxyPtrPredicate(), ProxyPtrAllocator(g_pSmallHeap)),
 	m_queIOExecuted(ProxyPtrAllocator(g_pSmallHeap)),
-	m_bEnableOverlapped (bOverlappedIO),
+	m_bEnableOverlapped(bOverlappedIO),
 	m_nSuspendCallbackTimeQuota(0)
 {
 	m_dwMainThreadId = GetCurrentThreadId();
@@ -44,13 +44,13 @@ CRefStreamEngine::CRefStreamEngine (CCryPak* pPak, IMiniLog* pLog, unsigned useW
 
 	//m_nSuspendCallbackTimeQuota = 1; // suspend anyway: we don't support this..
 	m_nCallbackTimeQuota = 0;
-	SetCallbackTimeQuota (50000);
-	m_dwMask=0;
+	SetCallbackTimeQuota(50000);
+	m_dwMask = 0;
 
-	m_hIOJob = CreateEvent (NULL, FALSE, FALSE, NULL);
-	m_hIOExecuted = CreateEvent (NULL, TRUE, FALSE, NULL);
-	m_hDummyEvent = CreateEvent (NULL, FALSE, FALSE, NULL);
-	memset (m_nSectorSizes, 0, sizeof(m_nSectorSizes));
+	m_hIOJob = CreateEvent(NULL, FALSE, FALSE, NULL);
+	m_hIOExecuted = CreateEvent(NULL, TRUE, FALSE, NULL);
+	m_hDummyEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
+	memset(m_nSectorSizes, 0, sizeof(m_nSectorSizes));
 
 	if (useWorkerThreads)
 		StartWorkerThread();
@@ -82,16 +82,16 @@ CRefStreamEngine::~CRefStreamEngine()
 		for (NameStreamMap::iterator it = m_mapFilesByName.begin(); it != m_mapFilesByName.end(); ++it)
 			m_pLog->Log("%s: %s", it->first.c_str(), it->second->Dump().c_str());
 
-	CloseHandle (m_hIOJob);
-	CloseHandle (m_hIOExecuted);
-	CloseHandle (m_hDummyEvent);
+	CloseHandle(m_hIOJob);
+	CloseHandle(m_hIOExecuted);
+	CloseHandle(m_hDummyEvent);
 }
 
-unsigned CRefStreamEngine::UpdateAndWait (unsigned nMilliseconds, unsigned nFlags)
+unsigned CRefStreamEngine::UpdateAndWait(unsigned nMilliseconds, unsigned nFlags)
 {
 	if (IsMainThread())
 		Update(nFlags);
-	return Wait (nMilliseconds,nFlags);
+	return Wait(nMilliseconds, nFlags);
 }
 
 // returns true if called from the main thread for this engine
@@ -103,18 +103,18 @@ bool CRefStreamEngine::IsMainThread()
 bool CRefStreamEngine::IsWorkerThread()
 {
 	return GetCurrentThreadId() == m_dwWorkerThreadId;
-} 
+}
 
 //////////////////////////////////////////////////////////////////////////
 // Starts asynchronous read from the specified file
 // MT: Main thread only
-IReadStream_AutoPtr CRefStreamEngine::StartRead (const char* szSource, const char* szFilePathPC, IStreamCallback* pCallback, StreamReadParams* pParams)
+IReadStream_AutoPtr CRefStreamEngine::StartRead(const char* szSource, const char* szFilePathPC, IStreamCallback* pCallback, StreamReadParams* pParams)
 {
 	unsigned nFlags = 0;
 	if (pParams)
 		nFlags = pParams->nFlags;
 
-	m_pPak->RecordFile( szFilePathPC );
+	m_pPak->RecordFile(szFilePathPC);
 
 	// get rid of some jobs if there are too many in the queue
 	if (!(nFlags & SRP_QUICK_STARTREAD))
@@ -125,15 +125,15 @@ IReadStream_AutoPtr CRefStreamEngine::StartRead (const char* szSource, const cha
 		}
 
 	char szFilePathBuf[CCryPak::g_nMaxPath];
-	const char* szFilePath = m_pPak->AdjustFileName (szFilePathPC, szFilePathBuf, pParams && (pParams->nFlags & SRP_FLAGS_PATH_REAL) ? ICryPak::FLAGS_PATH_REAL: 0);
+	const char* szFilePath = m_pPak->AdjustFileName(szFilePathPC, szFilePathBuf, pParams && (pParams->nFlags & SRP_FLAGS_PATH_REAL) ? ICryPak::FLAGS_PATH_REAL : 0);
 
 	// first try to find such file; if it's already pending, add a client to it only
 	CRefReadStream_AutoPtr pStream;
-	NameStreamMap::iterator it = m_mapFilesByName.find (szFilePath);
+	NameStreamMap::iterator it = m_mapFilesByName.find(szFilePath);
 
 	if (it == m_mapFilesByName.end())
 	{
-		pStream = new CRefReadStream (szFilePath, this);
+		pStream = new CRefReadStream(szFilePath, this);
 	}
 	else
 		pStream = it->second;
@@ -141,17 +141,17 @@ IReadStream_AutoPtr CRefStreamEngine::StartRead (const char* szSource, const cha
 	// make sure that the permanent streams get locked in memory;
 	// if it's already locked, insert() won't do anything
 	if (nFlags & SRP_FLAGS_MAKE_PERMANENT)
-		m_setLockedStreams.insert (pStream);
+		m_setLockedStreams.insert(pStream);
 	else
-	if (nFlags & SRP_FLAGS_MAKE_TRANSIENT)
-		m_setLockedStreams.erase (pStream);
-	
+		if (nFlags & SRP_FLAGS_MAKE_TRANSIENT)
+			m_setLockedStreams.erase(pStream);
+
 	// at this moment the stream should self-register in this engine and the stream sets should get initialized
 	CRefReadStreamProxy_AutoPtr pProxy = new CRefReadStreamProxy(szSource, pStream, pCallback, pParams);
 
 	// register the proxy
-	AddIOJob (pProxy);
-	
+	AddIOJob(pProxy);
+
 	if (!(nFlags & SRP_QUICK_STARTREAD))
 		Update(0);
 
@@ -159,7 +159,7 @@ IReadStream_AutoPtr CRefStreamEngine::StartRead (const char* szSource, const cha
 }
 
 // signals that this proxy needs to be executed (StartRead called)
-void CRefStreamEngine::AddIOJob (CRefReadStreamProxy* pJobProxy)
+void CRefStreamEngine::AddIOJob(CRefReadStreamProxy* pJobProxy)
 {
 	if (!m_hIOWorker)
 	{ // its very simple with single-threaded model: we just put the job to the queue
@@ -168,44 +168,44 @@ void CRefStreamEngine::AddIOJob (CRefReadStreamProxy* pJobProxy)
 		SortIOJobs_NoLock();
 	}
 	else
-	// for multi-threaded model, we need to put the job to the queue and signal the worker
-	// thread about it.
+		// for multi-threaded model, we need to put the job to the queue and signal the worker
+		// thread about it.
 	{
 		// put to the queue
 		{
-			AUTO_LOCK (m_csIOJobs);
+			AUTO_LOCK(m_csIOJobs);
 			m_queIOJobs.push_back(pJobProxy);
 			SortIOJobs_NoLock();
 		}
-		SetEvent (m_hIOJob);
-	} 
-} 
- 
-  
+		SetEvent(m_hIOJob);
+	}
+}
+
+
 //////////////////////////////////////////////////////////////////////////
 // returns the size of the file; returns 0 if there's no such file.
-unsigned CRefStreamEngine::GetFileSize (const char* szFilePathPC, unsigned nCryPakFlags)
+unsigned CRefStreamEngine::GetFileSize(const char* szFilePathPC, unsigned nCryPakFlags)
 {
 	char szFilePathBuf[m_pPak->g_nMaxPath];
-	const char *szFilePath = m_pPak->AdjustFileName (szFilePathPC, szFilePathBuf, nCryPakFlags);
-	NameStreamMap::iterator it = m_mapFilesByName.find (szFilePath);
+	const char* szFilePath = m_pPak->AdjustFileName(szFilePathPC, szFilePathBuf, nCryPakFlags);
+	NameStreamMap::iterator it = m_mapFilesByName.find(szFilePath);
 	if (it != m_mapFilesByName.end())
 	{
 		if (!it->second->GetFileSize())
 			it->second->Activate();
-		return it->second->GetFileSize(); 
-	}  
-   
+		return it->second->GetFileSize();
+	}
+
 	// we didn't find the file size in the cache - open the file and query the size
 #if defined(LINUX)
-	HANDLE hFile = CreateFile (szFilePath, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
+	HANDLE hFile = CreateFile(szFilePath, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
 #else
-	HANDLE hFile = CreateFile (szFilePath, GENERIC_READ, FILE_SHARE_READ|FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
+	HANDLE hFile = CreateFile(szFilePath, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
 #endif
 	if (hFile != INVALID_HANDLE_VALUE)
 	{
 		unsigned nFileSize = ::GetFileSize(hFile, NULL);
-		CloseHandle (hFile);
+		CloseHandle(hFile);
 		return nFileSize;
 	}
 	else
@@ -231,7 +231,7 @@ void CRefStreamEngine::Update(unsigned nFlags)
 	unsigned numRemovedJobs = 0;
 	unsigned numFinalizedJobs = 0;
 	do {
-	
+
 		if (!m_hIOWorker)
 		{
 			// If we're in single-threaded mode, update means the whole cycle:
@@ -241,18 +241,18 @@ void CRefStreamEngine::Update(unsigned nFlags)
 			// enter alertable state so that the IO completion routines can be called
 			WaitForSingleObjectEx(m_hDummyEvent, 0, TRUE);
 		}
-		
+
 		// If we're in multi-threaded mode, Update from main thread means
 		// just finalization of executed in the worker IO jobs.
 		numFinalizedJobs = FinalizeIOJobs(nFlags);
 
 		// Update from worker thread shouldn't be called at all
-		
+
 		// We continue updating until all the jobs that are possible to move out
 		// of the IO Job queue are moved. Even if no jobs were moved, but some were finalized,
 		// the finalized jobs may have spawned some new jobs, we'll try to start those, too
 		// but we don't let it go on forever because of the limits
-	} while(numRemovedJobs | numFinalizedJobs);
+	} while (numRemovedJobs | numFinalizedJobs);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -261,24 +261,24 @@ void CRefStreamEngine::Update(unsigned nFlags)
 // - may be called from any non-worker thread
 unsigned CRefStreamEngine::Wait(unsigned nMilliseconds, unsigned nFlags)
 {
-	ResetEvent (m_hIOExecuted);
+	ResetEvent(m_hIOExecuted);
 	if (!IsMainThread())
 	{
 		// special case - this function is called from non-main thread
 		// just wait until some io gets executed, if there's anything to wait for
-		if (numIOJobs(eWaiting)+numIOJobs(ePending) > 0) // no sense to wait here if there are no waiting or pending jobs
+		if (numIOJobs(eWaiting) + numIOJobs(ePending) > 0) // no sense to wait here if there are no waiting or pending jobs
 			WaitForSingleObject(m_hIOExecuted, nMilliseconds);
 		return 0;
 	}
 
-	AddCallbackTimeQuota (nMilliseconds * 1000);
+	AddCallbackTimeQuota(nMilliseconds * 1000);
 
 	if (m_hIOWorker)
 	{
 		unsigned nFinalized = FinalizeIOJobs(nFlags); // finalize whatever may not have been finalized
 		if (nFinalized)
 			return nFinalized; // we don't wait if we finalized something
-		if (numIOJobs(eWaiting)+numIOJobs(ePending) > 0) // no sense to wait here if there are no waiting or pending jobs
+		if (numIOJobs(eWaiting) + numIOJobs(ePending) > 0) // no sense to wait here if there are no waiting or pending jobs
 			WaitForSingleObject(m_hIOExecuted, nMilliseconds);
 	}
 	else
@@ -292,19 +292,19 @@ unsigned CRefStreamEngine::Wait(unsigned nMilliseconds, unsigned nFlags)
 }
 
 // adds to the callback time quota in this frame, the specified number of microseconds
-void CRefStreamEngine::AddCallbackTimeQuota (int nMicroseconds)
+void CRefStreamEngine::AddCallbackTimeQuota(int nMicroseconds)
 {
 	m_nCallbackTimeQuota += nMicroseconds * m_nPerfFreq / 1000000;
 	if (m_nCallbackTimeQuota < 0)
 		m_nCallbackTimeQuota = 0;
 }
 
-void CRefStreamEngine::SetStreamCompressionMask( const DWORD indwMask )
+void CRefStreamEngine::SetStreamCompressionMask(const DWORD indwMask)
 {
-	m_dwMask=indwMask;
+	m_dwMask = indwMask;
 }
 
-void CRefStreamEngine::SetCallbackTimeQuota (int nMicroseconds)
+void CRefStreamEngine::SetCallbackTimeQuota(int nMicroseconds)
 {
 	// if we have 
 	if (m_nCallbackTimeQuota < 0)
@@ -320,7 +320,7 @@ void CRefStreamEngine::SetCallbackTimeQuota (int nMicroseconds)
 bool CRefStreamEngine::IsCallbackTimeQuota(unsigned nFlags)
 {
 	if (m_nSuspendCallbackTimeQuota == 0
-		&& !(nFlags&FLAGS_DISABLE_CALLBACK_TIME_QUOTA)
+		&& !(nFlags & FLAGS_DISABLE_CALLBACK_TIME_QUOTA)
 		&& m_nCallbackTimeQuota <= 0
 		)
 		return false;
@@ -349,10 +349,10 @@ unsigned CRefStreamEngine::FinalizeIOJobs(unsigned nFlags)
 		assert(pProxy->IsIOExecuted());
 
 		int64 nStartTime, nEndTime;
-		QueryPerformanceCounter ((LARGE_INTEGER*)&nStartTime);
+		QueryPerformanceCounter((LARGE_INTEGER*)&nStartTime);
 		// TODO: add control over the callback execution time
 		// this proxy needs to be moved out of the IO queue
-		pProxy->FinalizeIO ();
+		pProxy->FinalizeIO();
 		++numFinalizedJobs;
 		QueryPerformanceCounter((LARGE_INTEGER*)&nEndTime);
 
@@ -367,7 +367,7 @@ unsigned CRefStreamEngine::FinalizeIOJobs(unsigned nFlags)
 
 
 // this will be the thread that executes everything that can take time
-void CRefStreamEngine::IOWorkerThread ()
+void CRefStreamEngine::IOWorkerThread()
 {
 	do
 	{
@@ -379,8 +379,7 @@ void CRefStreamEngine::IOWorkerThread ()
 		// besides, the callback might have spawned some new jobs.
 		// the pending->executed move will happen in the callback
 		WaitForSingleObjectEx(m_hIOJob, INFINITE, TRUE);
-	}
-	while (!m_bStopIOWorker);
+	} while (!m_bStopIOWorker);
 
 	// wait for pending IO
 	AUTO_LOCK(m_csIOPending);
@@ -411,7 +410,7 @@ void CRefStreamEngine::SortIOJobs()
 // this sorts the IO jobs, without bothering about synchronization
 void CRefStreamEngine::SortIOJobs_NoLock()
 {
-	std::sort (m_queIOJobs.begin(), m_queIOJobs.end(), CRefReadStreamProxy::Order());
+	std::sort(m_queIOJobs.begin(), m_queIOJobs.end(), CRefReadStreamProxy::Order());
 }
 
 bool CRefStreamEngine::IsSuspended()
@@ -430,14 +429,14 @@ unsigned CRefStreamEngine::StartIOJobs()
 
 		CRefReadStreamProxy* pEndJob = NULL; // the job that will mark the end of loop
 		// TODO: implement limitation on the number of simultaneous read requests
-		while(!m_queIOJobs.empty() 
+		while (!m_queIOJobs.empty()
 			&& m_setIOPending.size() < m_nMaxReadDepth
 			&& !IsSuspended())
 		{
 			CRefReadStreamProxy_AutoPtr pProxy = m_queIOJobs.front();
 
 			m_queIOJobs.pop_front();
-			m_setIOPending.insert (pProxy);
+			m_setIOPending.insert(pProxy);
 
 			// temporary unlock both queue and set and start the reading
 			bool bReadStarted;
@@ -466,7 +465,7 @@ unsigned CRefStreamEngine::StartIOJobs()
 			{
 				// recoverable error - we'll try again next time
 				m_queIOJobs.push_back(pProxy);
-				m_setIOPending.erase (pProxy);
+				m_setIOPending.erase(pProxy);
 
 				if (pEndJob)
 				{
@@ -483,7 +482,7 @@ unsigned CRefStreamEngine::StartIOJobs()
 	return numMovedJobs;
 }
 
-void CRefStreamEngine::OnIOJobExecuted (CRefReadStreamProxy* pJobProxy)
+void CRefStreamEngine::OnIOJobExecuted(CRefReadStreamProxy* pJobProxy)
 {
 	if (m_hIOWorker && (pJobProxy->GetParams().nFlags & SRP_FLAGS_ASYNC_CALLBACK))
 		pJobProxy->FinalizeIO();
@@ -495,11 +494,11 @@ void CRefStreamEngine::OnIOJobExecuted (CRefReadStreamProxy* pJobProxy)
 			// first add, then erase - to avoid releasing the autopointer
 			// this is under double-locked CS's to avoid in-between artifacts
 			m_queIOExecuted.push_back(pJobProxy);
-			m_setIOPending.erase (pJobProxy);
+			m_setIOPending.erase(pJobProxy);
 		}
 	}
 
-	SetEvent (m_hIOExecuted);
+	SetEvent(m_hIOExecuted);
 
 	// perhaps this will free the way for another IO job.
 	// but we won't call StartIOJobs(), because this same funciton can only be
@@ -516,66 +515,66 @@ unsigned CRefStreamEngine::GetSectorSize(const char* szPath)
 	{
 		// this is a share, try to get the share sector size..
 		// find the end of the share name \\server\share specification
-		const char* pEnd = szPath+1; // the pEnd points to \server\share\...
+		const char* pEnd = szPath + 1; // the pEnd points to \server\share\...
 		int nSlashes = 0;
-		while(*pEnd && nSlashes < 2)
+		while (*pEnd && nSlashes < 2)
 		{
 			// the pEnd points to server\share\... the first time the loop is entered
 			// when it reaches \share\.., nSlashes == 1, and 
 			// when it reaches \..., nSlashes == 2 and pEnd points to the backslash 
-			if (*++pEnd == '\\') 
+			if (*++pEnd == '\\')
 				++nSlashes;
 		}
 
 		TElementaryArray<char> pShareName;
-		pShareName.reinit (pEnd - szPath+1);
-		memcpy (&pShareName[0], szPath, pEnd - szPath);
+		pShareName.reinit(pEnd - szPath + 1);
+		memcpy(&pShareName[0], szPath, pEnd - szPath);
 		pShareName[pEnd - szPath] = '\0';
 
-		if (!GetDiskFreeSpace (&pShareName[0], &dwSectorsPerCluster, &dwBytesPerSector, &dwNumberOfFreeClusters, &dwTotalNumberOfClusters))
+		if (!GetDiskFreeSpace(&pShareName[0], &dwSectorsPerCluster, &dwBytesPerSector, &dwNumberOfFreeClusters, &dwTotalNumberOfClusters))
 			// set some default for share
 			dwSectorsPerCluster = 4 * 1024;
 		return dwSectorsPerCluster;
 	}
 	else
-	if (szPath[0] && szPath[1] == ':')
-	{
-		return GetDriveSectorSize(szPath[0]);
-	}
-	else
-	{
-		// this is relative path
-		TElementaryArray<char> pDir;
-		DWORD dwLen = GetCurrentDirectory(0, NULL);
-		pDir.reinit (dwLen);
-		if (dwLen != GetCurrentDirectory(dwLen, &pDir[0]))
+		if (szPath[0] && szPath[1] == ':')
 		{
-			DWORD dwSectorsPerCluster, dwBytesPerSector, dwNumberOfFreeClusters, dwTotalNumberOfClusters;
-			if (!GetDiskFreeSpace(NULL, &dwSectorsPerCluster, &dwBytesPerSector, &dwNumberOfFreeClusters, &dwTotalNumberOfClusters))
-				dwSectorsPerCluster = 2 * 1024;
-			return dwSectorsPerCluster;
+			return GetDriveSectorSize(szPath[0]);
 		}
 		else
-			return GetDriveSectorSize(pDir[0]);
-	}
+		{
+			// this is relative path
+			TElementaryArray<char> pDir;
+			DWORD dwLen = GetCurrentDirectory(0, NULL);
+			pDir.reinit(dwLen);
+			if (dwLen != GetCurrentDirectory(dwLen, &pDir[0]))
+			{
+				DWORD dwSectorsPerCluster, dwBytesPerSector, dwNumberOfFreeClusters, dwTotalNumberOfClusters;
+				if (!GetDiskFreeSpace(NULL, &dwSectorsPerCluster, &dwBytesPerSector, &dwNumberOfFreeClusters, &dwTotalNumberOfClusters))
+					dwSectorsPerCluster = 2 * 1024;
+				return dwSectorsPerCluster;
+			}
+			else
+				return GetDriveSectorSize(pDir[0]);
+		}
 }
 
-unsigned CRefStreamEngine::GetDriveSectorSize (char cDrive)
+unsigned CRefStreamEngine::GetDriveSectorSize(char cDrive)
 {
 	cDrive = tolower(cDrive);
 	// this is an absolute path
 	char szBuf[4] = "X:\\";
 	szBuf[0] = cDrive;
 	// determine the pointer to the cached value of the sector size (NULL if there's no such)
-	unsigned * pCachedSectorSize = NULL;
-	if (szBuf[0]>='c' && unsigned(szBuf[0] - 'c') < SIZEOF_ARRAY(m_nSectorSizes))
-		pCachedSectorSize = m_nSectorSizes + szBuf[0]-'c';
+	unsigned* pCachedSectorSize = NULL;
+	if (szBuf[0] >= 'c' && unsigned(szBuf[0] - 'c') < SIZEOF_ARRAY(m_nSectorSizes))
+		pCachedSectorSize = m_nSectorSizes + szBuf[0] - 'c';
 
 	// if we have don't have this disk size cache, (or just it wasn't cached yet), calculate and cache it
 	if (!pCachedSectorSize || *pCachedSectorSize)
 	{
 		DWORD dwSectorsPerCluster, dwBytesPerSector, dwNumberOfFreeClusters, dwTotalNumberOfClusters;
-		if (!GetDiskFreeSpace (szBuf, &dwSectorsPerCluster, &dwBytesPerSector, &dwNumberOfFreeClusters, &dwTotalNumberOfClusters))
+		if (!GetDiskFreeSpace(szBuf, &dwSectorsPerCluster, &dwBytesPerSector, &dwNumberOfFreeClusters, &dwTotalNumberOfClusters))
 			// set some default for disk
 			dwSectorsPerCluster = 2 * 1024;
 		else
@@ -592,8 +591,8 @@ void CRefStreamEngine::StopWorkerThread()
 	{
 		m_bStopIOWorker = true;
 		SetEvent(m_hIOJob);
-		WaitForSingleObject (m_hIOWorker, INFINITE);
-		CloseHandle (m_hIOWorker);
+		WaitForSingleObject(m_hIOWorker, INFINITE);
+		CloseHandle(m_hIOWorker);
 		m_hIOWorker = NULL;
 	}
 }
@@ -602,21 +601,21 @@ void CRefStreamEngine::StartWorkerThread()
 {
 	StopWorkerThread();
 	m_bStopIOWorker = false;
-	m_hIOWorker = CreateThread (NULL, 0x8000, IOWorkerThreadProc, this, 0, &m_dwWorkerThreadId);
+	m_hIOWorker = CreateThread(NULL, 0x8000, IOWorkerThreadProc, this, 0, &m_dwWorkerThreadId);
 }
 
 //////////////////////////////////////////////////////////////////////////
 // registers a new stream (added to the system: queued)
 // MT: Main thread only
-void CRefStreamEngine::Register (CRefReadStream* pStream)
+void CRefStreamEngine::Register(CRefReadStream* pStream)
 {
-	m_mapFilesByName.insert (NameStreamMap::value_type(pStream->GetFileName(), pStream));
+	m_mapFilesByName.insert(NameStreamMap::value_type(pStream->GetFileName(), pStream));
 }
 
 //////////////////////////////////////////////////////////////////////////
 // unregisters: happens upon release of all resources
 // MT: Main thread only
-void CRefStreamEngine::Unregister (CRefReadStream* pStream)
+void CRefStreamEngine::Unregister(CRefReadStream* pStream)
 {
 	m_mapFilesByName.erase(pStream->GetFileName());
 }
@@ -636,7 +635,7 @@ void CRefStreamEngine::CheckOSCaps()
 
 	if (os.dwPlatformId != VER_PLATFORM_WIN32_NT)
 	{
-		m_pLog->LogWarning("StreamEngine: OS (platform %d) doesn't support streaming, turning overlapped IO off",os.dwPlatformId );
+		m_pLog->LogWarning("StreamEngine: OS (platform %d) doesn't support streaming, turning overlapped IO off", os.dwPlatformId);
 		// only NT supports overlapped IO
 		m_bEnableOverlapped = false;
 	}
@@ -653,25 +652,25 @@ unsigned CRefStreamEngine::numIOJobs(IOJobKindEnum nKind)
 	switch (nKind)
 	{
 	case eWaiting:
-		{
-			AUTO_LOCK(m_csIOJobs);
-			return (unsigned)m_queIOJobs.size();
-		}
-		break;
+	{
+		AUTO_LOCK(m_csIOJobs);
+		return (unsigned)m_queIOJobs.size();
+	}
+	break;
 
 	case ePending:
-		{
-			AUTO_LOCK(m_csIOPending);
-			return (unsigned)m_setIOPending.size();
-		}
-		break;
+	{
+		AUTO_LOCK(m_csIOPending);
+		return (unsigned)m_setIOPending.size();
+	}
+	break;
 
 	case eExecuted:
-		{
-			AUTO_LOCK(m_csIOExecuted);
-			return (unsigned)m_queIOExecuted.size();
-		}
-		break;
+	{
+		AUTO_LOCK(m_csIOExecuted);
+		return (unsigned)m_queIOExecuted.size();
+	}
+	break;
 	}
 
 	return 0;
@@ -680,7 +679,7 @@ unsigned CRefStreamEngine::numIOJobs(IOJobKindEnum nKind)
 
 //! Puts the memory statistics into the given sizer object
 //! According to the specifications in interface ICrySizer
-void CRefStreamEngine::GetMemoryStatistics(ICrySizer *pSizer)
+void CRefStreamEngine::GetMemoryStatistics(ICrySizer* pSizer)
 {
 	size_t nSize = sizeof(*this);
 
@@ -717,14 +716,14 @@ void CRefStreamEngine::GetMemoryStatistics(ICrySizer *pSizer)
 }
 
 //! Enables or disables callback time quota per frame
-void CRefStreamEngine::SuspendCallbackTimeQuota ()
+void CRefStreamEngine::SuspendCallbackTimeQuota()
 {
 	if (m_nPerfFreq > 0)
 	{
 		++m_nSuspendCallbackTimeQuota;
 	}
 }
-void CRefStreamEngine::ResumeCallbackTimeQuota ()
+void CRefStreamEngine::ResumeCallbackTimeQuota()
 {
 	if (m_nPerfFreq > 0)
 	{

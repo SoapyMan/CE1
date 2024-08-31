@@ -4,11 +4,11 @@
 
 bool g_bDone = false;
 
-bool InvokeDebugger(CLUADbg *pDebugger, const char *pszSourceFile, int iLine, const char *pszReason)
+bool InvokeDebugger(CLUADbg* pDebugger, const char* pszSourceFile, int iLine, const char* pszReason)
 {
 	HACCEL hAccelerators = NULL;
 	MSG msg;
-	IScriptSystem *pIScriptSystem = NULL;
+	IScriptSystem* pIScriptSystem = NULL;
 
 	if (pDebugger == NULL)
 		return false;
@@ -53,7 +53,7 @@ bool InvokeDebugger(CLUADbg *pDebugger, const char *pszSourceFile, int iLine, co
 	pDebugger->GetStackAndLocals();
 
 	g_bDone = false;
- 	while (GetMessage(&msg, NULL, 0, 0) && !g_bDone) 
+	while (GetMessage(&msg, NULL, 0, 0) && !g_bDone)
 	{
 		if (hAccelerators == NULL || TranslateAccelerator(pDebugger->m_hWnd, hAccelerators, &msg) == 0)
 		{
@@ -74,7 +74,7 @@ bool InvokeDebugger(CLUADbg *pDebugger, const char *pszSourceFile, int iLine, co
 
 	DestroyAcceleratorTable(hAccelerators);
 
-	return (int) msg.wParam == 0;
+	return (int)msg.wParam == 0;
 
 	return true;
 }
