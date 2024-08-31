@@ -21,26 +21,26 @@ extern "C" {
 
 extern "C" int gLuaAllocatedMemory;
 
-int calcprotosize(Proto *f)
+int calcprotosize(Proto* f)
 {
-	int i=0;
-	i+=calcarraysize(f->sizecode, Instruction);
-	i+=calcarraysize(f->sizelocvars, struct LocVar);
-	i+=calcarraysize(f->sizek, TObject);
-	i+=calcarraysize(f->sizep, Proto *);
-	i+=calcarraysize(f->sizelineinfo, int);
-	i+=sizeof(Proto);
+	int i = 0;
+	i += calcarraysize(f->sizecode, Instruction);
+	i += calcarraysize(f->sizelocvars, struct LocVar);
+	i += calcarraysize(f->sizek, TObject);
+	i += calcarraysize(f->sizep, Proto*);
+	i += calcarraysize(f->sizelineinfo, int);
+	i += sizeof(Proto);
 	return i;
 }
 
-int calctablesize(Hash *t) {
-	int i=0;
-	i+=calcarraysize(t->size, Node);
-	i+=sizeof(Hash);
+int calctablesize(Hash* t) {
+	int i = 0;
+	i += calcarraysize(t->size, Node);
+	i += sizeof(Hash);
 	return i;
 }
 
-void CScriptSystem::GetMemoryStatistics(ICrySizer *pSizer)
+void CScriptSystem::GetMemoryStatistics(ICrySizer* pSizer)
 {
 	//pSizer->AddObject( this,gLuaAllocatedMemory+sizeof(*this) );
 	//return;
@@ -51,112 +51,112 @@ void CScriptSystem::GetMemoryStatistics(ICrySizer *pSizer)
 
 
 	lua_StateStats lss;
-	lua_StateStats *LSS=&lss;
-	Proto *proto=m_pLS->G->rootproto;
-	Closure *closure=m_pLS->G->rootcl;
-	Hash *hash=m_pLS->G->roottable;
-	Udata *udata=m_pLS->G->rootudata;
-	TString *string=m_pLS->G->strt.hash[0];
+	lua_StateStats* LSS = &lss;
+	Proto* proto = m_pLS->G->rootproto;
+	Closure* closure = m_pLS->G->rootcl;
+	Hash* hash = m_pLS->G->roottable;
+	Udata* udata = m_pLS->G->rootudata;
+	TString* string = m_pLS->G->strt.hash[0];
 
-	LSS->nProto=0;
-	LSS->nProtoMem=0;
-	LSS->nClosure=0;
-	LSS->nClosureMem=0;
-	LSS->nHash=0;
-	LSS->nHashMem=0;
-	LSS->nString=0;
-	LSS->nStringMem=0;
-	LSS->nUdata=0;
-	LSS->nUdataMem=0;
+	LSS->nProto = 0;
+	LSS->nProtoMem = 0;
+	LSS->nClosure = 0;
+	LSS->nClosureMem = 0;
+	LSS->nHash = 0;
+	LSS->nHashMem = 0;
+	LSS->nString = 0;
+	LSS->nStringMem = 0;
+	LSS->nUdata = 0;
+	LSS->nUdataMem = 0;
 #ifdef TRACE_TO_FILE
-	FILE *f=fopen("protodump.txt","w+");
-	if(!f)::OutputDebugString("opening 'protodump.txt' failed\n");
+	FILE* f = fopen("protodump.txt", "w+");
+	if (!f)::OutputDebugString("opening 'protodump.txt' failed\n");
 #endif
-/////BYTECODE////////////////////////////////////////////
+	/////BYTECODE////////////////////////////////////////////
 	{
-		SIZER_SUBCOMPONENT_NAME(pSizer,"Bytecode");
-		while(proto!=NULL)
+		SIZER_SUBCOMPONENT_NAME(pSizer, "Bytecode");
+		while (proto != NULL)
 		{
 			LSS->nProto++;
-			LSS->nProtoMem+=calcprotosize(proto);
+			LSS->nProtoMem += calcprotosize(proto);
 #ifdef TRACE_TO_FILE
-			if(f)if(!proto->lineDefined)
-				fprintf(f,"%d,%s,noline\n",calcprotosize(proto),getstr(proto->source));
+			if (f)if (!proto->lineDefined)
+				fprintf(f, "%d,%s,noline\n", calcprotosize(proto), getstr(proto->source));
 			else
-				fprintf(f,"%d,%s,%d\n",calcprotosize(proto),getstr(proto->source),-proto->lineinfo[0]);
+				fprintf(f, "%d,%s,%d\n", calcprotosize(proto), getstr(proto->source), -proto->lineinfo[0]);
 #endif
-			proto=proto->next;
+			proto = proto->next;
 		}
-		pSizer->AddObject(m_pLS->G->rootproto,LSS->nProtoMem);
+		pSizer->AddObject(m_pLS->G->rootproto, LSS->nProtoMem);
 	}
 #ifdef TRACE_TO_FILE
-	if(f)fclose(f);
+	if (f)fclose(f);
 #endif
 	/////FUNCTIONS/////////////////////////////////////////
 	{
-		SIZER_SUBCOMPONENT_NAME(pSizer,"Functions");
-		while(closure!=NULL)
+		SIZER_SUBCOMPONENT_NAME(pSizer, "Functions");
+		while (closure != NULL)
 		{
 			LSS->nClosure++;
-			LSS->nClosureMem+=calcclosuresize(closure->nupvalues);
-			closure=closure->next;
+			LSS->nClosureMem += calcclosuresize(closure->nupvalues);
+			closure = closure->next;
 		}
-		pSizer->AddObject(m_pLS->G->rootcl,LSS->nClosureMem);
+		pSizer->AddObject(m_pLS->G->rootcl, LSS->nClosureMem);
 	}
 	/////TABLES/////////////////////////////////////////
 	{
-		int maxsize=0;
-		int size=0;
-		while(hash!=NULL)
+		int maxsize = 0;
+		int size = 0;
+		while (hash != NULL)
 		{
 			LSS->nHash++;
-			size=calctablesize(hash);
-			if(size>maxsize)maxsize=size;
-			LSS->nHashMem+=size;
-			hash=hash->next;
+			size = calctablesize(hash);
+			if (size > maxsize)maxsize = size;
+			LSS->nHashMem += size;
+			hash = hash->next;
 		}
-		char ctemp[200]="Unknown";
-		SIZER_SUBCOMPONENT_NAME(pSizer,ctemp);
-		pSizer->AddObject(m_pLS->G->roottable,LSS->nHashMem);
+		char ctemp[200] = "Unknown";
+		SIZER_SUBCOMPONENT_NAME(pSizer, ctemp);
+		pSizer->AddObject(m_pLS->G->roottable, LSS->nHashMem);
 	}
 	/////USERDATA///////////////////////////////////////
 	{
-		SIZER_SUBCOMPONENT_NAME(pSizer,"User Data");
-		while(udata!=NULL)
+		SIZER_SUBCOMPONENT_NAME(pSizer, "User Data");
+		while (udata != NULL)
 		{
 			LSS->nUdata++;
-			LSS->nUdataMem+=sizeudata(udata->uv.len);
-			udata=udata->uv.next;
+			LSS->nUdataMem += sizeudata(udata->uv.len);
+			udata = udata->uv.next;
 		}
-		pSizer->AddObject(m_pLS->G->rootudata,LSS->nUdataMem);
+		pSizer->AddObject(m_pLS->G->rootudata, LSS->nUdataMem);
 	}
 	/////STRINGS///////////////////////////////////////
 	{
-		SIZER_SUBCOMPONENT_NAME(pSizer,"Strings");
-		for (int i=0; i<m_pLS->G->strt.size; i++) {  /* for each list */
-			TString **p = &m_pLS->G->strt.hash[i];
-			TString *curr;
+		SIZER_SUBCOMPONENT_NAME(pSizer, "Strings");
+		for (int i = 0; i < m_pLS->G->strt.size; i++) {  /* for each list */
+			TString** p = &m_pLS->G->strt.hash[i];
+			TString* curr;
 			while ((curr = *p) != NULL)
 			{
-					LSS->nString++;
-					if (string) // this can be NULL in Previewer
-						LSS->nStringMem += sizestring(string->tsv.len);
-					p = &curr->tsv.nexthash;
+				LSS->nString++;
+				if (string) // this can be NULL in Previewer
+					LSS->nStringMem += sizestring(string->tsv.len);
+				p = &curr->tsv.nexthash;
 			}
 		}
-		pSizer->AddObject(m_pLS->G->strt.hash,LSS->nStringMem);
+		pSizer->AddObject(m_pLS->G->strt.hash, LSS->nStringMem);
 	}
 	/////REGISTRY///////////////////////////////////////
 	{
-		SIZER_SUBCOMPONENT_NAME(pSizer,"Reference Registry");
-		pSizer->AddObject(m_pLS->G->registry,calctablesize(m_pLS->G->registry));
-		pSizer->AddObject(m_pLS->G->weakregistry,calctablesize(m_pLS->G->weakregistry));
-		pSizer->AddObject(m_pLS->G->xregistry,calctablesize(m_pLS->G->xregistry));
+		SIZER_SUBCOMPONENT_NAME(pSizer, "Reference Registry");
+		pSizer->AddObject(m_pLS->G->registry, calctablesize(m_pLS->G->registry));
+		pSizer->AddObject(m_pLS->G->weakregistry, calctablesize(m_pLS->G->weakregistry));
+		pSizer->AddObject(m_pLS->G->xregistry, calctablesize(m_pLS->G->xregistry));
 	}
 	{
-		SIZER_SUBCOMPONENT_NAME(pSizer,"Global Table");
-		pSizer->AddObject(m_pLS->gt,calctablesize(m_pLS->gt));
-		
+		SIZER_SUBCOMPONENT_NAME(pSizer, "Global Table");
+		pSizer->AddObject(m_pLS->gt, calctablesize(m_pLS->gt));
+
 	}
 	/*char sTemp[1000];
 	::OutputDebugString("-----LUA STATS------\n");

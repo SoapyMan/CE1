@@ -44,7 +44,7 @@ inline int CScriptObject::GetThisRef()
 {
 	if (m_bDeleted)
 	{
-		CryError( "Access to deleted script object" );
+		CryError("Access to deleted script object");
 	}
 	return lua_xgetref(m_pLS, m_nRef);
 }
@@ -53,20 +53,20 @@ inline int CScriptObject::GetThisRef()
 
 CScriptObject::CScriptObject(int nCreationNumber)
 {
-	m_nRef=nCreationNumber;
+	m_nRef = nCreationNumber;
 	m_pLS = NULL;
-	
-	m_hDelegationTag= 0;
+
+	m_hDelegationTag = 0;
 	m_pSink = NULL;
-	m_nIterationCounter=-1;
-	m_pSetGetParams=NULL;
+	m_nIterationCounter = -1;
+	m_pSetGetParams = NULL;
 	m_bAttached = false;
 	m_bDeleted = false;
 }
 
 CScriptObject::~CScriptObject()
 {
-	if(m_pSetGetParams)
+	if (m_pSetGetParams)
 		delete m_pSetGetParams;
 }
 
@@ -80,104 +80,104 @@ void CScriptObject::Attach()
 {
 	m_bAttached = true;
 	Detach();
-	lua_xref(m_pLS,m_nRef);
+	lua_xref(m_pLS, m_nRef);
 }
 
 
 void CScriptObject::Recreate()
 {
-	m_hDelegationTag= 0;
+	m_hDelegationTag = 0;
 	m_pSink = NULL;
-	m_nIterationCounter=-1;
-	m_pSetGetParams=NULL;
+	m_nIterationCounter = -1;
+	m_pSetGetParams = NULL;
 
 	m_bAttached = false;
 	m_bDeleted = false;
 }
 
-bool CScriptObject::CreateEmpty(CScriptSystem *pScriptSystem)
+bool CScriptObject::CreateEmpty(CScriptSystem* pScriptSystem)
 {
 	;
-	m_pLS=(lua_State *)pScriptSystem->GetScriptHandle();
+	m_pLS = (lua_State*)pScriptSystem->GetScriptHandle();
 	Detach();
 	return true;
 }
 
-bool CScriptObject::Create(CScriptSystem *pScriptSystem)
+bool CScriptObject::Create(CScriptSystem* pScriptSystem)
 {
-	m_pLS=(lua_State *)pScriptSystem->GetScriptHandle();
+	m_pLS = (lua_State*)pScriptSystem->GetScriptHandle();
 	_GUARD_STACK(m_pLS);
 	Detach();
 
 	lua_newtable(m_pLS);
-	
+
 	Attach();
 	return true;
-	
+
 	//return false;
 }
 
-bool CScriptObject::CreateGlobal(CScriptSystem *pScriptSystem, const char *sName)
+bool CScriptObject::CreateGlobal(CScriptSystem* pScriptSystem, const char* sName)
 {
-	m_pLS=(lua_State *)pScriptSystem->GetScriptHandle();
+	m_pLS = (lua_State*)pScriptSystem->GetScriptHandle();
 	_GUARD_STACK(m_pLS);
 	Detach();
 
 	lua_newtable(m_pLS);
 	Attach();
 	_GET_THIS();
-	lua_setglobal(m_pLS, sName);	
-	
-		return true;
+	lua_setglobal(m_pLS, sName);
+
+	return true;
 }
 
 void CScriptObject::PushBack(int nVal)
 {
 	_GUARD_STACK(m_pLS);
 	if (!_GET_THIS())
-			return;
-	int nLastPos=lua_getn(m_pLS,-1);
-	SetAt(nLastPos+1,nVal);
+		return;
+	int nLastPos = lua_getn(m_pLS, -1);
+	SetAt(nLastPos + 1, nVal);
 }
 
 void CScriptObject::PushBack(float fVal)
 {
 	_GUARD_STACK(m_pLS);
 	if (!_GET_THIS())
-			return;
-	int nLastPos=lua_getn(m_pLS,-1);
-	SetAt(nLastPos+1,fVal);
-	
+		return;
+	int nLastPos = lua_getn(m_pLS, -1);
+	SetAt(nLastPos + 1, fVal);
+
 }
 
-void CScriptObject::PushBack(const char *sVal)
+void CScriptObject::PushBack(const char* sVal)
 {
 	_GUARD_STACK(m_pLS);
 	if (!_GET_THIS())
-			return;
-	int nLastPos=lua_getn(m_pLS,-1);
-	SetAt(nLastPos+1,sVal);
-	
+		return;
+	int nLastPos = lua_getn(m_pLS, -1);
+	SetAt(nLastPos + 1, sVal);
+
 }
 
 void CScriptObject::PushBack(bool bVal)
 {
 	_GUARD_STACK(m_pLS);
 	if (!_GET_THIS())
-			return;
-	int nLastPos=lua_getn(m_pLS,-1);
-	SetAt(nLastPos+1,bVal);
-	
+		return;
+	int nLastPos = lua_getn(m_pLS, -1);
+	SetAt(nLastPos + 1, bVal);
+
 }
 
-void CScriptObject::PushBack(IScriptObject *pObj)
+void CScriptObject::PushBack(IScriptObject* pObj)
 {
 	_GUARD_STACK(m_pLS);
 	if (!_GET_THIS())
-			return;
-	int nLastPos=lua_getn(m_pLS,-1);
-	SetAt(nLastPos+1,pObj);
-	
+		return;
+	int nLastPos = lua_getn(m_pLS, -1);
+	SetAt(nLastPos + 1, pObj);
+
 }
 
 bool CScriptObject::BeginSetGetChain()
@@ -189,425 +189,425 @@ bool CScriptObject::BeginSetGetChain()
 
 void CScriptObject::EndSetGetChain()
 {
-	if(lua_istable(m_pLS,-1))
-		lua_pop(m_pLS,1);
-	else{
+	if (lua_istable(m_pLS, -1))
+		lua_pop(m_pLS, 1);
+	else {
 		DebugBreak();
 	}
 }
 
-void CScriptObject::SetValueChain(const char *sKey, int nVal)
+void CScriptObject::SetValueChain(const char* sKey, int nVal)
 {
 	lua_pushstring(m_pLS, sKey);
 	lua_pushnumber(m_pLS, (lua_Number)nVal);
-	SET_FUNCTION(m_pLS, - 3);
+	SET_FUNCTION(m_pLS, -3);
 }
 
-void CScriptObject::SetValue(const char *sKey, int nVal)
+void CScriptObject::SetValue(const char* sKey, int nVal)
 {
 	_GUARD_STACK(m_pLS);
 	if (!_GET_THIS())
 		return;
-		
-	SetValueChain(sKey,nVal);
-	
+
+	SetValueChain(sKey, nVal);
+
 }
 
-void CScriptObject::SetValueChain(const char *sKey, float fVal)
+void CScriptObject::SetValueChain(const char* sKey, float fVal)
 {
 	lua_pushstring(m_pLS, sKey);
 	lua_pushnumber(m_pLS, fVal);
-	SET_FUNCTION(m_pLS, - 3);
+	SET_FUNCTION(m_pLS, -3);
 }
 
-void CScriptObject::SetValue(const char *sKey, float fVal)
+void CScriptObject::SetValue(const char* sKey, float fVal)
 {
 	_GUARD_STACK(m_pLS);
 	if (!_GET_THIS())
 		return;
-		
-	SetValueChain(sKey,fVal);
+
+	SetValueChain(sKey, fVal);
 }
 
-void CScriptObject::SetValueChain(const char *sKey, bool bVal)
+void CScriptObject::SetValueChain(const char* sKey, bool bVal)
 {
-  lua_pushstring(m_pLS, sKey);
+	lua_pushstring(m_pLS, sKey);
 	if (bVal)
 		lua_pushnumber(m_pLS, 1);
 	else
 		lua_pushnil(m_pLS);
-	SET_FUNCTION(m_pLS, - 3);
+	SET_FUNCTION(m_pLS, -3);
 }
 
-void CScriptObject::SetValue(const char *sKey, bool bVal)
+void CScriptObject::SetValue(const char* sKey, bool bVal)
 {
 	_GUARD_STACK(m_pLS);
-		// int nVal=bVal?1:0;
+	// int nVal=bVal?1:0;
 	if (!_GET_THIS())
-			return;
-	SetValueChain(sKey,bVal);
+		return;
+	SetValueChain(sKey, bVal);
 }
 
-void CScriptObject::SetValueChain(const char *sKey, const char *sVal)
+void CScriptObject::SetValueChain(const char* sKey, const char* sVal)
 {
-		lua_pushstring(m_pLS, sKey);
-		lua_pushstring(m_pLS, sVal);
-		SET_FUNCTION(m_pLS, - 3);
+	lua_pushstring(m_pLS, sKey);
+	lua_pushstring(m_pLS, sVal);
+	SET_FUNCTION(m_pLS, -3);
 }
 
-void CScriptObject::SetValue(const char *sKey, const char *sVal)
+void CScriptObject::SetValue(const char* sKey, const char* sVal)
 {
 	_GUARD_STACK(m_pLS);
 	if (!_GET_THIS())
 		return;
-	SetValueChain(sKey,sVal);
+	SetValueChain(sKey, sVal);
 }
 
-void CScriptObject::SetValueChain(const char *sKey, IScriptObject *pObj)
-{ 
+void CScriptObject::SetValueChain(const char* sKey, IScriptObject* pObj)
+{
 	lua_pushstring(m_pLS, sKey);
-	if (!pObj)	
+	if (!pObj)
 	{
-		CryWarning( VALIDATOR_MODULE_GAME,VALIDATOR_WARNING,"\001 ERROR! Passing NULL IScriptObject to SETVALUE CHAIN!");
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "\001 ERROR! Passing NULL IScriptObject to SETVALUE CHAIN!");
 #if defined(_DEBUG) && !defined(WIN64)
 		DEBUG_BREAK;
 #endif
 		lua_pushnil(m_pLS);
 	}
 	else
-	  lua_xgetref(m_pLS, pObj->GetRef());
-	SET_FUNCTION(m_pLS, - 3);
+		lua_xgetref(m_pLS, pObj->GetRef());
+	SET_FUNCTION(m_pLS, -3);
 }
 
-void CScriptObject::SetValue(const char *sKey, IScriptObject *pObj)
+void CScriptObject::SetValue(const char* sKey, IScriptObject* pObj)
 {
 	_GUARD_STACK(m_pLS);
 	if (!_GET_THIS())
 		return;
 
-	SetValueChain(sKey,pObj);
+	SetValueChain(sKey, pObj);
 }
 
-void CScriptObject::SetValueChain(const char *sKey, USER_DATA ud)
+void CScriptObject::SetValueChain(const char* sKey, USER_DATA ud)
 {
 	_GUARD_STACK(m_pLS);
 	lua_pushstring(m_pLS, sKey);
 
-	if(ud && lua_getref(m_pLS, ud))
+	if (ud && lua_getref(m_pLS, ud))
 	{
-		if(lua_isuserdata(m_pLS,-1))
+		if (lua_isuserdata(m_pLS, -1))
 		{
-			SET_FUNCTION(m_pLS, - 3);
+			SET_FUNCTION(m_pLS, -3);
 		}
 	}
 }
 
-void CScriptObject::SetValue(const char *sKey, USER_DATA ud)
+void CScriptObject::SetValue(const char* sKey, USER_DATA ud)
 {
 	_GUARD_STACK(m_pLS);
 	if (!_GET_THIS())
 		return;
 
-	SetValueChain(sKey,ud);
+	SetValueChain(sKey, ud);
 }
 
-void CScriptObject::SetToNullChain(const char *sKey)
+void CScriptObject::SetToNullChain(const char* sKey)
 {
 	lua_pushstring(m_pLS, sKey);
 	lua_pushnil(m_pLS);
-	SET_FUNCTION(m_pLS, - 3);
+	SET_FUNCTION(m_pLS, -3);
 }
 
-void CScriptObject::SetToNull(const char *sKey)
+void CScriptObject::SetToNull(const char* sKey)
 {
 	_GUARD_STACK(m_pLS);
 	if (!_GET_THIS())
 		return;
-		SetToNullChain(sKey);
+	SetToNullChain(sKey);
 }
 
-bool CScriptObject::GetValueChain(const char *sKey, int &nVal)
+bool CScriptObject::GetValueChain(const char* sKey, int& nVal)
 {
 	_GUARD_STACK(m_pLS);
-	bool res=false;
+	bool res = false;
 	lua_pushstring(m_pLS, sKey);
-	GET_FUNCTION(m_pLS, - 2);
-	if (lua_isnumber(m_pLS, - 1))
+	GET_FUNCTION(m_pLS, -2);
+	if (lua_isnumber(m_pLS, -1))
 	{
 		res = true;
-		nVal =(int)lua_tonumber(m_pLS, - 1);
+		nVal = (int)lua_tonumber(m_pLS, -1);
 	}
 	return res;
 }
 
-bool CScriptObject::GetValue(const char *sKey, int &nVal)
+bool CScriptObject::GetValue(const char* sKey, int& nVal)
 {
 	BEGIN_CHECK_STACK
-	bool res = false;
-	if (!_GET_THIS())
-		return false;
-	
-	res=GetValueChain(sKey,nVal);
-	lua_pop(m_pLS, 1);
-	END_CHECK_STACK
-	return res;
-}
-
-bool CScriptObject::GetValueChain(const char *sKey, HSCRIPTFUNCTION &funcVal)
-{
-	_GUARD_STACK(m_pLS);
-	bool res = false;
-	lua_pushstring(m_pLS, sKey);
-	GET_FUNCTION(m_pLS, - 2);
-	if (lua_isfunction(m_pLS, - 1))
-	{
-		res = true;
-		funcVal =(HSCRIPTFUNCTION)lua_ref(m_pLS,0);
-	}
-	return res;
-}
-
-bool CScriptObject::GetValue(const char *sKey, HSCRIPTFUNCTION &funcVal)
-{
-	_GUARD_STACK(m_pLS);
 		bool res = false;
 	if (!_GET_THIS())
 		return false;
-	res=GetValueChain(sKey,funcVal);
+
+	res = GetValueChain(sKey, nVal);
+	lua_pop(m_pLS, 1);
+	END_CHECK_STACK
+		return res;
+}
+
+bool CScriptObject::GetValueChain(const char* sKey, HSCRIPTFUNCTION& funcVal)
+{
+	_GUARD_STACK(m_pLS);
+	bool res = false;
+	lua_pushstring(m_pLS, sKey);
+	GET_FUNCTION(m_pLS, -2);
+	if (lua_isfunction(m_pLS, -1))
+	{
+		res = true;
+		funcVal = (HSCRIPTFUNCTION)lua_ref(m_pLS, 0);
+	}
 	return res;
 }
 
-bool CScriptObject::GetValueChain(const char *sKey, bool &bVal)
+bool CScriptObject::GetValue(const char* sKey, HSCRIPTFUNCTION& funcVal)
+{
+	_GUARD_STACK(m_pLS);
+	bool res = false;
+	if (!_GET_THIS())
+		return false;
+	res = GetValueChain(sKey, funcVal);
+	return res;
+}
+
+bool CScriptObject::GetValueChain(const char* sKey, bool& bVal)
 {
 	_GUARD_STACK(m_pLS);
 	int nVal;
 	bool res;
 	lua_pushstring(m_pLS, sKey);
-	GET_FUNCTION(m_pLS, - 2);
-	if (lua_isnil(m_pLS, - 1))
+	GET_FUNCTION(m_pLS, -2);
+	if (lua_isnil(m_pLS, -1))
 	{
 		res = true;
 		bVal = false;
 	}
-	else if (lua_isnumber(m_pLS, - 1))
+	else if (lua_isnumber(m_pLS, -1))
 	{
 		res = true;
-		nVal =(int)lua_tonumber(m_pLS, - 1);
+		nVal = (int)lua_tonumber(m_pLS, -1);
 		if (nVal)
 			bVal = true;
 		else
 			bVal = false;
 	}
-	
+
 	return res;
 }
 
-bool CScriptObject::GetValue(const char *sKey, bool &bVal)
+bool CScriptObject::GetValue(const char* sKey, bool& bVal)
 {
 	_GUARD_STACK(m_pLS);
 	bool res = false;
-	
+
 	if (!_GET_THIS())
 		return false;
-	
-	res=GetValueChain(sKey,bVal);
-	
-	
-		return res;
+
+	res = GetValueChain(sKey, bVal);
+
+
+	return res;
 }
 
-bool CScriptObject::GetValueChain(const char *sKey, float &fVal)
+bool CScriptObject::GetValueChain(const char* sKey, float& fVal)
 {
 	_GUARD_STACK(m_pLS);
-	bool res=false;
+	bool res = false;
 	lua_pushstring(m_pLS, sKey);
-	GET_FUNCTION(m_pLS, - 2);
-	if (lua_isnumber(m_pLS, - 1))
+	GET_FUNCTION(m_pLS, -2);
+	if (lua_isnumber(m_pLS, -1))
 	{
 		res = true;
-		fVal =(float)lua_tonumber(m_pLS, - 1);
+		fVal = (float)lua_tonumber(m_pLS, -1);
 	}
-	
+
 	return res;
 }
 
-bool CScriptObject::GetValue(const char *sKey, float &fVal)
-{
-	_GUARD_STACK(m_pLS);
-		bool res = false;
-	if (!_GET_THIS())
-		return false;
-	res=GetValueChain(sKey,fVal);
-	return res;
-}
-
-bool CScriptObject::GetValueChain(const char *sKey, const char* &sVal)
-{
-	_GUARD_STACK(m_pLS);
-	bool res=false;
-	lua_pushstring(m_pLS, sKey);
-	GET_FUNCTION(m_pLS, - 2);
-	if (lua_isstring(m_pLS, - 1))
-	{
-		res = true;
-		sVal =(char *)lua_tostring(m_pLS, - 1);
-	}
-	
-	return res;
-}
-
-bool CScriptObject::GetValue(const char *sKey, const char* &sVal)
+bool CScriptObject::GetValue(const char* sKey, float& fVal)
 {
 	_GUARD_STACK(m_pLS);
 	bool res = false;
 	if (!_GET_THIS())
 		return false;
-	
-	res=GetValueChain(sKey,sVal);
+	res = GetValueChain(sKey, fVal);
 	return res;
 }
 
-bool CScriptObject::GetValueChain(const char *sKey, IScriptObject *pObj)
+bool CScriptObject::GetValueChain(const char* sKey, const char*& sVal)
 {
 	_GUARD_STACK(m_pLS);
-	bool res=false;
+	bool res = false;
 	lua_pushstring(m_pLS, sKey);
-	GET_FUNCTION(m_pLS, - 2);
-	if (lua_istable(m_pLS, - 1))
+	GET_FUNCTION(m_pLS, -2);
+	if (lua_isstring(m_pLS, -1))
 	{
 		res = true;
-		lua_pushvalue(m_pLS, - 1);
+		sVal = (char*)lua_tostring(m_pLS, -1);
+	}
+
+	return res;
+}
+
+bool CScriptObject::GetValue(const char* sKey, const char*& sVal)
+{
+	_GUARD_STACK(m_pLS);
+	bool res = false;
+	if (!_GET_THIS())
+		return false;
+
+	res = GetValueChain(sKey, sVal);
+	return res;
+}
+
+bool CScriptObject::GetValueChain(const char* sKey, IScriptObject* pObj)
+{
+	_GUARD_STACK(m_pLS);
+	bool res = false;
+	lua_pushstring(m_pLS, sKey);
+	GET_FUNCTION(m_pLS, -2);
+	if (lua_istable(m_pLS, -1))
+	{
+		res = true;
+		lua_pushvalue(m_pLS, -1);
 		pObj->Attach();
 	}
-	
+
 	return res;
 }
 
-bool CScriptObject::GetValue(const char *sKey, IScriptObject *pObj)
+bool CScriptObject::GetValue(const char* sKey, IScriptObject* pObj)
 {
 	_GUARD_STACK(m_pLS);
 	bool res = false;
 	if (!_GET_THIS())
 		return false;
-	res=GetValueChain(sKey,pObj);
+	res = GetValueChain(sKey, pObj);
 	return res;
 }
 
-bool CScriptObject::GetValueRecursive( const char *szPath, IScriptObject *pObj )
+bool CScriptObject::GetValueRecursive(const char* szPath, IScriptObject* pObj)
 {
 	assert(pObj);
 	_GUARD_STACK(m_pLS);
 
-	const char *pSrc=szPath;
+	const char* pSrc = szPath;
 
-	IScriptObject *pCurrent=this;
+	IScriptObject* pCurrent = this;
 
 	pObj->Clone(this);
 
-	while(*pSrc)
+	while (*pSrc)
 	{
-		char szInterm[256],*pDst=szInterm;
+		char szInterm[256], * pDst = szInterm;
 
-		while(*pSrc)
-			*pDst++=*pSrc++;
+		while (*pSrc)
+			*pDst++ = *pSrc++;
 
-		*pDst=0;								// zero termination
+		*pDst = 0;								// zero termination
 
-		if(!pCurrent->GetValue(szInterm,pObj))
+		if (!pCurrent->GetValue(szInterm, pObj))
 			return false;
 
-		pCurrent=pObj;
+		pCurrent = pObj;
 	}
 
 	return true;
 }
 
 
-bool CScriptObject::GetUDValueChain(const char *sKey, USER_DATA &nValue, int &nCookie)	//AMD Port
+bool CScriptObject::GetUDValueChain(const char* sKey, USER_DATA& nValue, int& nCookie)	//AMD Port
 {
 	_GUARD_STACK(m_pLS);
 	lua_pushstring(m_pLS, sKey);
-	GET_FUNCTION(m_pLS, - 2);
-	if(lua_isuserdata(m_pLS,-1))
+	GET_FUNCTION(m_pLS, -2);
+	if (lua_isuserdata(m_pLS, -1))
 	{
-		USER_DATA_CHUNK *udc=(USER_DATA_CHUNK *)lua_touserdata(m_pLS,-1);
-		if(!udc)
+		USER_DATA_CHUNK* udc = (USER_DATA_CHUNK*)lua_touserdata(m_pLS, -1);
+		if (!udc)
 			return false;
-		nValue=udc->nVal;
-		nCookie=udc->nCookie;
+		nValue = udc->nVal;
+		nCookie = udc->nCookie;
 		return true;
 	}
 	return false;
 }
 
-bool CScriptObject::GetUDValue(const char *sKey, USER_DATA &nValue, int &nCookie)		//AMD Port
+bool CScriptObject::GetUDValue(const char* sKey, USER_DATA& nValue, int& nCookie)		//AMD Port
 {
 	_GUARD_STACK(m_pLS);
 	bool res = false;
 	if (!_GET_THIS())
 		return false;
-	return GetUDValueChain(sKey,nValue,nCookie);
+	return GetUDValueChain(sKey, nValue, nCookie);
 }
 
 void CScriptObject::SetAt(int nIdx, int nVal)
 {
-	assert(nIdx>=0);		// nIdx=1 -> first element
+	assert(nIdx >= 0);		// nIdx=1 -> first element
 
 	_GUARD_STACK(m_pLS);
 	if (!_GET_THIS())
 		return;
-		
+
 	lua_pushnumber(m_pLS, (lua_Number)nVal);
-	lua_rawseti(m_pLS, - 2, nIdx);
+	lua_rawseti(m_pLS, -2, nIdx);
 }
 
 void CScriptObject::SetAt(int nIdx, float fVal)
 {
-	assert(nIdx>=0);		// nIdx=1 -> first element
+	assert(nIdx >= 0);		// nIdx=1 -> first element
 
 	_GUARD_STACK(m_pLS);
 	if (!_GET_THIS())
 		return;
-		
+
 	lua_pushnumber(m_pLS, fVal);
-	lua_rawseti(m_pLS, - 2, nIdx);
+	lua_rawseti(m_pLS, -2, nIdx);
 }
 
 void CScriptObject::SetAt(int nIdx, bool bVal)
 {
-	assert(nIdx>=0);		// nIdx=1 -> first element
+	assert(nIdx >= 0);		// nIdx=1 -> first element
 
 	_GUARD_STACK(m_pLS);
 	if (!_GET_THIS())
 		return;
-	
+
 	if (bVal)
 		lua_pushnumber(m_pLS, 1);
 	else
 		lua_pushnil(m_pLS);
-	lua_rawseti(m_pLS, - 2, nIdx);
+	lua_rawseti(m_pLS, -2, nIdx);
 }
 
 void CScriptObject::SetAt(int nIdx, const char* sVal)
 {
-	assert(nIdx>=0);		// nIdx=1 -> first element
+	assert(nIdx >= 0);		// nIdx=1 -> first element
 
 	_GUARD_STACK(m_pLS);
 	if (!_GET_THIS())
 		return;
-		
+
 	lua_pushstring(m_pLS, sVal);
-	lua_rawseti(m_pLS, - 2, nIdx);
+	lua_rawseti(m_pLS, -2, nIdx);
 }
 
-void CScriptObject::SetAt(int nIdx, IScriptObject *pObj)
+void CScriptObject::SetAt(int nIdx, IScriptObject* pObj)
 {
 	_GUARD_STACK(m_pLS);
 	if (!_GET_THIS())
 		return;
-		
+
 	lua_xgetref(m_pLS, pObj->GetRef());
-	lua_rawseti(m_pLS, - 2, nIdx);
+	lua_rawseti(m_pLS, -2, nIdx);
 }
 
 void CScriptObject::SetAtUD(int nIdx, USER_DATA nVal)
@@ -616,9 +616,9 @@ void CScriptObject::SetAtUD(int nIdx, USER_DATA nVal)
 	if (!_GET_THIS())
 		return;
 
-	if(nVal && lua_getref(m_pLS, nVal))
+	if (nVal && lua_getref(m_pLS, nVal))
 	{
-		if(lua_isuserdata(m_pLS, -1))
+		if (lua_isuserdata(m_pLS, -1))
 		{
 			lua_rawseti(m_pLS, -2, nIdx);
 		}
@@ -630,24 +630,24 @@ void CScriptObject::SetNullAt(int nIdx)
 	_GUARD_STACK(m_pLS);
 	if (!_GET_THIS())
 		return;
-		
+
 	lua_pushnil(m_pLS);
-	lua_rawseti(m_pLS, - 2, nIdx);
+	lua_rawseti(m_pLS, -2, nIdx);
 }
 
 int CScriptObject::Count()
 {
 	_GUARD_STACK(m_pLS);
 	int top = lua_gettop(m_pLS);
-	
-	int nCount=0;
+
+	int nCount = 0;
 	if (!_GET_THIS())
 		return -1;
-		
+
 	int trgTable = top + 1;
-		
+
 	lua_pushnil(m_pLS);  // first key
-	while (lua_next(m_pLS, trgTable) != 0) 
+	while (lua_next(m_pLS, trgTable) != 0)
 	{
 		// `key' is at index -2 and `value' at index -1
 		nCount++;
@@ -657,119 +657,7 @@ int CScriptObject::Count()
 	return nCount;
 }
 
-bool CScriptObject::GetAt(int nIdx, int &nVal)
-{
-	_GUARD_STACK(m_pLS);
-		bool res = false;
-	if (!_GET_THIS())
-		return false;
-	
-	if (lua_getn(m_pLS, - 1) < nIdx)
-	{
-		return false;
-	}
-		
-	lua_rawgeti(m_pLS, - 1, nIdx);
-	if (lua_isnumber(m_pLS, - 1))
-	{
-		res = true;
-		nVal =(int)lua_tonumber(m_pLS, - 1);
-	}
-	return res;
-}
-
-bool CScriptObject::GetAt(int nIdx, float &fVal)
-{
-	_GUARD_STACK(m_pLS);
-		bool res = false;
-	if (!_GET_THIS())
-		return false;
-	
-	if (lua_getn(m_pLS, - 1) < nIdx)
-	{
-		return false;
-	}
-	
-	lua_rawgeti(m_pLS, - 1, nIdx);
-	if (lua_isnumber(m_pLS, - 1))
-	{
-		res = true;
-		fVal = lua_tonumber(m_pLS, - 1);
-	}
-	return res;
-}
-
-bool CScriptObject::GetAt(int nIdx, bool &bVal)
-{
-	_GUARD_STACK(m_pLS);
-		bool res = false;
-	int nVal;
-	if (!_GET_THIS())
-		return false;
-	
-	if (lua_getn(m_pLS, - 1) < nIdx)
-	{
-		return false;
-	}	
-	
-	lua_rawgeti(m_pLS, - 1, nIdx);
-	if (lua_isnumber(m_pLS, - 1))
-	{
-		res = true;
-		nVal =(int)lua_tonumber(m_pLS, - 1);
-		if (nVal)
-			bVal = true;
-		else
-			bVal = false;
-	}
-	return res;
-}
-
-bool CScriptObject::GetAt(int nIdx, const char* &sVal)
-{
-	_GUARD_STACK(m_pLS);
-	bool res = false;
-	if (!_GET_THIS())
-		return false;
-	
-	if (lua_getn(m_pLS, - 1) < nIdx)
-	{
-		return false;
-	}
-	
-	lua_rawgeti(m_pLS, - 1, nIdx);
-	if (lua_isstring(m_pLS, - 1))
-	{
-		res = true;
-		sVal =(char *)lua_tostring(m_pLS, - 1);
-	}
-	return res;
-}
-
-bool CScriptObject::GetAt(int nIdx, IScriptObject *pObj)
-{
-	_GUARD_STACK(m_pLS);
-	bool res = false;
-	if (!_GET_THIS())
-		return false;
-	
-	if (lua_getn(m_pLS, - 1) < nIdx)
-	{
-		return false;
-	}	
-	
-	lua_rawgeti(m_pLS, - 1, nIdx);
-	if (lua_istable(m_pLS, - 1))
-	{
-		res = true;
-		lua_pushvalue(m_pLS, - 1);
-		pObj->Attach();
-		
-	}
-	return res;
-}
-
-bool CScriptObject::GetAtUD(int nIdx, USER_DATA &nVal, int &nCookie)
+bool CScriptObject::GetAt(int nIdx, int& nVal)
 {
 	_GUARD_STACK(m_pLS);
 	bool res = false;
@@ -779,16 +667,128 @@ bool CScriptObject::GetAtUD(int nIdx, USER_DATA &nVal, int &nCookie)
 	if (lua_getn(m_pLS, -1) < nIdx)
 	{
 		return false;
-	}	
+	}
 
 	lua_rawgeti(m_pLS, -1, nIdx);
-	if (lua_isuserdata(m_pLS, - 1))
+	if (lua_isnumber(m_pLS, -1))
 	{
-		USER_DATA_CHUNK *udc=(USER_DATA_CHUNK *)lua_touserdata(m_pLS,-1);
-		if(!udc)
+		res = true;
+		nVal = (int)lua_tonumber(m_pLS, -1);
+	}
+	return res;
+}
+
+bool CScriptObject::GetAt(int nIdx, float& fVal)
+{
+	_GUARD_STACK(m_pLS);
+	bool res = false;
+	if (!_GET_THIS())
+		return false;
+
+	if (lua_getn(m_pLS, -1) < nIdx)
+	{
+		return false;
+	}
+
+	lua_rawgeti(m_pLS, -1, nIdx);
+	if (lua_isnumber(m_pLS, -1))
+	{
+		res = true;
+		fVal = lua_tonumber(m_pLS, -1);
+	}
+	return res;
+}
+
+bool CScriptObject::GetAt(int nIdx, bool& bVal)
+{
+	_GUARD_STACK(m_pLS);
+	bool res = false;
+	int nVal;
+	if (!_GET_THIS())
+		return false;
+
+	if (lua_getn(m_pLS, -1) < nIdx)
+	{
+		return false;
+	}
+
+	lua_rawgeti(m_pLS, -1, nIdx);
+	if (lua_isnumber(m_pLS, -1))
+	{
+		res = true;
+		nVal = (int)lua_tonumber(m_pLS, -1);
+		if (nVal)
+			bVal = true;
+		else
+			bVal = false;
+	}
+	return res;
+}
+
+bool CScriptObject::GetAt(int nIdx, const char*& sVal)
+{
+	_GUARD_STACK(m_pLS);
+	bool res = false;
+	if (!_GET_THIS())
+		return false;
+
+	if (lua_getn(m_pLS, -1) < nIdx)
+	{
+		return false;
+	}
+
+	lua_rawgeti(m_pLS, -1, nIdx);
+	if (lua_isstring(m_pLS, -1))
+	{
+		res = true;
+		sVal = (char*)lua_tostring(m_pLS, -1);
+	}
+	return res;
+}
+
+bool CScriptObject::GetAt(int nIdx, IScriptObject* pObj)
+{
+	_GUARD_STACK(m_pLS);
+	bool res = false;
+	if (!_GET_THIS())
+		return false;
+
+	if (lua_getn(m_pLS, -1) < nIdx)
+	{
+		return false;
+	}
+
+	lua_rawgeti(m_pLS, -1, nIdx);
+	if (lua_istable(m_pLS, -1))
+	{
+		res = true;
+		lua_pushvalue(m_pLS, -1);
+		pObj->Attach();
+
+	}
+	return res;
+}
+
+bool CScriptObject::GetAtUD(int nIdx, USER_DATA& nVal, int& nCookie)
+{
+	_GUARD_STACK(m_pLS);
+	bool res = false;
+	if (!_GET_THIS())
+		return false;
+
+	if (lua_getn(m_pLS, -1) < nIdx)
+	{
+		return false;
+	}
+
+	lua_rawgeti(m_pLS, -1, nIdx);
+	if (lua_isuserdata(m_pLS, -1))
+	{
+		USER_DATA_CHUNK* udc = (USER_DATA_CHUNK*)lua_touserdata(m_pLS, -1);
+		if (!udc)
 			return false;
-		nVal=udc->nVal;
-		nCookie=udc->nCookie;
+		nVal = udc->nVal;
+		nCookie = udc->nCookie;
 		return true;
 	}
 
@@ -806,12 +806,12 @@ THIS_PTR CScriptObject::GetThis()
 	return m_pThis;
 }*/
 
-bool CScriptObject::AddFunction(const char *sName, SCRIPT_FUNCTION pThunk, int nFuncID)
+bool CScriptObject::AddFunction(const char* sName, SCRIPT_FUNCTION pThunk, int nFuncID)
 {
 	_GUARD_STACK(m_pLS);
 	if (!_GET_THIS())
 		return false;
-		
+
 	lua_pushstring(m_pLS, sName);
 	lua_pushnumber(m_pLS, (lua_Number)nFuncID);
 	//lua_newuserdatabox(m_pLS, m_pThis);
@@ -820,21 +820,21 @@ bool CScriptObject::AddFunction(const char *sName, SCRIPT_FUNCTION pThunk, int n
 	return true;
 }
 
-bool CScriptObject::AddSetGetHandlers(SCRIPT_FUNCTION pSetThunk,SCRIPT_FUNCTION pGetThunk)
+bool CScriptObject::AddSetGetHandlers(SCRIPT_FUNCTION pSetThunk, SCRIPT_FUNCTION pGetThunk)
 {
 
-	if((!m_pSetGetParams) && pSetThunk && pGetThunk && m_hDelegationTag)
+	if ((!m_pSetGetParams) && pSetThunk && pGetThunk && m_hDelegationTag)
 	{
-		m_pSetGetParams=new CScriptObject::SetGetParams;
+		m_pSetGetParams = new CScriptObject::SetGetParams;
 		//int nTag = lua_newtag(m_pLS);
 		lua_newuserdatabox(m_pLS, this);
 		//lua_newuserdatabox(m_pLS, m_pThis);
 		lua_pushcclosure(m_pLS, CScriptObject::SetTableTagHandler, 1);
 		lua_settagmethod(m_pLS, m_hDelegationTag, "settable");
-/*		lua_newuserdatabox(m_pLS, this);
-		//lua_newuserdatabox(m_pLS, m_pThis);
-		lua_pushcclosure(m_pLS, CScriptObject::GetTableTagHandler, 1);
-		lua_settagmethod(m_pLS, nTag, "gettable");*/
+		/*		lua_newuserdatabox(m_pLS, this);
+				//lua_newuserdatabox(m_pLS, m_pThis);
+				lua_pushcclosure(m_pLS, CScriptObject::GetTableTagHandler, 1);
+				lua_settagmethod(m_pLS, nTag, "gettable");*/
 
 		if (!_GET_THIS())
 		{
@@ -842,30 +842,30 @@ bool CScriptObject::AddSetGetHandlers(SCRIPT_FUNCTION pSetThunk,SCRIPT_FUNCTION 
 			lua_settagmethod(m_pLS, m_hDelegationTag, "settable");
 			/*lua_pushnil(m_pLS);
 			lua_settagmethod(m_pLS, nTag, "gettable");;*/
-			return false;	
+			return false;
 		}
 
 		lua_settag(m_pLS, m_hDelegationTag);
-		lua_pop(m_pLS,1);
+		lua_pop(m_pLS, 1);
 
-		m_pSetGetParams->m_pSetThunk=pSetThunk;
-		m_pSetGetParams->m_pGetThunk=pGetThunk;
-		m_pSetGetParams->m_hSetGetTag=m_hDelegationTag;
+		m_pSetGetParams->m_pSetThunk = pSetThunk;
+		m_pSetGetParams->m_pGetThunk = pGetThunk;
+		m_pSetGetParams->m_hSetGetTag = m_hDelegationTag;
 	}
 	else
 	{
-		if(m_pSetGetParams)
+		if (m_pSetGetParams)
 		{
-			if(m_pSetGetParams->m_hSetGetTag)
+			if (m_pSetGetParams->m_hSetGetTag)
 			{
 				lua_pushnil(m_pLS);
 				lua_settagmethod(m_pLS, m_pSetGetParams->m_hSetGetTag, "settable");
 				/*lua_pushnil(m_pLS);
 				lua_settagmethod(m_pLS, m_pSetGetParams->m_hSetGetTag, "gettable");;*/
-				m_pSetGetParams->m_hSetGetTag=NULL;
+				m_pSetGetParams->m_hSetGetTag = NULL;
 			}
 			delete m_pSetGetParams;
-			m_pSetGetParams=NULL;
+			m_pSetGetParams = NULL;
 		}
 	}
 	return true;
@@ -888,36 +888,36 @@ bool CScriptObject::AddSetGetHandlers(SCRIPT_FUNCTION pSetThunk,SCRIPT_FUNCTION 
 #endif
 
 #endif
-int CScriptObject::GetTableTagHandler(lua_State *L)
+int CScriptObject::GetTableTagHandler(lua_State* L)
 {
-	CScriptObject *pThis = (CScriptObject *)lua_touserdata(L, - 1);
+	CScriptObject* pThis = (CScriptObject*)lua_touserdata(L, -1);
 	int nRet;
-	FIXME_ASSERT(pThis->m_pSetGetParams->m_pGetThunk!=NULL);
+	FIXME_ASSERT(pThis->m_pSetGetParams->m_pGetThunk != NULL);
 	/*{
 		//lua_pop(L,2);
 		FIXME_ASSERT(lua_istable(L,1));
 		lua_pop(L,1);
 		lua_rawget(L,1);
-		
+
 		return 1;
 	}*/
-	
-	if(((nRet=pThis->m_pSetGetParams->m_pGetThunk((HSCRIPT)L))==-1))
+
+	if (((nRet = pThis->m_pSetGetParams->m_pGetThunk((HSCRIPT)L)) == -1))
 	{
 		//lua_pop(L,2);
-		FIXME_ASSERT(lua_istable(L,1));
-		lua_pop(L,1);
-		lua_rawget(L,1);
+		FIXME_ASSERT(lua_istable(L, 1));
+		lua_pop(L, 1);
+		lua_rawget(L, 1);
 		return 1;
 	}
 	else return nRet;
 }
 
-int CScriptObject::SetTableTagHandler(lua_State *L)
+int CScriptObject::SetTableTagHandler(lua_State* L)
 {
-	CScriptObject *pThis = (CScriptObject *)lua_touserdata(L, - 1);
+	CScriptObject* pThis = (CScriptObject*)lua_touserdata(L, -1);
 	int nRet;
-	FIXME_ASSERT(pThis->m_pSetGetParams->m_pGetThunk!=NULL);
+	FIXME_ASSERT(pThis->m_pSetGetParams->m_pGetThunk != NULL);
 	/*if(!pThis->m_pSetThunk)
 	{
 		FIXME_ASSERT(lua_istable(L,1));
@@ -925,126 +925,126 @@ int CScriptObject::SetTableTagHandler(lua_State *L)
 		lua_rawset(L,1);
 		return 0;
 	}*/
-	if( /*!lua_isfunction(L,-2) && !lua_iscfunction(L,-2) && !lua_isuserdata(L,-2) &&*/ (!((nRet=pThis->m_pSetGetParams->m_pSetThunk((HSCRIPT)L))==-1)))
+	if ( /*!lua_isfunction(L,-2) && !lua_iscfunction(L,-2) && !lua_isuserdata(L,-2) &&*/ (!((nRet = pThis->m_pSetGetParams->m_pSetThunk((HSCRIPT)L)) == -1)))
 	{
-		FIXME_ASSERT(lua_istable(L,1));
-		lua_pop(L,1);
+		FIXME_ASSERT(lua_istable(L, 1));
+		lua_pop(L, 1);
 	}
-	else{
-		FIXME_ASSERT(lua_istable(L,1));
-		lua_pop(L,1);
-		lua_rawset(L,1);
+	else {
+		FIXME_ASSERT(lua_istable(L, 1));
+		lua_pop(L, 1);
+		lua_rawset(L, 1);
 		return 0;
 	}
 	return 0;
 }
 
-void CScriptObject::RegisterParent(IScriptObjectSink *pSink)
+void CScriptObject::RegisterParent(IScriptObjectSink* pSink)
 {
 	m_pSink = pSink;
 }
 
-bool CScriptObject::Clone(IScriptObject *pObj)
-{	
+bool CScriptObject::Clone(IScriptObject* pObj)
+{
 	//BEGIN_CHECK_STACK
 	_GUARD_STACK(m_pLS);
 	int top = lua_gettop(m_pLS);
-	
+
 	if (!lua_xgetref(m_pLS, pObj->GetRef()))
 		return false;
 	if (!_GET_THIS())
 		return false;
-	
+
 	int srcTable = top + 1;
 	int trgTable = top + 2;
-	
+
 	lua_pushnil(m_pLS);  // first key
-	while (lua_next(m_pLS, srcTable) != 0) 
+	while (lua_next(m_pLS, srcTable) != 0)
 	{
 		// `key' is at index -2 and `value' at index -1
-		lua_pushvalue(m_pLS, - 2); // Push again index.
-		lua_pushvalue(m_pLS, - 2); // Push value.
+		lua_pushvalue(m_pLS, -2); // Push again index.
+		lua_pushvalue(m_pLS, -2); // Push value.
 		SET_FUNCTION(m_pLS, trgTable);
 		lua_pop(m_pLS, 1); // pop value, leave index.
 	}
 	//lua_settop(m_pLS, top); // Restore stack.
 	//END_CHECK_STACK
-	
-		return true;
+
+	return true;
 }
 
 
 
-void CScriptObject::Dump(IScriptObjectDumpSink *p)
+void CScriptObject::Dump(IScriptObjectDumpSink* p)
 {
-	if(!p)return;
+	if (!p)return;
 	_GUARD_STACK(m_pLS);
 	int top = lua_gettop(m_pLS);
-	
+
 	if (!_GET_THIS())
 		return;
-	
-	
+
+
 	int trgTable = top + 1;
-	
-	
+
+
 	lua_pushnil(m_pLS);  // first key
-	int reftop=lua_gettop(m_pLS);
-	while (lua_next(m_pLS, trgTable) != 0) 
+	int reftop = lua_gettop(m_pLS);
+	while (lua_next(m_pLS, trgTable) != 0)
 	{
 		// `key' is at index -2 and `value' at index -1
-		if(lua_isnumber(m_pLS, - 2))
+		if (lua_isnumber(m_pLS, -2))
 		{
-			int nIdx = (int)lua_tonumber(m_pLS, - 2); // again index
-			if (lua_isnil(m_pLS, - 1))
+			int nIdx = (int)lua_tonumber(m_pLS, -2); // again index
+			if (lua_isnil(m_pLS, -1))
 			{
 				p->OnElementFound(nIdx, svtNull);
 			}
-			else if (lua_isfunction(m_pLS, - 1))
+			else if (lua_isfunction(m_pLS, -1))
 			{
 				p->OnElementFound(nIdx, svtFunction);
 			}
-			else if (lua_isnumber(m_pLS, - 1))
+			else if (lua_isnumber(m_pLS, -1))
 			{
 				p->OnElementFound(nIdx, svtNumber);
 			}
-			else if (lua_isstring(m_pLS, - 1))
+			else if (lua_isstring(m_pLS, -1))
 			{
 				p->OnElementFound(nIdx, svtString);
 			}
-			else if (lua_istable(m_pLS, - 1))
+			else if (lua_istable(m_pLS, -1))
 			{
 				p->OnElementFound(nIdx, svtObject);
 			}
-			else if (lua_isuserdata(m_pLS, - 1))
+			else if (lua_isuserdata(m_pLS, -1))
 			{
 				p->OnElementFound(nIdx, svtUserData);
 			}
 		}
 		else
 		{
-			const char *sName = lua_tostring(m_pLS, - 2); // again index
-			if (lua_isnil(m_pLS, - 1))
+			const char* sName = lua_tostring(m_pLS, -2); // again index
+			if (lua_isnil(m_pLS, -1))
 			{
 				p->OnElementFound(sName, svtNull);
 			}
-			else if (lua_isfunction(m_pLS, - 1))
+			else if (lua_isfunction(m_pLS, -1))
 			{
 				p->OnElementFound(sName, svtFunction);
 			}
-			else if (lua_isnumber(m_pLS, - 1))
+			else if (lua_isnumber(m_pLS, -1))
 			{
 				p->OnElementFound(sName, svtNumber);
 			}
-			else if (lua_isstring(m_pLS, - 1))
+			else if (lua_isstring(m_pLS, -1))
 			{
 				p->OnElementFound(sName, svtString);
 			}
-			else if (lua_istable(m_pLS, - 1))
+			else if (lua_istable(m_pLS, -1))
 			{
 				p->OnElementFound(sName, svtObject);
 			}
-			else if (lua_isuserdata(m_pLS, - 1))
+			else if (lua_isuserdata(m_pLS, -1))
 			{
 				p->OnElementFound(sName, svtUserData);
 			}
@@ -1055,39 +1055,39 @@ void CScriptObject::Dump(IScriptObjectDumpSink *p)
 	//END_CHECK_STACK
 }
 
-ScriptVarType CScriptObject::GetValueType(const char *sKey)
+ScriptVarType CScriptObject::GetValueType(const char* sKey)
 {
 	_GUARD_STACK(m_pLS);
-	ScriptVarType svtRetVal=svtNull;
+	ScriptVarType svtRetVal = svtNull;
 	if (!_GET_THIS())
 		return svtNull;
-	
-	lua_pushstring(m_pLS, sKey);
-	GET_FUNCTION(m_pLS, - 2);
 
-	if (lua_isnil(m_pLS, - 1))
+	lua_pushstring(m_pLS, sKey);
+	GET_FUNCTION(m_pLS, -2);
+
+	if (lua_isnil(m_pLS, -1))
 	{
-		svtRetVal=svtNull;
+		svtRetVal = svtNull;
 	}
-	else if (lua_isfunction(m_pLS, - 1))
+	else if (lua_isfunction(m_pLS, -1))
 	{
-		svtRetVal=svtFunction;
+		svtRetVal = svtFunction;
 	}
-	else if (lua_isnumber(m_pLS, - 1))
+	else if (lua_isnumber(m_pLS, -1))
 	{
-		svtRetVal=svtNumber;
+		svtRetVal = svtNumber;
 	}
-	else if (lua_isstring(m_pLS, - 1))
+	else if (lua_isstring(m_pLS, -1))
 	{
-		svtRetVal=svtString;
+		svtRetVal = svtString;
 	}
-	else if (lua_istable(m_pLS, - 1))
+	else if (lua_istable(m_pLS, -1))
 	{
-		svtRetVal=svtObject;
+		svtRetVal = svtObject;
 	}
-	else if (lua_isuserdata(m_pLS, - 1))
+	else if (lua_isuserdata(m_pLS, -1))
 	{
-		svtRetVal=svtUserData;
+		svtRetVal = svtUserData;
 	}
 
 	//lua_pop(m_pLS, 2);
@@ -1098,37 +1098,37 @@ ScriptVarType CScriptObject::GetValueType(const char *sKey)
 ScriptVarType CScriptObject::GetAtType(int nIdx)
 {
 	_GUARD_STACK(m_pLS);
-	ScriptVarType svtRetVal=svtNull;
+	ScriptVarType svtRetVal = svtNull;
 	if (!_GET_THIS())
 		return svtNull;
-	
-	if (lua_getn(m_pLS, - 1) < nIdx)
+
+	if (lua_getn(m_pLS, -1) < nIdx)
 	{
 		//lua_pop(m_pLS, 1);
 		return svtNull;
 	}
-	
-	lua_rawgeti(m_pLS, - 1, nIdx);
 
-	if (lua_isnil(m_pLS, - 1))
+	lua_rawgeti(m_pLS, -1, nIdx);
+
+	if (lua_isnil(m_pLS, -1))
 	{
-		svtRetVal=svtNull;
+		svtRetVal = svtNull;
 	}
-	else if (lua_isfunction(m_pLS, - 1))
+	else if (lua_isfunction(m_pLS, -1))
 	{
-		svtRetVal=svtFunction;
+		svtRetVal = svtFunction;
 	}
-	else if (lua_isnumber(m_pLS, - 1))
+	else if (lua_isnumber(m_pLS, -1))
 	{
-		svtRetVal=svtNumber;
+		svtRetVal = svtNumber;
 	}
-	else if (lua_isstring(m_pLS, - 1))
+	else if (lua_isstring(m_pLS, -1))
 	{
-		svtRetVal=svtString;
+		svtRetVal = svtString;
 	}
-	else if (lua_istable(m_pLS, - 1))
+	else if (lua_istable(m_pLS, -1))
 	{
-		svtRetVal=svtObject;
+		svtRetVal = svtObject;
 	}
 
 	//lua_pop(m_pLS, 2);
@@ -1147,24 +1147,24 @@ void CScriptObject::Detach()
 
 void CScriptObject::Release()
 {
-	
-	AddSetGetHandlers(NULL,NULL);
+
+	AddSetGetHandlers(NULL, NULL);
 	if (m_pSink)
 	{
 		m_pSink->OnRelease();
-		if(m_nRef)
+		if (m_nRef)
 		{
 			if (_GET_THIS())
 			{
-				lua_setnativedata(m_pLS,-1,NULL);
-				lua_pop(m_pLS,1);
+				lua_setnativedata(m_pLS, -1, NULL);
+				lua_pop(m_pLS, 1);
 			}
 		}
 	}
 	m_pSink = NULL;
 	Detach();
 	//m_hSetGetTag=NULL;
-	CScriptSystem *pScriptSystem=(CScriptSystem *)lua_getuserptr(m_pLS);
+	CScriptSystem* pScriptSystem = (CScriptSystem*)lua_getuserptr(m_pLS);
 	pScriptSystem->ReleaseScriptObject(this);
 	m_bDeleted = true;
 	//delete this;
@@ -1172,10 +1172,10 @@ void CScriptObject::Release()
 
 bool CScriptObject::BeginIteration()
 {
-	if(m_nIterationCounter!=-1)
+	if (m_nIterationCounter != -1)
 		return false;
 
-	m_nIterationCounter=lua_gettop(m_pLS);
+	m_nIterationCounter = lua_gettop(m_pLS);
 	if (!_GET_THIS())
 		return false;
 	lua_pushnil(m_pLS);
@@ -1184,54 +1184,54 @@ bool CScriptObject::BeginIteration()
 
 bool CScriptObject::MoveNext()
 {
-	if(m_nIterationCounter==-1)
+	if (m_nIterationCounter == -1)
 		return false;
-  //leave only the index into the stack
-	while((lua_gettop(m_pLS)-(m_nIterationCounter+1))>1)
+	//leave only the index into the stack
+	while ((lua_gettop(m_pLS) - (m_nIterationCounter + 1)) > 1)
 	{
-		lua_pop(m_pLS,1);
+		lua_pop(m_pLS, 1);
 	}
-	return (lua_next(m_pLS, m_nIterationCounter+1) != 0);
+	return (lua_next(m_pLS, m_nIterationCounter + 1) != 0);
 }
 
-bool CScriptObject::GetCurrent(int &nVal)
+bool CScriptObject::GetCurrent(int& nVal)
 {
-	if(m_nIterationCounter==-1)
+	if (m_nIterationCounter == -1)
 		return false;
 	if (lua_isnumber(m_pLS, -1))
 	{
-		nVal =(int)lua_tonumber(m_pLS, -1);
+		nVal = (int)lua_tonumber(m_pLS, -1);
 		return true;
 	}
 	return false;
 }
 
-bool CScriptObject::GetCurrent(float &fVal)
+bool CScriptObject::GetCurrent(float& fVal)
 {
-	if(m_nIterationCounter==-1)
+	if (m_nIterationCounter == -1)
 		return false;
 	if (lua_isnumber(m_pLS, -1))
 	{
-		fVal =lua_tonumber(m_pLS, -1);
+		fVal = lua_tonumber(m_pLS, -1);
 		return true;
 	}
 	return false;
 }
 
-bool CScriptObject::GetCurrent(bool &bVal)
+bool CScriptObject::GetCurrent(bool& bVal)
 {
-	if(m_nIterationCounter==-1)
+	if (m_nIterationCounter == -1)
 		return false;
-	bool res=false;
-	if (lua_isnil(m_pLS, - 1))
+	bool res = false;
+	if (lua_isnil(m_pLS, -1))
 	{
 		res = true;
 		bVal = false;
 	}
-	else if (lua_isnumber(m_pLS, - 1))
+	else if (lua_isnumber(m_pLS, -1))
 	{
 		res = true;
-		int nVal =(int)lua_tonumber(m_pLS, - 1);
+		int nVal = (int)lua_tonumber(m_pLS, -1);
 		if (nVal)
 			bVal = true;
 		else
@@ -1240,35 +1240,35 @@ bool CScriptObject::GetCurrent(bool &bVal)
 	return res;
 }
 
-bool CScriptObject::GetCurrent(const char* &sVal)
+bool CScriptObject::GetCurrent(const char*& sVal)
 {
-	if(m_nIterationCounter==-1)
+	if (m_nIterationCounter == -1)
 		return false;
-	if (lua_isstring(m_pLS, - 1))
+	if (lua_isstring(m_pLS, -1))
 	{
-		sVal =(char *)lua_tostring(m_pLS, - 1);
+		sVal = (char*)lua_tostring(m_pLS, -1);
 		return true;
 	}
 	return false;
 }
 
 
-bool CScriptObject::GetCurrentPtr(const void * &pObj)
+bool CScriptObject::GetCurrentPtr(const void*& pObj)
 {
-	if(m_nIterationCounter==-1)
+	if (m_nIterationCounter == -1)
 		return false;
 
-	pObj=lua_topointer(m_pLS, - 1);
+	pObj = lua_topointer(m_pLS, -1);
 
-	return pObj!=0;
+	return pObj != 0;
 }
 
 
-bool CScriptObject::GetCurrent(IScriptObject *pObj)
+bool CScriptObject::GetCurrent(IScriptObject* pObj)
 {
-	if(m_nIterationCounter==-1)
+	if (m_nIterationCounter == -1)
 		return false;
-	bool res=false;
+	bool res = false;
 	if (lua_istable(m_pLS, -1))
 	{
 		res = true;
@@ -1280,13 +1280,13 @@ bool CScriptObject::GetCurrent(IScriptObject *pObj)
 
 
 // MartinM, used to create a hash value out of a lua function (for cheat protection)
-bool CScriptObject::GetCurrentFuncData(unsigned int * &pCode, int &iSize)
+bool CScriptObject::GetCurrentFuncData(unsigned int*& pCode, int& iSize)
 {
-	if(m_nIterationCounter==-1)
+	if (m_nIterationCounter == -1)
 		return false;
 	if (lua_isfunction(m_pLS, -1))
 	{
-		lua_getluafuncdata(m_pLS,-1,&pCode,&iSize);
+		lua_getluafuncdata(m_pLS, -1, &pCode, &iSize);
 		return true;
 	}
 	return false;
@@ -1294,56 +1294,56 @@ bool CScriptObject::GetCurrentFuncData(unsigned int * &pCode, int &iSize)
 
 
 // MartinM, used to create a hash value out of a lua function (for cheat protection)
-bool CScriptObject::GetFuncData(const char *sKey, unsigned int * &pCode, int &iSize)
+bool CScriptObject::GetFuncData(const char* sKey, unsigned int*& pCode, int& iSize)
 {
 	_GUARD_STACK(m_pLS);
 	bool res = false;
 	lua_pushstring(m_pLS, sKey);
-	GET_FUNCTION(m_pLS, - 2);
+	GET_FUNCTION(m_pLS, -2);
 
 	if (lua_isfunction(m_pLS, -1))
 	{
-		lua_getluafuncdata(m_pLS,-1,&pCode,&iSize);
+		lua_getluafuncdata(m_pLS, -1, &pCode, &iSize);
 		return true;
 	}
 	return false;
 }
 
 
-bool CScriptObject::GetCurrentKey(const char* &sKey)
+bool CScriptObject::GetCurrentKey(const char*& sKey)
 {
-	if(m_nIterationCounter==-1)
+	if (m_nIterationCounter == -1)
 		return false;
 
-//	if (lua_isstring(m_pLS, - 2))
-  if(lua_rawtag(m_pLS, -2)==LUA_TSTRING)			// get the internal type without converting it
+	//	if (lua_isstring(m_pLS, - 2))
+	if (lua_rawtag(m_pLS, -2) == LUA_TSTRING)			// get the internal type without converting it
 	{
-		sKey=(char *)lua_tostring(m_pLS, - 2);
+		sKey = (char*)lua_tostring(m_pLS, -2);
 		return true;
 	}
 	return false;
 }
 
-bool CScriptObject::GetCurrentKey(int &nKey)
+bool CScriptObject::GetCurrentKey(int& nKey)
 {
-	if(m_nIterationCounter==-1)
+	if (m_nIterationCounter == -1)
 		return false;
 
-//	if(lua_isnumber(m_pLS,-2))
-  if(lua_rawtag(m_pLS, -2)==LUA_TNUMBER)			// get the internal type without converting it
+	//	if(lua_isnumber(m_pLS,-2))
+	if (lua_rawtag(m_pLS, -2) == LUA_TNUMBER)			// get the internal type without converting it
 	{
-		nKey =(int)lua_tonumber(m_pLS, -2);
+		nKey = (int)lua_tonumber(m_pLS, -2);
 		return true;
 	}
 	return false;
 }
 
 
-void CScriptObject::Attach(IScriptObject *so)
+void CScriptObject::Attach(IScriptObject* so)
 {
-	if(!lua_xgetref(m_pLS,so->GetRef()))
+	if (!lua_xgetref(m_pLS, so->GetRef()))
 	{
-		
+
 		return;
 	}
 	Attach();
@@ -1351,7 +1351,7 @@ void CScriptObject::Attach(IScriptObject *so)
 
 void CScriptObject::EndIteration()
 {
-	if(m_nIterationCounter==-1)
+	if (m_nIterationCounter == -1)
 	{
 		//Timur[2/20/2003]
 		// This is invalid call, fire warning.
@@ -1359,122 +1359,122 @@ void CScriptObject::EndIteration()
 		return;
 	}
 
-	lua_settop(m_pLS,m_nIterationCounter);
-	m_nIterationCounter=-1;
+	lua_settop(m_pLS, m_nIterationCounter);
+	m_nIterationCounter = -1;
 }
 
 ScriptVarType CScriptObject::GetCurrentType()
 {
-	ScriptVarType svtRetVal=svtNull;
+	ScriptVarType svtRetVal = svtNull;
 
-	if (lua_isnil(m_pLS, - 1))
+	if (lua_isnil(m_pLS, -1))
 	{
-		svtRetVal=svtNull;
+		svtRetVal = svtNull;
 	}
-	else if (lua_isfunction(m_pLS, - 1))
+	else if (lua_isfunction(m_pLS, -1))
 	{
-		svtRetVal=svtFunction;
+		svtRetVal = svtFunction;
 	}
-	else if (lua_isnumber(m_pLS, - 1))
+	else if (lua_isnumber(m_pLS, -1))
 	{
-		svtRetVal=svtNumber;
+		svtRetVal = svtNumber;
 	}
-	else if (lua_isstring(m_pLS, - 1))
+	else if (lua_isstring(m_pLS, -1))
 	{
-		svtRetVal=svtString;
+		svtRetVal = svtString;
 	}
-	else if (lua_isuserdata(m_pLS, - 1))
+	else if (lua_isuserdata(m_pLS, -1))
 	{
-		svtRetVal=svtUserData;
+		svtRetVal = svtUserData;
 	}
-	else if (lua_istable(m_pLS, - 1))
+	else if (lua_istable(m_pLS, -1))
 	{
-		svtRetVal=svtObject;
+		svtRetVal = svtObject;
 	}
-	return svtRetVal;	
+	return svtRetVal;
 }
 
 void CScriptObject::Clear()
 {
 	_GUARD_STACK(m_pLS);
 	int top = lua_gettop(m_pLS);
-	
+
 	if (!_GET_THIS())
 		return;
 
 	int trgTable = top + 1;
-		
+
 	lua_pushnil(m_pLS);  // first key
-	while (lua_next(m_pLS, trgTable) != 0) 
+	while (lua_next(m_pLS, trgTable) != 0)
 	{
-			lua_pop(m_pLS, 1); // pop value, leave index.
-			lua_pushvalue(m_pLS, -1); // Push again index.
-			lua_pushnil(m_pLS);
-			lua_rawset(m_pLS,trgTable);
+		lua_pop(m_pLS, 1); // pop value, leave index.
+		lua_pushvalue(m_pLS, -1); // Push again index.
+		lua_pushnil(m_pLS);
+		lua_rawset(m_pLS, trgTable);
 	}
-//	lua_settop(m_pLS, top); // Restore stack.
-//	END_CHECK_STACK
+	//	lua_settop(m_pLS, top); // Restore stack.
+	//	END_CHECK_STACK
 }
 
-void CScriptObject::SetNativeData(void *nd)
+void CScriptObject::SetNativeData(void* nd)
 {
 	_GUARD_STACK(m_pLS);
 	if (!_GET_THIS())
 		return;
-	lua_setnativedata(m_pLS,-1,nd);
+	lua_setnativedata(m_pLS, -1, nd);
 }
 
-void *CScriptObject::GetNativeData()
+void* CScriptObject::GetNativeData()
 {
 	_GUARD_STACK(m_pLS);
 	if (!_GET_THIS())
 		return NULL;
-	return lua_getnativedata(m_pLS,-1);
+	return lua_getnativedata(m_pLS, -1);
 }
 
-int CScriptObject::IndexTagHandler(lua_State *L)
+int CScriptObject::IndexTagHandler(lua_State* L)
 {
-	CScriptObject *p=(CScriptObject *)lua_touserdata(L,-2);
-	int nRet=0;
-	if(p && p->m_pSetGetParams)
+	CScriptObject* p = (CScriptObject*)lua_touserdata(L, -2);
+	int nRet = 0;
+	if (p && p->m_pSetGetParams)
 	{
 		if (p->m_bDeleted)
 		{
-			CryError( "<CScriptObject::IndexTagHandler> Access to deleted script object" );
+			CryError("<CScriptObject::IndexTagHandler> Access to deleted script object");
 		}
-		if((nRet=p->m_pSetGetParams->m_pGetThunk((HSCRIPT)L))!=-1)
+		if ((nRet = p->m_pSetGetParams->m_pGetThunk((HSCRIPT)L)) != -1)
 		{
 			return nRet;
 		}
 		//lua_pop(L,1);
 	}
 
-	if(lua_istable(L,4))
+	if (lua_istable(L, 4))
 	{
-		if(!lua_getnativedata(L,1))return 0;
-		lua_pushvalue(L,2);
-		lua_rawget(L,-2);
-		lua_remove(L,-2);
+		if (!lua_getnativedata(L, 1))return 0;
+		lua_pushvalue(L, 2);
+		lua_rawget(L, -2);
+		lua_remove(L, -2);
 		return 1;
 	}
 	return 0;
 }
 
-void CScriptObject::Delegate(IScriptObject *pObj)
+void CScriptObject::Delegate(IScriptObject* pObj)
 {
-	if(!pObj)return;
+	if (!pObj)return;
 	m_hDelegationTag = lua_newtag(m_pLS);
 	lua_newuserdatabox(m_pLS, this);
-	if(!lua_xgetref(m_pLS,pObj->GetRef()))return;
+	if (!lua_xgetref(m_pLS, pObj->GetRef()))return;
 	lua_pushcclosure(m_pLS, CScriptObject::IndexTagHandler, 2);
 	lua_settagmethod(m_pLS, m_hDelegationTag, "index");
 	if (!_GET_THIS())
 	{
 		lua_pushnil(m_pLS);
 		lua_settagmethod(m_pLS, m_hDelegationTag, "index");
-		return ;
+		return;
 	}
 
 	lua_settag(m_pLS, m_hDelegationTag);
-	lua_pop(m_pLS,1);
+	lua_pop(m_pLS, 1);
 }
