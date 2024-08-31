@@ -17,26 +17,26 @@
 #include "ConsoleTrack.h"
 
 //////////////////////////////////////////////////////////////////////////
-void CConsoleTrack::SerializeKey( IConsoleKey &key,XmlNodeRef &keyNode,bool bLoading )
+void CConsoleTrack::SerializeKey(IConsoleKey& key, XmlNodeRef& keyNode, bool bLoading)
 {
 	if (bLoading)
 	{
-		const char *str;
-		str = keyNode->getAttr( "command" );
-		strncpy( key.command,str,sizeof(key.command) );
-		key.command[sizeof(key.command)-1] = 0;
+		const char* str;
+		str = keyNode->getAttr("command");
+		strncpy(key.command, str, sizeof(key.command));
+		key.command[sizeof(key.command) - 1] = 0;
 	}
 	else
 	{
 		if (strlen(key.command) > 0)
-			keyNode->setAttr( "command",key.command );
+			keyNode->setAttr("command", key.command);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CConsoleTrack::GetKeyInfo( int key,const char* &description,float &duration )
+void CConsoleTrack::GetKeyInfo(int key, const char*& description, float& duration)
 {
-	assert( key >= 0 && key < (int)m_keys.size() );
+	assert(key >= 0 && key < (int)m_keys.size());
 	CheckValid();
 	description = 0;
 	duration = 0;

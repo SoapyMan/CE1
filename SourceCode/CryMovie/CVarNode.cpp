@@ -21,10 +21,10 @@
 #include <IConsole.h>
 
 //////////////////////////////////////////////////////////////////////////
-CAnimCVarNode::CAnimCVarNode( IMovieSystem *sys )
-: CAnimNode(sys)
+CAnimCVarNode::CAnimCVarNode(IMovieSystem* sys)
+	: CAnimNode(sys)
 {
-	SetFlags( GetFlags()|ANODE_FLAG_CAN_CHANGE_NAME );
+	SetFlags(GetFlags() | ANODE_FLAG_CAN_CHANGE_NAME);
 	m_dwSupportedTracks = PARAM_BIT(APARAM_FLOAT_1);
 	m_value = 0;
 }
@@ -41,7 +41,7 @@ int CAnimCVarNode::GetParamCount() const
 }
 
 //////////////////////////////////////////////////////////////////////////
-bool CAnimCVarNode::GetParamInfo( int nIndex, SParamInfo &info ) const
+bool CAnimCVarNode::GetParamInfo(int nIndex, SParamInfo& info) const
 {
 	if (nIndex == 0)
 	{
@@ -55,22 +55,22 @@ bool CAnimCVarNode::GetParamInfo( int nIndex, SParamInfo &info ) const
 }
 
 //////////////////////////////////////////////////////////////////////////
-bool CAnimCVarNode::GetParamInfoFromId( int paramId, SParamInfo &info ) const
+bool CAnimCVarNode::GetParamInfoFromId(int paramId, SParamInfo& info) const
 {
 	if (paramId == APARAM_FLOAT_1)
 	{
-		GetParamInfo( 0,info );
+		GetParamInfo(0, info);
 		return true;
 	}
 	return false;
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CAnimCVarNode::SetName( const char *name )
+void CAnimCVarNode::SetName(const char* name)
 {
 	// Name of node is used as a name of console var.
 	CAnimNode::SetName(name);
-	ICVar *pVar = m_pMovieSystem->GetSystem()->GetIConsole()->GetCVar( GetName(),false );
+	ICVar* pVar = m_pMovieSystem->GetSystem()->GetIConsole()->GetCVar(GetName(), false);
 	if (pVar)
 	{
 		m_value = pVar->GetFVal();
@@ -78,15 +78,15 @@ void CAnimCVarNode::SetName( const char *name )
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CAnimCVarNode::Animate( SAnimContext &ec )
+void CAnimCVarNode::Animate(SAnimContext& ec)
 {
-	IAnimBlock *anim = GetAnimBlock();
+	IAnimBlock* anim = GetAnimBlock();
 	if (!anim)
 		return;
-	
+
 	float value = m_value;
 
-	IAnimTrack *pValueTrack = anim->GetTrack(APARAM_FLOAT_1);
+	IAnimTrack* pValueTrack = anim->GetTrack(APARAM_FLOAT_1);
 	if (pValueTrack)
 	{
 		pValueTrack->GetValue(ec.time, value);
@@ -96,10 +96,10 @@ void CAnimCVarNode::Animate( SAnimContext &ec )
 	{
 		m_value = value;
 		// Change console var value.
-		ICVar *pVar = m_pMovieSystem->GetSystem()->GetIConsole()->GetCVar( GetName(),false );
+		ICVar* pVar = m_pMovieSystem->GetSystem()->GetIConsole()->GetCVar(GetName(), false);
 		if (pVar)
 		{
-			pVar->Set( m_value );
+			pVar->Set(m_value);
 		}
 	}
 }

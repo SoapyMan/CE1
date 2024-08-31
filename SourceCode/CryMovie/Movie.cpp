@@ -34,18 +34,18 @@
 int CMovieSystem::m_mov_NoCutscenes = 0;
 
 //////////////////////////////////////////////////////////////////////////
-CMovieSystem::CMovieSystem( ISystem *system )
+CMovieSystem::CMovieSystem(ISystem* system)
 {
 	m_system = system;
 	m_bRecording = false;
-	m_pCallback=NULL;
-	m_pUser=NULL;
+	m_pCallback = NULL;
+	m_pUser = NULL;
 	m_bPaused = false;
 	m_bLastFrameAnimateOnStop = true;
 	m_lastGenId = 1;
 	m_sequenceStopBehavior = ONSTOP_GOTO_END_TIME;
 
-	system->GetIConsole()->Register( "mov_NoCutscenes",&m_mov_NoCutscenes,0,0,"Disable playing of Cut-Scenes" );
+	system->GetIConsole()->Register("mov_NoCutscenes", &m_mov_NoCutscenes, 0, 0, "Disable playing of Cut-Scenes");
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -54,21 +54,21 @@ CMovieSystem::~CMovieSystem()
 }
 
 //////////////////////////////////////////////////////////////////////////
-bool CMovieSystem::Load(const char *pszFile, const char *pszMission)
+bool CMovieSystem::Load(const char* pszFile, const char* pszMission)
 {
 	XmlNodeRef rootNode = m_system->LoadXmlFile(pszFile);
 	if (!rootNode)
 		return false;
-	XmlNodeRef Node=NULL;
-	for (int i=0;i<rootNode->getChildCount();i++)
+	XmlNodeRef Node = NULL;
+	for (int i = 0; i < rootNode->getChildCount(); i++)
 	{
-		XmlNodeRef missionNode=rootNode->getChild(i);
+		XmlNodeRef missionNode = rootNode->getChild(i);
 		XmlString sName;
 		if (!(sName = missionNode->getAttr("Name")))
 			continue;
 		if (stricmp(sName.c_str(), pszMission))
 			continue;
-		Node=missionNode;
+		Node = missionNode;
 		break;
 	}
 	if (!Node)
@@ -78,9 +78,9 @@ bool CMovieSystem::Load(const char *pszFile, const char *pszMission)
 }
 
 //////////////////////////////////////////////////////////////////////////
-IAnimNode* CMovieSystem::CreateNode( int nodeType,int nodeId )
+IAnimNode* CMovieSystem::CreateNode(int nodeType, int nodeId)
 {
-	CAnimNode *node = NULL;
+	CAnimNode* node = NULL;
 	if (!nodeId)
 	{
 		// Make uniq id.
@@ -120,7 +120,7 @@ IAnimNode* CMovieSystem::CreateNode( int nodeType,int nodeId )
 }
 
 //////////////////////////////////////////////////////////////////////////
-IAnimTrack* CMovieSystem::CreateTrack( EAnimTrackType type )
+IAnimTrack* CMovieSystem::CreateTrack(EAnimTrackType type)
 {
 	switch (type)
 	{
@@ -141,15 +141,15 @@ IAnimTrack* CMovieSystem::CreateTrack( EAnimTrackType type )
 	return 0;
 }
 
-void CMovieSystem::ChangeAnimNodeId( int nodeId,int newNodeId )
+void CMovieSystem::ChangeAnimNodeId(int nodeId, int newNodeId)
 {
 	if (nodeId == newNodeId)
 		return;
 	Nodes::iterator it = m_nodes.find(nodeId);
 	if (it != m_nodes.end())
 	{
-		IAnimNode *node = GetNode( nodeId );
-		((CAnimNode*)node)->SetId( newNodeId );
+		IAnimNode* node = GetNode(nodeId);
+		((CAnimNode*)node)->SetId(newNodeId);
 		m_nodes[newNodeId] = node;
 		m_nodes.erase(it);
 	}
@@ -157,45 +157,45 @@ void CMovieSystem::ChangeAnimNodeId( int nodeId,int newNodeId )
 }
 
 //////////////////////////////////////////////////////////////////////////
-IAnimSequence* CMovieSystem::CreateSequence( const char *sequenceName )
+IAnimSequence* CMovieSystem::CreateSequence(const char* sequenceName)
 {
-	IAnimSequence *seq = new CAnimSequence( this );
-	seq->SetName( sequenceName );
-	m_sequences.push_back( seq );
+	IAnimSequence* seq = new CAnimSequence(this);
+	seq->SetName(sequenceName);
+	m_sequences.push_back(seq);
 	return seq;
 }
 
 //////////////////////////////////////////////////////////////////////////
-IAnimSequence* CMovieSystem::LoadSequence( const char *pszFilePath )
+IAnimSequence* CMovieSystem::LoadSequence(const char* pszFilePath)
 {
-	XmlNodeRef sequenceNode = m_system->LoadXmlFile( pszFilePath );
+	XmlNodeRef sequenceNode = m_system->LoadXmlFile(pszFilePath);
 	if (sequenceNode)
 	{
-		return LoadSequence( sequenceNode );
+		return LoadSequence(sequenceNode);
 	}
 	return NULL;
 }
 
 //////////////////////////////////////////////////////////////////////////
-IAnimSequence* CMovieSystem::LoadSequence( XmlNodeRef &xmlNode, bool bLoadEmpty )
+IAnimSequence* CMovieSystem::LoadSequence(XmlNodeRef& xmlNode, bool bLoadEmpty)
 {
-	IAnimSequence *seq = new CAnimSequence( this );
-	seq->Serialize( xmlNode,true,bLoadEmpty );
+	IAnimSequence* seq = new CAnimSequence(this);
+	seq->Serialize(xmlNode, true, bLoadEmpty);
 	// Delete previous sequence with the same name.
-	IAnimSequence *pPrevSeq = FindSequence( seq->GetName() );
+	IAnimSequence* pPrevSeq = FindSequence(seq->GetName());
 	if (pPrevSeq)
-		RemoveSequence( pPrevSeq );
-	m_sequences.push_back( seq );
+		RemoveSequence(pPrevSeq);
+	m_sequences.push_back(seq);
 	return seq;
 }
 
 //////////////////////////////////////////////////////////////////////////
-IAnimSequence* CMovieSystem::FindSequence( const char *sequence )
+IAnimSequence* CMovieSystem::FindSequence(const char* sequence)
 {
 	for (Sequences::iterator it = m_sequences.begin(); it != m_sequences.end(); ++it)
 	{
-		IAnimSequence *seq = *it;
-		if (stricmp(seq->GetName(),sequence) == 0)
+		IAnimSequence* seq = *it;
+		if (stricmp(seq->GetName(), sequence) == 0)
 		{
 			return seq;
 		}
@@ -206,21 +206,21 @@ IAnimSequence* CMovieSystem::FindSequence( const char *sequence )
 //////////////////////////////////////////////////////////////////////////
 ISequenceIt* CMovieSystem::GetSequences()
 {
-	CSequenceIt *It=new CSequenceIt();
+	CSequenceIt* It = new CSequenceIt();
 	for (Sequences::iterator it = m_sequences.begin(); it != m_sequences.end(); ++it)
 	{
-		It->add( *it );
+		It->add(*it);
 	}
 	return It;
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CMovieSystem::RemoveSequence( IAnimSequence *seq )
+void CMovieSystem::RemoveSequence(IAnimSequence* seq)
 {
-	assert( seq != 0 );
+	assert(seq != 0);
 	if (seq)
 	{
-		IMovieCallback *pCallback=GetCallback();
+		IMovieCallback* pCallback = GetCallback();
 		SetCallback(NULL);
 		StopSequence(seq);
 
@@ -237,7 +237,7 @@ void CMovieSystem::RemoveSequence( IAnimSequence *seq )
 }
 
 //////////////////////////////////////////////////////////////////////////
-IAnimNode* CMovieSystem::GetNode( int nodeId ) const
+IAnimNode* CMovieSystem::GetNode(int nodeId) const
 {
 	Nodes::const_iterator it = m_nodes.find(nodeId);
 	if (it != m_nodes.end())
@@ -246,13 +246,13 @@ IAnimNode* CMovieSystem::GetNode( int nodeId ) const
 }
 
 //////////////////////////////////////////////////////////////////////////
-IAnimNode* CMovieSystem::FindNode( const char *nodeName ) const
+IAnimNode* CMovieSystem::FindNode(const char* nodeName) const
 {
 	for (Nodes::const_iterator it = m_nodes.begin(); it != m_nodes.end(); ++it)
 	{
-		IAnimNode *node = it->second;
+		IAnimNode* node = it->second;
 		// Case insesentivy name comparasion.
-		if (stricmp(node->GetName(),nodeName) == 0)
+		if (stricmp(node->GetName(), nodeName) == 0)
 		{
 			return node;
 		}
@@ -261,28 +261,28 @@ IAnimNode* CMovieSystem::FindNode( const char *nodeName ) const
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CMovieSystem::RemoveNode( IAnimNode* node )
+void CMovieSystem::RemoveNode(IAnimNode* node)
 {
-	assert( node != 0 );
+	assert(node != 0);
 
 	{
 		// Remove this node from all sequences that reference this node.
 		for (Sequences::iterator sit = m_sequences.begin(); sit != m_sequences.end(); ++sit)
 		{
-			(*sit)->RemoveNode( node );
+			(*sit)->RemoveNode(node);
 		}
 	}
 
 	Nodes::iterator it = m_nodes.find(node->GetId());
 	if (it != m_nodes.end())
-		m_nodes.erase( it );
+		m_nodes.erase(it);
 }
 
 //////////////////////////////////////////////////////////////////////////
 void CMovieSystem::RemoveAllSequences()
 {
 	m_bLastFrameAnimateOnStop = false;
-	IMovieCallback *pCallback=GetCallback();
+	IMovieCallback* pCallback = GetCallback();
 	SetCallback(NULL);
 	StopAllSequences();
 	m_sequences.clear();
@@ -294,7 +294,7 @@ void CMovieSystem::RemoveAllSequences()
 void CMovieSystem::RemoveAllNodes()
 {
 	m_bLastFrameAnimateOnStop = false;
-	IMovieCallback *pCallback=GetCallback();
+	IMovieCallback* pCallback = GetCallback();
 	SetCallback(NULL);
 	StopAllSequences();
 	m_nodes.clear();
@@ -305,42 +305,42 @@ void CMovieSystem::RemoveAllNodes()
 //////////////////////////////////////////////////////////////////////////
 void CMovieSystem::SaveNodes(XmlNodeRef nodesNode)
 {
-	for (Nodes::iterator It=m_nodes.begin();It!=m_nodes.end();++It)
+	for (Nodes::iterator It = m_nodes.begin(); It != m_nodes.end(); ++It)
 	{
-		XmlNodeRef nodeNode=nodesNode->newChild("Node");
-		IAnimNode *pNode=It->second;
+		XmlNodeRef nodeNode = nodesNode->newChild("Node");
+		IAnimNode* pNode = It->second;
 		nodeNode->setAttr("Id", pNode->GetId());
 		nodeNode->setAttr("Type", pNode->GetType());
 		nodeNode->setAttr("Name", pNode->GetName());
 		switch (pNode->GetType())
 		{
-			case ANODE_CAMERA:	// FALL THROUGH
-			case ANODE_ENTITY:
-				IAnimNode *pTgt=pNode->GetTarget();
-				if (pTgt)
-					nodeNode->setAttr("TargetId", pTgt->GetId());
-				break;
+		case ANODE_CAMERA:	// FALL THROUGH
+		case ANODE_ENTITY:
+			IAnimNode* pTgt = pNode->GetTarget();
+			if (pTgt)
+				nodeNode->setAttr("TargetId", pTgt->GetId());
+			break;
 		}
-		pNode->Serialize( nodeNode,false );
+		pNode->Serialize(nodeNode, false);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CMovieSystem::PlaySequence( const char *sequenceName,bool bResetFx )
+void CMovieSystem::PlaySequence(const char* sequenceName, bool bResetFx)
 {
-	IAnimSequence *seq = FindSequence(sequenceName);
+	IAnimSequence* seq = FindSequence(sequenceName);
 	if (seq)
-	{ 
-		PlaySequence(seq,bResetFx);
+	{
+		PlaySequence(seq, bResetFx);
 	}
 	else
-		GetSystem ()->GetILog()->Log ("CMovieSystem::PlaySequence: Error: Sequence \"%s\" not found", sequenceName);
+		GetSystem()->GetILog()->Log("CMovieSystem::PlaySequence: Error: Sequence \"%s\" not found", sequenceName);
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CMovieSystem::PlaySequence( IAnimSequence *seq,bool bResetFx )
+void CMovieSystem::PlaySequence(IAnimSequence* seq, bool bResetFx)
 {
-	assert( seq != 0 );
+	assert(seq != 0);
 	if (!seq || IsPlaying(seq))
 		return;
 
@@ -357,7 +357,7 @@ void CMovieSystem::PlaySequence( IAnimSequence *seq,bool bResetFx )
 	if (seq->GetFlags() & IAnimSequence::CUT_SCENE)
 	{
 		if (m_pUser)
-			m_pUser->BeginCutScene(seq->GetFlags(),bResetFx);
+			m_pUser->BeginCutScene(seq->GetFlags(), bResetFx);
 	}
 
 	seq->Activate();
@@ -368,22 +368,22 @@ void CMovieSystem::PlaySequence( IAnimSequence *seq,bool bResetFx )
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CMovieSystem::StopSequence( const char *sequenceName )
+void CMovieSystem::StopSequence(const char* sequenceName)
 {
-	IAnimSequence *seq = FindSequence(sequenceName);
+	IAnimSequence* seq = FindSequence(sequenceName);
 	if (seq)
 		StopSequence(seq);
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CMovieSystem::StopSequence( IAnimSequence *seq )
+void CMovieSystem::StopSequence(IAnimSequence* seq)
 {
-	assert( seq != 0 );
+	assert(seq != 0);
 	for (PlayingSequences::iterator it = m_playingSequences.begin(); it != m_playingSequences.end(); ++it)
 	{
 		if (it->sequence == seq)
 		{
-			m_playingSequences.erase( it );
+			m_playingSequences.erase(it);
 
 			if (m_bLastFrameAnimateOnStop)
 			{
@@ -403,7 +403,7 @@ void CMovieSystem::StopSequence( IAnimSequence *seq )
 				}
 				seq->Deactivate();
 			}
-			
+
 			// If this sequence is cut scene end it.
 			if (seq->GetFlags() & IAnimSequence::CUT_SCENE)
 			{
@@ -420,7 +420,7 @@ void CMovieSystem::StopAllSequences()
 {
 	while (!m_playingSequences.empty())
 	{
-		StopSequence( m_playingSequences.begin()->sequence );
+		StopSequence(m_playingSequences.begin()->sequence);
 	}
 	m_playingSequences.clear();
 }
@@ -432,14 +432,14 @@ void CMovieSystem::StopAllCutScenes()
 	for (PlayingSequences::iterator it = m_playingSequences.begin(); it != m_playingSequences.end(); it = next)
 	{
 		next = it; ++next;
-		IAnimSequence *seq = it->sequence;
+		IAnimSequence* seq = it->sequence;
 		if (seq->GetFlags() & IAnimSequence::CUT_SCENE)
-			StopSequence( seq );
+			StopSequence(seq);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
-bool CMovieSystem::IsPlaying( IAnimSequence *seq ) const
+bool CMovieSystem::IsPlaying(IAnimSequence* seq) const
 {
 	for (PlayingSequences::const_iterator it = m_playingSequences.begin(); it != m_playingSequences.end(); ++it)
 	{
@@ -450,7 +450,7 @@ bool CMovieSystem::IsPlaying( IAnimSequence *seq ) const
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CMovieSystem::Reset( bool bPlayOnReset )
+void CMovieSystem::Reset(bool bPlayOnReset)
 {
 	m_bLastFrameAnimateOnStop = false;
 	StopAllSequences();
@@ -459,14 +459,14 @@ void CMovieSystem::Reset( bool bPlayOnReset )
 	// Reset all sequences.
 	for (Sequences::iterator sit = m_sequences.begin(); sit != m_sequences.end(); ++sit)
 	{
-		IAnimSequence *seq = *sit;
+		IAnimSequence* seq = *sit;
 		seq->Reset();
 	}
 
 	// Reset all nodes.
 	for (Nodes::const_iterator it = m_nodes.begin(); it != m_nodes.end(); ++it)
 	{
-		IAnimNode *node = it->second;
+		IAnimNode* node = it->second;
 		node->Reset();
 	}
 
@@ -480,16 +480,16 @@ void CMovieSystem::Reset( bool bPlayOnReset )
 	{
 		for (Sequences::iterator sit = m_sequences.begin(); sit != m_sequences.end(); ++sit)
 		{
-			IAnimSequence *seq = *sit;
+			IAnimSequence* seq = *sit;
 			if (seq->GetFlags() & IAnimSequence::PLAY_ONRESET)
 				PlaySequence(seq);
 		}
 	}
 
 	// Reset camera.
-	SCameraParams CamParams=GetCameraParams();
-	CamParams.cameraNode=NULL;
-	CamParams.nCameraId=0;
+	SCameraParams CamParams = GetCameraParams();
+	CamParams.cameraNode = NULL;
+	CamParams.nCameraId = 0;
 	SetCameraParams(CamParams);
 }
 
@@ -498,20 +498,20 @@ void CMovieSystem::PlayOnLoadSequences()
 {
 	for (Sequences::iterator sit = m_sequences.begin(); sit != m_sequences.end(); ++sit)
 	{
-		IAnimSequence *seq = *sit;
+		IAnimSequence* seq = *sit;
 		if (seq->GetFlags() & IAnimSequence::PLAY_ONRESET)
 			PlaySequence(seq);
 	}
 
 	// Reset camera.
-	SCameraParams CamParams=GetCameraParams();
-	CamParams.cameraNode=NULL;
-	CamParams.nCameraId=0;
+	SCameraParams CamParams = GetCameraParams();
+	CamParams.cameraNode = NULL;
+	CamParams.nCameraId = 0;
 	SetCameraParams(CamParams);
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CMovieSystem::Update( float dt )
+void CMovieSystem::Update(float dt)
 {
 	if (m_bPaused)
 		return;
@@ -523,14 +523,14 @@ void CMovieSystem::Update( float dt )
 	std::vector<IAnimSequence*> stopSequences;
 
 	// cap delta time.
-	dt = max( 0,min(0.5f,dt) );
-	
+	dt = max(0, min(0.5f, dt));
+
 	PlayingSequences::iterator next;
 	for (PlayingSequences::iterator it = m_playingSequences.begin(); it != m_playingSequences.end(); it = next)
 	{
 		next = it; ++next;
 
-		PlayingSequence &ps = *it;
+		PlayingSequence& ps = *it;
 
 		ac.time = ps.time;
 		ac.sequence = ps.sequence;
@@ -564,13 +564,13 @@ void CMovieSystem::Update( float dt )
 		}
 
 		// Animate sequence. (Can invalidate iterator)
-		ps.sequence->Animate( ac );
+		ps.sequence->Animate(ac);
 	}
 
 	// Stop quied sequencs.
 	for (int i = 0; i < (int)stopSequences.size(); i++)
 	{
-		StopSequence( stopSequences[i] );
+		StopSequence(stopSequences[i]);
 	}
 }
 
@@ -581,26 +581,26 @@ void CMovieSystem::Callback(ECallbackReason Reason)
 		return;
 	switch (Reason)
 	{
-		case CBR_ADDNODE:
-			m_pCallback->OnAddNode();
-			break;
-		case CBR_REMOVENODE:
-			m_pCallback->OnRemoveNode();
-			break;
-		case CBR_CHANGENODE:
-			m_pCallback->OnChangeNode();
-			break;
-		case CBR_REGISTERNODECB:
-			m_pCallback->OnRegisterNodeCallback();
-			break;
-		case CBR_UNREGISTERNODECB:
-			m_pCallback->OnUnregisterNodeCallback();
-			break;
+	case CBR_ADDNODE:
+		m_pCallback->OnAddNode();
+		break;
+	case CBR_REMOVENODE:
+		m_pCallback->OnRemoveNode();
+		break;
+	case CBR_CHANGENODE:
+		m_pCallback->OnChangeNode();
+		break;
+	case CBR_REGISTERNODECB:
+		m_pCallback->OnRegisterNodeCallback();
+		break;
+	case CBR_UNREGISTERNODECB:
+		m_pCallback->OnUnregisterNodeCallback();
+		break;
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CMovieSystem::Serialize( XmlNodeRef &xmlNode,bool bLoading,bool bRemoveOldNodes,bool bLoadEmpty )
+void CMovieSystem::Serialize(XmlNodeRef& xmlNode, bool bLoading, bool bRemoveOldNodes, bool bLoadEmpty)
 {
 	if (bLoading)
 	{
@@ -612,14 +612,14 @@ void CMovieSystem::Serialize( XmlNodeRef &xmlNode,bool bLoading,bool bRemoveOldN
 		//////////////////////////////////////////////////////////////////////////
 		// Load animation nodes from XML.
 		//////////////////////////////////////////////////////////////////////////
-		XmlNodeRef nodeNode=xmlNode->findChild("NodeData");
+		XmlNodeRef nodeNode = xmlNode->findChild("NodeData");
 		if (nodeNode)
 		{
-			std::map<int,int> mapNodeTarget;
-			for (int i=0;i<nodeNode->getChildCount();i++)
+			std::map<int, int> mapNodeTarget;
+			for (int i = 0; i < nodeNode->getChildCount(); i++)
 			{
-				XmlNodeRef node=nodeNode->getChild(i);
-				IAnimNode *pAnimNode = NULL;
+				XmlNodeRef node = nodeNode->getChild(i);
+				IAnimNode* pAnimNode = NULL;
 				string sTarget;
 
 				int nodeId = atoi(node->getAttr("Id"));
@@ -627,30 +627,30 @@ void CMovieSystem::Serialize( XmlNodeRef &xmlNode,bool bLoading,bool bRemoveOldN
 				if (!GetNode(nodeId))
 				{
 					int nodeType = atoi(node->getAttr("Type"));
-					pAnimNode = CreateNode( nodeType,nodeId );
+					pAnimNode = CreateNode(nodeType, nodeId);
 					if (pAnimNode)
 					{
 						pAnimNode->SetName(node->getAttr("Name"));
 						int entityId = -1;
-						if (node->getAttr("EntityId",entityId))
+						if (node->getAttr("EntityId", entityId))
 						{
 							pAnimNode->SetEntity(entityId);
 						}
-						pAnimNode->Serialize( node,true );
+						pAnimNode->Serialize(node, true);
 
 						int targetId = -1;
-						if (node->getAttr("TargetId",targetId))
+						if (node->getAttr("TargetId", targetId))
 						{
 							if (!sTarget.empty())
-								mapNodeTarget.insert(std::map<int,int>::value_type( pAnimNode->GetId(), targetId ));
+								mapNodeTarget.insert(std::map<int, int>::value_type(pAnimNode->GetId(), targetId));
 						}
 					}
 				}
 			}
 			// After all nodes loaded,Bind targets.
-			for (std::map<int,int>::iterator It=mapNodeTarget.begin();It!=mapNodeTarget.end();++It)
+			for (std::map<int, int>::iterator It = mapNodeTarget.begin(); It != mapNodeTarget.end(); ++It)
 			{
-				IAnimNode *pAnimNode=GetNode(It->first);
+				IAnimNode* pAnimNode = GetNode(It->first);
 				assert(pAnimNode);
 				pAnimNode->SetTarget(GetNode(It->second));
 			}
@@ -658,52 +658,53 @@ void CMovieSystem::Serialize( XmlNodeRef &xmlNode,bool bLoading,bool bRemoveOldN
 		//////////////////////////////////////////////////////////////////////////
 		// Load sequences from XML.
 		//////////////////////////////////////////////////////////////////////////
-		XmlNodeRef seqNode=xmlNode->findChild("SequenceData");
+		XmlNodeRef seqNode = xmlNode->findChild("SequenceData");
 		if (seqNode)
 		{
-			for (int i=0;i<seqNode->getChildCount();i++)
+			for (int i = 0; i < seqNode->getChildCount(); i++)
 			{
 				if (!LoadSequence(seqNode->getChild(i), bLoadEmpty))
 					return;
 			}
 		}
 		//Reset();
-	}else
+	}
+	else
 	{
 		// Save animation nodes to xml.
 		XmlNodeRef nodesNode = xmlNode->newChild("NodeData");
 		for (Nodes::iterator nodeIt = m_nodes.begin(); nodeIt != m_nodes.end(); ++nodeIt)
 		{
 			XmlNodeRef nodeNode = nodesNode->newChild("Node");
-			IAnimNode *pNode = nodeIt->second;
-			pNode->Serialize( nodeNode,false );
+			IAnimNode* pNode = nodeIt->second;
+			pNode->Serialize(nodeNode, false);
 		}
 
-		XmlNodeRef sequencesNode=xmlNode->newChild("SequenceData");
-		ISequenceIt *It=GetSequences();
-		IAnimSequence *seq=It->first();;
+		XmlNodeRef sequencesNode = xmlNode->newChild("SequenceData");
+		ISequenceIt* It = GetSequences();
+		IAnimSequence* seq = It->first();;
 		while (seq)
 		{
-			XmlNodeRef sequenceNode=sequencesNode->newChild("Sequence");
+			XmlNodeRef sequenceNode = sequencesNode->newChild("Sequence");
 			seq->Serialize(sequenceNode, false);
-			seq=It->next();
+			seq = It->next();
 		}
 		It->Release();
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CMovieSystem::SetCameraParams( const SCameraParams &Params )
+void CMovieSystem::SetCameraParams(const SCameraParams& Params)
 {
 	m_ActiveCameraParams = Params;
 	if (m_pUser)
 		m_pUser->SetActiveCamera(m_ActiveCameraParams);
 	if (m_pCallback)
-		m_pCallback->OnSetCamera( m_ActiveCameraParams );
+		m_pCallback->OnSetCamera(m_ActiveCameraParams);
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CMovieSystem::SendGlobalEvent( const char *pszEvent )
+void CMovieSystem::SendGlobalEvent(const char* pszEvent)
 {
 	if (m_pUser)
 		m_pUser->SendGlobalEvent(pszEvent);
@@ -747,13 +748,13 @@ void CMovieSystem::Resume()
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CMovieSystem::OnPlaySound( ISound *pSound )
+void CMovieSystem::OnPlaySound(ISound* pSound)
 {
 	if (m_pUser)
-		m_pUser->PlaySubtitles( pSound );
+		m_pUser->PlaySubtitles(pSound);
 }
 
-float CMovieSystem::GetPlayingTime(IAnimSequence * pSeq)
+float CMovieSystem::GetPlayingTime(IAnimSequence* pSeq)
 {
 	if (!pSeq)
 		return -1;
@@ -771,7 +772,7 @@ float CMovieSystem::GetPlayingTime(IAnimSequence * pSeq)
 	return -1;
 }
 
-bool CMovieSystem::SetPlayingTime(IAnimSequence * pSeq, float fTime)
+bool CMovieSystem::SetPlayingTime(IAnimSequence* pSeq, float fTime)
 {
 	if (!pSeq)
 		return false;
@@ -790,7 +791,7 @@ bool CMovieSystem::SetPlayingTime(IAnimSequence * pSeq, float fTime)
 	return false;
 }
 
-void CMovieSystem::SetSequenceStopBehavior( ESequenceStopBehavior behavior )
+void CMovieSystem::SetSequenceStopBehavior(ESequenceStopBehavior behavior)
 {
 	m_sequenceStopBehavior = behavior;
 }

@@ -17,53 +17,54 @@
 #include "MusicTrack.h"
 
 //////////////////////////////////////////////////////////////////////////
-void CMusicTrack::SerializeKey( IMusicKey &key,XmlNodeRef &keyNode,bool bLoading )
+void CMusicTrack::SerializeKey(IMusicKey& key, XmlNodeRef& keyNode, bool bLoading)
 {
 	if (bLoading)
 	{
-		const char *pStr;
+		const char* pStr;
 		int nType;
 		if (!keyNode->getAttr("type", nType))
-			key.eType=eMusicKeyType_SetMood;
+			key.eType = eMusicKeyType_SetMood;
 		else
-			key.eType=(EMusicKeyType)nType;
-		pStr=keyNode->getAttr("mood");
+			key.eType = (EMusicKeyType)nType;
+		pStr = keyNode->getAttr("mood");
 		if (pStr)
 		{
 			strncpy(key.szMood, pStr, sizeof(key.szMood));
-			key.szMood[sizeof(key.szMood)-1]=0;
-		}else
+			key.szMood[sizeof(key.szMood) - 1] = 0;
+		}
+		else
 		{
-			key.szMood[0]=0;
+			key.szMood[0] = 0;
 		}
 		if (!keyNode->getAttr("volramp_time", key.fTime))
-			key.fTime=0.0f;
+			key.fTime = 0.0f;
 	}
 	else
 	{
 		keyNode->setAttr("type", key.eType);
-		if (strlen(key.szMood)>0)
+		if (strlen(key.szMood) > 0)
 			keyNode->setAttr("mood", key.szMood);
 		keyNode->setAttr("volramp_time", key.fTime);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CMusicTrack::GetKeyInfo( int key,const char* &description,float &duration )
+void CMusicTrack::GetKeyInfo(int key, const char*& description, float& duration)
 {
-	assert( key >= 0 && key < (int)m_keys.size() );
+	assert(key >= 0 && key < (int)m_keys.size());
 	CheckValid();
 	description = 0;
 	duration = 0;
 	switch (m_keys[key].eType)
 	{
-		case eMusicKeyType_SetMood:
-			duration=0.0f;
-			description=m_keys[key].szMood;
-			break;
-		case eMusicKeyType_VolumeRamp:
-			duration=m_keys[key].fTime;
-			description="RampDown";
-			break;
+	case eMusicKeyType_SetMood:
+		duration = 0.0f;
+		description = m_keys[key].szMood;
+		break;
+	case eMusicKeyType_VolumeRamp:
+		duration = m_keys[key].fTime;
+		description = "RampDown";
+		break;
 	}
 }

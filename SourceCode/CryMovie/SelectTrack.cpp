@@ -17,26 +17,26 @@
 #include "SelectTrack.h"
 
 //////////////////////////////////////////////////////////////////////////
-void CSelectTrack::SerializeKey( ISelectKey &key,XmlNodeRef &keyNode,bool bLoading )
+void CSelectTrack::SerializeKey(ISelectKey& key, XmlNodeRef& keyNode, bool bLoading)
 {
 	if (bLoading)
 	{
-		const char *szSelection;
-		szSelection= keyNode->getAttr( "node" );
+		const char* szSelection;
+		szSelection = keyNode->getAttr("node");
 
-		strncpy( key.szSelection,szSelection,sizeof(key.szSelection) );
-		key.szSelection[sizeof(key.szSelection)-1] = 0;
+		strncpy(key.szSelection, szSelection, sizeof(key.szSelection));
+		key.szSelection[sizeof(key.szSelection) - 1] = 0;
 	}
 	else
 	{
-		keyNode->setAttr( "node",key.szSelection);
+		keyNode->setAttr("node", key.szSelection);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CSelectTrack::GetKeyInfo( int key,const char* &description,float &duration )
+void CSelectTrack::GetKeyInfo(int key, const char*& description, float& duration)
 {
-	assert( key >= 0 && key < (int)m_keys.size() );
+	assert(key >= 0 && key < (int)m_keys.size());
 	CheckValid();
 	description = 0;
 	duration = m_keys[key].fDuration;

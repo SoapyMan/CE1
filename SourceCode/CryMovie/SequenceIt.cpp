@@ -15,10 +15,10 @@ void CSequenceIt::Release()
 {
 	delete this;
 }
-	
-void CSequenceIt::add( IAnimSequence* element )
+
+void CSequenceIt::add(IAnimSequence* element)
 {
-	m_elements.push_back( element );
+	m_elements.push_back(element);
 	m_count++;
 	m_current = m_elements.begin();
 }
@@ -39,7 +39,7 @@ int CSequenceIt::count() const
 {
 	return m_count;
 };
-	
+
 IAnimSequence* CSequenceIt::first()
 {
 	m_current = m_elements.begin();

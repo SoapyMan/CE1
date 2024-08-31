@@ -17,14 +17,14 @@
 #include "ExprTrack.h"
 
 //////////////////////////////////////////////////////////////////////////
-void CExprTrack::SerializeKey( IExprKey &key,XmlNodeRef &keyNode,bool bLoading )
+void CExprTrack::SerializeKey(IExprKey& key, XmlNodeRef& keyNode, bool bLoading)
 {
 	if (bLoading)
 	{
-		const char *desc;
-		desc=keyNode->getAttr( "name");
+		const char* desc;
+		desc = keyNode->getAttr("name");
 		strncpy(key.pszName, desc, sizeof(key.pszName));
-		key.pszName[sizeof(key.pszName)-1]=0;
+		key.pszName[sizeof(key.pszName) - 1] = 0;
 		keyNode->getAttr("amp", key.fAmp);
 		keyNode->getAttr("blendin", key.fBlendIn);
 		keyNode->getAttr("hold", key.fHold);
@@ -41,13 +41,13 @@ void CExprTrack::SerializeKey( IExprKey &key,XmlNodeRef &keyNode,bool bLoading )
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CExprTrack::GetKeyInfo( int key,const char* &description, float &duration )
+void CExprTrack::GetKeyInfo(int key, const char*& description, float& duration)
 {
-	assert( key >= 0 && key < (int)m_keys.size() );
+	assert(key >= 0 && key < (int)m_keys.size());
 	CheckValid();
-	duration=m_keys[key].fBlendIn+m_keys[key].fHold+m_keys[key].fBlendOut;
+	duration = m_keys[key].fBlendIn + m_keys[key].fHold + m_keys[key].fBlendOut;
 	if (strlen(m_keys[key].pszName) > 0)
-		description=m_keys[key].pszName;
+		description = m_keys[key].pszName;
 	else
-		description=0;
+		description = 0;
 }

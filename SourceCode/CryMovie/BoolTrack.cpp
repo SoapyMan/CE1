@@ -17,14 +17,14 @@
 #include "BoolTrack.h"
 
 //////////////////////////////////////////////////////////////////////////
-void CBoolTrack::GetKeyInfo( int index,const char* &description,float &duration )
+void CBoolTrack::GetKeyInfo(int index, const char*& description, float& duration)
 {
 	description = 0;
 	duration = 0;
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CBoolTrack::GetValue( float time,bool &value )
+void CBoolTrack::GetValue(float time, bool& value)
 {
 	value = true; // True by default.
 
@@ -35,14 +35,14 @@ void CBoolTrack::GetValue( float time,bool &value )
 		return;
 
 	int key = 0;
-	while ((key < nkeys) && (time >= m_keys[key].time)) 
+	while ((key < nkeys) && (time >= m_keys[key].time))
 		key++;
 
 	value = !(key & 1);	// True if even key.
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CBoolTrack::SetValue( float time,const bool &value,bool bDefault )
+void CBoolTrack::SetValue(float time, const bool& value, bool bDefault)
 {
 	Invalidate();
 }

@@ -35,7 +35,7 @@ int CAnimBlock::GetTrackCount() const
 }
 
 //////////////////////////////////////////////////////////////////////////
-bool CAnimBlock::GetTrackInfo( int index,int &paramId,IAnimTrack **pTrack ) const
+bool CAnimBlock::GetTrackInfo(int index, int& paramId, IAnimTrack** pTrack) const
 {
 	if (index < 0 && index >= m_tracks.size())
 	{
@@ -47,7 +47,7 @@ bool CAnimBlock::GetTrackInfo( int index,int &paramId,IAnimTrack **pTrack ) cons
 	return true;
 }
 
-const char* CAnimBlock::GetParamName( AnimParamType param ) const
+const char* CAnimBlock::GetParamName(AnimParamType param) const
 {
 	switch (param)
 	{
@@ -65,8 +65,8 @@ const char* CAnimBlock::GetParamName( AnimParamType param ) const
 		return "Events";
 	case APARAM_CAMERA:
 		return "Camera";
-	
-	// Sound tracks.
+
+		// Sound tracks.
 	case APARAM_SOUND1:
 		return "Sound1";
 	case APARAM_SOUND2:
@@ -74,7 +74,7 @@ const char* CAnimBlock::GetParamName( AnimParamType param ) const
 	case APARAM_SOUND3:
 		return "Sound3";
 
-	// Character tracks.
+		// Character tracks.
 	case APARAM_CHARACTER1:
 		return "Animation1";
 	case APARAM_CHARACTER2:
@@ -102,7 +102,7 @@ const char* CAnimBlock::GetParamName( AnimParamType param ) const
 	return "Unknown";
 }
 
-IAnimTrack* CAnimBlock::GetTrack( int param ) const
+IAnimTrack* CAnimBlock::GetTrack(int param) const
 {
 	for (int i = 0; i < m_tracks.size(); i++)
 	{
@@ -112,7 +112,7 @@ IAnimTrack* CAnimBlock::GetTrack( int param ) const
 	return 0;
 }
 
-void CAnimBlock::SetTrack( int param,IAnimTrack *track )
+void CAnimBlock::SetTrack(int param, IAnimTrack* track)
 {
 	if (track)
 	{
@@ -124,7 +124,7 @@ void CAnimBlock::SetTrack( int param,IAnimTrack *track )
 				return;
 			}
 		}
-		AddTrack( param,track );
+		AddTrack(param, track);
 	}
 	else
 	{
@@ -133,14 +133,14 @@ void CAnimBlock::SetTrack( int param,IAnimTrack *track )
 		{
 			if (m_tracks[i].paramId == param)
 			{
-				m_tracks.erase( m_tracks.begin() + i );
+				m_tracks.erase(m_tracks.begin() + i);
 			}
 		}
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CAnimBlock::AddTrack( int param,IAnimTrack *track )
+void CAnimBlock::AddTrack(int param, IAnimTrack* track)
 {
 	TrackDesc td;
 	td.paramId = param;
@@ -149,13 +149,13 @@ void CAnimBlock::AddTrack( int param,IAnimTrack *track )
 }
 
 //////////////////////////////////////////////////////////////////////////
-bool CAnimBlock::RemoveTrack( IAnimTrack *pTrack )
+bool CAnimBlock::RemoveTrack(IAnimTrack* pTrack)
 {
 	for (int i = 0; i < m_tracks.size(); i++)
 	{
 		if (m_tracks[i].track == pTrack)
 		{
-			m_tracks.erase( m_tracks.begin() + i );
+			m_tracks.erase(m_tracks.begin() + i);
 			return true;
 		}
 	}
@@ -163,30 +163,30 @@ bool CAnimBlock::RemoveTrack( IAnimTrack *pTrack )
 }
 
 //////////////////////////////////////////////////////////////////////////
-IAnimTrack* CAnimBlock::CreateTrack( int paramId,EAnimValue valueType )
+IAnimTrack* CAnimBlock::CreateTrack(int paramId, EAnimValue valueType)
 {
-	IAnimTrack *pTrack = NULL;
+	IAnimTrack* pTrack = NULL;
 	switch (valueType)
 	{
-	case AVALUE_FLOAT:   pTrack=new CTcbFloatTrack; break;
-	case AVALUE_VECTOR:  pTrack=new CTcbVectorTrack; break;
-	case AVALUE_QUAT:    pTrack=new CTcbQuatTrack; break;
-	case AVALUE_EVENT:   pTrack=new CEventTrack; break;
-	case AVALUE_BOOL:    pTrack=new CBoolTrack; break;
-	case AVALUE_SELECT:  pTrack=new CSelectTrack; break;
-	case AVALUE_SOUND:   pTrack=new CSoundTrack; break;
-	case AVALUE_CHARACTER: pTrack=new CCharacterTrack; break;
-	case AVALUE_EXPRESSION:pTrack=new CExprTrack; break;
-	case AVALUE_CONSOLE: pTrack=new CConsoleTrack; break;
-	case AVALUE_MUSIC:   pTrack=new CMusicTrack; break;
+	case AVALUE_FLOAT:   pTrack = new CTcbFloatTrack; break;
+	case AVALUE_VECTOR:  pTrack = new CTcbVectorTrack; break;
+	case AVALUE_QUAT:    pTrack = new CTcbQuatTrack; break;
+	case AVALUE_EVENT:   pTrack = new CEventTrack; break;
+	case AVALUE_BOOL:    pTrack = new CBoolTrack; break;
+	case AVALUE_SELECT:  pTrack = new CSelectTrack; break;
+	case AVALUE_SOUND:   pTrack = new CSoundTrack; break;
+	case AVALUE_CHARACTER: pTrack = new CCharacterTrack; break;
+	case AVALUE_EXPRESSION:pTrack = new CExprTrack; break;
+	case AVALUE_CONSOLE: pTrack = new CConsoleTrack; break;
+	case AVALUE_MUSIC:   pTrack = new CMusicTrack; break;
 	}
 	if (pTrack)
-		AddTrack( paramId,pTrack );
+		AddTrack(paramId, pTrack);
 	return pTrack;
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CAnimBlock::Serialize( IAnimNode *pNode,XmlNodeRef &xmlNode,bool bLoading, bool bLoadEmptyTracks )
+void CAnimBlock::Serialize(IAnimNode* pNode, XmlNodeRef& xmlNode, bool bLoading, bool bLoadEmptyTracks)
 {
 	if (bLoading)
 	{
@@ -200,14 +200,14 @@ void CAnimBlock::Serialize( IAnimNode *pNode,XmlNodeRef &xmlNode,bool bLoading, 
 		for (int i = 0; i < num; i++)
 		{
 			XmlNodeRef trackNode = xmlNode->getChild(i);
-			trackNode->getAttr( "ParamId",paramId );
-			if (!pNode->GetParamInfoFromId( paramId,info ))
+			trackNode->getAttr("ParamId", paramId);
+			if (!pNode->GetParamInfoFromId(paramId, info))
 				continue;
-			
-			IAnimTrack *track = CreateTrack( paramId,info.valueType );
+
+			IAnimTrack* track = CreateTrack(paramId, info.valueType);
 			if (track)
 			{
-				if (!track->Serialize( trackNode,bLoading,bLoadEmptyTracks ))
+				if (!track->Serialize(trackNode, bLoading, bLoadEmptyTracks))
 				{
 					// Boolean tracks must always be loaded even if empty.
 					if (track->GetType() != ATRACK_BOOL)
@@ -223,25 +223,25 @@ void CAnimBlock::Serialize( IAnimNode *pNode,XmlNodeRef &xmlNode,bool bLoading, 
 		// Saving.
 		for (int i = 0; i < m_tracks.size(); i++)
 		{
-			IAnimTrack *track = m_tracks[i].track;
+			IAnimTrack* track = m_tracks[i].track;
 			if (track)
 			{
 				int paramid = m_tracks[i].paramId;
-				XmlNodeRef trackNode = xmlNode->newChild( "Track" );
-				trackNode->setAttr( "ParamId",m_tracks[i].paramId );
-				track->Serialize( trackNode,bLoading );
+				XmlNodeRef trackNode = xmlNode->newChild("Track");
+				trackNode->setAttr("ParamId", m_tracks[i].paramId);
+				track->Serialize(trackNode, bLoading);
 			}
 		}
 	}
 }
 
-void CAnimBlock::SetTimeRange( Range timeRange )
+void CAnimBlock::SetTimeRange(Range timeRange)
 {
 	for (int i = 0; i < m_tracks.size(); i++)
 	{
 		if (m_tracks[i].track)
 		{
-			m_tracks[i].track->SetTimeRange( timeRange );
+			m_tracks[i].track->SetTimeRange(timeRange);
 		}
 	}
 }
@@ -252,9 +252,9 @@ void CAnimBlock::SetTimeRange( Range timeRange )
 
 
 //////////////////////////////////////////////////////////////////////////
-CAnimNode::CAnimNode( IMovieSystem *sys )
+CAnimNode::CAnimNode(IMovieSystem* sys)
 {
-	m_dwSupportedTracks=0;
+	m_dwSupportedTracks = 0;
 	m_id = 0;
 	m_animBlock = 0;
 	m_callback = 0;
@@ -262,7 +262,7 @@ CAnimNode::CAnimNode( IMovieSystem *sys )
 	m_pMovieSystem = sys;
 	m_pMovieSystem->Callback(CBR_ADDNODE);
 	m_flags = 0;
-	strcpy(m_name,"");
+	strcpy(m_name, "");
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -272,7 +272,7 @@ CAnimNode::~CAnimNode()
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CAnimNode::SetFlags( int flags )
+void CAnimNode::SetFlags(int flags)
 {
 	m_flags = flags;
 }
@@ -284,17 +284,17 @@ int CAnimNode::GetFlags() const
 }
 
 //////////////////////////////////////////////////////////////////////////
-int CAnimNode::FindTrack(IAnimTrack *pInTrack)
+int CAnimNode::FindTrack(IAnimTrack* pInTrack)
 {
 	if (!m_animBlock)
 		return -1;
-	
+
 	int paramCount = m_animBlock->GetTrackCount();
 	for (int paramIndex = 0; paramIndex < paramCount; paramIndex++)
 	{
 		int paramId;
-		IAnimTrack *pTrack;
-		if (!m_animBlock->GetTrackInfo( paramIndex,paramId,&pTrack ))
+		IAnimTrack* pTrack;
+		if (!m_animBlock->GetTrackInfo(paramIndex, paramId, &pTrack))
 			continue;
 		if (pTrack == pInTrack)
 			return paramId;
@@ -303,15 +303,15 @@ int CAnimNode::FindTrack(IAnimTrack *pInTrack)
 }
 
 //////////////////////////////////////////////////////////////////////////
-IAnimTrack* CAnimNode::CreateTrack( int paramId )
+IAnimTrack* CAnimNode::CreateTrack(int paramId)
 {
 	if (!m_animBlock)
 		return 0;
-	
+
 	SParamInfo info;
-	if (GetParamInfoFromId(paramId,info))
+	if (GetParamInfoFromId(paramId, info))
 	{
-		IAnimTrack *pTrack = m_animBlock->CreateTrack( paramId,info.valueType );
+		IAnimTrack* pTrack = m_animBlock->CreateTrack(paramId, info.valueType);
 		if (pTrack)
 			m_pMovieSystem->Callback(CBR_CHANGENODE);
 		return pTrack;
@@ -320,11 +320,11 @@ IAnimTrack* CAnimNode::CreateTrack( int paramId )
 }
 
 //////////////////////////////////////////////////////////////////////////
-bool CAnimNode::RemoveTrack( IAnimTrack *pTrack )
+bool CAnimNode::RemoveTrack(IAnimTrack* pTrack)
 {
 	if (!m_animBlock)
 		return false;
-	if (m_animBlock->RemoveTrack( pTrack ))
+	if (m_animBlock->RemoveTrack(pTrack))
 	{
 		m_pMovieSystem->Callback(CBR_CHANGENODE);
 		return true;
@@ -333,16 +333,16 @@ bool CAnimNode::RemoveTrack( IAnimTrack *pTrack )
 }
 
 //////////////////////////////////////////////////////////////////////////
-IAnimNode* CAnimNode::GetChild( int i ) const
+IAnimNode* CAnimNode::GetChild(int i) const
 {
-	assert( i >= 0 && i < (int)m_childs.size() );
+	assert(i >= 0 && i < (int)m_childs.size());
 	return m_childs[i];
 }
 
 //////////////////////////////////////////////////////////////////////////
-bool CAnimNode::IsChildOf( IAnimNode *node )
+bool CAnimNode::IsChildOf(IAnimNode* node)
 {
-	CAnimNode *p = m_parent;
+	CAnimNode* p = m_parent;
 	while (p && p != node) {
 		p = p->m_parent;
 	}
@@ -351,22 +351,22 @@ bool CAnimNode::IsChildOf( IAnimNode *node )
 	return false;
 
 }
-	
+
 //////////////////////////////////////////////////////////////////////////
-void CAnimNode::AttachChild( IAnimNode* child )
+void CAnimNode::AttachChild(IAnimNode* child)
 {
-	assert( child );
+	assert(child);
 	if (!child)
 		return;
 
-	CAnimNode *childNode = (CAnimNode*)child;
+	CAnimNode* childNode = (CAnimNode*)child;
 
 	// If not already attached to this node.
 	if (childNode->m_parent == this)
 		return;
 
 	// Add to child list first to make sure node not get deleted while reattaching.
-	m_childs.push_back( childNode );
+	m_childs.push_back(childNode);
 	if (childNode->m_parent)
 		childNode->DetachThis();	// Detach node if attached to other parent.	
 	childNode->m_parent = this;	// Assign this node as parent to child node.
@@ -390,44 +390,44 @@ void CAnimNode::DetachThis()
 		// Copy parent to temp var, erasing child from parent may delete this node if child referenced only from parent.
 		CAnimNode* parent = m_parent;
 		m_parent = 0;
-		parent->RemoveChild( this );
+		parent->RemoveChild(this);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CAnimNode::RemoveChild( CAnimNode *node )
+void CAnimNode::RemoveChild(CAnimNode* node)
 {
-	Childs::iterator it = std::find( m_childs.begin(),m_childs.end(),node );
+	Childs::iterator it = std::find(m_childs.begin(), m_childs.end(), node);
 	if (it != m_childs.end())
-		m_childs.erase( it );
+		m_childs.erase(it);
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CAnimNode::Animate( SAnimContext &ec )
+void CAnimNode::Animate(SAnimContext& ec)
 {
 }
 
 //////////////////////////////////////////////////////////////////////////
-bool CAnimNode::IsParamValid( int paramId ) const
+bool CAnimNode::IsParamValid(int paramId) const
 {
 	SParamInfo info;
-	if (GetParamInfoFromId(paramId,info))
+	if (GetParamInfoFromId(paramId, info))
 		return true;
 	return false;
 }
 
 //////////////////////////////////////////////////////////////////////////
-bool CAnimNode::SetParamValue( float time,AnimParamType param,float value )
+bool CAnimNode::SetParamValue(float time, AnimParamType param, float value)
 {
-	IAnimBlock *anim = GetAnimBlock();
+	IAnimBlock* anim = GetAnimBlock();
 	if (anim)
 	{
-		IAnimTrack *track = anim->GetTrack(param);
+		IAnimTrack* track = anim->GetTrack(param);
 		if (track && track->GetValueType() == AVALUE_FLOAT)
 		{
 			// Float track.
-			bool bDefault = !(m_pMovieSystem->IsRecording() && (m_flags&ANODE_FLAG_SELECTED)); // Only selected nodes can be recorded
-			track->SetValue( time,value,bDefault );
+			bool bDefault = !(m_pMovieSystem->IsRecording() && (m_flags & ANODE_FLAG_SELECTED)); // Only selected nodes can be recorded
+			track->SetValue(time, value, bDefault);
 			return true;
 		}
 	}
@@ -435,16 +435,16 @@ bool CAnimNode::SetParamValue( float time,AnimParamType param,float value )
 }
 
 //////////////////////////////////////////////////////////////////////////
-bool CAnimNode::GetParamValue( float time,AnimParamType param,float &value )
+bool CAnimNode::GetParamValue(float time, AnimParamType param, float& value)
 {
-	IAnimBlock *anim = GetAnimBlock();
+	IAnimBlock* anim = GetAnimBlock();
 	if (anim)
 	{
-		IAnimTrack *track = anim->GetTrack(param);
+		IAnimTrack* track = anim->GetTrack(param);
 		if (track && track->GetValueType() == AVALUE_FLOAT)
 		{
 			// Float track.
-			track->GetValue( time,value );
+			track->GetValue(time, value);
 			return true;
 		}
 	}
@@ -452,37 +452,37 @@ bool CAnimNode::GetParamValue( float time,AnimParamType param,float &value )
 }
 
 //////////////////////////////////////////////////////////////////////////
-IAnimTrack* CAnimNode::GetTrack( int nParamId ) const
+IAnimTrack* CAnimNode::GetTrack(int nParamId) const
 {
 	if (!m_animBlock)
 		return 0;
-	return m_animBlock->GetTrack( nParamId );
+	return m_animBlock->GetTrack(nParamId);
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CAnimNode::SetTrack( int nParamId,IAnimTrack *track )
+void CAnimNode::SetTrack(int nParamId, IAnimTrack* track)
 {
 	if (!m_animBlock)
 		return;
-	m_animBlock->SetTrack( nParamId,track );
+	m_animBlock->SetTrack(nParamId, track);
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CAnimNode::Serialize( XmlNodeRef &xmlNode,bool bLoading )
+void CAnimNode::Serialize(XmlNodeRef& xmlNode, bool bLoading)
 {
 	if (bLoading)
 	{
-		xmlNode->getAttr( "Id",m_id );
-		const char *name = xmlNode->getAttr("Name");
+		xmlNode->getAttr("Id", m_id);
+		const char* name = xmlNode->getAttr("Name");
 		if (name)
 			SetName(name);
 	}
 	else
 	{
-		xmlNode->setAttr( "Id",m_id );
-		xmlNode->setAttr("Type", GetType() );
-		xmlNode->setAttr("Name", GetName() );
-		IAnimNode *pTgt = GetTarget();
+		xmlNode->setAttr("Id", m_id);
+		xmlNode->setAttr("Type", GetType());
+		xmlNode->setAttr("Name", GetName());
+		IAnimNode* pTgt = GetTarget();
 		if (pTgt)
 		{
 			xmlNode->setAttr("TargetId", pTgt->GetId());
@@ -491,9 +491,9 @@ void CAnimNode::Serialize( XmlNodeRef &xmlNode,bool bLoading )
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CAnimNode::SetAnimBlock( IAnimBlock *block )
+void CAnimNode::SetAnimBlock(IAnimBlock* block)
 {
 	m_animBlock = block;
 	if (m_animBlock)
-		m_animBlock->SetId( m_id );
+		m_animBlock->SetId(m_id);
 };

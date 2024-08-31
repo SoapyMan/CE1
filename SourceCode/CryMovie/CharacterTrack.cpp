@@ -17,50 +17,50 @@
 #include "CharacterTrack.h"
 
 //////////////////////////////////////////////////////////////////////////
-void CCharacterTrack::SerializeKey( ICharacterKey &key,XmlNodeRef &keyNode,bool bLoading )
+void CCharacterTrack::SerializeKey(ICharacterKey& key, XmlNodeRef& keyNode, bool bLoading)
 {
 	if (bLoading)
 	{
-		const char *str;
-		
-		str = keyNode->getAttr( "anim" );
-		strncpy( key.animation,str,sizeof(key.animation) );
-		key.animation[sizeof(key.animation)-1] = 0;
+		const char* str;
+
+		str = keyNode->getAttr("anim");
+		strncpy(key.animation, str, sizeof(key.animation));
+		key.animation[sizeof(key.animation) - 1] = 0;
 
 		key.duration = 0;
 		key.blendTime = 0;
 		key.startTime = 0;
 		key.bLoop = false;
 		key.speed = 1;
-		keyNode->getAttr( "length",key.duration );
-		keyNode->getAttr( "blend",key.blendTime );
-		keyNode->getAttr( "speed",key.speed );
-		keyNode->getAttr( "loop",key.bLoop );
-		keyNode->getAttr( "unload",key.bUnload );
-		keyNode->getAttr( "start",key.startTime );
+		keyNode->getAttr("length", key.duration);
+		keyNode->getAttr("blend", key.blendTime);
+		keyNode->getAttr("speed", key.speed);
+		keyNode->getAttr("loop", key.bLoop);
+		keyNode->getAttr("unload", key.bUnload);
+		keyNode->getAttr("start", key.startTime);
 	}
 	else
 	{
 		if (strlen(key.animation) > 0)
-			keyNode->setAttr( "anim",key.animation );
+			keyNode->setAttr("anim", key.animation);
 		if (key.duration > 0)
-			keyNode->setAttr( "length",key.duration );
+			keyNode->setAttr("length", key.duration);
 		if (key.blendTime > 0)
-			keyNode->setAttr( "blend",key.blendTime );
+			keyNode->setAttr("blend", key.blendTime);
 		if (key.speed != 1)
-			keyNode->setAttr( "speed",key.speed );
+			keyNode->setAttr("speed", key.speed);
 		if (key.bLoop)
-			keyNode->setAttr( "loop",key.bLoop );
+			keyNode->setAttr("loop", key.bLoop);
 		if (key.bUnload)
-			keyNode->setAttr( "unload",key.bUnload );
+			keyNode->setAttr("unload", key.bUnload);
 		if (key.startTime != 0)
-			keyNode->setAttr( "start",key.startTime );
+			keyNode->setAttr("start", key.startTime);
 	}
 }
 
-void CCharacterTrack::GetKeyInfo( int key,const char* &description,float &duration )
+void CCharacterTrack::GetKeyInfo(int key, const char*& description, float& duration)
 {
-	assert( key >= 0 && key < (int)m_keys.size() );
+	assert(key >= 0 && key < (int)m_keys.size());
 	CheckValid();
 	description = 0;
 	duration = 0;
@@ -70,9 +70,9 @@ void CCharacterTrack::GetKeyInfo( int key,const char* &description,float &durati
 		if (m_keys[key].bLoop)
 		{
 			float lastTime = m_timeRange.end;
-			if (key+1 < (int)m_keys.size())
+			if (key + 1 < (int)m_keys.size())
 			{
-				lastTime = m_keys[key+1].time;
+				lastTime = m_keys[key + 1].time;
 			}
 			// duration is unlimited but cannot last past end of track or time of next key on track.
 			duration = lastTime - m_keys[key].time;

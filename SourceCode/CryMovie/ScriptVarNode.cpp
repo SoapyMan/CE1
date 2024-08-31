@@ -21,10 +21,10 @@
 #include <IScriptSystem.h>
 
 //////////////////////////////////////////////////////////////////////////
-CAnimScriptVarNode::CAnimScriptVarNode( IMovieSystem *sys )
-: CAnimNode(sys)
+CAnimScriptVarNode::CAnimScriptVarNode(IMovieSystem* sys)
+	: CAnimNode(sys)
 {
-	SetFlags( GetFlags()|ANODE_FLAG_CAN_CHANGE_NAME );
+	SetFlags(GetFlags() | ANODE_FLAG_CAN_CHANGE_NAME);
 	m_dwSupportedTracks = PARAM_BIT(APARAM_FLOAT_1);
 	m_value = -1e-20f;
 }
@@ -42,7 +42,7 @@ int CAnimScriptVarNode::GetParamCount() const
 }
 
 //////////////////////////////////////////////////////////////////////////
-bool CAnimScriptVarNode::GetParamInfo( int nIndex, SParamInfo &info ) const
+bool CAnimScriptVarNode::GetParamInfo(int nIndex, SParamInfo& info) const
 {
 	if (nIndex == 0)
 	{
@@ -56,11 +56,11 @@ bool CAnimScriptVarNode::GetParamInfo( int nIndex, SParamInfo &info ) const
 }
 
 //////////////////////////////////////////////////////////////////////////
-bool CAnimScriptVarNode::GetParamInfoFromId( int paramId, SParamInfo &info ) const
+bool CAnimScriptVarNode::GetParamInfoFromId(int paramId, SParamInfo& info) const
 {
 	if (paramId == APARAM_FLOAT_1)
 	{
-		GetParamInfo( 0,info );
+		GetParamInfo(0, info);
 		return true;
 	}
 	return false;
@@ -68,15 +68,15 @@ bool CAnimScriptVarNode::GetParamInfoFromId( int paramId, SParamInfo &info ) con
 
 
 //////////////////////////////////////////////////////////////////////////
-void CAnimScriptVarNode::Animate( SAnimContext &ec )
+void CAnimScriptVarNode::Animate(SAnimContext& ec)
 {
-	IAnimBlock *anim = GetAnimBlock();
+	IAnimBlock* anim = GetAnimBlock();
 	if (!anim)
 		return;
-	
+
 	float value = m_value;
 
-	IAnimTrack *pValueTrack = anim->GetTrack(APARAM_FLOAT_1);
+	IAnimTrack* pValueTrack = anim->GetTrack(APARAM_FLOAT_1);
 	if (pValueTrack)
 	{
 		pValueTrack->GetValue(ec.time, value);
@@ -92,29 +92,29 @@ void CAnimScriptVarNode::Animate( SAnimContext &ec )
 
 void CAnimScriptVarNode::SetScriptValue()
 {
-	const char *sVarName = GetName();
-	const char *sPnt = strchr(sVarName,'.');
+	const char* sVarName = GetName();
+	const char* sPnt = strchr(sVarName, '.');
 	if (sPnt == 0)
 	{
 		// Global variable.
-		IScriptSystem *pScriptSystem = m_pMovieSystem->GetSystem()->GetIScriptSystem();
-		pScriptSystem->SetGlobalValue( sVarName,m_value );
+		IScriptSystem* pScriptSystem = m_pMovieSystem->GetSystem()->GetIScriptSystem();
+		pScriptSystem->SetGlobalValue(sVarName, m_value);
 	}
 	else
 	{
 		char sTable[256];
 		char sName[256];
-		strcpy( sTable,sVarName );
-		sTable[sPnt-sVarName] = 0;
-		strcpy( sName,sPnt+1 );
+		strcpy(sTable, sVarName);
+		sTable[sPnt - sVarName] = 0;
+		strcpy(sName, sPnt + 1);
 
 		// In Table value.
-		IScriptSystem *pScriptSystem = m_pMovieSystem->GetSystem()->GetIScriptSystem();
-		_SmartScriptObject pTable(pScriptSystem,true);
-		if (pScriptSystem->GetGlobalValue( sTable,pTable ))
+		IScriptSystem* pScriptSystem = m_pMovieSystem->GetSystem()->GetIScriptSystem();
+		_SmartScriptObject pTable(pScriptSystem, true);
+		if (pScriptSystem->GetGlobalValue(sTable, pTable))
 		{
 			// Set float value inside table.
-			pTable->SetValue( sName,m_value );
+			pTable->SetValue(sName, m_value);
 		}
 	}
 }
