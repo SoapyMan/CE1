@@ -29,33 +29,35 @@ HWND Cry_GetHWND(SDL_Window* window)
 
 void CD3D9Renderer::DisplaySplash()
 {
-	return;
-	//
-	//#ifdef GAME_IS_FARCRY
-	//	HBITMAP hImage = (HBITMAP)LoadImage(GetModuleHandle(0), "fcsplash.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
-	//#else
-	//	HBITMAP hImage = (HBITMAP)LoadImage(GetModuleHandle(0), "splash.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
-	//#endif
-	//
-	//	if (hImage != INVALID_HANDLE_VALUE)
-	//	{
-	//		RECT rect;
-	//		HDC hDC = GetDC(m_hWnd);
-	//		HDC hDCBitmap = CreateCompatibleDC(hDC);
-	//		BITMAP bm;
-	//
-	//		GetClientRect(m_hWnd, &rect);
-	//		GetObject(hImage, sizeof(bm), &bm);
-	//		SelectObject(hDCBitmap, hImage);
-	//
-	//		DWORD x = rect.left + (((rect.right-rect.left)-bm.bmWidth) >> 1);
-	//		DWORD y = rect.top + (((rect.bottom-rect.top)-bm.bmHeight) >> 1);
-	//
-	//		BitBlt(hDC, x, y, bm.bmWidth, bm.bmHeight, hDCBitmap, 0, 0, SRCCOPY);
-	//
-	//		DeleteObject(hImage);
-	//		DeleteDC(hDCBitmap);
-	//	}
+#ifdef _WIN32
+#ifdef GAME_IS_FARCRY
+	HBITMAP hImage = (HBITMAP)LoadImage(GetModuleHandle(0), "fcsplash.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+#else
+	HBITMAP hImage = (HBITMAP)LoadImage(GetModuleHandle(0), "splash.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+#endif
+	
+	if (hImage != INVALID_HANDLE_VALUE)
+	{
+		HWND hWnd = Cry_GetHWND(m_hWnd);
+
+		RECT rect;
+		HDC hDC = GetDC(hWnd);
+		HDC hDCBitmap = CreateCompatibleDC(hDC);
+		BITMAP bm;
+	
+		GetClientRect(hWnd, &rect);
+		GetObject(hImage, sizeof(bm), &bm);
+		SelectObject(hDCBitmap, hImage);
+	
+		DWORD x = rect.left + (((rect.right-rect.left)-bm.bmWidth) >> 1);
+		DWORD y = rect.top + (((rect.bottom-rect.top)-bm.bmHeight) >> 1);
+	
+		BitBlt(hDC, x, y, bm.bmWidth, bm.bmHeight, hDCBitmap, 0, 0, SRCCOPY);
+	
+		DeleteObject(hImage);
+		DeleteDC(hDCBitmap);
+	}
+#endif
 }
 
 void CD3D9Renderer::UnSetRes()
@@ -202,6 +204,8 @@ HRESULT CD3D9Renderer::InvalidateDeviceObjects()
 
 	//iLog->Log("...InvalidateDeviceObjects");
 
+	m_pd3dDevice->EvictManagedResources();
+
 	m_nFrameReset++;
 	SAFE_RELEASE(m_pVB2D);
 	SAFE_RELEASE(m_pIB);
@@ -271,12 +275,11 @@ HRESULT CD3D9Renderer::InvalidateDeviceObjects()
 				pID3DCubeTexture = (IDirect3DCubeTexture9*)tp->m_RefTex.m_VidTex;
 				hr = pID3DCubeTexture->GetCubeMapSurface((D3DCUBEMAP_FACES)0, 0, &pSurf);
 			}
-			else
-				if (tp->m_eTT == eTT_Base || tp->m_eTT == eTT_Bumpmap || tp->m_eTT == eTT_Rectangle || tp->m_eTT == eTT_DSDTBump)
-				{
-					pID3DTexture = (IDirect3DTexture9*)tp->m_RefTex.m_VidTex;
-					hr = pID3DTexture->GetSurfaceLevel(0, &pSurf);
-				}
+			else if (tp->m_eTT == eTT_Base || tp->m_eTT == eTT_Bumpmap || tp->m_eTT == eTT_Rectangle || tp->m_eTT == eTT_DSDTBump)
+			{
+				pID3DTexture = (IDirect3DTexture9*)tp->m_RefTex.m_VidTex;
+				hr = pID3DTexture->GetSurfaceLevel(0, &pSurf);
+			}
 			if (!pSurf)
 				continue;
 			hr = pSurf->GetDesc(&Desc);
@@ -1421,15 +1424,12 @@ HRESULT CD3D9Renderer::Initialize3DEnvironment()
 	{
 		if (m_D3DSettings.GetVertexProcessingType() == SOFTWARE_VP)
 			behaviorFlags |= D3DCREATE_SOFTWARE_VERTEXPROCESSING;
-		else
-			if (m_D3DSettings.GetVertexProcessingType() == MIXED_VP)
-				behaviorFlags |= D3DCREATE_MIXED_VERTEXPROCESSING;
-			else
-				if (m_D3DSettings.GetVertexProcessingType() == HARDWARE_VP)
-					behaviorFlags |= D3DCREATE_HARDWARE_VERTEXPROCESSING;
-				else
-					if (m_D3DSettings.GetVertexProcessingType() == PURE_HARDWARE_VP)
-						behaviorFlags |= D3DCREATE_HARDWARE_VERTEXPROCESSING | D3DCREATE_PUREDEVICE;
+		else if (m_D3DSettings.GetVertexProcessingType() == MIXED_VP)
+			behaviorFlags |= D3DCREATE_MIXED_VERTEXPROCESSING;
+		else if (m_D3DSettings.GetVertexProcessingType() == HARDWARE_VP)
+			behaviorFlags |= D3DCREATE_HARDWARE_VERTEXPROCESSING;
+		else if (m_D3DSettings.GetVertexProcessingType() == PURE_HARDWARE_VP)
+			behaviorFlags |= D3DCREATE_HARDWARE_VERTEXPROCESSING | D3DCREATE_PUREDEVICE;
 	}
 
 	HWND hWnd = Cry_GetHWND(m_hWnd);
