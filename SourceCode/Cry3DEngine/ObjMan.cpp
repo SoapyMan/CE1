@@ -30,6 +30,52 @@ double CObjManager::m_dMakeObjectTime = 0;
 double CObjManager::m_dCIndexedMesh__LoadMaterial = 0;
 double CObjManager::m_dUpdateCustomLightingSpritesAndShadowMaps = 0;
 
+const int cryHash(int hash, int value)
+{
+	hash *= 31;
+	hash += value;
+	return hash;
+}
+
+const int cryStrHash(const char* str, bool caseIns = false, int length = -1)
+{
+	if (!str)
+		return 0;
+
+	const int StringHashBits = 24;
+	const int StringHashMask = ((1 << StringHashBits) - 1);
+
+	assert(str);
+	int len = length >= 0 ? length : strlen(str);
+	const char* ptr = str;
+
+	int hash = len;
+	for (; len > 0; --len)
+	{
+		int v1 = hash >> 19;
+		int v0 = hash << 5;
+
+		int chr = caseIns ? tolower(*ptr) : *ptr;
+
+		hash = ((v0 | v1) + chr) & StringHashMask;
+		++ptr;
+	}
+
+	return hash;
+
+}
+
+const int objManHashObj(const char* __szFileName,
+	const char* _szGeomName,
+	EVertsSharing eVertsSharing,
+	bool bLoadAdditinalInfo,
+	bool bKeepInLocalSpace)
+{
+	int hash = cryStrHash(__szFileName, true) | ((eVertsSharing | bKeepInLocalSpace << 1 | bLoadAdditinalInfo << 2) << 24);
+	hash = cryHash(hash, cryStrHash(_szGeomName ? _szGeomName : "", true));
+	return hash;
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Register / Unregister in sectors
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -345,16 +391,17 @@ void CObjManager::CheckObjectLeaks(bool bDeleteAll)
 
 	for (ObjectsMap::iterator it = m_lstLoadedObjects.begin(); it != m_lstLoadedObjects.end(); ++it)
 	{
-		if (!(*it)->IsDefaultObject())
+		CStatObj* obj = it->second;
+		if (!obj->IsDefaultObject())
 		{
-			if ((*it)->m_szGeomName[0])
-				GetLog()->Log("Warning: object not deleted: %s / %s", (*it)->m_szFileName, (*it)->m_szGeomName);
+			if (obj->m_szGeomName[0])
+				GetLog()->Log("Warning: object not deleted: %s / %s", obj->m_szFileName, obj->m_szGeomName);
 			else
-				GetLog()->Log("Warning: object not deleted: %s", (*it)->m_szFileName);
+				GetLog()->Log("Warning: object not deleted: %s", obj->m_szFileName);
 		}
 
 		if (bDeleteAll)
-			delete (*it);
+			delete obj;
 	}
 
 	if (bDeleteAll)
@@ -382,15 +429,18 @@ CStatObj* CObjManager::MakeObject(const char* __szFileName,
 {
 	AUTO_PROFILE_SECTION(GetTimer(), CObjManager::m_dMakeObjectTime);
 
+	assert(__szFileName && __szFileName[0]);
+
 	if (!strcmp(__szFileName, "NOFILE"))
 	{ // make ampty object to be filled from outside
-		CStatObj* pObject = new CStatObj();
+		ObjectsMap::iterator it = m_lstLoadedObjects.find(0);
+		if (it == m_lstLoadedObjects.end())
+			it = m_lstLoadedObjects.insert_or_assign(0, new CStatObj()).first;
+
+		CStatObj* pObject = it->second;
 		pObject->RegisterUser();
-		m_lstLoadedObjects.insert(pObject);
 		return pObject;
 	}
-
-	assert(__szFileName && __szFileName[0]);
 
 	char szFileName[MAX_PATH_LENGTH];
 
@@ -413,64 +463,57 @@ CStatObj* CObjManager::MakeObject(const char* __szFileName,
 		strncpy(&szFileName[nLen - 4], &szFileName[nLen - 3], 4);
 	}
 
-	// Construct tmp object for search
-	CStatObj tmp;
-	strcpy(tmp.m_szFileName, szFileName);
-	strcpy(tmp.m_szGeomName, _szGeomName ? _szGeomName : "");
-	tmp.m_bKeepInLocalSpace = bKeepInLocalSpace;
-	tmp.m_bLoadAdditinalInfo = bLoadAdditinalInfo;
-	tmp.m_eVertsSharing = eVertsSharing;
-	//	tmp.m_bCalcLighting			== s2->m_bCalcLighting);
-	//	tmp.m_bMakePhysics			== s2->m_bMakePhysics);
+	// [Anton] - always use new cgf for objects used for cloth simulation
+	const bool isCloth = _szGeomName && strcmp(_szGeomName, "cloth") == 0;
 
-  // Try to find already loaded object
-	if (!_szGeomName || !*_szGeomName || strcmp(_szGeomName, "cloth"))
-	{	// [Anton] - always use new cgf for objects used for cloth simulation
-		ObjectsMap::iterator it = m_lstLoadedObjects.find(&tmp);
-		if (it != m_lstLoadedObjects.end())
-		{
-			assert(stricmp((*it)->m_szFileName, szFileName) == 0 && // compare file name
-				(!_szGeomName || stricmp((*it)->m_szGeomName, _szGeomName) == 0)); // compare geom name
-
-			(*it)->RegisterUser();
-			return (*it);
-		}
-
+	int objHash = objManHashObj(szFileName, _szGeomName, eVertsSharing, bLoadAdditinalInfo, bKeepInLocalSpace);
+	ObjectsMap::iterator it = m_lstLoadedObjects.find(objHash);
+	if (it == m_lstLoadedObjects.end())
+	{
 		// if ccfg was requested - change extension to cgf
-		tmp.m_szFileName[strlen(tmp.m_szFileName) - 2] = 0;
-		strcat(tmp.m_szFileName, "cgf");
+		char szFileNameCCGFTest[MAX_PATH_LENGTH];
+		strcpy(szFileNameCCGFTest, szFileName);
 
-		// Try to find already loaded object
-		it = m_lstLoadedObjects.find(&tmp);
-		if (it != m_lstLoadedObjects.end())
-		{
-			assert(stricmp((*it)->m_szFileName, tmp.m_szFileName) == 0 && // compare file name
-				(!_szGeomName || stricmp((*it)->m_szGeomName, _szGeomName) == 0)); // compare geom name
+		szFileNameCCGFTest[strlen(szFileNameCCGFTest) - 2] = 0;
+		strcat(szFileNameCCGFTest, "cgf");
 
-			(*it)->RegisterUser();
-			return (*it);
-		}
+		objHash = objManHashObj(szFileNameCCGFTest, _szGeomName, eVertsSharing, bLoadAdditinalInfo, bKeepInLocalSpace);
+		it = m_lstLoadedObjects.find(objHash);
+	}
+
+	if (it != m_lstLoadedObjects.end())
+	{
+		CStatObj* obj = it->second;
+		assert(stricmp(obj->m_szFileName, szFileName) == 0 && // compare file name
+			(!_szGeomName || stricmp(obj->m_szGeomName, _szGeomName) == 0)); // compare geom name
+
+		obj->RegisterUser();
+		return obj;
 	}
 
 	// Load new CGF
 	CStatObj* pObject = new CStatObj();
 	if (!pObject->Load(szFileName, _szGeomName, eVertsSharing, bLoadAdditinalInfo, bKeepInLocalSpace, bLoadLater))
 	{
+		delete pObject;
+
 		// object not found
 		// if geom name is specified - just return 0
 		if (_szGeomName && _szGeomName[0])
-		{
-			delete pObject;
-			return 0;
-		}
-
+			return NULL;
+	
 		if (!m_pDefaultCGF)
 			GetConsole()->Exit("Error: CObjManager::MakeObject: Default object not found");
 
 		// return default object
 		m_pDefaultCGF->RegisterUser();
-		delete pObject;
 		return m_pDefaultCGF;
+	}
+
+	if (!isCloth)
+	{
+		objHash = objManHashObj(pObject->m_szFileName, _szGeomName, eVertsSharing, bLoadAdditinalInfo, bKeepInLocalSpace);
+		m_lstLoadedObjects.insert_or_assign(objHash, pObject);
 	}
 
 	// now try to load lods
@@ -480,43 +523,34 @@ CStatObj* CObjManager::MakeObject(const char* __szFileName,
 	  //  pObject->UpdateCustomLightingSpritesAndShadowMaps(m_vOutdoorAmbientColor, 0, fBackSideLevel, bCalcLighting );
 
 	pObject->RegisterUser();
-	m_lstLoadedObjects.insert(pObject);
-
 	return pObject;
 }
 
 bool CObjManager::ReleaseObject(CStatObj* pObject)
 {
-	//	ObjectsMap::iterator it = m_lstLoadedObjects.find( pObject );
-		//if (it != m_lstLoadedObjects.end())
-
 	for (ObjectsMap::iterator it = m_lstLoadedObjects.begin(); it != m_lstLoadedObjects.end(); ++it)
-		if ((CStatObj*)(*it) == pObject)
+	{
+		if (it->second != pObject)
+			continue;
+
+		pObject->UnregisterUser();
+		if (pObject->m_nUsers <= 0 && !m_bLockCGFResources)
 		{
-			assert(pObject == (CStatObj*)(*it));
-
-			CStatObj* p = (CStatObj*)(*it);
-
-			pObject->UnregisterUser();
-
-			if (pObject->m_nUsers <= 0 && !m_bLockCGFResources)
-			{
-				GetLog()->Log("Object unloaded: %s  %s", pObject->m_szFileName, pObject->m_szGeomName);
-				m_lstLoadedObjects.erase(it);
+			GetLog()->Log("Object unloaded: %s  %s", pObject->m_szFileName, pObject->m_szGeomName);
+			m_lstLoadedObjects.erase(it);
 
 #ifdef _DEBUG
-				// check that there is no other copies
-	//			ObjectsMap::iterator it_test = m_lstLoadedObjects.find( pObject );
-		//		assert(it_test == m_lstLoadedObjects.end());
-				for (ObjectsMap::iterator it2 = m_lstLoadedObjects.begin(); it2 != m_lstLoadedObjects.end(); ++it2)
-					assert((CStatObj*)(*it2) != pObject);
+			// check that there is no other copies
+//			ObjectsMap::iterator it_test = m_lstLoadedObjects.find( pObject );
+	//		assert(it_test == m_lstLoadedObjects.end());
+			for (ObjectsMap::iterator it2 = m_lstLoadedObjects.begin(); it2 != m_lstLoadedObjects.end(); ++it2)
+				assert((CStatObj*)(*it2) != pObject);
 #endif
 
-				delete pObject;
-			}
-
-			return true;
+			delete pObject;
 		}
+		return true;
+	}
 
 	return false; // not found
 }
@@ -789,7 +823,8 @@ int CObjManager::GetMemoryUsage(class ICrySizer* pSizer)
 	nSize += m_lstLoadedObjects.size() * sizeof(CStatObj*);
 	for (ObjectsMap::iterator it = m_lstLoadedObjects.begin(); it != m_lstLoadedObjects.end(); ++it)
 	{
-		nSize += ((CStatObj*)(*it))->GetMemoryUsage();
+		CStatObj* obj = it->second;
+		nSize += obj->GetMemoryUsage();
 		nSize += sizeof(CStatObj);
 	}
 	nSize += m_lstStaticTypes.GetMemoryUsage();
@@ -909,7 +944,7 @@ void CObjManager::FreeNotUsedCGFs()
 		for (ObjectsMap::iterator it = m_lstLoadedObjects.begin(); it != m_lstLoadedObjects.end(); it = next)
 		{
 			next = it; next++;
-			CStatObj* p = (CStatObj*)(*it);
+			CStatObj* p = it->second;
 			if (p->m_nUsers <= 0)
 			{
 				GetLog()->Log("Object unloaded: %s  %s", p->m_szFileName, p->m_szGeomName);

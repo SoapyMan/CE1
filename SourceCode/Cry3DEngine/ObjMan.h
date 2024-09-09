@@ -104,35 +104,7 @@ public:
   list2<CStatObjInst*> m_lstFarObjects[2];
 
 protected:
-	struct string_less
-	{
-		bool operator()( CStatObj *s1,CStatObj *s2 ) const
-		{
-			int nFileCmpRes = stricmp(s1->m_szFileName,s2->m_szFileName);
-			if(!nFileCmpRes) // if file name is the same - compare just geom names
-			{
-				int nObjCmpRes = stricmp(s1->m_szGeomName,s2->m_szGeomName);
-
-				if(nObjCmpRes==0)
-				{
-					if(s1->m_eVertsSharing == s2->m_eVertsSharing)
-					{
-						assert(s1->m_bKeepInLocalSpace	== s2->m_bKeepInLocalSpace);
-						//					assert(s1->m_bMakePhysics				== s2->m_bMakePhysics);
-						//					assert(s1->m_bCalcLighting			== s2->m_bCalcLighting);
-						return s1->m_bLoadAdditinalInfo < s2->m_bLoadAdditinalInfo;
-					}
-					
-					return s1->m_eVertsSharing < s2->m_eVertsSharing;
-				}
-
-				return nObjCmpRes < 0;
-			}
-
-			return nFileCmpRes < 0;
-		}
-	};
-	typedef std::set<CStatObj*,string_less> ObjectsMap;
+	typedef std::map<int, CStatObj*> ObjectsMap;
 	ObjectsMap m_lstLoadedObjects;
 
   void InitFarState();

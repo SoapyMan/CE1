@@ -26,25 +26,24 @@ float CStatObj::m_fStreamingTimePerFrame = 0;
 
 void CStatObj::FreeTriData()
 {
-	delete m_pTriData;
-	m_pTriData = 0;
+	SAFE_DELETE(m_pTriData);
 }
 
 const char* CStatObj::GetScriptMaterialName(int Id)
 {
 	CLeafBuffer* lb = m_pLeafBuffer;
+	list2<CMatInfo>& matInfos = *lb->m_pMats;
 	if (Id < 0)
 	{
-		for (int i = 0; i < lb->m_pMats->Count(); i++)
+		for (int i = 0; i < matInfos.Count(); i++)
 		{
-			if ((*lb->m_pMats)[i].sScriptMaterial[0])
-				return (*lb->m_pMats)[i].sScriptMaterial;
+			if (matInfos[i].sScriptMaterial[0])
+				return matInfos[i].sScriptMaterial;
 		}
 		return NULL;
 	}
-	else
-		if (Id < lb->m_pMats->Count() && (*lb->m_pMats)[Id].sScriptMaterial[0])
-			return (*lb->m_pMats)[Id].sScriptMaterial;
+	else if (Id < matInfos.Count() && matInfos[Id].sScriptMaterial[0])
+		return matInfos[Id].sScriptMaterial;
 
 	return NULL;
 }
@@ -127,8 +126,9 @@ CStatObj::~CStatObj()
 	ShutDown();
 
 	for (int i = 0; i < MAX_STATOBJ_LODS_NUM; i++)
-		if (m_arrpLowLODs[i])
-			delete m_arrpLowLODs[i];
+	{
+		SAFE_DELETE(m_arrpLowLODs[i]);
+	}
 }
 
 void CStatObj::ShutDown()
@@ -138,59 +138,45 @@ void CStatObj::ShutDown()
 
 	if (m_pTriData)
 		m_pTriData->FreeLMInfo();
+	SAFE_DELETE(m_pTriData);
 
-	//	assert (IsHeapValid());
-
-	delete m_pTriData;
-	m_pTriData = 0;
-
-	//	assert (IsHeapValid());
-
-	for (int n = 0; n < 2; n++)
+	for (int n = 0; n < MAX_PHYS_GEOMS_IN_CGF; n++)
+	{
 		if (m_arrPhysGeomInfo[n])
 			GetPhysicalWorld()->GetGeomManager()->UnregisterGeometry(m_arrPhysGeomInfo[n]);
-
-	//	assert (IsHeapValid());
+	}
 
 	if (m_pSMLSource && m_pSMLSource->m_LightFrustums.Count() && m_pSMLSource->m_LightFrustums[0].pModelsList)
 		delete m_pSMLSource->m_LightFrustums[0].pModelsList;
-	delete m_pSMLSource;
+	SAFE_DELETE(m_pSMLSource);
 
-	//	assert (IsHeapValid());
-
-	if (m_pLeafBuffer && !m_pLeafBuffer->m_bMaterialsWasCreatedInRenderer)
+	CLeafBuffer* lb = m_pLeafBuffer;
+	if (lb)
 	{
-		for (int i = 0; i < (*m_pLeafBuffer->m_pMats).Count(); i++)
+		if (!lb->m_bMaterialsWasCreatedInRenderer)
 		{
-			CMatInfo* mi = m_pLeafBuffer->m_pMats->Get(i);
-			if (mi->pRE)
-				mi->pRE->Release();
-			if (mi->shaderItem.m_pShader)
-				mi->shaderItem.m_pShader->Release();
-			if (mi->shaderItem.m_pShaderResources)
-				mi->shaderItem.m_pShaderResources->Release();
+			//list2<CMatInfo>& matInfos = *lb->m_pMats;
+			//for (int i = 0; i < matInfos.Count(); i++)
+			//{
+			//	CMatInfo& mi = matInfos[i];
+			//	SAFE_RELEASE(mi.pRE);
+			//	SAFE_RELEASE(mi.shaderItem.m_pShader);
+			//	SAFE_RELEASE(mi.shaderItem.m_pShaderResources);
+			//}
+			SAFE_DELETE(m_pLeafBuffer->m_pMats);
 		}
-		delete m_pLeafBuffer->m_pMats;
-		m_pLeafBuffer->m_pMats = 0;
+
+		GetRenderer()->DeleteLeafBuffer(lb);
 	}
-
-	//	assert (IsHeapValid());
-
-	GetRenderer()->DeleteLeafBuffer(m_pLeafBuffer);
-	m_pLeafBuffer = 0;
-
-	//	assert (IsHeapValid());
+	m_pLeafBuffer = NULL;
 
 	for (int i = 0; i < FAR_TEX_COUNT; i++)
+	{
 		if (m_arrSpriteTexID[i])
 			GetRenderer()->RemoveTexture(m_arrSpriteTexID[i]);
-
-	if (m_pSvObj)
-	{
-		//		assert (IsHeapValid());
-		m_pSvObj->Release();
-		m_pSvObj = NULL;
 	}
+
+	SAFE_RELEASE(m_pSvObj);
 
 	for (int i = 0; i < MAX_STATOBJ_LODS_NUM; i++)
 	{
@@ -249,43 +235,49 @@ void CStatObj::MakeLeafBuffer(bool bSortAndShareVerts)
 		return;
 
 	assert(!m_pLeafBuffer);
+
 	m_pLeafBuffer = GetRenderer()->CreateLeafBuffer(eBT_Static, "StatObj");
 
 	m_pLeafBuffer->m_pMats = new list2<CMatInfo>;
 	m_pLeafBuffer->m_pMats->AddList(m_pTriData->m_lstMatTable);
 
-	if (bSortAndShareVerts)
-		bSortAndShareVerts = bSortAndShareVerts;
-
 	if (m_pTriData->m_nFaceCount)
+	{
 		m_pLeafBuffer->CreateBuffer(m_pTriData, bSortAndShareVerts, true, //false,);
 			m_pTriData->m_lstGeomNames.Count() > 0 && strstr(m_pTriData->m_lstGeomNames[0], "cloth") != 0);
+	}
 
 	// remove materials without geometry
-	if (m_bIgnoreFakeMaterialsInCGF)
-		if (m_pLeafBuffer && !m_pLeafBuffer->m_bMaterialsWasCreatedInRenderer)
+	if (!m_bIgnoreFakeMaterialsInCGF)
+		return;
+	
+	CLeafBuffer* lb = m_pLeafBuffer;
+	list2<CMatInfo>& matInfos = *lb->m_pMats;
+	if (lb && !lb->m_bMaterialsWasCreatedInRenderer)
+	{
+		for (int i = 0; i < matInfos.Count(); i++)
 		{
-			for (int i = 0; i < (*m_pLeafBuffer->m_pMats).Count(); i++)
+			CMatInfo& mi = matInfos[i];
+			if (!mi.pRE || !mi.nNumIndices || !mi.nNumVerts)
 			{
-				CMatInfo* mi = m_pLeafBuffer->m_pMats->Get(i);
-				if (!mi->pRE || !mi->nNumIndices || !mi->nNumVerts)
-				{
-					SAFE_RELEASE(mi->shaderItem.m_pShader);
-					SAFE_RELEASE(mi->shaderItem.m_pShaderResources);
-					m_pLeafBuffer->m_pMats->Delete(i);
+				//SAFE_RELEASE(mi.pRE);
+				//SAFE_RELEASE(mi.shaderItem.m_pShader);
+				//SAFE_RELEASE(mi.shaderItem.m_pShaderResources);
+				matInfos.Delete(i);
 
-					if (i < m_lstShaderTemplates.Num())
-						m_lstShaderTemplates.DelElem(i);
-					i--;
-				}
-				else
-					mi->pRE->m_pChunk = mi;
+				if (i < m_lstShaderTemplates.Num())
+					m_lstShaderTemplates.DelElem(i);
+				i--;
 			}
+			else
+				mi.pRE->m_pChunk = &mi;
 		}
 
-	int nDeleted = m_pTriData->m_lstMatTable.Count() - m_pLeafBuffer->m_pMats->Count();
-	if (nDeleted)
-		CryLogComment("  %d not used material slots removed", nDeleted);
+		int nDeleted = m_pTriData->m_lstMatTable.Count() - m_pLeafBuffer->m_pMats->Count();
+		if (nDeleted)
+			CryLogComment("  %d not used material slots removed", nDeleted);
+	}
+
 }
 
 //////////////////////////////////////////////////////////////////////////

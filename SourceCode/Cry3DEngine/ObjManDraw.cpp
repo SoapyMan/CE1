@@ -202,7 +202,7 @@ void CObjManager::PrefechObjects()
 {
 	for (ObjectsMap::iterator it = m_lstLoadedObjects.begin(); it != m_lstLoadedObjects.end(); ++it)
 	{
-		CStatObj* pStatObj = (*it);
+		CStatObj* pStatObj = it->second;
 		SRendParams params;
 		params.nDLightMask = 1;
 		GetRenderer()->EF_StartEf();

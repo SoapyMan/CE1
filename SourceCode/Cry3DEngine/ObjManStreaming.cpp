@@ -44,12 +44,13 @@ void CObjManager::PreloadNearObjects()
 	// load marked objects
 		for (ObjectsMap::iterator it = m_lstLoadedObjects.begin(); it != m_lstLoadedObjects.end(); ++it)
 		{
-			if ((*it)->m_bUseStreaming && !(*it)->GetLeafBuffer() && (*it)->m_nMarkedForStreamingFrameId > GetFrameID() + 10)
+			CStatObj* obj = it->second;
+			if (obj->m_bUseStreaming && !obj->GetLeafBuffer() && obj->m_nMarkedForStreamingFrameId > GetFrameID() + 10)
 			{	// streaming
 				CStatObj::m_fStreamingTimePerFrame -= GetTimer()->GetAsyncCurTime();
-				bool bRes = (*it)->Load((*it)->m_szFileName, (*it)->m_szGeomName[0] ? (*it)->m_szGeomName : 0,
-					(*it)->m_eVertsSharing, (*it)->m_bLoadAdditinalInfo, (*it)->m_bKeepInLocalSpace, false);
-				(*it)->m_bUseStreaming = true;
+				bool bRes = obj->Load(obj->m_szFileName, obj->m_szGeomName[0] ? obj->m_szGeomName : 0,
+					obj->m_eVertsSharing, obj->m_bLoadAdditinalInfo, obj->m_bKeepInLocalSpace, false);
+				obj->m_bUseStreaming = true;
 				CStatObj::m_fStreamingTimePerFrame += GetTimer()->GetAsyncCurTime();
 			}
 
@@ -64,7 +65,7 @@ void CObjManager::CheckUnload()
 	if (GetCVars()->e_stream_cgf)
 		for (ObjectsMap::iterator it = m_lstLoadedObjects.begin(); it != m_lstLoadedObjects.end(); ++it)
 		{
-			CStatObj* pStatObj = (*it);
+			CStatObj* pStatObj = it->second;
 			if (pStatObj->m_bUseStreaming && pStatObj->GetLeafBuffer() &&
 				crymax(pStatObj->m_nLastRendFrameId, pStatObj->m_nMarkedForStreamingFrameId) < GetFrameID() - 100)
 			{
@@ -89,8 +90,9 @@ void CObjManager::CheckUnload()
 	if (GetFrameID() % 32 == 0)
 		for (ObjectsMap::iterator it = m_lstLoadedObjects.begin(); it != m_lstLoadedObjects.end(); ++it)
 		{
-			if ((*it)->GetLeafBuffer() && (*it)->GetShadowVolume())
-				(*it)->GetShadowVolume()->CheckUnload();
+			CStatObj* pStatObj = it->second;
+			if (pStatObj->GetLeafBuffer() && pStatObj->GetShadowVolume())
+				pStatObj->GetShadowVolume()->CheckUnload();
 		}
 }
 
@@ -100,18 +102,19 @@ void CObjManager::GetObjectsStreamingStatus(int& nReady, int& nTotalInStreaming,
 	for (ObjectsMap::iterator it = m_lstLoadedObjects.begin(); it != m_lstLoadedObjects.end(); ++it)
 	{
 		nTotal++;
-		if ((*it)->m_bUseStreaming)
+		CStatObj* pStatObj = it->second;
+		if (pStatObj->m_bUseStreaming)
 		{
 			nTotalInStreaming++;
-			if ((*it)->GetLeafBuffer())
+			if (pStatObj->GetLeafBuffer())
 			{
-				CStatObj* p = (*it);
+				CStatObj* p = pStatObj;
 				nReady++;
 			}
 		}
 		else
 		{
-			CStatObj* p = (*it);
+			CStatObj* p = pStatObj;
 			p = p;
 			p->m_szFileName;
 		}
