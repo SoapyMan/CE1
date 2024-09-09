@@ -271,8 +271,7 @@ void CEntity::ShutDown()
 	SAFE_RELEASE(m_pContainer);
 	m_bUpdateContainer = false;
 
-	if (m_pScriptObject)
-		m_pScriptObject->Release();
+	SAFE_RELEASE(m_pScriptObject);
 
 	//if (HaveCamera() && m_lstBindings.empty())
 	//SetCamera(0);
@@ -280,11 +279,7 @@ void CEntity::ShutDown()
 	SAFE_RELEASE(m_pCamera);
 	m_bUpdateCamera = false;
 
-	if (m_pDynLight)
-	{
-		delete m_pDynLight;
-		m_pDynLight = NULL;
-	}
+	SAFE_DELETE(m_pDynLight);
 
 	UnregisterInSector();
 
@@ -303,6 +298,8 @@ void CEntity::ShutDown()
 		m_pISystem->GetIRenderer()->RemoveTexture((* it).image);
 		}*/
 	}
+	m_objects.clear();
+
 	std::vector < IStatObj* >::iterator itaux;
 	for (itaux = m_auxObjects.begin(); itaux < m_auxObjects.end(); itaux++) if (*itaux)
 		m_pISystem->GetI3DEngine()->ReleaseObject(*itaux);
@@ -335,11 +332,7 @@ void CEntity::ShutDown()
 		m_pISystem->GetIPhysicalWorld()->DestroyPhysicalEntity(m_pBBox);
 		m_pBBox = NULL;
 	}
-	if (m_pPhysState)
-	{
-		delete[] m_pPhysState;
-		m_pPhysState = 0;
-	}
+	SAFE_DELETE_ARRAY(m_pPhysState);
 
 	//	delete m_pLSource;
 	//	m_pLSource=0;
@@ -384,8 +377,7 @@ void CEntity::ShutDown()
 	//////////////////////////////////////////////////////////////////////////
 	// Delete colliders list.
 	//////////////////////////////////////////////////////////////////////////
-	delete m_pColliders;
-	m_pColliders = NULL;
+	SAFE_DELETE( m_pColliders);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -994,11 +986,7 @@ void CEntity::Reset()
 		}
 
 	// Remove all colliders.
-	if (m_pColliders)
-	{
-		delete m_pColliders;
-		m_pColliders = NULL;
-	}
+	SAFE_DELETE(m_pColliders);
 }
 
 //////////////////////////////////////////////////////////////////////////
