@@ -270,10 +270,8 @@ void CStatObj::MakeLeafBuffer(bool bSortAndShareVerts)
 				CMatInfo* mi = m_pLeafBuffer->m_pMats->Get(i);
 				if (!mi->pRE || !mi->nNumIndices || !mi->nNumVerts)
 				{
-					if (mi->shaderItem.m_pShader)
-						mi->shaderItem.m_pShader->Release();
-					if (mi->shaderItem.m_pShaderResources)
-						mi->shaderItem.m_pShaderResources->Release();
+					SAFE_RELEASE(mi->shaderItem.m_pShader);
+					SAFE_RELEASE(mi->shaderItem.m_pShaderResources);
 					m_pLeafBuffer->m_pMats->Delete(i);
 
 					if (i < m_lstShaderTemplates.Num())

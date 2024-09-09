@@ -156,7 +156,7 @@ void WritePCX(char* name, byte* data, byte* pal, int width, int height)
 	*pack++ = 0x0c;
 	for (i = 0; i < 768; i++)
 		*pack++ = *pal++;
-	len = pack - (byte*)pcx;
+	len = static_cast<int>(pack - (byte*)pcx);
 	fp = fxopen(name, "wb");
 	if (!fp)
 		return;

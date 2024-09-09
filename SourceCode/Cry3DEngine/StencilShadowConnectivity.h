@@ -395,7 +395,7 @@ public:
 
 		fprintf(out,"%d Vertices:\n",m_numVertices);
 
-		fprintf(out,"Faces:\n",m_numFaces);
+		fprintf(out,"Faces:\n");
 		for(unsigned i=0;i<m_numFaces;i++)
 			fprintf(out,"   vertex indices={%d,%d,%d}\n",m_pFaces[i].getVertex(0),m_pFaces[i].getVertex(1),m_pFaces[i].getVertex(2));
 

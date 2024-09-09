@@ -307,7 +307,7 @@ const char* CCryPak::AdjustFileName(const char* src, char* dst, unsigned nFlags,
 		*++pEnd = '\0';
 	}
 
-	unsigned nLength = pEnd - dst;
+	unsigned int nLength = unsigned int(pEnd - dst);
 
 	if (bFoundInPak)
 		*bFoundInPak = false;

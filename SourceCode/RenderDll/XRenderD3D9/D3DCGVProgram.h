@@ -855,7 +855,7 @@ public:
 
   void mfDelInst()
   {
-    if(m_Insts[m_CurInst].m_CGProgram && (int)m_Insts[m_CurInst].m_CGProgram != -1)
+    if(m_Insts[m_CurInst].m_CGProgram && (INT_PTR)m_Insts[m_CurInst].m_CGProgram != -1)
     {
       if (m_Insts[m_CurInst].m_BindConstants)
         delete m_Insts[m_CurInst].m_BindConstants;

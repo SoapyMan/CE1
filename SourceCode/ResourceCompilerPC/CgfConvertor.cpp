@@ -1024,7 +1024,7 @@ void CGFConvertor::writeTangSkin(unsigned nLOD)
 		if (fCos < fMinCos && fabs(fCos)>1e-2)
 			fMinCos = fCos;
 	}
-	Log("Validated tangents difference: the error is no more than %g degrees", cry_acosf(fMinCos) * 180 / M_PI);
+	Log("Validated tangents difference: the error is no more than %g degrees", cry_acosf(fMinCos) * 180 / gf_PI);
 
 	//
 	//////////////////////////////////////////////////////////////////////////

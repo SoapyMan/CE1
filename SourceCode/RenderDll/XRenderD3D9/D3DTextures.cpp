@@ -4506,7 +4506,7 @@ void CD3D9TexMan::Update()
 				Size += Texs[i]->m_Size;
 				PartSize += Texs[i]->m_LoadedSize;
 			}
-			fprintf(fp, "*** Total Size: %d\n\n", Size, PartSize, PartSize);
+			fprintf(fp, "*** Total Size: %d\n\n", Size);
 
 			Texs.Free();
 		}

@@ -3804,7 +3804,7 @@ void CAISystem::FlushSystem(void)
 
 
 	// clear building id's
-	IntIntMultiMap::iterator iim = m_mapBuildingMap.begin();
+	VisIntMultiMap::iterator iim = m_mapBuildingMap.begin();
 	for (; iim != m_mapBuildingMap.end(); ++iim)
 	{
 		m_BuildingIDManager.FreeId(iim->second);
@@ -5104,8 +5104,8 @@ bool CAISystem::CheckInside(const Vec3d& pos, int& nBuildingID, IVisArea*& pArea
 		IVisArea* pArea = p3dEngine->GetVisAreaFromPos(pos);
 		if (pArea)
 		{
-			IntIntMultiMap::iterator imi;
-			imi = m_mapBuildingMap.find((INT_PTR)pArea);		//AMD Port
+			VisIntMultiMap::iterator imi;
+			imi = m_mapBuildingMap.find(pArea);		//AMD Port
 			if (imi != m_mapBuildingMap.end())
 			{
 				nBuildingID = imi->second;
@@ -5122,10 +5122,10 @@ bool CAISystem::CheckInside(const Vec3d& pos, int& nBuildingID, IVisArea*& pArea
 					IVisArea* pCurrent = lstSectors.front();
 					lstSectors.pop_front();
 
-					if (m_mapBuildingMap.find((INT_PTR)pCurrent) == m_mapBuildingMap.end())									//AMD Port
+					if (m_mapBuildingMap.find(pCurrent) == m_mapBuildingMap.end())									//AMD Port
 					{
 
-						m_mapBuildingMap.insert(IntIntMultiMap::iterator::value_type((INT_PTR)pCurrent, m_nNumBuildings));	//AMD Port
+						m_mapBuildingMap.insert(VisIntMultiMap::iterator::value_type(pCurrent, m_nNumBuildings));	//AMD Port
 
 
 						int nr = pCurrent->GetVisAreaConnections(&m_pAreaList[0], 100);
@@ -5136,7 +5136,7 @@ bool CAISystem::CheckInside(const Vec3d& pos, int& nBuildingID, IVisArea*& pArea
 
 						for (int i = 0; i < nr; i++)
 						{
-							if (m_mapBuildingMap.find((INT_PTR)m_pAreaList[i]) == m_mapBuildingMap.end())						//AMD Port
+							if (m_mapBuildingMap.find(m_pAreaList[i]) == m_mapBuildingMap.end())						//AMD Port
 								lstSectors.push_back(m_pAreaList[i]);
 						}
 					}

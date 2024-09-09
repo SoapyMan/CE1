@@ -55,7 +55,7 @@ typedef struct BeaconStruct
 } BeaconStruct;
 
 typedef std::multimap<unsigned short , CAIObject *> AIObjects;
-typedef std::multimap<int,int> IntIntMultiMap;
+typedef std::multimap<IVisArea*,int> VisIntMultiMap;
 typedef std::list<CAIObject *> ListAIObjects;
 typedef std::map<string, FormationDescriptor> DescriptorMap;
 typedef std::map<int, CFormation*> FormationMap;
@@ -146,7 +146,7 @@ class CAISystem : public IAISystem
 	int m_nRaysThisUpdateFrame;
 
 	unsigned int m_nNumBuildings;
-	IntIntMultiMap m_mapBuildingMap;
+	VisIntMultiMap m_mapBuildingMap;
 
 	
 	CAIAutoBalance *m_pAutoBalance;

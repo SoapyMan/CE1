@@ -995,10 +995,12 @@ int CResFile::mfFileDelete(char* name)
 void StripExtension(const char* in, char* out)
 {
 	ptrdiff_t len = strlen(in) - 1;
+	ptrdiff_t inputLen = len;
 
 	if (len <= 1)
 	{
-		strcpy(out, in);
+		if(in != out)
+			strcpy(out, in);
 		return;
 	}
 
@@ -1011,7 +1013,8 @@ void StripExtension(const char* in, char* out)
 			{
 				if (in[n] == '+')
 				{
-					strcpy(out, in);
+					if (in != out)
+						strcpy(out, in);
 					return;
 				}
 				n++;
@@ -1021,11 +1024,14 @@ void StripExtension(const char* in, char* out)
 		len--;
 		if (!len)
 		{
-			strcpy(out, in);
+			if (in != out)
+				strcpy(out, in);
 			return;
 		}
 	}
-	strncpy(out, in, len);
+
+	if (in != out)
+		strncpy(out, in, len);
 	out[len] = 0;
 }
 

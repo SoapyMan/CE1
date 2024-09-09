@@ -689,7 +689,7 @@ COPStrafe::COPStrafe(float distance)
 {
 	m_fDistance = distance;
 	m_fRemainingDistance = distance;
-	m_fLastRemainingDistance = fabs(distance + distance);
+	m_fLastRemainingDistance = cry_fabsf(distance + distance);
 	m_bPositionSnapshotTaken = false;
 }
 
@@ -746,7 +746,7 @@ bool COPStrafe::Execute(CPipeUser* pOperand)
 			pOperand->m_State.right = false;
 			pOperand->m_State.left = false;
 			m_fRemainingDistance = m_fDistance;
-			m_fLastRemainingDistance = fabs(m_fDistance + m_fDistance);
+			m_fLastRemainingDistance = cry_fabsf(m_fDistance + m_fDistance);
 			return true;
 		}
 		m_fLastRemainingDistance = m_fRemainingDistance;
@@ -2110,23 +2110,23 @@ bool COPJumpCmd::Execute(CPipeUser* pOperand)
 		// first velocity
 		float vel;
 		// calculate angles
-		float beta = asin(dy / d);
+		float beta = cry_asinf(dy / d);
 		float gamma = m_fJumpAngleInRadians + beta;
 
 		// calculate coefficients for the quadratic formula
 		float sbeta, cbeta, sgamma, cgamma, tgamma;
-		sbeta = sin(beta);
-		cbeta = cos(beta);
-		sgamma = sin(gamma);
-		cgamma = cos(gamma);
+		sbeta = cry_sinf(beta);
+		cbeta = cry_cosf(beta);
+		sgamma = cry_sinf(gamma);
+		cgamma = cry_cosf(gamma);
 		tgamma = sgamma / cgamma;
 		float A = fActualGravity * dx * dx;
-		float B = dx * sin(2 * gamma) - dy * cgamma * cgamma;
+		float B = dx * cry_sinf(2 * gamma) - dy * cgamma * cgamma;
 
 		if (B < 0.0001f)
 			return true;
 
-		vel = sqrt(A / B);
+		vel = cry_sqrtf(A / B);
 		// now calculate the time duration
 		if (fabs(vel * cgamma) < 0.01f)
 			return true;

@@ -204,7 +204,7 @@ bool CShader::mfCompileHWShadeLayer(SShader* ef, char* scr, TArray<SShaderPassHW
 				ef->m_Flags |= EF_HASVSHADER;
 				uint64 nMask = 0;
 				if (nAffectMask)
-					nMask = mfScriptPreprocessorMask(ef, pCurCommand - m_pCurScript);
+					nMask = mfScriptPreprocessorMask(ef, static_cast<int>(pCurCommand - m_pCurScript));
 				sm->m_VProgram = CVProgram::mfForName(params, nMask & nAffectMask);
 				if (!ef->m_DefaultVProgram && sm->m_VProgram && (sm->m_VProgram->m_Flags & VPFI_DEFAULTPOS))
 					ef->m_DefaultVProgram = sm->m_VProgram;
@@ -268,7 +268,7 @@ bool CShader::mfCompileHWShadeLayer(SShader* ef, char* scr, TArray<SShaderPassHW
 				ef->m_Flags3 |= EF3_HASPSHADER;
 				uint64 nMask = 0;
 				if (nAffectMask)
-					nMask = mfScriptPreprocessorMask(ef, pCurCommand - m_pCurScript);
+					nMask = mfScriptPreprocessorMask(ef, static_cast<int>(pCurCommand - m_pCurScript));
 				ps = CPShader::mfForName(params, nMask & nAffectMask);
 				if (ps)
 				{
@@ -1574,25 +1574,25 @@ void SMatrixTransform_Rotate::mfSet(bool bSet)
 		switch (m_Offs)
 		{
 		case 1:
-			D3DXMatrixRotationX(&mat, p[0] * M_PI / 180.0f);
+			D3DXMatrixRotationX(&mat, p[0] * gf_PI / 180.0f);
 			break;
 		case 2:
-			D3DXMatrixRotationY(&mat, p[0] * M_PI / 180.0f);
+			D3DXMatrixRotationY(&mat, p[0] * gf_PI / 180.0f);
 			break;
 		case 4:
-			D3DXMatrixRotationZ(&mat, p[0] * M_PI / 180.0f);
+			D3DXMatrixRotationZ(&mat, p[0] * gf_PI / 180.0f);
 			break;
 		case 3:
-			D3DXMatrixRotationAxis(&mat, &D3DXVECTOR3(1, 1, 0), p[0] * M_PI / 180.0f);
+			D3DXMatrixRotationAxis(&mat, &D3DXVECTOR3(1, 1, 0), p[0] * gf_PI / 180.0f);
 			break;
 		case 5:
-			D3DXMatrixRotationAxis(&mat, &D3DXVECTOR3(1, 0, 1), p[0] * M_PI / 180.0f);
+			D3DXMatrixRotationAxis(&mat, &D3DXVECTOR3(1, 0, 1), p[0] * gf_PI / 180.0f);
 			break;
 		case 6:
-			D3DXMatrixRotationAxis(&mat, &D3DXVECTOR3(0, 1, 1), p[0] * M_PI / 180.0f);
+			D3DXMatrixRotationAxis(&mat, &D3DXVECTOR3(0, 1, 1), p[0] * gf_PI / 180.0f);
 			break;
 		case 7:
-			D3DXMatrixRotationAxis(&mat, &D3DXVECTOR3(1, 1, 1), p[0] * M_PI / 180.0f);
+			D3DXMatrixRotationAxis(&mat, &D3DXVECTOR3(1, 1, 1), p[0] * gf_PI / 180.0f);
 			break;
 		default:
 			return;

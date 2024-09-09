@@ -229,7 +229,7 @@ inline int strnlen (const char* szString, const char* szStringEnd)
 	for (p = szString; p < szStringEnd && *p; ++p)
 		continue;
 
-	return p - szString;
+	return int(p - szString);
 }
 
 
@@ -242,7 +242,7 @@ inline int findString(const char* szString, const char* arrStringList[])
 	for (const char** p = arrStringList; *p; ++p)
 	{
 		if (0 == strcmp(*p, szString))
-			return p - arrStringList;
+			return int(p - arrStringList);
 	}
 	return -1; // string was not found
 }

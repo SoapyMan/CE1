@@ -259,7 +259,7 @@ public:
 
 	// given the bone index, (INDEX, NOT ID), returns this bone's parent index
 	int getBoneParentIndex (int nBoneIndex);
-	int getBoneParentIndex (const CryBone* pBone) {return getBoneParentIndex(pBone - getBones());}
+	int getBoneParentIndex(const CryBone* pBone) { return getBoneParentIndex(int(pBone - getBones())); }
 	int getBonePhysParentIndex (int nBoneIndex, int nLod=0); // same, but finds the first ancestor that has physical geometry
 	int getBonePhysChildIndex (int nBoneIndex, int nLod=0);
 
@@ -275,8 +275,8 @@ public:
 
 	CryBoneInfo* getBoneInfo(int nBone) {return &GetModel()->getBoneInfo(nBone);}
 	const CryBoneInfo* getBoneInfo(int nBone) const {return &GetModel()->getBoneInfo(nBone);}
-	CryBoneInfo* getBoneInfo(const CryBone* pBone) {return getBoneInfo(pBone - &getBone(0));}
-	const CryBoneInfo* getBoneInfo(const CryBone* pBone) const {return getBoneInfo(pBone - getBones());}
+	CryBoneInfo* getBoneInfo(const CryBone* pBone) { return getBoneInfo(int(pBone - &getBone(0))); }
+	const CryBoneInfo* getBoneInfo(const CryBone* pBone) const { return getBoneInfo(int(pBone - getBones())); }
 
 	void setBoneParent();
 
@@ -303,7 +303,7 @@ public:
 	const Matrix44* getBoneGlobalMatrices() const {return &m_arrBoneGlobalMatrices[0];}
 	const Matrix44& getBoneMatrixGlobal (int nBone) const {return m_arrBoneGlobalMatrices[nBone];}
 	Matrix44& getBoneMatrixGlobal (int nBone) {return m_arrBoneGlobalMatrices[nBone];}
-	Matrix44& getBoneMatrixGlobal (const CryBone* pBone) { return getBoneMatrixGlobal (pBone - getBones()); }
+	Matrix44& getBoneMatrixGlobal(const CryBone* pBone) { return getBoneMatrixGlobal(int(pBone - getBones())); }
 
 	// calculates the global matrices
 	// from relative to parent matrices

@@ -75,14 +75,14 @@ public:
   };
 
 public:
-  CRERandom( unsigned long ulSeed = INITIAL_SEED ) : m_ulIndex( 0 )
+  CRERandom( unsigned int ulSeed = INITIAL_SEED ) : m_ulIndex( 0 )
   {
     SetSeed( ulSeed );
   }
 
   ~CRERandom() {};
 
-  void SetSeed( unsigned long ulSeed )
+  void SetSeed(unsigned int ulSeed )
   {
     m_ulState[ 0 ] = ( ulSeed | 1 ) & 0xFFFFFFFFU;
     for( m_ulIndex = 1; m_ulIndex < N; ++m_ulIndex )
@@ -91,14 +91,14 @@ public:
     }
   }
 
-  unsigned long GetInteger()
+  unsigned int GetInteger()
   {
     if( N == m_ulIndex )
     {
       Reload();
     }
 
-    unsigned long ulY = m_ulState[ m_ulIndex++ ];
+    unsigned int ulY = m_ulState[ m_ulIndex++ ];
     ulY ^= TemperingShiftU( ulY );
     ulY ^= TemperingShiftS( ulY ) & TEMPERING_MASK_B;
     ulY ^= TemperingShiftT( ulY ) & TEMPERING_MASK_C;
@@ -138,7 +138,7 @@ public:
   }
 
 private:
-  enum EMersenneTwisterConstants
+  enum EMersenneTwisterConstants : unsigned int
   {
       GENERATOR   = 69069U,
 
@@ -155,9 +155,9 @@ private:
 
   void Reload()
   {
-    const unsigned long c_ulMag01[ 2 ] = { 0x0, MATRIX_A };
+    const unsigned int c_ulMag01[ 2 ] = { 0x0, MATRIX_A };
 
-    unsigned long ulY;
+    unsigned int ulY;
     for( m_ulIndex = 0; m_ulIndex < N - M; ++m_ulIndex ) 
     {
         ulY = ( m_ulState[ m_ulIndex     ] & UPPER_MASK ) |
@@ -180,30 +180,30 @@ private:
     m_ulIndex = 0;
   }
 
-  unsigned long TemperingShiftU( unsigned long ulX )
+  unsigned int TemperingShiftU(unsigned int ulX )
   {
     return( ulX >> 11 );
   }
 
-  unsigned long TemperingShiftS( unsigned long ulX )
+  unsigned int TemperingShiftS(unsigned int ulX )
   {
     return( ulX << 7 );
   }
 
-  unsigned long TemperingShiftT( unsigned long ulX )
+  unsigned int TemperingShiftT(unsigned int ulX )
   {
     return( ulX << 15 );
   }
 
-  unsigned long TemperingShiftL( unsigned long ulX )
+  unsigned int TemperingShiftL(unsigned int ulX )
   {
     return( ulX >> 18 );
   }
 
 private:
-  unsigned long m_ulIndex;
+    unsigned int m_ulIndex;
 
-  unsigned long m_ulState[ N ];
+    unsigned int m_ulState[ N ];
 };
 
 //=============================================================================
@@ -238,7 +238,7 @@ public:
   void LinkVisSectors(float fSize);
   float GetWaterZElevation(float fX, float fY);
 
-  void PostLoad( unsigned long ulSeed, float fWindDirection, float fWindSpeed, float fWaveHeight, float fDirectionalDependence, float fChoppyWavesFactor, float fSuppressSmallWavesFactor );
+  void PostLoad(unsigned int ulSeed, float fWindDirection, float fWindSpeed, float fWaveHeight, float fDirectionalDependence, float fChoppyWavesFactor, float fSuppressSmallWavesFactor );
   void Update( float fTime );
   void UpdateTexture(void);
   void PrepareHMap();

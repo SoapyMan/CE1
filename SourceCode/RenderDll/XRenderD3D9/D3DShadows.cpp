@@ -380,7 +380,7 @@ void CD3D9Renderer::DrawAllShadowsOnTheScreen()
 	float height = 600;
 	Set2DMode(true, (int)width, (int)height);
 
-	float fArrDim = max(4, sqrt(float(MAX_DYNAMIC_SHADOW_MAPS_COUNT)));
+	float fArrDim = max(4, cry_sqrtf(float(MAX_DYNAMIC_SHADOW_MAPS_COUNT)));
 	float fPicDimX = width / fArrDim;
 	float fPicDimY = height / fArrDim;
 	int nShadowId = 0;
@@ -1057,7 +1057,7 @@ void CD3D9Renderer::ConfigShadowTexgen(int Num, int rangeMap, ShadowMapFrustum* 
 			float fOffsetX = 0.5f + (0.5f / (float)pFrustum->nTexSize);
 			float fOffsetY = 0.5f + (0.5f / (float)pFrustum->nTexSize);
 
-			float Smatrix[16] =
+			static float Smatrix[16] =
 			{
 			  0.5f,     0,        0,             0,
 			  0,       -0.5f,     0,             0,

@@ -1172,7 +1172,7 @@ GraphNode* CGraph::GREEDYStep(GraphNode* pBegin, const Vec3d& pos, bool bIndoor)
 		{
 			if (pBegin->link.empty())
 				return pBegin;
-			m_mapGreedyWalkCandidates.insert(CandidateMap::iterator::value_type(0, pBegin->link.front().pLink));
+			m_mapGreedyWalkCandidates.insert(CandidateMap::iterator::value_type(0.0f, pBegin->link.front().pLink));
 		}
 		else
 		{

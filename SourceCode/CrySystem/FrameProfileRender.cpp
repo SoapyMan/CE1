@@ -983,7 +983,7 @@ void CFrameProfileSystem::RenderMemoryInfo()
 	ROW_SIZE = 11;
 	COL_SIZE = 11;
 
-#ifdef WIN32
+#ifdef USE_CRY_MEMORY_MANAGER
 	float col = 1;
 	float row = 1;
 

@@ -356,7 +356,7 @@ void CREOcean::LinkVisSectors(float fSize)
 	}
 }
 
-void CREOcean::PostLoad(unsigned long ulSeed, float fWindDirection, float fWindSpeed, float fWaveHeight, float fDirectionalDependence, float fChoppyWavesFactor, float fSuppressSmallWavesFactor)
+void CREOcean::PostLoad(unsigned int ulSeed, float fWindDirection, float fWindSpeed, float fWaveHeight, float fDirectionalDependence, float fChoppyWavesFactor, float fSuppressSmallWavesFactor)
 {
 	m_fWindX = cry_cosf(fWindDirection);
 	m_fWindY = cry_sinf(fWindDirection);

@@ -306,7 +306,7 @@ void CRESky::DrawSkySphere(float fHeight)
 
 		for (int i = 0; i <= 360; i += 40)
 		{
-			float rad = (i) * (M_PI / 180);
+			float rad = (i) * (gf_PI / 180);
 
 			vert.xyz.x = cry_sinf(rad) * nWSize * r;
 			vert.xyz.y = cry_cosf(rad) * nWSize * r;

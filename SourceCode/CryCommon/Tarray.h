@@ -75,7 +75,7 @@ public:
 #endif
 		pointer pResult = (pointer)(((UINT_PTR)p+0x10)&~0xF);
 		// save the offset to the actual allocated address behind the useable aligned address
-		reinterpret_cast<int*>(pResult)[-1] = (char*)p - (char*)pResult;
+        reinterpret_cast<int*>(pResult)[-1] = static_cast<int>((char*)p - (char*)pResult);
 		return pResult;
 	}
 
@@ -130,7 +130,7 @@ template<class T> void Sort( T* First, int Num )
   {
     Current = *StackTop;
   Loop:
-    INT Count = Current.Max - Current.Min + 1;
+    INT Count = int(Current.Max - Current.Min) + 1;
     if( Count <= 8 )
     {
       // Use simple bubble-sort.
@@ -258,7 +258,11 @@ public:
   {
     if ( Count )
     {
-      memcpy(m_pElements+Index, m_pElements+(Index+Count), sizeof(T)*(m_nCount-Index-Count));
+      const int last = Index + Count;
+      const int rest = m_nCount - last;
+      if (rest > 0)
+        memmove(m_pElements + Index, m_pElements + last, rest * sizeof(T));
+
       m_nCount -= Count;
     }
   }

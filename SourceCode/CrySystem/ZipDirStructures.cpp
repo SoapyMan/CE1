@@ -282,7 +282,7 @@ void ZipDir::FileEntry::OnNewFileData(void* pUncompressed, unsigned nSize, unsig
 const char* ZipDir::DOSTimeCStr(ZipFile::ushort nTime)
 {
 	static char szBuf[16];
-	sprintf(szBuf, "%02:%02.%02", (nTime >> 11), ((nTime & ((1 << 11) - 1)) >> 5), ((nTime & ((1 << 5) - 1)) << 1));
+	sprintf(szBuf, "%02d:%02d.%02d", (nTime >> 11), ((nTime & ((1 << 11) - 1)) >> 5), ((nTime & ((1 << 5) - 1)) << 1));
 	return szBuf;
 }
 

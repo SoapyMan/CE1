@@ -956,7 +956,7 @@ char* CCGPShader_D3D::mfCreateAdditionalPS()
 			len = strlen(strFog);
 			int len2 = strlen(pScr) + 1;
 			newScr = new char[len + len2];
-			n = sNewStr - pScr + n;
+			n = static_cast<int>(sNewStr - pScr) + n;
 			strncpy(newScr, pScr, n);
 			strcpy(&newScr[n], strFog);
 			strcpy(&newScr[n + len], &pScr[n]);

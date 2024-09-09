@@ -360,10 +360,10 @@ void CLipSync::StreamOnComplete(IReadStream* pStream, unsigned nError)
 			const char* pLastScanBuffer = pBuffer;
 			const char* pScanBufferComma;
 			const char* pScanBufferBreak;
-			while (((pScanBufferComma = strnstr(pLastScanBuffer, ",", pEndBuffer - pLastScanBuffer)) != NULL) || ((pScanBufferBreak = strnstr(pLastScanBuffer, "\n", pEndBuffer - pLastScanBuffer)) != NULL))
+			while (((pScanBufferComma = strnstr(pLastScanBuffer, ",", int(pEndBuffer - pLastScanBuffer))) != NULL) || ((pScanBufferBreak = strnstr(pLastScanBuffer, "\n", int(pEndBuffer - pLastScanBuffer))) != NULL))
 			{
-				pScanBufferComma = strnstr(pLastScanBuffer, ",", pEndBuffer - pLastScanBuffer);
-				pScanBufferBreak = strnstr(pLastScanBuffer, "\n", pEndBuffer - pLastScanBuffer);
+				pScanBufferComma = strnstr(pLastScanBuffer, ",", int(pEndBuffer - pLastScanBuffer));
+				pScanBufferBreak = strnstr(pLastScanBuffer, "\n", int(pEndBuffer - pLastScanBuffer));
 				if ((!pScanBufferComma) && (!pScanBufferBreak))
 					break;
 				if (!pScanBufferComma)
@@ -374,7 +374,7 @@ void CLipSync::StreamOnComplete(IReadStream* pStream, unsigned nError)
 					pScanBufferBreak--;
 				bool bLastItem = pScanBufferComma > pScanBufferBreak;
 				pScanBuffer = (!bLastItem) ? pScanBufferComma : pScanBufferBreak;
-				int nTokenLength = pScanBuffer - pLastScanBuffer;
+				int nTokenLength = int(pScanBuffer - pLastScanBuffer);
 				if (nTokenLength >= sizeof(sTempBuf))
 				{
 					nTokenLength = sizeof(sTempBuf) - 1;

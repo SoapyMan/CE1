@@ -142,7 +142,12 @@ public:
   inline void Delete(const int nElemId, const int nElemCount = 1)
   {
     assert( nElemId >= 0 && nElemId+nElemCount <= m_nCount );
-    memcpy(&(m_pElements[nElemId]), &(m_pElements[nElemId+nElemCount]), sizeof(T)*(m_nCount-nElemId-nElemCount));
+
+    const int last = nElemId + nElemId;
+    const int rest = m_nCount - last;
+    if (rest > 0)
+        memmove(m_pElements + nElemId, m_pElements + last, rest * sizeof(T));
+
     m_nCount-=nElemCount;
   }
 

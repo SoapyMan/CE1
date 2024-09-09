@@ -46,12 +46,12 @@ void CD3D9Renderer::EF_InitWaveTables()
 	{
 		float f = (float)i;
 
-		m_RP.m_tSinTable[i] = sin_tpl(f * (360.0f / 1023.0f) * M_PI / 180.0f);
-		m_RP.m_tHalfSinTable[i] = sin_tpl(f * (360.0f / 1023.0f) * M_PI / 180.0f);
+		m_RP.m_tSinTable[i] = sin_tpl(f * (360.0f / 1023.0f) * gf_PI / 180.0f);
+		m_RP.m_tHalfSinTable[i] = sin_tpl(f * (360.0f / 1023.0f) * gf_PI / 180.0f);
 		if (m_RP.m_tHalfSinTable[i] < 0)
 			m_RP.m_tHalfSinTable[i] = 0;
-		m_RP.m_tCosTable[i] = cos_tpl(f * (360.0f / 1023.0f) * M_PI / 180.0f);
-		m_RP.m_tHillTable[i] = sin_tpl(f * (180.0f / 1023.0f) * M_PI / 180.0f);
+		m_RP.m_tCosTable[i] = cos_tpl(f * (360.0f / 1023.0f) * gf_PI / 180.0f);
+		m_RP.m_tHillTable[i] = sin_tpl(f * (180.0f / 1023.0f) * gf_PI / 180.0f);
 
 		if (i < 512)
 			m_RP.m_tSquareTable[i] = 1.0f;
@@ -3113,7 +3113,7 @@ void CD3D9Renderer::EF_CheckOverflow(int nVerts, int nInds, CRendElement* re)
 			iLog->Log("CD3D9Renderer::EF_CheckOverflow: numIndices > MAX (%d > %d)\n", nInds, m_RP.m_MaxTris * 3);
 			nInds = m_RP.m_MaxTris * 3;
 		}
-		EF_Start(m_RP.m_pShader, m_RP.m_pStateShader, m_RP.m_pShaderResources, m_RP.m_pFogVolume ? (m_RP.m_pFogVolume - &m_RP.m_FogVolumes[0]) : 0, re);
+		EF_Start(m_RP.m_pShader, m_RP.m_pStateShader, m_RP.m_pShaderResources, m_RP.m_pFogVolume ? static_cast<int>(m_RP.m_pFogVolume - &m_RP.m_FogVolumes[0]) : 0, re);
 	}
 }
 
@@ -8517,9 +8517,9 @@ bool CD3D9Renderer::EF_CalcWarpCamera(STWarpZone* wp, int nObject, CCamera& prev
 		fDot = m_RP.m_CamVecs[0].Dot(wp->plane.n);
 		Vec3d vNewDir = m_RP.m_CamVecs[0] + wp->plane.n * -2.0f * fDot;
 
-		vNewAngs[0] = cry_asinf(vNewDir[2]) / M_PI * 180.0f;
+		vNewAngs[0] = cry_asinf(vNewDir[2]) / gf_PI * 180.0f;
 		vNewAngs[1] = vPrevAngs[1] + 180.0f;
-		vNewAngs[2] = -cry_atan2f(vNewDir[0], -vNewDir[1]) / M_PI * 180.0f;
+		vNewAngs[2] = -cry_atan2f(vNewDir[0], -vNewDir[1]) / gf_PI * 180.0f;
 
 		m_RP.m_PersFlags &= ~RBPF_DRAWPORTAL;
 		m_RP.m_PersFlags |= RBPF_DRAWMIRROR;

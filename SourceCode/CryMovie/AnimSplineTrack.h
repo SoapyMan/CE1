@@ -346,7 +346,7 @@ bool TAnimTcbTrack<T>::Serialize( XmlNodeRef &xmlNode,bool bLoading, bool bLoadE
 
 //////////////////////////////////////////////////////////////////////////
 //! Specialize for single float track.
-template <> TAnimTcbTrack<float>::TAnimTcbTrack<float>()
+template <> TAnimTcbTrack<float>::TAnimTcbTrack()
 {
 	AllocSpline();
 	m_flags = 0;
@@ -381,7 +381,7 @@ template<> void TAnimTcbTrack<float>::GetKeyInfo( int index,const char* &descrip
 
 //////////////////////////////////////////////////////////////////////////
 //! Specialize for Vector track.
-template <> TAnimTcbTrack<Vec3>::TAnimTcbTrack<Vec3>()
+template <> TAnimTcbTrack<Vec3>::TAnimTcbTrack()
 {
 	AllocSpline();
 	m_flags = 0;
@@ -418,7 +418,7 @@ template <> void TAnimTcbTrack<Vec3>::GetKeyInfo( int index,const char* &descrip
 //////////////////////////////////////////////////////////////////////////
 //! Specialize for Quaternion track.
 //! Spezialize spline creation for quaternion.
-template <> TAnimTcbTrack<Quat>::TAnimTcbTrack<Quat>()
+template <> TAnimTcbTrack<Quat>::TAnimTcbTrack()
 {
 	m_spline = new TCBQuatSpline;
 	m_flags = 0;

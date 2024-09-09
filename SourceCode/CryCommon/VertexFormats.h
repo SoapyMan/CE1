@@ -347,7 +347,7 @@ const int g_VertFormatNormalOffsets[] =
   (int)&(((struct_VERTEX_FORMAT_P3F_N_COL4UB_COL4UB_TEX2F*)0)->normal),
 };
 
-static struct SBufInfoTable gBufInfoTable[] = 
+static struct SBufInfoTable gBufInfoTable[VERTEX_FORMAT_NUMS] =
 {
   {
     0

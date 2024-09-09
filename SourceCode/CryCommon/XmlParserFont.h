@@ -806,7 +806,7 @@ public:
 				return -1;
 
 			// set position
-			long pos = (found - start);
+			long pos = static_cast<int>(found - start);
 			pos += offset;
 
 			return pos;
@@ -843,7 +843,7 @@ public:
 				return -1;
 
 			// set position
-			long pos = (found - start);
+			long pos = static_cast<int>(found - start);
 			pos += offset;
 
 			return pos;
@@ -880,7 +880,7 @@ public:
 				return -1;
 
 			// set position
-			long pos = (found - start);
+			long pos = static_cast<int>(found - start);
 			pos += offset;
 
 			return pos;

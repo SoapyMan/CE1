@@ -1336,7 +1336,7 @@ void CEntity::OnCollide(float fDeltaTime)
 			Vec3d vrel = contacts[nColls].v[1] - contacts[nColls].v[0], r = contacts[nColls].pt - sd.centerOfMass;
 			if (sd.w.len2() > 0.01f)
 				r -= sd.w * ((r * sd.w) / sd.w.len2());
-			velImpactCur = fabs(vrel * contacts[nColls].n);
+			velImpactCur = cry_fabsf(vrel * contacts[nColls].n);
 			velSlide2Cur = (vrel - contacts[nColls].n * velImpactCur).len2();
 			velRoll2Cur = (sd.w ^ r).len2();
 

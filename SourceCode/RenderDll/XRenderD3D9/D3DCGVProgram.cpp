@@ -1257,7 +1257,7 @@ char* CCGVProgram_D3D::mfGenerateTCScript(char* Script, int nt)
 			size_t len = strlen(sStr);
 			size_t len2 = strlen(Script) + 1;
 			char* newScr2 = new char[len + len2];
-			n = sNewStr - Script;
+			n = static_cast<int>(sNewStr - Script);
 			strncpy(newScr2, Script, n);
 			strcpy(&newScr2[n], sStr);
 			strcpy(&newScr2[n + len], &Script[n]);
@@ -1325,7 +1325,7 @@ char* CCGVProgram_D3D::mfGenerateTCScript(char* Script, int nt)
 						len = strlen(sStr);
 						size_t len2 = strlen(Script) + 1;
 						char* newScr2 = new char[len + len2];
-						n = sNewStr - Script + n;
+						n = static_cast<int>(sNewStr - Script) + n;
 						strncpy(newScr2, Script, n);
 						strcpy(&newScr2[n], sStr);
 						strcpy(&newScr2[n + len], &Script[n]);
@@ -1354,7 +1354,7 @@ char* CCGVProgram_D3D::mfGenerateTCScript(char* Script, int nt)
 							len = strlen("float3 TNormal : BLENDWEIGHT;\n");
 							size_t len2 = strlen(Script) + 1;
 							char* newScr2 = new char[len + len2];
-							n = sNewStr - Script + n;
+							n = static_cast<int>(sNewStr - Script) + n;
 							strncpy(newScr2, Script, n);
 							strcpy(&newScr2[n], "float3 TNormal : BLENDWEIGHT;\n");
 							strcpy(&newScr2[n + len], &Script[n]);
@@ -1415,7 +1415,7 @@ char* CCGVProgram_D3D::mfCreateAdditionalVP(CVProgram* pPosVP)
 		sNewStr += n;
 	}
 
-	n = sNewStr - pScript->m_Script;
+	n = static_cast<int>(sNewStr - pScript->m_Script);
 	len = strlen(pScript->m_Script) + 1;
 	int nScr = 0;
 	int nInst = 0;
@@ -1459,7 +1459,7 @@ char* CCGVProgram_D3D::mfCreateAdditionalVP(CVProgram* pPosVP)
 				len = strlen(", uniform float4 pg[66] : register(c30)");
 				size_t len2 = strlen(newScr) + 1;
 				char* newScr2 = new char[len + len2];
-				n = sNewStr - newScr + n;
+				n = static_cast<int>(sNewStr - newScr) + n;
 				strncpy(newScr2, newScr, n);
 				strcpy(&newScr2[n], ", uniform float4 pg[66] : register(c30)");
 				strcpy(&newScr2[n + len], &newScr[n]);
@@ -1500,7 +1500,7 @@ char* CCGVProgram_D3D::mfCreateAdditionalVP(CVProgram* pPosVP)
 				len = strlen(", uniform float3 Fog : register(c29)");
 				int len2 = strlen(newScr) + 1;
 				char* newScr2 = new char[len + len2];
-				n = sNewStr - newScr + n;
+				n = static_cast<int>(sNewStr - newScr) + n;
 				strncpy(newScr2, newScr, n);
 				strcpy(&newScr2[n], ", uniform float3 Fog : register(c29)");
 				strcpy(&newScr2[n + len], &newScr[n]);
@@ -1529,7 +1529,7 @@ char* CCGVProgram_D3D::mfCreateAdditionalVP(CVProgram* pPosVP)
 				len = strlen("float FogC : FOG;\n");
 				int len2 = strlen(newScr) + 1;
 				char* newScr2 = new char[len + len2];
-				n = sNewStr - newScr + n;
+				n = static_cast<int>(sNewStr - newScr) + n;
 				strncpy(newScr2, newScr, n);
 				strcpy(&newScr2[n], "float FogC : FOG;\n");
 				strcpy(&newScr2[n + len], &newScr[n]);
@@ -1569,7 +1569,7 @@ char* CCGVProgram_D3D::mfCreateAdditionalVP(CVProgram* pPosVP)
 				len = strlen(", uniform float4 ClipPlane : register(c14)");
 				int len2 = strlen(newScr) + 1;
 				char* newScr2 = new char[len + len2];
-				n = sNewStr - newScr + n;
+				n = static_cast<int>(sNewStr - newScr) + n;
 				strncpy(newScr2, newScr, n);
 				strcpy(&newScr2[n], ", uniform float4 ClipPlane : register(c14)");
 				strcpy(&newScr2[n + len], &newScr[n]);
@@ -1595,7 +1595,7 @@ char* CCGVProgram_D3D::mfCreateAdditionalVP(CVProgram* pPosVP)
 					len = strlen("float4 Tex3 : TEXCOORD3;\n");
 					int len2 = strlen(newScr) + 1;
 					char* newScr2 = new char[len + len2];
-					n = sNewStr - newScr + n;
+					n = static_cast<int>(sNewStr - newScr) + n;
 					strncpy(newScr2, newScr, n);
 					strcpy(&newScr2[n], "float4 Tex3 : TEXCOORD3;\n");
 					strcpy(&newScr2[n + len], &newScr[n]);
@@ -1635,7 +1635,7 @@ char* CCGVProgram_D3D::mfCreateAdditionalVP(CVProgram* pPosVP)
 			len = strlen(", uniform float4 g_VSCONST_0_025_05_1 : register(c28)");
 			int len2 = strlen(newScr) + 1;
 			char* newScr2 = new char[len + len2];
-			n = sNewStr - newScr + n;
+			n = static_cast<int>(sNewStr - newScr) + n;
 			strncpy(newScr2, newScr, n);
 			strcpy(&newScr2[n], ", uniform float4 g_VSCONST_0_025_05_1 : register(c28)");
 			strcpy(&newScr2[n + len], &newScr[n]);

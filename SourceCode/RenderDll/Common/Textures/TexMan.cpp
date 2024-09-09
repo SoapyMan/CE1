@@ -200,7 +200,7 @@ int STexPic::GetFileNames(char* name0, char* name1, int nLen)
 			const char* name1 = strchr(&name[1], '$');
 			if (name1)
 			{
-				nLen = crymin(nLen, name1 - name - 1);
+				nLen = crymin(nLen, static_cast<int>(name1 - name) - 1);
 				strncpy(name0, &name[1], nLen);
 				name0[nLen] = 0;
 				return 1;
@@ -209,7 +209,7 @@ int STexPic::GetFileNames(char* name0, char* name1, int nLen)
 		strncpy(name0, m_SourceName.c_str(), nLen);
 		return 1;
 	}
-	int nL = crymin(nLen, name - m_SourceName.c_str());
+	int nL = crymin(nLen, static_cast<int>(name - m_SourceName.c_str()));
 	strncpy(name0, m_SourceName.c_str(), nL);
 	name0[nL] = 0;
 	nL = crymin(nLen, (int)strlen(&name[6]));

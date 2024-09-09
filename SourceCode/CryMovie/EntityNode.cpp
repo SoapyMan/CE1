@@ -890,7 +890,7 @@ void CAnimEntityNode::AnimateCharacterTrack(class CCharacterTrack* track, SAnimC
 		{
 			if (key.bLoop)
 			{
-				t = fmod(t, key.duration);
+				t = cry_fmod(t, key.duration);
 			}
 			// Start playing animation.
 			//m_character->EnableTimeUpdate(false);

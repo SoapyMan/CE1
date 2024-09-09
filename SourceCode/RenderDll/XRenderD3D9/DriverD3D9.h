@@ -349,7 +349,7 @@ struct SD3DRenderTarget
 //======================================================================
 /// Direct3D Render driver class
 
-class IEntityRender;
+struct IEntityRender;
 
 class CD3D9Renderer : public CRenderer
 {

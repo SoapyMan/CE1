@@ -1499,7 +1499,7 @@ void SMatrixTransform_LightCMProject::mfSet(bool bSet)
 
 				//scale the cubemap to adjust the default 45 degree 1/2 angle fustrum to 
 				//the desired angle (0 to 90 degrees)
-				float scaleFactor = cry_tanf((90.0f - dl->m_fLightFrustumAngle) * M_PI / 180.0f);
+				float scaleFactor = cry_tanf((90.0f - dl->m_fLightFrustumAngle) * gf_PI / 180.0f);
 				glScalef(1, scaleFactor, scaleFactor);
 
 				//we need to rotate the cubemap to account for the spotlights orientation
@@ -1527,7 +1527,7 @@ void SMatrixTransform_LightCMProject::mfSet(Matrix44& matr)
 
 			//scale the cubemap to adjust the default 45 degree 1/2 angle fustrum to 
 			//the desired angle (0 to 90 degrees)
-			float scaleFactor = cry_tanf((90.0f - dl->m_fLightFrustumAngle) * M_PI / 180.0f);
+			float scaleFactor = cry_tanf((90.0f - dl->m_fLightFrustumAngle) * gf_PI / 180.0f);
 			mathScale(matr.GetData(), Vec3d(1, scaleFactor, scaleFactor), g_CpuFlags);
 
 			//we need to rotate the cubemap to account for the spotlights orientation
