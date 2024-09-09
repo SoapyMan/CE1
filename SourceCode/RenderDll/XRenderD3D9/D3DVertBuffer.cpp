@@ -211,26 +211,24 @@ void CD3D9Renderer::UpdateIndexBuffer(SVertexStream* dest, const void* src, int 
 		else
 			dest->m_bLocked = true;
 	}
-	else
-		if (dest->m_VertBuf.m_pPtr)
+	else if (dest->m_VertBuf.m_pPtr)
+	{
+		if (bUnLock && dest->m_bLocked)
 		{
-			if (bUnLock && dest->m_bLocked)
-			{
-				ibuf = (IDirect3DIndexBuffer9*)dest->m_VertBuf.m_pPtr;
-				hReturn = ibuf->Unlock();
-				dest->m_bLocked = false;
-			}
-			else
-				if (!bUnLock && !dest->m_bLocked)
-				{
-					PROFILE_FRAME(Mesh_UpdateIBuffersLock);
-					ibuf = (IDirect3DIndexBuffer9*)dest->m_VertBuf.m_pPtr;
-					ushort* dst;
-					hReturn = ibuf->Lock(0, 0, (void**)&dst, dest->m_bDynamic ? D3DLOCK_DISCARD : 0);
-					dest->m_bLocked = true;
-					dest->m_VData = dst;
-				}
+			ibuf = (IDirect3DIndexBuffer9*)dest->m_VertBuf.m_pPtr;
+			hReturn = ibuf->Unlock();
+			dest->m_bLocked = false;
 		}
+		else if (!bUnLock && !dest->m_bLocked)
+		{
+			PROFILE_FRAME(Mesh_UpdateIBuffersLock);
+			ibuf = (IDirect3DIndexBuffer9*)dest->m_VertBuf.m_pPtr;
+			ushort* dst;
+			hReturn = ibuf->Lock(0, 0, (void**)&dst, dest->m_bDynamic ? D3DLOCK_DISCARD : 0);
+			dest->m_bLocked = true;
+			dest->m_VData = dst;
+		}
+	}
 }
 void CD3D9Renderer::ReleaseIndexBuffer(SVertexStream* dest)
 {
@@ -284,40 +282,57 @@ bool CD3D9Renderer::AllocateVBChunk(int bytes_count, TVertPool* Ptr, SVertexStre
 {
 	assert(bytes_count);
 
+	if (!Ptr->m_alloc_info.Count())
+	{
+		if (bytes_count > Ptr->m_nBufSize)
+			CryError("Can't alloc VB chunk with %d bytes");
+
+		const int piplevel = 0;
+
+		// register new chunk
+		alloc_info_struct ai;
+		ai.ptr = piplevel;
+		ai.szSource = szSource;
+		ai.bytes_num = bytes_count;
+		ai.busy = true;
+		Ptr->m_alloc_info.Add(ai);
+
+		pVB->m_nBufOffset = piplevel;
+		pVB->m_pPool = (SVertPool*)Ptr;
+	}
+
 	int best_i = -1;
 	int min_size = 10000000;
 
 	// find best chunk
 	for (int i = 0; i < Ptr->m_alloc_info.Count(); i++)
 	{
-		if (!Ptr->m_alloc_info[i].busy)
-		{
-			if (Ptr->m_alloc_info[i].bytes_num >= bytes_count)
-			{
-				if (Ptr->m_alloc_info[i].bytes_num < min_size)
-				{
-					best_i = i;
-					min_size = Ptr->m_alloc_info[i].bytes_num;
-				}
-			}
-		}
+		alloc_info_struct& info = Ptr->m_alloc_info[i];
+		if (info.busy)
+			continue;
+		if (bytes_count > info.bytes_num)
+			continue;
+
+		best_i = i;
 	}
 
 	if (best_i >= 0)
-	{ // use best free chunk
-		Ptr->m_alloc_info[best_i].busy = true;
-		Ptr->m_alloc_info[best_i].szSource = szSource;
+	{
+		// use best free chunk
+		alloc_info_struct& best_info = Ptr->m_alloc_info[best_i];
+		best_info.busy = true;
+		best_info.szSource = szSource;
 
-		int bytes_free = Ptr->m_alloc_info[best_i].bytes_num - bytes_count;
+		const int bytes_free = best_info.bytes_num - bytes_count;
 		if (bytes_free > 0)
 		{
 			// modify reused shunk
-			Ptr->m_alloc_info[best_i].bytes_num = bytes_count;
+			best_info.bytes_num = bytes_count;
 
 			// insert another free shunk
 			alloc_info_struct new_shunk;
 			new_shunk.bytes_num = bytes_free;
-			new_shunk.ptr = Ptr->m_alloc_info[best_i].ptr + Ptr->m_alloc_info[best_i].bytes_num;
+			new_shunk.ptr = best_info.ptr + best_info.bytes_num;
 			new_shunk.busy = false;
 
 			if (best_i < Ptr->m_alloc_info.Count() - 1) // if not last
@@ -326,36 +341,12 @@ bool CD3D9Renderer::AllocateVBChunk(int bytes_count, TVertPool* Ptr, SVertexStre
 				Ptr->m_alloc_info.Add(new_shunk);
 		}
 
-		pVB->m_nBufOffset = Ptr->m_alloc_info[best_i].ptr;
+		pVB->m_nBufOffset = best_info.ptr;
 		pVB->m_pPool = (SVertPool*)Ptr;
-
 		return true;
 	}
 
-	int res_ptr = 0;
-
-	int piplevel = Ptr->m_alloc_info.Count() ? (Ptr->m_alloc_info.Last().ptr - Ptr->m_alloc_info[0].ptr) + Ptr->m_alloc_info.Last().bytes_num : 0;
-	if (piplevel + bytes_count + 100 >= Ptr->m_nBufSize)
-	{
-		return false;
-	}
-	else
-	{
-		res_ptr = piplevel;
-	}
-
-	// register new chunk
-	alloc_info_struct ai;
-	ai.ptr = res_ptr;
-	ai.szSource = szSource;
-	ai.bytes_num = bytes_count;
-	ai.busy = true;
-	Ptr->m_alloc_info.Add(ai);
-
-	pVB->m_nBufOffset = res_ptr;
-	pVB->m_pPool = (SVertPool*)Ptr;
-
-	return true;
+	return false;
 }
 
 bool CD3D9Renderer::ReleaseVBChunk(TVertPool* Ptr, SVertexStream* pVB)
@@ -397,14 +388,12 @@ bool CD3D9Renderer::ReleaseVBChunk(TVertPool* Ptr, SVertexStream* pVB)
 
 void CD3D9Renderer::AllocVBInPool(int size, int nVFormat, SVertexStream* pVB)
 {
-	CD3D9Renderer* rd = gcpRendD3D;
-
 	assert(nVFormat >= 0 && nVFormat < VERTEX_FORMAT_NUMS);
 
-	int Flags = D3DUSAGE_WRITEONLY;
-	D3DPOOL Pool = D3DPOOL_MANAGED;
-	int fvf = 0;
-	int VBsize = CV_d3d9_vbpoolsize;
+	const int Flags = D3DUSAGE_WRITEONLY;
+	const D3DPOOL Pool = D3DPOOL_MANAGED;
+	const int fvf = 0;
+	const int VBsize = CV_d3d9_vbpoolsize;
 
 	TVertPool* Ptr;
 	for (Ptr = sVertPools; Ptr; Ptr = Ptr->Next)
@@ -412,6 +401,7 @@ void CD3D9Renderer::AllocVBInPool(int size, int nVFormat, SVertexStream* pVB)
 		if (AllocateVBChunk(size, Ptr, pVB, NULL))
 			break;
 	}
+
 	if (!Ptr)
 	{
 		Ptr = new TVertPool;
@@ -428,7 +418,7 @@ void CD3D9Renderer::AllocVBInPool(int size, int nVFormat, SVertexStream* pVB)
 		AllocateVBChunk(size, Ptr, pVB, NULL);
 	}
 	if (!Ptr->m_pVB)
-		rd->m_pd3dDevice->CreateVertexBuffer(VBsize, Flags, fvf, Pool, &Ptr->m_pVB, NULL);
+		gcpRendD3D->m_pd3dDevice->CreateVertexBuffer(Ptr->m_nBufSize, Flags, fvf, Pool, &Ptr->m_pVB, NULL);
 }
 
 void CD3D9Renderer::CreateBuffer(int size, int vertexformat, CVertexBuffer* buf, int Type, const char* szSource)
@@ -534,6 +524,7 @@ CVertexBuffer* CD3D9Renderer::CreateBuffer(int vertexcount, int vertexformat, co
 }
 
 ///////////////////////////////////////////
+
 void CD3D9Renderer::UpdateBuffer(CVertexBuffer* dest, const void* src, int vertexcount, bool bUnLock, int offs, int Type)
 {
 	PROFILE_FRAME(Mesh_UpdateVBuffers);
@@ -545,33 +536,41 @@ void CD3D9Renderer::UpdateBuffer(CVertexBuffer* dest, const void* src, int verte
 
 	HRESULT hr = 0;
 	IDirect3DVertexBuffer9* tvert;
-	int size;
+	int size = m_VertexSize[dest->m_vertexformat];
 	int nOffs = 0;
+
+	if (vertexcount > dest->m_NumVerts)
+	{
+		CryError("Too many verts %s, buffer size is %d", vertexcount, dest->m_NumVerts);
+	}
+
+	SVertexStream& generalStream = dest->m_VS[VSF_GENERAL];
+	SVertexStream& tangentsStream = dest->m_VS[VSF_TANGENTS];
 	if (!src)
 	{
 		if (!Type)
 		{
 			tvert = (IDirect3DVertexBuffer9*)dest->GetStream(VSF_GENERAL, &nOffs);
-			size = m_VertexSize[dest->m_vertexformat];
+			
 			if (bUnLock)
 			{
 				// video buffer update
-				if (dest->m_VS[VSF_GENERAL].m_bLocked)
+				if (generalStream.m_bLocked)
 				{
-					dest->m_VS[VSF_GENERAL].m_bLocked = false;
+					generalStream.m_bLocked = false;
 					hr = tvert->Unlock();
 				}
 			}
 			else
 			{
 				// video buffer update
-				if (!dest->m_VS[VSF_GENERAL].m_bLocked)
+				if (!generalStream.m_bLocked)
 				{
 					PROFILE_FRAME(Mesh_UpdateVBuffersLock);
-					dest->m_VS[VSF_GENERAL].m_bLocked = true;
+					generalStream.m_bLocked = true;
 					hr = tvert->Lock(0, 0, (void**)&pVertices, dest->m_bDynamic ? D3DLOCK_DISCARD : 0);
 					byte* pData = (byte*)pVertices;
-					dest->m_VS[VSF_GENERAL].m_VData = &pData[nOffs];
+					generalStream.m_VData = &pData[nOffs];
 				}
 			}
 		}
@@ -584,23 +583,24 @@ void CD3D9Renderer::UpdateBuffer(CVertexBuffer* dest, const void* src, int verte
 					continue;
 				if (!((1 << i) & Type))
 					continue;
+
+				SVertexStream& stream = dest->m_VS[i];
 				if (bUnLock)
 				{
-					if (dest->m_VS[i].m_bLocked)
+					if (stream.m_bLocked)
 					{
-						dest->m_VS[i].m_bLocked = false;
+						stream.m_bLocked = false;
 						hr = tvert->Unlock();
 					}
 				}
 				else
 				{
-					if (!dest->m_VS[i].m_bLocked)
+					if (!stream.m_bLocked)
 					{
 						PROFILE_FRAME(Mesh_UpdateVBuffersLock);
-						dest->m_VS[i].m_bLocked = true;
+						stream.m_bLocked = true;
 						hr = tvert->Lock(0, 0, (void**)&pVertices, dest->m_bDynamic ? D3DLOCK_DISCARD : 0);
-						byte* pData = (byte*)pVertices;
-						dest->m_VS[VSF_GENERAL].m_VData = &pData[nOffs];
+						generalStream.m_VData = (byte*)pVertices + nOffs;
 					}
 				}
 			}
@@ -610,63 +610,62 @@ void CD3D9Renderer::UpdateBuffer(CVertexBuffer* dest, const void* src, int verte
 
 	if (Type == VSF_GENERAL)
 	{
-		if (dest->m_VS[VSF_GENERAL].m_pPool)
+		if (generalStream.m_pPool)
 		{
-			tvert = dest->m_VS[VSF_GENERAL].m_pPool->m_pVB;
-			nOffs = dest->m_VS[VSF_GENERAL].m_nBufOffset;
+			tvert = generalStream.m_pPool->m_pVB;
+			nOffs = generalStream.m_nBufOffset;
 		}
 		else
-			tvert = (IDirect3DVertexBuffer9*)dest->m_VS[VSF_GENERAL].m_VertBuf.m_pPtr;
+			tvert = (IDirect3DVertexBuffer9*)generalStream.m_VertBuf.m_pPtr;
 		size = m_VertexSize[dest->m_vertexformat];
 	}
-	else
-		if (Type == VSF_TANGENTS)
+	else if (Type == VSF_TANGENTS)
+	{
+		if (tangentsStream.m_pPool)
 		{
-			if (dest->m_VS[VSF_TANGENTS].m_pPool)
-			{
-				tvert = dest->m_VS[VSF_TANGENTS].m_pPool->m_pVB;
-				nOffs = dest->m_VS[VSF_TANGENTS].m_nBufOffset;
-			}
-			else
-				tvert = (IDirect3DVertexBuffer9*)dest->m_VS[VSF_TANGENTS].m_VertBuf.m_pPtr;
-			size = sizeof(SPipTangents);
+			tvert = tangentsStream.m_pPool->m_pVB;
+			nOffs = tangentsStream.m_nBufOffset;
 		}
+		else
+			tvert = (IDirect3DVertexBuffer9*)tangentsStream.m_VertBuf.m_pPtr;
+		size = sizeof(SPipTangents);
+	}
 
+	SVertexStream& stream = dest->m_VS[Type];
 	if (!tvert)  // system buffer update
 	{
 		PROFILE_FRAME(Mesh_UpdateVBuffersCopy);
+
 		if (dest->m_bFenceSet)
-			cryMemcpy(dest->m_VS[Type].m_VData, src, size * vertexcount);
-		else
-			if (Type == VSF_GENERAL && dest->m_VS[VSF_GENERAL].m_VData)
-				cryMemcpy(dest->m_VS[VSF_GENERAL].m_VData, src, size * vertexcount);
+			cryMemcpy(stream.m_VData, src, size * vertexcount);
+		else if (Type == VSF_GENERAL && generalStream.m_VData)
+			cryMemcpy(generalStream.m_VData, src, size * vertexcount);
 		return;
 	}
 
 	// video buffer update
-	if (!dest->m_VS[Type].m_bLocked)
+	if (!stream.m_bLocked)
 	{
 		PROFILE_FRAME(Mesh_UpdateVBuffersLock);
-		dest->m_VS[Type].m_bLocked = true;
+		stream.m_bLocked = true;
 		hr = tvert->Lock(nOffs, size * vertexcount, (void**)&pVertices, dest->m_bDynamic ? D3DLOCK_DISCARD : 0);
 		assert(!hr);
-		dest->m_VS[Type].m_VData = pVertices;
+		stream.m_VData = pVertices;
 	}
 
 	if (SUCCEEDED(hr) && src)
 	{
 		PROFILE_FRAME(Mesh_UpdateVBuffersCopy);
-		cryMemcpy(dest->m_VS[Type].m_VData, src, size * vertexcount);
+		cryMemcpy(stream.m_VData, src, size * vertexcount);
 		tvert->Unlock();
-		dest->m_VS[Type].m_bLocked = false;
+		stream.m_bLocked = false;
 		m_RP.m_PS.m_MeshUpdateBytes += size * vertexcount;
 	}
-	else
-		if (dest->m_VS[Type].m_bLocked && bUnLock)
-		{
-			tvert->Unlock();
-			dest->m_VS[Type].m_bLocked = false;
-		}
+	else if (stream.m_bLocked && bUnLock)
+	{
+		tvert->Unlock();
+		stream.m_bLocked = false;
+	}
 }
 
 void CD3D9Renderer::UnlockBuffer(CVertexBuffer* buf, int Type)
