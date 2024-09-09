@@ -22,7 +22,7 @@
 
 #if !defined(LINUX) && !defined(_DEBUG) && !defined(__SANITIZE_ADDRESS__)
 // must be disiabled when ASAN is on
-//#define USE_CRY_MEMORY_MANAGER
+#define USE_CRY_MEMORY_MANAGER
 #endif
 
 #ifdef USE_CRY_MEMORY_MANAGER
