@@ -1941,42 +1941,29 @@ CLeafBuffer::~CLeafBuffer()
 		{
 			CMatInfo* mi = m_pMats->Get(i);
 			if (mi->pMatEnt)
-			{ // pMatEnt can present only if file was loaded from co
-				delete mi->pMatEnt;
-				mi->pMatEnt = 0;
-
-				if (mi->m_dwNumSections)
-					delete[] mi->m_pPrimitiveGroups;
-				mi->m_pPrimitiveGroups = 0;
-			}
-
-			if (mi->shaderItem.m_pShader)
-				mi->shaderItem.m_pShader->Release();
-			if (mi->shaderItem.m_pShaderResources)
-				mi->shaderItem.m_pShaderResources->Release();
-
-			if (m_pMats->Get(i)->pRE)
 			{
-				m_pMats->Get(i)->pRE->Release();
+				// pMatEnt can present only if file was loaded from co
+				SAFE_DELETE(mi->pMatEnt);
+				SAFE_DELETE_ARRAY(mi->m_pPrimitiveGroups);
 			}
+
+			SAFE_RELEASE(mi->shaderItem.m_pShader);
+			SAFE_RELEASE(mi->shaderItem.m_pShaderResources);
+
+			SAFE_RELEASE(m_pMats->Get(i)->pRE);
 		}
-		delete m_pMats;
-		m_pMats = 0;
+		SAFE_DELETE(m_pMats);
 	}
 
 	FreeSystemBuffer();
 
-	if (m_pLoadedColors)
-		delete[] m_pLoadedColors;
-	m_pLoadedColors = 0;
+	SAFE_DELETE_ARRAY(m_pLoadedColors);
 
 	Unload();
 
 	DestroyIndices();
 	SAFE_DELETE(m_pIndicesPreStrip);
-
-	delete[] m_arrVertStripMap;
-	m_arrVertStripMap = 0;
+	SAFE_DELETE_ARRAY(m_arrVertStripMap);
 }
 
 void CLeafBuffer::FreeSystemBuffer()
