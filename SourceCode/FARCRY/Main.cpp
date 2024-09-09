@@ -151,6 +151,9 @@ char * getenv( const char *varname )
 
 void SetMasterCDFolder()
 {
+	if (IsDebuggerPresent())
+		return;
+
 	char szExeFileName[_MAX_PATH];
 	// Get the path of the executable
 	GetModuleFileName( GetModuleHandle(NULL), szExeFileName, sizeof(szExeFileName));
