@@ -793,7 +793,7 @@ inline double sCycles2()
 	}
 	return ((double)L +  4294967296.0 * (double)H);
 #else
-	return static_cast<double>(__rdtsc());
+  return static_cast<double>(__rdtsc());
 #endif
 
 }
@@ -805,7 +805,7 @@ _inline void makeProjectionMatrix(float fovy, float aspect, float nearval, float
 {
   float left, right, bottom, top;
 
-  top = nearval * cry_tanf(fovy * static_cast<float>(M_PI) / 360.0f);
+  top = nearval * cry_tanf(fovy * gf_PI / 360.0f);
   bottom = -top;
 
   left = bottom * aspect;

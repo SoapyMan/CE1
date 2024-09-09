@@ -53,7 +53,7 @@ inline double sCycles2()
 	}
 	return ((double)L + 4294967296.0 * (double)H);
 #else
-	return __rdtsc();
+	return static_cast<float>(__rdtsc());
 #endif
 
 }
