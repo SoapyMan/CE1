@@ -143,7 +143,7 @@ public:
   {
     assert( nElemId >= 0 && nElemId+nElemCount <= m_nCount );
 
-    const int last = nElemId + nElemId;
+    const int last = nElemId + nElemCount;
     const int rest = m_nCount - last;
     if (rest > 0)
         memmove(m_pElements + nElemId, m_pElements + last, rest * sizeof(T));
