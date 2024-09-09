@@ -5,21 +5,42 @@
 #include <platform.h>
 #include <stdlib.h>
 
+#if defined(LINUX)
+#define HMODULE void*
+#include <dlfcn.h>
+#endif
+
+#ifdef __cplusplus
+#include <new.h>
+#endif
+
+#if defined(__has_feature)
+#   if __has_feature(address_sanitizer) // for clang
+#       define __SANITIZE_ADDRESS__ // GCC already sets this
+#   endif
+#endif
+
+#if !defined(LINUX) && !defined(_DEBUG) && !defined(__SANITIZE_ADDRESS__)
+// must be disiabled when ASAN is on
+//#define USE_CRY_MEMORY_MANAGER
+#endif
+
+#ifdef USE_CRY_MEMORY_MANAGER
+
 #ifdef WIN32
 	#ifdef CRYSYSTEM_EXPORTS
 		#define CRYMEMORYMANAGER_API __declspec(dllexport)
 	#else
 		#define CRYMEMORYMANAGER_API __declspec(dllimport)
 	#endif
-#endif //WIN32 
-#if defined(LINUX)
-	#define CRYMEMORYMANAGER_API
-#endif //LINUX 
+#endif //WIN32
 
-#if defined(LINUX)
-	#define HMODULE void*
-	#include <dlfcn.h>
+#ifdef __cplusplus
+#	define CRYMEM_THROW throw()
+#else
+#	define CRYMEM_THROW
 #endif
+
 //! Structure filled by call to CryModuleGetMemoryInfo()
 struct CryModuleMemoryInfo
 {
@@ -31,85 +52,41 @@ struct CryModuleMemoryInfo
 	int num_allocations;
 };
 
-#if defined(LINUX)
-#undef _ACCESS_POOL
-#undef _SYSTEM_POOL
-#define _SYSTEM_POOL(a)
-#define _ACCESS_POOL
-#define CryModuleMalloc malloc
-#define CryModuleRealloc realloc
-#define CryModuleFree free
 #ifdef __cplusplus
-	inline void* CryModuleReallocSize(void *ptr,size_t oldsize,size_t size)  { return CryModuleRealloc(ptr,size);}
-	inline void  CryModuleFreeSize(void *ptr,size_t size) { CryModuleFree(ptr);}
-	#include <new>
-		#define throw(...) //Temporary fix - See https://stackoverflow.com/a/52804461
-		inline void * __cdecl operator new   (size_t  size) throw(std::bad_alloc) { return CryModuleMalloc(size); }
-		inline void * __cdecl operator new[](size_t size) throw(std::bad_alloc) { return CryModuleMalloc(size); };
-		inline void __cdecl operator delete  (void *p) { CryModuleFree(p); };
-		inline void __cdecl operator delete[](void *p) { CryModuleFree(p); };
-		#undef throw /* reset */
-#else
-	static void* CryModuleReallocSize(void *ptr,size_t oldsize,size_t size)  { return CryModuleRealloc(ptr,size);}
-	static void  CryModuleFreeSize(void *ptr,size_t size) { CryModuleFree(ptr);}
+extern "C" {
 #endif
-#else
 
 //////////////////////////////////////////////////////////////////////////
 // Used by overrided new and delete operators.
 //////////////////////////////////////////////////////////////////////////
-#ifdef __cplusplus
-	// C++ methods.
-	extern "C"
-	{
-		void* CryModuleMalloc(size_t size) throw();
-		void* CryModuleRealloc(void *memblock,size_t size) throw();
-		void  CryModuleFree(void *ptr) throw();
-		void* CryModuleReallocSize(void *memblock,size_t oldsize,size_t size);
-		void  CryModuleFreeSize(void *ptr,size_t size);
-	}
-	#else
-		// C methods.
-		extern void* CryModuleMalloc(size_t size);
-		extern void* CryModuleRealloc(void *memblock,size_t size);
-		extern void  CryModuleFree(void *ptr);
-		extern void* CryModuleReallocSize(void *memblock,size_t oldsize,size_t size);
-		extern void  CryModuleFreeSize(void *ptr,size_t size);
-#endif //__cplusplus
+
+void* CryModuleMalloc(size_t size) CRYMEM_THROW;
+void* CryModuleRealloc(void* memblock, size_t size) CRYMEM_THROW;
+void  CryModuleFree(void* ptr) CRYMEM_THROW;
+void* CryModuleReallocSize(void* memblock, size_t oldsize, size_t size);
+void  CryModuleFreeSize(void* ptr, size_t size);
+
 //////////////////////////////////////////////////////////////////////////
 
-#ifdef __cplusplus
-	extern "C" {
-#endif
-
 #if defined(CRYSYSTEM_EXPORTS) || (!defined(WIN32) && !defined(LINUX))
-	CRYMEMORYMANAGER_API void *CryMalloc(size_t size);
-	CRYMEMORYMANAGER_API void *CryRealloc(void *memblock,size_t size);
-	CRYMEMORYMANAGER_API void *CryReallocSize(void *memblock,size_t oldsize,size_t size);
-	CRYMEMORYMANAGER_API void CryFree(void *p);
-	CRYMEMORYMANAGER_API void CryFreeSize(void *p,size_t size);
-	CRYMEMORYMANAGER_API int CryStats(char *buf);
-	CRYMEMORYMANAGER_API void CryFlushAll();
+CRYMEMORYMANAGER_API void *CryMalloc(size_t size);
+CRYMEMORYMANAGER_API void *CryRealloc(void *memblock,size_t size);
+CRYMEMORYMANAGER_API void *CryReallocSize(void *memblock,size_t oldsize,size_t size);
+CRYMEMORYMANAGER_API void CryFree(void *p);
+CRYMEMORYMANAGER_API void CryFreeSize(void *p,size_t size);
+CRYMEMORYMANAGER_API int CryStats(char *buf);
+CRYMEMORYMANAGER_API void CryFlushAll();
 #endif
 
 #ifdef __cplusplus
-	}
+}
 #endif 
 
 
-
-//#ifndef CRYSYSTEM_EXPORTS
-
 #define _ACCESS_POOL
 
-
-#if defined(_DEBUG) || defined(DONT_USE_CRY_MEMORY_MANAGER)
-	#define CryModuleMalloc malloc
-	#define CryModuleRealloc realloc
-	#define CryModuleFree free
-#else
-	#ifdef USE_NEWPOOL
-		#define USING_CRY_MEMORY_MANAGER
+#ifdef USE_NEWPOOL
+	#define USING_CRY_MEMORY_MANAGER
 	// - check this covers all prototypes
 	// - way to check memory in use by old malloc?
 	// issues
@@ -298,9 +275,9 @@ struct _CryMemoryManagerPoolHelper
 #undef _ACCESS_POOL
 #define _ACCESS_POOL \
   _CryMemoryManagerPoolHelper g_CryMemoryManagerHelper;\
-	void* CryModuleMalloc( size_t size ) throw(){ return g_CryMemoryManagerHelper.Malloc(size); };\
-	void* CryModuleRealloc( void *ptr,size_t size )  throw(){ return g_CryMemoryManagerHelper.Realloc(ptr,size); };\
-	void  CryModuleFree( void *ptr ) throw() { g_CryMemoryManagerHelper.Free(ptr); };\
+	void* CryModuleMalloc( size_t size ) CRYMEM_THROW{ return g_CryMemoryManagerHelper.Malloc(size); };\
+	void* CryModuleRealloc( void *ptr,size_t size )  CRYMEM_THROW{ return g_CryMemoryManagerHelper.Realloc(ptr,size); };\
+	void  CryModuleFree( void *ptr ) CRYMEM_THROW { g_CryMemoryManagerHelper.Free(ptr); };\
 	void* CryModuleReallocSize(void *ptr,size_t oldsize,size_t size)  { return g_CryMemoryManagerHelper.ReallocSize(ptr,oldsize,size); };\
 	void  CryModuleFreeSize(void *ptr,size_t size) { g_CryMemoryManagerHelper.FreeSize(ptr,size); };\
 	CRY_MEM_USAGE_API void CryModuleGetMemoryInfo( CryModuleMemoryInfo *pMemInfo ) { g_CryMemoryManagerHelper.GetMemoryInfo(pMemInfo); };
@@ -308,29 +285,17 @@ struct _CryMemoryManagerPoolHelper
 // To be created inside CrySystem.
 #define _SYSTEM_POOL( hSystemHandle ) \
 	_CryMemoryManagerPoolHelper g_CryMemoryManagerHelper( hSystemHandle );\
-	void* CryModuleMalloc( size_t size ) throw() {return g_CryMemoryManagerHelper.Malloc(size); };\
-	void* CryModuleRealloc( void *ptr,size_t size ) throw(){ return g_CryMemoryManagerHelper.Realloc(ptr,size); };\
+	void* CryModuleMalloc( size_t size ) CRYMEM_THROW {return g_CryMemoryManagerHelper.Malloc(size); };\
+	void* CryModuleRealloc( void *ptr,size_t size ) CRYMEM_THROW{ return g_CryMemoryManagerHelper.Realloc(ptr,size); };\
 	void  CryModuleFree( void *ptr ) { g_CryMemoryManagerHelper.Free(ptr); };\
 	void* CryModuleReallocSize(void *ptr,size_t oldsize,size_t size)  { return g_CryMemoryManagerHelper.ReallocSize(ptr,oldsize,size); };\
 	void  CryModuleFreeSize(void *ptr,size_t size) { g_CryMemoryManagerHelper.FreeSize(ptr,size); };\
 	CRY_MEM_USAGE_API void CryModuleGetMemoryInfo( CryModuleMemoryInfo *pMemInfo ) { g_CryMemoryManagerHelper.GetMemoryInfo(pMemInfo); };
 #endif
 
-#ifdef __cplusplus
-#include <new.h>
-#endif
-
-
 #undef malloc
 #undef realloc
 #undef free
-
-
-/*
-inline void *malloc(unsigned int size) { return _CryMalloc(size); };
-inline void *realloc(void *block, unsigned int size) { return _CryRealloc(block, size); };
-inline void free(void *p) { _CryFree(p); };
-*/
 
 #if defined(__clang__)
 #define NOEXCEPT noexcept
@@ -360,8 +325,20 @@ inline void free(void *p) { _CryFree(p); };
 
 #endif // USE_NEWPOOL
 
-#endif // _DEBUG
 
-//#endif // CRYSYSTEM_EXPORTS
-#endif //LINUX
+#else
+#define CRYMEMORYMANAGER_API
+#undef _ACCESS_POOL
+#undef _SYSTEM_POOL
+#define _SYSTEM_POOL(a)
+#define _ACCESS_POOL
+#define CryModuleMalloc malloc
+#define CryModuleRealloc realloc
+#define CryModuleFree free
+
+static void* CryModuleReallocSize(void* ptr, size_t oldsize, size_t size) { return CryModuleRealloc(ptr, size); }
+static void  CryModuleFreeSize(void* ptr, size_t size) { CryModuleFree(ptr); }
+
+#endif // USE_CRY_MEMORY_MANAGER
+
 #endif //_CRY_MEMORY_MANAGER_H_

@@ -1,5 +1,7 @@
 // CryMemoryManager.cpp : Defines the entry point for the DLL application.
 
+// TODO: replace with tcmalloc if needed
+
 #include "StdAfx.h"
 
 
