@@ -4,7 +4,6 @@
 
 #include <stdio.h>
 
-
 class CPortableString: public string
 {
 	//char& operator [] (int i) {return (*this)[i];}
@@ -142,7 +141,13 @@ public:
 };
 
 // compatibility with STL Utils
-
-
+namespace std
+{
+	//! Specialization of string to const char cast.
+	inline const char* constchar_cast(const CPortableString& str)
+	{
+		return str.GetString();
+	}
+}
 
 #endif

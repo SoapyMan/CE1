@@ -1,10 +1,7 @@
 #pragma once
 
 #ifndef LINUX
-
 #include <wininet.h>
-#include <dbghelp.h>
-
 #include <IScriptSystem.h>
 #include <_ScriptableEx.h>
 

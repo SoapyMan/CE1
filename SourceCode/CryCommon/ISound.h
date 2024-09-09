@@ -24,6 +24,10 @@
 #include "StlUtils.h"
 #include "TString.h"
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+//crysound definitions
+typedef struct _FSOUND_REVERB_PROPERTIES FSOUND_REVERB_PROPERTIES;
+
 class		CCamera;
 struct	IMusicSystem;
 class		ICrySizer;
@@ -131,10 +135,6 @@ struct ISoundEventListener
 // Marco's NOTE: this is a redefine of the EAX preset OFF, since it seems
 // that audigy cards are having problems when the default EAX off preset
 #define MY_CS_PRESET_OFF  {0,	1.0f,	0.00f, -10000, -10000, -10000,   0.1f,  0.1f, 0.1f,  -10000, 0.0f, { 0.0f,0.0f,0.0f }, -10000, 0.0f, { 0.0f,0.0f,0.0f }, 0.0750f, 0.00f, 0.04f, 0.000f, 0.0f, 1000.0f, 20.0f, 0.0f,   0.0f,   0.0f, 0 }
-
-//////////////////////////////////////////////////////////////////////////////////////////////
-//crysound definitions
-#include <fmod/fmod.h>
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // Sound system interface

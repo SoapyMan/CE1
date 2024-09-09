@@ -59,23 +59,17 @@ typedef void *EVENT_HANDLE;
 #if defined(WIN32) && !defined(WIN64)
 #define _CPU_X86
 // Insert your headers here
+#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <Win32specific.h>
 
 #define RC_EXECUTABLE "rc.exe"
 #endif
 
-#ifdef _MSC_VER
-#define _CRT_SECURE_NO_WARNINGS
-#define _CRT_SECURE_NO_DEPRECATE
-#pragma warning(disable:4996)
-#pragma warning(disable:4302)
-#pragma warning(disable:4477)
-#endif
-
 #if defined(WIN64)
 #define _CPU_AMD64
 // Insert your headers here
+#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <Win64specific.h>
 

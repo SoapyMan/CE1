@@ -3520,9 +3520,6 @@ void CGLRenderer::EF_ResetStateShaderState()
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
-
-#include "../Common/NvTriStrip/NvTriStrip.h"
-
 // Used for HW effectors for rendering of tri mesh (vertex array)
 void CGLRenderer::EF_DrawIndexedMesh(int nPrimType)
 {

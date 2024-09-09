@@ -809,21 +809,17 @@ void CShader::mfInit(void)
 						if (pVar->GetType() == CVAR_FLOAT && pVar->GetFVal() != float(atof(arg[2])))
 							bCond = false;
 					}
-					else
-						if (!strnicmp(arg[0], "GPU", 3))
-						{
-							if (!strnicmp(arg[2], "NV1X", 4) && nGPU != RFT_HW_GF2)
-								bCond = false;
-							else
-								if (!strnicmp(arg[2], "NV2X", 4) && nGPU != RFT_HW_GF3)
-									bCond = false;
-								else
-									if (!strnicmp(arg[2], "R300", 4) && nGPU != RFT_HW_RADEON)
-										bCond = false;
-									else
-										if (!strnicmp(arg[2], "NV4X", 4) && nGPU != RFT_HW_NV4X)
-											bCond = false;
-						}
+					else if (!strnicmp(arg[0], "GPU", 3))
+					{
+						if (!strnicmp(arg[2], "NV1X", 4) && nGPU != RFT_HW_GF2)
+							bCond = false;
+						else if (!strnicmp(arg[2], "NV2X", 4) && nGPU != RFT_HW_GF3)
+							bCond = false;
+						else if (!strnicmp(arg[2], "R300", 4) && nGPU != RFT_HW_RADEON)
+							bCond = false;
+						else if (!strnicmp(arg[2], "NV4X", 4) && nGPU != RFT_HW_NV4X)
+							bCond = false;
+					}
 				}
 				else if (arg[0][0] == '}')
 					bCond = true;

@@ -1059,9 +1059,9 @@ void CGFConvertor::validateTangents(const TangData* pTangents, unsigned numTange
 				++numNonUnit;
 		}
 
-		fMaxEDTB = max(fMaxEDTB, Prop.fErrorDegTB);
-		fMaxEDTN = max(fMaxEDTN, Prop.fErrorDegTN);
-		fMaxEDBN = max(fMaxEDBN, Prop.fErrorDegBN);
+		fMaxEDTB = crymax(fMaxEDTB, Prop.fErrorDegTB);
+		fMaxEDTN = crymax(fMaxEDTN, Prop.fErrorDegTN);
+		fMaxEDBN = crymax(fMaxEDBN, Prop.fErrorDegBN);
 	}
 	if (numNonOrthogonal | numNonUnit)
 	{

@@ -213,7 +213,7 @@ bool CLMSerializationManager2::_Load(const char* pszFileName, std::vector<IEntit
 		else
 			pUVh = new UVSetHeader();//old format
 		assert(pUVh);
-		std::auto_ptr<UVSetHeader> uvh(pUVh);
+		std::unique_ptr<UVSetHeader> uvh(pUVh);
 		// Read position of GLM which uses this texture coordinate set
 		if (1 != GetPak()->FRead(pUVh, (sHeader.iVersion >= 3) ? sizeof(UVSetHeader3) : sizeof(UVSetHeader), 1, hFile))
 		{

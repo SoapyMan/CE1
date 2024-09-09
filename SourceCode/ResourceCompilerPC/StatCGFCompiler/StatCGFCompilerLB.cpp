@@ -24,7 +24,7 @@
 #include "CryChunkedFile.h"
 #include "CryHeaders.h"
 
-#include "NvTriStrip\NvTriStrip.h"
+#include <NvTriStrip.h>
 
 #include "meshidx.h"
 #include <IShader.h>
@@ -345,8 +345,8 @@ void CSimpleLeafBuffer::CreateLeafBuffer(CIndexedMesh* pTriData, int Stripify, b
 			Vec3d v = pV->xyz;
 			vMin.CheckMin(v);
 			vMax.CheckMax(v);
-			nMin = min(nMin, ind);
-			nMax = max(nMax, ind);
+			nMin = crymin(nMin, ind);
+			nMax = crymax(nMax, ind);
 		}
 		mi->m_vCenter = (vMin + vMax) * 0.5f;
 		mi->m_fRadius = (vMin - mi->m_vCenter).Length();
@@ -451,8 +451,6 @@ void CSimpleLeafBuffer::CompactBuffer(struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F* _
 	m_pLog->Log("  Vert buffer size after compression = %d %s ( %d -> %d )", ratio, "%", vert_num_before, *_vcount);
 }
 
-#include "NvTriStrip/NVTriStrip.h"
-
 void CSimpleLeafBuffer::StripifyMesh(int StripType, CBasis* pTangNonStrip)
 {
 	int i;
@@ -541,8 +539,8 @@ void CSimpleLeafBuffer::StripifyMesh(int StripType, CBasis* pTangNonStrip)
 				int newVertex = pg[groupCtr].indices[indexCtr] + vertFirst;
 				NewIndexes.Add(newVertex);
 
-				nMin = min(nMin, newVertex);
-				nMax = max(nMax, newVertex);
+				nMin = crymin(nMin, newVertex);
+				nMax = crymax(nMax, newVertex);
 
 				//copy from old -> new vertex buffer
 				memcpy(&pVBNew[newVertex], &pVBOld[oldVertex], sizeof(struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F));

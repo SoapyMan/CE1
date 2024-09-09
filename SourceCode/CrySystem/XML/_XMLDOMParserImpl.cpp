@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////////////////////////
 
 //#ifndef _XBOX
-#include "StdAfx.h"
+#include "../StdAfx.h"
 //#endif
 
 #include "_XMLDOMParserImpl.h"
@@ -14,7 +14,7 @@
 
 
 #define XMLPARSEAPI(type) type
-#include "Expat/expat.h"
+#include <expat.h>
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction

@@ -3,20 +3,6 @@
 
 
 #include <INetwork.h>
-
-#if defined(LINUX) || defined(WIN64)
-#include <map>
-#endif
-#ifdef WIN64
-	#define hash_map map
-#else
-#if defined(LINUX)
-#include <ext/hash_map>
-#else
-#include <hash_map>
-#endif
-#endif
-
 #include <IConsole.h>
 
 #define NET_SNOOPER_RETRY				(2)
@@ -28,7 +14,7 @@ typedef struct NETSnooperServer
 	CIPAddress			ipAddress;		//!< 
 	DWORD						dwStartTime;	//!< 
 	DWORD						dwTimeout;		//!< when current time >= dwTimeout, increase cTry, and retry
-	byte						cTry;					//!< when cTry > NET_SNOOPER_RETRY, remove from list
+	BYTE						cTry;					//!< when cTry > NET_SNOOPER_RETRY, remove from list
 	bool						bDoing;				//!< 
 } NETSnooperServer;
 

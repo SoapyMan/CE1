@@ -1377,37 +1377,34 @@ bool CCGPShader_D3D::mfActivate()
 				else
 					m_CGProfileType = CG_PROFILE_PS_1_1;
 		}
-		else
-			if (m_Flags & PSFI_PS2XONLY)
+		else if (m_Flags & PSFI_PS2XONLY)
+		{
+			if (gRenDev->m_bDeviceSupports_PS2X)
+				m_CGProfileType = CG_PROFILE_PS_2_X;
+			else if (gRenDev->GetFeatures() & RFT_HW_PS20)
 			{
-				if (gRenDev->m_bDeviceSupports_PS2X)
+				if ((gRenDev->GetFeatures() & RFT_HW_MASK) == RFT_HW_GFFX)
 					m_CGProfileType = CG_PROFILE_PS_2_X;
 				else
-					if (gRenDev->GetFeatures() & RFT_HW_PS20)
-					{
-						if ((gRenDev->GetFeatures() & RFT_HW_MASK) == RFT_HW_GFFX)
-							m_CGProfileType = CG_PROFILE_PS_2_X;
-						else
-							m_CGProfileType = CG_PROFILE_PS_2_0;
-					}
-					else
-						m_CGProfileType = CG_PROFILE_PS_1_1;
+					m_CGProfileType = CG_PROFILE_PS_2_0;
 			}
 			else
-				if (m_Flags & PSFI_PS20ONLY)
-				{
-					if (gRenDev->GetFeatures() & RFT_HW_PS20)
-					{
-						if ((gRenDev->GetFeatures() & RFT_HW_MASK) == RFT_HW_GFFX)
-							m_CGProfileType = CG_PROFILE_PS_2_X;
-						else
-							m_CGProfileType = CG_PROFILE_PS_2_0;
-					}
-					else
-						m_CGProfileType = CG_PROFILE_PS_1_1;
-				}
+				m_CGProfileType = CG_PROFILE_PS_1_1;
+		}
+		else if (m_Flags & PSFI_PS20ONLY)
+		{
+			if (gRenDev->GetFeatures() & RFT_HW_PS20)
+			{
+				if ((gRenDev->GetFeatures() & RFT_HW_MASK) == RFT_HW_GFFX)
+					m_CGProfileType = CG_PROFILE_PS_2_X;
 				else
-					m_CGProfileType = CG_PROFILE_PS_1_1;
+					m_CGProfileType = CG_PROFILE_PS_2_0;
+			}
+			else
+				m_CGProfileType = CG_PROFILE_PS_1_1;
+		}
+		else
+			m_CGProfileType = CG_PROFILE_PS_1_1;
 
 		if ((m_Insts[m_CurInst].m_Mask & VPVST_HDR) && m_CGProfileType == CG_PROFILE_PS_1_1)
 		{
@@ -1474,19 +1471,18 @@ bool CCGPShader_D3D::mfActivate()
 				statusdst = iSystem->GetIPak()->FOpen(namedst, "r");
 				if (statusdst == NULL)
 					bCreate = true;
-				else
-					if (!m_Functions.size())
-					{
-						statussrc = iSystem->GetIPak()->FOpen(namesrc, "r");
-						writetimesrc = iSystem->GetIPak()->GetModificationTime(statussrc);
-						writetimedst = iSystem->GetIPak()->GetModificationTime(statusdst);;
-						if (CompareFileTime(&writetimesrc, &writetimedst) != 0)
-							bCreate = true;
-						iSystem->GetIPak()->FGets(strVer0, 128, statusdst);
-						if (strcmp(strVer, strVer0))
-							bCreate = true;
-						iSystem->GetIPak()->FClose(statussrc);
-					}
+				else if (!m_Functions.size())
+				{
+					statussrc = iSystem->GetIPak()->FOpen(namesrc, "r");
+					writetimesrc = iSystem->GetIPak()->GetModificationTime(statussrc);
+					writetimedst = iSystem->GetIPak()->GetModificationTime(statusdst);;
+					if (CompareFileTime(&writetimesrc, &writetimedst) != 0)
+						bCreate = true;
+					iSystem->GetIPak()->FGets(strVer0, 128, statusdst);
+					if (strcmp(strVer, strVer0))
+						bCreate = true;
+					iSystem->GetIPak()->FClose(statussrc);
+				}
 			}
 		}
 		else
@@ -1500,6 +1496,7 @@ bool CCGPShader_D3D::mfActivate()
 				iSystem->GetIPak()->FClose(statusdst);
 				statusdst = NULL;
 			}
+
 			m_Flags |= PSFI_WASGENERATED;
 			char* scr = mfCreateAdditionalPS();
 

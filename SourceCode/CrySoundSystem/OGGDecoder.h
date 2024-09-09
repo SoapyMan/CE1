@@ -1,7 +1,7 @@
 #pragma once
 
 #include "PatternDecoder.h"
-#include <vorbis/vorbisfile.h>
+#include <minivorbis.h>
 
 struct IMusicSystem;
 class COGGDecoderInstance;

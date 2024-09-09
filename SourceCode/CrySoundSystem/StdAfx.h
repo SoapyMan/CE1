@@ -44,7 +44,7 @@
 #include <IConsole.h>
 #include <ISound.h>
 #include <ISystem.h>
-#include <fmod/fmod.h>
+#include <fmod.h>
 #include <Cry_Math.h>
 //#include <vector.h>
 #include <set>

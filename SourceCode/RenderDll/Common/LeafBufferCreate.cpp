@@ -12,6 +12,7 @@
 
 #include <CryCompiledFile.h>
 #include <VertexBufferSource.h>
+#include <NvTriStrip.h>
 
 CLeafBuffer CLeafBuffer::m_Root("Root");
 CLeafBuffer CLeafBuffer::m_RootGlobal("RootGlobal");
@@ -1109,8 +1110,6 @@ bool CLeafBuffer::CreateBuffer(struct VertexBufferSource* pSource)
 	*/
 	return false;
 }
-
-#include "NvTriStrip/NvTriStrip.h"
 
 void CLeafBuffer::StripifyMesh(int StripType)
 {

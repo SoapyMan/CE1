@@ -523,7 +523,7 @@ void CMovieSystem::Update(float dt)
 	std::vector<IAnimSequence*> stopSequences;
 
 	// cap delta time.
-	dt = max(0, min(0.5f, dt));
+	dt = crymax(0, crymin(0.5f, dt));
 
 	PlayingSequences::iterator next;
 	for (PlayingSequences::iterator it = m_playingSequences.begin(); it != m_playingSequences.end(); it = next)

@@ -10,9 +10,9 @@
 //-------------------------------------------------------------------------------------------------
 #include "StdAfx.h"
 #include "FontRenderer.h"
-#include "FreeType2/include/freetype/ftoutln.h"
-#include "FreeType2/include/freetype/ftglyph.h"
-#include "FreeType2/include/freetype/ftimage.h"
+#include <freetype/ftoutln.h>
+#include <freetype/ftglyph.h>
+#include <freetype/ftimage.h>
 
 
 

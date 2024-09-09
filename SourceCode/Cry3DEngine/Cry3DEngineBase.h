@@ -21,6 +21,7 @@ struct ISystem;
 struct IRenderer;
 struct ILog;
 class  IPhysicalWorld;
+struct ICryPak;
 struct ITimer;
 struct IConsole;
 struct I3DEngine;

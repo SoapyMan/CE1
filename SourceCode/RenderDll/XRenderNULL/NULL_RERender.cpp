@@ -112,9 +112,6 @@ bool CREFlashBang::mfDraw(SShader* ef, SShaderPass* sfm)
 {
 	return true;
 }
-void CREFlashBang::mfPrepare()
-{
-}
 
 // screen process 
 bool CREScreenProcess::mfDraw(SShader* ef, SShaderPass* sfm)

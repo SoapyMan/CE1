@@ -26,7 +26,7 @@
 
 #include "meshidx.h"
 #include "IShader.h"
-#include "NvTriStrip\NvTriStrip.h"
+#include <NvTriStrip.h>
 
 #include "SerializeBuffer.h"
 

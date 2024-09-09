@@ -31,18 +31,6 @@ TiZ: some modification to adapt the code to run under PS2.
 #include <d3d.h>
 #endif
 
-#ifdef PS2
-/////////////////////////////////////
-// should be in ddraw.h
-
-#ifndef MAKEFOURCC
-    #define MAKEFOURCC(ch0, ch1, ch2, ch3)                              \
-                ((DWORD)(BYTE)(ch0) | ((DWORD)(BYTE)(ch1) << 8) |   \
-                ((DWORD)(BYTE)(ch2) << 16) | ((DWORD)(BYTE)(ch3) << 24 ))
-#endif //defined(MAKEFOURCC)
-
-#endif
-
 struct TimingInfo;		// defined in Image_DXTC.cpp
 
 #define byte 	unsigned char

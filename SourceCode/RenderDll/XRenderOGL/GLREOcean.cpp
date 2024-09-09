@@ -10,7 +10,6 @@
 #include "RenderPCH.h"
 #include "GL_Renderer.h"
 #include "I3DEngine.h"
-#include "../Common/NvTriStrip/NvTriStrip.h"
 #include "GLCGVProgram.h"
 
 #undef THIS_FILE

@@ -1,9 +1,9 @@
-#include "StdAfx.h"
+#include "../StdAfx.h"
 
 #include <stdlib.h>
 
 #define XMLPARSEAPI(type) type
-#include "Expat/expat.h"
+#include <expat.h>
 #include "xml.h"
 #include <string>
 

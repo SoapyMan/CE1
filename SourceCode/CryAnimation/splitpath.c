@@ -36,7 +36,7 @@
 *Exceptions:
 *
 *******************************************************************************/
-#ifndef WIN32
+#if !defined(_XBOX) & !defined(_WIN32)
 void portable_splitpath (
         const char *path,
         char *drive,

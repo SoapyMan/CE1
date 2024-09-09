@@ -7,6 +7,7 @@
 
 =============================================================================*/
 
+#include <Windows.h>
 #include "RenderPCH.h"
 #include "DriverD3D9.h"
 #include "I3dengine.h"

@@ -16,6 +16,7 @@
 #endif	
 
 #if defined(WIN32) || defined(WIN64)
+#define WIN32_LEAN_AND_MEAN
 #include "windows.h"
 #include "Wininet.h"
 #endif

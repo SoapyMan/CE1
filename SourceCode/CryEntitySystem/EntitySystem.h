@@ -19,7 +19,7 @@
 # pragma once
 #endif
 
-#include <map>
+#include <unordered_map>
 #include <set>
 #include <vector>
 #include <IEntitySystem.h>
@@ -34,26 +34,8 @@ class CStaticObject;
 class CStatObjInfo;
 class CEntityClonesMgr;
 
-#ifdef WIN64
-// workaround for Amd64 compiler
-#include <map>
-#define hash_map map 
-#else
-#if defined(LINUX)
-#include <ext/hash_map>
-#include "IEntityRenderState.h"
-#else
-#include <hash_map>
-#endif
-#endif
-
-#if defined(LINUX)
-	typedef __gnu_cxx::hash_map<EntityId,CEntity*> EntityMap;
-	typedef __gnu_cxx::hash_map<EntityId,CEntity*>::iterator EntityMapItor;
-#else
-	typedef std::hash_map<EntityId,CEntity*> EntityMap;
-	typedef EntityMap::iterator EntityMapItor;
-#endif
+typedef std::unordered_map<EntityId,CEntity*> EntityMap;
+typedef EntityMap::iterator EntityMapItor;
 
 typedef std::vector<CEntity*> EntityVector;
 typedef EntityVector::iterator EntityVectorItor;

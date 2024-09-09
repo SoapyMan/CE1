@@ -14,25 +14,10 @@
 #define _STL_UTILS_HEADER_
 
 #include <algorithm>
-
-// searches the given entry in the map by key, and if there is none, returns the default value
-#ifdef WIN64
 #include <map>
-#define hash_map map
+
 template <typename Map, typename key_type, typename mapped_type>
 inline mapped_type find_in_map(const Map& mapKeyToValue, key_type key, mapped_type valueDefault)
-#else
-#if defined(LINUX)
-#include "platform.h"
-#include <ext/hash_map>
-#else
-#include <hash_map>
-#endif
- // TODO: get rid of it and use map
-template <typename Map>
-inline typename Map::mapped_type find_in_map(const Map& mapKeyToValue, typename Map::key_type key, typename Map::mapped_type valueDefault)
-#endif
-
 {
 	typename Map::const_iterator it = mapKeyToValue.find (key);
 	if (it == mapKeyToValue.end())
@@ -252,7 +237,7 @@ namespace stl
 
 	//////////////////////////////////////////////////////////////////////////
 	// Hash map usage:
-	// typedef stl::hash_map<string,int, stl::hash_stricmp<string> > StringToIntHash;
+	// typedef stl::unordered_map<string,int, stl::hash_stricmp<string> > StringToIntHash;
 	//////////////////////////////////////////////////////////////////////////
 
 	//////////////////////////////////////////////////////////////////////////
@@ -303,17 +288,9 @@ namespace stl
 				return stricmp(constchar_cast(key1),constchar_cast(key2)) < 0;
 			}
 	};
-#if !defined(LINUX)
-	// Support for both Microsoft and SGI kind of hash_map.
-	template <class Key,class Value,class HashFunc>
-	class hash_map : 
-#ifdef _STLP_HASH_MAP // STL Port
-		std::hash_map<Key,Value,HashFunc,HashFunc>
-#else
-		std::hash_map<Key,Value,HashFunc>
-#endif // STL Port
-	{};
-#endif //LINUX
+
 }
+
+
 
 #endif

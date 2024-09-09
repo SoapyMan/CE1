@@ -3,6 +3,7 @@
 
 #include "StdAfx.h"
 #if !defined(_XBOX) && !defined(LINUX)
+#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #else
 #if !defined(LINUX)

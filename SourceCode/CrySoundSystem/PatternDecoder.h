@@ -1,6 +1,7 @@
 #pragma once
 
 #define LOG_MUSICFILES
+#undef WAVE_FORMAT_PCM
 
 struct SMusicPatternFileInfo
 {

@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "MTSafeAllocator.h"
 #include "TArrays.h"
-#include "zlib/zlib.h"
+#include <zlib.h>
 #include "smartptr.h"
 #include "ZipFileFormat.h"
 #include "ZipDirStructures.h"

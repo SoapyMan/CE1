@@ -20,7 +20,7 @@
 #pragma once
 
 #include "IConsole.h"
-#include "../PunkBuster/pbcommon.h"
+#include <pbcommon.h>
 
 class CNetwork;
 class CServer;

@@ -97,7 +97,7 @@ DWORD ResourceCompiler::GetFileUnixTimeMax(const char* filename)
 	FILETIME ftWrite, ftCreate;
 	if (GetFileTime(filename, &ftWrite, &ftCreate))
 	{
-		return max(FileUtil::FiletimeToUnixTime(ftWrite), FileUtil::FiletimeToUnixTime(ftCreate));
+		return crymax(FileUtil::FiletimeToUnixTime(ftWrite), FileUtil::FiletimeToUnixTime(ftCreate));
 	}
 	else
 		return 0;
@@ -109,7 +109,7 @@ DWORD ResourceCompiler::GetFileUnixTimeMin(const char* filename)
 	FILETIME ftWrite, ftCreate;
 	if (GetFileTime(filename, &ftWrite, &ftCreate))
 	{
-		return min(FileUtil::FiletimeToUnixTime(ftWrite), FileUtil::FiletimeToUnixTime(ftCreate));
+		return crymin(FileUtil::FiletimeToUnixTime(ftWrite), FileUtil::FiletimeToUnixTime(ftCreate));
 	}
 	else
 		return 0;

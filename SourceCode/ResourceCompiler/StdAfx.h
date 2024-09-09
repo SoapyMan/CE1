@@ -34,21 +34,7 @@ typedef CPortableString CString;
 #include <map>
 #include <set>
 #include <string>
-#ifdef WIN64
-#define hash_map map
-#include "StlUtils.h"
-//! Specialization of string to const char cast.
-namespace stl{
-template <>
-inline const char* constchar_cast( const CPortableString &str )
-{
-	return str.GetString();
-}
-}
 
-#else
-#include <hash_map>
-#endif
 //#include <StlDbgAlloc.h>
 // to make smoother transition back from cry to std namespace...
 #define cry std

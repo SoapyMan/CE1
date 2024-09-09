@@ -12,7 +12,7 @@
 #include "D3DCGVProgram.h"
 #include "D3DCGPShader.h"
 #include "I3dengine.h"
-#include "../Common/NvTriStrip/NVTriStrip.h"
+#include <NVTriStrip.h>
 
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;

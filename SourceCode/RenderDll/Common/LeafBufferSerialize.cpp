@@ -15,7 +15,7 @@
 
 #include "RenderPCH.h"
 #include "CryHeaders.h"
-#include "NvTriStrip/NvTriStrip.h"
+#include <NvTriStrip.h>
 #include "SerializeBuffer.h"
 #include "MakMatInfoFromMAT_ENTITY.h"
 

@@ -48,13 +48,8 @@
 #include <ICryPak.h>
 #include <chrono>
 #include <time.h>
-
-#if !defined(LINUX)
-#	include <dbghelp.h>
-#	pragma comment(lib, "dbghelp.lib")
-#else
-#	include <stdio.h>
-#endif
+#include <fmod.h>
+#include <stdio.h>
 
 #if defined(LINUX)
 #include "ILog.h"
@@ -674,24 +669,7 @@ void CXGame::Save(string sFileName, Vec3d* pos, Vec3d* angles, bool bFirstCheckp
 
 		m_pLog->LogToConsole("Level saved in %d bytes(%s)", BITS2BYTES(stm.GetSize()), sFileName.c_str());
 
-		// replace / by \ because MakeSureDirectoryPathExists does not work with unix paths
 		size_t pos = 1;
-#ifndef __linux
-		for (;;)
-		{
-			pos = sFileName.find_first_of("/", pos);
-
-			if (pos == string::npos)
-			{
-				break;
-			}
-
-			sFileName.replace(pos, 1, "\\", 1);
-			pos += 1;
-		}
-
-		if (MakeSureDirectoryPathExists(sFileName.c_str()))
-#else
 		ICryPak* pPak = m_pSystem->GetIPak();
 		char dname[256];
 		strcpy(dname, sFileName.c_str());
@@ -701,7 +679,6 @@ void CXGame::Save(string sFileName, Vec3d* pos, Vec3d* angles, bool bFirstCheckp
 			*last_slash = '\0';
 		}
 		if (pPak->MakeDir(dname))
-#endif
 		{
 			if (!m_pSystem->WriteCompressedFile((char*)sFileName.c_str(), stm.GetPtr(), stm.GetSize()))
 			{

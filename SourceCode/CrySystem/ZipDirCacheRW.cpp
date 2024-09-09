@@ -13,7 +13,7 @@
 #include <sys/stat.h>
 #endif
 // declaration of Z_OK for ZipRawDecompress
-#include "zlib/zlib.h"
+#include <zlib.h>
 
 using namespace ZipFile;
 

@@ -1954,20 +1954,16 @@ void CCGVProgram_D3D::mfGetDstFileName(char* dstname, int nSize, bool bUseASCIIC
 
 	if (m_Flags & VPFI_AUTOENUMTC)
 		type = "D3D9_Auto";
+	else if (m_CGProfileType == CG_PROFILE_VS_1_1)
+		type = "D3D9_VS11";
+	else if (m_CGProfileType == CG_PROFILE_VS_2_0)
+		type = "D3D9_VS20";
+	else if (m_CGProfileType == CG_PROFILE_VS_2_X)
+		type = "D3D9_VS2X";
+	else if (m_CGProfileType == CG_PROFILE_VS_3_0)
+		type = "D3D9_VS30";
 	else
-		if (m_CGProfileType == CG_PROFILE_VS_1_1)
-			type = "D3D9_VS11";
-		else
-			if (m_CGProfileType == CG_PROFILE_VS_2_0)
-				type = "D3D9_VS20";
-			else
-				if (m_CGProfileType == CG_PROFILE_VS_2_X)
-					type = "D3D9_VS2X";
-				else
-					if (m_CGProfileType == CG_PROFILE_VS_3_0)
-						type = "D3D9_VS30";
-					else
-						type = "Unknown";
+		type = "Unknown";
 
 	char* fog = "";
 	if ((m_Insts[m_CurInst].m_Mask & VPVST_FOGGLOBAL) || m_CGProfileType == CG_PROFILE_VS_3_0)
@@ -2354,22 +2350,20 @@ bool CCGVProgram_D3D::mfActivate(CVProgram* pPosVP)
 		{
 			if (gRenDev->GetFeatures() & RFT_HW_PS30)
 				m_CGProfileType = CG_PROFILE_VS_3_0;
-			else
-				if (gRenDev->GetFeatures() & RFT_HW_PS20)
-					m_CGProfileType = VS20Profile;
-				else
-					m_CGProfileType = CG_PROFILE_VS_1_1;
-		}
-		else
-			if (m_Flags & VPFI_VS20ONLY)
-			{
-				if (gRenDev->GetFeatures() & RFT_HW_PS20)
-					m_CGProfileType = VS20Profile;
-				else
-					m_CGProfileType = CG_PROFILE_VS_1_1;
-			}
+			else if (gRenDev->GetFeatures() & RFT_HW_PS20)
+				m_CGProfileType = VS20Profile;
 			else
 				m_CGProfileType = CG_PROFILE_VS_1_1;
+		}
+		else if (m_Flags & VPFI_VS20ONLY)
+		{
+			if (gRenDev->GetFeatures() & RFT_HW_PS20)
+				m_CGProfileType = VS20Profile;
+			else
+				m_CGProfileType = CG_PROFILE_VS_1_1;
+		}
+		else
+			m_CGProfileType = CG_PROFILE_VS_1_1;
 
 		if (m_Insts[m_CurInst].m_Mask & (VPVST_INSTANCING_NOROT | VPVST_INSTANCING_ROT))
 		{
@@ -2435,19 +2429,18 @@ bool CCGVProgram_D3D::mfActivate(CVProgram* pPosVP)
 				statusdst = iSystem->GetIPak()->FOpen(namedst, "r");
 				if (statusdst == NULL)
 					bCreate = true;
-				else
-					if (!m_Functions.size())
-					{
-						statussrc = iSystem->GetIPak()->FOpen(namesrc, "r");
-						writetimesrc = iSystem->GetIPak()->GetModificationTime(statussrc);
-						writetimedst = iSystem->GetIPak()->GetModificationTime(statusdst);;
-						if (CompareFileTime(&writetimesrc, &writetimedst) != 0)
-							bCreate = true;
-						iSystem->GetIPak()->FGets(strVer0, 128, statusdst);
-						if (strcmp(strVer, strVer0))
-							bCreate = true;
-						iSystem->GetIPak()->FClose(statussrc);
-					}
+				else if (!m_Functions.size())
+				{
+					statussrc = iSystem->GetIPak()->FOpen(namesrc, "r");
+					writetimesrc = iSystem->GetIPak()->GetModificationTime(statussrc);
+					writetimedst = iSystem->GetIPak()->GetModificationTime(statusdst);;
+					if (CompareFileTime(&writetimesrc, &writetimedst) != 0)
+						bCreate = true;
+					iSystem->GetIPak()->FGets(strVer0, 128, statusdst);
+					if (strcmp(strVer, strVer0))
+						bCreate = true;
+					iSystem->GetIPak()->FClose(statussrc);
+				}
 			}
 		}
 		else

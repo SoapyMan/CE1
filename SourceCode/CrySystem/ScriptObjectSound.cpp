@@ -9,7 +9,7 @@
 #include <IConsole.h>
 #include <ILog.h>
 #include <ISound.h>
-#include <fmod/fmod.h>
+#include <fmod.h>
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction

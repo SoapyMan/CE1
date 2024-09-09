@@ -2,7 +2,7 @@
 #include <ILog.h>
 #include <Stream.h>
 #include "System.h"
-#include "zlib/zlib.h"
+#include <zlib.h>
 #if defined(LINUX)
 #	include <sys/io.h>
 #else

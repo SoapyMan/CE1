@@ -23,9 +23,9 @@
  */
 
 /* this is not a core library module, so it doesn't define JPEG_INTERNALS */
-#include "jpeg6/jinclude.h"
-#include "jpeg6/jpeglib.h"
-#include "jpeg6/jerror.h"
+#include <jinclude.h>
+#include <jpeglib.h>
+#include <jerror.h>
 
 
 /* Expanded data source object for stdio input */
@@ -134,7 +134,7 @@ my_jpeg_memory_src (j_decompress_ptr cinfo, char * inbfr, int len)
   src->pub.init_source = init_source;
   src->pub.fill_input_buffer = fill_input_buffer;
   src->pub.skip_input_data = skip_input_data;
-  src->pub.resync_to_restart = my_jpeg_resync_to_restart; /* use default method */
+  src->pub.resync_to_restart = jpeg_resync_to_restart; /* use default method */
   src->pub.term_source = term_source;
   src->infile = 0L;
   src->pub.bytes_in_buffer = len;		/*!!! sets to entire file len */

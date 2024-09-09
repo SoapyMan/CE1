@@ -567,9 +567,6 @@ void CGLRenderer::UpdateBuffer(CVertexBuffer* dest, const void* src, int vertexc
 	}
 }
 
-
-#include "../Common/NvTriStrip/NvTriStrip.h"
-
 ///////////////////////////////////////////
 void CGLRenderer::DrawBuffer(CVertexBuffer* src, SVertexStream* indicies, int numindices, int offsindex, int prmode, int vert_start, int vert_num, CMatInfo* mi)
 {

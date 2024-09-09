@@ -1,7 +1,5 @@
-#ifdef WIN32
-#define portable_makepath _makepath 
-#else
-#ifdef _XBOX
+#if defined(_XBOX)
+
 #ifdef __cplusplus
 extern "C" void portable_makepath (
         char *path,
@@ -19,13 +17,9 @@ void portable_makepath (
         const char *ext
 		);
 #endif // _CPP
-#else // _XBOX
-extern "C" void portable_makepath (
-        char *path,
-        const char *drive,
-        const char *dir,
-        const char *fname,
-        const char *ext
-        );
-#endif // _XBOX
+
+#elif defined(_WIN32)
+
+#define portable_makepath _makepath 
+
 #endif

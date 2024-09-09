@@ -99,6 +99,7 @@ _inline void __cdecl __CRYTEKDLL_TRACE(const char *sFormat, ... )
 /*
 #ifndef _XBOX
 #ifdef WIN32
+#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <stdarg.h>
 #endif

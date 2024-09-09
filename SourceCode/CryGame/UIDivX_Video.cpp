@@ -15,6 +15,7 @@
 #if !defined(LINUX) &&  !defined(NOT_USE_DIVX_SDK)
 
 #include <Cry_Math.h>
+#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include "UIDivX_Video.h"
 #include "UIVideoPanel.h"

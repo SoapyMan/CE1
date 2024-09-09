@@ -33,7 +33,7 @@
 *Exceptions:
 *
 *******************************************************************************/
-#ifndef WIN32
+#if !defined(_XBOX) & !defined(_WIN32)
 void portable_makepath (
         char *path,
         const char *drive,

@@ -103,15 +103,6 @@ void CRTDeleteArray(void *pData);
 #include <vector>
 #include <list>
 #include <map>
-#ifdef WIN64
-#define hash_map map
-#else
-#if defined(LINUX)
-#include <ext/hash_map>
-#else
-#include <hash_map>
-#endif
-#endif
 #include <set>
 #include <string>
 #include <algorithm>

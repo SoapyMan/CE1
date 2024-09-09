@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "RenderMeshBuilder.h"
 #include "StlUtils.h"
-#include "NvTriStrip/NvTriStrip.h"
+#include <NvTriStrip.h>
 
 // constructs everything for the render mesh out of the given mesh
 void CRenderMeshBuilder::build(const CryChunkedFile::MeshDesc* pMeshDesc)

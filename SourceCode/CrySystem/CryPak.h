@@ -433,7 +433,7 @@ public:
 
 	void OnMissingFile (const char* szPath);
 	// missing file -> count of missing files
-	typedef CMTSafeAllocator<std::pair<string, unsigned> > MissingFileMapAllocator;
+	typedef CMTSafeAllocator<std::pair<const string, unsigned> > MissingFileMapAllocator;
 	typedef std::map<string, unsigned, std::less<string>, MissingFileMapAllocator > MissingFileMap;
 	MissingFileMap m_mapMissingFiles;
 };

@@ -248,12 +248,12 @@ void CSimpleStatObj::Physicalize()
 				Vec3d ptmin = pExVerts[0], ptmax = pExVerts[0], sz;
 				for (int i = 1; i < init_count; i++)
 				{
-					ptmin.x = min(ptmin.x, pExVerts[i].x);
-					ptmax.x = max(ptmax.x, pExVerts[i].x);
-					ptmin.y = min(ptmin.y, pExVerts[i].y);
-					ptmax.y = max(ptmax.y, pExVerts[i].y);
-					ptmin.z = min(ptmin.z, pExVerts[i].z);
-					ptmax.z = max(ptmax.z, pExVerts[i].z);
+					ptmin.x = crymin(ptmin.x, pExVerts[i].x);
+					ptmax.x = crymax(ptmax.x, pExVerts[i].x);
+					ptmin.y = crymin(ptmin.y, pExVerts[i].y);
+					ptmax.y = crymax(ptmax.y, pExVerts[i].y);
+					ptmin.z = crymin(ptmin.z, pExVerts[i].z);
+					ptmax.z = crymax(ptmax.z, pExVerts[i].z);
 				}
 				int nMinTrisPerNode = 2, nMaxTrisPerNode = 4;
 				sz = ptmax - ptmin;
@@ -267,7 +267,7 @@ void CSimpleStatObj::Physicalize()
 				}
 				else
 					flags |= mesh_approx_box | mesh_approx_sphere;
-				if (lstPhysIndices.Count() < 600 && max(max(sz.x, sz.y), sz.z) > 6) // make more dense OBBs for large (wrt terrain grid) objects
+				if (lstPhysIndices.Count() < 600 && crymax(crymax(sz.x, sz.y), sz.z) > 6) // make more dense OBBs for large (wrt terrain grid) objects
 					nMinTrisPerNode = nMaxTrisPerNode = 1;
 
 				//        assert(0);

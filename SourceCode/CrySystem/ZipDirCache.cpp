@@ -8,7 +8,7 @@
 #include "ZipDirCache.h"
 #include "ZipDirFind.h"
 #include "ZipDirCacheFactory.h"
-#include "zlib/zlib.h"
+#include <zlib.h>
 
 using namespace ZipFile;
 

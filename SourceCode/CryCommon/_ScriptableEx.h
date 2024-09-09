@@ -6,17 +6,8 @@
 
 #include <vector>
 #include <string>
-//#define _NO_HASHMAP
+
 //#define NO_USERDATA_FOR_PROPERTIES
-#ifndef _NO_HASHMAP
-#include <map>
-#else
-#if defined(LINUX)
-#include <ext/hash_map>
-#else
-#include <hash_map>
-#endif
-#endif
 
 template<class T>
 class _ScriptableEx
@@ -38,9 +29,6 @@ public:
 			m_pScriptThis->AddSetGetHandlers(NULL,NULL);
 			m_pScriptThis->Release();
 		}
-
-
-
 	}
 
 	typedef int(T::*MemberFunc)(IFunctionHandler *pH);

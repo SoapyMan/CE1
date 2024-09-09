@@ -18,7 +18,7 @@
 #endif
 
 #ifndef _XBOX
-#ifdef WIN32
+#if defined(WIN32) && !defined(USE_SDL_INPUT)
 #include <dinput.h>
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>

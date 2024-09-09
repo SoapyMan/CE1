@@ -608,14 +608,13 @@ void CShader::mfCheckAffectedFiles(const char* ShadersPath, int nCheckFile, TArr
 				if (CRenderer::CV_r_usehwshaders != 2)
 					continue;
 			}
-			else
-				if (!stricmp(&nmf[len + 4], "old"))
-				{
-					if (CRenderer::CV_r_usehwshaders != 1)
-						continue;
-				}
-				else
+			else if (!stricmp(&nmf[len + 4], "old"))
+			{
+				if (CRenderer::CV_r_usehwshaders != 1)
 					continue;
+			}
+			else
+				continue;
 		}
 
 		fp = iSystem->GetIPak()->FOpen(nmf, "rb");
@@ -2333,14 +2332,13 @@ int CShader::mfLoadSubdir(char* drn, int n)
 				if (CRenderer::CV_r_usehwshaders != 2)
 					continue;
 			}
-			else
-				if (!stricmp(&nmf[len + 4], "old"))
-				{
-					if (CRenderer::CV_r_usehwshaders != 1)
-						continue;
-				}
-				else
+			else if (!stricmp(&nmf[len + 4], "old"))
+			{
+				if (CRenderer::CV_r_usehwshaders != 1)
 					continue;
+			}
+			else
+				continue;
 		}
 
 		char* pFinalScript = mfScriptForFileName(nmf, NULL, 0);
