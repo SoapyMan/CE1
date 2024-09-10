@@ -549,7 +549,7 @@ void C3DEngine::LoadEnvironmentSettingsFromXML(const char* szMissionName, bool b
 
 	// set default values
 	m_vFogColor(1, 1, 1);
-	m_fDefMaxViewDist = m_fMaxViewDist = 1024;
+	m_fDefMaxViewDist = m_fMaxViewDist = DEFAULT_ZMAX;
 	m_vDefFogColor = m_vFogColor;
 	m_fDefFogNearDist = m_fFogNearDist = 50;
 	m_fDefFogFarDist = m_fFogFarDist = 1500;

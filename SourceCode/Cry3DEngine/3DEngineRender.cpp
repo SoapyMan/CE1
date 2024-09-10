@@ -1135,7 +1135,7 @@ void C3DEngine::DrawTerrainDetailTextureLayers()
 
 void C3DEngine::DrawFarTrees()
 {
-	m_pObjManager->DrawFarObjects(m_fMaxViewDist);
+	m_pObjManager->DrawFarObjects(m_fMaxViewDist * m_pCVars->e_vegetation_sprites_distance_ratio);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////

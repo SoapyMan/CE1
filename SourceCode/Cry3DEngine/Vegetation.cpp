@@ -373,27 +373,26 @@ bool CStatObjInst::DrawEntity(const struct SRendParams& _EntDrawParams)
 			m_pObjManager->m_pCoverageBuffer->AddBBox(vTopMin, vTopMax, vCamPos - m_vPos);
 		}
 	}
-	else // process sprite
-		if (!bUse3DOnly && fDistance > near_far_dist)
-		{ // add to the list of far objects
-			if (m_pObjManager->m_lstFarObjects[m_pObjManager->m_nRenderStackLevel].Count() < 16384)
+	else  if (!bUse3DOnly && fDistance > near_far_dist) // process sprite
+	{ // add to the list of far objects
+		if (m_pObjManager->m_lstFarObjects[m_pObjManager->m_nRenderStackLevel].Count() < 16384)
+		{
+			if (!m_pObjManager->m_nRenderStackLevel)
 			{
-				if (!m_pObjManager->m_nRenderStackLevel)
+				if (fLodSwitchCountDown < 1.f)
 				{
-					if (fLodSwitchCountDown < 1.f)
-					{
-						float DZ = m_vPos.z + pBody->GetCenter().z * m_fScale - vCamPos.z;
-						float fAngle2 = -cry_atanf(DZ / fDistance) * (1.f - fLodSwitchCountDown);
-						fAngle2 = crymax(0, crymin(1, (fAngle2 + 0.5f)));
-						m_ucLodAngle = uchar(fAngle2 * 255.f);
-					}
-					else
-						m_ucLodAngle = 127;
+					float DZ = m_vPos.z + pBody->GetCenter().z * m_fScale - vCamPos.z;
+					float fAngle2 = -cry_atanf(DZ / fDistance) * (1.f - fLodSwitchCountDown);
+					fAngle2 = crymax(0, crymin(1, (fAngle2 + 0.5f)));
+					m_ucLodAngle = uchar(fAngle2 * 255.f);
 				}
-
-				m_pObjManager->m_lstFarObjects[m_pObjManager->m_nRenderStackLevel].Add(this);
+				else
+					m_ucLodAngle = 127;
 			}
+
+			m_pObjManager->m_lstFarObjects[m_pObjManager->m_nRenderStackLevel].Add(this);
 		}
+	}
 
 	return true;
 }

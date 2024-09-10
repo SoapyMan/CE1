@@ -33,7 +33,7 @@ Plane GetPlane(const Vec3 &v0, const Vec3 &v1, const Vec3 &v2);
 #endif
 //////////////////////////////////////////////////////////////////////
 
-#define DEFAULT_ZMAX	1024.0f
+#define DEFAULT_ZMAX	1500.0f
 #define DEFAULT_ZMIN	0.25f
 #define DEFAULT_FOV		gf_PI/2
 

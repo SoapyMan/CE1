@@ -96,7 +96,7 @@ void CGLRenderer::DrawObjSprites_NoBend(list2<CStatObjInst*>* pList, float fMaxV
 			fMaxDist = max_view_dist;
 
 		float fFadeOut;
-		if (pObjMan->m_lstStaticTypes[o->m_nObjectTypeID].bFadeSize)
+		if (!CV_r_VegetationSpritesNoScale && pObjMan->m_lstStaticTypes[o->m_nObjectTypeID].bFadeSize)
 		{
 			fFadeOut = (1.f - (fDistance * pObjMan->m_fZoomFactor) / (fMaxDist)) * 8.f;
 			if (fFadeOut <= 0)
@@ -414,7 +414,7 @@ void CGLRenderer::DrawObjSprites_NoBend_Merge(list2<CStatObjInst*>* pList, float
 			fMaxDist = max_view_dist;
 
 		float fFadeOut;
-		if (pObjMan->m_lstStaticTypes[o->m_nObjectTypeID].bFadeSize)
+		if (!CV_r_VegetationSpritesNoScale && pObjMan->m_lstStaticTypes[o->m_nObjectTypeID].bFadeSize)
 		{
 			fFadeOut = (1.f - (fDistance * pObjMan->m_fZoomFactor) / (fMaxDist)) * 8.f;
 			if (fFadeOut <= 0)

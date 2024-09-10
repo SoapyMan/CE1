@@ -22,7 +22,7 @@
 #define MAX_MML_LEVEL  3
 #define MAX_TEX_MML_LEVEL  1
 
-#define DETAIL_TEX_DISTANCE (0.065f*m_fMaxViewDist)//64
+#define DETAIL_TEX_DISTANCE (0.15f*m_fMaxViewDist)//64
 
 #define MIN_ALLOWED_MERGED_SECTORS_DISTANCE 512
 

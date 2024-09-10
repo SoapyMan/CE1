@@ -241,7 +241,7 @@ void CD3D9Renderer::DrawObjSprites_NoBend(list2<CStatObjInst*>* pList, float fMa
 			fMaxDist = max_view_dist;
 
 		float fFadeOut;
-		if (pObjMan->m_lstStaticTypes[o->m_nObjectTypeID].bFadeSize)
+		if (!CV_r_VegetationSpritesNoScale && pObjMan->m_lstStaticTypes[o->m_nObjectTypeID].bFadeSize)
 		{
 			fFadeOut = (1.f - (fDistance * pObjMan->m_fZoomFactor) / (fMaxDist)) * 8.f;
 			if (fFadeOut <= 0)
@@ -609,7 +609,7 @@ void CD3D9Renderer::DrawObjSprites_NoBend_Merge(list2<CStatObjInst*>* pList, flo
 			fMaxDist = max_view_dist;
 
 		float fFadeOut;
-		if (pObjMan->m_lstStaticTypes[o->m_nObjectTypeID].bFadeSize)
+		if (!CV_r_VegetationSpritesNoScale && pObjMan->m_lstStaticTypes[o->m_nObjectTypeID].bFadeSize)
 		{
 			fFadeOut = (1.f - (fDistance * pObjMan->m_fZoomFactor) / (fMaxDist)) * 8.f;
 			if (fFadeOut <= 0)
@@ -1135,7 +1135,7 @@ void CD3D9Renderer::DrawObjSprites(list2<CStatObjInst*>* pList, float fMaxViewDi
 			fMaxDist = max_view_dist;
 
 		float fFadeOut;
-		if (pObjMan->m_lstStaticTypes[o->m_nObjectTypeID].bFadeSize)
+		if (!CV_r_VegetationSpritesNoScale && pObjMan->m_lstStaticTypes[o->m_nObjectTypeID].bFadeSize)
 		{
 			fFadeOut = (1.f - (fDistance * pObjMan->m_fZoomFactor) / (fMaxDist)) * 8.f;
 			if (fFadeOut <= 0)

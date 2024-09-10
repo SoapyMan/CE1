@@ -77,7 +77,7 @@ void CSectorInfo::SetLOD()
 			float allowed_error =
 				(m_pTerrain->m_fLodLFactor *
 					GetCVars()->e_terrain_lod_ratio *
-					(m_fDistance + camera_h)) / (180.f) * 2.5f;
+					(m_fDistance + camera_h)) / (180.f);
 
 			int l;
 			for (l = MAX_MML_LEVEL; l > ZERO_MML_LEVEL; l--)

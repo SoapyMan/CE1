@@ -327,6 +327,7 @@ int CRenderer::CV_r_ReplaceCubeMap;
 
 int CRenderer::CV_r_VegetationSpritesAlphaBlend;
 int CRenderer::CV_r_VegetationSpritesNoBend;
+int CRenderer::CV_r_VegetationSpritesNoScale;
 int CRenderer::CV_r_Vegetation_IgnoreVertColors;
 int CRenderer::CV_r_Vegetation_PerpixelLight;
 
@@ -1125,7 +1126,8 @@ CRenderer::CRenderer()
 
 	iConsole->Register("r_ReplaceCubemap", &CV_r_ReplaceCubeMap, 1);
 	iConsole->Register("r_VegetationSpritesAlphaBlend", &CV_r_VegetationSpritesAlphaBlend, 0);
-	iConsole->Register("r_VegetationSpritesNoBend", &CV_r_VegetationSpritesNoBend, 2);
+	iConsole->Register("r_VegetationSpritesNoBend", &CV_r_VegetationSpritesNoBend, 2, VF_DUMPTODISK);
+	iConsole->Register("r_VegetationSpritesNoScale", &CV_r_VegetationSpritesNoScale, 1, VF_DUMPTODISK);
 	iConsole->Register("r_Vegetation_IgnoreVertColors", &CV_r_Vegetation_IgnoreVertColors, 0);
 	iConsole->Register("r_Vegetation_PerpixelLight", &CV_r_Vegetation_PerpixelLight, 1, VF_DUMPTODISK | VF_REQUIRE_APP_RESTART);
 

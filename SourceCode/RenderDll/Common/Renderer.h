@@ -1200,6 +1200,7 @@ public:
 	static int CV_r_ReplaceCubeMap;
   static int CV_r_VegetationSpritesAlphaBlend;
   static int CV_r_VegetationSpritesNoBend;
+  static int CV_r_VegetationSpritesNoScale;
   static int CV_r_Vegetation_IgnoreVertColors;
   static int CV_r_Vegetation_PerpixelLight;
 
