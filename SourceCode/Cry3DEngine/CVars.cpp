@@ -139,7 +139,7 @@ void CVars::Init()
 	INIT_CVAR_SER_R(e_use_global_fog_in_fog_volumes, 0, "simulate ocean volume fog using global fog");
 	INIT_CVAR_CHEAT(e_precache_level, 1, "Pre-render objects right after level loading");
 	INIT_CVAR_PUBL_(e_shadow_maps_max_casters_per_object, 8, "Maximum number of active shadow casters per object");
-	INIT_CVAR_PUBL_(e_water_ocean_sun_reflection, 0, "Draw sun reflection in the ocean");
+	INIT_CVAR_PUBL_(e_water_ocean_sun_reflection, 1, "Draw sun reflection in the ocean");
 	INIT_CVAR_CHEAT(e_objects_fade_on_distance, 1, "Objects fading out on distance");
 	INIT_CVAR_PUBL_(e_area_merging_max_tris_in_input_brush, 512, "Merge only objects containing no more than x triangles");
 	INIT_CVAR_SER__(e_stencil_shadows_only_from_strongest_light, 0, "Cast no more than one stencil shadow from object");
@@ -166,7 +166,7 @@ void CVars::Init()
 	INIT_CVAR_PUBL_(e_detail_texture_min_fov, 0.55f, "If FOV is less - alternative version of terrain detail texturing will be used");
 	INIT_CVAR_SER_R_NET(e_vegetation_min_size, 0.0f, "Minimal size of static object, smaller objects will be not rendered");
 	INIT_CVAR_CHEAT(e_terrain_occlusion_culling_precision, 0.15f, "Density of rays");
-	INIT_CVAR_PUBL_(e_terrain_lod_ratio, 1.f, "Set heightmap LOD");
+	INIT_CVAR_SER__(e_terrain_lod_ratio, 1.f, "Set heightmap LOD");
 	INIT_CVAR_SER__(e_particles_lod, 1.f, "1 - full LOD, 0.5 - scale frequency and count down twice");
 	INIT_CVAR_CHEAT(e_debug_lights, 0, "Use different colors for objects affected by different number of lights\n 0 - back, 1 - blue, 2 - green, 3 or more - red");
 	INIT_CVAR_SER__(e_shadow_maps_view_dist_ratio, 10, "View dist ratio for shadow maps");
