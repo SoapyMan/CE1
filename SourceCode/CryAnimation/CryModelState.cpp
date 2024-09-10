@@ -842,6 +842,13 @@ void CryModelState::DrawForShadow()
 }
 */
 
+void CryModelState::DeleteLeafBuffers()
+{
+	for (unsigned nSlot = 1; nSlot < m_arrSubmeshes.size(); ++nSlot)
+		if (m_arrSubmeshes[nSlot])
+			m_arrSubmeshes[nSlot]->DeleteLeafBuffers();
+}
+
 void CryModelState::setBoneParent()
 {
 	SelfValidate();

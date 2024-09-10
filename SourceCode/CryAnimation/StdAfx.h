@@ -23,7 +23,7 @@
 // if UNIQUE_VERT_BUFF_PER_INSTANCE not defined - only every model will use unique vertex buffer
 // works much slower now, especially with reflections. shadow maps not supported now.
 // buffer waiting can be optimized: cycle thru 4-8 vertex buffers (for all models)
-//#define UNIQUE_VERT_BUFF_PER_INSTANCE
+#define UNIQUE_VERT_BUFF_PER_INSTANCE
 
 
 #ifdef _XBOX
