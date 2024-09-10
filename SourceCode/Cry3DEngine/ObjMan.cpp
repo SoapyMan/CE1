@@ -491,6 +491,12 @@ CStatObj* CObjManager::MakeObject(const char* __szFileName,
 		return obj;
 	}
 
+	if (m_pDefaultCGF && !strcmp(szFileName, "Objects\\default.cgf"))
+	{
+		m_pDefaultCGF->RegisterUser();
+		return m_pDefaultCGF;
+	}
+
 	// Load new CGF
 	CStatObj* pObject = new CStatObj();
 	if (!pObject->Load(szFileName, _szGeomName, eVertsSharing, bLoadAdditinalInfo, bKeepInLocalSpace, bLoadLater))

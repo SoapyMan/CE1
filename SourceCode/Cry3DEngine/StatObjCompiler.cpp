@@ -27,7 +27,7 @@
 bool CStatObj::CompileInNeeded()
 {
 	if (!GetCVars()->e_ccgf_make_if_not_found)
-		return true;
+		return false;
 
 #ifdef WIN32
 

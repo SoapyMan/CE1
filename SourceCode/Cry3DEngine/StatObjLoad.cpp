@@ -98,7 +98,7 @@ bool CStatObj::Load(const char* szFileName, const char* szGeomName,
 	// Create compiled file if needed
 	// This checks will slowdown loading but allows to avoid complex processing of errors during streaming
 	if (!CompileInNeeded())
-		return false; // unable to build file
+		return LoadUncompiled(szFileName, szGeomName, eVertsSharing, bLoadAdditinalInfo, bKeepInLocalSpace, false, bMakePhysics);
 
 	// do not stream subobjects
 	if (bUseStreaming && !m_szGeomName[0])
