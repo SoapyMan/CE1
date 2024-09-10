@@ -13,9 +13,107 @@
 #include "D3DCGPShader.h"
 #include "D3DCGVProgram.h"
 
-
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
+
+#include <d3dcompiler.h>
+
+static HMODULE s_hD3DCompiler = nullptr;
+static pD3DDisassemble s_D3DDisassembleFunc = nullptr;
+static pD3DCompile s_D3DCompileFunc = nullptr;
+
+void D3DCompilerInitialize()
+{
+	s_hD3DCompiler = LoadLibrary("D3DCompiler_43.dll");
+	if (!s_hD3DCompiler)
+	{
+		CryError("Cannot load D3DCompiler_43.dll - try installing DirectX9 redistributable");
+		return;
+	}
+
+	// Get the D3DCompile function pointer
+	s_D3DCompileFunc = (pD3DCompile)GetProcAddress(s_hD3DCompiler, "D3DCompile");
+	if (!s_D3DCompileFunc)
+	{
+		iLog->LogError("Failed to get D3DCompile function.");
+		FreeLibrary(s_hD3DCompiler);
+		s_hD3DCompiler = nullptr;
+		return;
+	}
+
+	// Get the D3DDisassemble function pointer
+	s_D3DDisassembleFunc = (pD3DDisassemble)GetProcAddress(s_hD3DCompiler, "D3DDisassemble");
+	if (!s_D3DDisassembleFunc)
+	{
+		iLog->LogError("Failed to get D3DDisassemble function.");
+		FreeLibrary(s_hD3DCompiler);
+		s_hD3DCompiler = nullptr;
+		return;
+	}
+}
+
+void D3DCompilerShutdown()
+{
+	FreeLibrary(s_hD3DCompiler);
+	s_hD3DCompiler = nullptr;
+}
+
+char* D3DCompileShader(const char* name, const char* shaderSource, const char* shaderModel, const char* entryPoint)
+{
+	if (!s_hD3DCompiler)
+		return nullptr;
+
+	iLog->Log("Compiling shader %s", name);
+
+	D3D_SHADER_MACRO defines[] = {
+		"CGC", "0", 0, 0
+	};
+
+	// Compile shader
+	ID3DBlob* pShaderBlob = nullptr;
+	ID3DBlob* pErrorBlob = nullptr;
+
+	HRESULT hr = s_D3DCompileFunc(
+		shaderSource, strlen(shaderSource),
+		name, defines,
+		nullptr,
+		entryPoint ? entryPoint : "main",
+		shaderModel,
+		D3DCOMPILE_PACK_MATRIX_ROW_MAJOR | D3DCOMPILE_ENABLE_BACKWARDS_COMPATIBILITY,
+		0,
+		&pShaderBlob,
+		&pErrorBlob
+	);
+
+	if (FAILED(hr))
+	{
+		if (pErrorBlob)
+		{
+			iLog->LogError("Shader %s compile failed: %s", name, (char*)pErrorBlob->GetBufferPointer());
+			pErrorBlob->Release();
+		}
+		else
+			iLog->LogError("Shader %s compile failed", name);
+		return nullptr;
+	}
+
+	char* pBuf = nullptr;
+
+	// Disassemble the shader bytecode to get the assembly output
+	ID3DBlob* pDisassembly = nullptr;
+	hr = s_D3DDisassembleFunc(pShaderBlob->GetBufferPointer(), pShaderBlob->GetBufferSize(), 0, NULL, &pDisassembly);
+	if (SUCCEEDED(hr) && pDisassembly)
+	{
+		pBuf = new char[pDisassembly->GetBufferSize() + 1];
+		memcpy(pBuf, pDisassembly->GetBufferPointer(), pDisassembly->GetBufferSize());
+		pBuf[pDisassembly->GetBufferSize()] = 0;
+		pDisassembly->Release();
+	}
+	pShaderBlob->Release();
+
+	return pBuf;
+}
+
 
 //============================================================================
 

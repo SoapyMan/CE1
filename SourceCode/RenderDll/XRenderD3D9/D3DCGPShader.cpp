@@ -728,12 +728,10 @@ char* CCGPShader_D3D::mfGenerateScriptPS()
 	{
 		if (gcpRendD3D->m_bDeviceSupportsComprNormalmaps == 1)
 			newScr.Copy("# define _3DC\n", strlen("# define _3DC\n"));
-		else
-			if (gcpRendD3D->m_bDeviceSupportsComprNormalmaps == 2)
-				newScr.Copy("# define _V8U8\n", strlen("# define _V8U8\n"));
-			else
-				if (gcpRendD3D->m_bDeviceSupportsComprNormalmaps == 3)
-					newScr.Copy("# define _CxV8U8\n", strlen("# define _CxV8U8\n"));
+		else if (gcpRendD3D->m_bDeviceSupportsComprNormalmaps == 2)
+			newScr.Copy("# define _V8U8\n", strlen("# define _V8U8\n"));
+		else if (gcpRendD3D->m_bDeviceSupportsComprNormalmaps == 3)
+			newScr.Copy("# define _CxV8U8\n", strlen("# define _CxV8U8\n"));
 
 		if (m_Insts[m_CurInst].m_Mask & VPVST_3DC_A)
 			newScr.Copy("# define _3DC_A\n", strlen("# define _3DC_A\n"));
@@ -1871,4 +1869,136 @@ bool CCGPShader_D3D::mfSet(bool bEnable, SShaderPassHW* slw, int nFlags)
 	}
 	m_CurRC = this;
 	return true;
+}
+
+char* CCGPShader_D3D::mfLoadCG_Int(char* prog_text)
+{
+	CGprofile pr = (CGprofile)m_CGProfileType;
+
+	if (pr == CG_PROFILE_PS_2_0 || pr == CG_PROFILE_PS_2_X || pr == CG_PROFILE_PS_3_0)
+	{
+		char* sz2AProfile = (gRenDev->GetFeatures() & RFT_HW_MASK) == RFT_HW_GFFX ? "ps_2_a" : "ps_2_b";
+
+		char* szPr;
+		switch (pr)
+		{
+			case CG_PROFILE_PS_2_0: szPr = "ps_2_0"; break;
+			case CG_PROFILE_PS_2_X: szPr = sz2AProfile; break;
+			case CG_PROFILE_PS_3_0: szPr = "ps_3_0"; break;
+			default:
+				return nullptr;
+		}
+
+		char* pBuf = gcpRendD3D->CompileShader(
+			m_Name.c_str(),
+			prog_text,
+			szPr,
+			m_EntryFunc.GetIndex() ? m_EntryFunc.c_str() : nullptr
+		);
+
+		return pBuf;
+	}
+	else
+	{
+#ifdef USE_CG
+		char szParams[256];
+		sprintf(szParams, "-DCGC=1");
+		const char* profileOpts[] =
+		{
+			szParams,
+			cgD3D9GetOptimalOptions(pr),
+			NULL,
+		};
+
+		CGprogram cgPr;
+		if (m_EntryFunc.GetIndex())
+			cgPr = cgCreateProgram(gcpRendD3D->m_CGContext, CG_SOURCE, prog_text, pr, m_EntryFunc.c_str(), profileOpts);
+		else
+			cgPr = cgCreateProgram(gcpRendD3D->m_CGContext, CG_SOURCE, prog_text, pr, "main", profileOpts);
+		CGerror err = cgGetError();
+		if (err != CG_NO_ERROR)
+			return NULL;
+		if (!cgPr)
+		{
+			Warning(0, 0, "Couldn't find function '%s' in CG pixel program '%s'", "main", m_Name.c_str());
+			return NULL;
+		}
+		if (CRenderer::CV_r_shaderssave == 2)
+		{
+			_chdir("c:\\MasterCD\\TestCG");
+			mfSaveCGFile(prog_text);
+			_chdir("c:\\MasterCD");
+		}
+		char* code = mfGetObjectCode(cgPr);
+		cgDestroyProgram(cgPr);
+		return code;
+#else
+		// make command for execution
+		FILE* fp = fopen("$$in.cg", "w");
+		if (!fp)
+			return NULL;
+		assert(*prog_text);
+		fputs(prog_text, fp);
+		fclose(fp);
+
+		char szCmdLine[512];
+		sprintf(szCmdLine, "cgc.exe -DCGC=1 -profile ps_1_1 -o $$out.cg $$in.cg");
+
+		STARTUPINFO si;
+		ZeroMemory(&si, sizeof(si));
+		si.cb = sizeof(si);
+		si.dwX = 100;
+		si.dwY = 100;
+		si.dwFlags = STARTF_USEPOSITION;
+
+		PROCESS_INFORMATION pi;
+		ZeroMemory(&pi, sizeof(pi));
+		if (!CreateProcess(NULL, // No module name (use command line). 
+			szCmdLine,				// Command line. 
+			NULL,             // Process handle not inheritable. 
+			NULL,             // Thread handle not inheritable. 
+			FALSE,            // Set handle inheritance to FALSE. 
+			CREATE_NO_WINDOW, // No creation flags. 
+			NULL,             // Use parent's environment block. 
+			NULL/*szFolderName*/,     // Set starting directory. 
+			&si,              // Pointer to STARTUPINFO structure.
+			&pi)             // Pointer to PROCESS_INFORMATION structure.
+			)
+		{
+			iLog->LogError("CreateProcess failed: %s", szCmdLine);
+			return NULL;
+		}
+
+		while (WAIT_OBJECT_0 != WaitForSingleObject(pi.hProcess, 10000))
+			iLog->LogWarning("CG runtime takes forever to compile.. waiting.. (last error %d)", GetLastError());
+
+		CloseHandle(pi.hProcess);
+		CloseHandle(pi.hThread);
+
+		fp = fopen("$$out.cg", "rb");
+		if (!fp)
+		{
+			remove("$$in.cg");
+			remove("$$out.cg");
+			return NULL;
+		}
+		fseek(fp, 0, SEEK_END);
+		int size = ftell(fp);
+		fseek(fp, 0, SEEK_SET);
+		if (size < 20)
+		{
+			remove("$$in.cg");
+			remove("$$out.cg");
+			return NULL;
+		}
+		char* pBuf = new char[size + 1];
+		fread(pBuf, sizeof(char), size, fp);
+		pBuf[size] = '\0';
+		fclose(fp);
+		remove("$$in.cg");
+		remove("$$out.cg");
+
+		return pBuf;
+#endif
+	}
 }

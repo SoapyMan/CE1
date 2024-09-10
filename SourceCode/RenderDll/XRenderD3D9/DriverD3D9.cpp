@@ -123,12 +123,24 @@ CD3D9Renderer::CD3D9Renderer()
 	iConsole->Register("d3d9_DecalOffset", &CV_d3d9_decaloffset, 15);
 	iConsole->Register("d3d9_NoDepthMaps", &CV_d3d9_nodepthmaps, 0, VF_REQUIRE_APP_RESTART);
 	iConsole->Register("d3d9_NormalMapScale", &CV_d3d9_normalmapscale, 0.15f, VF_REQUIRE_LEVEL_RELOAD);
+
+	extern void D3DCompilerInitialize();
+	D3DCompilerInitialize();
 }
 
 CD3D9Renderer::~CD3D9Renderer()
 {
 	//FreeResources(FRR_ALL);
 	ShutDown();
+
+	extern void D3DCompilerShutdown();
+	D3DCompilerShutdown();
+}
+
+char* CD3D9Renderer::CompileShader(const char* name, const char* shaderSource, const char* shaderModel, const char* entryPoint)
+{
+	extern char* D3DCompileShader(const char* name, const char* shaderSource, const char* shaderModel, const char* entryPoint);
+	return D3DCompileShader(name, shaderSource, shaderModel, entryPoint);
 }
 
 void  CD3D9Renderer::ShareResources(IRenderer* renderer)

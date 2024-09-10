@@ -2885,3 +2885,32 @@ bool CCGVProgram_D3D::mfSet(bool bStat, SShaderPassHW* slw, int nFlags)
 
 	return true;
 }
+
+char* CCGVProgram_D3D::mfLoadCG(const char* prog_text)
+{
+	CGprofile pr = (CGprofile)m_CGProfileType;
+	char* Buf = fxReplaceInText((char*)prog_text, "vertout OUT", "vertout OUT = (vertout)0");
+
+	char* szPr;
+	switch (pr)
+	{
+		case CG_PROFILE_VS_1_1: szPr = "vs_1_1"; break;
+		case CG_PROFILE_VS_2_0: szPr = "vs_2_0"; break;
+		case CG_PROFILE_VS_2_X: szPr = "vs_2_a"; break;
+		case CG_PROFILE_VS_3_0: szPr = "vs_3_0"; break;
+		default:
+			return nullptr;
+	}
+
+	char* pBuf = gcpRendD3D->CompileShader(
+		m_Name.c_str(),
+		Buf, 
+		szPr,
+		m_EntryFunc.GetIndex() ? m_EntryFunc.c_str() : nullptr
+	);
+	
+	if (Buf != prog_text)
+		delete[] Buf;
+
+	return pBuf;
+}

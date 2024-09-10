@@ -576,7 +576,7 @@ public:
   bool AllocateVBChunk(int size, TVertPool *Ptr, SVertexStream *pVB, const char *szSource);
   bool ReleaseVBChunk(TVertPool *Ptr, SVertexStream *pVB);
 
-#if !defined(_XBOX) && !defined(WIN64) && defined(USE_CG)
+#if defined(USE_CG)
   CGcontext m_CGContext;
 #endif
 
@@ -1344,6 +1344,8 @@ public:
 
   void EF_DrawDebugLights();
   void EF_DrawDebugTools();
+
+  char* CompileShader(const char* name, const char* shaderSource, const char* shaderModel, const char* entryPoint);
 
   static void EF_DrawWire();
   static void EF_DrawNormals();
