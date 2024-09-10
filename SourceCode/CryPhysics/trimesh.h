@@ -79,12 +79,7 @@ public:
 	virtual int PreparePolyline(coord_plane *psurface, int iPrim,int iFeature, geometry_under_test *pGTest, vector2df *&ptbuf,
 		int *&pVtxIdBuf,int *&pEdgeIdBuf);
 
-	int GetEdgeByBuddy(int itri,int itri_buddy) {
-		int iedge=0,imask;
-		imask = m_pTopology[itri].ibuddy[1]-itri_buddy; imask = imask-1>>31 ^ imask>>31; iedge = 1&imask;
-		imask = m_pTopology[itri].ibuddy[2]-itri_buddy; imask = imask-1>>31 ^ imask>>31; iedge = iedge&~imask | 2&imask;
-		return iedge;
-	}
+	int GetEdgeByBuddy(int itri, int itri_buddy);
 	int GetNeighbouringEdgeId(int vtxid, int ivtx);
 	void PrepareTriangle(int itri,triangle *ptri, const geometry_under_test *pGTest);
 	int TraceTriangleInters(int iop, primitive *pprims[], int idx_buddy,int type_buddy, prim_inters *pinters, 

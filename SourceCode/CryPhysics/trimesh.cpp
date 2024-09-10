@@ -573,7 +573,7 @@ int CTriMesh::GetUnprojectionCandidates(int iop, const contact* pcontact, primit
 	int i, itri, iFeature = pcontact->iFeature[iop];
 	indexed_triangle* ptri = (indexed_triangle*)pGTest->primbuf1;
 	intptr_t idmask = ~iszero_mask(m_pIds);
-	short idnull = -1, * pIds = (short*)((intptr_t)m_pIds & idmask | (intptr_t)&idnull & ~idmask);
+	char idnull = (char)-1, * ptrnull = &idnull, * pIds = (char*)((intptr_t)m_pIds & idmask | (intptr_t)ptrnull & ~idmask);
 	itri = ((indexed_triangle*)pprim)->idx;
 	PrepareTriangle(itri, ptri, pGTest); ptri->idx = itri;
 	pprim = ptri;
@@ -624,7 +624,7 @@ int CTriMesh::GetUnprojectionCandidates(int iop, const contact* pcontact, primit
 			ntris++;
 		} while (itri >= 0 && itri != itri0 && ntris < pGTest->szprimbuf1 - 1);
 
-		pGTest->edges[0].n[1] = pGTest->edges[0].dir ^ ptri[ntris - 1].n;
+		pGTest->edges[0].n[1] = pGTest->edges[0].dir ^ ptri[max(0, ntris - 1)].n;
 		pGTest->nSurfaces = ntris + 1;
 		pGTest->nEdges = ntris + 1;
 		pprim = ptri;
@@ -642,14 +642,14 @@ int CTriMesh::GetUnprojectionCandidates(int iop, const contact* pcontact, primit
 		pGTest->surfaces[0].idx = itri;
 		pGTest->surfaces[0].iFeature = 0x40;
 
-		piFeature[0] = GetEdgeByBuddy(m_pTopology[itri].ibuddy[iFeature & 0x1F], itri) | 0xA0;
-		itri = m_pTopology[itri].ibuddy[iFeature & 0x1F];
+		i = itri; itri = m_pTopology[itri].ibuddy[iFeature & 0x1F];
 		pGTest->nSurfaces = 1;
 		if (itri < 0) {
 			pGTest->edges[0].n[1] = pGTest->edges[0].n[0];
 			return 0;
 		}
 
+		piFeature[0] = GetEdgeByBuddy(itri, i) | 0xA0;
 		PrepareTriangle(itri, ptri, pGTest);
 		pGTest->idbuf[0] = pIds[itri & idmask];
 		ptri->idx = itri;
@@ -1197,6 +1197,13 @@ int CTriMesh::RegisterIntersection(primitive* pprim1, primitive* pprim2, geometr
 	}
 
 	return 1;
+}
+
+int CTriMesh::GetEdgeByBuddy(int itri, int itri_buddy) {
+	int iedge = 0, imask;
+	imask = m_pTopology[itri].ibuddy[1] - itri_buddy; imask = imask - 1 >> 31 ^ imask >> 31; iedge = 1 & imask;
+	imask = m_pTopology[itri].ibuddy[2] - itri_buddy; imask = imask - 1 >> 31 ^ imask >> 31; iedge = iedge & ~imask | 2 & imask;
+	return iedge;
 }
 
 
