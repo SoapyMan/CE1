@@ -34,9 +34,15 @@ bool CAnimObjectLoader::Load(CAnimObject* animObject, const char* geomName, cons
 	// check the file header for validity
 	const FILE_HEADER& fh = pReader->getFileHeader();
 
-	if (fh.Version != GeomFileVersion || fh.FileType != FileType_Geom)
+	if (fh.FileType != FileType_Geom)
 	{
-		g_GetLog()->LogError("CAnimObjectLoader::Load: file version error or not an geometry file: %s", geomName);
+		g_GetLog()->LogError("CAnimObjectLoader: not a geometry file: %s", geomName);
+		return false;
+	}
+
+	if (fh.Version != GeomFileVersion)
+	{
+		g_GetLog()->LogError("CAnimObjectLoader: invalid file version: %s", geomName);
 		return false;
 	}
 
@@ -64,17 +70,24 @@ bool CAnimObjectLoader::LoadAnimation(const char* animFile)
 	CChunkFileReader_AutoPtr pReader = new CChunkFileReader();
 	if (!pReader->open(animFile))
 	{
-		g_GetLog()->LogError("CAnimObjectLoader::LoadAnimation: file loading %s", animFile);
+		g_GetLog()->LogError("CAnimObjectLoader: file loading %s", animFile);
 		return false;
 	}
 
 	// check the file header for validity
 	const FILE_HEADER& fh = pReader->getFileHeader();
 
-	//if(fh.Version != AnimFileVersion || fh.FileType != FileType_Anim) 
-	if (fh.Version != GeomFileVersion || fh.FileType != FileType_Geom)
+	//if(fh.Version != AnimFileVersion)
+	if (fh.FileType != FileType_Geom)
 	{
-		g_GetLog()->LogError("CAnimObjectLoader::LoadAnimation: file version error or not an animation file: %s", animFile);
+		g_GetLog()->LogError("CAnimObjectLoader: not an animation file: %s", animFile);
+		return false;
+	}
+
+	//  if(fh.FileType != FileType_Anim) 
+	if (fh.Version != GeomFileVersion)
+	{
+		g_GetLog()->LogError("CAnimObjectLoader: invalid file version: %s", animFile);
 		return false;
 	}
 

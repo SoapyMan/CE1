@@ -148,7 +148,7 @@ bool CControllerManager::LoadAnimation(int nAnimId)
 	if (!nFileSize) // no such file
 	{
 		if (!(Anim.nFlags & GlobalAnimation::FLAGS_DISABLE_LOAD_ERROR_LOG))
-			g_GetLog()->LogError("\003CControllerManager::LoadAnimation: file loading %s file not found", Anim.strFileName.c_str());
+			g_GetLog()->LogError("\003CControllerManager: can't open %s", Anim.strFileName.c_str());
 		return false;
 	}
 
@@ -184,7 +184,7 @@ bool CControllerManager::LoadAnimation(int nAnimId)
 		if (!Reader.open(Anim.strFileName))
 		{
 			if (!(Anim.nFlags & GlobalAnimation::FLAGS_DISABLE_LOAD_ERROR_LOG))
-				g_GetLog()->LogError("\003CControllerManager::LoadAnimation: file loading %s, last error is: %s", Anim.strFileName.c_str(), Reader.getLastError());
+				g_GetLog()->LogError("\003CControllerManager: file %s, last error: %s", Anim.strFileName.c_str(), Reader.getLastError());
 			return false;
 		}
 		return LoadAnimation(nAnimId, &Reader);
@@ -237,9 +237,15 @@ bool CControllerManager::LoadAnimation(int nAnimId, CChunkFileReader* pReader)
 	// check the file header for validity
 	const FILE_HEADER& fh = pReader->getFileHeader();
 
-	if (fh.Version != AnimFileVersion || fh.FileType != FileType_Anim)
+	if (fh.FileType != FileType_Anim)
 	{
-		g_GetLog()->LogError("\003CControllerManager::LoadAnimation: file version error or not an animation file: %s", Anim.strFileName.c_str());
+		g_GetLog()->LogError("\003CControllerManager: not an animation file: %s", Anim.strFileName.c_str());
+		return false;
+	}
+
+	if (fh.Version != AnimFileVersion)
+	{
+		g_GetLog()->LogError("\003CControllerManager: invalid version error: %s", Anim.strFileName.c_str());
 		return false;
 	}
 
@@ -289,7 +295,7 @@ bool CControllerManager::LoadAnimation(int nAnimId, CChunkFileReader* pReader)
 				}
 				else
 				{
-					g_GetLog()->LogError("\002CControllerManager::LoadAnimation: error loading v827 controller: %s", Anim.strFileName.c_str());
+					g_GetLog()->LogError("\002CControllerManager: error loading v827 controller: %s", Anim.strFileName.c_str());
 					return false;
 				}
 			}
