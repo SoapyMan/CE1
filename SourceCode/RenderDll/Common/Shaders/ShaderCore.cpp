@@ -573,7 +573,7 @@ void CShader::mfClearAll(void)
 	{
 		if (CVProgram::m_VPrograms[i] && CRenderer::CV_r_printmemoryleaks)
 			iLog->Log("Warning: CShader::mfClearAll: Vertex shader %s was not deleted", CVProgram::m_VPrograms[i]->m_Name.c_str());
-		delete CVProgram::m_VPrograms[i];
+		SAFE_DELETE(CVProgram::m_VPrograms[i]);
 	}
 	CVProgram::m_VPrograms.Free();
 
@@ -581,14 +581,14 @@ void CShader::mfClearAll(void)
 	{
 		if (CPShader::m_PShaders[i] && CRenderer::CV_r_printmemoryleaks)
 			iLog->Log("Warning: CShader::mfClearAll: Pixel shader %s was not deleted", CPShader::m_PShaders[i]->m_Name.c_str());
-		delete CPShader::m_PShaders[i];
+		SAFE_DELETE(CPShader::m_PShaders[i]);
 	}
 	CPShader::m_PShaders.Free();
 #endif
 
 	for (i = 0; i < CLightStyle::m_LStyles.Num(); i++)
 	{
-		delete CLightStyle::m_LStyles[i];
+		SAFE_DELETE(CLightStyle::m_LStyles[i]);
 	}
 	CLightStyle::m_LStyles.Free();
 
