@@ -1476,7 +1476,7 @@ bool CCGPShader_D3D::mfActivate()
 					statussrc = iSystem->GetIPak()->FOpen(namesrc, "r");
 					writetimesrc = iSystem->GetIPak()->GetModificationTime(statussrc);
 					writetimedst = iSystem->GetIPak()->GetModificationTime(statusdst);;
-					if (CompareFileTime(&writetimesrc, &writetimedst) != 0)
+					if (CompareFileTime(&writetimesrc, &writetimedst) > 0)
 						bCreate = true;
 					iSystem->GetIPak()->FGets(strVer0, 128, statusdst);
 					if (strcmp(strVer, strVer0))
