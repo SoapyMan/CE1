@@ -102,7 +102,6 @@ class CTagPointManager : public ITagPointManager
 {
 public:
 	CTagPointManager( IGame *pGame )  { m_pGame = (CXGame*) pGame; };
-	virtual ~CTagPointManager() {};
 
 	// This function creates a tag point in the game world
 	virtual ITagPoint *CreateTagPoint(const string &name, const Vec3 &pos, const Vec3 &angles) 
@@ -372,8 +371,7 @@ CXGame::~CXGame()
 	SAFE_RELEASE(m_pRConSystem);
 	SAFE_DELETE(m_pTimeDemoRecorder);
 	SAFE_DELETE(m_pGameMods);
-
-	delete m_pTagPointManager;
+	SAFE_DELETE(m_pTagPointManager);
 }
 
 //////////////////////////////////////////////////////////////////////////

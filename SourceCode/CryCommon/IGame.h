@@ -108,6 +108,8 @@ struct EntityClass
 */
 struct IEntityClassRegistry
 {
+	virtual ~IEntityClassRegistry() {}
+
 	/*Retrieves an entity class by name
 	@param str entity name
 	@return EntityClass ptr if succeded, NULL if failed
@@ -148,6 +150,8 @@ struct IEntityClassRegistry
 
 struct INameIterator
 {
+	virtual ~INameIterator() {}
+
 	virtual void Release() = 0;
 	virtual void MoveFirst() = 0;
 	virtual bool MoveNext() = 0;
@@ -195,6 +199,8 @@ struct SGameModDescription
 //////////////////////////////////////////////////////////////////////////
 struct IGameMods
 {
+	virtual ~IGameMods() {}
+
 	// Returns description of the currently active game mode.
 	// @returns NULL if the game mod is not found.
 	virtual const SGameModDescription* GetModDescription( const char *sModName ) const = 0;
@@ -210,6 +216,8 @@ struct IGameMods
 
 struct ITagPointManager
 {
+	virtual ~ITagPointManager() {}
+
 	// This function creates a tag point in the game world
 	virtual ITagPoint *CreateTagPoint(const string &name, const Vec3 &pos, const Vec3 &angles) = 0;
 
@@ -234,6 +242,8 @@ enum EGameCapability
 //	Exposes the basic functionality to initialize and run the game.
 struct IGame
 {
+	virtual ~IGame() {}
+
 	//########################################################################
 	//## EXTREMELY IMPORTANT: Do not modify anything below, else the binary 
 	//##                      compatibility with the gold version of Far Cry 
