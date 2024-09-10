@@ -871,6 +871,18 @@ void CSystem::RenderEnd()
 
 	RenderStats();
 	RenderStatistics();
+
+	RenderFrameEnd();
+}
+
+void CSystem::RenderFrameEnd()
+{
+	if (m_bIgnoreUpdates)
+		return;
+
+	if (!m_pRenderer)
+		return;
+
 	//////////////////////////////////////////////////////////////////////
 	//draw labels
 	m_pRenderer->FlushTextMessages();
@@ -880,6 +892,7 @@ void CSystem::RenderEnd()
 	m_Time.MeasureTime("3RendFlush");
 }
 
+
 //////////////////////////////////////////////////////////////////////////
 void CSystem::UpdateLoadingScreen()
 {
@@ -887,10 +900,10 @@ void CSystem::UpdateLoadingScreen()
 	{
 		RenderBegin();
 		if (m_sysShowLoadingLog->GetIVal())
-			GetIConsole()->Draw();
+			m_pConsole->Draw();
 		else
-			GetIConsole()->DrawLoadingImage();
-		RenderEnd();
+			m_pConsole->DrawLoadingImage();
+		RenderFrameEnd();
 	}
 	// This happens during loading, give windows opportunity to process window messages.
 	PollWindowEvents();

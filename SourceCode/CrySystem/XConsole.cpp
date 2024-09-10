@@ -862,22 +862,7 @@ void CXConsole::Draw()
 	const double fBlinkTime = CURSOR_TIME * 2.0;
 	m_bDrawCursor = fmod((double)fCurrTime, fBlinkTime) < 0.5;
 
-	//DrawLoadingImage();
-
-	// draw progress bar
-	if (m_nProgressRange)
-	{
-		float fRcp1024 = 1.0f / 1024.0f;
-		float fProgress = min(1.0f, m_nProgress / (float)m_nProgressRange);
-
-		float fTexProgress0 = 51.0f * fRcp1024;
-		float fTexProgress1 = (51.0f + fProgress * (1024.0f - 51.0f * 2.0f)) * fRcp1024;
-
-
-		m_pRenderer->SetState(GS_BLSRC_SRCALPHA | GS_BLDST_ONEMINUSSRCALPHA | GS_NODEPTHTEST);
-		m_pRenderer->Draw2dImage(0.0, 0.0, 800.0f, 600.0f, m_nLoadingBackTexID, 0.0f, 1.0f, 1.0f, 0.0f);
-		m_pRenderer->Draw2dImage(40, 480, fProgress * (800.0f - 40.0f * 2.0f), 13, m_nLoadingBarTexID, fTexProgress0, 1.0f, fTexProgress1, 0.0f);
-	}
+	DrawLoadingImage();
 
 	int nPrevMode = m_pRenderer->SetPolygonMode(0);
 	//if (!m_bStaticBackground)
@@ -888,6 +873,15 @@ void CXConsole::Draw()
 void CXConsole::DrawLoadingImage()
 {
 	if (!m_pImage)
+		return;
+
+	if (!m_pRenderer)
+	{
+		// For Editor.
+		m_pRenderer = m_pSystem->GetIRenderer();
+	}
+
+	if (!m_pRenderer)
 		return;
 
 	float fCurrTime = m_pTimer->GetCurrTime();
@@ -915,6 +909,21 @@ void CXConsole::DrawLoadingImage()
 			m_pRenderer->Draw2dImage(0, (float)(m_nScrollPos - m_nScrollMax), 800, (float)(m_nScrollMax), m_pImage->GetTextureID(), 4.0f, 2.0f);
 			m_pRenderer->ResetTextureMatrix();
 		}
+	}
+
+	// draw progress bar
+	if (m_nProgressRange)
+	{
+		float fRcp1024 = 1.0f / 1024.0f;
+		float fProgress = min(1.0f, m_nProgress / (float)m_nProgressRange);
+
+		float fTexProgress0 = 51.0f * fRcp1024;
+		float fTexProgress1 = (51.0f + fProgress * (1024.0f - 51.0f * 2.0f)) * fRcp1024;
+
+
+		m_pRenderer->SetState(GS_BLSRC_SRCALPHA | GS_BLDST_ONEMINUSSRCALPHA | GS_NODEPTHTEST);
+		m_pRenderer->Draw2dImage(0.0, 0.0, 800.0f, 600.0f, m_nLoadingBackTexID, 0.0f, 1.0f, 1.0f, 0.0f);
+		m_pRenderer->Draw2dImage(40, 480, fProgress * (800.0f - 40.0f * 2.0f), 13, m_nLoadingBarTexID, fTexProgress0, 1.0f, fTexProgress1, 0.0f);
 	}
 }
 
