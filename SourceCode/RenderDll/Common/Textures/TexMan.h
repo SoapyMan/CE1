@@ -114,7 +114,7 @@ public:
     m_dwLevels = 0;
     m_pTex = NULL;
   }
-  ~CBaseMap()
+  virtual ~CBaseMap()
   {
     m_pTex = NULL;
   }
