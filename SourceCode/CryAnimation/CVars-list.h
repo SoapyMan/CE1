@@ -145,7 +145,7 @@ DECLARE_INT_VARIABLE_IMMEDIATE(ca_NoDrawShadowVolumes, 0, "if this is 1, shadow 
 
 // multiplier value used to calculate the LOD for characters
 // Increase this to decrease the LOD distances
-DECLARE_FLOAT_VARIABLE(ca_LodBias, 0.125f, "Multiplier value used to calculate the LOD for characters.\nIncrease this to decreasethe LOD distances");
+DECLARE_FLOAT_VARIABLE(ca_LodBias, 0.05f, "Multiplier value used to calculate the LOD for characters.\nIncrease this to decreasethe LOD distances");
 
 // 1 - skin algorithm using relative to def matrices (not not effective)
 // 2 - new optimized algorithm using global bone matrices
