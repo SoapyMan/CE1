@@ -1510,7 +1510,7 @@ STexPic* CTexMan::LoadFromImage(const char* name, uint flags, uint flags2, byte 
 					strcpy(wasloaded[i], nam[i]);
 					delete im[i];
 
-					//Warning( 0,0,"Warning: CTexMan::LoadFromImage: Texture skipped because it's compressed: %s [Ext=%s]", name, gImgExt[nI][n]);
+					//Warning( 0,0,"CTexMan: skipped compressed texture: %s [Ext=%s]", name, gImgExt[nI][n]);
 
 					continue;
 				}
@@ -1525,7 +1525,7 @@ STexPic* CTexMan::LoadFromImage(const char* name, uint flags, uint flags2, byte 
 		{
 #if !defined(NULL_RENDERER)
 #ifdef WIN64
-			Warning(VALIDATOR_FLAG_TEXTURE, wasloaded[i], "Error: CTexMan::LoadFromImage: Generate normal map from compressed texture: '%s', "
+			Warning(VALIDATOR_FLAG_TEXTURE, wasloaded[i], "CTexMan: generating bump-map from compressed texture: '%s', "
 				"Loading of compressed bump-maps is not supported. "
 				"If you want the engine to compress it please use _ddn_cct postfix in texture name",
 				wasloaded[i]);
@@ -1553,7 +1553,7 @@ STexPic* CTexMan::LoadFromImage(const char* name, uint flags, uint flags2, byte 
 				break;
 			}
 #if !defined(NULL_RENDERER)
-			Warning(VALIDATOR_FLAG_TEXTURE, wasloaded[i], "Error: CTexMan::LoadFromImage: Generate normal map from compressed texture: '%s', "
+			Warning(VALIDATOR_FLAG_TEXTURE, wasloaded[i], "CTexMan: generating bump-map from compressed texture: '%s', "
 				"Loading of compressed bump-maps is not supported. "
 				"If you want the engine to compress it please use _ddn_cct postfix in texture name",
 				wasloaded[i]);
@@ -1756,13 +1756,13 @@ void CTexMan::ImagePreprocessing(CImageFile* im, uint flags, uint flags2, byte e
 	if (!bPowerOfTwo)
 	{
 		if (imf == eIF_DXT1 || imf == eIF_DXT3 || imf == eIF_DXT5)
-			Warning(VALIDATOR_FLAG_TEXTURE, im->m_FileName, "Error: CTexMan::ImagePreprocessing: Attempt to load of non-power-of-two compressed texture '%s' (%dx%d)", im->m_FileName, width, height);
+			Warning(VALIDATOR_FLAG_TEXTURE, im->m_FileName, "CTexMan: non-POT compressed texture '%s' (%dx%d)", im->m_FileName, width, height);
 		else
-			Warning(VALIDATOR_FLAG_TEXTURE, im->m_FileName, "Warning: CTexMan::ImagePreprocessing: Attempt to load of non-power-of-two texture '%s' (%dx%d)", im->m_FileName, width, height);
+			Warning(VALIDATOR_FLAG_TEXTURE, im->m_FileName, "CTexMan: non-POT texture '%s' (%dx%d)", im->m_FileName, width, height);
 	}
-	else
-		if ((flags & FT_NORESIZE))
-			return;
+	else if ((flags & FT_NORESIZE))
+		return;
+
 	if (nWidth != width || nHeight != height)
 	{
 		if (imf == eIF_DXT1 || imf == eIF_DXT3 || imf == eIF_DXT5)
@@ -1798,22 +1798,21 @@ void CTexMan::ImagePreprocessing(CImageFile* im, uint flags, uint flags2, byte e
 					}
 					if (nLodDH != nLodDW)
 					{
-						Warning(VALIDATOR_FLAG_TEXTURE, im->m_FileName, "Error: CTexMan::ImagePreprocessing: Scaling of '%s' compressed texture is dangerous (non-proportional scaling)", im->m_FileName);
+						Warning(VALIDATOR_FLAG_TEXTURE, im->m_FileName, "CTexMan: non-proportional scaling of '%s' compressed texture", im->m_FileName);
 					}
-					else
-						if (n)
-						{
-							byte* dst = im->m_pByteImage;
-							int nSize = im->mfGet_ImageSize();
-							memmove(dst, &dst[nOffs], nSize - nOffs);
-							im->mfSet_ImageSize(nSize - nOffs);
-							im->mfSet_numMips(nMips - n);
-							im->mfSet_dimensions(nWidth, nHeight);
-							bResample = true;
-						}
+					else if (n)
+					{
+						byte* dst = im->m_pByteImage;
+						int nSize = im->mfGet_ImageSize();
+						memmove(dst, &dst[nOffs], nSize - nOffs);
+						im->mfSet_ImageSize(nSize - nOffs);
+						im->mfSet_numMips(nMips - n);
+						im->mfSet_dimensions(nWidth, nHeight);
+						bResample = true;
+					}
 				}
 				else
-					Warning(VALIDATOR_FLAG_TEXTURE, im->m_FileName, "Error: CTexMan::ImagePreprocessing: Scaling of '%s' compressed texture is dangerous (only one mip)", im->m_FileName);
+					Warning(VALIDATOR_FLAG_TEXTURE, im->m_FileName, "CTexMan: Scaling only one mip of '%s' compressed texture", im->m_FileName);
 			}
 #ifndef WIN64
 			if (!bResample)
@@ -2962,7 +2961,7 @@ void CTexMan::ClearAll(int nFlags)
 		if (!(tp->m_Flags & FT_NOREMOVE))
 		{
 			if (CRenderer::CV_r_printmemoryleaks)
-				iLog->Log("Warning: CTexMan::ClearAll: Texture %s (Id: %d) was not deleted (%d)", tp->m_SourceName.c_str(), i, tp->m_nRefCounter);
+				iLog->Log("CTexMan: '%s' (Id: %d) was not deleted (%d)", tp->m_SourceName.c_str(), i, tp->m_nRefCounter);
 		}
 		continue;
 
