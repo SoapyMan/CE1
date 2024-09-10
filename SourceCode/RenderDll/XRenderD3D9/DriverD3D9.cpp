@@ -246,25 +246,14 @@ void CD3D9Renderer::WaitForDevice()
 	if (m_bEditor)
 		return;
 
-	int* nLost = (int*)EF_Query(EFQ_DeviceLost, 0);
-	if (!*nLost)
-		return;
-
-	if (m_hWnd)
+	// Don't make any steps while 3D device is lost
+	while (true)
 	{
-		MSG msg;
-		// Don't make any steps while 3D device is lost
-		while (true)
-		{
-			while (PeekMessage(&msg, (HWND)m_hWnd, 0, 0, PM_REMOVE))
-			{
-				TranslateMessage(&msg);
-				DispatchMessage(&msg);
-			}
-			nLost = (int*)EF_Query(EFQ_DeviceLost, 0);
-			if (!*nLost)
-				break;
-		}
+		int* nLost = (int*)EF_Query(EFQ_DeviceLost, 0);
+		if (!*nLost)
+			break;
+
+		iSystem->PollWindowEvents();
 	}
 }
 

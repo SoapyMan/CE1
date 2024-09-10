@@ -134,6 +134,7 @@ public:
 	virtual void Clear();
 	virtual void Update();
 	virtual void Draw();
+	virtual void DrawLoadingImage();
  	virtual void AddCommand(const char *sName, const char *sScriptFunc, const DWORD indwFlags=0, const char *help = "");
 	virtual void ExecuteString(const char *command,bool bNeedSlash=false,bool bIgnoreDevMode=false);
 	virtual void Exit(const char *command,...);

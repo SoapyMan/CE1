@@ -245,6 +245,7 @@ struct IConsole
 	/*! Draw the console
 	*/
 	virtual void	Draw()=0;
+	virtual void	DrawLoadingImage()=0;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	/*! Add a Console command
 		@param sName name of the command (ex "connect")

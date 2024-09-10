@@ -14,6 +14,8 @@
 #include "StdAfx.h"
 #include "System.h"
 
+#include <SDL.h>
+
 #ifndef _XBOX
 #ifdef WIN32
 #define WIN32_LEAN_AND_MEAN
@@ -881,34 +883,17 @@ void CSystem::RenderEnd()
 //////////////////////////////////////////////////////////////////////////
 void CSystem::UpdateLoadingScreen()
 {
-	if (!m_bEditor)
+	if (!m_bEditor && (int)GetIRenderer()->EF_Query(EFQ_RecurseLevel) <= 0)
 	{
-		if ((int)GetIRenderer()->EF_Query(EFQ_RecurseLevel) <= 0)
-		{
-			RenderBegin();
+		RenderBegin();
+		if (m_sysShowLoadingLog->GetIVal())
 			GetIConsole()->Draw();
-			RenderEnd();
-		}
+		else
+			GetIConsole()->DrawLoadingImage();
+		RenderEnd();
 	}
 	// This happens during loading, give windows opportunity to process window messages.
-#ifdef WIN32
-	if (m_hWnd && ::IsWindow((HWND)m_hWnd))
-	{
-		MSG msg;
-		// Don't make any steps while 3D device is lost
-		while (true)
-		{
-			while (PeekMessage(&msg, (HWND)m_hWnd, 0, 0, PM_REMOVE))
-			{
-				TranslateMessage(&msg);
-				DispatchMessage(&msg);
-			}
-			int* nLost = (int*)GetIRenderer()->EF_Query(EFQ_DeviceLost, 0);
-			if (!*nLost)
-				break;
-		}
-	}
-#endif
+	PollWindowEvents();
 }
 
 //! Renders the statistics; this is called from RenderEnd, but if the 

@@ -94,6 +94,8 @@ public:
 	//! End rendering frame and swap back buffer.
 	void	RenderEnd();
 
+	void	PollWindowEvents();
+
 	//! Update screen during loading.
 	void UpdateLoadingScreen();
 
@@ -441,6 +443,7 @@ private: // ------------------------------------------------------
 	ICVar *m_cvMemStats;
 	ICVar *m_cvMemStatsThreshold;
 	ICVar *m_cvMemStatsMaxDepth;
+	ICVar *m_sysShowLoadingLog;
 	ICVar *m_sysWarnings;										//!< might be 0, "sys_warnings" - Treat warning as errors.
 	ICVar *m_cvSSInfo;											//!< might be 0, "sys_SSInfo" 0/1 - get file sourcesafe info
 	ICVar *m_sys_profile;

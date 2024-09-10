@@ -196,6 +196,8 @@ struct ISystem
 	// End rendering frame and swap back buffer.
 	virtual void	RenderEnd() = 0;
 
+	virtual void	PollWindowEvents() = 0;
+
 	// Renders the statistics; this is called from RenderEnd, but if the 
 	// Host application (Editor) doesn't employ the Render cycle in ISystem,
 	// it may call this method to render the essencial statistics

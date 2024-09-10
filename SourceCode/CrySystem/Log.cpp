@@ -24,9 +24,7 @@
 #include <time.h>
 #endif
 
-
-//#define RETURN return
-#define RETURN
+static const unsigned int s_nMaxVerbosity = 8;
 
 
 //////////////////////////////////////////////////////////////////////
@@ -61,21 +59,17 @@ void CLog::Done()
 //////////////////////////////////////////////////////////////////////////
 void CLog::EnableVerbosity(bool bEnable)
 {
-	RETURN;
-
 	if (bEnable)
 	{
-		if (!m_pLogVerbosity)
+		if (!m_pLogVerbosity && m_pSystem->GetIConsole())
 		{
-			if (m_pSystem->GetIConsole())
-			{
+
 #if defined(DEBUG) || (defined(LINUX) && !defined(NDEBUG))
-				m_pLogVerbosity = m_pSystem->GetIConsole()->CreateVariable("log_Verbosity", "5", VF_DUMPTODISK);
+			m_pLogVerbosity = m_pSystem->GetIConsole()->CreateVariable("log_Verbosity", "5", VF_DUMPTODISK);
 #else
-				m_pLogVerbosity = m_pSystem->GetIConsole()->CreateVariable("log_Verbosity", "3", VF_DUMPTODISK);
+			m_pLogVerbosity = m_pSystem->GetIConsole()->CreateVariable("log_Verbosity", "3", VF_DUMPTODISK);
 #endif
-				m_pLogFileVerbosity = m_pSystem->GetIConsole()->CreateVariable("log_FileVerbosity", "3", VF_DUMPTODISK);
-			}
+			m_pLogFileVerbosity = m_pSystem->GetIConsole()->CreateVariable("log_FileVerbosity", "3", VF_DUMPTODISK);
 		}
 	}
 	else
@@ -94,7 +88,6 @@ void CLog::EnableVerbosity(bool bEnable)
 //////////////////////////////////////////////////////////////////////////
 void CLog::SetVerbosity(int verbosity)
 {
-	RETURN;
 	EnableVerbosity(true);
 	if (m_pLogVerbosity)
 		m_pLogVerbosity->Set(verbosity);
@@ -127,15 +120,9 @@ void CLog::LogError(const char* szFormat, ...)
 //////////////////////////////////////////////////////////////////////////
 void CLog::Log(const char* szFormat, ...)
 {
-	if (m_pLogVerbosity && !m_pLogVerbosity->GetIVal())
-	{
-		if (m_pLogFileVerbosity && !m_pLogFileVerbosity->GetIVal())
-		{
-			return;
-		}
-	}
+	if (!GetVerbosityLevel(true) && !GetFileVerbosityLevel(true))
+		return;
 
-	RETURN;
 	va_list arg;
 	va_start(arg, szFormat);
 	LogV(eMessage, szFormat, arg);
@@ -146,7 +133,6 @@ void CLog::Log(const char* szFormat, ...)
 //////////////////////////////////////////////////////////////////////
 void CLog::LogV(const ELogType type, const char* szFormat, va_list args)
 {
-	RETURN;
 	if (!szFormat)
 		return;
 
@@ -163,8 +149,7 @@ void CLog::LogV(const ELogType type, const char* szFormat, va_list args)
 		bfile = true;
 		if (type == eInput)
 		{
-			const unsigned char nMaxVerbosity = 8;
-			int nLogFileVerbosity = m_pLogFileVerbosity ? m_pLogFileVerbosity->GetIVal() : nMaxVerbosity;
+			int nLogFileVerbosity = GetFileVerbosityLevel(true);
 			if (nLogFileVerbosity == 0)
 				bfile = 0;
 		}
@@ -229,15 +214,9 @@ void CLog::LogV(const ELogType type, const char* szFormat, va_list args)
 //////////////////////////////////////////////////////////////////////
 void CLog::LogPlus(const char* szFormat, ...)
 {
-	if (m_pLogVerbosity && !m_pLogVerbosity->GetIVal())
-	{
-		if (m_pLogFileVerbosity && !m_pLogFileVerbosity->GetIVal())
-		{
-			return;
-		}
-	}
+	if (!GetVerbosityLevel(true) && !GetFileVerbosityLevel(true))
+		return;
 
-	RETURN;
 	if (!szFormat)
 		return;
 
@@ -314,16 +293,7 @@ void CLog::LogStringToConsole(const char* szString, bool bAdd)
 //////////////////////////////////////////////////////////////////////
 void CLog::LogToConsole(const char* szFormat, ...)
 {
-	if (m_pLogVerbosity && !m_pLogVerbosity->GetIVal())
-	{
-		if (m_pLogFileVerbosity && !m_pLogFileVerbosity->GetIVal())
-		{
-			return;
-		}
-	}
-
-	RETURN;
-	if (!szFormat)
+	if (!szFormat || !GetVerbosityLevel(true) && !GetFileVerbosityLevel(true))
 		return;
 
 	bool bfile = false, bconsole = false;
@@ -345,16 +315,7 @@ void CLog::LogToConsole(const char* szFormat, ...)
 //////////////////////////////////////////////////////////////////////
 void CLog::LogToConsolePlus(const char* szFormat, ...)
 {
-	if (m_pLogVerbosity && !m_pLogVerbosity->GetIVal())
-	{
-		if (m_pLogFileVerbosity && !m_pLogFileVerbosity->GetIVal())
-		{
-			return;
-		}
-	}
-
-	RETURN;
-	if (!szFormat)
+	if (!szFormat || !GetVerbosityLevel(true) && !GetFileVerbosityLevel(true))
 		return;
 
 	bool bfile = false, bconsole = false;
@@ -384,6 +345,7 @@ void CLog::LogStringToFile(const char* szString, bool bAdd)
 
 	if (!m_pSystem)
 		return;
+
 	IConsole* console = m_pSystem->GetIConsole();
 
 	char szTemp[MAX_TEMP_LENGTH_SIZE];
@@ -449,15 +411,9 @@ void CLog::LogStringToFile(const char* szString, bool bAdd)
 //////////////////////////////////////////////////////////////////////
 void CLog::LogToFilePlus(const char* szFormat, ...)
 {
-	if (m_pLogVerbosity && !m_pLogVerbosity->GetIVal())
-	{
-		if (m_pLogFileVerbosity && !m_pLogFileVerbosity->GetIVal())
-		{
-			return;
-		}
-	}
+	if (!GetVerbosityLevel(true) && !GetFileVerbosityLevel(true))
+		return;
 
-	RETURN;
 	if (!m_szFilename[0] || !szFormat)
 		return;
 
@@ -479,15 +435,9 @@ void CLog::LogToFilePlus(const char* szFormat, ...)
 //////////////////////////////////////////////////////////////////////
 void CLog::LogToFile(const char* szFormat, ...)
 {
-	if (m_pLogVerbosity && !m_pLogVerbosity->GetIVal())
-	{
-		if (m_pLogFileVerbosity && !m_pLogFileVerbosity->GetIVal())
-		{
-			return;
-		}
-	}
+	if (!GetVerbosityLevel(true) && !GetFileVerbosityLevel(true))
+		return;
 
-	RETURN;
 	if (!m_szFilename[0] || !szFormat)
 		return;
 
@@ -509,7 +459,6 @@ void CLog::LogToFile(const char* szFormat, ...)
 //////////////////////////////////////////////////////////////////////
 void CLog::SetFileName(const char* command)
 {
-	RETURN;
 	if (!command)
 		return;
 
@@ -531,33 +480,33 @@ const char* CLog::GetFileName()
 //////////////////////////////////////////////////////////////////////
 void CLog::UpdateLoadingScreen(const char* szFormat, ...)
 {
-	if ((!m_pLogVerbosity) || (m_pLogVerbosity && m_pLogVerbosity->GetIVal()) || ((!m_pLogFileVerbosity) || (m_pLogFileVerbosity && m_pLogFileVerbosity->GetIVal())))
+	if (!szFormat || !GetVerbosityLevel(true) && !GetFileVerbosityLevel(true))
 	{
-		RETURN;
-		if (szFormat)
+		GetISystem()->GetStreamEngine()->Update();
+		return;
+	}
+
+	bool bfile = false, bconsole = false;
+	CheckAgainstVerbosity(szFormat, bfile, bconsole);
+
+	if (bconsole || bfile)
+	{
+		va_list args;
+		va_start(args, szFormat);
+		_vsnprintf(m_szTemp, sizeof(m_szTemp), szFormat, args);
+		m_szTemp[sizeof(m_szTemp) - 8] = 0;
+		va_end(args);
+
+		if (bconsole)
+			LogToConsole(m_szTemp);
+		if (bfile)
+			LogToFile(m_szTemp);
+		if (bconsole)
 		{
-			bool bfile = false, bconsole = false;
-			CheckAgainstVerbosity(szFormat, bfile, bconsole);
-
-			if (bconsole || bfile)
-			{
-				va_list args;
-				va_start(args, szFormat);
-				_vsnprintf(m_szTemp, sizeof(m_szTemp), szFormat, args);
-				m_szTemp[sizeof(m_szTemp) - 8] = 0;
-				va_end(args);
-
-				if (bconsole)
-					LogToConsole(m_szTemp);
-				if (bfile)
-					LogToFile(m_szTemp);
-				if (bconsole)
-				{
-					((CSystem*)m_pSystem)->UpdateLoadingScreen();
-				}
-			}
+			((CSystem*)m_pSystem)->UpdateLoadingScreen();
 		}
 	}
+
 	// Take this oportunity to update streaming engine.
 	GetISystem()->GetStreamEngine()->Update();
 }
@@ -565,40 +514,38 @@ void CLog::UpdateLoadingScreen(const char* szFormat, ...)
 //////////////////////////////////////////////////////////////////////
 void CLog::UpdateLoadingScreenPlus(const char* szFormat, ...)
 {
-	if ((!m_pLogVerbosity) || (m_pLogVerbosity && m_pLogVerbosity->GetIVal()) || ((!m_pLogFileVerbosity) || (m_pLogFileVerbosity && m_pLogFileVerbosity->GetIVal())))
+	if (!szFormat || !GetVerbosityLevel(true) && !GetFileVerbosityLevel(true))
+		return;
+
+	bool bfile = false, bconsole = false;
+	CheckAgainstVerbosity(szFormat, bfile, bconsole);
+
+	va_list args;
+	va_start(args, szFormat);
+	_vsnprintf(m_szTemp, sizeof(m_szTemp), szFormat, args);
+	m_szTemp[sizeof(m_szTemp) - 8] = 0;
+	va_end(args);
+
+	if (bconsole)
+		LogToConsolePlus(m_szTemp);
+	if (bfile)
+		LogToFilePlus(m_szTemp);
+
+	if (bconsole)
 	{
-		RETURN;
-		if (szFormat)
-		{
-			bool bfile = false, bconsole = false;
-			CheckAgainstVerbosity(szFormat, bfile, bconsole);
-
-			va_list args;
-			va_start(args, szFormat);
-			_vsnprintf(m_szTemp, sizeof(m_szTemp), szFormat, args);
-			m_szTemp[sizeof(m_szTemp) - 8] = 0;
-			va_end(args);
-
-			if (bconsole)
-				LogToConsolePlus(m_szTemp);
-			if (bfile)
-				LogToFilePlus(m_szTemp);
-
-			if (bconsole)
-			{
-				((CSystem*)m_pSystem)->UpdateLoadingScreen();
-			}
-		}
+		((CSystem*)m_pSystem)->UpdateLoadingScreen();
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
-int	CLog::GetVerbosityLevel()
+int	CLog::GetVerbosityLevel(bool forceIfOff) const
 {
-	if (m_pLogVerbosity)
-		return (m_pLogVerbosity->GetIVal());
+	return m_pLogVerbosity ? m_pLogVerbosity->GetIVal() : (forceIfOff ? s_nMaxVerbosity : 0);
+}
 
-	return (0);
+int	CLog::GetFileVerbosityLevel(bool forceIfOff) const
+{
+	return m_pLogFileVerbosity ? m_pLogFileVerbosity->GetIVal() : (forceIfOff ? s_nMaxVerbosity : 0);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -611,13 +558,11 @@ int	CLog::GetVerbosityLevel()
 //    sometimes, or kill the verbosity qualifier in the text that's gonna be passed next time.
 const char* CLog::CheckAgainstVerbosity(const char* pText, bool& logtofile, bool& logtoconsole)
 {
-	RETURN;
 	// the max verbosity (most detailed level)
-	const unsigned char nMaxVerbosity = 8;
 
 	// the current verbosity of the log
-	int nLogVerbosity = m_pLogVerbosity ? m_pLogVerbosity->GetIVal() : nMaxVerbosity;
-	int nLogFileVerbosity = m_pLogFileVerbosity ? m_pLogFileVerbosity->GetIVal() : nMaxVerbosity;
+	int nLogVerbosity = GetVerbosityLevel(true);
+	int nLogFileVerbosity = GetFileVerbosityLevel(true);
 
 	nLogFileVerbosity = max(nLogFileVerbosity, nLogVerbosity);		// file verbosity depends on usual log_verbosity as well
 
@@ -636,7 +581,7 @@ const char* CLog::CheckAgainstVerbosity(const char* pText, bool& logtofile, bool
 	{
 		// verbosity is not defined in the text
 		pStartText = pText;
-		textVerbosity = nMaxVerbosity;
+		textVerbosity = s_nMaxVerbosity;
 	}
 	else
 	{

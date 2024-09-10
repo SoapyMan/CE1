@@ -53,7 +53,8 @@ public:
   virtual void UpdateLoadingScreenPlus(const char *command,...);
 	virtual void EnableVerbosity( bool bEnable );
 	virtual void SetVerbosity( int verbosity );
-	virtual	int	 GetVerbosityLevel();
+	virtual	int	 GetVerbosityLevel(bool forceIfOff = false) const;
+	virtual	int	 GetFileVerbosityLevel(bool forceIfOff = false) const;
 
 private:
 	

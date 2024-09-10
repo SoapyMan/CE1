@@ -93,7 +93,7 @@ struct IStreamData
 
 
 
-//#define OLD_STREAM
+#define OLD_STREAM
 class CStream  
 {
 public:

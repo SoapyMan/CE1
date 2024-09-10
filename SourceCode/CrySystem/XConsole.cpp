@@ -862,41 +862,7 @@ void CXConsole::Draw()
 	const double fBlinkTime = CURSOR_TIME * 2.0;
 	m_bDrawCursor = fmod((double)fCurrTime, fBlinkTime) < 0.5;
 
-	if (m_pImage)
-	{
-		float time = fCurrTime * 0.05f;
-
-		//#ifndef _XBOX
-		if (!m_nProgressRange)
-		{
-			if (m_bStaticBackground)
-			{
-				m_pRenderer->SetState(GS_NODEPTHTEST);
-				m_pRenderer->Draw2dImage(0, 0, 800, 600, m_pImage->GetTextureID(), 0.0f, 1.0f, 1.0f, 0.0f);
-			}
-			else
-			{
-				m_pRenderer->SetState(GS_NODEPTHTEST);
-				m_pRenderer->TransformTextureMatrix(time, 0, 0, 1);
-				m_pRenderer->Draw2dImage(0, (float)(m_nScrollPos - m_nScrollMax), 800, (float)(m_nScrollMax), m_pImage->GetTextureID(), 4.0f, 2.0f);
-				m_pRenderer->ResetTextureMatrix();
-
-				m_pRenderer->SetState(GS_BLSRC_SRCALPHA | GS_BLDST_ONEMINUSSRCALPHA | GS_NODEPTHTEST);
-				m_pRenderer->SetMaterialColor(1, 1, 1, 0.5f);
-
-				m_pRenderer->TransformTextureMatrix(time, 0, 0, -1);
-				m_pRenderer->Draw2dImage(0, (float)(m_nScrollPos - m_nScrollMax), 800, (float)(m_nScrollMax), m_pImage->GetTextureID(), 4.0f, 2.0f);
-				m_pRenderer->ResetTextureMatrix();
-			}
-		}
-		/*#else
-				if(m_bStaticBackground)
-					m_pRenderer->Draw2dImage(0,(float)(m_nScrollPos-m_nScrollMax),800,(float)m_nScrollMax,m_pImage->GetTextureID(),4.0f,2.0f);
-				else
-					m_pRenderer->Draw2dImage(0,0,800,600,m_pImage->GetTextureID());
-		#endif		*/
-
-	}
+	//DrawLoadingImage();
 
 	// draw progress bar
 	if (m_nProgressRange)
@@ -917,6 +883,39 @@ void CXConsole::Draw()
 	//if (!m_bStaticBackground)
 	DrawBuffer(m_nScrollPos, "console");
 	m_pRenderer->SetPolygonMode(nPrevMode);
+}
+
+void CXConsole::DrawLoadingImage()
+{
+	if (!m_pImage)
+		return;
+
+	float fCurrTime = m_pTimer->GetCurrTime();
+	float time = fCurrTime * 0.05f;
+
+	//#ifndef _XBOX
+	if (!m_nProgressRange)
+	{
+		if (m_bStaticBackground)
+		{
+			m_pRenderer->SetState(GS_NODEPTHTEST);
+			m_pRenderer->Draw2dImage(0, 0, 800, 600, m_pImage->GetTextureID(), 0.0f, 1.0f, 1.0f, 0.0f);
+		}
+		else
+		{
+			m_pRenderer->SetState(GS_NODEPTHTEST);
+			m_pRenderer->TransformTextureMatrix(time, 0, 0, 1);
+			m_pRenderer->Draw2dImage(0, (float)(m_nScrollPos - m_nScrollMax), 800, (float)(m_nScrollMax), m_pImage->GetTextureID(), 4.0f, 2.0f);
+			m_pRenderer->ResetTextureMatrix();
+
+			m_pRenderer->SetState(GS_BLSRC_SRCALPHA | GS_BLDST_ONEMINUSSRCALPHA | GS_NODEPTHTEST);
+			m_pRenderer->SetMaterialColor(1, 1, 1, 0.5f);
+
+			m_pRenderer->TransformTextureMatrix(time, 0, 0, -1);
+			m_pRenderer->Draw2dImage(0, (float)(m_nScrollPos - m_nScrollMax), 800, (float)(m_nScrollMax), m_pImage->GetTextureID(), 4.0f, 2.0f);
+			m_pRenderer->ResetTextureMatrix();
+		}
+	}
 }
 
 void CXConsole::DrawBuffer(int nScrollPos, const char* szEffect)

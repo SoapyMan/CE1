@@ -191,6 +191,7 @@ CSystem::CSystem() :
 	m_pUserCallback = NULL;
 	sys_script_debugger = NULL;
 	m_sysWarnings = NULL;
+	m_sysShowLoadingLog = NULL;
 	m_sys_profile = NULL;
 	m_sys_profile_graphScale = NULL;
 	m_sys_profile_pagefaultsgraph = NULL;
@@ -478,6 +479,7 @@ void CSystem::ShutDown(bool bRelaunch)
 	SAFE_RELEASE(m_rDriver);
 
 	SAFE_RELEASE(m_sysWarnings);
+	SAFE_RELEASE(m_sysShowLoadingLog);
 	SAFE_RELEASE(m_sys_profile);
 	SAFE_RELEASE(m_sys_profile_graph);
 	SAFE_RELEASE(m_sys_profile_pagefaultsgraph);
@@ -845,67 +847,7 @@ bool CSystem::Update(int updateFlags, int nPauseMode)
 	if (IsQuitting())
 		return (false);
 
-
-
-#ifndef _XBOX
-#ifdef WIN32
-	// process window messages
-	{
-		FRAME_PROFILER("SysUpdate:PeekMessage", this, PROFILE_SYSTEM);
-
-#if 0
-		if (m_hWnd && ::IsWindow((HWND)m_hWnd))
-		{
-			MSG msg;
-			while (PeekMessage(&msg, (HWND)m_hWnd, 0, 0, PM_REMOVE))
-			{
-				TranslateMessage(&msg);
-				DispatchMessage(&msg);
-			}
-		}
-#else
-		SDL_Event event;
-		std::vector<SDL_Event> events;
-		while (SDL_PollEvent(&event))
-		{
-			switch (event.type)
-			{
-			case SDL_QUIT: Quit(); break;
-			case SDL_WINDOWEVENT:
-			{
-				switch (event.window.type)
-				{
-				case SDL_WINDOWEVENT_SHOWN:
-				case SDL_WINDOWEVENT_RESTORED:
-				case SDL_WINDOWEVENT_MAXIMIZED:
-				case SDL_WINDOWEVENT_ENTER:
-				case SDL_WINDOWEVENT_FOCUS_GAINED:
-					g_bWindowInFocus = true;
-					break;
-
-				case SDL_WINDOWEVENT_HIDDEN:
-				case SDL_WINDOWEVENT_MINIMIZED:
-				case SDL_WINDOWEVENT_LEAVE:
-				case SDL_WINDOWEVENT_FOCUS_LOST:
-					g_bWindowInFocus = false;
-					break;
-				}
-			}
-			break;
-			default:
-				events.push_back(event);
-				break;
-			}
-		}
-		for (SDL_Event ev : events)
-		{
-			SDL_PushEvent(&ev);
-		}
-		events.clear();
-#endif
-	}
-#endif
-#endif
+	PollWindowEvents();
 
 	m_Time.MeasureTime("WndMess");
 
@@ -1110,6 +1052,52 @@ bool CSystem::Update(int updateFlags, int nPauseMode)
 	}
 
 	return !m_bQuit;
+}
+
+void CSystem::PollWindowEvents()
+{
+#ifndef _XBOX
+	// process window messages
+	FRAME_PROFILER("SysUpdate:PeekMessage", this, PROFILE_SYSTEM);
+
+	SDL_Event event;
+	std::vector<SDL_Event> events;
+	while (SDL_PollEvent(&event))
+	{
+		switch (event.type)
+		{
+		case SDL_QUIT: Quit(); break;
+		case SDL_WINDOWEVENT:
+		{
+			switch (event.window.type)
+			{
+			case SDL_WINDOWEVENT_SHOWN:
+			case SDL_WINDOWEVENT_RESTORED:
+			case SDL_WINDOWEVENT_MAXIMIZED:
+			case SDL_WINDOWEVENT_ENTER:
+			case SDL_WINDOWEVENT_FOCUS_GAINED:
+				g_bWindowInFocus = true;
+				break;
+
+			case SDL_WINDOWEVENT_HIDDEN:
+			case SDL_WINDOWEVENT_MINIMIZED:
+			case SDL_WINDOWEVENT_LEAVE:
+			case SDL_WINDOWEVENT_FOCUS_LOST:
+				g_bWindowInFocus = false;
+				break;
+			}
+		}
+		break;
+		default:
+			events.push_back(event);
+			break;
+		}
+	}
+	for (SDL_Event ev : events)
+		SDL_PushEvent(&ev);
+
+	events.clear();
+#endif
 }
 
 //////////////////////////////////////////////////////////////////////////
