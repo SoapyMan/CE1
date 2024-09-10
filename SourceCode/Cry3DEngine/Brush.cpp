@@ -610,7 +610,6 @@ void CObjManager::MergeBrushes()
 	int nEntityId = 0;
 	int nNextStartId = -1;
 	list2<CBrush*> newBrushes;
-	int nMergeId = -1;
 	qsort(&m_lstBrushContainer[0], m_lstBrushContainer.Count(), sizeof(m_lstBrushContainer[0]), CBrush__Cmp_MergeID);
 
 	list2<struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F> lstVerts;
@@ -626,17 +625,16 @@ void CObjManager::MergeBrushes()
 	for (i = 0; i < m_lstBrushContainer.Count(); i++)
 	{
 		CBrush* pBrush = m_lstBrushContainer[i];
-		nMergeId = pBrush->GetMergeId();
+
+		const int nMergeId = pBrush->GetMergeId();
 		if (nMergeId <= 0)
 			continue;
-		//nMergeId = 1;
-		//pBrush->SetMergeId(nMergeId);
+
 		if (nMergeId > nNumGroups)
 			nNumGroups = nMergeId;
 	}
 	if (!nNumGroups)
 		return;
-	nMergeId = -1;
 
 	GetLog()->UpdateLoadingScreen("\003---Merge brushes ... ");
 
@@ -648,7 +646,7 @@ void CObjManager::MergeBrushes()
 		for (i = 0; i < m_lstBrushContainer.Count(); i++)
 		{
 			CBrush* pBrush = m_lstBrushContainer[i];
-			nMergeId = pBrush->GetMergeId();
+			const int nMergeId = pBrush->GetMergeId();
 			if (nMergeId <= 0)
 				continue;
 			if (nLastMergedId != nMergeId)
@@ -670,32 +668,39 @@ void CObjManager::MergeBrushes()
 		fp = fopen("BrushesMerged.txt", "w");
 	}
 
+	const int nMergeIgnoreRenderFlags = (ERF_CASTSHADOWVOLUME | ERF_CASTSHADOWMAPS);
+
 	groupBrushes = new TArray<SMatGroup*>[nNumGroups];
 	for (i = 0; i < m_lstBrushContainer.Count(); i++)
 	{
 		CBrush* pBrush = m_lstBrushContainer[i];
-		nMergeId = pBrush->GetMergeId();
+		int nMergeId = pBrush->GetMergeId();
 		if (nMergeId <= 0)
 			continue;
+
 		nMergeId--;
-		if (pBrush->m_dwRndFlags & ERF_CASTSHADOWVOLUME || pBrush->m_dwRndFlags & ERF_CASTSHADOWMAPS)
+		if (pBrush->m_dwRndFlags & nMergeIgnoreRenderFlags)
 			continue;
+
 		Matrix44 mat;
 		mat.SetIdentity();
-		int nLMTexId = pBrush->GetLightmap(0) ? pBrush->GetLightmap(0)->GetColorLerpTex() : 0;
-		int nHDRLMTexId = pBrush->GetLightmap(0) ? pBrush->GetLightmap(0)->GetHDRColorLerpTex() : 0;
 		IStatObj* pStatObj = pBrush->GetEntityStatObj(0, &mat);
 		if (!pStatObj)
 			continue;
+
 		CLeafBuffer* pLB = pStatObj->GetLeafBuffer();
 		if (!pLB || !pLB->m_SecVertCount)
 			continue;
+
+		const int nLMTexId = pBrush->GetLightmap(0) ? pBrush->GetLightmap(0)->GetColorLerpTex() : 0;
+		const int nHDRLMTexId = pBrush->GetLightmap(0) ? pBrush->GetLightmap(0)->GetHDRColorLerpTex() : 0;
+
 		for (int m = 0; m < pLB->m_pMats->Count(); m++)
 		{
 			CMatInfo newMatInfo = *pLB->m_pMats->Get(m);
-
 			if (GetCVars()->e_materials)
-			{ // Override default material
+			{
+				// Override default material
 				CMatInfo* pCustMat = (CMatInfo*)pBrush->GetMaterial();
 				if (pCustMat)
 				{
@@ -712,19 +717,23 @@ void CObjManager::MergeBrushes()
 					newMatInfo.shaderItem = pCustMat->shaderItem;
 				}
 			}
-			SMatGroup* mg;
+			
+			SMatGroup* mg = NULL;
 			for (j = 0; j < groupBrushes[nMergeId].Num(); j++)
 			{
 				mg = groupBrushes[nMergeId][j];
 				if (!mg)
 					continue;
+
 				IShader* shm = newMatInfo.shaderItem.m_pShader->GetTemplate(-1);
 				if (shm == mg->sh.m_pShader &&
 					newMatInfo.shaderItem.m_pShaderResources == mg->sh.m_pShaderResources &&
 					nLMTexId == mg->nLMId)
+				{
 					break;
+				}
 			}
-			if (j == groupBrushes[nMergeId].Num())
+			if (!mg)
 			{
 				mg = new SMatGroup;
 				mg->sh.m_pShader = newMatInfo.shaderItem.m_pShader->GetTemplate(-1);
@@ -733,6 +742,7 @@ void CObjManager::MergeBrushes()
 				mg->nNumVerts = 0;
 				groupBrushes[nMergeId].AddElem(mg);
 			}
+
 			for (j = 0; j < mg->Owners.Num(); j++)
 			{
 				if (mg->Owners[j].Id == i)
@@ -748,10 +758,13 @@ void CObjManager::MergeBrushes()
 			mg->nNumVerts += newMatInfo.nNumVerts;
 		}
 	}
+
 	TArray<bool> Enabled;
 	TArray<int> maxMergedMats;
+
 	maxMergedMats.Reserve(m_lstBrushContainer.Count());
 	Enabled.Reserve(m_lstBrushContainer.Count());
+
 	for (i = 0; i < nNumGroups; i++)
 	{
 		for (j = 0; j < groupBrushes[i].Num(); j++)
@@ -759,31 +772,31 @@ void CObjManager::MergeBrushes()
 			SMatGroup* mg = groupBrushes[i][j];
 			for (int m = 0; m < mg->Owners.Num(); m++)
 			{
-				int nId = mg->Owners[m].Id;
+				const int nId = mg->Owners[m].Id;
 				maxMergedMats[nId] = crymax(mg->Owners.Num(), maxMergedMats[nId]);
 			}
 		}
 	}
+
 	int nRejected = 0;
 	int nRequested = 0;
 	for (j = 0; j < m_lstBrushContainer.Count(); j++)
 	{
 		CBrush* pBrush = m_lstBrushContainer[j];
-		if (pBrush->m_dwRndFlags & ERF_CASTSHADOWVOLUME || pBrush->m_dwRndFlags & ERF_CASTSHADOWMAPS)
+		if (pBrush->m_dwRndFlags & nMergeIgnoreRenderFlags)
 			continue;
-		nMergeId = pBrush->GetMergeId();
-		if (nMergeId <= 0)
+
+		if (pBrush->GetMergeId() <= 0)
 			continue;
+
 		nRequested++;
-		if (maxMergedMats[j] >= 3)
-			Enabled[j] = true;
-		else
-		{
-			nRejected++;
-			Enabled[j] = false;
-		}
+
+		Enabled[j] = (maxMergedMats[j] >= 3);
+		if(!Enabled[j])
+			++nRejected;
 	}
 
+	list2<ushort> lstIndicesSorted;
 	while (nEntityId < m_lstBrushContainer.Count() || nNextStartId >= 0)
 	{
 		Vec3d vBoxMax(-10000, -10000, -10000);
@@ -797,12 +810,11 @@ void CObjManager::MergeBrushes()
 		if (nNextStartId >= 0)
 			nEntityId = nNextStartId;
 		nNextStartId = -1;
-		int nMergeID = -1;
-
+		
 		lstVerts.Clear();
 		lstLMTexCoords.Clear();
 		lstIndices.Clear();
-		list2<ushort> lstIndicesSorted; lstIndicesSorted.Clear();
+		lstIndicesSorted.Clear();
 		lstChunks.Clear();
 		lstChunksMerged.Clear();
 		lstTangBasises.Clear();
@@ -810,43 +822,47 @@ void CObjManager::MergeBrushes()
 		TArray<int> brMerged;
 		brMerged.Free();
 		int dwResRndFlags = ERF_RECVSHADOWMAPS;
+
+		int nMergeID = -1;
 		for (; nEntityId < m_lstBrushContainer.Count(); nEntityId++)
 		{
 			CBrush* pBrush = m_lstBrushContainer[nEntityId];
 			if (pBrush->GetMergeId() <= 0)
 				continue;
-			if (pBrush->m_dwRndFlags & ERF_MERGED ||
-				pBrush->m_dwRndFlags & ERF_CASTSHADOWVOLUME ||
-				pBrush->m_dwRndFlags & ERF_CASTSHADOWMAPS)
+
+			if (pBrush->m_dwRndFlags & (ERF_MERGED | nMergeIgnoreRenderFlags))
 				continue;
+
 			if (!Enabled[nEntityId])
 				continue;
+
 			if (nMergeID != pBrush->GetMergeId() && nCurVertsNum)
 				break;
+
 			nMergeID = pBrush->GetMergeId();
 			if (nLMTexId < 0)
 			{
-				nLMTexId = pBrush->GetLightmap(0) ? pBrush->GetLightmap(0)->GetColorLerpTex() : 0;
+				nLMTexId =	  pBrush->GetLightmap(0) ? pBrush->GetLightmap(0)->GetColorLerpTex() : 0;
 				nHDRLMTexId = pBrush->GetLightmap(0) ? pBrush->GetLightmap(0)->GetHDRColorLerpTex() : 0;
 				nLMDirTexId = pBrush->GetLightmap(0) ? pBrush->GetLightmap(0)->GetDomDirectionTex() : 0;
 			}
-			else
+			else if(nLMTexId != (pBrush->GetLightmap(0) ? pBrush->GetLightmap(0)->GetColorLerpTex() : 0) ||
+				 nHDRLMTexId != (pBrush->GetLightmap(0) ? pBrush->GetLightmap(0)->GetHDRColorLerpTex() : 0) ||
+				 nLMDirTexId != (pBrush->GetLightmap(0) ? pBrush->GetLightmap(0)->GetDomDirectionTex() : 0))
 			{
-				if (nLMTexId != (pBrush->GetLightmap(0) ? pBrush->GetLightmap(0)->GetColorLerpTex() : 0) ||
-					nHDRLMTexId != (pBrush->GetLightmap(0) ? pBrush->GetLightmap(0)->GetHDRColorLerpTex() : 0) ||
-					nLMDirTexId != (pBrush->GetLightmap(0) ? pBrush->GetLightmap(0)->GetDomDirectionTex() : 0))
-				{
-					if (nNextStartId < 0)
-						nNextStartId = nEntityId;
-					continue;
-				}
+				if (nNextStartId < 0)
+					nNextStartId = nEntityId;
+				continue;
 			}
+
 			Matrix44 mat;
 			mat.SetIdentity();
+
 			IStatObj* pStatObj = pBrush->GetEntityStatObj(0, &mat);
 			if (!pStatObj)
 				continue;
-			EERType eType = pBrush->GetEntityRenderType();
+
+			const EERType eType = pBrush->GetEntityRenderType();
 			assert(eType == eERType_Brush);
 			if (eType != eERType_Brush)
 				continue;
@@ -855,12 +871,11 @@ void CObjManager::MergeBrushes()
 				continue;
 
 			CLeafBuffer* pLMLB = pBrush->GetLightmapTexCoord(0);
-
 			CLeafBuffer* pLB = pStatObj->GetLeafBuffer();
 			if (!pLB->m_SecVertCount)
 				continue;
 
-			if (nCurVertsNum + pLB->m_SecVertCount > 65535)
+			if (nCurVertsNum + pLB->m_SecVertCount > USHRT_MAX)
 				break;
 
 			int nIndCount = 0;
@@ -873,7 +888,8 @@ void CObjManager::MergeBrushes()
 				CMatInfo newMatInfo = *pLB->m_pMats->Get(m);
 
 				if (GetCVars()->e_materials)
-				{ // Override default material
+				{
+					// Override default material
 					CMatInfo* pCustMat = (CMatInfo*)pBrush->GetMaterial();
 					if (pCustMat)
 					{
@@ -883,9 +899,8 @@ void CObjManager::MergeBrushes()
 
 						if (nMatId == 0)
 							pCustMat = (CMatInfo*)pCustMat;
-						else
-							if (nMatId - 1 < pCustMat->GetSubMtlCount())
-								pCustMat = (CMatInfo*)pCustMat->GetSubMtl(nMatId - 1);
+						else if (nMatId - 1 < pCustMat->GetSubMtlCount())
+							pCustMat = (CMatInfo*)pCustMat->GetSubMtl(nMatId - 1);
 
 						newMatInfo.shaderItem = pCustMat->shaderItem;
 					}
@@ -974,9 +989,7 @@ void CObjManager::MergeBrushes()
 				newMatInfo.m_Id = pBrush->GetLightmap(0) ? pBrush->GetLightmap(0)->GetColorLerpTex() : 0;
 
 				if (newMatInfo.nNumIndices)
-				{
 					lstChunks.Add(newMatInfo);
-				}
 				else
 					assert(!newMatInfo.nNumVerts);
 			}
@@ -993,8 +1006,7 @@ void CObjManager::MergeBrushes()
 
 		// sort
 		if (lstChunks.Count())
-			qsort(lstChunks.GetElements(), lstChunks.Count(),
-				sizeof(lstChunks[0]), CBrush__Cmp_MatChunks);
+			qsort(lstChunks.GetElements(), lstChunks.Count(), sizeof(lstChunks[0]), CBrush__Cmp_MatChunks);
 
 		// merge chunks
 		for (int nChunk = 0; nChunk < lstChunks.Count(); nChunk++)
@@ -1069,9 +1081,7 @@ void CObjManager::MergeBrushes()
 		pNewBrush->m_vWSBoxMin = vBoxMin;
 		pNewBrush->m_vWSBoxMax = vBoxMax;
 		pNewBrush->m_fWSRadius = vBoxMin.GetDistance(vBoxMax) * 0.5f;
-		pNewBrush->m_dwRndFlags |= ERF_MERGED_NEW;
-		pNewBrush->m_dwRndFlags |= ERF_NOTRANS_MASK;
-		pNewBrush->m_dwRndFlags |= dwResRndFlags;
+		pNewBrush->m_dwRndFlags |= ERF_MERGED_NEW | ERF_NOTRANS_MASK | dwResRndFlags;
 
 		// Make leafbuffer and fill it with texture coordinates
 		if (nLMTexId && (nLMDirTexId || (GetCVars()->e_light_maps_quality == 0)))
@@ -1095,8 +1105,9 @@ void CObjManager::MergeBrushes()
 
 		newBrushes.Add(pNewBrush);
 	}
-	int nOldBrushes = m_lstBrushContainer.Count();
-	int nNewBrushes = newBrushes.Count();
+
+	const int nOldBrushes = m_lstBrushContainer.Count();
+	const int nNewBrushes = newBrushes.Count();
 	int nMergedBrushes = nNewBrushes;
 	for (i = 0; i < m_lstBrushContainer.Count(); i++)
 	{
@@ -1104,9 +1115,7 @@ void CObjManager::MergeBrushes()
 		if (pBrush)
 		{
 			if (pBrush->m_dwRndFlags & ERF_MERGED)
-			{
 				pBrush->DeleteLMTC();
-			}
 			else
 				nMergedBrushes++;
 			newBrushes.Add(m_lstBrushContainer[i]);
