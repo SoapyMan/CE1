@@ -765,7 +765,7 @@ void C3DEngine::LoadMissionSettingsFromXML(XDOM::IXMLDOMNode* pInputNode, bool b
 	// get terrain lods
 	float fGeometryLodRatio = (float)atof(GetXMLAttribText(pInputNode, "Environment", "HeightMap", "GeometryLodRatio", "1.0"));
 	if (GetCVars()->e_cgf_load_lods == 0 && fGeometryLodRatio > 1.f) // ised only for very high spec
-		fGeometryLodRatio = 1.f + (fGeometryLodRatio - 1.f) * 0.5f;
+		fGeometryLodRatio = 0.75f + (fGeometryLodRatio - 1.f) * 0.25f;
 	ICVar* pCVar = GetConsole()->GetCVar("e_terrain_lod_ratio");
 	if (pCVar)
 		pCVar->Set(fGeometryLodRatio);
