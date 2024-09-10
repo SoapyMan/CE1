@@ -101,7 +101,7 @@ void CXConsole::Init(CSystem* pSystem)
 {
 	m_pSystem = pSystem;
 	if (pSystem->GetICryFont())
-		m_pFont = pSystem->GetICryFont()->GetFont("Console");
+		m_pFont = pSystem->GetICryFont()->GetFont("console");
 	m_pRenderer = pSystem->GetIRenderer();
 	m_pInput = pSystem->GetIInput();
 	m_pTimer = pSystem->GetITimer();
@@ -844,7 +844,7 @@ void CXConsole::Draw()
 		ICryFont* pICryFont = m_pSystem->GetICryFont();
 
 		if (pICryFont)
-			m_pFont = m_pSystem->GetICryFont()->GetFont("Default");
+			m_pFont = m_pSystem->GetICryFont()->GetFont("console");
 	}
 
 	float fCurrTime = m_pTimer->GetCurrTime();
@@ -937,8 +937,8 @@ void CXConsole::DrawBuffer(int nScrollPos, const char* szEffect)
 		m_pFont->UseRealPixels(false);
 		m_pFont->SetEffect(szEffect);
 		m_pFont->SetSameSize(true);
-		m_pFont->SetCharWidthScale(1.5f / 3.0f);
-		m_pFont->SetSize(vector2f(14, 14));
+		m_pFont->SetCharWidthScale(0.45f);
+		m_pFont->SetSize(vector2f(10, 10));
 		m_pFont->SetColor(color4f(1, 1, 1, 1));
 
 		m_pFont->UseRealPixels(true);
