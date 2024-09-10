@@ -191,7 +191,6 @@ CSystem::CSystem() :
 	m_pUserCallback = NULL;
 	sys_script_debugger = NULL;
 	m_sysWarnings = NULL;
-	m_sysShowLoadingLog = NULL;
 	m_sys_profile = NULL;
 	m_sys_profile_graphScale = NULL;
 	m_sys_profile_pagefaultsgraph = NULL;
@@ -479,7 +478,6 @@ void CSystem::ShutDown(bool bRelaunch)
 	SAFE_RELEASE(m_rDriver);
 
 	SAFE_RELEASE(m_sysWarnings);
-	SAFE_RELEASE(m_sysShowLoadingLog);
 	SAFE_RELEASE(m_sys_profile);
 	SAFE_RELEASE(m_sys_profile_graph);
 	SAFE_RELEASE(m_sys_profile_pagefaultsgraph);

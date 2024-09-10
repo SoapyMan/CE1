@@ -799,8 +799,7 @@ bool CXGame::Update()
 		}
 	}
 
-	bool bRenderFrame = (!m_pSystem->GetViewCamera().GetPos().IsZero() || m_bMenuOverlay || m_bUIOverlay) 
-											&& g_Render->GetIVal() != 0;
+	const bool bRenderFrame = (!m_pSystem->GetViewCamera().GetPos().IsZero() || m_bMenuOverlay || m_bUIOverlay) && g_Render->GetIVal() != 0;
 
 	//////////////////////////////////////////////////////////////////////////
 	// Start Profiling frame
@@ -1390,9 +1389,6 @@ void CXGame::ProcessPMessages(const char *szMsg)
 				sname=szMsg+9;
 			}
 
-			// disable input handling during load
-			m_pSystem->GetIInput()->EnableEventPosting(0);
-			//m_pSystem->GetIInput()->GetIKeyboard()->ClearKeyState();
 			// get out of all the areas localplayer is in - on load it will be retrigererd
 			IEntity *pIMyPlayer = GetMyPlayer();
 			if( pIMyPlayer )
@@ -1415,10 +1411,6 @@ void CXGame::ProcessPMessages(const char *szMsg)
 					m_pSystem->GetIProcess()->SetFlags(PROC_3DENGINE);								
 				}
 			}
-
-			// finished loading, reenable input
-			m_pSystem->GetIInput()->EnableEventPosting(1);
-			//m_pSystem->GetIInput()->GetIKeyboard()->ClearKeyState();
 		}
 	}
 // 	else
@@ -1481,7 +1473,6 @@ void CXGame::LoadLevelCS(bool keepclient, const char *szMapName, const char *szM
 	{
 		m_pSystem->GetIConsole()->Clear();
 		m_pSystem->GetIConsole()->SetScrollMax(600);
-		m_pSystem->GetIConsole()->ShowConsole(true);
 
 		string sLoadingScreenTexture = string("levels/") + string(szMapName) + string("/loadscreen_") + string(szMapName) + ".dds";
 

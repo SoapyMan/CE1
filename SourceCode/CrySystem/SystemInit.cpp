@@ -1430,11 +1430,6 @@ void CSystem::CreateSystemVars()
 	m_cvPakReadSlice = attachVariable("sys_PakReadSlice", &m_PakVar.nReadSlice, "If non-0, means number of kilobytes to use to read files in portions. Should only be used on Win9x kernels");
 	m_cvPakLogMissingFiles = attachVariable("sys_PakLogMissingFiles", &m_PakVar.nLogMissingFiles, "If non-0, missing file names go to mastercd/MissingFilesX.log. 1) only resulting report  2) run-time report is ON, one entry per file  3) full run-time report");
 
-	m_sysShowLoadingLog = GetIConsole()->CreateVariable("sys_loadingLog", "0", VF_DUMPTODISK,
-		"Toggles printing loading log on loading screen.\n"
-		"Usage: sys_loadingLog [0/1]\n"
-		"Default is 0 (off).");
-
 	m_sysNoUpdate = GetIConsole()->CreateVariable("sys_noupdate", "0", VF_CHEAT,
 		"Toggles updating of system with sys_script_debugger.\n"
 		"Usage: sys_noupdate [0/1]\n"

@@ -899,14 +899,12 @@ void CSystem::UpdateLoadingScreen()
 	if (!m_bEditor && (int)GetIRenderer()->EF_Query(EFQ_RecurseLevel) <= 0)
 	{
 		RenderBegin();
-		if (m_sysShowLoadingLog->GetIVal())
-			m_pConsole->Draw();
-		else
-			m_pConsole->DrawLoadingImage();
+		m_pConsole->Draw();
 		RenderFrameEnd();
 	}
 	// This happens during loading, give windows opportunity to process window messages.
 	PollWindowEvents();
+	m_pIInput->Update(true);
 }
 
 //! Renders the statistics; this is called from RenderEnd, but if the 

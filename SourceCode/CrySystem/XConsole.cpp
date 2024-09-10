@@ -847,8 +847,7 @@ void CXConsole::Draw()
 			m_pFont = m_pSystem->GetICryFont()->GetFont("console");
 	}
 
-	float fCurrTime = m_pTimer->GetCurrTime();
-
+	DrawLoadingImage();
 	ScrollConsole();
 
 	if (m_nScrollPos <= 0)
@@ -859,37 +858,14 @@ void CXConsole::Draw()
 		return;
 	}
 
-	const double fBlinkTime = CURSOR_TIME * 2.0;
-	m_bDrawCursor = fmod((double)fCurrTime, fBlinkTime) < 0.5;
+	const float fCurrTime = m_pTimer->GetCurrTime();
+	const float fBlinkTime = CURSOR_TIME * 2.0f;
+	m_bDrawCursor = cry_fmod(fCurrTime, fBlinkTime) < 0.5;
 
-	DrawLoadingImage();
-
-	int nPrevMode = m_pRenderer->SetPolygonMode(0);
-	//if (!m_bStaticBackground)
-	DrawBuffer(m_nScrollPos, "console");
-	m_pRenderer->SetPolygonMode(nPrevMode);
-}
-
-void CXConsole::DrawLoadingImage()
-{
-	if (!m_pImage)
-		return;
-
-	if (!m_pRenderer)
-	{
-		// For Editor.
-		m_pRenderer = m_pSystem->GetIRenderer();
-	}
-
-	if (!m_pRenderer)
-		return;
-
-	float fCurrTime = m_pTimer->GetCurrTime();
-	float time = fCurrTime * 0.05f;
-
-	//#ifndef _XBOX
 	if (!m_nProgressRange)
 	{
+		float time = fCurrTime * 0.05f;
+
 		if (m_bStaticBackground)
 		{
 			m_pRenderer->SetState(GS_NODEPTHTEST);
@@ -910,6 +886,26 @@ void CXConsole::DrawLoadingImage()
 			m_pRenderer->ResetTextureMatrix();
 		}
 	}
+
+	int nPrevMode = m_pRenderer->SetPolygonMode(0);
+	//if (!m_bStaticBackground)
+	DrawBuffer(m_nScrollPos, "console");
+	m_pRenderer->SetPolygonMode(nPrevMode);
+}
+
+void CXConsole::DrawLoadingImage()
+{
+	if (!m_pImage)
+		return;
+
+	if (!m_pRenderer)
+	{
+		// For Editor.
+		m_pRenderer = m_pSystem->GetIRenderer();
+	}
+
+	if (!m_pRenderer)
+		return;
 
 	// draw progress bar
 	if (m_nProgressRange)
@@ -932,79 +928,79 @@ void CXConsole::DrawBuffer(int nScrollPos, const char* szEffect)
 	if (!m_bConsoleActive && (con_display_last_messages->GetIVal() == 0))
 		return;
 
-	if (m_pFont && m_pRenderer)
+	if (!m_pFont || !m_pRenderer)
+		return;
+
+	m_pFont->UseRealPixels(false);
+	m_pFont->SetEffect(szEffect);
+	m_pFont->SetSameSize(true);
+	m_pFont->SetCharWidthScale(0.45f);
+	m_pFont->SetSize(vector2f(10, 10));
+	m_pFont->SetColor(color4f(1, 1, 1, 1));
+
+	m_pFont->UseRealPixels(true);
+	float csize = 0.8f * m_pFont->GetCharHeight();
+	m_pFont->UseRealPixels(false);
+
+	float ypos = nScrollPos - csize - 3.0f;
+
+	float fCharWidth = (m_pFont->GetCharWidth() * m_pFont->GetCharWidthScale());
+
+	/*if (GetFont() && m_pRenderer)
 	{
-		m_pFont->UseRealPixels(false);
-		m_pFont->SetEffect(szEffect);
-		m_pFont->SetSameSize(true);
-		m_pFont->SetCharWidthScale(0.45f);
-		m_pFont->SetSize(vector2f(10, 10));
-		m_pFont->SetColor(color4f(1, 1, 1, 1));
+	float fXScale = 0.5f;
+	float fYScale = 1.0f;
+	CXFont *pFont= GetFont();
+	m_pRenderer->SetFontScale(fXScale, fYScale);
+	int csize = (int)(pFont->m_charsize*fYScale*(float)(m_pRenderer->GetHeight())/600.0f);
+	int nCharWidth = (int)(pFont->m_charsize*fXScale*(float)(m_pRenderer->GetWidth())/800.0f);
+	m_pRenderer->SetCurFontColor(Col_White);*/
 
-		m_pFont->UseRealPixels(true);
-		float csize = 0.8f * m_pFont->GetCharHeight();
-		m_pFont->UseRealPixels(false);
+	//int ypos=nScrollPos-csize-3;	
 
-		float ypos = nScrollPos - csize - 3.0f;
+	//Draw the input line
+	if (m_bConsoleActive && !m_nProgressRange)
+	{
+		/*m_pRenderer->DrawString(LINE_BORDER-nCharWidth, ypos, false, ">");
+		m_pRenderer->DrawString(LINE_BORDER, ypos, false, m_sInputBuffer.c_str());
+			if(m_bDrawCursor)
+				m_pRenderer->DrawString(LINE_BORDER+nCharWidth*m_nCursorPos, ypos, false, "_");*/
 
-		float fCharWidth = (m_pFont->GetCharWidth() * m_pFont->GetCharWidthScale());
+		m_pFont->DrawString((float)(LINE_BORDER - fCharWidth), (float)ypos, ">");
+		m_pFont->DrawString((float)LINE_BORDER, (float)ypos, m_sInputBuffer.c_str(), false);
 
-		/*if (GetFont() && m_pRenderer)
-	  {
-		float fXScale = 0.5f;
-		float fYScale = 1.0f;
-		CXFont *pFont= GetFont();
-		m_pRenderer->SetFontScale(fXScale, fYScale);
-		int csize = (int)(pFont->m_charsize*fYScale*(float)(m_pRenderer->GetHeight())/600.0f);
-		int nCharWidth = (int)(pFont->m_charsize*fXScale*(float)(m_pRenderer->GetWidth())/800.0f);
-		m_pRenderer->SetCurFontColor(Col_White);*/
-
-		//int ypos=nScrollPos-csize-3;	
-
-		//Draw the input line
-		if (m_bConsoleActive && !m_nProgressRange)
+		if (m_bDrawCursor)
 		{
-			/*m_pRenderer->DrawString(LINE_BORDER-nCharWidth, ypos, false, ">");
-			m_pRenderer->DrawString(LINE_BORDER, ypos, false, m_sInputBuffer.c_str());
-				if(m_bDrawCursor)
-					m_pRenderer->DrawString(LINE_BORDER+nCharWidth*m_nCursorPos, ypos, false, "_");*/
+			string szCursorLeft(m_sInputBuffer.c_str(), m_sInputBuffer.c_str() + m_nCursorPos);
+			int n = m_pFont->GetTextLength(szCursorLeft.c_str(), false);
 
-			m_pFont->DrawString((float)(LINE_BORDER - fCharWidth), (float)ypos, ">");
-			m_pFont->DrawString((float)LINE_BORDER, (float)ypos, m_sInputBuffer.c_str(), false);
-
-			if (m_bDrawCursor)
-			{
-				string szCursorLeft(m_sInputBuffer.c_str(), m_sInputBuffer.c_str() + m_nCursorPos);
-				int n = m_pFont->GetTextLength(szCursorLeft.c_str(), false);
-
-				m_pFont->DrawString((float)(LINE_BORDER + (fCharWidth * n)), (float)ypos, "_");
-			}
+			m_pFont->DrawString((float)(LINE_BORDER + (fCharWidth * n)), (float)ypos, "_");
 		}
-
-		ypos -= csize;
-
-		ConsoleBufferRItor ritor;
-		ritor = m_dqConsoleBuffer.rbegin();
-		int nScroll = 0;
-		while (ritor != m_dqConsoleBuffer.rend() && ypos >= 0)
-		{
-			if (nScroll >= m_nScrollLine)
-			{
-				const char* buf = ritor->c_str();// GetBuf(k);
-
-				if (*buf > 0 && *buf < 32) buf++;		// to jump over verbosity level character
-
-				if (ypos + csize > 0)
-					m_pFont->DrawString((float)LINE_BORDER, (float)ypos, buf, false);
-				//m_pRenderer->DrawString(LINE_BORDER, ypos, false, buf);
-			//CSystem::GetRenderer()->WriteXY(m_font,0,ypos,0.5f,1,1,1,1,1,buf);			
-				ypos -= csize;
-			}
-			nScroll++;
-
-			++ritor;
-		} //k		
 	}
+
+	ypos -= csize;
+
+	ConsoleBufferRItor ritor;
+	ritor = m_dqConsoleBuffer.rbegin();
+	int nScroll = 0;
+	while (ritor != m_dqConsoleBuffer.rend() && ypos >= 0)
+	{
+		if (nScroll >= m_nScrollLine)
+		{
+			const char* buf = ritor->c_str();// GetBuf(k);
+
+			if (*buf > 0 && *buf < 32) buf++;		// to jump over verbosity level character
+
+			if (ypos + csize > 0)
+				m_pFont->DrawString((float)LINE_BORDER, (float)ypos, buf, false);
+			//m_pRenderer->DrawString(LINE_BORDER, ypos, false, buf);
+		//CSystem::GetRenderer()->WriteXY(m_font,0,ypos,0.5f,1,1,1,1,1,buf);			
+			ypos -= csize;
+		}
+		nScroll++;
+
+		++ritor;
+	} //k		
 }
 
 
@@ -1050,8 +1046,7 @@ void CXConsole::ScrollConsole()
 	case sdDOWN: // The console is scrolling down
 
 		// Vlads note: console should go down immediately, otherwise it can look very bad on startup
-		//m_nScrollPos+=nCurrHeight/2;			
-		m_nScrollPos = m_nScrollMax;
+		m_nScrollPos+=nCurrHeight/2;
 
 		if (m_nScrollPos > m_nScrollMax)
 		{
@@ -1714,7 +1709,9 @@ void CXConsole::TickProgressBar()
 	if (m_nProgressRange != 0 && m_nProgressRange > m_nProgress)
 	{
 		m_nProgress++;
-		m_pSystem->UpdateLoadingScreen();
+
+		if (IsOpened() || (m_nProgress % 10) == 0)
+			m_pSystem->UpdateLoadingScreen();
 	}
 
 	if (m_pSystem->GetIGame())

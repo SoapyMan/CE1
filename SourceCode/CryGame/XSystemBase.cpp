@@ -1541,7 +1541,6 @@ bool CXSystemBase::LoadLevelCommon( SMissionInfo &missionInfo )
 
 	m_pSystem->GetIConsole()->Clear();
 	m_pSystem->GetIConsole()->SetScrollMax(600);
-	m_pSystem->GetIConsole()->ShowConsole(true);
 
 	m_pSystem->GetIConsole()->SetLoadingImage( sLoadingScreenTexture.c_str() );
 	m_pSystem->GetIConsole()->ResetProgressBar(0x7fffffff);
@@ -1773,10 +1772,6 @@ bool CXSystemBase::LoadLevelCommon( SMissionInfo &missionInfo )
 
 	if (m_pGame->IsMultiplayer())
 		AddMPProtectedFiles( missionInfo );
-
-	// hack, to get the progressbar to the end...
-	for (int i = 0; i < (int)(dwProgressBarRange); i++)
-		m_pConsole->TickProgressBar();
 
 	//////////////////////////////////////////////////////////////////////////
 	// Log to file level loading time.

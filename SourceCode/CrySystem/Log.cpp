@@ -501,10 +501,6 @@ void CLog::UpdateLoadingScreen(const char* szFormat, ...)
 			LogToConsole(m_szTemp);
 		if (bfile)
 			LogToFile(m_szTemp);
-		if (bconsole)
-		{
-			((CSystem*)m_pSystem)->UpdateLoadingScreen();
-		}
 	}
 
 	// Take this oportunity to update streaming engine.
@@ -530,11 +526,6 @@ void CLog::UpdateLoadingScreenPlus(const char* szFormat, ...)
 		LogToConsolePlus(m_szTemp);
 	if (bfile)
 		LogToFilePlus(m_szTemp);
-
-	if (bconsole)
-	{
-		((CSystem*)m_pSystem)->UpdateLoadingScreen();
-	}
 }
 
 //////////////////////////////////////////////////////////////////////////

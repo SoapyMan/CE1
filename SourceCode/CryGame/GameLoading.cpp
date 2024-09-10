@@ -856,13 +856,9 @@ bool CXGame::LoadFromStream(CStream& stm, bool isdemo)
 		}
 		else
 		{
-			GetISystem()->GetIInput()->EnableEventPosting(false);
-			//m_pSystem->GetIInput()->GetIKeyboard()->ClearKeyState();
 			LoadLevelCS(false, sLevelName.c_str(), sMissionName.c_str(), false);
 			//m_pClient->Connect("localhost");				
-			//m_pSystem->GetIInput()->GetIKeyboard()->ClearKeyState();
-			GetISystem()->GetIInput()->EnableEventPosting(true);
-		};
+		}
 	}
 	else
 	{
@@ -874,7 +870,6 @@ bool CXGame::LoadFromStream(CStream& stm, bool isdemo)
 		pConsole->Clear();
 		pConsole->ResetProgressBar(nEnt + 3);
 		pConsole->SetScrollMax(600);
-		pConsole->ShowConsole(1);
 		DeleteMessage("Switch"); // no switching during loading
 
 		// local player has to exit all areas before starting to delete entities
@@ -952,9 +947,7 @@ bool CXGame::LoadFromStream(CStream& stm, bool isdemo)
 		Update();
 
 	if (bLoadBar)
-	{
 		pConsole->TickProgressBar();	// advance progress
-	}
 
 	VERIFY_COOKIE_NO(stm, 0x3c);
 
@@ -1386,7 +1379,6 @@ bool CXGame::LoadFromStream(CStream& stm, bool isdemo)
 	m_pSystem->GetISoundSystem()->Mute(false);
 
 	m_bMapLoadedFromCheckpoint = true;
-
 
 	m_pEntitySystem->PauseTimers(false, true);
 
@@ -1994,9 +1986,7 @@ bool CXGame::LoadFromStream_RELEASEVERSION(CStream& stm, bool isdemo, CScriptObj
 		Update();
 
 	if (bLoadBar)
-	{
 		pConsole->TickProgressBar();	// advance progress
-	}
 
 	VERIFY_COOKIE_NO(stm, 0x3c);
 
@@ -2560,9 +2550,7 @@ bool CXGame::LoadFromStream_PATCH_1(CStream& stm, bool isdemo, CScriptObjectStre
 		Update();
 
 	if (bLoadBar)
-	{
 		pConsole->TickProgressBar();	// advance progress
-	}
 
 	VERIFY_COOKIE_NO(stm, 0x3c);
 

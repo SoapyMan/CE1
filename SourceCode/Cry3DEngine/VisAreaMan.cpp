@@ -1333,15 +1333,11 @@ bool CVisAreaManager::UnRegisterInAllSectors(IEntityRender* pEntityRS)
 	return bRes;
 }
 
-
-
-
-Vec3 CamAngles[6] =
+const int NUM_CAM_ANGLES = 4;
+static Vec3 CamAngles[NUM_CAM_ANGLES] =
 {
 		Vec3(90, -90,  0),  //posx
 		Vec3(90,  90,  0),  //negx
-		Vec3(180, 180,  0),  //posy
-		Vec3(0, 180,  0),  //negy
 		Vec3(90, 180,  0),  //posz
 		Vec3(90,   0,  0)  //negz
 };
@@ -1358,6 +1354,9 @@ void CVisAreaManager::Preceche(CObjManager* pObjManager)
 
 	GetRenderer()->EnableSwapBuffers(false);
 
+	I3DEngine* engine = Get3DEngine();
+	C3DEngine* pEngine = static_cast<C3DEngine*>(engine);
+
 	//loop over all sectors and place a light in the middle of the sector  
 	for (int v = 0; v < m_lstVisAreas.Count(); v++)
 	{
@@ -1367,35 +1366,32 @@ void CVisAreaManager::Preceche(CObjManager* pObjManager)
 
 		m_nRenderFrameID = GetRenderer()->GetFrameID();
 
-
 		CDLight DynLight;
 
 		//place camera in the middle of a sector and render sector form 
 		//different directions
-		for (int i = 0; i < 6; i++) {
-
+		for (int i = 0; i < NUM_CAM_ANGLES; i++)
+		{
 			GetRenderer()->BeginFrame();
 
 			// Add sun lsource
 			DynLight.m_Origin = (m_lstVisAreas[v]->m_vBoxMin + m_lstVisAreas[v]->m_vBoxMax) * 0.5f;
 			DynLight.m_fRadius = 100;
 			DynLight.m_Flags |= DLF_LM;
-			Get3DEngine()->AddDynamicLightSource(DynLight, (IEntityRender*)-1);
+			engine->AddDynamicLightSource(DynLight, (IEntityRender*)-1);
 
 			CCamera cam = GetViewCamera();
 
 			cam.SetPos(DynLight.m_Origin);
 			cam.SetAngle(CamAngles[i]);
 			cam.SetFov(1.7f);  //very wide-opend fov
-			Get3DEngine()->SetCamera(cam);
 
-			Get3DEngine()->Draw();
+			engine->SetCamera(cam);
+			engine->Draw();
 			GetRenderer()->Update();
 		}
 
 	}
-
-
 
 	//--------------------------------------------------------------------------------------
 	//----                  PRE-FETCHING OF RENDER-DATA IN OUTDOORS                     ----
@@ -1421,32 +1417,29 @@ void CVisAreaManager::Preceche(CObjManager* pObjManager)
 		}
 	}
 
-
 	//loop over all cam-position in the level and render this part of the level 
 	//from 6 different directions
 	for (int p = 0; p < ValidPosition; p++) //loop over outdoor-camera position
 	{
-		for (int i = 0; i < 6; i++) //loop over 6 camera orientations
+		for (int i = 0; i < NUM_CAM_ANGLES; i++) //loop over 6 camera orientations
 		{
-
 			GetRenderer()->BeginFrame();
-
 			CCamera cam = GetViewCamera();
 			cam.SetPos(CamOutdoorPositions[p]);
 			cam.SetAngle(CamAngles[i]);
 			cam.SetFov(1.7f);  //very wide-opend fov
-			Get3DEngine()->SetCamera(cam);
+			engine->SetCamera(cam);
 
-			Get3DEngine()->Draw();
+			engine->Draw();
 			GetRenderer()->Update();
 		}
 	}
 	GetCVars()->e_sleep = 0;
 
-	((C3DEngine*)Get3DEngine())->GetDynamicLightSources()->Clear();
+	pEngine->GetDynamicLightSources()->Clear();
 	GetRenderer()->EF_ClearLightsList();
-	((C3DEngine*)Get3DEngine())->UpdateLightSources();
-	((C3DEngine*)Get3DEngine())->PrepareLightSourcesForRendering();
+	pEngine->UpdateLightSources();
+	pEngine->PrepareLightSourcesForRendering();
 
 	GetRenderer()->EnableSwapBuffers(true);
 }
