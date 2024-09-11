@@ -64,11 +64,11 @@ public:
 	CJoystick();
 	~CJoystick();
 
-	bool	Init(ILog *pLog);
-	void	Update();			
+	bool	Init(ILog* pLog);
+	void	Update();
 	void	ShutDown();
 
-	int		GetNumButtons();	
+	int		GetNumButtons();
 	bool	IsButtonPressed(int buttonnum);
 	int		GetDir();
 	int		GetHatDir();
@@ -77,160 +77,160 @@ public:
 	Vec3	GetAnalog1Dir(unsigned int joystickID) const;
 	Vec3	GetAnalog2Dir(unsigned int joystickID) const;
 
-private:	
+private:
 
 	bool	m_initialized;
 	bool	m_hatswitch;
 
-	int		m_numbuttons;	
+	int		m_numbuttons;
 	float	m_joytime;
-	
+
 	unsigned char m_buttons[8];
 	unsigned char m_dirs[4];
-	unsigned char m_hatdirs[4];	
+	unsigned char m_hatdirs[4];
 
 	unsigned int	m_numjoysticks;	//!<	Number of available joysticks
 	// this is for returning analog controller directional input. Input is in the range -1..1 for the x and y axis. z unused
-	Vec3	*m_vAnalog1Dir;
-	Vec3	*m_vAnalog2Dir;
+	Vec3* m_vAnalog1Dir;
+	Vec3* m_vAnalog2Dir;
 
-	ILog *m_pLog;
+	ILog* m_pLog;
 
-	
-	
-/////////////////////////////////////////////////////////////////
-///////////////PS2 SPECIFIC CODE ////////////////////////////////
-/////////////////////////////////////////////////////////////////	
-	
+
+
+	/////////////////////////////////////////////////////////////////
+	///////////////PS2 SPECIFIC CODE ////////////////////////////////
+	/////////////////////////////////////////////////////////////////	
+
 #ifdef PS2
 
 	//PS2 INTERFACE
-	public:
-	
-	
+public:
+
+
 	bool ButtonPressed(int Type);
 	bool ButtonHasBeenPressed(int Type);
-	
-	
+
+
 	bool DigitalCrossDirection(int Type);
 	unsigned char LeftStickX();
 	unsigned char LeftStickY();
 	unsigned char RightStickX();
 	unsigned char RightStickY();
-	
-	
+
+
 
 	//PS2 "INTERNAL" UTILITY 
-	private:
-	
-	void GetAnalog(unsigned char *pData);
-	void GetDigital(unsigned char *pData);
-	void GetButton(unsigned char *pData);
-	
+private:
+
+	void GetAnalog(unsigned char* pData);
+	void GetDigital(unsigned char* pData);
+	void GetButton(unsigned char* pData);
+
 	//Convert the PS2 pad information in PC style format(used by the interface).
 	void ConvertPadInformation();
 
-	
+
 	//The type of Joystick
 	int JoyType;
-	
-	
+
+
 	//For analogic stick
 	unsigned char m_RightX;
 	unsigned char m_RightY;
-	
+
 	unsigned char m_LeftX;
 	unsigned char m_LeftY;
-	
+
 	//For digital stick
 	bool m_Left;
 	bool m_Right;
 	bool m_Up;
 	bool m_Down;
-	
+
 	//Digital button
-	
+
 	bool m_L1;
 	bool m_L2;
 	bool m_R1;
 	bool m_R2;
-	
+
 	bool m_Square;
 	bool m_Circle;
 	bool m_Triangle;
 	bool m_Cross;
-	
+
 	bool m_Start;
 	bool m_Select;
-	
+
 	bool m_TriggerL;
 	bool m_TriggerR;
-	
-	
-	
-	
-	
+
+
+
+
+
 	bool m_old_L1;
 	bool m_old_L2;
 	bool m_old_R1;
 	bool m_old_R2;
-	
+
 	bool m_old_Square;
 	bool m_old_Circle;
 	bool m_old_Triangle;
 	bool m_old_Cross;
-	
+
 	bool m_old_Start;
 	bool m_old_Select;
-	
+
 	bool m_old_TriggerL;
 	bool m_old_TriggerR;
-	
+
 	//USED TO SIMULATE MOUSE/////////////////
-	
+
 	float m_fMouseScreenX;
 	float m_fMouseScreenY;
-	
+
 	float m_fMouseDeltaX;
 	float m_fMouseDeltaY;
-	
-	public:
-	
+
+public:
+
 	float GetVScreenX();
 	float GetVScreenY();
-	
+
 	float GetDeltaX();
 	float GetDeltaY();
-	
-	
-	void SetScreenX(float x){m_MouseScreenX=x;}
-	void SetScreenY(float y){m_MouseScreenY=y;}
-	
-	
-	
+
+
+	void SetScreenX(float x) { m_MouseScreenX = x; }
+	void SetScreenY(float y) { m_MouseScreenY = y; }
+
+
+
 	//END MOUSE SIMULATION //////////////////
-	
-	
+
+
 	///USED TO SIMULATE THE KEYBOARD ////////
 
 	bool KeyDown(int p_key);
 	bool KeyPressed(int p_key);
-	
+
 	////////////////////////////////////////
-	
+
 	bool HasControl;
-	bool HasMovControl(){return HasControl;}
-	
-	
-	
-	
-	
+	bool HasMovControl() { return HasControl; }
+
+
+
+
+
 
 #endif
 
-/////////////////////////////////////////////////////////////////
-///////////////END PS2 SPECIFIC CODE ////////////////////////////
-/////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////
+	///////////////END PS2 SPECIFIC CODE ////////////////////////////
+	/////////////////////////////////////////////////////////////////
 
 };
 

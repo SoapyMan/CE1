@@ -190,16 +190,16 @@ class CInput;
 class CXDebugKeyboard : public IKeyboard
 {
 public:
-	bool Init(CInput * pInput, ILog *pLog);
+	bool Init(CInput* pInput, ILog* pLog);
 
 	CXDebugKeyboard();
 	virtual ~CXDebugKeyboard();
-////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////
 	void ShutDown();
 	//! allow to force a key code value
-  void SetKey(int p_key, int value);
+	void SetKey(int p_key, int value);
 	//! allow to force a key code value
-  void SetPrevKey(int p_key, int value);
+	void SetPrevKey(int p_key, int value);
 	//! check for key pressed and held
 	bool KeyDown(int p_key);
 	//! check for key pressed only once
@@ -211,15 +211,15 @@ public:
 	//! return the code of the key pressed
 	int GetKeyPressedCode();
 	//! return the name of the key pressed 
-	const char *GetKeyPressedName();
+	const char* GetKeyPressedName();
 	//! return the code of the key down
 	int GetKeyDownCode();
 	//! return the name of the key down
-	const char *GetKeyDownName();
+	const char* GetKeyDownName();
 	//! return the name (key name list) of the key specified in kKeyCode
-	const char *EnumerateKey(int nKeyCode);
+	const char* EnumerateKey(int nKeyCode);
 	//! set/unset directinput to exclusive mode
-	void SetExclusive(bool value,void *hwnd=0);
+	void SetExclusive(bool value, void* hwnd = 0);
 	//! wait for a key pressed
 	void WaitForKey();
 	//! clear the key (pressed) state
@@ -228,29 +228,29 @@ public:
 	//const char *GetKeyName(unsigned short nKey);
 	//!
 	void Update();
-/////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////
 private:
 	static XAsciiKey m_AsciiTable[256];
 
-public:	
+public:
 	unsigned short DIK2XKEY(unsigned char cCode);
 	unsigned char XKEY2DIK(unsigned short nCode);
 	unsigned char XKEY2ASCII(unsigned short nCode);
-	
+
 protected:
 	//bool Acquire();
 	//bool UnAcquire();
 	void SetupKeyNames();
 	unsigned char	m_cKeysState[0x0000011F];
-	unsigned char	m_cOldKeysState[0x0000011F];	
-  
+	unsigned char	m_cOldKeysState[0x0000011F];
+
 private:
-	ILog *m_pLog;
+	ILog* m_pLog;
 
-  CInput * m_pInput;
+	CInput* m_pInput;
 
-  HANDLE m_hDebugKeyboard;
-  bool m_bKeys[256];
+	HANDLE m_hDebugKeyboard;
+	bool m_bKeys[256];
 };
 
 #endif // _XDEBUGKEYBOARD_H_
