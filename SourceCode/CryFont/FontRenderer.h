@@ -75,7 +75,6 @@ private:
 
 	FT_Library		m_pLibrary;
 	FT_Face			m_pFace;
-	FT_GlyphSlot	m_pGlyph;
 	float			m_fSizeRatio;
 
 	FT_Encoding		m_pEncoding;

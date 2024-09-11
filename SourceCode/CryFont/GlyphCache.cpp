@@ -163,7 +163,6 @@ int CGlyphCache::PreCacheGlyph(wchar_t cChar)
 	if (pItor != m_pCacheTable.end())
 	{
 		pItor->second->dwUsage = m_dwUsage;
-
 		return 1;
 	}
 
