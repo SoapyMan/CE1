@@ -161,7 +161,7 @@ void CVars::Init()
 	INIT_CVAR_PUBL_(e_rain_amount, 0.0f, "Values between 0 and 1 controls density of the rain");
 	INIT_CVAR_SER__(e_vegetation_sprites_distance_ratio, 1.0f, "Allows changing distance on what vegetation switch into sprite");
 	INIT_CVAR_SER__(e_obj_lod_ratio, 10.0f, "LOD for vegetation, brushes and entities");
-	INIT_CVAR_CHEAT(e_obj_view_dist_ratio, 55.0f, "View distance for vegetation, brushes and entities");
+	INIT_CVAR_CHEAT(e_obj_view_dist_ratio, 100.0f, "View distance for vegetation, brushes and entities");
 	INIT_CVAR_CHEAT(e_dynamic_ambient_ratio, 1.0f, "Controls how object ambient level dependinds from surrounding lights");
 	INIT_CVAR_PUBL_(e_detail_texture_min_fov, 0.55f, "If FOV is less - alternative version of terrain detail texturing will be used");
 	INIT_CVAR_SER_R_NET(e_vegetation_min_size, 0.0f, "Minimal size of static object, smaller objects will be not rendered");
