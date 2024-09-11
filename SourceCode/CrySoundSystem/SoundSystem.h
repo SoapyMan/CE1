@@ -217,9 +217,9 @@ public:
 	//! Check for EAX support.
 	bool IsEAX(int version);
 	//! Set EAX listener environment.
-	bool SetEaxListenerEnvironment(int nPreset, FSOUND_REVERB_PROPERTIES* pProps = NULL, int nFlags = 0);
+	bool SetEaxListenerEnvironment(int nPreset, const SoundReverbProperties* pProps = NULL, int nFlags = 0);
 	//! Gets current EAX listener environment.
-	bool GetCurrentEaxEnvironment(int& nPreset, FSOUND_REVERB_PROPERTIES& Props);
+	bool GetCurrentEaxEnvironment(int& nPreset, SoundReverbProperties& Props);
 
 	bool SetGroupScale(int nGroup, float fScale);
 
@@ -274,14 +274,14 @@ public:
 	bool	m_bOK, m_bInside;
 	bool	m_bValidPos;
 
-	int m_nBuffersLoaded;
+	int		m_nBuffersLoaded;
 
 	//SoundMap			m_sounds;
 	SoundBufferPropsMap	m_soundBuffers;
 	SoundList	m_vecSounds;
 	SoundList	m_lstSoundSpotsInactive;
 	SoundList	m_lstSoundSpotsActive;
-	int				m_nInactiveSoundSpotsSize;
+	int			m_nInactiveSoundSpotsSize;
 	SoundListItor m_itLastInactivePos;
 	SoundList	m_lstFadeUnderwaterSounds;
 
@@ -335,7 +335,7 @@ public:
 	bool	m_bPause, m_bResetVolume;
 
 	int		m_nLastEax;
-	FSOUND_REVERB_PROPERTIES* m_pLastEAXProps;
+	SoundReverbProperties m_lastEAXProps;	// not used when m_nLastEax >= 0
 
 	SEAXProps m_EAXIndoor;
 	SEAXProps m_EAXOutdoor;

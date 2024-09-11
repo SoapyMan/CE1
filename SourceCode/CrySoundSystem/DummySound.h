@@ -149,9 +149,9 @@ public:
 	//! Check for EAX support.
 	bool IsEAX(int version) { return(false); }
 	//! Set EAX listener environment.
-	bool SetEaxListenerEnvironment(int nPreset, FSOUND_REVERB_PROPERTIES* pProps = NULL, int nFlags = 0) { return(false); }
+	bool SetEaxListenerEnvironment(int nPreset, const SoundReverbProperties* pProps = NULL, int nFlags = 0) { return(false); }
 	//! Gets current EAX listener environment.
-	bool GetCurrentEaxEnvironment(int& nPreset, FSOUND_REVERB_PROPERTIES& Props) { nPreset = 0; return (true); }
+	bool GetCurrentEaxEnvironment(int& nPreset, SoundReverbProperties& Props) { nPreset = 0; return (true); }
 	bool SetGroupScale(int nGroup, float fScale) { return true; }
 	void RecomputeSoundOcclusion(bool bRecomputeListener, bool bForceRecompute, bool bReset) {}
 

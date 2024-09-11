@@ -9,7 +9,6 @@
 #include <IConsole.h>
 #include <ILog.h>
 #include <ISound.h>
-#include <fmod.h>
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -421,7 +420,7 @@ int CScriptObjectSound::SetEaxEnvironment(IFunctionHandler* pH)
 		nFlags=0,			--CS_REVERB_FLAGS - modifies the behavior of above properties (win32 only)
 	*/
 
-	FSOUND_REVERB_PROPERTIES pProps;
+	SoundReverbProperties pProps;
 
 	int nTemp; //cannot use unsigned int as parameter to getvaluechain function
 
@@ -444,12 +443,12 @@ int CScriptObjectSound::SetEaxEnvironment(IFunctionHandler* pH)
 		pObj->GetValueChain("fDecayLFRatio", pProps.DecayLFRatio);
 		pObj->GetValueChain("nReflections", pProps.Reflections);
 		pObj->GetValueChain("fReflectionsDelay", pProps.ReflectionsDelay);
-		pObj->GetValueChain("fReflectionsPan", oVec); vVec = oVec.Get();
-		pProps.ReflectionsPan[0] = vVec.x; pProps.ReflectionsPan[1] = vVec.y; pProps.ReflectionsPan[2] = vVec.z;
+		pObj->GetValueChain("fReflectionsPan", oVec); 
+		pProps.ReflectionsPan = oVec;
 		pObj->GetValueChain("nReverb", pProps.Reverb);
 		pObj->GetValueChain("fReverbDelay", pProps.ReverbDelay);
-		pObj->GetValueChain("fReverbPan", oVec); vVec = oVec.Get();
-		pProps.ReverbPan[0] = vVec.x; pProps.ReverbPan[1] = vVec.y; pProps.ReverbPan[2] = vVec.z;
+		pObj->GetValueChain("fReverbPan", oVec);
+		pProps.ReverbPan = oVec;
 		pObj->GetValueChain("fEchoTime", pProps.EchoTime);
 		pObj->GetValueChain("fEchoDepth", pProps.EchoDepth);
 		pObj->GetValueChain("fModulationTime", pProps.ModulationTime);

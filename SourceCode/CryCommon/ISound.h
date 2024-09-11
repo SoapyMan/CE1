@@ -26,47 +26,52 @@
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 //crysound definitions
-typedef struct _FSOUND_REVERB_PROPERTIES FSOUND_REVERB_PROPERTIES;
 
-class		CCamera;
+
+class	CCamera;
 struct	IMusicSystem;
-class		ICrySizer;
+class	ICrySizer;
 struct	IVisArea;
 
 //////////////////////////////////////////////////////////////////////
 #define MAX_SFX			1024
 
 //////////////////////////////////////////////////////////////////////
-#define FLAG_SOUND_LOOP									1<<0 
-#define FLAG_SOUND_2D										1<<1
-#define FLAG_SOUND_3D										1<<2 
-#define FLAG_SOUND_STEREO								1<<3 
-#define FLAG_SOUND_16BITS								1<<4 
-#define FLAG_SOUND_STREAM								1<<5 
-#define FLAG_SOUND_RELATIVE							1<<6   // sound position moves relative to player
-#define FLAG_SOUND_RADIUS								1<<7 	// sound has a radius, custom attenuation calculation
-#define FLAG_SOUND_DOPPLER							1<<8 	// use doppler effect for this sound	
-#define FLAG_SOUND_NO_SW_ATTENUATION		1<<9 	// doesn't use SW attenuation for this sound
-#define FLAG_SOUND_MUSIC								1<<10 	// pure music sound, to use to set pure music volume
-#define FLAG_SOUND_OUTDOOR							1<<11 	// play the sound only if the listener is in outdoor
-#define FLAG_SOUND_INDOOR	 							1<<12	// play the sound only if the listener is in indoor
-#define FLAG_SOUND_UNSCALABLE						1<<13 	// for all sounds with this flag the volume can be scaled separately respect to the master volume
-#define FLAG_SOUND_OCCLUSION	 					1<<14 	// the sound uses sound occlusion
-//#define FLAG_SOUND_FAILED				32768 // the loading of this sound has failed - do not try to load again every frame
-#define FLAG_SOUND_LOAD_SYNCHRONOUSLY		1<<15  // the loading of this sound will be synchronous (asynchronously by default).
-#define FLAG_SOUND_FADE_OUT_UNDERWATER  1<<16 
+enum ESoundFlags
+{
+	FLAG_SOUND_LOOP					= 1<<0, 
+	FLAG_SOUND_2D					= 1<<1,
+	FLAG_SOUND_3D					= 1<<2, 
+	FLAG_SOUND_STEREO				= 1<<3, 
+	FLAG_SOUND_16BITS				= 1<<4, 
+	FLAG_SOUND_STREAM				= 1<<5, 
+	FLAG_SOUND_RELATIVE				= 1<<6,		// sound position moves relative to player
+	FLAG_SOUND_RADIUS				= 1<<7,		// sound has a radius, custom attenuation calculation
+	FLAG_SOUND_DOPPLER				= 1<<8,		// use doppler effect for this sound	
+	FLAG_SOUND_NO_SW_ATTENUATION	= 1<<9,		// doesn't use SW attenuation for this sound
+	FLAG_SOUND_MUSIC				= 1<<10,	// pure music sound, to use to set pure music volume
+	FLAG_SOUND_OUTDOOR				= 1<<11,	// play the sound only if the listener is in outdoor
+	FLAG_SOUND_INDOOR	 			= 1<<12,	// play the sound only if the listener is in indoor
+	FLAG_SOUND_UNSCALABLE			= 1<<13,	// for all sounds with this flag the volume can be scaled separately respect to the master volume
+	FLAG_SOUND_OCCLUSION	 		= 1<<14,	// the sound uses sound occlusion
+	FLAG_SOUND_LOAD_SYNCHRONOUSLY	= 1<<15,	// the loading of this sound will be synchronous (asynchronously by default).
+	FLAG_SOUND_FADE_OUT_UNDERWATER  = 1<<16, 
+};
 
-#define FLAG_SOUND_ACTIVELIST	 	(FLAG_SOUND_RADIUS | FLAG_SOUND_OCCLUSION | FLAG_SOUND_INDOOR | FLAG_SOUND_OUTDOOR)
+#define FLAG_SOUND_ACTIVELIST		(FLAG_SOUND_RADIUS | FLAG_SOUND_OCCLUSION | FLAG_SOUND_INDOOR | FLAG_SOUND_OUTDOOR)
+#define SOUNDBUFFER_FLAG_MASK		(FLAG_SOUND_LOOP | FLAG_SOUND_2D | FLAG_SOUND_3D | FLAG_SOUND_STEREO | FLAG_SOUND_16BITS | FLAG_SOUND_STREAM)	// flags affecting the sound-buffer, not its instance
 
-#define SOUNDBUFFER_FLAG_MASK	(FLAG_SOUND_LOOP | FLAG_SOUND_2D | FLAG_SOUND_3D | FLAG_SOUND_STEREO | FLAG_SOUND_16BITS | FLAG_SOUND_STREAM)	// flags affecting the sound-buffer, not its instance
+enum ESoundScale
+{
+	SOUNDSCALE_MASTER			= 0,
+	SOUNDSCALE_SCALEABLE		= 1,
+	SOUNDSCALE_DEAFNESS			= 2,
+	SOUNDSCALE_UNDERWATER		= 3,
+	SOUNDSCALE_MISSIONHINT		= 4,
 
-#define MAX_SOUNDSCALE_GROUPS		8
+	MAX_SOUNDSCALE_GROUPS		= 8,
+};
 
-#define SOUNDSCALE_MASTER				0
-#define SOUNDSCALE_SCALEABLE		1
-#define SOUNDSCALE_DEAFNESS			2
-#define SOUNDSCALE_UNDERWATER		3
-#define SOUNDSCALE_MISSIONHINT	4
 
 struct ISound;
 
@@ -112,6 +117,36 @@ enum {
 	EAX_PRESET_PARKINGLOT,
 	EAX_PRESET_SEWERPIPE,
 	EAX_PRESET_UNDERWATER
+};
+
+struct SoundReverbProperties
+{
+	unsigned int Environment;            // 0     , 25    , 0      , sets all listener properties (WIN32/PS2 only) */
+	float        EnvSize;                // 1.0   , 100.0 , 7.5    , environment size in meters (WIN32 only) */
+	float        EnvDiffusion;           // 0.0   , 1.0   , 1.0    , environment diffusion (WIN32/XBOX) */
+	int          Room;                   // -10000, 0     , -1000  , room effect level (at mid frequencies) (WIN32/XBOX/PS2) */
+	int          RoomHF;                 // -10000, 0     , -100   , relative room effect level at high frequencies (WIN32/XBOX) */
+	int          RoomLF;                 // -10000, 0     , 0      , relative room effect level at low frequencies (WIN32 only) */
+	float        DecayTime;              // 0.1   , 20.0  , 1.49   , reverberation decay time at mid frequencies (WIN32/XBOX) */
+	float        DecayHFRatio;           // 0.1   , 2.0   , 0.83   , high-frequency to mid-frequency decay time ratio (WIN32/XBOX) */
+	float        DecayLFRatio;           // 0.1   , 2.0   , 1.0    , low-frequency to mid-frequency decay time ratio (WIN32 only) */
+	int          Reflections;            // -10000, 1000  , -2602  , early reflections level relative to room effect (WIN32/XBOX) */
+	float        ReflectionsDelay;       // 0.0   , 0.3   , 0.007  , initial reflection delay time (WIN32/XBOX) */
+	Vec3         ReflectionsPan;         //       ,       , [0,0,0], early reflections panning vector (WIN32 only) */
+	int          Reverb;                 // -10000, 2000  , 200    , late reverberation level relative to room effect (WIN32/XBOX) */
+	float        ReverbDelay;            // 0.0   , 0.1   , 0.011  , late reverberation delay time relative to initial reflection (WIN32/XBOX) */
+	Vec3         ReverbPan;              //       ,       , [0,0,0], late reverberation panning vector (WIN32 only) */
+	float        EchoTime;               // .075  , 0.25  , 0.25   , echo time (WIN32/PS2 only.  PS2 = Delay time for ECHO/DELAY modes only) */
+	float        EchoDepth;              // 0.0   , 1.0   , 0.0    , echo depth (WIN32/PS2 only.  PS2 = Feedback level for ECHO mode only) */
+	float        ModulationTime;         // 0.04  , 4.0   , 0.25   , modulation time (WIN32 only) */
+	float        ModulationDepth;        // 0.0   , 1.0   , 0.0    , modulation depth (WIN32 only) */
+	float        AirAbsorptionHF;        // -100  , 0.0   , -5.0   , change in level per meter at high frequencies (WIN32 only) */
+	float        HFReference;            // 1000.0, 20000 , 5000.0 , reference high frequency (hz) (WIN32/XBOX) */
+	float        LFReference;            // 20.0  , 1000.0, 250.0  , reference low frequency (hz) (WIN32 only) */
+	float        RoomRolloffFactor;      // 0.0   , 10.0  , 0.0    , like FSOUND_3D_SetRolloffFactor but for room effect (WIN32/XBOX) */
+	float        Diffusion;              // 0.0   , 100.0 , 100.0  , Value that controls the echo density in the late reverberation decay. (XBOX only) */
+	float        Density;                // 0.0   , 100.0 , 100.0  , Value that controls the modal density in the late reverberation decay (XBOX only) */
+	unsigned int Flags;                  // FSOUND_REVERB_FLAGS - modifies the behavior of above properties (WIN32/PS2 only) */
 };
 
 //! Sound events sent to callback that can registered to every sound.
@@ -192,11 +227,11 @@ struct ISoundSystem
 	virtual bool IsEAX(int version) = 0;
 	//! Set EAX listener environment; one of the predefined presets
 	//! listened above or a custom environmental reverb set
-	virtual bool SetEaxListenerEnvironment(int nPreset, FSOUND_REVERB_PROPERTIES* pProps = NULL, int nFlags = 0) = 0;
+	virtual bool SetEaxListenerEnvironment(int nPreset, const SoundReverbProperties* pProps = NULL, int nFlags = 0) = 0;
 
 	//! Gets current EAX listener environment or one of the predefined presets
 	//! used to save into the savegame
-	virtual bool GetCurrentEaxEnvironment(int& nPreset, FSOUND_REVERB_PROPERTIES& Props) = 0;
+	virtual bool GetCurrentEaxEnvironment(int& nPreset, SoundReverbProperties& Props) = 0;
 
 	//! Set the scaling factor for a specific scale group (0-31)
 	virtual bool SetGroupScale(int nGroup, float fScale) = 0;

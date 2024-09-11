@@ -187,7 +187,6 @@ project "CrySystem"
 	uses {
 		"CryCommon",
 		"SDL2",
-		"fmod",
 		"zlib",
 		"md5",
 		"expat"
@@ -294,7 +293,6 @@ project "CryGame"
     kind "SharedLib"
 	uses {
 		"CryCommon",
-		"fmod",
 		-- "ffmpeg" TODO
 		-- "bink"
 	}

@@ -48,7 +48,6 @@
 #include <ICryPak.h>
 #include <chrono>
 #include <time.h>
-#include <fmod.h>
 #include <stdio.h>
 
 #if defined(LINUX)
@@ -294,7 +293,7 @@ bool CXGame::SaveToStream(CStream& stm, Vec3d* pos, Vec3d* angles, string sFilen
 
 	// save current EAX preset
 	int nPreset;
-	FSOUND_REVERB_PROPERTIES tProps;
+	SoundReverbProperties tProps;
 	ISoundSystem* snd = m_pSystem->GetISoundSystem();
 	if (snd)
 	{
@@ -303,9 +302,7 @@ bool CXGame::SaveToStream(CStream& stm, Vec3d* pos, Vec3d* angles, string sFilen
 
 	stm.Write(nPreset);
 	if (nPreset == -1)
-	{
-		stm.WriteBits((BYTE*)&tProps, sizeof(FSOUND_REVERB_PROPERTIES));
-	}
+		stm.WriteBits((BYTE*)&tProps, sizeof(SoundReverbProperties));
 
 	WRITE_COOKIE_NO(stm, 0x12);
 
@@ -793,12 +790,12 @@ bool CXGame::LoadFromStream(CStream& stm, bool isdemo)
 
 	// Load EAX preset
 	int nPreset;
-	FSOUND_REVERB_PROPERTIES tProps;
+	SoundReverbProperties tProps;
 	m_pSystem->GetISoundSystem()->GetCurrentEaxEnvironment(nPreset, tProps);
 	stm.Read(nPreset);
 	if (nPreset == -1)
 	{
-		stm.ReadBits((BYTE*)&tProps, sizeof(FSOUND_REVERB_PROPERTIES));
+		stm.ReadBits((BYTE*)&tProps, sizeof(SoundReverbProperties));
 	}
 
 	VERIFY_COOKIE_NO(stm, 0x12);
@@ -1827,13 +1824,11 @@ bool CXGame::LoadFromStream_RELEASEVERSION(CStream& stm, bool isdemo, CScriptObj
 
 	// Load EAX preset
 	int nPreset;
-	FSOUND_REVERB_PROPERTIES tProps;
+	SoundReverbProperties tProps;
 	m_pSystem->GetISoundSystem()->GetCurrentEaxEnvironment(nPreset, tProps);
 	stm.Read(nPreset);
 	if (nPreset == -1)
-	{
-		stm.ReadBits((BYTE*)&tProps, sizeof(FSOUND_REVERB_PROPERTIES));
-	}
+		stm.ReadBits((BYTE*)&tProps, sizeof(SoundReverbProperties));
 
 	VERIFY_COOKIE_NO(stm, 0x12);
 
@@ -2391,13 +2386,11 @@ bool CXGame::LoadFromStream_PATCH_1(CStream& stm, bool isdemo, CScriptObjectStre
 
 	// Load EAX preset
 	int nPreset;
-	FSOUND_REVERB_PROPERTIES tProps;
+	SoundReverbProperties tProps;
 	m_pSystem->GetISoundSystem()->GetCurrentEaxEnvironment(nPreset, tProps);
 	stm.Read(nPreset);
 	if (nPreset == -1)
-	{
-		stm.ReadBits((BYTE*)&tProps, sizeof(FSOUND_REVERB_PROPERTIES));
-	}
+		stm.ReadBits((BYTE*)&tProps, sizeof(SoundReverbProperties));
 
 	VERIFY_COOKIE_NO(stm, 0x12);
 

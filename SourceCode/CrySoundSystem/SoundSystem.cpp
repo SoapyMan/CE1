@@ -48,63 +48,63 @@ extern "C"
 {
 
 #if CS_SAFEBORDER
-	enum { g_cFillConst = 0xCE };
-	void CheckSafeBorder(char* p)
-	{
-		for (unsigned i = 0; i < CS_SAFEBORDER; ++i)
-			if (p[i] != (char)(g_cFillConst + i))
-				__debugbreak();
-	}
+enum { g_cFillConst = 0xCE };
+void CheckSafeBorder(char* p)
+{
+	for (unsigned i = 0; i < CS_SAFEBORDER; ++i)
+		if (p[i] != (char)(g_cFillConst + i))
+			__debugbreak();
+}
 
-	void FillSafeBofder(char* p)
-	{
-		for (unsigned i = 0; i < CS_SAFEBORDER; ++i)
-			p[i] = (char)(g_cFillConst + i);
-	}
+void FillSafeBofder(char* p)
+{
+	for (unsigned i = 0; i < CS_SAFEBORDER; ++i)
+		p[i] = (char)(g_cFillConst + i);
+}
 #endif
-	static void* F_CALLBACKAPI CrySound_Alloc(unsigned int size)
-	{
+static void* F_CALLBACKAPI CrySound_Alloc(unsigned int size)
+{
 #if CS_SAFEBORDER
-		unsigned* pN = (unsigned*)malloc(size + 2 * CS_SAFEBORDER + sizeof(unsigned));
-		*pN = size;
-		char* p = (char*)(pN + 1);
-		FillSafeBofder(p);
-		FillSafeBofder(p + size + CS_SAFEBORDER);
-		return p + CS_SAFEBORDER;
+	unsigned* pN = (unsigned*)malloc(size + 2 * CS_SAFEBORDER + sizeof(unsigned));
+	*pN = size;
+	char* p = (char*)(pN + 1);
+	FillSafeBofder(p);
+	FillSafeBofder(p + size + CS_SAFEBORDER);
+	return p + CS_SAFEBORDER;
 #else
-		return malloc(size);
+	return malloc(size);
 #endif
-	}
+}
 
-	static void F_CALLBACKAPI CrySound_Free(void* ptr)
-	{
+static void F_CALLBACKAPI CrySound_Free(void* ptr)
+{
 #if CS_SAFEBORDER
-		char* pOld = ((char*)ptr) - CS_SAFEBORDER;
-		unsigned* pNOld = ((unsigned*)pOld) - 1;
+	char* pOld = ((char*)ptr) - CS_SAFEBORDER;
+	unsigned* pNOld = ((unsigned*)pOld) - 1;
 
-		CheckSafeBorder(pOld);
-		CheckSafeBorder(pOld + *pNOld + CS_SAFEBORDER);
+	CheckSafeBorder(pOld);
+	CheckSafeBorder(pOld + *pNOld + CS_SAFEBORDER);
 
-		free(pNOld);
+	free(pNOld);
 #else
-		free(ptr);
+	free(ptr);
 #endif
-	}
+}
 
-	static void* F_CALLBACKAPI CrySound_Realloc(void* ptr, unsigned int size)
-	{
+static void* F_CALLBACKAPI CrySound_Realloc(void* ptr, unsigned int size)
+{
 #if CS_SAFEBORDER
-		char* pOld = ((char*)ptr) - CS_SAFEBORDER;
-		unsigned* pNOld = ((unsigned*)pOld) - 1;
+	char* pOld = ((char*)ptr) - CS_SAFEBORDER;
+	unsigned* pNOld = ((unsigned*)pOld) - 1;
 
-		char* pRet = (char*)CrySound_Alloc(size);
-		memcpy(pRet, ptr, min(*pNOld, size));
-		CrySound_Free(ptr);
-		return pRet;
+	char* pRet = (char*)CrySound_Alloc(size);
+	memcpy(pRet, ptr, min(*pNOld, size));
+	CrySound_Free(ptr);
+	return pRet;
 #else
-		return realloc(ptr, size);
+	return realloc(ptr, size);
 #endif
-	}
+}
 
 }
 
@@ -148,6 +148,73 @@ static int F_CALLBACKAPI CrySound_ftell(void* nFile)
 	return GetISystem()->GetIPak()->FTell(file);
 }
 
+#define VEC_COPY(_dst, _src) { \
+		(_dst)[0] = (_src)[0]; \
+		(_dst)[1] = (_src)[1]; \
+		(_dst)[2] = (_src)[2];	\
+	}
+
+static void CrySound_ToCS(SoundReverbProperties& dest, const FSOUND_REVERB_PROPERTIES& src)
+{
+	dest.Environment = src.Environment;
+	dest.EnvSize = src.EnvSize;
+	dest.EnvDiffusion = src.EnvDiffusion;
+	dest.Room = src.Room;
+	dest.RoomHF = src.RoomHF;
+	dest.RoomLF = src.RoomLF;
+	dest.DecayTime = src.DecayTime;
+	dest.DecayHFRatio = src.DecayHFRatio;
+	dest.DecayLFRatio = src.DecayLFRatio;
+	dest.Reflections = src.Reflections;
+	dest.ReflectionsDelay = src.ReflectionsDelay;
+	VEC_COPY(dest.ReflectionsPan, src.ReflectionsPan);
+	dest.Reverb = src.Reverb;
+	dest.ReverbDelay = src.ReverbDelay;
+	VEC_COPY(dest.ReverbPan, src.ReverbPan);
+	dest.EchoTime = src.EchoTime;
+	dest.EchoDepth = src.EchoDepth;
+	dest.ModulationTime = src.ModulationTime;
+	dest.ModulationDepth = src.ModulationDepth;
+	dest.AirAbsorptionHF = src.AirAbsorptionHF;
+	dest.HFReference = src.HFReference;
+	dest.LFReference = src.LFReference;
+	dest.RoomRolloffFactor = src.RoomRolloffFactor;
+	dest.Diffusion = src.Diffusion;
+	dest.Density = src.Density;
+	dest.Flags = src.Flags;
+}
+
+static void CrySound_ToFMOD(FSOUND_REVERB_PROPERTIES& dest, const SoundReverbProperties& src)
+{
+	dest.Environment = src.Environment;
+	dest.EnvSize = src.EnvSize;
+	dest.EnvDiffusion = src.EnvDiffusion;
+	dest.Room = src.Room;
+	dest.RoomHF = src.RoomHF;
+	dest.RoomLF = src.RoomLF;
+	dest.DecayTime = src.DecayTime;
+	dest.DecayHFRatio = src.DecayHFRatio;
+	dest.DecayLFRatio = src.DecayLFRatio;
+	dest.Reflections = src.Reflections;
+	dest.ReflectionsDelay = src.ReflectionsDelay;
+	VEC_COPY(dest.ReflectionsPan, src.ReflectionsPan);
+	dest.Reverb = src.Reverb;
+	dest.ReverbDelay = src.ReverbDelay;
+	VEC_COPY(dest.ReverbPan, src.ReverbPan);
+	dest.EchoTime = src.EchoTime;
+	dest.EchoDepth = src.EchoDepth;
+	dest.ModulationTime = src.ModulationTime;
+	dest.ModulationDepth = src.ModulationDepth;
+	dest.AirAbsorptionHF = src.AirAbsorptionHF;
+	dest.HFReference = src.HFReference;
+	dest.LFReference = src.LFReference;
+	dest.RoomRolloffFactor = src.RoomRolloffFactor;
+	dest.Diffusion = src.Diffusion;
+	dest.Density = src.Density;
+	dest.Flags = src.Flags;
+}
+
+#undef VEC_COPY
 
 //////////////////////////////////////////////////////////////////////
 CSoundSystem::CSoundSystem(ISystem* pSystem, HWND hWnd) : CSoundSystemCommon(pSystem)
@@ -298,7 +365,7 @@ CSoundSystem::CSoundSystem(ISystem* pSystem, HWND hWnd) : CSoundSystemCommon(pSy
 	m_bOK = true;
 	m_bValidPos = false;
 
-	m_nLastEax = EAX_PRESET_OFF;
+	m_nLastEax = 0;
 	m_EAXIndoor.nPreset = EAX_PRESET_OFF;
 	m_EAXOutdoor.nPreset = EAX_PRESET_OFF;
 
@@ -306,8 +373,6 @@ CSoundSystem::CSoundSystem(ISystem* pSystem, HWND hWnd) : CSoundSystemCommon(pSy
 
 	m_bResetVolume = false;
 	m_fSFXResetVolume = 1.0f;
-
-	m_pLastEAXProps = NULL;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -909,7 +974,9 @@ void CSoundSystem::Update()
 			if (!m_bInside)
 			{
 				// if outside,set the global EAX outdoor environment
-				SetEaxListenerEnvironment(m_EAXOutdoor.nPreset, (m_EAXOutdoor.nPreset == -1) ? &m_EAXOutdoor.EAX : NULL);
+				SoundReverbProperties props;
+				CrySound_ToCS(props, m_EAXOutdoor.EAX);
+				SetEaxListenerEnvironment(m_EAXOutdoor.nPreset, (m_EAXOutdoor.nPreset == -1) ? &props : nullptr);
 			}
 		}
 	}
@@ -1498,18 +1565,18 @@ bool CSoundSystem::IsEAX(int version)
 }
 
 //////////////////////////////////////////////////////////////////////////
-bool CSoundSystem::GetCurrentEaxEnvironment(int& nPreset, FSOUND_REVERB_PROPERTIES& Props)
+bool CSoundSystem::GetCurrentEaxEnvironment(int& nPreset, SoundReverbProperties& Props)
 {
 	nPreset = m_nLastEax;
-	if (m_pLastEAXProps)
-		memcpy(&Props, m_pLastEAXProps, sizeof(FSOUND_REVERB_PROPERTIES));
+	if (m_nLastEax == -1)
+		memcpy(&Props, &m_lastEAXProps, sizeof(SoundReverbProperties));
 	else
-		memset(&Props, 0, sizeof(FSOUND_REVERB_PROPERTIES));
+		memset(&Props, 0, sizeof(SoundReverbProperties));
 	return (true);
 }
 
 //////////////////////////////////////////////////////////////////////
-bool CSoundSystem::SetEaxListenerEnvironment(int nPreset, FSOUND_REVERB_PROPERTIES* tpProps, int nFlags)
+bool CSoundSystem::SetEaxListenerEnvironment(int nPreset, const SoundReverbProperties* tpProps, int nFlags)
 {
 	GUARD_HEAP;
 	FUNCTION_PROFILER(GetSystem(), PROFILE_SOUND);
@@ -1522,7 +1589,9 @@ bool CSoundSystem::SetEaxListenerEnvironment(int nPreset, FSOUND_REVERB_PROPERTI
 	if (nFlags == FLAG_SOUND_OUTDOOR)
 	{
 		m_EAXOutdoor.nPreset = nPreset;
-		m_EAXOutdoor.EAX = *tpProps;
+		if(tpProps)
+			CrySound_ToFMOD(m_EAXOutdoor.EAX, *tpProps);
+
 		m_pILog->Log("Setting global EAX outdoor");
 		if (m_bInside)
 			return (false); // set only when outside
@@ -1572,9 +1641,12 @@ bool CSoundSystem::SetEaxListenerEnvironment(int nPreset, FSOUND_REVERB_PROPERTI
 	*/
 	if (tpProps)
 	{
-		FSOUND_Reverb_SetProperties(tpProps);
 		m_nLastEax = -1;
-		m_pLastEAXProps = tpProps;
+		m_lastEAXProps = *tpProps;
+
+		FSOUND_REVERB_PROPERTIES fProps;
+		CrySound_ToFMOD(fProps, *tpProps);
+		FSOUND_Reverb_SetProperties(&fProps);
 	}
 	else
 	{
@@ -1729,7 +1801,6 @@ bool CSoundSystem::SetEaxListenerEnvironment(int nPreset, FSOUND_REVERB_PROPERTI
 		}
 		}
 		m_nLastEax = nPreset;
-		m_pLastEAXProps = NULL; // using one of pre-defined presets
 	}
 	return (true);
 }
