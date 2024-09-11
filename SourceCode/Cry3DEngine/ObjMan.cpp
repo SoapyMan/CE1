@@ -430,18 +430,6 @@ CStatObj* CObjManager::MakeObject(const char* __szFileName,
 	AUTO_PROFILE_SECTION(GetTimer(), CObjManager::m_dMakeObjectTime);
 
 	CRYASSERT(__szFileName && __szFileName[0]);
-
-	if (!strcmp(__szFileName, "NOFILE"))
-	{ // make ampty object to be filled from outside
-		ObjectsMap::iterator it = m_lstLoadedObjects.find(0);
-		if (it == m_lstLoadedObjects.end())
-			it = m_lstLoadedObjects.insert_or_assign(0, new CStatObj()).first;
-
-		CStatObj* pObject = it->second;
-		pObject->RegisterUser();
-		return pObject;
-	}
-
 	char szFileName[MAX_PATH_LENGTH];
 
 	// Normilize file name

@@ -409,14 +409,14 @@ CBrush::~CBrush()
 
 	//m_pLMData = NULL;
 
-	//if(GetRndFlags() & ERF_MERGED_NEW && m_nObjectTypeID>=0)
-	//{
-	//	CStatObj * pBody = (CStatObj*)m_lstBrushTypes[m_nObjectTypeID];
-	//	CRYASSERT(pBody->m_nUsers==1);
-	//	delete pBody;
-	//	m_lstBrushTypes[m_nObjectTypeID] = NULL;
-	//	m_nObjectTypeID=-1;
-	//}
+	if ((GetRndFlags() & ERF_MERGED_NEW) && m_nObjectTypeID >= 0)
+	{
+		CStatObj* pBody = (CStatObj*)m_lstBrushTypes[m_nObjectTypeID];
+		CRYASSERT(pBody->m_nUsers==1);
+		delete pBody;
+		m_lstBrushTypes[m_nObjectTypeID] = NULL;
+		m_nObjectTypeID=-1;
+	}
 
 	DeleteLMTC();
 }
@@ -581,7 +581,6 @@ static int CBrush__Cmp_MatChunks(const void* v1, const void* v2)
 	return 0;
 }
 
-#pragma optimize("", off)
 void CObjManager::MergeBrushes()
 {
 	if (!GetCVars()->e_brushes_merging || !m_lstBrushContainer.Count())
@@ -709,9 +708,8 @@ void CObjManager::MergeBrushes()
 
 					if (nMatId == 0)
 						pCustMat = (CMatInfo*)pCustMat;
-					else
-						if (nMatId - 1 < pCustMat->GetSubMtlCount())
-							pCustMat = (CMatInfo*)pCustMat->GetSubMtl(nMatId - 1);
+					else if (nMatId - 1 < pCustMat->GetSubMtlCount())
+						pCustMat = (CMatInfo*)pCustMat->GetSubMtl(nMatId - 1);
 
 					newMatInfo.shaderItem = pCustMat->shaderItem;
 				}
@@ -1055,7 +1053,8 @@ void CObjManager::MergeBrushes()
 		}
 
 		// make statobj
-		CStatObj* pNewStatObj = MakeObject("NOFILE");
+		CStatObj* pNewStatObj = new CStatObj();
+		pNewStatObj->RegisterUser();
 		pNewStatObj->m_nLoadedTrisCount = lstIndices.Count() / 3;
 		pNewStatObj->SetLeafBuffer(pNewLB);
 		pNewStatObj->SetBBoxMin(vBoxMin);
@@ -1072,9 +1071,6 @@ void CObjManager::MergeBrushes()
 				fprintf(fp, "Brush: %d:\n", brMerged[i]);
 			}
 		}
-
-		//	if(m_pAreaBrush == (CBrush*)0x0e968358)
-		//	int b=0;
 
 		Matrix44 mat;
 		mat.SetIdentity();
