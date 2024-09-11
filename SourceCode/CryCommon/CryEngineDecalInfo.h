@@ -24,7 +24,7 @@
 //     Structure containing common parameters that describe a decal
 struct CryEngineDecalInfo
 {
-	struct IEntityRender * pDecalOwner; // Owner (decal will be rendered on this entity)
+	struct IEntityRender* pDecalOwner; // Owner (decal will be rendered on this entity)
 	Vec3_tpl<float> vPos;				// Decal position (world coordinates)
 	Vec3_tpl<float> vNormal;			// Decal/face normal
 	float fSize;						// Decal size
@@ -32,15 +32,15 @@ struct CryEngineDecalInfo
 	INT_PTR	nTid;						// Texture Id		//@@ AMD Port
 	float fAngle;						// Angle of rotation
 	INT_PTR	nPartID;					// Entity part id which determines the bone id in case of a character which has been the hit	//@@AMD Port
-	struct IStatObj * pStatObj;			// Decal geometry
+	struct IStatObj* pStatObj;			// Decal geometry
 	Vec3_tpl<float> vHitDirection;		// Direction from weapon/player position to decal position (bullet direction)
 	float m_fGrowTime;					// Used for blood pools
 	bool bAdjustPos;					// Place decal on some visible surface
 
 	// the constructor fills in some non-obligatory fields; the other fields must be filled in by the client
-	CryEngineDecalInfo ()
+	CryEngineDecalInfo()
 	{
-		memset(this,0,sizeof(*this));
+		memset(this, 0, sizeof(*this));
 		nPartID = -1;
 		bAdjustPos = true;
 	}

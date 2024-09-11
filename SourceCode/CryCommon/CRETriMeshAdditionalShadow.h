@@ -13,12 +13,12 @@ public:
 
   CRETriMeshAdditionalShadow()
   {
-    mfSetType(eDATA_TriMeshAdditionalShadow);
-    mfUpdateFlags(FCEF_TRANSFORM | FCEF_NODEL);
+	mfSetType(eDATA_TriMeshAdditionalShadow);
+	mfUpdateFlags(FCEF_TRANSFORM | FCEF_NODEL);
 		m_vOrigin(0,0,0);
 		m_nNumEdges=m_nNumFaces=0;
 		m_pShadowVolEdgesList=NULL;
-		m_pFacesList=NULL;		
+		m_pFacesList=NULL;
 		m_pTexture=NULL;
   }
 
@@ -39,8 +39,8 @@ public:
 	ITexPic		*m_pTexture;
 
 private:
-	
-  friend class CRender3D;	
+
+  friend class CRender3D;
 };
 
 #endif  // __CRETRIMESHADDITIONALSHADOW_H__

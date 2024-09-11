@@ -6,21 +6,21 @@
 
 struct VertexBufferSource
 {
-	VertexBufferSource():
-		numMaterials (0),
-		pMaterials (NULL),
-		pShaders (NULL),
-		pMats (NULL),
+	VertexBufferSource() :
+		numMaterials(0),
+		pMaterials(NULL),
+		pShaders(NULL),
+		pMats(NULL),
 		pOrFlags(NULL),
 		pAndFlags(NULL),
 		numPrimGroups(0),
 		pPrimGroups(NULL),
 		numIndices(0),
 		pIndices(NULL),
-		numVertices (0),
+		numVertices(0),
 		pVertices(NULL),
 		pUVs(NULL),
-		nREFlags (0)
+		nREFlags(0)
 	{
 	}
 
@@ -38,18 +38,18 @@ struct VertexBufferSource
 	// these parameters may be NULL
 	const unsigned* pOrFlags;
 	const unsigned* pAndFlags;
-	
+
 	// the number of Primitive Groups (sections)
 	unsigned numPrimGroups;
 	// the pointer to the array of sections
 	const struct CCFMaterialGroup* pPrimGroups;
-	
+
 	// the number of indices in the index buffer
 	unsigned numIndices;
 	// the indices
 	const unsigned short* pIndices;
 
-  // the number of vertices
+	// the number of vertices
 	unsigned numVertices;
 	// the vertices
 	const Vec3d* pVertices;

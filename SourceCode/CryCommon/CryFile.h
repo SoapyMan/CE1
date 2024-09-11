@@ -27,21 +27,21 @@ class CCryFile
 {
 public:
 	CCryFile();
-	CCryFile( const char *filename, const char *mode );
+	CCryFile(const char* filename, const char* mode);
 	virtual ~CCryFile();
 
-	virtual bool Open( const char *filename, const char *mode );
+	virtual bool Open(const char* filename, const char* mode);
 	virtual void Close();
 
 	//! Writes data in a file to the current file position.
-	virtual size_t Write( void *lpBuf,size_t nSize );
+	virtual size_t Write(void* lpBuf, size_t nSize);
 	//! Reads data from a file at the current file position.
-	virtual size_t Read( void *lpBuf,size_t nSize );
+	virtual size_t Read(void* lpBuf, size_t nSize);
 	//! Retrieves the length of the file.
 	virtual size_t GetLength();
 
 	//! Positions the current file pointer.
-	virtual size_t Seek( size_t seek, int mode );
+	virtual size_t Seek(size_t seek, int mode);
 	//! Positions the current file pointer at the beginning of the file.
 	void SeekToBegin();
 	//! Positions the current file pointer at the end of the file.
@@ -69,8 +69,8 @@ public:
 
 private:
 	string m_filename;
-	FILE *m_file;
-	ICryPak *m_pIPak;
+	FILE* m_file;
+	ICryPak* m_pIPak;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -83,11 +83,11 @@ inline CCryFile::CCryFile()
 }
 
 //////////////////////////////////////////////////////////////////////////
-inline CCryFile::CCryFile( const char *filename, const char *mode )
+inline CCryFile::CCryFile(const char* filename, const char* mode)
 {
 	m_file = 0;
 	m_pIPak = GetISystem()->GetIPak();
-	Open( filename,mode );
+	Open(filename, mode);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -97,12 +97,12 @@ inline CCryFile::~CCryFile()
 }
 
 //////////////////////////////////////////////////////////////////////////
-inline bool CCryFile::Open( const char *filename, const char *mode )
+inline bool CCryFile::Open(const char* filename, const char* mode)
 {
 	if (m_file)
 		Close();
 	m_filename = filename;
-	m_file = m_pIPak->FOpen( filename,mode );
+	m_file = m_pIPak->FOpen(filename, mode);
 	return m_file != NULL;
 }
 
@@ -118,27 +118,27 @@ inline void CCryFile::Close()
 }
 
 //////////////////////////////////////////////////////////////////////////
-inline size_t CCryFile::Write( void *lpBuf,size_t nSize )
+inline size_t CCryFile::Write(void* lpBuf, size_t nSize)
 {
-	assert( m_file );
-	return m_pIPak->FWrite( lpBuf,1,nSize,m_file );
+	assert(m_file);
+	return m_pIPak->FWrite(lpBuf, 1, nSize, m_file);
 }
 
 //////////////////////////////////////////////////////////////////////////
-inline size_t CCryFile::Read( void *lpBuf,size_t nSize )
+inline size_t CCryFile::Read(void* lpBuf, size_t nSize)
 {
-	assert( m_file );
-	return m_pIPak->FRead( lpBuf,1,nSize,m_file );
+	assert(m_file);
+	return m_pIPak->FRead(lpBuf, 1, nSize, m_file);
 }
 
 //////////////////////////////////////////////////////////////////////////
 inline size_t CCryFile::GetLength()
 {
-	assert( m_file );
+	assert(m_file);
 	long curr = m_pIPak->FTell(m_file);
-	m_pIPak->FSeek( m_file,0,SEEK_END );
+	m_pIPak->FSeek(m_file, 0, SEEK_END);
 	long size = m_pIPak->FTell(m_file);
-	m_pIPak->FSeek(m_file,curr,SEEK_SET);
+	m_pIPak->FSeek(m_file, curr, SEEK_SET);
 	return size;
 }
 
@@ -148,10 +148,10 @@ inline size_t CCryFile::GetLength()
 #endif
 
 //////////////////////////////////////////////////////////////////////////
-inline size_t CCryFile::Seek( size_t seek, int mode )
+inline size_t CCryFile::Seek(size_t seek, int mode)
 {
-	assert( m_file );
-	return m_pIPak->FSeek( m_file,seek,mode );
+	assert(m_file);
+	return m_pIPak->FSeek(m_file, seek, mode);
 }
 
 #ifdef WIN64
@@ -161,13 +161,13 @@ inline size_t CCryFile::Seek( size_t seek, int mode )
 //////////////////////////////////////////////////////////////////////////
 inline void CCryFile::SeekToBegin()
 {
-	Seek( 0,SEEK_SET );
+	Seek(0, SEEK_SET);
 }
 
 //////////////////////////////////////////////////////////////////////////
 inline size_t CCryFile::SeekToEnd()
 {
-	Seek( 0,SEEK_END );
+	Seek(0, SEEK_END);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -187,8 +187,8 @@ inline bool CCryFile::IsEof()
 //////////////////////////////////////////////////////////////////////////
 inline void CCryFile::Flush()
 {
-	assert( m_file );
-	m_pIPak->FFlush( m_file );
+	assert(m_file);
+	m_pIPak->FFlush(m_file);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -207,7 +207,7 @@ inline const char* CCryFile::GetPakPath() const
 {
 	if (m_file)
 	{
-		const char *sPath = m_pIPak->GetFileArchivePath(m_file);
+		const char* sPath = m_pIPak->GetFileArchivePath(m_file);
 		if (sPath != NULL)
 			return sPath;
 	}

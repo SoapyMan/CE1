@@ -114,7 +114,7 @@ enum CCFChunkTypeEnum
 
 	// the skin representing tangents,
 	CCF_SKIN_TANGENTS,
-	
+
 	// the array of materials: it's just followed by an integral number of structures MAT_ENTITY
 	CCF_MATERIALS,
 
@@ -184,7 +184,7 @@ struct CCFAnimInfo
 {
 	// combination of GlobalAnimation internal flags
 	unsigned nAnimFlags;
-	
+
 	// timing data, retrieved from the timing_chunk_desc
 	int nTicksPerFrame;
 	float fSecsPerTick;
@@ -252,7 +252,7 @@ struct CCFBGBone
 {
 	// the index of the bone, in LOD0 indexation (to be directly plugged into the bone array)
 	unsigned nBone;
-	
+
 	// the geometry data
 	// the number of vertices in the mesh. This structure is immediately followed by
 	// a Vec3d array of this size
@@ -266,9 +266,9 @@ struct CCFBGBone
 struct CCFIntFace
 {
 	unsigned short v[3];
-	CCFIntFace (){}
-	
-	CCFIntFace (const unsigned short* p)
+	CCFIntFace() {}
+
+	CCFIntFace(const unsigned short* p)
 	{
 		v[0] = p[0]; v[1] = p[1]; v[2] = p[2];
 	}
@@ -334,12 +334,12 @@ struct CCFMaterialGroup
 class CCFFileWriter
 {
 public:
-	CCFFileWriter (FILE* f):
-		m_pFile (f), m_nLastChunk (-1)
+	CCFFileWriter(FILE* f) :
+		m_pFile(f), m_nLastChunk(-1)
 	{
 	}
 
-	CCFFileWriter ():
+	CCFFileWriter() :
 		m_pFile(NULL), m_nLastChunk(-1)
 	{
 	}
@@ -350,7 +350,7 @@ public:
 	}
 
 	// changes the file handle
-	void SetFile (FILE* f)
+	void SetFile(FILE* f)
 	{
 		CloseChunk();
 		m_pFile = f;
@@ -363,13 +363,13 @@ public:
 		// first, end the previous chunk
 		CloseChunk();
 		// remember the current position
-		m_nLastChunk = ftell (m_pFile);
+		m_nLastChunk = ftell(m_pFile);
 
 		// write the chunk header
 		CCFChunkHeader header;
 		header.nType = nType;
 		header.nSize = 0;
-		return fwrite (&header, sizeof(header), 1, m_pFile);
+		return fwrite(&header, sizeof(header), 1, m_pFile);
 	}
 
 	// Signals the end of the chunk that was added with AddChunk
@@ -379,21 +379,21 @@ public:
 		if (m_nLastChunk < 0)
 			return; // no last chunk, or the last chunk was closed
 
-		long nNewChunkPos = ftell (m_pFile);
-		if (nNewChunkPos&3)
+		long nNewChunkPos = ftell(m_pFile);
+		if (nNewChunkPos & 3)
 		{
 			// align by 4-byte boundary
 			int nPad = 0;
-			fwrite (&nPad, 1, 4-(nNewChunkPos&3), m_pFile);
-			nNewChunkPos = ftell (m_pFile);
+			fwrite(&nPad, 1, 4 - (nNewChunkPos & 3), m_pFile);
+			nNewChunkPos = ftell(m_pFile);
 		}
 
 		// write the size of the chunk to the chunk header
-		fseek (m_pFile, (INT_PTR)(&((CCFChunkHeader*)0)->nSize)+m_nLastChunk, SEEK_SET);
+		fseek(m_pFile, (INT_PTR)(&((CCFChunkHeader*)0)->nSize) + m_nLastChunk, SEEK_SET);
 		unsigned nSize = nNewChunkPos - m_nLastChunk;
-		fwrite (&nSize, sizeof(nSize), 1, m_pFile);
+		fwrite(&nSize, sizeof(nSize), 1, m_pFile);
 		// set the file pointer back where it was
-		fseek (m_pFile, nNewChunkPos, SEEK_SET);
+		fseek(m_pFile, nNewChunkPos, SEEK_SET);
 
 		// forget about the last chunk
 		m_nLastChunk = -1;
@@ -416,8 +416,8 @@ class CCFFileReader
 {
 public:
 	// ASSUMES: the file pointer is exactly at some chunk header
-	CCFFileReader (FILE* f):
-		m_pFile (f)
+	CCFFileReader(FILE* f) :
+		m_pFile(f)
 	{
 		Reset();
 	}
@@ -447,21 +447,21 @@ public:
 	}
 
 	// returns the chunk data size, in bytes
-	unsigned GetDataSize ()const
+	unsigned GetDataSize()const
 	{
 		return m_Header.nSize - sizeof(m_Header);
 	}
 
 	// reads the data into the supplied buffer (must be at least GetDataSize() bytes)
 	// returns true when successful
-	bool ReadData (void* pBuffer)
+	bool ReadData(void* pBuffer)
 	{
-		return 1 == fread (pBuffer, GetDataSize(), 1, m_pFile);
+		return 1 == fread(pBuffer, GetDataSize(), 1, m_pFile);
 	}
 
 	// skips the current chunk and goes no to the next one.
 	// returns true if successful
-	bool Skip ()
+	bool Skip()
 	{
 		// be pessimistic - we won't read it
 		m_Header.nType = CCF_NOT_CHUNK;
@@ -470,10 +470,10 @@ public:
 		if (!m_pFile)
 			return false;
 
-		if (fseek (m_pFile, m_nNextChunk, SEEK_SET))
+		if (fseek(m_pFile, m_nNextChunk, SEEK_SET))
 			return false; // couldn't seek
 
-		if (1 != fread (&m_Header, sizeof(m_Header),1, m_pFile))
+		if (1 != fread(&m_Header, sizeof(m_Header), 1, m_pFile))
 			return false; // couldn't read
 
 		m_nNextChunk += m_Header.nSize;
@@ -501,23 +501,23 @@ class CCFMemReader
 public:
 
 	// we don't support chunks of > this size
-	enum {g_nMaxChunkSize = 0x40000000};
+	enum { g_nMaxChunkSize = 0x40000000 };
 
 	// ASSUMES: the file pointer is exactly at some chunk header
-	CCFMemReader (const void* pData, unsigned nSize):
-		m_pData ((const char*)pData), m_pEnd ((const char*)pData + nSize)
+	CCFMemReader(const void* pData, unsigned nSize) :
+		m_pData((const char*)pData), m_pEnd((const char*)pData + nSize)
 	{
 		Reset();
 	}
 
 
 	// starts all over again
-	void Reset ()
+	void Reset()
 	{
 		if (m_pEnd - m_pData > sizeof(CCFChunkHeader) && ((unsigned)(m_pEnd - m_pData)) <= g_nMaxChunkSize)
 		{
 			m_pHeader = (CCFChunkHeader*)m_pData;
-			if (((const char*)m_pHeader)+m_pHeader->nSize > m_pEnd || m_pHeader->nSize > g_nMaxChunkSize)
+			if (((const char*)m_pHeader) + m_pHeader->nSize > m_pEnd || m_pHeader->nSize > g_nMaxChunkSize)
 				m_pHeader = NULL; // Error: data truncated
 		}
 		else
@@ -543,25 +543,25 @@ public:
 	}
 
 	// returns the chunk data size, in bytes
-	unsigned GetDataSize ()const
+	unsigned GetDataSize()const
 	{
 		return m_pHeader->nSize - sizeof(*m_pHeader);
 	}
 
 	// reads the data into the supplied buffer (must be at least GetDataSize() bytes)
 	// returns true when successful
-	const void* GetData ()
+	const void* GetData()
 	{
-		return m_pHeader+1;
+		return m_pHeader + 1;
 	}
 
 	// skips the current chunk and goes no to the next one.
 	// returns true if successful
-	bool Skip ()
+	bool Skip()
 	{
 		// be optimistic - assume we will end up with successful step to the next chunk
 		m_pHeader = (const CCFChunkHeader*)(((const char*)m_pHeader) + m_pHeader->nSize);
-		if ((const char*)(m_pHeader+1) > m_pEnd)
+		if ((const char*)(m_pHeader + 1) > m_pEnd)
 		{
 			// there's no next chunk, or its header is truncated
 			m_pHeader = NULL;
@@ -576,7 +576,7 @@ public:
 			return false;
 		}
 
-		if (((const char*)m_pHeader)+m_pHeader->nSize > m_pEnd)
+		if (((const char*)m_pHeader) + m_pHeader->nSize > m_pEnd)
 		{
 			// the chunk header is maybe ok, but the chunk data is truncated; or maybe
 			// the chunk header contains noise

@@ -24,20 +24,20 @@ class ICrySizer;
 
 enum
 {
-	ERROR_UNKNOWN_ERROR          = 0xF0000000,
+	ERROR_UNKNOWN_ERROR = 0xF0000000,
 	ERROR_UNEXPECTED_DESTRUCTION = 0xF0000001,
-	ERROR_INVALID_CALL           = 0xF0000002,
-	ERROR_CANT_OPEN_FILE         = 0xF0000003,
-	ERROR_REFSTREAM_ERROR        = 0xF0000004,
-	ERROR_OFFSET_OUT_OF_RANGE    = 0xF0000005,
-	ERROR_REGION_OUT_OF_RANGE    = 0xF0000006,
-	ERROR_SIZE_OUT_OF_RANGE      = 0xF0000007,
-	ERROR_CANT_START_READING     = 0xF0000008,
-	ERROR_OUT_OF_MEMORY          = 0xF0000009,
-	ERROR_ABORTED_ON_SHUTDOWN    = 0xF000000A,
-	ERROR_OUT_OF_MEMORY_QUOTA    = 0xF000000B,
-	ERROR_ZIP_CACHE_FAILURE      = 0xF000000C,
-	ERROR_USER_ABORT             = 0xF000000D
+	ERROR_INVALID_CALL = 0xF0000002,
+	ERROR_CANT_OPEN_FILE = 0xF0000003,
+	ERROR_REFSTREAM_ERROR = 0xF0000004,
+	ERROR_OFFSET_OUT_OF_RANGE = 0xF0000005,
+	ERROR_REGION_OUT_OF_RANGE = 0xF0000006,
+	ERROR_SIZE_OUT_OF_RANGE = 0xF0000007,
+	ERROR_CANT_START_READING = 0xF0000008,
+	ERROR_OUT_OF_MEMORY = 0xF0000009,
+	ERROR_ABORTED_ON_SHUTDOWN = 0xF000000A,
+	ERROR_OUT_OF_MEMORY_QUOTA = 0xF000000B,
+	ERROR_ZIP_CACHE_FAILURE = 0xF000000C,
+	ERROR_USER_ABORT = 0xF000000D
 };
 
 
@@ -54,7 +54,7 @@ enum StreamReadParamsFlagEnum
 
 	// if this flag is set, the stream will be treated as "permanent" and the file handle will
 	// be cached. This is needed for files which are accessed frequently, e.g. Resource files.
-	SRP_FLAGS_MAKE_PERMANENT = 1<<2,
+	SRP_FLAGS_MAKE_PERMANENT = 1 << 2,
 
 	// if this flag is set and the stream was made permanent before (either explicitly because of
 	// the SRP_FLAGS_MAKE_PERMANENT flag, or implicitly because of the policy of the StreamEngine),
@@ -66,17 +66,17 @@ enum StreamReadParamsFlagEnum
 
 	// this means that the path passed to StartRead is real path, and shouldn't undergo
 	// adjustments through mod searching mechanics
-	SRP_FLAGS_PATH_REAL      = 1 << 5,
+	SRP_FLAGS_PATH_REAL = 1 << 5,
 
 	// if this is set, it is adviced that Update(0) be called during startread, which
 	// can effectively call the callback before StartRead returns
 	// SRP_IMMEDIATE_UPDATE and SRP_QUICK_RETURN are mutually exclusive
-	SRP_IMMEDIATE_UPDATE     = 1 << 6,
+	SRP_IMMEDIATE_UPDATE = 1 << 6,
 
 	// if this is set, it is adviced that Update(0) not be called during StartRead,
 	// which yields quicker response.
 	// SRP_IMMEDIATE_UPDATE and SRP_QUICK_RETURN are mutually exclusive
-	SRP_QUICK_STARTREAD      = 1 << 7
+	SRP_QUICK_STARTREAD = 1 << 7
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -84,7 +84,7 @@ enum StreamReadParamsFlagEnum
 // all the unnecessary parameters go here, because there are many of them
 struct StreamReadParams
 {
-	StreamReadParams (
+	StreamReadParams(
 		//const char* _szFile,
 		//IStreamCallback* _pCallback,
 		DWORD_PTR _dwUserData = 0,
@@ -95,17 +95,17 @@ struct StreamReadParams
 		unsigned _nSize = 0,
 		void* _pBuffer = NULL,
 		unsigned _nFlags = 0
-	):
+	) :
 		//szFile (_szFile),
 		//pCallback(_pCallback),
-		dwUserData (_dwUserData),
+		dwUserData(_dwUserData),
 		nPriority(_nPriority),
 		nLoadTime(_nLoadTime),
 		nMaxLoadTime(_nMaxLoadTime),
-		pBuffer (_pBuffer),
-		nOffset (_nOffset),
-		nSize (_nSize),
-		nFlags (_nFlags)
+		pBuffer(_pBuffer),
+		nOffset(_nOffset),
+		nSize(_nSize),
+		nFlags(_nFlags)
 	{
 	}
 
@@ -187,16 +187,16 @@ public:
 	// (in the main thread) outside StartRead() (it happens in the entity update),
 	// so you're guaranteed that it won't trash inside the calling function. However, this may change in the future
 	// and you'll be required to assign it to IReadStream immediately (StartRead will return IReadStream_AutoPtr then)
-	virtual IReadStreamPtr StartRead (const char* szSource, const char* szFile, IStreamCallback* pCallback = NULL, StreamReadParams* pParams = NULL) = 0;
+	virtual IReadStreamPtr StartRead(const char* szSource, const char* szFile, IStreamCallback* pCallback = NULL, StreamReadParams* pParams = NULL) = 0;
 
 	// returns the size of the file; returns 0 if there's no such file.
 	// nCryPakFlags is the flag set as in ICryPak
-	virtual unsigned GetFileSize (const char* szFile, unsigned nCryPakFlags = 0) = 0;
+	virtual unsigned GetFileSize(const char* szFile, unsigned nCryPakFlags = 0) = 0;
 
 	// waits at most the specified number of milliseconds, or until at least one pending operation is completed
 	// nFlags: may have the following flag set: 
 	//    FLAGS_DISABLE_CALLBACK_TIME_QUOTA
-	virtual void Update (unsigned nFlags = 0) = 0;
+	virtual void Update(unsigned nFlags = 0) = 0;
 
 	// wait at most the specified time for the IO jobs to be completed.
 	// Returns the number of jobs that actually were completed (finalized) during the call.
@@ -205,15 +205,15 @@ public:
 
 	//! Puts the memory statistics into the given sizer object
 	//! According to the specifications in interface ICrySizer
-	virtual void GetMemoryStatistics(ICrySizer *pSizer) = 0;
+	virtual void GetMemoryStatistics(ICrySizer* pSizer) = 0;
 
 	//! Enables or disables callback time quota per frame
-	virtual void SuspendCallbackTimeQuota(){}
-	virtual void ResumeCallbackTimeQuota(){}
+	virtual void SuspendCallbackTimeQuota() {}
+	virtual void ResumeCallbackTimeQuota() {}
 
 	//! lossy stream compression useful for network comunication (affects load/save as well)
 	//! /return 0=no compression
-	virtual DWORD GetStreamCompressionMask() const=0;
+	virtual DWORD GetStreamCompressionMask() const = 0;
 
 	virtual ~IStreamEngine() {}
 };
@@ -266,22 +266,22 @@ protected:
 //   IReadStream_AutoPtr pReadStream = pStreamEngine->StartRead ("bla.xxx", this);
 // OR:
 //   pStreamEngine->StartRead ("MusicSystem","bla.xxx", this);
-class IReadStream: public _reference_target_MT
+class IReadStream : public _reference_target_MT
 {
 public:
 	// returns true if the file read was not successful.
 	virtual bool IsError() = 0;
-  // returns true if the file read was completed successfully
-	// check IsError to check if the whole requested file (piece) was read
+	// returns true if the file read was completed successfully
+	  // check IsError to check if the whole requested file (piece) was read
 	virtual bool IsFinished() = 0;
 	// returns the number of bytes read so far (the whole buffer size if IsFinished())
 	// if bWait == true, then waits until the pending I/O operation completes
 	// returns the total number of bytes read (if it completes successfully, returns the size of block being read)
-	virtual unsigned int GetBytesRead(bool bWait=false) = 0;
+	virtual unsigned int GetBytesRead(bool bWait = false) = 0;
 	// returns the buffer into which the data has been or will be read
 	// at least GetBytesRead() bytes in this buffer are guaranteed to be already read
 	// DO NOT USE THIS BUFFER during read operation! DO NOT READ from it, it can lead to memory corruption!
-	virtual const void* GetBuffer () = 0;
+	virtual const void* GetBuffer() = 0;
 
 	// tries to stop reading the stream; this is advisory and may have no effect
 	// but the callback	will not be called after this. If you just destructing object,
@@ -289,7 +289,7 @@ public:
 	virtual void Abort() {}
 
 	// tries to raise the priority of the read; this is advisory and may have no effect
-	virtual void RaisePriority (int nPriority) {}
+	virtual void RaisePriority(int nPriority) {}
 
 	// Returns the transparent DWORD that was passed in the StreamReadParams::dwUserData field
 	// of the structure passed in the call to IStreamEngine::StartRead
@@ -298,7 +298,7 @@ public:
 	// unconditionally waits until the callback is called
 	// i.e. if the stream hasn't yet finish, it's guaranteed that the user-supplied callback
 	// is called before return from this function (unless no callback was specified)
-  virtual void Wait() = 0;
+	virtual void Wait() = 0;
 protected:
 	// the clients are not allowed to destroy this object directly; only via Release()
 	virtual ~IReadStream() {}
@@ -326,7 +326,7 @@ public:
 	//   If this callback is called, it doesn't mean the data load will finish successfully;
 	//     it still may not finish (then the OnError is called)
 	//   nSize is always LESS than the requested data size; when it's equal, StreamOnFinish is called instead
-	virtual void StreamOnProgress (IReadStream* pStream) {}
+	virtual void StreamOnProgress(IReadStream* pStream) {}
 
 	// signals that reading the requested data has completed (with or without error).
 	// this callback is always called, whether an error occurs or not
@@ -336,7 +336,7 @@ public:
 	// Pending status is true during this callback, because the callback itself is the part of IO operation
 	// nError == 0 : Success
 	// nError != 0 : Error code
-	virtual void StreamOnComplete (IReadStream* pStream, unsigned nError) = 0;
+	virtual void StreamOnComplete(IReadStream* pStream, unsigned nError) = 0;
 };
 
 

@@ -42,21 +42,21 @@ typedef unsigned int				u32;
 typedef unsigned long long	u64;
 
 typedef DWORD								DWORD_PTR;
-typedef int intptr_t, INT_PTR, *PINT_PTR;
-typedef unsigned int uintptr_t, UINT_PTR, *PUINT_PTR;
-typedef char *LPSTR, *PSTR;
+typedef int intptr_t, INT_PTR, * PINT_PTR;
+typedef unsigned int uintptr_t, UINT_PTR, * PUINT_PTR;
+typedef char* LPSTR, * PSTR;
 
-typedef long LONG_PTR, *PLONG_PTR, *PLONG;
-typedef unsigned long ULONG_PTR, *PULONG_PTR;
+typedef long LONG_PTR, * PLONG_PTR, * PLONG;
+typedef unsigned long ULONG_PTR, * PULONG_PTR;
 
 typedef unsigned char				BYTE;
 typedef unsigned short			WORD;
-typedef void*								HWND;
+typedef void* HWND;
 typedef UINT_PTR 						WPARAM;
 typedef LONG_PTR 						LPARAM;
 typedef LONG_PTR 						LRESULT;
 #define PLARGE_INTEGER LARGE_INTEGER*
-typedef const char *LPCSTR, *PCSTR;
+typedef const char* LPCSTR, * PCSTR;
 typedef long long						LONGLONG;
 typedef	ULONG_PTR						SIZE_T;
 typedef unsigned char				byte;

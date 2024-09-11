@@ -112,7 +112,7 @@ struct IUnknownProxy;
 typedef struct AIObjectParameters
 {
 	AgentParameters	 m_sParamStruct;
-	IUnknownProxy *pProxy;
+	IUnknownProxy* pProxy;
 	float	fEyeHeight;
 	bool	bUsePathfindOutdoors;
 
@@ -123,14 +123,14 @@ struct IAIObject;
 typedef struct GoalParameters
 {
 	Vec3 m_vPosition;
-	IAIObject *m_pTarget; 
+	IAIObject* m_pTarget;
 	float fValue;
 	float fValueAux;
 	int nValue;
 	bool bValue;
 	string szString;
 	//const char *szString;
-    
+
 	GoalParameters()
 	{
 		fValue = 0;
@@ -143,26 +143,26 @@ typedef struct GoalParameters
 #if (defined(WIN64) || defined(LINUX64)) && !defined(_DLL) 
 	// FIX: refcounted STL with static libs (e.g. on AMD64 compiler) will crash without these
 	// TODO: AMD64 port: make a robust solution
-	inline GoalParameters (const GoalParameters& params)
+	inline GoalParameters(const GoalParameters& params)
 	{
 		m_vPosition = params.m_vPosition;
-		m_pTarget   = params.m_pTarget; 
-		fValue      = params.fValue;
-		fValueAux   = params.fValueAux;
-		nValue      = params.nValue;
-		bValue      = params.bValue;
-		szString    = params.szString.c_str();
+		m_pTarget = params.m_pTarget;
+		fValue = params.fValue;
+		fValueAux = params.fValueAux;
+		nValue = params.nValue;
+		bValue = params.bValue;
+		szString = params.szString.c_str();
 	}
 
 	inline GoalParameters& operator = (const GoalParameters& params)
 	{
 		m_vPosition = params.m_vPosition;
-		m_pTarget   = params.m_pTarget; 
-		fValue      = params.fValue;
-		fValueAux   = params.fValueAux;
-		nValue      = params.nValue;
-		bValue      = params.bValue;
-		szString    = params.szString.c_str();
+		m_pTarget = params.m_pTarget;
+		fValue = params.fValue;
+		fValueAux = params.fValueAux;
+		nValue = params.nValue;
+		bValue = params.bValue;
+		szString = params.szString.c_str();
 		return *this;
 	}
 #endif
@@ -172,7 +172,7 @@ typedef struct GoalParameters
 
 typedef struct IGoalPipe
 {
-	virtual void PushGoal(const string &name, bool bBlocking, GoalParameters &params) =0;
+	virtual void PushGoal(const string& name, bool bBlocking, GoalParameters& params) = 0;
 } IGoalPipe;
 
 
@@ -184,7 +184,7 @@ typedef struct SAIEVENT
 	int nDeltaHealth;
 	float fThreat;
 	float fInterest;
-	IAIObject *pSeen;
+	IAIObject* pSeen;
 	bool bPathFound;
 	Vec3 vPosition;
 } SAIEVENT;
@@ -196,58 +196,58 @@ typedef struct IAIObject
 {
 	virtual void SetRadius(float fRadius) = 0;
 	virtual float GetRadius() = 0;
-	virtual void SetPos(const Vec3 &pos,bool bKeepEyeHeight = true) = 0;
-	virtual const Vec3 &GetPos() = 0;
-	virtual void SetAngles(const Vec3 &angles) = 0;
-	virtual const Vec3 &GetAngles() = 0;
+	virtual void SetPos(const Vec3& pos, bool bKeepEyeHeight = true) = 0;
+	virtual const Vec3& GetPos() = 0;
+	virtual void SetAngles(const Vec3& angles) = 0;
+	virtual const Vec3& GetAngles() = 0;
 	virtual unsigned short GetType() = 0;
-	virtual void *GetAssociation() = 0;
-	virtual void Release()=0;
-	virtual void ParseParameters(const AIObjectParameters &params)=0;
-	virtual bool CanBeConvertedTo(unsigned short type, void **pConverted) = 0;
-	virtual void SetName(const char *pName)= 0;
-	virtual char *GetName()= 0;
-	virtual void IsEnabled(bool enabled)= 0;
-	virtual void Event(unsigned short, SAIEVENT *pEvent) = 0;
+	virtual void* GetAssociation() = 0;
+	virtual void Release() = 0;
+	virtual void ParseParameters(const AIObjectParameters& params) = 0;
+	virtual bool CanBeConvertedTo(unsigned short type, void** pConverted) = 0;
+	virtual void SetName(const char* pName) = 0;
+	virtual char* GetName() = 0;
+	virtual void IsEnabled(bool enabled) = 0;
+	virtual void Event(unsigned short, SAIEVENT* pEvent) = 0;
 	virtual void SetEyeHeight(float fHeight) = 0;
-	virtual SOBJECTSTATE * GetState() = 0;
+	virtual SOBJECTSTATE* GetState() = 0;
 	virtual void Bind(IAIObject* bind) = 0;
-	virtual void Unbind( ) = 0;
-//	virtual IAIObject* GetBound( ) = 0;
-	virtual	void CreateBoundObject( unsigned short type, const Vec3& vBindPos, const Vec3& vBindAngl)=0;
+	virtual void Unbind() = 0;
+	//	virtual IAIObject* GetBound( ) = 0;
+	virtual	void CreateBoundObject(unsigned short type, const Vec3& vBindPos, const Vec3& vBindAngl) = 0;
 	virtual void EDITOR_DrawRanges(bool bEnable = true) = 0;
 	virtual IUnknownProxy* GetProxy() = 0;
-	virtual void SetSignal(int nSignalID, const char * szText, void *pSender=0) = 0;
+	virtual void SetSignal(int nSignalID, const char* szText, void* pSender = 0) = 0;
 	virtual bool IsMoving() = 0;
-	virtual void Save(CStream & stm)=0;
-	virtual void Load(CStream & stm)=0;
-	virtual void Load_PATCH_1(CStream & stm)=0;
-	virtual void NeedsPathOutdoor( bool bNeeds, bool bForce=false ) = 0;
-	virtual bool IfNeedsPathOutdoor( ) = 0;
+	virtual void Save(CStream& stm) = 0;
+	virtual void Load(CStream& stm) = 0;
+	virtual void Load_PATCH_1(CStream& stm) = 0;
+	virtual void NeedsPathOutdoor(bool bNeeds, bool bForce = false) = 0;
+	virtual bool IfNeedsPathOutdoor() = 0;
 } IAIObject;
 
 typedef struct IPupeUser
 {
-	virtual void RegisterAttack(const char *name)=0;
-	virtual void RegisterRetreat(const char *name)=0;
-	virtual void RegisterWander(const char *name)=0;
-	virtual void RegisterIdle(const char *name)=0;
-	virtual bool SelectPipe(int id, const char *name, IAIObject *pArgument = 0)=0;
-	virtual bool InsertSubPipe(int id, const char *name, IAIObject *pArgument = 0)=0;
-	virtual IAIObject *GetAttentionTarget()=0;
+	virtual void RegisterAttack(const char* name) = 0;
+	virtual void RegisterRetreat(const char* name) = 0;
+	virtual void RegisterWander(const char* name) = 0;
+	virtual void RegisterIdle(const char* name) = 0;
+	virtual bool SelectPipe(int id, const char* name, IAIObject* pArgument = 0) = 0;
+	virtual bool InsertSubPipe(int id, const char* name, IAIObject* pArgument = 0) = 0;
+	virtual IAIObject* GetAttentionTarget() = 0;
 } IPipeUser;
 
-typedef struct IPuppet 
+typedef struct IPuppet
 {
-	virtual AgentParameters GetPuppetParameters()=0;
-	virtual void SetPuppetParameters(AgentParameters &pParams)=0;
+	virtual AgentParameters GetPuppetParameters() = 0;
+	virtual void SetPuppetParameters(AgentParameters& pParams) = 0;
 } IPuppet;
 
-typedef struct IVehicle 
+typedef struct IVehicle
 {
-//	virtual void SetGunner(IAIObject *pGunner)=0;
-//	virtual AgentParameters &GetPuppetParameters()=0;
-//	virtual void SetPuppetParameters(AgentParameters &pParams)=0;
+	//	virtual void SetGunner(IAIObject *pGunner)=0;
+	//	virtual AgentParameters &GetPuppetParameters()=0;
+	//	virtual void SetPuppetParameters(AgentParameters &pParams)=0;
 } IVehicle;
 
 
@@ -271,29 +271,29 @@ typedef struct AISIGNAL
 	int						nSignal;
 	///const char *			strText;
 	char 			  strText[1024];
-	void *					pSender;
+	void* pSender;
 } AISIGNAL;
 
 
 typedef struct SOBJECTSTATE
 {
 
-//fixme	- remove it when dom\ne with tweaking of vehicles movement
+	//fixme	- remove it when dom\ne with tweaking of vehicles movement
 	char	DEBUG_controlDirection;
 
-	
+
 	bool	forward;
 	bool	back;
 	bool  turnleft;
 	bool	turnright;
 	bool  turnup;
 	bool	turndown;
-	
+
 	bool	left;
 	bool	run;
 	bool	right;
 	bool	dodge;		// for vehicles - when avoiding rockets/grenades
-//	bool	bLost;		// proxy would like to regenerate path
+	//	bool	bLost;		// proxy would like to regenerate path
 
 	enum	PathUsage
 	{
@@ -303,7 +303,7 @@ typedef struct SOBJECTSTATE
 	};
 
 	PathUsage	pathUsage;
-	
+
 	char	mutantJump;
 	bool	bCloseContact;
 
@@ -338,11 +338,11 @@ typedef struct SOBJECTSTATE
 	std::vector<AISIGNAL> vSignals;
 	int nAuxSignal;
 	string szAuxSignalText;
-	
-	SOBJECTSTATE():
-	vFireDir(1.0f,0.0f,0.0f),
-	vTargetPos(1.0f,0.0f,0.0f),
-	vMoveDir(1.0f,0.0f,0.0f)
+
+	SOBJECTSTATE() :
+		vFireDir(1.0f, 0.0f, 0.0f),
+		vTargetPos(1.0f, 0.0f, 0.0f),
+		vMoveDir(1.0f, 0.0f, 0.0f)
 	{
 		Reset();
 		mutantJump = 0;
@@ -358,7 +358,7 @@ typedef struct SOBJECTSTATE
 		fStickDist = -1;
 		pathUsage = PU_NewPathWanted;
 		fDistanceFromTarget = 0;
-		
+
 	}
 
 	void Reset()
@@ -366,8 +366,8 @@ typedef struct SOBJECTSTATE
 
 		DEBUG_controlDirection = 0;
 
-		forward = back = turnleft = turnright = turnup = turndown = jump =  fire = false;
-//		mutantJump = 0;
+		forward = back = turnleft = turnright = turnup = turndown = jump = fire = false;
+		//		mutantJump = 0;
 		bCloseContact = false;
 		bHaveTarget = false;
 		fThreat = 0;
@@ -375,30 +375,30 @@ typedef struct SOBJECTSTATE
 		//left = right = false;
 		//bReevaluate = false;
 		fValueAux = 0;
-	//	bTakingDamage = false;
+		//	bTakingDamage = false;
 		bMemory = false;
 		bSound = false;
-		vMoveDir(0,0,0);
-		vTargetPos(0,0,0);
+		vMoveDir(0, 0, 0);
+		vTargetPos(0, 0, 0);
 		bTargetEnabled = false;
 		nAuxSignal = 0;
 		fDesiredSpeed = 1.0f;
-		
+
 	}
 
-	bool operator==(SOBJECTSTATE &other)
+	bool operator==(SOBJECTSTATE& other)
 	{
 		if (forward == other.forward)
 			if (back == other.back)
 				if (turnleft == other.turnleft)
 					if (turnright == other.turnright)
-					if (run == other.run)
-					if (jump == other.jump)
-						if (left == other.left)
-							if (right == other.right)
-								if (fire == other.fire)
-									if (bodystate == other.bodystate)
-											return true;
+						if (run == other.run)
+							if (jump == other.jump)
+								if (left == other.left)
+									if (right == other.right)
+										if (fire == other.fire)
+											if (bodystate == other.bodystate)
+												return true;
 		return false;
 	}
 
@@ -414,7 +414,7 @@ typedef struct SMOTORSTATE
 	{
 		crouched = proned = false;
 	}
-	
+
 } SMOTORSTATE;
 
 struct IAISystem;
@@ -432,35 +432,35 @@ class IPhysicalEntity;
 
 typedef struct IUnknownProxy
 {
-	virtual bool QueryProxy(unsigned char type, void **pProxy) = 0;
-	virtual int Update(SOBJECTSTATE *) = 0;
-	virtual void Release()=0;
-	virtual bool CustomUpdate(Vec3& pos, Vec3 &angles) = 0;
+	virtual bool QueryProxy(unsigned char type, void** pProxy) = 0;
+	virtual int Update(SOBJECTSTATE*) = 0;
+	virtual void Release() = 0;
+	virtual bool CustomUpdate(Vec3& pos, Vec3& angles) = 0;
 	virtual IPhysicalEntity* GetPhysics() = 0;
-	virtual void DebugDraw(struct IRenderer *pRenderer) = 0;
+	virtual void DebugDraw(struct IRenderer* pRenderer) = 0;
 	virtual bool CheckStatus(unsigned char status) = 0;
 	virtual void ApplyHealth(float fHealth) = 0;
-	virtual void Load(CStream &str)=0;
-	virtual void Load_PATCH_1(CStream &str)=0;
-	virtual void Save(CStream &str)=0;
-//	virtual bool IsBound() = 0;
+	virtual void Load(CStream& str) = 0;
+	virtual void Load_PATCH_1(CStream& str) = 0;
+	virtual void Save(CStream& str) = 0;
+	//	virtual bool IsBound() = 0;
 } IUnknownProxy;
 
 
 typedef struct IPuppetProxy : public IUnknownProxy
 {
-	virtual void GetDimensions(int bodypos, float &eye_height, float &height) = 0;
+	virtual void GetDimensions(int bodypos, float& eye_height, float& height) = 0;
 	virtual void Reset() = 0;
 	virtual void MovementControl(bool bEnableMovement, float fDuration) = 0;
 } IPuppetProxy;
 
 typedef struct IVehicleProxy : public IUnknownProxy
 {
-	virtual void GetDimensions(int bodypos, float &eye_height, float &height) = 0;
+	virtual void GetDimensions(int bodypos, float& eye_height, float& height) = 0;
 	virtual void Reset() = 0;
-	virtual Vec3	UpdateThreat( void* threat ) = 0;
-	virtual Vec3	HeliAttackAdvance( SOBJECTSTATE &state ) = 0;
-	virtual void SetSpeeds(float fwd, float bkw=-1) = 0;
+	virtual Vec3	UpdateThreat(void* threat) = 0;
+	virtual Vec3	HeliAttackAdvance(SOBJECTSTATE& state) = 0;
+	virtual void SetSpeeds(float fwd, float bkw = -1) = 0;
 } IVehicleProxy;
 
 
@@ -472,7 +472,7 @@ typedef struct GameNodeData
 
 	void Reset()
 	{
-		m_pos(0,0,0);
+		m_pos(0, 0, 0);
 		fSlope = 0;
 		bWater = false;
 	}
@@ -483,10 +483,10 @@ typedef struct ObstacleData
 	Vec3 vPos;
 	Vec3 vDir;
 
-	bool operator==(const ObstacleData &other)
+	bool operator==(const ObstacleData& other)
 	{
-		if (IsEquivalent(other.vPos,vPos,VEC_EPSILON)) 
-			if (IsEquivalent(vDir,other.vDir,VEC_EPSILON))
+		if (IsEquivalent(other.vPos, vPos, VEC_EPSILON))
+			if (IsEquivalent(vDir, other.vDir, VEC_EPSILON))
 				return true;
 
 		return false;
@@ -494,8 +494,8 @@ typedef struct ObstacleData
 
 	ObstacleData()
 	{
-		vPos.Set(0,0,0);
-		vDir.Set(0,0,0);
+		vPos.Set(0, 0, 0);
+		vDir.Set(0, 0, 0);
 	}
 
 } ObstacleData;
@@ -507,7 +507,7 @@ struct GraphNode;
 
 typedef struct GraphLink
 {
-	GraphNode *pLink;											// next triangle this way
+	GraphNode* pLink;											// next triangle this way
 	unsigned int nStartIndex, nEndIndex;						// indices of the edge vertices of this edge
 	float	fMaxRadius;											// maximum size sphere that can pass trough this edge
 	Vec3	vEdgeCenter;
@@ -518,13 +518,13 @@ typedef struct GraphLink
 		pLink = 0;
 		nStartIndex = nEndIndex = 0;
 		fMaxRadius = 0;
-		vWayOut(0,0,0);
-		vEdgeCenter(0,0,0);
+		vWayOut(0, 0, 0);
+		vEdgeCenter(0, 0, 0);
 	}
 
 	bool IsNewLink()
 	{
-		if( fMaxRadius<0.0f && fMaxRadius>-5.0f )
+		if (fMaxRadius<0.0f && fMaxRadius>-5.0f)
 			return true;
 		return false;
 	}
@@ -545,15 +545,15 @@ typedef struct GraphNode
 	float fHeuristic;
 	float fDistance;
 	int nRefCount;
-	IVisArea *pArea;
+	IVisArea* pArea;
 	int nBuildingID;
-	
+
 	GameNodeData data;
 
 	GraphNode()
 	{
 		bCreated = true;
-		link.reserve(5);	
+		link.reserve(5);
 		tag = false;
 		data.Reset();
 		mark = false;
@@ -574,7 +574,7 @@ typedef struct GraphNode
 	{
 		nRefCount--;
 
-		assert(nRefCount>=0);
+		assert(nRefCount >= 0);
 
 		if (nRefCount == 0)
 			return true;
@@ -589,36 +589,36 @@ typedef struct GraphNode
 	float				GetDegeneracyValue();
 	void				MakeAntiClockwise();
 	bool				IsAntiClockwise();
-	float				GetCross( const Vec3 &vCutStart, const Vec3 &vDir, const GraphLink &theLink );
-	GraphLink*			FindNewLink();
+	float				GetCross(const Vec3& vCutStart, const Vec3& vDir, const GraphLink& theLink);
+	GraphLink* FindNewLink();
 
-/*	void AddHidePoint(const Vec3 &pos, const Vec3 &dir)
-	{
-			ObstacleData od;
-			od.vPos = pos;
-			od.vDir = dir;
-			if (std::find(vertex.begin(),vertex.end(),od) == vertex.end())
-						vertex.push_back(od);
-	}
-	*/
-	
+	/*	void AddHidePoint(const Vec3 &pos, const Vec3 &dir)
+		{
+				ObstacleData od;
+				od.vPos = pos;
+				od.vDir = dir;
+				if (std::find(vertex.begin(),vertex.end(),od) == vertex.end())
+							vertex.push_back(od);
+		}
+		*/
+
 } GraphNode;
 
 typedef struct IGraph {
-	virtual GraphNode * CreateNewNode(bool bFromTriangulation = false)=0;
-	virtual void DeleteNode(GraphNode * pNode)=0;
-	virtual void WriteToFile(const char *pname)=0;
-	virtual bool ReadFromFile(const char *pname)=0;
-	virtual bool RemoveEntrance(int nBuildingID, GraphNode * pNode)=0;
-	virtual void RemoveIndoorNodes(void)=0;
+	virtual GraphNode* CreateNewNode(bool bFromTriangulation = false) = 0;
+	virtual void DeleteNode(GraphNode* pNode) = 0;
+	virtual void WriteToFile(const char* pname) = 0;
+	virtual bool ReadFromFile(const char* pname) = 0;
+	virtual bool RemoveEntrance(int nBuildingID, GraphNode* pNode) = 0;
+	virtual void RemoveIndoorNodes(void) = 0;
 	virtual void AddIndoorEntrance(int nBuildingID, GraphNode* pNode, bool bExitOnly = false) = 0;
-	virtual void Connect(GraphNode *one, GraphNode *two) = 0;
-	virtual void Disconnect(GraphNode * pDisconnected,bool bDelete = true	) =0;
-	virtual GraphNode *GetEnclosing(const Vec3 &pos, GraphNode *pStart = 0 ,bool bOutsideOnly = false) = 0;
-	virtual void AddHidePoint(GraphNode *pOwner, const Vec3 &pos, const Vec3 &dir) = 0;
-	virtual void RemoveHidePoint(GraphNode *pOwner, const Vec3 &pos, const Vec3 &dir) = 0;
-	virtual void DisableInSphere(const Vec3 &pos,float fRadius) = 0;
-	virtual void EnableInSphere(const Vec3 &pos,float fRadius) = 0;
+	virtual void Connect(GraphNode* one, GraphNode* two) = 0;
+	virtual void Disconnect(GraphNode* pDisconnected, bool bDelete = true) = 0;
+	virtual GraphNode* GetEnclosing(const Vec3& pos, GraphNode* pStart = 0, bool bOutsideOnly = false) = 0;
+	virtual void AddHidePoint(GraphNode* pOwner, const Vec3& pos, const Vec3& dir) = 0;
+	virtual void RemoveHidePoint(GraphNode* pOwner, const Vec3& pos, const Vec3& dir) = 0;
+	virtual void DisableInSphere(const Vec3& pos, float fRadius) = 0;
+	virtual void EnableInSphere(const Vec3& pos, float fRadius) = 0;
 } IGraph;
 
 

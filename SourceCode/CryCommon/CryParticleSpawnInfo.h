@@ -55,7 +55,7 @@ public:
 	enum FlagEnum
 	{
 		// in this mode, only up-looking normals will be taken into account
-		FLAGS_RAIN_MODE      = 1,
+		FLAGS_RAIN_MODE = 1,
 		// with this flag, the spawn will occur only on one frame
 		FLAGS_ONE_TIME_SPAWN = 1 << 1,
 		// with this flag, nBoneId will determine the bone from which the particle will be spawned,
@@ -72,17 +72,17 @@ public:
 	// the position of the particle in local bone coordinates
 	Vec3 vBonePos;
 
-	CryParticleSpawnInfo():
-		fSpawnRate (0),
-		nFlags (0),
-		nBone (0),
-		vBonePos(0,0,0)
+	CryParticleSpawnInfo() :
+		fSpawnRate(0),
+		nFlags(0),
+		nBone(0),
+		vBonePos(0, 0, 0)
 	{
 	}
-	
-	CryParticleSpawnInfo (float _fSpawnRate, unsigned _nFlags = 0):
+
+	CryParticleSpawnInfo(float _fSpawnRate, unsigned _nFlags = 0) :
 		fSpawnRate(_fSpawnRate),
-		nFlags (_nFlags)
+		nFlags(_nFlags)
 	{
 	}
 };

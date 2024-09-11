@@ -77,79 +77,79 @@ public:
 	// (to exclude stack overruns or underruns at runtime)
 	friend class CrySizerComponentNameHelper;
 
-	ICrySizer ():
+	ICrySizer() :
 		m_nFlags(0)
-		{
-		}
+	{
+	}
 
-	virtual ~ICrySizer () {}
+	virtual ~ICrySizer() {}
 
 	// adds an object identified by the unique pointer (it needs not be
 	// the actual object position in the memory, though it would be nice,
 	// but it must be unique throughout the system and unchanging for this object)
 	// RETURNS: true if the object has actually been added (for the first time)
 	//          and calculated
-	virtual bool AddObject (const void* pIdentifier, size_t nSizeBytes) = 0;
+	virtual bool AddObject(const void* pIdentifier, size_t nSizeBytes) = 0;
 
 	template <typename T>
-	bool Add (const T* pId, size_t num)
+	bool Add(const T* pId, size_t num)
 	{
 		return AddObject(pId, num * sizeof(T));
 	}
 
 	template <class T>
-	bool Add (const T& rObject)
+	bool Add(const T& rObject)
 	{
-		return AddObject (&rObject, sizeof(T));
+		return AddObject(&rObject, sizeof(T));
 	}
 
-	bool Add (const char* szText)
+	bool Add(const char* szText)
 	{
-		return AddObject(szText, strlen(szText)+1);
+		return AddObject(szText, strlen(szText) + 1);
 	}
 
 	template <class String>
-	bool AddString (const String& strText)
+	bool AddString(const String& strText)
 	{
 		if (!strText.empty())
-			return AddObject (strText.c_str(), strText.length()+1);
+			return AddObject(strText.c_str(), strText.length() + 1);
 		else
 			return false;
 	}
 #ifdef _XSTRING_
 	template <class Elem, class Traits, class Allocator>
-	bool Add (const std::basic_string<Elem, Traits, Allocator>& strText)
+	bool Add(const std::basic_string<Elem, Traits, Allocator>& strText)
 	{
-		AddString (strText);
+		AddString(strText);
 	}
 #endif
 
 #ifdef _STRING_
-	bool Add (const string& strText)
+	bool Add(const string& strText)
 	{
 		AddString(strText);
 	}
 #endif
 
 	template <class Container>
-	bool AddContainer (const Container& rContainer)
+	bool AddContainer(const Container& rContainer)
 	{
 		if (!rContainer.empty())
-			return AddObject (&(*rContainer.begin()),rContainer.size()*sizeof(typename Container::value_type));
+			return AddObject(&(*rContainer.begin()), rContainer.size() * sizeof(typename Container::value_type));
 		return false;
 	}
 
 	// returns the flags
-	unsigned GetFlags()const {return m_nFlags;}
+	unsigned GetFlags()const { return m_nFlags; }
 
 protected:
 	// these functions must operate on the component name stack
 	// they are to be only accessible from within class CrySizerComponentNameHelper
 	// which should be used through macro SIZER_COMPONENT_NAME
-	virtual void Push (const char* szComponentName) = 0;
+	virtual void Push(const char* szComponentName) = 0;
 	// pushes the name that is the name of the previous component . (dot) this name
-	virtual void PushSubcomponent (const char* szSubcomponentName) = 0;
-	virtual void Pop () = 0;
+	virtual void PushSubcomponent(const char* szSubcomponentName) = 0;
+	virtual void Pop() = 0;
 
 	unsigned m_nFlags;
 };
@@ -169,13 +169,13 @@ class CrySizerComponentNameHelper
 {
 public:
 	// pushes the component name on top of the name stack of the given sizer
-	CrySizerComponentNameHelper (ICrySizer* pSizer, const char* szComponentName, bool bSubcomponent):
+	CrySizerComponentNameHelper(ICrySizer* pSizer, const char* szComponentName, bool bSubcomponent) :
 		m_pSizer(pSizer)
 	{
 		if (bSubcomponent)
-			pSizer->PushSubcomponent (szComponentName);
+			pSizer->PushSubcomponent(szComponentName);
 		else
-			pSizer->Push (szComponentName);
+			pSizer->Push(szComponentName);
 	}
 
 	// pops the component name off top of the name stack of the sizer 

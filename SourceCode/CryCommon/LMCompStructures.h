@@ -11,7 +11,7 @@
 #define USE_DOT3_ALPHA 
 
 #ifdef USE_DOT3_ALPHA 
-	#define APPLY_COLOUR_FIX
+#define APPLY_COLOUR_FIX
 #endif
 
 #ifdef USE_DOT3_ALPHA
@@ -38,34 +38,34 @@ namespace NSAVE_RESULT
 struct RenderLMData : public _reference_target_t
 {
 	//! \brief Requires renderer for texture resource release
-	RenderLMData(struct IRenderer *pIRenderer, int iColorLerpTex, int iHDRColorLerpTex, int iDomDirectionTex, int iOcclTex = 0)
+	RenderLMData(struct IRenderer* pIRenderer, int iColorLerpTex, int iHDRColorLerpTex, int iDomDirectionTex, int iOcclTex = 0)
 	{
-		m_pIRenderer		= pIRenderer;
-		m_iColorLerpTex		= iColorLerpTex;
+		m_pIRenderer = pIRenderer;
+		m_iColorLerpTex = iColorLerpTex;
 		m_iHDRColorLerpTex = iHDRColorLerpTex;
-		m_iDomDirectionTex	= iDomDirectionTex;
-		m_iOcclTex			= iOcclTex;
+		m_iDomDirectionTex = iDomDirectionTex;
+		m_iOcclTex = iOcclTex;
 	};
 
 	//! \brief Obtain textures
-	int GetColorLerpTex()		{ return m_iColorLerpTex; };
-	int GetHDRColorLerpTex()		{ return m_iHDRColorLerpTex; };
-	int GetDomDirectionTex()	{ return m_iDomDirectionTex; };
-	int GetOcclTex()			{ return m_iOcclTex; };
+	int GetColorLerpTex() { return m_iColorLerpTex; };
+	int GetHDRColorLerpTex() { return m_iHDRColorLerpTex; };
+	int GetDomDirectionTex() { return m_iDomDirectionTex; };
+	int GetOcclTex() { return m_iOcclTex; };
 
 protected:
 	//! \brief Destrucktor protected, call Release()
-	~RenderLMData() 
-	{ 
+	~RenderLMData()
+	{
 		m_pIRenderer->RemoveTexture(m_iColorLerpTex);
 		m_pIRenderer->RemoveTexture(m_iDomDirectionTex);
-		if(m_iOcclTex != 0)
+		if (m_iOcclTex != 0)
 			m_pIRenderer->RemoveTexture(m_iOcclTex);
-		if(m_iHDRColorLerpTex != 0)
+		if (m_iHDRColorLerpTex != 0)
 			m_pIRenderer->RemoveTexture(m_iHDRColorLerpTex);
 	};
 
-	struct IRenderer *m_pIRenderer; //!< Needed to correctly release texture resources
+	struct IRenderer* m_pIRenderer; //!< Needed to correctly release texture resources
 	int m_iColorLerpTex;            //!< Color + lerp factor texture
 	int m_iHDRColorLerpTex;         //!< HDR Color in RGBE representation
 	int m_iDomDirectionTex;         //!< Dominant direction texture
@@ -91,9 +91,9 @@ struct LMGenParam
 		m_bDontMergePolys = false;
 		m_bSpotAsPointlight = true;
 		m_bOnlyExportLights = false;
-    m_bHDR = false;
+		m_bHDR = false;
 	};
- 
+
 	UINT m_iTextureResolution;		//!< Resolution of the produced textures
 	float m_fTexelSize;				//!< World space size of one texel
 	UINT m_iSubSampling;			//!< Amount of sub-sampling used for shadows etc.
@@ -106,13 +106,13 @@ struct LMGenParam
 	bool m_bDontMergePolys;			//!<
 	bool m_bSpotAsPointlight;		//!< overrides spotlight to be used as omnilight source
 	bool m_bOnlyExportLights;		//!< Export only static lights sources, does not recompile lightmaps.
-  bool m_bHDR;                //!< Generate HDR light map data in RGBE representation
+	bool m_bHDR;                //!< Generate HDR light map data in RGBE representation
 };
 
 struct TexCoord2Comp
 {
 	TexCoord2Comp(float _s, float _t) { s = _s; t = _t; };
-	TexCoord2Comp() : s(0.f), t(0.f){};
+	TexCoord2Comp() : s(0.f), t(0.f) {};
 	float s;
 	float t;
 };
@@ -120,7 +120,7 @@ struct TexCoord2Comp
 //! \brief Callback interface for compiler output
 struct ICompilerProgress
 {
-	virtual void Output(const char *pszText) = 0;
+	virtual void Output(const char* pszText) = 0;
 };
 
 struct LMStatLightFileHeader
@@ -129,7 +129,7 @@ struct LMStatLightFileHeader
 	{
 		iVersion = 0;
 		iSizeOfDLight = sizeof(CDLight);
-		iNumDLights = 0;  
+		iNumDLights = 0;
 	};
 
 	uint8 iVersion;
@@ -164,13 +164,13 @@ typedef enum EOCCLCOLOURASSIGNMENT
 typedef struct SOcclusionMapTexel
 {
 	uint16 colour;
-	SOcclusionMapTexel() : colour(0){}
-	const SOcclusionMapTexel& operator =(const SOcclusionMapTexel& rTexel){colour = rTexel.colour; return *this;}
-	const bool operator ==(const SOcclusionMapTexel& rTexel)const{return rTexel.colour == colour;}
-	const bool operator !=(const SOcclusionMapTexel& rTexel)const{return rTexel.colour != colour;}
+	SOcclusionMapTexel() : colour(0) {}
+	const SOcclusionMapTexel& operator =(const SOcclusionMapTexel& rTexel) { colour = rTexel.colour; return *this; }
+	const bool operator ==(const SOcclusionMapTexel& rTexel)const { return rTexel.colour == colour; }
+	const bool operator !=(const SOcclusionMapTexel& rTexel)const { return rTexel.colour != colour; }
 	const uint8 operator [](const EOCCLCOLOURASSIGNMENT eChannel) const
 	{
-		switch(eChannel)
+		switch (eChannel)
 		{
 		case EOCCLCOLOURASSIGNMENT_NONE:
 			assert(true);
@@ -180,21 +180,21 @@ typedef struct SOcclusionMapTexel
 			return (uint8)(colour & 0x000F);
 			break;
 		case EOCCLCOLOURASSIGNMENT_GREEN:
-			return (uint8)((colour >> 4)& 0x000F);
+			return (uint8)((colour >> 4) & 0x000F);
 			break;
 		case EOCCLCOLOURASSIGNMENT_RED:
-			return (uint8)((colour >> 8)& 0x000F);
+			return (uint8)((colour >> 8) & 0x000F);
 			break;
 		case EOCCLCOLOURASSIGNMENT_ALPHA:
-			return (uint8)((colour >> 12)& 0x000F);
+			return (uint8)((colour >> 12) & 0x000F);
 			break;
 		}
 		return 0;
 	}
-	const SOcclusionMapTexel& SetValue(const EOCCLCOLOURASSIGNMENT eChannel, const uint8 cValue) 
+	const SOcclusionMapTexel& SetValue(const EOCCLCOLOURASSIGNMENT eChannel, const uint8 cValue)
 	{
 		assert(cValue < 0x10);
-		switch(eChannel)
+		switch (eChannel)
 		{
 		case EOCCLCOLOURASSIGNMENT_NONE:
 			assert(true);
@@ -229,16 +229,16 @@ typedef struct GLMOcclLightInfo
 	GLMOcclLightInfo() : uiLightCount(0)
 	{
 		iChannelAssignment[0] = iChannelAssignment[1] = iChannelAssignment[2] = iChannelAssignment[3] = EOCCLCOLOURASSIGNMENT_NONE;
-		iLightIDs[0] = iLightIDs[1] = iLightIDs[2] = iLightIDs[3] = std::pair<EntityId, EntityId>(0,0);
+		iLightIDs[0] = iLightIDs[1] = iLightIDs[2] = iLightIDs[3] = std::pair<EntityId, EntityId>(0, 0);
 	}
-	const unsigned int UsedChannelCount()const{return uiLightCount;}
+	const unsigned int UsedChannelCount()const { return uiLightCount; }
 	const EOCCLCOLOURASSIGNMENT FindLightSource(const std::pair<EntityId, EntityId>& ciID)
 	{
 		EOCCLCOLOURASSIGNMENT ret = EOCCLCOLOURASSIGNMENT_NONE;
 		int i = 0;
-		while(iChannelAssignment[i] != EOCCLCOLOURASSIGNMENT_NONE && i<4)
+		while (iChannelAssignment[i] != EOCCLCOLOURASSIGNMENT_NONE && i < 4)
 		{
-			if(iLightIDs[i] == ciID)
+			if (iLightIDs[i] == ciID)
 				return iChannelAssignment[i];
 			i++;
 		}
@@ -246,13 +246,13 @@ typedef struct GLMOcclLightInfo
 	}
 	const EOCCLCOLOURASSIGNMENT AddLightsource(const std::pair<EntityId, EntityId>& cID)
 	{
-		if(uiLightCount >= 4)
+		if (uiLightCount >= 4)
 			return EOCCLCOLOURASSIGNMENT_NONE;//already 4 light sources used
 		EOCCLCOLOURASSIGNMENT eChannel = FindLightSource(cID);
-		if(eChannel != EOCCLCOLOURASSIGNMENT_NONE)
+		if (eChannel != EOCCLCOLOURASSIGNMENT_NONE)
 			return eChannel;//already contained
 		//else insert
-		switch(uiLightCount)
+		switch (uiLightCount)
 		{
 		case 0:
 			iChannelAssignment[0] = EOCCLCOLOURASSIGNMENT_RED;
@@ -269,7 +269,7 @@ typedef struct GLMOcclLightInfo
 		}
 		iLightIDs[uiLightCount] = cID;
 		uiLightCount++;
-		return iChannelAssignment[uiLightCount-1];
+		return iChannelAssignment[uiLightCount - 1];
 	}
 }GLMOcclLightInfo;
 

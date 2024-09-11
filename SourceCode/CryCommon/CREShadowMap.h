@@ -1,4 +1,4 @@
- 
+
 #ifndef __CRESHADOWMAP_H__
 #define __CRESHADOWMAP_H__
 
@@ -18,10 +18,10 @@ public:
 
   CREShadowMap()
   {
-    mfSetType(eDATA_ShadowMap);
-    mfUpdateFlags(FCEF_TRANSFORM);
-    m_pShadowFrustum=0;
-    m_fAlpha=1.f;
+	mfSetType(eDATA_ShadowMap);
+	mfUpdateFlags(FCEF_TRANSFORM);
+	m_pShadowFrustum=0;
+	m_fAlpha=1.f;
   }
 
   virtual ~CREShadowMap();
@@ -40,8 +40,8 @@ public:
 
   CREShadowMapCaster()
   {
-    mfSetType(eDATA_ShadowMap);
-    mfUpdateFlags(FCEF_TRANSFORM);
+	mfSetType(eDATA_ShadowMap);
+	mfUpdateFlags(FCEF_TRANSFORM);
   }
 
   virtual ~CREShadowMapCaster()

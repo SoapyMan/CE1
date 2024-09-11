@@ -63,7 +63,7 @@ struct IFrameProfilePeakCallback
 {
 	//! Called when peak is detected for this profiler.
 	//! @param fPeakTime peak time in milliseconds.
-	virtual void OnFrameProfilerPeak( CFrameProfiler *pProfiler,float fPeakTime ) = 0;
+	virtual void OnFrameProfilerPeak(CFrameProfiler* pProfiler, float fPeakTime) = 0;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -85,7 +85,7 @@ struct IFrameProfileSystem
 	//! Reset all profiling data.
 	virtual void Reset() = 0;
 	//! Add new frame profiler.
-	virtual void AddFrameProfiler( CFrameProfiler *pProfiler ) = 0;
+	virtual void AddFrameProfiler(CFrameProfiler* pProfiler) = 0;
 	//! Must be called at the start of the frame.
 	virtual void StartFrame() = 0;
 	//! Must be called at the end of the frame.
@@ -95,23 +95,23 @@ struct IFrameProfileSystem
 	virtual int GetProfilerCount() const = 0;
 	//! Get frame profiler at specified index.
 	//! @param index must be 0 <= index < GetProfileCount() 
-	virtual CFrameProfiler* GetProfiler( int index ) const = 0;
+	virtual CFrameProfiler* GetProfiler(int index) const = 0;
 
-	virtual void Enable( bool bCollect,bool bDisplay ) = 0;
-	virtual void SetSubsystemFilter( bool bFilterSubsystem,EProfiledSubsystem subsystem ) = 0;
+	virtual void Enable(bool bCollect, bool bDisplay) = 0;
+	virtual void SetSubsystemFilter(bool bFilterSubsystem, EProfiledSubsystem subsystem) = 0;
 	//! True if profiler is turned off (even if collection is paused).
 	virtual bool IsEnabled() const = 0;
 	//! True if profiler must collect profiling data.
 	virtual bool IsProfiling() const = 0;
-	virtual void SetDisplayQuantity( EDisplayQuantity quantity ) = 0;
+	virtual void SetDisplayQuantity(EDisplayQuantity quantity) = 0;
 
 	// For custom frame profilers.
-	virtual void StartCustomSection( CCustomProfilerSection *pSection ) = 0;
-	virtual void EndCustomSection( CCustomProfilerSection *pSection ) = 0;
+	virtual void StartCustomSection(CCustomProfilerSection* pSection) = 0;
+	virtual void EndCustomSection(CCustomProfilerSection* pSection) = 0;
 
 	//! Register peak listener callback to be called when peak value is greater then this.
-	virtual void AddPeaksListener( IFrameProfilePeakCallback *pPeakCallback ) = 0;
-	virtual void RemovePeaksListener( IFrameProfilePeakCallback *pPeakCallback ) = 0;
+	virtual void AddPeaksListener(IFrameProfilePeakCallback* pPeakCallback) = 0;
+	virtual void RemovePeaksListener(IFrameProfilePeakCallback* pPeakCallback) = 0;
 };
 
 
@@ -123,13 +123,13 @@ template <class T, int TCount>
 class CFrameProfilerSamplesHistory
 {
 public:
-	CFrameProfilerSamplesHistory() :	m_nHistoryNext (0),m_nHistoryCount(0) {}
+	CFrameProfilerSamplesHistory() : m_nHistoryNext(0), m_nHistoryCount(0) {}
 
 	//! Add a new sample to history.
-	void Add( T sample )
+	void Add(T sample)
 	{
 		m_history[m_nHistoryNext] = sample;
-		m_nHistoryNext = (m_nHistoryNext+TCount-1) % TCount;
+		m_nHistoryNext = (m_nHistoryNext + TCount - 1) % TCount;
 		if (m_nHistoryCount < TCount)
 			++m_nHistoryCount;
 	}
@@ -143,12 +143,12 @@ public:
 	T GetLast()
 	{
 		if (m_nHistoryCount)
-			return m_history[(m_nHistoryNext+1)%TCount];
+			return m_history[(m_nHistoryNext + 1) % TCount];
 		else
 			return 0;
 	}
 	//! calculates average sample value for at most the given number of frames (less if so many unavailable)
-	T GetAverage( int nCount = TCount )
+	T GetAverage(int nCount = TCount)
 	{
 		if (m_nHistoryCount)
 		{
@@ -157,7 +157,7 @@ public:
 				nCount = m_nHistoryCount;
 			for (int i = 1; i <= nCount; ++i)
 			{
-				fSum += m_history[(m_nHistoryNext+i) % (sizeof(m_history)/sizeof((m_history)[0]))];
+				fSum += m_history[(m_nHistoryNext + i) % (sizeof(m_history) / sizeof((m_history)[0]))];
 			}
 			return fSum / nCount;
 		}
@@ -175,7 +175,7 @@ public:
 				nCount = m_nHistoryCount;
 			for (int i = 1; i <= nCount; ++i)
 			{
-				fSum += m_history[(m_nHistoryNext+i)%TCount] * fCurrMult;
+				fSum += m_history[(m_nHistoryNext + i) % TCount] * fCurrMult;
 				fSumWeight += fCurrMult;
 				fCurrMult *= fMultiplier;
 			}
@@ -186,7 +186,7 @@ public:
 	}
 	//! calculates Standart deviation of values.
 	//! stdev = Sqrt( Sum((X-Xave)^2)/(n-1) )
-	T GetStdDeviation( int nCount = TCount )
+	T GetStdDeviation(int nCount = TCount)
 	{
 		if (m_nHistoryCount)
 		{
@@ -197,16 +197,16 @@ public:
 				nCount = m_nHistoryCount;
 			for (int i = 1; i <= nCount; ++i)
 			{
-				fVal = m_history[(m_nHistoryNext+i) % (sizeof(m_history)/sizeof((m_history)[0]))];
-				fSumVariance = (fVal - fAve)*(fVal - fAve); // (X-Xave)^2
+				fVal = m_history[(m_nHistoryNext + i) % (sizeof(m_history) / sizeof((m_history)[0]))];
+				fSumVariance = (fVal - fAve) * (fVal - fAve); // (X-Xave)^2
 			}
-			return sqrtf( fSumVariance/(nCount-1) );
+			return sqrtf(fSumVariance / (nCount - 1));
 		}
 		else
 			return 0;
 	}
 	//! calculates max sample value for at most the given number of frames (less if so many unavailable)
-	T GetMax(int nCount=TCount)
+	T GetMax(int nCount = TCount)
 	{
 		if (m_nHistoryCount)
 		{
@@ -215,7 +215,7 @@ public:
 				nCount = m_nHistoryCount;
 			for (int i = 1; i <= nCount; ++i)
 			{
-				T fCur = m_history[(m_nHistoryNext+i) % (sizeof(m_history)/sizeof((m_history)[0]))];
+				T fCur = m_history[(m_nHistoryNext + i) % (sizeof(m_history) / sizeof((m_history)[0]))];
 				if (i == 1 || fCur > fMax)
 					fMax = fCur;
 			}
@@ -234,7 +234,7 @@ public:
 				nCount = m_nHistoryCount;
 			for (int i = 1; i <= nCount; ++i)
 			{
-				T fCur = m_history[(m_nHistoryNext+i) % (sizeof(m_history)/sizeof((m_history)[0]))];
+				T fCur = m_history[(m_nHistoryNext + i) % (sizeof(m_history) / sizeof((m_history)[0]))];
 				if (i == 1 || fCur < fMin)
 					fMin = fCur;
 			}
@@ -282,8 +282,8 @@ public:
 class CFrameProfiler
 {
 public:
-	ISystem *m_pISystem;
-	const char *m_name;
+	ISystem* m_pISystem;
+	const char* m_name;
 
 	//! Total time spent in this counter including time of child profilers in current frame.
 	int64 m_totalTime;
@@ -303,24 +303,24 @@ public:
 	float m_variance;
 
 	//! Current parent profiler in last frame.
-	CFrameProfiler *m_pParent;
+	CFrameProfiler* m_pParent;
 	//! Expended or collapsed displaying state.
 	bool m_bExpended;
 	bool m_bHaveChildren;
 
 	EProfiledSubsystem m_subsystem;
 
-	CFrameProfilerSamplesHistory<float,64> m_totalTimeHistory;
-	CFrameProfilerSamplesHistory<float,64> m_selfTimeHistory;
-	CFrameProfilerSamplesHistory<int,64> m_countHistory;
+	CFrameProfilerSamplesHistory<float, 64> m_totalTimeHistory;
+	CFrameProfilerSamplesHistory<float, 64> m_selfTimeHistory;
+	CFrameProfilerSamplesHistory<int, 64> m_countHistory;
 
 	//! Graph data for this frame profiler.
-	
+
 	//! Graph associated with this profiler.
 	CFrameProfilerGraph* m_pGraph;
-	CFrameProfilerOfflineHistory *m_pOfflineHistory;
+	CFrameProfilerOfflineHistory* m_pOfflineHistory;
 
-	CFrameProfiler( ISystem *pSystem,const char *sCollectorName,EProfiledSubsystem subsystem=PROFILE_ANY )
+	CFrameProfiler(ISystem* pSystem, const char* sCollectorName, EProfiledSubsystem subsystem = PROFILE_ANY)
 	{
 		m_pParent = 0;
 		m_pGraph = 0;
@@ -333,7 +333,7 @@ public:
 		m_count = 0;
 		m_pISystem = pSystem;
 		m_name = sCollectorName;
-		m_pISystem->GetIProfileSystem()->AddFrameProfiler( this );
+		m_pISystem->GetIProfileSystem()->AddFrameProfiler(this);
 	}
 };
 
@@ -347,19 +347,19 @@ class CFrameProfilerSection
 public:
 	int64 m_startTime;
 	int64 m_excludeTime;
-	CFrameProfiler *m_pFrameProfiler;
-	CFrameProfilerSection *m_pParent;
+	CFrameProfiler* m_pFrameProfiler;
+	CFrameProfilerSection* m_pParent;
 
-	__forceinline CFrameProfilerSection( CFrameProfiler *profiler )
+	__forceinline CFrameProfilerSection(CFrameProfiler* profiler)
 	{
 		m_pFrameProfiler = profiler;
 		if (profiler)
-			m_pFrameProfiler->m_pISystem->StartProfilerSection( this );
+			m_pFrameProfiler->m_pISystem->StartProfilerSection(this);
 	}
 	__forceinline ~CFrameProfilerSection()
 	{
 		if (m_pFrameProfiler)
-			m_pFrameProfiler->m_pISystem->EndProfilerSection( this );
+			m_pFrameProfiler->m_pISystem->EndProfilerSection(this);
 	}
 };
 
@@ -371,23 +371,23 @@ public:
 class CCustomProfilerSection
 {
 public:
-	int *m_pValue;
+	int* m_pValue;
 	int m_excludeValue;
-	CFrameProfiler *m_pFrameProfiler;
-	CCustomProfilerSection *m_pParent;
+	CFrameProfiler* m_pFrameProfiler;
+	CCustomProfilerSection* m_pParent;
 
 	//! pValue pointer must remain valid until after calling destructor of this custom profiler section.
-	__forceinline CCustomProfilerSection( CFrameProfiler *profiler,int *pValue )
+	__forceinline CCustomProfilerSection(CFrameProfiler* profiler, int* pValue)
 	{
 		m_pValue = pValue;
 		m_pFrameProfiler = profiler;
 		if (profiler)
-			m_pFrameProfiler->m_pISystem->GetIProfileSystem()->StartCustomSection( this );
+			m_pFrameProfiler->m_pISystem->GetIProfileSystem()->StartCustomSection(this);
 	}
 	__forceinline ~CCustomProfilerSection()
 	{
 		if (m_pFrameProfiler)
-			m_pFrameProfiler->m_pISystem->GetIProfileSystem()->EndCustomSection( this );
+			m_pFrameProfiler->m_pISystem->GetIProfileSystem()->EndCustomSection(this);
 	}
 };
 

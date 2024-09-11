@@ -3,13 +3,13 @@
 
 namespace primitives {
 
-////////////////////////// primitives //////////////////////
+	////////////////////////// primitives //////////////////////
 
 	struct primitive {
 	};
 
 	struct box : primitive {
-		enum entype { type=0 };
+		enum entype { type = 0 };
 		matrix3x3f Basis;
 		int bOriented;
 		vectorf center;
@@ -17,7 +17,7 @@ namespace primitives {
 	};
 
 	struct triangle : primitive {
-		enum entype { type=1 };
+		enum entype { type = 1 };
 		vectorf pt[3];
 		vectorf n;
 	};
@@ -30,17 +30,17 @@ namespace primitives {
 		matrix3x3f Basis;
 		int bOriented;
 		vectorf origin;
-		vector2df step,stepr;
+		vector2df step, stepr;
 		vector2di size;
 		vector2di stride;
 
-		int inrange(int ix, int iy) {	return isneg(ix-size.x) & isnonneg(ix) & isneg(iy-size.y) & isnonneg(iy); }
-		int getcell_safe(int ix,int iy) { int mask=-inrange(ix,iy); return iy*stride.y+ix*stride.x&mask | size.x*size.y&~mask; }
+		int inrange(int ix, int iy) { return isneg(ix - size.x) & isnonneg(ix) & isneg(iy - size.y) & isnonneg(iy); }
+		int getcell_safe(int ix, int iy) { int mask = -inrange(ix, iy); return iy * stride.y + ix * stride.x & mask | size.x * size.y & ~mask; }
 	};
 
 	struct heightfield : grid {
-		enum entype { type=2 };
-		heightfield& operator=(const heightfield &src) {
+		enum entype { type = 2 };
+		heightfield& operator=(const heightfield& src) {
 			step = src.step; stepr = src.stepr;
 			size = src.size; stride = src.stride;
 			pdata = src.pdata; heightscale = src.heightscale;
@@ -49,43 +49,43 @@ namespace primitives {
 			return *this;
 		}
 
-		float getheight(int ix,int iy) const { return getheight(ix*stride.x+iy*stride.y); }
-		int gettype(int ix,int iy) const { return gettype(ix*stride.x+iy*stride.y); }
-		float getheight(int icell) const { return pdata[icell]*heightscale; }
-		int gettype(int icell) const { 
-			int itype=pflags[icell]>>typepower & typemask, idelta=itype-typehole;
-			return itype | ((idelta-1)>>31 ^ idelta>>31);
+		float getheight(int ix, int iy) const { return getheight(ix * stride.x + iy * stride.y); }
+		int gettype(int ix, int iy) const { return gettype(ix * stride.x + iy * stride.y); }
+		float getheight(int icell) const { return pdata[icell] * heightscale; }
+		int gettype(int icell) const {
+			int itype = pflags[icell] >> typepower & typemask, idelta = itype - typehole;
+			return itype | ((idelta - 1) >> 31 ^ idelta >> 31);
 		}
 
-		unsigned short *pdata;
+		unsigned short* pdata;
 		float heightscale;
-		unsigned short *pflags;
+		unsigned short* pflags;
 		unsigned short typemask;
 		int typehole;
 		int typepower;
 	};
 
 	struct ray : primitive {
-		enum entype { type=3 };
+		enum entype { type = 3 };
 		vectorf origin;
 		vectorf dir;
 	};
 
 	struct sphere : primitive {
-		enum entype { type=4 };
+		enum entype { type = 4 };
 		vectorf center;
 		float r;
 	};
 
 	struct cylinder : primitive {
-		enum entype { type=5 };
+		enum entype { type = 5 };
 		vectorf center;
 		vectorf axis;
-		float r,hh;
+		float r, hh;
 	};
 
 	struct plane : primitive {
-		enum entype { type=6 };
+		enum entype { type = 6 };
 		vectorf n;
 		vectorf origin;
 	};
@@ -96,21 +96,21 @@ namespace primitives {
 }
 
 struct prim_inters {
-	prim_inters() { minPtDist2=0.0f; }
+	prim_inters() { minPtDist2 = 0.0f; }
 	vectorf pt[2];
 	vectorf n;
 	unsigned char iFeature[2][2];
 	float minPtDist2;
 	short id[2];
 	int iNode[2];
-	vectorf *ptborder;
-	int nborderpt,nbordersz;
+	vectorf* ptborder;
+	int nborderpt, nbordersz;
 	vectorf ptbest;
 	int nBestPtVal;
 };
 
 struct contact {
-	real t,taux;
+	real t, taux;
 	vectorf pt;
 	vectorf n;
 	unsigned int iFeature[2];
@@ -121,14 +121,14 @@ const int NPRIMS = 8;
 ///////////////////// geometry contact structures ///////////////////
 
 struct geom_contact_area {
-	enum entype { polygon,polyline };
+	enum entype { polygon, polyline };
 	int type;
 	int npt;
 	int nmaxpt;
 	float minedge;
-	int *piPrim[2];
-	int *piFeature[2];
-	vectorf *pt;
+	int* piPrim[2];
+	int* piFeature[2];
+	vectorf* pt;
 	vectorf n1; // normal of other object surface (or edge)
 };
 
@@ -143,11 +143,11 @@ struct geom_contact {
 	int iPrim[2];
 	int iFeature[2];
 	int iNode[2]; // BV-tree nodes of contacting primitives
-	vectorf *ptborder; // intersection border
+	vectorf* ptborder; // intersection border
 	int nborderpt;
 	vectorf center;
 	bool bBorderConsecutive;
-	geom_contact_area *parea;
+	geom_contact_area* parea;
 };
 
 #endif

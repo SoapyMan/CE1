@@ -11,19 +11,19 @@ struct IVisArea;
 
 enum EERType
 {
-  eERType_Unknown,
-  eERType_Brush,
-  eERType_Vegetation
+	eERType_Unknown,
+	eERType_Brush,
+	eERType_Vegetation
 };
 
 struct OcclusionTestClient
 {
-  OcclusionTestClient() { memset(this,0,sizeof(OcclusionTestClient)); bLastResult = true; }
-  unsigned char ucOcclusionByTerrainFrames;
-  unsigned char ucOcclusionByObjectsFrames;
-  bool  bLastResult;
-  int   nLastVisibleFrameID;
-  //	class CREOcclusionQuery * arrREOcclusionQuery[2];
+	OcclusionTestClient() { memset(this, 0, sizeof(OcclusionTestClient)); bLastResult = true; }
+	unsigned char ucOcclusionByTerrainFrames;
+	unsigned char ucOcclusionByObjectsFrames;
+	bool  bLastResult;
+	int   nLastVisibleFrameID;
+	//	class CREOcclusionQuery * arrREOcclusionQuery[2];
 };
 
 //! rendering properties/state of entity
@@ -36,32 +36,32 @@ struct IEntityRenderState
 {
 	IEntityRenderState()
 	{	// init vars
-    pShadowMapInfo = 0;
-//    nScissorX1=nScissorY1=nScissorX2=nScissorY2=0;
+		pShadowMapInfo = 0;
+		//    nScissorX1=nScissorY1=nScissorX2=nScissorY2=0;
 	}
 
 	virtual ~IEntityRenderState()
 	{
 		delete pShadowMapInfo;
-		pShadowMapInfo=0;
+		pShadowMapInfo = 0;
 	}
 
 	// used for shadow maps
-  struct ShadowMapInfo{
-    ShadowMapInfo() { memset(this,0,sizeof(ShadowMapInfo)); }
-		void Release(enum EERType eEntType, struct IRenderer * pRenderer);
-    list2<struct ShadowMapLightSourceInstance> * pShadowMapCasters;
-    struct ShadowMapLightSource * pShadowMapFrustumContainer;
-		struct ShadowMapLightSource * pShadowMapFrustumContainerPassiveCasters;
-    list2<struct CLeafBuffer *> * pShadowMapLeafBuffersList;
-    Vec3 vPrevTerShadowPos; 
-    float fPrevTerShadowRadius;
-  } * pShadowMapInfo;
+	struct ShadowMapInfo {
+		ShadowMapInfo() { memset(this, 0, sizeof(ShadowMapInfo)); }
+		void Release(enum EERType eEntType, struct IRenderer* pRenderer);
+		list2<struct ShadowMapLightSourceInstance>* pShadowMapCasters;
+		struct ShadowMapLightSource* pShadowMapFrustumContainer;
+		struct ShadowMapLightSource* pShadowMapFrustumContainerPassiveCasters;
+		list2<struct CLeafBuffer*>* pShadowMapLeafBuffersList;
+		Vec3 vPrevTerShadowPos;
+		float fPrevTerShadowRadius;
+	} *pShadowMapInfo;
 
 	// tmp flaot (distance to the light source, used for sorting)
 	float fTmpDistance;
 
-//  unsigned short nScissorX1, nScissorY1, nScissorX2, nScissorY2;
+	//  unsigned short nScissorX1, nScissorY1, nScissorX2, nScissorY2;
 
 	unsigned int nStrongestLightId;
 };
@@ -94,182 +94,184 @@ struct IEntityRenderState
 
 struct IEntityRender
 {
-  IEntityRender()
-  {
-    m_dwRndFlags = 0;
-    m_pEntityRenderState = 0;
-    m_narrDrawFrames[0] = m_narrDrawFrames[1] = 0;
-    m_narrShadowFrames[0] = m_narrShadowFrames[1] = 0;
-    ucViewDistRatio=100;
-    ucLodRatio=100;
-    m_pSector = 0; 
-    m_pVisArea=0;
-		m_vWSBoxMin=m_vWSBoxMax=Vec3(0,0,0);
-		m_fWSMaxViewDist=m_fWSRadius=0;
+	IEntityRender()
+	{
+		m_dwRndFlags = 0;
+		m_pEntityRenderState = 0;
+		m_narrDrawFrames[0] = m_narrDrawFrames[1] = 0;
+		m_narrShadowFrames[0] = m_narrShadowFrames[1] = 0;
+		ucViewDistRatio = 100;
+		ucLodRatio = 100;
+		m_pSector = 0;
+		m_pVisArea = 0;
+		m_vWSBoxMin = m_vWSBoxMax = Vec3(0, 0, 0);
+		m_fWSMaxViewDist = m_fWSRadius = 0;
 		m_arrfDistance[0] = m_arrfDistance[1] = 0;
 		m_nFogVolumeID = 0;
 		m_bForceBBox = 0;
-  }
+	}
 
-	virtual const char * GetEntityClassName() const = 0;
-	virtual const Vec3 & GetPos(bool bWorldOnly = true) const = 0;
-	virtual const Vec3 & GetAngles(int realA=0) const = 0;
+	virtual const char* GetEntityClassName() const = 0;
+	virtual const Vec3& GetPos(bool bWorldOnly = true) const = 0;
+	virtual const Vec3& GetAngles(int realA = 0) const = 0;
 	virtual float GetScale() const = 0;
-	virtual const char *GetName() const = 0;
-	virtual void	GetRenderBBox( Vec3 &mins,Vec3 &maxs ) = 0;
-	virtual void	GetBBox( Vec3 &mins,Vec3 &maxs ) { GetRenderBBox( mins, maxs ); }
+	virtual const char* GetName() const = 0;
+	virtual void	GetRenderBBox(Vec3& mins, Vec3& maxs) = 0;
+	virtual void	GetBBox(Vec3& mins, Vec3& maxs) { GetRenderBBox(mins, maxs); }
 	virtual float GetRenderRadius() const = 0;
-  virtual bool HasChanged() { return false; }
-	virtual bool DrawEntity(const struct SRendParams & EntDrawParams) = 0;
+	virtual bool HasChanged() { return false; }
+	virtual bool DrawEntity(const struct SRendParams& EntDrawParams) = 0;
 	virtual bool IsStatic() const = 0;
-  virtual struct IStatObj * GetEntityStatObj( unsigned int nSlot, Matrix44 * pMatrix = NULL, bool bReturnOnlyVisible = false) { return 0; }
-  virtual void SetEntityStatObj( unsigned int nSlot, IStatObj * pStatObj, Matrix44 * pMatrix = NULL ) {};
-	virtual struct ICryCharInstance* GetEntityCharacter( unsigned int nSlot, Matrix44 * pMatrix = NULL ) { return 0; }
-	virtual void Physicalize(bool bInstant=false) {} 
-	virtual class CDLight	* GetLight() { return 0; }
+	virtual struct IStatObj* GetEntityStatObj(unsigned int nSlot, Matrix44* pMatrix = NULL, bool bReturnOnlyVisible = false) { return 0; }
+	virtual void SetEntityStatObj(unsigned int nSlot, IStatObj* pStatObj, Matrix44* pMatrix = NULL) {};
+	virtual struct ICryCharInstance* GetEntityCharacter(unsigned int nSlot, Matrix44* pMatrix = NULL) { return 0; }
+	virtual void Physicalize(bool bInstant = false) {}
+	virtual class CDLight* GetLight() { return 0; }
 	virtual struct IEntityContainer* GetContainer() const { return 0; }
- 
+
 	float m_fWSMaxViewDist;
 
-  // rendering flags
-  virtual void SetRndFlags(unsigned int dwFlags) { m_dwRndFlags = dwFlags; }
-  virtual void SetRndFlags(unsigned int dwFlags, bool bEnable)
-  { if(bEnable) m_dwRndFlags |= dwFlags; else m_dwRndFlags &= ~dwFlags; }
-  virtual unsigned int GetRndFlags() { return m_dwRndFlags; }
-  int m_dwRndFlags; 
+	// rendering flags
+	virtual void SetRndFlags(unsigned int dwFlags) { m_dwRndFlags = dwFlags; }
+	virtual void SetRndFlags(unsigned int dwFlags, bool bEnable)
+	{
+		if (bEnable) m_dwRndFlags |= dwFlags; else m_dwRndFlags &= ~dwFlags;
+	}
+	virtual unsigned int GetRndFlags() { return m_dwRndFlags; }
+	int m_dwRndFlags;
 
-  // object draw frames (set if was drawn)
-  void SetDrawFrame( int nFrameID, int nRecursionLevel ) { m_narrDrawFrames[nRecursionLevel] = nFrameID; }
-  int GetDrawFrame( int nRecursionLevel = 0 ) const{ return m_narrDrawFrames[nRecursionLevel]; }
-  int m_narrDrawFrames[2];	
+	// object draw frames (set if was drawn)
+	void SetDrawFrame(int nFrameID, int nRecursionLevel) { m_narrDrawFrames[nRecursionLevel] = nFrameID; }
+	int GetDrawFrame(int nRecursionLevel = 0) const { return m_narrDrawFrames[nRecursionLevel]; }
+	int m_narrDrawFrames[2];
 
-  // shadow draw frames (set if was drawn)
-  void SetShadowFrame( unsigned short nFrameID, int nRecursionLevel ) { m_narrShadowFrames[nRecursionLevel] = nFrameID; }
-  unsigned short GetShadowFrame( int nRecursionLevel = 0 ) const{ return m_narrShadowFrames[nRecursionLevel]; }
+	// shadow draw frames (set if was drawn)
+	void SetShadowFrame(unsigned short nFrameID, int nRecursionLevel) { m_narrShadowFrames[nRecursionLevel] = nFrameID; }
+	unsigned short GetShadowFrame(int nRecursionLevel = 0) const { return m_narrShadowFrames[nRecursionLevel]; }
 
-  // current distance to the camera (with reqursioin)
-  float m_arrfDistance[2];
+	// current distance to the camera (with reqursioin)
+	float m_arrfDistance[2];
 
-  //! contains rendering properties, not 0 only if entity going to be rendered
-  struct IEntityRenderState * m_pEntityRenderState;
+	//! contains rendering properties, not 0 only if entity going to be rendered
+	struct IEntityRenderState* m_pEntityRenderState;
 
-  unsigned short m_narrShadowFrames[2];	
+	unsigned short m_narrShadowFrames[2];
 
-  Vec3 m_vWSBoxMin, m_vWSBoxMax;
-  float m_fWSRadius;
-//##  float m_fMaxViewDist;
+	Vec3 m_vWSBoxMin, m_vWSBoxMax;
+	float m_fWSRadius;
+	//##  float m_fMaxViewDist;
 	unsigned char m_bForceBBox;
-  unsigned char ucViewDistRatio;
-  unsigned char ucLodRatio;
+	unsigned char ucViewDistRatio;
+	unsigned char ucLodRatio;
 	unsigned char m_nFogVolumeID;
 
-  // cur areas info
-  struct CSectorInfo* m_pSector; 
-  struct CVisArea * m_pVisArea;
+	// cur areas info
+	struct CSectorInfo* m_pSector;
+	struct CVisArea* m_pVisArea;
 
 	// Used for occlusion culling
 	OcclusionTestClient OcclState;
 
-  //! Access to the EntityRenderState for 3dengine
-  IEntityRenderState * & GetEntityRS() { return m_pEntityRenderState; }
+	//! Access to the EntityRenderState for 3dengine
+	IEntityRenderState*& GetEntityRS() { return m_pEntityRenderState; }
 
 	//## Lightmaps (here dot3lightmaps only)
 
 	// Summary: 
 	//   Assigns a texture set reference for dot3 lightmapping. The object will Release() it at the end of its lifetime
-  virtual void SetLightmap(struct RenderLMData * pLMData, float *pTexCoords, UINT iNumTexCoords, int nLod=0) {};
+	virtual void SetLightmap(struct RenderLMData* pLMData, float* pTexCoords, UINT iNumTexCoords, int nLod = 0) {};
 
 	// Summary: 
 	//   Assigns a texture set reference for dot3 lightmapping. The object will Release() it at the end of its lifetime, special call from lightmap serializer/compiler to set occlusion map values
-	virtual void SetLightmap(RenderLMData *pLMData, float *pTexCoords, UINT iNumTexCoords, const unsigned char cucOcclIDCount, const std::vector<std::pair<EntityId, EntityId> >& aIDs){};
+	virtual void SetLightmap(RenderLMData* pLMData, float* pTexCoords, UINT iNumTexCoords, const unsigned char cucOcclIDCount, const std::vector<std::pair<EntityId, EntityId> >& aIDs) {};
 
 	//  Returns:
 	//    true if there are lightmap texture coodinates and a lightmap texture assignment
-  virtual bool HasLightmap(int nLod) { return false; };
+	virtual bool HasLightmap(int nLod) { return false; };
 	//  Returns:
 	//    Lightmap texture set for this object, or NULL if there's none assigned. Don't release obtained copy, it's not a reference
 	//  See Also: 
 	//    SetLightmap
-  virtual RenderLMData * GetLightmap(int nLod) { return 0; };
+	virtual RenderLMData* GetLightmap(int nLod) { return 0; };
 	// Summary:
 	//   Returns vertex buffer holding instance specific texture coordinate set for dot3 lightmaps
-  virtual struct CLeafBuffer * GetLightmapTexCoord(int nLod) { return 0; };
+	virtual struct CLeafBuffer* GetLightmapTexCoord(int nLod) { return 0; };
 
 
 	virtual bool IsEntityHasSomethingToRender() = 0;
 
 	virtual bool IsEntityAreasVisible() = 0;
 
-  // Returns:
-	//   Current VisArea or null if in outdoors or entity was not registered in 3dengine
-  IVisArea * GetEntityVisArea() { return (IVisArea*)m_pVisArea; }
+	// Returns:
+	  //   Current VisArea or null if in outdoors or entity was not registered in 3dengine
+	IVisArea* GetEntityVisArea() { return (IVisArea*)m_pVisArea; }
 
-  /* Allows to adjust defailt max view distance settings, 
-    if fMaxViewDistRatio is 100 - default max view distance is used */
-  void SetViewDistRatio(int nViewDistRatio) { ucViewDistRatio = crymin(254,crymax(0,nViewDistRatio)); }
+	/* Allows to adjust defailt max view distance settings,
+	  if fMaxViewDistRatio is 100 - default max view distance is used */
+	void SetViewDistRatio(int nViewDistRatio) { ucViewDistRatio = crymin(254, crymax(0, nViewDistRatio)); }
 
 	/*! Makes object visible at any distance */
 	void SetViewDistUnlimited() { ucViewDistRatio = 255; }
 
 	// Summary:
 	//   Retrieves the view distance settings
-	int GetViewDistRatio() { return (ucViewDistRatio==255) ? 1000l : ucViewDistRatio; }
+	int GetViewDistRatio() { return (ucViewDistRatio == 255) ? 1000l : ucViewDistRatio; }
 
-  //! return max view distance ratio
-  virtual float GetViewDistRatioNormilized() { return 0.01f*GetViewDistRatio(); }
+	//! return max view distance ratio
+	virtual float GetViewDistRatioNormilized() { return 0.01f * GetViewDistRatio(); }
 
-  /*! Allows to adjust defailt lod distance settings, 
-  if fLodRatio is 100 - default lod distance is used */
-  void SetLodRatio(int nLodRatio) { ucLodRatio = crymin(255,crymax(0,nLodRatio)); }
+	/*! Allows to adjust defailt lod distance settings,
+	if fLodRatio is 100 - default lod distance is used */
+	void SetLodRatio(int nLodRatio) { ucLodRatio = crymin(255, crymax(0, nLodRatio)); }
 
-  //! return lod distance ratio
-  float GetLodRatioNormilized() { return 0.01f*ucLodRatio; }
+	//! return lod distance ratio
+	float GetLodRatioNormilized() { return 0.01f * ucLodRatio; }
 
 	// get/set physical entity
 	virtual class IPhysicalEntity* GetPhysics() const = 0;
-	virtual void SetPhysics( IPhysicalEntity* pPhys ) = 0;
+	virtual void SetPhysics(IPhysicalEntity* pPhys) = 0;
 
 	virtual ~IEntityRender() {};
 
 	//! Set override material for this instance.
-	virtual void SetMaterial( IMatInfo *pMatInfo ) = 0;
+	virtual void SetMaterial(IMatInfo* pMatInfo) = 0;
 	//! Query override material of this instance.
 	virtual IMatInfo* GetMaterial() const = 0;
-  virtual int GetEditorObjectId() { return 0; }
-  virtual void SetEditorObjectId(int nEditorObjectId) {}
+	virtual int GetEditorObjectId() { return 0; }
+	virtual void SetEditorObjectId(int nEditorObjectId) {}
 
-  //! Physicalize if it isn't already
-  virtual void CheckPhysicalized() {};
+	//! Physicalize if it isn't already
+	virtual void CheckPhysicalized() {};
 
-  virtual int DestroyPhysicalEntityCallback(IPhysicalEntity *pent) { return 0; }
+	virtual int DestroyPhysicalEntityCallback(IPhysicalEntity* pent) { return 0; }
 
-  virtual void SetStatObjGroupId(int nStatObjInstanceGroupId) { }
+	virtual void SetStatObjGroupId(int nStatObjInstanceGroupId) { }
 
-  virtual float GetMaxViewDist() { return 0; }
+	virtual float GetMaxViewDist() { return 0; }
 
-  virtual void Serialize(bool bSave, struct ICryPak * pPak, FILE * f) {}
-  virtual EERType GetEntityRenderType() { return eERType_Unknown; }
-  virtual void Dephysicalize( ) {}
-  virtual void Dematerialize( ) {}
-  virtual int GetMemoryUsage() { return 0; }
+	virtual void Serialize(bool bSave, struct ICryPak* pPak, FILE* f) {}
+	virtual EERType GetEntityRenderType() { return eERType_Unknown; }
+	virtual void Dephysicalize() {}
+	virtual void Dematerialize() {}
+	virtual int GetMemoryUsage() { return 0; }
 
-	virtual list2<struct ShadowMapLightSourceInstance> * GetShadowMapCasters()
+	virtual list2<struct ShadowMapLightSourceInstance>* GetShadowMapCasters()
 	{
-		if(m_pEntityRenderState && m_pEntityRenderState->pShadowMapInfo)
+		if (m_pEntityRenderState && m_pEntityRenderState->pShadowMapInfo)
 			return m_pEntityRenderState->pShadowMapInfo->pShadowMapCasters;
 		return 0;
 	}
 
-	virtual struct ShadowMapLightSource * GetShadowMapFrustumContainer()
+	virtual struct ShadowMapLightSource* GetShadowMapFrustumContainer()
 	{
-		if(m_pEntityRenderState && m_pEntityRenderState->pShadowMapInfo)
+		if (m_pEntityRenderState && m_pEntityRenderState->pShadowMapInfo)
 			return m_pEntityRenderState->pShadowMapInfo->pShadowMapFrustumContainer;
 		return 0;
 	}
 
-	virtual struct ShadowMapLightSource * GetShadowMapFrustumContainerPassiveCasters()
+	virtual struct ShadowMapLightSource* GetShadowMapFrustumContainerPassiveCasters()
 	{
-		if(m_pEntityRenderState && m_pEntityRenderState->pShadowMapInfo)
+		if (m_pEntityRenderState && m_pEntityRenderState->pShadowMapInfo)
 			return m_pEntityRenderState->pShadowMapInfo->pShadowMapFrustumContainerPassiveCasters;
 		return 0;
 	}

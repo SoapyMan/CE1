@@ -3,7 +3,7 @@
   Copyright (c) 2001 Crytek Studios. All Rights Reserved.
 
   Revision history:
-    * Created by Khonich Andrey
+	* Created by Khonich Andrey
 
 =============================================================================*/
 
@@ -17,272 +17,272 @@
 
 ///#include "CryHeaders.h"
 
-_inline float FClamp( float X, float Min, float Max )
+_inline float FClamp(float X, float Min, float Max)
 {
-  return X<Min ? Min : X<Max ? X : Max;
+	return X < Min ? Min : X < Max ? X : Max;
 }
 
 class CFColor
 {
 public:
-  float r, g, b, a;
+	float r, g, b, a;
 
 public:
-  CFColor() {}
-  CFColor(const Vec3 & vVec)
-  {
-    r = vVec.x;
-    g = vVec.y;
-    b = vVec.z;
-    a = 1.f;
-  }
-  CFColor(float lr, float lg, float lb, float la = 1.0f)
-  {
-    r = lr;
-    g = lg;
-    b = lb;
-    a = la;
-  }
-  CFColor(float *cols)
-  {
-    r = cols[0];
-    g = cols[1];
-    b = cols[2];
-    a = cols[3];
-  }
-  CFColor(unsigned int c)
-  {
-    r = (c & 0xff) / 255.0f;
-    g = ((c>>8) & 0xff) / 255.0f;
-    b = ((c>>16) & 0xff) / 255.0f;
-    a = ((c>>24) & 0xff) / 255.0f;
-  }
-  CFColor(unsigned char c[4])
-  {
-    r = c[0] / 255.0f;
-    g = c[1] / 255.0f;
-    b = c[2] / 255.0f;
-    a = c[3] / 255.0f;
-  }
-/*  CFColor(CryIRGB *c)
-  {
-    r = c->r / 255.0f;
-    g = c->g / 255.0f;
-    b = c->b / 255.0f;
-    a = 1.0f;
-  }*/
-
-  CFColor(float c)
-  {
-    r = g = b = a = c;
-  }
-
-	void	Set(float fR,float fG,float fB,float fA=1.0f)
+	CFColor() {}
+	CFColor(const Vec3& vVec)
 	{
-		r=fR;g=fG;b=fB;a=fA;
+		r = vVec.x;
+		g = vVec.y;
+		b = vVec.z;
+		a = 1.f;
+	}
+	CFColor(float lr, float lg, float lb, float la = 1.0f)
+	{
+		r = lr;
+		g = lg;
+		b = lb;
+		a = la;
+	}
+	CFColor(float* cols)
+	{
+		r = cols[0];
+		g = cols[1];
+		b = cols[2];
+		a = cols[3];
+	}
+	CFColor(unsigned int c)
+	{
+		r = (c & 0xff) / 255.0f;
+		g = ((c >> 8) & 0xff) / 255.0f;
+		b = ((c >> 16) & 0xff) / 255.0f;
+		a = ((c >> 24) & 0xff) / 255.0f;
+	}
+	CFColor(unsigned char c[4])
+	{
+		r = c[0] / 255.0f;
+		g = c[1] / 255.0f;
+		b = c[2] / 255.0f;
+		a = c[3] / 255.0f;
+	}
+	/*  CFColor(CryIRGB *c)
+	  {
+		r = c->r / 255.0f;
+		g = c->g / 255.0f;
+		b = c->b / 255.0f;
+		a = 1.0f;
+	  }*/
+
+	CFColor(float c)
+	{
+		r = g = b = a = c;
 	}
 
-  // Binary math operators.
-  friend CFColor operator*( float Scale, const CFColor& C )
-  {
-    return CFColor( C.r * Scale, C.g * Scale, C.b * Scale, C.a * Scale );
-  }
-  CFColor operator+( const CFColor& C ) const
-  {
-    return CFColor( r + C.r, g + C.g, b + C.b, a + C.a );
-  }
-  CFColor operator-( const CFColor& C ) const
-  {
-    return CFColor( r - C.r, g - C.g, b - C.b, a - C.a );
-  }
-  CFColor operator*( float Scale ) const
-  {
-    return CFColor( r * Scale, g * Scale, b * Scale, a * Scale );
-  }
-  CFColor operator/( float Scale ) const
-  {
-    float IScale = 1.0f/Scale;
-    return CFColor( r * IScale, g * IScale, b * IScale, a * IScale );
-  }
-  CFColor operator*( const CFColor& C ) const
-  {
-    return CFColor( r * C.r, g * C.g, b * C.b, a * C.a );
-  }
+	void	Set(float fR, float fG, float fB, float fA = 1.0f)
+	{
+		r = fR; g = fG; b = fB; a = fA;
+	}
 
-  // Binary comparison operators.
-  bool operator==( const CFColor& C ) const
-  {
-    return r==C.r && g==C.g && b==C.b && a==C.a;
-  }
-  bool operator!=( const CFColor& C ) const
-  {
-    return r!=C.r || g!=C.g || b!=C.b || a!=C.a;
-  }
+	// Binary math operators.
+	friend CFColor operator*(float Scale, const CFColor& C)
+	{
+		return CFColor(C.r * Scale, C.g * Scale, C.b * Scale, C.a * Scale);
+	}
+	CFColor operator+(const CFColor& C) const
+	{
+		return CFColor(r + C.r, g + C.g, b + C.b, a + C.a);
+	}
+	CFColor operator-(const CFColor& C) const
+	{
+		return CFColor(r - C.r, g - C.g, b - C.b, a - C.a);
+	}
+	CFColor operator*(float Scale) const
+	{
+		return CFColor(r * Scale, g * Scale, b * Scale, a * Scale);
+	}
+	CFColor operator/(float Scale) const
+	{
+		float IScale = 1.0f / Scale;
+		return CFColor(r * IScale, g * IScale, b * IScale, a * IScale);
+	}
+	CFColor operator*(const CFColor& C) const
+	{
+		return CFColor(r * C.r, g * C.g, b * C.b, a * C.a);
+	}
 
-  // Assignment operators.
-  CFColor operator=( const float c )
-  {
-    r = g = b = a = c;
-    return *this;
-  }
-  CFColor operator=( const CFColor& C )
-  {
-    r = C.r;
-    g = C.g;
-    b = C.b;
-    a = C.a;
-    return *this;
-  }
-  CFColor operator+=( const CFColor& C )
-  {
-    r += C.r; g += C.g; b += C.b; a += C.a;
-    return *this;
-  }
-  CFColor operator-=( const CFColor& C )
-  {
-    r -= C.r; g -= C.g; b -= C.b; a -= C.a;
-    return *this;
-  }
-  CFColor operator*=( float Scale )
-  {
-    r *= Scale; g *= Scale; b *= Scale; a *= Scale;
-    return *this;
-  }
-  CFColor operator/=( float V )
-  {
-    float IV = 1.0f/V;
-    r *= IV; g *= IV; b *= IV; a *= IV;
-    return *this;
-  }
-  CFColor operator*=( const CFColor& C )
-  {
-    r *= C.r; g *= C.g; b *= C.b; a *= C.a;
-    return *this;
-  }
-  CFColor operator/=( const CFColor& C )
-  {
-    r /= C.r; g /= C.g; b /= C.b; a /= C.a;
-    return *this;
-  }
+	// Binary comparison operators.
+	bool operator==(const CFColor& C) const
+	{
+		return r == C.r && g == C.g && b == C.b && a == C.a;
+	}
+	bool operator!=(const CFColor& C) const
+	{
+		return r != C.r || g != C.g || b != C.b || a != C.a;
+	}
 
-  _inline const float& operator[](int i) const { return (&r)[i]; }
+	// Assignment operators.
+	CFColor operator=(const float c)
+	{
+		r = g = b = a = c;
+		return *this;
+	}
+	CFColor operator=(const CFColor& C)
+	{
+		r = C.r;
+		g = C.g;
+		b = C.b;
+		a = C.a;
+		return *this;
+	}
+	CFColor operator+=(const CFColor& C)
+	{
+		r += C.r; g += C.g; b += C.b; a += C.a;
+		return *this;
+	}
+	CFColor operator-=(const CFColor& C)
+	{
+		r -= C.r; g -= C.g; b -= C.b; a -= C.a;
+		return *this;
+	}
+	CFColor operator*=(float Scale)
+	{
+		r *= Scale; g *= Scale; b *= Scale; a *= Scale;
+		return *this;
+	}
+	CFColor operator/=(float V)
+	{
+		float IV = 1.0f / V;
+		r *= IV; g *= IV; b *= IV; a *= IV;
+		return *this;
+	}
+	CFColor operator*=(const CFColor& C)
+	{
+		r *= C.r; g *= C.g; b *= C.b; a *= C.a;
+		return *this;
+	}
+	CFColor operator/=(const CFColor& C)
+	{
+		r /= C.r; g /= C.g; b /= C.b; a /= C.a;
+		return *this;
+	}
 
-  _inline float& operator[](int i) { return (&r)[i]; }
+	_inline const float& operator[](int i) const { return (&r)[i]; }
 
-  float* operator * ()                 { return (&r); }
+	_inline float& operator[](int i) { return (&r)[i]; }
 
-  unsigned int GetTrue()
-  {
-    union
-    {
-      struct
-      {
-        unsigned char R, G, B, A;
-      };
-      unsigned int D;
-    }C;
-    C.R = uchar(r * 255.0f); 
-    C.G = uchar(g * 255.0f); 
-    C.B = uchar(b * 255.0f); 
-    C.A = uchar(a * 255.0f);
-    return C.D;
-  }
+	float* operator * () { return (&r); }
 
-  unsigned int GetTrueInv()
-  {
-    union
-    {
-      struct
-      {
-        unsigned char R, G, B, A;
-      };
-      unsigned int D;
-    }C;
-    C.R = uchar(255.0f-r*255.0f); 
-    C.G = uchar(255.0f-g*255.0f); 
-    C.B = uchar(255.0f-b*255.0f); 
-    C.A = uchar(255.0f-a*255.0f);
-    return C.D;
-  }
+	unsigned int GetTrue()
+	{
+		union
+		{
+			struct
+			{
+				unsigned char R, G, B, A;
+			};
+			unsigned int D;
+		}C;
+		C.R = uchar(r * 255.0f);
+		C.G = uchar(g * 255.0f);
+		C.B = uchar(b * 255.0f);
+		C.A = uchar(a * 255.0f);
+		return C.D;
+	}
 
-  unsigned int GetTrueCol()
-  {
-    union
-    {
-      struct
-      {
-        unsigned char R, G, B, A;
-      };
-      unsigned int D;
-    }C;
-//    C.R = r * 255.0f; C.G = g * 255.0f; C.B = b * 255.0f; C.A = 255;
-    C.R = uchar(r * 255.0f); 
-    C.G = uchar(g * 255.0f); 
-    C.B = uchar(b * 255.0f); 
-    C.A = uchar(255.0f);
-    return C.D;
-  }
+	unsigned int GetTrueInv()
+	{
+		union
+		{
+			struct
+			{
+				unsigned char R, G, B, A;
+			};
+			unsigned int D;
+		}C;
+		C.R = uchar(255.0f - r * 255.0f);
+		C.G = uchar(255.0f - g * 255.0f);
+		C.B = uchar(255.0f - b * 255.0f);
+		C.A = uchar(255.0f - a * 255.0f);
+		return C.D;
+	}
 
-  void ScaleCol (float f)
-  {
-    r *= f; g *= f; b *= f;
-  }
+	unsigned int GetTrueCol()
+	{
+		union
+		{
+			struct
+			{
+				unsigned char R, G, B, A;
+			};
+			unsigned int D;
+		}C;
+		//    C.R = r * 255.0f; C.G = g * 255.0f; C.B = b * 255.0f; C.A = 255;
+		C.R = uchar(r * 255.0f);
+		C.G = uchar(g * 255.0f);
+		C.B = uchar(b * 255.0f);
+		C.A = uchar(255.0f);
+		return C.D;
+	}
 
-  float NormalizeCol (CFColor& out)
-  {
-    float max;
+	void ScaleCol(float f)
+	{
+		r *= f; g *= f; b *= f;
+	}
 
-    max = r;
-    if (g > max)
-      max = g;
-    if (b > max)
-      max = b;
+	float NormalizeCol(CFColor& out)
+	{
+		float max;
 
-    if (max == 0)
-      return 0;
+		max = r;
+		if (g > max)
+			max = g;
+		if (b > max)
+			max = b;
 
-    out = *this / max;
+		if (max == 0)
+			return 0;
 
-    return max;
-  }
+		out = *this / max;
 
-  float Normalize (CFColor& out)
-  {
-    float max;
+		return max;
+	}
 
-    max = r;
-    if (g > max)
-      max = g;
-    if (b > max)
-      max = b;
-    if (a > max)
-      max = a;
+	float Normalize(CFColor& out)
+	{
+		float max;
 
-    if (max == 0)
-      return 0;
+		max = r;
+		if (g > max)
+			max = g;
+		if (b > max)
+			max = b;
+		if (a > max)
+			max = a;
 
-    out = *this / max;
+		if (max == 0)
+			return 0;
 
-    return max;
-  }
+		out = *this / max;
 
-  void Clamp(float Min = 0, float Max = 1.0f)
-  {
-    r = ::FClamp(r, Min, Max);
-    g = ::FClamp(g, Min, Max);
-    b = ::FClamp(b, Min, Max);
-    a = ::FClamp(a, Min, Max);
-  }
-  void ClampCol(float Min = 0, float Max = 1.0f)
-  {
-    r = ::FClamp(r, Min, Max);
-    g = ::FClamp(g, Min, Max);
-    b = ::FClamp(b, Min, Max);
-  }
-  void ClampAlpha(float Min = 0, float Max = 1.0f)
-  {
-    a = ::FClamp(a, Min, Max);
-  }
+		return max;
+	}
+
+	void Clamp(float Min = 0, float Max = 1.0f)
+	{
+		r = ::FClamp(r, Min, Max);
+		g = ::FClamp(g, Min, Max);
+		b = ::FClamp(b, Min, Max);
+		a = ::FClamp(a, Min, Max);
+	}
+	void ClampCol(float Min = 0, float Max = 1.0f)
+	{
+		r = ::FClamp(r, Min, Max);
+		g = ::FClamp(g, Min, Max);
+		b = ::FClamp(b, Min, Max);
+	}
+	void ClampAlpha(float Min = 0, float Max = 1.0f)
+	{
+		a = ::FClamp(a, Min, Max);
+	}
 };
 
 #define Col_Aquamarine		CFColor (0.439216f, 0.858824f, 0.576471f)

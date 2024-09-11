@@ -14,13 +14,13 @@
 #ifndef _INETWORK_H_
 #define _INETWORK_H_
 #if defined(WIN32) || defined(WIN64)
-	#ifdef CRYNETWORK_EXPORTS
-	#define CRYNETWORK_API __declspec(dllexport)
-	#else
-	#define CRYNETWORK_API __declspec(dllimport)
+#ifdef CRYNETWORK_EXPORTS
+#define CRYNETWORK_API __declspec(dllexport)
+#else
+#define CRYNETWORK_API __declspec(dllimport)
 #endif
 #else
-	#define CRYNETWORK_API 
+#define CRYNETWORK_API 
 #endif
 
 #if _MSC_VER > 1000
@@ -30,14 +30,14 @@
 #include "platform.h"
 
 #if !defined(PS2) && !defined(_XBOX) && !defined(LINUX)
-	#include <winsock.h>
+#include <winsock.h>
 #else
-	#ifdef _XBOX
-		#include <Xtl.h>
-	#endif
-	#ifdef LINUX
-		#include <sys/socket.h>
-	#endif
+#ifdef _XBOX
+#include <Xtl.h>
+#endif
+#ifdef LINUX
+#include <sys/socket.h>
+#endif
 #endif
 
 #include "Cry_Math.h"					// CVec3
@@ -149,7 +149,7 @@
 
 enum CryNetworkVarible
 {
-	cnvDataStreamTimeout=0
+	cnvDataStreamTimeout = 0
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -176,12 +176,12 @@ struct ISystem;
 struct INetwork
 {
 	//! \return local IPAddress (needed if we have several servers on one machine), 0.0.0.0 if not used
-	virtual DWORD GetLocalIP() const=0;
+	virtual DWORD GetLocalIP() const = 0;
 
 	//! also initialize Ubi.com integration (flaw in the UBI.com SDK - we would like to be able to set the IP later but they
 	//! need it during initialization)
 	//! \param dwLocalIP local IPAddress (needed if we have several servers on one machine)
-	virtual void SetLocalIP( const char *szLocalIP )=0;
+	virtual void SetLocalIP(const char* szLocalIP) = 0;
 
 	/*! create a client object and return the related interface
 			@param pSink a pointer to an object the inplements IClientSink [the object that will receive all notification during the connection]
@@ -189,7 +189,7 @@ struct INetwork
 				will use a "fake connection" (memory based)
 			@return an IClient interface
 	*/
-	virtual IClient *CreateClient(IClientSink *pSink,bool bLocal=false) = 0;
+	virtual IClient* CreateClient(IClientSink* pSink, bool bLocal = false) = 0;
 
 	/*! create and start a server ,return the related interface
 			@param pFactory a pointer to an object the inplements IServerSlotFactory
@@ -197,53 +197,53 @@ struct INetwork
 			@param nPort local IP port where the server will listen
 			@return an IServer interface
 	*/
-	virtual IServer *CreateServer(IServerSlotFactory *pFactory,WORD nPort, bool local=false) = 0;
+	virtual IServer* CreateServer(IServerSlotFactory* pFactory, WORD nPort, bool local = false) = 0;
 
 	//! create an RCon System (remote control system)
-	virtual IRConSystem *CreateRConSystem() = 0;
+	virtual IRConSystem* CreateRConSystem() = 0;
 	/*! create an internet server snooper
 	@param pSink id of the error
 	@return Interface to a server snooper
 	*/
-	virtual INETServerSnooper *CreateNETServerSnooper(INETServerSnooperSink *pSink) = 0;
+	virtual INETServerSnooper* CreateNETServerSnooper(INETServerSnooperSink* pSink) = 0;
 	/*! create a server snooper
 		@param pSink id of the error
 		@return Interface to a server snooper
 	*/
-	virtual IServerSnooper *CreateServerSnooper(IServerSnooperSink *pSink) = 0;
+	virtual IServerSnooper* CreateServerSnooper(IServerSnooperSink* pSink) = 0;
 	/*! return the string representation of a socket error
 		@param err id of the error
 		@return string description of the error
 	*/
-	virtual const char *EnumerateError(NRESULT err) = 0;
+	virtual const char* EnumerateError(NRESULT err) = 0;
 	//! release the interface(and delete the object that implements it)
-  virtual void Release() = 0;
+	virtual void Release() = 0;
 	//!
-	virtual void GetMemoryStatistics(ICrySizer *pSizer) = 0;
+	virtual void GetMemoryStatistics(ICrySizer* pSizer) = 0;
 	//!
 	//! \return interface pointer to the compression helper library, is always valid
-	virtual ICompressionHelper *GetCompressionHelper() = 0;
+	virtual ICompressionHelper* GetCompressionHelper() = 0;
 
 	//! Submit to network list files, that must be matching on Client and Server.
 	virtual void ClearProtectedFiles() = 0;
-	virtual void AddProtectedFile( const char *sFilename ) = 0;
+	virtual void AddProtectedFile(const char* sFilename) = 0;
 	//!
 	//! \return 0 if there is no server registered at this port
-	virtual IServer *GetServerByPort( const WORD wPort ) = 0;
+	virtual IServer* GetServerByPort(const WORD wPort) = 0;
 	//! used to update things like the UBI.com services
-	virtual void UpdateNetwork()=0;
+	virtual void UpdateNetwork() = 0;
 	//! currently used to update UBI.com info and check CDKey
 	//! If it is a UBI type server we should the register, if we have already registered this will do nothing.
 	//! \param szServerName must not be 0
 	//! \param dwPlayerCount >0
-	virtual void OnAfterServerLoadLevel( const char *szServerName, const uint32 dwPlayerCount, const WORD wPort )=0;
+	virtual void OnAfterServerLoadLevel(const char* szServerName, const uint32 dwPlayerCount, const WORD wPort) = 0;
 	//! \return true=it's possible (e.g. logged into UBI.com), false=it's not possible
 	virtual bool VerifyMultiplayerOverInternet() = 0;
 	//! We have to tell Ubisoft that the client has successfully connected
 	//! If ubisoft is not running this won't do anything.
 	virtual void Client_ReJoinGameServer() = 0;
 	//! \return 0 if there is no client
-	virtual IClient *GetClient() = 0;
+	virtual IClient* GetClient() = 0;
 };
 
 
@@ -258,7 +258,7 @@ struct IClientSink
 	/*! called by the client when the disconnection occur
 		@param string representation of the disconnection cause
 	*/
-	virtual void OnXClientDisconnect(const char *szCause) = 0;
+	virtual void OnXClientDisconnect(const char* szCause) = 0;
 	/*! called by the client when the server send a contex setup.
 
 		NOTES: for instance a context are all information that allow the client to load a
@@ -267,11 +267,11 @@ struct IClientSink
 
 		@param stmContext stream that contain the context informations(game dependent)
 	*/
-	virtual void OnXContextSetup(CStream &stmContext) = 0;
+	virtual void OnXContextSetup(CStream& stmContext) = 0;
 	/*! called by the client when some data is received
 		@param stmContext stream that contain the data
 	*/
-	virtual void OnXData(CStream &stm) = 0;
+	virtual void OnXData(CStream& stm) = 0;
 
 	/*! called by the client when the server is very laggy (more than cl_timeout)
 			that means that the client waits cl_timeout seconds, without any data from the server...
@@ -302,7 +302,7 @@ struct IClientSink
 
 	REMARKS:
 		when a disconnection occur the object that implements this interface
-		CANNOT BE REUSED. This mean that the interface must be released 
+		CANNOT BE REUSED. This mean that the interface must be released
 		and a new IClient must be created for each connection.
 */
 struct IClient
@@ -313,25 +313,25 @@ struct IClient
 		@param iAuthorizationSize >0
 		--@param wPort the remote port of the server
 	*/
-	virtual void Connect(const char *szIP, WORD wPort, const BYTE *pbAuthorizationID, unsigned int iAuthorizationSize) = 0;
+	virtual void Connect(const char* szIP, WORD wPort, const BYTE* pbAuthorizationID, unsigned int iAuthorizationSize) = 0;
 	/*! start disconnect from a server
 		@param szCause cause of the disconneciton that will be send to the server
 	*/
-	virtual void Disconnect(const char *szCause) = 0;
+	virtual void Disconnect(const char* szCause) = 0;
 	/*! send reliable data to the server
 		@param stm the bitstream that store the data
 	*/
-	virtual void SendReliable(CStream &stm) = 0;
+	virtual void SendReliable(CStream& stm) = 0;
 	/*! send unreliable data to the server
 		@param stm the bitstream that store the data
 	*/
-	virtual void SendUnreliable(CStream &stm) = 0;
-	/*! notify the server that the contex setup was received and the client now is ready to 
+	virtual void SendUnreliable(CStream& stm) = 0;
+	/*! notify the server that the contex setup was received and the client now is ready to
 		start to receive the data stream.
 		usually called when the client finish to load the level.
 		@param stm the bitstream that store the data that the server will receive(usally player name etc..)
 	*/
-	virtual void ContextReady(CStream &stm) = 0;
+	virtual void ContextReady(CStream& stm) = 0;
 	/*! check if the client is ready to send data to the server
 		@return true if the client is ready,false if not
 	*/
@@ -349,38 +349,38 @@ struct IClient
 		@param nIncomingPackets per sec
 		@param nOutgoingPackets per sec
 	*/
-	virtual void GetBandwidth( float &fIncomingKbPerSec, float &fOutgoinKbPerSec, DWORD &nIncomingPackets, DWORD &nOutgoingPackets )=0;
+	virtual void GetBandwidth(float& fIncomingKbPerSec, float& fOutgoinKbPerSec, DWORD& nIncomingPackets, DWORD& nOutgoingPackets) = 0;
 	/*! release the interface(and delete the object that implements it)
 	*/
 	virtual void Release() = 0;
 	/*! get the average round trip delay through client and server
 		@return the average ping in milliseconds
 	*/
-	virtual unsigned int GetPing()=0;
+	virtual unsigned int GetPing() = 0;
 	//!
-	virtual unsigned int GetRemoteTimestamp(unsigned int nTime)=0;
+	virtual unsigned int GetRemoteTimestamp(unsigned int nTime) = 0;
 	//!
-	virtual unsigned int GetPacketsLostCount()=0;
+	virtual unsigned int GetPacketsLostCount() = 0;
 	//!
-	virtual unsigned int GetUnreliablePacketsLostCount()=0;
+	virtual unsigned int GetUnreliablePacketsLostCount() = 0;
 	//! returns IP of server.
 	virtual CIPAddress GetServerIP() const = 0;
 	//!
-	virtual void InitiateCDKeyAuthorization( const bool inbCDAuthorization ) = 0;
+	virtual void InitiateCDKeyAuthorization(const bool inbCDAuthorization) = 0;
 	//! \param pbAuthorizationID 0 if you wanna create a fake AuthorizationID, otherwise pointer to the AuthorizationID
-	virtual void OnCDKeyAuthorization( BYTE *pbAuthorizationID ) = 0;
+	virtual void OnCDKeyAuthorization(BYTE* pbAuthorizationID) = 0;
 	//!
-	virtual void SetServerIP( const char *szServerIP ) = 0;
+	virtual void SetServerIP(const char* szServerIP) = 0;
 };
 
 struct IServerSnooper
 {
 	/*! query the LAN for servers
 	*/
-	virtual void SearchForLANServers(unsigned int nTime=0) = 0;
+	virtual void SearchForLANServers(unsigned int nTime = 0) = 0;
 	virtual void Update(unsigned int nTime) = 0;
 	//! release the interface(and delete the object that implements it)
-  virtual void Release() = 0;
+	virtual void Release() = 0;
 };
 
 struct IServerSnooperSink
@@ -389,13 +389,13 @@ struct IServerSnooperSink
 		@param ip IP address of the found server
 		@param stmServerInfo stream containing all server informations(game dependent)
 	*/
-	virtual void OnServerFound(CIPAddress &ip, const string &szServerInfoString, int ping) = 0;
+	virtual void OnServerFound(CIPAddress& ip, const string& szServerInfoString, int ping) = 0;
 };
 
 
 struct INetworkPacketSink
 {
-	virtual void OnReceivingPacket( const unsigned char inPacketID, CStream &stmPacket, CIPAddress &ip )=0;
+	virtual void OnReceivingPacket(const unsigned char inPacketID, CStream& stmPacket, CIPAddress& ip) = 0;
 };
 
 
@@ -404,9 +404,9 @@ struct INETServerSnooper
 	//! query internet servers for info
 	virtual void Update(unsigned int dwTime) = 0;
 	//!
-	virtual void AddServer(const CIPAddress &ip) = 0;
+	virtual void AddServer(const CIPAddress& ip) = 0;
 	//!
-	virtual void AddServerList(const std::vector<CIPAddress> &vIP) = 0;
+	virtual void AddServerList(const std::vector<CIPAddress>& vIP) = 0;
 	//! release the interface(and delete the object that implements it)
 	virtual void Release() = 0;
 	//! clear the current list of servers
@@ -419,12 +419,12 @@ struct INETServerSnooperSink
 	@param ip IP address of the found server
 	@param stmServerInfo stream containing all serer informations(game dependent)
 	*/
-	virtual void OnNETServerFound(const CIPAddress &ip, const string &szServerInfoString, int ping) = 0;
+	virtual void OnNETServerFound(const CIPAddress& ip, const string& szServerInfoString, int ping) = 0;
 
 	/*! called by the client when some server timedout
 	@param ip IP address of the dead server
 	*/
-	virtual void OnNETServerTimeout(const CIPAddress &ip) = 0;
+	virtual void OnNETServerTimeout(const CIPAddress& ip) = 0;
 };
 
 
@@ -433,13 +433,13 @@ struct IRConSystem
 {
 	//! query response packets
 	//! Can specify optional client, to get server ip from.
-	virtual void Update( unsigned int dwTime,IClient *pClient=NULL )=0;
+	virtual void Update(unsigned int dwTime, IClient* pClient = NULL) = 0;
 	//! release the interface(and delete the object that implements it)
-	virtual void Release()=0;
+	virtual void Release() = 0;
 	//!
-	virtual void ExecuteRConCommand( const char *inszCommand )=0;
+	virtual void ExecuteRConCommand(const char* inszCommand) = 0;
 	//!
-	virtual void OnServerCreated( IServer *inpServer )=0;
+	virtual void OnServerCreated(IServer* inpServer) = 0;
 };
 
 
@@ -448,22 +448,22 @@ struct IRConSystem
 struct IServerSlotSink
 {
 	//! called by the serverslot when the connection occur
-	virtual void OnXServerSlotConnect(const BYTE *pbAuthorizationID, unsigned int uiAuthorizationSize) = 0;
+	virtual void OnXServerSlotConnect(const BYTE* pbAuthorizationID, unsigned int uiAuthorizationSize) = 0;
 	/*! called by the serverslot when the disconnection occur
 		@param string representation of the disconnection cause
 	*/
-	virtual void OnXServerSlotDisconnect(const char *szCause) = 0;
+	virtual void OnXServerSlotDisconnect(const char* szCause) = 0;
 	/*! called by the serverslot when the client send a "context ready"
 		@param stm bitstream that store the data sent by the client as answer of the context setup(usally player name etc..)
 	*/
-	virtual void OnContextReady(CStream &stm) = 0; //<<FIXME>> add some level validation code
+	virtual void OnContextReady(CStream& stm) = 0; //<<FIXME>> add some level validation code
 	/*! called by the serverslot when some data is received
 		@param stm bitstream that store the received data
 	*/
-	virtual void OnData(CStream &stm) = 0;
+	virtual void OnData(CStream& stm) = 0;
 	//! 
-	virtual void OnXPlayerAuthorization( bool bAllow, const char *szError, const BYTE *pGlobalID, 
-		unsigned int uiGlobalIDSize ) = 0;
+	virtual void OnXPlayerAuthorization(bool bAllow, const char* szError, const BYTE* pGlobalID,
+		unsigned int uiGlobalIDSize) = 0;
 };
 
 struct SServerSlotBandwidthStats
@@ -481,10 +481,10 @@ struct SServerSlotBandwidthStats
 
 	void Reset()
 	{
-		m_nReliableBitCount=0;
-		m_nReliablePacketCount=0;
-		m_nUnreliableBitCount=0;
-		m_nUnreliablePacketCount=0;
+		m_nReliableBitCount = 0;
+		m_nReliablePacketCount = 0;
+		m_nUnreliableBitCount = 0;
+		m_nUnreliablePacketCount = 0;
 	}
 };
 
@@ -498,23 +498,23 @@ struct IServerSlot
 	/*! set the host object that will receive all server slot notifications
 		@param pSink poiter to an object thath implements IServerSlotSink
 	*/
-	virtual void Advise(IServerSlotSink *pSink) = 0;
+	virtual void Advise(IServerSlotSink* pSink) = 0;
 	/*! disconnect the client associated to this server slot
 		@param szCause cause of the disconneciton that will be send to the client
 	*/
-	virtual void Disconnect(const char *szCause) = 0;
+	virtual void Disconnect(const char* szCause) = 0;
 	/*! send a context setup to the client
 		@param stm bitstream that store the context information(usually level name etc..)
 	*/
-	virtual bool ContextSetup(CStream &stm) = 0;
+	virtual bool ContextSetup(CStream& stm) = 0;
 	/*! send reliable data to the client
 		@param stm the bitstream that store the data
 	*/
-	virtual void SendReliable(CStream &stm,bool bSecondaryChannel=false) = 0;
+	virtual void SendReliable(CStream& stm, bool bSecondaryChannel = false) = 0;
 	/*! send unreliable data to the client
 		@param stm the bitstream that store the data
 	*/
-	virtual void SendUnreliable(CStream &stm) = 0;
+	virtual void SendUnreliable(CStream& stm) = 0;
 	/*! check if the server slot is ready to send data to the client
 		@return true if the serverslot is ready,false if not
 	*/
@@ -522,8 +522,8 @@ struct IServerSlot
 	/*! get the unique id that identify the server slot on a server
 		@return ID of the serverslot
 	*/
-	virtual unsigned char GetID()=0;
-	
+	virtual unsigned char GetID() = 0;
+
 	// Return IP in integer form.
 	virtual unsigned int GetClientIP() const = 0;
 	//! release the interface(and delete the object that implements it)
@@ -531,7 +531,7 @@ struct IServerSlot
 	/*! get the average round trip delay through client and server
 		@return the average ping in milliseconds
 	*/
-  virtual unsigned int GetPing() = 0;
+	virtual unsigned int GetPing() = 0;
 	//!
 	virtual unsigned int GetPacketsLostCount() = 0;
 	//!
@@ -539,27 +539,27 @@ struct IServerSlot
 	//! used for bandwidth calculations (to adjust the bandwidth)
 	virtual void ResetBandwidthStats() = 0;
 	//! used for bandwidth calculations (to adjust the bandwidth)
-	virtual void GetBandwidthStats( SServerSlotBandwidthStats &out ) const = 0;
+	virtual void GetBandwidthStats(SServerSlotBandwidthStats& out) const = 0;
 	//! just calles OnXPlayerAuthorization of the corresponding game specific object
-	virtual void OnPlayerAuthorization( bool bAllow, const char *szError, const BYTE *pGlobalID, 
-		unsigned int uiGlobalIDSize ) = 0;
+	virtual void OnPlayerAuthorization(bool bAllow, const char* szError, const BYTE* pGlobalID,
+		unsigned int uiGlobalIDSize) = 0;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
 //the application must implement this class
 struct IServerSlotFactory
 {
-	virtual bool CreateServerSlot(IServerSlot *pIServerSlot) = 0;
-	
+	virtual bool CreateServerSlot(IServerSlot* pIServerSlot) = 0;
+
 	//! \return true=success, false otherwise
 	//! fill the given string with server infos
 	//! \note do not overwrite the string, just append to it
-	virtual bool GetServerInfoStatus(string &szServerStatus) = 0;
-	virtual bool GetServerInfoStatus(string &szName, string &szGameType, string &szMap, string &szVersion, bool *pbPassword, int *piPlayers, int *piMaxPlayers) = 0;
-	virtual bool GetServerInfoRules(string &szServerRules) = 0;
-	virtual bool GetServerInfoPlayers(string *vszStrings[4], int &nStrings) = 0;
+	virtual bool GetServerInfoStatus(string& szServerStatus) = 0;
+	virtual bool GetServerInfoStatus(string& szName, string& szGameType, string& szMap, string& szVersion, bool* pbPassword, int* piPlayers, int* piMaxPlayers) = 0;
+	virtual bool GetServerInfoRules(string& szServerRules) = 0;
+	virtual bool GetServerInfoPlayers(string* vszStrings[4], int& nStrings) = 0;
 	//! Called when someone sends XML request to server, this function must fill sResponse string with XML response.
-	virtual bool ProcessXMLInfoRequest( const char *sRequest,const char *sRespone,int nResponseMaxLength ) = 0;
+	virtual bool ProcessXMLInfoRequest(const char* sRequest, const char* sRespone, int nResponseMaxLength) = 0;
 };
 
 // the application should implement this class
@@ -596,22 +596,22 @@ struct IServerSecuritySink
 	virtual void UnbanIP(const unsigned int dwIP) = 0;
 
 	/*! Report cheating user.
-	 *	
+	 *
 	 */
-	virtual void CheaterFound( const unsigned int dwIP,int type,const char *sMsg ) = 0;
+	virtual void CheaterFound(const unsigned int dwIP, int type, const char* sMsg) = 0;
 
 	/*! Request slot information from the game.
-	 *	
+	 *
 	 */
-	virtual bool GetSlotInfo(  const unsigned int dwIP,SSlotInfo &info , int nameOnly ) = 0;
+	virtual bool GetSlotInfo(const unsigned int dwIP, SSlotInfo& info, int nameOnly) = 0;
 };
 
 
 enum EMPServerType
 {
-	eMPST_LAN=0,				//!< LAN
-	eMPST_NET=1,				//!< e.g. ASE
-	eMPST_UBI=2,				//!< UBI.com
+	eMPST_LAN = 0,				//!< LAN
+	eMPST_NET = 1,				//!< e.g. ASE
+	eMPST_UBI = 2,				//!< UBI.com
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -628,26 +628,26 @@ struct IServer
 	//! release the interface and delete the implemetation
 	virtual void Release() = 0;
 	//! set a server veriable
-	virtual void SetVariable(enum CryNetworkVarible eVarName,unsigned int nValue) = 0;
+	virtual void SetVariable(enum CryNetworkVarible eVarName, unsigned int nValue) = 0;
 	/*! get the average bandwidth used by all active connections
 		@param fIncomingKbPerSec incoming kb per sec
 		@param fOutgoingKbPerSec outgoing kb per sec
 		@param nIncomingPackets per sec
 		@param nOutgoingPackets per sec
 	*/
-	virtual void GetBandwidth( float &fIncomingKbPerSec, float &fOutgoinKbPerSec, DWORD &nIncomingPackets, DWORD &nOutgoingPackets )=0;
+	virtual void GetBandwidth(float& fIncomingKbPerSec, float& fOutgoinKbPerSec, DWORD& nIncomingPackets, DWORD& nOutgoingPackets) = 0;
 	/*!return the symbolic name of the localhost
 		@return the symbolic name of the localhost
 	*/
-	virtual const char *GetHostName() = 0;
+	virtual const char* GetHostName() = 0;
 	//! \param inPacketID e.g. FT_CQP_RCON_COMMAND
 	//! \param inpSink must not be 0
-	virtual void RegisterPacketSink( const unsigned char inPacketID, INetworkPacketSink *inpSink )=0;
+	virtual void RegisterPacketSink(const unsigned char inPacketID, INetworkPacketSink* inpSink) = 0;
 
 	/*! set the security sink
 			\param pSecurirySink pointer to a class that implements the IServerSecuritySink interface
 	*/
-	virtual void SetSecuritySink(IServerSecuritySink *pSecuritySink) = 0;
+	virtual void SetSecuritySink(IServerSecuritySink* pSecuritySink) = 0;
 
 	/*!	check the state of an ip address before creating the slot
 		\return the state of the ip (banned or not)
@@ -666,13 +666,13 @@ struct IServer
 
 	//! time complexity: O(n) n=connected server slots
 	//! \return 0 if there is no serverslot with this client (was never there or disconnected)
-	virtual IServerSlot *GetServerSlotbyID( const unsigned char ucId ) const = 0;
+	virtual IServerSlot* GetServerSlotbyID(const unsigned char ucId) const = 0;
 
 	//! to iterate through all clients (new clients ids are the lowest available at that time)
 	virtual uint8 GetMaxClientID() const = 0;
 
 	//! LAN/UBI/NET
-	virtual EMPServerType GetServerType() const=0;
+	virtual EMPServerType GetServerType() const = 0;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -680,8 +680,8 @@ struct IServer
 
 
 // exports;
-extern "C"{
-	CRYNETWORK_API INetwork *CreateNetwork(ISystem *pSystem);
-	typedef INetwork *(*PFNCREATENETWORK)(ISystem *pSystem);
+extern "C" {
+	CRYNETWORK_API INetwork* CreateNetwork(ISystem* pSystem);
+	typedef INetwork* (*PFNCREATENETWORK)(ISystem* pSystem);
 }
 #endif //_INETWORK_H_

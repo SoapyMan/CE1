@@ -38,11 +38,11 @@ public:
 	T start;
 	T end;
 
-	TRange()	{ start = 0; end = 0; };
-	TRange( const TRange &r ) { start = r.start; end = r.end; };
-	TRange( T s,T e ) { start = s; end = e; };
+	TRange() { start = 0; end = 0; };
+	TRange(const TRange& r) { start = r.start; end = r.end; };
+	TRange(T s, T e) { start = s; end = e; };
 
-	void Set( T s,T e ) { start = s; end = e; };
+	void Set(T s, T e) { start = s; end = e; };
 	void Clear() { start = 0; end = 0; };
 
 	//! Get length of range.
@@ -51,47 +51,47 @@ public:
 	bool IsEmpty()	const { return (start == 0 && end == 0); }
 
 	//! Check if value is inside range.
-	bool IsInside( T val ) { return val >= start && val <= end; };
+	bool IsInside(T val) { return val >= start && val <= end; };
 
-	void ClipValue( T &val )
+	void ClipValue(T& val)
 	{
 		if (val < start) val = start;
 		if (val > end) val = end;
 	}
 
 	//! Compare two ranges.
-	bool	operator == ( const TRange &r ) const {
+	bool	operator == (const TRange& r) const {
 		return start == r.start && end == r.end;
 	}
 	//! Assign operator.
-	TRange&	operator =( const TRange &r ) {
+	TRange& operator =(const TRange& r) {
 		start = r.start;
 		end = r.end;
 		return *this;
 	}
 	//! Interect two ranges.
-	TRange	operator & ( const TRange &r )	{
-		return TRange( MAX(start,r.start),MIN(end,r.end) );
+	TRange	operator & (const TRange& r) {
+		return TRange(MAX(start, r.start), MIN(end, r.end));
 	}
-	TRange&	operator &= ( const TRange &r )	{
+	TRange& operator &= (const TRange& r) {
 		return (*this = (*this & r));
 	}
 	//! Concatent two ranges.
-	TRange	operator | ( const TRange &r )	{
-		return TRange( MIN(start,r.start),MAX(end,r.end) );
+	TRange	operator | (const TRange& r) {
+		return TRange(MIN(start, r.start), MAX(end, r.end));
 	}
-	TRange&	operator |= ( const TRange &r )	{
+	TRange& operator |= (const TRange& r) {
 		return (*this = (*this | r));
 	}
 	//! Add new value to range.
-	TRange	operator + ( T v )	{
+	TRange	operator + (T v) {
 		T s = start, e = end;
 		if (v < start) s = v;
 		if (v > end) e = v;
-		return TRange( s,e );
+		return TRange(s, e);
 	}
 	//! Add new value to range.
-	TRange&	operator += ( T v )	{
+	TRange& operator += (T v) {
 		if (v < start) start = v;
 		if (v > end) end = v;
 		return *this;

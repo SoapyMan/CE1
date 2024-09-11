@@ -37,17 +37,17 @@ struct IKey
 	int flags;
 
 	// compare keys.
-	bool operator<( const IKey &key ) const { return time < key.time; }
-	bool operator==( const IKey &key ) const { return time == key.time; }
-	bool operator>( const IKey &key ) const { return time > key.time; }
-	bool operator<=( const IKey &key ) const { return time <= key.time; }
-	bool operator>=( const IKey &key ) const { return time >= key.time; }
-	bool operator!=( const IKey &key ) const { return time != key.time; }
+	bool operator<(const IKey& key) const { return time < key.time; }
+	bool operator==(const IKey& key) const { return time == key.time; }
+	bool operator>(const IKey& key) const { return time > key.time; }
+	bool operator<=(const IKey& key) const { return time <= key.time; }
+	bool operator>=(const IKey& key) const { return time >= key.time; }
+	bool operator!=(const IKey& key) const { return time != key.time; }
 
 protected:
 	//! Protect from direct instantiation of this class.
 	//! Only derived classes can be created,
-	IKey() :time(0),flags(0) {};
+	IKey() :time(0), flags(0) {};
 };
 
 /** ITcbKey used in all TCB tracks.
@@ -58,10 +58,10 @@ struct ITcbKey : public IKey
 	float fval[4];
 	// Key controls.
 	float tens;         //!< Key tension value.
-  float cont;         //!< Key continuity value.
-  float bias;         //!< Key bias value.
-  float easeto;       //!< Key ease to value.
-  float easefrom;     //!< Key ease from value.
+	float cont;         //!< Key continuity value.
+	float bias;         //!< Key bias value.
+	float easeto;       //!< Key ease to value.
+	float easefrom;     //!< Key ease from value.
 
 	//! Protect from direct instantiation of this class.
 	//! Only derived classes can be created,
@@ -71,14 +71,14 @@ struct ITcbKey : public IKey
 	};
 
 	template <class T>
-	void SetValue( const T& val ) { *((T*)fval) = val; };
+	void SetValue(const T& val) { *((T*)fval) = val; };
 	template <class T>
-	void GetValue( T& val ) { val = *((T*)fval); };
+	void GetValue(T& val) { val = *((T*)fval); };
 
-	void SetFloat( float val ) { SetValue(val); };
-	void SetVec3( const Vec3 &val ) { SetValue(val); };
-	void SetQuat( const Quat &val ) { SetValue(val); };
-	
+	void SetFloat(float val) { SetValue(val); };
+	void SetVec3(const Vec3& val) { SetValue(val); };
+	void SetQuat(const Quat& val) { SetValue(val); };
+
 	float GetFloat() const { return *((float*)fval); };
 	const Vec3& GetVec3() const { return *((Vec3*)fval); };
 	const Quat& GetQuat() const { return *((Quat*)fval); };
@@ -106,7 +106,7 @@ struct ISelectKey : public IKey
 {
 	char szSelection[128];	//!< Node name.
 	float fDuration;
-	
+
 	ISelectKey()
 	{
 		fDuration = 0;
@@ -136,10 +136,10 @@ struct ISoundKey : public IKey
 		outRadius = 100;
 		bStream = false;
 		bLoop = false;
-		pszFilename[0]=0;
-		nVolume=255;
-		nPan=127;
-		fDuration=0.0f;
+		pszFilename[0] = 0;
+		nVolume = 255;
+		nPan = 127;
+		fDuration = 0.0f;
 		description[0] = 0;
 	}
 };
@@ -156,7 +156,7 @@ struct ICharacterKey : public IKey
 	bool bLoop;				//!< True if animation must be looped.
 	bool bUnload;			//!< Unload after sequence is finished
 
-	ICharacterKey()	{
+	ICharacterKey() {
 		animation[0] = '\0'; duration = 0; blendTime = 0; startTime = 0; speed = 1;
 		bLoop = false;
 		bUnload = false;
@@ -169,11 +169,11 @@ struct IExprKey : public IKey
 {
 	IExprKey()
 	{
-		pszName[0]=0;
-		fAmp=1.0f;
-		fBlendIn=0.5f;
-		fHold=1.0f;
-		fBlendOut=0.5f;
+		pszName[0] = 0;
+		fAmp = 1.0f;
+		fBlendIn = 0.5f;
+		fHold = 1.0f;
+		fBlendOut = 0.5f;
 	}
 	char pszName[128];	//!< Name of morph-target
 	float fAmp;
@@ -196,7 +196,7 @@ struct IConsoleKey : public IKey
 
 enum EMusicKeyType
 {
-	eMusicKeyType_SetMood=0,
+	eMusicKeyType_SetMood = 0,
 	eMusicKeyType_VolumeRamp
 };
 
@@ -211,11 +211,11 @@ struct IMusicKey : public IKey
 	char description[32];
 	IMusicKey()
 	{
-		eType=eMusicKeyType_SetMood;
-		szMood[0]=0;
-		fTime=0.0f;
-		fDuration=0.0f;
-		description[0]=0;
+		eType = eMusicKeyType_SetMood;
+		szMood[0] = 0;
+		fTime = 0.0f;
+		fDuration = 0.0f;
+		description[0] = 0;
 	}
 };
 

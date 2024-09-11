@@ -26,14 +26,14 @@ struct ISystem;
 extern "C"
 #if !defined(_XBOX) && !defined(LINUX)
 #ifdef CRYFONT_EXPORTS
-	__declspec(dllexport)
+__declspec(dllexport)
 #else
-	__declspec(dllimport)
+__declspec(dllimport)
 #endif
 #endif
-struct ICryFont* CreateCryFontInterface(ISystem *pSystem);
+struct ICryFont* CreateCryFontInterface(ISystem* pSystem);
 
-typedef ICryFont *(*PFNCREATECRYFONTINTERFACE)(ISystem *pSystem);
+typedef ICryFont* (*PFNCREATECRYFONTINTERFACE)(ISystem* pSystem);
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // Rendering interfaces
@@ -48,14 +48,14 @@ struct ICryFont
 {
 
 	virtual void Release() = 0;
-	
+
 	//! create a named font
-	virtual struct IFFont *NewFont(const char *pszName) = 0;
+	virtual struct IFFont* NewFont(const char* pszName) = 0;
 	//! get a named font
-	virtual struct IFFont *GetFont(const char *pszName) = 0;
+	virtual struct IFFont* GetFont(const char* pszName) = 0;
 
 	//! Puts the objects used in this module into the sizer interface
-	virtual void GetMemoryUsage (class ICrySizer* pSizer) = 0;
+	virtual void GetMemoryUsage(class ICrySizer* pSizer) = 0;
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -93,16 +93,16 @@ struct IFFont
 	virtual void Release() = 0;
 
 	//! Load a font from a TTF file
-	virtual bool Load(const char *szFile, unsigned long nWidth, unsigned long nHeight, unsigned long nTTFFlags) = 0;
+	virtual bool Load(const char* szFile, unsigned long nWidth, unsigned long nHeight, unsigned long nTTFFlags) = 0;
 
 	//! Load a font from a XML file
-	virtual bool Load(const char *szFile) = 0;
+	virtual bool Load(const char* szFile) = 0;
 
 	//! Free the memory
 	virtual void Free() = 0;
 
 	//! Set the current effect to use
-	virtual void SetEffect(const char *szEffect) = 0;
+	virtual void SetEffect(const char* szEffect) = 0;
 
 	// Set clipping rectangle
 	virtual void SetClippingRect(float fX, float fY, float fW, float fH) = 0;
@@ -112,14 +112,14 @@ struct IFFont
 
 	//! Set the color of the current effect
 	virtual void SetColor(const color4f& col, int nPass = 0) = 0;
-	virtual void UseRealPixels(bool bRealPixels=true)=0;
-	virtual bool UsingRealPixels()=0;
+	virtual void UseRealPixels(bool bRealPixels = true) = 0;
+	virtual bool UsingRealPixels() = 0;
 
 	//! Set the characters base size
-	virtual void SetSize(const vector2f &size) = 0;
+	virtual void SetSize(const vector2f& size) = 0;
 
 	//! Return the seted size
-	virtual vector2f &GetSize() = 0;
+	virtual vector2f& GetSize() = 0;
 
 	//! Return the char width
 	virtual float GetCharWidth() = 0;
@@ -141,34 +141,34 @@ struct IFFont
 
 	//! Draw a formated string
 	//! \param bASCIIMultiLine true='\','n' is a valid return, false=it's not
-	virtual void DrawString( float x, float y, const char *szMsg, const bool bASCIIMultiLine=true ) = 0;
+	virtual void DrawString(float x, float y, const char* szMsg, const bool bASCIIMultiLine = true) = 0;
 
 	//! Compute the text size
 	//! \param bASCIIMultiLine true='\','n' is a valid return, false=it's not
-	virtual vector2f GetTextSize(const char *szMsg, const bool bASCIIMultiLine=true ) = 0;
+	virtual vector2f GetTextSize(const char* szMsg, const bool bASCIIMultiLine = true) = 0;
 
 	//! Draw a formated string
 	//! \param bASCIIMultiLine true='\','n' is a valid return, false=it's not
-	virtual void DrawStringW( float x, float y, const wchar_t *swStr, const bool bASCIIMultiLine=true ) = 0;
+	virtual void DrawStringW(float x, float y, const wchar_t* swStr, const bool bASCIIMultiLine = true) = 0;
 
 	// Draw a formated string
-	virtual void DrawWrappedStringW( float x, float y, float w, const wchar_t *swStr, const bool bASCIIMultiLine=true ) = 0;
+	virtual void DrawWrappedStringW(float x, float y, float w, const wchar_t* swStr, const bool bASCIIMultiLine = true) = 0;
 
 	//! Compute the text size
 	//! \param bASCIIMultiLine true='\','n' is a valid return, false=it's not
-	virtual vector2f GetTextSizeW(const wchar_t *swStr, const bool bASCIIMultiLine=true ) = 0;	
+	virtual vector2f GetTextSizeW(const wchar_t* swStr, const bool bASCIIMultiLine = true) = 0;
 
 	// Compute the text size
-	virtual vector2f GetWrappedTextSizeW(const wchar_t *swStr, float w, const bool bASCIIMultiLine=true ) = 0;
+	virtual vector2f GetWrappedTextSizeW(const wchar_t* swStr, float w, const bool bASCIIMultiLine = true) = 0;
 
 	//! Compute virtual text-length (because of special chars...)
-	virtual int GetTextLength(const char *szMsg, const bool bASCIIMultiLine=true) = 0;
+	virtual int GetTextLength(const char* szMsg, const bool bASCIIMultiLine = true) = 0;
 
 	//! Compute virtual text-length (because of special chars...)
-	virtual int GetTextLengthW(const wchar_t *szwMsg, const bool bASCIIMultiLine=true) = 0;
+	virtual int GetTextLengthW(const wchar_t* szwMsg, const bool bASCIIMultiLine = true) = 0;
 
 	//! Puts the memory used by this font into the given sizer
-	virtual void GetMemoryUsage (class ICrySizer* pSizer) = 0;
+	virtual void GetMemoryUsage(class ICrySizer* pSizer) = 0;
 };
 
 

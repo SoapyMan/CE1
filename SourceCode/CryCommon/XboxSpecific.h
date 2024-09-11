@@ -16,7 +16,7 @@
 #define _CRY_COMMON_XBOX_SPECIFIC_HDR_
 
 #ifdef __cplusplus
-inline int IsHeapValid ()
+inline int IsHeapValid()
 {
 	return true;
 }

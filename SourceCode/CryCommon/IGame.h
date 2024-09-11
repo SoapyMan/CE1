@@ -58,7 +58,7 @@ struct	ILipSync;
 struct	ICVar;
 class		CXServer;
 struct	IBitStream;
-class		ICrySizer; 
+class		ICrySizer;
 struct	ISound;
 struct  IScriptObject;
 struct	IEntity;
@@ -85,19 +85,19 @@ struct EntityClass
 	//
 	bool								bLoaded;
 
-	EntityClass() { ClassId = 0;bLoaded=false; }
+	EntityClass() { ClassId = 0; bLoaded = false; }
 	// Copy constrctor required by STL containers.
-	EntityClass( const EntityClass &ec ) { *this = ec; }
+	EntityClass(const EntityClass& ec) { *this = ec; }
 	// Copy operator required by STL containers.
-	EntityClass& operator=( const EntityClass &ec )
+	EntityClass& operator=(const EntityClass& ec)
 	{
-		bReserved=ec.bReserved;
+		bReserved = ec.bReserved;
 		ClassId = ec.ClassId;
 		strClassName = ec.strClassName;
 		strScriptFile = ec.strScriptFile;
 		strFullScriptFile = ec.strFullScriptFile;
 		strGameType = ec.strGameType;
-		bLoaded=ec.bLoaded;
+		bLoaded = ec.bLoaded;
 		return *this;
 	}
 };
@@ -114,13 +114,13 @@ struct IEntityClassRegistry
 	@param str entity name
 	@return EntityClass ptr if succeded, NULL if failed
 	*/
-	virtual EntityClass *GetByClass(const char *sClassName,bool bAutoLoadScript=true)= 0;
+	virtual EntityClass* GetByClass(const char* sClassName, bool bAutoLoadScript = true) = 0;
 	//virtual EntityClass *GetByClass(const string &str)= 0;
 	/*Retrieves an entity class by ClassId
 	@param ClassId class id
 	@return EntityClass ptr if succeded, NULL if failed
 	*/
-	virtual EntityClass *GetByClassId(const EntityClassId ClassId,bool bAutoLoadScript=true)= 0;
+	virtual EntityClass* GetByClassId(const EntityClassId ClassId, bool bAutoLoadScript = true) = 0;
 	/*Adds a class type into the registry
 	@param ClassId class id
 	@param sClassName class name(into the script file)
@@ -129,7 +129,7 @@ struct IEntityClassRegistry
 	@param bForceReload if set to true force script to be eloaded for already registered class.
 	@return true if added, false if failed
 	*/
-	virtual bool AddClass(const EntityClassId ClassId,const char* sClassName,const char* sScriptFile,bool bReserved=false,bool bForceReload=false) = 0;
+	virtual bool AddClass(const EntityClassId ClassId, const char* sClassName, const char* sScriptFile, bool bReserved = false, bool bForceReload = false) = 0;
 
 	/*move the iterator to the begin of the registry
 	*/
@@ -137,15 +137,15 @@ struct IEntityClassRegistry
 	/*get the next entity class into the registry
 	@return a pointer to the next entityclass, or NULL if is the end
 	*/
-	virtual EntityClass *Next() = 0;
+	virtual EntityClass* Next() = 0;
 	/*return the count of the entity classes
 	@return the count of the entity classes
 	*/
 	virtual int Count() = 0;
 
-	virtual bool LoadRegistryEntry(EntityClass *pClass, bool bForceReload=false) = 0;
+	virtual bool LoadRegistryEntry(EntityClass* pClass, bool bForceReload = false) = 0;
 	// debug to OutputDebugString()
-	virtual void Debug()=0;
+	virtual void Debug() = 0;
 };
 
 struct INameIterator
@@ -155,7 +155,7 @@ struct INameIterator
 	virtual void Release() = 0;
 	virtual void MoveFirst() = 0;
 	virtual bool MoveNext() = 0;
-	virtual bool Get(char *pszBuffer, INT *pSize) = 0;
+	virtual bool Get(char* pszBuffer, INT* pSize) = 0;
 };
 
 class IPhysicsStreamer;
@@ -172,9 +172,9 @@ class IPhysicsEventClient;
 struct SGameModDescription
 {
 	// Constructor.
-	SGameModDescription() 
+	SGameModDescription()
 	{
-		dwFlags=0;
+		dwFlags = 0;
 	};
 
 	// Mod's name.
@@ -203,15 +203,15 @@ struct IGameMods
 
 	// Returns description of the currently active game mode.
 	// @returns NULL if the game mod is not found.
-	virtual const SGameModDescription* GetModDescription( const char *sModName ) const = 0;
+	virtual const SGameModDescription* GetModDescription(const char* sModName) const = 0;
 	// @returns name of the mod currently active, never returns 0
 	virtual const char* GetCurrentMod() const = 0;
 	// Sets the currently active game mod.
 	// @returns true if Mod is successfully set, false if Mod set failed.
-	virtual bool SetCurrentMod( const char *sModName,bool bNeedsRestart=false ) = 0;
+	virtual bool SetCurrentMod(const char* sModName, bool bNeedsRestart = false) = 0;
 	// Returns modified path for the currently active mod/tc (if any)
 	// @returns true if there is an active mod, false otherwise
-	virtual const char* GetModPath(const char *szSource)= 0;
+	virtual const char* GetModPath(const char* szSource) = 0;
 };
 
 struct ITagPointManager
@@ -219,16 +219,16 @@ struct ITagPointManager
 	virtual ~ITagPointManager() {}
 
 	// This function creates a tag point in the game world
-	virtual ITagPoint *CreateTagPoint(const string &name, const Vec3 &pos, const Vec3 &angles) = 0;
+	virtual ITagPoint* CreateTagPoint(const string& name, const Vec3& pos, const Vec3& angles) = 0;
 
 	// Retrieves a tag point by name
-	virtual ITagPoint *GetTagPoint(const string &name) =0;
+	virtual ITagPoint* GetTagPoint(const string& name) = 0;
 
 	// Deletes a tag point from the game
-	virtual void RemoveTagPoint(ITagPoint *pPoint) = 0;
+	virtual void RemoveTagPoint(ITagPoint* pPoint) = 0;
 
-	virtual void AddRespawnPoint(ITagPoint *pPoint) = 0;
-	virtual void RemoveRespawnPoint(ITagPoint *pPoint) = 0;
+	virtual void AddRespawnPoint(ITagPoint* pPoint) = 0;
+	virtual void RemoveRespawnPoint(ITagPoint* pPoint) = 0;
 };
 
 enum EGameCapability
@@ -251,7 +251,7 @@ struct IGame
 
 	// Summary: Initialize game.
 	// Returns: true on success, false otherwise
-	virtual bool Init( struct ISystem *pSystem, bool bDedicatedSrv, bool bInEditor, const char *szGameMod ) = 0;
+	virtual bool Init(struct ISystem* pSystem, bool bDedicatedSrv, bool bInEditor, const char* szGameMod) = 0;
 
 	// Summary: Update the module and all subsystems
 	// Returns: false to stop the main loop 
@@ -259,12 +259,12 @@ struct IGame
 
 	// Summary: Run the main loop until another subsystem force the exit
 	// Returns: false to stop the main loop 
-	virtual bool Run( bool &bRelaunch ) = 0;
+	virtual bool Run(bool& bRelaunch) = 0;
 
 	// Summary: Determines if a MOD is currently loaded
 	// Returns: A string holding the name of the MOD if one is loaded, else 
 	//          NULL will be returned if only Far Cry is loaded.
-	virtual const char *IsMODLoaded() = 0;
+	virtual const char* IsMODLoaded() = 0;
 
 	// Returns interface to access Game Mod functionality.
 	virtual IGameMods* GetModsInterface() = 0;
@@ -279,49 +279,49 @@ struct IGame
 
 	// Executes scheduled events, called by system before executing each fixed time step in multiplayer
 	virtual void ExecuteScheduledEvents() = 0;
-	
+
 	// Tells whether fixed timestep physics in multiplayer is on
 	virtual bool UseFixedStep() = 0;
-	
-	// Snaps to to fixed step 
-	virtual int SnapTime(float fTime,float fOffset=0.5f) = 0;
 
 	// Snaps to to fixed step 
-	virtual int SnapTime(int iTime,float fOffset=0.5f) = 0;
-	
+	virtual int SnapTime(float fTime, float fOffset = 0.5f) = 0;
+
+	// Snaps to to fixed step 
+	virtual int SnapTime(int iTime, float fOffset = 0.5f) = 0;
+
 	// returns fixed MP step in physworld time granularity
 	virtual int GetiFixedStep() = 0;
-	
+
 	// returns fixed MP step
 	virtual float GetFixedStep() = 0;
-	
+
 	// Load level [level editor only]
 	// @param pszLevelDirectory level directory
-	virtual bool LoadLevelForEditor(const char *pszLevelDirectory, const char *pszMissionName = 0) = 0;
+	virtual bool LoadLevelForEditor(const char* pszLevelDirectory, const char* pszMissionName = 0) = 0;
 
 	// Get the entity class regitry
-	virtual IEntityClassRegistry *GetClassRegistry() = 0;
+	virtual IEntityClassRegistry* GetClassRegistry() = 0;
 
-	virtual void OnSetVar(ICVar *pVar)=0;
-	virtual void SendMessage(const char *s)=0;
+	virtual void OnSetVar(ICVar* pVar) = 0;
+	virtual void SendMessage(const char* s) = 0;
 	virtual void ResetState() = 0;
-	virtual void GetMemoryStatistics(ICrySizer *pSizer) = 0;
+	virtual void GetMemoryStatistics(ICrySizer* pSizer) = 0;
 
 	// saves player configuration
-	virtual void SaveConfiguration( const char *sSystemCfg,const char *sGameCfg,const char *sProfile)=0;
+	virtual void SaveConfiguration(const char* sSystemCfg, const char* sGameCfg, const char* sProfile) = 0;
 
 	// This is used by editor for changing properties from scripts (no restart).
-	virtual void ReloadScripts()=0;
+	virtual void ReloadScripts() = 0;
 
-	virtual bool GetModuleState( EGameCapability eCap ) = 0;
+	virtual bool GetModuleState(EGameCapability eCap) = 0;
 
 	// functions return callback sinks for the physics
-	virtual IPhysicsStreamer *GetPhysicsStreamer() = 0;
-	virtual IPhysicsEventClient *GetPhysicsEventClient() = 0;
+	virtual IPhysicsStreamer* GetPhysicsStreamer() = 0;
+	virtual IPhysicsEventClient* GetPhysicsEventClient() = 0;
 
 	// is called from time to time during loading (usually network updates)
 	// currently only called for server map loading
-	virtual void UpdateDuringLoading()=0;
+	virtual void UpdateDuringLoading() = 0;
 
 	//virtual ITagPointManager* GetTagPointManager();
 	virtual IXAreaMgr* GetAreaManager() = 0;
@@ -329,7 +329,7 @@ struct IGame
 };
 
 #ifdef GAME_IS_FARCRY
-	#include "IXGame.h"
+#include "IXGame.h"
 #endif
 
 typedef IGame* (*PFNCREATEGAMEINSTANCE)();

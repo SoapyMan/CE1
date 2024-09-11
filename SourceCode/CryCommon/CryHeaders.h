@@ -18,8 +18,8 @@
 
 enum ChunkTypes
 {
-	ChunkType_ANY			= 0,
-	ChunkType_Mesh			= 0xCCCC0000,
+	ChunkType_ANY = 0,
+	ChunkType_Mesh = 0xCCCC0000,
 	ChunkType_Helper,
 	ChunkType_VertAnim,
 	ChunkType_BoneAnim,
@@ -53,15 +53,15 @@ struct CryVertex
 
 struct CryFace
 {
-	int v0,v1,v2;			//vertex indices
+	int v0, v1, v2;			//vertex indices
 	int MatID;				//mat ID
 	int SmGroup;			//smoothing group
 
 
-	int& operator [] (int i) {return (&v0)[i];}
-	int operator [] (int i)const {return (&v0)[i];}
-	bool isDegenerate ()const {return v0 == v1 || v1 == v2 || v2 == v0;}
-	bool isCollapsed()const {return v0 == v1 && v1 == v2;}
+	int& operator [] (int i) { return (&v0)[i]; }
+	int operator [] (int i)const { return (&v0)[i]; }
+	bool isDegenerate()const { return v0 == v1 || v1 == v2 || v2 == v0; }
+	bool isCollapsed()const { return v0 == v1 && v1 == v2; }
 };
 
 // structure used for sorting the cryFace arrays by material id
@@ -85,16 +85,16 @@ struct CryKey
 
 struct CryUV
 {
-	float u,v;				//texture coordinates
+	float u, v;				//texture coordinates
 };
 
 struct CryTexFace
 {
-	int t0,t1,t2;			//texture vertex indices
-	CryTexFace(){}
-	CryTexFace (int _t0,int _t1, int _t2):t0(_t0),t1(_t1),t2(_t2) {}
-	int& operator[] (int i) {return (&t0)[i];}
-	int operator[] (int i) const {return (&t0)[i];}
+	int t0, t1, t2;			//texture vertex indices
+	CryTexFace() {}
+	CryTexFace(int _t0, int _t1, int _t2) :t0(_t0), t1(_t1), t2(_t2) {}
+	int& operator[] (int i) { return (&t0)[i]; }
+	int operator[] (int i) const { return (&t0)[i]; }
 };
 
 // Material & Texture Primitives _____________________________________________________________________________________________________
@@ -107,7 +107,7 @@ struct TextureMap
 	bool	umirror;
 	bool	vtile;
 	bool	vmirror;
-	
+
 	//texture position values
 	float	uoff_val;
 	float	uscl_val;
@@ -146,7 +146,7 @@ struct TextureMap
 	int		nthFrame;	// Update reflection every Nth frame.
 	int		refSize;	// Reflection size.
 	float	refBlur;	// Reflection blur.
-	
+
 	//texture position values
 	float	uoff_val;
 	float	uscl_val;
@@ -189,7 +189,7 @@ struct TextureMap2
 
 	unsigned char	type;	  // Mapping type.
 	unsigned char	flags;	// Mapping type.
-  unsigned char Amount;
+	unsigned char Amount;
 	unsigned char Reserved[1];
 
 	//tiling and mirror
@@ -201,7 +201,7 @@ struct TextureMap2
 	int		nthFrame;	// Update reflection every Nth frame.
 	int		refSize;	// Reflection size.
 	float	refBlur;	// Reflection blur.
-	
+
 	//texture position values
 	float	uoff_val;
 	float	uscl_val;
@@ -227,7 +227,7 @@ struct TextureMap3
 
 	unsigned char	type;	  // Mapping type.
 	unsigned char	flags;	// Mapping type.
-  unsigned char Amount;
+	unsigned char Amount;
 	unsigned char Reserved[32];
 
 	//tiling and mirror
@@ -239,7 +239,7 @@ struct TextureMap3
 	int		nthFrame;	// Update reflection every Nth frame.
 	int		refSize;	// Reflection size.
 	float	refBlur;	// Reflection blur.
-	
+
 	//texture position values
 	float	uoff_val;
 	float	uscl_val;
@@ -258,36 +258,36 @@ struct TextureMap3
 	int	vrot_ctrlID;
 	int	wrot_ctrlID;
 
-  TextureMap3& operator = (const TextureMap2& tm)
-  {
-    strcpy(name, tm.name);
-    type = tm.type;
-    umirror = tm.umirror;
-    vtile = tm.vtile;
-    vmirror = tm.vmirror;
-    
-    nthFrame = tm.nthFrame;
-    refSize = tm.refSize;
-    refBlur = tm.refBlur;
-    
-    uoff_val = tm.uoff_val;
-    uscl_val = tm.uscl_val;
-    urot_val = tm.urot_val;
-    voff_val = tm.voff_val;
-    vscl_val = tm.vscl_val;
-    vrot_val = tm.vrot_val;
-    wrot_val = tm.wrot_val;
-    
-    uoff_ctrlID = tm.uoff_ctrlID;
-    uscl_ctrlID = tm.uscl_ctrlID;
-    urot_ctrlID = tm.urot_ctrlID;
-    voff_ctrlID = tm.voff_ctrlID;
-    vscl_ctrlID = tm.vscl_ctrlID;
-    vrot_ctrlID = tm.vrot_ctrlID;
-    wrot_ctrlID = tm.wrot_ctrlID;
-    
-    return *this;
-  }  
+	TextureMap3& operator = (const TextureMap2& tm)
+	{
+		strcpy(name, tm.name);
+		type = tm.type;
+		umirror = tm.umirror;
+		vtile = tm.vtile;
+		vmirror = tm.vmirror;
+
+		nthFrame = tm.nthFrame;
+		refSize = tm.refSize;
+		refBlur = tm.refBlur;
+
+		uoff_val = tm.uoff_val;
+		uscl_val = tm.uscl_val;
+		urot_val = tm.urot_val;
+		voff_val = tm.voff_val;
+		vscl_val = tm.vscl_val;
+		vrot_val = tm.vrot_val;
+		wrot_val = tm.wrot_val;
+
+		uoff_ctrlID = tm.uoff_ctrlID;
+		uscl_ctrlID = tm.uscl_ctrlID;
+		urot_ctrlID = tm.urot_ctrlID;
+		voff_ctrlID = tm.voff_ctrlID;
+		vscl_ctrlID = tm.vscl_ctrlID;
+		vrot_ctrlID = tm.vrot_ctrlID;
+		wrot_ctrlID = tm.wrot_ctrlID;
+
+		return *this;
+	}
 };
 
 struct CryLink
@@ -308,12 +308,12 @@ struct CryLinkOrderByBlending
 
 struct CryIRGB
 {
-	unsigned char r,g,b;
+	unsigned char r, g, b;
 };
 
 struct CryFRGB
 {
-	float r,g,b;
+	float r, g, b;
 };
 
 struct NAME_ENTITY
@@ -326,7 +326,7 @@ struct SCENEPROP_ENTITY
 	char	name[32];
 	char	value[64];
 };
-  /*
+/*
 struct BONE_ENTITY
 {
 	int		BoneID;
@@ -340,10 +340,10 @@ struct BONE_ENTITY
 struct phys_geometry;
 struct BONE_PHYSICS
 {
-	phys_geometry *pPhysGeom; // id of a separate mesh for this bone
+	phys_geometry* pPhysGeom; // id of a separate mesh for this bone
 	// additional joint parameters
 	int		flags;
-	float min[3],max[3];
+	float min[3], max[3];
 	float spring_angle[3];
 	float spring_tension[3];
 	float damping[3];
@@ -356,7 +356,7 @@ struct BONE_PHYSICS_COMP
 	int nPhysGeom; // id of a separate mesh for this bone
 	// additional joint parameters
 	int		flags;
-	float min[3],max[3];
+	float min[3], max[3];
 	float spring_angle[3];
 	float spring_tension[3];
 	float damping[3];
@@ -369,10 +369,10 @@ struct BONE_PHYSICS_COMP
 #endif
 
 #define __copy3(MEMBER) left.MEMBER[0] = right.MEMBER[0]; left.MEMBER[1] = right.MEMBER[1]; left.MEMBER[2] = right.MEMBER[2];
-inline void CopyPhysInfo (BONE_PHYSICS& left, const BONE_PHYSICS_COMP& right)
+inline void CopyPhysInfo(BONE_PHYSICS& left, const BONE_PHYSICS_COMP& right)
 {
 	left.pPhysGeom = (phys_geometry*)(INT_PTR)right.nPhysGeom;
-	left.flags     = right.flags;
+	left.flags = right.flags;
 	__copy3(min);
 	__copy3(max);
 	__copy3(spring_angle);
@@ -382,10 +382,10 @@ inline void CopyPhysInfo (BONE_PHYSICS& left, const BONE_PHYSICS_COMP& right)
 	__copy3(framemtx[1]);
 	__copy3(framemtx[2]);
 }
-inline void CopyPhysInfo (BONE_PHYSICS_COMP& left, const BONE_PHYSICS& right)
+inline void CopyPhysInfo(BONE_PHYSICS_COMP& left, const BONE_PHYSICS& right)
 {
 	left.nPhysGeom = (int)right.pPhysGeom;
-	left.flags     = right.flags;
+	left.flags = right.flags;
 	__copy3(min);
 	__copy3(max);
 	__copy3(spring_angle);
@@ -411,7 +411,7 @@ struct BONE_ENTITY
 	BONE_PHYSICS_COMP phys;
 };
 
-  /*
+/*
 struct MAT_ENTITY
 {
 	char	name[64];	//material name
@@ -420,7 +420,7 @@ struct MAT_ENTITY
 	CryIRGB	col_d;		//diffuse color
 	CryIRGB	col_s;		//specular color
 	CryIRGB	col_a;		//ambiant color
-	
+
 	char	map_d[32];	//diffuse map file name
 	char	map_o[32];	//opacity map file name
 	char	map_b[32];	//bump map file name
@@ -433,47 +433,47 @@ struct MAT_ENTITY
 
 enum MTL_CHUNK_FLAGS
 {
-	MTLFLAG_WIRE =		0x001,
-	MTLFLAG_2SIDED =	0x002,
+	MTLFLAG_WIRE = 0x001,
+	MTLFLAG_2SIDED = 0x002,
 	MTLFLAG_FACEMAP = 0x004,
 	MTLFLAG_FACETED = 0x008,
-	MTLFLAG_ADDITIVE= 0x010,
-	MTLFLAG_SUBTRACTIVE= 0x020,
-	MTLFLAG_CRYSHADER= 0x040,
-	MTLFLAG_PHYSICALIZE= 0x080,
+	MTLFLAG_ADDITIVE = 0x010,
+	MTLFLAG_SUBTRACTIVE = 0x020,
+	MTLFLAG_CRYSHADER = 0x040,
+	MTLFLAG_PHYSICALIZE = 0x080,
 	MTLFLAG_ADDITIVEDECAL = 0x0100,
-  MTLFLAG_USEGLOSSINESS = 0x0200,
+	MTLFLAG_USEGLOSSINESS = 0x0200,
 };
 
 struct MAT_ENTITY_DATA
 {
 	char	name[64];	  //material/shader name
 	bool	IsStdMat;	  //if false the below values are meaningless
-  int  m_New;
+	int  m_New;
 
 	CryIRGB	col_d;		//diffuse color
 	CryIRGB	col_s;		//specular color
 	CryIRGB	col_a;		//ambient color
 
 	float specLevel; // Specular level.
-  float	specShininess;
+	float	specShininess;
 	float	selfIllum;	// self illumination.
 	float opacity;		// Opacity 0-1.
 	float alpharef;		// Alpha-test 0-1.
-  float m_Temp[8]; // For future modifications
+	float m_Temp[8]; // For future modifications
 
 	int flags;
-	
+
 	TextureMap3 map_a;	//Ambient map file name
 	TextureMap3 map_d;	//Diffuse map file name
 	TextureMap3 map_o;	//Opacity map file name
 	TextureMap3 map_b;	//Bump map file name
-  TextureMap3 map_s;	//Specular Texture settings
-  TextureMap3 map_g;	//Gloss Texture settings
-  TextureMap3 map_detail;	//Detail Texture settings
-  TextureMap3 map_e;	//Environment Texture settings
+	TextureMap3 map_s;	//Specular Texture settings
+	TextureMap3 map_g;	//Gloss Texture settings
+	TextureMap3 map_detail;	//Detail Texture settings
+	TextureMap3 map_e;	//Environment Texture settings
 	TextureMap3 map_subsurf; //Subsurface scattering Texture settings
-  TextureMap3	map_displ;//Displacement Texture settings
+	TextureMap3	map_displ;//Displacement Texture settings
 
 	float	Dyn_Bounce;
 	float	Dyn_StaticFriction;
@@ -484,12 +484,12 @@ struct MAT_ENTITY_DATA
 	int   nChildren;
 };
 
-struct MAT_ENTITY: public MAT_ENTITY_DATA
+struct MAT_ENTITY : public MAT_ENTITY_DATA
 {
-	int		*m_pMaterialChildren;
+	int* m_pMaterialChildren;
 };
 
-struct MAT_ENTITY_COMP: public MAT_ENTITY_DATA
+struct MAT_ENTITY_COMP : public MAT_ENTITY_DATA
 {
 	int m_iMaterialChildren;
 };
@@ -529,7 +529,7 @@ struct FILE_HEADER
 
 enum FileTypes
 {
-	FileType_Geom			= 0xFFFF0000,
+	FileType_Geom = 0xFFFF0000,
 	FileType_Anim,
 };
 /*
@@ -539,14 +539,14 @@ enum FileTypes
 #define GeomFileVersion		0x0744
 #define AnimFileVersion		0x0744
 
-//========================================
-//Chunk Table Entity
-//========================================
+  //========================================
+  //Chunk Table Entity
+  //========================================
 
 
 struct CHUNK_HEADER_0623
 {
-	enum {VERSION = 0x0623};
+	enum { VERSION = 0x0623 };
 	ChunkTypes	ChunkType;
 	int			ChunkVersion;
 	int			FileOffset;
@@ -554,7 +554,7 @@ struct CHUNK_HEADER_0623
 
 struct CHUNK_HEADER_0744
 {
-	enum {VERSION = 0x0744};
+	enum { VERSION = 0x0744 };
 	ChunkTypes	ChunkType;
 	int			ChunkVersion;
 	int			FileOffset;
@@ -580,7 +580,7 @@ struct RANGE_ENTITY
 //========================================
 struct TIMING_CHUNK_DESC_0918
 {
-	enum {VERSION = 0x0918};
+	enum { VERSION = 0x0918 };
 	CHUNK_HEADER	chdr;
 
 	float			SecsPerTick;		// seconds/ticks
@@ -599,7 +599,7 @@ typedef TIMING_CHUNK_DESC_0918 TIMING_CHUNK_DESC;
 enum MtlTypes { MTL_UNKNOWN, MTL_STANDARD, MTL_MULTI, MTL_2SIDED };
 struct MTL_CHUNK_DESC_0744
 {
-	enum {VERSION = 0x0744};
+	enum { VERSION = 0x0744 };
 	CHUNK_HEADER	chdr;
 	char			name[64];	//material name 
 	MtlTypes		MtlType;	//one of the MtlTypes enum values
@@ -611,7 +611,7 @@ struct MTL_CHUNK_DESC_0744
 			CryIRGB		col_d;		//diffuse color
 			CryIRGB		col_s;		//specular color
 			CryIRGB		col_a;		//ambiant color
-			
+
 			TextureMap	tex_d;		//Diffuse Texture settings
 			TextureMap	tex_o;		//opacity Texture settings
 			TextureMap	tex_b;		//Bump Texture settings
@@ -631,7 +631,7 @@ struct MTL_CHUNK_DESC_0744
 //////////////////////////////////////////////////////////////////////////
 struct MTL_CHUNK_DESC_0745
 {
-	enum {VERSION=0x0745};
+	enum { VERSION = 0x0745 };
 	CHUNK_HEADER	chdr;
 	char			name[64];	  //material/shader name 
 	MtlTypes		MtlType;	//one of the MtlTypes enum values
@@ -644,23 +644,23 @@ struct MTL_CHUNK_DESC_0745
 			CryIRGB		col_s;		//specular color
 			CryIRGB		col_a;		//ambient color
 			float     specLevel; // Specular level.
-      float     specShininess;
+			float     specShininess;
 			float			selfIllum;	// self illumination.
 			float			opacity;		// Opacity 0-1.
-			
+
 			TextureMap2	tex_a;		//Ambient Texture settings
 			TextureMap2	tex_d;		//Diffuse Texture settings
 			TextureMap2	tex_s;		//Specular Texture settings
 			TextureMap2	tex_o;		//Opacity Texture settings
 			TextureMap2	tex_b;		//Bump Texture settings
-      TextureMap2	tex_g;		//Gloss Texture settings
-      TextureMap2	tex_c;		//Cubemap Texture settings
-      TextureMap2	tex_rl;		//Reflection Texture settings
+			TextureMap2	tex_g;		//Gloss Texture settings
+			TextureMap2	tex_c;		//Cubemap Texture settings
+			TextureMap2	tex_rl;		//Reflection Texture settings
 			TextureMap2	tex_subsurf;		//Subsurface scattering Texture settings
-      TextureMap2	tex_det;  //Detail Texture settings
+			TextureMap2	tex_det;  //Detail Texture settings
 
 			int			flags;
-			
+
 			float		Dyn_Bounce;
 			float		Dyn_StaticFriction;
 			float		Dyn_SlidingFriction;
@@ -675,11 +675,11 @@ struct MTL_CHUNK_DESC_0745
 
 struct MTL_CHUNK_DESC_0746
 {
-	enum {VERSION = 0x0746};
+	enum { VERSION = 0x0746 };
 	CHUNK_HEADER	chdr;
 	char			name[64];	  //material/shader name 
-  char      Reserved[60];
-  float			alphaTest;
+	char      Reserved[60];
+	float			alphaTest;
 	MtlTypes		MtlType;	//one of the MtlTypes enum values
 
 	union
@@ -690,23 +690,23 @@ struct MTL_CHUNK_DESC_0746
 			CryIRGB		col_s;		//specular color
 			CryIRGB		col_a;		//ambient color
 			float     specLevel; // Specular level.
-      float     specShininess;
+			float     specShininess;
 			float			selfIllum;	// self illumination.
 			float			opacity;		// Opacity 0-1.
-			
+
 			TextureMap3	tex_a;		//Ambient Texture settings
 			TextureMap3	tex_d;		//Diffuse Texture settings
 			TextureMap3	tex_s;		//Specular Texture settings
 			TextureMap3	tex_o;		//Opacity Texture settings
 			TextureMap3	tex_b;		//Bump Texture settings
-      TextureMap3	tex_g;		//Gloss Texture settings
-      TextureMap3	tex_fl;		//Filter texture (Detail Texture settings)
-      TextureMap3	tex_rl;		//Reflection Texture settings
+			TextureMap3	tex_g;		//Gloss Texture settings
+			TextureMap3	tex_fl;		//Filter texture (Detail Texture settings)
+			TextureMap3	tex_rl;		//Reflection Texture settings
 			TextureMap3	tex_subsurf;		//Subsurface scattering Texture settings
-      TextureMap3	tex_det;  //Detail Texture settings
+			TextureMap3	tex_det;  //Detail Texture settings
 
 			int			flags;
-			
+
 			float		Dyn_Bounce;
 			float		Dyn_StaticFriction;
 			float		Dyn_SlidingFriction;
@@ -729,13 +729,13 @@ typedef MTL_CHUNK_DESC_0746 MTL_CHUNK_DESC_EXPORTER;
 enum LightTypes { LT_OMNI, LT_SPOT, LT_DIRECT, LT_AMBIENT };
 struct LIGHT_CHUNK_DESC_0351
 {
-	enum {VERSION = 0x0351};
+	enum { VERSION = 0x0351 };
 	int			ChunkType;		//must be ChunkType_Light
-	int			ChunkVersion;	
+	int			ChunkVersion;
 
 	char		name[64];		// light name
-    int			type;			// one of the LightTypes values
-    bool 		on;				// light is on
+	int			type;			// one of the LightTypes values
+	bool 		on;				// light is on
 	Vec3	pos;			// world position
 	Matrix44	tm;				// transformation matrix
 	CryIRGB		color;			// RGB color
@@ -754,11 +754,11 @@ struct LIGHT_CHUNK_DESC_0351
 
 struct LIGHT_CHUNK_DESC_0744
 {
-	enum {VERSION = 0x0744};
+	enum { VERSION = 0x0744 };
 	CHUNK_HEADER	chdr;
 
 	LightTypes	type;			// one of the LightTypes values
-    bool 		on;				// light is on
+	bool 		on;				// light is on
 	CryIRGB		color;			// RGB color
 	float 		intens;			// multiplier value
 
@@ -785,7 +785,7 @@ typedef LIGHT_CHUNK_DESC_0744 LIGHT_CHUNK_DESC;
 //========================================
 struct MESH_CHUNK_DESC_0623
 {
-	enum {VERSION = 0x0623};
+	enum { VERSION = 0x0623 };
 	int		ChunkType;		//must be ChunkType_Mesh
 	int		ChunkVersion;
 	int		GeomID;
@@ -801,7 +801,7 @@ struct MESH_CHUNK_DESC_0623
 
 struct MESH_CHUNK_DESC_0744
 {
-	enum {VERSION = 0x0744};
+	enum { VERSION = 0x0744 };
 	CHUNK_HEADER	chdr;
 
 	bool	HasBoneInfo;
@@ -819,7 +819,7 @@ typedef MESH_CHUNK_DESC_0744 MESH_CHUNK_DESC;
 //========================================
 struct SCENEPROPS_CHUNK_DESC_0201
 {
-	enum {VERSION = 0x0201};
+	enum { VERSION = 0x0201 };
 	int		ChunkType;		//must be ChunkType_SceneProps
 	int		ChunkVersion;
 	int		nProps;
@@ -827,7 +827,7 @@ struct SCENEPROPS_CHUNK_DESC_0201
 
 struct SCENEPROPS_CHUNK_DESC_0744
 {
-	enum {VERSION = 0x0744};
+	enum { VERSION = 0x0744 };
 
 	CHUNK_HEADER	chdr;
 
@@ -861,7 +861,7 @@ struct CryCustomAttribute
 //////////////////////////////////////////////////////////////////////////
 struct CUSTOM_ATTRIBS_CHUNK_DESC_0744
 {
-	enum {VERSION = 0x0744};
+	enum { VERSION = 0x0744 };
 
 	CHUNK_HEADER	chdr;
 	int numAttribs;
@@ -943,7 +943,7 @@ struct BONEANIM_CHUNK_DESC
 
 struct BONEANIM_CHUNK_DESC_0290
 {
-	enum {VERSION = 0x0290};
+	enum { VERSION = 0x0290 };
 
 	CHUNK_HEADER	chdr;
 	int		nBones;
@@ -958,7 +958,7 @@ typedef BONEANIM_CHUNK_DESC_0290 BONEANIM_CHUNK_DESC;
 //========================================
 struct GEOMNAMELIST_CHUNK_DESC_0201
 {
-	enum {VERSION=0x0201};
+	enum { VERSION = 0x0201 };
 	int		ChunkType;		//must be ChunkType_GeomNameList
 	int		ChunkVersion;
 	int		nEntities;
@@ -972,7 +972,7 @@ typedef GEOMNAMELIST_CHUNK_DESC_0201 GEOMNAMELIST_CHUNK_DESC;
 //========================================
 struct BONENAMELIST_CHUNK_DESC_0201
 {
-	enum {VERSION=0x0201};
+	enum { VERSION = 0x0201 };
 	int		ChunkType;		//must be ChunkType_BoneNameList
 	int		ChunkVersion;
 	int		nEntities;
@@ -980,7 +980,7 @@ struct BONENAMELIST_CHUNK_DESC_0201
 
 struct BONENAMELIST_CHUNK_DESC_0744
 {
-	enum {VERSION=0x0744};
+	enum { VERSION = 0x0744 };
 	CHUNK_HEADER chdr;
 	int			 nEntities;
 };
@@ -989,7 +989,7 @@ struct BONENAMELIST_CHUNK_DESC_0744
 // it's followed by numEntities packed \0-terminated strings, the list terminated by double-\0
 struct BONENAMELIST_CHUNK_DESC_0745
 {
-	enum {VERSION = 0x0745};
+	enum { VERSION = 0x0745 };
 	int numEntities;
 };
 
@@ -998,7 +998,7 @@ struct BONENAMELIST_CHUNK_DESC_0745
 //========================================
 struct MTLLIST_CHUNK_DESC_0201
 {
-	enum {VERSION = 0x0201};
+	enum { VERSION = 0x0201 };
 	int		ChunkType;		//must be ChunkType_MtlList
 	int		ChunkVersion;
 	int		nEntities;
@@ -1015,7 +1015,7 @@ struct BaseKey
 
 struct BaseTCB
 {
-	float t,c,b;
+	float t, c, b;
 	float ein, eout;
 };
 
@@ -1026,9 +1026,9 @@ struct BaseKeyQ : BaseKey { CryQuat	val; };
 struct CryLin1Key : BaseKey1 {};
 struct CryLin3Key : BaseKey3 {};
 struct CryLinQKey : BaseKeyQ {};
-struct CryTCB1Key : BaseKey1 , BaseTCB {};
-struct CryTCB3Key : BaseKey3 , BaseTCB {};
-struct CryTCBQKey : BaseKeyQ , BaseTCB {};
+struct CryTCB1Key : BaseKey1, BaseTCB {};
+struct CryTCB3Key : BaseKey3, BaseTCB {};
+struct CryTCBQKey : BaseKeyQ, BaseTCB {};
 struct CryBez1Key : BaseKey1 { float		intan, outtan; };
 struct CryBez3Key : BaseKey3 { Vec3	intan, outtan; };
 struct CryBezQKey : BaseKeyQ {};
@@ -1046,7 +1046,7 @@ struct CryKeyPQLog
 	Vec3 vRotLog; // logarithm of the rotation
 
 	// resets to initial position/rotation/time
-	void reset ()
+	void reset()
 	{
 		nTime = 0;
 		vPos.x = vPos.y = vPos.z = 0;
@@ -1059,13 +1059,13 @@ struct CryKeyPQLog
 //========================================
 //Controller Chunk Header
 //========================================
-enum CtrlTypes 
-{ 
-	CTRL_NONE, 
-	CTRL_CRYBONE, 
-	CTRL_LINEER1,	CTRL_LINEER3,	CTRL_LINEERQ, 
-	CTRL_BEZIER1,	CTRL_BEZIER3,	CTRL_BEZIERQ, 
-	CTRL_TCB1,		CTRL_TCB3,		CTRL_TCBQ,
+enum CtrlTypes
+{
+	CTRL_NONE,
+	CTRL_CRYBONE,
+	CTRL_LINEER1, CTRL_LINEER3, CTRL_LINEERQ,
+	CTRL_BEZIER1, CTRL_BEZIER3, CTRL_BEZIERQ,
+	CTRL_TCB1, CTRL_TCB3, CTRL_TCBQ,
 	CTRL_BSPLINE_2O, // 2-byte fixed values, open
 	CTRL_BSPLINE_1O, // 1-byte fixed values, open
 	CTRL_BSPLINE_2C, // 2-byte fixed values, closed
@@ -1082,7 +1082,7 @@ enum CtrlFlags
 // descriptor-header of the controller chunk, precedes the controller data
 struct CONTROLLER_CHUNK_DESC_0826
 {
-	enum {VERSION=0x0826};
+	enum { VERSION = 0x0826 };
 
 	CHUNK_HEADER	chdr;
 
@@ -1093,14 +1093,14 @@ struct CONTROLLER_CHUNK_DESC_0826
 	unsigned int nFlags;		// Flags of controller.
 	//int				nSubCtrl;	// # of sub controllers; not used now/reserved
 
-  unsigned nControllerId; // unique generated in exporter id based on crc32 of bone name
+	unsigned nControllerId; // unique generated in exporter id based on crc32 of bone name
 };
 
 // intermediate version between the CONTROLLER_BSPLINE_DATA_0826 and CONTROLLER_CHUNK_DESC_0826
 // followed by CryKeyPQLog array
 struct CONTROLLER_CHUNK_DESC_0827
 {
-	enum {VERSION = 0x0827};
+	enum { VERSION = 0x0827 };
 	unsigned numKeys;
 	unsigned nControllerId;
 };
@@ -1109,12 +1109,12 @@ struct CONTROLLER_CHUNK_DESC_0827
 // descriptor of B-Spline controller
 struct CONTROLLER_BSPLINE_DATA_0826
 {
-	enum {VERSION = 0x0826};
-	
+	enum { VERSION = 0x0826 };
+
 	// spline degree, normally 3 (cubic)
 	// degree 0 is piecewise-constant (CP=K-1), -1 is constant (always 0 knots, 1 control point)
-	int nDegree; 
-	
+	int nDegree;
+
 	// number of knots; number of Control Points is deduced from
 	// the number of knots and the degree: CP = K + D - 1
 	int nKnots;
@@ -1133,7 +1133,7 @@ typedef CONTROLLER_BSPLINE_DATA_0826 CONTROLLER_BSPLINE_DATA;
 //========================================
 struct NODE_CHUNK_DESC_0823
 {
-	enum {VERSION = 0x0823};
+	enum { VERSION = 0x0823 };
 	CHUNK_HEADER	chdr;
 
 	char		name[64];
@@ -1143,7 +1143,7 @@ struct NODE_CHUNK_DESC_0823
 	int			nChildren;		// # of children Nodes
 	int			MatID;			// Material chunk No
 
-	bool		IsGroupHead;	
+	bool		IsGroupHead;
 	bool		IsGroupMember;
 
 	Matrix44	tm;				// transformation matrix
@@ -1165,40 +1165,40 @@ typedef NODE_CHUNK_DESC_0823 NODE_CHUNK_DESC;
 //========================================
 enum HelperTypes
 {
-	HP_POINT=0,
-	HP_DUMMY=1,
-	HP_XREF=2,
-	HP_CAMERA=3
+	HP_POINT = 0,
+	HP_DUMMY = 1,
+	HP_XREF = 2,
+	HP_CAMERA = 3
 };
 struct HELPER_CHUNK_DESC_0362
 {
-	enum {VERSION = 0x0362};
+	enum { VERSION = 0x0362 };
 	int			ChunkType;		//must be ChunkType_Helper
-	int			ChunkVersion;	
+	int			ChunkVersion;
 
 	char		name[64];		// helper name
-    int			type;			// one of the HelperTypes values
+	int			type;			// one of the HelperTypes values
 	Vec3	pos;			// world position
 	Matrix44	tm;				// transformation matrix
 };
 
 struct HELPER_CHUNK_DESC_0744
 {
-	enum {VERSION = 0x0744};
+	enum { VERSION = 0x0744 };
 	CHUNK_HEADER	chdr;
 
-    HelperTypes	type;			// one of the HelperTypes values
+	HelperTypes	type;			// one of the HelperTypes values
 	Vec3	size;			// size in local x,y,z axises (for dummy only)
 };
 
-typedef HELPER_CHUNK_DESC_0744 HELPER_CHUNK_DESC; 
+typedef HELPER_CHUNK_DESC_0744 HELPER_CHUNK_DESC;
 #define HELPER_CHUNK_DESC_VERSION HELPER_CHUNK_DESC::VERSION
 
 // ChunkType_BoneLightBinding
 // describes the lights binded to bones
 struct BONELIGHTBINDING_CHUNK_DESC_0001
 {
-	enum {VERSION = 0x0001};
+	enum { VERSION = 0x0001 };
 	unsigned numBindings; // the number of bone-light binding substructures following this structure
 };
 
@@ -1218,7 +1218,7 @@ struct SBoneLightBind
 // The string is after the array because of future alignment considerations; it may be padded with 0s.
 struct MESHMORPHTARGET_CHUNK_DESC_0001
 {
-	enum {VERSION = 0x0001};
+	enum { VERSION = 0x0001 };
 	unsigned nChunkIdMesh;   // the chunk id of the mesh chunk (ChunkType_Mesh) for which this morph target is
 	unsigned numMorphVertices;  // number of MORPHED vertices
 };
@@ -1236,11 +1236,11 @@ struct SMeshMorphTargetVertex
 // This structure is followed by 
 struct BONEINITIALPOS_CHUNK_DESC_0001
 {
-	enum {VERSION = 0x0001};
+	enum { VERSION = 0x0001 };
 	// the chunk id of the mesh chunk (ChunkType_Mesh) with bone info for which these bone initial positions are applicable.
 	// there might be some unused bones here as well. There must be the same number of bones as in the other chunks - they're placed
 	// in BoneId order.
-	unsigned nChunkIdMesh; 
+	unsigned nChunkIdMesh;
 	// this is the number of bone initial pose matrices here
 	unsigned numBones;
 };
@@ -1251,10 +1251,10 @@ struct BONEINITIALPOS_CHUNK_DESC_0001
 struct SBoneInitPosMatrix
 {
 	float mx[4][3];
-	float* operator [] (int i) {return mx[i];}
-	const float* operator [] (int i)const {return mx[i];}
+	float* operator [] (int i) { return mx[i]; }
+	const float* operator [] (int i)const { return mx[i]; }
 
-	const Vec3& getOrt (int nOrt)const {return *(const Vec3*)(mx[nOrt]);}
+	const Vec3& getOrt(int nOrt)const { return *(const Vec3*)(mx[nOrt]); }
 };
 
 #ifdef WIN64 // TODO: comment this, to apply the pack pragma to all platforms

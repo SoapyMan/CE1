@@ -17,18 +17,18 @@
 //#if defined(LINUX)
 //	#include "Splash.h"
 //#else
-	enum eSplashType
-	{
-		EST_Water,
-	};
+enum eSplashType
+{
+	EST_Water,
+};
 //#endif
 
 
-typedef HRESULT (*MIPDXTcallback)(void * data, int miplevel, DWORD size, int width, int height, void * user_data);
+typedef HRESULT(*MIPDXTcallback)(void* data, int miplevel, DWORD size, int width, int height, void* user_data);
 
 // Global typedefs.
 //////////////////////////////////////////////////////////////////////
-typedef const char*			cstr;
+typedef const char* cstr;
 #if !defined(LINUX)
 typedef unsigned long       DWORD;
 #endif //LINUX
@@ -50,10 +50,10 @@ typedef unsigned short	ushort;
 
 //forward declarations.
 //////////////////////////////////////////////////////////////////////
-typedef void*	WIN_HWND;
-typedef void*	WIN_HINSTANCE;
-typedef void*	WIN_HDC;
-typedef void*	WIN_HGLRC;
+typedef void* WIN_HWND;
+typedef void* WIN_HINSTANCE;
+typedef void* WIN_HDC;
+typedef void* WIN_HGLRC;
 
 class		CVertexBuffer;
 class		CREOcLeaf;
@@ -340,22 +340,22 @@ template	<class T> class list2;
 // Texture object interface
 struct ITexPic
 {
-  virtual void AddRef() = 0;
-  virtual void Release(int bForce=false)=0;
-  virtual const char *GetName()=0;
-  virtual int GetWidth() = 0;
-  virtual int GetHeight() = 0;
-  virtual int GetOriginalWidth() = 0;
-  virtual int GetOriginalHeight() = 0;
-  virtual int GetTextureID() = 0;
-  virtual int GetFlags() = 0;
-  virtual int GetFlags2() = 0;
-  virtual void SetClamp(bool bEnable) = 0;
-  virtual bool IsTextureLoaded() = 0;
-  virtual void PrecacheAsynchronously(float fDist, int Flags) = 0;
-  virtual void Preload (int Flags)=0;
-  virtual byte *GetData32()=0;
-  virtual bool SetFilter(int nFilter)=0;
+	virtual void AddRef() = 0;
+	virtual void Release(int bForce = false) = 0;
+	virtual const char* GetName() = 0;
+	virtual int GetWidth() = 0;
+	virtual int GetHeight() = 0;
+	virtual int GetOriginalWidth() = 0;
+	virtual int GetOriginalHeight() = 0;
+	virtual int GetTextureID() = 0;
+	virtual int GetFlags() = 0;
+	virtual int GetFlags2() = 0;
+	virtual void SetClamp(bool bEnable) = 0;
+	virtual bool IsTextureLoaded() = 0;
+	virtual void PrecacheAsynchronously(float fDist, int Flags) = 0;
+	virtual void Preload(int Flags) = 0;
+	virtual byte* GetData32() = 0;
+	virtual bool SetFilter(int nFilter) = 0;
 };
 
 #define	FORMAT_8_BIT	 8
@@ -366,20 +366,20 @@ struct ITexPic
 // Import and Export interfaces passed to the renderer
 struct SCryRenderInterface
 {
-  class CMalloc  *igcpMalloc;
+	class CMalloc* igcpMalloc;
 
-  ILog     *ipLog;
-  IConsole *ipConsole;
-  ITimer   *ipTimer;
-  ISystem  *ipSystem;
-  int      *ipTest_int;
-	IPhysicalWorld *pIPhysicalWorld;
+	ILog* ipLog;
+	IConsole* ipConsole;
+	ITimer* ipTimer;
+	ISystem* ipSystem;
+	int* ipTest_int;
+	IPhysicalWorld* pIPhysicalWorld;
 };
 
 //////////////////////////////////////////////////////////////////////
 struct tLmInfo
 {
-	float						fS[3],fT[3];
+	float						fS[3], fT[3];
 	unsigned short	nTextureIdLM;     // general color light map
 	unsigned short	nTextureIdLM_LD;  // lights direction texture for DOT3 LM
 };
@@ -387,51 +387,51 @@ struct tLmInfo
 //////////////////////////////////////////////////////////////////////
 struct CObjFace
 {
-  CObjFace() { memset(this,0,sizeof(CObjFace)); }
+	CObjFace() { memset(this, 0, sizeof(CObjFace)); }
 	~CObjFace()
 	{
-/*		if (m_lInfo)
-		{
-			delete m_lInfo;
-			m_lInfo=NULL;
-		}*/
+		/*		if (m_lInfo)
+				{
+					delete m_lInfo;
+					m_lInfo=NULL;
+				}*/
 	}
-  
-  unsigned short v[3];
-  unsigned short t[3];
-  unsigned short n[3];
+
+	unsigned short v[3];
+	unsigned short t[3];
+	unsigned short n[3];
 	unsigned short b[3];
-  unsigned short shader_id;
-	
-//	tLmInfo		*m_lInfo;
+	unsigned short shader_id;
 
-//  Vec3 m_vCenter;
-	
-	//! tell if this surface is lit by the light (for dynamic lights)
-  bool	m_bLit;
+	//	tLmInfo		*m_lInfo;
+
+	//  Vec3 m_vCenter;
+
+		//! tell if this surface is lit by the light (for dynamic lights)
+	bool	m_bLit;
 	//! plane equation for this surface (for dynamic lights)
-  Plane m_Plane;  
-  Vec3 m_Vecs[3];
+	Plane m_Plane;
+	Vec3 m_Vecs[3];
 
-  uchar m_dwFlags;
-  float m_fArea;	
+	uchar m_dwFlags;
+	float m_fArea;
 };
 
 #define VBF_DYNAMIC 1
 
 struct SDispFormat
 {
-  int m_Width;
-  int m_Height;
-  int m_BPP;
+	int m_Width;
+	int m_Height;
+	int m_BPP;
 };
 
 struct SAAFormat
 {
-  char szDescr[64];
-  int nSamples;
-  int nQuality;
-  int nAPIType;
+	char szDescr[64];
+	int nSamples;
+	int nQuality;
+	int nAPIType;
 };
 
 // Stream ID's
@@ -446,86 +446,86 @@ struct SAAFormat
 
 union UHWBuf
 {
-  void *m_pPtr;
-  uint m_nID;
+	void* m_pPtr;
+	uint m_nID;
 };
 
 struct SVertexStream
 {
-  void *m_VData;      // pointer to buffer data
-  UHWBuf m_VertBuf;   // HW buffer descriptor 
-  int m_nItems;
-  bool m_bLocked;     // Used in Direct3D only
-  bool m_bDynamic;
-  int m_nBufOffset;
-  struct SVertPool *m_pPool;
-  SVertexStream()
-  {
-    Reset();
-    m_bDynamic = false;
-    m_nBufOffset = 0;
-    m_pPool = NULL;
-  }
+	void* m_VData;      // pointer to buffer data
+	UHWBuf m_VertBuf;   // HW buffer descriptor 
+	int m_nItems;
+	bool m_bLocked;     // Used in Direct3D only
+	bool m_bDynamic;
+	int m_nBufOffset;
+	struct SVertPool* m_pPool;
+	SVertexStream()
+	{
+		Reset();
+		m_bDynamic = false;
+		m_nBufOffset = 0;
+		m_pPool = NULL;
+	}
 
-  void Reset()
-  {
-    m_VData = NULL;
-    m_VertBuf.m_pPtr = NULL;
-    m_nItems = NULL;
-    m_bLocked = false;
-  }
+	void Reset()
+	{
+		m_VData = NULL;
+		m_VertBuf.m_pPtr = NULL;
+		m_nItems = NULL;
+		m_bLocked = false;
+	}
 };
 
 //////////////////////////////////////////////////////////////////////
 // General VertexBuffer created by CreateVertexBuffer() function
 class CVertexBuffer
 {
-public:	
-  CVertexBuffer() 
-  {
-    for (int i=0; i<VSF_NUM; i++)
-    {
-      m_VS[i].Reset();
-    }
-    m_fence=0;
-    m_bFenceSet=0;
-    m_NumVerts = 0;
-    m_vertexformat = 0;
-  }
-  
-  CVertexBuffer(void* pData, int nVertexFormat, int nVertCount=0)
-  {
-    for (int i=0; i<VSF_NUM; i++)
-    {
-      m_VS[i].m_VData = NULL;
-      m_VS[i].m_VertBuf.m_pPtr = NULL;
-      m_VS[i].m_bLocked = false;
-    }
-    m_VS[VSF_GENERAL].m_VData = pData;
-    m_vertexformat = nVertexFormat;
-	  m_fence=0;
-	  m_bFenceSet=0;
-    m_NumVerts = nVertCount;
-  }
-  void *GetStream(int nStream, int *nOffs);
+public:
+	CVertexBuffer()
+	{
+		for (int i = 0; i < VSF_NUM; i++)
+		{
+			m_VS[i].Reset();
+		}
+		m_fence = 0;
+		m_bFenceSet = 0;
+		m_NumVerts = 0;
+		m_vertexformat = 0;
+	}
 
-  SVertexStream m_VS[VSF_NUM]; // 4 vertex streams and one index stream
+	CVertexBuffer(void* pData, int nVertexFormat, int nVertCount = 0)
+	{
+		for (int i = 0; i < VSF_NUM; i++)
+		{
+			m_VS[i].m_VData = NULL;
+			m_VS[i].m_VertBuf.m_pPtr = NULL;
+			m_VS[i].m_bLocked = false;
+		}
+		m_VS[VSF_GENERAL].m_VData = pData;
+		m_vertexformat = nVertexFormat;
+		m_fence = 0;
+		m_bFenceSet = 0;
+		m_NumVerts = nVertCount;
+	}
+	void* GetStream(int nStream, int* nOffs);
 
-  uint m_bFenceSet : 1;
-  uint m_bDynamic : 1;
+	SVertexStream m_VS[VSF_NUM]; // 4 vertex streams and one index stream
+
+	uint m_bFenceSet : 1;
+	uint m_bDynamic : 1;
 	int		m_vertexformat;
 	unsigned int m_fence;
-  int   m_NumVerts;
-//## MM unused?	void *pPS2Buffer;
+	int   m_NumVerts;
+	//## MM unused?	void *pPS2Buffer;
 
-  int Size(int Flags, int nVerts);
+	int Size(int Flags, int nVerts);
 };
 
 enum ERendStats
 {
-  eRS_VidBuffer,
-  eRS_ShaderPipeline,
-  eRS_CurTexturesInfo,
+	eRS_VidBuffer,
+	eRS_ShaderPipeline,
+	eRS_CurTexturesInfo,
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -544,25 +544,25 @@ enum ERendStats
 
 enum EImFormat
 {
-  eIF_Unknown = 0,
-  eIF_Pcx,
-  eIF_Tga,
-  eIF_Jpg,
-  eIF_Gif,
-  eIF_Tif,
-  eIF_Bmp,
-  eIF_Lbm,
-  eIF_DXT1,
-  eIF_DXT3,
-  eIF_DXT5,
-  eIF_DDS_LUMINANCE,
-  eIF_DDS_RGB8,
-  eIF_DDS_SIGNED_RGB8,
-  eIF_DDS_SIGNED_HILO8,
-  eIF_DDS_SIGNED_HILO16,
-  eIF_DDS_RGBA8,
-  eIF_DDS_DSDT,
-  eIF_DDS_RGBA4,
+	eIF_Unknown = 0,
+	eIF_Pcx,
+	eIF_Tga,
+	eIF_Jpg,
+	eIF_Gif,
+	eIF_Tif,
+	eIF_Bmp,
+	eIF_Lbm,
+	eIF_DXT1,
+	eIF_DXT3,
+	eIF_DXT5,
+	eIF_DDS_LUMINANCE,
+	eIF_DDS_RGB8,
+	eIF_DDS_SIGNED_RGB8,
+	eIF_DDS_SIGNED_HILO8,
+	eIF_DDS_SIGNED_HILO16,
+	eIF_DDS_RGBA8,
+	eIF_DDS_DSDT,
+	eIF_DDS_RGBA4,
 };
 
 
@@ -587,10 +587,10 @@ enum EImFormat
 // LoadAnimatedTexture returns pointer to this structure
 struct AnimTexInfo
 {
-  AnimTexInfo() { memset(this,0,sizeof(AnimTexInfo)); }
-  char sName[256];
-  int * pBindIds;
-  int nFramesCount;
+	AnimTexInfo() { memset(this, 0, sizeof(AnimTexInfo)); }
+	char sName[256];
+	int* pBindIds;
+	int nFramesCount;
 	int nRefCounter;
 };
 
@@ -663,7 +663,7 @@ struct SDrawTextInfo
 	float		color[4];
 	float xscale;
 	float yscale;
-	CXFont*	xfont;
+	CXFont* xfont;
 
 	SDrawTextInfo()
 	{
@@ -679,137 +679,137 @@ struct SDrawTextInfo
 struct IRenderer//: public IRendererCallbackServer
 {
 	//! Init the renderer, params are self-explanatory
-  virtual WIN_HWND Init(int x,int y,int width,int height,unsigned int cbpp, int zbpp, int sbits, bool fullscreen,WIN_HINSTANCE hinst, WIN_HWND Glhwnd=0, WIN_HDC Glhdc=0, WIN_HGLRC hGLrc=0, bool bReInit=false)=0;
+	virtual WIN_HWND Init(int x, int y, int width, int height, unsigned int cbpp, int zbpp, int sbits, bool fullscreen, WIN_HINSTANCE hinst, WIN_HWND Glhwnd = 0, WIN_HDC Glhdc = 0, WIN_HGLRC hGLrc = 0, bool bReInit = false) = 0;
 
-  virtual bool SetCurrentContext(WIN_HWND hWnd)=0;
-  virtual bool CreateContext(WIN_HWND hWnd, bool bAllowFSAA=false)=0;
-  virtual bool DeleteContext(WIN_HWND hWnd)=0;
+	virtual bool SetCurrentContext(WIN_HWND hWnd) = 0;
+	virtual bool CreateContext(WIN_HWND hWnd, bool bAllowFSAA = false) = 0;
+	virtual bool DeleteContext(WIN_HWND hWnd) = 0;
 
-  virtual int GetFeatures()=0;
-  virtual int GetMaxTextureMemory()=0;
+	virtual int GetFeatures() = 0;
+	virtual int GetMaxTextureMemory() = 0;
 
 	//! Shut down the renderer
-	virtual void	ShutDown(bool bReInit=false)=0;
+	virtual void	ShutDown(bool bReInit = false) = 0;
 
 	//! Return all supported by video card video formats (except low resolution formats)
-	virtual int	EnumDisplayFormats(TArray<SDispFormat>& Formats, bool bReset)=0;
+	virtual int	EnumDisplayFormats(TArray<SDispFormat>& Formats, bool bReset) = 0;
 
-  //! Changes resolution of the window/device (doen't require to reload the level
-  virtual bool	ChangeResolution(int nNewWidth, int nNewHeight, int nNewColDepth, int nNewRefreshHZ, bool bFullScreen)=0;
+	//! Changes resolution of the window/device (doen't require to reload the level
+	virtual bool	ChangeResolution(int nNewWidth, int nNewHeight, int nNewColDepth, int nNewRefreshHZ, bool bFullScreen) = 0;
 
 	//! Shut down the renderer
-	virtual void	Release()=0;
+	virtual void	Release() = 0;
 
 	//! Free the allocated resources
-  virtual void  FreeResources(int nFlags)=0;
+	virtual void  FreeResources(int nFlags) = 0;
 
-  //! Refresh/Reload the allocated resources
-  virtual void  RefreshResources(int nFlags)=0;
+	//! Refresh/Reload the allocated resources
+	virtual void  RefreshResources(int nFlags) = 0;
 
-  //! Should be called before loading of the level
-  virtual void	PreLoad (void)=0;
+	//! Should be called before loading of the level
+	virtual void	PreLoad(void) = 0;
 
-  //! Should be called after loading of the level
-  virtual void	PostLoad (void)=0;
+	//! Should be called after loading of the level
+	virtual void	PostLoad(void) = 0;
 
 	//! Should be called at the beginning of every frame
-	virtual void	BeginFrame	(void)=0;
+	virtual void	BeginFrame(void) = 0;
 
 	//! Should be called at the end of every frame
-	virtual void	Update		(void)=0;	
-	
+	virtual void	Update(void) = 0;
+
 	//! This renderer will share resources (textures) with specified renderer.
 	//! Specified renderer must be of same type as this renderer.
-	virtual void  ShareResources( IRenderer *renderer )=0;
+	virtual void  ShareResources(IRenderer* renderer) = 0;
 
-  virtual	void	GetViewport(int *x, int *y, int *width, int *height)=0;
-  virtual	void	SetViewport(int x=0, int y=0, int width=0, int height=0)=0;
-  virtual	void	SetScissor(int x=0, int y=0, int width=0, int height=0)=0;
+	virtual	void	GetViewport(int* x, int* y, int* width, int* height) = 0;
+	virtual	void	SetViewport(int x = 0, int y = 0, int width = 0, int height = 0) = 0;
+	virtual	void	SetScissor(int x = 0, int y = 0, int width = 0, int height = 0) = 0;
 
 	//! Make this renderer current renderer.
 	//! Only relevant for OpenGL ignored of DX, used by Editors.
 	virtual void	MakeCurrent() = 0;
 
 	//! Draw a triangle strip
-	virtual void  DrawTriStrip(CVertexBuffer *src, int vert_num=4)=0;
+	virtual void  DrawTriStrip(CVertexBuffer* src, int vert_num = 4) = 0;
 
-  virtual void *GetDynVBPtr(int nVerts, int &nOffs, int Pool) = 0;
-  virtual void DrawDynVB(int nOffs, int Pool, int nVerts) = 0;
-  virtual void DrawDynVB(struct_VERTEX_FORMAT_P3F_COL4UB_TEX2F *pBuf, ushort *pInds, int nVerts, int nInds, int nPrimType) = 0;
+	virtual void* GetDynVBPtr(int nVerts, int& nOffs, int Pool) = 0;
+	virtual void DrawDynVB(int nOffs, int Pool, int nVerts) = 0;
+	virtual void DrawDynVB(struct_VERTEX_FORMAT_P3F_COL4UB_TEX2F* pBuf, ushort* pInds, int nVerts, int nInds, int nPrimType) = 0;
 
 	//! append fence to the end of rendering stream
-	virtual void SetFenceCompleted(CVertexBuffer * buffer)=0;
+	virtual void SetFenceCompleted(CVertexBuffer* buffer) = 0;
 
 	//! Create a vertex buffer
-	virtual	CVertexBuffer	*CreateBuffer(int  vertexcount,int vertexformat, const char *szSource, bool bDynamic=false)=0;
+	virtual	CVertexBuffer* CreateBuffer(int  vertexcount, int vertexformat, const char* szSource, bool bDynamic = false) = 0;
 
 	//! Release a vertex buffer
-	virtual void	ReleaseBuffer(CVertexBuffer *bufptr)=0;
+	virtual void	ReleaseBuffer(CVertexBuffer* bufptr) = 0;
 
 	//! Draw a vertex buffer
-	virtual void	DrawBuffer(CVertexBuffer *src,SVertexStream *indicies,int numindices, int offsindex, int prmode,int vert_start=0,int vert_stop=0, CMatInfo *mi=NULL)=0;
+	virtual void	DrawBuffer(CVertexBuffer* src, SVertexStream* indicies, int numindices, int offsindex, int prmode, int vert_start = 0, int vert_stop = 0, CMatInfo* mi = NULL) = 0;
 
 	//! Update a vertex buffer
-	virtual void	UpdateBuffer(CVertexBuffer *dest,const void *src,int vertexcount, bool bUnLock, int nOffs=0, int Type=0)=0;
+	virtual void	UpdateBuffer(CVertexBuffer* dest, const void* src, int vertexcount, bool bUnLock, int nOffs = 0, int Type = 0) = 0;
 
-  virtual void  CreateIndexBuffer(SVertexStream *dest,const void *src,int indexcount)=0;
-  //! Update indicies 
-  virtual void  UpdateIndexBuffer(SVertexStream *dest,const void *src, int indexcount, bool bUnLock=true)=0;
-  virtual void  ReleaseIndexBuffer(SVertexStream *dest)=0;
+	virtual void  CreateIndexBuffer(SVertexStream* dest, const void* src, int indexcount) = 0;
+	//! Update indicies 
+	virtual void  UpdateIndexBuffer(SVertexStream* dest, const void* src, int indexcount, bool bUnLock = true) = 0;
+	virtual void  ReleaseIndexBuffer(SVertexStream* dest) = 0;
 
 	//! Check for an error in the current frame
-	virtual	void	CheckError(const char *comment)=0;
+	virtual	void	CheckError(const char* comment) = 0;
 
 	//! Draw a bbox specified by mins/maxs (debug puprposes)
-	virtual	void	Draw3dBBox(const Vec3 &mins,const Vec3 &maxs, int nPrimType=DPRIM_WHIRE_BOX)=0;
+	virtual	void	Draw3dBBox(const Vec3& mins, const Vec3& maxs, int nPrimType = DPRIM_WHIRE_BOX) = 0;
 
 	//! Draw a primitive specified by min/max vertex (for debug purposes)
 	//! because of legacy code, the default implementation calls Draw3dBBox.
 	//! in the newly changed renderer implementations, this will be the principal function and Draw3dBBox will eventually only draw 3dbboxes
-	virtual	void	Draw3dPrim(const Vec3 &mins,const Vec3 &maxs, int nPrimType=DPRIM_WHIRE_BOX, const float* fRGBA = NULL)
+	virtual	void	Draw3dPrim(const Vec3& mins, const Vec3& maxs, int nPrimType = DPRIM_WHIRE_BOX, const float* fRGBA = NULL)
 	{
 		// default implementaiton ignores color
-		Draw3dBBox(mins, maxs,nPrimType);
+		Draw3dBBox(mins, maxs, nPrimType);
 	}
 
 	//! Set the renderer camera
-	virtual	void	SetCamera(const CCamera &cam)=0;
+	virtual	void	SetCamera(const CCamera& cam) = 0;
 
 	//! Get the renderer camera
-	virtual	const CCamera& GetCamera()=0;
+	virtual	const CCamera& GetCamera() = 0;
 
 	//! Set delta gamma
-	virtual	bool	SetGammaDelta(const float fGamma)=0;
+	virtual	bool	SetGammaDelta(const float fGamma) = 0;
 
 	//! Change display size
-	virtual bool	ChangeDisplay(unsigned int width,unsigned int height,unsigned int cbpp)=0;
+	virtual bool	ChangeDisplay(unsigned int width, unsigned int height, unsigned int cbpp) = 0;
 
 	//! Chenge viewport size
-  virtual void  ChangeViewport(unsigned int x,unsigned int y,unsigned int width,unsigned int height)=0;
+	virtual void  ChangeViewport(unsigned int x, unsigned int y, unsigned int width, unsigned int height) = 0;
 
 	//! Save source data to a Tga file (NOTE: Should not be here)	
-	virtual	bool	SaveTga(unsigned char *sourcedata,int sourceformat,int w,int h,const char *filename,bool flip)=0;
+	virtual	bool	SaveTga(unsigned char* sourcedata, int sourceformat, int w, int h, const char* filename, bool flip) = 0;
 
 	//! Set the current binded texture
-	virtual	void	SetTexture(int tnum, ETexType Type=eTT_Base)=0;	
+	virtual	void	SetTexture(int tnum, ETexType Type = eTT_Base) = 0;
 
 	//! Set the white texture
-	virtual	void	SetWhiteTexture()=0;	
+	virtual	void	SetWhiteTexture() = 0;
 
 	//! Write a message on the screen
-	virtual void	WriteXY(CXFont *currfont,int x,int y, float xscale,float yscale,float r,float g,float b,float a,const char *message, ...)=0;	
+	virtual void	WriteXY(CXFont* currfont, int x, int y, float xscale, float yscale, float r, float g, float b, float a, const char* message, ...) = 0;
 	//! Write a message on the screen with additional flags.
 	//! for flags @see 
-	virtual void	Draw2dText( float posX,float posY,const char *szText,SDrawTextInfo &info )=0;
+	virtual void	Draw2dText(float posX, float posY, const char* szText, SDrawTextInfo& info) = 0;
 
 	//! Draw a 2d image on the screen (Hud etc.)
-  virtual void	Draw2dImage	(float xpos,float ypos,float w,float h,int texture_id,float s0=0,float t0=0,float s1=1,float t1=1,float angle=0,float r=1,float g=1,float b=1,float a=1,float z=1)=0;
+	virtual void	Draw2dImage(float xpos, float ypos, float w, float h, int texture_id, float s0 = 0, float t0 = 0, float s1 = 1, float t1 = 1, float angle = 0, float r = 1, float g = 1, float b = 1, float a = 1, float z = 1) = 0;
 
 	//! Draw a image using the current matrix
-	virtual void DrawImage(float xpos,float ypos,float w,float h,int texture_id,float s0,float t0,float s1,float t1,float r,float g,float b,float a)=0;
+	virtual void DrawImage(float xpos, float ypos, float w, float h, int texture_id, float s0, float t0, float s1, float t1, float r, float g, float b, float a) = 0;
 
 	//! Set the polygon mode (wireframe, solid)
-	virtual int	SetPolygonMode(int mode)=0;
+	virtual int	SetPolygonMode(int mode) = 0;
 
 	//! Get screen width
 	virtual	int		GetWidth() = 0;
@@ -818,306 +818,306 @@ struct IRenderer//: public IRendererCallbackServer
 	virtual	int		GetHeight() = 0;
 
 	//! Memory status information
-	virtual void GetMemoryUsage(ICrySizer* Sizer)=0;
+	virtual void GetMemoryUsage(ICrySizer* Sizer) = 0;
 
 	//! Get a screenshot and save to a file
-	virtual void ScreenShot(const char *filename=NULL)=0;
+	virtual void ScreenShot(const char* filename = NULL) = 0;
 
 	//! Get current bpp
-  virtual int	GetColorBpp()=0;
+	virtual int	GetColorBpp() = 0;
 
 	//! Get current z-buffer depth
-  virtual int	GetDepthBpp()=0;
+	virtual int	GetDepthBpp() = 0;
 
 	//! Get current stencil bits
-  virtual int	GetStencilBpp()=0;
+	virtual int	GetStencilBpp() = 0;
 
-  //! Project to screen
-  virtual void ProjectToScreen( float ptx, float pty, float ptz, 
-                                float *sx, float *sy, float *sz )=0;
+	//! Project to screen
+	virtual void ProjectToScreen(float ptx, float pty, float ptz,
+		float* sx, float* sy, float* sz) = 0;
 
 	//! Unproject to screen
-  virtual int UnProject(float sx, float sy, float sz, 
-                float *px, float *py, float *pz,
-                const float modelMatrix[16], 
-                const float projMatrix[16], 
-                const int    viewport[4])=0;
+	virtual int UnProject(float sx, float sy, float sz,
+		float* px, float* py, float* pz,
+		const float modelMatrix[16],
+		const float projMatrix[16],
+		const int    viewport[4]) = 0;
 
 	//! Unproject from screen
-  virtual int UnProjectFromScreen( float  sx, float  sy, float  sz, 
-                           float *px, float *py, float *pz)=0;
-
-  //! for editor
-  virtual void  GetModelViewMatrix(float *mat)=0;
+	virtual int UnProjectFromScreen(float  sx, float  sy, float  sz,
+		float* px, float* py, float* pz) = 0;
 
 	//! for editor
-  virtual void  GetModelViewMatrix(double *mat)=0;
+	virtual void  GetModelViewMatrix(float* mat) = 0;
 
 	//! for editor
-  virtual void  GetProjectionMatrix(double *mat)=0;
+	virtual void  GetModelViewMatrix(double* mat) = 0;
 
 	//! for editor
-  virtual void  GetProjectionMatrix(float *mat)=0;
+	virtual void  GetProjectionMatrix(double* mat) = 0;
 
 	//! for editor
-  virtual Vec3 GetUnProject(const Vec3 &WindowCoords,const CCamera &cam)=0;
+	virtual void  GetProjectionMatrix(float* mat) = 0;
 
-  virtual void RenderToViewport(const CCamera &cam, float x, float y, float width, float height)=0;
+	//! for editor
+	virtual Vec3 GetUnProject(const Vec3& WindowCoords, const CCamera& cam) = 0;
 
-  virtual void WriteDDS(byte *dat, int wdt, int hgt, int Size, const char *name, EImFormat eF, int NumMips)=0;
-	virtual void WriteTGA(byte *dat, int wdt, int hgt, const char *name, int bits)=0;
-	virtual void WriteJPG(byte *dat, int wdt, int hgt, char *name)=0;
+	virtual void RenderToViewport(const CCamera& cam, float x, float y, float width, float height) = 0;
+
+	virtual void WriteDDS(byte* dat, int wdt, int hgt, int Size, const char* name, EImFormat eF, int NumMips) = 0;
+	virtual void WriteTGA(byte* dat, int wdt, int hgt, const char* name, int bits) = 0;
+	virtual void WriteJPG(byte* dat, int wdt, int hgt, char* name) = 0;
 
 	/////////////////////////////////////////////////////////////////////////////////
 	//Replacement functions for Font
 
-	virtual	bool FontUploadTexture(class CFBitmap*, ETEX_Format eTF=eTF_8888)=0;
-	virtual	int  FontCreateTexture(int Width, int Height, byte *pData, ETEX_Format eTF=eTF_8888)=0;
-  virtual	bool FontUpdateTexture(int nTexId, int X, int Y, int USize, int VSize, byte *pData)=0;
-	virtual	void FontReleaseTexture(class CFBitmap *pBmp)=0;
-	virtual void FontSetTexture(class CFBitmap*, int nFilterMode)=0;
-  virtual void FontSetTexture(int nTexId, int nFilterMode)=0;
-	virtual void FontSetRenderingState(unsigned long nVirtualScreenWidth, unsigned long nVirtualScreenHeight)=0;
-	virtual void FontSetBlending(int src, int dst)=0;
-	virtual void FontRestoreRenderingState()=0;
+	virtual	bool FontUploadTexture(class CFBitmap*, ETEX_Format eTF = eTF_8888) = 0;
+	virtual	int  FontCreateTexture(int Width, int Height, byte* pData, ETEX_Format eTF = eTF_8888) = 0;
+	virtual	bool FontUpdateTexture(int nTexId, int X, int Y, int USize, int VSize, byte* pData) = 0;
+	virtual	void FontReleaseTexture(class CFBitmap* pBmp) = 0;
+	virtual void FontSetTexture(class CFBitmap*, int nFilterMode) = 0;
+	virtual void FontSetTexture(int nTexId, int nFilterMode) = 0;
+	virtual void FontSetRenderingState(unsigned long nVirtualScreenWidth, unsigned long nVirtualScreenHeight) = 0;
+	virtual void FontSetBlending(int src, int dst) = 0;
+	virtual void FontRestoreRenderingState() = 0;
 
-  /////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////////
 
 
-  /////////////////////////////////////////////////////////////////////////////////
-  // external interface for shaders
-  /////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////////
+	// external interface for shaders
+	/////////////////////////////////////////////////////////////////////////////////
 
-  virtual bool EF_PrecacheResource(IShader *pSH, float fDist, float fTimeToReady, int Flags)=0;
-  virtual bool EF_PrecacheResource(ITexPic *pTP, float fDist, float fTimeToReady, int Flags)=0;
-  virtual bool EF_PrecacheResource(CLeafBuffer *pPB, float fDist, float fTimeToReady, int Flags)=0;
-  virtual bool EF_PrecacheResource(CDLight *pLS, float fDist, float fTimeToReady, int Flags)=0;
+	virtual bool EF_PrecacheResource(IShader* pSH, float fDist, float fTimeToReady, int Flags) = 0;
+	virtual bool EF_PrecacheResource(ITexPic* pTP, float fDist, float fTimeToReady, int Flags) = 0;
+	virtual bool EF_PrecacheResource(CLeafBuffer* pPB, float fDist, float fTimeToReady, int Flags) = 0;
+	virtual bool EF_PrecacheResource(CDLight* pLS, float fDist, float fTimeToReady, int Flags) = 0;
 
-  virtual void EF_EnableHeatVision(bool bEnable)=0;
-  virtual bool EF_GetHeatVision()=0;
+	virtual void EF_EnableHeatVision(bool bEnable) = 0;
+	virtual bool EF_GetHeatVision() = 0;
 
-  virtual void EF_PolygonOffset(bool bEnable, float fFactor, float fUnits)=0;
+	virtual void EF_PolygonOffset(bool bEnable, float fFactor, float fUnits) = 0;
 
-  // Add 3D polygon to the list
-  virtual void EF_AddPolyToScene3D(int Ef, int numPts, SColorVert *verts, CCObject *obj=NULL, int nFogID=0)=0;
+	// Add 3D polygon to the list
+	virtual void EF_AddPolyToScene3D(int Ef, int numPts, SColorVert* verts, CCObject* obj = NULL, int nFogID = 0) = 0;
 
-  // Add Sprite to the list
-  virtual CCObject *EF_AddSpriteToScene(int Ef, int numPts, SColorVert *verts, CCObject *obj, byte *inds=NULL, int ninds=0, int nFogID=0)=0;
+	// Add Sprite to the list
+	virtual CCObject* EF_AddSpriteToScene(int Ef, int numPts, SColorVert* verts, CCObject* obj, byte* inds = NULL, int ninds = 0, int nFogID = 0) = 0;
 
-  // Add 2D polygon to the list
-  virtual void EF_AddPolyToScene2D(int Ef, int numPts, SColorVert2D *verts)=0;
-  virtual void EF_AddPolyToScene2D(SShaderItem si, int nTempl, int numPts, SColorVert2D *verts)=0;
+	// Add 2D polygon to the list
+	virtual void EF_AddPolyToScene2D(int Ef, int numPts, SColorVert2D* verts) = 0;
+	virtual void EF_AddPolyToScene2D(SShaderItem si, int nTempl, int numPts, SColorVert2D* verts) = 0;
 
-  /////////////////////////////////////////////////////////////////////////////////
-  // Shaders/Shaders management /////////////////////////////////////////////////////////////////////////////////
-  /////////////////////////////////////////////////////////////////////////////////
-  // Load shader for name (name)
-  virtual IShader *EF_LoadShader (const char *name, EShClass Class, int flags=0, uint64 nMaskGen=0)=0;
-  // Load shader item for name (name)
-  virtual SShaderItem EF_LoadShaderItem (const char *name, EShClass Class, bool bShare, const char *templName, int flags=0, SInputShaderResources *Res=NULL, uint64 nMaskGen=0)=0;
-  // reload file
-  virtual bool					EF_ReloadFile (const char *szFileName)=0;
-  // Reinit all shader files (build hash tables)
-  virtual void					EF_ReloadShaderFiles (int nCategory)=0;
-  // Reload all texturer files
-  virtual void					EF_ReloadTextures ()=0;
-  // Create new shader as copy of (ef)
-  virtual IShader			*EF_CopyShader(IShader *ef)=0;
-  // Get texture object by ID
-  virtual ITexPic *EF_GetTextureByID(int Id)=0;
-  // Loading of the texture for name(nameTex)
-  virtual ITexPic			*EF_LoadTexture(const char* nameTex, uint flags, uint flags2, byte eTT, float fAmount1=-1.0f, float fAmount2=-1.0f, int Id=-1, int BindId=0)=0;
-  // Load lightmap for name (name)
-  virtual int			    EF_LoadLightmap (const char *name)=0;
-  virtual bool			    EF_ScanEnvironmentCM (const char *name, int size, Vec3& Pos)=0;
-  // Function used for loading animated texture from specified folder
-  virtual int						EF_ReadAllImgFiles(IShader *ef, SShaderTexUnit *tl, STexAnim *ta, char *name)=0;
-  // Return texture procedure for name (name)
-  virtual char					**EF_GetShadersForFile(const char *File, int num)=0;
-  // Return Light. Material properties for Name (Str). Materials descriptions - in shader file LightMaterials.ses
-  virtual SLightMaterial *EF_GetLightMaterial(char *Str)=0;
-  // Register new user defined template
-  virtual bool					EF_RegisterTemplate(int nTemplId, char *Name, bool bReplace)=0;
+	/////////////////////////////////////////////////////////////////////////////////
+	// Shaders/Shaders management /////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////////
+	// Load shader for name (name)
+	virtual IShader* EF_LoadShader(const char* name, EShClass Class, int flags = 0, uint64 nMaskGen = 0) = 0;
+	// Load shader item for name (name)
+	virtual SShaderItem EF_LoadShaderItem(const char* name, EShClass Class, bool bShare, const char* templName, int flags = 0, SInputShaderResources* Res = NULL, uint64 nMaskGen = 0) = 0;
+	// reload file
+	virtual bool					EF_ReloadFile(const char* szFileName) = 0;
+	// Reinit all shader files (build hash tables)
+	virtual void					EF_ReloadShaderFiles(int nCategory) = 0;
+	// Reload all texturer files
+	virtual void					EF_ReloadTextures() = 0;
+	// Create new shader as copy of (ef)
+	virtual IShader* EF_CopyShader(IShader* ef) = 0;
+	// Get texture object by ID
+	virtual ITexPic* EF_GetTextureByID(int Id) = 0;
+	// Loading of the texture for name(nameTex)
+	virtual ITexPic* EF_LoadTexture(const char* nameTex, uint flags, uint flags2, byte eTT, float fAmount1 = -1.0f, float fAmount2 = -1.0f, int Id = -1, int BindId = 0) = 0;
+	// Load lightmap for name (name)
+	virtual int			    EF_LoadLightmap(const char* name) = 0;
+	virtual bool			    EF_ScanEnvironmentCM(const char* name, int size, Vec3& Pos) = 0;
+	// Function used for loading animated texture from specified folder
+	virtual int						EF_ReadAllImgFiles(IShader* ef, SShaderTexUnit* tl, STexAnim* ta, char* name) = 0;
+	// Return texture procedure for name (name)
+	virtual char** EF_GetShadersForFile(const char* File, int num) = 0;
+	// Return Light. Material properties for Name (Str). Materials descriptions - in shader file LightMaterials.ses
+	virtual SLightMaterial* EF_GetLightMaterial(char* Str) = 0;
+	// Register new user defined template
+	virtual bool					EF_RegisterTemplate(int nTemplId, char* Name, bool bReplace) = 0;
 
-  // Create splash
-  virtual void			EF_AddSplash (Vec3 Pos, eSplashType eST, float fForce, int Id=-1)=0;
+	// Create splash
+	virtual void			EF_AddSplash(Vec3 Pos, eSplashType eST, float fForce, int Id = -1) = 0;
 
-  // Hide shader template (exclude from list)
-  virtual bool					EF_HideTemplate(const char *name)=0;
-  // UnHide shader template (include in list)
-  virtual bool					EF_UnhideTemplate(const char *name)=0;
-  // UnHide all shader templates (include in list)
-  virtual bool					EF_UnhideAllTemplates()=0;
+	// Hide shader template (exclude from list)
+	virtual bool					EF_HideTemplate(const char* name) = 0;
+	// UnHide shader template (include in list)
+	virtual bool					EF_UnhideTemplate(const char* name) = 0;
+	// UnHide all shader templates (include in list)
+	virtual bool					EF_UnhideAllTemplates() = 0;
 
-  virtual bool EF_SetLightHole(Vec3 vPos, Vec3 vNormal, int idTex, float fScale=1.0f, bool bAdditive=true)=0;
+	virtual bool EF_SetLightHole(Vec3 vPos, Vec3 vNormal, int idTex, float fScale = 1.0f, bool bAdditive = true) = 0;
 
-  // Create new RE (RenderElement) of type (edt)
-  virtual CRendElement *EF_CreateRE (EDataType edt)=0;
+	// Create new RE (RenderElement) of type (edt)
+	virtual CRendElement* EF_CreateRE(EDataType edt) = 0;
 
-  // Begin using shaders (return first index for allow recursions)
-  virtual void EF_StartEf ()=0;
+	// Begin using shaders (return first index for allow recursions)
+	virtual void EF_StartEf() = 0;
 
-  // Get CCObject for RE transformation
-  virtual CCObject *EF_GetObject (bool bTemp=false, int num=-1)=0;
+	// Get CCObject for RE transformation
+	virtual CCObject* EF_GetObject(bool bTemp = false, int num = -1) = 0;
 
-  // Add shader to the list
-  virtual void EF_AddEf (int NumFog, CRendElement *re, IShader *ef, SRenderShaderResources *sr,  CCObject *obj, int nTempl, IShader *efState=0, int nSort=0)=0;
+	// Add shader to the list
+	virtual void EF_AddEf(int NumFog, CRendElement* re, IShader* ef, SRenderShaderResources* sr, CCObject* obj, int nTempl, IShader* efState = 0, int nSort = 0) = 0;
 
-  // Draw all shaded REs in the list
-  virtual void EF_EndEf3D (int nFlags)=0;
+	// Draw all shaded REs in the list
+	virtual void EF_EndEf3D(int nFlags) = 0;
 
-  // Dynamic lights
-  virtual bool EF_IsFakeDLight (CDLight *Source)=0;
-  virtual void EF_ADDDlight(CDLight *Source)=0;
-  virtual void EF_ClearLightsList()=0;
-  virtual bool EF_UpdateDLight(CDLight *pDL)=0;
+	// Dynamic lights
+	virtual bool EF_IsFakeDLight(CDLight* Source) = 0;
+	virtual void EF_ADDDlight(CDLight* Source) = 0;
+	virtual void EF_ClearLightsList() = 0;
+	virtual bool EF_UpdateDLight(CDLight* pDL) = 0;
 
-  /////////////////////////////////////////////////////////////////////////////////
-  // 2d interface for the shaders
-  /////////////////////////////////////////////////////////////////////////////////
-  virtual void EF_EndEf2D(bool bSort)=0;
+	/////////////////////////////////////////////////////////////////////////////////
+	// 2d interface for the shaders
+	/////////////////////////////////////////////////////////////////////////////////
+	virtual void EF_EndEf2D(bool bSort) = 0;
 
-  // Add new shader to the list
-  virtual bool EF_DrawEfForName(char *name, float x, float y, float width, float height, CFColor& col, int nTempl=-1)=0;
-  virtual bool EF_DrawEfForNum(int num, float x, float y, float width, float height, CFColor& col, int nTempl=-1)=0;
-  virtual bool EF_DrawEf(IShader *ef, float x, float y, float width, float height, CFColor& col, int nTempl=-1)=0;
-  virtual bool EF_DrawEf(SShaderItem si, float x, float y, float width, float height, CFColor& col, int nTempl=-1)=0;
+	// Add new shader to the list
+	virtual bool EF_DrawEfForName(char* name, float x, float y, float width, float height, CFColor& col, int nTempl = -1) = 0;
+	virtual bool EF_DrawEfForNum(int num, float x, float y, float width, float height, CFColor& col, int nTempl = -1) = 0;
+	virtual bool EF_DrawEf(IShader* ef, float x, float y, float width, float height, CFColor& col, int nTempl = -1) = 0;
+	virtual bool EF_DrawEf(SShaderItem si, float x, float y, float width, float height, CFColor& col, int nTempl = -1) = 0;
 
-  // Add new shader as part of texture to the list
-  virtual bool EF_DrawPartialEfForName(char *name, SVrect *vr, SVrect *pr, CFColor& col)=0;
-  virtual bool EF_DrawPartialEfForNum(int num, SVrect *vr, SVrect *pr, CFColor& col)=0;
-  virtual bool EF_DrawPartialEf(IShader *ef, SVrect *vr, SVrect *pr, CFColor& col, float iwdt=0, float ihgt=0)=0;
+	// Add new shader as part of texture to the list
+	virtual bool EF_DrawPartialEfForName(char* name, SVrect* vr, SVrect* pr, CFColor& col) = 0;
+	virtual bool EF_DrawPartialEfForNum(int num, SVrect* vr, SVrect* pr, CFColor& col) = 0;
+	virtual bool EF_DrawPartialEf(IShader* ef, SVrect* vr, SVrect* pr, CFColor& col, float iwdt = 0, float ihgt = 0) = 0;
 
-  // Return different common shader parameters (used in ShaderBrowser) CryIndEd.exe
-  virtual void *EF_Query(int Query, int Param=0)=0;
-  // Construct effector (optimize) after parsing
-  virtual void EF_ConstructEf(IShader *Ef)=0;
-  // Setting of the global world color (use in shaders pipeline)
-  virtual void EF_SetWorldColor(float r, float g, float b, float a=1.0f)=0;
-  //! Register fog volume for layered fog
-  virtual int  EF_RegisterFogVolume(float fMaxFogDist, float fFogLayerZ, CFColor color, int nIndex=-1, bool bCaustics=false) = 0;
+	// Return different common shader parameters (used in ShaderBrowser) CryIndEd.exe
+	virtual void* EF_Query(int Query, int Param = 0) = 0;
+	// Construct effector (optimize) after parsing
+	virtual void EF_ConstructEf(IShader* Ef) = 0;
+	// Setting of the global world color (use in shaders pipeline)
+	virtual void EF_SetWorldColor(float r, float g, float b, float a = 1.0f) = 0;
+	//! Register fog volume for layered fog
+	virtual int  EF_RegisterFogVolume(float fMaxFogDist, float fFogLayerZ, CFColor color, int nIndex = -1, bool bCaustics = false) = 0;
 
-  // for stats
-	virtual int  GetPolyCount()=0;
-  virtual void GetPolyCount(int &nPolygons,int &nShadowVolPolys)=0;
+	// for stats
+	virtual int  GetPolyCount() = 0;
+	virtual void GetPolyCount(int& nPolygons, int& nShadowVolPolys) = 0;
 
-  // 3d engine set this color to fog color
-  virtual void SetClearColor(const Vec3 & vColor)=0;
+	// 3d engine set this color to fog color
+	virtual void SetClearColor(const Vec3& vColor) = 0;
 
-  // create/delete LeafBuffer object
-  virtual CLeafBuffer * CreateLeafBuffer(bool bDynamic, const char *szSource="Unknown", class CIndexedMesh * pIndexedMesh=0)=0;
-  
-  virtual CLeafBuffer * CreateLeafBufferInitialized(
-    void * pVertBuffer, int nVertCount, int nVertFormat, 
-    ushort* pIndices, int nIndices,
-    int nPrimetiveType, const char *szSource, EBufferType eBufType = eBT_Dynamic,
-    int nMatInfoCount=1, int nClientTextureBindID=0,
-    bool (*PrepareBufferCallback)(CLeafBuffer *, bool)=NULL,
-    void *CustomData=NULL,
-    bool bOnlyVideoBuffer=false, bool bPrecache=true)=0;
+	// create/delete LeafBuffer object
+	virtual CLeafBuffer* CreateLeafBuffer(bool bDynamic, const char* szSource = "Unknown", class CIndexedMesh* pIndexedMesh = 0) = 0;
 
-  virtual void DeleteLeafBuffer(CLeafBuffer * pLBuffer)=0;
-  virtual int GetFrameID(bool bIncludeRecursiveCalls=true)=0;
+	virtual CLeafBuffer* CreateLeafBufferInitialized(
+		void* pVertBuffer, int nVertCount, int nVertFormat,
+		ushort* pIndices, int nIndices,
+		int nPrimetiveType, const char* szSource, EBufferType eBufType = eBT_Dynamic,
+		int nMatInfoCount = 1, int nClientTextureBindID = 0,
+		bool (*PrepareBufferCallback)(CLeafBuffer*, bool) = NULL,
+		void* CustomData = NULL,
+		bool bOnlyVideoBuffer = false, bool bPrecache = true) = 0;
 
-  virtual void MakeMatrix(const Vec3 & pos, const Vec3 & angles,const Vec3 & scale, Matrix44* mat)=0;
+	virtual void DeleteLeafBuffer(CLeafBuffer* pLBuffer) = 0;
+	virtual int GetFrameID(bool bIncludeRecursiveCalls = true) = 0;
 
-//////////////////////////////////////////////////////////////////////	
-	/*!	Draw an image on the screen as a label text
-			@param vPos:	3d position
-			@param fSize: size of the image
-			@nTextureId:	Texture Id dell'immagine
-	*/
-	virtual void DrawLabelImage(const Vec3 &vPos,float fSize,int nTextureId)=0;
+	virtual void MakeMatrix(const Vec3& pos, const Vec3& angles, const Vec3& scale, Matrix44* mat) = 0;
 
-  virtual void DrawLabel(Vec3 pos, float font_size, const char * label_text, ...)=0;
-  virtual void DrawLabelEx(Vec3 pos, float font_size, float * pfColor, bool bFixedSize, bool bCenter, const char * label_text, ...)=0;
-	virtual void Draw2dLabel( float x,float y, float font_size, float * pfColor, bool bCenter, const char * label_text, ...)=0;	
+	//////////////////////////////////////////////////////////////////////	
+		/*!	Draw an image on the screen as a label text
+				@param vPos:	3d position
+				@param fSize: size of the image
+				@nTextureId:	Texture Id dell'immagine
+		*/
+	virtual void DrawLabelImage(const Vec3& vPos, float fSize, int nTextureId) = 0;
 
-//////////////////////////////////////////////////////////////////////	
+	virtual void DrawLabel(Vec3 pos, float font_size, const char* label_text, ...) = 0;
+	virtual void DrawLabelEx(Vec3 pos, float font_size, float* pfColor, bool bFixedSize, bool bCenter, const char* label_text, ...) = 0;
+	virtual void Draw2dLabel(float x, float y, float font_size, float* pfColor, bool bCenter, const char* label_text, ...) = 0;
 
-	virtual float ScaleCoordX(float value)=0;
-	virtual float ScaleCoordY(float value)=0;
+	//////////////////////////////////////////////////////////////////////	
 
-	virtual void	SetState(int State)=0;
+	virtual float ScaleCoordX(float value) = 0;
+	virtual float ScaleCoordY(float value) = 0;
 
-	virtual void	SetCullMode	(int mode=R_CULL_BACK)=0;
-	virtual bool	EnableFog	(bool enable)=0;
-	virtual void	SetFog		(float density,float fogstart,float fogend,const float *color,int fogmode)=0;
-	virtual void	EnableTexGen(bool enable)=0; 
-	virtual void	SetTexgen	(float scaleX,float scaleY,float translateX=0,float translateY=0)=0;
-  virtual void  SetTexgen3D(float x1, float y1, float z1, float x2, float y2, float z2)=0;
-	virtual void	SetLodBias	(float value=R_DEFAULT_LODBIAS)=0;
-  virtual void  SetColorOp(byte eCo, byte eAo, byte eCa, byte eAa)=0;
+	virtual void	SetState(int State) = 0;
+
+	virtual void	SetCullMode(int mode = R_CULL_BACK) = 0;
+	virtual bool	EnableFog(bool enable) = 0;
+	virtual void	SetFog(float density, float fogstart, float fogend, const float* color, int fogmode) = 0;
+	virtual void	EnableTexGen(bool enable) = 0;
+	virtual void	SetTexgen(float scaleX, float scaleY, float translateX = 0, float translateY = 0) = 0;
+	virtual void  SetTexgen3D(float x1, float y1, float z1, float x2, float y2, float z2) = 0;
+	virtual void	SetLodBias(float value = R_DEFAULT_LODBIAS) = 0;
+	virtual void  SetColorOp(byte eCo, byte eAo, byte eCa, byte eAa) = 0;
 
 	//! NOTE: the following functions will be removed.
-	virtual	void	EnableVSync(bool enable)=0;
-	virtual void	PushMatrix()=0;
-	virtual void	RotateMatrix(float a,float x,float y,float z)=0;
-  virtual void	RotateMatrix(const Vec3 & angels)=0;
-	virtual void	TranslateMatrix(float x,float y,float z)=0;
-	virtual void	ScaleMatrix(float x,float y,float z)=0;
-	virtual void	TranslateMatrix(const Vec3 &pos)=0;
-  virtual void  MultMatrix(float * mat)=0;
-	virtual	void	LoadMatrix(const Matrix44 *src=0)=0;
-	virtual void	PopMatrix()=0;
-	virtual	void	EnableTMU(bool enable)=0;
-	virtual void	SelectTMU(int tnum)=0;	  	
-	virtual	unsigned int DownLoadToVideoMemory(unsigned char *data,int w, int h, ETEX_Format eTFSrc, ETEX_Format eTFDst, int nummipmap, bool repeat=true, int filter=FILTER_BILINEAR, int Id=0, char *szCacheName=NULL, int flags=0)=0;
-  virtual	void UpdateTextureInVideoMemory(uint tnum, unsigned char *newdata,int posx,int posy,int w,int h,ETEX_Format eTFSrc=eTF_0888)=0;	
-	virtual unsigned int LoadTexture(const char * filename,int *tex_type=NULL,unsigned int def_tid=0,bool compresstodisk=true,bool bWarn=true)=0;
-  virtual bool DXTCompress( byte *raw_data,int nWidth,int nHeight,ETEX_Format eTF, bool bUseHW, bool bGenMips, int nSrcBytesPerPix, MIPDXTcallback callback=0)=0;
-  virtual bool DXTDecompress(byte *srcData,byte *dstData, int nWidth,int nHeight,ETEX_Format eSrcTF, bool bUseHW, int nDstBytesPerPix)=0;
-	virtual	void	RemoveTexture(unsigned int TextureId)=0;
-  virtual	void	RemoveTexture(ITexPic * pTexPic) = 0;	
-  virtual void TextToScreen(float x, float y, const char * format, ...)=0;
-  virtual void TextToScreenColor(int x, int y, float r, float g, float b, float a, const char * format, ...)=0;
-  virtual void ResetToDefault()=0;
-  virtual int  GenerateAlphaGlowTexture(float k)=0;
-	virtual void SetMaterialColor(float r, float g, float b, float a)=0;	
-	virtual int  LoadAnimatedTexture(const char * format,const int nCount)=0;  
-	virtual void RemoveAnimatedTexture(AnimTexInfo * pInfo)=0;
-  virtual AnimTexInfo * GetAnimTexInfoFromId(int nId)=0;
-	virtual void	Draw2dLine	(float x1,float y1,float x2,float y2)=0;
-//  virtual void DrawLine(float * p1, float * p2)=0;
-  virtual void SetLineWidth(float fWidth)=0;
-  virtual void DrawLine(const Vec3 & vPos1, const Vec3 & vPos2)=0;
-  virtual void DrawLineColor(const Vec3 & vPos1, const CFColor & vColor1, const Vec3 & vPos2, const CFColor & vColor2)=0;
-  virtual void Graph(byte *g, int x, int y, int wdt, int hgt, int nC, int type, char *text, CFColor& color, float fScale)=0;
-  virtual void DrawBall(float x, float y, float z, float radius)=0;
-  virtual void DrawBall(const Vec3 & pos, float radius )=0;
-  virtual void DrawPoint(float x, float y, float z, float fSize = 0.0f)=0;
-  virtual void FlushTextMessages()=0;  
-  virtual void DrawObjSprites(list2<CStatObjInst*> *pList, float fMaxViewDist, CObjManager *pObjMan)=0;
-  virtual void DrawQuad(const Vec3 &right, const Vec3 &up, const Vec3 &origin,int nFlipMode=0)=0;
-  virtual void DrawQuad(float dy,float dx, float dz, float x, float y, float z)=0;
-  virtual void ClearDepthBuffer()=0;  
-  virtual void ClearColorBuffer(const Vec3 vColor)=0;  
-  virtual void ReadFrameBuffer(unsigned char * pRGB, int nSizeX, int nSizeY, bool bBackBuffer, bool bRGBA, int nScaledX=-1, int nScaledY=-1)=0;  
-  virtual void SetFogColor(float * color)=0;
-  virtual void TransformTextureMatrix(float x, float y, float angle, float scale)=0;
-  virtual void ResetTextureMatrix()=0;
-  virtual char	GetType()=0;
-  virtual char*	GetVertexProfile(bool bSupportedProfile)=0;
-  virtual char*	GetPixelProfile(bool bSupportedProfile)=0;
-  virtual void	SetType(char type)=0;	
-  virtual unsigned int  MakeSprite(float object_scale, int tex_size, float angle, IStatObj * pStatObj, uchar * pTmpBuffer, uint def_tid)=0;
-  virtual unsigned int  Make3DSprite(int nTexSize, float fAngleStep, IStatObj * pStatObj)=0;
-  virtual ShadowMapFrustum * MakeShadowMapFrustum(ShadowMapFrustum * lof, ShadowMapLightSource * pLs, const Vec3 & obj_pos, list2<IStatObj*> * pStatObjects, int shadow_type)=0;
-  virtual void Set2DMode(bool enable, int ortox, int ortoy)=0;
-  virtual int ScreenToTexture()=0;  
-  virtual void SetTexClampMode(bool clamp)=0;  
+	virtual	void	EnableVSync(bool enable) = 0;
+	virtual void	PushMatrix() = 0;
+	virtual void	RotateMatrix(float a, float x, float y, float z) = 0;
+	virtual void	RotateMatrix(const Vec3& angels) = 0;
+	virtual void	TranslateMatrix(float x, float y, float z) = 0;
+	virtual void	ScaleMatrix(float x, float y, float z) = 0;
+	virtual void	TranslateMatrix(const Vec3& pos) = 0;
+	virtual void  MultMatrix(float* mat) = 0;
+	virtual	void	LoadMatrix(const Matrix44* src = 0) = 0;
+	virtual void	PopMatrix() = 0;
+	virtual	void	EnableTMU(bool enable) = 0;
+	virtual void	SelectTMU(int tnum) = 0;
+	virtual	unsigned int DownLoadToVideoMemory(unsigned char* data, int w, int h, ETEX_Format eTFSrc, ETEX_Format eTFDst, int nummipmap, bool repeat = true, int filter = FILTER_BILINEAR, int Id = 0, char* szCacheName = NULL, int flags = 0) = 0;
+	virtual	void UpdateTextureInVideoMemory(uint tnum, unsigned char* newdata, int posx, int posy, int w, int h, ETEX_Format eTFSrc = eTF_0888) = 0;
+	virtual unsigned int LoadTexture(const char* filename, int* tex_type = NULL, unsigned int def_tid = 0, bool compresstodisk = true, bool bWarn = true) = 0;
+	virtual bool DXTCompress(byte* raw_data, int nWidth, int nHeight, ETEX_Format eTF, bool bUseHW, bool bGenMips, int nSrcBytesPerPix, MIPDXTcallback callback = 0) = 0;
+	virtual bool DXTDecompress(byte* srcData, byte* dstData, int nWidth, int nHeight, ETEX_Format eSrcTF, bool bUseHW, int nDstBytesPerPix) = 0;
+	virtual	void	RemoveTexture(unsigned int TextureId) = 0;
+	virtual	void	RemoveTexture(ITexPic* pTexPic) = 0;
+	virtual void TextToScreen(float x, float y, const char* format, ...) = 0;
+	virtual void TextToScreenColor(int x, int y, float r, float g, float b, float a, const char* format, ...) = 0;
+	virtual void ResetToDefault() = 0;
+	virtual int  GenerateAlphaGlowTexture(float k) = 0;
+	virtual void SetMaterialColor(float r, float g, float b, float a) = 0;
+	virtual int  LoadAnimatedTexture(const char* format, const int nCount) = 0;
+	virtual void RemoveAnimatedTexture(AnimTexInfo* pInfo) = 0;
+	virtual AnimTexInfo* GetAnimTexInfoFromId(int nId) = 0;
+	virtual void	Draw2dLine(float x1, float y1, float x2, float y2) = 0;
+	//  virtual void DrawLine(float * p1, float * p2)=0;
+	virtual void SetLineWidth(float fWidth) = 0;
+	virtual void DrawLine(const Vec3& vPos1, const Vec3& vPos2) = 0;
+	virtual void DrawLineColor(const Vec3& vPos1, const CFColor& vColor1, const Vec3& vPos2, const CFColor& vColor2) = 0;
+	virtual void Graph(byte* g, int x, int y, int wdt, int hgt, int nC, int type, char* text, CFColor& color, float fScale) = 0;
+	virtual void DrawBall(float x, float y, float z, float radius) = 0;
+	virtual void DrawBall(const Vec3& pos, float radius) = 0;
+	virtual void DrawPoint(float x, float y, float z, float fSize = 0.0f) = 0;
+	virtual void FlushTextMessages() = 0;
+	virtual void DrawObjSprites(list2<CStatObjInst*>* pList, float fMaxViewDist, CObjManager* pObjMan) = 0;
+	virtual void DrawQuad(const Vec3& right, const Vec3& up, const Vec3& origin, int nFlipMode = 0) = 0;
+	virtual void DrawQuad(float dy, float dx, float dz, float x, float y, float z) = 0;
+	virtual void ClearDepthBuffer() = 0;
+	virtual void ClearColorBuffer(const Vec3 vColor) = 0;
+	virtual void ReadFrameBuffer(unsigned char* pRGB, int nSizeX, int nSizeY, bool bBackBuffer, bool bRGBA, int nScaledX = -1, int nScaledY = -1) = 0;
+	virtual void SetFogColor(float* color) = 0;
+	virtual void TransformTextureMatrix(float x, float y, float angle, float scale) = 0;
+	virtual void ResetTextureMatrix() = 0;
+	virtual char	GetType() = 0;
+	virtual char* GetVertexProfile(bool bSupportedProfile) = 0;
+	virtual char* GetPixelProfile(bool bSupportedProfile) = 0;
+	virtual void	SetType(char type) = 0;
+	virtual unsigned int  MakeSprite(float object_scale, int tex_size, float angle, IStatObj* pStatObj, uchar* pTmpBuffer, uint def_tid) = 0;
+	virtual unsigned int  Make3DSprite(int nTexSize, float fAngleStep, IStatObj* pStatObj) = 0;
+	virtual ShadowMapFrustum* MakeShadowMapFrustum(ShadowMapFrustum* lof, ShadowMapLightSource* pLs, const Vec3& obj_pos, list2<IStatObj*>* pStatObjects, int shadow_type) = 0;
+	virtual void Set2DMode(bool enable, int ortox, int ortoy) = 0;
+	virtual int ScreenToTexture() = 0;
+	virtual void SetTexClampMode(bool clamp) = 0;
 	virtual	void EnableSwapBuffers(bool bEnable) = 0;
-  virtual WIN_HWND GetHWND() = 0;
-	virtual void OnEntityDeleted(IEntityRender * pEntityRender)=0;
+	virtual WIN_HWND GetHWND() = 0;
+	virtual void OnEntityDeleted(IEntityRender* pEntityRender) = 0;
 	virtual void SetGlobalShaderTemplateId(int nTemplateId) = 0;
 	virtual int GetGlobalShaderTemplateId() = 0;
 
-  //! Return all supported by video card video AA formats
-  virtual int	EnumAAFormats(TArray<SAAFormat>& Formats, bool bReset)=0;
-  virtual int  CreateRenderTarget (int nWidth, int nHeight, ETEX_Format eTF)=0;
-  virtual bool DestroyRenderTarget (int nHandle)=0;
-  virtual bool SetRenderTarget (int nHandle)=0;
-  virtual float EF_GetWaterZElevation(float fX, float fY)=0;
+	//! Return all supported by video card video AA formats
+	virtual int	EnumAAFormats(TArray<SAAFormat>& Formats, bool bReset) = 0;
+	virtual int  CreateRenderTarget(int nWidth, int nHeight, ETEX_Format eTF) = 0;
+	virtual bool DestroyRenderTarget(int nHandle) = 0;
+	virtual bool SetRenderTarget(int nHandle) = 0;
+	virtual float EF_GetWaterZElevation(float fX, float fY) = 0;
 };
 
 
@@ -1168,101 +1168,101 @@ struct IRenderer//: public IRendererCallbackServer
 // this structure used to pass render parameters to Render() functions of IStatObj and ICharInstance
 struct SRendParams
 {
-  SRendParams()
-  {
-    memset(this, 0, sizeof(SRendParams));
-    nShaderTemplate = -2;
-    fScale = 1.f;
-    vColor(1.f,1.f,1.f);
+	SRendParams()
+	{
+		memset(this, 0, sizeof(SRendParams));
+		nShaderTemplate = -2;
+		fScale = 1.f;
+		vColor(1.f, 1.f, 1.f);
 		fAlpha = 1.f;
 		fSQDistance = -1.f;
-  }
+	}
 
-	SRendParams (const SRendParams& rThat)
+	SRendParams(const SRendParams& rThat)
 	{
-		memcpy (this, &rThat, sizeof(SRendParams));
+		memcpy(this, &rThat, sizeof(SRendParams));
 	}
 
 	//! position of render elements
-  Vec3				vPos;
+	Vec3				vPos;
 	//! scale of render elements
-  float				fScale;
+	float				fScale;
 	//! angles of the object
-  Vec3				vAngles;
+	Vec3				vAngles;
 	//! object transformations
-  Matrix44		*pMatrix;
-  //! custom offset for sorting by distance
-  float				fCustomSortOffset;
+	Matrix44* pMatrix;
+	//! custom offset for sorting by distance
+	float				fCustomSortOffset;
 	//! shader template to use
-  int					nShaderTemplate;
+	int					nShaderTemplate;
 	//! light mask to specifiy which light to use on the object
-  unsigned int nDLightMask;
+	unsigned int nDLightMask;
 	//! strongest light affecting the object
 	unsigned int nStrongestDLightMask;
 	//! fog volume id
-  int					nFogVolumeID;
+	int					nFogVolumeID;
 	//! amount of bending animations for vegetations
-  float				fBending;
+	float				fBending;
 	//! state shader
-  IShader			*pStateShader;
+	IShader* pStateShader;
 	//! list of shadow map casters
-  list2<ShadowMapLightSourceInstance> * pShadowMapCasters;
+	list2<ShadowMapLightSourceInstance>* pShadowMapCasters;
 	//! object color
 	Vec3     vColor;
 	//! object alpha
-  float     fAlpha;
+	float     fAlpha;
 	//! force a sort value for render elements
 	int				nSortValue;
 	//! Ambient color for the object
 	Vec3			vAmbientColor;
 	//! distance from camera
-  float     fDistance;
+	float     fDistance;
 	//! CCObject flags
-  int		    dwFObjFlags;
+	int		    dwFObjFlags;
 	//! light source for shadow volume calculations
-	CDLight		*pShadowVolumeLightSource;
-  //! reference to entity, allows to improve handling of shadow volumes of IStatObj instances
-  struct IEntityRender	* pCaller;
+	CDLight* pShadowVolumeLightSource;
+	//! reference to entity, allows to improve handling of shadow volumes of IStatObj instances
+	struct IEntityRender* pCaller;
 	//! Heat Amount for heat vision
 	float			fHeatAmount;
 	//! define size of shadow volume
 	float			fShadowVolumeExtent;
 	//! lightmap informaion
-	struct RenderLMData * pLightMapInfo;
-	struct CLeafBuffer * pLMTCBuffer; // Object instance specific tex LM texture coords;
+	struct RenderLMData* pLightMapInfo;
+	struct CLeafBuffer* pLMTCBuffer; // Object instance specific tex LM texture coords;
 	byte arrOcclusionLightIds[4];
 	//! Override material.
-	IMatInfo *pMaterial;
-  //! Scissor settings for this object
-//  int nScissorX1, nScissorY1, nScissorX2, nScissorY2;
-	//! custom shader params
-	TArray <struct SShaderParam> * pShaderParams;
+	IMatInfo* pMaterial;
+	//! Scissor settings for this object
+  //  int nScissorX1, nScissorY1, nScissorX2, nScissorY2;
+	  //! custom shader params
+	TArray <struct SShaderParam>* pShaderParams;
 	//! squared distance to the center of object
 	float fSQDistance;
-  //! CCObject custom data
-  void * pCCObjCustomData;
+	//! CCObject custom data
+	void* pCCObjCustomData;
 };
 
 //! holds shadow volume informations for static objects
 //////////////////////////////////////////////////////////////////////
 struct ItShadowVolume
 {
-	virtual void	Release()=0;	
-	virtual Vec3	GetPos()=0;
-	virtual void	SetPos(const Vec3 &vPos)=0;
-	virtual	class CShadowVolObject	*GetShadowVolume()=0;
-	virtual	void	SetShadowVolume(CShadowVolObject *psvObj)=0;
+	virtual void	Release() = 0;
+	virtual Vec3	GetPos() = 0;
+	virtual void	SetPos(const Vec3& vPos) = 0;
+	virtual	class CShadowVolObject* GetShadowVolume() = 0;
+	virtual	void	SetShadowVolume(CShadowVolObject* psvObj) = 0;
 
 	//! /param lSource lightsource, worldspace and objectspace position is used
 	//! /param inArea pointer to the area whre the object is in (could be 0 - but shadow extrusion is set to maximum)
-  virtual	void	RebuildShadowVolumeBuffer( const CDLight &lSource, float fExtent )=0;
+	virtual	void	RebuildShadowVolumeBuffer(const CDLight& lSource, float fExtent) = 0;
 
 	//! return memory usage
-	virtual	int GetMemoryUsage(){ return 0; }; //todo: implement
+	virtual	int GetMemoryUsage() { return 0; }; //todo: implement
 
-  //! this buffer will contain vertices after RebuildDynamicShadowVolumeBuffer() calll
-  virtual	Vec3 * GetSysVertBufer() = 0;
-  virtual	void CheckUnload() {};
+	//! this buffer will contain vertices after RebuildDynamicShadowVolumeBuffer() calll
+	virtual	Vec3* GetSysVertBufer() = 0;
+	virtual	void CheckUnload() {};
 };
 
 #endif //rende

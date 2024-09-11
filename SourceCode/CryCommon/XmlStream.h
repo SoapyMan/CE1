@@ -28,8 +28,8 @@ struct IXmlNotify
 {
 public:
 	// notify methods
-	virtual void FoundElement	( const string & name, const string & value ) = 0;
-	virtual void FoundAttribute	( const string & name, const string & value ) = 0;
+	virtual void FoundElement(const string& name, const string& value) = 0;
+	virtual void FoundAttribute(const string& name, const string& value) = 0;
 };
 
 
@@ -43,124 +43,124 @@ public:
 class XmlStream :
 	public string
 {
-	IXmlNotify *			_subscriber;	// notification subscriber
+	IXmlNotify* _subscriber;	// notification subscriber
 
 public:
 
-	XmlStream (IXmlNotify *pNotify = NULL) :
-		string ()
+	XmlStream(IXmlNotify* pNotify = NULL) :
+		string()
 	{
-			_subscriber = pNotify;
+		_subscriber = pNotify;
 	}
 
-	virtual ~XmlStream ()
-	{ 
-		release(); 
+	virtual ~XmlStream()
+	{
+		release();
 	}
 
 	// release resources
-	bool create ()
+	bool create()
 	{
 		return true;
 	}
 
-	bool create ( char * buffer, long len )
+	bool create(char* buffer, long len)
 	{
-		if ( buffer && len > 0 )
+		if (buffer && len > 0)
 		{
-			assign( buffer, len );
+			assign(buffer, len);
 			return true;
 		}
 		else
 			return false;
 	}
 
-	void release ()
+	void release()
 	{
-		erase( begin(), end() );
+		erase(begin(), end());
 	}
 
 	// parse the attibutes and values
-	void parseAttributesValues(string &att)
+	void parseAttributesValues(string& att)
 	{
-		if(!att.size())
+		if (!att.size())
 			return;
 
-		char *p = (char*)att.c_str();
-		while(*p)
+		char* p = (char*)att.c_str();
+		while (*p)
 		{
 			string attrib = "";
 			string value = "";
 
-			while(*p && (*p == ' '  || *p == '=' || *p == '"'))
-			{			
+			while (*p && (*p == ' ' || *p == '=' || *p == '"'))
+			{
 				p++;
 			}
 
-			while(*p && *p != ' ' && *p != '=')
+			while (*p && *p != ' ' && *p != '=')
 			{
 				attrib += *p;
 				p++;
 			}
 
-			while(*p && (*p == ' '  || *p == '=' || *p == '"'))
-			{			
+			while (*p && (*p == ' ' || *p == '=' || *p == '"'))
+			{
 				p++;
 			}
 
-			while(*p && *p != '"')
+			while (*p && *p != '"')
 			{
 				value += *p;
 				p++;
 			}
 
-			if ( _subscriber )
+			if (_subscriber)
 			{
-				if(attrib.size() && value.size())
-					_subscriber->FoundAttribute(attrib,value);
+				if (attrib.size() && value.size())
+					_subscriber->FoundAttribute(attrib, value);
 			}
 		}
 	}
 
 	// notify methods
-	void foundNode		( string & name, string & attributes )
+	void foundNode(string& name, string& attributes)
 	{
 		// if no name stop
-		if ( name.empty() )
+		if (name.empty())
 			return;
 
 		// tell subscriber
-		if ( _subscriber )
+		if (_subscriber)
 		{
-			_subscriber->FoundElement(name,string(""));
-			parseAttributesValues(attributes);		
+			_subscriber->FoundElement(name, string(""));
+			parseAttributesValues(attributes);
 		}
 	}
 
-	void foundElement	( string & name, string & value, string & attributes )
+	void foundElement(string& name, string& value, string& attributes)
 	{
 		// if no name stop
-		if ( name.empty() )
+		if (name.empty())
 			return;
 
 		// tell subscriber
-		if ( _subscriber )
+		if (_subscriber)
 		{
-			_subscriber->FoundElement(name,value);
+			_subscriber->FoundElement(name, value);
 			parseAttributesValues(value);
 			parseAttributesValues(attributes);
 		}
 	}
 
 	// save/load stream
-	bool save		( char * buffer )
+	bool save(char* buffer)
 	{
 		// show success
 		bool success = true;
 		//try
 		//{
 			// save stream to buffer
-			memcpy( buffer,(char *) c_str(), size() );
+		memcpy(buffer, (char*)c_str(), size());
 		//}
 		//catch(...)
 		//{
@@ -170,10 +170,10 @@ public:
 		return success;
 	}
 
-	bool load		( char * buffer )
+	bool load(char* buffer)
 	{
 		// if invalid show failed
-		if ( !buffer )
+		if (!buffer)
 			return false;
 
 		// show success
@@ -181,7 +181,7 @@ public:
 		//try
 		//{
 			// load stream from buffer
-			str() = buffer;
+		str() = buffer;
 		//}
 		//catch(...)
 		//{
@@ -192,14 +192,14 @@ public:
 	}
 
 	// parse the current buffer
-	bool parse			( char * buffer, long length )
+	bool parse(char* buffer, long length)
 	{
 		// if invalid stop
-		if ( !buffer || length <= 0 )
+		if (!buffer || length <= 0)
 			return false;
 
 		// debug info
-		assign( buffer, length );
+		assign(buffer, length);
 
 		// debug info
 #ifdef _SHOWDEBUGINFO
@@ -216,12 +216,12 @@ public:
 		XmlParserFont parser;
 
 		// parse nodes
-		bool docParsed = parseNodes(parser,buffer,length);
+		bool docParsed = parseNodes(parser, buffer, length);
 
 		return docParsed;
 	}
 
-	bool parseNodes		( XmlParserFont & parser, char * buffer, long parseLength )
+	bool parseNodes(XmlParserFont& parser, char* buffer, long parseLength)
 	{
 		// #DGH note
 		// need to address a null node within another node
@@ -243,32 +243,32 @@ public:
 
 		// while parse success, note for the first parser
 		// this set the internal state also
-		while ( parser.parse(buffer,parseLength) )
+		while (parser.parse(buffer, parseLength))
 		{
 			// if the value has a tag marker
-			if ( parser.valueHasTag() )
+			if (parser.valueHasTag())
 			{
 				// show found node
-				string   name		 = parser.getName();
-				string	 attributes  = parser.getAttributes();
+				string   name = parser.getName();
+				string	 attributes = parser.getAttributes();
 
-				foundNode( name, attributes );				
+				foundNode(name, attributes);
 
 				// get the parse state
 				long valueLength;
-				char * valueBuffer =
-				parser.getValueState(valueLength);
+				char* valueBuffer =
+					parser.getValueState(valueLength);
 
 				// if parsing the node fails
 				XmlParserFont parserNode;
-				if ( !parseNodes(parserNode,valueBuffer,valueLength) )
+				if (!parseNodes(parserNode, valueBuffer, valueLength))
 					return false;
 
 				// if new parse cur position is in the last parser
 				// last tag position we are done with the node
-				char * curPos     = parserNode.getCurPos();
-				char * lastCurPos = parser.getLastTagPos();
-				if ( curPos >= lastCurPos )
+				char* curPos = parserNode.getCurPos();
+				char* lastCurPos = parser.getLastTagPos();
+				if (curPos >= lastCurPos)
 				{
 					break;
 				}
@@ -276,49 +276,53 @@ public:
 			else
 			{
 				// show found element
-				string   name		 = parser.getName();
-				string   value		 = parser.getValue();
-				string	 attributes  = parser.getAttributes();
+				string   name = parser.getName();
+				string   value = parser.getValue();
+				string	 attributes = parser.getAttributes();
 
-				foundElement(name,value,attributes);
+				foundElement(name, value, attributes);
 			}
 
 			// get new parse state
 			buffer =
-			parser.getParseState(parseLength);
+				parser.getParseState(parseLength);
 		}
 
 		return true;
 	}
 
 	// get/set subscriber
-	bool hasSubscriber ()
+	bool hasSubscriber()
 	{
-		if ( _subscriber )
+		if (_subscriber)
 			return true;
 		else
 			return false;
 	}
 
-	IXmlNotify * getSubscriber ()
+	IXmlNotify* getSubscriber()
 	{
 		return _subscriber;
 	}
 
-	void setSubscriber ( IXmlNotify *set )
+	void setSubscriber(IXmlNotify* set)
 	{
 		_subscriber = set;
 	}
 
 
 	// get ref to tag stream
-	XmlStream & getTagStream ()
-	{ return *this; }
+	XmlStream& getTagStream()
+	{
+		return *this;
+	}
 
 
 	// get string ref
-	string & str()
-	{ return (string &) *this; }
+	string& str()
+	{
+		return (string&)*this;
+	}
 };
 
 #endif // CRYCOMMON_XMLSTREAM_H

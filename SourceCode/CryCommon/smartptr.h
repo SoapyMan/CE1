@@ -3,24 +3,24 @@
 //////////////////////////////////////////////////////////////////
 // SMART POINTER
 //////////////////////////////////////////////////////////////////
-template <class _I> class _smart_ptr 
+template <class _I> class _smart_ptr
 {
 private:
-  _I* p;
+	_I* p;
 public:
-  _smart_ptr() : p(NULL) {}
+	_smart_ptr() : p(NULL) {}
 #if defined(LINUX64)
 	_smart_ptr(typeof(__null)) : p(NULL) {}
 #endif
 	_smart_ptr(int Null) : p(NULL) {}
-  _smart_ptr(_I* p_)
+	_smart_ptr(_I* p_)
 	{
 		p = p_;
 		if (p)
 			p->AddRef();
 	}
-	
-  _smart_ptr(const _smart_ptr &p_)
+
+	_smart_ptr(const _smart_ptr& p_)
 	{
 		p = p_.p;
 		if (p)
@@ -31,11 +31,11 @@ public:
 		if (p)
 			p->Release();
 	}
-  operator _I*() const { return p; }
-  operator const _I*() const { return p; }
-  _I& operator*() const { return *p; }
-  _I* operator->(void) const { return p; }
-  _smart_ptr&  operator=(_I* newp)
+	operator _I* () const { return p; }
+	operator const _I* () const { return p; }
+	_I& operator*() const { return *p; }
+	_I* operator->(void) const { return p; }
+	_smart_ptr& operator=(_I* newp)
 	{
 		if (newp)
 			newp->AddRef();
@@ -44,7 +44,7 @@ public:
 		p = newp;
 		return *this;
 	}
-	_smart_ptr&  operator=(const _smart_ptr &newp)
+	_smart_ptr& operator=(const _smart_ptr& newp)
 	{
 		if (newp.p)
 			newp.p->AddRef();
@@ -53,85 +53,85 @@ public:
 		p = newp.p;
 		return *this;
 	}
-  operator bool() const 
+	operator bool() const
 	{
 		return p != NULL;
 	};
-	bool operator !() const 
+	bool operator !() const
 	{
 		return p == NULL;
 	};
- 	bool  operator ==(const _I* p2) const 
+	bool  operator ==(const _I* p2) const
 	{
 		return p == p2;
 	};
- 	bool  operator ==(_I* p2) const 
+	bool  operator ==(_I* p2) const
 	{
 		return p == p2;
 	};
-  bool  operator !=(const _I* p2) const 
+	bool  operator !=(const _I* p2) const
 	{
 		return p != p2;
 	};
-	bool  operator !=(_I* p2) const 
+	bool  operator !=(_I* p2) const
 	{
 		return p != p2;
 	};
-	bool  operator !=(const _smart_ptr &p2) const 
+	bool  operator !=(const _smart_ptr& p2) const
 	{
 		return p != p2.p;
 	};
-  bool  operator <(const _I* p2) const 
+	bool  operator <(const _I* p2) const
 	{
 		return p < p2;
 	};
-  bool  operator >(const _I* p2) const 
+	bool  operator >(const _I* p2) const
 	{
 		return p > p2;
 	};
 };
 
 template <class _I>
-inline bool operator ==(const _smart_ptr<_I> &p1, int null)	
+inline bool operator ==(const _smart_ptr<_I>& p1, int null)
 {
-	return !(bool)p1;	
+	return !(bool)p1;
 }
 template <class _I>
-inline bool operator !=(const _smart_ptr<_I> &p1, int null)
+inline bool operator !=(const _smart_ptr<_I>& p1, int null)
 {
-	return (bool)p1;	
+	return (bool)p1;
 }
 template <class _I>
-inline bool operator ==(int null, const _smart_ptr<_I> &p1)
+inline bool operator ==(int null, const _smart_ptr<_I>& p1)
 {
-	return !(bool)p1;	
+	return !(bool)p1;
 }
 template <class _I>
-inline bool operator !=(int null, const _smart_ptr<_I> &p1)
+inline bool operator !=(int null, const _smart_ptr<_I>& p1)
 {
-	return (bool)p1;	
+	return (bool)p1;
 }
 /*
 #if defined(LINUX64)
 template <class _I>
-inline bool operator ==(const _smart_ptr<_I> &p1, typeof(__null))	
+inline bool operator ==(const _smart_ptr<_I> &p1, typeof(__null))
 {
-	return !(bool)p1;	
+	return !(bool)p1;
 }
 template <class _I>
 inline bool operator !=(const _smart_ptr<_I> &p1, typeof(__null))
 {
-	return (bool)p1;	
+	return (bool)p1;
 }
 template <class _I>
 inline bool operator ==(typeof(__null), const _smart_ptr<_I> &p1)
 {
-	return !(bool)p1;	
+	return !(bool)p1;
 }
 template <class _I>
 inline bool operator !=(typeof(__null), const _smart_ptr<_I> &p1)
 {
-	return (bool)p1;	
+	return (bool)p1;
 }
 #endif //LINUX64
 */
@@ -140,8 +140,8 @@ inline bool operator !=(typeof(__null), const _smart_ptr<_I> &p1)
 template <typename Counter> class _reference_target
 {
 public:
-	_reference_target():
-		m_nRefCounter (0)
+	_reference_target() :
+		m_nRefCounter(0)
 	{
 	}
 
@@ -180,14 +180,14 @@ template <class Derived>
 class _reference_target_MT_novtbl
 {
 public:
-	_reference_target_MT_novtbl():
-		m_nRefCounter (0)
+	_reference_target_MT_novtbl() :
+		m_nRefCounter(0)
 	{
 	}
 
 	void AddRef()
 	{
-		InterlockedIncrement (&m_nRefCounter);
+		InterlockedIncrement(&m_nRefCounter);
 	}
 
 	void Release()
@@ -196,7 +196,7 @@ public:
 			delete static_cast<Derived*>(this);
 	}
 
-	int32 NumRefs()const {return m_nRefCounter;}
+	int32 NumRefs()const { return m_nRefCounter; }
 protected:
 #if defined(LINUX)
 	volatile signed int m_nRefCounter;
@@ -205,7 +205,7 @@ protected:
 #endif
 };
 
-class _reference_target_MT: public _reference_target_MT_novtbl<_reference_target_MT>
+class _reference_target_MT : public _reference_target_MT_novtbl<_reference_target_MT>
 {
 public:
 	virtual ~_reference_target_MT()
@@ -221,8 +221,8 @@ public:
 template <typename Counter> class _i_reference_target
 {
 public:
-	_i_reference_target():
-		m_nRefCounter (0)
+	_i_reference_target() :
+		m_nRefCounter(0)
 	{
 	}
 
@@ -293,7 +293,7 @@ public:
 			static_cast<Header*>(this)->Delete();
 	}
 
-	int32 NumRefs()const {return m_nRefCount;}
+	int32 NumRefs()const { return m_nRefCount; }
 };
 
 #endif

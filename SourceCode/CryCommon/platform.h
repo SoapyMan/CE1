@@ -24,8 +24,8 @@
 #endif // _MSC_VER > 1000
 
 #if !defined(LINUX)
-typedef void *THREAD_HANDLE;
-typedef void *EVENT_HANDLE;
+typedef void* THREAD_HANDLE;
+typedef void* EVENT_HANDLE;
 #endif
 
 #if defined(WIN32) || defined(WIN64)
@@ -39,13 +39,13 @@ typedef void *EVENT_HANDLE;
 #undef assert
 #define assert(exp) (void)( (exp) || (printf("Assert: ' %s ' has failed\n", #exp), 0) )
 
-	#include <stdlib.h> 
-	#include <time.h>
-	#ifdef __cplusplus
-		#include <map>
-		#include <vector>
-	#endif
-	//linux supports more than just 15 bit of random number generator
+#include <stdlib.h> 
+#include <time.h>
+#ifdef __cplusplus
+#include <map>
+#include <vector>
+#endif
+//linux supports more than just 15 bit of random number generator
 /*#define rand Rand
 #ifdef __cplusplus
 		inline int Rand(){return (rand()&0x7FFF);}
@@ -121,73 +121,73 @@ typedef void *EVENT_HANDLE;
 namespace cry_std
 {
 	template<typename T>
-	class char_traits: public ::std::char_traits<T>
+	class char_traits : public ::std::char_traits<T>
 	{};
 	// to avoid importing the string
 	template <typename T>
-	class string: public ::std::basic_string<T,char_traits<T> >
+	class string : public ::std::basic_string<T, char_traits<T> >
 	{
 	public:
-		typedef ::std::basic_string<T,char_traits<T> > Base;
-		string(){}
-		string (const Base& s): Base(s.c_str()) {}
-		string (const string& s): Base(s.c_str()) {}
-		string (const T p): Base(p){}
-		string (const T* p): Base(p){}
+		typedef ::std::basic_string<T, char_traits<T> > Base;
+		string() {}
+		string(const Base& s) : Base(s.c_str()) {}
+		string(const string& s) : Base(s.c_str()) {}
+		string(const T p) : Base(p) {}
+		string(const T* p) : Base(p) {}
 		//string (const_iterator itBegin, const_iterator itEnd): Base(itBegin, itEnd) {}
-		string (const T* p, size_t n) : Base(p, n){}
-		string (const T* p, const T* q): Base (p, q-p) {}
-		string (const Base& s, size_t pos, size_t sz): Base(s,pos,sz) {}
+		string(const T* p, size_t n) : Base(p, n) {}
+		string(const T* p, const T* q) : Base(p, q - p) {}
+		string(const Base& s, size_t pos, size_t sz) : Base(s, pos, sz) {}
 		string& operator = (const Base& s)
 		{
-		// in Amd64 platform, the STL has reference-counted string
-		// because of this, before self-assignment through a pointer,
-		// the string gets destructed, which renders the pointer hanging.
-		// to correct this, we avoid self-assignment through pointer
-		if (s.c_str() != this->c_str())
-			assign(s.c_str());
-		return *this;
+			// in Amd64 platform, the STL has reference-counted string
+			// because of this, before self-assignment through a pointer,
+			// the string gets destructed, which renders the pointer hanging.
+			// to correct this, we avoid self-assignment through pointer
+			if (s.c_str() != this->c_str())
+				assign(s.c_str());
+			return *this;
 		}
 		string& operator = (const T* p)
 		{
-		// in Amd64 platform, the STL has reference-counted string
-		// because of this, before self-assignment through a pointer,
-		// the string gets destructed, which renders the pointer hanging.
-		// to correct this, we avoid self-assignment through pointer
-		if (p != this->c_str())
-			assign(p);
-		return *this;
+			// in Amd64 platform, the STL has reference-counted string
+			// because of this, before self-assignment through a pointer,
+			// the string gets destructed, which renders the pointer hanging.
+			// to correct this, we avoid self-assignment through pointer
+			if (p != this->c_str())
+				assign(p);
+			return *this;
 		}
 		string& operator = (const string& s)
 		{
-		// in Amd64 platform, the STL has reference-counted string
-		// because of this, before self-assignment through a pointer,
-		// the string gets destructed, which renders the pointer hanging.
-		// to correct this, we avoid self-assignment through pointer
-		if (s.c_str() != this->c_str())
-			assign (s.c_str());
-		return *this;
+			// in Amd64 platform, the STL has reference-counted string
+			// because of this, before self-assignment through a pointer,
+			// the string gets destructed, which renders the pointer hanging.
+			// to correct this, we avoid self-assignment through pointer
+			if (s.c_str() != this->c_str())
+				assign(s.c_str());
+			return *this;
 		}
-		void push_back(char c) {(*this) += c;}
-		void clear() {this->resize(0);}
+		void push_back(char c) { (*this) += c; }
+		void clear() { this->resize(0); }
 
-		string& operator += (const Base& s) {append(s);return *this;}
-		string& operator += (char c) {append(1,c); return *this;}
-		string& operator += (const T* p) {append(p);return *this;}
+		string& operator += (const Base& s) { append(s); return *this; }
+		string& operator += (char c) { append(1, c); return *this; }
+		string& operator += (const T* p) { append(p); return *this; }
 	};
-	template <typename T> string<T> operator + (const string<T>& left, const string<T>& right) {return string<T>(left)+=right;}
-	template <typename T> string<T> operator + (const typename string<T>::Base& left, const string<T>& right) {return string<T>(left)+=right;}
-	template <typename T> string<T> operator + (const string<T>& left, const typename string<T>::Base& right) {return string<T>(left)+=right;}
-	template <typename T> string<T> operator + (const T* left, const string<T>& right) {return string<T>(left)+=right;}
-	template <typename T> string<T> operator + (const string<T>& left, const T* right) {return string<T>(left)+=right;}
-	template <typename T> string<T> operator + (const T left, const string<T>& right) {return string<T>(left)+=right;}
-	template <typename T> string<T> operator + (const string<T>& left, const T right) {return string<T>(left)+=right;}
+	template <typename T> string<T> operator + (const string<T>& left, const string<T>& right) { return string<T>(left) += right; }
+	template <typename T> string<T> operator + (const typename string<T>::Base& left, const string<T>& right) { return string<T>(left) += right; }
+	template <typename T> string<T> operator + (const string<T>& left, const typename string<T>::Base& right) { return string<T>(left) += right; }
+	template <typename T> string<T> operator + (const T* left, const string<T>& right) { return string<T>(left) += right; }
+	template <typename T> string<T> operator + (const string<T>& left, const T* right) { return string<T>(left) += right; }
+	template <typename T> string<T> operator + (const T left, const string<T>& right) { return string<T>(left) += right; }
+	template <typename T> string<T> operator + (const string<T>& left, const T right) { return string<T>(left) += right; }
 }
 
 typedef cry_std::string<char>//std::basic_string<char, cry_std::char_traits<char>, std::allocator<char> >
-	string;
+string;
 typedef cry_std::string<wchar_t>//std::basic_string<wchar_t, cry_std::char_traits<wchar_t>, std::allocator<wchar_t> >
-	wstring;
+wstring;
 #else	// defined(WIN64)
 typedef std::string string;
 typedef std::wstring wstring;
@@ -225,7 +225,7 @@ typedef double real;
 typedef int index_t;
 typedef int                 INT;
 typedef unsigned int        UINT;
-typedef unsigned int        *PUINT;
+typedef unsigned int* PUINT;
 
 #if defined(WIN64) || defined(LINUX)
 #ifdef __cplusplus
@@ -235,35 +235,35 @@ static int64 GetTicks()
 #endif
 {
 #if defined(WIN64)
-	return __rdtsc ();
+	return __rdtsc();
 #else
-	typedef union _LARGE_INTEGER 
+	typedef union _LARGE_INTEGER
 	{
-    struct 
+		struct
 		{
-        DWORD LowPart;
-        LONG HighPart;
-    };
-    struct 
+			DWORD LowPart;
+			LONG HighPart;
+		};
+		struct
 		{
-        DWORD LowPart;
-        LONG HighPart;
-    } u;
-    long long QuadPart;
+			DWORD LowPart;
+			LONG HighPart;
+		} u;
+		long long QuadPart;
 	} LARGE_INTEGER;
 
 	LARGE_INTEGER counter;
-	__asm__ __volatile__ ( "rdtsc" : "=a" (counter.u.LowPart), "=d" (counter.u.HighPart) );
+	__asm__ __volatile__("rdtsc" : "=a" (counter.u.LowPart), "=d" (counter.u.HighPart));
 	return counter.QuadPart;
 #endif
 }
 #endif
 
 #if defined(LINUX)
-	#define RC_EXECUTABLE "rc"
+#define RC_EXECUTABLE "rc"
 //	#include <WinBase.h>
 #ifdef __cplusplus
-	#include "Linux_Win32Wrapper.h"
+#include "Linux_Win32Wrapper.h"
 #endif
 #endif
 

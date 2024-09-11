@@ -11,9 +11,9 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////
 struct ITimer
 {
-//	virtual bool Init() = 0;
-	//! reset the timer
-	virtual void Reset() = 0;	
+	//	virtual bool Init() = 0;
+		//! reset the timer
+	virtual void Reset() = 0;
 
 	//! update the timer every frame
 	virtual void Update() = 0;
@@ -28,7 +28,7 @@ struct ITimer
 	virtual const CTimeValue GetCurrTimePrecise() const = 0;
 
 	//! return the current time at the moment of the call
-	virtual const float GetAsyncCurTime()= 0;
+	virtual const float GetAsyncCurTime() = 0;
 
 	//! return the time passed from the last update
 	virtual const float GetFrameTime() const = 0;
@@ -40,7 +40,7 @@ struct ITimer
 	virtual float	GetFrameRate() = 0;
 
 	//! time profiling
-  virtual float gfGetTime() = 0;
+	virtual float gfGetTime() = 0;
 
 	//! time profiling
 	virtual float MeasureTime(const char* comment) = 0;
@@ -52,14 +52,14 @@ template <typename time>
 class CITimerAutoProfiler
 {
 public:
-	CITimerAutoProfiler (ITimer* pTimer, time& rTime):
-		m_pTimer (pTimer),
-		m_rTime (rTime)
+	CITimerAutoProfiler(ITimer* pTimer, time& rTime) :
+		m_pTimer(pTimer),
+		m_rTime(rTime)
 	{
 		rTime -= pTimer->GetAsyncCurTime();
 	}
 
-	~CITimerAutoProfiler ()
+	~CITimerAutoProfiler()
 	{
 		m_rTime += m_pTimer->GetAsyncCurTime();
 	}

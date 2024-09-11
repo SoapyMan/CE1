@@ -48,11 +48,11 @@ enum EValidatorModule
 
 enum EValidatorFlags
 {
-	VALIDATOR_FLAG_FILE			= 0x0001,		// Indicate that required file was not found or file was invalid.
-	VALIDATOR_FLAG_TEXTURE	= 0x0002,		// Problem with texture.
-	VALIDATOR_FLAG_SCRIPT		= 0x0004,		// Problem with script.
-	VALIDATOR_FLAG_SOUND		= 0x0008,		// Problem with sound.
-	VALIDATOR_FLAG_AI				= 0x0010,		// Problem with AI.
+	VALIDATOR_FLAG_FILE = 0x0001,		// Indicate that required file was not found or file was invalid.
+	VALIDATOR_FLAG_TEXTURE = 0x0002,		// Problem with texture.
+	VALIDATOR_FLAG_SCRIPT = 0x0004,		// Problem with script.
+	VALIDATOR_FLAG_SOUND = 0x0008,		// Problem with sound.
+	VALIDATOR_FLAG_AI = 0x0010,		// Problem with AI.
 };
 
 struct SValidatorRecord
@@ -62,11 +62,11 @@ struct SValidatorRecord
 	//! In which module error occured.
 	EValidatorModule module;
 	//! Error Text.
-	const char *text;
+	const char* text;
 	//! File which is missing or causing problem.
-	const char *file;
+	const char* file;
 	//! Additional description for this error.
-	const char *description;
+	const char* description;
 	//! Flags that suggest kind of error.
 	int flags;
 
@@ -86,7 +86,7 @@ struct SValidatorRecord
  */
 struct IValidator
 {
-	virtual void Report( SValidatorRecord &record ) = 0;
+	virtual void Report(SValidatorRecord& record) = 0;
 };
 
 #endif // __ivalidator_h__

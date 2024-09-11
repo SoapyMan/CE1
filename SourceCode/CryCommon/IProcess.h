@@ -22,10 +22,10 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////
 struct IProcess
 {
-	virtual	bool	Init() = 0;	
+	virtual	bool	Init() = 0;
 	virtual void	Update() = 0;
 	virtual void	Draw() = 0;
-	virtual	void	ShutDown(bool bEditorMode=false) = 0;		
+	virtual	void	ShutDown(bool bEditorMode = false) = 0;
 	virtual	void	SetFlags(int flags) = 0;
 	virtual	int		GetFlags(void) = 0;
 };

@@ -29,12 +29,12 @@ typedef string String;
 class CryBasicString
 {
 public:
-	static char* strdup (const char* szSource, size_t nLength)
+	static char* strdup(const char* szSource, size_t nLength)
 	{
 		if (szSource && nLength > 0)
 		{
-			char* pNewString = (char*)malloc(nLength+1);
-			memcpy (pNewString, szSource, nLength);
+			char* pNewString = (char*)malloc(nLength + 1);
+			memcpy(pNewString, szSource, nLength);
 			pNewString[nLength] = '\0';
 			return pNewString;
 		}
@@ -43,46 +43,46 @@ public:
 	}
 
 	// for debug: to use the memory manager
-	static char* strdup (const char* szSource)
+	static char* strdup(const char* szSource)
 	{
 		if (szSource && szSource[0])
 		{
-			char* pNewString = (char*)malloc(strlen(szSource)+1);
-			strcpy (pNewString, szSource);
+			char* pNewString = (char*)malloc(strlen(szSource) + 1);
+			strcpy(pNewString, szSource);
 			return pNewString;
 		}
 		else
 			return NULL;
 	}
 
-	static char* strcat (const char* szLeft, const char*szRight)
+	static char* strcat(const char* szLeft, const char* szRight)
 	{
 		if (szLeft[0] || szRight[0])
 		{
 			size_t sizeLeft = strlen(szLeft), sizeRight = strlen(szRight);
-			char* pNewString = (char*) malloc (sizeLeft + sizeRight + 1);
-			memcpy (pNewString, szLeft, sizeLeft);
+			char* pNewString = (char*)malloc(sizeLeft + sizeRight + 1);
+			memcpy(pNewString, szLeft, sizeLeft);
 			// copy together with the terminating null
-			memcpy (pNewString+sizeLeft, szRight, sizeRight+1);
+			memcpy(pNewString + sizeLeft, szRight, sizeRight + 1);
 			return pNewString;
 		}
 		else
 			return NULL;
 	}
 
-	CryBasicString (const char* szRight)
+	CryBasicString(const char* szRight)
 	{
 		m_pString = strdup(szRight);
 	}
 
-	CryBasicString (const char* szBegin, const char* szEnd)
+	CryBasicString(const char* szBegin, const char* szEnd)
 	{
-		m_pString = strdup (szBegin, (unsigned int)(szEnd-szBegin));
+		m_pString = strdup(szBegin, (unsigned int)(szEnd - szBegin));
 	}
 
-	CryBasicString (const char* szBegin, unsigned nLength)
+	CryBasicString(const char* szBegin, unsigned nLength)
 	{
-		m_pString = strdup (szBegin, nLength);
+		m_pString = strdup(szBegin, nLength);
 	}
 
 	CryBasicString(const CryBasicString& rRight)
@@ -95,37 +95,37 @@ public:
 		m_pString = strdup(rRight.c_str(), rRight.length());
 	}
 
-	CryBasicString():
+	CryBasicString() :
 		m_pString(NULL)
 	{
 	}
 
 	~CryBasicString()
 	{
-		free (m_pString);
+		free(m_pString);
 	}
 
 	CryBasicString& operator = (const char* szRight)
 	{
 		//assert (m_pString == m_pDuplicate);
-		free (m_pString);
-		m_pString = strdup (szRight);
+		free(m_pString);
+		m_pString = strdup(szRight);
 #ifdef _DEBUG
 		//m_pDuplicate = m_pString;
 #endif
 		return *this;
 	}
 
-	void assign (const char* szBegin, const char* szEnd)
+	void assign(const char* szBegin, const char* szEnd)
 	{
-		free (m_pString);
-		m_pString = strdup(szBegin, (unsigned int)(szEnd-szBegin));
+		free(m_pString);
+		m_pString = strdup(szBegin, (unsigned int)(szEnd - szBegin));
 	}
 
-	void assign (const char* szBegin, unsigned nLength)
+	void assign(const char* szBegin, unsigned nLength)
 	{
-		free (m_pString);
-		m_pString = strdup (szBegin, nLength);
+		free(m_pString);
+		m_pString = strdup(szBegin, nLength);
 	}
 
 	CryBasicString& operator = (const CryBasicString& rRight)
@@ -144,31 +144,31 @@ public:
 	const char* c_str() const
 	{
 		//assert (m_pString == m_pDuplicate);
-		return m_pString?m_pString:"";
+		return m_pString ? m_pString : "";
 	}
 
 	char operator[] (int nIndex)const
 	{
 		//assert (m_pString == m_pDuplicate);
-		assert (nIndex >= 0 && nIndex < length());
+		assert(nIndex >= 0 && nIndex < length());
 		return m_pString[nIndex];
 	}
 
 	char& operator[] (int nIndex)
 	{
 		//assert (m_pString == m_pDuplicate);
-		assert (nIndex >= 0 && nIndex < length());
+		assert(nIndex >= 0 && nIndex < length());
 		return m_pString[nIndex];
 	}
 
 	int length()const
 	{
 		//assert (m_pString == m_pDuplicate);
-		return m_pString ? (int)strlen(m_pString):0;
+		return m_pString ? (int)strlen(m_pString) : 0;
 	}
-	int size()const {return length();}
+	int size()const { return length(); }
 
-	bool empty () const
+	bool empty() const
 	{
 		//assert (m_pString == m_pDuplicate);
 		return !m_pString || !m_pString[0];
@@ -187,20 +187,20 @@ public:
 		return strcmp(c_str(), strRight.c_str()) > 0;
 	}
 
-	CryBasicString& operator += (const char*szRight)
+	CryBasicString& operator += (const char* szRight)
 	{
-		char* pResult = strcat (c_str(), szRight);
-		free (m_pString);
+		char* pResult = strcat(c_str(), szRight);
+		free(m_pString);
 		m_pString = pResult;
 		return (*this);
 	}
 
 	CryBasicString& operator += (const CryBasicString& rRight)
 	{
-		return (*this)+= rRight.c_str();
+		return (*this) += rRight.c_str();
 	}
 
-	void swap (CryBasicString& right)
+	void swap(CryBasicString& right)
 	{
 		char* pTmp = m_pString;
 		m_pString = right.m_pString;
@@ -211,11 +211,11 @@ public:
 	friend CryBasicString operator + (const CryBasicString& rLeft, const char* szRight);
 	friend CryBasicString operator + (const CryBasicString& rLeft, const CryBasicString& rRight);
 protected:
-	void attach (char* szString)
+	void attach(char* szString)
 	{
 		if (m_pString != szString)
 		{
-			free (m_pString);
+			free(m_pString);
 			m_pString = szString;
 		}
 	}
@@ -232,21 +232,21 @@ protected:
 inline CryBasicString operator + (const char* szLeft, const CryBasicString& rRight)
 {
 	CryBasicString strResult;
-	strResult.attach(CryBasicString::strcat (szLeft, rRight.c_str()));
+	strResult.attach(CryBasicString::strcat(szLeft, rRight.c_str()));
 	return strResult;
 }
 
 inline CryBasicString operator + (const CryBasicString& rLeft, const char* szRight)
 {
 	CryBasicString strResult;
-	strResult.attach(CryBasicString::strcat (rLeft.c_str(), szRight));
+	strResult.attach(CryBasicString::strcat(rLeft.c_str(), szRight));
 	return strResult;
 }
 
 inline CryBasicString operator + (const CryBasicString& rLeft, const CryBasicString& rRight)
 {
 	CryBasicString strResult;
-	strResult.attach (CryBasicString::strcat (rLeft.c_str(), rRight.c_str()));
+	strResult.attach(CryBasicString::strcat(rLeft.c_str(), rRight.c_str()));
 	return strResult;
 }
 
@@ -254,7 +254,7 @@ namespace stl
 {
 	//! Specialization of CryBasicString to const char cast.
 	template <>
-		inline const char* constchar_cast( const CryBasicString &type )
+	inline const char* constchar_cast(const CryBasicString& type)
 	{
 		return type.c_str();
 	}

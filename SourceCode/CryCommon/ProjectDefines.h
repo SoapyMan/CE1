@@ -21,15 +21,15 @@
 #if defined(LINUX)
 
 #if defined(LINUX64)
-	#define NOT_USE_PUNKBUSTER_SDK
+#define NOT_USE_PUNKBUSTER_SDK
 #endif
-	#define _DATAPROBE
-	#define NOT_USE_BINK_SDK					// mainly needed for licencees to compile without the Bink integration
-	#define NOT_USE_DIVX_SDK					// mainly needed for licencees to compile without the DivX integration
-	#define EXCLUDE_UBICOM_CLIENT_SDK			// to compile a standalone server without the client integration
+#define _DATAPROBE
+#define NOT_USE_BINK_SDK					// mainly needed for licencees to compile without the Bink integration
+#define NOT_USE_DIVX_SDK					// mainly needed for licencees to compile without the DivX integration
+#define EXCLUDE_UBICOM_CLIENT_SDK			// to compile a standalone server without the client integration
 #else
-	
-	#define _DATAPROBE
+
+#define _DATAPROBE
 //	#define NOT_USE_UBICOM_SDK					// mainly needed for licencees to compile without the UBI.com integration
 
 //	#define NOT_USE_PUNKBUSTER_SDK				// mainly needed for licencees to compile without the Punkbuster integration

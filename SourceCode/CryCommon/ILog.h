@@ -4,7 +4,7 @@
 
 #include "IMiniLog.h"
 #if defined(LINUX)
-	#include "platform.h"
+#include "platform.h"
 #endif
 
 //////////////////////////////////////////////////////////////////////
@@ -49,7 +49,7 @@
 //      with global_verbosity_level 1 this is not printed but with global_verbosity_level 2 or higher it is
 
 //////////////////////////////////////////////////////////////////////
-struct ILog: public IMiniLog
+struct ILog : public IMiniLog
 {
 	virtual void Release() = 0;
 
@@ -58,48 +58,48 @@ struct ILog: public IMiniLog
 //	virtual void	Log(int dwFlags,const char *szCommand,...)=0;
 
 	//set the file used to log to disk
-	virtual void	SetFileName(const char *command = NULL) = 0;
+	virtual void	SetFileName(const char* command = NULL) = 0;
 
 	//
-	virtual const char*	GetFileName() = 0;
+	virtual const char* GetFileName() = 0;
 
 	//all the following functions will be removed are here just to be able to compile the project ---------------------------
 
 	//will log the text both to file and console
-	virtual void	Log(const char *szCommand,...)=0;
+	virtual void	Log(const char* szCommand, ...) = 0;
 
-	virtual void	LogWarning(const char *szCommand,...)=0;
+	virtual void	LogWarning(const char* szCommand, ...) = 0;
 
-	virtual void	LogError(const char *szCommand,...)=0;
+	virtual void	LogError(const char* szCommand, ...) = 0;
 
 	//will log the text both to the end of file and console
-	virtual void	LogPlus(const char *command,...) = 0;	
+	virtual void	LogPlus(const char* command, ...) = 0;
 
 	//log to the file specified in setfilename
-  virtual void	LogToFile(const char *command,...) = 0;	
+	virtual void	LogToFile(const char* command, ...) = 0;
 
 	//
-	virtual void	LogToFilePlus(const char *command,...) = 0;
+	virtual void	LogToFilePlus(const char* command, ...) = 0;
 
 	//log to console only
-	virtual void	LogToConsole(const char *command,...) = 0;
+	virtual void	LogToConsole(const char* command, ...) = 0;
 
 	//
-	virtual void	LogToConsolePlus(const char *command,...) = 0;
+	virtual void	LogToConsolePlus(const char* command, ...) = 0;
 
 	//
-	virtual void	UpdateLoadingScreen(const char *command,...) = 0;	
+	virtual void	UpdateLoadingScreen(const char* command, ...) = 0;
 
 	//
- 	virtual void	UpdateLoadingScreenPlus(const char *command,...) = 0;
+	virtual void	UpdateLoadingScreenPlus(const char* command, ...) = 0;
 
 	//
-	virtual void	EnableVerbosity( bool bEnable ) = 0;
+	virtual void	EnableVerbosity(bool bEnable) = 0;
 
 	//
-	virtual void	SetVerbosity( int verbosity ) = 0;
+	virtual void	SetVerbosity(int verbosity) = 0;
 
-	virtual int		GetVerbosityLevel(bool forceIfOff = false) const =0;
+	virtual int		GetVerbosityLevel(bool forceIfOff = false) const = 0;
 	virtual int		GetFileVerbosityLevel(bool forceIfOff = false) const = 0;
 };
 
@@ -113,63 +113,63 @@ struct ILog: public IMiniLog
 #endif
 
 #ifdef _XBOX
-inline void _ConvertNameForXBox(char *dst, const char *src)
+inline void _ConvertNameForXBox(char* dst, const char* src)
 {
-  //! On XBox d:\ represents current working directory (C:\MasterCD)
-  //! only back slash (\) can be used
-  strcpy(dst, "d:\\");
-  if (src[0]=='.' && (src[1]=='\\' || src[1]=='/'))
-    strcat(dst, &src[2]);
-  else
-    strcat(dst, src);
-  int len = strlen(dst);
-  for (int n=0; dst[n]; n++)
-  {
-    if ( dst[n] == '/' )
-      dst[n] = '\\';
-    if (n > 8 && n+3 < len && dst[n] == '\\' && dst[n+1] == '.' && dst[n+2] == '.')
-    {
-      int m = n+3;
-      n--;
-      while (dst[n] != '\\')
-      {
-        n--;
-        if (!n)
-          break;
-      }
-      if (n)
-      {
-        memmove(&dst[n], &dst[m], len-m+1);
-        len -= m-n;
-        n--;
-      }
-    }
-  }
+	//! On XBox d:\ represents current working directory (C:\MasterCD)
+	//! only back slash (\) can be used
+	strcpy(dst, "d:\\");
+	if (src[0] == '.' && (src[1] == '\\' || src[1] == '/'))
+		strcat(dst, &src[2]);
+	else
+		strcat(dst, src);
+	int len = strlen(dst);
+	for (int n = 0; dst[n]; n++)
+	{
+		if (dst[n] == '/')
+			dst[n] = '\\';
+		if (n > 8 && n + 3 < len && dst[n] == '\\' && dst[n + 1] == '.' && dst[n + 2] == '.')
+		{
+			int m = n + 3;
+			n--;
+			while (dst[n] != '\\')
+			{
+				n--;
+				if (!n)
+					break;
+			}
+			if (n)
+			{
+				memmove(&dst[n], &dst[m], len - m + 1);
+				len -= m - n;
+				n--;
+			}
+		}
+	}
 }
 #endif
 
 //! Everybody should use fxopen instead of fopen
 //! so it will work both on PC and XBox
-inline FILE * fxopen(const char *file, const char *mode)
+inline FILE* fxopen(const char* file, const char* mode)
 {
-  //SetFileAttributes(file,FILE_ATTRIBUTE_ARCHIVE);
-//	FILE *pFile = fopen("C:/MasterCD/usedfiles.txt","a");
-//	if (pFile)
-//	{
-//		fprintf(pFile,"%s\n",file);
-//		fclose(pFile);
-//	}
+	//SetFileAttributes(file,FILE_ATTRIBUTE_ARCHIVE);
+  //	FILE *pFile = fopen("C:/MasterCD/usedfiles.txt","a");
+  //	if (pFile)
+  //	{
+  //		fprintf(pFile,"%s\n",file);
+  //		fclose(pFile);
+  //	}
 
 #ifdef _XBOX
-  char name[256];
-  _ConvertNameForXBox(name, file);
-  return fopen(name, mode);
+	char name[256];
+	_ConvertNameForXBox(name, file);
+	return fopen(name, mode);
 #else
 //#if defined(LINUX)
 //	return fopen_nocase(file, mode);
 //#else
-  return fopen(file, mode);
-//#endif //LINUX
+	return fopen(file, mode);
+	//#endif //LINUX
 #endif
 }
 
