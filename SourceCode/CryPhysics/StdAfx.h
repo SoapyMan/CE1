@@ -48,7 +48,7 @@
 #else
 #include <xtl.h>
 #endif
- 
+
 #include <stdlib.h>
 #include <float.h>
 
@@ -57,8 +57,8 @@
 #else
 class CStream {
 public:
-	bool WriteBits(BYTE *pBits, DWORD nSize) { return true; }
-	bool ReadBits(BYTE *pBits, DWORD nSize) { return true; }
+	bool WriteBits(BYTE* pBits, DWORD nSize) { return true; }
+	bool ReadBits(BYTE* pBits, DWORD nSize) { return true; }
 	bool Write(bool b) { return true; }
 	bool Write(char c) { return true; }
 	bool Write(unsigned char uc) { return true; }
@@ -67,23 +67,23 @@ public:
 	bool Write(short s) { return true; }
 	bool Write(int i) { return true; }
 	bool Write(unsigned int ui) { return true; }
-	bool Write(const vectorf &v) { return true; }
-	bool Read(bool &b) { return true; }
-	bool Read(char &c) { return true; }
-	bool Read(unsigned char &uc) { return true; }
-	bool Read(unsigned short &us) { return true; }
-	bool Read(short &s) { return true; }
-	bool Read(int &i) { return true; }
-	bool Read(unsigned int &ui) { return true; }
-	bool Read(float &f) { return true; }
-	bool Read(vectorf &v) { return true; }
-	bool WriteNumberInBits(int n,size_t nSize) { return true; }
-	bool WriteNumberInBits(unsigned int n,size_t nSize) { return true; }
-	bool ReadNumberInBits(int &n,size_t nSize) { return true; }
-	bool ReadNumberInBits(unsigned int &n,size_t nSize) { return true; }
+	bool Write(const vectorf& v) { return true; }
+	bool Read(bool& b) { return true; }
+	bool Read(char& c) { return true; }
+	bool Read(unsigned char& uc) { return true; }
+	bool Read(unsigned short& us) { return true; }
+	bool Read(short& s) { return true; }
+	bool Read(int& i) { return true; }
+	bool Read(unsigned int& ui) { return true; }
+	bool Read(float& f) { return true; }
+	bool Read(vectorf& v) { return true; }
+	bool WriteNumberInBits(int n, size_t nSize) { return true; }
+	bool WriteNumberInBits(unsigned int n, size_t nSize) { return true; }
+	bool ReadNumberInBits(int& n, size_t nSize) { return true; }
+	bool ReadNumberInBits(unsigned int& n, size_t nSize) { return true; }
 	bool Seek(size_t dwPos = 0) { return true; }
 	size_t GetReadPos() { return 0; }
-	unsigned char *GetPtr() const { return 0; };
+	unsigned char* GetPtr() const { return 0; };
 	size_t GetSize() const { return 0; }
 	bool SetSize(size_t indwBitSize) { return true; }
 };
