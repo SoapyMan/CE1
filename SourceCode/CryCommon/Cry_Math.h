@@ -36,11 +36,6 @@ template <class F, int SI, int SJ> struct Matrix33_tpl;
 template <class F> struct Matrix34_tpl;
 template <class F, int SI, int SJ> struct Matrix44_tpl;
 
-
-
-
-
-
 ///////////////////////////////////////////////////////////////////////////////
 // Definitions                                                               //
 ///////////////////////////////////////////////////////////////////////////////
@@ -64,24 +59,12 @@ const real sqrt3 = (real)1.7320508075688772935274463415059;
 
 //-----------------------------------------------------------------------
 
-
-
-
-
-
-
 #if defined(LINUX)
 #undef CRYASSERT
 #define CRYASSERT(exp) (void)( (exp) || (printf("Assert: ' %s ' has failed\n", #exp), 0) )
 
 #endif
 
-
-
-//-------------------------------------------
-//-- the portability functions for AMD64
-//-------------------------------------------
-#if defined(WIN64) &&  defined(_CPU_AMD64) && !defined(LINUX)
 #define ILINE __forceinline
 
 ILINE void cry_sincosf(float angle, float* pCosSin) { pCosSin[0] = cosf(angle); pCosSin[1] = sinf(angle); }
@@ -110,81 +93,6 @@ ILINE float cry_floorf(float x) { return floorf(x); }
 
 ILINE double cry_sinh(double z) { return (exp(z) - exp(-z)) * 0.5; }
 ILINE double cry_cosh(double z) { return (exp(z) + exp(-z)) * 0.5; }
-#endif
-
-
-
-//-------------------------------------------
-//-- the portability functions for CPU_X86
-//-------------------------------------------
-#if defined(_CPU_X86) && defined(_MSC_VER) && !defined(LINUX)
-#define ILINE __forceinline
-
-// calculates the cosine and sine of the given angle in radians 
-ILINE void cry_sincosf(float angle, float* pCosSin) {
-	__asm {
-		FLD         DWORD PTR       angle
-		FSINCOS
-		MOV         EAX, pCosSin
-		FSTP        DWORD PTR[EAX]		//put cosine into pCosSin[0]
-		FSTP        DWORD PTR[EAX + 4]	//put sine into cossin[1]
-	}
-}
-// calculates the cosine and sine of the given angle in radians 
-ILINE void cry_sincos(double angle, double* pCosSin) {
-	__asm {
-		FLD         QWORD PTR       angle
-		FSINCOS
-		MOV         EAX, pCosSin
-		FSTP        QWORD PTR[EAX]			//put cosine into pCosSin[0]
-		FSTP        QWORD PTR[EAX + 8]		//put sine into cossin[1]
-	}
-}
-ILINE float cry_sinf(float x) { return sinf(x); }
-ILINE float cry_cosf(float x) { return cosf(x); }
-ILINE float cry_fmod(float x, float y) { return fmodf(x, y); }
-ILINE float cry_ceilf(float x) { return ceilf(x); }
-ILINE float cry_asinf(float x) { return asinf(x); }
-ILINE float cry_acosf(float x) { return acosf(x); }
-ILINE float cry_atanf(float x) { return atanf(x); }
-ILINE float cry_atan2f(float x, float y) { return atan2f(x, y); }
-ILINE float cry_sqrtf(float x) { return sqrtf(x); }
-ILINE float cry_tanhf(float x) { return tanhf(x); }
-ILINE float cry_fabsf(float x) { return fabsf(x); }
-ILINE float cry_expf(float x) { return expf(x); }
-ILINE float cry_logf(float x) { return logf(x); }
-ILINE float cry_floorf(float x) { return floorf(x); }
-ILINE float cry_tanf(float x) { return tanf(x); }
-ILINE float cry_powf(float x, float y) { return powf(x, y); }
-#endif
-
-
-//-------------------------------------------
-//-- the portability functions for LINUX
-//-------------------------------------------
-#if defined(LINUX)
-#define ILINE inline
-
-ILINE void cry_sincosf(float angle, float* pCosSin) { pCosSin[0] = cosf(angle);	pCosSin[1] = sinf(angle); }
-ILINE void cry_sincos(double angle, double* pCosSin) { pCosSin[0] = cosf(angle);	pCosSin[1] = sinf(angle); }
-ILINE float cry_sinf(float x) { return sinf(x); }
-ILINE float cry_cosf(float x) { return cosf(x); }
-ILINE float cry_fmod(float x, float y) { return fmodf(x, y); }
-ILINE float cry_ceilf(float x) { return ceilf(x); }
-ILINE float cry_asinf(float x) { return asinf(x); }
-ILINE float cry_acosf(float x) { return acosf(x); }
-ILINE float cry_atanf(float x) { return atanf(x); }
-ILINE float cry_atan2f(float x, float y) { return atan2f(x, y); }
-ILINE float cry_sqrtf(float x) { return sqrtf(x); }
-ILINE float cry_tanhf(float x) { return tanhf(x); }
-ILINE float cry_fabsf(float x) { return fabsf(x); }
-ILINE float cry_expf(float x) { return expf(x); }
-ILINE float cry_logf(float x) { return logf(x); }
-ILINE float cry_floorf(float x) { return floorf(x); }
-ILINE float cry_tanf(float x) { return tanf(x); }
-ILINE float cry_powf(float x, float y) { return powf(x, y); }
-#endif
-
 
 //-----------------------------------------------------------------------
 
@@ -244,7 +152,9 @@ inline int incm3(int i) { return i + 1 & (i - 2) >> 31; }
 inline int decm3(int i) { return i - 1 + ((i - 1) >> 31 & 3); }
 #endif
 
-template <class T> T clamp_tpl(T X, T Min, T Max) { return X < Min ? Min : X < Max ? X : Max; }
+template<typename T> T lerp(const T u, const T v, const float x) { return u + (v - u) * x; }
+
+template <class T> T clamp(T X, T Min, T Max) { return X < Min ? Min : X < Max ? X : Max; }
 
 template<class F> inline F square(F fOp) { return(fOp * fOp); }
 

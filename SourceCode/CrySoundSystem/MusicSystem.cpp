@@ -137,9 +137,7 @@ void CMusicSystem::Shutdown()
 	m_pStream = NULL;
 	m_nChannel = -1;
 	m_bPlaying = false;
-	if (m_pMixBuffer)
-		delete[] m_pMixBuffer;
-	m_pMixBuffer = NULL;
+	SAFE_DELETE(m_pMixBuffer)
 	FlushPatterns();
 }
 
@@ -1129,6 +1127,63 @@ void CMusicSystem::AdjustMixStreamsRefCount(int nSamples)
 /* mix all streams in the play-list into pBuffer; mixlength is nSamples
 	the data is processed before mixing if needed (eg. ramping)
 */
+
+// TODO: perhaps move this to SoundMixer.h ?
+struct int16stereo
+{
+	int16 l;
+	int16 r;
+};
+using f32stereo = Vec2;
+
+template<typename T2>
+float sampleValueMono(const T2 src) { return src; }
+
+template<typename T2>
+f32stereo sampleValueStereo(const T2 src) { return { sampleValueMono(src.l), sampleValueMono(src.r) }; }
+
+template<typename _OUT>
+void mixSample(const float in, const float sampleFrac, _OUT& out);
+
+template<typename _OUT>
+void mixSample(const f32stereo in, const float sampleFrac, _OUT& out);
+
+template<>
+void mixSample(const float in, const float sampleFrac, int16& out)
+{
+	const int result = (((SHRT_MAX - out) * in) / SHRT_MAX) + out;
+	out = clamp(result, SHRT_MIN, SHRT_MAX);
+}
+
+template<>
+void mixSample(const f32stereo in, const float sampleFrac, int16stereo& out)
+{
+	mixSample(in.x, sampleFrac, out.l);
+	mixSample(in.y, sampleFrac, out.r);
+}
+
+template<typename _OUT, typename _IN>
+int MixSamplesStereo(const _IN* in, int numInSamples, _OUT* out, int numOutSamples, float volume, float rate)
+{
+	float samplePos = 0.0f;
+	int i = 0;
+	for (; i < numOutSamples && samplePos < numInSamples; ++i)
+	{
+		const int srcSamplePos = cry_floorf(samplePos);
+		const float sampleFrac = samplePos - cry_floorf(samplePos);
+
+		const f32stereo srcValA = sampleValueStereo(in[srcSamplePos]);
+		const f32stereo srcValB = sampleValueStereo(in[crymin(numInSamples - 1, srcSamplePos + 1)]);
+		const f32stereo sourceVal = lerp(srcValA, srcValB, sampleFrac) * volume;
+
+		mixSample(sourceVal, sampleFrac, out[i]);
+
+		samplePos += rate;
+	}
+
+	return i + 1;
+}
+
 void CMusicSystem::MixStreams(void* pBuffer, int nSamples)
 {
 	for (TPatternPlayInfoVecIt It = m_vecPlayingPatterns.begin(); It != m_vecPlayingPatterns.end();)
@@ -1142,7 +1197,6 @@ void CMusicSystem::MixStreams(void* pBuffer, int nSamples)
 		}
 		else
 		{
-			GUARD_HEAP; // AMD64 note: here was a Memory Corruption
 			switch (PlayInfo.eBlendType)
 			{
 			case EBlend_ToEnd:
@@ -1156,42 +1210,18 @@ void CMusicSystem::MixStreams(void* pBuffer, int nSamples)
 				break;
 			}
 			}
+
 			PlayInfo.pPatternInstance->GetPCMData((signed long*)m_pMixBuffer, nSamplesToRead);
 
-			switch (PlayInfo.eBlendType)
-			{
-			case EBlend_FadeOut:
+			if (PlayInfo.eBlendType == EBlend_FadeOut)
 			{
 				if (FadeStream(PlayInfo, (signed short*)m_pMixBuffer, nSamplesToRead))
 					bStreamEnd = true;
-				break;
 			}
-			}
-			//const int nSize = 1024*1024*4;
-			//static int arrBuffer[nSize];
-			//memset (arrBuffer, 0xCE, sizeof(arrBuffer));
-	  //memcpy (pBuffer, m_pMixBuffer, nSamplesToRead*4);
-	  //memset(pBuffer, 0, nSamplesToRead*4);
-			FSOUND_DSP_MixBuffers(pBuffer, m_pMixBuffer, nSamplesToRead, m_nSampleRate, PlayInfo.pPatternInstance->GetPattern()->GetLayeringVolume(), 128, FSOUND_16BITS | FSOUND_STEREO);
-			/*
-			  signed short *destptr = (signed short *)pBuffer;
-				signed int *srcptr = (signed int *)pBuffer;
 
-				for (int count = 0; count < nSamplesToRead; count++)
-				{
-					signed int lval,rval;
-					lval = *srcptr++;
-					rval = *srcptr++;
-
-					*destptr++ = (signed short)( lval < -32768 ? -32768 : lval > 32767 ? 32767 : lval);
-					*destptr++ = (signed short)( rval < -32768 ? -32768 : rval > 32767 ? 32767 : rval);
-			  }
-			/**/
-
-			/*CRYASSERT (arrBuffer[nSize-1] == 0xCECECECE);
-				   CRYASSERT (IsHeapValid());
-				   memcpy (pBuffer, arrBuffer, nSamplesToRead*4);
-				   CRYASSERT (IsHeapValid());*/
+			const float layeringVolume = PlayInfo.pPatternInstance->GetPattern()->GetLayeringVolume() / 1000.0f;
+			const float samplingRate = m_nSampleRate / 44100.0f;
+			MixSamplesStereo(reinterpret_cast<const int16stereo*>(m_pMixBuffer), nSamplesToRead, reinterpret_cast<int16stereo*>(pBuffer), nSamples, layeringVolume, samplingRate);
 		}
 		if (bStreamEnd)
 		{
