@@ -22,10 +22,10 @@ typedef string SysConfigValue;
 class CSystemConfiguration
 {
 public:
-	CSystemConfiguration( const string& strSysConfigFilePath,CSystem *pSystem);
+	CSystemConfiguration(const string& strSysConfigFilePath, CSystem* pSystem);
 	~CSystemConfiguration();
 
-	string RemoveWhiteSpaces( string& s )
+	string RemoveWhiteSpaces(string& s)
 	{
 		string s1;
 		for (int i = 0; i < (int)(s.size()); i++)
@@ -39,7 +39,7 @@ private:
 
 	void ParseSystemConfig();
 
-	CSystem	*m_pSystem;
-	string m_strSysConfigFilePath;	
+	CSystem* m_pSystem;
+	string m_strSysConfigFilePath;
 };
 

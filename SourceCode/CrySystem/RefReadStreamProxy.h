@@ -10,7 +10,7 @@
 #include "IStreamEngine.h"
 
 
-class CRefReadStreamProxy: public IReadStream
+class CRefReadStreamProxy : public IReadStream
 {
 public:
 	// we need a MT-safe reference counting here..
@@ -18,21 +18,21 @@ public:
 	// this class sets the priority order for the proxes
 	struct Order
 	{
-		bool operator ()(const CRefReadStreamProxy* pLeft, const CRefReadStreamProxy* pRight)const 
+		bool operator ()(const CRefReadStreamProxy* pLeft, const CRefReadStreamProxy* pRight)const
 		{
 			return pLeft->GetPriority() > pRight->GetPriority();
 		}
 	};
 
 	// max number of retries - if the file doesn't start reading after this number of retries, unrecoverable error is returned
-	enum {g_numMaxRetries = 4};
+	enum { g_numMaxRetries = 4 };
 	// this is the length of the block that's read at once.
 	// big requests are splitted into smaller blocks of this size
-	enum {g_nBlockLength = 32 * 1024 * 1024}; // 128 k is the max size of the DMA transfer request
+	enum { g_nBlockLength = 32 * 1024 * 1024 }; // 128 k is the max size of the DMA transfer request
 
-	CRefReadStreamProxy (const char* szSource, class CRefReadStream* pStream, IStreamCallback* pCallback, StreamReadParams* pParams);
-	~CRefReadStreamProxy ();
-	DWORD_PTR GetUserData() {return m_Params.dwUserData;}
+	CRefReadStreamProxy(const char* szSource, class CRefReadStream* pStream, IStreamCallback* pCallback, StreamReadParams* pParams);
+	~CRefReadStreamProxy();
+	DWORD_PTR GetUserData() { return m_Params.dwUserData; }
 
 	// returns true if the file read was not successful.
 	bool IsError();
@@ -42,11 +42,11 @@ public:
 	bool IsFinished();
 
 	// returns the number of bytes read so far (the whole buffer size if IsFinished())
-	unsigned int GetBytesRead (bool bWait);
+	unsigned int GetBytesRead(bool bWait);
 
 	// returns the buffer into which the data has been or will be read
 	// at least GetBytesRead() bytes in this buffer are guaranteed to be already read
-	const void* GetBuffer ();
+	const void* GetBuffer();
 
 	// tries to stop reading the stream; this is advisory and may have no effect
 	// but the callback	will not be called after this. If you just destructing object,
@@ -54,7 +54,7 @@ public:
 	void Abort();
 
 	// tries to raise the priority of the read; this is advisory and may have no effect
-	void RaisePriority (unsigned nPriority);
+	void RaisePriority(unsigned nPriority);
 
 	// unconditionally waits until the callback is called
 	// i.e. if the stream hasn't yet finish, it's guaranteed that the user-supplied callback
@@ -64,12 +64,12 @@ public:
 	// the interface for the actual stream
 	// returns true, if the read start finished (with error or success)
 	// or false if it needs to be restarted again
-	bool StartRead (unsigned nMemQuota = 0x7FFFFFFF);
+	bool StartRead(unsigned nMemQuota = 0x7FFFFFFF);
 
 	// returns the total number of pending read operations
 	//static unsigned numPendingOperations() {return g_numPendingOperations;}
 
-	int GetPriority()const{return m_Params.nPriority;}
+	int GetPriority()const { return m_Params.nPriority; }
 
 	// this returns true after the main IO job has been executed (either in worker or in main thread)
 	bool IsIOExecuted();
@@ -77,7 +77,7 @@ public:
 	// this gets called upon the IO has been executed to call the callbacks
 	void FinalizeIO();
 
-	const StreamReadParams& GetParams() const {return m_Params;}
+	const StreamReadParams& GetParams() const { return m_Params; }
 
 	// finalizes the read operation, forces callback and erases it (so that it doesn't get called twice)
 	void OnFinishRead(unsigned nError);
@@ -93,13 +93,13 @@ protected:
 	void OnIOComplete(unsigned nError, unsigned numBytesRead);
 	// on the platforms that support overlapped IO, calls ReadFileEx.
 	// on other platforms merely reads the file, calling OnIOComplete()
-  DWORD CallReadFileEx ();
+	DWORD CallReadFileEx();
 
 	static VOID CALLBACK FileIOCompletionRoutine(
 		DWORD dwErrorCode,                // completion code
 		DWORD dwNumberOfBytesTransfered,  // number of bytes transferred
 		LPOVERLAPPED lpOverlapped         // I/O information buffer
-		);
+	);
 
 	// the actual stream
 	class CRefReadStream* m_pStream;

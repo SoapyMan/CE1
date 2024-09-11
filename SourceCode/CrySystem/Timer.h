@@ -45,51 +45,51 @@ public:
 
 	//! @name ITimer implementation
 	//@{
-	bool Init( ISystem *pSystem );
-	virtual void Reset();		
+	bool Init(ISystem* pSystem);
+	virtual void Reset();
 	virtual void Update();
 	virtual void Enable(bool bEnable);
 
 	virtual const CTimeValue GetCurrTimePrecise() const
 	{
-		int64 llNow=(*m_pfnUpdate)()-m_lBaseTime;
+		int64 llNow = (*m_pfnUpdate)() - m_lBaseTime;
 
 		// can be done much better
-		double fac=(double)TIMEVALUE_PRECISION/(double)m_lTicksPerSec;
+		double fac = (double)TIMEVALUE_PRECISION / (double)m_lTicksPerSec;
 
-		return CTimeValue(int64(llNow*fac));
+		return CTimeValue(int64(llNow * fac));
 	}
 
 	//! \return in seconds
-	virtual inline const float GetCurrTime() const 
+	virtual inline const float GetCurrTime() const
 	{
 		return m_fCurrTime;
 	}
-	
-//	virtual const CTimeValue GetFrameStart() const;
 
-	virtual inline const float GetAsyncCurTime()  
-	{ 
-		int64 llNow=(*m_pfnUpdate)()-m_lBaseTime;
-		double dVal=(double)llNow;
-		float fRet=(float)(dVal/(double)(m_lTicksPerSec));
+	//	virtual const CTimeValue GetFrameStart() const;
 
-		return fRet; 
+	virtual inline const float GetAsyncCurTime()
+	{
+		int64 llNow = (*m_pfnUpdate)() - m_lBaseTime;
+		double dVal = (double)llNow;
+		float fRet = (float)(dVal / (double)(m_lTicksPerSec));
+
+		return fRet;
 	}
-	
-	virtual inline const float GetFrameTime() const 
-	{ 
-		return m_fFrameTime;   
-	} 
-	
+
+	virtual inline const float GetFrameTime() const
+	{
+		return m_fFrameTime;
+	}
+
 	virtual float	GetFrameRate();
 	virtual float gfGetTime() { return GetAsyncCurTime(); }				// to be removed
-  virtual float MeasureTime(const char* comment);
-	bool GetBasicStats( float & fStatsLogic, float & fStatsRender, float & fStatsSumm );
+	virtual float MeasureTime(const char* comment);
+	bool GetBasicStats(float& fStatsLogic, float& fStatsRender, float& fStatsSumm);
 	//@}
 private:
-	
-	typedef int64 (*TimeUpdateFunc) ();	//  absolute, in microseconds,
+
+	typedef int64(*TimeUpdateFunc) ();	//  absolute, in microseconds,
 
 	//! get the timer in microseconds. using QueryPerformanceCounter
 	static int64	GetPerformanceCounterTime();
@@ -97,7 +97,7 @@ private:
 	static int64	GetMMTime();
 	//! updates m_fCurrTime
 	void RefreshCurrTime();
-		
+
 	TimeUpdateFunc	m_pfnUpdate;								//!< pointer to the timer function (performance counter or timegettime)
 	int64						m_lBaseTime;								//!< absolute in ticks, 1 sec = m_lTicksPerSec units
 	int64						m_lLastTime;								//!< absolute in ticks, 1 sec = m_lTicksPerSec units
@@ -116,29 +116,29 @@ private:
 	//////////////////////////////////////////////////////////////////////////
 	// Console vars.
 	//////////////////////////////////////////////////////////////////////////
-  int							m_e_time_smoothing;					//!< [0..FPS_FRAMES-2] optional smoothing, 0=no, x=x additional steps,  
-  int							m_e_time_profiling;					//!< 
+	int							m_e_time_smoothing;					//!< [0..FPS_FRAMES-2] optional smoothing, 0=no, x=x additional steps,  
+	int							m_e_time_profiling;					//!< 
 	float						m_fixed_time_step;					//!< 
 	//////////////////////////////////////////////////////////////////////////
 
-  struct time_info_struct
-  {
-    time_info_struct() { param_name[0]=0; value=0; }
-    char param_name[32];
-    float value;
-  } m_TimeInfoTable[TIME_PROFILE_PARAMS];			//!< this table contain times and code point names
+	struct time_info_struct
+	{
+		time_info_struct() { param_name[0] = 0; value = 0; }
+		char param_name[32];
+		float value;
+	} m_TimeInfoTable[TIME_PROFILE_PARAMS];			//!< this table contain times and code point names
 
-  int							m_nCurProfLine;  						//!< 
+	int							m_nCurProfLine;  						//!< 
 	// todo: change from float to int64
-  float						m_fProfStartTime;						//!< in milliseconds, -1 menst value is not set
+	float						m_fProfStartTime;						//!< in milliseconds, -1 menst value is not set
 
-	ISystem *				m_pSystem;									//!< 
-	
+	ISystem* m_pSystem;									//!< 
+
 	// game/render ratio profiling
 	float						m_fStatsLogic;							//!< 
 	float						m_fStatsRender;							//!< 
 	float						m_fStatsSumm;								//!< 
-  int							m_nCurProfLinesNum;  				//!< 
+	int							m_nCurProfLinesNum;  				//!< 
 };
 
 

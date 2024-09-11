@@ -8,36 +8,36 @@
 class CRefStreamEngine;
 class CRefReadStreamProxy;
 
-class CRefReadStream: public _reference_target_t
+class CRefReadStream : public _reference_target_t
 {
 public:
 
 	// this is the maximum size in bytes of a file inside zip
 	// that will be cached even though it's not compressed
-	enum {g_nMaxCacheUncompressed = 64 * 1024};
+	enum { g_nMaxCacheUncompressed = 64 * 1024 };
 
 	// if the file can't be opened, this object permanently returns an error (right after construction)
-	CRefReadStream (const string& strFileName, CRefStreamEngine* pEngine);
+	CRefReadStream(const string& strFileName, CRefStreamEngine* pEngine);
 
 	// returns true if the file read was not successful.
-	virtual bool IsError() {return m_bError;}
+	virtual bool IsError() { return m_bError; }
 
 	// request to abort comes from the proxy. This doesn't means immediate deallocation.
 	virtual void Abort(CRefReadStreamProxy* pProxy);
 
 	// Client (through the given Proxy) has requested priority rise
-	virtual void OnRaisePriority (CRefReadStreamProxy* pProxy, unsigned nPriority);
+	virtual void OnRaisePriority(CRefReadStreamProxy* pProxy, unsigned nPriority);
 
 	// the proxy to this stream appeared, take it into account (increase the ref counter)
-	void Register (CRefReadStreamProxy* pProxy){this->AddRef();m_setProxies.insert (pProxy);}
+	void Register(CRefReadStreamProxy* pProxy) { this->AddRef(); m_setProxies.insert(pProxy); }
 	// the proxy deallocates, don't take it into account (decrease ref counter)
-	void Unregister (CRefReadStreamProxy* pProxy) {m_setProxies.erase (pProxy);this->Release();}
+	void Unregister(CRefReadStreamProxy* pProxy) { m_setProxies.erase(pProxy); this->Release(); }
 
 	// returns the path to the file; this is always the real path, it shouldn't undergo MOD path adjustments
-	const string& GetFileName() const {return m_strFileName;}
+	const string& GetFileName() const { return m_strFileName; }
 
-	unsigned GetFileSize() const {return m_nFileSize;}
-	HANDLE GetFile () {return m_hFile;}
+	unsigned GetFileSize() const { return m_nFileSize; }
+	HANDLE GetFile() { return m_hFile; }
 
 	void OnIOExecuted(CRefReadStreamProxy* pProxy);
 
@@ -45,11 +45,11 @@ public:
 	// returns the size of the sector on the disk on which this file resides
 	unsigned GetSectorSize();
 #endif //LINUX
-	
+
 	// activates: opens the file, gets its size. If failed, returns false
 	bool Activate();
 
-	CRefStreamEngine* GetEngine() {return m_pEngine;}
+	CRefStreamEngine* GetEngine() { return m_pEngine; }
 
 	// returns the offset that is to be added to the desired offset in the file handle opened by this stream
 	// this is an artificial offset that will encounter for the files being in an archive
@@ -64,7 +64,7 @@ public:
 	// this is true when the file was open with FILE_FLAG_OVERLAPPED flag;
 	// and therefore the operations on the file may and should be overlapped.
 	// otherwise perhaps some limitation exists and we should only work synchronously.
-	bool isOverlapped() const {return m_bOverlapped;}
+	bool isOverlapped() const { return m_bOverlapped; }
 
 	// dumps all clients (proxies) - each uses the Dump function of the proxy
 	string Dump();

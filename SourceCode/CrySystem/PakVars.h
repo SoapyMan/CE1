@@ -7,7 +7,7 @@ struct PakVars
 	int nPriority;
 	int nReadSlice;
 	int nLogMissingFiles;
-	PakVars():nPriority(1),nReadSlice(0), nLogMissingFiles(0){}
+	PakVars() :nPriority(1), nReadSlice(0), nLogMissingFiles(0) {}
 };
 
 

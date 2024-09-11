@@ -1046,7 +1046,7 @@ void CXConsole::ScrollConsole()
 	case sdDOWN: // The console is scrolling down
 
 		// Vlads note: console should go down immediately, otherwise it can look very bad on startup
-		m_nScrollPos+=nCurrHeight/2;
+		m_nScrollPos += nCurrHeight / 2;
 
 		if (m_nScrollPos > m_nScrollMax)
 		{

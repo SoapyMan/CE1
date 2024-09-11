@@ -16,7 +16,7 @@ struct ICryCharManager;
 
 	REMARKS:
 	After initialization of the script-object it will be globally accessable through scripts using the namespace "Animation".
-	
+
 	Example:
 		Animation:DumpAnims();
 
@@ -24,32 +24,32 @@ struct ICryCharManager;
 	These function will never be called from C-Code. They're script-exclusive.
 */
 
-class CScriptObjectAnimation:
+class CScriptObjectAnimation :
 	public _ScriptableEx<CScriptObjectAnimation>
 {
 public:
 	CScriptObjectAnimation(void);
 	virtual ~CScriptObjectAnimation(void);
-	void Init(IScriptSystem *pScriptSystem, ISystem *pSystem);
-	static void InitializeTemplate(IScriptSystem *pSS);
+	void Init(IScriptSystem* pScriptSystem, ISystem* pSystem);
+	static void InitializeTemplate(IScriptSystem* pSS);
 
 public:
-	int DumpAnims(IFunctionHandler *pH);
-	int DumpModels (IFunctionHandler *pH);
-	int TestParticles (IFunctionHandler *pH);
-	int StopParticles (IFunctionHandler *pH);
+	int DumpAnims(IFunctionHandler* pH);
+	int DumpModels(IFunctionHandler* pH);
+	int TestParticles(IFunctionHandler* pH);
+	int StopParticles(IFunctionHandler* pH);
 	int TrashAnims(IFunctionHandler* pH);
 	int UnloadAnim(IFunctionHandler* pH);
 	int ClearDecals(IFunctionHandler* pH);
 	int DumpDecals(IFunctionHandler* pH);
 	int Start2Anims(IFunctionHandler* pH);
-	int DumpStates (IFunctionHandler* pH);
+	int DumpStates(IFunctionHandler* pH);
 	int ExportModels(IFunctionHandler* pH);
 
 	ICryCharManager* getAnimationManager();
 
 private:
-	ISystem *m_pSystem;
+	ISystem* m_pSystem;
 };
 
 #endif

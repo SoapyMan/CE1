@@ -36,7 +36,7 @@ class DebugCallStack
 {
 public:
 	// Returns single instance of DebugStack
-	static DebugCallStack*	instance();
+	static DebugCallStack* instance();
 
 	ISystem* GetSystem() { return m_pSystem; };
 	//! Dumps Current Call Stack to log.
@@ -45,21 +45,21 @@ public:
 	void	updateCallStack();
 
 	//! Get current call stack information.
-	void getCallStack( std::vector<string> &functions );
+	void getCallStack(std::vector<string>& functions);
 
-	void installErrorHandler( ISystem *pSystem );
-	int	 handleException( void *exception_pointer );
+	void installErrorHandler(ISystem* pSystem);
+	int	 handleException(void* exception_pointer);
 
-	void dumpCallStack( std::vector<string> &functions );
+	void dumpCallStack(std::vector<string>& functions);
 
 	//! Return name of module where exception happened.
 	const char* getExceptionModule() { return m_excModule; }
 	const char* getExceptionLine() { return m_excLine; }
 
-	typedef void (*ErrorCallback)( const char* description,const char* value );
+	typedef void (*ErrorCallback)(const char* description, const char* value);
 
-	void registerErrorCallback( ErrorCallback call );
-	void unregisterErrorCallback( ErrorCallback call );
+	void registerErrorCallback(ErrorCallback call);
+	void unregisterErrorCallback(ErrorCallback call);
 
 	std::list<ErrorCallback> m_errorCallbacks;
 public:
@@ -68,12 +68,12 @@ public:
 
 	bool initSymbols();
 	void doneSymbols();
-	
-	string	LookupFunctionName( void *adderss,bool fileInfo );
-	int			updateCallStack( void *exception_pointer );
-	void		FillStackTrace( DWORD64 eip,DWORD64 esp,DWORD64 ebp,PCONTEXT pContext=NULL );
 
-	static	int unhandledExceptionHandler( void *exception_pointer );
+	string	LookupFunctionName(void* adderss, bool fileInfo);
+	int			updateCallStack(void* exception_pointer);
+	void		FillStackTrace(DWORD64 eip, DWORD64 esp, DWORD64 ebp, PCONTEXT pContext = NULL);
+
+	static	int unhandledExceptionHandler(void* exception_pointer);
 
 	std::vector<string> m_functions;
 	static DebugCallStack* m_instance;
@@ -81,11 +81,11 @@ public:
 	char m_excLine[256];
 	char m_excModule[128];
 
-	void *prevExceptionHandler;
+	void* prevExceptionHandler;
 
 	bool	m_symbols;
 
-	ISystem *m_pSystem;
+	ISystem* m_pSystem;
 };
 
 #endif //WIN32

@@ -65,225 +65,225 @@ enum SOE_MEMBER_LUA_TABLES {
 	These function will never be called from C-Code. They're script-exclusive.
 */
 class CScriptObjectEntity :
-public _ScriptableEx<CScriptObjectEntity>,
-public IScriptObjectSink
+	public _ScriptableEx<CScriptObjectEntity>,
+	public IScriptObjectSink
 {
 public:
 	CScriptObjectEntity();
 	virtual ~CScriptObjectEntity();
-	bool Create(IScriptSystem *pScriptSystem, ISystem *pSystem);
-	void SetEntity(IEntity *pEntity);
-	void SetContainer(IScriptObject *pContainer);
-//IScriptObjectSink
+	bool Create(IScriptSystem* pScriptSystem, ISystem* pSystem);
+	void SetEntity(IEntity* pEntity);
+	void SetContainer(IScriptObject* pContainer);
+	//IScriptObjectSink
 	void OnRelease()
 	{
 		m_pScriptThis->Clear();
-		m_pScriptThis=NULL;
+		m_pScriptThis = NULL;
 		delete this;
 	}
-	static void InitializeTemplate(IScriptSystem *pSS);
+	static void InitializeTemplate(IScriptSystem* pSS);
 	static void ReleaseTemplate();
 public:
-	int SelectPipe(IFunctionHandler *pH);
-	int EnableUpdate(IFunctionHandler *pH);
-	int SetUpdateIfPotentiallyVisible(IFunctionHandler *pH);
-	int SetUpdateType(IFunctionHandler *pH);
-	int SetBBox(IFunctionHandler *pH);
-	int GetBBox(IFunctionHandler *pH);
-	int GetLocalBBox(IFunctionHandler *pH);
-	int SetRadius(IFunctionHandler *pH);
-	int SetUpdateRadius(IFunctionHandler *pH);
-	int GetUpdateRadius(IFunctionHandler *pH);
-	int LoadBreakable(IFunctionHandler *pH);
-	int BreakEntity(IFunctionHandler *pH);
-	int TriggerEvent(IFunctionHandler *pH);
-	int GetHelperPos(IFunctionHandler *pH);
-	int GetBonePos(IFunctionHandler *pH);
-	int GetBoneDir(IFunctionHandler *pH);
-	int GetBoneNameFromTable(IFunctionHandler *pH);
-	int LoadVehicle(IFunctionHandler *pH);
+	int SelectPipe(IFunctionHandler* pH);
+	int EnableUpdate(IFunctionHandler* pH);
+	int SetUpdateIfPotentiallyVisible(IFunctionHandler* pH);
+	int SetUpdateType(IFunctionHandler* pH);
+	int SetBBox(IFunctionHandler* pH);
+	int GetBBox(IFunctionHandler* pH);
+	int GetLocalBBox(IFunctionHandler* pH);
+	int SetRadius(IFunctionHandler* pH);
+	int SetUpdateRadius(IFunctionHandler* pH);
+	int GetUpdateRadius(IFunctionHandler* pH);
+	int LoadBreakable(IFunctionHandler* pH);
+	int BreakEntity(IFunctionHandler* pH);
+	int TriggerEvent(IFunctionHandler* pH);
+	int GetHelperPos(IFunctionHandler* pH);
+	int GetBonePos(IFunctionHandler* pH);
+	int GetBoneDir(IFunctionHandler* pH);
+	int GetBoneNameFromTable(IFunctionHandler* pH);
+	int LoadVehicle(IFunctionHandler* pH);
 	//int SetDamage(IFunctionHandler *pH);
-	int CreateParticleEntity(IFunctionHandler *pH);
-	int GetPos(IFunctionHandler *pH);
-	int GetCenterOfMassPos(IFunctionHandler *pH);
+	int CreateParticleEntity(IFunctionHandler* pH);
+	int GetPos(IFunctionHandler* pH);
+	int GetCenterOfMassPos(IFunctionHandler* pH);
 	//int GetWorldPos(IFunctionHandler *pH);
-	int SetPos(IFunctionHandler *pH);
-	int SetName(IFunctionHandler *pH);
-	int GetName(IFunctionHandler *pH);
-	int SetAIName(IFunctionHandler *pH);
-	int GetAIName(IFunctionHandler *pH);
-	int PhysicalizeCharacter(IFunctionHandler *pH);
-	int LoadObject(IFunctionHandler *pH);
-	int LoadObjectPiece(IFunctionHandler *pH);
-	int GetObjectPos(IFunctionHandler *pH);
-	int SetObjectPos(IFunctionHandler *pH);
-	int GetObjectAngles(IFunctionHandler *pH);
-	int SetObjectAngles(IFunctionHandler *pH);
-	int DrawObject(IFunctionHandler *pH);
-	int CreateParticlePhys(IFunctionHandler *pH);
-	int CreateLivingEntity(IFunctionHandler *pH);
-	int CreateRigidBody(IFunctionHandler *pH);
-	int CreateArticulatedBody(IFunctionHandler *pH);
-	int CreateRigidBodyPiece(IFunctionHandler *pH);
-	int CreateSoftEntity(IFunctionHandler *pH);
-	int ResetPhysics(IFunctionHandler *pH);
-	int AwakePhysics(IFunctionHandler *pH);
-	int AwakeCharacterPhysics(IFunctionHandler *pH);
-	int CreateStaticEntity(IFunctionHandler *pH);
-	int SetAngles(IFunctionHandler *pH);
-	int GetAngles(IFunctionHandler *pH);
+	int SetPos(IFunctionHandler* pH);
+	int SetName(IFunctionHandler* pH);
+	int GetName(IFunctionHandler* pH);
+	int SetAIName(IFunctionHandler* pH);
+	int GetAIName(IFunctionHandler* pH);
+	int PhysicalizeCharacter(IFunctionHandler* pH);
+	int LoadObject(IFunctionHandler* pH);
+	int LoadObjectPiece(IFunctionHandler* pH);
+	int GetObjectPos(IFunctionHandler* pH);
+	int SetObjectPos(IFunctionHandler* pH);
+	int GetObjectAngles(IFunctionHandler* pH);
+	int SetObjectAngles(IFunctionHandler* pH);
+	int DrawObject(IFunctionHandler* pH);
+	int CreateParticlePhys(IFunctionHandler* pH);
+	int CreateLivingEntity(IFunctionHandler* pH);
+	int CreateRigidBody(IFunctionHandler* pH);
+	int CreateArticulatedBody(IFunctionHandler* pH);
+	int CreateRigidBodyPiece(IFunctionHandler* pH);
+	int CreateSoftEntity(IFunctionHandler* pH);
+	int ResetPhysics(IFunctionHandler* pH);
+	int AwakePhysics(IFunctionHandler* pH);
+	int AwakeCharacterPhysics(IFunctionHandler* pH);
+	int CreateStaticEntity(IFunctionHandler* pH);
+	int SetAngles(IFunctionHandler* pH);
+	int GetAngles(IFunctionHandler* pH);
 	//int GetAnglesReal(IFunctionHandler *pH);	
-	int Bind(IFunctionHandler *pH);
-	int Unbind(IFunctionHandler *pH);
-	int IsBound(IFunctionHandler *pH);
-	int NetPresent(IFunctionHandler *pH);
-	int RenderShadow(IFunctionHandler *pH);
-	int SetRegisterInSectors(IFunctionHandler *pH);
-	int SetPhysicParams(IFunctionHandler *pH);
-	int SetCharacterPhysicParams(IFunctionHandler *pH);
-	int GetParticleCollisionStatus(IFunctionHandler *pH);
-	int GetObjectStatus(IFunctionHandler *pH);
-	int SetObjectStatus(IFunctionHandler *pH);
-	int GetDirectionVector(IFunctionHandler *pH);
-	int IsAnimationRunning(IFunctionHandler *pH);
-	int AddImpulse(IFunctionHandler *pH);
-	int AddImpulseObj(IFunctionHandler *pH);
-	int IsPointWithinRadius(IFunctionHandler *pH);
-//	int RegisterWithAI(IFunctionHandler *pH);
-	int GetDistanceFromPoint(IFunctionHandler *pH);
-	int DestroyPhysics(IFunctionHandler *pH);
-	int EnablePhysics(IFunctionHandler *pH);
-	int SetSecondShader(IFunctionHandler *pH);
-	int SetShader(IFunctionHandler *pH);
-	int GetShader(IFunctionHandler *pH);
-	int GetCameraPosition(IFunctionHandler *pH);
-	int SetShaderFloat(IFunctionHandler *pH);
-	int SetColor(IFunctionHandler *pH);
-	int SetStatObjScale(IFunctionHandler *pH);
-	int EnableSave(IFunctionHandler *pH);
+	int Bind(IFunctionHandler* pH);
+	int Unbind(IFunctionHandler* pH);
+	int IsBound(IFunctionHandler* pH);
+	int NetPresent(IFunctionHandler* pH);
+	int RenderShadow(IFunctionHandler* pH);
+	int SetRegisterInSectors(IFunctionHandler* pH);
+	int SetPhysicParams(IFunctionHandler* pH);
+	int SetCharacterPhysicParams(IFunctionHandler* pH);
+	int GetParticleCollisionStatus(IFunctionHandler* pH);
+	int GetObjectStatus(IFunctionHandler* pH);
+	int SetObjectStatus(IFunctionHandler* pH);
+	int GetDirectionVector(IFunctionHandler* pH);
+	int IsAnimationRunning(IFunctionHandler* pH);
+	int AddImpulse(IFunctionHandler* pH);
+	int AddImpulseObj(IFunctionHandler* pH);
+	int IsPointWithinRadius(IFunctionHandler* pH);
+	//	int RegisterWithAI(IFunctionHandler *pH);
+	int GetDistanceFromPoint(IFunctionHandler* pH);
+	int DestroyPhysics(IFunctionHandler* pH);
+	int EnablePhysics(IFunctionHandler* pH);
+	int SetSecondShader(IFunctionHandler* pH);
+	int SetShader(IFunctionHandler* pH);
+	int GetShader(IFunctionHandler* pH);
+	int GetCameraPosition(IFunctionHandler* pH);
+	int SetShaderFloat(IFunctionHandler* pH);
+	int SetColor(IFunctionHandler* pH);
+	int SetStatObjScale(IFunctionHandler* pH);
+	int EnableSave(IFunctionHandler* pH);
 
-	int PlaySound(IFunctionHandler *pH);
+	int PlaySound(IFunctionHandler* pH);
 
-	int KillCharacter(IFunctionHandler *pH);
-	int DrawCharacter(IFunctionHandler *pH);
-	int LoadCharacter(IFunctionHandler *pH);
-	int StartAnimation(IFunctionHandler *pH);
-	int ResetAnimation(IFunctionHandler *pH);
-	int SetAnimationEvent(IFunctionHandler *pH);
-	int SetAnimationKeyEvent(IFunctionHandler *pH);
-	int DisableAnimationEvent(IFunctionHandler *pH);
-	int SetAnimationSpeed(IFunctionHandler *pH);
-	int SetAnimationTime(IFunctionHandler *pH);
-	int GetAnimationTime(IFunctionHandler *pH);
-	int GetCurAnimation(IFunctionHandler *pH);
-	int GetAnimationLength(IFunctionHandler *pH);
-	int ReleaseLipSync(IFunctionHandler *pH);
-	int DoRandomExpressions(IFunctionHandler *pH);
-	int DoExpression(IFunctionHandler *pH);
-	int SayDialog(IFunctionHandler *pH);
-	int StopDialog(IFunctionHandler *pH);
-	int SetTimer(IFunctionHandler *pH);
-	int KillTimer(IFunctionHandler *pH);
-	int SetScriptUpdateRate(IFunctionHandler *pH);
+	int KillCharacter(IFunctionHandler* pH);
+	int DrawCharacter(IFunctionHandler* pH);
+	int LoadCharacter(IFunctionHandler* pH);
+	int StartAnimation(IFunctionHandler* pH);
+	int ResetAnimation(IFunctionHandler* pH);
+	int SetAnimationEvent(IFunctionHandler* pH);
+	int SetAnimationKeyEvent(IFunctionHandler* pH);
+	int DisableAnimationEvent(IFunctionHandler* pH);
+	int SetAnimationSpeed(IFunctionHandler* pH);
+	int SetAnimationTime(IFunctionHandler* pH);
+	int GetAnimationTime(IFunctionHandler* pH);
+	int GetCurAnimation(IFunctionHandler* pH);
+	int GetAnimationLength(IFunctionHandler* pH);
+	int ReleaseLipSync(IFunctionHandler* pH);
+	int DoRandomExpressions(IFunctionHandler* pH);
+	int DoExpression(IFunctionHandler* pH);
+	int SayDialog(IFunctionHandler* pH);
+	int StopDialog(IFunctionHandler* pH);
+	int SetTimer(IFunctionHandler* pH);
+	int KillTimer(IFunctionHandler* pH);
+	int SetScriptUpdateRate(IFunctionHandler* pH);
 	// State managment.
-	int GotoState(IFunctionHandler *pH);
-	int IsInState(IFunctionHandler *pH);
-	int GetState(IFunctionHandler *pH);
-	int RegisterState(IFunctionHandler *pH);
-	int	ApplyForceToEnvironment(IFunctionHandler *pH);
+	int GotoState(IFunctionHandler* pH);
+	int IsInState(IFunctionHandler* pH);
+	int GetState(IFunctionHandler* pH);
+	int RegisterState(IFunctionHandler* pH);
+	int	ApplyForceToEnvironment(IFunctionHandler* pH);
 
-  int	IsVisible(IFunctionHandler *pH);
+	int	IsVisible(IFunctionHandler* pH);
 	//
-	int GetTouchedSurfaceID(IFunctionHandler *pH);
+	int GetTouchedSurfaceID(IFunctionHandler* pH);
 	//
 	//retrieves point of collision for rigid body
-	int GetTouchedPoint(IFunctionHandler *pH);
+	int GetTouchedPoint(IFunctionHandler* pH);
 
-	int AttachToBone(IFunctionHandler *pH);
-	int AttachObjectToBone(IFunctionHandler *pH);
-	int DetachObjectToBone(IFunctionHandler *pH);
-//	int TranslatePartIdToDeadBody(IFunctionHandler *pH);
+	int AttachToBone(IFunctionHandler* pH);
+	int AttachObjectToBone(IFunctionHandler* pH);
+	int DetachObjectToBone(IFunctionHandler* pH);
+	//	int TranslatePartIdToDeadBody(IFunctionHandler *pH);
 
-	int InitDynamicLight(IFunctionHandler *pH);
-	int AddDynamicLight(IFunctionHandler *pH);
-	int AddDynamicLight2(IFunctionHandler *pH);
-	int	RemoveLight(IFunctionHandler *pH);
+	int InitDynamicLight(IFunctionHandler* pH);
+	int AddDynamicLight(IFunctionHandler* pH);
+	int AddDynamicLight2(IFunctionHandler* pH);
+	int	RemoveLight(IFunctionHandler* pH);
 
 	//
 	//	proseeding humming rockets
-	int DoHam(IFunctionHandler *pH);
-	int ResetHam(IFunctionHandler *pH);
+	int DoHam(IFunctionHandler* pH);
+	int ResetHam(IFunctionHandler* pH);
 
-	int LoadBoat(IFunctionHandler *pH);
+	int LoadBoat(IFunctionHandler* pH);
 
-//	int GetBuildingId(IFunctionHandler *pH);
-//	int GetSectorId(IFunctionHandler *pH);
-	int Damage(IFunctionHandler *pH);
-//	int UpdateInSector(IFunctionHandler *pH);
-	int GetCameraAngles(IFunctionHandler *pH);
-	int CreateParticleEmitter(IFunctionHandler *pH);
-	int CreateParticleEmitterEffect(IFunctionHandler *pH);
-	int DeleteParticleEmitter(IFunctionHandler *pH);
-	int GetEntitiesInContact(IFunctionHandler *pH);
-	int IsAffectedByExplosion(IFunctionHandler *pH);
-	int SetMaterial(IFunctionHandler *pH);
-	int GetMaterial(IFunctionHandler *pH);
-	int TrackColliders(IFunctionHandler *pH);
-	int CheckCollisions(IFunctionHandler *pH);
-	int AwakeEnvironment(IFunctionHandler *pH);
+	//	int GetBuildingId(IFunctionHandler *pH);
+	//	int GetSectorId(IFunctionHandler *pH);
+	int Damage(IFunctionHandler* pH);
+	//	int UpdateInSector(IFunctionHandler *pH);
+	int GetCameraAngles(IFunctionHandler* pH);
+	int CreateParticleEmitter(IFunctionHandler* pH);
+	int CreateParticleEmitterEffect(IFunctionHandler* pH);
+	int DeleteParticleEmitter(IFunctionHandler* pH);
+	int GetEntitiesInContact(IFunctionHandler* pH);
+	int IsAffectedByExplosion(IFunctionHandler* pH);
+	int SetMaterial(IFunctionHandler* pH);
+	int GetMaterial(IFunctionHandler* pH);
+	int TrackColliders(IFunctionHandler* pH);
+	int CheckCollisions(IFunctionHandler* pH);
+	int AwakeEnvironment(IFunctionHandler* pH);
 
-	int GetViewDistRatio(IFunctionHandler *pH);
-	int SetViewDistRatio(IFunctionHandler *pH);
-	int SetViewDistUnlimited(IFunctionHandler *pH);
-	int SetStateClientside(IFunctionHandler *pH);
+	int GetViewDistRatio(IFunctionHandler* pH);
+	int SetViewDistRatio(IFunctionHandler* pH);
+	int SetViewDistUnlimited(IFunctionHandler* pH);
+	int SetStateClientside(IFunctionHandler* pH);
 
 private: // -------------------------------------------------------------------------------
 
-	int SetEntityPhysicParams(IPhysicalEntity *pe, IFunctionHandler *pH,int iOffs=0, ICryCharInstance *pIChar=0);
-	int CreateRigidOrArticulatedBody(pe_type type, IFunctionHandler *pH);
+	int SetEntityPhysicParams(IPhysicalEntity* pe, IFunctionHandler* pH, int iOffs = 0, ICryCharInstance* pIChar = 0);
+	int CreateRigidOrArticulatedBody(pe_type type, IFunctionHandler* pH);
 
-	void SetMemberVector( SOE_MEMBER_LUA_TABLES member,const Vec3 &vec );
+	void SetMemberVector(SOE_MEMBER_LUA_TABLES member, const Vec3& vec);
 
-	IEntity *m_pEntity;
-	IEntitySystem *m_pEntitySystem;
-	ISystem *m_pISystem;
-	ISoundSystem *m_pSoundSystem;
+	IEntity* m_pEntity;
+	IEntitySystem* m_pEntitySystem;
+	ISystem* m_pISystem;
+	ISoundSystem* m_pSoundSystem;
 	int m_nCurrSoundId;
 #ifdef USE_MEMBER_POS
-	static IScriptObject *m_pObjectPos;
-	static IScriptObject *m_pObjectAngles;
-	static IScriptObject *m_pCameraPosition;
-	static IScriptObject *m_pGenVector;
+	static IScriptObject* m_pObjectPos;
+	static IScriptObject* m_pObjectAngles;
+	static IScriptObject* m_pCameraPosition;
+	static IScriptObject* m_pGenVector;
 #endif
 
 	// member script objects (preallocated)
 	static IScriptObject* m_memberSO[SOE_MEMBER_LAST];
 
 	// copy of function from ScriptObjectParticle
-	bool ReadParticleTable(IScriptObject *pITable, struct ParticleParams &sParamOut);
+	bool ReadParticleTable(IScriptObject* pITable, struct ParticleParams& sParamOut);
 
-//	pe_params_particle m_RocketParticlePar;		// quick fix for hamming rockets
-	//float		m_ControlTime;
-	//float		m_ControlTimeLimit;
-	//Vec3d		m_Control;
-//	char m_tonno[256];
+	//	pe_params_particle m_RocketParticlePar;		// quick fix for hamming rockets
+		//float		m_ControlTime;
+		//float		m_ControlTimeLimit;
+		//Vec3d		m_Control;
+	//	char m_tonno[256];
 public:
 	// Enable/ disable various entity features
-	int EnableProp(IFunctionHandler * pH);
-	int InsertSubpipe(IFunctionHandler * pH);
-	int ChangeAIParameter(IFunctionHandler * pH);
-	int SetAICustomFloat(IFunctionHandler *pH);
-	int ActivatePhysics(IFunctionHandler *pH);
-	int SetHandsIKTarget(IFunctionHandler *pH);
-	int SetDefaultIdleAnimations(IFunctionHandler *pH);
-	int GetVelocity(IFunctionHandler *pH);
+	int EnableProp(IFunctionHandler* pH);
+	int InsertSubpipe(IFunctionHandler* pH);
+	int ChangeAIParameter(IFunctionHandler* pH);
+	int SetAICustomFloat(IFunctionHandler* pH);
+	int ActivatePhysics(IFunctionHandler* pH);
+	int SetHandsIKTarget(IFunctionHandler* pH);
+	int SetDefaultIdleAnimations(IFunctionHandler* pH);
+	int GetVelocity(IFunctionHandler* pH);
 
-	int ApplyImpulseToEnvironment(IFunctionHandler * pH);
-	int RemoveDecals(IFunctionHandler * pH);
-	int SwitchLight(IFunctionHandler * pH);
-	int ForceCharacterUpdate(IFunctionHandler * pH);
-	int Hide(IFunctionHandler * pH);
-	int NoExplosionCollision(IFunctionHandler * pH);
+	int ApplyImpulseToEnvironment(IFunctionHandler* pH);
+	int RemoveDecals(IFunctionHandler* pH);
+	int SwitchLight(IFunctionHandler* pH);
+	int ForceCharacterUpdate(IFunctionHandler* pH);
+	int Hide(IFunctionHandler* pH);
+	int NoExplosionCollision(IFunctionHandler* pH);
 
 };
 

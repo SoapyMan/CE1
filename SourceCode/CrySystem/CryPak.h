@@ -30,9 +30,9 @@ extern CMTSafeHeap* g_pSmallHeap;
 extern CMTSafeHeap* g_pBigHeap;
 
 // this is the header in the cache of the file data
-struct CCachedFileData: public _reference_target_MT_novtbl<CCachedFileData>
+struct CCachedFileData : public _reference_target_MT_novtbl<CCachedFileData>
 {
-	CCachedFileData (class CCryPak* pPak, ZipDir::Cache*pZip, ZipDir::FileEntry* pFileEntry);
+	CCachedFileData(class CCryPak* pPak, ZipDir::Cache* pZip, ZipDir::FileEntry* pFileEntry);
 
 	~CCachedFileData();
 
@@ -41,23 +41,23 @@ struct CCachedFileData: public _reference_target_MT_novtbl<CCachedFileData>
 	// the cache is refreshed. Otherwise, it returns whatever cache is (NULL if the data isn't cached yet)
 	void* GetData(bool bRefreshCache = true);
 
-	ZipDir::Cache* GetZip(){return m_pZip;}
-	ZipDir::FileEntry* GetFileEntry() {return m_pFileEntry;}
+	ZipDir::Cache* GetZip() { return m_pZip; }
+	ZipDir::FileEntry* GetFileEntry() { return m_pFileEntry; }
 
 	// the memory needs to be allocated out of a MT-safe heap here
-	void * __cdecl operator new   (size_t size) { return g_pSmallHeap->Alloc(size, "CCachedFileData::new"); } 
-	void __cdecl operator delete  (void *p) { g_pSmallHeap->Free(p); };
+	void* __cdecl operator new   (size_t size) { return g_pSmallHeap->Alloc(size, "CCachedFileData::new"); }
+	void __cdecl operator delete  (void* p) { g_pSmallHeap->Free(p); };
 
 	unsigned GetFileDataOffset()
 	{
 		if (m_pFileEntry->nFileDataOffset == m_pFileEntry->INVALID_DATA_OFFSET)
-			m_pZip->Refresh (m_pFileEntry);
+			m_pZip->Refresh(m_pFileEntry);
 		return m_pFileEntry->nFileDataOffset;
 	}
 
 	unsigned sizeofThis()const
 	{
-		return sizeof(*this) + (m_pFileData&&m_pFileEntry?m_pFileEntry->desc.lSizeUncompressed:0);
+		return sizeof(*this) + (m_pFileData && m_pFileEntry ? m_pFileEntry->desc.lSizeUncompressed : 0);
 	}
 protected:
 
@@ -100,7 +100,7 @@ struct CZipPseudoFile
 	enum
 	{
 		_O_COMMIT_FLUSH_MODE = 1 << 31,
-		_O_DIRECT_OPERATION  = 1 << 30
+		_O_DIRECT_OPERATION = 1 << 30
 	};
 
 	// this object must be constructed before usage
@@ -111,10 +111,10 @@ struct CZipPseudoFile
 		m_nFlags = nFlags;
 		m_nCurSeek = 0;
 
-		if ((nFlags & _O_DIRECT_OPERATION)&&pFileData&&pFileData->GetFileEntry()->nMethod == ZipFile::METHOD_STORE)
+		if ((nFlags & _O_DIRECT_OPERATION) && pFileData && pFileData->GetFileEntry()->nMethod == ZipFile::METHOD_STORE)
 		{
-			m_fDirect = fopen (pFileData->GetZip()->GetFilePath(), "rb"); // "rb" is the only supported mode
-			FSeek(0,SEEK_SET); // the user assumes offset 0 right after opening the file
+			m_fDirect = fopen(pFileData->GetZip()->GetFilePath(), "rb"); // "rb" is the only supported mode
+			FSeek(0, SEEK_SET); // the user assumes offset 0 right after opening the file
 		}
 		else
 			m_fDirect = NULL;
@@ -123,26 +123,26 @@ struct CZipPseudoFile
 	// this object needs to be freed manually when the CryPak shuts down..
 	void Destruct()
 	{
-		assert ((bool)m_pFileData);
+		assert((bool)m_pFileData);
 		// mark it free, and deallocate the pseudofile memory
 		m_pFileData = NULL;
 		if (m_fDirect)
-			fclose (m_fDirect);
+			fclose(m_fDirect);
 	}
 
-	CCachedFileData* GetFile() {return m_pFileData;}
+	CCachedFileData* GetFile() { return m_pFileData; }
 
-	long FTell() {return m_nCurSeek;}
-	
+	long FTell() { return m_nCurSeek; }
+
 	unsigned GetFileSize()
 	{
-		return GetFile()?GetFile()->GetFileEntry()->desc.lSizeUncompressed:0;
+		return GetFile() ? GetFile()->GetFileEntry()->desc.lSizeUncompressed : 0;
 	}
 
-	int FSeek (long nOffset, int nMode);
-	size_t FRead (void* pDest, size_t nSize, size_t nCount, FILE* hFile);
+	int FSeek(long nOffset, int nMode);
+	size_t FRead(void* pDest, size_t nSize, size_t nCount, FILE* hFile);
 	int FEof();
-	int FScanfv (const char* szFormat, va_list args);
+	int FScanfv(const char* szFormat, va_list args);
 	char* FGets(char* pBuf, int n);
 	int Getc();
 	int Ungetc(int c);
@@ -158,10 +158,10 @@ struct CZipPseudoFile
 		return m_pFileData->GetZip()->GetFilePath();
 	}
 protected:
-  long m_nCurSeek;
-  CCachedFileDataPtr m_pFileData;
+	long m_nCurSeek;
+	CCachedFileDataPtr m_pFileData;
 	// nFlags is a combination of _O_... flags
-  unsigned m_nFlags;
+	unsigned m_nFlags;
 	FILE* m_fDirect;
 };
 
@@ -174,23 +174,23 @@ struct CIStringOrder
 	}
 };
 
-class CCryPakFindData: public _reference_target_t
+class CCryPakFindData : public _reference_target_t
 {
 public:
 	// the directory wildcard must already be adjusted
-	CCryPakFindData (class CCryPak*pPak, const char* szDir);
+	CCryPakFindData(class CCryPak* pPak, const char* szDir);
 	bool	empty() const;
 #ifndef __linux
 	bool	Fetch(_finddata_t* pfd);
 #else
 	bool	Fetch(dirent* pfd);
 #endif
-	void	Scan(CCryPak*pPak, const char* szDir);
+	void	Scan(CCryPak* pPak, const char* szDir);
 
 	size_t sizeofThis()const;
 protected:
-	void ScanFS(CCryPak*pPak, const char* szDir);
-	void ScanZips(CCryPak*pPak, const char* szDir);
+	void ScanFS(CCryPak* pPak, const char* szDir);
+	void ScanZips(CCryPak* pPak, const char* szDir);
 
 	struct FileDesc
 	{
@@ -200,15 +200,15 @@ protected:
 		time_t tCreate;
 		time_t tWrite;
 
-		FileDesc (struct _finddata_t* fd);
-		FileDesc (struct __finddata64_t* fd);
+		FileDesc(struct _finddata_t* fd);
+		FileDesc(struct __finddata64_t* fd);
 #ifdef __linux
-		FileDesc (struct dirent* fd);
+		FileDesc(struct dirent* fd);
 #endif
-		FileDesc (ZipDir::FileEntry* fe);
+		FileDesc(ZipDir::FileEntry* fe);
 
 		// default initialization is as a directory entry
-		FileDesc ();
+		FileDesc();
 	};
 	typedef std::map<string, FileDesc, CIStringOrder> FileMap;
 	FileMap m_mapFiles;
@@ -233,7 +233,7 @@ class CCryPak : public ICryPak
 	// to use caching or access the zips directly
 	CCritSection m_csCachedFiles;
 	typedef CMTSafeAllocator<CCachedFileData*> CachedFileDataAllocator;
-	typedef std::set<CCachedFileData*,CCachedFileDataOrder, CachedFileDataAllocator > CachedFileDataSet;
+	typedef std::set<CCachedFileData*, CCachedFileDataOrder, CachedFileDataAllocator > CachedFileDataSet;
 	CachedFileDataSet m_setCachedFiles;
 
 	// The F* emulation functions critical sectio: protects all F* functions
@@ -251,7 +251,7 @@ class CCryPak : public ICryPak
 		string strBindRoot; // the zip binding root WITH the trailing native slash
 		//string strFileName; // the zip file name (no path)
 
-		const char* GetFullPath()const {return pZip->GetFilePath();}
+		const char* GetFullPath()const { return pZip->GetFilePath(); }
 
 		ICryArchive_AutoPtr pArchive;
 		ZipDir::CachePtr pZip;
@@ -268,7 +268,7 @@ class CCryPak : public ICryPak
 	typedef std::set<CCryPakFindData_AutoPtr> CryPakFindDataSet;
 	CryPakFindDataSet m_setFindData;
 
-	IMiniLog *m_pLog;
+	IMiniLog* m_pLog;
 
 	// the root: "C:\MasterCD\"		  
 	string m_strMasterCDRoot;
@@ -281,38 +281,38 @@ class CCryPak : public ICryPak
 	// Opened files collector.
 	//////////////////////////////////////////////////////////////////////////
 	bool m_bRememberOpenedFiles;
-	typedef std::set<string,stl::less_stricmp<string> > RecordedFilesSet;
+	typedef std::set<string, stl::less_stricmp<string> > RecordedFilesSet;
 	RecordedFilesSet m_recordedFilesSet;
 
 	const PakVars* m_pPakVars;
 
-  bool InitPack(const char *szBasePath, unsigned nFlags = FLAGS_PATH_REAL);
+	bool InitPack(const char* szBasePath, unsigned nFlags = FLAGS_PATH_REAL);
 
 public:
 	// given the source relative path, constructs the full path to the file according to the flags
-	const char* AdjustFileName (const char *src, char dst[g_nMaxPath], unsigned nFlags,bool *bFoundInPak=NULL);
+	const char* AdjustFileName(const char* src, char dst[g_nMaxPath], unsigned nFlags, bool* bFoundInPak = NULL);
 
 	// this is the start of indexation of pseudofiles: 
 	// to the actual index , this offset is added to get the valid handle
-	enum {g_nPseudoFileIdxOffset = 1};
+	enum { g_nPseudoFileIdxOffset = 1 };
 
 	// this defines which slash will be kept internally
-	enum {g_cNativeSlash = '\\', g_cNonNativeSlash = '/'};
+	enum { g_cNativeSlash = '\\', g_cNonNativeSlash = '/' };
 
-  // makes the path lower-case and removes the duplicate and non native slashes
-  // may make some other fool-proof stuff
-  // may NOT write beyond the string buffer (may not make it longer)
-  // returns: the pointer to the ending terminator \0
-  static char* BeautifyPath(char* dst);
+	// makes the path lower-case and removes the duplicate and non native slashes
+	// may make some other fool-proof stuff
+	// may NOT write beyond the string buffer (may not make it longer)
+	// returns: the pointer to the ending terminator \0
+	static char* BeautifyPath(char* dst);
 
-	CCryPak(IMiniLog* pLog,PakVars* pPakVars = NULL);
+	CCryPak(IMiniLog* pLog, PakVars* pPakVars = NULL);
 	~CCryPak();
 
-	const PakVars* GetPakVars()const {return m_pPakVars;}
+	const PakVars* GetPakVars()const { return m_pPakVars; }
 
 public:
 	PakInfo* GetPakInfo();
-	void FreePakInfo (PakInfo*);
+	void FreePakInfo(PakInfo*);
 
 	//! adds a mod to the list of mods
 	void AddMod(const char* szMod);
@@ -321,40 +321,40 @@ public:
 
 	//! Puts the memory statistics into the given sizer object
 	//! According to the specifications in interface ICrySizer
-	void GetMemoryStatistics(ICrySizer *pSizer);
+	void GetMemoryStatistics(ICrySizer* pSizer);
 
 	// open the physical archive file - creates if it doesn't exist
 	// returns NULL if it's invalid or can't open the file
-	virtual ICryArchive* OpenArchive (const char* szPath, unsigned nFlags = 0);
+	virtual ICryArchive* OpenArchive(const char* szPath, unsigned nFlags = 0);
 
 	// returns the path to the archive in which the file was opened
-	virtual const char* GetFileArchivePath (FILE* f);
+	virtual const char* GetFileArchivePath(FILE* f);
 
-	CCritSection& GetCachedFileLock() {return m_csCachedFiles;}
+	CCritSection& GetCachedFileLock() { return m_csCachedFiles; }
 
-	void Register (CCachedFileData* p)
+	void Register(CCachedFileData* p)
 	{
 		// actually, registration may only happen when the set is already locked, but for generality..
 		AUTO_LOCK(m_csCachedFiles);
-		m_setCachedFiles.insert (p);
+		m_setCachedFiles.insert(p);
 	}
 
-	void Unregister (CCachedFileData* p)
+	void Unregister(CCachedFileData* p)
 	{
 		AUTO_LOCK(m_csCachedFiles);
-		m_setCachedFiles.erase (p);
+		m_setCachedFiles.erase(p);
 	}
-  // ICryPak interface
-  virtual bool Init (const char *szBasePath);
-  virtual void Release();
-  virtual bool OpenPack(const char *pName, unsigned nFlags = 0);
-	virtual bool OpenPack(const char* szBindRoot, const char *pName, unsigned nFlags = 0);
-	virtual bool OpenPackCommon(const char* szBindRoot, const char *pName, unsigned nFlags = 0);
+	// ICryPak interface
+	virtual bool Init(const char* szBasePath);
+	virtual void Release();
+	virtual bool OpenPack(const char* pName, unsigned nFlags = 0);
+	virtual bool OpenPack(const char* szBindRoot, const char* pName, unsigned nFlags = 0);
+	virtual bool OpenPackCommon(const char* szBindRoot, const char* pName, unsigned nFlags = 0);
 	// after this call, the file will be unlocked and closed, and its contents won't be used to search for files
 	virtual bool ClosePack(const char* pName, unsigned nFlags = 0);
-	virtual bool OpenPacks(const char *pWildcard, unsigned nFlags = 0);
-	virtual bool OpenPacks(const char* szBindRoot, const char *pWildcard, unsigned nFlags = 0);
-	bool OpenPacksCommon(const char* szDir, char *cWork, unsigned nFlags);
+	virtual bool OpenPacks(const char* pWildcard, unsigned nFlags = 0);
+	virtual bool OpenPacks(const char* szBindRoot, const char* pWildcard, unsigned nFlags = 0);
+	bool OpenPacksCommon(const char* szDir, char* cWork, unsigned nFlags);
 	// closes pack files by the path and wildcard
 	virtual bool ClosePacks(const char* pWildcard, unsigned nFlags = 0);
 
@@ -371,50 +371,50 @@ public:
 
 	// tests if the given file path refers to an existing file inside registered (opened) packs
 	// the path must be absolute normalized lower-case with forward-slashes
-	bool HasFileEntry (const char* szPath);
+	bool HasFileEntry(const char* szPath);
 
-  virtual FILE *FOpen(const char *pName, const char *mode, unsigned nFlags);
-	virtual FILE *FOpen(const char *pName, const char *mode,char *szFileGamePath,int nLen);
-  virtual size_t FRead(void *data, size_t length, size_t elems, FILE *handle);
-  virtual size_t FWrite(void *data, size_t length, size_t elems, FILE *handle);
-  virtual int FSeek(FILE *handle, long seek, int mode);
-  virtual long FTell(FILE *handle);
-  virtual int FFlush(FILE *handle);
-  virtual int FClose(FILE *handle);
+	virtual FILE* FOpen(const char* pName, const char* mode, unsigned nFlags);
+	virtual FILE* FOpen(const char* pName, const char* mode, char* szFileGamePath, int nLen);
+	virtual size_t FRead(void* data, size_t length, size_t elems, FILE* handle);
+	virtual size_t FWrite(void* data, size_t length, size_t elems, FILE* handle);
+	virtual int FSeek(FILE* handle, long seek, int mode);
+	virtual long FTell(FILE* handle);
+	virtual int FFlush(FILE* handle);
+	virtual int FClose(FILE* handle);
 #ifndef __linux
-  virtual intptr_t FindFirst(const char *pDir, struct _finddata_t *fd);
-  virtual int FindNext(intptr_t handle, struct _finddata_t *fd);
+	virtual intptr_t FindFirst(const char* pDir, struct _finddata_t* fd);
+	virtual int FindNext(intptr_t handle, struct _finddata_t* fd);
 #else
-  virtual intptr_t FindFirst(const char *pDir, struct dirent* fd);
-  virtual int FindNext(intptr_t handle, struct dirent *fd);
+	virtual intptr_t FindFirst(const char* pDir, struct dirent* fd);
+	virtual int FindNext(intptr_t handle, struct dirent* fd);
 #endif
-  virtual int FindClose(intptr_t handle);
-  virtual int FEof(FILE *handle);
-  virtual int FScanf(FILE *, const char *, ...);
-  virtual char *FGets(char *, int, FILE *);
-  virtual int Getc(FILE *);
-  virtual int Ungetc(int c, FILE *);
-  virtual int FPrintf(FILE *handle, const char *format, ...);
+	virtual int FindClose(intptr_t handle);
+	virtual int FEof(FILE* handle);
+	virtual int FScanf(FILE*, const char*, ...);
+	virtual char* FGets(char*, int, FILE*);
+	virtual int Getc(FILE*);
+	virtual int Ungetc(int c, FILE*);
+	virtual int FPrintf(FILE* handle, const char* format, ...);
 	unsigned FGetSize(FILE* f);
-//	virtual bool IsOutOfDate(const char * szFileName, const char * szMasterFile);
-	//virtual FILETIME GetFileTime(const char * szFileName);
+	//	virtual bool IsOutOfDate(const char * szFileName, const char * szMasterFile);
+		//virtual FILETIME GetFileTime(const char * szFileName);
 
-	// creates a directory
-	virtual bool MakeDir (const char* szPath);
+		// creates a directory
+	virtual bool MakeDir(const char* szPath);
 
 	// returns the current game directory, with trailing slash (or empty string if it's right in MasterCD)
 	// this is used to support Resource Compiler which doesn't have access to this interface:
 	// in case all the contents is located in a subdirectory of MasterCD, this string is the subdirectory name with slash
 	//virtual const char* GetGameDir();
 
-	void Register (ICryArchive* pArchive);
-	void Unregister (ICryArchive* pArchive);
-	ICryArchive* FindArchive (const char* szFullPath);
+	void Register(ICryArchive* pArchive);
+	void Unregister(ICryArchive* pArchive);
+	ICryArchive* FindArchive(const char* szFullPath);
 
 	// compresses the raw data into raw data. The buffer for compressed data itself with the heap passed. Uses method 8 (deflate)
 	// returns one of the Z_* errors (Z_OK upon success)
 	// MT-safe
-	int RawCompress (const void* pUncompressed, unsigned long* pDestSize, void* pCompressed, unsigned long nSrcSize, int nLevel = -1);
+	int RawCompress(const void* pUncompressed, unsigned long* pDestSize, void* pCompressed, unsigned long nSrcSize, int nLevel = -1);
 
 	// Uncompresses raw (without wrapping) data that is compressed with method 8 (deflated) in the Zip file
 	// returns one of the Z_* errors (Z_OK upon success)
@@ -422,16 +422,16 @@ public:
 	// with 2 differences: there are no 16-bit checks, and 
 	// it initializes the inflation to start without waiting for compression method byte, as this is the 
 	// way it's stored into zip file
-	int RawUncompress (void* pUncompressed, unsigned long* pDestSize, const void* pCompressed, unsigned long nSrcSize) ;
+	int RawUncompress(void* pUncompressed, unsigned long* pDestSize, const void* pCompressed, unsigned long nSrcSize);
 
 	//////////////////////////////////////////////////////////////////////////
 	// Files opening recorder.
 	//////////////////////////////////////////////////////////////////////////
-	void RecordFileOpen( bool bEnable );
-	void RecordFile( const char *szFilename );
-	void EnumerateRecordedFiles( RecordedFilesEnumCallback enumCallback );
+	void RecordFileOpen(bool bEnable);
+	void RecordFile(const char* szFilename);
+	void EnumerateRecordedFiles(RecordedFilesEnumCallback enumCallback);
 
-	void OnMissingFile (const char* szPath);
+	void OnMissingFile(const char* szPath);
 	// missing file -> count of missing files
 	typedef CMTSafeAllocator<std::pair<const string, unsigned> > MissingFileMapAllocator;
 	typedef std::map<string, unsigned, std::less<string>, MissingFileMapAllocator > MissingFileMap;
@@ -455,45 +455,45 @@ struct CryArchiveSortByName
 };
 
 template <class Cache>
-class TCryArchive: public ICryArchive
-{			
+class TCryArchive : public ICryArchive
+{
 public:
-	TCryArchive (CCryPak*pPak, const string& strBindRoot, Cache* pCache, unsigned nFlags = 0):
+	TCryArchive(CCryPak* pPak, const string& strBindRoot, Cache* pCache, unsigned nFlags = 0) :
 		m_pCache(pCache),
-		m_strBindRoot (strBindRoot),
+		m_strBindRoot(strBindRoot),
 		m_pPak(pPak),
-		m_nFlags (nFlags)
+		m_nFlags(nFlags)
 	{
 		pPak->Register(this);
 	}
 
 	~TCryArchive()
 	{
-		m_pPak->Unregister (this);
+		m_pPak->Unregister(this);
 	}
 
 	// finds the file; you don't have to close the returned handle
-	Handle FindFile (const char* szRelativePath)
+	Handle FindFile(const char* szRelativePath)
 	{
 		char szFullPath[CCryPak::g_nMaxPath];
-		const char*pPath = AdjustPath (szRelativePath, szFullPath);
+		const char* pPath = AdjustPath(szRelativePath, szFullPath);
 		if (!pPath)
 			return NULL;
 		return m_pCache->FindFile(pPath);
 	}
-	
+
 	// returns the size of the file (unpacked) by the handle
-	unsigned GetFileSize (Handle h)
+	unsigned GetFileSize(Handle h)
 	{
-		assert (m_pCache->IsOwnerOf((ZipDir::FileEntry*)h));
+		assert(m_pCache->IsOwnerOf((ZipDir::FileEntry*)h));
 		return ((ZipDir::FileEntry*)h)->desc.lSizeUncompressed;
 	}
 
 	// reads the file into the preallocated buffer (must be at least the size of GetFileSize())
-	int ReadFile (Handle h, void* pBuffer)
+	int ReadFile(Handle h, void* pBuffer)
 	{
-		assert (m_pCache->IsOwnerOf((ZipDir::FileEntry*)h));
-		return m_pCache->ReadFile ((ZipDir::FileEntry*)h, NULL, pBuffer);
+		assert(m_pCache->IsOwnerOf((ZipDir::FileEntry*)h));
+		return m_pCache->ReadFile((ZipDir::FileEntry*)h, NULL, pBuffer);
 	}
 
 	// returns the full path to the archive file
@@ -502,7 +502,7 @@ public:
 		return m_pCache->GetFilePath();
 	}
 
-	unsigned GetFlags() const {return m_nFlags;}
+	unsigned GetFlags() const { return m_nFlags; }
 	bool SetFlags(unsigned nFlagsToSet)
 	{
 		if (nFlagsToSet & FLAGS_RELATIVE_PATHS_ONLY)
@@ -516,7 +516,7 @@ public:
 		return true;
 	}
 
-	bool ResetFlags (unsigned nFlagsToReset)
+	bool ResetFlags(unsigned nFlagsToReset)
 	{
 		if (nFlagsToReset & FLAGS_RELATIVE_PATHS_ONLY)
 			m_nFlags &= ~FLAGS_RELATIVE_PATHS_ONLY;
@@ -530,12 +530,12 @@ public:
 	}
 
 
-	Cache* GetCache() {return m_pCache;}
+	Cache* GetCache() { return m_pCache; }
 protected:
 	// returns the pointer to the relative file path to be passed
 	// to the underlying Cache pointer. Uses the given buffer to construct the path.
 	// returns NULL if the file path is invalid
-	const char* AdjustPath (const char* szRelativePath, char szFullPathBuf[CCryPak::g_nMaxPath])
+	const char* AdjustPath(const char* szRelativePath, char szFullPathBuf[CCryPak::g_nMaxPath])
 	{
 		if (!szRelativePath[0])
 			return NULL;
@@ -546,7 +546,7 @@ protected:
 		if (szRelativePath[1] == ':' || (m_nFlags & FLAGS_ABSOLUTE_PATHS))
 		{
 			// make the normalized full path and try to match it against the binding root of this object
-			const char* szFullPath = m_pPak->AdjustFileName (szRelativePath, szFullPathBuf, m_nFlags & FLAGS_IGNORE_MODS ? ICryPak::FLAGS_PATH_REAL : 0);
+			const char* szFullPath = m_pPak->AdjustFileName(szRelativePath, szFullPathBuf, m_nFlags & FLAGS_IGNORE_MODS ? ICryPak::FLAGS_PATH_REAL : 0);
 			size_t nPathLen = strlen(szFullPath);
 			if (nPathLen <= m_strBindRoot.length())
 				return NULL;
@@ -575,11 +575,11 @@ protected:
 };
 
 
-class CryArchiveRW: public TCryArchive<ZipDir::CacheRW>
+class CryArchiveRW : public TCryArchive<ZipDir::CacheRW>
 {
 public:
 
-	CryArchiveRW (CCryPak*pPak, const string& strBindRoot, ZipDir::CacheRW* pCache, unsigned nFlags = 0):
+	CryArchiveRW(CCryPak* pPak, const string& strBindRoot, ZipDir::CacheRW* pCache, unsigned nFlags = 0) :
 		TCryArchive<ZipDir::CacheRW>(pPak, strBindRoot, pCache, nFlags)
 	{
 	}
@@ -591,29 +591,29 @@ public:
 	// Adds a new file to the zip or update an existing one
 	// adds a directory (creates several nested directories if needed)
 	// compression methods supported are 0 (store) and 8 (deflate) , compression level is 0..9 or -1 for default (like in zlib)
-	int UpdateFile (const char* szRelativePath, void* pUncompressed, unsigned nSize, unsigned nCompressionMethod = 0, int nCompressionLevel = -1);
+	int UpdateFile(const char* szRelativePath, void* pUncompressed, unsigned nSize, unsigned nCompressionMethod = 0, int nCompressionLevel = -1);
 
 	// deletes the file from the archive
-	int RemoveFile (const char* szRelativePath);
+	int RemoveFile(const char* szRelativePath);
 
 	// deletes the directory, with all its descendants (files and subdirs)
-	int RemoveDir (const char* szRelativePath);
+	int RemoveDir(const char* szRelativePath);
 
 	int RemoveAll();
 
-	enum {gClassId = 1};
-	unsigned GetClassId()const {return gClassId;}
+	enum { gClassId = 1 };
+	unsigned GetClassId()const { return gClassId; }
 };
 
 
-class CryArchive: public TCryArchive<ZipDir::Cache>
+class CryArchive : public TCryArchive<ZipDir::Cache>
 {
 public:
-	CryArchive (CCryPak* pPak, const string& strBindRoot, ZipDir::Cache* pCache, unsigned nFlags):
+	CryArchive(CCryPak* pPak, const string& strBindRoot, ZipDir::Cache* pCache, unsigned nFlags) :
 		TCryArchive<ZipDir::Cache>(pPak, strBindRoot, pCache, nFlags)
 	{	}
 
-	~CryArchive(){}
+	~CryArchive() {}
 
 	// Adds a new file to the zip or update an existing one
 	// adds a directory (creates several nested directories if needed)
@@ -621,16 +621,16 @@ public:
 	// METHOD_DEFLATE == METHOD_COMPRESS == 8 (deflate) , compression
 	// level is LEVEL_FASTEST == 0 till LEVEL_BEST == 9 or LEVEL_DEFAULT == -1
 	// for default (like in zlib)
-	int UpdateFile (const char* szRelativePath, void* pUncompressed, unsigned nSize, unsigned nCompressionMethod = 0, int nCompressionLevel = -1) {return ZipDir::ZD_ERROR_INVALID_CALL;}
+	int UpdateFile(const char* szRelativePath, void* pUncompressed, unsigned nSize, unsigned nCompressionMethod = 0, int nCompressionLevel = -1) { return ZipDir::ZD_ERROR_INVALID_CALL; }
 
 	// deletes the file from the archive
-	int RemoveFile (const char* szRelativePath) {return ZipDir::ZD_ERROR_INVALID_CALL;}
+	int RemoveFile(const char* szRelativePath) { return ZipDir::ZD_ERROR_INVALID_CALL; }
 	int RemoveAll();
 
 	// deletes the directory, with all its descendants (files and subdirs)
-	int RemoveDir (const char* szRelativePath) {return ZipDir::ZD_ERROR_INVALID_CALL;}
-	enum {gClassId = 2};
-	unsigned GetClassId()const {return gClassId;}
+	int RemoveDir(const char* szRelativePath) { return ZipDir::ZD_ERROR_INVALID_CALL; }
+	enum { gClassId = 2 };
+	unsigned GetClassId()const { return gClassId; }
 
 };
 

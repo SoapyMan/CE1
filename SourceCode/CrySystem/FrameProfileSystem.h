@@ -32,10 +32,10 @@ class CFrameProfilerTimer
 {
 public:
 	static void Init(); // called once
-	static void GetTicks( int64* nTime);
+	static void GetTicks(int64* nTime);
 	static int64 GetTicks() { int64 nTime; GetTicks(&nTime); return nTime; }
-	static float TicksToSeconds( int64 nTime );
-	static float TicksToMilliseconds( int64 nTime );
+	static float TicksToSeconds(int64 nTime);
+	static float TicksToMilliseconds(int64 nTime);
 protected:
 	static int64 g_nTicksPerSecond;
 	static double g_fSecondsPerTick;
@@ -51,12 +51,12 @@ class CFrameProfileSystem : public IFrameProfileSystem
 {
 public:
 	int m_nCurSample;
-	
-	char *m_pPrefix;
+
+	char* m_pPrefix;
 	bool m_bEnabled;
 	//! True when collection must be paused.
 	bool m_bCollectionPaused;
-	
+
 	//! If set profiling data will be collected.
 	bool m_bCollect;
 	//! If set profiling data will be displayed.
@@ -68,12 +68,12 @@ public:
 	//! Put memory info also in the log.
 	bool m_bLogMemoryInfo;
 
-	ISystem *m_pSystem;
-	IRenderer *m_pRenderer;
+	ISystem* m_pSystem;
+	IRenderer* m_pRenderer;
 
 	struct SPeakRecord
 	{
-		CFrameProfiler *pProfiler;
+		CFrameProfiler* pProfiler;
 		float peakValue;
 		float avarageValue;
 		float variance;
@@ -83,14 +83,14 @@ public:
 	};
 	struct SProfilerDisplayInfo
 	{
-		float x,y; // Position where this profiler rendered.
+		float x, y; // Position where this profiler rendered.
 		int averageCount;
 		int level; // child level.
-		CFrameProfiler *pProfiler;
+		CFrameProfiler* pProfiler;
 	};
 	struct SSubSystemInfo
 	{
-		const char *name;
+		const char* name;
 		float selfTime;
 	};
 
@@ -108,8 +108,8 @@ public:
 	//! Frame time not accounted by registered profilers.
 	int64 m_frameLostTime;
 	//! Frame profiler.
-	CFrameProfilerSection *m_pCurrentProfileSection;
-	CCustomProfilerSection *m_pCurrentCustomSection;
+	CFrameProfilerSection* m_pCurrentProfileSection;
+	CCustomProfilerSection* m_pCurrentCustomSection;
 
 	typedef std::vector<CFrameProfiler*> Profilers;
 	//! Array of all registered profilers.
@@ -117,7 +117,7 @@ public:
 	//! Network profilers, they are not in regular list.
 	Profilers m_netTrafficProfilers;
 	//! Currently active profilers array.
-	Profilers *m_pProfilers;
+	Profilers* m_pProfilers;
 
 	float m_peakTolerance;
 	//! List of several latest peaks.
@@ -129,8 +129,8 @@ public:
 
 	//////////////////////////////////////////////////////////////////////////
 	//! Smooth frame time in milliseconds.
-	CFrameProfilerSamplesHistory<float,32> m_frameTimeHistory;
-	CFrameProfilerSamplesHistory<float,32> m_frameTimeLostHistory;
+	CFrameProfilerSamplesHistory<float, 32> m_frameTimeHistory;
+	CFrameProfilerSamplesHistory<float, 32> m_frameTimeLostHistory;
 
 	//////////////////////////////////////////////////////////////////////////
 	// Graphs.
@@ -153,14 +153,14 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	// Selection/Render.
 	//////////////////////////////////////////////////////////////////////////
-	int m_selectedRow,m_selectedCol;
-	float ROW_SIZE,COL_SIZE;
+	int m_selectedRow, m_selectedCol;
+	float ROW_SIZE, COL_SIZE;
 	float m_baseY;
-	float m_mouseX,m_mouseY;
+	float m_mouseX, m_mouseY;
 
 #ifdef WIN32
 	HMODULE hPsapiModule;
-	typedef BOOL (WINAPI *FUNC_GetProcessMemoryInfo)( HANDLE,PPROCESS_MEMORY_COUNTERS,DWORD );
+	typedef BOOL(WINAPI* FUNC_GetProcessMemoryInfo)(HANDLE, PPROCESS_MEMORY_COUNTERS, DWORD);
 	FUNC_GetProcessMemoryInfo pfGetProcessMemoryInfo;
 	bool m_bNoPsapiDll;
 #endif
@@ -173,7 +173,7 @@ public:
 	// Subsystems.
 	//////////////////////////////////////////////////////////////////////////
 	SSubSystemInfo m_subsystems[PROFILE_LAST_SUBSYSTEM];
-	
+
 	CFrameProfilerOfflineHistory m_frameTimeOfflineHistory;
 
 	//////////////////////////////////////////////////////////////////////////
@@ -187,10 +187,10 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	CFrameProfileSystem();
 	~CFrameProfileSystem();
-	void Init( ISystem *pSystem );
+	void Init(ISystem* pSystem);
 	void Done();
 
-	void SetProfiling(bool on, bool display, char *prefix, ISystem *pSystem);
+	void SetProfiling(bool on, bool display, char* prefix, ISystem* pSystem);
 
 	//////////////////////////////////////////////////////////////////////////
 	// IFrameProfileSystem interface implementation.
@@ -199,7 +199,7 @@ public:
 	void Reset();
 	//! Add new frame profiler.
 	//! Profile System will not delete those pointers, client must take care of memory managment issues.
-	void AddFrameProfiler( CFrameProfiler *pProfiler );
+	void AddFrameProfiler(CFrameProfiler* pProfiler);
 	//! Must be called at the start of the frame.
 	void StartFrame();
 	//! Must be called at the end of the frame.
@@ -208,64 +208,64 @@ public:
 	int GetProfilerCount() const { return (int)m_profilers.size(); };
 	//! Get frame profiler at specified index.
 	//! @param index must be 0 <= index < GetProfileCount() 
-	CFrameProfiler* GetProfiler( int index ) const;
+	CFrameProfiler* GetProfiler(int index) const;
 
 	//////////////////////////////////////////////////////////////////////////
 	// Adds a value to profiler.
-	virtual void StartCustomSection( CCustomProfilerSection *pSection );
-	virtual void EndCustomSection( CCustomProfilerSection *pSection );
+	virtual void StartCustomSection(CCustomProfilerSection* pSection);
+	virtual void EndCustomSection(CCustomProfilerSection* pSection);
 
 	//////////////////////////////////////////////////////////////////////////
 	// Peak callbacks.
 	//////////////////////////////////////////////////////////////////////////
-	virtual void AddPeaksListener( IFrameProfilePeakCallback *pPeakCallback );
-	virtual void RemovePeaksListener( IFrameProfilePeakCallback *pPeakCallback );
-	
+	virtual void AddPeaksListener(IFrameProfilePeakCallback* pPeakCallback);
+	virtual void RemovePeaksListener(IFrameProfilePeakCallback* pPeakCallback);
+
 	//////////////////////////////////////////////////////////////////////////
 	//! Starts profiling a new section.
-	void StartProfilerSection( CFrameProfilerSection *pSection );
+	void StartProfilerSection(CFrameProfilerSection* pSection);
 	//! Ends profiling a section.
-	void EndProfilerSection( CFrameProfilerSection *pSection );
+	void EndProfilerSection(CFrameProfilerSection* pSection);
 
 	//! Enable/Diable profile samples gathering.
-	void Enable( bool bCollect,bool bDisplay );
-	void EnableMemoryProfile( bool bEnable );
-	void SetSubsystemFilter( bool bFilterSubsystem,EProfiledSubsystem subsystem );
-	void EnableHistograms( bool bEnableHistograms );
+	void Enable(bool bCollect, bool bDisplay);
+	void EnableMemoryProfile(bool bEnable);
+	void SetSubsystemFilter(bool bFilterSubsystem, EProfiledSubsystem subsystem);
+	void EnableHistograms(bool bEnableHistograms);
 	bool IsEnabled() const { return m_bEnabled; };
 	bool IsProfiling() const { return m_bCollect; }
-	void SetDisplayQuantity( EDisplayQuantity quantity );
-	void AddPeak( SPeakRecord &peak );
-	void SetHistogramScale( float fScale ) { m_histogramScale = fScale; }
-	void SetDrawGraph( bool bDrawGraph ) { m_bDrawGraph = bDrawGraph; };
-	void SetNetworkProfiler( bool bNet ) { m_bNetworkProfiling = bNet; };
-	void SetPeakTolerance( float fPeakTimeMillis ) { m_peakTolerance = fPeakTimeMillis; }
-	void SetPageFaultsGraph( bool bEnabled ) { m_bPageFaultsGraph = bEnabled; };
+	void SetDisplayQuantity(EDisplayQuantity quantity);
+	void AddPeak(SPeakRecord& peak);
+	void SetHistogramScale(float fScale) { m_histogramScale = fScale; }
+	void SetDrawGraph(bool bDrawGraph) { m_bDrawGraph = bDrawGraph; };
+	void SetNetworkProfiler(bool bNet) { m_bNetworkProfiling = bNet; };
+	void SetPeakTolerance(float fPeakTimeMillis) { m_peakTolerance = fPeakTimeMillis; }
+	void SetPageFaultsGraph(bool bEnabled) { m_bPageFaultsGraph = bEnabled; };
 
-	void SetSubsystemFilter( const char *sFilterName );
-	void UpdateOfflineHistory( CFrameProfiler *pProfiler );
+	void SetSubsystemFilter(const char* sFilterName);
+	void UpdateOfflineHistory(CFrameProfiler* pProfiler);
 
 	//////////////////////////////////////////////////////////////////////////
 	// Rendering.
 	//////////////////////////////////////////////////////////////////////////
 	void Render();
 	void RenderMemoryInfo();
-	void RenderProfiler( CFrameProfiler *pProfiler,int level,float col,float row,bool bExtended,bool bSelected );
-	void RenderProfilerHeader( float col,float row,bool bExtended );
-	void RenderProfilers( float col,float row,bool bExtended );
+	void RenderProfiler(CFrameProfiler* pProfiler, int level, float col, float row, bool bExtended, bool bSelected);
+	void RenderProfilerHeader(float col, float row, bool bExtended);
+	void RenderProfilers(float col, float row, bool bExtended);
 	void RenderPeaks();
-	void RenderSubSystems( float col,float row );
+	void RenderSubSystems(float col, float row);
 	void RenderHistograms();
 	void CalcDisplayedProfilers();
 	void DrawGraph();
-	void DrawLabel( float raw,float column, float* fColor,float glow,const char* szText,float fScale=1.0f);
-	void DrawRect( float x1,float y1,float x2,float y2,float *fColor );
+	void DrawLabel(float raw, float column, float* fColor, float glow, const char* szText, float fScale = 1.0f);
+	void DrawRect(float x1, float y1, float x2, float y2, float* fColor);
 	CFrameProfiler* GetSelectedProfiler();
 	// Recursively add frame profiler and childs to displayed list.
-	void AddDisplayedProfiler( CFrameProfiler *pProfiler,int level );
+	void AddDisplayedProfiler(CFrameProfiler* pProfiler, int level);
 
 	//////////////////////////////////////////////////////////////////////////
-	float TranslateToDisplayValue( int64 val );
+	float TranslateToDisplayValue(int64 val);
 };
 
 #else
@@ -274,8 +274,8 @@ public:
 class CFrameProfilerTimer
 {
 public:
-	
-	static float TicksToSeconds( int64 nTime ){return 0.0f;}
+
+	static float TicksToSeconds(int64 nTime) { return 0.0f; }
 };
 
 // Dummy Frame profile system interface.
@@ -285,45 +285,45 @@ struct CFrameProfileSystem : public IFrameProfileSystem
 	virtual void Reset() {};
 	//! Add new frame profiler.
 	//! Profile System will not delete those pointers, client must take care of memory managment issues.
-	virtual void AddFrameProfiler( class CFrameProfiler *pProfiler ) {};
+	virtual void AddFrameProfiler(class CFrameProfiler* pProfiler) {};
 	//! Must be called at the start of the frame.
 	virtual void StartFrame() {};
 	//! Must be called at the end of the frame.
 	virtual void EndFrame() {};
 
 	//! Here the new methods needed to enable profiling to go off.
-	virtual int GetProfilerCount() const {return 0;}
+	virtual int GetProfilerCount() const { return 0; }
 
-	virtual CFrameProfiler* GetProfiler( int index ) const {return NULL;}
+	virtual CFrameProfiler* GetProfiler(int index) const { return NULL; }
 
-	virtual void Enable( bool bCollect,bool bDisplay ){}
+	virtual void Enable(bool bCollect, bool bDisplay) {}
 
-	virtual void SetSubsystemFilter( bool bFilterSubsystem,EProfiledSubsystem subsystem ){}
-	virtual void SetSubsystemFilter( const char *sFilterName ){}
+	virtual void SetSubsystemFilter(bool bFilterSubsystem, EProfiledSubsystem subsystem) {}
+	virtual void SetSubsystemFilter(const char* sFilterName) {}
 
-	virtual bool IsEnabled() const {return 0;}
-	
-	virtual bool IsProfiling() const {return 0;}
+	virtual bool IsEnabled() const { return 0; }
 
-	virtual void SetDisplayQuantity( EDisplayQuantity quantity ){}
+	virtual bool IsProfiling() const { return 0; }
 
-	virtual void StartCustomSection( CCustomProfilerSection *pSection ){}
-	virtual void EndCustomSection( CCustomProfilerSection *pSection ){}
+	virtual void SetDisplayQuantity(EDisplayQuantity quantity) {}
 
-	virtual void AddPeaksListener( IFrameProfilePeakCallback *pPeakCallback ){}
-	virtual void RemovePeaksListener( IFrameProfilePeakCallback *pPeakCallback ){}
+	virtual void StartCustomSection(CCustomProfilerSection* pSection) {}
+	virtual void EndCustomSection(CCustomProfilerSection* pSection) {}
 
-	void Init( ISystem *pSystem ){}
-	void Done(){}
-	void Render(){}
+	virtual void AddPeaksListener(IFrameProfilePeakCallback* pPeakCallback) {}
+	virtual void RemovePeaksListener(IFrameProfilePeakCallback* pPeakCallback) {}
 
-	void SetHistogramScale( float fScale ){}
-	void SetDrawGraph( bool bDrawGraph ){}
-	void SetNetworkProfiler( bool bNet ){}
-	void SetPeakTolerance( float fPeakTimeMillis ){}
-	void SetPageFaultsGraph( bool bEnabled ){}
+	void Init(ISystem* pSystem) {}
+	void Done() {}
+	void Render() {}
 
-	void EnableMemoryProfile( bool bEnable ){}
+	void SetHistogramScale(float fScale) {}
+	void SetDrawGraph(bool bDrawGraph) {}
+	void SetNetworkProfiler(bool bNet) {}
+	void SetPeakTolerance(float fPeakTimeMillis) {}
+	void SetPageFaultsGraph(bool bEnabled) {}
+
+	void EnableMemoryProfile(bool bEnable) {}
 };
 
 #endif // USE_FRAME_PROFILER

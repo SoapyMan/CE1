@@ -15,16 +15,16 @@ class CAutoLock
 	T& m_csThis; // the critical section that is to be locked on construction and unlocked on destruction
 public:
 	// on construction, we lock the critical section
-	CAutoLock(T& csThis):
-			m_csThis(csThis)
-			{
-				csThis.Lock();
-			}
-			// on destruction, we unlock it
-			~CAutoLock()
-			{
-				m_csThis.Unlock();
-			}
+	CAutoLock(T& csThis) :
+		m_csThis(csThis)
+	{
+		csThis.Lock();
+	}
+	// on destruction, we unlock it
+	~CAutoLock()
+	{
+		m_csThis.Unlock();
+	}
 };
 
 template <class T>
@@ -33,16 +33,16 @@ class CAutoUnlock
 	T& m_csThis; // the critical section that is to be locked on construction and unlocked on destruction
 public:
 	// on construction, we lock the critical section
-	CAutoUnlock (T& csThis):
-			m_csThis(csThis)
-			{
-				csThis.Unlock();
-			}
-			// on destruction, we unlock it
-			~CAutoUnlock()
-			{
-				m_csThis.Lock();
-			}
+	CAutoUnlock(T& csThis) :
+		m_csThis(csThis)
+	{
+		csThis.Unlock();
+	}
+	// on destruction, we unlock it
+	~CAutoUnlock()
+	{
+		m_csThis.Lock();
+	}
 };
 
 
@@ -58,17 +58,17 @@ public:
 
 	CCritSection()
 	{
-		InitializeCriticalSection (&csThis);
+		InitializeCriticalSection(&csThis);
 	}
 	~CCritSection()
 	{
-		DeleteCriticalSection (&csThis);
+		DeleteCriticalSection(&csThis);
 	}
-	void Lock ()
+	void Lock()
 	{
 		EnterCriticalSection(&csThis);
 	}
-	void Unlock ()
+	void Unlock()
 	{
 		LeaveCriticalSection(&csThis);
 	}
@@ -76,7 +76,7 @@ public:
 	// the lock and unlock facilities are disabled for explicit use,
 	// the client functions should use auto-lockers and auto-unlockers
 private:
-	CCritSection (const CCritSection &);
+	CCritSection(const CCritSection&);
 
 	friend class CAutoLock<CCritSection>;
 	friend class CAutoUnlock<CCritSection>;

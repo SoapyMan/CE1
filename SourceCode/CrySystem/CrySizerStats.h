@@ -28,15 +28,15 @@ class CrySizerStats
 {
 public:
 	// constructs the statistics based on the given cry sizer
-	CrySizerStats (CrySizerImpl* pCrySizer);
+	CrySizerStats(CrySizerImpl* pCrySizer);
 
-	CrySizerStats ();
+	CrySizerStats();
 
 	// this structure describes one component of the memory size statistics
 	struct Component
 	{
-		Component() {clear();}
-		Component (const string& name, unsigned size = 0, unsigned num = 0):
+		Component() { clear(); }
+		Component(const string& name, unsigned size = 0, unsigned num = 0) :
 			strName(name), sizeBytes(size), numObjects(num), nDepth(0) {}
 		void clear()
 		{
@@ -56,18 +56,18 @@ public:
 		size_t numObjects;
 		unsigned nDepth;
 
-		float getSizeMBytes() const {return sizeBytes / float(1<<20);}
+		float getSizeMBytes() const { return sizeBytes / float(1 << 20); }
 
-		float getTotalSizeMBytes () const {return sizeBytesTotal / float(1<<20);}
+		float getTotalSizeMBytes() const { return sizeBytesTotal / float(1 << 20); }
 
 		struct NameOrder
 		{
-			bool operator () (const Component& left, const Component& right)const {return left.strName < right.strName;}
+			bool operator () (const Component& left, const Component& right)const { return left.strName < right.strName; }
 		};
 
 		struct SizeOrder
 		{
-			bool operator () (const Component& left, const Component& right)const {return left.sizeBytes < right.sizeBytes;}
+			bool operator () (const Component& left, const Component& right)const { return left.sizeBytes < right.sizeBytes; }
 		};
 
 		struct GenericOrder
@@ -77,22 +77,22 @@ public:
 	};
 
 	// returns the number of different subsystems/components used
-	unsigned numComponents()const {return (unsigned)m_arrComponents.size();}
+	unsigned numComponents()const { return (unsigned)m_arrComponents.size(); }
 	// returns the name of the i-th component
-	const Component& getComponent(unsigned nComponent)const {return m_arrComponents[nComponent];}
+	const Component& getComponent(unsigned nComponent)const { return m_arrComponents[nComponent]; }
 
-	unsigned size() const {return numComponents();}
-	const Component& operator [] (unsigned i) const {return getComponent(i);}
-	const Component& operator [] (  signed i) const {return getComponent(i);}
+	unsigned size() const { return numComponents(); }
+	const Component& operator [] (unsigned i) const { return getComponent(i); }
+	const Component& operator [] (signed i) const { return getComponent(i); }
 
-	size_t getMaxNameLength()const {return m_nMaxNameLength;}
-	enum {g_numTimers = 3};
+	size_t getMaxNameLength()const { return m_nMaxNameLength; }
+	enum { g_numTimers = 3 };
 
-	void startTimer(unsigned nTimer, ITimer*pTimer);
-	void stopTimer(unsigned nTimer, ITimer*pTimer);
-	float getTime(unsigned nTimer)const {assert (nTimer < g_numTimers);return m_fTime[nTimer];}
-	int getAgeFrames() const {return m_nAgeFrames;}
-	void incAgeFrames() {++m_nAgeFrames;}
+	void startTimer(unsigned nTimer, ITimer* pTimer);
+	void stopTimer(unsigned nTimer, ITimer* pTimer);
+	float getTime(unsigned nTimer)const { assert(nTimer < g_numTimers); return m_fTime[nTimer]; }
+	int getAgeFrames() const { return m_nAgeFrames; }
+	void incAgeFrames() { ++m_nAgeFrames; }
 protected:
 	// refreshes the statistics built after the component array is built
 	void refresh();
@@ -119,16 +119,16 @@ protected:
 class CrySizerStatsBuilder
 {
 public:
-	CrySizerStatsBuilder (CrySizerImpl* pSizer, int nMinSubcomponentBytes = 0);
+	CrySizerStatsBuilder(CrySizerImpl* pSizer, int nMinSubcomponentBytes = 0);
 
-	void build (CrySizerStats* pStats);
+	void build(CrySizerStats* pStats);
 
 protected:
 	typedef CrySizerStats::Component Component;
 	// if there is already such name in the map, then just returns the index
 	// of the compoentn in the component array; otherwise adds an entry to themap
 	// and to the component array nad returns its index
-	Component& mapName (unsigned nName);
+	Component& mapName(unsigned nName);
 
 	// creates the map of names from old to new, and initializes the components themselves
 	void processNames();
@@ -137,7 +137,7 @@ protected:
 	// name map and components. In case all the subtree is empty, returns 0 and 
 	// adds nothing. Otherwise, returns the total size of objects belonging to the
 	// subtree
-	size_t addNameSubtree (unsigned nDepth, size_t nName);
+	size_t addNameSubtree(unsigned nDepth, size_t nName);
 
 protected:
 	CrySizerStats* m_pStats;
@@ -160,10 +160,10 @@ protected:
 class CrySizerStatsRenderer
 {
 public:
-	CrySizerStatsRenderer (ISystem* pSystem, CrySizerStats* pStats, unsigned nMaxDepth = 2, int nMinSubcomponentBytes = -1);
+	CrySizerStatsRenderer(ISystem* pSystem, CrySizerStats* pStats, unsigned nMaxDepth = 2, int nMinSubcomponentBytes = -1);
 	void render(bool bRefreshMark = false);
 	// dumps it to log
-	void dump ();
+	void dump();
 protected:
 	typedef CrySizerStats::Component Component;
 

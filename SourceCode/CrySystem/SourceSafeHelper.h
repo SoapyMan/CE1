@@ -24,5 +24,5 @@
 //! \param outszDate outszDate!=0, [0..indwBufferSize-1]
 //! \param indwBufferSize >0
 //! \return true=success, false otherwise (output parameters are set to empty strings)
-bool _GetSSFileInfo( const char *inszSourceSafePath, const char *inszSSProject, const char *inszDirProject, const char *inszFileName, 
-	char *outszName, char *outszComment, char *outszDate, const unsigned int innBufferSize );
+bool _GetSSFileInfo(const char* inszSourceSafePath, const char* inszSSProject, const char* inszDirProject, const char* inszFileName,
+	char* outszName, char* outszComment, char* outszDate, const unsigned int innBufferSize);

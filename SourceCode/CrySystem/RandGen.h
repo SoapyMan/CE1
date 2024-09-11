@@ -6,8 +6,8 @@
 class CSysPseudoRandGen
 {
 private:
-	uint32 state[N_RAND_STATE+1];     // state vector + 1 extra to not violate ANSI C
-	uint32 *next;          // next random value is computed from here
+	uint32 state[N_RAND_STATE + 1];     // state vector + 1 extra to not violate ANSI C
+	uint32* next;          // next random value is computed from here
 	int left;					     // can *next++ this many times before reloading
 private:
 	uint32 Reload();

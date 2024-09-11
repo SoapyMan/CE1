@@ -18,51 +18,51 @@ class CXConsole;
 
 
 class CXConsoleVariable :
-public ICVar
-{                     
+	public ICVar
+{
 public:
 	//! constructor
 	//! \param pConsole must not be 0
-	CXConsoleVariable(CXConsole *pConsole,IScriptSystem *pSS,const char *sName,int nFlags,int nType, const char *help);
+	CXConsoleVariable(CXConsole* pConsole, IScriptSystem* pSS, const char* sName, int nFlags, int nType, const char* help);
 	//! constructor
 	//! \param pConsole must not be 0
-	CXConsoleVariable(CXConsole *pConsole,IScriptSystem *pSS,const char *sName,void *pVar,int nFlags,int nType, const char *help);
+	CXConsoleVariable(CXConsole* pConsole, IScriptSystem* pSS, const char* sName, void* pVar, int nFlags, int nType, const char* help);
 	//! destructor
 	virtual ~CXConsoleVariable();
 
-	void GetMemoryUsage (class ICrySizer* pSizer);
+	void GetMemoryUsage(class ICrySizer* pSizer);
 
 	// ------------------------------------------------------------------------------------------
 
 //! @see ICVar
 	virtual int GetIVal();
-//! @see ICVar
+	//! @see ICVar
 	virtual float GetFVal();
-//! @see ICVar
-	virtual char *GetString();
-//! @see ICVar
+	//! @see ICVar
+	virtual char* GetString();
+	//! @see ICVar
 	virtual void Set(const char* s);
-//! @see ICVar
+	//! @see ICVar
 	virtual void ForceSet(const char* s);
-//! @see ICVar
+	//! @see ICVar
 	virtual void Set(float f);
-//! @see ICVar
+	//! @see ICVar
 	virtual void Set(int i);
-//! @see ICVar
+	//! @see ICVar
 	virtual void ClearFlags(int flags);
-//! @see ICVar
+	//! @see ICVar
 	virtual int GetFlags();
-//! @see ICVar
-	virtual int SetFlags( int flags );
-//! @see ICVar
+	//! @see ICVar
+	virtual int SetFlags(int flags);
+	//! @see ICVar
 	virtual int GetType();
-//! @see ICVar
+	//! @see ICVar
 	virtual const char* GetName();
-//! @see ICVar
+	//! @see ICVar
 	virtual const char* GetHelp();
-//! @see ICVar
+	//! @see ICVar
 	virtual void Release();
-//! @see ICVar
+	//! @see ICVar
 	virtual void Refresh();
 
 
@@ -70,7 +70,7 @@ public:
 	void SetSrc(void* pSrc);
 
 
-//hack
+	//hack
 	bool							m_bLoadedFromScript;					//!<
 
 	bool CanGetValueFromScript();
@@ -78,13 +78,13 @@ public:
 private: 	// ------------------------------------------------------------------------------------------
 
 	char							m_sName[128];									//!<
-	const char *			m_psHelp;											//!< pointer to the help string, might be 0
+	const char* m_psHelp;											//!< pointer to the help string, might be 0
 	int								m_nFlags;											//!< e.g. VF_SERVER_ONCE, VF_CHEAT, ...
 	int								m_nType;											//!< can be only CVAR_STRING or CVAR_INT or CVAR_FLOAT
-	
-	char *						m_sValue;											//!<
-	int *							m_nValue;											//!<
-	float *						m_fValue;											//!<
+
+	char* m_sValue;											//!<
+	int* m_nValue;											//!<
+	float* m_fValue;											//!<
 
 	int								m_localInt;										//!<
 	float							m_localFloat;									//!<
@@ -94,9 +94,9 @@ private: 	// -------------------------------------------------------------------
 	// needs to be deleted along with the duplicated values. If this is false, the principal value doesn't belong to this object and doesn't
 	// need to be deallocated. The other two need to be deallocated ANYWAY
 	bool							m_bAutoDelete;								//!<
-	
-	CXConsole *				m_pConsole;										//!<
-	IScriptSystem *		m_pScriptSystem;							//!<
+
+	CXConsole* m_pConsole;										//!<
+	IScriptSystem* m_pScriptSystem;							//!<
 	HTAG							m_hScriptTag;									//!<
 };
 

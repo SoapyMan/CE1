@@ -14,7 +14,7 @@
 struct ICryPak;
 
 
-class CRefStreamEngine:public IStreamEngine
+class CRefStreamEngine :public IStreamEngine
 {
 public:
 	//! useWorkerThreads is the number of worker threads  to use;
@@ -28,50 +28,50 @@ public:
 
 	virtual DWORD GetStreamCompressionMask() const;
 
-	virtual IReadStream_AutoPtr StartRead (const char* szSource, const char* szFile, IStreamCallback* pCallback, StreamReadParams* pParams = NULL);
+	virtual IReadStream_AutoPtr StartRead(const char* szSource, const char* szFile, IStreamCallback* pCallback, StreamReadParams* pParams = NULL);
 
-	virtual unsigned GetFileSize (const char* szFile, unsigned nCryPakFlags);
+	virtual unsigned GetFileSize(const char* szFile, unsigned nCryPakFlags);
 
 	virtual void Update(unsigned nFlags);
 
 	virtual unsigned Wait(unsigned nMilliseconds, unsigned nFlags);
 
-	virtual void GetMemoryStatistics(ICrySizer *pSizer);
+	virtual void GetMemoryStatistics(ICrySizer* pSizer);
 
 	// ------------------------------------------------
 
 	//! registers a new stream (added to the system: queued)
-	void Register (CRefReadStream*);
+	void Register(CRefReadStream*);
 	//! unregisters: happens upon release of all resources
-	void Unregister (CRefReadStream*);
+	void Unregister(CRefReadStream*);
 
-	CCryPak* GetPak() {return m_pPak;}
+	CCryPak* GetPak() { return m_pPak; }
 
-	unsigned UpdateAndWait (unsigned nMilliseconds, unsigned nFlags);
+	unsigned UpdateAndWait(unsigned nMilliseconds, unsigned nFlags);
 
 #ifndef LINUX
 	// returns the (cached) size of the sector on the volume where the given path points
 	unsigned GetSectorSize(const char* szPath);
-	unsigned GetDriveSectorSize (char cDrive);
+	unsigned GetDriveSectorSize(char cDrive);
 #endif //LINUX
 
 	// sort the IO jobs in the IOQueue by priority
 	void SortIOJobs();
-	void OnIOJobExecuted (CRefReadStreamProxy* pJobProxy);
+	void OnIOJobExecuted(CRefReadStreamProxy* pJobProxy);
 
 	bool IsSuspended();
 
 	// returns true, if overlapped io with FILE_FLAG_OVERLAPPED and ReadFileEx is enabled
-	bool isOverlappedIoEnabled() {return m_bEnableOverlapped;}
+	bool isOverlappedIoEnabled() { return m_bEnableOverlapped; }
 
-	enum IOJobKindEnum{eWaiting, ePending, eExecuted};
+	enum IOJobKindEnum { eWaiting, ePending, eExecuted };
 	unsigned numIOJobs(IOJobKindEnum nKind);
 
 	//!
 	void SetCallbackTimeQuota(int nMicroseconds);
 
 	//!
-	void SetStreamCompressionMask( const DWORD indwMask );
+	void SetStreamCompressionMask(const DWORD indwMask);
 
 	// returns true if called from the main thread for this engine
 	bool IsMainThread();
@@ -87,18 +87,18 @@ protected:
 	// this sorts the IO jobs, without bothering about synchronization
 	void SortIOJobs_NoLock();
 	// this will be the thread that executes everything that can take time
-	void IOWorkerThread ();
+	void IOWorkerThread();
 
 	// the static function used to start the thread
 #if defined(LINUX)
-	static void* WINAPI IOWorkerThreadProc (LPVOID pThis)
+	static void* WINAPI IOWorkerThreadProc(LPVOID pThis)
 	{
 		((CRefStreamEngine*)pThis)->IOWorkerThread();
 		pthread_exit(NULL);//finish thread
 		return NULL;
 	}
 #else
-	static DWORD WINAPI IOWorkerThreadProc (LPVOID pThis)
+	static DWORD WINAPI IOWorkerThreadProc(LPVOID pThis)
 	{
 		((CRefStreamEngine*)pThis)->IOWorkerThread();
 		return 0;
@@ -109,7 +109,7 @@ protected:
 	void StopWorkerThread();
 
 	// signals that this proxy needs to be executed (StartRead called)
-	void AddIOJob (CRefReadStreamProxy* pJobProxy);
+	void AddIOJob(CRefReadStreamProxy* pJobProxy);
 
 	// executes StartRead on the proxies that need it, and remove those proxies
 	// from the IO Queue. As soon as the proxy is removed from the IO Queue, it's on its own
@@ -203,7 +203,7 @@ protected:
 
 	// this flag is set if the callback time quota is enabled
 	int m_nSuspendCallbackTimeQuota;
-	
+
 	// this is the id of the main thread in which this engine operates
 	DWORD m_dwMainThreadId;
 	// the id of the worker thread, if any 

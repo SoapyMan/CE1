@@ -32,7 +32,7 @@ public:
 		//! used for early command e.g. "-DEVMODE", "-IP:123.22.23.1", "-MOD:CS"
 		//! or for console command e.g. "map mp_airstrip", "name test" 
 		//! \param inszArgument must not be 0
-		virtual void ReturnArgument( const char *inszArgument )=0;
+		virtual void ReturnArgument(const char* inszArgument) = 0;
 	};
 
 	// ----------------------------------------------------------------------
@@ -42,8 +42,8 @@ public:
 	//! \param inszCommandLine must not be 0, e.g. -DEVMODE -IP:123.22.23.1 -MOD:CS "g_gametype ASSAULT" "start_server mp_airstrip"
 	//! \param pEarlyCommands 0 or pointer to the sink for early commands e.g. "-DEVMODE", "-IP:123.22.23.1", "-MOD:CS"
 	//! \param pConsoleCommands 0 or pointer to the sink for console commands e.g. "map mp_airstrip", "name test" 
-	static void ParseArguments( const char *inszCommandLine, ICmdlineArgumentSink *pEarlyCommands, 
-		ICmdlineArgumentSink *pConsoleCommands );
+	static void ParseArguments(const char* inszCommandLine, ICmdlineArgumentSink* pEarlyCommands,
+		ICmdlineArgumentSink* pConsoleCommands);
 
 private: // ---------------------------------------------------------------
 };

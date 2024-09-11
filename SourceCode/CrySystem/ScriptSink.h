@@ -30,27 +30,27 @@ class CScriptSink :
 	public IScriptDebugSink
 {
 public:
-	CScriptSink( CSystem *pSystem,CXConsole *pConsole );
+	CScriptSink(CSystem* pSystem, CXConsole* pConsole);
 
 	void Init();
 
 	//! Called every frame to handle ScriptSystem needs..
-	void Update( bool bNoLuaGC=false );
+	void Update(bool bNoLuaGC = false);
 
-	void OnLoadSource(const char *sSourceName,unsigned char *sSource,long nSourceSize);
-	void OnExecuteLine(ScriptDebugInfo &sdiDebugInfo);
-///////////////////////////////////////////////////////////////////////////
-	//! @name IScriptSytemSink implementation
-	//@{ 
-	void OnScriptError(const char *sSourceFile,const char *sFuncName,int nLineNum,const char *sErrorDesc);
-	void OnSetGlobal(const char *sVarName);
+	void OnLoadSource(const char* sSourceName, unsigned char* sSource, long nSourceSize);
+	void OnExecuteLine(ScriptDebugInfo& sdiDebugInfo);
+	///////////////////////////////////////////////////////////////////////////
+		//! @name IScriptSytemSink implementation
+		//@{ 
+	void OnScriptError(const char* sSourceFile, const char* sFuncName, int nLineNum, const char* sErrorDesc);
+	void OnSetGlobal(const char* sVarName);
 	bool CanSetGlobal(const char* sVarName);
-	void OnLoadedScriptDump(const char *sScriptPath);
-	void OnCollectUserData(INT_PTR nValue,int nCookie);
+	void OnLoadedScriptDump(const char* sScriptPath);
+	void OnCollectUserData(INT_PTR nValue, int nCookie);
 	//@}
 
 	//! \param freq time in seconds
-	void SetGCFreq( const float fFreq ) { m_fGCFreq = fFreq; };
+	void SetGCFreq(const float fFreq) { m_fGCFreq = fFreq; };
 
 private: // ----------------------------------------------------------------
 
@@ -58,8 +58,8 @@ private: // ----------------------------------------------------------------
 	float						m_lastGCTime;			//!< absolute time in seconds
 	int							m_nLastGCCount;		//!<
 	//there's no need to use interface inside the same module
-	CSystem *				m_pSystem;				//!<
-	CXConsole *			m_pConsole;				//!<
+	CSystem* m_pSystem;				//!<
+	CXConsole* m_pConsole;				//!<
 };
 
 

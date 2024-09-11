@@ -42,47 +42,47 @@ public:
 	CDataProbe();
 	virtual ~CDataProbe();
 
-	virtual bool Dummy1( SDataProbeContext &ctx ) { return false; };
-	virtual int Dummy2( void *pBuf,int aa,SDataProbeContext &ctx ) { return 2322; };
-	virtual bool Dummy3( SDataProbeContext &ctx ) { return false; };
+	virtual bool Dummy1(SDataProbeContext& ctx) { return false; };
+	virtual int Dummy2(void* pBuf, int aa, SDataProbeContext& ctx) { return 2322; };
+	virtual bool Dummy3(SDataProbeContext& ctx) { return false; };
 
-	virtual uint32 GetHash( const char *sString );
+	virtual uint32 GetHash(const char* sString);
 	// Hash of any buffer.
-	virtual uint32 GetHash( const void *buffer,int len );
+	virtual uint32 GetHash(const void* buffer, int len);
 
 	virtual void RandomAlloc();
 
-	virtual bool GetCode( SDataProbeContext &ctx );
-	virtual bool GetRandomFileProbe( SDataProbeContext &ctx,bool bAtEnd );
-	virtual bool GetRandomModuleProbe( SDataProbeContext &ctx );
-	virtual bool GetModuleProbe( SDataProbeContext &ctx );
+	virtual bool GetCode(SDataProbeContext& ctx);
+	virtual bool GetRandomFileProbe(SDataProbeContext& ctx, bool bAtEnd);
+	virtual bool GetRandomModuleProbe(SDataProbeContext& ctx);
+	virtual bool GetModuleProbe(SDataProbeContext& ctx);
 
-	virtual int GetLoadedModules( SModuleInfo **pModules );
-	virtual void AddModule( SModuleInfo &moduleInfo );
+	virtual int GetLoadedModules(SModuleInfo** pModules);
+	virtual void AddModule(SModuleInfo& moduleInfo);
 
-	virtual	void RandSeed( uint32 seed );
+	virtual	void RandSeed(uint32 seed);
 	virtual	uint32 GetRand();
-	virtual	float GetRand( float fMin,float fMax );
+	virtual	float GetRand(float fMin, float fMax);
 
 	//////////////////////////////////////////////////////////////////////////
 	// Compress block of data with zlib.
-	virtual int Compress( void *dest,unsigned int &destLen,const void *source, unsigned int sourceLen,int level=6 );
+	virtual int Compress(void* dest, unsigned int& destLen, const void* source, unsigned int sourceLen, int level = 6);
 	// Uncompress block of data with zlib.
-	virtual int Uncompress( void *dest,unsigned int &destLen,const void *source, unsigned int sourceLen );
+	virtual int Uncompress(void* dest, unsigned int& destLen, const void* source, unsigned int sourceLen);
 
-	void GetMD5( const char *pSrcBuffer,int nSrcSize,char signatureMD5[16] );
-	void AESDecryptBuffer( const char *pSrcBuffer,int nSrcSize,char *pDestBuffer,int &nDestSize,const char *sKey );
+	void GetMD5(const char* pSrcBuffer, int nSrcSize, char signatureMD5[16]);
+	void AESDecryptBuffer(const char* pSrcBuffer, int nSrcSize, char* pDestBuffer, int& nDestSize, const char* sKey);
 
 	// Local from system.
-	bool CheckLoader( void *pFunc );
+	bool CheckLoader(void* pFunc);
 
 
 private:
-	bool GetDataCode( char* pBuffer,int nSize,SDataProbeContext &ctx );
+	bool GetDataCode(char* pBuffer, int nSize, SDataProbeContext& ctx);
 	bool CheckLoaderFC();
 
 	CSysPseudoRandGen m_rand;
-	void *m_pRandAlloc;
+	void* m_pRandAlloc;
 	std::vector<SModuleInfo> m_loadedModules;
 	string m_sBinPath;
 };

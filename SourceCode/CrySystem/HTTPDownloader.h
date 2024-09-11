@@ -22,7 +22,7 @@ enum
 class CDownloadManager;
 
 
-class CHTTPDownloader:
+class CHTTPDownloader :
 	public _ScriptableEx<CHTTPDownloader>
 {
 public:
@@ -30,10 +30,10 @@ public:
 	virtual ~CHTTPDownloader();
 
 	static
-	void InitializeTemplate(IScriptSystem *pSS);
+		void InitializeTemplate(IScriptSystem* pSS);
 
-	int Create(ISystem *pISystem, CDownloadManager *pParent);
-	int	Download(const char *szURL, const char *szDestination);
+	int Create(ISystem* pISystem, CDownloadManager* pParent);
+	int	Download(const char* szURL, const char* szDestination);
 	void Cancel();
 	int GetState() { return m_iState; };
 	int	GetFileSize() const { return m_iFileSize; };
@@ -41,13 +41,13 @@ public:
 	const string& GetDstFileName() const { return m_szDstFile; };
 	void	Release();
 
-	int Download(IFunctionHandler *pH);
-	int Cancel(IFunctionHandler *pH);
-	int Release(IFunctionHandler *pH);
+	int Download(IFunctionHandler* pH);
+	int Cancel(IFunctionHandler* pH);
+	int Release(IFunctionHandler* pH);
 
-	int GetURL(IFunctionHandler *pH);
-	int GetFileSize(IFunctionHandler *pH);
-	int GetFileName(IFunctionHandler *pH);
+	int GetURL(IFunctionHandler* pH);
+	int GetFileSize(IFunctionHandler* pH);
+	int GetFileName(IFunctionHandler* pH);
 
 	void OnError();
 	void OnComplete();
@@ -56,7 +56,7 @@ public:
 private:
 
 	static
-	DWORD DownloadProc(CHTTPDownloader *_this);
+		DWORD DownloadProc(CHTTPDownloader* _this);
 	void	CreateThread();
 	DWORD DoDownload();
 	void	PrepareBuffer();
@@ -67,14 +67,14 @@ private:
 	HINTERNET					m_hINET;
 	HINTERNET					m_hUrl;
 
-	unsigned char			*m_pBuffer;
+	unsigned char* m_pBuffer;
 	int								m_iFileSize;
 
 	volatile int			m_iState;
 	volatile bool			m_bContinue;
 
-	ISystem						*m_pSystem;
-	CDownloadManager	*m_pParent;
+	ISystem* m_pSystem;
+	CDownloadManager* m_pParent;
 };
 
 #endif //LINUX
