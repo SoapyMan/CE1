@@ -664,25 +664,22 @@ void CXGame::Save(string sFileName, Vec3d* pos, Vec3d* angles, bool bFirstCheckp
 			SaveName(sFileName, tmp);
 		}
 
-		m_pLog->LogToConsole("Level saved in %d bytes(%s)", BITS2BYTES(stm.GetSize()), sFileName.c_str());
-
-		size_t pos = 1;
-		ICryPak* pPak = m_pSystem->GetIPak();
 		char dname[256];
 		strcpy(dname, sFileName.c_str());
 		char* last_slash = strrchr(dname, '/');
 		if (last_slash)
-		{
 			*last_slash = '\0';
-		}
+
+		ICryPak* pPak = m_pSystem->GetIPak();
 		if (pPak->MakeDir(dname))
 		{
 			if (!m_pSystem->WriteCompressedFile((char*)sFileName.c_str(), stm.GetPtr(), stm.GetSize()))
 			{
-				m_pLog->Log("cannot write savegame to file %s", sFileName.c_str());
-
+				m_pLog->Log("\001Cannot write savegame to file %s", sFileName.c_str());
 				return;
-			};
+			}
+
+			m_pLog->LogToConsole("\001Game saved to %s (%d bytes)", sFileName.c_str(), BITS2BYTES(stm.GetSize()));
 			m_sLastSavedCheckpointFilename = sFileName;
 
 			/*
