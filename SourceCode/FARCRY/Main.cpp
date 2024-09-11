@@ -27,7 +27,7 @@
 // Timur.
 // This is FarCry.exe authentication function, this code is not for public release!!
 //////////////////////////////////////////////////////////////////////////
-void AuthCheckFunction( void *data )
+void AuthCheckFunction(void* data)
 {
 	// src and trg can be the same pointer (in place encryption)
 	// len must be in bytes and must be multiple of 8 byts (64bits).
@@ -54,10 +54,10 @@ void AuthCheckFunction( void *data )
 	w[0]=y; w[1]=z; v+=2,w+=2; }}
 
 	// Data assumed to be 32 bytes.
-	int key1[4] = {1873613783,235688123,812763783,1745863682};
-	TEA_DECODE( (unsigned int*)data,(unsigned int*)data,32,(unsigned int*)key1 );
-	int key2[4] = {1897178562,734896899,156436554,902793442};
-	TEA_ENCODE( (unsigned int*)data,(unsigned int*)data,32,(unsigned int*)key2 );
+	int key1[4] = { 1873613783,235688123,812763783,1745863682 };
+	TEA_DECODE((unsigned int*)data, (unsigned int*)data, 32, (unsigned int*)key1);
+	int key2[4] = { 1897178562,734896899,156436554,902793442 };
+	TEA_ENCODE((unsigned int*)data, (unsigned int*)data, 32, (unsigned int*)key2);
 }
 
 
@@ -93,19 +93,19 @@ void AuthCheckFunction( void *data )
 //#endif
 //
 
-static ISystem *g_pISystem=NULL;
+static ISystem* g_pISystem = NULL;
 static bool g_bSystemRelaunch = false;
 static char szMasterCDFolder[_MAX_PATH];
 
 #ifdef WIN32
-static void* g_hSystemHandle=NULL;
+static void* g_hSystemHandle = NULL;
 #define DLL_SYSTEM "CrySystem.dll"
 #define DLL_GAME	 "CryGame.dll"
 #endif
 
 #ifndef PS2
 #if !defined(PS2)
-bool RunGame(HINSTANCE hInstance,const char *sCmdLine);
+bool RunGame(HINSTANCE hInstance, const char* sCmdLine);
 #else
 bool RunGame(HINSTANCE hInstance);
 #endif
@@ -114,7 +114,7 @@ bool RunGame(HINSTANCE hInstance);
 #ifdef _XBOX
 void main()
 {
-	RunGame(NULL,"");
+	RunGame(NULL, "");
 }
 
 
@@ -122,21 +122,21 @@ void main()
 
 
 
-int _strcmpi(   const char *string1,   const char *string2 )
+int _strcmpi(const char* string1, const char* string2)
 {
-   return _stricmp( string1, string2 );
+	return _stricmp(string1, string2);
 }
 
 
-int system( const char *command )
+int system(const char* command)
 {
-  return 0;
+	return 0;
 }
 
 
-char * getenv( const char *varname )
+char* getenv(const char* varname)
 {
-  return 0;
+	return 0;
 }
 
 
@@ -156,7 +156,7 @@ void SetMasterCDFolder()
 
 	char szExeFileName[_MAX_PATH];
 	// Get the path of the executable
-	GetModuleFileName( GetModuleHandle(NULL), szExeFileName, sizeof(szExeFileName));
+	GetModuleFileName(GetModuleHandle(NULL), szExeFileName, sizeof(szExeFileName));
 
 	char path_buffer[_MAX_PATH];
 	char drive[_MAX_DRIVE];
@@ -164,11 +164,11 @@ void SetMasterCDFolder()
 	char fname[_MAX_FNAME];
 	char ext[_MAX_EXT];
 
-	_splitpath( szExeFileName, drive, dir, fname, ext );
-	_makepath( path_buffer, drive,dir,NULL,NULL );
-	strcat( path_buffer,".." );
-	SetCurrentDirectory( path_buffer );
-	GetCurrentDirectory( sizeof(szMasterCDFolder),szMasterCDFolder );
+	_splitpath(szExeFileName, drive, dir, fname, ext);
+	_makepath(path_buffer, drive, dir, NULL, NULL);
+	strcat(path_buffer, "..");
+	SetCurrentDirectory(path_buffer);
+	GetCurrentDirectory(sizeof(szMasterCDFolder), szMasterCDFolder);
 }
 
 #ifdef FARCRY_CD_CHECK_RUSSIAN
@@ -176,32 +176,32 @@ void SetMasterCDFolder()
 #include <tchar.h>
 typedef std::basic_string< TCHAR > tstring;
 typedef std::vector< TCHAR > tvector;
-void CheckFarCryCD( HINSTANCE hInstance )
+void CheckFarCryCD(HINSTANCE hInstance)
 {
-	bool bRet( false );
+	bool bRet(false);
 
-	DWORD nBufferSize( GetLogicalDriveStrings( 0, 0 ) );
-	if( 0 < nBufferSize )
+	DWORD nBufferSize(GetLogicalDriveStrings(0, 0));
+	if (0 < nBufferSize)
 	{
 		// get list of all available logical drives
-		tvector rawDriveLetters( nBufferSize + 1 );
-		GetLogicalDriveStrings( nBufferSize, &rawDriveLetters[ 0 ] );
+		tvector rawDriveLetters(nBufferSize + 1);
+		GetLogicalDriveStrings(nBufferSize, &rawDriveLetters[0]);
 
 		// quickly scan all drives
-		tvector::size_type i( 0 );
-		while( true )
+		tvector::size_type i(0);
+		while (true)
 		{
 			// check if current drive is cd/dvd drive
-			if( DRIVE_CDROM == GetDriveType( &rawDriveLetters[ i ] ) )
+			if (DRIVE_CDROM == GetDriveType(&rawDriveLetters[i]))
 			{
 				// get volume name
-				tvector cdVolumeName( MAX_VOLUME_ID_SIZE + 1 );
-				if( FALSE != GetVolumeInformation( &rawDriveLetters[ i ],
-					&cdVolumeName[ 0 ], (DWORD) cdVolumeName.size(), 0, 0, 0, 0, 0 ) )
+				tvector cdVolumeName(MAX_VOLUME_ID_SIZE + 1);
+				if (FALSE != GetVolumeInformation(&rawDriveLetters[i],
+					&cdVolumeName[0], (DWORD)cdVolumeName.size(), 0, 0, 0, 0, 0))
 				{
 					// check volume name to verify it's Far Cry's game cd/dvd
-					tstring cdVolumeLabel( &cdVolumeName[ 0 ] );
-					if( cdVolumeLabel == FARCRY_CD_LABEL)
+					tstring cdVolumeLabel(&cdVolumeName[0]);
+					if (cdVolumeLabel == FARCRY_CD_LABEL)
 					{
 						// found Far Cry's game cd/dvd, copy information and bail out
 						//szCDPath = &rawDriveLetters[ i ];
@@ -211,14 +211,14 @@ void CheckFarCryCD( HINSTANCE hInstance )
 			}
 
 			// proceed to next drive
-			while( 0 != rawDriveLetters[ i ] )
+			while (0 != rawDriveLetters[i])
 			{
 				++i;
 			}
 			++i; // skip null termination of current drive
 
 			// check if we're out of drive letters
-			if( 0 == rawDriveLetters[ i ] )
+			if (0 == rawDriveLetters[i])
 			{
 				// double null termination found, bail out
 				break;
@@ -228,19 +228,19 @@ void CheckFarCryCD( HINSTANCE hInstance )
 
 	// Not CD/DVD with FARCRY_1 label found. Give to user warning message and bail out.
 	char str[1024];
-	LoadString( hInstance,IDS_NOCD,str,sizeof(str) );
-	MessageBox( NULL,str,_T("CD Check Error"),MB_OK|MB_ICONERROR );
+	LoadString(hInstance, IDS_NOCD, str, sizeof(str));
+	MessageBox(NULL, str, _T("CD Check Error"), MB_OK | MB_ICONERROR);
 	exit(1);
 }
 #else
-void CheckFarCryCD( HINSTANCE hInstance ) {};
+void CheckFarCryCD(HINSTANCE hInstance) {};
 #endif // FARCRY_CD_CHECK_RUSSIAN
 
 ///////////////////////////////////////////////
 int APIENTRY WinMain(HINSTANCE hInstance,
-                     HINSTANCE hPrevInstance,
-                     LPSTR     lpCmdLine,
-                     int       nCmdShow)
+	HINSTANCE hPrevInstance,
+	LPSTR     lpCmdLine,
+	int       nCmdShow)
 {
 #ifdef _DEBUG
 	int tmpDbgFlag;
@@ -256,28 +256,28 @@ int APIENTRY WinMain(HINSTANCE hInstance,
   // [marco] If a previous instance is running, activate
   // the old one and terminate the new one, depending
 	// on command line devmode status
-  HWND hwndPrev;
+	HWND hwndPrev;
 	static char szWndClass[] = "CryENGINE";
-	bool bDevMode=false;
-	bool bRelaunching=false;
+	bool bDevMode = false;
+	bool bRelaunching = false;
 	if (lpCmdLine)
 	{
-		if (strstr(lpCmdLine,"-DEVMODE"))
-			bDevMode=true;
-		if (strstr(lpCmdLine,"-RELAUNCHING"))
-			bRelaunching=true;
+		if (strstr(lpCmdLine, "-DEVMODE"))
+			bDevMode = true;
+		if (strstr(lpCmdLine, "-RELAUNCHING"))
+			bRelaunching = true;
 	}
 	// in devmode we don't care, we allow to run multiple instances
 	// for mp debugging
-  if (!bDevMode)
-  {
-		hwndPrev = FindWindow (szWndClass, NULL);
+	if (!bDevMode)
+	{
+		hwndPrev = FindWindow(szWndClass, NULL);
 		// not in devmode and we found another window - see if the
 		// system is relaunching, in this case is fine 'cos the application
 		// will be closed immediately after
 		if (hwndPrev && !bRelaunching)
 		{
-			SetForegroundWindow (hwndPrev);
+			SetForegroundWindow(hwndPrev);
 			return (-1);
 		}
 	}
@@ -286,7 +286,7 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 	SetMasterCDFolder();
 
 #if !defined(PS2)
-	RunGame(hInstance,lpCmdLine);
+	RunGame(hInstance, lpCmdLine);
 #else
 	RunGame(hInstance);
 #endif
@@ -302,173 +302,173 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	switch (msg)
 	{
 	case WM_MOVE:
-					{
-						// TODO
-						break;
-					}
+	{
+		// TODO
+		break;
+	}
 
-		case WM_DISPLAYCHANGE:
-					{
-						// TODO
-						break;
-					}
+	case WM_DISPLAYCHANGE:
+	{
+		// TODO
+		break;
+	}
 
-		case WM_SIZE:
-					{
-						// Check to see if we are losing our window
-						if ((wParam == SIZE_MAXHIDE) || (wParam == SIZE_MINIMIZED))
-						{
-							// TODO
-							break;
-						}
-
-						GetClientRect(hWnd, &rect);
-						if (g_pISystem && !g_bSystemRelaunch)
-							g_pISystem->GetIRenderer()->ChangeViewport(0, 0, LOWORD(lParam), HIWORD(lParam));
-
-						break;
-					}
-
-		case WM_ACTIVATEAPP:
-			{
-				if (!wParam)
-				{
-					if (g_pISystem && g_pISystem->GetIInput())
-					{
-						g_pISystem->GetIInput()->ClearKeyState();
-						g_pISystem->GetIInput()->SetMouseExclusive(false);
-						g_pISystem->GetIInput()->SetKeyboardExclusive(false);
-					}
-				}
-				else
-				{
-					if (g_pISystem && g_pISystem->GetIInput())
-					{
-						g_pISystem->GetIInput()->ClearKeyState();
-						g_pISystem->GetIInput()->SetMouseExclusive(true);
-						g_pISystem->GetIInput()->SetKeyboardExclusive(true);
-					}
-				}
-				break;
-			}
-
-		case WM_MOUSEACTIVATE:
-					{
-						return MA_ACTIVATEANDEAT;
-					}
-
-		case WM_ACTIVATE:
-					{
-						if (wParam == WA_INACTIVE)
-						{
-							if (g_pISystem && g_pISystem->GetIInput())
-							{
-								g_pISystem->GetIInput()->ClearKeyState();
-								g_pISystem->GetIInput()->SetMouseExclusive(false);
-								g_pISystem->GetIInput()->SetKeyboardExclusive(false);
-
-							}
-						}
-						else if ((wParam == WA_ACTIVE) ||(wParam == WA_CLICKACTIVE))
-						{
-							if (g_pISystem && g_pISystem->GetIInput())
-							{
-								g_pISystem->GetIInput()->SetMouseExclusive(true);
-								g_pISystem->GetIInput()->SetKeyboardExclusive(true);
-							}
-						}
-						break;
-					}
-
-		case WM_ENTERSIZEMOVE:
-		case WM_ENTERMENULOOP:
-					{
-						return 0;
-					}
-
-		case WM_SETFOCUS:
-					{
-						if (g_pISystem && g_pISystem->GetIInput())
-						{
-							g_pISystem->GetIInput()->ClearKeyState();
-							g_pISystem->GetIInput()->SetMouseExclusive(true);
-							g_pISystem->GetIInput()->SetKeyboardExclusive(true);
-						}
-
-						break;
-					}
-
-		case WM_KILLFOCUS:
-					{
-						if (g_pISystem && g_pISystem->GetIInput())
-						{
-							g_pISystem->GetIInput()->ClearKeyState();
-							g_pISystem->GetIInput()->SetMouseExclusive(false);
-							g_pISystem->GetIInput()->SetKeyboardExclusive(false);
-						}
-						break;
-					}
-
-		case WM_DESTROY: 
-					{
-						// TODO
-						break;
-					}
-		case WM_HOTKEY:
-			return 0;
+	case WM_SIZE:
+	{
+		// Check to see if we are losing our window
+		if ((wParam == SIZE_MAXHIDE) || (wParam == SIZE_MINIMIZED))
+		{
+			// TODO
 			break;
+		}
 
-		case WM_SYSKEYDOWN:
-			{
-				if (g_pISystem && g_pISystem->GetIInput())
-					g_pISystem->GetIInput()->FeedVirtualKey(wParam,lParam,true);
-				break;
-			}
-		case WM_SYSKEYUP:
-			{
-				if (g_pISystem && g_pISystem->GetIInput())
-					g_pISystem->GetIInput()->FeedVirtualKey(wParam,lParam,false);
-				break;
-			}
-		case WM_KEYDOWN:
+		GetClientRect(hWnd, &rect);
+		if (g_pISystem && !g_bSystemRelaunch)
+			g_pISystem->GetIRenderer()->ChangeViewport(0, 0, LOWORD(lParam), HIWORD(lParam));
+
+		break;
+	}
+
+	case WM_ACTIVATEAPP:
+	{
+		if (!wParam)
+		{
 			if (g_pISystem && g_pISystem->GetIInput())
-					g_pISystem->GetIInput()->FeedVirtualKey(wParam,lParam,true);
-			break;
-		case WM_KEYUP:
+			{
+				g_pISystem->GetIInput()->ClearKeyState();
+				g_pISystem->GetIInput()->SetMouseExclusive(false);
+				g_pISystem->GetIInput()->SetKeyboardExclusive(false);
+			}
+		}
+		else
+		{
 			if (g_pISystem && g_pISystem->GetIInput())
-				g_pISystem->GetIInput()->FeedVirtualKey(wParam,lParam,false);
-			break;
-
-		case WM_CHAR:
-					{
-						break;
-					}
-
-		case 0x020A: // WM_MOUSEWHEEL
-					g_pISystem->GetIInput()->GetIMouse()->SetMouseWheelRotation((short) HIWORD(wParam));
-					break;
-
-		case WM_QUIT:
 			{
-				/*m_pGame->Release();
-				m_pGame = NULL;
-				*/
-				/*
-				if (g_pISystem)
-				{
-					g_pISystem->Quit();
-				}
-				*/
-				break;
+				g_pISystem->GetIInput()->ClearKeyState();
+				g_pISystem->GetIInput()->SetMouseExclusive(true);
+				g_pISystem->GetIInput()->SetKeyboardExclusive(true);
 			}
-		case WM_CLOSE:
+		}
+		break;
+	}
+
+	case WM_MOUSEACTIVATE:
+	{
+		return MA_ACTIVATEANDEAT;
+	}
+
+	case WM_ACTIVATE:
+	{
+		if (wParam == WA_INACTIVE)
+		{
+			if (g_pISystem && g_pISystem->GetIInput())
 			{
-				if (g_pISystem)
-				{
-					g_pISystem->Quit();
-				}
-				break;
+				g_pISystem->GetIInput()->ClearKeyState();
+				g_pISystem->GetIInput()->SetMouseExclusive(false);
+				g_pISystem->GetIInput()->SetKeyboardExclusive(false);
+
 			}
+		}
+		else if ((wParam == WA_ACTIVE) || (wParam == WA_CLICKACTIVE))
+		{
+			if (g_pISystem && g_pISystem->GetIInput())
+			{
+				g_pISystem->GetIInput()->SetMouseExclusive(true);
+				g_pISystem->GetIInput()->SetKeyboardExclusive(true);
+			}
+		}
+		break;
+	}
+
+	case WM_ENTERSIZEMOVE:
+	case WM_ENTERMENULOOP:
+	{
+		return 0;
+	}
+
+	case WM_SETFOCUS:
+	{
+		if (g_pISystem && g_pISystem->GetIInput())
+		{
+			g_pISystem->GetIInput()->ClearKeyState();
+			g_pISystem->GetIInput()->SetMouseExclusive(true);
+			g_pISystem->GetIInput()->SetKeyboardExclusive(true);
+		}
+
+		break;
+	}
+
+	case WM_KILLFOCUS:
+	{
+		if (g_pISystem && g_pISystem->GetIInput())
+		{
+			g_pISystem->GetIInput()->ClearKeyState();
+			g_pISystem->GetIInput()->SetMouseExclusive(false);
+			g_pISystem->GetIInput()->SetKeyboardExclusive(false);
+		}
+		break;
+	}
+
+	case WM_DESTROY:
+	{
+		// TODO
+		break;
+	}
+	case WM_HOTKEY:
+		return 0;
+		break;
+
+	case WM_SYSKEYDOWN:
+	{
+		if (g_pISystem && g_pISystem->GetIInput())
+			g_pISystem->GetIInput()->FeedVirtualKey(wParam, lParam, true);
+		break;
+	}
+	case WM_SYSKEYUP:
+	{
+		if (g_pISystem && g_pISystem->GetIInput())
+			g_pISystem->GetIInput()->FeedVirtualKey(wParam, lParam, false);
+		break;
+	}
+	case WM_KEYDOWN:
+		if (g_pISystem && g_pISystem->GetIInput())
+			g_pISystem->GetIInput()->FeedVirtualKey(wParam, lParam, true);
+		break;
+	case WM_KEYUP:
+		if (g_pISystem && g_pISystem->GetIInput())
+			g_pISystem->GetIInput()->FeedVirtualKey(wParam, lParam, false);
+		break;
+
+	case WM_CHAR:
+	{
+		break;
+	}
+
+	case 0x020A: // WM_MOUSEWHEEL
+		g_pISystem->GetIInput()->GetIMouse()->SetMouseWheelRotation((short)HIWORD(wParam));
+		break;
+
+	case WM_QUIT:
+	{
+		/*m_pGame->Release();
+		m_pGame = NULL;
+		*/
+		/*
+		if (g_pISystem)
+		{
+			g_pISystem->Quit();
+		}
+		*/
+		break;
+	}
+	case WM_CLOSE:
+	{
+		if (g_pISystem)
+		{
+			g_pISystem->Quit();
+		}
+		break;
+	}
 	}
 
 	return (DefWindowProc(hWnd, msg, wParam, lParam));
@@ -477,18 +477,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 bool RegisterWindow(HINSTANCE hInst)
 {
 	// Register a window class
- 
+
 	WNDCLASS wc;
 
-	wc.style         = CS_OWNDC | CS_HREDRAW | CS_VREDRAW;
-	wc.lpfnWndProc   = WndProc;
-	wc.cbClsExtra    = 4;
-	wc.cbWndExtra    = 4;
-	wc.hInstance     = hInst;
-	wc.hIcon         = LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICON));
-	wc.hCursor       = NULL;
-	wc.hbrBackground =(HBRUSH)GetStockObject(BLACK_BRUSH);
-	wc.lpszMenuName  = NULL;
+	wc.style = CS_OWNDC | CS_HREDRAW | CS_VREDRAW;
+	wc.lpfnWndProc = WndProc;
+	wc.cbClsExtra = 4;
+	wc.cbWndExtra = 4;
+	wc.hInstance = hInst;
+	wc.hIcon = LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICON));
+	wc.hCursor = NULL;
+	wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
+	wc.lpszMenuName = NULL;
 	wc.lpszClassName = "CryENGINE";
 
 	if (!RegisterClass(&wc))
@@ -500,12 +500,12 @@ bool RegisterWindow(HINSTANCE hInst)
 
 #else	//PS2
 
-bool RunGamePS2(IGame *hInstance)
+bool RunGamePS2(IGame* hInstance)
 {
 	SSystemInitParams sip;
 	sip.sLogFileName = "log.txt";
 
-	g_pISystem = CreateSystemInterface( sip );
+	g_pISystem = CreateSystemInterface(sip);
 	if (!g_pISystem)
 	{
 		//Error( "CreateSystemInterface Failed" );
@@ -522,13 +522,13 @@ bool RunGamePS2(IGame *hInstance)
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	SGameInitParams gip;
-	if (!g_pISystem->CreateGame( gip ))
+	if (!g_pISystem->CreateGame(gip))
 	{
 		//Error( "CreateGame Failed" );
 		return false;
 	}
 
-	IGame *pGame = g_pISystem->GetIGame();
+	IGame* pGame = g_pISystem->GetIGame();
 
 
 
@@ -545,11 +545,11 @@ bool RunGamePS2(IGame *hInstance)
 
 
 // returns the decimal string representation of the given int
-string IntToString (int nNumber)
+string IntToString(int nNumber)
 {
 	char szNumber[16];
 	//	itoa (nNumber, szNumber, 10);
-	sprintf (szNumber, "%d", nNumber);
+	sprintf(szNumber, "%d", nNumber);
 	return szNumber;
 }
 
@@ -557,7 +557,7 @@ string IntToString (int nNumber)
 string UIntToHexString(DWORD dwNumber)
 {
 	char szNumber[24];
-	sprintf (szNumber, "0x%X", dwNumber);
+	sprintf(szNumber, "0x%X", dwNumber);
 	return szNumber;
 }
 
@@ -566,7 +566,7 @@ string TryFormatWinError(DWORD dwError)
 #ifdef WIN32
 	LPVOID lpMsgBuf;   // pointer to the buffer that will accept the formatted message
 	//DWORD dwLastError = OsGetLastError(); // the last user error for which the description should be formatted
-	DWORD dwFormattedMsgLen = FormatMessage( FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, dwError, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR) &lpMsgBuf, 0, NULL );
+	DWORD dwFormattedMsgLen = FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, dwError, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&lpMsgBuf, 0, NULL);
 
 	if (!dwFormattedMsgLen)
 		// error. return both the user error and the error received during formatting the user error
@@ -574,10 +574,10 @@ string TryFormatWinError(DWORD dwError)
 	else
 	{// the lpMsgBuf contains allocated by the system call message that is to be returned.
 		// we'll copy it into sResult and free it and return sResult
-		string sResult = (LPCTSTR) lpMsgBuf;
-		LocalFree (lpMsgBuf);
-		while (!sResult.empty() && ((unsigned char)sResult[sResult.length()-1]) < 0x20)
-			sResult.resize(sResult.length()-1);
+		string sResult = (LPCTSTR)lpMsgBuf;
+		LocalFree(lpMsgBuf);
+		while (!sResult.empty() && ((unsigned char)sResult[sResult.length() - 1]) < 0x20)
+			sResult.resize(sResult.length() - 1);
 		return sResult;
 	}
 #else
@@ -592,9 +592,9 @@ string FormatWinError(DWORD dwError)
 
 	if (sResult.empty())
 		// error. return both the user error and the error received during formatting the user error
-		sResult = "Error " + IntToString (GetLastError()) + " while formatting error message";
+		sResult = "Error " + IntToString(GetLastError()) + " while formatting error message";
 
-	return sResult + "\n(" + (dwError & 0x80000000 ? UIntToHexString(dwError):IntToString(dwError)) + ")";
+	return sResult + "\n(" + (dwError & 0x80000000 ? UIntToHexString(dwError) : IntToString(dwError)) + ")";
 }
 
 #define MAX_CMDLINE_LEN 256
@@ -609,30 +609,30 @@ InvokeExternalConfigTool()
 	try
 	{
 		// build tmp working directory
-		char tmpWorkingDir[ MAX_PATH ];
-		GetModuleFileName( 0, tmpWorkingDir, MAX_PATH );
-		strlwr( tmpWorkingDir );
+		char tmpWorkingDir[MAX_PATH];
+		GetModuleFileName(0, tmpWorkingDir, MAX_PATH);
+		strlwr(tmpWorkingDir);
 
 		// look for \bin as it should work for either \bin32 and \bin64
-		char* pBin( strstr( tmpWorkingDir, "\\bin" ) );
-		if( 0 != pBin )
+		char* pBin(strstr(tmpWorkingDir, "\\bin"));
+		if (0 != pBin)
 		{
 			// trunc tmp working directory path to X:\...\MasterCD
 			*pBin = 0;
 
 			// save current working directory
-			char curWorkingDir[ MAX_PATH ];
-			GetCurrentDirectory( MAX_PATH, curWorkingDir );
+			char curWorkingDir[MAX_PATH];
+			GetCurrentDirectory(MAX_PATH, curWorkingDir);
 
 			// set temporary working directory and launch external config tool
-			SetCurrentDirectory( tmpWorkingDir );
-			_spawnl( _P_WAIT, "Bin32\\FarCryConfigurator.exe", "Bin32\\FarCryConfigurator.exe", "/Caller=FarCry", 0 );
+			SetCurrentDirectory(tmpWorkingDir);
+			_spawnl(_P_WAIT, "Bin32\\FarCryConfigurator.exe", "Bin32\\FarCryConfigurator.exe", "/Caller=FarCry", 0);
 
 			// restore current working directory
-			SetCurrentDirectory( curWorkingDir );
+			SetCurrentDirectory(curWorkingDir);
 		}
 	}
-	catch( ... )
+	catch (...)
 	{
 	}
 #endif
@@ -648,20 +648,20 @@ InvokeExternalConfigTool()
 
 
 //////////////////////////////////////////////////////////////////////////
-bool RunGame(HINSTANCE hInstance,const char *sCmdLine)
+bool RunGame(HINSTANCE hInstance, const char* sCmdLine)
 {
 	SDL_Init(SDL_INIT_EVERYTHING);
 
-//	InvokeExternalConfigTool();
+	//	InvokeExternalConfigTool();
 
-	HWND hWnd=NULL;
+	HWND hWnd = NULL;
 	// initialize the system
-	bool bRelaunch=false;
+	bool bRelaunch = false;
 
 	char szLocalCmdLine[MAX_CMDLINE_LEN];
-	memset(szLocalCmdLine,0,MAX_CMDLINE_LEN);
+	memset(szLocalCmdLine, 0, MAX_CMDLINE_LEN);
 	if (sCmdLine)
-		strncpy(szLocalCmdLine,sCmdLine,MAX_CMDLINE_LEN);
+		strncpy(szLocalCmdLine, sCmdLine, MAX_CMDLINE_LEN);
 
 	do {
 		//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_DELAY_FREE_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_ALWAYS_DF);
@@ -671,10 +671,10 @@ bool RunGame(HINSTANCE hInstance,const char *sCmdLine)
 
 		if (szLocalCmdLine[0])
 		{
-			int nLen=(int)strlen(szLocalCmdLine);
-			if (nLen>MAX_CMDLINE_LEN)
-				nLen=MAX_CMDLINE_LEN;
-			strncpy(sip.szSystemCmdLine,szLocalCmdLine,nLen);
+			int nLen = (int)strlen(szLocalCmdLine);
+			if (nLen > MAX_CMDLINE_LEN)
+				nLen = MAX_CMDLINE_LEN;
+			strncpy(sip.szSystemCmdLine, szLocalCmdLine, nLen);
 		}
 
 #ifndef _XBOX
@@ -700,7 +700,7 @@ bool RunGame(HINSTANCE hInstance,const char *sCmdLine)
 			return false;
 		}
 
-		PFNCREATESYSTEMINTERFACE pfnCreateSystemInterface = (PFNCREATESYSTEMINTERFACE)SDL_LoadFunction( g_hSystemHandle,"CreateSystemInterface" );
+		PFNCREATESYSTEMINTERFACE pfnCreateSystemInterface = (PFNCREATESYSTEMINTERFACE)SDL_LoadFunction(g_hSystemHandle, "CreateSystemInterface");
 
 		// Initialize with instance and window handles.
 		sip.hInstance = hInstance;
@@ -709,7 +709,7 @@ bool RunGame(HINSTANCE hInstance,const char *sCmdLine)
 		sip.pCheckFunc = AuthCheckFunction;
 
 		// initialize the system
-		g_pISystem = pfnCreateSystemInterface( sip );
+		g_pISystem = pfnCreateSystemInterface(sip);
 		if (!g_pISystem)
 		{
 			SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "FarCry Error", "CreateSystemInterface Failed", nullptr);
@@ -717,57 +717,57 @@ bool RunGame(HINSTANCE hInstance,const char *sCmdLine)
 		}
 #else
 		// initialize the system
-		g_pISystem = CreateSystemInterface( sip );
+		g_pISystem = CreateSystemInterface(sip);
 #endif
 
-//////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////
 #ifdef GERMAN_GORE_CHECK
-			string sVar=string("g")+"_"+"g"+"o"+"r"+"e";
-			ICVar *pGore=g_pISystem->GetIConsole()->CreateVariable(sVar.c_str(),"1",VF_DUMPTODISK|VF_READONLY);
-			pGore->ForceSet("1");
+		string sVar = string("g") + "_" + "g" + "o" + "r" + "e";
+		ICVar* pGore = g_pISystem->GetIConsole()->CreateVariable(sVar.c_str(), "1", VF_DUMPTODISK | VF_READONLY);
+		pGore->ForceSet("1");
 #endif
-//////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////
 
-		// Enable Log verbosity.
+				// Enable Log verbosity.
 		g_pISystem->GetILog()->EnableVerbosity(true);
 
 		{
-			AutoSuspendTimeQuota suspender (g_pISystem->GetStreamEngine());
+			AutoSuspendTimeQuota suspender(g_pISystem->GetStreamEngine());
 
 			/////////////////////////////////////////////////////////////////////
 			// INITIAL CONSOLE STATUS IS INACTIVE
 			/////////////////////////////////////////////////////////////////////
 			g_pISystem->GetIConsole()->ShowConsole(false);
-			g_pISystem->GetIConsole()->SetScrollMax(600/2);
+			g_pISystem->GetIConsole()->SetScrollMax(600 / 2);
 
 
-	#ifdef WIN32
+#ifdef WIN32
 			SGameInitParams ip;
 			ip.sGameDLL = DLL_GAME;
 			if (szLocalCmdLine[0])
-				strncpy(ip.szGameCmdLine,szLocalCmdLine,sizeof(ip.szGameCmdLine));
+				strncpy(ip.szGameCmdLine, szLocalCmdLine, sizeof(ip.szGameCmdLine));
 
 #ifdef GORE_CHECK
-			ICVar *pGore=g_pISystem->GetIConsole()->CreateVariable("g_gore","1",VF_DUMPTODISK|VF_READONLY);
+			ICVar* pGore = g_pISystem->GetIConsole()->CreateVariable("g_gore", "1", VF_DUMPTODISK | VF_READONLY);
 			pGore->ForceSet("1");
 #endif
 
-			if (!g_pISystem->CreateGame( ip ))
+			if (!g_pISystem->CreateGame(ip))
 			{
-				SDL_ShowSimpleMessageBox( SDL_MESSAGEBOX_ERROR, "FarCry Error", "CreateGame Failed: CryGame.dll", nullptr);
+				SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "FarCry Error", "CreateGame Failed: CryGame.dll", nullptr);
 				return false;
 			}
 
-	#else
+#else
 			SGameInitParams ip;
-			if (!g_pISystem->CreateGame( ip ))
+			if (!g_pISystem->CreateGame(ip))
 			{
 				//Error( "CreateGame Failed" );
 				return false;
 			}
-	#endif
+#endif
 
-//			g_pISystem->GetIConsole()->ExecuteString(sCmdLine);
+			//			g_pISystem->GetIConsole()->ExecuteString(sCmdLine);
 
 		}
 
@@ -778,14 +778,14 @@ bool RunGame(HINSTANCE hInstance,const char *sCmdLine)
 		g_pISystem->GetIInput()->SetMouseExclusive(true);
 		g_pISystem->GetIInput()->SetKeyboardExclusive(true);
 
-		IGame *pGame = g_pISystem->GetIGame();
+		IGame* pGame = g_pISystem->GetIGame();
 
-//////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////
 #ifdef GERMAN_GORE_CHECK
-		
-		string sDLL=string("C")+"r"+"y"+"E"+"n"+"t"+"i"+"t"+"y"+"S"+"y"+"s"+"t"+"e"+"m"+"."+"d"+"l"+"l";
 
-		HMODULE tDLL= ::LoadLibrary(sDLL.c_str());
+		string sDLL = string("C") + "r" + "y" + "E" + "n" + "t" + "i" + "t" + "y" + "S" + "y" + "s" + "t" + "e" + "m" + "." + "d" + "l" + "l";
+
+		HMODULE tDLL = ::LoadLibrary(sDLL.c_str());
 		if (!tDLL)
 		{
 			return false;
@@ -793,44 +793,44 @@ bool RunGame(HINSTANCE hInstance,const char *sCmdLine)
 			g_pISystem->Release();
 			g_pISystem++;
 		}
-		
+
 		PFNCREATEMAINENTITYSYSTEM pfnCreateEntitySystem;
 
-		string sFunc=string("C")+"r"+"e"+"a"+"t"+"e"+"M"+"a"+"i"+"n"+"E"+"n"+"t"+"i"+"t"+"y"+"S"+"y"+"s"+"t"+"e"+"m";
+		string sFunc = string("C") + "r" + "e" + "a" + "t" + "e" + "M" + "a" + "i" + "n" + "E" + "n" + "t" + "i" + "t" + "y" + "S" + "y" + "s" + "t" + "e" + "m";
 
-		pfnCreateEntitySystem = (PFNCREATEMAINENTITYSYSTEM) ::GetProcAddress( tDLL, sFunc.c_str());
+		pfnCreateEntitySystem = (PFNCREATEMAINENTITYSYSTEM) ::GetProcAddress(tDLL, sFunc.c_str());
 
 		if (!pfnCreateEntitySystem)
-		{			
+		{
 			return false;
-			g_pISystem->Release();			
+			g_pISystem->Release();
 			g_pISystem->Release();
 			g_pISystem++;
 		}
 
 		::FreeLibrary(tDLL);
-		
+
 #endif
-//////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////
 
 		pGame->Run(bRelaunch);
 
 		// remove the previous cmdline in case we relaunch
-		memset(szLocalCmdLine,0,MAX_CMDLINE_LEN);
+		memset(szLocalCmdLine, 0, MAX_CMDLINE_LEN);
 
 		if (g_pISystem)
 		{
-			const char *szMod=NULL;
-			IGameMods *pMods=pGame->GetModsInterface();
+			const char* szMod = NULL;
+			IGameMods* pMods = pGame->GetModsInterface();
 			if (pMods)
-				szMod=pMods->GetCurrentMod();
+				szMod = pMods->GetCurrentMod();
 
-			if (szMod!=NULL && (strlen(szMod)>0))
+			if (szMod != NULL && (strlen(szMod) > 0))
 			{
 				// the game is relaunching because the MOD changed -
 				// add it as system paramter for the next relaunch
 				//strncpy(szLocalCmdLine,szMod,MAX_CMDLINE_LEN);
-				sprintf(szLocalCmdLine,"-MOD:%s",szMod);
+				sprintf(szLocalCmdLine, "-MOD:%s", szMod);
 			}
 
 			hWnd = (HWND)g_pISystem->GetIRenderer()->GetHWND();
@@ -858,7 +858,7 @@ bool RunGame(HINSTANCE hInstance,const char *sCmdLine)
 		if (!bRelaunch)
 			SDL_UnloadObject(g_hSystemHandle);
 
-		g_hSystemHandle= NULL;
+		g_hSystemHandle = NULL;
 
 		if (hWnd)
 		{
@@ -867,7 +867,7 @@ bool RunGame(HINSTANCE hInstance,const char *sCmdLine)
 		}
 #endif;
 
-	} while(false);
+	} while (false);
 
 	if (bRelaunch)
 	{
@@ -879,30 +879,30 @@ bool RunGame(HINSTANCE hInstance,const char *sCmdLine)
 
 		STARTUPINFO si;
 		PROCESS_INFORMATION pi;
-		memset( &pi,0,sizeof(pi) );
-		memset( &si,0,sizeof(si) );
+		memset(&pi, 0, sizeof(pi));
+		memset(&si, 0, sizeof(si));
 		si.cb = sizeof(si);
 		char szExe[_MAX_PATH];
-		GetModuleFileName( NULL,szExe,sizeof(szExe) );
+		GetModuleFileName(NULL, szExe, sizeof(szExe));
 
 		// [marco] must alloc a new one 'cos could be modified
 		// by CreateProcess
-		char *szBuf=NULL;
+		char* szBuf = NULL;
 		if (szLocalCmdLine[0])
 		{
 			szBuf = new char[strlen(szLocalCmdLine) + strlen(szExe) + strlen("-RELAUNCHING") + 4];
-			sprintf(szBuf,"%s %s -RELAUNCHING",szExe,szLocalCmdLine);
+			sprintf(szBuf, "%s %s -RELAUNCHING", szExe, szLocalCmdLine);
 		}
 		else
 		{
 			szBuf = new char[strlen(szExe) + strlen("-RELAUNCHING") + 4];
-			sprintf(szBuf,"%s -RELAUNCHING",szExe);
+			sprintf(szBuf, "%s -RELAUNCHING", szExe);
 		}
 
-		CreateProcess(0,szBuf,NULL,NULL,FALSE,NULL,NULL,szMasterCDFolder,&si,&pi );
+		CreateProcess(0, szBuf, NULL, NULL, FALSE, NULL, NULL, szMasterCDFolder, &si, &pi);
 
 		// Now terminate this process as fast as possible.
-		ExitProcess( 0 );
+		ExitProcess(0);
 
 #endif WIN32
 	}
