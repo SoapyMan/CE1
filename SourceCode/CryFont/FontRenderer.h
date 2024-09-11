@@ -55,21 +55,21 @@ public:
 	CFontRenderer();
 	~CFontRenderer();
 
-	int			LoadFromFile(const string &szFileName);
-	int			LoadFromMemory(unsigned char *pBuffer, int iBufferSize);
+	int			LoadFromFile(const string& szFileName);
+	int			LoadFromMemory(unsigned char* pBuffer, int iBufferSize);
 	int			Release();
 
 	int			SetGlyphBitmapSize(int iWidth, int iHeight);
-	int			GetGlyphBitmapSize(int *pWidth, int *pHeight);
+	int			GetGlyphBitmapSize(int* pWidth, int* pHeight);
 
 	int			SetSizeRatio(float fSizeRatio) { m_fSizeRatio = fSizeRatio; return 1; };
 	float		GetSizeRatio() { return m_fSizeRatio; };
 
 	int			SetEncoding(FT_Encoding pEncoding);
-	FT_Encoding	GetEncoding() { return m_pEncoding; }; 
+	FT_Encoding	GetEncoding() { return m_pEncoding; };
 
-	int			GetGlyph(CGlyphBitmap *pGlyphBitmap, int *iGlyphWidth, int *iGlyphHeight, int iX, int iY, int iCharCode);
-	int			GetGlyphScaled(CGlyphBitmap *pGlyphBitmap, int *iGlyphWidth, int *iGlyphHeight, int iX, int iY, float fScaleX, float fScaleY, int iCharCode);
+	int			GetGlyph(CGlyphBitmap* pGlyphBitmap, int* iGlyphWidth, int* iGlyphHeight, int iX, int iY, int iCharCode);
+	int			GetGlyphScaled(CGlyphBitmap* pGlyphBitmap, int* iGlyphWidth, int* iGlyphHeight, int iX, int iY, float fScaleX, float fScaleY, int iCharCode);
 
 private:
 

@@ -186,7 +186,7 @@ bool CFBitmap::SaveBitmap(const char *szFile, bool bSaveRGB)
 	W16(0);
 
 	W32(54);
-	
+
 	bfSize = m_nWidth * m_nHeight * 3;
 
 	W32(40);
@@ -200,7 +200,7 @@ bool CFBitmap::SaveBitmap(const char *szFile, bool bSaveRGB)
 	W32(0);
 	W32(0);
 	W32(0);
-	
+
 	if(!bSaveRGB)
 	{
 		for(i = m_nHeight-1; i >= 0; i--)
@@ -229,7 +229,7 @@ bool CFBitmap::SaveBitmap(const char *szFile, bool bSaveRGB)
 			}
 		}
 	}
-	
+
 	fclose(fp);
 	return true;
 }
@@ -246,7 +246,7 @@ void CFBitmap::GetMemoryUsage (class ICrySizer* pSizer)
 
 //------------------------------------------------------------------------------------
 CFBitmap::CFBitmap()
-: m_iWidth(0), m_iHeight(0), m_pData(0), m_pIRenderData(0)
+	: m_iWidth(0), m_iHeight(0), m_pData(0), m_pIRenderData(0)
 {
 }
 
@@ -271,20 +271,20 @@ int CFBitmap::Blur(int iIterations)
 
 			if (y - 1 >= 0)
 			{
-				yupOffset = (y-1) * m_iWidth;
+				yupOffset = (y - 1) * m_iWidth;
 			}
 			else
 			{
-				yupOffset = (y) * m_iWidth;
+				yupOffset = (y)*m_iWidth;
 			}
 
 			if (y + 1 <= m_iHeight)
 			{
-				ydownOffset = (y+1) * m_iWidth;
+				ydownOffset = (y + 1) * m_iWidth;
 			}
 			else
 			{
-				ydownOffset = (y) * m_iWidth;
+				ydownOffset = (y)*m_iWidth;
 			}
 
 			for (int x = 0; x < m_iWidth; x++)
@@ -323,7 +323,7 @@ int CFBitmap::Scale(float fScaleX, float fScaleY)
 	int iNewWidth = (int)(m_iWidth * fScaleX);
 	int iNewHeight = (int)(m_iHeight * fScaleY);
 
-	unsigned char *pNewData = new unsigned char[iNewWidth * iNewHeight];
+	unsigned char* pNewData = new unsigned char[iNewWidth * iNewHeight];
 
 	if (!pNewData)
 	{
@@ -352,7 +352,7 @@ int CFBitmap::Scale(float fScaleX, float fScaleY)
 		yFraction = yFractioned - yFloor;
 		oneMinusY = 1.0f - yFraction;
 
-//		yOffset = y * m_iWidth;
+		//		yOffset = y * m_iWidth;
 		yNewOffset = y * iNewWidth;
 
 
@@ -369,7 +369,7 @@ int CFBitmap::Scale(float fScaleX, float fScaleY)
 
 			xFraction = xFractioned - xFloor;
 			oneMinusX = 1.0f - xFraction;
-			
+
 			c0 = m_pData[yFloor * m_iWidth + xFloor];
 			c1 = m_pData[yFloor * m_iWidth + xCeil];
 			c2 = m_pData[yCeil * m_iWidth + xFloor];
@@ -392,7 +392,7 @@ int CFBitmap::Scale(float fScaleX, float fScaleY)
 }
 
 //------------------------------------------------------------------------------------
-int CFBitmap::BlitFrom(CFBitmap *pSrc, int iSX, int iSY, int iDX, int iDY, int iW, int iH)
+int CFBitmap::BlitFrom(CFBitmap* pSrc, int iSX, int iSY, int iDX, int iDY, int iW, int iH)
 {
 	for (int y = 0; y < iH; y++)
 	{
@@ -406,7 +406,7 @@ int CFBitmap::BlitFrom(CFBitmap *pSrc, int iSX, int iSY, int iDX, int iDY, int i
 }
 
 //------------------------------------------------------------------------------------
-int CFBitmap::BlitTo(CFBitmap *pDst, int iDX, int iDY, int iSX, int iSY, int iW, int iH)
+int CFBitmap::BlitTo(CFBitmap* pDst, int iDX, int iDY, int iSX, int iSY, int iW, int iH)
 {
 	for (int y = 0; y < iH; y++)
 	{
@@ -415,7 +415,7 @@ int CFBitmap::BlitTo(CFBitmap *pDst, int iDX, int iDY, int iSX, int iSY, int iW,
 			pDst->m_pData[(iDY + y) * pDst->m_iWidth + (iDX + x)] = m_pData[(iSY + y) * m_iWidth + (iSX + x)];
 		}
 	}
-	
+
 	return 1;
 }
 
@@ -424,7 +424,7 @@ int CFBitmap::Create(int iWidth, int iHeight)
 {
 	SAFE_DELETE_ARRAY(m_pData);
 
-	m_pData = new unsigned char [iWidth * iHeight];
+	m_pData = new unsigned char[iWidth * iHeight];
 
 	m_iWidth = iWidth;
 	m_iHeight = iHeight;
@@ -437,7 +437,7 @@ int CFBitmap::Release()
 {
 	SAFE_DELETE_ARRAY(m_pData);
 	m_iWidth = m_iHeight = 0;
-//	m_pIRenderData = 0;
+	//	m_pIRenderData = 0;
 
 	delete this;
 
@@ -450,11 +450,11 @@ int CFBitmap::Release()
 #define W16(val) { unsigned short t16 = (val); fwrite(&t16, 2, 1, hFile); }
 #define W32(val) { unsigned int t32 = (val); fwrite(&t32, 4, 1, hFile); }
 //------------------------------------------------------------------------------------
-int CFBitmap::SaveBitmap(const std::string &szFileName)
+int CFBitmap::SaveBitmap(const std::string& szFileName)
 {
-	FILE *hFile = fopen(szFileName.c_str(), "wb");
+	FILE* hFile = fopen(szFileName.c_str(), "wb");
 
-	if(!hFile)
+	if (!hFile)
 	{
 		return 0;
 	}
@@ -465,7 +465,7 @@ int CFBitmap::SaveBitmap(const std::string &szFileName)
 	W32(iFileSize);
 	W16(0);
 	W16(0);
-	
+
 	W32(54);
 
 	W32(40);
@@ -484,9 +484,9 @@ int CFBitmap::SaveBitmap(const std::string &szFileName)
 	W32(0);
 	W32(0);
 
-	for(int i = m_iHeight - 1; i >= 0; i--)
+	for (int i = m_iHeight - 1; i >= 0; i--)
 	{
-		for(int j = 0; j < m_iWidth; j++)
+		for (int j = 0; j < m_iWidth; j++)
 		{
 			fwrite(&m_pData[(i * m_iWidth) + j], 1, 1, hFile);
 			fwrite(&m_pData[(i * m_iWidth) + j], 1, 1, hFile);
@@ -500,8 +500,8 @@ int CFBitmap::SaveBitmap(const std::string &szFileName)
 }
 
 //------------------------------------------------------------------------------------
-void CFBitmap::GetMemoryUsage (class ICrySizer *pSizer)
+void CFBitmap::GetMemoryUsage(class ICrySizer* pSizer)
 {
-	pSizer->Add (*this);
-	pSizer->Add (m_pData, m_iWidth * m_iHeight);
+	pSizer->Add(*this);
+	pSizer->Add(m_pData, m_iWidth * m_iHeight);
 }

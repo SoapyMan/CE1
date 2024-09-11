@@ -22,21 +22,21 @@ typedef FontMap::iterator FontMapItor;
 class CCryFont : public ICryFont
 {
 public:
-	CCryFont(ISystem *pSystem);
+	CCryFont(ISystem* pSystem);
 	virtual ~CCryFont();
 
 	void Release();
-	
+
 	// create a font
-	struct IFFont *NewFont(const char *pszName);
-	struct IFFont *GetFont(const char *pszName);
+	struct IFFont* NewFont(const char* pszName);
+	struct IFFont* GetFont(const char* pszName);
 
 	//! Puts the objects used in this module into the sizer interface
-	void GetMemoryUsage (class ICrySizer* pSizer);
+	void GetMemoryUsage(class ICrySizer* pSizer);
 private:
 	friend class CFFont;
 	FontMap m_mapFonts;
-  ISystem*	m_pISystem;		        // system interface
+	ISystem* m_pISystem;		        // system interface
 
 private:
 };
