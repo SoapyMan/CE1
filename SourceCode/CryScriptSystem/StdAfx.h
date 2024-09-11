@@ -42,14 +42,14 @@
 #ifdef PS2
 #include "iostream.h"
 //wrapper for VC specific function
-inline void itoa(int n, char *str, int basen)
+inline void itoa(int n, char* str, int basen)
 {
- 	sprintf(str,"%d", n);
+	sprintf(str, "%d", n);
 }
-  
-inline char *_strlwr(const char *str)
+
+inline char* _strlwr(const char* str)
 {
-    return PS2strlwr(str);
+	return PS2strlwr(str);
 }
 #endif
 

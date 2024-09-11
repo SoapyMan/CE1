@@ -9,7 +9,7 @@
 #pragma once
 #endif // _MSC_VER > 1000
 #include <IScriptSystem.h>
-extern "C"{
+extern "C" {
 #include <lua.h>
 }
 #include <algorithm>
@@ -28,12 +28,12 @@ struct BreakPoint
 {
 	BreakPoint()
 	{
-		nLine=-1;
+		nLine = -1;
 	}
 	BreakPoint(const BreakPoint& b)
 	{
-		nLine=b.nLine;
-		sSourceFile=b.sSourceFile;
+		nLine = b.nLine;
+		sSourceFile = b.sSourceFile;
 	}
 	int nLine;
 	string sSourceFile;
@@ -42,7 +42,7 @@ struct BreakPoint
 typedef std::set<string> ScriptFileList;
 typedef ScriptFileList::iterator ScriptFileListItor;
 
-typedef std::map<int,int> UserDataMap;
+typedef std::map<int, int> UserDataMap;
 typedef UserDataMap::iterator UserDataMapItor;
 
 class CScriptSystem;
@@ -56,10 +56,10 @@ struct USER_DATA_CHUNK
 };
 
 #define SCRIPT_OBJECT_POOL_SIZE 15000
-typedef std::vector<CScriptObject * > ScriptObjectsObjectPool;
+typedef std::vector<CScriptObject* > ScriptObjectsObjectPool;
 
 /*! IScriptSystem implementation
-	@see IScriptSystem 
+	@see IScriptSystem
 */
 class CScriptSystem : public IScriptSystem
 {
@@ -69,121 +69,121 @@ public:
 	//! destructor
 	virtual ~CScriptSystem();
 	//!
-	bool Init(IScriptSystemSink *pSink,IScriptDebugSink *pDebugSink,bool bStdLibs,int nStackSize);
+	bool Init(IScriptSystemSink* pSink, IScriptDebugSink* pDebugSink, bool bStdLibs, int nStackSize);
 	//!
-	void RegisterErrorHandler(bool bDebugger=false);
+	void RegisterErrorHandler(bool bDebugger = false);
 	//!
 	void FormatAndRaiseError(int nErr);
 	//!
-	bool _ExecuteFile(const char *sFileName,bool bRaiseError);
+	bool _ExecuteFile(const char* sFileName, bool bRaiseError);
 	//!
-	void ReleaseScriptObject(CScriptObject *p);
+	void ReleaseScriptObject(CScriptObject* p);
 	// this is validating call to hunt down possible memory corruptions
 	// normally it should be defined as inlined empty function
 	static void Validate();
 	//!
 	IScriptSystemSink* GetSystemSink() { return m_pSink; };
 	//!
-	void UnrefFunction (HSCRIPTFUNCTION hFunc);
+	void UnrefFunction(HSCRIPTFUNCTION hFunc);
 
 	// interface IScriptSystem -----------------------------------------------------------
 
-	virtual IFunctionHandler *GetFunctionHandler();
+	virtual IFunctionHandler* GetFunctionHandler();
 	virtual HSCRIPT GetScriptHandle() { return (HSCRIPT)m_pLS; }
-	virtual bool ExecuteFile(const char *sFileName,bool bRaiseError,bool bForceReload);
-	virtual bool ExecuteBuffer(const char *sBuffer, size_t nSize);
-	virtual void UnloadScript(const char *sFileName);
+	virtual bool ExecuteFile(const char* sFileName, bool bRaiseError, bool bForceReload);
+	virtual bool ExecuteBuffer(const char* sBuffer, size_t nSize);
+	virtual void UnloadScript(const char* sFileName);
 	virtual void UnloadScripts();
-	virtual bool ReloadScript(const char *sFileName,bool bRaiseError);
+	virtual bool ReloadScript(const char* sFileName, bool bRaiseError);
 	virtual bool ReloadScripts();
 	virtual void DumpLoadedScripts();
-	virtual IScriptObject *GetGlobalObject();
-	virtual IScriptObject *CreateEmptyObject();
-	virtual IScriptObject *CreateObject();
-	virtual IScriptObject *CreateGlobalObject(const char *sName);
+	virtual IScriptObject* GetGlobalObject();
+	virtual IScriptObject* CreateEmptyObject();
+	virtual IScriptObject* CreateObject();
+	virtual IScriptObject* CreateGlobalObject(const char* sName);
 	virtual int BeginCall(HSCRIPTFUNCTION hFunc);
-	virtual int BeginCall(const char *sFuncName);
-	virtual int BeginCall(const char *sTableName,const char *sFuncName);
+	virtual int BeginCall(const char* sFuncName);
+	virtual int BeginCall(const char* sTableName, const char* sFuncName);
 	virtual void EndCall();
-	virtual void EndCall(int &nRet);
-	virtual void EndCall(float &fRet);
-	virtual void EndCall(const char *&sRet);
-	virtual void EndCall(bool &bRet);
-	virtual void EndCall(IScriptObject *pScriptObject);
-	virtual HSCRIPTFUNCTION GetFunctionPtr(const char *sFuncName);
-	virtual HSCRIPTFUNCTION GetFunctionPtr(const char *sTableName, const char *sFuncName);
+	virtual void EndCall(int& nRet);
+	virtual void EndCall(float& fRet);
+	virtual void EndCall(const char*& sRet);
+	virtual void EndCall(bool& bRet);
+	virtual void EndCall(IScriptObject* pScriptObject);
+	virtual HSCRIPTFUNCTION GetFunctionPtr(const char* sFuncName);
+	virtual HSCRIPTFUNCTION GetFunctionPtr(const char* sTableName, const char* sFuncName);
 	virtual void ReleaseFunc(HSCRIPTFUNCTION f);
 	virtual void PushFuncParam(int nVal);
 	virtual void PushFuncParam(float fVal);
-	virtual void PushFuncParam(const char *sVal);
+	virtual void PushFuncParam(const char* sVal);
 	virtual void PushFuncParam(bool bVal);
-	virtual void PushFuncParam(IScriptObject *pVal);
-	virtual void SetGlobalValue(const char *sKey, int nVal);
-	virtual void SetGlobalValue(const char *sKey, float fVal);
-	virtual void SetGlobalValue(const char *sKey, const char *sVal);
-	virtual void SetGlobalValue(const char *sKey, IScriptObject *pObj);
-	virtual void SetGlobalToNull(const char *sKey);
-	virtual bool GetGlobalValue(const char *sKey, int &nVal);
-	virtual bool GetGlobalValue(const char *sKey, float &fVal);
-	virtual bool GetGlobalValue(const char *sKey, const char * &sVal);
-	virtual bool GetGlobalValue(const char *sKey, IScriptObject *pObj);
-	virtual HTAG CreateTaggedValue(const char *sKey, int *pVal);
-	virtual HTAG CreateTaggedValue(const char *sKey, float *pVal);
-	virtual HTAG CreateTaggedValue(const char *sKey, char *pVal);
+	virtual void PushFuncParam(IScriptObject* pVal);
+	virtual void SetGlobalValue(const char* sKey, int nVal);
+	virtual void SetGlobalValue(const char* sKey, float fVal);
+	virtual void SetGlobalValue(const char* sKey, const char* sVal);
+	virtual void SetGlobalValue(const char* sKey, IScriptObject* pObj);
+	virtual void SetGlobalToNull(const char* sKey);
+	virtual bool GetGlobalValue(const char* sKey, int& nVal);
+	virtual bool GetGlobalValue(const char* sKey, float& fVal);
+	virtual bool GetGlobalValue(const char* sKey, const char*& sVal);
+	virtual bool GetGlobalValue(const char* sKey, IScriptObject* pObj);
+	virtual HTAG CreateTaggedValue(const char* sKey, int* pVal);
+	virtual HTAG CreateTaggedValue(const char* sKey, float* pVal);
+	virtual HTAG CreateTaggedValue(const char* sKey, char* pVal);
 	virtual void RemoveTaggedValue(HTAG htag);
-	virtual USER_DATA CreateUserData(INT_PTR nVal,int nCookie);
-	virtual void RaiseError(const char *sErr,...);
+	virtual USER_DATA CreateUserData(INT_PTR nVal, int nCookie);
+	virtual void RaiseError(const char* sErr, ...);
 	virtual void ForceGarbageCollection();
 	virtual int GetCGCount();
 	virtual void SetGCThreshhold(int nKb);
 	virtual void UnbindUserdata();
 	virtual void Release();
-	virtual void EnableDebugger(IScriptDebugSink *pDebugSink);
-	virtual IScriptObject *GetBreakPoints();
-	virtual HBREAKPOINT AddBreakPoint(const char *sFile,int nLineNumber);
-	virtual IScriptObject *GetLocalVariables(int nLevel = 0);
-	virtual IScriptObject *GetCallsStack();
-	virtual void DebugContinue(){m_bsBreakState=bsContinue;}
-	virtual void DebugStepNext(){m_bsBreakState=bsStepNext;}
-	virtual void DebugStepInto(){m_bsBreakState=bsStepInto;}
-	virtual void DebugDisable(){m_bsBreakState=bsNoBreak;}
-	virtual BreakState GetBreakState(){return m_bsBreakState;}
-	virtual void GetMemoryStatistics(ICrySizer *pSizer);
-	virtual void GetScriptHash( const char *sPath, const char *szKey, unsigned int &dwHash );
+	virtual void EnableDebugger(IScriptDebugSink* pDebugSink);
+	virtual IScriptObject* GetBreakPoints();
+	virtual HBREAKPOINT AddBreakPoint(const char* sFile, int nLineNumber);
+	virtual IScriptObject* GetLocalVariables(int nLevel = 0);
+	virtual IScriptObject* GetCallsStack();
+	virtual void DebugContinue() { m_bsBreakState = bsContinue; }
+	virtual void DebugStepNext() { m_bsBreakState = bsStepNext; }
+	virtual void DebugStepInto() { m_bsBreakState = bsStepInto; }
+	virtual void DebugDisable() { m_bsBreakState = bsNoBreak; }
+	virtual BreakState GetBreakState() { return m_bsBreakState; }
+	virtual void GetMemoryStatistics(ICrySizer* pSizer);
+	virtual void GetScriptHash(const char* sPath, const char* szKey, unsigned int& dwHash);
 	virtual void PostInit();
 
 private: // ---------------------------------------------------------------------
 
 	//!
-	static int ErrorHandler(lua_State *L);
+	static int ErrorHandler(lua_State* L);
 	//!
-	static int SetGlobalTagHandlerFloat(lua_State *L);
+	static int SetGlobalTagHandlerFloat(lua_State* L);
 	//!
-	static int GetGlobalTagHandlerFloat(lua_State *L);
+	static int GetGlobalTagHandlerFloat(lua_State* L);
 	//!
-	static int SetGlobalTagHandlerInt(lua_State *L);
+	static int SetGlobalTagHandlerInt(lua_State* L);
 	//!
-	static int GetGlobalTagHandlerInt(lua_State *L);
+	static int GetGlobalTagHandlerInt(lua_State* L);
 	//!
-	static int SetGlobalTagHandlerString(lua_State *L);
+	static int SetGlobalTagHandlerString(lua_State* L);
 	//!
-	static int GetGlobalTagHandlerString(lua_State *L);
+	static int GetGlobalTagHandlerString(lua_State* L);
 	//!
-	void NotifySetGlobal(const char *sVarName);
+	void NotifySetGlobal(const char* sVarName);
 	//!
-	bool CanSetGlobal(const char *sVarName);
+	bool CanSetGlobal(const char* sVarName);
 	//!
-	CScriptObject *CreateScriptObject();
+	CScriptObject* CreateScriptObject();
 	//!
 	void RegisterTagHandlers();
 	//!
-	static int GCTagHandler(lua_State *L);
+	static int GCTagHandler(lua_State* L);
 
-//	void GetScriptHashFunction( IScriptObject &Current, unsigned int &dwHash);
-	
-	// ----------------------------------------------------------------------------
+	//	void GetScriptHashFunction( IScriptObject &Current, unsigned int &dwHash);
 
-	lua_State *								m_pLS;
+		// ----------------------------------------------------------------------------
+
+	lua_State* m_pLS;
 	bool 											m_bDebug;											//!< temp value for function calls
 	int 											m_nTempArg;
 	int 											m_nTempTop;
@@ -193,13 +193,13 @@ private: // --------------------------------------------------------------------
 	int												m_nStringTag;
 
 	int												m_nGCTag;
-	
+
 	string										m_strCurrentFile;
 
 	CFunctionHandler					m_feFuntionHandler;
 	ScriptFileList						m_dqLoadedFiles;
 
-	IScriptSystemSink *				m_pSink;
+	IScriptSystemSink* m_pSink;
 	ScriptObjectsObjectPool		m_stkScriptObjectsPool;
 
 	UserDataMap								m_mapUserData;
@@ -209,8 +209,8 @@ public: // ---------------------------------------------------------------------
 	BreakPoint								m_BreakPoint;									//!
 	string										m_sLastBreakSource;						//!
 	int												m_nLastBreakLine;							//!
-  BreakState								m_bsBreakState;								//!
-	IScriptDebugSink *				m_pDebugSink;									//!
+	BreakState								m_bsBreakState;								//!
+	IScriptDebugSink* m_pDebugSink;									//!
 	int												m_nObjCreationNumber;					//!< debug variable
 };
 
