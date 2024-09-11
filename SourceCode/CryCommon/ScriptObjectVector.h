@@ -19,7 +19,8 @@ public:
 	CScriptObjectVector()
 	{
 	}
-	CScriptObjectVector(IScriptSystem* pScriptSystem, bool bCreateEmpty = false) :_SmartScriptObject(pScriptSystem, bCreateEmpty)
+	CScriptObjectVector(IScriptSystem* pScriptSystem, bool bCreateEmpty = false)
+		: _SmartScriptObject(pScriptSystem, bCreateEmpty)
 	{
 	}
 
@@ -33,7 +34,7 @@ public:
 			m_pSO->EndSetGetChain();
 		}
 	}
-	Vec3 Get()
+	Vec3 Get() const
 	{
 		Vec3 v(0, 0, 0);
 		if (m_pSO->BeginSetGetChain())
@@ -47,16 +48,22 @@ public:
 
 		return v;
 	}
-	/*	Vec3& operator=(CScriptObjectVector &vec)
-		{
-			static Vec3 v3;
-			vec.Set(v3);
-			return v3;
-		}*/
+
+	Vec3 operator=(const CScriptObjectVector& vec)
+	{
+		Set(vec.Get());
+		return *this;
+	}
+
 	CScriptObjectVector& operator=(const Vec3& v3)
 	{
 		Set(v3);
 		return *this;
+	}
+
+	operator Vec3() const
+	{
+		return Get();
 	}
 };
 
@@ -76,24 +83,31 @@ public:
 		m_pSO->SetAt(2, v.y);
 		m_pSO->SetAt(3, v.z);
 	}
-	Vec3& Get()
+
+	Vec3 Get() const
 	{
-		static Vec3 v(0, 0, 0);
+		Vec3 v(0, 0, 0);
 		m_pSO->GetAt(1, v.x);
 		m_pSO->GetAt(2, v.y);
 		m_pSO->GetAt(3, v.z);
 		return v;
 	}
-	/*	Vec3& operator=(CScriptObjectVector &vec)
-		{
-			static Vec3 v3;
-			vec.Set(v3);
-			return v3;
-		}*/
+
+	Vec3 operator=(const CScriptObjectColor& vec)
+	{
+		Set(vec.Get());
+		return *this;
+	}
+
 	CScriptObjectColor& operator=(const Vec3& v3)
 	{
 		Set(v3);
 		return *this;
+	}
+
+	operator Vec3() const
+	{
+		return Get();
 	}
 };
 
