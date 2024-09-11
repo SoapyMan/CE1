@@ -10,30 +10,30 @@ class ICrySkinSource
 {
 public:
 	// this structure is initialized through the constructor
-	ICrySkinSource (
-			const CryVertexBinding* pLinks,
-			unsigned numLinks,
-			const Vec3* pVertices,
-			unsigned numVertices,
-			const TangData* pExtTangents,
-			unsigned numExtTangents,
-			const unsigned* pExtToIntMapping
-		):
-		m_pLinks (pLinks),
-		m_numLinks (numLinks),
-		m_pVertices (pVertices),
-		m_numVertices (numVertices),
-		m_pExtTangents (pExtTangents),
-		m_numExtTangents (numExtTangents),
-		m_pExtToIntMapping (pExtToIntMapping)
+	ICrySkinSource(
+		const CryVertexBinding* pLinks,
+		unsigned numLinks,
+		const Vec3* pVertices,
+		unsigned numVertices,
+		const TangData* pExtTangents,
+		unsigned numExtTangents,
+		const unsigned* pExtToIntMapping
+	) :
+		m_pLinks(pLinks),
+		m_numLinks(numLinks),
+		m_pVertices(pVertices),
+		m_numVertices(numVertices),
+		m_pExtTangents(pExtTangents),
+		m_numExtTangents(numExtTangents),
+		m_pExtToIntMapping(pExtToIntMapping)
 	{}
-	unsigned numVertices()const {return m_numVertices;}
-	const Vec3& getVertex (unsigned i)const  {return m_pVertices[i];}
-	unsigned numLinks() const {return m_numLinks;}
-	const CryVertexBinding& getLink (unsigned i) const {return m_pLinks[i];}
-	unsigned numExtTangents() const {return m_numExtTangents;}
-	const unsigned *getExtToIntMapEntries()const {return m_pExtToIntMapping;}
-	const TangData& getExtTangent(unsigned i)const {return m_pExtTangents[i];}
+	unsigned numVertices()const { return m_numVertices; }
+	const Vec3& getVertex(unsigned i)const { return m_pVertices[i]; }
+	unsigned numLinks() const { return m_numLinks; }
+	const CryVertexBinding& getLink(unsigned i) const { return m_pLinks[i]; }
+	unsigned numExtTangents() const { return m_numExtTangents; }
+	const unsigned* getExtToIntMapEntries()const { return m_pExtToIntMapping; }
+	const TangData& getExtTangent(unsigned i)const { return m_pExtTangents[i]; }
 protected:
 	// this needs to be filled in by the derived class
 	unsigned m_numLinks;
@@ -48,9 +48,9 @@ protected:
 class CrySkinBuilderBase0
 {
 public:
-	CrySkinBuilderBase0(const class ICrySkinSource* pGeometry):
-		m_pGeometry (pGeometry)
-		{}
+	CrySkinBuilderBase0(const class ICrySkinSource* pGeometry) :
+		m_pGeometry(pGeometry)
+	{}
 
 	typedef CrySkinVertexAligned Vertex;
 
@@ -63,7 +63,7 @@ protected:
 	const ICrySkinSource* m_pGeometry;
 };
 
-class CrySkinBuilderBase: public CrySkinBuilderBase0
+class CrySkinBuilderBase : public CrySkinBuilderBase0
 {
 public:
 protected:
@@ -81,7 +81,7 @@ protected:
 
 	// fills in the group of aux ints for the given bone (the rigid vertex group)
 	// returns the pointer to the next available auxint after the group
-	void fillRigidGroup (CrySkinStreams& streams, unsigned nBone);
+	void fillRigidGroup(CrySkinStreams& streams, unsigned nBone);
 
 protected:
 
@@ -97,11 +97,11 @@ protected:
 	{
 		CrySkinRigidVertexArray arrRigid;
 		CrySkinSmoothVertexArray arrSmooth;
-		bool empty() const{return arrRigid.empty() && arrSmooth.empty();}
-		void reserve (unsigned numReserve)
+		bool empty() const { return arrRigid.empty() && arrSmooth.empty(); }
+		void reserve(unsigned numReserve)
 		{
-			arrRigid.reserve (numReserve/2);
-			arrSmooth.reserve (numReserve/2);
+			arrRigid.reserve(numReserve / 2);
+			arrSmooth.reserve(numReserve / 2);
 		}
 	};
 	typedef std::vector< BoneVertexGroup > BoneVertexArray;

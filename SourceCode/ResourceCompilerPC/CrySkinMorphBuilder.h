@@ -5,7 +5,7 @@
 class CrySkinMorph;
 
 // builds the skin morph
-class CrySkinMorphBuilder: public CrySkinBuilderBase
+class CrySkinMorphBuilder : public CrySkinBuilderBase
 {
 public:
 	// Receives the geometry and the array of inverse-default-global matrices
@@ -13,7 +13,7 @@ public:
 	CrySkinMorphBuilder(const ICrySkinSource* pGeometry, const Matrix44* pMatInvDef, unsigned numBones);
 
 	// initializes the given skin out of the given morph target
-	void initSkinMorph (const SMeshMorphTargetVertex* pMorphVerts, unsigned numMorphVerts, class CrySkinMorph* pSkin);
+	void initSkinMorph(const SMeshMorphTargetVertex* pMorphVerts, unsigned numMorphVerts, class CrySkinMorph* pSkin);
 
 protected:
 	// for the given morph target(source) finds and initializes the m_nFirstAffectingBone and m_numAffectingBones
@@ -31,7 +31,7 @@ protected:
 
 	// fills in the group of aux ints for the given bone (the smooth vertex group)
 	// returns the pointer to the next available auxint after the group
-	void fillSmoothGroup (CrySkinStreams& streams, unsigned nBone);
+	void fillSmoothGroup(CrySkinStreams& streams, unsigned nBone);
 protected:
 	// the bone info that's used to translate the 
 	// the matrices are from getInvDefGlobal() of each corresponding CryBoneInfo

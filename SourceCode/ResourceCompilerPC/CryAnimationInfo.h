@@ -7,7 +7,7 @@ inline bool operator < (const AnimEvent& left, const AnimEvent& right)
 	return left.fTime < right.fTime;
 }
 // returns true if the given events are equal with the given time tolerance
-inline bool isEqual (const AnimEvent& left, const AnimEvent& right, float fTolerance = 1e-3f)
+inline bool isEqual(const AnimEvent& left, const AnimEvent& right, float fTolerance = 1e-3f)
 {
 	return left.UserData == right.UserData
 		&& fabs(left.fTime - right.fTime) < fTolerance;
@@ -19,15 +19,15 @@ struct AnimData
 	string strName; // the name of the animation (not the name of the file) - unique per-model
 	float fStart, fStop; // start and stop time, in seconds
 	int nGlobalAnimId;
-  bool  bLoop;
+	bool  bLoop;
 
-	AnimData():
+	AnimData() :
 		fStart(0), fStop(0), bLoop(false),
-		nGlobalAnimId (-1)
+		nGlobalAnimId(-1)
 	{
 	}
-	bool isStatic () const {return fStart == fStop;}
-	float getLength() const {return fStop - fStart;}
+	bool isStatic() const { return fStart == fStop; }
+	float getLength() const { return fStop - fStart; }
 
 	size_t sizeofThis()const
 	{
@@ -78,16 +78,16 @@ struct GlobalAnimation
 		FLAGS_LOAD_PENDING = 1 << 4,
 
 		// this is the flag combination that should be applied only to default animations
-		FLAGS_DEFAULT_ANIMATION = FLAGS_DISABLE_DELAY_LOAD|FLAGS_DISABLE_LOAD_ERROR_LOG,
+		FLAGS_DEFAULT_ANIMATION = FLAGS_DISABLE_DELAY_LOAD | FLAGS_DISABLE_LOAD_ERROR_LOG,
 
 		// combination of all possible flags
-		FLAGS_ALL_FLAGS = (1<<5) - 1,
+		FLAGS_ALL_FLAGS = (1 << 5) - 1,
 
 		// the flags by default
 		FLAGS_DEFAULT_FLAGS = 0
 	};
 
-	GlobalAnimation ()
+	GlobalAnimation()
 	{
 		// some standard values to fill in before the animation will be loaded
 		nRefCount = 0;
@@ -100,13 +100,13 @@ struct GlobalAnimation
 		fScale = 0.01f;
 		rangeGlobal.end = 900; // this is in ticks, means 30 frames
 	}
-	
-	IController*GetController(unsigned nControllerID)
+
+	IController* GetController(unsigned nControllerID)
 	{
 		ControllerArray::iterator it = std::lower_bound(arrCtrls.begin(), arrCtrls.end(), nControllerID, AnimCtrlSortPred());
 		if (it != arrCtrls.end() && (*it)->GetID() == nControllerID)
 		{
-			IController *c = *it;
+			IController* c = *it;
 #ifdef _DEBUG
 			// set this to true in the debugger to obtain the 0th frame p and q
 			bool bCheck = false;
@@ -121,13 +121,13 @@ struct GlobalAnimation
 		return NULL;
 	}
 
-	bool IsLoaded()const {return !arrCtrls.empty();}
+	bool IsLoaded()const { return !arrCtrls.empty(); }
 
-	bool IsInfoLoaded()const {return (nFlags&FLAGS_INFO_LOADED) != 0;}
-	void OnInfoLoaded() {nFlags |= FLAGS_INFO_LOADED;}
-	bool IsAutoUnload()const {return (nFlags&FLAGS_DISABLE_AUTO_UNLOAD)== 0;}
+	bool IsInfoLoaded()const { return (nFlags & FLAGS_INFO_LOADED) != 0; }
+	void OnInfoLoaded() { nFlags |= FLAGS_INFO_LOADED; }
+	bool IsAutoUnload()const { return (nFlags & FLAGS_DISABLE_AUTO_UNLOAD) == 0; }
 
-	void OnTick ()
+	void OnTick()
 	{
 		++nTickCount;
 		nLastAccessFrameId = g_nFrameID;
@@ -153,8 +153,8 @@ struct GlobalAnimation
 		if (!--nRefCount)
 		{
 #ifdef _DEBUG
-			for (ControllerArray::iterator it = arrCtrls.begin(); it!= arrCtrls.end(); ++it)
-				assert ((*it)->NumRefs()==1); // only this object references the controllers now
+			for (ControllerArray::iterator it = arrCtrls.begin(); it != arrCtrls.end(); ++it)
+				assert((*it)->NumRefs() == 1); // only this object references the controllers now
 #endif
 			arrCtrls.clear(); // nobody uses the controllers; clean them up. This makes the animation effectively unloaded
 		}
@@ -168,13 +168,13 @@ struct GlobalAnimation
 		if (arrCtrls.empty())
 			return 0;
 		int nMax = arrCtrls[0]->NumRefs();
-		for (ControllerArray::iterator it = arrCtrls.begin()+1; it!= arrCtrls.end(); ++it)
-			if((*it)->NumRefs() > nMax)
+		for (ControllerArray::iterator it = arrCtrls.begin() + 1; it != arrCtrls.end(); ++it)
+			if ((*it)->NumRefs() > nMax)
 				nMax = (*it)->NumRefs();
 		return nMax;
 	}
 #endif
-	size_t sizeofThis ()const;
+	size_t sizeofThis()const;
 
 
 

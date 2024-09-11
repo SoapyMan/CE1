@@ -23,7 +23,7 @@ struct TCryBoneDescData
 
 	// [Sergiy] physics info for different lods
 	// lod 0 is the physics of alive body, lod 1 is the physics of a dead body
-	TBonePhysics m_PhysInfo[2]; 
+	TBonePhysics m_PhysInfo[2];
 	float m_fMass;
 
 	Matrix44 m_matInvDefGlobal; // allows to get difference to def pose matrices 
@@ -48,11 +48,11 @@ typedef TCryBoneDescData<BONE_PHYSICS_COMP> CryBoneDescData_Comp;
 
 #define __copy(x) left.x = right.x
 
-inline void CopyCryBone (CryBoneDescData_Comp& left, const CryBoneDescData& right)
+inline void CopyCryBone(CryBoneDescData_Comp& left, const CryBoneDescData& right)
 {
 	__copy(m_nControllerID);
-	CopyPhysInfo (left.m_PhysInfo[0], right.m_PhysInfo[0]);
-	CopyPhysInfo (left.m_PhysInfo[1], right.m_PhysInfo[1]);
+	CopyPhysInfo(left.m_PhysInfo[0], right.m_PhysInfo[0]);
+	CopyPhysInfo(left.m_PhysInfo[1], right.m_PhysInfo[1]);
 	__copy(m_fMass);
 	__copy(m_matInvDefGlobal);
 	__copy(m_nLimbId);
@@ -61,11 +61,11 @@ inline void CopyCryBone (CryBoneDescData_Comp& left, const CryBoneDescData& righ
 	__copy(m_nOffsetChildren);
 }
 
-inline void CopyCryBone (CryBoneDescData& left, const CryBoneDescData_Comp& right)
+inline void CopyCryBone(CryBoneDescData& left, const CryBoneDescData_Comp& right)
 {
 	__copy(m_nControllerID);
-	CopyPhysInfo (left.m_PhysInfo[0], right.m_PhysInfo[0]);
-	CopyPhysInfo (left.m_PhysInfo[1], right.m_PhysInfo[1]);
+	CopyPhysInfo(left.m_PhysInfo[0], right.m_PhysInfo[0]);
+	CopyPhysInfo(left.m_PhysInfo[1], right.m_PhysInfo[1]);
 	__copy(m_fMass);
 	__copy(m_matInvDefGlobal);
 	__copy(m_nLimbId);
@@ -80,48 +80,48 @@ inline void CopyCryBone (CryBoneDescData& left, const CryBoneDescData_Comp& righ
 
 
 
-class CryBoneDesc: public CryBoneDescData
+class CryBoneDesc : public CryBoneDescData
 {
 public:
-	CryBoneDesc ();
-	~CryBoneDesc ();
+	CryBoneDesc();
+	~CryBoneDesc();
 
 	// returns the bone name, if available
 	const char* getNameCStr()const;
 	const string& getName()const;
 
-	unsigned getControllerId()const {return m_nControllerID;}
+	unsigned getControllerId()const { return m_nControllerID; }
 
 	// sets the name of the bone out of the given buffer of the given max size
-	void setName (const char* szName);
+	void setName(const char* szName);
 
-	unsigned numChildren ()const {return m_numChildren;}
-	bool hasParent() const {return m_nOffsetParent != 0;}
-	int getParentIndexOffset()const {return m_nOffsetParent;}
-	int getFirstChildIndexOffset() const {return m_nOffsetChildren;}
+	unsigned numChildren()const { return m_numChildren; }
+	bool hasParent() const { return m_nOffsetParent != 0; }
+	int getParentIndexOffset()const { return m_nOffsetParent; }
+	int getFirstChildIndexOffset() const { return m_nOffsetChildren; }
 
-	const Matrix44& getInvDefGlobal() const {return m_matInvDefGlobal;}
+	const Matrix44& getInvDefGlobal() const { return m_matInvDefGlobal; }
 	void setDefaultGlobal(const Matrix44& mxDefault);
-	int getLimbId () const {return m_nLimbId;}
+	int getLimbId() const { return m_nLimbId; }
 
-	BONE_PHYSICS& getPhysInfo (int nLod) {return m_PhysInfo[nLod];}
+	BONE_PHYSICS& getPhysInfo(int nLod) { return m_PhysInfo[nLod]; }
 
 	// updates this bone physics, from the given entity descriptor, and of the given lod
-	void UpdatePhysics (const BONE_ENTITY& entity, int nLod);
-	void setPhysics (int nLod, const BONE_PHYSICS& BonePhysics)
+	void UpdatePhysics(const BONE_ENTITY& entity, int nLod);
+	void setPhysics(int nLod, const BONE_PHYSICS& BonePhysics)
 	{
-		assert (nLod >= 0 && nLod < sizeof(m_PhysInfo)/sizeof(m_PhysInfo[0]));
+		assert(nLod >= 0 && nLod < sizeof(m_PhysInfo) / sizeof(m_PhysInfo[0]));
 		m_PhysInfo[nLod] = BonePhysics;
 	}
 	// the physics for the given LOD is not available
-	void resetPhysics (int nLod)
+	void resetPhysics(int nLod)
 	{
-		assert (nLod >= 0 && nLod < sizeof(m_PhysInfo)/sizeof(m_PhysInfo[0]));
-		memset (&m_PhysInfo[nLod], 0, sizeof(m_PhysInfo[nLod]));
+		assert(nLod >= 0 && nLod < sizeof(m_PhysInfo) / sizeof(m_PhysInfo[0]));
+		memset(&m_PhysInfo[nLod], 0, sizeof(m_PhysInfo[nLod]));
 	}
-	const BONE_PHYSICS& getPhysics (int nLod)const
+	const BONE_PHYSICS& getPhysics(int nLod)const
 	{
-		assert (nLod >= 0 && nLod < sizeof(m_PhysInfo)/sizeof(m_PhysInfo[0]));
+		assert(nLod >= 0 && nLod < sizeof(m_PhysInfo) / sizeof(m_PhysInfo[0]));
 		return m_PhysInfo[nLod];
 	}
 
@@ -131,7 +131,7 @@ public:
 	// Then, register it with RegisterGeometry(). It will return phys_geometry* that the caller
 	// should put into the corresponding LOD m_PhysInfo.pPhysGeom
 	// CryBoneInfo::PostInitPhysGeom uses this same id to find the physical geometry in the map
-	INT_PTR getPhysGeomId (unsigned nLOD) {return (INT_PTR)m_PhysInfo[nLOD].pPhysGeom;}
+	INT_PTR getPhysGeomId(unsigned nLOD) { return (INT_PTR)m_PhysInfo[nLOD].pPhysGeom; }
 
 	// compares two bone descriptions and returns true if they're the same bone
 	// (the same name and the same position in the hierarchy)
@@ -140,16 +140,16 @@ public:
 	// Serializes the description:
 	// returns the number of required bytes for serialization, if the data pointer is NULL
 	// returns 0 (if the buffer size is not enough) or the number of bytes written, if the data pointer is given
-	unsigned Serialize (bool bSave, void *pStream, unsigned nSize);
+	unsigned Serialize(bool bSave, void* pStream, unsigned nSize);
 
 	// scales the bone with the given multiplier
-	void scale (float fScale);
+	void scale(float fScale);
 
 protected:
 
 	// loads the bone from a raw chunk data (no header)
 	// returns false if the bone couldn't be loaded
-	bool LoadRaw (const BONE_ENTITY* pEntity);
+	bool LoadRaw(const BONE_ENTITY* pEntity);
 
 	//! Performs post-initialization. This step is requred to initialize the pPhysGeom of the bones
 	//! After the bone has been loaded but before it is first used. When the bone is first loaded, pPhysGeom
@@ -159,7 +159,7 @@ protected:
 	//!	NOTE:
 	//!	The entries of the map that were used are deleted
 	typedef std::map<INT_PTR, struct phys_geometry*> ChunkIdToPhysGeomMap;
-	bool PostInitPhysGeom (ChunkIdToPhysGeomMap& mapChunkIdToPhysGeom, int nLodLevel);
+	bool PostInitPhysGeom(ChunkIdToPhysGeomMap& mapChunkIdToPhysGeom, int nLodLevel);
 
 	friend class CryBoneHierarchyLoader;
 

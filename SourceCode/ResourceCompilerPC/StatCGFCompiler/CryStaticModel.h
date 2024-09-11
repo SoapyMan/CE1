@@ -24,42 +24,42 @@ class CGeom;
 struct LightInstance
 {
 	LIGHT_CHUNK_DESC Chunk;
-  Vec3d vPos;
-  char szName[64];
-  struct ITexPic * pLightImage;
+	Vec3d vPos;
+	char szName[64];
+	struct ITexPic* pLightImage;
 };
 
 struct HelperInstance
 {
 	HELPER_CHUNK_DESC Chunk;
-  char szName[64];
+	char szName[64];
 	Matrix44 tMat;
 };
 
 class CXFile;
 
-struct CryStaticModel 
+struct CryStaticModel
 {
-	CryStaticModel();	
+	CryStaticModel();
 	~CryStaticModel();
 
-  char m_FileName[256];
+	char m_FileName[256];
 
-  list2<CGeom*>          m_lstGeoms;
-  list2<MAT_ENTITY>      m_lstMaterials;	  
+	list2<CGeom*>          m_lstGeoms;
+	list2<MAT_ENTITY>      m_lstMaterials;
 	list2<NAME_ENTITY>     m_lstGeomNames;
-  list2<LightInstance>   m_lstLights;	
-  list2<HelperInstance>  m_lstHelpers;	
+	list2<LightInstance>   m_lstLights;
+	list2<HelperInstance>  m_lstHelpers;
 
-  bool OnLoadgeom(char * filename, const char * geom_name, bool bLoadMats, bool bKeepInLocalSpace);
+	bool OnLoadgeom(char* filename, const char* geom_name, bool bLoadMats, bool bKeepInLocalSpace);
 
-  float m_fBoundingRadius;
-  float m_fCenterZ;
+	float m_fBoundingRadius;
+	float m_fCenterZ;
 
-  void LoadMaterials(CXFile*f, int pos);
+	void LoadMaterials(CXFile* f, int pos);
 	int m_nNewObjs;
-  CBaseObj ** m_ppNewObjs;
-	ILog * m_pLog;
+	CBaseObj** m_ppNewObjs;
+	ILog* m_pLog;
 };
 
 // timers that are used for precision very low cost profiling of load times

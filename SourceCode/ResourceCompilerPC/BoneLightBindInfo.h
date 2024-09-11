@@ -34,26 +34,28 @@ struct CBoneLightBindDesc
 //////////////////////////////////////////////////////////////////////////
 // the structure describing binding of a light to a bone.
 // refers to the bone by the id, and contains the whole info about the ligtht
-class CBoneLightBindInfo: public CBoneLightBindDesc
+class CBoneLightBindInfo : public CBoneLightBindDesc
 {
 public:
 	CBoneLightBindInfo()
-	{m_nBone = 0;}
+	{
+		m_nBone = 0;
+	}
 
 	// initializes this from the structures found in the cgf file
-	void load (const SBoneLightBind&, const LIGHT_CHUNK_DESC&, const char* szLightName, float fScale);
+	void load(const SBoneLightBind&, const LIGHT_CHUNK_DESC&, const char* szLightName, float fScale);
 
-	void scale (float fScale);
+	void scale(float fScale);
 
 	// returns the index of the bone to which the light source is bound
-	unsigned getBone() const {return m_nBone;}
+	unsigned getBone() const { return m_nBone; }
 
 	// initializes the given DLight structure out of the given bone instance
 	// this is one-time call that is only required after construction of the DLight to initialize its constant parameters
-	void initDLight (CDLight& DLight);
+	void initDLight(CDLight& DLight);
 
 	// per-frame update of the DLight structure. Updates the light position and radius
-	void updateDLight (const Matrix44& matParentBone, float fRadiusMultiplier, CDLight& DLight);
+	void updateDLight(const Matrix44& matParentBone, float fRadiusMultiplier, CDLight& DLight);
 
 	// returns true if this light source is local (affects only the character)
 	bool isLocal()const;
@@ -73,9 +75,9 @@ public:
 	// if the buffer is NULL, and bSave is true, returns the required buffer size
 	// otherwise, tries to save/load from the buffer, returns the number of bytes written/read
 	// or 0 if the buffer is too small or some error occured
-	unsigned Serialize (bool bSave, void* pBuffer, unsigned nSize);
+	unsigned Serialize(bool bSave, void* pBuffer, unsigned nSize);
 
-	const char* getLightImageCStr()const {return m_strLightImage.c_str();}
+	const char* getLightImageCStr()const { return m_strLightImage.c_str(); }
 protected:
 	string m_strLightImage; //spot light texture
 

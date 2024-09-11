@@ -3,30 +3,30 @@
 
 #include "CrySkinBuilderBase.h"
 
-class CrySkinBasisBuilder: public CrySkinBuilderBase0
+class CrySkinBasisBuilder : public CrySkinBuilderBase0
 {
 public:
-	CrySkinBasisBuilder (const ICrySkinSource* pGeometry, const Matrix44* pMatInvDef, unsigned numBones);
+	CrySkinBasisBuilder(const ICrySkinSource* pGeometry, const Matrix44* pMatInvDef, unsigned numBones);
 
 	// sets the destination vertex interval to operate on. Initially, this is infinity.
 	// The destination vertex interval is the interval within which the destination vertex
 	// index must lie in order to be skinned. The base of the interval is considered
 	// vertex 0 in the produced skinner
-	void setDestinationInterval (unsigned nBegin, unsigned nEnd);
+	void setDestinationInterval(unsigned nBegin, unsigned nEnd);
 
 	// initializes the given rigid basis builder
-	void initRigidBasisSkin (class CrySkinRigidBasis* pSkin);
+	void initRigidBasisSkin(class CrySkinRigidBasis* pSkin);
 protected:
 
 	// calculate the number of used bones and the skip-bone
 	void preprocess();
 
 	// makes up the basis array
-	void makeBoneBases ();
+	void makeBoneBases();
 
 	// fills the given bases to the simple stream
 	typedef std::vector< CrySkinRigidBaseInfo > CrySkinRigidBasisArray;
-  void fillGroup (CrySkinStreams& stream, const CrySkinRigidBasisArray& arrBases);
+	void fillGroup(CrySkinStreams& stream, const CrySkinRigidBasisArray& arrBases);
 protected:
 	// the bone info, from which we'll extract the default position
 	const Matrix44* m_pMatInvDef;
@@ -37,10 +37,10 @@ protected:
 	{
 		CrySkinRigidBasisArray arrRight;// unflipped, Normal  = Tang ^ Binorm
 		CrySkinRigidBasisArray arrLeft; // flipped, Normal = Binorm ^ Tang
-		void reserve (unsigned numReserve)
+		void reserve(unsigned numReserve)
 		{
-			arrRight.reserve (numReserve/2);
-			arrLeft.reserve (numReserve/2);
+			arrRight.reserve(numReserve / 2);
+			arrLeft.reserve(numReserve / 2);
 		}
 	};
 	typedef std::vector<BoneBasisGroup> BoneBasisGroupArray;
@@ -56,7 +56,7 @@ protected:
 
 	/*
 	unsigned m_nFlags;
-	
+
 	enum
 	{
 		flagForSSE = 1// if this is set, then the skin is constructed for SSE usage
