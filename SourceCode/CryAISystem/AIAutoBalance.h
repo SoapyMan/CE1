@@ -13,7 +13,7 @@ class CAIAutoBalance : public IAutoBalance
 
 	float m_fLastPlayerDeathTime;
 	float m_fTotalTimeStart;
-	
+
 	AIBalanceStats m_Stats;
 
 	VectorOfFloats m_vEnemyLifetimes;
@@ -42,15 +42,15 @@ public:
 	void RegisterEnemyLifetime(float fLifeInSeconds);
 	void SetAllowedDeathCount(int nDeaths);
 	void Checkpoint();
-	void DebugDraw(IRenderer * pRenderer);
+	void DebugDraw(IRenderer* pRenderer);
 	void SetMultipliers(float fAccuracy, float fAggression, float fHealth);
-	void GetMultipliers(float & fAccuracy, float & fAggression, float & fHealth);
-	void AdjustDifficulty(bool bCalcDeath=true);
-	void Clamp(float & fVal);
+	void GetMultipliers(float& fAccuracy, float& fAggression, float& fHealth);
+	void AdjustDifficulty(bool bCalcDeath = true);
+	void Clamp(float& fVal);
 	void RegisterPlayerFire(int nShots);
 	void RegisterPlayerHit();
 	void CalcMinimum(void);
-	void GetAutobalanceStats(AIBalanceStats & stats);
+	void GetAutobalanceStats(AIBalanceStats& stats);
 	void RegisterVehicleDestroyed(void);
 };
 

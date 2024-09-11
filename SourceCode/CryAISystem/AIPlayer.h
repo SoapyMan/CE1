@@ -3,20 +3,20 @@
 
 #include "AIObject.h"
 
-class CAIPlayer :	public CAIObject
+class CAIPlayer : public CAIObject
 {
 
 	float m_fMaxPerception;
 	float m_fLastPerceptionSnapshot;
-	IUnknownProxy *m_pProxy;
+	IUnknownProxy* m_pProxy;
 
 	bool m_bSendPerceptionResetNotification;
 
 public:
 	CAIPlayer(void);
 	~CAIPlayer(void);
-	void ParseParameters(const AIObjectParameters & params);
-	bool CanBeConvertedTo(unsigned short type, void ** pConverted);
+	void ParseParameters(const AIObjectParameters& params);
+	bool CanBeConvertedTo(unsigned short type, void** pConverted);
 
 	AgentParameters		m_Parameters;
 	void RegisterPerception(float fValue);

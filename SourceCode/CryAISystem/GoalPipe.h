@@ -43,35 +43,35 @@ typedef std::vector<QGoal> GoalQueue;
 class CGoalPipe : public IGoalPipe
 {
 
-	CAISystem			*m_pAISystem;
+	CAISystem* m_pAISystem;
 
 	GoalQueue			m_qGoalPipe;
 
-	
+
 	unsigned int		m_nPosition;	// position in pipe
-	CGoalPipe			*m_pSubPipe;
-	
+	CGoalPipe* m_pSubPipe;
+
 public:
 	void Reset();
-	CGoalPipe * Clone();
-	CGoalPipe(const string &name, CAISystem *pAISystem);
+	CGoalPipe* Clone();
+	CGoalPipe(const string& name, CAISystem* pAISystem);
 	virtual ~CGoalPipe();
 
 	// IGoalPipe
-	void PushGoal(const string &pName, bool bBlocking,GoalParameters &params);
+	void PushGoal(const string& pName, bool bBlocking, GoalParameters& params);
 
-	GoalPointer PopGoal(bool &blocking, string &name, GoalParameters &params,CPipeUser *pOperand);
+	GoalPointer PopGoal(bool& blocking, string& name, GoalParameters& params, CPipeUser* pOperand);
 
 	string		m_sName;		// name of this pipe
-	CAIObject			*m_pArgument;
+	CAIObject* m_pArgument;
 	// Makes the IP of this pipe jump to the desired position
 	void Jump(int position);
 	bool IsInSubpipe(void);
-	CGoalPipe * GetSubpipe(void);
-	void SetSubpipe(CGoalPipe * pPipe);
+	CGoalPipe* GetSubpipe(void);
+	void SetSubpipe(CGoalPipe* pPipe);
 	size_t MemStats();
-	int GetPosition() { return m_nPosition;}
-	void SetPosition(int iNewPos) { if ((iNewPos>0) && (iNewPos<(m_qGoalPipe.size()))) m_nPosition=iNewPos;}
+	int GetPosition() { return m_nPosition; }
+	void SetPosition(int iNewPos) { if ((iNewPos > 0) && (iNewPos < (m_qGoalPipe.size()))) m_nPosition = iNewPos; }
 };
 
 #endif // !defined(AFX_GOALPIPE_H__12BD0344_3B3F_4B55_8500_25581ECF7ACC__INCLUDED_)

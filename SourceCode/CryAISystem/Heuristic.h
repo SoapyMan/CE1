@@ -12,26 +12,26 @@
 
 class CGraph;
 
-class CHeuristic  
+class CHeuristic
 {
 	//GameNodeData	m_BaseValues;
 public:
 	CHeuristic(/*const GameNodeData &basevalues*/);
 	virtual ~CHeuristic();
 
-	virtual float Estimate(GraphNode *pNode, CGraph* graph );
+	virtual float Estimate(GraphNode* pNode, CGraph* graph);
 };
 
 class CStandardHeuristic : public CHeuristic
 {
 public:
-	float Estimate(GraphNode *pNode, CGraph* graph);
+	float Estimate(GraphNode* pNode, CGraph* graph);
 };
 
 class CVehicleHeuristic : public CHeuristic
 {
 public:
-	float Estimate(GraphNode *pNode, CGraph* graph);
+	float Estimate(GraphNode* pNode, CGraph* graph);
 };
 
 

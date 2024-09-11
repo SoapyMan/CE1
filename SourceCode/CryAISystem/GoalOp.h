@@ -24,15 +24,15 @@ class CPipeUser;
 
 #include <string>
 
-class CGoalOp  
+class CGoalOp
 {
 public:
 	CGoalOp();
 	virtual ~CGoalOp();
 
-	virtual bool Execute(CPipeUser *pOperand) {return true;}
-	virtual int XMLExport( const char *pBuffer) {return 0;}
-	virtual void Reset(CPipeUser *pOperand) {}
+	virtual bool Execute(CPipeUser* pOperand) { return true; }
+	virtual int XMLExport(const char* pBuffer) { return 0; }
+	virtual void Reset(CPipeUser* pOperand) {}
 };
 
 ////////////////////////////////////////////////////////////
@@ -41,17 +41,17 @@ public:
 //
 ////////////////////////////////////////////////////////
 
-class COPAcqTarget: public CGoalOp
+class COPAcqTarget : public CGoalOp
 {
-	
+
 public:
-	COPAcqTarget(CAIObject *pTarget);
+	COPAcqTarget(CAIObject* pTarget);
 	~COPAcqTarget();
 
-	CAIObject *m_pTarget;
+	CAIObject* m_pTarget;
 
-	bool Execute(CPipeUser *pOperand);
-	int XMLExport(const char *pBuffer);
+	bool Execute(CPipeUser* pOperand);
+	int XMLExport(const char* pBuffer);
 };
 
 
@@ -62,29 +62,29 @@ public:
 ////////////////////////////////////////////////////////
 class COPPathFind;
 class COPTrace;
-class COPApproach: public CGoalOp
+class COPApproach : public CGoalOp
 {
 
 	float m_fLastDistance;
-	CAIObject *m_pTempTarget;
+	CAIObject* m_pTempTarget;
 	float m_fInitialDistance;
 	bool	m_bPercent;
 	bool	m_bUseLastOpResalt;
 	char	m_nTicks;
-	COPTrace		*m_pTraceDirective;
-	COPPathFind		*m_pPathfindDirective;
+	COPTrace* m_pTraceDirective;
+	COPPathFind* m_pPathfindDirective;
 
 	float	m_fTime;
-	
+
 public:
-	COPApproach(float distance, bool percent = false, bool useLastOpResalt = false );
+	COPApproach(float distance, bool percent = false, bool useLastOpResalt = false);
 	~COPApproach();
 
 	float m_fDistance;
 
-	bool Execute(CPipeUser *pOperand);
-	int XMLExport(const char *pBuffer);
-	void Reset(CPipeUser *pOperand);
+	bool Execute(CPipeUser* pOperand);
+	int XMLExport(const char* pBuffer);
+	void Reset(CPipeUser* pOperand);
 };
 
 ////////////////////////////////////////////////////////////
@@ -92,7 +92,7 @@ public:
 //				BACKOFF - makes agent back off to "distance" from current att target
 //
 ////////////////////////////////////////////////////////
-class COPBackoff: public CGoalOp
+class COPBackoff : public CGoalOp
 {
 	bool m_bPercent;
 	bool m_bBackingOff;
@@ -104,8 +104,8 @@ public:
 
 	float m_fDistance;
 
-	bool Execute(CPipeUser *pOperand);
-	int XMLExport(const char *pBuffer);
+	bool Execute(CPipeUser* pOperand);
+	int XMLExport(const char* pBuffer);
 };
 
 ////////////////////////////////////////////////////////////
@@ -113,22 +113,22 @@ public:
 //				TIMEOUT - counts down a timer...
 //
 ////////////////////////////////////////////////////////
-class COPTimeout: public CGoalOp
+class COPTimeout : public CGoalOp
 {
 
-	ITimer	*m_pTimer;
+	ITimer* m_pTimer;
 	float		m_fCount;
 	float		m_fLastTime;
 public:
-	COPTimeout(float interval, ITimer *pTimer, float interval_end = 0);
+	COPTimeout(float interval, ITimer* pTimer, float interval_end = 0);
 	~COPTimeout();
 
-	float m_fInterval;	
-	float m_fIntervalCurrent;	
-	float m_fIntervalEnd;	
+	float m_fInterval;
+	float m_fIntervalCurrent;
+	float m_fIntervalEnd;
 
-	bool Execute(CPipeUser *pOperand);
-	int XMLExport(const char *pBuffer);
+	bool Execute(CPipeUser* pOperand);
+	int XMLExport(const char* pBuffer);
 };
 
 ////////////////////////////////////////////////////////////
@@ -136,20 +136,20 @@ public:
 //				STRAFE makes agent strafe left or right (1,-1)... 0 stops strafing
 //
 ////////////////////////////////////////////////////////
-class COPStrafe: public CGoalOp
+class COPStrafe : public CGoalOp
 {
-	
+
 public:
 	COPStrafe(float distance);
 	~COPStrafe();
 
-	float m_fDistance,m_fRemainingDistance,m_fLastRemainingDistance;
+	float m_fDistance, m_fRemainingDistance, m_fLastRemainingDistance;
 	bool m_bPositionSnapshotTaken;
 	Vec3d m_vTargetPos;
 	Vec3d m_vStartPos;
 
-	bool Execute(CPipeUser *pOperand);
-	int XMLExport(const char *pBuffer){return 0;}
+	bool Execute(CPipeUser* pOperand);
+	int XMLExport(const char* pBuffer) { return 0; }
 };
 
 ////////////////////////////////////////////////////////////
@@ -157,9 +157,9 @@ public:
 //				FIRECMD - 1 allowes agent to fire, 0 forbids agent to fire
 //
 ////////////////////////////////////////////////////////
-class COPFireCmd: public CGoalOp
+class COPFireCmd : public CGoalOp
 {
-	
+
 public:
 	COPFireCmd(bool AllowedToFire, bool bSmartFire);
 	~COPFireCmd();
@@ -167,8 +167,8 @@ public:
 	bool m_bAllowedToFire;
 	bool m_bSmartFire;
 
-	bool Execute(CPipeUser *pOperand);
-	int XMLExport(const char *pBuffer);
+	bool Execute(CPipeUser* pOperand);
+	int XMLExport(const char* pBuffer);
 };
 
 ////////////////////////////////////////////////////////////
@@ -176,16 +176,16 @@ public:
 //				BODYCMD - controls agents stance (0- stand, 1-crouch, 2-prone)
 //
 ////////////////////////////////////////////////////////
-class COPBodyCmd: public CGoalOp
+class COPBodyCmd : public CGoalOp
 {
 public:
 	COPBodyCmd(int bodystate);
-	~COPBodyCmd(){}
+	~COPBodyCmd() {}
 
 	int m_nBodyState;
 
-	bool Execute(CPipeUser *pOperand);
-	int XMLExport(const char *pBuffer);
+	bool Execute(CPipeUser* pOperand);
+	int XMLExport(const char* pBuffer);
 };
 
 ////////////////////////////////////////////////////////////
@@ -193,7 +193,7 @@ public:
 //				RUNCMD - makes the agent run if 1, walk if 0
 //
 ////////////////////////////////////////////////////////
-class COPRunCmd: public CGoalOp
+class COPRunCmd : public CGoalOp
 {
 public:
 	COPRunCmd(bool running);
@@ -201,8 +201,8 @@ public:
 
 	bool m_bRunning;
 
-	bool Execute(CPipeUser *pOperand);
-	int XMLExport(const char *pBuffer);
+	bool Execute(CPipeUser* pOperand);
+	int XMLExport(const char* pBuffer);
 };
 
 /*
@@ -230,16 +230,16 @@ public:
 ////////////////////////////////////////////////////////
 class COPLookAround : public CGoalOp
 {
-	CAIObject *m_pDummyAttTarget;
+	CAIObject* m_pDummyAttTarget;
 	float m_fLastDot;
 	float m_fMaximumAngle;
 public:
-	void Reset(CPipeUser *pOperand);
-	COPLookAround(float maximum) {m_pDummyAttTarget=0; m_fMaximumAngle = maximum;}
+	void Reset(CPipeUser* pOperand);
+	COPLookAround(float maximum) { m_pDummyAttTarget = 0; m_fMaximumAngle = maximum; }
 	~COPLookAround();
 
-	bool Execute(CPipeUser *pOperand);
-	int XMLExport(const char *pBuffer);
+	bool Execute(CPipeUser* pOperand);
+	int XMLExport(const char* pBuffer);
 };
 
 
@@ -250,15 +250,15 @@ public:
 ////////////////////////////////////////////////////////
 class COPPathFind : public CGoalOp
 {
-	IAIObject *m_pTarget;
+	IAIObject* m_pTarget;
 	string m_sPathName;
 	bool m_bWaitingForResult;
 public:
-	COPPathFind(const char *szName, IAIObject *pTarget = 0) { m_pTarget = pTarget; m_bWaitingForResult =false;m_sPathName = szName; }
+	COPPathFind(const char* szName, IAIObject* pTarget = 0) { m_pTarget = pTarget; m_bWaitingForResult = false; m_sPathName = szName; }
 	~COPPathFind() {}
 
-	bool Execute(CPipeUser *pOperand);
-	int XMLExport(const char *pBuffer);
+	bool Execute(CPipeUser* pOperand);
+	int XMLExport(const char* pBuffer);
 };
 
 
@@ -272,11 +272,11 @@ class COPLocate : public CGoalOp
 	string m_sName;
 	unsigned int m_nObjectType;
 public:
-	COPLocate(const char *szName, unsigned int ot = 0) { if (szName) m_sName = szName;m_nObjectType = ot;}
+	COPLocate(const char* szName, unsigned int ot = 0) { if (szName) m_sName = szName; m_nObjectType = ot; }
 	~COPLocate() {}
 
-	bool Execute(CPipeUser *pOperand);
-	int XMLExport(const char *pBuffer);
+	bool Execute(CPipeUser* pOperand);
+	int XMLExport(const char* pBuffer);
 };
 
 ////////////////////////////////////////////////////////////
@@ -296,16 +296,16 @@ class COPTrace : public CGoalOp
 
 public:
 
-	CAIObject *m_pNavTarget;
+	CAIObject* m_pNavTarget;
 
-	void Reset(CPipeUser *pOperand);
-	COPTrace( bool bExact, float fDistance = 0, bool bSingleStep = false) { m_pNavTarget = 0; bExactFollow = bExact;m_fDistance = fDistance;m_bSingleStep = bSingleStep;}
+	void Reset(CPipeUser* pOperand);
+	COPTrace(bool bExact, float fDistance = 0, bool bSingleStep = false) { m_pNavTarget = 0; bExactFollow = bExact; m_fDistance = fDistance; m_bSingleStep = bSingleStep; }
 	~COPTrace() {}
 
-	bool Execute(CPipeUser *pOperand);
-	int XMLExport(const char *pBuffer);
+	bool Execute(CPipeUser* pOperand);
+	int XMLExport(const char* pBuffer);
 protected:
-	void CreateDummyFromNode(const Vec3d &pos, CAISystem *pSystem);
+	void CreateDummyFromNode(const Vec3d& pos, CAISystem* pSystem);
 };
 
 ////////////////////////////////////////////////////////////
@@ -317,11 +317,11 @@ class COPIgnoreAll : public CGoalOp
 {
 	bool	m_bParam;
 public:
-	COPIgnoreAll(bool param) { m_bParam = param;}
+	COPIgnoreAll(bool param) { m_bParam = param; }
 	~COPIgnoreAll() {}
 
-	bool Execute(CPipeUser *pOperand);
-	int XMLExport(const char *pBuffer);
+	bool Execute(CPipeUser* pOperand);
+	int XMLExport(const char* pBuffer);
 };
 
 
@@ -335,14 +335,14 @@ class COPSignal : public CGoalOp
 	int m_nSignalID;
 	string m_sSignal;
 	unsigned char m_cFilter;
-	CAIObject *m_pTarget;
+	CAIObject* m_pTarget;
 	bool m_bSent;
 public:
-	COPSignal(int param, const char *szSignal, unsigned char cFilter) { m_bSent = false;m_nSignalID = param;m_pTarget=0;m_cFilter = cFilter;m_sSignal = szSignal;}
+	COPSignal(int param, const char* szSignal, unsigned char cFilter) { m_bSent = false; m_nSignalID = param; m_pTarget = 0; m_cFilter = cFilter; m_sSignal = szSignal; }
 	~COPSignal() {}
 
-	bool Execute(CPipeUser *pOperand);
-	int XMLExport(const char *pBuffer);
+	bool Execute(CPipeUser* pOperand);
+	int XMLExport(const char* pBuffer);
 };
 
 
@@ -355,11 +355,11 @@ class COPDeValue : public CGoalOp
 {
 	bool bDevaluePuppets;
 public:
-	COPDeValue(int nPuppetsAlso = 0) { bDevaluePuppets = (nPuppetsAlso!=0);}
+	COPDeValue(int nPuppetsAlso = 0) { bDevaluePuppets = (nPuppetsAlso != 0); }
 	~COPDeValue() {}
 
-	bool Execute(CPipeUser *pOperand);
-	int XMLExport(const char *pBuffer);
+	bool Execute(CPipeUser* pOperand);
+	int XMLExport(const char* pBuffer);
 };
 
 ////////////////////////////////////////////////////////////
@@ -374,8 +374,8 @@ public:
 	COPForget() {}
 	~COPForget() {}
 
-	bool Execute(CPipeUser *pOperand);
-	int XMLExport(const char *pBuffer);
+	bool Execute(CPipeUser* pOperand);
+	int XMLExport(const char* pBuffer);
 };
 
 
@@ -386,23 +386,23 @@ public:
 ////////////////////////////////////////////////////////
 class COPHide : public CGoalOp
 {
-	CAIObject *m_pHideTarget;
-	COPApproach *m_pApproach;
+	CAIObject* m_pHideTarget;
+	COPApproach* m_pApproach;
 	Vec3d m_vHidePos;
 	Vec3d m_vLastPos;
 	float m_fSearchDistance;
 	int		m_nEvaluationMethod;
-	COPPathFind *m_pPathFindDirective;
-	COPTrace *m_pTraceDirective;
+	COPPathFind* m_pPathFindDirective;
+	COPTrace* m_pTraceDirective;
 	bool m_bLookAtHide;
 	char m_nTicks;
 	bool m_bAttTarget;
 	bool m_bEndEffect;
 
 public:
-	COPHide(float distance, int method, bool bExact) 
+	COPHide(float distance, int method, bool bExact)
 	{
-		m_fSearchDistance=distance; m_nEvaluationMethod = method; m_pHideTarget=0;
+		m_fSearchDistance = distance; m_nEvaluationMethod = method; m_pHideTarget = 0;
 		m_pPathFindDirective = 0;
 		m_pTraceDirective = 0;
 		m_bLookAtHide = bExact;
@@ -410,10 +410,10 @@ public:
 	}
 	~COPHide() {}
 
-	bool Execute(CPipeUser *pOperand);
-	int XMLExport(const char *pBuffer);
-	void Reset(CPipeUser *pOperand);
-	bool IsBadHiding(CPipeUser *pOperand);
+	bool Execute(CPipeUser* pOperand);
+	int XMLExport(const char* pBuffer);
+	void Reset(CPipeUser* pOperand);
+	bool IsBadHiding(CPipeUser* pOperand);
 };
 
 
@@ -427,11 +427,11 @@ class COPStick : public CGoalOp
 	float m_fDistance;
 	bool m_bGroup;
 public:
-	COPStick(float dist,bool bGroup) { m_fDistance=dist;m_bGroup = bGroup;}
+	COPStick(float dist, bool bGroup) { m_fDistance = dist; m_bGroup = bGroup; }
 	~COPStick() {}
 
-	bool Execute(CPipeUser *pOperand);
-	int XMLExport(const char *pBuffer);
+	bool Execute(CPipeUser* pOperand);
+	int XMLExport(const char* pBuffer);
 };
 
 
@@ -443,13 +443,13 @@ public:
 class COPForm : public CGoalOp
 {
 	string m_sName;
-	
+
 public:
-	COPForm(const char *name) { m_sName = name;}
+	COPForm(const char* name) { m_sName = name; }
 	~COPForm() {}
 
-	bool Execute(CPipeUser *pOperand);
-	int XMLExport(const char *pBuffer){return 0;}
+	bool Execute(CPipeUser* pOperand);
+	int XMLExport(const char* pBuffer) { return 0; }
 };
 
 
@@ -461,15 +461,15 @@ public:
 class COPClear : public CGoalOp
 {
 	string m_sName;
-	
+
 public:
 	COPClear() {}
 	~COPClear() {}
 
-	bool Execute(CPipeUser *pOperand);
+	bool Execute(CPipeUser* pOperand);
 
 #if !defined(LINUX)
-	int XMLExport(const char *pBuffer);
+	int XMLExport(const char* pBuffer);
 #endif
 };
 
@@ -483,15 +483,15 @@ class COPLookAt : public CGoalOp
 {
 	float m_fStartAngle;
 	float m_fEndAngle;
-	CAIObject *m_pDummyAttTarget;
+	CAIObject* m_pDummyAttTarget;
 	float m_fLastDot;
-	
+
 public:
-	COPLookAt(float startangle, float endangle) {m_fStartAngle = startangle; m_fEndAngle = endangle;m_pDummyAttTarget=0;}
+	COPLookAt(float startangle, float endangle) { m_fStartAngle = startangle; m_fEndAngle = endangle; m_pDummyAttTarget = 0; }
 	~COPLookAt() {}
 
-	bool Execute(CPipeUser *pOperand);
-	int XMLExport(const char *pBuffer){return 0;}
+	bool Execute(CPipeUser* pOperand);
+	int XMLExport(const char* pBuffer) { return 0; }
 };
 
 
@@ -502,7 +502,7 @@ public:
 ////////////////////////////////////////////////////////
 class COPJumpCmd : public CGoalOp
 {
-	CAIObject *m_pJumpTarget;
+	CAIObject* m_pJumpTarget;
 	Vec3d m_vJumpPos;
 	Vec3d m_vLastPos;
 	float m_fSearchDistance;
@@ -513,17 +513,17 @@ class COPJumpCmd : public CGoalOp
 	float m_fJumpAngleInRadians;
 
 public:
-	COPJumpCmd(float distance, int method, bool bExact, float fJumpAngle) 
+	COPJumpCmd(float distance, int method, bool bExact, float fJumpAngle)
 	{
-		m_fSearchDistance=distance; m_nEvaluationMethod = method; m_pJumpTarget=0;
+		m_fSearchDistance = distance; m_nEvaluationMethod = method; m_pJumpTarget = 0;
 		m_bJustCalculate = bExact;
-		m_fJumpAngleInRadians = fJumpAngle*3.1415926f/180.f;
+		m_fJumpAngleInRadians = fJumpAngle * 3.1415926f / 180.f;
 	}
 	~COPJumpCmd() {}
 
-	bool Execute(CPipeUser *pOperand);
-	int XMLExport(const char *pBuffer);
-	void Reset(CPipeUser *pOperand);
+	bool Execute(CPipeUser* pOperand);
+	int XMLExport(const char* pBuffer);
+	void Reset(CPipeUser* pOperand);
 };
 
 
@@ -533,18 +533,18 @@ public:
 //				HELLYADV - helicopter chooses the next point for attack - puts it into LastOpResult
 //
 ////////////////////////////////////////////////////////
-class COPHeliAdv: public CGoalOp
+class COPHeliAdv : public CGoalOp
 {
-	
+
 public:
 	COPHeliAdv();
 	~COPHeliAdv();
 
 	float m_fDistance;
 
-	bool Execute(CPipeUser *pOperand);
-	int XMLExport(const char *pBuffer);
-	void Reset(CPipeUser *pOperand);
+	bool Execute(CPipeUser* pOperand);
+	int XMLExport(const char* pBuffer);
+	void Reset(CPipeUser* pOperand);
 };
 
 

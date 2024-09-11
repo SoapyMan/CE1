@@ -18,7 +18,7 @@
 class CPuppet;
 
 class CAIVehicle :
-//	public CPipeUser, IVehicle
+	//	public CPipeUser, IVehicle
 	public CPuppet
 {
 public:
@@ -26,47 +26,47 @@ public:
 	~CAIVehicle(void);
 
 	void Update();
-	void Steer(const Vec3d & vTargetPos, GraphNode * pNode);
-//	void UpdateVehicleInternalState();
-	void Navigate(CAIObject *pTarget);
-	void Event(unsigned short eType, SAIEVENT *pEvent);
+	void Steer(const Vec3d& vTargetPos, GraphNode* pNode);
+	//	void UpdateVehicleInternalState();
+	void Navigate(CAIObject* pTarget);
+	void Event(unsigned short eType, SAIEVENT* pEvent);
 
 	void Reset(void);
-	void ParseParameters(const AIObjectParameters &params);
-	void OnObjectRemoved(CAIObject *pObject);
+	void ParseParameters(const AIObjectParameters& params);
+	void OnObjectRemoved(CAIObject* pObject);
 
-	bool CanBeConvertedTo(unsigned short type, void **pConverted);
+	bool CanBeConvertedTo(unsigned short type, void** pConverted);
 
-	void	SetParameters(AgentParameters & sParams);
-	AgentParameters GetPuppetParameters() { return GetParameters();}
-	void SetPuppetParameters(AgentParameters &pParams) { SetParameters(pParams);}
+	void	SetParameters(AgentParameters& sParams);
+	AgentParameters GetPuppetParameters() { return GetParameters(); }
+	void SetPuppetParameters(AgentParameters& pParams) { SetParameters(pParams); }
 
 	void SetVehicleType(unsigned short type) { m_VehicleType = type; }
-	unsigned short GetVehicleType( ) { return m_VehicleType; }
+	unsigned short GetVehicleType() { return m_VehicleType; }
 
 	void UpdateThread();
 
 	virtual IUnknownProxy* GetProxy() { return m_pProxy; };
 	void Bind(IAIObject* bind);
-	void Unbind( );
-//	IAIObject* GetBound( )  { return m_Gunner; }
-//	void	SetGunner( IAIObject *pGunner );				//CPuppet	*gunner);
-//	void Event(unsigned short eType, SAIEVENT *pEvent);
+	void Unbind();
+	//	IAIObject* GetBound( )  { return m_Gunner; }
+	//	void	SetGunner( IAIObject *pGunner );				//CPuppet	*gunner);
+	//	void Event(unsigned short eType, SAIEVENT *pEvent);
 
-	IVehicleProxy	*m_pProxy;
+	IVehicleProxy* m_pProxy;
 
-	CAIObject		*m_Threat;
+	CAIObject* m_Threat;
 
 private:
 
 	unsigned short m_VehicleType;
 
-	CPuppet	*m_Gunner;
+	CPuppet* m_Gunner;
 
 public:
 	void AlertPuppets(void);
-	void Save(CStream & stm);
-	void Load(CStream & stm);
+	void Save(CStream& stm);
+	void Load(CStream& stm);
 };
 
 #endif

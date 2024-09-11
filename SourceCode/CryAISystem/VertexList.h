@@ -13,17 +13,17 @@ class CVertexList
 public:
 	CVertexList(void);
 	~CVertexList(void);
-	int AddVertex(const ObstacleData & od);
+	int AddVertex(const ObstacleData& od);
 
 	const ObstacleData GetVertex(int index);
-	ObstacleData &ModifyVertex(int index);
-	int FindVertex(const ObstacleData & od);
+	ObstacleData& ModifyVertex(int index);
+	int FindVertex(const ObstacleData& od);
 
-	void WriteToFile( CCryFile& file );
-	void ReadFromFile( class CCryFile &file );
+	void WriteToFile(CCryFile& file);
+	void ReadFromFile(class CCryFile& file);
 
-	void Clear() {m_vList.clear();}
-	int GetSize() {return m_vList.size();}
+	void Clear() { m_vList.clear(); }
+	int GetSize() { return m_vList.size(); }
 };
 
 #endif // #ifndef _VERTEX_LIST_

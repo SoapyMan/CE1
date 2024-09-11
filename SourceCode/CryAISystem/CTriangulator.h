@@ -6,23 +6,23 @@
 
 typedef struct Vtx
 {
-	float x,y,z;
-	void *pForeign;
+	float x, y, z;
+	void* pForeign;
 	std::vector<int> m_lstTris;	// triangles that contain this point
 	bool bImportant;
 
-	bool operator==(const Vtx &other)
+	bool operator==(const Vtx& other)
 	{
-		float dist2 = ((x-other.x)*(x-other.x) + (y-other.y)*(y-other.y) + (z-other.z)*(z-other.z));
-		if (dist2<0.7)
+		float dist2 = ((x - other.x) * (x - other.x) + (y - other.y) * (y - other.y) + (z - other.z) * (z - other.z));
+		if (dist2 < 0.7)
 			return true;
 
-		if ( (fabs(x-other.x)<0.0001) && (fabs(y-other.y)<0.0001) )
+		if ((fabs(x - other.x) < 0.0001) && (fabs(y - other.y) < 0.0001))
 			return true;
 
 		return false;
 	}
-} Vtx; 
+} Vtx;
 
 
 typedef struct Tri
@@ -31,25 +31,25 @@ typedef struct Tri
 	Vtx center;
 	float radius;
 
-	void *outsider;
+	void* outsider;
 
 	Tri()
 	{
 		outsider = 0;
 	}
-	
+
 } Tri;
 
 #if defined(__MWERKS__) || defined(LINUX)
-struct POINT {int x,y; };
+struct POINT { int x, y; };
 #endif
 
 typedef struct tagMyPoint : public POINT
 {
-	struct tagMyPoint *next;
-	bool operator==(const tagMyPoint &other)
+	struct tagMyPoint* next;
+	bool operator==(const tagMyPoint& other)
 	{
-		 return ( (this->x == other.x) && (this->y == other.y));
+		return ((this->x == other.x) && (this->y == other.y));
 	}
 } MYPOINT;
 
@@ -63,15 +63,15 @@ extern int g_lajno;
 class CTriangulator
 {
 
-	
+
 	VARRAY		m_vProcessed;
 	TARRAY		m_vTriangles;
 	std::list<MYPOINT>	m_lstUnique;
-	
+
 
 
 public:
-	void CalcCircle(const Vtx &v1, const Vtx &v2, const Vtx &v3,  Tri *pTri);
+	void CalcCircle(const Vtx& v1, const Vtx& v2, const Vtx& v3, Tri* pTri);
 
 	CTriangulator();
 	~CTriangulator();
@@ -80,16 +80,16 @@ public:
 	Vtx m_vtxBBoxMin;
 	Vtx m_vtxBBoxMax;
 
-	int AddVertex(float x, float y,float z, void *pForeign,bool bImportant = false);
+	int AddVertex(float x, float y, float z, void* pForeign, bool bImportant = false);
 	bool Triangulate();
 	TARRAY GetTriangles();
 	VARRAY GetVertices();
-	bool IsAntiClockwise(Tri *who);
+	bool IsAntiClockwise(Tri* who);
 	void PushUnique(int a, int b);
 private:
 protected:
-	bool IsPerpendicular(const Vtx &v1, const Vtx &v2, const Vtx &v3);
-	bool Calculate(Tri *pTri);
+	bool IsPerpendicular(const Vtx& v1, const Vtx& v2, const Vtx& v3);
+	bool Calculate(Tri* pTri);
 public:
 	bool PrepForTriangulation(void);
 	void FinalizeTriangulation(void);

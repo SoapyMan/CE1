@@ -32,21 +32,21 @@ class CFormation
 	Vec3 m_vPos;
 	Vec3 m_vAngles;
 
-	CAISystem *m_pAISystem;
+	CAISystem* m_pAISystem;
 
 	bool m_bReservationAllowed;
 
 public:
-	CFormation(CAISystem *pAISystem);
+	CFormation(CAISystem* pAISystem);
 	~CFormation(void);
 	// fills the formation class with all necessary information
-	void Create(FormationDescriptor & desc);
+	void Create(FormationDescriptor& desc);
 	// Update of the formation (refreshes position of formation points)
-	void Update(CAIObject *pOwner);
+	void Update(CAIObject* pOwner);
 	// returns an available formation point, if that exists
-	CAIObject * GetFormationPoint(CAIObject *pRequester);
-	void Draw(IRenderer * pRenderer);
-	void FreeFormationPoint(CAIObject * pCurrentHolder);
+	CAIObject* GetFormationPoint(CAIObject* pRequester);
+	void Draw(IRenderer* pRenderer);
+	void FreeFormationPoint(CAIObject* pCurrentHolder);
 
 };
 

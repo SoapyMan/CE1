@@ -42,19 +42,19 @@
 #include "Cry_Camera.h"
 // TODO: reference additional headers your program requires here
 
-class CAISystem; 
+class CAISystem;
 
 
 
-CAISystem *GetAISystem();
+CAISystem* GetAISystem();
 
 //////////////////////////////////////////////////////////////////////////
 // Report AI warnings to validator.
 //////////////////////////////////////////////////////////////////////////
 //! Reports an AI Warning to validator with WARNING severity.
-void AIWarning( const char *format,... );
+void AIWarning(const char* format, ...);
 //! Reports an AI Warning to validator with ERROR severity.
-void AIError( const char *format,... );
+void AIError(const char* format, ...);
 
 
 //{{AFX_INSERT_LOCATION}}

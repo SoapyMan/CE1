@@ -23,7 +23,7 @@ struct ISystem;
 extern "C"
 {
 
-	CRYAIAPI IAISystem *CreateAISystem( ISystem *pSystem);
+	CRYAIAPI IAISystem* CreateAISystem(ISystem* pSystem);
 
 }
 

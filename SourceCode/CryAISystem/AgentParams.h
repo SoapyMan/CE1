@@ -50,31 +50,31 @@ typedef struct AgentParameters
 
 	AgentParameters()
 	{
-			m_fSightRange=0;
-			m_fHorizontalFov=0;
-			m_fVerticalFov=0;
-			m_fAccuracy=0;
-			m_fResponsiveness=0;
+		m_fSightRange = 0;
+		m_fHorizontalFov = 0;
+		m_fVerticalFov = 0;
+		m_fAccuracy = 0;
+		m_fResponsiveness = 0;
 
-			m_fMaxHealth=0;
-			m_fSoundRange=0;
-			m_fAttackRange=0;
-			m_fCommRange=0;
+		m_fMaxHealth = 0;
+		m_fSoundRange = 0;
+		m_fAttackRange = 0;
+		m_fCommRange = 0;
 
-			m_fAggression=0;
-			m_fDefensiveness=0;
-			m_fMorale=0;
-			m_fPanic=0;
-			m_fCohesion=0;
-			m_fPersistence=0;
+		m_fAggression = 0;
+		m_fDefensiveness = 0;
+		m_fMorale = 0;
+		m_fPanic = 0;
+		m_fCohesion = 0;
+		m_fPersistence = 0;
 
-			m_fSpeciesHostility=0;
-			m_fGroupHostility=0;
+		m_fSpeciesHostility = 0;
+		m_fGroupHostility = 0;
 
-			m_nSpecies=0;
-			m_nGroup=0;
+		m_nSpecies = 0;
+		m_nGroup = 0;
 
-			m_bIgnoreTargets=false;
+		m_bIgnoreTargets = false;
 	}
 
 

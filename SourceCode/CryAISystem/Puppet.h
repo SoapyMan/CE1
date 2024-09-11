@@ -40,7 +40,7 @@ typedef struct VisionSD
 	{
 		bFrameTag = false;
 		fExposureTime = 0;
-		fThreatIndex =0;
+		fThreatIndex = 0;
 		fInterestIndex = 0;
 		fExpirationTime = 0;
 	}
@@ -52,36 +52,36 @@ typedef struct SoundSD
 	float fInterestIndex;
 	Vec3d vPosition;
 	float fTimeout;
-	CAIObject *pDummyRepresentation;
-	CAIObject *pOwner;
+	CAIObject* pDummyRepresentation;
+	CAIObject* pOwner;
 } SoundSD;
 
 typedef struct MemoryRecord
 {
-	CAIObject *pDummyRepresentation;
+	CAIObject* pDummyRepresentation;
 	float fIntensity;
 	float fThreatIndex;
 	Vec3d vLastKnownPosition;
 } MemoryRecord;
 
 typedef std::vector<QGoal> VectorOGoals;
-typedef std::map<CAIObject*,VisionSD> VisibilityMap;
-typedef std::map<int,SoundSD> AudibilityMap;
-typedef std::map<CAIObject*,MemoryRecord> MemoryMap;
-typedef std::map<CAIObject*,float> DevaluedMap;
-typedef std::map<CAIObject*,CAIObject*> ObjectObjectMap;
+typedef std::map<CAIObject*, VisionSD> VisibilityMap;
+typedef std::map<int, SoundSD> AudibilityMap;
+typedef std::map<CAIObject*, MemoryRecord> MemoryMap;
+typedef std::map<CAIObject*, float> DevaluedMap;
+typedef std::map<CAIObject*, CAIObject*> ObjectObjectMap;
 
 
 class CPuppet : public CPipeUser, IPuppet
 {
-//VehicleChange
-protected:	
+	//VehicleChange
+protected:
 	//AgentParameters		m_Parameters;
-	
-	
+
+
 	float				m_fDEBUG_MaxHealth;
 	float				m_fMotionAddition;
-	
+
 	float				m_fSuppressFiring;	// in seconds
 
 	float				m_fAIMTime;
@@ -102,40 +102,40 @@ protected:
 	GoalMap			m_mapWanders;
 	GoalMap			m_mapIdles;
 
-//	Vec3d				m_vLastHidePoint;
-//	bool				m_bLastHideResult;
+	//	Vec3d				m_vLastHidePoint;
+	//	bool				m_bLastHideResult;
 
 
-//	VectorOGoals	m_vActiveGoals;
-//	bool				m_bBlocked;
+	//	VectorOGoals	m_vActiveGoals;
+	//	bool				m_bBlocked;
 
-	
+
 	float m_fAccuracySupressor;
 
-	
+
 	bool m_bRunning;
 	bool m_bLeftStrafe;
 	bool m_bRightStrafe;
 
 
-	
-	ObstacleData *m_pMyObstacle;		// used to track when this puppet occupies a hiding place
-	
-	
+
+	ObstacleData* m_pMyObstacle;		// used to track when this puppet occupies a hiding place
+
+
 public:
-	
-//	void SetAttentionTarget(CAIObject *pObject);
-	bool PointAudible(const Vec3d &pos, float fRadius);
-	void Forget(CAIObject *pDummyObject);
-	void OnObjectRemoved(CAIObject *pObject);
+
+	//	void SetAttentionTarget(CAIObject *pObject);
+	bool PointAudible(const Vec3d& pos, float fRadius);
+	void Forget(CAIObject* pDummyObject);
+	void OnObjectRemoved(CAIObject* pObject);
 	bool m_bDryUpdate;
-	void RequestPathTo(const Vec3d &pos);
-	void Navigate(CAIObject *pTarget);
-	bool PointVisible(const Vec3d &pos);
-	void Event(unsigned short eType, SAIEVENT *pEvent);
+	void RequestPathTo(const Vec3d& pos);
+	void Navigate(CAIObject* pTarget);
+	bool PointVisible(const Vec3d& pos);
+	void Event(unsigned short eType, SAIEVENT* pEvent);
 	void UpdatePuppetInternalState();
-	bool CanBeConvertedTo(unsigned short type, void **pConverted);
-	void AddToVisibleList(CAIObject *pAIObject, bool bForce = false, float fAdditionalMultiplier=1.f);
+	bool CanBeConvertedTo(unsigned short type, void** pConverted);
+	void AddToVisibleList(CAIObject* pAIObject, bool bForce = false, float fAdditionalMultiplier = 1.f);
 	void QuickVisibility();
 	CPuppet();
 	virtual ~CPuppet();
@@ -146,34 +146,34 @@ public:
 	//void RegisterIdle(const char *name);
 	//bool SelectPipe(int id,const char *name, IAIObject *pArgument);
 
-	AgentParameters GetPuppetParameters() { return GetParameters();}
-	void SetPuppetParameters(AgentParameters &pParams) { SetParameters(pParams);}
+	AgentParameters GetPuppetParameters() { return GetParameters(); }
+	void SetPuppetParameters(AgentParameters& pParams) { SetParameters(pParams); }
 
-	void ParseParameters(const AIObjectParameters &params);
+	void ParseParameters(const AIObjectParameters& params);
 	void Update();
 
-	void Devalue(CAIObject *pObject, bool bDevaluePuppets);
+	void Devalue(CAIObject* pObject, bool bDevaluePuppets);
 
 	//AgentParameters &GetParameters() { return m_Parameters;}
 
 	bool m_bMeasureAll;
 	//bool m_bHaveLiveTarget;
-	
-	CFormation *m_pFormation;
-	IPuppetProxy	*m_pProxy;
+
+	CFormation* m_pFormation;
+	IPuppetProxy* m_pProxy;
 	float m_fUrgency;
 	bool m_bVisible;
-//	bool m_bDEBUG_Unstuck;
-//	bool m_bUpdateInternal;
-	//bool m_bLooseAttention;		// true when we have don't have to look exactly at our target all the time
-//	CGoalPipe		*m_pCurrentGoalPipe;
+	//	bool m_bDEBUG_Unstuck;
+	//	bool m_bUpdateInternal;
+		//bool m_bLooseAttention;		// true when we have don't have to look exactly at our target all the time
+	//	CGoalPipe		*m_pCurrentGoalPipe;
 	float m_fCos;
 	float m_fBound;
-	
-//	Vec3d m_vDEBUG_VECTOR;
-	//string m_sDEBUG_GOAL;
 
-	// move these to private after debug stage
+	//	Vec3d m_vDEBUG_VECTOR;
+		//string m_sDEBUG_GOAL;
+
+		// move these to private after debug stage
 	VisibilityMap m_mapVisibleAgents;
 	MemoryMap m_mapMemory;
 	DevaluedMap m_mapDevaluedPoints;
@@ -181,48 +181,50 @@ public:
 	ObjectObjectMap m_mapInterestingDummies;
 	AudibilityMap m_mapSoundEvents;
 
-//	CAIObject *m_pAttentionTarget;
+	//	CAIObject *m_pAttentionTarget;
 
-//	CAIObject *m_pLastOpResult;		// temporary here while real system in development
+	//	CAIObject *m_pLastOpResult;		// temporary here while real system in development
 
-//	int m_nPathDecision;
-//	ListPositions m_lstPath;
-//	bool m_bAllowedToFire;
-//	bool m_bSmartFire;
+	//	int m_nPathDecision;
+	//	ListPositions m_lstPath;
+	//	bool m_bAllowedToFire;
+	//	bool m_bSmartFire;
 	int m_nBodyPos;
-	
-	
-	float m_DEBUG_LASTUPDATETIME;
-	CAIObject *m_pDEBUGLastHideSpot;
 
-	void GetAgentParams(AgentParameters &params) { params = m_Parameters;	}
-	void GetCurrentGoalName(string &name) {  if (m_pCurrentGoalPipe) name = m_pCurrentGoalPipe->m_sName;
-																								else name = "";}
+
+	float m_DEBUG_LASTUPDATETIME;
+	CAIObject* m_pDEBUGLastHideSpot;
+
+	void GetAgentParams(AgentParameters& params) { params = m_Parameters; }
+	void GetCurrentGoalName(string& name) {
+		if (m_pCurrentGoalPipe) name = m_pCurrentGoalPipe->m_sName;
+		else name = "";
+	}
 
 
 protected:
-	void HandleSoundEvent(SAIEVENT *pEvent);
-	void HandlePathDecision(SAIEVENT *pEvent);
+	void HandleSoundEvent(SAIEVENT* pEvent);
+	void HandlePathDecision(SAIEVENT* pEvent);
 	//void ResetCurrentPipe();
-	void AssessThreat(CAIObject *pObject, VisionSD &data);
-	void Remember(CAIObject *pObject, VisionSD &data);
-	void HandleVisualStimulus(SAIEVENT *pEvent);
-//	void GetStateFromActiveGoals(SOBJECTSTATE &state);
-//	CGoalPipe *GetGoalPipe(const char *name);
-//VehicleChange
-//private:
+	void AssessThreat(CAIObject* pObject, VisionSD& data);
+	void Remember(CAIObject* pObject, VisionSD& data);
+	void HandleVisualStimulus(SAIEVENT* pEvent);
+	//	void GetStateFromActiveGoals(SOBJECTSTATE &state);
+	//	CGoalPipe *GetGoalPipe(const char *name);
+	//VehicleChange
+	//private:
 	float m_fHorizontalFOVrad;
 protected:
 	// calculates threat based on input parameters and this puppet's parameters
-	float CalculateThreat(const AgentParameters & params);
+	float CalculateThreat(const AgentParameters& params);
 	// calculates interest value of the target with the given parameters
-	float CalculateInterest(const AgentParameters & params);
+	float CalculateInterest(const AgentParameters& params);
 public:
 	// Steers the puppet outdoors and makes it avoid the immediate obstacles
 //VehicleChange
-	virtual void Steer(const Vec3d & vTargetPos, GraphNode * pNode);
+	virtual void Steer(const Vec3d& vTargetPos, GraphNode* pNode);
 	// debug function to unstuck the puppet if it is stuck
-	void CreateFormation(const char * szName);
+	void CreateFormation(const char* szName);
 	void Reset(void);
 
 	void ReleaseFormation(void);
@@ -233,15 +235,15 @@ protected:
 	// decides whether to fire or not
 	void FireCommand(void);
 public:
-	void AddToMemory(CAIObject * pObject);
+	void AddToMemory(CAIObject* pObject);
 	// finds hide point in graph based on specified search method
 	Vec3d FindHidePoint(float fSearchDistance, int nMethod, bool bIndoor = false, bool bSameOk = false);
 	// Evaluates whether the chosen navigation point will expose us too much to the target
-	bool Compromising(const ObstacleData &od,bool bIndoor);
-	
+	bool Compromising(const ObstacleData& od, bool bIndoor);
+
 	// returns true if puppet visible
-	bool Sees(CPuppet * pObject);
-	void SetParameters(AgentParameters & sParams);
+	bool Sees(CPuppet* pObject);
+	void SetParameters(AgentParameters& sParams);
 	//void SetLastOpResult(CAIObject * pObject);
 	///bool InsertSubPipe(int id, const char * name, IAIObject * pArgument);
 	Vec3d GetOutdoorHidePoint(int nMethod, float fSearchDistance, bool bSameOk);
@@ -253,16 +255,16 @@ public:
 
 	bool	m_bCloseContact;
 	float	m_fLastUpdateTime;
-	
+
 
 	void CrowdControl(void);
 	void CheckPlayerTargeting(void);
 	void RemoveFromGoalPipe(CAIObject* pObject);
-	CAIObject * GetMemoryOwner(CAIObject * pMemoryRepresentation);
-	
-	void Save(CStream & stm);
-	void Load(CStream & stm);
-	void Load_PATCH_1(CStream & stm);
+	CAIObject* GetMemoryOwner(CAIObject* pMemoryRepresentation);
+
+	void Save(CStream& stm);
+	void Load(CStream& stm);
+	void Load_PATCH_1(CStream& stm);
 };
 
 #endif // !defined(AFX_PUPPET_H__539B7168_3AA0_47B1_9D72_723B52A869E2__INCLUDED_)
