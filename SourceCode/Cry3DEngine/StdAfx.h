@@ -65,7 +65,7 @@ typedef unsigned short	ushort;
 #endif
 
 #if !defined(LINUX)
-	#include <assert.h>
+#include <assert.h>
 #endif
 #include <vector>
 #include <list>
@@ -75,8 +75,8 @@ typedef unsigned short	ushort;
 
 
 #if defined(PS2) || defined(GAMECUBE)
-  using std::min;
-  using std::max;
+using std::min;
+using std::max;
 #endif
 
 #ifndef __forceinline
@@ -93,41 +93,41 @@ typedef unsigned short	ushort;
 #define MAX_PATH_LENGTH 512
 
 #ifndef stricmp
-inline int __cdecl stricmp(const char *dst, const char *src)
+inline int __cdecl stricmp(const char* dst, const char* src)
 {
-  int f,l;
-  do
-  {
-    if ( ((f=(unsigned char)(*(dst++))) >= 'A') && (f<='Z'))
-      f -= ('A' - 'a');
-    
-    if ( ((l=(unsigned char)(*(src++))) >= 'A') && (l<='Z'))
-      l -= ('A' - 'a');
-  } while ( f && (f == l) );
+	int f, l;
+	do
+	{
+		if (((f = (unsigned char)(*(dst++))) >= 'A') && (f <= 'Z'))
+			f -= ('A' - 'a');
 
-  return(f - l);
+		if (((l = (unsigned char)(*(src++))) >= 'A') && (l <= 'Z'))
+			l -= ('A' - 'a');
+	} while (f && (f == l));
+
+	return(f - l);
 }
 #endif
 
 #ifndef strnicmp
-inline int __cdecl strnicmp (const char * first, const char * last, size_t count)
+inline int __cdecl strnicmp(const char* first, const char* last, size_t count)
 {
-  int f,l;
-  if ( count )
-  {
-    do
-    {
-      if ( ((f=(unsigned char)(*(first++))) >= 'A') && (f<='Z') )
-        f -= 'A' - 'a';
+	int f, l;
+	if (count)
+	{
+		do
+		{
+			if (((f = (unsigned char)(*(first++))) >= 'A') && (f <= 'Z'))
+				f -= 'A' - 'a';
 
-      if ( ((l=(unsigned char)(*(last++))) >= 'A') && (l<='Z'))
-        l -= 'A' - 'a';
-    } while ( --count && f && (f == l) );
+			if (((l = (unsigned char)(*(last++))) >= 'A') && (l <= 'Z'))
+				l -= 'A' - 'a';
+		} while (--count && f && (f == l));
 
-    return( f - l );
-  }
+		return(f - l);
+	}
 
-  return 0;
+	return 0;
 }
 #endif
 
@@ -186,31 +186,31 @@ struct IEntityRender;
 #include "CrySizer.h"
 #include "StlUtils.h"
 
-inline float L1Distance2D(const Vec3 &v0, const Vec3 &v1)	{	return crymax(Ffabs(v0.x-v1.x),Ffabs(v0.y-v1.y));	}	
+inline float L1Distance2D(const Vec3& v0, const Vec3& v1) { return crymax(Ffabs(v0.x - v1.x), Ffabs(v0.y - v1.y)); }
 
 inline float GetDist2D(float x1, float y1, float x2, float y2)
 {
-  float xm = (x1-x2);
-  float ym = (y1-y2);
-  return cry_sqrtf(xm*xm + ym*ym);
+	float xm = (x1 - x2);
+	float ym = (y1 - y2);
+	return cry_sqrtf(xm * xm + ym * ym);
 }
 
 #if !defined(LINUX)	//than it does already exist
-inline int vsnprintf(char * buf, int size, const char * format, va_list & args)
+inline int vsnprintf(char* buf, int size, const char* format, va_list& args)
 {
 	int res = _vsnprintf(buf, size, format, args);
-	assert(res>=0 && res<size); // just to know if there was problems in past
-	buf[size-1]=0;
+	assert(res >= 0 && res < size); // just to know if there was problems in past
+	buf[size - 1] = 0;
 	return res;
 }
 #endif
 
-inline int snprintf(char * buf, int size, const char * format, ...)
+inline int snprintf(char* buf, int size, const char* format, ...)
 {
 	va_list arglist;
 	va_start(arglist, format);
 	int res = vsnprintf(buf, size, format, arglist);
-	va_end(arglist);	
+	va_end(arglist);
 	return res;
 }
 

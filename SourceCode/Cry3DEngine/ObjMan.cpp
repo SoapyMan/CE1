@@ -507,7 +507,7 @@ CStatObj* CObjManager::MakeObject(const char* __szFileName,
 		// if geom name is specified - just return 0
 		if (_szGeomName && _szGeomName[0])
 			return NULL;
-	
+
 		if (!m_pDefaultCGF)
 			GetConsole()->Exit("Error: CObjManager::MakeObject: Default object not found");
 

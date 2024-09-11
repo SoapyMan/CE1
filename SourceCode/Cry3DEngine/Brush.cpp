@@ -717,7 +717,7 @@ void CObjManager::MergeBrushes()
 					newMatInfo.shaderItem = pCustMat->shaderItem;
 				}
 			}
-			
+
 			SMatGroup* mg = NULL;
 			for (j = 0; j < groupBrushes[nMergeId].Num(); j++)
 			{
@@ -792,7 +792,7 @@ void CObjManager::MergeBrushes()
 		nRequested++;
 
 		Enabled[j] = (maxMergedMats[j] >= 3);
-		if(!Enabled[j])
+		if (!Enabled[j])
 			++nRejected;
 	}
 
@@ -810,7 +810,7 @@ void CObjManager::MergeBrushes()
 		if (nNextStartId >= 0)
 			nEntityId = nNextStartId;
 		nNextStartId = -1;
-		
+
 		lstVerts.Clear();
 		lstLMTexCoords.Clear();
 		lstIndices.Clear();
@@ -842,13 +842,13 @@ void CObjManager::MergeBrushes()
 			nMergeID = pBrush->GetMergeId();
 			if (nLMTexId < 0)
 			{
-				nLMTexId =	  pBrush->GetLightmap(0) ? pBrush->GetLightmap(0)->GetColorLerpTex() : 0;
+				nLMTexId = pBrush->GetLightmap(0) ? pBrush->GetLightmap(0)->GetColorLerpTex() : 0;
 				nHDRLMTexId = pBrush->GetLightmap(0) ? pBrush->GetLightmap(0)->GetHDRColorLerpTex() : 0;
 				nLMDirTexId = pBrush->GetLightmap(0) ? pBrush->GetLightmap(0)->GetDomDirectionTex() : 0;
 			}
-			else if(nLMTexId != (pBrush->GetLightmap(0) ? pBrush->GetLightmap(0)->GetColorLerpTex() : 0) ||
-				 nHDRLMTexId != (pBrush->GetLightmap(0) ? pBrush->GetLightmap(0)->GetHDRColorLerpTex() : 0) ||
-				 nLMDirTexId != (pBrush->GetLightmap(0) ? pBrush->GetLightmap(0)->GetDomDirectionTex() : 0))
+			else if (nLMTexId != (pBrush->GetLightmap(0) ? pBrush->GetLightmap(0)->GetColorLerpTex() : 0) ||
+				nHDRLMTexId != (pBrush->GetLightmap(0) ? pBrush->GetLightmap(0)->GetHDRColorLerpTex() : 0) ||
+				nLMDirTexId != (pBrush->GetLightmap(0) ? pBrush->GetLightmap(0)->GetDomDirectionTex() : 0))
 			{
 				if (nNextStartId < 0)
 					nNextStartId = nEntityId;

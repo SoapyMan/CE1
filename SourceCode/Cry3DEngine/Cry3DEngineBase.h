@@ -30,54 +30,54 @@ struct CVisAreaManager;
 
 struct Cry3DEngineBase
 {
-  static ISystem * m_pSys;
-  static IRenderer * m_pRenderer;
-  static ITimer * m_pTimer;
-  static ILog * m_pLog;
-  static IPhysicalWorld * m_pPhysicalWorld;
-  static IConsole * m_pConsole;
-  static I3DEngine * m_p3DEngine;
-  static CVars * m_pCVars;
-  static ICryPak * m_pCryPak;
-  static int m_nRenderStackLevel;
-  static int m_dwRecursionDrawFlags[2];
+	static ISystem* m_pSys;
+	static IRenderer* m_pRenderer;
+	static ITimer* m_pTimer;
+	static ILog* m_pLog;
+	static IPhysicalWorld* m_pPhysicalWorld;
+	static IConsole* m_pConsole;
+	static I3DEngine* m_p3DEngine;
+	static CVars* m_pCVars;
+	static ICryPak* m_pCryPak;
+	static int m_nRenderStackLevel;
+	static int m_dwRecursionDrawFlags[2];
 	static int m_nRenderFrameID;
 	static bool m_bProfilerEnabled;
 	static float m_fPreloadStartTime;
 
-  static int m_CpuFlags;
-  static double m_SecondsPerCycle;
+	static int m_CpuFlags;
+	static double m_SecondsPerCycle;
 	static ESystemConfigSpec m_configSpec;
-  static ESystemConfigSpec m_LightConfigSpec;
+	static ESystemConfigSpec m_LightConfigSpec;
 
 	static bool m_bIgnoreFakeMaterialsInCGF;
 	static bool m_bEditorMode;
 
-  static ISystem	       * GetSystem() { return m_pSys; }
-  static IRenderer	     * GetRenderer() { return m_pRenderer; }
-  static ITimer         * GetTimer() { return m_pTimer; }
-  static ILog           * GetLog() { return m_pLog; }
-  static IPhysicalWorld * GetPhysicalWorld() { return m_pPhysicalWorld;}
-  static IConsole       * GetConsole() { return m_pConsole; }
-  static I3DEngine      * Get3DEngine() { return m_p3DEngine; }
-  static CVars          * GetCVars() { return m_pCVars; }
-  static CVisAreaManager* GetVisAreaManager();
-  static ICryPak        * GetPak() { return m_pCryPak; }
+	static ISystem* GetSystem() { return m_pSys; }
+	static IRenderer* GetRenderer() { return m_pRenderer; }
+	static ITimer* GetTimer() { return m_pTimer; }
+	static ILog* GetLog() { return m_pLog; }
+	static IPhysicalWorld* GetPhysicalWorld() { return m_pPhysicalWorld; }
+	static IConsole* GetConsole() { return m_pConsole; }
+	static I3DEngine* Get3DEngine() { return m_p3DEngine; }
+	static CVars* GetCVars() { return m_pCVars; }
+	static CVisAreaManager* GetVisAreaManager();
+	static ICryPak* GetPak() { return m_pCryPak; }
 
 	static int GetFrameID() { return m_nRenderFrameID; };
 
-  CCamera & GetViewCamera() ;
-  float GetCurTimeSec();
+	CCamera& GetViewCamera();
+	float GetCurTimeSec();
 	float GetCurAsyncTimeSec();
-  void UpdateLoadingScreen(const char *command,...);
-  void UpdateLoadingScreenPlus(const char *command,...);
+	void UpdateLoadingScreen(const char* command, ...);
+	void UpdateLoadingScreenPlus(const char* command, ...);
 
 	// Validator warning.
-	static void Warning( int flags,const char *file,const char *format,... );
-	
-	CCObject * GetIdentityCCObject() 
+	static void Warning(int flags, const char* file, const char* format, ...);
+
+	CCObject* GetIdentityCCObject()
 	{
-		CCObject * pCCObject = GetRenderer()->EF_GetObject(true);
+		CCObject* pCCObject = GetRenderer()->EF_GetObject(true);
 		pCCObject->m_Matrix.SetIdentity();
 		return pCCObject;
 	}

@@ -37,18 +37,18 @@
 
 // this holds datas for volumes and areas
 //////////////////////////////////////////////////////////////////////////
-typedef struct s_Container 
+typedef struct s_Container
 {
 	s_Container()
 	{
-		pObj=NULL;
-		pEnt=NULL;
-		pSV=NULL;
+		pObj = NULL;
+		pEnt = NULL;
+		pSV = NULL;
 	}
 
-	IStatObj					*pObj;
-	IPhysicalEntity		*pEnt;
-	class CShadowVolObject	*pSV;
+	IStatObj* pObj;
+	IPhysicalEntity* pEnt;
+	class CShadowVolObject* pSV;
 }tContainer;
 
 //////////////////////////////////////////////////////////////////////
@@ -66,72 +66,72 @@ typedef std::vector<IPhysicalEntity*>::iterator iphysobjit;
 //////////////////////////////////////////////////////////////////////
 class CVolume : public Cry3DEngineBase
 {
-public:	
+public:
 	//constructors/destructors
 	//this constructor is only for building
 	CVolume()
-	{		
-		m_dwFlags=0;				
-		m_nObjCount=0;
-		m_vOrigin(0,0,0);
-		m_vMins=SetMaxBB();
-		m_vMaxs=SetMinBB();		
-  }
-/*	
-	CVolume() 
-	{		
-		m_dwFlags=0;	
-		m_nObjCount=0;
-		m_vOrigin(0,0,0);		
-		m_vMins=SetMaxBB();
-		m_vMaxs=SetMinBB();
-	};
-	*/
+	{
+		m_dwFlags = 0;
+		m_nObjCount = 0;
+		m_vOrigin(0, 0, 0);
+		m_vMins = SetMaxBB();
+		m_vMaxs = SetMinBB();
+	}
+	/*
+		CVolume()
+		{
+			m_dwFlags=0;
+			m_nObjCount=0;
+			m_vOrigin(0,0,0);
+			m_vMins=SetMaxBB();
+			m_vMaxs=SetMinBB();
+		};
+		*/
 	virtual ~CVolume();
 
 	int	GetFlags() { return(m_dwFlags); }
 	//////////////////////////////////////////////////////////////////////
 	//check if a point is inside the volume
-	virtual bool	CheckInside(const Vec3d &pos,bool bWorldSpace) { return(false); }
+	virtual bool	CheckInside(const Vec3d& pos, bool bWorldSpace) { return(false); }
 
-	void		RemoveGeometry(IStatObj *pSource,ContainerListIt i);
-	
+	void		RemoveGeometry(IStatObj* pSource, ContainerListIt i);
+
 	//void			SetGeometry(IStatObj *pSource);
 	//void	AddGeometry(IStatObj *pSource,IPhysicalEntity *pEnt=NULL);
 	void	AddGeometry(tContainer tCont);
 
-	Vec3d	GetBBoxMin(bool bWorldSpace=false)
-	{ 	
+	Vec3d	GetBBoxMin(bool bWorldSpace = false)
+	{
 		if (bWorldSpace)
 		{
-			Vec3d vWorldPos=m_vOrigin+m_vMins;
+			Vec3d vWorldPos = m_vOrigin + m_vMins;
 			return(vWorldPos);
 		}
 
-		return(m_vMins); 
+		return(m_vMins);
 	}
 
-	Vec3d	GetBBoxMax(bool bWorldSpace=false) 
-	{ 
+	Vec3d	GetBBoxMax(bool bWorldSpace = false)
+	{
 		if (bWorldSpace)
 		{
-			Vec3d vWorldPos=m_vOrigin+m_vMaxs;
+			Vec3d vWorldPos = m_vOrigin + m_vMaxs;
 			return(vWorldPos);
 		}
-		return(m_vMaxs); 
+		return(m_vMaxs);
 	}
 
 	//set new volume's position 
 	//////////////////////////////////////////////////////////////////////
-	void	SetPos(const Vec3d &vPos); 
+	void	SetPos(const Vec3d& vPos);
 	Vec3d	GetPos() { return (m_vOrigin); }
-		
+
 	//bounding box
 	Vec3d m_vMins;
 	Vec3d	m_vMaxs;
 
 	//volume flags
-	int m_dwFlags;	
+	int m_dwFlags;
 
 	//! the source geometry
 	//IStatObj	*m_pSource;		
@@ -141,10 +141,10 @@ public:
 	//istatobjlist	m_lstStatObjs;
 	//iphysobjlist	m_lstPhysObjs;
 
-protected:		
+protected:
 
 	//! volume origin
-	Vec3d m_vOrigin;	
+	Vec3d m_vOrigin;
 	//Vec3d	m_vWorldPos;	
 };
 

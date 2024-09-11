@@ -56,20 +56,20 @@ public:
 	//! default constructor
 	//! creates an empty mesh connectivity
 	CStencilShadowConnectivityBuilder(void);
-	
+
 	//! destructor
 	virtual ~CStencilShadowConnectivityBuilder(void);
 
 	//! return to the state right after construction
-	virtual void Reinit( void );
+	virtual void Reinit(void);
 
-  // sets the maximum distance between two points that are allowed to be welded
-	//virtual void SetWeldTolerance (float fTolerance) {m_fWeldTolerance = fTolerance*fTolerance;}
+	// sets the maximum distance between two points that are allowed to be welded
+	  //virtual void SetWeldTolerance (float fTolerance) {m_fWeldTolerance = fTolerance*fTolerance;}
 
-	// reserves space for the given number of triangles that are to be added
-	//! /param nNumTriangles 0..
-	//! /param innNumVertices 0..
-	virtual void ReserveForTriangles( unsigned nNumTriangles, unsigned innNumVertices );
+	  // reserves space for the given number of triangles that are to be added
+	  //! /param nNumTriangles 0..
+	  //! /param innNumVertices 0..
+	virtual void ReserveForTriangles(unsigned nNumTriangles, unsigned innNumVertices);
 
 	// adds a single triangle to the mesh
 	// the triangle is defined by three vertices, in counter-clockwise order
@@ -79,7 +79,7 @@ public:
 	//! /param nV1 vertex index two 0..0xffff
 	//! /param nV2 vertex index three 0..0xffff
 	//! /param inpVertexPos pointer to the vertex array (to remove vertices on same position)
-	virtual void AddTriangle( vindex nV0, vindex nV1, vindex nV2 );
+	virtual void AddTriangle(vindex nV0, vindex nV1, vindex nV2);
 
 	//!
 	//! /param nV0 vertex index one 0..0xffff
@@ -89,22 +89,22 @@ public:
 	//! /param vV1 original vertex two position 
 	//! /param vV2 original vertex three position 
 	//! slower but with the auto weld feature (if there are vertices with the same position your result is smaller and therefore faster)
-	virtual void AddTriangleWelded( vindex nV0, vindex nV1, vindex nV2, const Vec3d &vV0, const Vec3d &vV1, const Vec3d &vV2 );
+	virtual void AddTriangleWelded(vindex nV0, vindex nV1, vindex nV2, const Vec3d& vV0, const Vec3d& vV1, const Vec3d& vV2);
 
 	// constructs/compiles the optimum representation of the connectivity
 	// to be used in run-time
 	// WARNING: use Release method to dispose the connectivity object
 	//! /param inpVertexBuf vertex position buffer to check for solvable open edges (2 vertices with same position)
 	//! /return interface pointer, could be 0
-	virtual class IStencilShadowConnectivity *ConstructConnectivity( void );
+	virtual class IStencilShadowConnectivity* ConstructConnectivity(void);
 
 	// returns the number of single (with no pair faces found) or orphaned edges
 	// /return 0..
-	virtual unsigned numOrphanedEdges ()const;
+	virtual unsigned numOrphanedEdges()const;
 
 	//! Returns the list of faces for orphaned edges into the given buffer;
 	//! For each orphaned edge, one face will be returned; some faces may be duplicated
-	virtual void getOrphanedEdgeFaces (unsigned* pBuffer);
+	virtual void getOrphanedEdgeFaces(unsigned* pBuffer);
 
 
 protected:
@@ -132,32 +132,32 @@ protected:
 	// helper to get order for Vec3d
 	struct CVec3dOrder
 	{
-		bool operator() ( const Vec3d &a, const Vec3d &b ) const
+		bool operator() (const Vec3d& a, const Vec3d& b) const
 		{
 			// first sort by x
-			if(a.x<b.x)return(true);
-			if(a.x>b.x)return(false);
+			if (a.x < b.x)return(true);
+			if (a.x > b.x)return(false);
 
 			// then by y
-			if(a.y<b.y)return(true);
-			if(a.y>b.y)return(false);
+			if (a.y < b.y)return(true);
+			if (a.y > b.y)return(false);
 
 			// then by z
-			if(a.z<b.z)return(true);
-			if(a.z>b.z)return(false);
+			if (a.z < b.z)return(true);
+			if (a.z > b.z)return(false);
 
 			return(false);
 		}
 	};
 
-	typedef std::map<Vec3d,unsigned,CVec3dOrder> VertexWelderMap;
+	typedef std::map<Vec3d, unsigned, CVec3dOrder> VertexWelderMap;
 	VertexWelderMap m_mVertexWelder;						//!< used for AddTriangleWelded
 
 	// this will try to find a close match to the given vertex, and
 	// if found, return its index (the actual index of the vertex that's very close or
 	// coincide with v in space). Otherwise, creates a new vertex reference in the map
 	// and returns the index nNewVertex
-	unsigned WeldVertex (const Vec3d& v, unsigned nNewVertex);
+	unsigned WeldVertex(const Vec3d& v, unsigned nNewVertex);
 
 	//float m_fWeldTolerance;
 	// this is 1 + the max index of the vertex in the original mesh vertex array, that
@@ -170,7 +170,7 @@ protected:
 	// otherwise, withdraw the edge from the list of single edges and add to double edges
 	//! /param eEdge
 	//! /param efFace
-	void AddNewEdge (BasicEdge eEdge, EdgeFace efFace);
+	void AddNewEdge(BasicEdge eEdge, EdgeFace efFace);
 };
 
 // this is the builder of connectivity that can be used for static objects
@@ -180,28 +180,28 @@ class CStencilShadowStaticConnectivityBuilder :public CStencilShadowConnectivity
 public:
 	CStencilShadowStaticConnectivityBuilder();
 	virtual ~CStencilShadowStaticConnectivityBuilder();
-	void AddTriangleWelded( vindex nV0, vindex nV1, vindex nV2, const Vec3d &vV0, const Vec3d &vV1, const Vec3d &vV2 );
+	void AddTriangleWelded(vindex nV0, vindex nV1, vindex nV2, const Vec3d& vV0, const Vec3d& vV1, const Vec3d& vV2);
 	//! return to the state right after construction
-	virtual void Reinit( void );
+	virtual void Reinit(void);
 
 	// reserves space for the given number of triangles that are to be added
 	//! /param nNumTriangles 0..
 	//! /param innNumVertices 0..
-	virtual void ReserveForTriangles( unsigned nNumTriangles, unsigned innNumVertices );
+	virtual void ReserveForTriangles(unsigned nNumTriangles, unsigned innNumVertices);
 
 	// constructs/compiles the optimum representation of the connectivity
 	// to be used in run-time
 	// WARNING: use Release method to dispose the connectivity object
 	//! /param inpVertexBuf vertex position buffer to check for solvable open edges (2 vertices with same position)
 	//! /return interface pointer, could be 0
-	virtual class IStencilShadowConnectivity *ConstructConnectivity( void );
+	virtual class IStencilShadowConnectivity* ConstructConnectivity(void);
 protected:
 	// WARNING: This is only to be called when the whole construction process
 	//   is finished, to modify already created connectivity
 	// Goes through all vertices used by the connectivity and constructs a continuous
 	// array out of them; reindexes the vertices in the connectivity object
 	// to use these vertices; puts the new vertex array into the connectivity object
-	void SetVertices (CStencilShadowConnectivity * pConnectivity);
+	void SetVertices(CStencilShadowConnectivity* pConnectivity);
 
 	typedef CStencilShadowConnectivity::Plane Plane;
 	std::vector<Plane> m_vPlanes;

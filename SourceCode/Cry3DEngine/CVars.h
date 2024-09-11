@@ -19,66 +19,68 @@
 // console variables
 struct CVars : public Cry3DEngineBase
 {
-  CVars() 
-  { Init(); }
+	CVars()
+	{
+		Init();
+	}
 
-  void Init();
+	void Init();
 
-  int 
+	int
 		e_allow_cvars_serialization,
-    e_shadow_maps,
-    e_shadow_maps_debug,
-    e_shadow_maps_from_static_objects,
+		e_shadow_maps,
+		e_shadow_maps_debug,
+		e_shadow_maps_from_static_objects,
 		e_shadow_maps_self_shadowing,
 		e_shadow_maps_receiving,
-    e_detail_objects,
-    e_fog,
-    e_motion_blur,
-    e_beach,
-    e_detail_texture,
+		e_detail_objects,
+		e_fog,
+		e_motion_blur,
+		e_beach,
+		e_detail_texture,
 		e_detail_texture_quality,
-    e_particles,
-    e_particles_debug,
+		e_particles,
+		e_particles_debug,
 		e_particles_max_count,
 		e_particles_receive_shadows,
-    e_decals,
-    e_bflyes,
-    e_vegetation_bending,
-    e_vegetation,
-    e_vegetation_sprites,
-    e_entities,
-    e_entities_debug,
-    e_sky_box,
-    e_terrain,
-    e_terrain_debug,
-    e_water_ocean,
-    e_vegetation_debug,
-    e_shadow_maps_frustums,
-    e_terrain_occlusion_culling,
-    e_terrain_texture_pool,
-    e_terrain_texture_bind,
-    e_terrain_log,
-    e_out_space,
-    e_video_buffer_stats,
-    e_sun,
-    e_terrain_merge_far_sectors,
-    e_terrain_texture_mipmaps,
+		e_decals,
+		e_bflyes,
+		e_vegetation_bending,
+		e_vegetation,
+		e_vegetation_sprites,
+		e_entities,
+		e_entities_debug,
+		e_sky_box,
+		e_terrain,
+		e_terrain_debug,
+		e_water_ocean,
+		e_vegetation_debug,
+		e_shadow_maps_frustums,
+		e_terrain_occlusion_culling,
+		e_terrain_texture_pool,
+		e_terrain_texture_bind,
+		e_terrain_log,
+		e_out_space,
+		e_video_buffer_stats,
+		e_sun,
+		e_terrain_merge_far_sectors,
+		e_terrain_texture_mipmaps,
 		e_terrain_texture_mip_offset,
-		
+
 		// if set to non-0, then after the specified number of frames rendered,
 		// the game exits printing the average FPS value.
 		// NOTE:
 		//  for this to work, the r_DisplayInfo must be "1"
-    e_timedemo_frames,
+		e_timedemo_frames,
 
 		// if set to non-0, then after the specified number of milliseconds of rendering,
 		// the game exists unconditionally. This is used for automatic multipass profiling with VTune 6.x
 		e_timedemo_milliseconds,
-    
+
 		e_cbuffer,
 		e_dynamic_light,
 		e_dynamic_light_exact_vis_test,
-    e_stencil_shadows,
+		e_stencil_shadows,
 		e_dynamic_light_debug,
 		e_hw_occlusion_culling_water,
 		e_hw_occlusion_culling_objects,
@@ -89,22 +91,22 @@ struct CVars : public Cry3DEngineBase
 		e_water_volumes,
 		e_bboxes,
 		e_brushes,
-    e_brushes_merging_debug,
-    e_brushes_merging,
-    e_brushes_onlymerged,
+		e_brushes_merging_debug,
+		e_brushes_merging,
+		e_brushes_onlymerged,
 		e_register_in_sectors,
-    e_stream_cgf,
-    e_stream_for_physics,
-    e_stream_for_visuals,
-    e_stream_areas,
+		e_stream_cgf,
+		e_stream_for_physics,
+		e_stream_for_visuals,
+		e_stream_areas,
 		e_scissor_debug,
-    e_projector_exact_test,
-    e_ccgf_load,
-    e_ccgf_make_if_not_found,
-    e_check_number_of_physicalized_polygons,
-    e_materials,
-    e_vegetation_sprites_slow_switch,
-    e_terrain_single_pass,
+		e_projector_exact_test,
+		e_ccgf_load,
+		e_ccgf_make_if_not_found,
+		e_check_number_of_physicalized_polygons,
+		e_materials,
+		e_vegetation_sprites_slow_switch,
+		e_terrain_single_pass,
 		e_stream_preload_textures,
 		e_area_merging_distance,
 		e_area_merging_draw_merged_geometry_only,
@@ -143,10 +145,10 @@ struct CVars : public Cry3DEngineBase
 		e_voxel_realtime_light_update,
 		e_widescreen;
 
-  float 
-    e_vegetation_sprites_min_distance,
-    e_rain_amount,
-    e_vegetation_sprites_distance_ratio,
+	float
+		e_vegetation_sprites_min_distance,
+		e_rain_amount,
+		e_vegetation_sprites_distance_ratio,
 		e_obj_lod_ratio,
 		e_obj_view_dist_ratio,
 		e_dynamic_ambient_ratio,
@@ -162,10 +164,10 @@ struct CVars : public Cry3DEngineBase
 		e_obj_min_view_dist,
 		e_explosion_scale;
 
-	ICVar 
+	ICVar
 		* e_capture_folder,
 		* e_capture_file_format,
-		* e_deformable_terrain;	
+		* e_deformable_terrain;
 };
-  
+
 #endif // _3DENGINE_CVARS_H_

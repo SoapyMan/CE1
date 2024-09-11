@@ -48,25 +48,25 @@ public:
 	// Last time when particles where spawned.
 	float m_lastSpawnTime;
 	//! Pointer to particle params. (ParticleEffect).
-	ParticleParams *m_pParams;
+	ParticleParams* m_pParams;
 	//! Pointer to child params of this emitter.
-	ParticleParams *m_pChildParams;
+	ParticleParams* m_pChildParams;
 	//! Notify time when position was last set on this emitter.
 	float m_lastActiveTime;
 	//! Particle effect used for this emitter.
 	IParticleEffect_AutoPtr m_pEffect;
 	//! Owner particle manager.
-	class CPartManager *m_pPartManager;
+	class CPartManager* m_pPartManager;
 	//! Override material for this emitter.
 	_smart_ptr<IMatInfo> m_pMaterial;
 	//! Entity who controls this emitter.
-	IEntityRender *m_pSpawnerEntity;
+	IEntityRender* m_pSpawnerEntity;
 	//! Custom shader from material.
 	_smart_ptr<IShader> m_pShader;
 	//! Bounding box.
 	AABB m_bbox;
 	//! Water level in position of emitter. Used to avoid calculating it for each particle.
-	float m_fWaterLevel; 
+	float m_fWaterLevel;
 
 	//////////////////////////////////////////////////////////////////////////
 	std::vector<_smart_ptr<CParticleEmitter> > m_childEmitters;
@@ -78,7 +78,7 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	// Methods.
 	//////////////////////////////////////////////////////////////////////////
-	CParticleEmitter( CPartManager *pPartManager ) : m_pos(0,0,0),m_dir(0,0,0)
+	CParticleEmitter(CPartManager* pPartManager) : m_pos(0, 0, 0), m_dir(0, 0, 0)
 	{
 		m_pPartManager = pPartManager;
 		m_pSpawnerEntity = NULL;
@@ -93,34 +93,34 @@ public:
 		m_bVisible = true;
 		m_fWaterLevel = WATER_LEVEL_UNKNOWN;
 		m_bLoopSound = false;
-		m_bUseEndTime=false;
+		m_bUseEndTime = false;
 		m_bChildEmitter = false;
 	}
 	~CParticleEmitter();
 	void ReleaseParams();
-	void UpdateChildSpawnTimes( float fCurrTime );
+	void UpdateChildSpawnTimes(float fCurrTime);
 	// Only when not effect.
-	void InitTexture( ParticleParams *pParams );
+	void InitTexture(ParticleParams* pParams);
 
-	void AssignEffect( IParticleEffect *pEffect,bool bChildEffects );
+	void AssignEffect(IParticleEffect* pEffect, bool bChildEffects);
 
 	void CalculateWaterLevel();
-	void OnActivate( bool bActive );
-	void OnSpawnParticles( bool bChildProcess );
+	void OnActivate(bool bActive);
+	void OnSpawnParticles(bool bChildProcess);
 	void PlaySound();
 
 	//////////////////////////////////////////////////////////////////////////
 	// IParticleEmitter interface implementation.
 	//////////////////////////////////////////////////////////////////////////
-	virtual void SetParams( const ParticleParams &params );
-	virtual void SetEffect( IParticleEffect *pEffect );
+	virtual void SetParams(const ParticleParams& params);
+	virtual void SetEffect(IParticleEffect* pEffect);
 	virtual const ParticleParams& GetParams() const;
-	virtual void SetPos( const Vec3 &vPos,const Vec3 &vDir,float fScale );
-	virtual void SetSpawnPeriod( float fSpawnPeriod );
-	virtual void SetLifeTime( const float fLifeTime );
+	virtual void SetPos(const Vec3& vPos, const Vec3& vDir, float fScale);
+	virtual void SetSpawnPeriod(float fSpawnPeriod);
+	virtual void SetLifeTime(const float fLifeTime);
 	virtual void SetUnlimitedLife();
-	virtual void SetEntity( IEntityRender *pEntity );
-	virtual void SetMaterial( IMatInfo *pMaterial );
+	virtual void SetEntity(IEntityRender* pEntity);
+	virtual void SetMaterial(IMatInfo* pMaterial);
 };
 
 #endif // __particleemitter_h__

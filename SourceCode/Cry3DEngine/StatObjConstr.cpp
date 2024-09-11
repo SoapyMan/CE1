@@ -250,7 +250,7 @@ void CStatObj::MakeLeafBuffer(bool bSortAndShareVerts)
 	// remove materials without geometry
 	if (!m_bIgnoreFakeMaterialsInCGF)
 		return;
-	
+
 	CLeafBuffer* lb = m_pLeafBuffer;
 	list2<CMatInfo>& matInfos = *lb->m_pMats;
 	if (lb && !lb->m_bMaterialsWasCreatedInRenderer)

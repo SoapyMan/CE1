@@ -36,8 +36,8 @@ class Cry_Butterfly
 
   inline void Limit(float * val, float min, float max)
   {
-    if(*val > max)      *val = max;
-    else if(*val < min) *val = min;
+	if(*val > max)      *val = max;
+	else if(*val < min) *val = min;
   }
 
   bool IsPointInvalid(const Vec3d & pos);
@@ -56,7 +56,7 @@ class CBFManager : public Cry3DEngineBase
   SVertexStream   m_Indixes;
   int m_nTexID;
   bool m_bEven;
-	Vec3d m_vForward;	
+	Vec3d m_vForward;
   int m_nCurrentObjectsCount;
 
 public:
@@ -70,5 +70,5 @@ public:
 };
 
 
-#endif 
+#endif
 */

@@ -22,27 +22,27 @@
 
 #include "BaseObj.h"
 
-class CGeom  : public CBaseObj
+class CGeom : public CBaseObj
 {
 public:
-	CryVertex	  *m_pVertices;
-	CryFace		  *m_pFaces;
-	CryUV		    *m_pUVs;
-	CryTexFace	*m_pTexFaces;
-	CryIRGB		  *m_pVcols;
-//	int			    *m_pNumLinks;
-//	CryLink		** m_pLinks;
+	CryVertex* m_pVertices;
+	CryFace* m_pFaces;
+	CryUV* m_pUVs;
+	CryTexFace* m_pTexFaces;
+	CryIRGB* m_pVcols;
+	//	int			    *m_pNumLinks;
+	//	CryLink		** m_pLinks;
 
-	char * m_sPropstr;
+	char* m_sPropstr;
 	MESH_CHUNK_DESC	m_Chunk;
 
 	CGeom();
 	virtual ~CGeom();
-	
-	//from BaseObj
-	bool Load(CXFile *f, int pos);
 
-  MESH_CHUNK_DESC	* GetChunk() { return &m_Chunk; }
+	//from BaseObj
+	bool Load(CXFile* f, int pos);
+
+	MESH_CHUNK_DESC* GetChunk() { return &m_Chunk; }
 
 	//CGeom methods
 	void Deform();

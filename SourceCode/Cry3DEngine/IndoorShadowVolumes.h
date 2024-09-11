@@ -33,24 +33,24 @@ class IStencilShadowConnectivity;
 //////////////////////////////////////////////////////////////////////
 class CShadowVolObject : public CVolume
 {
-public:	
+public:
 
 	// constructor
 	CShadowVolObject()
-	{						
-//		m_pFaceList=NULL;		
-		m_pReMeshShadow=NULL;
-		m_pSystemVertexBuffer=NULL;
-		m_pEdgeConnectivity=0;
-		m_nNumVertices=0;
-//		m_nNumFaces=0;
+	{
+		//		m_pFaceList=NULL;		
+		m_pReMeshShadow = NULL;
+		m_pSystemVertexBuffer = NULL;
+		m_pEdgeConnectivity = 0;
+		m_nNumVertices = 0;
+		//		m_nNumFaces=0;
 	};
 
 	//! destructor
 	~CShadowVolObject();
 
 	//!
-	bool	CheckInside(const Vec3d &pos,bool bWorldSpace=true)
+	bool	CheckInside(const Vec3d& pos, bool bWorldSpace = true)
 	{
 		//temporary return false...will be a cool AI game play feature to know 
 		//if we are in shadows
@@ -58,26 +58,26 @@ public:
 	}
 
 	//! precalculate the connectivity infos to build the object silouhette
-	bool CreateConnectivityInfo( void );	
+	bool CreateConnectivityInfo(void);
 
 	//! create/update a vertex buffer containing the shadow volume (for static lights)
-	void	RebuildShadowVolumeBuffer( const CDLight &lSource, float fExtent );
+	void	RebuildShadowVolumeBuffer(const CDLight& lSource, float fExtent);
 
-  Vec3d * GetSysVertBufer() { return m_pSystemVertexBuffer; }
+	Vec3d* GetSysVertBufer() { return m_pSystemVertexBuffer; }
 
-  int		GetNumVertices() { return(m_nNumVertices); }
-//  int		GetNumFaces() { return(m_nNumFaces); }
+	int		GetNumVertices() { return(m_nNumVertices); }
+	//  int		GetNumFaces() { return(m_nNumFaces); }
 
-	// Shader RenderElements for stencil
-	CRETriMeshShadow *						m_pReMeshShadow;								//!<
-  
-  void CheckUnload();
+		// Shader RenderElements for stencil
+	CRETriMeshShadow* m_pReMeshShadow;								//!<
 
-  IStencilShadowConnectivity * & GetEdgeConnectivity() { return m_pEdgeConnectivity; }
+	void CheckUnload();
+
+	IStencilShadowConnectivity*& GetEdgeConnectivity() { return m_pEdgeConnectivity; }
 
 protected:
 
-//! free the shadow volume buffers
+	//! free the shadow volume buffers
 	void	FreeVertexBuffers();
 
 	//list of faces from source objects, its always shared from the stat obj
@@ -85,7 +85,7 @@ protected:
 //  CObjFace *										m_pFaceList;										//!< pointer to MeshIdx faces [0..m_nNumFaces-1]
 
 	//list of edges...can be shared from another shadow vol object
-	IStencilShadowConnectivity *	m_pEdgeConnectivity;						//!< stored edge connectivity for fast shadow edge extraction, could be 0, call ->Release() to free it
+	IStencilShadowConnectivity* m_pEdgeConnectivity;						//!< stored edge connectivity for fast shadow edge extraction, could be 0, call ->Release() to free it
 
 	TFixedArray<unsigned short>		m_arrIndices;										//!<
 	unsigned											m_nNumVertices;									//!< number of vertices in SystemBuffer
@@ -93,10 +93,10 @@ protected:
 	//!
 	//! /param nNumIndices
 	//! /param nNumVertices
-	void PrepareShadowVolumeVertexBuffer( unsigned nNumIndices, unsigned nNumVertices );
+	void PrepareShadowVolumeVertexBuffer(unsigned nNumIndices, unsigned nNumVertices);
 
 	//shadow volume renderer vertex buffer
-  Vec3d * m_pSystemVertexBuffer;
+	Vec3d* m_pSystemVertexBuffer;
 };
 
 struct ItShadowVolume;
@@ -105,17 +105,17 @@ struct tShadowVolume : public ItShadowVolume
 {
 	tShadowVolume()
 	{
-		pSvObj=NULL;
+		pSvObj = NULL;
 	}
 
-	CShadowVolObject *GetShadowVolume()
+	CShadowVolObject* GetShadowVolume()
 	{
 		return (pSvObj);
 	}
 
-	void SetShadowVolume(CShadowVolObject *pParmSvObj)
+	void SetShadowVolume(CShadowVolObject* pParmSvObj)
 	{
-		pSvObj=pParmSvObj;
+		pSvObj = pParmSvObj;
 	}
 
 	void	Release()
@@ -123,7 +123,7 @@ struct tShadowVolume : public ItShadowVolume
 		if (pSvObj)
 		{
 			delete pSvObj;
-			pSvObj=NULL;
+			pSvObj = NULL;
 		}
 
 		delete this;
@@ -135,23 +135,23 @@ struct tShadowVolume : public ItShadowVolume
 		return (pSvObj->GetPos());
 	}
 
-	void SetPos(const Vec3d &vPos)
+	void SetPos(const Vec3d& vPos)
 	{
 		pSvObj->SetPos(vPos);
 	}
 
 	//! recalculate the object's silouhette, mostly for dynamic lights
 	//! the light should always be in object space
-	void	RebuildShadowVolumeBuffer( const CDLight &lSource, float fExtent )
+	void	RebuildShadowVolumeBuffer(const CDLight& lSource, float fExtent)
 	{
 		pSvObj->RebuildShadowVolumeBuffer(lSource, fExtent);
 	}
 
-  Vec3d * GetSysVertBufer() { return pSvObj->GetSysVertBufer(); }
+	Vec3d* GetSysVertBufer() { return pSvObj->GetSysVertBufer(); }
 
-  void CheckUnload() { pSvObj->CheckUnload(); }
+	void CheckUnload() { pSvObj->CheckUnload(); }
 
-	CShadowVolObject *pSvObj;	
+	CShadowVolObject* pSvObj;
 };
 
 #endif
