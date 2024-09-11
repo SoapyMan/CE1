@@ -11,13 +11,13 @@
 #define _SILENCE_STDEXT_HASH_DEPRECATION_WARNINGS
 
 #if !defined(LINUX)
-	#include <tchar.h>
+#include <tchar.h>
 #else
-	#include <curses.h>									// getch() 
+#include <curses.h>									// getch() 
 #endif
 
 #if !defined(LINUX)
-	#define NOT_USE_CRY_MEMORY_MANAGER
+#define NOT_USE_CRY_MEMORY_MANAGER
 #endif
 #include <platform.h>
 
