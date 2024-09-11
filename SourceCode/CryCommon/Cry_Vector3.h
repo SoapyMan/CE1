@@ -58,6 +58,7 @@ public:
 	Vec3_tpl(type_min) { x = y = z = -100; }
 	Vec3_tpl(type_max) { x = y = z = 100; }
 
+	Vec3_tpl(const F v) { x = v; y = v; z = v; };
 	Vec3_tpl(const F vx, const F vy, const F vz) { x = vx; y = vy; z = vz; };
 
 	//bracket operator

@@ -1510,9 +1510,6 @@ bool CCGVProgram_GL::mfActivate(CVProgram* pPosVP)
 			}
 			else
 			{
-#ifdef WIN64
-				iLog->LogError("\002 Can't create CG vertex program '%s' (cache name: %s): NO CG Runtime in 64-bit version", m_Name.c_str(), namedst);
-#endif
 				m_Insts[m_CurInst].m_dwHandle = 0;
 			}
 			statusdst = iSystem->GetIPak()->FOpen(namedst, "r");

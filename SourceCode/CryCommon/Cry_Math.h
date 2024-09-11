@@ -53,6 +53,8 @@ const float gf_PI_MUL_2 = 3.14159265358979323846264338327950288419716939937510f 
 const float gf_PI_DIV_2 = 3.14159265358979323846264338327950288419716939937510f * 0.5f; // pi/2
 const float gf_DEGTORAD = 0.01745329251994329547f; // Degrees to Radians
 const float gf_RADTODEG = 57.29577951308232286465f; // Radians to Degrees
+const float gf_INFINITY = 1900000.0f;
+const float gf_EPSILON = 0.00001f;
 
 // the check for compatibility with Max SDK: Max gfx.h header defines its own pi
 #if !defined(_GFX_H_)

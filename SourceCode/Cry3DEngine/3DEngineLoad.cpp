@@ -434,8 +434,8 @@ void C3DEngine::LoadFogVolumesFromXML(XDOM::IXMLDOMDocumentPtr pDoc)
 
 	{ // make hardcoded volume for ocean
 		VolumeInfo volumeInfo;
-		volumeInfo.vBoxMax = Vec3d(1000000, 1000000, m_pTerrain->GetWaterLevel());
-		volumeInfo.vBoxMin = Vec3d(-1000000, -1000000, -1000000);
+		volumeInfo.vBoxMax = Vec3d(gf_INFINITY, gf_INFINITY, m_pTerrain->GetWaterLevel());
+		volumeInfo.vBoxMin = Vec3d(-gf_INFINITY);
 		//    volumeInfo.pShader = 0;
 		volumeInfo.pShader = GetRenderer()->EF_LoadShader("FogLayer", eSH_World, EF_SYSTEM);
 		volumeInfo.vColor = m_vUnderWaterFogColor;

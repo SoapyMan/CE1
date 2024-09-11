@@ -392,7 +392,7 @@ void CSectorInfo::MakeBeachStage2(FILE* hFileToSave)
 			// find totaly free point closest to last result point
 			int closest_id = -1;
 			{
-				float closest_dist = 100000;
+				float closest_dist = gf_INFINITY;
 				for (int j = 0; j < m_lstUnsortedBeachVerts.Count(); j++)
 					if (m_lstUnsortedBeachVerts[j].busy == 0)
 					{

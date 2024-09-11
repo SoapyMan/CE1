@@ -199,7 +199,7 @@ float CryCharDecalBuilder::GetDistanceToTriangleBCS(GeomFace nVertex)
 	else
 	{
 		if (b0 < 1e-3)
-			return -100000;
+			return -gf_INFINITY;
 	}
 
 	float b1 = (v[1].x * v[2].y - v[2].x * v[1].y) / b0;
@@ -211,7 +211,7 @@ float CryCharDecalBuilder::GetDistanceToTriangleBCS(GeomFace nVertex)
 		if (g_GetCVars()->ca_PerforatingDecals())
 			return distanceToThinTriangle(v);
 		else
-			return -100000;
+			return -gf_INFINITY;
 
 	//assert (fabs(b1+b2+b3-1) < 0.01f);
 #ifdef _DEBUG

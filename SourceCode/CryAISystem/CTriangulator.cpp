@@ -307,8 +307,8 @@ bool CTriangulator::PrepForTriangulation(void)
 	// calculate super-triangle
 	VARRAY::iterator i;
 	Vtx min, max;
-	min.x = 100000.f;
-	min.y = 100000.f;
+	min.x = gf_INFINITY;
+	min.y = gf_INFINITY;
 	max.x = 0.f;
 	max.y = 0.f;
 

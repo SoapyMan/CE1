@@ -409,16 +409,16 @@ CBrush::~CBrush()
 	Get3DEngine()->FreeEntityRenderState(this);
 
 	//m_pLMData = NULL;
-/*
-	if(GetRndFlags()&ERF_MERGED_NEW && m_nObjectTypeID>=0)
-	{
-		CStatObj * pBody = (CStatObj*)m_lstBrushTypes[m_nObjectTypeID];
-		assert(pBody->m_nUsers==1);
-		delete pBody;
-		m_lstBrushTypes[m_nObjectTypeID] = NULL;
-		m_nObjectTypeID=-1;
-	}
-*/
+
+	//if(GetRndFlags() & ERF_MERGED_NEW && m_nObjectTypeID>=0)
+	//{
+	//	CStatObj * pBody = (CStatObj*)m_lstBrushTypes[m_nObjectTypeID];
+	//	assert(pBody->m_nUsers==1);
+	//	delete pBody;
+	//	m_lstBrushTypes[m_nObjectTypeID] = NULL;
+	//	m_nObjectTypeID=-1;
+	//}
+
 	DeleteLMTC();
 }
 
@@ -536,11 +536,10 @@ void CBrush::Dephysicalize()
 
 void CBrush::Dematerialize()
 {
-	if (m_pMaterial)
-		m_pMaterial = 0;
+	m_pMaterial = nullptr;
 }
 
-int __cdecl CBrush__Cmp_MergeID(const void* v1, const void* v2)
+static int CBrush__Cmp_MergeID(const void* v1, const void* v2)
 {
 	CBrush** pBr1 = (CBrush**)v1;
 	CBrush** pBr2 = (CBrush**)v2;
@@ -548,60 +547,42 @@ int __cdecl CBrush__Cmp_MergeID(const void* v1, const void* v2)
 	// shader
 	if (pBr1[0]->GetMergeId() > pBr2[0]->GetMergeId())
 		return  1;
-	else
-		if (pBr1[0]->GetMergeId() < pBr2[0]->GetMergeId())
-			return -1;
+	else if (pBr1[0]->GetMergeId() < pBr2[0]->GetMergeId())
+		return -1;
 
 	return 0;
 }
 
-struct LMTexCoord
-{
-	float s, t;
-};
-
-int __cdecl CBrush__Cmp_MatChunks(const void* v1, const void* v2)
+static int CBrush__Cmp_MatChunks(const void* v1, const void* v2)
 {
 	CMatInfo* pMat1 = (CMatInfo*)v1;
 	CMatInfo* pMat2 = (CMatInfo*)v2;
 
+	SShaderItem& shader1 = pMat1->shaderItem;
+	SShaderItem& shader2 = pMat2->shaderItem;
+
 	// shader
-	if (pMat1->shaderItem.m_pShader->GetTemplate(-1) > pMat2->shaderItem.m_pShader->GetTemplate(-1))
+	if (shader1.m_pShader->GetTemplate(-1) > shader2.m_pShader->GetTemplate(-1))
 		return  1;
-	else
-		if (pMat1->shaderItem.m_pShader->GetTemplate(-1) < pMat2->shaderItem.m_pShader->GetTemplate(-1))
-			return -1;
+	else if (shader1.m_pShader->GetTemplate(-1) < shader2.m_pShader->GetTemplate(-1))
+		return -1;
 
 	// shader resources
-	if (pMat1->shaderItem.m_pShaderResources > pMat2->shaderItem.m_pShaderResources)
+	if (shader1.m_pShaderResources > shader2.m_pShaderResources)
 		return  1;
-	else
-		if (pMat1->shaderItem.m_pShaderResources < pMat2->shaderItem.m_pShaderResources)
-			return -1;
+	else if (shader1.m_pShaderResources < shader2.m_pShaderResources)
+		return -1;
 
 	// lm tex id
 	if (pMat1->m_Id > pMat2->m_Id)
 		return  1;
-	else
-		if (pMat1->m_Id < pMat2->m_Id)
-			return -1;
+	else if (pMat1->m_Id < pMat2->m_Id)
+		return -1;
 
 	return 0;
 }
 
-struct SBrushM
-{
-	int Id;
-	int nNumMats;
-};
-struct SMatGroup
-{
-	SShaderItem sh;
-	int nLMId;
-	int nNumVerts;
-	TArray<SBrushM> Owners;
-};
-
+#pragma optimize("", off)
 void CObjManager::MergeBrushes()
 {
 	if (!GetCVars()->e_brushes_merging || !m_lstBrushContainer.Count())
@@ -611,6 +592,25 @@ void CObjManager::MergeBrushes()
 	int nNextStartId = -1;
 	list2<CBrush*> newBrushes;
 	qsort(&m_lstBrushContainer[0], m_lstBrushContainer.Count(), sizeof(m_lstBrushContainer[0]), CBrush__Cmp_MergeID);
+
+	struct SBrushM
+	{
+		int Id;
+		int nNumMats;
+	};
+
+	struct SMatGroup
+	{
+		TArray<SBrushM> Owners;
+		SShaderItem sh;
+		int nLMId;
+		int nNumVerts;
+	};
+
+	struct LMTexCoord
+	{
+		float s, t;
+	};
 
 	list2<struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F> lstVerts;
 	list2<LMTexCoord> lstLMTexCoords;
@@ -799,8 +799,8 @@ void CObjManager::MergeBrushes()
 	list2<ushort> lstIndicesSorted;
 	while (nEntityId < m_lstBrushContainer.Count() || nNextStartId >= 0)
 	{
-		Vec3d vBoxMax(-10000, -10000, -10000);
-		Vec3d vBoxMin(10000, 10000, 10000);
+		Vec3d vBoxMax(-gf_INFINITY);
+		Vec3d vBoxMin(gf_INFINITY);
 
 		int nLMTexId = -1;
 		int nHDRLMTexId = -1;
@@ -839,16 +839,18 @@ void CObjManager::MergeBrushes()
 			if (nMergeID != pBrush->GetMergeId() && nCurVertsNum)
 				break;
 
+			RenderLMData* lmData = pBrush->GetLightmap(0);
+
 			nMergeID = pBrush->GetMergeId();
 			if (nLMTexId < 0)
 			{
-				nLMTexId = pBrush->GetLightmap(0) ? pBrush->GetLightmap(0)->GetColorLerpTex() : 0;
-				nHDRLMTexId = pBrush->GetLightmap(0) ? pBrush->GetLightmap(0)->GetHDRColorLerpTex() : 0;
-				nLMDirTexId = pBrush->GetLightmap(0) ? pBrush->GetLightmap(0)->GetDomDirectionTex() : 0;
+				nLMTexId = lmData ? lmData->GetColorLerpTex() : 0;
+				nHDRLMTexId = lmData ? lmData->GetHDRColorLerpTex() : 0;
+				nLMDirTexId = lmData ? lmData->GetDomDirectionTex() : 0;
 			}
-			else if (nLMTexId != (pBrush->GetLightmap(0) ? pBrush->GetLightmap(0)->GetColorLerpTex() : 0) ||
-				nHDRLMTexId != (pBrush->GetLightmap(0) ? pBrush->GetLightmap(0)->GetHDRColorLerpTex() : 0) ||
-				nLMDirTexId != (pBrush->GetLightmap(0) ? pBrush->GetLightmap(0)->GetDomDirectionTex() : 0))
+			else if (nLMTexId != (lmData ? lmData->GetColorLerpTex() : 0) ||
+				nHDRLMTexId != (lmData ? lmData->GetHDRColorLerpTex() : 0) ||
+				nLMDirTexId != (lmData ? lmData->GetDomDirectionTex() : 0))
 			{
 				if (nNextStartId < 0)
 					nNextStartId = nEntityId;
@@ -875,14 +877,14 @@ void CObjManager::MergeBrushes()
 			if (!pLB->m_SecVertCount)
 				continue;
 
-			if (nCurVertsNum + pLB->m_SecVertCount > USHRT_MAX)
+			if (lstVerts.Count() + pLB->m_SecVertCount > USHRT_MAX)
 				break;
 
 			int nIndCount = 0;
 			pLB->GetIndices(&nIndCount);
 			brMerged.AddElem(nEntityId);
 
-			int nInitVertCout = lstVerts.Count();
+			const int nInitVertCout = lstVerts.Count();
 			for (int m = 0; m < pLB->m_pMats->Count(); m++)
 			{
 				CMatInfo newMatInfo = *pLB->m_pMats->Get(m);
@@ -893,7 +895,7 @@ void CObjManager::MergeBrushes()
 					CMatInfo* pCustMat = (CMatInfo*)pBrush->GetMaterial();
 					if (pCustMat)
 					{
-						int nMatId = newMatInfo.m_nCGFMaterialID;
+						const int nMatId = newMatInfo.m_nCGFMaterialID;
 						if (nMatId < 0)
 							continue;
 
@@ -986,7 +988,7 @@ void CObjManager::MergeBrushes()
 				newMatInfo.nFirstVertId = lstVerts.Count() - newMatInfo.nNumVerts;
 
 				newMatInfo.pRE = 0;
-				newMatInfo.m_Id = pBrush->GetLightmap(0) ? pBrush->GetLightmap(0)->GetColorLerpTex() : 0;
+				newMatInfo.m_Id = lmData ? lmData->GetColorLerpTex() : 0;
 
 				if (newMatInfo.nNumIndices)
 					lstChunks.Add(newMatInfo);

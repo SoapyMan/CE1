@@ -256,34 +256,33 @@ struct CLeafBuffer
 		return (byte*)&lb->m_TempTexCoords[Id];
 	}
 
-	CVertexBuffer* m_pVertexBuffer;						//!< video memory
+	CVertexBuffer*			m_pVertexBuffer;						//!< video memory
+	CLeafBuffer*			m_pVertexContainer;					//!<
 
-	CLeafBuffer* m_pVertexContainer;					//!<
+	uint					m_bMaterialsWasCreatedInRenderer : 1;
+	uint					m_bOnlyVideoBuffer : 1;
+	uint					m_bDynamic : 1;
 
-	uint										m_bMaterialsWasCreatedInRenderer : 1;
-	uint										m_bOnlyVideoBuffer : 1;
-	uint										m_bDynamic : 1;
-
-	uint										m_UpdateVBufferMask;				//!<
+	uint					m_UpdateVBufferMask;				//!<
 	uint                    m_UpdateFrame;
-	uint                    m_SortFrame;								//!< to prevent unneccessary sorting during one frame
-	int											m_SecVertCount;							//!< number of vertices in m_pSecVertBuffer
-	CVertexBuffer* m_pSecVertBuffer;						//!< system memory
+	uint                    m_SortFrame;						//!< to prevent unneccessary sorting during one frame
+	int						m_SecVertCount;						//!< number of vertices in m_pSecVertBuffer
+	CVertexBuffer*			m_pSecVertBuffer;					//!< system memory
 
 	SVertexStream           m_Indices;
 	TArray <ushort>         m_SecIndices;
 	int                     m_NumIndices;
-	list2<ushort>* m_pIndicesPreStrip;
+	list2<ushort>*			m_pIndicesPreStrip;
 
-	uint* m_arrVertStripMap;					//!<
+	uint*					m_arrVertStripMap;					//!<
 
-	int						          m_nVertexFormat;
-	int											m_nPrimetiveType;						//!< R_PRIMV_TRIANGLES, R_PRIMV_TRIANGLE_STRIP, R_PRIMV...
+	int						m_nVertexFormat;
+	int						m_nPrimetiveType;					//!< R_PRIMV_TRIANGLES, R_PRIMV_TRIANGLE_STRIP, R_PRIMV...
 
-	list2<CMatInfo>* m_pMats;										//!<
+	list2<CMatInfo>*		m_pMats;							//!<
 
-	uint* m_arrVtxMap;												//!< [Anton] mapping table leaf buffer vertex idx->original vertex idx
-	float										m_fMinU, m_fMinV, m_fMaxU, m_fMaxV;	//!< only needed for fur rendering (room for improvement)
+	uint*					m_arrVtxMap;						//!< [Anton] mapping table leaf buffer vertex idx->original vertex idx
+	float					m_fMinU, m_fMinV, m_fMaxU, m_fMaxV;	//!< only needed for fur rendering (room for improvement)
 
 	//! /param StripType e.g. STRIPTYPE_NONE,STRIPTYPE_ONLYLISTS,STRIPTYPE_SINGLESTRIP,STRIPTYPE_MULTIPLESTRIPS,STRIPTYPE_DEFAULT (in IRenderer.h)
 	void StripifyMesh(int inStripType);
