@@ -1070,7 +1070,7 @@ CRenderer::CRenderer()
 		"Time fading factor of the light coronas.\n"
 		"Usage: r_CoronaFade 0.5"
 		"Default is 0.5.");
-	iConsole->Register("r_CoronaSizeScale", &CV_r_coronasizescale, 1.0f, VF_DUMPTODISK);
+	iConsole->Register("r_CoronaSizeScale", &CV_r_coronasizescale, 2.0f, VF_DUMPTODISK);
 	iConsole->Register("r_CoronaColorScale", &CV_r_coronacolorscale, 1.0f, 0, "");
 
 	iConsole->Register("r_CullByClipPlanes", &CV_r_cullbyclipplanes, 1);

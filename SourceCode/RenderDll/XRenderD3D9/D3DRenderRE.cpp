@@ -1112,7 +1112,7 @@ bool CREFlare::mfCheckVis(CCObject* obj)
 		}
 		if (fIntens >= 0.05f && bRays)
 		{
-			int sizeMask = 64;
+			int sizeMask = 128;
 			int sizeMask2 = sizeMask / 2;
 
 			if ((rd->m_RP.m_PersFlags & RBPF_HDR) && rd->m_nHDRType == 1)
