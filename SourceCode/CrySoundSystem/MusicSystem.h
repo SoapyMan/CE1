@@ -40,22 +40,22 @@ struct SMusicPatternPlayInfo
 {
 	SMusicPatternPlayInfo()
 	{
-		nLayer=MUSICLAYER_MAIN;
-		pPatternInstance=NULL;
-		eBlendType=EBlend_ToEnd;
-		pRefCount=NULL;
-		fPhase=1.0;
-		fFadeTime=0.0;	// use default fade time...
-		bRefCountAdjusted=false;
+		nLayer = MUSICLAYER_MAIN;
+		pPatternInstance = NULL;
+		eBlendType = EBlend_ToEnd;
+		pRefCount = NULL;
+		fPhase = 1.0;
+		fFadeTime = 0.0;	// use default fade time...
+		bRefCountAdjusted = false;
 	}
 	~SMusicPatternPlayInfo()
 	{
-		pPatternInstance=NULL;
+		pPatternInstance = NULL;
 	}
 	TPatternInstancePtr pPatternInstance;
 	int nLayer;
 	EBlendingType eBlendType;
-	int *pRefCount;
+	int* pRefCount;
 	// internal
 	double fPhase;	// phase for fading (0-1)
 	double fFadeTime;	// time in seconds to fade
@@ -66,7 +66,7 @@ struct SMusicPatternPlayInfo
 // A couple of typedefs for various stl-containers
 //////////////////////////////////////////////////////////////////////////
 
-typedef std::map<string,CMusicPattern*,stl::less_stricmp<string> >	TPatternMap;
+typedef std::map<string, CMusicPattern*, stl::less_stricmp<string> >	TPatternMap;
 typedef TPatternMap::iterator									TPatternMapIt;
 
 typedef std::vector<string>							TStringVec;
@@ -81,9 +81,9 @@ typedef TPatternPlayInfoVec::iterator					TPatternPlayInfoVecIt;
 
 struct SMoodEventInfo
 {
-	bool operator<(const SMoodEventInfo &b) const
+	bool operator<(const SMoodEventInfo& b) const
 	{
-		if (stricmp(sMood.c_str(),b.sMood.c_str()) < 0)
+		if (stricmp(sMood.c_str(), b.sMood.c_str()) < 0)
 			return true;
 		return false;
 	}
@@ -103,16 +103,16 @@ class CMusicSystem : public IMusicSystem
 protected:
 	CRITICAL_SECTION m_CS;
 	// system pointers
-	ISystem *m_pSystem;
-	ITimer *m_pTimer;
-	ILog *m_pLog;
-	ISoundSystem *m_pSoundSystem;
+	ISystem* m_pSystem;
+	ITimer* m_pTimer;
+	ILog* m_pLog;
+	ISoundSystem* m_pSoundSystem;
 	// random generator
 	CPseudoRandGen m_RandGen;
 	// notification sink
-	IMusicSystemSink *m_pSink;
+	IMusicSystemSink* m_pSink;
 	// current data (allocated externally)
-	SMusicData *m_pDataPtr;
+	SMusicData* m_pDataPtr;
 	bool m_bOwnMusicData;
 	// sound-playback params
 	float m_fMasterVolume;
@@ -121,7 +121,7 @@ protected:
 	// bytes/sample in output stream
 	int m_nBytesPerSample;
 	// fmod stream data
-	FSOUND_STREAM *m_pStream;
+	FSOUND_STREAM* m_pStream;
 	int m_nChannel;
 	// states
 	bool m_bDataLoaded;
@@ -140,17 +140,17 @@ protected:
 	int m_nLayeredRhythmicPatterns;
 	int m_nLayeredIncidentalPatterns;
 	// temporary mix-buffer
-	void *m_pMixBuffer;
+	void* m_pMixBuffer;
 	// array of currently playing patterns
 	TPatternPlayInfoVec m_vecPlayingPatterns;
 	// all themes (moods inside)
 	TThemeMap m_mapThemes;
 	// current theme/mood
-	SMusicTheme *m_pThemeOverride;				// overriding theme (eg. for vehicle)
-	SMusicTheme *m_pCurrTheme;
-	SMusicTheme *m_pNextTheme;						// in case a theme change occured, this is the new theme... NULL otherwise
-	SMusicMood *m_pCurrMood;
-	SMusicMood *m_pNextMood;
+	SMusicTheme* m_pThemeOverride;				// overriding theme (eg. for vehicle)
+	SMusicTheme* m_pCurrTheme;
+	SMusicTheme* m_pNextTheme;						// in case a theme change occured, this is the new theme... NULL otherwise
+	SMusicMood* m_pCurrMood;
+	SMusicMood* m_pNextMood;
 	// mood event arrays
 	TMoodEventSet m_setMoodEvents;				// active mood events
 	TMoodEventSet m_setFrameMoodEvents;		// mood events arrived last frame
@@ -163,90 +163,90 @@ protected:
 	// logging
 	TStringVec m_vecLog;
 	bool m_bEnableEventProcessing;
-	ICVar	*m_pCVarDebugMusic;
-	ICVar	*m_pCVarMusicEnable;
-	ICVar	*m_pCVarMusicMaxSimultaniousPatterns;
-	ICVar	*m_pCVarMusicStreamedData;
+	ICVar* m_pCVarDebugMusic;
+	ICVar* m_pCVarMusicEnable;
+	ICVar* m_pCVarMusicMaxSimultaniousPatterns;
+	ICVar* m_pCVarMusicStreamedData;
 	int m_musicEnable;
 protected:
 	virtual ~CMusicSystem();
 	bool Init();
 	void Shutdown();
 	void FlushLog();
-	CMusicPattern* AddPattern(const char *pszName, const char *pszFilename);
+	CMusicPattern* AddPattern(const char* pszName, const char* pszFilename);
 	bool FlushPatterns();
 	bool StartPlaying();
 	bool StopPlaying();
-	SMusicMood* GetMood(SMusicTheme *pTheme, const char *pszMood);
-	bool SetTheme(SMusicTheme *pNewTheme, bool bOverride);
-	bool SetMood(SMusicMood *pNewMood);
-	SMusicMood* GetDefaultMood(SMusicTheme *pTheme);
-	void PushPatternToMixList(SMusicPatternPlayInfo &PlayInfo);
+	SMusicMood* GetMood(SMusicTheme* pTheme, const char* pszMood);
+	bool SetTheme(SMusicTheme* pNewTheme, bool bOverride);
+	bool SetMood(SMusicMood* pNewMood);
+	SMusicMood* GetDefaultMood(SMusicTheme* pTheme);
+	void PushPatternToMixList(SMusicPatternPlayInfo& PlayInfo);
 	void EnterDefaultMood();
 	void Silence();
 	void AdjustMixStreamsRefCount(int nSamples);
-	void MixStreams(void *pBuffer, int nLength);
-	bool FadeStream(SMusicPatternPlayInfo &PlayInfo, signed short *pBuffer, int nSamples);
+	void MixStreams(void* pBuffer, int nLength);
+	bool FadeStream(SMusicPatternPlayInfo& PlayInfo, signed short* pBuffer, int nSamples);
 	void FadeOutAllSecondaryLayers(double fFadeTime);
-	CMusicPatternInstance* GetPatternInstance(const char *pszPattern);
-	bool UpdateCurrentPatternSet(SMusicMood *pMood, int nSamples, bool bAllowChange);
-	bool ChoosePatternSet(SMusicMood *pMood);
-	CMusicPatternInstance* ChooseBridge(SMusicTheme *pCurrTheme, SMusicTheme *pNewTheme);
-	CMusicPatternInstance* ChoosePattern(SMusicMood *pMood, int nLayer=MUSICLAYER_MAIN);
-	signed char StreamingCallback(FSOUND_STREAM *pStream, void *pBuffer, int nLength);
+	CMusicPatternInstance* GetPatternInstance(const char* pszPattern);
+	bool UpdateCurrentPatternSet(SMusicMood* pMood, int nSamples, bool bAllowChange);
+	bool ChoosePatternSet(SMusicMood* pMood);
+	CMusicPatternInstance* ChooseBridge(SMusicTheme* pCurrTheme, SMusicTheme* pNewTheme);
+	CMusicPatternInstance* ChoosePattern(SMusicMood* pMood, int nLayer = MUSICLAYER_MAIN);
+	signed char StreamingCallback(FSOUND_STREAM* pStream, void* pBuffer, int nLength);
 	//friend signed char __cdecl _StreamingCallback(CS_STREAM *pStream, void *pBuffer, int nLength, INT_PTR nParam);
-	friend signed char F_CALLBACKAPI _StreamingCallback(FSOUND_STREAM *pStream, void *pBuffer, int nLength, void* nParam);
-  friend class CMusicLoadSink;
+	friend signed char F_CALLBACKAPI _StreamingCallback(FSOUND_STREAM* pStream, void* pBuffer, int nLength, void* nParam);
+	friend class CMusicLoadSink;
 public:
-	CMusicSystem(ISystem *pSystem);
+	CMusicSystem(ISystem* pSystem);
 	void Release();
 	ISystem* GetSystem() { return m_pSystem; }
 	int GetBytesPerSample() { return m_nBytesPerSample; }
-	IMusicSystemSink* SetSink(IMusicSystemSink *pSink);
-	bool SetData(struct SMusicData *pMusicData,bool bNoRelease=false);
+	IMusicSystemSink* SetSink(IMusicSystemSink* pSink);
+	bool SetData(struct SMusicData* pMusicData, bool bNoRelease = false);
 	void ReleaseData();
 	void Unload();
 	void Pause(bool bPause);
-	void EnableEventProcessing(bool bEnable) { m_bEnableEventProcessing=bEnable; }
+	void EnableEventProcessing(bool bEnable) { m_bEnableEventProcessing = bEnable; }
 	bool ResetThemeOverride();
-	bool SetTheme(const char *pszTheme, bool bOverride=false);
+	bool SetTheme(const char* pszTheme, bool bOverride = false);
 	const char* GetTheme() { if (m_pCurrTheme) return m_pCurrTheme->sName.c_str(); return ""; }
-	bool SetMood(const char *pszMood);
-	bool SetDefaultMood(const char *pszMood);
+	bool SetMood(const char* pszMood);
+	bool SetDefaultMood(const char* pszMood);
 	const char* GetMood() { if (m_pCurrMood) return m_pCurrMood->sName.c_str(); return ""; }
 	IStringItVec* GetThemes();
-	IStringItVec* GetMoods(const char *pszTheme);
-	bool AddMusicMoodEvent(const char *pszMood, float fTimeout);
+	IStringItVec* GetMoods(const char* pszTheme);
+	bool AddMusicMoodEvent(const char* pszMood, float fTimeout);
 	void Update();
 	SMusicSystemStatus* GetStatus();	// retrieve status of music-system... dont keep returning pointer !
 	//! compute memory-consumption
 	void GetMemoryUsage(class ICrySizer* pSizer);
-	bool LoadMusicDataFromLUA(IScriptSystem* pScriptSystem, const char *pszFilename);
+	bool LoadMusicDataFromLUA(IScriptSystem* pScriptSystem, const char* pszFilename);
 	bool StreamOGG();
-	void LogMsg( const char *pszFormat, ... );
+	void LogMsg(const char* pszFormat, ...);
 
 	//////////////////////////////////////////////////////////////////////////
 	//! Load music data from XML.
 	//! @param bAddAdata if true data from XML will be added to currently loaded music data.
-	bool LoadFromXML( const char *sFilename,bool bAddData );
+	bool LoadFromXML(const char* sFilename, bool bAddData);
 
 	//////////////////////////////////////////////////////////////////////////
 	// Editing support.
 	//////////////////////////////////////////////////////////////////////////
-	virtual void UpdateTheme( SMusicTheme *pTheme );
-	virtual void UpdateMood( SMusicMood *pMood );
-	virtual void UpdatePattern( SPatternDef *pPattern );
-	virtual void RenamePattern( const char *sOldName,const char *sNewName );
-	virtual void PlayPattern( const char *sPattern,bool bStopPrevious );
-	virtual void DeletePattern( const char *sPattern );
+	virtual void UpdateTheme(SMusicTheme* pTheme);
+	virtual void UpdateMood(SMusicMood* pMood);
+	virtual void UpdatePattern(SPatternDef* pPattern);
+	virtual void RenamePattern(const char* sOldName, const char* sNewName);
+	virtual void PlayPattern(const char* sPattern, bool bStopPrevious);
+	virtual void DeletePattern(const char* sPattern);
 
 private:
 	//////////////////////////////////////////////////////////////////////////
 	// Loading.
 	//////////////////////////////////////////////////////////////////////////
-	void LoadPatternFromXML( XmlNodeRef node,SPatternDef *pPattern );
-	void LoadMoodFromXML( XmlNodeRef &node,SMusicMood *pMood );
-	void LoadThemeFromXML( XmlNodeRef &node,SMusicTheme *pTheme );
+	void LoadPatternFromXML(XmlNodeRef node, SPatternDef* pPattern);
+	void LoadMoodFromXML(XmlNodeRef& node, SMusicMood* pMood);
+	void LoadThemeFromXML(XmlNodeRef& node, SMusicTheme* pTheme);
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -256,17 +256,17 @@ private:
 class CStringItVec : public IStringItVec
 {
 public:
-	CStringItVec(TStringVec &Vec)
+	CStringItVec(TStringVec& Vec)
 	{
-		m_nRefCount=0;
-		m_Vec=Vec;
+		m_nRefCount = 0;
+		m_Vec = Vec;
 		MoveFirst();
 	};
-	bool IsEnd() { return (m_itVec==m_Vec.end()); };
+	bool IsEnd() { return (m_itVec == m_Vec.end()); };
 	const char* Next() { return IsEnd() ? "" : (*m_itVec++).c_str(); };
 	void MoveFirst() { m_itVec = m_Vec.begin(); };
 	void AddRef() { m_nRefCount++; }
-	void Release() { --m_nRefCount; if (m_nRefCount<=0) { delete this; } };
+	void Release() { --m_nRefCount; if (m_nRefCount <= 0) { delete this; } };
 protected:
 	int m_nRefCount;
 	TStringVec m_Vec;
@@ -280,8 +280,8 @@ protected:
 class CSmartCriticalSection
 {
 private:
-	CRITICAL_SECTION *m_pCS;
+	CRITICAL_SECTION* m_pCS;
 public:
-	CSmartCriticalSection(CRITICAL_SECTION &CS) { m_pCS=&CS; EnterCriticalSection(m_pCS); }
+	CSmartCriticalSection(CRITICAL_SECTION& CS) { m_pCS = &CS; EnterCriticalSection(m_pCS); }
 	~CSmartCriticalSection() { LeaveCriticalSection(m_pCS); }
 };

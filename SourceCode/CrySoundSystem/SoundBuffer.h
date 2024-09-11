@@ -15,21 +15,21 @@ enum BufferType
 
 struct SSoundBufferProps
 {
-	SSoundBufferProps(const char *_pszName, int _nFlags) : sName(_pszName)
+	SSoundBufferProps(const char* _pszName, int _nFlags) : sName(_pszName)
 	{
-		nFlags=_nFlags & SOUNDBUFFER_FLAG_MASK;
+		nFlags = _nFlags & SOUNDBUFFER_FLAG_MASK;
 	}
-	SSoundBufferProps(const SSoundBufferProps &Props) : sName(Props.sName)
+	SSoundBufferProps(const SSoundBufferProps& Props) : sName(Props.sName)
 	{
-		nFlags=Props.nFlags;
+		nFlags = Props.nFlags;
 	}
-	bool operator<(const SSoundBufferProps &Props) const
+	bool operator<(const SSoundBufferProps& Props) const
 	{
-		if (nFlags<Props.nFlags)
+		if (nFlags < Props.nFlags)
 			return true;
-		if (nFlags!=Props.nFlags)
+		if (nFlags != Props.nFlags)
 			return false;
-		return (stricmp(sName.c_str(), Props.sName.c_str())<0);
+		return (stricmp(sName.c_str(), Props.sName.c_str()) < 0);
 	}
 	string sName;
 	int nFlags;
@@ -45,12 +45,12 @@ class CSoundBuffer : IStreamCallback
 private:
 	union tagData
 	{
-		void *m_pData;
-		FSOUND_SAMPLE *m_pSample;
-		FSOUND_STREAM *m_pStream;
+		void* m_pData;
+		FSOUND_SAMPLE* m_pSample;
+		FSOUND_STREAM* m_pStream;
 	};
 protected:
-	CSoundSystem *m_pSoundSystem;
+	CSoundSystem* m_pSoundSystem;
 	int m_nRef;
 	BufferType m_Type;
 	tagData m_Data;
@@ -66,34 +66,34 @@ protected:
 	TBufferLoadReqVec m_vecLoadReqToAdd;
 protected:
 	virtual ~CSoundBuffer();
-	virtual void StreamOnComplete(IReadStream *pStream, unsigned nError);
+	virtual void StreamOnComplete(IReadStream* pStream, unsigned nError);
 	void SoundLoaded();
 	void LoadFailed();
-	void UpdateCallbacks();	
+	void UpdateCallbacks();
 public:
 	int GetFModFlags(bool bLooping);
-  CSoundBuffer(CSoundSystem *pSoundSystem, SSoundBufferProps &Props);
-	const char *GetName() { return(m_Props.sName.c_str());}
+	CSoundBuffer(CSoundSystem* pSoundSystem, SSoundBufferProps& Props);
+	const char* GetName() { return(m_Props.sName.c_str()); }
 	int AddRef();
 	int Release();
-	void RemoveFromLoadReqList(CSound *pSound);
-	bool Load(bool bLooping, CSound *pSound);
+	void RemoveFromLoadReqList(CSound* pSound);
+	bool Load(bool bLooping, CSound* pSound);
 	bool WaitForLoad();
 	void AbortLoading();
 	void DestroyData();
-	void SetSample(FSOUND_SAMPLE *pPtr);
-	void SetStream(FSOUND_STREAM *pPtr);
+	void SetSample(FSOUND_SAMPLE* pPtr);
+	void SetStream(FSOUND_STREAM* pPtr);
 	SSoundBufferProps GetProps() { return (m_Props); }
-	FSOUND_SAMPLE* GetSample() { return (m_Type==btSAMPLE) ? m_Data.m_pSample : NULL; }
-	FSOUND_STREAM* GetStream() { return (m_Type==btSTREAM) ? m_Data.m_pStream : NULL; }
+	FSOUND_SAMPLE* GetSample() { return (m_Type == btSAMPLE) ? m_Data.m_pSample : NULL; }
+	FSOUND_STREAM* GetStream() { return (m_Type == btSTREAM) ? m_Data.m_pStream : NULL; }
 	BufferType GetType() { return m_Type; }
 	float GetLengthInSeconds() { return m_fLength; }
 	int GetBaseFreq() { return m_nBaseFreq; }
 	//void AddFlags(int nFlags) { m_Props.nFlags|=nFlags; }
 	//void RemoveFlags(int nFlags) { m_Props.nFlags&=~nFlags; }
-	bool NotLoaded() { return (m_Data.m_pData==NULL) && (!m_pReadStream); }
-	bool Loaded() { return (m_Data.m_pData!=NULL) && (!m_pReadStream); }
-	bool Loading() { return (m_Data.m_pData==NULL) && (m_pReadStream); }
+	bool NotLoaded() { return (m_Data.m_pData == NULL) && (!m_pReadStream); }
+	bool Loaded() { return (m_Data.m_pData != NULL) && (!m_pReadStream); }
+	bool Loading() { return (m_Data.m_pData == NULL) && (m_pReadStream); }
 	bool LoadFailure() { return m_bLoadFailure; }
 };
 

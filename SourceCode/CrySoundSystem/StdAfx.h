@@ -51,21 +51,21 @@
 #include <algorithm>
 
 #ifdef PS2
-inline void __CRYTEKDLL_TRACE(const char *sFormat, ... )
+inline void __CRYTEKDLL_TRACE(const char* sFormat, ...)
 #else
-_inline void __cdecl __CRYTEKDLL_TRACE(const char *sFormat, ... )
+_inline void __cdecl __CRYTEKDLL_TRACE(const char* sFormat, ...)
 #endif
 {
 	va_list vl;
 	static char sTraceString[1024];
-	
+
 	va_start(vl, sFormat);
 	vsprintf(sTraceString, sFormat, vl);
 	va_end(vl);
 
 	strcat(sTraceString, "\n");
 
-	::OutputDebugString(sTraceString);	
+	::OutputDebugString(sTraceString);
 }
 
 #define TRACE __CRYTEKDLL_TRACE
@@ -98,7 +98,7 @@ _inline void __cdecl __CRYTEKDLL_TRACE(const char *sFormat, ... )
 
 class CHeapGuardian
 {
-public: CHeapGuardian() {assert (IsHeapValid());} ~CHeapGuardian() {assert (IsHeapValid());}
+public: CHeapGuardian() { assert(IsHeapValid()); } ~CHeapGuardian() { assert(IsHeapValid()); }
 };
 
 #ifdef _DEBUG
