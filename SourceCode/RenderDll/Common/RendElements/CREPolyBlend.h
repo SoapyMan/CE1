@@ -11,111 +11,111 @@
 
 enum ePBColStyle
 {
-  ePBCS_None,
-  ePBCS_Decay,
+	ePBCS_None,
+	ePBCS_Decay,
 };
 
 enum ePBType
 {
-  ePBT_Sprite,
-  ePBT_Beam,
+	ePBT_Sprite,
+	ePBT_Beam,
 };
 
 struct SPolyBlendStat
 {
-  int NumPolys;
-  int NumRendPolys;
-  int NumAnimPolys;
-  int NumAnimRendPolys;
-  int NumVerts;
-  int NumIndices;
+	int NumPolys;
+	int NumRendPolys;
+	int NumAnimPolys;
+	int NumAnimRendPolys;
+	int NumVerts;
+	int NumIndices;
 };
 
 class CREPolyBlend_Base : public CRendElement
 {
 public:
-  float ScaleX, ScaleY;
-  int NumOrients;
-  SOrient *Orients[16];
-  ePBColStyle eColStyle;
-  ePBColStyle eAlphaStyle;
-  ePBType eType; 
-  float LiveTime;
-  float LiveTimeA;
-  float Val0;
-  float Val1;
-  float ValA0;
-  float ValA1;
+	float ScaleX, ScaleY;
+	int NumOrients;
+	SOrient* Orients[16];
+	ePBColStyle eColStyle;
+	ePBColStyle eAlphaStyle;
+	ePBType eType;
+	float LiveTime;
+	float LiveTimeA;
+	float Val0;
+	float Val1;
+	float ValA0;
+	float ValA1;
 
 public:
-  CREPolyBlend_Base()
-  {
-    ScaleX = ScaleY = 0;
-    eColStyle = ePBCS_None;
-    eType = ePBT_Sprite;
-    LiveTime = 0;
-  }
+	CREPolyBlend_Base()
+	{
+		ScaleX = ScaleY = 0;
+		eColStyle = ePBCS_None;
+		eType = ePBT_Sprite;
+		LiveTime = 0;
+	}
 
-  virtual bool mfCompile(SShader *ef, char *scr);
+	virtual bool mfCompile(SShader* ef, char* scr);
 
 protected:
-  bool mfPrepareRB(CCObject *obj, Vec3d& orgo, CFColor& col);
-  void mfSetVerts(CCObject *obj, Vec3d& orgo, uint c, SOrient *ori);
+	bool mfPrepareRB(CCObject* obj, Vec3d& orgo, CFColor& col);
+	void mfSetVerts(CCObject* obj, Vec3d& orgo, uint c, SOrient* ori);
 
-  void mfCompileOrients(SShader *ef, int *nums, SOrient *Orients[], char *scr);
+	void mfCompileOrients(SShader* ef, int* nums, SOrient* Orients[], char* scr);
 };
 
 class CREPolyBlend : public CREPolyBlend_Base
 {
 public:
 
-  static SPolyBlendStat mRS;
-  static void mfPrintStat();
+	static SPolyBlendStat mRS;
+	static void mfPrintStat();
 
 public:
-  CREPolyBlend()
-  {
-    mfSetType(eDATA_PolyBlend);
-    Val0 = Val1 = 0;
-    mfSetFlags(FCEF_NEEDFILLBUF);
-  }
+	CREPolyBlend()
+	{
+		mfSetType(eDATA_PolyBlend);
+		Val0 = Val1 = 0;
+		mfSetFlags(FCEF_NEEDFILLBUF);
+	}
 
-  virtual ~CREPolyBlend() {};
+	virtual ~CREPolyBlend() {};
 
-  virtual void mfPrepare();
-  virtual bool mfCull(CCObject *obj);
-  virtual CRendElement *mfCopyConstruct(void)
-  {
-    CREPolyBlend *pb = new CREPolyBlend;
-    *pb = *this;
-    return pb;
-  }
-  virtual bool mfIsValidTime(SShader *ef, CCObject *obj, float curtime);
+	virtual void mfPrepare();
+	virtual bool mfCull(CCObject* obj);
+	virtual CRendElement* mfCopyConstruct(void)
+	{
+		CREPolyBlend* pb = new CREPolyBlend;
+		*pb = *this;
+		return pb;
+	}
+	virtual bool mfIsValidTime(SShader* ef, CCObject* obj, float curtime);
 };
 
 
 class CREAnimPolyBlend : public CREPolyBlend_Base
 {
 public:
-  int curNum;
+	int curNum;
 
 public:
-  CREAnimPolyBlend() : CREPolyBlend_Base()
-  {
-    mfSetType(eDATA_AnimPolyBlend);
-    mfSetFlags(FCEF_NEEDFILLBUF);
-  }
-  virtual ~CREAnimPolyBlend() {};
+	CREAnimPolyBlend() : CREPolyBlend_Base()
+	{
+		mfSetType(eDATA_AnimPolyBlend);
+		mfSetFlags(FCEF_NEEDFILLBUF);
+	}
+	virtual ~CREAnimPolyBlend() {};
 
-  virtual void mfPrepare();
-  virtual bool mfCull(CCObject *obj);
-  virtual CRendElement *mfCopyConstruct(void)
-  {
-    CREAnimPolyBlend *apb = new CREAnimPolyBlend;
-    *apb = *this;
-    return apb;
-  }
-  virtual bool mfIsValidTime(SShader *ef, CCObject *obj, float curtime);
+	virtual void mfPrepare();
+	virtual bool mfCull(CCObject* obj);
+	virtual CRendElement* mfCopyConstruct(void)
+	{
+		CREAnimPolyBlend* apb = new CREAnimPolyBlend;
+		*apb = *this;
+		return apb;
+	}
+	virtual bool mfIsValidTime(SShader* ef, CCObject* obj, float curtime);
 };
 
 #endif  // __CREPOLYBLEND_H__

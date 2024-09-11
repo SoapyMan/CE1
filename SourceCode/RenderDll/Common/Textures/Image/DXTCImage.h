@@ -8,7 +8,7 @@ Copyright (C) 2002, Ubi Soft Milan
 
 Comments:
 A class to load and decompress DXT textures to 32-bit raw image data format.
-.RAW output files can be loaded into photoshop by specifying the resolution 
+.RAW output files can be loaded into photoshop by specifying the resolution
 and 4 color channels of 8-bit, interleaved.
 
 A few approaches to block decompression are in place and a simple code timing
@@ -59,97 +59,97 @@ enum PixFormat
 #define COMPRESSED_S3TC_DXT1 PF_DXT1
 
 typedef struct _DDSCAPS2 {
-  DWORD  dwCaps;
-  DWORD  dwCaps2;
-  DWORD  dwCaps3;
-  DWORD  dwCaps4;
-} DDSCAPS2, *LPDDSCAPS2;
+	DWORD  dwCaps;
+	DWORD  dwCaps2;
+	DWORD  dwCaps3;
+	DWORD  dwCaps4;
+} DDSCAPS2, * LPDDSCAPS2;
 
 typedef struct _DDPIXELFORMAT {
-  DWORD  dwSize;
-  DWORD  dwFlags;
-  DWORD  dwFourCC;
-union {
-  DWORD  dwRGBBitCount;
-  DWORD  dwYUVBitCount;
-  DWORD  dwZBufferBitDepth;
-  DWORD  dwAlphaBitDepth;
-  DWORD  dwLuminanceBitCount;
-  DWORD  dwBumpBitCount;
-  DWORD  dwPrivateFormatBitCount;
-} ;
-union {
-  DWORD  dwRBitMask;
-  DWORD  dwYBitMask;
-  DWORD  dwStencilBitDepth;
-  DWORD  dwLuminanceBitMask;
-  DWORD  dwBumpDuBitMask;
-  DWORD  dwOperations;
-} ;
-union {
-  DWORD  dwGBitMask;
-  DWORD  dwUBitMask;
-  DWORD  dwZBitMask;
-  DWORD  dwBumpDvBitMask;
-  struct {
-    WORD wFlipMSTypes;
-    WORD wBltMSTypes;
-  } MultiSampleCaps;
-} ;
-union {
-  DWORD  dwBBitMask;
-  DWORD  dwVBitMask;
-  DWORD  dwStencilBitMask;
-  DWORD  dwBumpLuminanceBitMask;
-} ;
-union {
-  DWORD  dwRGBAlphaBitMask;
-  DWORD  dwYUVAlphaBitMask;
-  DWORD  dwLuminanceAlphaBitMask;
-  DWORD  dwRGBZBitMask;
-  DWORD  dwYUVZBitMask;
-} ;
-} DDPIXELFORMAT, *LPDDPIXELFORMAT;
+	DWORD  dwSize;
+	DWORD  dwFlags;
+	DWORD  dwFourCC;
+	union {
+		DWORD  dwRGBBitCount;
+		DWORD  dwYUVBitCount;
+		DWORD  dwZBufferBitDepth;
+		DWORD  dwAlphaBitDepth;
+		DWORD  dwLuminanceBitCount;
+		DWORD  dwBumpBitCount;
+		DWORD  dwPrivateFormatBitCount;
+	};
+	union {
+		DWORD  dwRBitMask;
+		DWORD  dwYBitMask;
+		DWORD  dwStencilBitDepth;
+		DWORD  dwLuminanceBitMask;
+		DWORD  dwBumpDuBitMask;
+		DWORD  dwOperations;
+	};
+	union {
+		DWORD  dwGBitMask;
+		DWORD  dwUBitMask;
+		DWORD  dwZBitMask;
+		DWORD  dwBumpDvBitMask;
+		struct {
+			WORD wFlipMSTypes;
+			WORD wBltMSTypes;
+		} MultiSampleCaps;
+	};
+	union {
+		DWORD  dwBBitMask;
+		DWORD  dwVBitMask;
+		DWORD  dwStencilBitMask;
+		DWORD  dwBumpLuminanceBitMask;
+	};
+	union {
+		DWORD  dwRGBAlphaBitMask;
+		DWORD  dwYUVAlphaBitMask;
+		DWORD  dwLuminanceAlphaBitMask;
+		DWORD  dwRGBZBitMask;
+		DWORD  dwYUVZBitMask;
+	};
+} DDPIXELFORMAT, * LPDDPIXELFORMAT;
 
-typedef struct _DDCOLORKEY{ 
-    DWORD dwColorSpaceLowValue; 
-    DWORD dwColorSpaceHighValue; 
-} DDCOLORKEY, *LPDDCOLORKEY;  
+typedef struct _DDCOLORKEY {
+	DWORD dwColorSpaceLowValue;
+	DWORD dwColorSpaceHighValue;
+} DDCOLORKEY, * LPDDCOLORKEY;
 
 typedef struct _DDSURFACEDESC2 {
-    DWORD         dwSize;
-    DWORD         dwFlags;
-    DWORD         dwHeight;
-    DWORD         dwWidth;
-    union
-    {
-        LONG      lPitch;
-        DWORD     dwLinearSize;
-    } DUMMYUNIONNAMEN_1;
-    DWORD         dwBackBufferCount;
-    union
-    {
-        DWORD     dwMipMapCount;
-        DWORD     dwRefreshRate;
-    } DUMMYUNIONNAMEN_2;
-    DWORD         dwAlphaBitDepth;
-    DWORD         dwReserved;
-    LPVOID        lpSurface;
-    DDCOLORKEY    ddckCKDestOverlay;
-    DDCOLORKEY    ddckCKDestBlt;
-    DDCOLORKEY    ddckCKSrcOverlay;
-    DDCOLORKEY    ddckCKSrcBlt;
-    DDPIXELFORMAT ddpfPixelFormat;
-    DDSCAPS2      ddsCaps;
-    DWORD         dwTextureStage;
-} DDSURFACEDESC2, *LPDDSURFACEDESC2; 
+	DWORD         dwSize;
+	DWORD         dwFlags;
+	DWORD         dwHeight;
+	DWORD         dwWidth;
+	union
+	{
+		LONG      lPitch;
+		DWORD     dwLinearSize;
+	} DUMMYUNIONNAMEN_1;
+	DWORD         dwBackBufferCount;
+	union
+	{
+		DWORD     dwMipMapCount;
+		DWORD     dwRefreshRate;
+	} DUMMYUNIONNAMEN_2;
+	DWORD         dwAlphaBitDepth;
+	DWORD         dwReserved;
+	LPVOID        lpSurface;
+	DDCOLORKEY    ddckCKDestOverlay;
+	DDCOLORKEY    ddckCKDestBlt;
+	DDCOLORKEY    ddckCKSrcOverlay;
+	DDCOLORKEY    ddckCKSrcBlt;
+	DDPIXELFORMAT ddpfPixelFormat;
+	DDSCAPS2      ddsCaps;
+	DWORD         dwTextureStage;
+} DDSURFACEDESC2, * LPDDSURFACEDESC2;
 
 
-class Image_DXTC  
+class Image_DXTC
 {
 public:
-	unsigned char	* m_pCompBytes;		// compressed image bytes
-	unsigned char	* m_pDecompBytes;
+	unsigned char* m_pCompBytes;		// compressed image bytes
+	unsigned char* m_pDecompBytes;
 
 	int		m_nCompSize;
 	int		m_nCompLineSz;
@@ -159,35 +159,35 @@ public:
 	PixFormat		m_CompFormat;
 
 	DDSURFACEDESC2      m_DDSD;			// read from dds file
-    bool				m_bMipTexture;	// texture has mipmaps?
+	bool				m_bMipTexture;	// texture has mipmaps?
 
 
 	int	m_nWidth;	// in pixels of uncompressed image 
 	int m_nHeight;
 
-	bool LoadFromFile( char * filename );		// true if success
+	bool LoadFromFile(char* filename);		// true if success
 
-	VOID DecodePixelFormat( CHAR* strPixelFormat, DDPIXELFORMAT* pddpf );
+	VOID DecodePixelFormat(CHAR* strPixelFormat, DDPIXELFORMAT* pddpf);
 
 	void AllocateDecompBytes();
 
 	void Decompress();
-	
+
 	void DecompressDXT1();
 	void DecompressDXT2();
 	void DecompressDXT3();
 	void DecompressDXT4();
 	void DecompressDXT5();
 
-	void SaveAsRaw8888(const char *name);			// save decompressed bits
-	void SaveAsRaw888(const char *name);			// save decompressed bits
+	void SaveAsRaw8888(const char* name);			// save decompressed bits
+	void SaveAsRaw888(const char* name);			// save decompressed bits
 
 	void RunTimingSession();	// run a few methods & time the code
-								// must use dxt5 texture
-	void Time_Decomp5_01( int ntimes, TimingInfo * info );
-	void Time_Decomp5_02( int ntimes, TimingInfo * info );
-	void Time_Decomp5_03( int ntimes, TimingInfo * info );
-	void Time_Decomp5_04( int ntimes, TimingInfo * info );
+	// must use dxt5 texture
+	void Time_Decomp5_01(int ntimes, TimingInfo* info);
+	void Time_Decomp5_02(int ntimes, TimingInfo* info);
+	void Time_Decomp5_03(int ntimes, TimingInfo* info);
+	void Time_Decomp5_04(int ntimes, TimingInfo* info);
 
 
 	Image_DXTC();

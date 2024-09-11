@@ -6,23 +6,23 @@
 
 struct SParticle
 {
-  SParticle *prev,*next;       // LINK
-  Vec3d      pos;              // CURRENT POSITION
-  Vec3d      prevPos[8];       // PREVIOUS POSITION
-  Vec3d      realPos;          // CURRENT RENDER POSITION
-  Vec3d      dir;              // CURRENT DIRECTION WITH SPEED
-  Vec3d      moveDir;          // CURRENT CHANGE DIRECTION
-  int        life;             // HOW LONG IT WILL LAST
-  int        startLife;
-  
-  CFColor    color;            // CURRENT COLOR OF PARTICLE
-  CFColor    prevColor;        // LAST COLOR OF PARTICLE
-  CFColor    deltaColor;       // CHANGE OF COLOR
+	SParticle* prev, * next;       // LINK
+	Vec3d      pos;              // CURRENT POSITION
+	Vec3d      prevPos[8];       // PREVIOUS POSITION
+	Vec3d      realPos;          // CURRENT RENDER POSITION
+	Vec3d      dir;              // CURRENT DIRECTION WITH SPEED
+	Vec3d      moveDir;          // CURRENT CHANGE DIRECTION
+	int        life;             // HOW LONG IT WILL LAST
+	int        startLife;
 
-  bool bSpark;
+	CFColor    color;            // CURRENT COLOR OF PARTICLE
+	CFColor    prevColor;        // LAST COLOR OF PARTICLE
+	CFColor    deltaColor;       // CHANGE OF COLOR
 
-  float curSize;
-  float deltaSize;
+	bool bSpark;
+
+	float curSize;
+	float deltaSize;
 };
 
 //================================================
@@ -31,91 +31,91 @@ struct SParticle
 
 enum EMoveType
 {
-  eMTWave,
-  eMTWhirl,
-  eMTSqueeze,
+	eMTWave,
+	eMTWhirl,
+	eMTSqueeze,
 };
 
 struct SPartMoveStage
 {
-  EMoveType eMoveType;
-  SWaveForm WaveMove;
+	EMoveType eMoveType;
+	SWaveForm WaveMove;
 };
 
 //================================================
 
 enum EParticleType
 {
-  ePTPoint,
-  ePTLine,
-  ePTPolySegs,
-  ePTPoly,
-  ePTBeam,
+	ePTPoint,
+	ePTLine,
+	ePTPolySegs,
+	ePTPoly,
+	ePTBeam,
 };
 
 enum EParticleCollision
 {
-  ePCollision_None,
-  ePCollision_True,
-  ePCollision_Plane
+	ePCollision_None,
+	ePCollision_True,
+	ePCollision_Plane
 };
 
 struct SParticleInfo
 {
-  // TRANSFORMATION INFO
-  float   yaw, yawVar;        // YAW AND VARIATION
-  float   pitch, pitchVar;    // PITCH AND VARIATION
-  float   speed,speedVar;
+	// TRANSFORMATION INFO
+	float   yaw, yawVar;        // YAW AND VARIATION
+	float   pitch, pitchVar;    // PITCH AND VARIATION
+	float   speed, speedVar;
 
-  int     life, lifeVar;              // LIFE COUNT AND VARIATION
-  CFColor    startColor, startColorVar;  // CURRENT COLOR OF PARTICLE
-  CFColor    endColor, endColorVar;      // CURRENT COLOR OF PARTICLE
+	int     life, lifeVar;              // LIFE COUNT AND VARIATION
+	CFColor    startColor, startColorVar;  // CURRENT COLOR OF PARTICLE
+	CFColor    endColor, endColorVar;      // CURRENT COLOR OF PARTICLE
 
-  // Physics
-  Vec3d      force;
+	// Physics
+	Vec3d      force;
 
-  EParticleType ePT;
-  int Flags;
+	EParticleType ePT;
+	int Flags;
 
-  // Move info
-  SPartMoveStage mMoves[MAX_PART_MOVE_STAGES];
-  int mNumMoves;
+	// Move info
+	SPartMoveStage mMoves[MAX_PART_MOVE_STAGES];
+	int mNumMoves;
 
-  Vec3d moveDir;
-  Vec3d moveDirVar;
+	Vec3d moveDir;
+	Vec3d moveDirVar;
 
-  // Geometry info
-  float startSize, startSizeVar;
-  float endSize, endSizeVar;
+	// Geometry info
+	float startSize, startSizeVar;
+	float endSize, endSizeVar;
 
-  float segmOffs;
-  int segmMax;
+	float segmOffs;
+	int segmMax;
 
-  int StackSize;
-  float Squeeze;
+	int StackSize;
+	float Squeeze;
 };
 
 struct SEmitter
 {
-  SParticleInfo pi;
+	SParticleInfo pi;
 
-  Vec3d    startPos;           // XYZ POSITION
-  Vec3d    startPosVar;        // XYZ POSITION VARIATION
+	Vec3d    startPos;           // XYZ POSITION
+	Vec3d    startPosVar;        // XYZ POSITION VARIATION
 
-  // Particle
-  SParticle *particle;               // NULL TERMINATED LINKED LIST
-  int       totalParticles[2];       // TOTAL EMITTED AT ANY TIME
-  int       particleCount[2];        // TOTAL EMITTED RIGHT NOW
-  int       emitsPerFrame, emitVar;  // EMITS PER FRAME AND VARIATION
+	// Particle
+	SParticle* particle;               // NULL TERMINATED LINKED LIST
+	int       totalParticles[2];       // TOTAL EMITTED AT ANY TIME
+	int       particleCount[2];        // TOTAL EMITTED RIGHT NOW
+	int       emitsPerFrame, emitVar;  // EMITS PER FRAME AND VARIATION
 
-  EParticleCollision eCollisionType;
-  Vec3d PlaneAxis;
-  Vec3d PlaneOffs;
+	EParticleCollision eCollisionType;
+	Vec3d PlaneAxis;
+	Vec3d PlaneOffs;
 
-  SParticleInfo Spark;
-  int NumSparks;
+	SParticleInfo Spark;
+	int NumSparks;
 
-  float Life;
+	float Life;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -128,79 +128,79 @@ struct SEmitter
 
 struct SParticleStat
 {
-  int NumSprays;
-  int NumRendSprays;
-  int NumParticles;
-  int NumVerts;
-  int NumIndices;
+	int NumSprays;
+	int NumRendSprays;
+	int NumParticles;
+	int NumVerts;
+	int NumIndices;
 };
 
 class CREParticleSpray : public CRendElement
 {
 public:
-  SEmitter mEmitter;
-  SParticle *mParticlePool[2];
-  SParticle *mParticlePntr[2];
-  int mFrame;
+	SEmitter mEmitter;
+	SParticle* mParticlePool[2];
+	SParticle* mParticlePntr[2];
+	int mFrame;
 
 private:
-/// Support Function Definitions //////////////////////////////////////////////
-  bool mfInitParticleSystem();
-  bool mfSetDefaultEmitter(SEmitter *emitter);
-  bool mfInitEmitter(SEmitter *emitter);
+	/// Support Function Definitions //////////////////////////////////////////////
+	bool mfInitParticleSystem();
+	bool mfSetDefaultEmitter(SEmitter* emitter);
+	bool mfInitEmitter(SEmitter* emitter);
 
-  bool mfAddParticle(SEmitter *emitter, SParticleInfo *pi);
-  bool mfUpdateParticle(SParticle *particle,SEmitter *emitter);
-  void mfEmitSparks(SParticle *p, SEmitter *em);
+	bool mfAddParticle(SEmitter* emitter, SParticleInfo* pi);
+	bool mfUpdateParticle(SParticle* particle, SEmitter* emitter);
+	void mfEmitSparks(SParticle* p, SEmitter* em);
 
-  bool mfUpdateEmitter(SEmitter *emitter);    // DRAW THE SYSTEM FOR A FRAME
-  SEmitter *mfGetEmitter(void) { return &mEmitter; }
+	bool mfUpdateEmitter(SEmitter* emitter);    // DRAW THE SYSTEM FOR A FRAME
+	SEmitter* mfGetEmitter(void) { return &mEmitter; }
 
-  // Parsing
-  void mfCompileParticleInfo(SShader *ef, SParticleInfo *pi, char *scr);
-  void mfCompileCollision(SShader *ef, SEmitter *em, char *scr, char *Collision);
-  bool mfCompileMove(SShader *ef, SPartMoveStage *pm, SParticleInfo *pi, char *scr);
-  bool mfCompileMoveTypeSqueeze(SShader *ef, SPartMoveStage *pm, char *scr);
-  bool mfCompileMoveTypeWhirl(SShader *ef, SPartMoveStage *pm, char *scr);
-  bool mfCompileMoveTypeWave(SShader *ef, SPartMoveStage *pm, char *scr);
+	// Parsing
+	void mfCompileParticleInfo(SShader* ef, SParticleInfo* pi, char* scr);
+	void mfCompileCollision(SShader* ef, SEmitter* em, char* scr, char* Collision);
+	bool mfCompileMove(SShader* ef, SPartMoveStage* pm, SParticleInfo* pi, char* scr);
+	bool mfCompileMoveTypeSqueeze(SShader* ef, SPartMoveStage* pm, char* scr);
+	bool mfCompileMoveTypeWhirl(SShader* ef, SPartMoveStage* pm, char* scr);
+	bool mfCompileMoveTypeWave(SShader* ef, SPartMoveStage* pm, char* scr);
 
 public:
-  CREParticleSpray()
-  {
-    mfSetType(eDATA_ParticleSpray);
-    mfUpdateFlags(FCEF_TRANSFORM | FCEF_NEEDFILLBUF);
-    mfInitEmitter(&mEmitter);
-  }
-  virtual ~CREParticleSpray();
-  //CREParticleSpray(CREParticleSpray *Orig);
-  CREParticleSpray& operator = (const CREParticleSpray& src);
+	CREParticleSpray()
+	{
+		mfSetType(eDATA_ParticleSpray);
+		mfUpdateFlags(FCEF_TRANSFORM | FCEF_NEEDFILLBUF);
+		mfInitEmitter(&mEmitter);
+	}
+	virtual ~CREParticleSpray();
+	//CREParticleSpray(CREParticleSpray *Orig);
+	CREParticleSpray& operator = (const CREParticleSpray& src);
 
-  // CRendElement interface
-  virtual void mfPrepare();
-  virtual bool mfCull(CCObject *obj);
+	// CRendElement interface
+	virtual void mfPrepare();
+	virtual bool mfCull(CCObject* obj);
 
-  virtual CRendElement *mfCopyConstruct(void)
-  {
-    //CREParticleSpray *ps = new CREParticleSpray;
-    //*ps = this;
-    return this;
-  }
+	virtual CRendElement* mfCopyConstruct(void)
+	{
+		//CREParticleSpray *ps = new CREParticleSpray;
+		//*ps = this;
+		return this;
+	}
 
-  virtual bool mfIsValidTime(SShader *ef, CCObject *obj, float curtime);
-  virtual bool mfCompile(SShader *ef, char *scr);
+	virtual bool mfIsValidTime(SShader* ef, CCObject* obj, float curtime);
+	virtual bool mfCompile(SShader* ef, char* scr);
 
-  static SParticleStat mRS;
-  static void mfPrintStat();
+	static SParticleStat mRS;
+	static void mfPrintStat();
 
 #ifdef DEBUGALLOC
 #undef new
 #endif
-  void* operator new( size_t Size )
-  {
-    void *ptr = malloc(Size);
-    memset(ptr, 0, Size);
-    return ptr;
-  }
+	void* operator new(size_t Size)
+	{
+		void* ptr = malloc(Size);
+		memset(ptr, 0, Size);
+		return ptr;
+	}
 #ifdef DEBUGALLOC
 #define new DEBUG_CLIENTBLOCK
 #endif

@@ -999,7 +999,7 @@ void StripExtension(const char* in, char* out)
 
 	if (len <= 1)
 	{
-		if(in != out)
+		if (in != out)
 			strcpy(out, in);
 		return;
 	}

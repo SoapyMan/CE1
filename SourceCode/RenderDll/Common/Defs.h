@@ -50,15 +50,15 @@
 #define DEBUG 1
 
 #if !defined(LINUX)
-	#if defined(COMP_WCC)
-		#define strcasecmp stricmp
-		#define strncasecmp strnicmp
-	#endif
+#if defined(COMP_WCC)
+#define strcasecmp stricmp
+#define strncasecmp strnicmp
+#endif
 
-	#if defined(COMP_VC)
-		#define strcasecmp _stricmp
-		#define strncasecmp _strnicmp
-	#endif
+#if defined(COMP_VC)
+#define strcasecmp _stricmp
+#define strncasecmp _strnicmp
+#endif
 #endif//LINUX
 
 # ifdef PROC_INTEL
@@ -68,49 +68,49 @@
 // (only works on a i386 type processor).
 // It is equivalent to 'i=(int)(f+.5)'. 
 #define FIST_MAGIC ((float)((((65536.0 * 65536.0 * 16)+(65536.0 * 0.5))* 65536.0)))
-_inline long QuickRound (float inval)
+_inline long QuickRound(float inval)
 {
-  double dtemp = FIST_MAGIC + inval;
-  return ((*(long *)&dtemp) - 0x80000000);
+	double dtemp = FIST_MAGIC + inval;
+	return ((*(long*)&dtemp) - 0x80000000);
 }
 
-_inline long QuickInt (float inval)
+_inline long QuickInt(float inval)
 {
-  double dtemp = FIST_MAGIC + (inval-.4999f);
-  return ((*(long *)&dtemp) - 0x80000000);
+	double dtemp = FIST_MAGIC + (inval - .4999f);
+	return ((*(long*)&dtemp) - 0x80000000);
 }
 
 // This is my own invention derived from the previous one. This converts
 // a floating point number to a 16.16 fixed point integer. It is
 // equivalent to 'i=(int)(f*65536.)'.
 #define FIST_MAGIC2 ((float)((((65536.0 * 16)+(0.5))* 65536.0)))
-inline long QuickInt16 (float inval)
+inline long QuickInt16(float inval)
 {
-  double dtemp = FIST_MAGIC2 + inval;
-  return ((*(long *)&dtemp) - 0x80000000);
+	double dtemp = FIST_MAGIC2 + inval;
+	return ((*(long*)&dtemp) - 0x80000000);
 }
 #endif //PROC_INTEL
 
 #ifdef PROC_M68K
 
 #define FIST_MAGIC ((((65536.0 * 65536.0 * 16)+(65536.0 * 0.5))* 65536.0))
-inline long QuickRound (float inval)
+inline long QuickRound(float inval)
 {
-  double dtemp = FIST_MAGIC + inval;
-  return (*(((long *)&dtemp) + 1)) - 0x80000000;
+	double dtemp = FIST_MAGIC + inval;
+	return (*(((long*)&dtemp) + 1)) - 0x80000000;
 }
-    
-inline long QuickInt (float inval)
+
+inline long QuickInt(float inval)
 {
-  double dtemp = FIST_MAGIC + (inval-.4999);
-  return (*(((long *)&dtemp) + 1)) - 0x80000000;
+	double dtemp = FIST_MAGIC + (inval - .4999);
+	return (*(((long*)&dtemp) + 1)) - 0x80000000;
 }
-	
+
 #define FIST_MAGIC2 ((((65536.0 * 16)+(0.5))* 65536.0))
-inline long QuickInt16 (float inval)
+inline long QuickInt16(float inval)
 {
-  double dtemp = FIST_MAGIC2 + inval;
-  return (*(((long *)&dtemp) + 1)) - 0x80000000;
+	double dtemp = FIST_MAGIC2 + inval;
+	return (*(((long*)&dtemp) + 1)) - 0x80000000;
 }
 #endif
 
@@ -130,9 +130,9 @@ inline long QuickInt16 (float inval)
 #define QInt24(x) (QInt16(((x)*256.0f)))
 
 #if STATS
-	#define STAT(x) x
+#define STAT(x) x
 #else
-	#define STAT(x)
+#define STAT(x)
 #endif
 
 

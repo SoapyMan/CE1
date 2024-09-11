@@ -8,16 +8,16 @@
  */
 class CImageJpgFile : public CImageFile
 {
-  ///
-  friend class CImageFile;	// For constructor
+	///
+	friend class CImageFile;	// For constructor
 
 private:
-  /// Read the JPG file from the buffer.
-  CImageJpgFile (byte* buf, long size);
+	/// Read the JPG file from the buffer.
+	CImageJpgFile(byte* buf, long size);
 
 public:
-  ///
-  virtual ~CImageJpgFile ();
+	///
+	virtual ~CImageJpgFile();
 };
 
 #endif //JPGIMAGE_H
