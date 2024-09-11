@@ -5,7 +5,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #endif
-#include <string>
+#include <sstream>
 #include "Assert.h"
 
 
@@ -119,11 +119,11 @@ int _CryAssertMsg(const char* filename, int line, bool isSkipped, const char* ex
 #define MAX_WARNING_LENGTH	4096
 	char szBuffer[MAX_WARNING_LENGTH + 32];
 
-	std::string assertMessage;
+	std::ostringstream assertMessage;
 	if (expression)
 	{
-		assertMessage += expression;
-		assertMessage += "\n\n";
+		assertMessage << expression;
+		assertMessage << "\n\n";
 	}
 
 	if (statement)
@@ -134,28 +134,28 @@ int _CryAssertMsg(const char* filename, int line, bool isSkipped, const char* ex
 		szBuffer[sizeof(szBuffer) - 8] = 0;
 		va_end(argptr);
 
-		assertMessage += szBuffer;
-		assertMessage += "\n\n";
+		assertMessage << szBuffer;
+		assertMessage << "\n\n";
 	}
 
-	assertMessage += "file: ";
-	assertMessage += filename;
-	assertMessage += "\n";
-	assertMessage += "line: ";
-	assertMessage += line;
+	assertMessage << "file: ";
+	assertMessage << filename;
+	assertMessage << "\n";
+	assertMessage << "line: ";
+	assertMessage << line;
 
 	if (!CryIsDebuggerPresent())
 	{
-		assertMessage += " - Display more asserts?";
-		const int res = AssertMessageBox(assertMessage.c_str(), "Assertion failed", false);
+		assertMessage << " - Display more asserts?";
+		const int res = AssertMessageBox(assertMessage.str().c_str(), "Assertion failed", false);
 		if (res != MSGBOX_BUTTON_YES)
 			return _CRYASSERT_IGNORE_ALWAYS;
 	}
 
 #if ASSERT_DEBUGGER_PROMPT
-	assertMessage += "\n -Press 'Abort' to Break the execution\n -Press 'Retry' to skip this CRYASSERT\n -Press 'Ignore' to suppress this message";
+	assertMessage << "\n -Press 'Abort' to Break the execution\n -Press 'Retry' to skip this CRYASSERT\n -Press 'Ignore' to suppress this message";
 
-	const int res = AssertMessageBox(assertMessage.c_str(), "Assertion failed", true);
+	const int res = AssertMessageBox(assertMessage.str().c_str(), "Assertion failed", true);
 	if (res == MSGBOX_BUTTON_RETRY)
 		return _CRYASSERT_SKIP;
 	else if (res == MSGBOX_BUTTON_IGNORE)
