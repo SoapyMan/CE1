@@ -6,13 +6,13 @@
 // CRYMOVIE_API functions as being imported from a DLL, wheras this DLL sees symbols
 // defined with this macro as being exported.
 #ifdef WIN32
-	#ifdef CRYMOVIE_EXPORTS
-		#define CRYMOVIE_API __declspec(dllexport)
-	#else
-		#define CRYMOVIE_API __declspec(dllimport)
-	#endif
+#ifdef CRYMOVIE_EXPORTS
+#define CRYMOVIE_API __declspec(dllexport)
+#else
+#define CRYMOVIE_API __declspec(dllimport)
+#endif
 #else //WIN32
-	#define CRYMOVIE_API
+#define CRYMOVIE_API
 #endif //WIN32
 
 struct ISystem;
@@ -21,7 +21,7 @@ struct IMovieSystem;
 extern "C"
 {
 
-CRYMOVIE_API IMovieSystem *CreateMovieSystem(ISystem *pSystem);
-CRYMOVIE_API void DeleteMovieSystem(IMovieSystem *pMM);
+	CRYMOVIE_API IMovieSystem* CreateMovieSystem(ISystem* pSystem);
+	CRYMOVIE_API void DeleteMovieSystem(IMovieSystem* pMM);
 
 }

@@ -33,8 +33,8 @@ public:
 	EAnimTrackType GetType() { return ATRACK_CONSOLE; };
 	EAnimValue GetValueType() { return AVALUE_CONSOLE; };
 
-	void GetKeyInfo( int key,const char* &description,float &duration );
-	void SerializeKey( IConsoleKey &key,XmlNodeRef &keyNode,bool bLoading );
+	void GetKeyInfo(int key, const char*& description, float& duration);
+	void SerializeKey(IConsoleKey& key, XmlNodeRef& keyNode, bool bLoading);
 };
 
 #endif // __consoletrack_h__

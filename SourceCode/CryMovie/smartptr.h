@@ -29,75 +29,75 @@
 ///////////////////////////////////////////////////////////////////////////////
 template <class _T>
 class TSmartPtr {
-  _T* p;
+	_T* p;
 public:
-  TSmartPtr() : p(NULL) {}
-  TSmartPtr( _T* p_ ) : p(p_) { if (p) (p)->AddRef(); }
-  TSmartPtr( const TSmartPtr<_T>& p_ ) : p(p_.p) { if (p) (p)->AddRef(); }  // Copy constructor.
-  TSmartPtr( int Null ) : p(NULL) {}
-  ~TSmartPtr() { if (p) (p)->Release(); }
+	TSmartPtr() : p(NULL) {}
+	TSmartPtr(_T* p_) : p(p_) { if (p) (p)->AddRef(); }
+	TSmartPtr(const TSmartPtr<_T>& p_) : p(p_.p) { if (p) (p)->AddRef(); }  // Copy constructor.
+	TSmartPtr(int Null) : p(NULL) {}
+	~TSmartPtr() { if (p) (p)->Release(); }
 
-  operator _T*() const { return p; }
-  operator const _T*() const { return p; }
-  _T& operator*() const { return *p; }
-  _T* operator->(void) const { return p; }
-  
-  TSmartPtr&  operator=( _T* newp ) {
-    if (newp)
+	operator _T* () const { return p; }
+	operator const _T* () const { return p; }
+	_T& operator*() const { return *p; }
+	_T* operator->(void) const { return p; }
+
+	TSmartPtr& operator=(_T* newp) {
+		if (newp)
 			(newp)->AddRef();
-    if (p)
+		if (p)
 			(p)->Release();
-    p = newp;
-    return *this;
-  }
+		p = newp;
+		return *this;
+	}
 
-  TSmartPtr&  operator=( const TSmartPtr<_T> &newp ) {
+	TSmartPtr& operator=(const TSmartPtr<_T>& newp) {
 		if (newp.p)
 			(newp.p)->AddRef();
-    if (p)
+		if (p)
 			(p)->Release();
-    p = newp.p;
-    return *this;
-  }
+		p = newp.p;
+		return *this;
+	}
 
-  //_T* ptr() const { return p; };
-  
-  //operator bool() { return p != NULL; };
-  operator bool() const { return p != NULL; };
-  //bool  operator !() { return p == NULL; };
+	//_T* ptr() const { return p; };
+
+	//operator bool() { return p != NULL; };
+	operator bool() const { return p != NULL; };
+	//bool  operator !() { return p == NULL; };
 	bool  operator !() const { return p == NULL; };
 
- 	// Misc compare functions.
-	bool  operator == ( const _T* p2 ) const { return p == p2; };
-	bool  operator == ( _T* p2 ) const { return p == p2; };
-  bool  operator != ( const _T* p2 ) const { return p != p2; };
-	bool  operator != ( _T* p2 ) const { return p != p2; };
-  bool  operator <  ( const _T* p2 ) const { return p < p2; };
-  bool  operator >  ( const _T* p2 ) const { return p > p2; };
-  
-  bool operator == ( const TSmartPtr<_T> &p2 ) const { return p == p2.p; };
-  bool operator != ( const TSmartPtr<_T> &p2 ) const { return p != p2.p; };
-  bool operator < ( const TSmartPtr<_T> &p2 ) const { return p < p2.p; };
-  bool operator > ( const TSmartPtr<_T> &p2 ) const { return p > p2.p; };
+	// Misc compare functions.
+	bool  operator == (const _T* p2) const { return p == p2; };
+	bool  operator == (_T* p2) const { return p == p2; };
+	bool  operator != (const _T* p2) const { return p != p2; };
+	bool  operator != (_T* p2) const { return p != p2; };
+	bool  operator <  (const _T* p2) const { return p < p2; };
+	bool  operator >  (const _T* p2) const { return p > p2; };
+
+	bool operator == (const TSmartPtr<_T>& p2) const { return p == p2.p; };
+	bool operator != (const TSmartPtr<_T>& p2) const { return p != p2.p; };
+	bool operator < (const TSmartPtr<_T>& p2) const { return p < p2.p; };
+	bool operator > (const TSmartPtr<_T>& p2) const { return p > p2.p; };
 };
 
 template <class T>
-inline bool operator == ( const TSmartPtr<T> &p1,int null )	{
+inline bool operator == (const TSmartPtr<T>& p1, int null) {
 	return !(bool)p1;
 }
 
 template <class T>
-inline bool operator != ( const TSmartPtr<T> &p1,int null )	{
+inline bool operator != (const TSmartPtr<T>& p1, int null) {
 	return (bool)p1;
 }
 
 template <class T>
-inline bool operator == ( int null,const TSmartPtr<T> &p1 )	{
+inline bool operator == (int null, const TSmartPtr<T>& p1) {
 	return !(bool)p1;
 }
 
 template <class T>
-inline bool operator != ( int null,const TSmartPtr<T> &p1 )	{
+inline bool operator != (int null, const TSmartPtr<T>& p1) {
 	return (bool)p1;
 }
 

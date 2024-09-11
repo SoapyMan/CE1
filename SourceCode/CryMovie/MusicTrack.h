@@ -32,8 +32,8 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	EAnimTrackType GetType() { return ATRACK_MUSIC; };
 	EAnimValue GetValueType() { return AVALUE_MUSIC; };
-	void GetKeyInfo( int key,const char* &description,float &duration );
-	void SerializeKey( IMusicKey &key,XmlNodeRef &keyNode,bool bLoading );
+	void GetKeyInfo(int key, const char*& description, float& duration);
+	void SerializeKey(IMusicKey& key, XmlNodeRef& keyNode, bool bLoading);
 };
 
 #endif // __musictrack_h__

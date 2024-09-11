@@ -25,46 +25,46 @@
 class CAnimSequence : public IAnimSequence
 {
 public:
-	CAnimSequence( IMovieSystem *pMovieSystem );
+	CAnimSequence(IMovieSystem* pMovieSystem);
 
 	// Movie system.
 	IMovieSystem* GetMovieSystem() const { return m_pMovieSystem; };
 
-	void SetName( const char *name );
+	void SetName(const char* name);
 	const char* GetName();
 
-	virtual void SetFlags( int flags );
+	virtual void SetFlags(int flags);
 	virtual int GetFlags() const;
 
-	void SetTimeRange( Range timeRange );
+	void SetTimeRange(Range timeRange);
 	Range GetTimeRange() { return m_timeRange; };
 
-	void ScaleTimeRange( const Range &timeRange );
+	void ScaleTimeRange(const Range& timeRange);
 
 	//! Return number of animation nodes in sequence.
 	int GetNodeCount() const;
 	//! Get specified animation node.
-	IAnimNode* GetNode( int index ) const;
+	IAnimNode* GetNode(int index) const;
 	//! Get Animation assigned to node at specified index.
-	IAnimBlock* GetAnimBlock( int index ) const;
+	IAnimBlock* GetAnimBlock(int index) const;
 
 	void Reset();
 	void Pause();
 	void Resume();
 
 	//! Add animation node to sequence.
-	bool AddNode( IAnimNode *node );
+	bool AddNode(IAnimNode* node);
 	//! Remove animation node from sequence.
-	void RemoveNode( IAnimNode *node );
+	void RemoveNode(IAnimNode* node);
 	//! Add scene node to sequence.
 	IAnimNode* AddSceneNode();
 	void RemoveAll();
 
 	void Activate();
 	void Deactivate();
-	void Animate( SAnimContext &ec );
+	void Animate(SAnimContext& ec);
 
-	void Serialize( XmlNodeRef &xmlNode,bool bLoading, bool bLoadEmptyTracks=true );
+	void Serialize(XmlNodeRef& xmlNode, bool bLoading, bool bLoadEmptyTracks = true);
 
 private:
 	void ComputeTimeRange();
@@ -85,7 +85,7 @@ private:
 	TSmartPtr<IAnimNode> m_pSceneNode;
 
 	//
-	IMovieSystem *m_pMovieSystem;
+	IMovieSystem* m_pMovieSystem;
 	bool m_bPaused;
 };
 

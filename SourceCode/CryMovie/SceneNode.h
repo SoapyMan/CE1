@@ -30,7 +30,7 @@ struct ISound;
 class CAnimSceneNode : public CAnimNode
 {
 public:
-	CAnimSceneNode(IMovieSystem *sys);
+	CAnimSceneNode(IMovieSystem* sys);
 	~CAnimSceneNode();
 
 	virtual EAnimNodeType GetType() const { return ANODE_SCENE; }
@@ -38,7 +38,7 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	// Overrides from CAnimNode
 	//////////////////////////////////////////////////////////////////////////
-	void Animate( SAnimContext &ec );
+	void Animate(SAnimContext& ec);
 	void CreateDefaultTracks();
 
 	// ovverided from IAnimNode
@@ -48,22 +48,22 @@ public:
 
 	//////////////////////////////////////////////////////////////////////////
 	virtual int GetParamCount() const;
-	virtual bool GetParamInfo( int nIndex, SParamInfo &info ) const;
-	virtual bool GetParamInfoFromId( int paramId, SParamInfo &info ) const;
+	virtual bool GetParamInfo(int nIndex, SParamInfo& info) const;
+	virtual bool GetParamInfoFromId(int paramId, SParamInfo& info) const;
 
 private:
 	void ReleaseSounds();
-	void ApplyCameraKey( ISelectKey &key,SAnimContext &ec );
-	void ApplyEventKey(IEventKey &key, SAnimContext &ec);
-	void ApplyConsoleKey(IConsoleKey &key, SAnimContext &ec);
-	void ApplySoundKey( IAnimTrack *pTrack,int nCurrKey,int nLayer, ISoundKey &key, SAnimContext &ec);
-	void ApplySequenceKey( IAnimTrack *pTrack,int nCurrKey,ISelectKey &key,SAnimContext &ec );
-	void ApplyMusicKey(IMusicKey &key, SAnimContext &ec);
+	void ApplyCameraKey(ISelectKey& key, SAnimContext& ec);
+	void ApplyEventKey(IEventKey& key, SAnimContext& ec);
+	void ApplyConsoleKey(IConsoleKey& key, SAnimContext& ec);
+	void ApplySoundKey(IAnimTrack* pTrack, int nCurrKey, int nLayer, ISoundKey& key, SAnimContext& ec);
+	void ApplySequenceKey(IAnimTrack* pTrack, int nCurrKey, ISelectKey& key, SAnimContext& ec);
+	void ApplyMusicKey(IMusicKey& key, SAnimContext& ec);
 
 	// Cached parameters of node at givven time.
 	float m_time;
 
-	IMovieSystem *m_pMovie;
+	IMovieSystem* m_pMovie;
 
 	bool m_bActive;
 

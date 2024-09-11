@@ -35,8 +35,8 @@ public:
 	EAnimTrackType GetType() { return ATRACK_CHARACTER; };
 	EAnimValue GetValueType() { return AVALUE_CHARACTER; };
 
-	void GetKeyInfo( int key,const char* &description,float &duration );
-	void SerializeKey( ICharacterKey &key,XmlNodeRef &keyNode,bool bLoading );
+	void GetKeyInfo(int key, const char*& description, float& duration);
+	void SerializeKey(ICharacterKey& key, XmlNodeRef& keyNode, bool bLoading);
 };
 
 #endif // __charactertrack_h__

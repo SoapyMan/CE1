@@ -37,8 +37,8 @@ public:
 	EAnimTrackType GetType() { return ATRACK_EVENT; };
 	EAnimValue GetValueType() { return AVALUE_EVENT; };
 
-	void GetKeyInfo( int key,const char* &description,float &duration );
-	void SerializeKey( IEventKey &key,XmlNodeRef &keyNode,bool bLoading );
+	void GetKeyInfo(int key, const char*& description, float& duration);
+	void SerializeKey(IEventKey& key, XmlNodeRef& keyNode, bool bLoading);
 };
 
 #endif // __entitytrack_h__

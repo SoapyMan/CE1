@@ -9,6 +9,6 @@ public:
 	EAnimTrackType GetType() { return ATRACK_EXPRESSION; };
 	EAnimValue GetValueType() { return AVALUE_EXPRESSION; };
 
-	void GetKeyInfo( int key,const char* &description,float &duration );
-	void SerializeKey( IExprKey &key,XmlNodeRef &keyNode,bool bLoading );
+	void GetKeyInfo(int key, const char*& description, float& duration);
+	void SerializeKey(IExprKey& key, XmlNodeRef& keyNode, bool bLoading);
 };

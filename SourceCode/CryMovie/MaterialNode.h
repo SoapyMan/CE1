@@ -22,21 +22,21 @@
 class CAnimMaterialNode : public CAnimNode
 {
 public:
-	CAnimMaterialNode( IMovieSystem *sys );
+	CAnimMaterialNode(IMovieSystem* sys);
 
 	virtual EAnimNodeType GetType() const { return ANODE_MATERIAL; }
 
 	//////////////////////////////////////////////////////////////////////////
 	// Overrides from CAnimNode
 	//////////////////////////////////////////////////////////////////////////
-	void Animate( SAnimContext &ec );
+	void Animate(SAnimContext& ec);
 
 	//////////////////////////////////////////////////////////////////////////
 	// Supported tracks description.
 	//////////////////////////////////////////////////////////////////////////
 	virtual int GetParamCount() const;
-	virtual bool GetParamInfo( int nIndex, SParamInfo &info ) const;
-	virtual bool GetParamInfoFromId( int paramId, SParamInfo &info ) const;
+	virtual bool GetParamInfo(int nIndex, SParamInfo& info) const;
+	virtual bool GetParamInfoFromId(int paramId, SParamInfo& info) const;
 
 private:
 	void SetScriptValue();

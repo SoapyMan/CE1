@@ -39,26 +39,26 @@ enum AnimParamTypeBits
 class CAnimBlock : public IAnimBlock
 {
 public:
-	void SetId( int id ) { m_id = id; };
+	void SetId(int id) { m_id = id; };
 	int	GetId() const { return m_id; };
 
 	int GetTrackCount() const;
-	bool GetTrackInfo( int index,int &paramId,IAnimTrack **pTrack ) const;
+	bool GetTrackInfo(int index, int& paramId, IAnimTrack** pTrack) const;
 
-	const char* GetParamName( AnimParamType param ) const;
+	const char* GetParamName(AnimParamType param) const;
 
-	IAnimTrack* GetTrack( int paramId ) const;
-	void SetTrack( int paramId,IAnimTrack *track );
-	IAnimTrack* CreateTrack( int paramId,EAnimValue valueType );
+	IAnimTrack* GetTrack(int paramId) const;
+	void SetTrack(int paramId, IAnimTrack* track);
+	IAnimTrack* CreateTrack(int paramId, EAnimValue valueType);
 
-	void SetTimeRange( Range timeRange );
+	void SetTimeRange(Range timeRange);
 
-	bool RemoveTrack( IAnimTrack *track );
+	bool RemoveTrack(IAnimTrack* track);
 
-	void Serialize( IAnimNode *pNode,XmlNodeRef &xmlNode,bool bLoading, bool bLoadEmptyTracks=true );
+	void Serialize(IAnimNode* pNode, XmlNodeRef& xmlNode, bool bLoading, bool bLoadEmptyTracks = true);
 
 private:
-	void AddTrack( int param,IAnimTrack *track );
+	void AddTrack(int param, IAnimTrack* track);
 
 	struct TrackDesc
 	{
@@ -77,28 +77,28 @@ private:
 class CAnimNode : public IAnimNode
 {
 public:
-	CAnimNode( IMovieSystem *sys );
+	CAnimNode(IMovieSystem* sys);
 	~CAnimNode();
 
-	void SetName( const char *name ) { strncpy(m_name,name,sizeof(m_name)-1); int nLen=strlen(name); if (nLen>sizeof(m_name)-1) nLen=sizeof(m_name)-1; m_name[nLen]=0; m_pMovieSystem->Callback(CBR_CHANGENODE); };
+	void SetName(const char* name) { strncpy(m_name, name, sizeof(m_name) - 1); int nLen = strlen(name); if (nLen > sizeof(m_name) - 1) nLen = sizeof(m_name) - 1; m_name[nLen] = 0; m_pMovieSystem->Callback(CBR_CHANGENODE); };
 	const char* GetName() { return m_name; };
 
-	void SetId( int id ) { m_id = id; };
+	void SetId(int id) { m_id = id; };
 	int GetId() const { return m_id; };
 
-	void SetEntity( int Id) {}
-	void SetEntity( IEntity *entity ) {}
+	void SetEntity(int Id) {}
+	void SetEntity(IEntity* entity) {}
 	IEntity* GetEntity() { return NULL; }
 
-	void SetFlags( int flags );
+	void SetFlags(int flags);
 	int GetFlags() const;
 
-	virtual IAnimTrack* CreateTrack( int paramId );
+	virtual IAnimTrack* CreateTrack(int paramId);
 	virtual void CreateDefaultTracks() {};
-	virtual bool RemoveTrack( IAnimTrack *pAnimTrack );
-	int FindTrack(IAnimTrack *pTrack);
+	virtual bool RemoveTrack(IAnimTrack* pAnimTrack);
+	int FindTrack(IAnimTrack* pTrack);
 
-	IMovieSystem*	GetMovieSystem() { return m_pMovieSystem; };
+	IMovieSystem* GetMovieSystem() { return m_pMovieSystem; };
 
 	virtual void Reset() {}
 	virtual void Pause() {}
@@ -107,32 +107,32 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	// Space position/orientation scale.
 	//////////////////////////////////////////////////////////////////////////
-	void SetPos( float time,const Vec3 &pos ) {};
-	void SetRotate( float time,const Quat &quat ) {};
-	void SetScale( float time,const Vec3 &scale ) {};
+	void SetPos(float time, const Vec3& pos) {};
+	void SetRotate(float time, const Quat& quat) {};
+	void SetScale(float time, const Vec3& scale) {};
 
-	Vec3 GetPos() { return Vec3(0,0,0); };
-	Quat GetRotate() { return Quat(0,0,0,0); };
-	Vec3 GetScale() { return Vec3(0,0,0); };
-
-	//////////////////////////////////////////////////////////////////////////
-	bool SetParamValue( float time,AnimParamType param,float val );
-	bool GetParamValue( float time,AnimParamType param,float &val );
+	Vec3 GetPos() { return Vec3(0, 0, 0); };
+	Quat GetRotate() { return Quat(0, 0, 0, 0); };
+	Vec3 GetScale() { return Vec3(0, 0, 0); };
 
 	//////////////////////////////////////////////////////////////////////////
-	void GetWorldTM( Matrix44 &tm ) { tm.SetIdentity(); };
+	bool SetParamValue(float time, AnimParamType param, float val);
+	bool GetParamValue(float time, AnimParamType param, float& val);
 
-	void SetTarget( IAnimNode *node ) {};
+	//////////////////////////////////////////////////////////////////////////
+	void GetWorldTM(Matrix44& tm) { tm.SetIdentity(); };
+
+	void SetTarget(IAnimNode* node) {};
 	IAnimNode* GetTarget() const { return 0; };
 
-	void Animate( SAnimContext &ec );
+	void Animate(SAnimContext& ec);
 
 	IAnimBlock* GetAnimBlock() const { return m_animBlock; };
-	void SetAnimBlock( IAnimBlock *block );
+	void SetAnimBlock(IAnimBlock* block);
 	IAnimBlock* CreateAnimBlock() { return new CAnimBlock; };
 
-	IAnimTrack* GetTrack( int nParamId ) const;
-	void SetTrack( int nParamId,IAnimTrack *track );
+	IAnimTrack* GetTrack(int nParamId) const;
+	void SetTrack(int nParamId, IAnimTrack* track);
 
 	//////////////////////////////////////////////////////////////////////////
 	// Support Child nodes.
@@ -144,32 +144,32 @@ public:
 	virtual int GetChildCount() const { return m_childs.size(); }
 
 	//! Get child by index.
-	virtual IAnimNode* GetChild( int i ) const;
+	virtual IAnimNode* GetChild(int i) const;
 	//! Return parent node if exist.
 	virtual IAnimNode* GetParent() const { return m_parent; }
 	//! Scans hiearachy up to determine if we child of specified node.
-	virtual bool IsChildOf( IAnimNode *node );
-	
+	virtual bool IsChildOf(IAnimNode* node);
+
 	//! Attach new child node.
-	virtual void AttachChild( IAnimNode* child );
-	
+	virtual void AttachChild(IAnimNode* child);
+
 	//! Detach all childs of this node.
 	virtual void DetachAll();
-	
+
 	//! Detach this node from parent.
 	//! Warning, if node is only referenced from parent, calling this will delete node.
 	virtual void DetachThis();
 
-	virtual void Serialize( XmlNodeRef &xmlNode,bool bLoading );
+	virtual void Serialize(XmlNodeRef& xmlNode, bool bLoading);
 
-	void RegisterCallback( IAnimNodeCallback *callback ) { m_callback = callback; m_pMovieSystem->Callback(CBR_REGISTERNODECB); };
-	void UnregisterCallback( IAnimNodeCallback *callback ) { m_callback = NULL; m_pMovieSystem->Callback(CBR_UNREGISTERNODECB); };
+	void RegisterCallback(IAnimNodeCallback* callback) { m_callback = callback; m_pMovieSystem->Callback(CBR_REGISTERNODECB); };
+	void UnregisterCallback(IAnimNodeCallback* callback) { m_callback = NULL; m_pMovieSystem->Callback(CBR_UNREGISTERNODECB); };
 
-	bool IsParamValid( int paramId ) const;
+	bool IsParamValid(int paramId) const;
 
 private:
 	// Remove child from our childs list.
-	void RemoveChild( CAnimNode *node );
+	void RemoveChild(CAnimNode* node);
 
 	//! Id of animation node.
 	int m_id;
@@ -178,7 +178,7 @@ private:
 	char m_name[64];
 
 	//! Pointer to parent node.
-	CAnimNode *m_parent;
+	CAnimNode* m_parent;
 
 	//! Child animation nodes.
 	typedef std::vector<TSmartPtr<CAnimNode> > Childs;

@@ -33,8 +33,8 @@ public:
 	EAnimTrackType GetType() { return ATRACK_SELECT; };
 	EAnimValue GetValueType() { return AVALUE_SELECT; };
 
-	void GetKeyInfo( int key,const char* &description,float &duration );
-	void SerializeKey( ISelectKey &key,XmlNodeRef &keyNode,bool bLoading );
+	void GetKeyInfo(int key, const char*& description, float& duration);
+	void SerializeKey(ISelectKey& key, XmlNodeRef& keyNode, bool bLoading);
 };
 
 #endif // __selecttrack_h__

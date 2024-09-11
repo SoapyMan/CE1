@@ -17,6 +17,6 @@ public:
 	EAnimTrackType GetType() { return ATRACK_SOUND; };
 	EAnimValue GetValueType() { return AVALUE_SOUND; };
 
-	void GetKeyInfo( int key,const char* &description,float &duration );
-	void SerializeKey( ISoundKey &key,XmlNodeRef &keyNode,bool bLoading );
+	void GetKeyInfo(int key, const char*& description, float& duration);
+	void SerializeKey(ISoundKey& key, XmlNodeRef& keyNode, bool bLoading);
 };

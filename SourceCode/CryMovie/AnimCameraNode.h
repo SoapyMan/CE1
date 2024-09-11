@@ -27,29 +27,29 @@
 class CAnimCameraNode : public CAnimEntityNode
 {
 private:
-	IMovieSystem *m_pMovie;
+	IMovieSystem* m_pMovie;
 	// Field of view in DEGREES! To Display it nicely for user.
 	float m_fFOV;
 public:
-	CAnimCameraNode(IMovieSystem *sys );
+	CAnimCameraNode(IMovieSystem* sys);
 	virtual ~CAnimCameraNode();
 	virtual EAnimNodeType GetType() const { return ANODE_CAMERA; }
-	virtual void Animate( SAnimContext &ec );
+	virtual void Animate(SAnimContext& ec);
 	virtual void CreateDefaultTracks();
 	virtual void Reset();
 	float GetFOV() { return m_fFOV; }
 
 	//////////////////////////////////////////////////////////////////////////
 	int GetParamCount() const;
-	bool GetParamInfo( int nIndex, SParamInfo &info ) const;
-	bool GetParamInfoFromId( int paramId, SParamInfo &info ) const;
+	bool GetParamInfo(int nIndex, SParamInfo& info) const;
+	bool GetParamInfoFromId(int paramId, SParamInfo& info) const;
 
 	//////////////////////////////////////////////////////////////////////////
-	bool SetParamValue( float time,AnimParamType param,float value );
-	bool GetParamValue( float time,AnimParamType param,float &value );
+	bool SetParamValue(float time, AnimParamType param, float value);
+	bool GetParamValue(float time, AnimParamType param, float& value);
 
 	IAnimTrack* CreateTrack(AnimParamType nParamType);
-	void Serialize( XmlNodeRef &xmlNode,bool bLoading );
+	void Serialize(XmlNodeRef& xmlNode, bool bLoading);
 };
 
 #endif // __animcameranode_h__

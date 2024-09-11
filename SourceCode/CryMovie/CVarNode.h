@@ -22,20 +22,20 @@
 class CAnimCVarNode : public CAnimNode
 {
 public:
-	CAnimCVarNode( IMovieSystem *sys );
+	CAnimCVarNode(IMovieSystem* sys);
 
 	virtual EAnimNodeType GetType() const { return ANODE_CVAR; }
 
 	//////////////////////////////////////////////////////////////////////////
 	// Overrides from CAnimNode
 	//////////////////////////////////////////////////////////////////////////
-	void SetName( const char *name );
-	void Animate( SAnimContext &ec );
+	void SetName(const char* name);
+	void Animate(SAnimContext& ec);
 	void CreateDefaultTracks();
 
 	virtual int GetParamCount() const;
-	virtual bool GetParamInfo( int nIndex, SParamInfo &info ) const;
-	virtual bool GetParamInfoFromId( int paramId, SParamInfo &info ) const;
+	virtual bool GetParamInfo(int nIndex, SParamInfo& info) const;
+	virtual bool GetParamInfoFromId(int paramId, SParamInfo& info) const;
 
 private:
 	float m_value;

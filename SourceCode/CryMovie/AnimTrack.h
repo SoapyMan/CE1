@@ -37,89 +37,89 @@ public:
 
 	//! Set number of keys in track.
 	//! If needed adds empty keys at end or remove keys from end.
-	virtual void SetNumKeys( int numKeys ) { m_keys.resize(numKeys); };
+	virtual void SetNumKeys(int numKeys) { m_keys.resize(numKeys); };
 
 	//! Remove specified key.
-	virtual void RemoveKey( int num );
+	virtual void RemoveKey(int num);
 
-	int CreateKey( float time );
-	int CloneKey( int fromKey );
-	int CopyKey( IAnimTrack *pFromTrack, int nFromKey );
+	int CreateKey(float time);
+	int CloneKey(int fromKey);
+	int CopyKey(IAnimTrack* pFromTrack, int nFromKey);
 
 	//! Get key at specified location.
 	//! @param key Must be valid pointer to compatable key structure, to be filled with specified key location.
-	virtual void GetKey( int index,IKey *key );
+	virtual void GetKey(int index, IKey* key);
 
 	//! Get time of specified key.
 	//! @return key time.
-	virtual float GetKeyTime( int index );
+	virtual float GetKeyTime(int index);
 
 	//! Find key at givven time.
 	//! @return Index of found key, or -1 if key with this time not found.
-	virtual int FindKey( float time );
+	virtual int FindKey(float time);
 
 	//! Get flags of specified key.
 	//! @return key time.
-	virtual int GetKeyFlags( int index );
+	virtual int GetKeyFlags(int index);
 
 	//! Set key at specified location.
 	//! @param key Must be valid pointer to compatable key structure.
-	virtual void SetKey( int index,IKey *key );
+	virtual void SetKey(int index, IKey* key);
 
 	//! Set time of specified key.
-	virtual void SetKeyTime( int index,float time );
+	virtual void SetKeyTime(int index, float time);
 
 	//! Set flags of specified key.
-	virtual void SetKeyFlags( int index,int flags );
+	virtual void SetKeyFlags(int index, int flags);
 
 	//! Sort keys in track (after time of keys was modified).
 	virtual void SortKeys();
 
 	//! Get track flags.
 	virtual int GetFlags() { return m_flags; };
-	
+
 	//! Set track flags.
-	virtual void SetFlags( int flags ) { m_flags = flags; };
+	virtual void SetFlags(int flags) { m_flags = flags; };
 
 	//////////////////////////////////////////////////////////////////////////
 	// Get track value at specified time.
 	// Interpolates keys if needed.
 	//////////////////////////////////////////////////////////////////////////
-	virtual void GetValue( float time,float &value ) { assert(0); };
-	virtual void GetValue( float time,Vec3 &value ) { assert(0); };
-	virtual void GetValue( float time,Quat &value ) { assert(0); };
-	virtual void GetValue( float time,bool &value ) { assert(0); };
+	virtual void GetValue(float time, float& value) { assert(0); };
+	virtual void GetValue(float time, Vec3& value) { assert(0); };
+	virtual void GetValue(float time, Quat& value) { assert(0); };
+	virtual void GetValue(float time, bool& value) { assert(0); };
 
 	//////////////////////////////////////////////////////////////////////////
 	// Set track value at specified time.
 	// Adds new keys if required.
 	//////////////////////////////////////////////////////////////////////////
-	virtual void SetValue( float time,const float &value,bool bDefault=false ) { assert(0); };
-	virtual void SetValue( float time,const Vec3 &value,bool bDefault=false ) { assert(0); };
-	virtual void SetValue( float time,const Quat &value,bool bDefault=false ) { assert(0); };
-	virtual void SetValue( float time,const bool &value,bool bDefault=false ) { assert(0); };
+	virtual void SetValue(float time, const float& value, bool bDefault = false) { assert(0); };
+	virtual void SetValue(float time, const Vec3& value, bool bDefault = false) { assert(0); };
+	virtual void SetValue(float time, const Quat& value, bool bDefault = false) { assert(0); };
+	virtual void SetValue(float time, const bool& value, bool bDefault = false) { assert(0); };
 
 	/** Assign active time range for this track.
 	*/
-	virtual void SetTimeRange( const Range &timeRange ) { m_timeRange = timeRange; };
+	virtual void SetTimeRange(const Range& timeRange) { m_timeRange = timeRange; };
 
 	/** Serialize this animation track to XML.
 			Do not ovveride this method, prefere to override SerializeKey.
 	*/
-	virtual bool Serialize( XmlNodeRef &xmlNode,bool bLoading, bool bLoadEmptyTracks=true );
+	virtual bool Serialize(XmlNodeRef& xmlNode, bool bLoading, bool bLoadEmptyTracks = true);
 
 	/** Serialize single key of this track.
 			Ovvride this in derived classes.
 			Do not save time attribute, it is already saved in Serialize of the track.
 	*/
-	virtual void SerializeKey( KeyType &key,XmlNodeRef &keyNode,bool bLoading ) = 0;
+	virtual void SerializeKey(KeyType& key, XmlNodeRef& keyNode, bool bLoading) = 0;
 
 	//////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////
 	/** Get last key before specified time.
 			@return Index of key, or -1 if such key not exist.
 	*/
-	int GetActiveKey( float time,KeyType *key );
+	int GetActiveKey(float time, KeyType* key);
 
 protected:
 	void CheckValid()
@@ -153,52 +153,52 @@ inline TAnimTrack<KeyType>::TAnimTrack()
 
 //////////////////////////////////////////////////////////////////////////
 template <class KeyType>
-inline void TAnimTrack<KeyType>::RemoveKey( int index )
+inline void TAnimTrack<KeyType>::RemoveKey(int index)
 {
-	assert( index >= 0 && index < (int)m_keys.size() );
-	m_keys.erase( m_keys.begin() + index );
+	assert(index >= 0 && index < (int)m_keys.size());
+	m_keys.erase(m_keys.begin() + index);
 	Invalidate();
 }
 
 //////////////////////////////////////////////////////////////////////////
 template <class KeyType>
-inline void TAnimTrack<KeyType>::GetKey( int index,IKey *key )
+inline void TAnimTrack<KeyType>::GetKey(int index, IKey* key)
 {
-	assert( index >= 0 && index < (int)m_keys.size() );
-	assert( key != 0 );
+	assert(index >= 0 && index < (int)m_keys.size());
+	assert(key != 0);
 	*(KeyType*)key = m_keys[index];
 }
 
 //////////////////////////////////////////////////////////////////////////
 template <class KeyType>
-inline void TAnimTrack<KeyType>::SetKey( int index,IKey *key )
+inline void TAnimTrack<KeyType>::SetKey(int index, IKey* key)
 {
-	assert( index >= 0 && index < (int)m_keys.size() );
-	assert( key != 0 );
+	assert(index >= 0 && index < (int)m_keys.size());
+	assert(key != 0);
 	m_keys[index] = *(KeyType*)key;
 	Invalidate();
 }
 
 //////////////////////////////////////////////////////////////////////////
 template <class KeyType>
-inline float TAnimTrack<KeyType>::GetKeyTime( int index )
+inline float TAnimTrack<KeyType>::GetKeyTime(int index)
 {
-	assert( index >= 0 && index < (int)m_keys.size() );
+	assert(index >= 0 && index < (int)m_keys.size());
 	return m_keys[index].time;
 }
 
 //////////////////////////////////////////////////////////////////////////
 template <class KeyType>
-inline void TAnimTrack<KeyType>::SetKeyTime( int index,float time )
+inline void TAnimTrack<KeyType>::SetKeyTime(int index, float time)
 {
-	assert( index >= 0 && index < (int)m_keys.size() );
+	assert(index >= 0 && index < (int)m_keys.size());
 	m_keys[index].time = time;
 	Invalidate();
 }
 
 //////////////////////////////////////////////////////////////////////////
 template <class KeyType>
-inline int TAnimTrack<KeyType>::FindKey( float time )
+inline int TAnimTrack<KeyType>::FindKey(float time)
 {
 	for (int i = 0; i < (int)m_keys.size(); i++)
 	{
@@ -210,17 +210,17 @@ inline int TAnimTrack<KeyType>::FindKey( float time )
 
 //////////////////////////////////////////////////////////////////////////
 template <class KeyType>
-inline int TAnimTrack<KeyType>::GetKeyFlags( int index )
+inline int TAnimTrack<KeyType>::GetKeyFlags(int index)
 {
-	assert( index >= 0 && index < (int)m_keys.size() );
+	assert(index >= 0 && index < (int)m_keys.size());
 	return m_keys[index].flags;
 }
 
 //////////////////////////////////////////////////////////////////////////
 template <class KeyType>
-inline void TAnimTrack<KeyType>::SetKeyFlags( int index,int flags )
+inline void TAnimTrack<KeyType>::SetKeyFlags(int index, int flags)
 {
-	assert( index >= 0 && index < (int)m_keys.size() );
+	assert(index >= 0 && index < (int)m_keys.size());
 	m_keys[index].flags = flags;
 	Invalidate();
 }
@@ -229,33 +229,33 @@ inline void TAnimTrack<KeyType>::SetKeyFlags( int index,int flags )
 template <class KeyType>
 inline void TAnimTrack<KeyType>::SortKeys()
 {
-	std::sort( m_keys.begin(),m_keys.end() );
+	std::sort(m_keys.begin(), m_keys.end());
 	m_bModified = false;
 }
 
 //////////////////////////////////////////////////////////////////////////
 template <class KeyType>
-inline bool TAnimTrack<KeyType>::Serialize( XmlNodeRef &xmlNode,bool bLoading,bool bLoadEmptyTracks )
+inline bool TAnimTrack<KeyType>::Serialize(XmlNodeRef& xmlNode, bool bLoading, bool bLoadEmptyTracks)
 {
 	if (bLoading)
 	{
 		int num = xmlNode->getChildCount();
-		
+
 		Range timeRange;
 		int flags = m_flags;
-		xmlNode->getAttr( "Flags",flags );
-		xmlNode->getAttr( "StartTime",timeRange.start );
-		xmlNode->getAttr( "EndTime",timeRange.end );
-		SetFlags( flags );
+		xmlNode->getAttr("Flags", flags);
+		xmlNode->getAttr("StartTime", timeRange.start);
+		xmlNode->getAttr("EndTime", timeRange.end);
+		SetFlags(flags);
 		SetTimeRange(timeRange);
 
-		SetNumKeys( num );
+		SetNumKeys(num);
 		for (int i = 0; i < num; i++)
 		{
 			XmlNodeRef keyNode = xmlNode->getChild(i);
-			keyNode->getAttr( "time",m_keys[i].time );
+			keyNode->getAttr("time", m_keys[i].time);
 
-			SerializeKey( m_keys[i],keyNode,bLoading );
+			SerializeKey(m_keys[i], keyNode, bLoading);
 		}
 
 		if ((!num) && (!bLoadEmptyTracks))
@@ -265,16 +265,16 @@ inline bool TAnimTrack<KeyType>::Serialize( XmlNodeRef &xmlNode,bool bLoading,bo
 	{
 		int num = GetNumKeys();
 		CheckValid();
-		xmlNode->setAttr( "Flags",GetFlags() );
-		xmlNode->setAttr( "StartTime",m_timeRange.start );
-		xmlNode->setAttr( "EndTime",m_timeRange.end );
+		xmlNode->setAttr("Flags", GetFlags());
+		xmlNode->setAttr("StartTime", m_timeRange.start);
+		xmlNode->setAttr("EndTime", m_timeRange.end);
 
 		for (int i = 0; i < num; i++)
 		{
-			XmlNodeRef keyNode = xmlNode->newChild( "Key" );
-			keyNode->setAttr( "time",m_keys[i].time );
+			XmlNodeRef keyNode = xmlNode->newChild("Key");
+			keyNode->setAttr("time", m_keys[i].time);
 
-			SerializeKey( m_keys[i],keyNode,bLoading );
+			SerializeKey(m_keys[i], keyNode, bLoading);
 		}
 	}
 	return true;
@@ -282,44 +282,44 @@ inline bool TAnimTrack<KeyType>::Serialize( XmlNodeRef &xmlNode,bool bLoading,bo
 
 //////////////////////////////////////////////////////////////////////////
 template <class KeyType>
-inline int TAnimTrack<KeyType>::CreateKey( float time )
+inline int TAnimTrack<KeyType>::CreateKey(float time)
 {
-	KeyType key,akey;
+	KeyType key, akey;
 	int nkey = GetNumKeys();
-	SetNumKeys( nkey+1 );	
+	SetNumKeys(nkey + 1);
 	key.time = time;
-	SetKey( nkey,&key );
+	SetKey(nkey, &key);
 
 	return nkey;
 }
 
 //////////////////////////////////////////////////////////////////////////
 template <class KeyType>
-inline int TAnimTrack<KeyType>::CloneKey( int fromKey )
+inline int TAnimTrack<KeyType>::CloneKey(int fromKey)
 {
 	KeyType key;
-	GetKey( fromKey,&key );
+	GetKey(fromKey, &key);
 	int nkey = GetNumKeys();
-	SetNumKeys( nkey+1 );
-	SetKey( nkey,&key );
+	SetNumKeys(nkey + 1);
+	SetKey(nkey, &key);
 	return nkey;
 }
 
 //////////////////////////////////////////////////////////////////////////
 template <class KeyType>
-inline int TAnimTrack<KeyType>::CopyKey( IAnimTrack *pFromTrack, int nFromKey )
+inline int TAnimTrack<KeyType>::CopyKey(IAnimTrack* pFromTrack, int nFromKey)
 {
 	KeyType key;
-	pFromTrack->GetKey( nFromKey,&key );
+	pFromTrack->GetKey(nFromKey, &key);
 	int nkey = GetNumKeys();
-	SetNumKeys( nkey+1 );
-	SetKey( nkey,&key );
+	SetNumKeys(nkey + 1);
+	SetKey(nkey, &key);
 	return nkey;
 }
 
 //////////////////////////////////////////////////////////////////////////
 template <class KeyType>
-inline int TAnimTrack<KeyType>::GetActiveKey( float time,KeyType *key )
+inline int TAnimTrack<KeyType>::GetActiveKey(float time, KeyType* key)
 {
 	CheckValid();
 
@@ -333,14 +333,14 @@ inline int TAnimTrack<KeyType>::GetActiveKey( float time,KeyType *key )
 
 	bool bTimeWrap = false;
 
-	if ((m_flags&ATRACK_CYCLE) || (m_flags&ATRACK_LOOP))
+	if ((m_flags & ATRACK_CYCLE) || (m_flags & ATRACK_LOOP))
 	{
 		// Warp time.
-		const char *desc = 0;
+		const char* desc = 0;
 		float duration = 0;
-		GetKeyInfo( nkeys-1,desc,duration );
-		float endtime = GetKeyTime(nkeys-1) + duration;
-		time = cry_fmod( time,endtime );
+		GetKeyInfo(nkeys - 1, desc, duration);
+		float endtime = GetKeyTime(nkeys - 1) + duration;
+		time = cry_fmod(time, endtime);
 		if (time < m_lastTime)
 		{
 			// Time is wrapped.
@@ -355,11 +355,11 @@ inline int TAnimTrack<KeyType>::GetActiveKey( float time,KeyType *key )
 		if (bTimeWrap)
 		{
 			// If time wrapped, active key is last key.
-			m_currKey = nkeys-1;
+			m_currKey = nkeys - 1;
 			*key = m_keys[m_currKey];
 		}
 		else
-      m_currKey = -1;
+			m_currKey = -1;
 		return m_currKey;
 	}
 
@@ -372,7 +372,7 @@ inline int TAnimTrack<KeyType>::GetActiveKey( float time,KeyType *key )
 	{
 		if (time >= m_keys[i].time)
 		{
-			if ((i >= nkeys-1) || (time < m_keys[i+1].time))
+			if ((i >= nkeys - 1) || (time < m_keys[i + 1].time))
 			{
 				m_currKey = i;
 				*key = m_keys[m_currKey];
@@ -388,7 +388,7 @@ inline int TAnimTrack<KeyType>::GetActiveKey( float time,KeyType *key )
 	{
 		if (time >= m_keys[i].time)
 		{
-			if ((i >= nkeys-1) || (time < m_keys[i+1].time))
+			if ((i >= nkeys - 1) || (time < m_keys[i + 1].time))
 			{
 				m_currKey = i;
 				*key = m_keys[m_currKey];

@@ -22,20 +22,20 @@
 class CAnimScriptVarNode : public CAnimNode
 {
 public:
-	CAnimScriptVarNode( IMovieSystem *sys );
+	CAnimScriptVarNode(IMovieSystem* sys);
 
 	virtual EAnimNodeType GetType() const { return ANODE_SCRIPTVAR; }
 
 	//////////////////////////////////////////////////////////////////////////
 	// Overrides from CAnimNode
 	//////////////////////////////////////////////////////////////////////////
-	void Animate( SAnimContext &ec );
+	void Animate(SAnimContext& ec);
 	void CreateDefaultTracks();
 
 	//////////////////////////////////////////////////////////////////////////
 	virtual int GetParamCount() const;
-	virtual bool GetParamInfo( int nIndex, SParamInfo &info ) const;
-	virtual bool GetParamInfoFromId( int paramId, SParamInfo &info ) const;
+	virtual bool GetParamInfo(int nIndex, SParamInfo& info) const;
+	virtual bool GetParamInfoFromId(int paramId, SParamInfo& info) const;
 
 private:
 	void SetScriptValue();
