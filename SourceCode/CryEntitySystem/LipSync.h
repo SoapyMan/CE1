@@ -55,8 +55,8 @@ struct SExprPattern
 {
 	SExprPattern()
 	{
-		fCurrIntervalTime=0.0f;
-		fNextIntervalTime=0.0f;
+		fCurrIntervalTime = 0.0f;
+		fNextIntervalTime = 0.0f;
 	}
 	string sName;
 	int nMorphTargetId;
@@ -73,7 +73,7 @@ struct SExprPattern
 	float fNextIntervalTime;
 };
 
-typedef std::map<string,int> TNameToIdMap;
+typedef std::map<string, int> TNameToIdMap;
 typedef TNameToIdMap::iterator		TNameToIdMapIt;
 
 typedef std::vector<SSyncData>		TSyncDataVec;
@@ -84,17 +84,17 @@ class CLipSync : public ILipSync, ISoundEventListener, IStreamCallback
 {
 private:
 	// needed interfaces
-	ISystem *m_pSystem;
-	ISoundSystem *m_pSoundSystem;
-	IScriptSystem *m_pScriptSystem;
-	IStreamEngine *m_pStreamEngine;
-	ILog *m_pLog;
-	ITimer *m_pTimer;
-	ICryPak *m_pPak;
+	ISystem* m_pSystem;
+	ISoundSystem* m_pSoundSystem;
+	IScriptSystem* m_pScriptSystem;
+	IStreamEngine* m_pStreamEngine;
+	ILog* m_pLog;
+	ITimer* m_pTimer;
+	ICryPak* m_pPak;
 	_smart_ptr<ISound> m_pSound;
-	IEntity *m_pEntity;
-	ICryCharInstance *m_pCharInst;
-	IDialogLoadSink *m_pSink;
+	IEntity* m_pEntity;
+	ICryCharInstance* m_pCharInst;
+	IDialogLoadSink* m_pSink;
 	IReadStreamPtr m_pReadStream;
 	string m_loadedExpression;
 	bool m_bSoundFileLoaded;
@@ -108,36 +108,36 @@ private:
 	TExprPatternVec m_vecExprPatterns;
 	// state
 	int m_nLastDataIdx[MAX_LIPSYNC_TRACKS];
-	IScriptObject	*m_pAITable;
+	IScriptObject* m_pAITable;
 private:
 	virtual ~CLipSync();
 	int GetDataIdx(int nChannel, int nSmp, int nLo, int nHi);
 	bool UpdateRandomExpressions(float fFrameTime, bool bAnimate);
 	bool UpdateLipSync(float fFrameTime, bool bAnimate);
-	void RemoveExtension(char *pszFilename);
-	void AddExtension(char *pszFilename, const char *pszExtension);
+	void RemoveExtension(char* pszFilename);
+	void AddExtension(char* pszFilename, const char* pszExtension);
 	void CheckIfDialogLoaded();
 	void LoadFailed();
-	void OnSoundEvent( ESoundCallbackEvent event,ISound *pSound );
+	void OnSoundEvent(ESoundCallbackEvent event, ISound* pSound);
 	void SyncFileLoaded();
 	void SyncFileLoadFailed();
 	void AbortLoading();
-	virtual void StreamOnComplete(IReadStream *pStream, unsigned nError);
+	virtual void StreamOnComplete(IReadStream* pStream, unsigned nError);
 public:
 	CLipSync();
-	bool Init(ISystem *pSystem, IEntity *pEntity);																		// initializes and prepares the character for lip-synching
+	bool Init(ISystem* pSystem, IEntity* pEntity);																		// initializes and prepares the character for lip-synching
 	void Release();																																		// releases all resources and deletes itself
-	bool LoadRandomExpressions(const char *pszExprScript, bool bRaiseError=true);			// load expressions from script
+	bool LoadRandomExpressions(const char* pszExprScript, bool bRaiseError = true);			// load expressions from script
 	bool UnloadRandomExpressions();																										// release expressions
 	// loads a dialog for later playback
-	bool LoadDialog(const char *pszFilename, int nSoundVolume, float fMinSoundRadius, float fMaxSoundRadius, float fClipDist, int nSoundFlags=0,IScriptObject *pAITable=NULL);																						
+	bool LoadDialog(const char* pszFilename, int nSoundVolume, float fMinSoundRadius, float fMaxSoundRadius, float fClipDist, int nSoundFlags = 0, IScriptObject* pAITable = NULL);
 	bool UnloadDialog();																															// releases all resources
-	bool PlayDialog(bool bUnloadWhenDone=true);																				// plays a loaded dialog
+	bool PlayDialog(bool bUnloadWhenDone = true);																				// plays a loaded dialog
 	bool StopDialog();																																// stops (aborts) a dialog
-	bool DoExpression(const char *pszMorphTarget, CryCharMorphParams &MorphParams, bool bAnim=true);		// do a specific expression
-	bool StopExpression(const char *pszMorphTarget);																	// stop animating the specified expression
-	bool Update(bool bAnimate=true);																									// updates animation & stuff
-	void SetCallbackSink(IDialogLoadSink *pSink) { m_pSink=pSink; }
+	bool DoExpression(const char* pszMorphTarget, CryCharMorphParams& MorphParams, bool bAnim = true);		// do a specific expression
+	bool StopExpression(const char* pszMorphTarget);																	// stop animating the specified expression
+	bool Update(bool bAnimate = true);																									// updates animation & stuff
+	void SetCallbackSink(IDialogLoadSink* pSink) { m_pSink = pSink; }
 };
 
 #endif // !defined(AFX_LIPSYNC_H__93A3FF8F_9950_4F4E_A719_48B376E471D5__INCLUDED_)

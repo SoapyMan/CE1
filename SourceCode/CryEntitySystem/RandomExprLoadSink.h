@@ -17,14 +17,14 @@ class CRandomExprLoadSink : public IScriptObjectDumpSink
 {
 private:
 	bool m_bRaiseError;
-	IScriptSystem *m_pScriptSystem;
-	_SmartScriptObject *m_pObj;
-	IAnimationSet *m_pAnimSet;
-	TExprPatternVec *m_pvecExprPatterns;
+	IScriptSystem* m_pScriptSystem;
+	_SmartScriptObject* m_pObj;
+	IAnimationSet* m_pAnimSet;
+	TExprPatternVec* m_pvecExprPatterns;
 	int m_nMode;
 public:
-	CRandomExprLoadSink(bool bRaiseError, IScriptSystem *pScriptSystem, _SmartScriptObject *pObj, IAnimationSet *pAnimSet, TExprPatternVec *pvecExprPatterns, int nMode=EXPRLOAD_MODE_BASE);
+	CRandomExprLoadSink(bool bRaiseError, IScriptSystem* pScriptSystem, _SmartScriptObject* pObj, IAnimationSet* pAnimSet, TExprPatternVec* pvecExprPatterns, int nMode = EXPRLOAD_MODE_BASE);
 	~CRandomExprLoadSink();
-	void OnElementFound(const char *sName, ScriptVarType type);
+	void OnElementFound(const char* sName, ScriptVarType type);
 	void OnElementFound(int nIdx, ScriptVarType type) {}
 };

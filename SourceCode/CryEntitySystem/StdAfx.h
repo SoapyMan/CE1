@@ -38,34 +38,34 @@
 #include <CryMemoryManager.h>
 
 #include <CrySizer.h>
- 
+
 #include <platform.h>
 
 ////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 extern bool g_bProfilerEnabled;
- 
+
 
 ////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 
 #ifdef PS2
 #ifndef DISABLE_VERIFY
-	#define _VERIFY(a)  \
+#define _VERIFY(a)  \
 	{						\
 		if(!(a))			\
 		{					\
 		FORCE_EXIT();		\
 		DEBUG_BREAK; \		
 		}					\
-	}							
+}
 #else
-	#define VERIFY(a) a;
+#define VERIFY(a) a;
 #endif
 
 #else
 #ifndef DISABLE_VERIFY
-	#define _VERIFY(a)  \
+#define _VERIFY(a)  \
 	{						\
 		if(!(a))			\
 		{					\
@@ -73,7 +73,7 @@ extern bool g_bProfilerEnabled;
 		}					\
 	}						
 #else
-	#define VERIFY(a) a;
+#define VERIFY(a) a;
 #endif
 
 #endif //PS2
@@ -134,7 +134,7 @@ typedef unsigned short		ushort;
 
 
 #ifdef PS2
-_inline void ___TRACE(const char *sFormat, ... )
+_inline void ___TRACE(const char* sFormat, ...)
 {
 
 	va_list vl;
@@ -144,11 +144,11 @@ _inline void ___TRACE(const char *sFormat, ... )
 	vsprintf(sTraceString, sFormat, vl);
 	va_end(vl);
 	cout << sTraceString << "\n";
-	
+
 }
 
 #else
-_inline void __cdecl ___TRACE(const char *sFormat, ... )
+_inline void __cdecl ___TRACE(const char* sFormat, ...)
 {
 
 	va_list vl;
@@ -158,7 +158,7 @@ _inline void __cdecl ___TRACE(const char *sFormat, ... )
 	vsprintf(sTraceString, sFormat, vl);
 	va_end(vl);
 	::OutputDebugString(sTraceString);
-	
+
 }
 
 #endif
@@ -171,23 +171,23 @@ _inline void __cdecl ___TRACE(const char *sFormat, ... )
 #ifdef _DEBUG
 
 //@FIXME this function should not be inline.
-_inline void __cdecl __CRYTEKDLL_TRACE(const char *sFormat, ... )
+_inline void __cdecl __CRYTEKDLL_TRACE(const char* sFormat, ...)
 {
-  va_list vl;
-  static char sTraceString[1024];
+	va_list vl;
+	static char sTraceString[1024];
 
-  va_start(vl, sFormat);
-  vsprintf(sTraceString, sFormat, vl);
-  va_end(vl);
+	va_start(vl, sFormat);
+	vsprintf(sTraceString, sFormat, vl);
+	va_end(vl);
 
-  strcat(sTraceString, "\n");
+	strcat(sTraceString, "\n");
 
 #ifdef WIN32
-  ::OutputDebugString(sTraceString);	
+	::OutputDebugString(sTraceString);
 #endif
 
 #ifdef GAMECUBE
-  OSReport(sTraceString);
+	OSReport(sTraceString);
 #endif
 
 }

@@ -17,22 +17,22 @@ struct IEntity;
 class CEntityItMap : public IEntityIt
 {
 public:
-	CEntityItMap(EntityMap *pMap)
+	CEntityItMap(EntityMap* pMap)
 	{
-		m_nRefCount=0;
+		m_nRefCount = 0;
 		m_pEntityMap = pMap;
 		MoveFirst();
 	};
 
 	bool IsEnd() { return (m_itEntityMap == m_pEntityMap->end()); };
-	IEntity * Next() { return IsEnd() ? NULL : (IEntity *) (* m_itEntityMap++).second; };
+	IEntity* Next() { return IsEnd() ? NULL : (IEntity*)(*m_itEntityMap++).second; };
 	void MoveFirst() { m_itEntityMap = m_pEntityMap->begin(); };
-	void AddRef(){m_nRefCount++;}
-	void Release() { --m_nRefCount; if(m_nRefCount<=0){delete this;} };
-	
+	void AddRef() { m_nRefCount++; }
+	void Release() { --m_nRefCount; if (m_nRefCount <= 0) { delete this; } };
+
 protected:
 	int m_nRefCount;
-	EntityMap *m_pEntityMap;
+	EntityMap* m_pEntityMap;
 	EntityMapItor m_itEntityMap;
 
 };
@@ -40,22 +40,22 @@ protected:
 class CEntityItVec : public IEntityIt
 {
 public:
-	CEntityItVec(EntityVector *pVec)
+	CEntityItVec(EntityVector* pVec)
 	{
-		m_nRefCount=0;
+		m_nRefCount = 0;
 		m_pEntityVec = pVec;
 		MoveFirst();
 	};
 
 	bool IsEnd() { return (m_itEntityVec == m_pEntityVec->end()); };
-	IEntity * Next() { return IsEnd() ? NULL : (*m_itEntityVec++); };
+	IEntity* Next() { return IsEnd() ? NULL : (*m_itEntityVec++); };
 	void MoveFirst() { m_itEntityVec = m_pEntityVec->begin(); };
-	void AddRef(){m_nRefCount++;}
-	void Release() { --m_nRefCount; if(m_nRefCount<=0){delete this;} };
+	void AddRef() { m_nRefCount++; }
+	void Release() { --m_nRefCount; if (m_nRefCount <= 0) { delete this; } };
 
 protected:
 	int m_nRefCount;
-	EntityVector *m_pEntityVec;
+	EntityVector* m_pEntityVec;
 	EntityVectorItor m_itEntityVec;
 
 };

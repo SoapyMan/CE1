@@ -21,7 +21,7 @@
 typedef std::vector<bool> BitVector;							// depending on STL implementation this might be a bit vector or a byte vector
 typedef BitVector::iterator BitVectorItor;
 
-class CIDGenerator  
+class CIDGenerator
 {
 public:
 	//! constructor
@@ -47,7 +47,7 @@ public:
 	bool IsUsed(WORD nID);
 
 	//!
-	static bool IsDynamicEntityId( WORD nID );
+	static bool IsDynamicEntityId(WORD nID);
 
 private: // ------------------------------------------------------------
 
