@@ -27,11 +27,11 @@ class CryCharDecal
 {
 public:
 	// sets the current game time for decals (for fading in / out)
-	static void setGlobalTime (float fTime) {g_fCurrTime = fTime;}
+	static void setGlobalTime(float fTime) { g_fCurrTime = fTime; }
 
 	// initializes it; expects the decal to come with vPos in LCS rather than WCS
-	CryCharDecal (){}
-	void buildFrom (class CryCharDecalBuilder& builder);
+	CryCharDecal() {}
+	void buildFrom(class CryCharDecalBuilder& builder);
 
 	// starts fading out the decal from this moment on
 	void startFadeOut(float fTimeout);
@@ -44,26 +44,26 @@ public:
 	{
 		return getTextureId() < rThat.getTextureId();
 	}
-	
+
 
 	DECLARE_VECTOR_GETTER_METHODS(CryCharDecalFace, Face, Faces, m_arrFaces);
 	DECLARE_VECTOR_GETTER_METHODS(CryCharDecalVertex, Vertex, Vertices, m_arrVertices);
 
 #if DECAL_USE_HELPERS
 	// helper vertex access methods - see the class header comment for more info
-	unsigned numHelperFaces () const;
+	unsigned numHelperFaces() const;
 	unsigned numHelperVertices() const;
-  Vec3 getHelperVertex (unsigned i) const;
-	CryUV getHelperUV (unsigned i) const;
-	CryCharDecalFace getHelperFace (unsigned i) const;
+	Vec3 getHelperVertex(unsigned i) const;
+	CryUV getHelperUV(unsigned i) const;
+	CryCharDecalFace getHelperFace(unsigned i) const;
 
 	const Vec3& getSourceWCS()const;
 
 	void debugDraw(const Matrix& matCharacter);
 #endif
-	const Vec3& getSourceLCS () const;
+	const Vec3& getSourceLCS() const;
 
-	int getTextureId ()const {return m_nTextureId;}
+	int getTextureId()const { return m_nTextureId; }
 
 	// returns the decal multiplier: 0 - no decal, 1 - full decal size
 	float getIntensity()const;
@@ -77,7 +77,7 @@ protected:
 
 	// the texture of the decal
 	int m_nTextureId;
-	
+
 	// the point, in LCS , where the shot was made
 	Vec3 m_ptSource;
 

@@ -25,33 +25,33 @@
 // Implementation of IController interface (see File:Controller.h)
 // Controller implementing the TCB (Kochanek-Bartles Hermit spline).
 ///////////////////////////////////////////////////////////////////////////
-class CControllerTCB: public IController
+class CControllerTCB : public IController
 {
 public:
 	// each controller has an ID, by which it is identifiable
-	unsigned GetID () const {return m_nControllerId;}
+	unsigned GetID() const { return m_nControllerId; }
 
 	//  returns orientation of the controller at the given time
-	CryQuat GetOrientation (float t);
+	CryQuat GetOrientation(float t);
 
 	//  returns the orientation of the controller at the given time, in logarithmic space
-	Vec3 GetOrientation2(float t) { return Vec3(0,0,0); };
+	Vec3 GetOrientation2(float t) { return Vec3(0, 0, 0); };
 
 	// returns position of the controller at the given time
-	Vec3 GetPosition (float t);
+	Vec3 GetPosition(float t);
 
 	// returns scale of the controller at the given time
-	Vec3 GetScale (float t);
-	
+	Vec3 GetScale(float t);
+
 	// retrieves the position and orientation within one call
 	// may be optimal in some applications
-	void GetValue (float t, CryQuat& q, Vec3 &p);
+	void GetValue(float t, CryQuat& q, Vec3& p);
 
 	// ignore.
-	void GetValue2 (float t, PQLog& pq) {};
+	void GetValue2(float t, PQLog& pq) {};
 
 	// returns the start time
-	virtual float GetTimeStart ()
+	virtual float GetTimeStart()
 	{
 		return m_timeStart;
 	}
@@ -81,16 +81,16 @@ class CControllerTCBVec3 : public CControllerTCB
 public:
 	// Loads (initializes) controller from the given chunk. The chunk descriptor is followed by the 
 	// chunk data immediately. Returns true if successful
-	bool Load( const CONTROLLER_CHUNK_DESC_0826* pChunk,float secsPerTick );
+	bool Load(const CONTROLLER_CHUNK_DESC_0826* pChunk, float secsPerTick);
 
 	// returns position of the controller at the given time
-	Vec3 GetPosition (float t);
+	Vec3 GetPosition(float t);
 
 	// returns scale of the controller at the given time
-	Vec3 GetScale (float t);
+	Vec3 GetScale(float t);
 
 	virtual bool IsLooping() const;
-	
+
 	size_t sizeofThis()const
 	{
 		return sizeof(*this) + m_spline.sizeofThis();
@@ -109,7 +109,7 @@ class CControllerTCBQuat : public CControllerTCB
 public:
 	// Loads (initializes) controller from the given chunk. The chunk descriptor is followed by the 
 	// chunk data immediately. Returns true if successful
-	bool Load( const CONTROLLER_CHUNK_DESC_0826* pChunk,float secsPerTick );
+	bool Load(const CONTROLLER_CHUNK_DESC_0826* pChunk, float secsPerTick);
 
 	//  returns orientation of the controller at the given time
 	CryQuat GetOrientation(float t);

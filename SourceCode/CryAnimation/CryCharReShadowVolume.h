@@ -34,18 +34,18 @@ public:
 	// prepares for calculating the shadow volume	
 	// numVertices is the minimal length of the vertex buffer
 	// numIndices is the minimal length of the index buffer
-	void prepare (unsigned numIndices, unsigned numVertices);
-	
+	void prepare(unsigned numIndices, unsigned numVertices);
+
 	// returns the pointer to the array of vertices to fill in
 	// the vertices are used to form the shadow volume mesh/geometry
-	Vec3d* getVertexBuffer () {return &m_arrVertices[0];}
+	Vec3d* getVertexBuffer() { return &m_arrVertices[0]; }
 
 	// returns the pointer to the indices in the index buffer to fill in
 	// the indices refer to the vertices in the vertex buffer returned by getVertexBuffer ()
-	unsigned short* getIndexBuffer () {return &m_arrIndices[0];}
+	unsigned short* getIndexBuffer() { return &m_arrIndices[0]; }
 
 	// assuming the calculation of the shadow volume is finished, submits it to the renderer
-	void submit (const SRendParams *rParams, IShader* pShadowCull );
+	void submit(const SRendParams* rParams, IShader* pShadowCull);
 
 	// returns the age of this shadow volume: the current frame - the frame it was submitted last
 	unsigned getAgeFrames();
@@ -53,10 +53,10 @@ public:
 	// returns the timeout from the last call to submit()
 	float getAgeSeconds();
 
-	void GetMemoryUsage (ICrySizer* pSizer);
+	void GetMemoryUsage(ICrySizer* pSizer);
 protected:
-	unsigned numMeshIndices() {return m_nUsedMeshVertices;}
-	unsigned numMeshVertices() {return m_pLeafBuffer->m_SecVertCount;}
+	unsigned numMeshIndices() { return m_nUsedMeshVertices; }
+	unsigned numMeshVertices() { return m_pLeafBuffer->m_SecVertCount; }
 
 protected:
 	//! shadow volume renderer managed vertex buffer
@@ -78,7 +78,7 @@ protected:
 
 	// the synchronous time when the last submit() was called
 	float m_fLastTimeSubmitted;
-	
+
 	// the last frame submit() function was called
 	int m_nLastFrameSubmitted;
 };

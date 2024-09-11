@@ -24,17 +24,17 @@ class CryCharDecalBuilder
 public:
 	// remembers the parameters and gets ready to initialize the Decal upon request
 	// memorizes all the references, they must be alive during the life cycle of this object
-	CryCharDecalBuilder (struct CryEngineDecalInfo& rDecal, class CryGeometryInfo* pGeometry, const Vec3* pVertices);
+	CryCharDecalBuilder(struct CryEngineDecalInfo& rDecal, class CryGeometryInfo* pGeometry, const Vec3* pVertices);
 
 	// returns the coordinate of the bullet in the LCS of the character
-	const Vec3& getSourceLCS () const {return m_ptSourceLCS;}
+	const Vec3& getSourceLCS() const { return m_ptSourceLCS; }
 	// returns the coordinates of the bullet in the WCS
 	//const Vec3& getSourceWCS () const {return m_rDecal.vPos;}
 	// returns the matrix of the bullet in LCS
-	const Matrix44& getBulletMatrix()const {return m_matBullet;}
+	const Matrix44& getBulletMatrix()const { return m_matBullet; }
 
 	// returns the original decal descriptor structure
-	const CryEngineDecalInfo& getDecalInfo () const {return m_rDecal;}
+	const CryEngineDecalInfo& getDecalInfo() const { return m_rDecal; }
 
 	DECLARE_VECTOR_GETTER_METHODS(CryCharDecalFace, DecalFace, DecalFaces, m_arrDecalFaces);
 	DECLARE_VECTOR_GETTER_METHODS(CryCharDecalVertex, DecalVertex, DecalVertices, m_arrDecalVertices);
@@ -44,19 +44,19 @@ protected:
 	void findParticipatingFaces();
 
 	// adds the face, with the vertices if needeed
-	void addFaceCCS (int nVertex[3], Vec3 vVertices[3]); // in Character Coordinate System
-	void addFaceBCS (GeomFace GeomIntFace); // in the Bullet coordinate system
+	void addFaceCCS(int nVertex[3], Vec3 vVertices[3]); // in Character Coordinate System
+	void addFaceBCS(GeomFace GeomIntFace); // in the Bullet coordinate system
 
 	// maps the vertex and returns the interan index
-	unsigned addVertexCCS (int nVertexExtIndex, const Vec3& vVertex); // in Character Coordinate System
+	unsigned addVertexCCS(int nVertexExtIndex, const Vec3& vVertex); // in Character Coordinate System
 	// maps the vertex and returns the interan index
-	unsigned addVertexBCS (int nVertexExtIndex); // in Bullet Coordinate System
+	unsigned addVertexBCS(int nVertexExtIndex); // in Bullet Coordinate System
 
 	// initializes the VerticesBCS array - vertices in the bullet coordinate system
 	void initVerticesBCS();
 
 	// returns the distance of the given triangle from the origin (bullet)
-	float GetDistanceToTriangleBCS (GeomFace nVertex);
+	float GetDistanceToTriangleBCS(GeomFace nVertex);
 protected:
 	// the original structure describing the decal, with the vPos set to the position of the bullet in WCS
 	CryEngineDecalInfo& m_rDecal;
@@ -64,10 +64,10 @@ protected:
 	// the inverse model TM. Model TM is the TM of the character. This inverse is used to transform from 
 	// the World space back into the character model space
 	//const Matrix& m_matInvModel;
-	
+
 	// the geometry of the character
 	CryGeometryInfo* m_pGeometry;
-	
+
 	// the temporary vertex array of the skinned character
 	const Vec3* m_pSkinVertices;
 

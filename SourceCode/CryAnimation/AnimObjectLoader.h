@@ -14,20 +14,20 @@ class CAnimObjectLoader
 {
 public:
 	// Load animation object from cgf or caf.
-	bool Load( CAnimObject* animObject,const char *geomName,const char *animFile );
+	bool Load(CAnimObject* animObject, const char* geomName, const char* animFile);
 
 private:
-	void LoadChunks( CChunkFileReader* pReader,bool bMakeNodes );
-	void LoadNodeChunk( int chunkID,const void* pChunk,bool bMakeNode );
-	void LoadControllerChunk( int chunkID,const void* pChunk );
+	void LoadChunks(CChunkFileReader* pReader, bool bMakeNodes);
+	void LoadNodeChunk(int chunkID, const void* pChunk, bool bMakeNode);
+	void LoadControllerChunk(int chunkID, const void* pChunk);
 	void InitNodes();
 
 	// Load all animations for this object.
-	void LoadAnimations( const char *cgaFile );
-	bool LoadAnimation( const char *animFile );
-	
+	void LoadAnimations(const char* cgaFile);
+	bool LoadAnimation(const char* animFile);
+
 	// Convert controller ticks to time in seconds.
-	float TickToTime( int ticks )
+	float TickToTime(int ticks)
 	{
 		return (float)ticks * m_secsPerTick;
 	}
@@ -44,13 +44,13 @@ private:
 		Vec3 scale;
 		CAnimObject::Node* node;
 	};
-	
+
 	//////////////////////////////////////////////////////////////////////////
-	typedef std::map<int,NodeDesc> NodeDescMap;
+	typedef std::map<int, NodeDesc> NodeDescMap;
 	NodeDescMap m_nodeMap;
 
 	//////////////////////////////////////////////////////////////////////////
-	typedef std::map<string,CAnimObject::Node*> NodeNamesMap;
+	typedef std::map<string, CAnimObject::Node*> NodeNamesMap;
 	NodeNamesMap m_nodeNameMap;
 
 

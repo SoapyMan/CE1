@@ -27,7 +27,7 @@ TYPEDEF_AUTOPTR(CFileMapping);
 // be true for successfully open files
 ////////////////////////////////////////////////////////////////////////
 
-class CChunkFileReader:
+class CChunkFileReader :
 	public _reference_target_t
 {
 public:
@@ -45,13 +45,13 @@ public:
 	// whether the file is a valid chunked file
 	bool open(const char* szFileName, unsigned nFlags = 0);
 
-	bool open (const string& strFileName, unsigned nFlags = 0);
+	bool open(const string& strFileName, unsigned nFlags = 0);
 
 	// closes the file mapping object and thus detaches the file from this reader
 	void close();
 
 	// returns the raw data of the file from the given offset
-  const void* getRawData(unsigned nOffset)const;
+	const void* getRawData(unsigned nOffset)const;
 
 	// returns the raw data of the i-th chunk
 	const void* getChunkData(int nChunkIdx)const;
@@ -67,14 +67,14 @@ public:
 	int numChunks()const;
 
 	// number of chunks of the specified type
-	int numChunksOfType (ChunkTypes nChunkType) const;
+	int numChunksOfType(ChunkTypes nChunkType) const;
 
 	// returns the file headers
 	const FileHeader& getFileHeader() const;
 
-	bool isValid () const;
+	bool isValid() const;
 
-	const char* getLastError()const {return gLastError;}
+	const char* getLastError()const { return gLastError; }
 protected:
 	// this variable contains the last error occured in this class
 	static const char* gLastError;
@@ -92,9 +92,9 @@ TYPEDEF_AUTOPTR(CChunkFileReader);
 // this function eats the given number of elements from the raw data pointer pRawData
 // and increments the pRawData to point to the end of data just eaten
 template <typename T>
-void EatRawData (T*pArray, unsigned nSize, const void*&pRawData)
+void EatRawData(T* pArray, unsigned nSize, const void*& pRawData)
 {
-	memcpy (pArray, pRawData, sizeof(T)*nSize);
+	memcpy(pArray, pRawData, sizeof(T) * nSize);
 	pRawData = static_cast<const T*>(pRawData) + nSize;
 }
 
@@ -103,13 +103,13 @@ void EatRawData (T*pArray, unsigned nSize, const void*&pRawData)
 // RETURNS:
 //   false if failed to read the data
 template <typename T>
-bool EatRawData (T*pArray, unsigned nSize, const void*&pRawData, unsigned& nDataSize)
+bool EatRawData(T* pArray, unsigned nSize, const void*& pRawData, unsigned& nDataSize)
 {
-	if (sizeof(T)*nSize <= nDataSize)
+	if (sizeof(T) * nSize <= nDataSize)
 	{
-		memcpy (pArray, pRawData, sizeof(T)*nSize);
+		memcpy(pArray, pRawData, sizeof(T) * nSize);
 		pRawData = static_cast <const T*> (pRawData) + nSize;
-		nDataSize -= sizeof(T)*nSize;
+		nDataSize -= sizeof(T) * nSize;
 		return true;
 	}
 	else
@@ -117,11 +117,11 @@ bool EatRawData (T*pArray, unsigned nSize, const void*&pRawData, unsigned& nData
 }
 
 template <typename T>
-bool EatRawData (T*pArray, unsigned nSize, const void*&pRawData, const void* pRawDataEnd)
+bool EatRawData(T* pArray, unsigned nSize, const void*& pRawData, const void* pRawDataEnd)
 {
-	if ((const char*)pRawData + sizeof(T)*nSize <= (const char*)pRawDataEnd)
+	if ((const char*)pRawData + sizeof(T) * nSize <= (const char*)pRawDataEnd)
 	{
-		memcpy (pArray, pRawData, sizeof(T)*nSize);
+		memcpy(pArray, pRawData, sizeof(T) * nSize);
 		pRawData = static_cast <const T*> (pRawData) + nSize;
 		return true;
 	}
@@ -140,13 +140,13 @@ bool EatRawData (T*pArray, unsigned nSize, const void*&pRawData, const void* pRa
 // RETURNS:
 //   false if failed to read the data
 template <typename T>
-bool EatRawDataPtr(const T*&pArray, unsigned nSize, const void*&pRawData, unsigned& nDataSize)
+bool EatRawDataPtr(const T*& pArray, unsigned nSize, const void*& pRawData, unsigned& nDataSize)
 {
-	if (sizeof(T)*nSize <= nDataSize)
+	if (sizeof(T) * nSize <= nDataSize)
 	{
 		pArray = (const T*)pRawData;
 		pRawData = static_cast <const T*> (pRawData) + nSize;
-		nDataSize -= sizeof(T)*nSize;
+		nDataSize -= sizeof(T) * nSize;
 		return true;
 	}
 	else
@@ -154,9 +154,9 @@ bool EatRawDataPtr(const T*&pArray, unsigned nSize, const void*&pRawData, unsign
 }
 
 template <typename T>
-bool EatRawDataPtr(const T*&pArray, unsigned nSize, const void*&pRawData, const void* pRawDataEnd)
+bool EatRawDataPtr(const T*& pArray, unsigned nSize, const void*& pRawData, const void* pRawDataEnd)
 {
-	if ((const char*)pRawData + sizeof(T)*nSize <= (const char*)pRawDataEnd)
+	if ((const char*)pRawData + sizeof(T) * nSize <= (const char*)pRawDataEnd)
 	{
 		pArray = (const T*)pRawData;
 		pRawData = static_cast <const T*> (pRawData) + nSize;

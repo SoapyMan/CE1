@@ -40,20 +40,20 @@ public:
 
 	Time& operator [] (int nKnot)
 	{
-		assert (nKnot >= 0 && nKnot < m_numKnots);
+		assert(nKnot >= 0 && nKnot < m_numKnots);
 		return m_pKnots[nKnot];
 	}
 
 	Time operator [] (int nKnot) const
 	{
-		assert (nKnot >= 0 && nKnot < m_numKnots);
+		assert(nKnot >= 0 && nKnot < m_numKnots);
 		return m_pKnots[nKnot];
 	}
 
 	// searches and returns the interval to which the given time belongs.
 	// each pair of knots defines interval [k1,k2)
 	// -1 is before the 0-th knot, numKnots() is after the last knot
-	int findInterval (Time fTime)const;
+	int findInterval(Time fTime)const;
 
 	// number of knots
 	int numKnots() const
@@ -62,17 +62,17 @@ public:
 	}
 
 	// returns the i-th basis function of degree d, given the time t
-	Value getBasis (int i, int d, Time t) const;
+	Value getBasis(int i, int d, Time t) const;
 
 	// returns the i-th basis function of degree d, given the time t and a hint, in which interval to search for it
-	Value getBasis (int i, int d, Time t, int nIntervalT) const;
+	Value getBasis(int i, int d, Time t, int nIntervalT) const;
 
 	// returns the time where the i-th given basis reaches its maximum
-	Time getBasisPeak (int i/*nStartKnot*/, int d/*nDegree*/);
+	Time getBasisPeak(int i/*nStartKnot*/, int d/*nDegree*/);
 
 	// returns the i-th basis d-th derivative discontinuity at knot k
 	// (amplitude of the delta function)
-	Value getDelta (int i, int d, int k) const;
+	Value getDelta(int i, int d, int k) const;
 
 	// Returns the P (product) penalty for knot closeness, as defined by Mary J. Lindstrom "Penalized Estimation of Free Knot Splines" 1999,
 	// logarithmic form
@@ -80,12 +80,12 @@ public:
 protected:
 	// returns the value of the basis function of degree d, given the time t
 	// the knots of the basis function start at pKnotBegin, and the first knot before t is pKnotBeforeT
-	Value getBasis (const Time* pKnotBegin, int d, Time t, const Time* pKnotBeforeT)const;
+	Value getBasis(const Time* pKnotBegin, int d, Time t, const Time* pKnotBeforeT)const;
 
 	// number of knots
 	int m_numKnots;
 
 	// the array of knots
 	// no assumption is made about the multiplicity of knots
-	Time *m_pKnots;
+	Time* m_pKnots;
 };

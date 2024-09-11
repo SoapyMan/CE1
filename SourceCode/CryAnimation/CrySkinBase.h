@@ -12,25 +12,25 @@ public:
 	void clear();
 	bool empty()const;
 
-	void scaleVertices (float fScale);
+	void scaleVertices(float fScale);
 
 	//version for little-endian
-	unsigned Serialize_PC (bool bSave, void* pBuffer, unsigned nBufSize);
+	unsigned Serialize_PC(bool bSave, void* pBuffer, unsigned nBufSize);
 
 	//version for big-endian
-	unsigned Serialize_GC (bool bSave, void* pBuffer, unsigned nBufSize);
-	
+	unsigned Serialize_GC(bool bSave, void* pBuffer, unsigned nBufSize);
+
 	// returns the number of bytes occupied by this structure and all its contained objects
 	unsigned sizeofThis()const;
 
 	// this structure contains the statistical information about this skin; its calculation
 	// may take significant time and should not be used in game run time (only for debugging purposes
 	// and to output statistics in the tools)
-  class CStatistics
+	class CStatistics
 	{
 	public:
-		CStatistics (const CrySkinBase*pSkin);
-		
+		CStatistics(const CrySkinBase* pSkin);
+
 		unsigned numBones;
 		unsigned numSkipBones;
 		unsigned numAuxInts;
@@ -38,12 +38,12 @@ public:
 	};
 	friend class CStatistics;
 
-	unsigned numBones() const {return m_numBones;}
-	unsigned numSkipBones() const {return m_numSkipBones;}
+	unsigned numBones() const { return m_numBones; }
+	unsigned numSkipBones() const { return m_numSkipBones; }
 protected:
 	CrySkinBase();
-	~CrySkinBase ();
-	void init (unsigned numVerts, unsigned numAux, unsigned numSkipBones, unsigned numBones);
+	~CrySkinBase();
+	void init(unsigned numVerts, unsigned numAux, unsigned numSkipBones, unsigned numBones);
 
 	typedef CrySkinVertexAligned Vertex;
 
@@ -52,16 +52,16 @@ protected:
 
 
 	// transforms the given smooth point into the destination with the matrix
-	static void transformWPoint (Vec3& pDest, const Matrix44& matBone, const Vertex& rVtx);
+	static void transformWPoint(Vec3& pDest, const Matrix44& matBone, const Vertex& rVtx);
 
 	// adds the given smooth point into the destination with the matrix
-	static void addWPoint (Vec3& pDest, const Matrix44& matBone, const Vertex& rVtx);
+	static void addWPoint(Vec3& pDest, const Matrix44& matBone, const Vertex& rVtx);
 
 	// transforms the given smooth point into the destination with the matrix
-	static void transformWVector (Vec3& pDest, const Matrix44& matBone, const Vertex& rVtx);
+	static void transformWVector(Vec3& pDest, const Matrix44& matBone, const Vertex& rVtx);
 
 	// adds the given smooth point into the destination with the matrix
-	static void addWVector (Vec3& pDest, const Matrix44& matBone, const Vertex& rVtx);
+	static void addWVector(Vec3& pDest, const Matrix44& matBone, const Vertex& rVtx);
 
 	//typedef TIncContAllocator<Vertex, &g_VectorAllocator> VertexAllocator;
 	//typedef TIncContAllocator<CrySkinAuxInt, &g_VectorAllocator> AuxIntAllocator;

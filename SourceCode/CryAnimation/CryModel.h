@@ -50,41 +50,41 @@ struct CCFCharLightDesc;
 class CryModel :
 	public CryModelAnimationContainer
 {
-friend class CryModelState;
-friend class CryModelLoader;
-friend class CryModelGeometryLoader;
-friend class CryModelSubmesh;
-friend class CryModelSubmeshGeometry;
-public:  
+	friend class CryModelState;
+	friend class CryModelLoader;
+	friend class CryModelGeometryLoader;
+	friend class CryModelSubmesh;
+	friend class CryModelSubmeshGeometry;
+public:
 
 	// returns the geometry of the given lod (0 is the highest detail lod)
-	CryGeometryInfo* getGeometryInfo (unsigned  nLodLevel = 0);
-	const CryGeometryInfo* getGeometryInfo (unsigned  nLodLevel = 0) const;
-	
+	CryGeometryInfo* getGeometryInfo(unsigned  nLodLevel = 0);
+	const CryGeometryInfo* getGeometryInfo(unsigned  nLodLevel = 0) const;
+
 	// returns the number of levels of details.
 	// 1 means there's only 0th (basic) level of details, or there are effectively no additional LODs
-	unsigned numLODs ()const {return (unsigned)m_arrGeomInfo.size();}
+	unsigned numLODs()const { return (unsigned)m_arrGeomInfo.size(); }
 
 	// this enum contains the 
 	enum DamageAreaEnum
 	{
 		g_nDamageAreaDefault = 0,
-		g_nDamageAreaHead    = 1,
-		g_nDamageAreaTorso   = 2,
-		g_nDamageAreaArmL    = 3,
-		g_nDamageAreaArmR    = 4,
-		g_nDamageAreaLegL    = 5,
-		g_nDamageAreaLegR    = 6
+		g_nDamageAreaHead = 1,
+		g_nDamageAreaTorso = 2,
+		g_nDamageAreaArmL = 3,
+		g_nDamageAreaArmR = 4,
+		g_nDamageAreaLegL = 5,
+		g_nDamageAreaLegR = 6
 	};
 
 	// fills the array m_arrDamageTable, using the bone names
 	void InitDamageTable();
 
-	enum {g_nMaxMaterialCount = 128};
+	enum { g_nMaxMaterialCount = 128 };
 
 	// retrieves the pointer to the static array of shadow volume vertices
 	//static float* getShadowVolumeVerts ();
-	
+
 	// expands the size of the shadow volume vertex array to the specified size
 	// the size defines the number of floats the array must have (at least)
 	//static void expandShadowVolumeVerts(unsigned nSize);
@@ -94,12 +94,12 @@ public:
 	// since expand will always restore the array
 	//static void freeShadowVolumeVerts( );
 
-  void ComputeStaticBoundingBox();
-	
+	void ComputeStaticBoundingBox();
+
 	// Loads it from geom file; returns the number of bytes used from the chunk
   ///unsigned LoadFromGeom (const MESH_CHUNK_DESC_0744* pChunk, unsigned nChunkSize, float scale, const int nLodLevel, bool bTestForBoneInfo=true);
-  
-	bool LoadGeomChunks (const string& filename, float scale, int nLodLevel);
+
+	bool LoadGeomChunks(const string& filename, float scale, int nLodLevel);
 
 	//void LoadTextures(const string& );
 
@@ -107,9 +107,9 @@ public:
 	// (or just returns, if the object is already cached)
 	IStencilShadowConnectivity* getStencilShadowConnectivity(unsigned nLOD);
 
-	unsigned numLocalBoneLights() const {return (unsigned)m_arrLocalBoneLights.size();}
-	unsigned numGlobalBoneLights() const {return (unsigned)m_arrGlobalBoneLights.size();}
-	unsigned numBoneLights() const {return numLocalBoneLights()+numGlobalBoneLights();}
+	unsigned numLocalBoneLights() const { return (unsigned)m_arrLocalBoneLights.size(); }
+	unsigned numGlobalBoneLights() const { return (unsigned)m_arrGlobalBoneLights.size(); }
+	unsigned numBoneLights() const { return numLocalBoneLights() + numGlobalBoneLights(); }
 	CBoneLightBindInfo& getBoneLight(unsigned i)
 	{
 		if (i < numLocalBoneLights())
@@ -117,22 +117,22 @@ public:
 		else
 		{
 			assert(i < numGlobalBoneLights());
-			return m_arrGlobalBoneLights[i-numLocalBoneLights()];
+			return m_arrGlobalBoneLights[i - numLocalBoneLights()];
 		}
 	}
-	CBoneLightBindInfo& getLocalBoneLight(unsigned i) {return m_arrLocalBoneLights[i];}
-	CBoneLightBindInfo& getGlobalBoneLight(unsigned i) {return m_arrGlobalBoneLights[i];}
+	CBoneLightBindInfo& getLocalBoneLight(unsigned i) { return m_arrLocalBoneLights[i]; }
+	CBoneLightBindInfo& getGlobalBoneLight(unsigned i) { return m_arrGlobalBoneLights[i]; }
 
 	void clearConstructionData();
 
 	const Vec3& getModelOffset()const;
 public:
 
-  //////////////////////////////////////////////////////////////////////////////////////////
-  // ----------------------------- GAME INTERFACE FUNCTIONS ----------------------------- //
-  //////////////////////////////////////////////////////////////////////////////////////////
-  CryModel (class CryCharBody* pBody, class CControllerManager* pControllerManager);
-  virtual ~CryModel();
+	//////////////////////////////////////////////////////////////////////////////////////////
+	// ----------------------------- GAME INTERFACE FUNCTIONS ----------------------------- //
+	//////////////////////////////////////////////////////////////////////////////////////////
+	CryModel(class CryCharBody* pBody, class CControllerManager* pControllerManager);
+	virtual ~CryModel();
 
 	// puts the size of the whole subsystem into this sizer object, classified,
 	// according to the flags set in the sizer
@@ -140,27 +140,27 @@ public:
 
 	const char* getFilePathCStr();
 
-  void DrawStaticGeom();                    // Draws static geometry, useful to check the Geom
-  //virtual void GetStaticBoundingBox(Vec3 * pvMin, Vec3 * pvMax);
-	
-	// returns the radius of the bounding sphere of the object
-	float getStaticBSphereRadius() {return m_fStaticBSphereRadius;}
+	void DrawStaticGeom();                    // Draws static geometry, useful to check the Geom
+	//virtual void GetStaticBoundingBox(Vec3 * pvMin, Vec3 * pvMax);
 
-  void InvertMarkedTangentBasises();
+	  // returns the radius of the bounding sphere of the object
+	float getStaticBSphereRadius() { return m_fStaticBSphereRadius; }
+
+	void InvertMarkedTangentBasises();
 
 	void ExportModelsASC();
 	//DECLARE_ARRAY_GETTER_METHODS(MAT_ENTITY, Material, Materials, m_arrMaterials);
-	size_t numMaterials ()const {return m_arrMaterials.size();}
-	const MAT_ENTITY& getMaterial (unsigned i)const {return m_arrMaterials[i];}
-	MAT_ENTITY& getMaterial (unsigned i) {return m_arrMaterials[i];}
-	
+	size_t numMaterials()const { return m_arrMaterials.size(); }
+	const MAT_ENTITY& getMaterial(unsigned i)const { return m_arrMaterials[i]; }
+	MAT_ENTITY& getMaterial(unsigned i) { return m_arrMaterials[i]; }
+
 	// Returns the interface for animations applicable to this model
-	virtual ICryAnimationSet* GetAnimationSet ();
+	virtual ICryAnimationSet* GetAnimationSet();
 
 	// builds the skins out of morph targets
-	void buildMorphSkins ();
+	void buildMorphSkins();
 
-	const CrySkinMorph& getMorphSkin (unsigned nLOD, int nMorphTargetId);
+	const CrySkinMorph& getMorphSkin(unsigned nLOD, int nMorphTargetId);
 
 	// builds the skins for tangent base and geometry skin calculation for each LOD
 	void buildGeomSkins();
@@ -169,44 +169,44 @@ public:
 	void buildStencilShadowInfos();
 
 	// deletes all unused materials in the material array
-	void deleteUnusedMaterials ();
+	void deleteUnusedMaterials();
 
-	CryModelState * m_pDefaultModelState;
+	CryModelState* m_pDefaultModelState;
 
 	// 1. completely initializes the CryModel from the given CCG file
 	// 2. Loads textures
 	// 3. Generates render arrays
 	// returns true if successfully initialized
-	bool initFromCCG (const string& strTextureDir, const string& strAnimationDir, class CCFMemReader& Reader, float fScale);
+	bool initFromCCG(const string& strTextureDir, const string& strAnimationDir, class CCFMemReader& Reader, float fScale);
 
 	// loads the LOD: geometry info and leaf buffers
 	// nSize is the size of the buffer including header; the raw data follows the header immediately
-	bool loadCCGLOD (unsigned nLOD, const CCFAnimGeomInfo* pHeader, unsigned nSize);
+	bool loadCCGLOD(unsigned nLOD, const CCFAnimGeomInfo* pHeader, unsigned nSize);
 
 	// loads the bone geometry and initializes the physical geometry for corresponding LOD for bones
-	bool loadCCGBoneGeomLOD (unsigned nLOD, float fScale, const CCFBoneGeometry* pHeader, unsigned nSize);
+	bool loadCCGBoneGeomLOD(unsigned nLOD, float fScale, const CCFBoneGeometry* pHeader, unsigned nSize);
 
 	// loads the morph target set from CCG; scales all morph targets
-	bool loadCCGMorphTargetSet (const CCFMorphTargetSet* pData, unsigned nSize, float fScale);
+	bool loadCCGMorphTargetSet(const CCFMorphTargetSet* pData, unsigned nSize, float fScale);
 
 	// loads the light array
-	bool loadCCGLights (const CCFCharLightDesc* pData, unsigned nSize,float fScale);
+	bool loadCCGLights(const CCFCharLightDesc* pData, unsigned nSize, float fScale);
 
 	// loads the bone geometry for a particular bone
-	bool loadCCGBoneGeom (IGeomManager* pGeomManager, unsigned nLOD, float fScale, const CCFBGBone* pHeader, unsigned nSize);
+	bool loadCCGBoneGeom(IGeomManager* pGeomManager, unsigned nLOD, float fScale, const CCFBGBone* pHeader, unsigned nSize);
 
 	// loads the animation list from the chunk
-	bool loadCCGAnimScript (float fScale, string strAnimDir, const void* pData, unsigned nSize);
+	bool loadCCGAnimScript(float fScale, string strAnimDir, const void* pData, unsigned nSize);
 
 	// given the pointers to the chunk datas of the anim info chunks, loads those animations
-	bool loadAnimations (float fScale, const std::vector<const struct CCFAnimInfo*>& arrAnimInfos);
+	bool loadAnimations(float fScale, const std::vector<const struct CCFAnimInfo*>& arrAnimInfos);
 
-	void loadCCGUserProperties (const char* pData, unsigned nSize);
+	void loadCCGUserProperties(const char* pData, unsigned nSize);
 
 	// fills the iGameID for each material, using its name to enumerate the physical materials in 3D Engine
 	void fillMaterialGameId();
 
-	CryBBoxA16* getBoneBBoxes ()
+	CryBBoxA16* getBoneBBoxes()
 	{
 #if ENABLE_BONE_BBOXES
 		return m_arrBoneBBoxes.begin();
@@ -236,7 +236,7 @@ protected:
 	TFixedArray<CryGeometryInfo> m_arrGeomInfo;
 
 	// these are the special user-defined scene properties exported from Max
-	typedef std::map<string,string> UserPropMap;
+	typedef std::map<string, string> UserPropMap;
 	UserPropMap m_mapUserProps;
 
 	// the radius of the bounding sphere of the object
@@ -258,11 +258,11 @@ protected:
 
 	// array of materials used to render this model
 	// this is a fixed array because reallocations occur only on load and then the array is only read from
-	std::vector <MAT_ENTITY> m_arrMaterials;  
+	std::vector <MAT_ENTITY> m_arrMaterials;
 
 	// local and global bone light and heat source bindings. the locals go first
 	std::vector<CBoneLightBindInfo> m_arrLocalBoneLights, m_arrGlobalBoneLights;
-	void addBoneLights (const std::vector<CBoneLightBindInfo>& arrLights);
+	void addBoneLights(const std::vector<CBoneLightBindInfo>& arrLights);
 	unsigned m_numLocalBoneLights;
 
 	// offset of the model LCS - by this value, the whole model is offset

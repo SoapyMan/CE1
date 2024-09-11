@@ -22,28 +22,28 @@
 // Describes the position and orientation of an object, changing in time.
 // Responsible for loading itself from a binary file, calculations
 //////////////////////////////////////////////////////////////////////////////////////////
-class IController: public _reference_target_t
+class IController : public _reference_target_t
 {
 public:
 
 	// each controller has an ID, by which it is identifiable
-	virtual unsigned GetID () const = 0;
+	virtual unsigned GetID() const = 0;
 
 	// returns the orientation of the controller at the given time
-	virtual CryQuat GetOrientation (float t) = 0;
+	virtual CryQuat GetOrientation(float t) = 0;
 
 	// returns the orientation of the controller at the given time, in logarithmic space
-	virtual Vec3 GetOrientation2 (float t) = 0;
+	virtual Vec3 GetOrientation2(float t) = 0;
 
 	// returns position of the controller at the given time
-	virtual Vec3 GetPosition (float t) = 0;
+	virtual Vec3 GetPosition(float t) = 0;
 
 	// returns scale of the controller at the given time
-	virtual Vec3 GetScale (float t) = 0;
-	
+	virtual Vec3 GetScale(float t) = 0;
+
 	// retrieves the position and orientation within one call
 	// may be optimal in some applications
-	virtual void GetValue (float t, CryQuat& q, Vec3 &p) = 0;
+	virtual void GetValue(float t, CryQuat& q, Vec3& p) = 0;
 
 	// retrieves the position and orientation (in the logarithmic space, i.e. instead of quaternion, its logarithm is returned)
 	// may be optimal for motion interpolation
@@ -52,16 +52,16 @@ public:
 		Vec3 vPos;
 		Vec3 vRotLog; // logarithm of the rotation
 
-		string toString()const {return "{pos:" + CryStringUtils::toString(vPos)+", rot="+CryStringUtils::toString (vRotLog) + "}";}
+		string toString()const { return "{pos:" + CryStringUtils::toString(vPos) + ", rot=" + CryStringUtils::toString(vRotLog) + "}"; }
 
 		// returns the rotation quaternion
 		CryQuat getOrientation()const;
 		// resets the state to zero
-		void reset ();
+		void reset();
 		// blends the pqSource[0] and pqSource[1] with weights 1-fBlend and fBlend into pqResult
-		void blendPQ (const PQLog* pqSource, float fBlend);
+		void blendPQ(const PQLog* pqSource, float fBlend);
 		// blends the pqFrom and pqTo with weights 1-fBlend and fBlend into pqResult
-		void blendPQ (const PQLog& pqFrom, const PQLog& pqTo, float fBlend);
+		void blendPQ(const PQLog& pqFrom, const PQLog& pqTo, float fBlend);
 		// builds the matrix out of the position and orientation stored in this PQLog
 		void buildMatrix(Matrix44& mat)const;
 		// a special version of the buildMatrix that adds a rotation to the rotation of this PQLog
@@ -69,7 +69,7 @@ public:
 		// returns the equivalent rotation in logarithmic space (the quaternion of which is negative the original)
 		Vec3 getComplementaryRotLog() const;
 		// constructs the position/rotation from the given matrix
-		void assignFromMatrix (const Matrix44& mat);
+		void assignFromMatrix(const Matrix44& mat);
 
 		PQLog operator * (float f)const
 		{
@@ -86,15 +86,15 @@ public:
 			return *this;
 		}
 	};
-	virtual void GetValue2 (float t, PQLog& pq) = 0;
+	virtual void GetValue2(float t, PQLog& pq) = 0;
 
 	// returns the start time
-	virtual float GetTimeStart () = 0;
+	virtual float GetTimeStart() = 0;
 
 	// returns the end time
 	virtual float GetTimeEnd() = 0;
 
-	virtual size_t sizeofThis () const = 0;
+	virtual size_t sizeofThis() const = 0;
 
 	virtual bool IsLooping() const { return false; };
 };
@@ -106,8 +106,8 @@ TYPEDEF_AUTOPTR(IController);
 // changing the rotation angle to Pi-X and flipping the rotation axis simultaneously)
 // this is needed for blending between animations represented by quaternions rotated by ~PI in quaternion space
 // (and thus ~2*PI in real space)
-extern void AdjustLogRotations (Vec3& vRotLog1, Vec3& vRotLog2);
-extern void AdjustLogRotationTo (const Vec3& vRotLog1, Vec3& vRotLog2);
+extern void AdjustLogRotations(Vec3& vRotLog1, Vec3& vRotLog2);
+extern void AdjustLogRotationTo(const Vec3& vRotLog1, Vec3& vRotLog2);
 extern void AdjustLogRotation(Vec3& vRotLog);
 
 
@@ -121,8 +121,8 @@ extern void AdjustLogRotation(Vec3& vRotLog);
 class AnimCtrlSortPred
 {
 public:
-	bool operator() (const IController_AutoPtr& a, const IController_AutoPtr& b) {assert (a!=(IController*)NULL && b != (IController*)NULL); return a->GetID() < b->GetID();}
-	bool operator() (const IController_AutoPtr& a, unsigned nID) {assert (a != (IController*)NULL);return a->GetID() < nID;}
+	bool operator() (const IController_AutoPtr& a, const IController_AutoPtr& b) { assert(a != (IController*)NULL && b != (IController*)NULL); return a->GetID() < b->GetID(); }
+	bool operator() (const IController_AutoPtr& a, unsigned nID) { assert(a != (IController*)NULL); return a->GetID() < nID; }
 };
 
 

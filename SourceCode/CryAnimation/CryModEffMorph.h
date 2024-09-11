@@ -12,28 +12,28 @@ public:
 	CryModEffMorph(/*CryModelAnimationContainer* pAnimations*/);
 
 	// advances the current time of the played animation and returns the blending factor by which this animation affects the bone pose
-	void Tick (float fDeltaTime);
+	void Tick(float fDeltaTime);
 
 	// starts the morphing sequence
-	void StartMorph (int nMorphTargetId, const CryCharMorphParams& rParams);
+	void StartMorph(int nMorphTargetId, const CryCharMorphParams& rParams);
 
 	// returns false when this morph target is inactive
-	bool isActive()const ;
+	bool isActive()const;
 
 	// returns the blending factor for this morph target
 	float getBlending()const;
 
 	// returns the morph target
-	int getMorphTargetId () const;
+	int getMorphTargetId() const;
 
-	void setTime(float fTime) {m_fTime = fTime;}
-	void setSpeed (float fSpeed) {m_Params.fSpeed = fSpeed;}
+	void setTime(float fTime) { m_fTime = fTime; }
+	void setSpeed(float fSpeed) { m_Params.fSpeed = fSpeed; }
 	void stop();
 
-	float getTime() const {return m_fTime;}
-	void freeze() {m_nFlags |= m_Params.FLAGS_FREEZE;}
+	float getTime() const { return m_fTime; }
+	void freeze() { m_nFlags |= m_Params.FLAGS_FREEZE; }
 protected:
-	
+
 	// the animation container that will answer all questions regarding the morph target
 	//CryModelAnimationContainer* m_pAnimations;
 

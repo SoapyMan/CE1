@@ -20,7 +20,7 @@
 // instances of this class (for each console) are to be created
 struct CryAnimVars
 {
-	enum {nDefaultAnimWarningLevel = 2};
+	enum { nDefaultAnimWarningLevel = 2 };
 	enum {
 #if defined(WIN64) || defined(LINUX64)
 		nDefaultAnimUnloadDelay = 0, // don't need to unload animation of Win64 architecture
@@ -30,7 +30,7 @@ struct CryAnimVars
 		nDefaultAnimDeferredLoad = 1
 #endif
 	};
-//#define DECLARE_STRING_VARIABLE(_var, _default) ICVar* _var
+	//#define DECLARE_STRING_VARIABLE(_var, _default) ICVar* _var
 #define DECLARE_INT_VARIABLE_IMMEDIATE(_var, _default,_comment) ICVar* m_p_##_var; int m_##_var; int _var () const {return m_##_var;} \
 	int _var##_Clamp (int nMin, int nMax)const \
 	{																				   \
@@ -59,28 +59,28 @@ struct CryAnimVars
 #undef DECLARE_INT_VARIABLE_IMMEDIATE_DUMP
 #undef DECLARE_FLOAT_VARIABLE_IMMEDIATE
 
-	float ca_MinVertexWeightLOD (unsigned nLOD);
+	float ca_MinVertexWeightLOD(unsigned nLOD);
 
-	float ca_UpdateSpeed (unsigned nLayer);
+	float ca_UpdateSpeed(unsigned nLayer);
 
 	int ca_RainPower_Clamped();
 
-	CryAnimVars ();
+	CryAnimVars();
 
-	~CryAnimVars ();
+	~CryAnimVars();
 
 	// declares or retrieves the pointer to the console variable
 	// with the given default value (used only in case the variable doesn't exist now)
 	// returns the pointer to the preexisting or newly created variable.
-	ICVar* declare (const char* szVarName, int nDefault, int nFlags=0 );
+	ICVar* declare(const char* szVarName, int nDefault, int nFlags = 0);
 
 	// attaches the given variable to the given container;
 	// recreates the variable if necessary
-	ICVar* attach (const char* szVarName, int* pContainer, const char* szComment, int nFlags = 0);
+	ICVar* attach(const char* szVarName, int* pContainer, const char* szComment, int nFlags = 0);
 
 	// detaches the given variable from the container;
 	// recreates the variable with new value
-	void detach (const char* szVarName, int* pContainer);
+	void detach(const char* szVarName, int* pContainer);
 };
-  
+
 #endif // _3DENGINE_CVARS_H_

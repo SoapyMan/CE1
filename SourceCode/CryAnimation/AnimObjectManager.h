@@ -29,14 +29,14 @@ public:
 	CAnimObjectManager();
 
 	//! Creates anim object, or get already created one.
-	ICryCharInstance* MakeAnimObject( const char *animFile );
-	bool RemoveCharacter( ICryCharInstance* obj );
+	ICryCharInstance* MakeAnimObject(const char* animFile);
+	bool RemoveCharacter(ICryCharInstance* obj);
 
 	// puts the size of the whole subsystem into this sizer object, classified,
 	// according to the flags set in the sizer
 	void GetMemoryUsage(class ICrySizer* pSizer)const;
 
-	unsigned NumObjects () {return (unsigned)m_objects.size();}
+	unsigned NumObjects() { return (unsigned)m_objects.size(); }
 
 	void LockResources();
 	void UnlockResources();

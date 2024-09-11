@@ -29,19 +29,19 @@
 // after that since the animation system is only active when the Manager object is alive
 //////////////////////////////////////////////////////////////////////////
 
-extern ISystem*					g_pISystem;
-extern IConsole*				g_pIConsole;
-extern ITimer*					g_pITimer;
-extern ILog*						g_pILog;
-extern ICryPak*					g_pIPak;
-extern IStreamEngine*		g_pIStreamEngine;
+extern ISystem* g_pISystem;
+extern IConsole* g_pIConsole;
+extern ITimer* g_pITimer;
+extern ILog* g_pILog;
+extern ICryPak* g_pIPak;
+extern IStreamEngine* g_pIStreamEngine;
 
-extern IRenderer*				g_pIRenderer;
-extern IPhysicalWorld*	g_pIPhysicalWorld;
-extern I3DEngine*				g_pI3DEngine;
+extern IRenderer* g_pIRenderer;
+extern IPhysicalWorld* g_pIPhysicalWorld;
+extern I3DEngine* g_pI3DEngine;
 
 extern bool							g_bProfilerOn;
-extern CryAnimVars*			g_pCVariables;
+extern CryAnimVars* g_pCVariables;
 
 
 
@@ -49,32 +49,32 @@ extern CryAnimVars*			g_pCVariables;
 // initializes the global values - just remembers the pointer to the system that will
 // be kept valid until deinitialization of the class (that happens upon destruction of the
 // CryCharManager instance). Also initializes the console variables
-__forceinline void g_InitInterfaces(ISystem* pISystem) 
+__forceinline void g_InitInterfaces(ISystem* pISystem)
 {
-	assert (pISystem);
-	g_pISystem				= pISystem;
-	g_pIConsole				= pISystem->GetIConsole();
-	g_pITimer					= pISystem->GetITimer();
-	g_pILog						= pISystem->GetILog();
-	g_pIPak						=	pISystem->GetIPak();
-	g_pIStreamEngine	=	pISystem->GetStreamEngine();
+	assert(pISystem);
+	g_pISystem = pISystem;
+	g_pIConsole = pISystem->GetIConsole();
+	g_pITimer = pISystem->GetITimer();
+	g_pILog = pISystem->GetILog();
+	g_pIPak = pISystem->GetIPak();
+	g_pIStreamEngine = pISystem->GetStreamEngine();
 
 	//we initialize this pointers in CryCharManager::Update() 
-	g_pIRenderer			= NULL;	//pISystem->GetIRenderer();
-	g_pIPhysicalWorld	= NULL;	//pISystem->GetIPhysicalWorld();
-	g_pI3DEngine			=	NULL;	//pISystem->GetI3DEngine();
+	g_pIRenderer = NULL;	//pISystem->GetIRenderer();
+	g_pIPhysicalWorld = NULL;	//pISystem->GetIPhysicalWorld();
+	g_pI3DEngine = NULL;	//pISystem->GetI3DEngine();
 
 	//---------------------------------------------------
 
 #ifdef _DEBUG
-	enum {numTests = 2};
+	enum { numTests = 2 };
 	for (int i = 0; i < numTests; ++i)
 	{
 		CryAnimVars* p = new CryAnimVars();
 		delete p;
 	}
 #endif
-	
+
 	g_pCVariables = new CryAnimVars();
 }
 
@@ -83,18 +83,18 @@ __forceinline void g_InitInterfaces(ISystem* pISystem)
 __forceinline void g_DeleteInterfaces()
 {
 	delete g_pCVariables;
-	g_pCVariables						= NULL;
+	g_pCVariables = NULL;
 
-	g_pISystem				= NULL;
-	g_pITimer					= NULL;
-	g_pILog						= NULL;
-	g_pIConsole				= NULL;
-	g_pIPak						= NULL;
-	g_pIStreamEngine	= NULL;;
+	g_pISystem = NULL;
+	g_pITimer = NULL;
+	g_pILog = NULL;
+	g_pIConsole = NULL;
+	g_pIPak = NULL;
+	g_pIStreamEngine = NULL;;
 
-	g_pIRenderer			= NULL;
-	g_pIPhysicalWorld	= NULL;
-	g_pI3DEngine			=	NULL;
+	g_pIRenderer = NULL;
+	g_pIPhysicalWorld = NULL;
+	g_pI3DEngine = NULL;
 }
 
 
@@ -103,31 +103,31 @@ __forceinline	CCamera& GetViewCamera() { return g_pISystem->GetViewCamera(); }
 __forceinline ISystem* GetISystem() { return g_pISystem; }  //we need this one just for the profiler
 
 __forceinline ISystem* g_GetISystem() { return g_pISystem; }
-__forceinline ITimer* g_GetTimer() {return g_pITimer;}
-__forceinline ILog* g_GetLog() {return g_pILog;}
+__forceinline ITimer* g_GetTimer() { return g_pITimer; }
+__forceinline ILog* g_GetLog() { return g_pILog; }
 __forceinline IConsole* g_GetConsole() { return g_pIConsole; }
-__forceinline ICryPak*	g_GetPak() { return g_pIPak; }
-__forceinline IStreamEngine* g_GetStreamEngine() { return g_pIStreamEngine;}
+__forceinline ICryPak* g_GetPak() { return g_pIPak; }
+__forceinline IStreamEngine* g_GetStreamEngine() { return g_pIStreamEngine; }
 
 __forceinline	IPhysicalWorld* GetPhysicalWorld() { return g_pIPhysicalWorld; }
 __forceinline	I3DEngine* Get3DEngine() { return g_pI3DEngine; }
 __forceinline	IRenderer* g_GetIRenderer() { return g_pIRenderer; }
 
 __forceinline bool IsProfilerOn() { return g_bProfilerOn; }
-__forceinline CryAnimVars*	g_GetCVars() { return g_pCVariables; }
+__forceinline CryAnimVars* g_GetCVars() { return g_pCVariables; }
 
 
 
 
 
-inline void g_LogToFile (const char* szFormat, ...)
+inline void g_LogToFile(const char* szFormat, ...)
 {
 	char szBuffer[0x800];
 	va_list args;
-	va_start(args,szFormat);
-	_vsnprintf (szBuffer, sizeof(szBuffer), szFormat, args);
+	va_start(args, szFormat);
+	_vsnprintf(szBuffer, sizeof(szBuffer), szFormat, args);
 	va_end(args);
-	g_GetLog()->LogToFile ("%s", szBuffer);
+	g_GetLog()->LogToFile("%s", szBuffer);
 }
 
 
@@ -136,23 +136,23 @@ inline void g_LogToFile (const char* szFormat, ...)
 
 #ifdef _DEBUG
 // this is an alternate log, that will do nothing in non-debug builds
-inline void g_Info (const char* szFormat, ...)
+inline void g_Info(const char* szFormat, ...)
 {
 	if (!g_GetCVars()->ca_EnableAnimationLog())
 		return;
 
-	FILE* f = fopen ("Animation.log", "at");
+	FILE* f = fopen("Animation.log", "at");
 	if (f)
 	{
 		va_list arg;
-		va_start (arg, szFormat);
+		va_start(arg, szFormat);
 
-		fprintf (f, "%5d ", g_GetIRenderer()->GetFrameID());
-		vfprintf (f, szFormat, arg);
-		fprintf (f, "\n");
+		fprintf(f, "%5d ", g_GetIRenderer()->GetFrameID());
+		vfprintf(f, szFormat, arg);
+		fprintf(f, "\n");
 
 		va_end(arg);
-		fclose (f);
+		fclose(f);
 	}
 }
 #else
@@ -236,7 +236,7 @@ inline void g_UpdateLoadingScreen(const char *command,...)
 		char		buf[512];
 		va_start(arglist, command);
 		vsprintf(buf, command, arglist);
-		va_end(arglist);	
+		va_end(arglist);
 		g_GetLog()->UpdateLoadingScreen(buf);
 	}
 	else
@@ -249,7 +249,7 @@ inline void UpdateLoadingScreenPlus(const char *command,...)
 	char		buf[512];
 	va_start(arglist, command);
 	vsprintf(buf, command, arglist);
-	va_end(arglist);	
+	va_end(arglist);
 	g_GetLog()->UpdateLoadingScreenPlus(buf);
 }
 

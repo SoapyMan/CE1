@@ -126,7 +126,7 @@ typedef unsigned char BYTE;
 
 
 
-typedef const char*			cstr;
+typedef const char* cstr;
 
 
 #include "Tarray.h"
@@ -169,15 +169,15 @@ const double gPi = 3.1415926535897932384626433832795;
 #include "CryAnimationBase.h"
 //#include "CryAnimation.h"
 
-inline double DLength( Vec3 &v ) { 
-	double dx=v.x*v.x;	
-	double dy=v.y*v.y;	
-	double dz=v.z*v.z;	
-	return sqrt( dx + dy + dz );
+inline double DLength(Vec3& v) {
+	double dx = v.x * v.x;
+	double dy = v.y * v.y;
+	double dz = v.z * v.z;
+	return sqrt(dx + dy + dz);
 }
 
 // maximum number of LODs per one geometric model (CryGeometry)
-enum {g_nMaxGeomLodLevels = 3};
+enum { g_nMaxGeomLodLevels = 3 };
 
 #define DECLARE_VECTOR_GETTER_METHODS(Type, Singular, Plural, member) \
 	Type* get##Plural() {return member.empty()?NULL:&member[0];}												\
@@ -190,23 +190,23 @@ enum {g_nMaxGeomLodLevels = 3};
 #ifdef _DEBUG
 
 //@FIXME this function should not be inline.
-_inline void __cdecl __CRYTEKDLL_TRACE(const char *sFormat, ... )
+_inline void __cdecl __CRYTEKDLL_TRACE(const char* sFormat, ...)
 {
-  va_list vl;
-  static char sTraceString[1024];
+	va_list vl;
+	static char sTraceString[1024];
 
-  va_start(vl, sFormat);
-  vsprintf(sTraceString, sFormat, vl);
-  va_end(vl);
+	va_start(vl, sFormat);
+	vsprintf(sTraceString, sFormat, vl);
+	va_end(vl);
 
-  strcat(sTraceString, "\n");
+	strcat(sTraceString, "\n");
 
 #ifdef WIN32
-  ::OutputDebugString(sTraceString);	
+	::OutputDebugString(sTraceString);
 #endif
 
 #ifdef GAMECUBE
-  OSReport(sTraceString);
+	OSReport(sTraceString);
 #endif
 
 }

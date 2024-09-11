@@ -15,10 +15,10 @@
 #define _CRY_VERTEX_BINDING_HDR_
 
 // array of crylinks for one vertex
-class CryVertexBinding: public std::vector<CryLink>
+class CryVertexBinding : public std::vector<CryLink>
 {
 public:
-	CryVertexBinding ();
+	CryVertexBinding();
 	// scales all the link offsets multiplying the offset by the given scale
 	void scaleOffsets(float fScale);
 	// sorts the links by the blending factor, descending order
@@ -30,18 +30,18 @@ public:
 	// ASSUMES:that the links are already sorted by the blending factors in descending order
 	void pruneSmallWeights(float fMinBlending, unsigned numMinLinks = 1);
 	// remaps the bone ids
-	void remapBoneIds (const unsigned* arrBoneIdMap, unsigned numBoneIds);
+	void remapBoneIds(const unsigned* arrBoneIdMap, unsigned numBoneIds);
 
 	// returns the maximum BoneID in the array of links
-	unsigned maxBoneID ()const;
+	unsigned maxBoneID()const;
 	// returns the minimal BoneID in the array of links
-	unsigned minBoneID () const;
+	unsigned minBoneID() const;
 
 	// returns the link weight to the given bone
-	float getBoneWeight (int nBoneID) const;
+	float getBoneWeight(int nBoneID) const;
 
 	// returns true if there is such bone weight
-	bool hasBoneWeight (int nBoneID, float fWeight) const;
+	bool hasBoneWeight(int nBoneID, float fWeight) const;
 };
 
 

@@ -8,8 +8,8 @@ struct CAnimationLayerInfo
 	int nAnimId;
 	float fTime; // this is time suitable for passing to controllers, i.e. ticks 
 	float fBlending;
-	CAnimationLayerInfo (int animid, float time, float blending): fBlending(blending), fTime(time), nAnimId(animid) {}
-	CAnimationLayerInfo(){}
+	CAnimationLayerInfo(int animid, float time, float blending) : fBlending(blending), fTime(time), nAnimId(animid) {}
+	CAnimationLayerInfo() {}
 };
 
 typedef std::vector<CAnimationLayerInfo> CAnimationLayerInfoArray;

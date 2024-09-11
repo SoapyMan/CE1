@@ -18,9 +18,9 @@ class CProfilerTimer
 public:
 	static void init(); // called once
 	static void getTicks(__int64* nTime);
-	static __int64 getTicks() {__int64 nTime; getTicks(&nTime); return nTime;}
-	static float ticksToSeconds (__int64 nTime);
-	static float ticksToMilliseconds (__int64 nTime);
+	static __int64 getTicks() { __int64 nTime; getTicks(&nTime); return nTime; }
+	static float ticksToSeconds(__int64 nTime);
+	static float ticksToMilliseconds(__int64 nTime);
 protected:
 	static __int64 g_nTicksPerSecond;
 	static double g_fSecondsPerTick;
@@ -36,16 +36,16 @@ template <typename TValue, int g_nCount>
 class CProfilerTimerHistory
 {
 public:
-	CProfilerTimerHistory():
-		m_nTimerHistoryNext (0),
-		m_nTimerHistoryCount (0)
+	CProfilerTimerHistory() :
+		m_nTimerHistoryNext(0),
+		m_nTimerHistoryCount(0)
 	{
 	}
 
 	void add(float fTimer)
 	{
 		m_fTimerHistory[m_nTimerHistoryNext] = fTimer;
-		m_nTimerHistoryNext = (m_nTimerHistoryNext+g_nCount-1)%g_nCount;
+		m_nTimerHistoryNext = (m_nTimerHistoryNext + g_nCount - 1) % g_nCount;
 		if (m_nTimerHistoryCount < g_nCount)
 			++m_nTimerHistoryCount;
 	}
@@ -58,12 +58,12 @@ public:
 	TValue getLast()
 	{
 		if (m_nTimerHistoryCount)
-			return m_fTimerHistory[(m_nTimerHistoryNext+1)%g_nCount];
+			return m_fTimerHistory[(m_nTimerHistoryNext + 1) % g_nCount];
 		else
 			return 0;
 	}
 	// calculates average time for at most the given number of frames (less if so many unavailable)
-	float getAve (int nCount = g_nCount)
+	float getAve(int nCount = g_nCount)
 	{
 		if (m_nTimerHistoryCount)
 		{
@@ -72,7 +72,7 @@ public:
 				nCount = m_nTimerHistoryCount;
 			for (int i = 1; i <= nCount; ++i)
 			{
-				fSum += m_fTimerHistory[(m_nTimerHistoryNext+i)%SIZEOF_ARRAY(m_fTimerHistory)];
+				fSum += m_fTimerHistory[(m_nTimerHistoryNext + i) % SIZEOF_ARRAY(m_fTimerHistory)];
 			}
 			return fSum / nCount;
 		}
@@ -81,7 +81,7 @@ public:
 	}
 	// calculates average time for at most the given number of frames (less if so many unavailable),
 	// multiplied by the Poisson function
-	float getAvePoisson (int nCount, float fMultiplier)
+	float getAvePoisson(int nCount, float fMultiplier)
 	{
 		if (m_nTimerHistoryCount)
 		{
@@ -90,7 +90,7 @@ public:
 				nCount = m_nTimerHistoryCount;
 			for (int i = 1; i <= nCount; ++i)
 			{
-				fSum += m_fTimerHistory[(m_nTimerHistoryNext+i)%g_nCount] * fCurrMult;
+				fSum += m_fTimerHistory[(m_nTimerHistoryNext + i) % g_nCount] * fCurrMult;
 				fSumWeight += fCurrMult;
 				fCurrMult *= fMultiplier;
 			}
@@ -100,7 +100,7 @@ public:
 			return 0;
 	}
 	// calculates max time for at most the given number of frames (less if so many unavailable)
-	float getMax(int nCount=g_nCount)
+	float getMax(int nCount = g_nCount)
 	{
 		if (m_nTimerHistoryCount)
 		{
@@ -109,7 +109,7 @@ public:
 				nCount = m_nTimerHistoryCount;
 			for (int i = 1; i <= nCount; ++i)
 			{
-				float fCur = m_fTimerHistory[(m_nTimerHistoryNext+i)%SIZEOF_ARRAY(m_fTimerHistory)];
+				float fCur = m_fTimerHistory[(m_nTimerHistoryNext + i) % SIZEOF_ARRAY(m_fTimerHistory)];
 				if (i == 1 || fCur > fMax)
 					fMax = fCur;
 			}
@@ -128,7 +128,7 @@ public:
 				nCount = m_nTimerHistoryCount;
 			for (int i = 1; i <= nCount; ++i)
 			{
-				float fCur = m_fTimerHistory[(m_nTimerHistoryNext+i)%SIZEOF_ARRAY(m_fTimerHistory)];
+				float fCur = m_fTimerHistory[(m_nTimerHistoryNext + i) % SIZEOF_ARRAY(m_fTimerHistory)];
 				if (i == 1 || fCur < fMin)
 					fMin = fCur;
 			}
@@ -148,10 +148,10 @@ protected:
 };
 
 // this is the accumulator - static object that will hold the profile info
-class CSimpleFrameProfilerInfo: public CryAnimationBase
+class CSimpleFrameProfilerInfo : public CryAnimationBase
 {
 public:
-	CSimpleFrameProfilerInfo (const char* szName);
+	CSimpleFrameProfilerInfo(const char* szName);
 
 	void startInterval();
 	void endInterval();
@@ -161,8 +161,8 @@ public:
 
 	void flush();
 protected:
-	void drawHeaderLabel ();
-	void drawStatistics (float fRow, float* fColor, const char* szLabel, CProfilerTimerHistory<float,64>& rProfiler);
+	void drawHeaderLabel();
+	void drawStatistics(float fRow, float* fColor, const char* szLabel, CProfilerTimerHistory<float, 64>& rProfiler);
 	void drawLabel(float fRow, float* fColor, const char* szText);
 
 protected:
@@ -173,8 +173,8 @@ protected:
 	int m_nFrame;
 	const char* m_szName;
 	int m_nIndex; // the index of this object
-	
-	CProfilerTimerHistory<float,64> m_HistTime, m_HistCount;
+
+	CProfilerTimerHistory<float, 64> m_HistTime, m_HistCount;
 	static int g_nCount; // count of such objects ever created
 };
 
@@ -189,13 +189,13 @@ protected:
 class CSimpleFrameProfiler
 {
 public:
-	CSimpleFrameProfiler (CSimpleFrameProfilerInfo* pInfo):
-		m_pInfo (pInfo)
+	CSimpleFrameProfiler(CSimpleFrameProfilerInfo* pInfo) :
+		m_pInfo(pInfo)
 	{
 		if (pInfo)
 			pInfo->startInterval();
 	}
-	~CSimpleFrameProfiler ()
+	~CSimpleFrameProfiler()
 	{
 		if (m_pInfo)
 			m_pInfo->endInterval();
@@ -213,30 +213,30 @@ protected:
 class CRecursiveFrameProfiler
 {
 	// the depth of the profilers' stack
-	enum {nStackDepth = 32};
+	enum { nStackDepth = 32 };
 public:
-	CRecursiveFrameProfiler (CSimpleFrameProfilerInfo* pInfo):
-		m_pInfo (pInfo)
+	CRecursiveFrameProfiler(CSimpleFrameProfilerInfo* pInfo) :
+		m_pInfo(pInfo)
 	{
 		if (pInfo)
 		{
 			pInfo->startInterval();
 			if (g_nStackTop > 0)
-				g_arrStack[g_nStackTop-1]->startDelay();
+				g_arrStack[g_nStackTop - 1]->startDelay();
 			g_arrStack[g_nStackTop] = this;
 			++g_nStackTop;
-			assert (g_nStackTop < nStackDepth);
+			assert(g_nStackTop < nStackDepth);
 		}
 	}
-	~CRecursiveFrameProfiler ()
+	~CRecursiveFrameProfiler()
 	{
 		if (m_pInfo)
 		{
 			m_pInfo->endInterval();
 			--g_nStackTop;
 			if (g_nStackTop > 0)
-				g_arrStack[g_nStackTop-1]->endDelay();
-			assert (g_nStackTop >= 0);
+				g_arrStack[g_nStackTop - 1]->endDelay();
+			assert(g_nStackTop >= 0);
 		}
 	}
 
@@ -245,7 +245,7 @@ protected:
 	{
 		// this is only called for the profilers on the stack; only the profilers
 		// with non-NULL profiler info are placed on the stack
-		assert (m_pInfo);
+		assert(m_pInfo);
 		m_pInfo->startDelay();
 	}
 
@@ -253,7 +253,7 @@ protected:
 	{
 		// this is only called for the profilers on the stack; only the profilers
 		// with non-NULL profiler info are placed on the stack
-		assert (m_pInfo);
+		assert(m_pInfo);
 		m_pInfo->endDelay();
 	}
 protected:

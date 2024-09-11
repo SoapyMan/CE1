@@ -25,10 +25,10 @@ public:
 	CryCharParticleManager();
 
 	// adds a particle spawn task, returns a handle to be used to 
-	int add (const ParticleParams& rParticleInfo, const CryParticleSpawnInfo& rSpawnInfo);
+	int add(const ParticleParams& rParticleInfo, const CryParticleSpawnInfo& rSpawnInfo);
 
 	// deletes a particle spawn task by the handle
-	bool remove (int nHandle);
+	bool remove(int nHandle);
 
 	// returns true if there are no emitters; when there are no emitters, it's not necessary to call spawn()
 	bool empty() const;
@@ -56,60 +56,60 @@ public:
 		// the number of bone matrices
 		unsigned numBoneMatrices;
 
-		void setVertices (const Vec3* _pVertices, unsigned _numVertices)
+		void setVertices(const Vec3* _pVertices, unsigned _numVertices)
 		{
-			this->pVertices   = _pVertices;
+			this->pVertices = _pVertices;
 			this->numVertices = _numVertices;
 		}
 
-		void setFaces (const GeomFace* _pFaces, unsigned _numFaces)
+		void setFaces(const GeomFace* _pFaces, unsigned _numFaces)
 		{
-			this->pFaces   = _pFaces;
+			this->pFaces = _pFaces;
 			this->numFaces = _numFaces;
 		}
 
 		// retrieves the vertices of the given face into [0..2] and the normal into [3]
-		void getFaceVN (unsigned nFace, Vec3* pVerts)const
+		void getFaceVN(unsigned nFace, Vec3* pVerts)const
 		{
-			for (int v = 0; v< 3; ++v)
+			for (int v = 0; v < 3; ++v)
 				pVerts[v] = this->pVertices[this->pFaces[nFace][v]];
-			pVerts[3] = (pVerts[2]-pVerts[0])^(pVerts[1]-pVerts[0]);
+			pVerts[3] = (pVerts[2] - pVerts[0]) ^ (pVerts[1] - pVerts[0]);
 		}
 	};
 
 
 	// spawn the particles (using the external tangent info and mapping)
-	void spawn (const SpawnParams& params);
+	void spawn(const SpawnParams& params);
 
 	void validateThis();
 
-	void GetMemoryUsage (ICrySizer* pSizer);
+	void GetMemoryUsage(ICrySizer* pSizer);
 protected:
 	struct Emitter
 	{
 		ParticleParams m_ParticleInfo;
 		CryParticleSpawnInfo m_SpawnInfo;
-		
+
 		// the quantity accumulator, to enable < 1 particles per frame
 		// the number of particles accumulates here over time
-		float m_fParticleAccumulator; 
+		float m_fParticleAccumulator;
 
 		// if false, this entry is reserved (doesn't emit any particles)
-		bool m_bActive; 
-		
-		// evaluates if a vertex with such base is valid for spawning a particle
-		bool isValid (const SPipTangents& rBase);
+		bool m_bActive;
 
-		Emitter () :
+		// evaluates if a vertex with such base is valid for spawning a particle
+		bool isValid(const SPipTangents& rBase);
+
+		Emitter() :
 			m_fParticleAccumulator(0),
-			m_bActive (false)
-			{
-			}
+			m_bActive(false)
+		{
+		}
 
 		// spawn the necessary number of particles
-		void spawn (const SpawnParams& params, float fTimeDelta);
+		void spawn(const SpawnParams& params, float fTimeDelta);
 		// spawns only one particle with the params
-		void spawnSingleParticle (const SpawnParams& params);
+		void spawnSingleParticle(const SpawnParams& params);
 		// spawns one particle from the skin
 		void spawnFromSkin(const SpawnParams& params);
 		// spawns one particle from bone

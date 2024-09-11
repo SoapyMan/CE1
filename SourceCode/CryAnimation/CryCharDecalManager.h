@@ -32,21 +32,21 @@ public:
 
 	static void LogStatistics();
 
-	CryCharDecalManager (class CryGeometryInfo* pGeomInfo);
+	CryCharDecalManager(class CryGeometryInfo* pGeomInfo);
 
-	~CryCharDecalManager ();
+	~CryCharDecalManager();
 
 	// Request (add) a new decal to the character
-	void Add (CryEngineDecalInfo& Decal);
+	void Add(CryEngineDecalInfo& Decal);
 
 	// discards the decal request queue (not yet realized decals added through Add())
 	void DiscardRequests();
 
 	// realizes (creates geometry for) unrealized(requested) decals
-	void Realize (const Vec3* pPositions);
+	void Realize(const Vec3* pPositions);
 
 	// returns true if the Realize() needs to be called
-	bool NeedRealize () const;
+	bool NeedRealize() const;
 
 	// this is the number of additional faces introduced by the decals
 	unsigned numFaces() const;
@@ -54,7 +54,7 @@ public:
 	unsigned numVertices() const;
 
 	// adds the render data to the renderer, so that the current decals can be rendered
-	void AddRenderData (CCObject *pObj, const SRendParams & rRendParams);
+	void AddRenderData(CCObject* pObj, const SRendParams& rRendParams);
 
 	// cleans up all decals, destroys the vertex buffer
 	void clear();
@@ -62,30 +62,30 @@ public:
 	void debugDump();
 
 	// returns the memory usage by this object into the sizer
-	void GetMemoryUsage (ICrySizer* pSizer);
+	void GetMemoryUsage(ICrySizer* pSizer);
 protected:
 	// sets up the given material to default state: just clean decal material
-  void initDefaultMaterial (CMatInfo& rMat);
+	void initDefaultMaterial(CMatInfo& rMat);
 
 	// assigns the given material to the given range of indices/vertices
-	void assignMaterial (unsigned nMaterial, int nTextureId, int nFirstIndex, int numIndices, int nFirstVertex, int numVertices);
+	void assignMaterial(unsigned nMaterial, int nTextureId, int nFirstIndex, int numIndices, int nFirstVertex, int numVertices);
 
 	// recreates the current leaf buffer so that it contains the given number of vertices and
 	// reserved indices, both uninitialized. There are 0 used indices initially
-	void ReserveVertexBufferVertices (const Vec3* pInPositions);
+	void ReserveVertexBufferVertices(const Vec3* pInPositions);
 
 	// recalculates the index array for the vertex buffer and replaces it (so that the vertex buffer is prepared for rendering)
 	// also makes sure the vertex buffer contains enough vertices to draw all the current decals (from m_arrDecals)
-	void RefreshVertexBufferIndices ();
+	void RefreshVertexBufferIndices();
 
 	// put the deformed vertices into the videomemory
-	void RefreshVertexBufferVertices (const Vec3* pPositions);
+	void RefreshVertexBufferVertices(const Vec3* pPositions);
 
 	// put the deformed vertices into the videobuffer of the given format
-	void RefreshVertexBufferVertices (const Vec3* pPositions, struct_VERTEX_FORMAT_P3F_TEX2F* pDst);
+	void RefreshVertexBufferVertices(const Vec3* pPositions, struct_VERTEX_FORMAT_P3F_TEX2F* pDst);
 
 	// put the deformed vertices into the videobuffer of the given format
-	void RefreshVertexBufferVertices (const Vec3* pPositions, struct_VERTEX_FORMAT_P3F_COL4UB_TEX2F* pDst);
+	void RefreshVertexBufferVertices(const Vec3* pPositions, struct_VERTEX_FORMAT_P3F_COL4UB_TEX2F* pDst);
 
 	// cleans up the old leaf buffers
 	void DeleteOldRenderElements();
@@ -97,20 +97,20 @@ protected:
 	// if there are decal requests, then converts them into the decal objects
 	// reserves the vertex/updates the index buffers, if need to be
 	// sets m_bNeedUpdateIndices to true if it has added something (and therefore refresh of indices is required)
-	void RealizeNewDecalRequests (const Vec3* pPositions);
+	void RealizeNewDecalRequests(const Vec3* pPositions);
 
 	// starts fading out all decals that are close enough to the given point
 	// NOTE: the radius is m^2 - it's the square of the radius of the sphere
-	void fadeOutCloseDecals (const Vec3& ptCenter, float fRadius2);
+	void fadeOutCloseDecals(const Vec3& ptCenter, float fRadius2);
 protected:
 	// deletes the leaf buffer
-	void DeleteLeafBuffer ();
+	void DeleteLeafBuffer();
 
 	// this represents the contiguous subarray of vertices and indices
 	struct MeshInfo {
 		unsigned short numIndices, numVertices;
 	};
-	struct SubmeshInfo: public MeshInfo {
+	struct SubmeshInfo : public MeshInfo {
 		unsigned short nFirstIndex, nFirstVertex;
 		int nTextureId;
 	};
@@ -119,12 +119,12 @@ protected:
 	// the information about the decal mesh currently (after groupMaterials)
 	static MeshInfo g_MeshInfo;
 	// the maximum number of decal types per character
-	enum {g_numSubmeshInfos = 32};
+	enum { g_numSubmeshInfos = 32 };
 	// the material groups
 	static SubmeshInfo g_SubmeshInfo[g_numSubmeshInfos];
 	// groups the decals and returns the information in gTmpMeshInfo and gTmpSubmeshInfo
 	// returns the number of materials in g_SubmeshInfo
-	unsigned groupMaterials ();
+	unsigned groupMaterials();
 
 
 	// the array of requested (unrealized) decals
@@ -160,14 +160,14 @@ protected:
 		unsigned numDecals;
 		unsigned numDecalVertices;
 		unsigned numDecalFaces;
-		float getAveVertsPerDecal() {return float (numDecalVertices) / numDecals;}
-		float getAveFacesPerDecal() {return float (numDecalFaces) / numDecals;}
-		bool empty() const {return numDecals == 0;}
-		void onDecalAdd (unsigned numVertices, unsigned numFaces);
-		CStatistics():
+		float getAveVertsPerDecal() { return float(numDecalVertices) / numDecals; }
+		float getAveFacesPerDecal() { return float(numDecalFaces) / numDecals; }
+		bool empty() const { return numDecals == 0; }
+		void onDecalAdd(unsigned numVertices, unsigned numFaces);
+		CStatistics() :
 			numDecalVertices(0),
 			numDecals(0),
-			numDecalFaces (0)
+			numDecalFaces(0)
 		{
 		}
 	};

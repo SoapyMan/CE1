@@ -18,36 +18,36 @@
 
 // this class contains the information that's common to all instances of bones
 // in the given model: like bone name, and misc. shared properties
-class CryBoneInfo: public CryBoneDesc
+class CryBoneInfo : public CryBoneDesc
 {
 public:
-	CryBoneInfo ();
-	~CryBoneInfo ();
+	CryBoneInfo();
+	~CryBoneInfo();
 
-	CryBoneInfo* getChild (unsigned i) {assert(i < numChildren()); return this + m_nOffsetChildren + i;}
-	const CryBoneInfo* getChild (unsigned i) const {assert(i < numChildren()); return this + m_nOffsetChildren + i;}
-	CryBoneInfo* getParent () {return m_nOffsetParent ? this + m_nOffsetParent : NULL;}
-	const CryBoneInfo* getParent () const {return m_nOffsetParent ? this + m_nOffsetParent : NULL;}
+	CryBoneInfo* getChild(unsigned i) { assert(i < numChildren()); return this + m_nOffsetChildren + i; }
+	const CryBoneInfo* getChild(unsigned i) const { assert(i < numChildren()); return this + m_nOffsetChildren + i; }
+	CryBoneInfo* getParent() { return m_nOffsetParent ? this + m_nOffsetParent : NULL; }
+	const CryBoneInfo* getParent() const { return m_nOffsetParent ? this + m_nOffsetParent : NULL; }
 
 	// binds this bone to a controller from the specified animation, using the controller manager
-	class IController* BindController (GlobalAnimation& GlobalAnim, unsigned nAnimID);
+	class IController* BindController(GlobalAnimation& GlobalAnim, unsigned nAnimID);
 	// unbinds the bone from the given animation's controller
-	void UnbindController (unsigned nAnimID);
+	void UnbindController(unsigned nAnimID);
 
 	CryBoneInfo& operator = (const CryBoneDesc& rThat);
 	unsigned sizeofThis()const;
 
 	void PostInitialize();
-	IController::PQLog &getDefRelTransform() { return m_pqDefRelTransform; }
-	CryQuat &getqRelPhysParent(int nLod) { return m_qRelPhysParent[nLod]; }
+	IController::PQLog& getDefRelTransform() { return m_pqDefRelTransform; }
+	CryQuat& getqRelPhysParent(int nLod) { return m_qRelPhysParent[nLod]; }
 
 protected:
 	// updates the given lod level bone physics info from the bones found in the given chunk
-	void UpdateHierarchyPhysics (const BONEANIM_CHUNK_DESC* pChunk, unsigned nChunkSize, int nLodLevel);
+	void UpdateHierarchyPhysics(const BONEANIM_CHUNK_DESC* pChunk, unsigned nChunkSize, int nLodLevel);
 
 	typedef std::map<unsigned, CryBoneInfo*> UnsignedToCryBoneMap;
 	// adds this bone and all its children to the given map controller id-> bone ptr
-	void AddHierarchyToControllerIdMap (UnsignedToCryBoneMap& mapControllerIdToCryBone);
+	void AddHierarchyToControllerIdMap(UnsignedToCryBoneMap& mapControllerIdToCryBone);
 
 	//! Performs post-initialization. This step is requred to initialize the pPhysGeom of the bones
 	//! After the bone has been loaded but before it is first used. When the bone is first loaded, pPhysGeom
@@ -57,7 +57,7 @@ protected:
 	//!	NOTE:
 	//!	The entries of the map that were used are deleted
 	typedef std::map<int, struct phys_geometry*> ChunkIdToPhysGeomMap;
-	bool PostInitPhysGeom (ChunkIdToPhysGeomMap& mapChunkIdToPhysGeom, int nLodLevel);
+	bool PostInitPhysGeom(ChunkIdToPhysGeomMap& mapChunkIdToPhysGeom, int nLodLevel);
 
 	friend class CryBone;
 	friend class CryModelState;

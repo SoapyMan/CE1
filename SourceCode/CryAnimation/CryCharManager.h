@@ -31,27 +31,27 @@ extern float g_YLine;
 class CryCharManager : public ICryCharManager
 {
 public:
-	CryCharManager (ISystem * pSystem);
-	~CryCharManager ();
+	CryCharManager(ISystem* pSystem);
+	~CryCharManager();
 
 	// Loads a cgf and the corresponding caf file and creates an animated object,
 	// or returns an existing object.
-	virtual ICryCharInstance * MakeCharacter(const char * szFilename, unsigned nFlags);
+	virtual ICryCharInstance* MakeCharacter(const char* szFilename, unsigned nFlags);
 
 	// loads the character model (which is ref-counted, so you must assign it to an autopointer)
 	virtual ICryCharModel* LoadModel(const char* szFileName, unsigned nFlags = 0);
 
 	// Reduces reference counter for object and deletes object if counter is 0
-	virtual void RemoveCharacter (ICryCharInstance * pCryCharInstance, unsigned nFlags);  
+	virtual void RemoveCharacter(ICryCharInstance* pCryCharInstance, unsigned nFlags);
 
 	// Deletes itself
 	virtual void Release();
 
 	// returns the controller manager used by this character manager
-	CControllerManager * GetControllerManager();
+	CControllerManager* GetControllerManager();
 
-	void RegisterBody (CryCharBody*);
-	void UnregisterBody (CryCharBody*);
+	void RegisterBody(CryCharBody*);
+	void UnregisterBody(CryCharBody*);
 
 	// puts the size of the whole subsystem into this sizer object, classified,
 	// according to the flags set in the sizer
@@ -62,7 +62,7 @@ public:
 	//! All the possible values for nCommand are in the CryAnimationScriptCommands.h
 	//! file in the CryAnimationScriptCommandEnum enumeration. All the parameter/result
 	//! structures are also there.
-	bool ExecScriptCommand (int nCommand, void* pParams = NULL, void* pResult = NULL);
+	bool ExecScriptCommand(int nCommand, void* pParams = NULL, void* pResult = NULL);
 
 	// should be called every frame
 	void Update();
@@ -71,14 +71,14 @@ public:
 	virtual void ClearResources();
 
 	//! The specified animation will be unloaded from memory; it will be loaded back upon the first invokation (via StartAnimation())
-	void UnloadAnimation (const char* szFileName);
+	void UnloadAnimation(const char* szFileName);
 
 	//! Starts loading the specified animation. fWhenRequired is the timeout, in seconds, from the current moment,
 	//! when the animation data will actually be needed
-	void StartLoadAnimation (const char* szFileName, float fWhenRequired);
+	void StartLoadAnimation(const char* szFileName, float fWhenRequired);
 
 	//! Unloads animations older than the given number of frames
-	void UnloadOldAnimations (int numFrames);
+	void UnloadOldAnimations(int numFrames);
 
 	// returns statistics about this instance of character animation manager
 	// don't call this too frequently
@@ -102,15 +102,15 @@ protected:
 
 	// Finds a cached or creates a new CryCharBody instance and returns it
 	// returns NULL if the construction failed
-	CryCharBody* FetchBody (const string& strFileName);
+	CryCharBody* FetchBody(const string& strFileName);
 
 	// locks or unlocks the given body if needed, depending on the hint and console variables
 	void DecideModelLockStatus(CryCharBody* pBody, unsigned nHints);
 	void ClearDecals();
 private:
-	CControllerManager * m_pControllerManager;
+	CControllerManager* m_pControllerManager;
 	// manager of animated objects.
-	CAnimObjectManager * m_pAnimObjectManager;
+	CAnimObjectManager* m_pAnimObjectManager;
 
 	class OrderByFileName
 	{

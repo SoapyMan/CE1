@@ -26,16 +26,16 @@ class TSparseArrayDriver
 protected:
 	// NOTE: only the descendants of this class (like Vec3 drivers for vertex buffer)
 	// can construct uninitialized copy of this class, because they know how to initialize it afterwards.
-	TSparseArrayDriver(){}
+	TSparseArrayDriver() {}
 public:
 	typedef unsigned char byte;
 
 	// initializes the sparse array: the pointer to the first element, and the distance between elements
 	// in bytes (by default, as for non-sparse arrays, the distance is the sizeof(T))
 	// The distance is between the first byte of one element and the first byte of the next element
-	TSparseArrayDriver (void* pData, int nStride):
-		m_pData ((byte*)pData),
-		m_nStride (nStride)
+	TSparseArrayDriver(void* pData, int nStride) :
+		m_pData((byte*)pData),
+		m_nStride(nStride)
 	{
 	}
 
@@ -63,10 +63,10 @@ public:
 	// smart pointer arithmetics
 
 	// shifts the array pointer to the 
-	TSparseArrayDriver<T>& operator += (int nShift) {m_pData += nShift*m_nStride; return *this;}
-	TSparseArrayDriver<T>& operator ++ () {m_pData += m_nStride; return *this;}
+	TSparseArrayDriver<T>& operator += (int nShift) { m_pData += nShift * m_nStride; return *this; }
+	TSparseArrayDriver<T>& operator ++ () { m_pData += m_nStride; return *this; }
 
-	operator bool ()const {return m_pData != NULL;}
+	operator bool()const { return m_pData != NULL; }
 protected:
 	// pointer to the 0th element of the array
 	byte* m_pData;

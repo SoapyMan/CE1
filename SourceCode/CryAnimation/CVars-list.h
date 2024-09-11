@@ -10,7 +10,7 @@
 
 
 // the multiplier for the decal sizes
-DECLARE_FLOAT_VARIABLE(ca_DecalSizeMultiplier, 1,"The multiplier for the decal sizes");
+DECLARE_FLOAT_VARIABLE(ca_DecalSizeMultiplier, 1, "The multiplier for the decal sizes");
 
 // This is an integer. If set to N != 0, then every Nth frame the normalization for the characters will be switched
 // on and off. When on, the binormals, tangents and normals are normalized during the skinning paths;
@@ -69,13 +69,13 @@ DECLARE_STRING_VARIABLE(ca_Freeze, "");
 
 // if this is not empty string, then character instances whose model file paths contain this substring,
 // will print their position each frame when skinned into a special file (Animation.log)
-DECLARE_STRING_VARIABLE (ca_LogPosition, "");
+DECLARE_STRING_VARIABLE(ca_LogPosition, "");
 
 
 #endif
 
 // if this is not empty string, the animations of characters with the given model will be logged
-DECLARE_STRING_VARIABLE (ca_LogAnimation, "");
+DECLARE_STRING_VARIABLE(ca_LogAnimation, "");
 
 // this is generic variable for debugging the heat light sources. Don't use it (or use on your own own)
 DECLARE_INT_VARIABLE_IMMEDIATE(ca_DebugHeatSources, 0, "This is generic variable for debugging the heat light sources. Don't use it (or use on your own risk)");
@@ -163,9 +163,9 @@ DECLARE_INT_VARIABLE_IMMEDIATE(ca_OverrideLayer, 0, "if this is not 0, then all 
 // this is the threshold of LOD minimal vertex weight that will be truncated
 // the vertex bindings with the given weight and less will be truncated
 // Effectively, the value >0.5 sets rigid linking, because there is never more than 1 weight > 0.5
-DECLARE_FLOAT_VARIABLE(ca_MinVertexWeightLOD0, 0.07f,"this is the threshold of LOD minimal vertex weight that will be truncated\nthe vertex bindings with the given weight and less will be truncated\nEffectively, the value >0.5 sets rigid linking, because there is never more than 1 weight > 0.5");
-DECLARE_FLOAT_VARIABLE(ca_MinVertexWeightLOD1, 0.3f,"this is the threshold of LOD minimal vertex weight that will be truncated\nthe vertex bindings with the given weight and less will be truncated\nEffectively, the value >0.5 sets rigid linking, because there is never more than 1 weight > 0.5");
-DECLARE_FLOAT_VARIABLE(ca_MinVertexWeightLOD2, 0.5f,"this is the threshold of LOD minimal vertex weight that will be truncated\nthe vertex bindings with the given weight and less will be truncated\nEffectively, the value >0.5 sets rigid linking, because there is never more than 1 weight > 0.5");
+DECLARE_FLOAT_VARIABLE(ca_MinVertexWeightLOD0, 0.07f, "this is the threshold of LOD minimal vertex weight that will be truncated\nthe vertex bindings with the given weight and less will be truncated\nEffectively, the value >0.5 sets rigid linking, because there is never more than 1 weight > 0.5");
+DECLARE_FLOAT_VARIABLE(ca_MinVertexWeightLOD1, 0.3f, "this is the threshold of LOD minimal vertex weight that will be truncated\nthe vertex bindings with the given weight and less will be truncated\nEffectively, the value >0.5 sets rigid linking, because there is never more than 1 weight > 0.5");
+DECLARE_FLOAT_VARIABLE(ca_MinVertexWeightLOD2, 0.5f, "this is the threshold of LOD minimal vertex weight that will be truncated\nthe vertex bindings with the given weight and less will be truncated\nEffectively, the value >0.5 sets rigid linking, because there is never more than 1 weight > 0.5");
 
 // this parameter determines how many vertices can be used in one tangent basis skin
 // This is used for strip-mining optimization recommended by the Pentium4 Optimization Manual:
@@ -175,10 +175,10 @@ DECLARE_INT_VARIABLE_IMMEDIATE(ca_VertsPerTangSubskin, 3000, "this parameter det
 // if this is 0, then the data that was used during construction of instances
 // of CryGeometryInfo and all its clients will be retained in memory for debugging
 // purposes.
-DECLARE_INT_VARIABLE_IMMEDIATE (ca_ZDeleteConstructionData, 1, "if this is 0, then the data that was used during construction of instances\nof CryGeometryInfo and all its clients will be retained in memory for debugging purposes");
+DECLARE_INT_VARIABLE_IMMEDIATE(ca_ZDeleteConstructionData, 1, "if this is 0, then the data that was used during construction of instances\nof CryGeometryInfo and all its clients will be retained in memory for debugging purposes");
 
 // if this is 1, then SSE is used for tangent space calculations and perhaps other things
-DECLARE_INT_VARIABLE_IMMEDIATE (ca_SSEEnable, 1, "If this is 1, then SSE is used for tangent space calculations and perhaps other things (like skinning)");
+DECLARE_INT_VARIABLE_IMMEDIATE(ca_SSEEnable, 1, "If this is 1, then SSE is used for tangent space calculations and perhaps other things (like skinning)");
 
 /*
 DECLARE_INT_VARIABLE_IMMEDIATE (ca_SSEEnable1, 0);
@@ -186,54 +186,54 @@ DECLARE_INT_VARIABLE_IMMEDIATE (ca_SSEEnable2, 0);
 DECLARE_INT_VARIABLE_IMMEDIATE (ca_SSEEnable3, 0);
 */
 // this is the number of repeats of skinning for testing
-DECLARE_INT_VARIABLE_IMMEDIATE (ca_TestSkinningRepeats,1, "this is the number of repeats of skinning for testing");
+DECLARE_INT_VARIABLE_IMMEDIATE(ca_TestSkinningRepeats, 1, "this is the number of repeats of skinning for testing");
 
 // this is the type of stripification to use on new objects. Set 0 not to stripify
-DECLARE_INT_VARIABLE_IMMEDIATE (ca_StripifyGeometry, 4, "this is the type of stripification to use on new objects. Set 0 not to stripify");
+DECLARE_INT_VARIABLE_IMMEDIATE(ca_StripifyGeometry, 4, "this is the type of stripification to use on new objects. Set 0 not to stripify");
 
 // the period, in frames, when the tangents will be recalculated for the character.
 // 1 means ever frame, 2 means every 2nd frame and so on
-DECLARE_INT_VARIABLE_IMMEDIATE (ca_TangentBasisCalcPeriod, 1, "the period, in frames, when the tangents will be recalculated for the character. 1 means ever frame, 2 means every 2nd frame and so on");
+DECLARE_INT_VARIABLE_IMMEDIATE(ca_TangentBasisCalcPeriod, 1, "the period, in frames, when the tangents will be recalculated for the character. 1 means ever frame, 2 means every 2nd frame and so on");
 
 // 0 - the same shadow vertex buffer is used for every frame shadow volume rendering
 // 1 - the shadow vertex buffers are switched
-DECLARE_INT_VARIABLE_IMMEDIATE (ca_ShadowDoubleBuffer, 1, "0 - the same shadow vertex buffer is used for every frame shadow volume rendering\n1 - the shadow vertex buffers are switched");
+DECLARE_INT_VARIABLE_IMMEDIATE(ca_ShadowDoubleBuffer, 1, "0 - the same shadow vertex buffer is used for every frame shadow volume rendering\n1 - the shadow vertex buffers are switched");
 
 // If 0, then the character's shadow volume isn't rendered (but the attached objects' volumes are rendered)
-DECLARE_INT_VARIABLE_IMMEDIATE (ca_EnableCharacterShadowVolume, 1, "If 0, then the character's shadow volume isn't rendered (but the attached objects' volumes are rendered)");
+DECLARE_INT_VARIABLE_IMMEDIATE(ca_EnableCharacterShadowVolume, 1, "If 0, then the character's shadow volume isn't rendered (but the attached objects' volumes are rendered)");
 
 // if this is not 0, then it will always replace the shadow volume extent
-DECLARE_FLOAT_VARIABLE (ca_ShadowVolumeExtent, 0, "if this is not 0, then it will always replace the shadow volume extent");
+DECLARE_FLOAT_VARIABLE(ca_ShadowVolumeExtent, 0, "if this is not 0, then it will always replace the shadow volume extent");
 
 #ifdef _DEBUG
 // if this is non-0, in debug mode there's no assertion when something is detached from a non-existing bone
 // DECLARE_INT_VARIABLE_IMMEDIATE (ca_NoAttachAssert, 0);
-DECLARE_INT_VARIABLE_IMMEDIATE (ca_DebugRebuildShadowVolumes, 0, "if this is non-0, in debug mode there's no assertion when something is detached from a non-existing bone");
-DECLARE_INT_VARIABLE_IMMEDIATE (ca_DebugGetParentWQuat, 0, "if this is non-0, in debug mode there's no assertion when something is detached from a non-existing bone");
+DECLARE_INT_VARIABLE_IMMEDIATE(ca_DebugRebuildShadowVolumes, 0, "if this is non-0, in debug mode there's no assertion when something is detached from a non-existing bone");
+DECLARE_INT_VARIABLE_IMMEDIATE(ca_DebugGetParentWQuat, 0, "if this is non-0, in debug mode there's no assertion when something is detached from a non-existing bone");
 #endif
 
 // This is the maximum number of shadow buffers per instance
 // With double buffering, there must be 2 * max number of light sources
-DECLARE_INT_VARIABLE_IMMEDIATE (ca_ShadowBufferLimit, 6, "This is the maximum number of shadow buffers per instance.\nWith double buffering, there must be 2 * max number of light sources");
+DECLARE_INT_VARIABLE_IMMEDIATE(ca_ShadowBufferLimit, 6, "This is the maximum number of shadow buffers per instance.\nWith double buffering, there must be 2 * max number of light sources");
 
 // enables a special kind of log: Animation.log file, solely for debugging
-DECLARE_INT_VARIABLE_IMMEDIATE (ca_EnableAnimationLog, 0, "enables a special kind of log: Animation.log file, solely for debugging");
+DECLARE_INT_VARIABLE_IMMEDIATE(ca_EnableAnimationLog, 0, "enables a special kind of log: Animation.log file, solely for debugging");
 
 // this is the "power" with which the rain drops the character:
 // with infinity, only the vertex that's the most parallel to the rain will react to the rain;
 // with 0, random point (including those not facing the rain flow) will be chosen.
-DECLARE_INT_VARIABLE_IMMEDIATE (ca_RainPower, 5, "this is the \"power\" with which the rain drops the character:\nwith infinity, only the vertex that's the most parallel to the rain will react to the rain;\nwith 0, random point (including those not facing the rain flow) will be chosen.");
+DECLARE_INT_VARIABLE_IMMEDIATE(ca_RainPower, 5, "this is the \"power\" with which the rain drops the character:\nwith infinity, only the vertex that's the most parallel to the rain will react to the rain;\nwith 0, random point (including those not facing the rain flow) will be chosen.");
 
 // if this is not 0, then no material sorting is performed
-DECLARE_INT_VARIABLE_IMMEDIATE (ca_NoMtlSorting, 1, "if this is not 0, then no material sorting is performed");
+DECLARE_INT_VARIABLE_IMMEDIATE(ca_NoMtlSorting, 1, "if this is not 0, then no material sorting is performed");
 
 // this is the maximum LOD to use for shadow volumes; if it's 0, it effectively does nothing
 // (all the range of LODs is available for shadow builder), if it's 1, then objects will use
 // LOD 1 shadows for LOD 0 characters if available .  Etc.
-DECLARE_INT_VARIABLE_IMMEDIATE (ca_LimitShadowLOD, 0, "this is the maximum LOD to use for shadow volumes; if it's 0, it effectively does nothing\n(all the range of LODs is available for shadow builder), if it's 1, then objects will use\nLOD 1 shadows for LOD 0 characters if available .  Etc.");
+DECLARE_INT_VARIABLE_IMMEDIATE(ca_LimitShadowLOD, 0, "this is the maximum LOD to use for shadow volumes; if it's 0, it effectively does nothing\n(all the range of LODs is available for shadow builder), if it's 1, then objects will use\nLOD 1 shadows for LOD 0 characters if available .  Etc.");
 
 // this is for testing: all characters are immediately multiplied by this scale factor
-DECLARE_FLOAT_VARIABLE (ca_RuntimeScale, 1, "Debug variable: all characters are immediately multiplied by this scale factor");
+DECLARE_FLOAT_VARIABLE(ca_RuntimeScale, 1, "Debug variable: all characters are immediately multiplied by this scale factor");
 
 // if this is true, then the blending between layers is performed by 
 // cubic (spline) function, not linear. This should look more natural
@@ -256,25 +256,25 @@ DECLARE_INT_VARIABLE_IMMEDIATE(ca_AnimationUnloadDelay, nDefaultAnimUnloadDelay,
 // if this is non-0, the animation are not loaded immediately upon request (when loading CGF), but
 // rather on first request. This feature should not be used with ca_AnimationUnloadDelay, because loading
 // all animations first and then automatically unloading them doesn't have much sense.
-DECLARE_INT_VARIABLE_IMMEDIATE(ca_AnimationDeferredLoad,nDefaultAnimDeferredLoad,"if this is non-0, the animation are not loaded immediately upon request (when loading CGF), but\nrather on first request. This feature should not be used with ca_AnimationUnloadDelay, because loading\nall animations first and then automatically unloading them doesn't have much sense.");
+DECLARE_INT_VARIABLE_IMMEDIATE(ca_AnimationDeferredLoad, nDefaultAnimDeferredLoad, "if this is non-0, the animation are not loaded immediately upon request (when loading CGF), but\nrather on first request. This feature should not be used with ca_AnimationUnloadDelay, because loading\nall animations first and then automatically unloading them doesn't have much sense.");
 
 // if this is 0, the original tangents will be used rather than the tangent skin to update the tangets during rendering
-DECLARE_INT_VARIABLE_IMMEDIATE (ca_EnableTangentSkinning, 1, "if this is 0, the original tangents will be used rather than the tangent skin to update the tangets during rendering");
+DECLARE_INT_VARIABLE_IMMEDIATE(ca_EnableTangentSkinning, 1, "if this is 0, the original tangents will be used rather than the tangent skin to update the tangets during rendering");
 
 // This (binary) mask is applied to the frame id to determine if the calculation of character BBox based on the skin vertex coordinates is enabled
-DECLARE_INT_VARIABLE_IMMEDIATE (ca_SkinBasedBBoxMask, 0xFFFFFFFF, "This (binary) mask is applied to the frame id to determine if the calculation of character BBox based on the skin vertex coordinates is enabled");
+DECLARE_INT_VARIABLE_IMMEDIATE(ca_SkinBasedBBoxMask, 0xFFFFFFFF, "This (binary) mask is applied to the frame id to determine if the calculation of character BBox based on the skin vertex coordinates is enabled");
 
-DECLARE_INT_VARIABLE_IMMEDIATE (ca_SafeReskin, 0, "If this is enabled, the character is reskinned every 2^6 frames even if it's doesn't seem to be required");
+DECLARE_INT_VARIABLE_IMMEDIATE(ca_SafeReskin, 0, "If this is enabled, the character is reskinned every 2^6 frames even if it's doesn't seem to be required");
 
-DECLARE_INT_VARIABLE_IMMEDIATE (ca_PrebuildShadowConnectivity, 0, "If this is enabled, the shadow connectivity is built upon load");
+DECLARE_INT_VARIABLE_IMMEDIATE(ca_PrebuildShadowConnectivity, 0, "If this is enabled, the shadow connectivity is built upon load");
 
-DECLARE_INT_VARIABLE_IMMEDIATE (ca_TestMirror, 0, "The lowest 3 bits determine whether the characters will be mirrored in the corresponding axis");
+DECLARE_INT_VARIABLE_IMMEDIATE(ca_TestMirror, 0, "The lowest 3 bits determine whether the characters will be mirrored in the corresponding axis");
 
-DECLARE_FLOAT_VARIABLE (ca_DrawAnims, 0, "Draws the debug information on the character in realtime");
+DECLARE_FLOAT_VARIABLE(ca_DrawAnims, 0, "Draws the debug information on the character in realtime");
 
-DECLARE_INT_VARIABLE_IMMEDIATE (ca_TickVersion, 1, "Sets the version of blending routine Tick(). Dev-time-only variable");
+DECLARE_INT_VARIABLE_IMMEDIATE(ca_TickVersion, 1, "Sets the version of blending routine Tick(). Dev-time-only variable");
 
-DECLARE_INT_VARIABLE_IMMEDIATE (ca_RestartBehaviour, 0, "0 - restarts the same animation if half of animation has been played; 1 - doesn't restart it at all");
+DECLARE_INT_VARIABLE_IMMEDIATE(ca_RestartBehaviour, 0, "0 - restarts the same animation if half of animation has been played; 1 - doesn't restart it at all");
 
 /*! Controls the presence of an additional directional light, which brings out the bumps on objects in shadows.
 	A radius of 0 disables the light.
@@ -284,10 +284,10 @@ DECLARE_FLOAT_VARIABLE_DUMP(ca_ambient_light_range, 0, "Controls the presence of
 	Initial value = 0.2f */
 DECLARE_FLOAT_VARIABLE_DUMP(ca_ambient_light_intensity, 0.2f, "Controls the intensity of the additional directional light. Right now, we only allow for different gray levels.\nInitial value = 0.2f");
 
-DECLARE_INT_VARIABLE_IMMEDIATE (ca_DebugShaders, 0, "1 - draws a label under each character, saying which shaders it uses");
+DECLARE_INT_VARIABLE_IMMEDIATE(ca_DebugShaders, 0, "1 - draws a label under each character, saying which shaders it uses");
 
-DECLARE_FLOAT_VARIABLE (ca_DeathBlendTime, 0.3, "Specifies the blending time between low-detail dead body skeleton and current skeleton");
+DECLARE_FLOAT_VARIABLE(ca_DeathBlendTime, 0.3, "Specifies the blending time between low-detail dead body skeleton and current skeleton");
 
-DECLARE_INT_VARIABLE_IMMEDIATE (ca_DecalAntiflickerHack, 1, "Enable this to draw decals only during light or fog pass - can be used to reduce decal flickering on characters");
+DECLARE_INT_VARIABLE_IMMEDIATE(ca_DecalAntiflickerHack, 1, "Enable this to draw decals only during light or fog pass - can be used to reduce decal flickering on characters");
 
 DECLARE_FLOAT_VARIABLE(ca_BoundZOffset, 0.0015f, "This is the relative offset of the bound objects with the corresponding flag set. It's a hack to avoid hemlets from penetrating the head when looking at a character from far away");

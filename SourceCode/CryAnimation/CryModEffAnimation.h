@@ -21,7 +21,7 @@ class CryModelAnimationContainer;
 // CCryModEffAnimation contains current state of this layers.
 // It performs animations timing and bone animation calculations. 
 //
-class CCryModEffAnimation:
+class CCryModEffAnimation :
 	public _i_reference_target_t
 {
 protected:
@@ -47,14 +47,14 @@ protected:
 	CryModelState* m_pParent;
 	unsigned m_nStartAnimFlags;
 
-	struct SFlags{
-		unsigned bLoop:1;
+	struct SFlags {
+		unsigned bLoop : 1;
 	};
-	
+
 	SFlags m_uFlags;
 
 	// this calls all the necessary callbacks
-	void OnTimeChanged (int nAnimId, float fPrevTime, float m_fAnimTime,float fSpeed);
+	void OnTimeChanged(int nAnimId, float fPrevTime, float m_fAnimTime, float fSpeed);
 
 	float getTicksPerSecond()const;
 
@@ -69,14 +69,14 @@ protected:
 		bool bRun; // if this is true, the time gets increased with each tick
 		bool bLoop; // if this is true, and bRun, then the time runs within the given loop interval
 
-		bool Tick (float fDeltaTime, bool bFade);
+		bool Tick(float fDeltaTime, bool bFade);
 	};
 	typedef std::vector<FadingAnim> FadingAnimArray;
 	// the died animations
 	FadingAnimArray m_arrFadeAnims;
 
 	// ticks the fading animations and adds them to the animation layer array
-	unsigned TickFadingAnims (float fDelta, float fWeightLeft, std::vector<CAnimationLayerInfo>& arrLayers, bool bFade = true);
+	unsigned TickFadingAnims(float fDelta, float fWeightLeft, std::vector<CAnimationLayerInfo>& arrLayers, bool bFade = true);
 
 	float getBlending()const;
 
@@ -86,7 +86,7 @@ public:
 	class Validator
 	{
 	public:
-		Validator(CCryModEffAnimation* pParent):
+		Validator(CCryModEffAnimation* pParent) :
 			m_pParent(pParent)
 		{
 			m_pParent->selfValidate();
@@ -101,11 +101,11 @@ public:
 
 	void selfValidate()
 	{
-		assert (m_fAnimTime <= m_fStopTime + 0.01f && m_fAnimTime >= m_fStartTime - 0.01f );
+		assert(m_fAnimTime <= m_fStopTime + 0.01f && m_fAnimTime >= m_fStartTime - 0.01f);
 	}
 
 	string dump();
-	unsigned getStartAnimFlags ()const {return m_nStartAnimFlags;}
+	unsigned getStartAnimFlags()const { return m_nStartAnimFlags; }
 
 	static void initClass();
 	static void deinitClass();
@@ -113,20 +113,20 @@ public:
 	CCryModEffAnimation(CryModelState* pParent);
 
 	// advances the current time of the played animation and returns the blending factor by which this animation affects the bone pose
-	unsigned Tick (float deltatime, const std::vector<ICharInstanceSink *>& arrSinks, std::vector<CAnimationLayerInfo>& arrLayers);
+	unsigned Tick(float deltatime, const std::vector<ICharInstanceSink*>& arrSinks, std::vector<CAnimationLayerInfo>& arrLayers);
 
 	void SetNoLoopNoBlendOut();
 	void SetNoLoop();
 
 	// forcibly sets the current time of the animation, in seconds
-	void SetCurrentTime (float fTime);
+	void SetCurrentTime(float fTime);
 	float GetCurrentTime() const { return m_fAnimTime; };
 	void Reset();
-	void StartAnimation(unsigned nAnimID, float fBlendInTime, float fBlendOutTime, CCryModEffAnimation* pSynchronizeWith,float fSpeed, unsigned nStartAnimFlags = 0);
-	void stop ();
+	void StartAnimation(unsigned nAnimID, float fBlendInTime, float fBlendOutTime, CCryModEffAnimation* pSynchronizeWith, float fSpeed, unsigned nStartAnimFlags = 0);
+	void stop();
 	float GetPhase()const;
 
-	float GetTimeTillEnd() {return m_fStopTime - m_fAnimTime;}
+	float GetTimeTillEnd() { return m_fStopTime - m_fAnimTime; }
 
 	// returns the number of any animation currently being played
 	// this can be the current animation, including animation of fadeout, if the 
@@ -134,10 +134,10 @@ public:
 	int GetAnyCurrentAnimation()const;
 
 	// is this animation effector completely stopped?
-  bool IsStopped();
+	bool IsStopped();
 
 	// does this animation effector actively plays some animations?
-	bool isActive ();
+	bool isActive();
 };
 
 TYPEDEF_AUTOPTR(CCryModEffAnimation);

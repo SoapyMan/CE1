@@ -53,10 +53,10 @@ struct aux_bone_info {
 };
 
 struct aux_phys_data {
-	IPhysicalEntity *pPhysEnt;
-	const char *strName;
+	IPhysicalEntity* pPhysEnt;
+	const char* strName;
 	int nBones;
-	aux_bone_info *pauxBoneInfo;
+	aux_bone_info* pauxBoneInfo;
 };
 
 class CryModelSubmesh;
@@ -69,13 +69,13 @@ TYPEDEF_AUTOPTR(CryModelSubmesh);
 // It performs bone loading, character skinning, some physical calculations, rendering character and shadow volumes.
 class CryModelState
 #ifdef _DEBUG
-//	,public IRendererCallbackClient
+	//	,public IRendererCallbackClient
 #endif
 {
-friend class CryModel; 
-friend class CryModelGeometryLoader; 
-friend class CryCharInstance;
-friend class CryModelSubmesh;
+	friend class CryModel;
+	friend class CryModelGeometryLoader;
+	friend class CryCharInstance;
+	friend class CryModelSubmesh;
 public:
 	static void initClass();
 	static void deinitClass();
@@ -83,48 +83,48 @@ public:
 	// this is the array that's returned from the LeafBuffer
 	list2<CMatInfo>* getLeafBufferMaterials();
 
-  CryModelState(CryModel* pMesh);
-  ~CryModelState();
+	CryModelState(CryModel* pMesh);
+	~CryModelState();
 
-  //////////////////////////////////////////////////////////////////////////////////////////
-  // ------------------------------- BASIC CONTROL FUNCS -------------------------------- //
-  //////////////////////////////////////////////////////////////////////////////////////////
-    
-//  void PushEffector(CCryModEffector *eff);      // Puts an effector in list 
-  void ProcessSkinning(const Vec3& t,const Matrix44& mtxModel,int nTemplate, int nLod=-1, bool bForceUpdate=false);
+	//////////////////////////////////////////////////////////////////////////////////////////
+	// ------------------------------- BASIC CONTROL FUNCS -------------------------------- //
+	//////////////////////////////////////////////////////////////////////////////////////////
 
-	void Render(const struct SRendParams & RendParams, Matrix44& mtxObjMatrix, struct CryCharInstanceRenderParams& rCharParams, const Vec3& t);
-  
-  void ProcessAnimations(float deltatime_anim, bool bUpdateBones, CryCharInstance* instance); // Process this model's animations
+  //  void PushEffector(CCryModEffector *eff);      // Puts an effector in list 
+	void ProcessSkinning(const Vec3& t, const Matrix44& mtxModel, int nTemplate, int nLod = -1, bool bForceUpdate = false);
 
-  CryModelState* MakeCopy();    // Makes an exact copy of this 
-                                // model and returns it
+	void Render(const struct SRendParams& RendParams, Matrix44& mtxObjMatrix, struct CryCharInstanceRenderParams& rCharParams, const Vec3& t);
+
+	void ProcessAnimations(float deltatime_anim, bool bUpdateBones, CryCharInstance* instance); // Process this model's animations
+
+	CryModelState* MakeCopy();    // Makes an exact copy of this 
+	// model and returns it
 
 	int numLODs(); // number of LODs in the 0th submesh
 
 	// copies the given leaf buffers to this instance leaf buffers
-	void CopyLeafBuffers (CLeafBuffer** pLeafBuffers);
+	void CopyLeafBuffers(CLeafBuffer** pLeafBuffers);
 
-  ICryBone * GetBoneByName(const char * szBoneName);
-  bool SetAnimationFrame(const char * szString, int nFrame);
+	ICryBone* GetBoneByName(const char* szBoneName);
+	bool SetAnimationFrame(const char* szString, int nFrame);
 
-	void BuildPhysicalEntity(IPhysicalEntity *pent,float mass,int surface_idx,float stiffness_scale, float scale,Vec3 offset, int nLod=0);
-	IPhysicalEntity *CreateCharacterPhysics(IPhysicalEntity *pHost, float mass,int surface_idx,float stiffness_scale, float scale,Vec3 offset, int nLod=0);
-	int CreateAuxilaryPhysics(IPhysicalEntity *pHost, float scale,Vec3 offset, int nLod=0);
-	void SynchronizeWithPhysicalEntity(IPhysicalEntity *pent, const Vec3& posMaster,const Quat& qMaster, Vec3 offset,int iDir=-1);
+	void BuildPhysicalEntity(IPhysicalEntity* pent, float mass, int surface_idx, float stiffness_scale, float scale, Vec3 offset, int nLod = 0);
+	IPhysicalEntity* CreateCharacterPhysics(IPhysicalEntity* pHost, float mass, int surface_idx, float stiffness_scale, float scale, Vec3 offset, int nLod = 0);
+	int CreateAuxilaryPhysics(IPhysicalEntity* pHost, float scale, Vec3 offset, int nLod = 0);
+	void SynchronizeWithPhysicalEntity(IPhysicalEntity* pent, const Vec3& posMaster, const Quat& qMaster, Vec3 offset, int iDir = -1);
 	// Forces skinning on the next frame
 	void ForceReskin();
-	IPhysicalEntity *RelinquishCharacterPhysics();
-	void SetCharacterPhysParams(float mass,int surface_idx,float scale) { m_fMass=mass; m_iSurfaceIdx=surface_idx; m_fScale=scale; }
-  void ProcessPhysics(float fDeltaTimePhys, int nNeff);
-	IPhysicalEntity *GetCharacterPhysics() { return m_pCharPhysics; }
-	IPhysicalEntity *GetCharacterPhysics(const char *pRootBoneName);
-	IPhysicalEntity *GetCharacterPhysics(int iAuxPhys);
-	void DestroyCharacterPhysics(int iMode=0);
+	IPhysicalEntity* RelinquishCharacterPhysics();
+	void SetCharacterPhysParams(float mass, int surface_idx, float scale) { m_fMass = mass; m_iSurfaceIdx = surface_idx; m_fScale = scale; }
+	void ProcessPhysics(float fDeltaTimePhys, int nNeff);
+	IPhysicalEntity* GetCharacterPhysics() { return m_pCharPhysics; }
+	IPhysicalEntity* GetCharacterPhysics(const char* pRootBoneName);
+	IPhysicalEntity* GetCharacterPhysics(int iAuxPhys);
+	void DestroyCharacterPhysics(int iMode = 0);
 
-	void ResetNonphysicalBoneRotations (int nLOD, float fBlend);
+	void ResetNonphysicalBoneRotations(int nLOD, float fBlend);
 
-  bool IsAnimStopped();
+	bool IsAnimStopped();
 
 	void DumpState();
 
@@ -132,37 +132,37 @@ public:
 	{
 		m_nLastSkinBBoxUpdateFrameId = 0;
 	}
-  //////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////////
 
-  
-  //////////////////////////////////////////////////////////////////////////////////////////
-  // ------------------------------- EFFECTORS FUNCTIONS -------------------------------- //
-  //////////////////////////////////////////////////////////////////////////////////////////
-  //                                            
-  //////////////////////////////////////////////////////////////////////////////////////////
-  // RunAnimation:                                    
-  //   Searchs for the animation in animations list and starts palying it.        
-  //////////////////////////////////////////////////////////////////////////////////////////
-	bool RunAnimation (const char * szAnimName, const struct CryCharAnimationParams& Params, float fSpeed);
-	bool RunAnimation (int nAnimID, const CryCharAnimationParams& Params, float fSpeed, bool bInternal = false);
-	bool RunMorph (const char* szMorphTarget, const CryCharMorphParams& Params);
+
+	//////////////////////////////////////////////////////////////////////////////////////////
+	// ------------------------------- EFFECTORS FUNCTIONS -------------------------------- //
+	//////////////////////////////////////////////////////////////////////////////////////////
+	//                                            
+	//////////////////////////////////////////////////////////////////////////////////////////
+	// RunAnimation:                                    
+	//   Searchs for the animation in animations list and starts palying it.        
+	//////////////////////////////////////////////////////////////////////////////////////////
+	bool RunAnimation(const char* szAnimName, const struct CryCharAnimationParams& Params, float fSpeed);
+	bool RunAnimation(int nAnimID, const CryCharAnimationParams& Params, float fSpeed, bool bInternal = false);
+	bool RunMorph(const char* szMorphTarget, const CryCharMorphParams& Params);
 	//! Finds the morph with the given id and sets its relative time.
 	//! Returns false if the operation can't be performed (no morph)
-	bool StopAnimation (int nLayer);
+	bool StopAnimation(int nLayer);
 	void StopAllMorphs();
 	void FreezeAllMorphs();
 
- 
+
 
 	// returns the animation currently being played in the given layer, or -1
-	int GetCurrentAnimation (unsigned nLayer);
+	int GetCurrentAnimation(unsigned nLayer);
 
-	bool RunMorph (int nMorphTargetId, float fBlendInTime, float fBlendOutTime);
-	
+	bool RunMorph(int nMorphTargetId, float fBlendInTime, float fBlendOutTime);
+
 	// Enables/Disables the Default Idle Animation restart.
 	// If this feature is enabled, then the last looped animation will be played back after the current (non-loop) animation is finished.
 	// Only those animations started with the flag bTreatAsDefaultIdleAnimation == true will be taken into account
-	void EnableIdleAnimationRestart (unsigned nLayer, bool bEnable = true);
+	void EnableIdleAnimationRestart(unsigned nLayer, bool bEnable = true);
 
 	// forgets about all default idle animations
 	void ForgetDefaultIdleAnimations();
@@ -170,66 +170,66 @@ public:
 	// sets the given aniimation to the given layer as the default
 	void SetDefaultIdleAnimation(unsigned nLayer, const char* szAnimName);
 
-//  void ChangeBlendSpeedFactor(float factor, int layer);
-  //                                            
-  // ==================================================================================== //
-  // ResetAllAnimations:                                                                  //
-  //   Stops all running anims and sets the model to the default pose                     //
-  // ==================================================================================== //
-  void ResetAllAnimations();
-  //                                            //
-  //////////////////////////////////////////////////////////////////////////////////////////
-	bool AddImpact(const int partid, vectorf point,vectorf impact,float scale);
+	//  void ChangeBlendSpeedFactor(float factor, int layer);
+	  //                                            
+	  // ==================================================================================== //
+	  // ResetAllAnimations:                                                                  //
+	  //   Stops all running anims and sets the model to the default pose                     //
+	  // ==================================================================================== //
+	void ResetAllAnimations();
+	//                                            //
+	//////////////////////////////////////////////////////////////////////////////////////////
+	bool AddImpact(const int partid, vectorf point, vectorf impact, float scale);
 	int TranslatePartIdToDeadBody(int partid);
 	//////////////////////////////////////////////////////////////////////////////////////////
-	void SetLimbIKGoal(int limbid, float scale, vectorf ptgoal=vectorf(1E10f,0,0), int ik_flags=0, float addlen=0, vectorf goal_normal=vectorf(zero));
-	vectorf GetLimbEndPos(int limbid,float scale);
+	void SetLimbIKGoal(int limbid, float scale, vectorf ptgoal = vectorf(1E10f, 0, 0), int ik_flags = 0, float addlen = 0, vectorf goal_normal = vectorf(zero));
+	vectorf GetLimbEndPos(int limbid, float scale);
 	//////////////////////////////////////////////////////////////////////////////////////////
 
 	// adds all heat sources ( currently head and heart) to the given object via AddHeatSource interface (member function)
-	void UpdateHeatSources (CCObject * pObj, const SRendParams & RendParams);
+	void UpdateHeatSources(CCObject* pObj, const SRendParams& RendParams);
 
 	// updates the dynamically (via ICryCharInstance at runtime) bound lights
-	void UpdateDynBoundLights (CCObject * pObj, const SRendParams & RendParams);
+	void UpdateDynBoundLights(CCObject* pObj, const SRendParams& RendParams);
 
 	// adds a new dynamically bound light
-	CDLight* AddDynBoundLight (ICryCharInstance* pParent,CDLight* pDLight, unsigned nBone, bool bCopyLight);
+	CDLight* AddDynBoundLight(ICryCharInstance* pParent, CDLight* pDLight, unsigned nBone, bool bCopyLight);
 	// removes the dynamically bound light
-	void RemoveDynBoundLight (CDLight* pDLight);
+	void RemoveDynBoundLight(CDLight* pDLight);
 	unsigned numDynBoundLights()const;
 	CDLight* getDynBoundLight(unsigned i);
 	void RemoveAllDynBoundLights();
 	// checks if such light is already bound
-	bool IsDynLightBound (CDLight*pDLight);
+	bool IsDynLightBound(CDLight* pDLight);
 
 	// Interface for the renderer - returns the CDLight describing the light in this character;
 	// returns NULL if there's no light with such index
-	const CDLight* getGlobalBoundLight (unsigned nIndex);
+	const CDLight* getGlobalBoundLight(unsigned nIndex);
 
 
 	//! render character's shadow volume 
-	void	RenderShadowVolumes(const SRendParams *rParams, int nLimitLOD);
-  
+	void	RenderShadowVolumes(const SRendParams* rParams, int nLimitLOD);
+
 	// Set the current time of the given layer, in seconds
-	void SetLayerTime (unsigned nLayer, float fTimeSeconds);
-	float GetLayerTime (unsigned nLayer) const;
+	void SetLayerTime(unsigned nLayer, float fTimeSeconds);
+	float GetLayerTime(unsigned nLayer) const;
 
 	// checks for possible memory corruptions in this object and its children
-	void SelfValidate ()const
+	void SelfValidate()const
 #ifndef _DEBUG
 	{}
 #endif
-		;
+	;
 
-	unsigned getInstanceNumber()const {return m_nInstanceNumber;}
+	unsigned getInstanceNumber()const { return m_nInstanceNumber; }
 	// returns the root bone
-	inline CryBone* getRootBone(){return m_arrBones.empty()?NULL:&m_arrBones[0];}
-	inline const CryBone* getRootBone()const{return m_arrBones.empty()?NULL:&m_arrBones[0];}
+	inline CryBone* getRootBone() { return m_arrBones.empty() ? NULL : &m_arrBones[0]; }
+	inline const CryBone* getRootBone()const { return m_arrBones.empty() ? NULL : &m_arrBones[0]; }
 
 	DECLARE_ARRAY_GETTER_METHODS(CryBone, Bone, Bones, m_arrBones)
 
 	// returns the approximate bounding box for this character in the passed in vectors
-	void GetBoundingBox (Vec3& vMin, Vec3& vMax) const;
+	void GetBoundingBox(Vec3& vMin, Vec3& vMax) const;
 
 	Vec3 GetCenter()const;
 
@@ -247,7 +247,7 @@ public:
 	void CreateBones();
 
 	// Adds a decal to the character
-	void AddDecal (CryEngineDecalInfo& Decal);
+	void AddDecal(CryEngineDecalInfo& Decal);
 	// cleans up all decals
 	void ClearDecals();
 	void DumpDecals();
@@ -258,32 +258,32 @@ public:
 	void SetPoseFromBoneInfos();
 
 	// given the bone index, (INDEX, NOT ID), returns this bone's parent index
-	int getBoneParentIndex (int nBoneIndex);
+	int getBoneParentIndex(int nBoneIndex);
 	int getBoneParentIndex(const CryBone* pBone) { return getBoneParentIndex(int(pBone - getBones())); }
-	int getBonePhysParentIndex (int nBoneIndex, int nLod=0); // same, but finds the first ancestor that has physical geometry
-	int getBonePhysChildIndex (int nBoneIndex, int nLod=0);
+	int getBonePhysParentIndex(int nBoneIndex, int nLod = 0); // same, but finds the first ancestor that has physical geometry
+	int getBonePhysChildIndex(int nBoneIndex, int nLod = 0);
 
-	unsigned numBoneChildren (int nBoneIndex) {return getBoneInfo(nBoneIndex)->numChildren();}
+	unsigned numBoneChildren(int nBoneIndex) { return getBoneInfo(nBoneIndex)->numChildren(); }
 
 	//returns the i-th child of the given bone
-	int getBoneChildIndex (int nBone, int i);
-	CryBone* getBoneChild (int nBone, int i);
+	int getBoneChildIndex(int nBone, int i);
+	CryBone* getBoneChild(int nBone, int i);
 
 	//returns the j-th child of i-th child of the given bone
-	int getBoneGrandChildIndex (int nBone, int i, int j);
-	CryBone* getBoneGrandChild (int nBone, int i, int j);
+	int getBoneGrandChildIndex(int nBone, int i, int j);
+	CryBone* getBoneGrandChild(int nBone, int i, int j);
 
-	CryBoneInfo* getBoneInfo(int nBone) {return &GetModel()->getBoneInfo(nBone);}
-	const CryBoneInfo* getBoneInfo(int nBone) const {return &GetModel()->getBoneInfo(nBone);}
+	CryBoneInfo* getBoneInfo(int nBone) { return &GetModel()->getBoneInfo(nBone); }
+	const CryBoneInfo* getBoneInfo(int nBone) const { return &GetModel()->getBoneInfo(nBone); }
 	CryBoneInfo* getBoneInfo(const CryBone* pBone) { return getBoneInfo(int(pBone - &getBone(0))); }
 	const CryBoneInfo* getBoneInfo(const CryBone* pBone) const { return getBoneInfo(int(pBone - getBones())); }
 
 	void setBoneParent();
 
-	ICharInstanceSink* getAnimationEventSink (int nAnimId);
-	void setAnimationEventSink (int nAnimId, ICharInstanceSink* pSink);
+	ICharInstanceSink* getAnimationEventSink(int nAnimId);
+	void setAnimationEventSink(int nAnimId, ICharInstanceSink* pSink);
 	void removeAllAnimationEvents();
-	void removeAnimationEventSink(ICharInstanceSink * pCharInstanceSink);
+	void removeAnimationEventSink(ICharInstanceSink* pCharInstanceSink);
 
 	CryModel* getAnimationSet()
 	{
@@ -297,12 +297,12 @@ public:
 	typedef std::vector<AnimEvent> AnimEventArray;
 
 	AnimEventArray& getAnimEvents(int nAnimId);
-	void addAnimEvent (int nAnimId, int nFrame, AnimSinkEventData UserData);
-	void removeAnimEvent (int nAnimId, int nFrame, AnimSinkEventData UserData);
+	void addAnimEvent(int nAnimId, int nFrame, AnimSinkEventData UserData);
+	void removeAnimEvent(int nAnimId, int nFrame, AnimSinkEventData UserData);
 
-	const Matrix44* getBoneGlobalMatrices() const {return &m_arrBoneGlobalMatrices[0];}
-	const Matrix44& getBoneMatrixGlobal (int nBone) const {return m_arrBoneGlobalMatrices[nBone];}
-	Matrix44& getBoneMatrixGlobal (int nBone) {return m_arrBoneGlobalMatrices[nBone];}
+	const Matrix44* getBoneGlobalMatrices() const { return &m_arrBoneGlobalMatrices[0]; }
+	const Matrix44& getBoneMatrixGlobal(int nBone) const { return m_arrBoneGlobalMatrices[nBone]; }
+	Matrix44& getBoneMatrixGlobal(int nBone) { return m_arrBoneGlobalMatrices[nBone]; }
 	Matrix44& getBoneMatrixGlobal(const CryBone* pBone) { return getBoneMatrixGlobal(int(pBone - getBones())); }
 
 	// calculates the global matrices
@@ -310,7 +310,7 @@ public:
 	void UpdateBoneMatricesGlobal();
 
 	// Replaces each bone global matrix with the relative matrix.
-	void ConvertBoneGlobalToRelativeMatrices ();
+	void ConvertBoneGlobalToRelativeMatrices();
 
 	// Multiplies each bone global matrix with the parent global matrix,
 	// and calculates the relative-to-default-pos matrix. This is essentially
@@ -322,19 +322,19 @@ public:
 	void debugDrawBones(const Matrix44* pModelMatrix = NULL);
 	void debugDrawDynBoundLights(const Matrix44* pModelMatrix);
 
-	void debugDrawBoundingBox (const Matrix44* pModelMatrix, int nBBoxSegments = 1);
+	void debugDrawBoundingBox(const Matrix44* pModelMatrix, int nBBoxSegments = 1);
 
 	// calculates the mem usage
 	void GetSize(ICrySizer* pSizer);
 
 
-	void setAnimationSpeed (unsigned nLayer, float fSpeed);
-	float getAnimationSpeed (unsigned nLayer);
+	void setAnimationSpeed(unsigned nLayer, float fSpeed);
+	float getAnimationSpeed(unsigned nLayer);
 
-	const CryAABB& getBBox() const{return m_BBox;}
+	const CryAABB& getBBox() const { return m_BBox; }
 	void InitBBox();
 	// notifies the renderer that the character will soon be rendered
-	void PreloadResources ( float fDistance, float fTime, int nFlags);
+	void PreloadResources(float fDistance, float fTime, int nFlags);
 
 	// the model that's coherent with the current model state: bones etc. are taken from there
 	CryModel* GetModel();
@@ -345,29 +345,29 @@ public:
 	// submesh creation/destruction is heavy operations, so the clients must use they rarely,
 	// and set visible/invisible when they need to turn them on/off
 	// But creating many submeshes is memory-consuming so the number of them must be kept low at all times
-	CryModelSubmesh* AddSubmesh (ICryCharModel* pModel, bool bVisible = false);
-	CryModelSubmesh* SetSubmesh (unsigned nSlot, ICryCharModel* pModel, bool bVisible = false);
-	CryModelSubmesh* SetSubmesh (unsigned nSlot, CryModel* pModel, bool bVisible = false);
-	CryModelSubmesh* AddSubmesh (CryModel* pModel, bool bVisible = false);
+	CryModelSubmesh* AddSubmesh(ICryCharModel* pModel, bool bVisible = false);
+	CryModelSubmesh* SetSubmesh(unsigned nSlot, ICryCharModel* pModel, bool bVisible = false);
+	CryModelSubmesh* SetSubmesh(unsigned nSlot, CryModel* pModel, bool bVisible = false);
+	CryModelSubmesh* AddSubmesh(CryModel* pModel, bool bVisible = false);
 
 	// removes submesh from the character
-	void RemoveSubmesh (ICryCharSubmesh* pSubmesh);
-	void RemoveSubmesh (unsigned nSlot);
+	void RemoveSubmesh(ICryCharSubmesh* pSubmesh);
+	void RemoveSubmesh(unsigned nSlot);
 
 	// enumeration of submeshes
-	size_t NumSubmeshes() {return m_arrSubmeshes.size();}
+	size_t NumSubmeshes() { return m_arrSubmeshes.size(); }
 	ICryCharSubmesh* GetSubmesh(unsigned i);
 	CryModelSubmesh* GetCryModelSubmesh(unsigned i);
 
 	CryModel* GetMesh();
 
 	// returns true if there are no submeshes yet
-	bool IsEmpty()const {return m_arrSubmeshes.empty();}
+	bool IsEmpty()const { return m_arrSubmeshes.empty(); }
 
-	bool SetShaderTemplateName (const char *TemplName, int Id, const char *ShaderName,IMatInfo *pCustomMaterial,unsigned nFlags);
-	CLeafBuffer* GetLeafBuffer ();
+	bool SetShaderTemplateName(const char* TemplName, int Id, const char* ShaderName, IMatInfo* pCustomMaterial, unsigned nFlags);
+	CLeafBuffer* GetLeafBuffer();
 
-	void SetShaderFloat(const char *Name, float fVal, const char *ShaderName=NULL);
+	void SetShaderFloat(const char* Name, float fVal, const char* ShaderName = NULL);
 
 
 private:
@@ -383,72 +383,72 @@ private:
 	// updates the *ModEff* - adds the given delta to the current time,
 	// calls the callbacks, etc. Returns the array describing the updated anim layers,
 	// it can be applied to the bones
-	void UpdateAnimatedEffectors (float fDeltaTimeSec, ActiveLayerArray& arrActiveLayers);
+	void UpdateAnimatedEffectors(float fDeltaTimeSec, ActiveLayerArray& arrActiveLayers);
 
 	// updates the bone matrices using the given array of animations -
 	// applies the animation layers to the bones
-	void UpdateBones (const ActiveLayerArray& arrActiveLayers);
+	void UpdateBones(const ActiveLayerArray& arrActiveLayers);
 
-	void ApplyAnimationToBones (CAnimationLayerInfo AnimLayer);
-	void ApplyAnimationsToBones (const CAnimationLayerInfo* pAnims, unsigned numAnims);
+	void ApplyAnimationToBones(CAnimationLayerInfo AnimLayer);
+	void ApplyAnimationsToBones(const CAnimationLayerInfo* pAnims, unsigned numAnims);
 
 	// out of the bone positions, calculates the bounding box for this character and puts it
 	// into m_vBoxMin,m_vBoxMax
-  void UpdateBBox();
-  
+	void UpdateBBox();
+
 	void ValidateBBox();
 
 
 	// renders the decals - adds the render element to the renderer
-	void AddDecalRenderData (CCObject *obj, const SRendParams & RendParams);
-	void AddFxRenderData (CCObject *obj, const SRendParams & RendParams);
+	void AddDecalRenderData(CCObject* obj, const SRendParams& RendParams);
+	void AddFxRenderData(CCObject* obj, const SRendParams& RendParams);
 
-	CryCharFxTrail* NewFxTrail (unsigned nSlot, const struct CryCharFxTrailParams& rParams);
+	CryCharFxTrail* NewFxTrail(unsigned nSlot, const struct CryCharFxTrailParams& rParams);
 	void RemoveFxTrail(unsigned nSlot);
 
 	// if bForceUpdate , then all the requested buffers are updated immediately (delayed update is not used), every frame
-  void Deform( int nLodToDeform, unsigned nFlags);
+	void Deform(int nLodToDeform, unsigned nFlags);
 
 	// skins the modelstate into the g_Temp (reserving it appropriately) if necessary
 	// returns the pointer to the deformed vertices (just the geometry info get verts if the model isn't deformable)
 	// returns NULL if can't deform
-  const Vec3* DeformForShadowVolume( int nLodToDeform);
+	const Vec3* DeformForShadowVolume(int nLodToDeform);
 
 	// skins this model (into the given temporary storage, if needed)
 	// if no storage is provided, then allocates its own storage (g_Temp.data())
 	// the normals must already be valid, they'll be only slightly modified
-	const Vec3* SelfSkin(int nLOD, Vec3*pBuffer = NULL, Vec3dA16* pNormalsA16 = NULL);
+	const Vec3* SelfSkin(int nLOD, Vec3* pBuffer = NULL, Vec3dA16* pNormalsA16 = NULL);
 
-	Vec3dA16* SelfNormalSkin(int nLOD, Vec3dA16*pBuffer);
+	Vec3dA16* SelfNormalSkin(int nLOD, Vec3dA16* pBuffer);
 
-  void DeformFirst();
+	void DeformFirst();
 
-	void setScale (const Vec3d& vScale);
+	void setScale(const Vec3d& vScale);
 
 	// applies necessary offsets to the root bone (only the relative to parent matrix)
 	void AddModelOffsets(CryBone* pBone);
 
 	// the record about animation that may be kept and played back later
-	struct AnimationRecord:public CryCharAnimationParams
+	struct AnimationRecord :public CryCharAnimationParams
 	{
-		AnimationRecord(){}
-		AnimationRecord (int _nAnimId, const CryCharAnimationParams& Params, float _fSpeed):
-		nAnimId(_nAnimId), fSpeed(_fSpeed),
-			CryCharAnimationParams(Params){}
+		AnimationRecord() {}
+		AnimationRecord(int _nAnimId, const CryCharAnimationParams& Params, float _fSpeed) :
+			nAnimId(_nAnimId), fSpeed(_fSpeed),
+			CryCharAnimationParams(Params) {}
 
-			void assign (int _nAnimId, const CryCharAnimationParams& Params, float _fSpeed)
-			{
-				*static_cast<CryCharAnimationParams*>(this) = Params;
-				nAnimId = _nAnimId;
-				fSpeed  = _fSpeed;
-			}
+		void assign(int _nAnimId, const CryCharAnimationParams& Params, float _fSpeed)
+		{
+			*static_cast<CryCharAnimationParams*>(this) = Params;
+			nAnimId = _nAnimId;
+			fSpeed = _fSpeed;
+		}
 
-			int nAnimId;
-			float fSpeed;
+		int nAnimId;
+		float fSpeed;
 	};
 	typedef std::deque<AnimationRecord> AnimationRecordArray;
 
-	
+
 	// effector layer. On some layers, the effectors may not be present (NULL)
 	// On some layers, there may be a default idle animation. This animation is played
 	// back when there's nothing else to play.
@@ -467,7 +467,7 @@ private:
 		// the queue of animations that must be started upon the end of current animation
 		AnimationRecordArray queDelayed;
 
-		AnimationLayer ();
+		AnimationLayer();
 
 		// forgets about the default idle animation
 		void ForgetDefaultIdleAnimation();
@@ -490,13 +490,13 @@ private:
 
 	// This is the global matrix that is passed to the character in ProcessSkinning() by the renderer from EF_ObjectChange()
 	// It is used by the decal manager to calculate the local coordinates of the hit point
-  Matrix44 m_ModelMatrix44;
+	Matrix44 m_ModelMatrix44;
 
-  CryAABB m_BBox;
+	CryAABB m_BBox;
 
-	CCryModEffIKSolver *m_pIKEffectors[4];
+	CCryModEffIKSolver* m_pIKEffectors[4];
 	Vec3 m_IKpos0[4];
-	IPhysicalEntity *m_pCharPhysics;
+	IPhysicalEntity* m_pCharPhysics;
 	aux_phys_data m_auxPhys[8];
 	int m_nAuxPhys;
 	char m_bHasPhysics, m_bPhysicsAwake, m_bPhysicsWasAwake;
@@ -504,19 +504,19 @@ private:
 	float m_fScale;
 	float m_fMass;
 	int m_iSurfaceIdx;
-	float m_fPhysBlendTime,m_fPhysBlendMaxTime,m_frPhysBlendMaxTime;
+	float m_fPhysBlendTime, m_fPhysBlendMaxTime, m_frPhysBlendMaxTime;
 
-  int m_nLodLevel;
+	int m_nLodLevel;
 
-  int GetDamageTableValue (int nId);
+	int GetDamageTableValue(int nId);
 
 	// based on the distance from camera, determines the best LOD
 	// for this character and memorizes it in the m_nLodLevel member
-  void CalculateLOD (float fDistance);
+	void CalculateLOD(float fDistance);
 
-	enum {g_nMaxLods = 3};
+	enum { g_nMaxLods = 3 };
 
-  bool IsCharacterActive();
+	bool IsCharacterActive();
 
 	// morphs the LOD 0 into the given destination (already skinned) buffer
 	// pDstNormlas can be non-NULL, in which case the normals are (fakely) modified
@@ -526,7 +526,7 @@ private:
 	// cached bones for heat source calculations
 	//CryBone *m_pBoneHead, *m_pBoneSpine2, *m_pBoneLeftArm;
 
-	CryCharParticleManager* getParticleManager() {return &m_ParticleManager;}
+	CryCharParticleManager* getParticleManager() { return &m_ParticleManager; }
 
 
 	// the lights attached to bones; their properties get
@@ -547,8 +547,8 @@ protected:
 		// need to be called
 		nFlagNeedBoneUpdate = 1,
 		// if this is set, then the animation was applied after the last skinning
-		nFlagNeedReskinLOD  = 1<<1,
-		nFlagsNeedReskinAllLODs = nFlagNeedReskinLOD | (nFlagNeedReskinLOD<<1) | (nFlagNeedReskinLOD<<2)
+		nFlagNeedReskinLOD = 1 << 1,
+		nFlagsNeedReskinAllLODs = nFlagNeedReskinLOD | (nFlagNeedReskinLOD << 1) | (nFlagNeedReskinLOD << 2)
 
 	};
 	// misc. internal flags - combination of FlagEnum values

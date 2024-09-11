@@ -27,14 +27,14 @@ class CryModelGeometryLoader
 {
 	// class CryModel is the only client of this class for now
 public:
-	CryModelGeometryLoader ();
-	~CryModelGeometryLoader ();
+	CryModelGeometryLoader();
+	~CryModelGeometryLoader();
 
 	// frees all resources allocated within this class
 	void clear();
-	
+
 	// parses the given file, returns true if successful
-	bool load (CryModel* pModel, CChunkFileReader* pReader, unsigned nLOD, float fScale);
+	bool load(CryModel* pModel, CChunkFileReader* pReader, unsigned nLOD, float fScale);
 
 	// returns true if the bone infos have the initial position set
 	bool hasBoneInfoInitPos();
@@ -61,22 +61,22 @@ protected:
 
 	// loads the bone name list into m_arrGeomBoneNameTable
 	// m_arrGeomBoneNameTable points to the chunk data places where the actual names are; so no need to deallocate the strings
-	bool loadBoneNameList (const CHUNK_HEADER& chunkHeader, const void* pChunk, unsigned nChunkSize);
+	bool loadBoneNameList(const CHUNK_HEADER& chunkHeader, const void* pChunk, unsigned nChunkSize);
 
 	// loads the bone light binding array
-	bool loadBoneLightBinding (const CHUNK_HEADER& chunkHeader, const void* pChunk, unsigned nChunkSize);
+	bool loadBoneLightBinding(const CHUNK_HEADER& chunkHeader, const void* pChunk, unsigned nChunkSize);
 
 	// loads the bone light binding array
-	bool loadBoneInitialPos (const CHUNK_HEADER& chunkHeader, const void* pChunk, unsigned nChunkSize);
+	bool loadBoneInitialPos(const CHUNK_HEADER& chunkHeader, const void* pChunk, unsigned nChunkSize);
 
 	// Attempts to load the material from the given material chunk
 	// loads the material from the material chunk to the given structure.
 	// returns true if the chunk was recognized and the material was loaded
-	bool loadMaterial (CHUNK_HEADER* pMaterialChunk, unsigned nChunkSize, MAT_ENTITY& rMaterial, class CMatEntityNameTokenizer& mt);
+	bool loadMaterial(CHUNK_HEADER* pMaterialChunk, unsigned nChunkSize, MAT_ENTITY& rMaterial, class CMatEntityNameTokenizer& mt);
 
-	bool loadBoneMesh (const CHUNK_HEADER& chunkHeader, const void* pChunk, unsigned nChunkSize);
-	bool loadBoneAnim (const CHUNK_HEADER& chunkHeader, const void* pChunk, unsigned nChunkSize);
-	bool loadBones (const BONEANIM_CHUNK_DESC* pChunk, unsigned nChunkSize);
+	bool loadBoneMesh(const CHUNK_HEADER& chunkHeader, const void* pChunk, unsigned nChunkSize);
+	bool loadBoneAnim(const CHUNK_HEADER& chunkHeader, const void* pChunk, unsigned nChunkSize);
+	bool loadBones(const BONEANIM_CHUNK_DESC* pChunk, unsigned nChunkSize);
 	// for LODs > 0, builds the m_arrTempBoneIdToIndex by matching the bone names
 	// against the bone names in the already loaded LOD 0
 	void buildBoneIndicesByNames();
@@ -86,7 +86,7 @@ protected:
 	// returns the file path tot he file being currently loaded
 	const char* getFilePathCStr()const;
 
-	void indicateProgress (const char* szMsg = NULL);
+	void indicateProgress(const char* szMsg = NULL);
 protected:
 	// this will contain the information about the loaded bones, if any
 	CryBoneHierarchyLoader m_BoneLoader;
@@ -118,12 +118,12 @@ protected:
 	int m_nFirstMat;
 
 	bool m_bFirstTimeWarningBoneGeometryMtl; // if set to true, we can issue this warning and set it to false; when it's false, we don't issue this warning to keep the extra warning number low
-  bool m_bMeshFound;     // mesh chunk found in the file
-  bool m_bGeometryFound; // mesh chunk found in the file
+	bool m_bMeshFound;     // mesh chunk found in the file
+	bool m_bGeometryFound; // mesh chunk found in the file
 	bool m_bBonesFound;    // bone animation chunk found in the file
 	unsigned m_nGeometryChunkID; // the id used to bind the morph targets
 
-	IGeomManager *m_pPhysicalGeometryManager;
+	IGeomManager* m_pPhysicalGeometryManager;
 
 	CChunkFileReader_AutoPtr m_pReader;
 	CryModel* m_pModel;

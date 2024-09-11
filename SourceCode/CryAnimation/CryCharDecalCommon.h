@@ -26,9 +26,9 @@ struct CryCharDecalVertex
 	// the new UV coordinates
 	CryUV uvNew;
 
-	CryCharDecalVertex () {}
-	CryCharDecalVertex (unsigned nOrigVertex, float u, float v):
-		nVertex (nOrigVertex)
+	CryCharDecalVertex() {}
+	CryCharDecalVertex(unsigned nOrigVertex, float u, float v) :
+		nVertex(nOrigVertex)
 	{
 		uvNew.u = u;
 		uvNew.v = v;

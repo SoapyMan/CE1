@@ -4,11 +4,11 @@
 struct CryCharInstanceRenderParams
 {
 	CFColor m_Color;
-	int m_nFlags; 
+	int m_nFlags;
 	CDLight m_ambientLight;
 
 	// creates a new CCObject with the most common parameters
-	CCObject* NewCryCharCCObject(const struct SRendParams & RendParams, const Matrix44& mtxObjMatrix, IDeformableRenderMesh* pCharInstance);
+	CCObject* NewCryCharCCObject(const struct SRendParams& RendParams, const Matrix44& mtxObjMatrix, IDeformableRenderMesh* pCharInstance);
 };
 
 

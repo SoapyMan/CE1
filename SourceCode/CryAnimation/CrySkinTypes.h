@@ -37,17 +37,17 @@ struct CrySkinRigidVertex
 	Vec3 pt;
 	unsigned nDest; // the destination vertex index
 
-	CrySkinRigidVertex(){}
+	CrySkinRigidVertex() {}
 
 	// initializes the structure given the offset from the bone and the destination vertex index
-	CrySkinRigidVertex (const Vec3& _ptOffset, unsigned _nDest):
-		pt (_ptOffset),
-		nDest (_nDest)
-		{
-		}
+	CrySkinRigidVertex(const Vec3& _ptOffset, unsigned _nDest) :
+		pt(_ptOffset),
+		nDest(_nDest)
+	{
+	}
 
 	// constructs the packed rigid vertex data from this structure
-	void build (CrySkinVertexAligned& vDst)const
+	void build(CrySkinVertexAligned& vDst)const
 	{
 		vDst.pt = pt;
 		vDst.nDest = nDest;
@@ -59,29 +59,29 @@ struct CrySkinRigidVertex
 // typedef SPipTangents SPipTangentsA16;
 struct SPipTangentsA16
 {
-  Vec3 m_Tangent;
+	Vec3 m_Tangent;
 	unsigned int m_Pad0;
-  Vec3 m_Binormal;
+	Vec3 m_Binormal;
 	unsigned int m_Pad1;
-  Vec3 m_TNormal;
+	Vec3 m_TNormal;
 	unsigned int m_Pad2;
 
 	inline SPipTangentsA16& operator = (const SPipTangents& right)
 	{
-		m_Tangent  = right.m_Tangent;
+		m_Tangent = right.m_Tangent;
 		m_Binormal = right.m_Binormal;
-		m_TNormal  = right.m_TNormal;
+		m_TNormal = right.m_TNormal;
 		return *this;
 	}
 
-	inline void copyTo (SPipTangents* right)
+	inline void copyTo(SPipTangents* right)
 	{/*
 #ifdef DO_ASM
-    _asm
+	_asm
 		{
 			mov EBX, this
 			mov EDX, right
-			
+
 			mov EAX, [EBX]
 			mov [EDX], EAX
 			mov EAX, [EBX+4]
@@ -105,10 +105,10 @@ struct SPipTangentsA16
 		}
 #else
 		*/
-		right->m_Tangent  = m_Tangent;
+		right->m_Tangent = m_Tangent;
 		right->m_Binormal = m_Binormal;
-		right->m_TNormal  = m_TNormal;
-//#endif
+		right->m_TNormal = m_TNormal;
+		//#endif
 	}
 };
 
@@ -133,18 +133,18 @@ struct CrySkinRigidBaseInfo
 	Vec3 ptBinormal;
 	unsigned nDest;
 
-	CrySkinRigidBaseInfo (){}
-	CrySkinRigidBaseInfo (const Matrix44& matInvDef, const TangData& rBasis, unsigned _nDest):
-	ptTangent (matInvDef.TransformVectorOLD(rBasis.tangent)),
-	ptBinormal(matInvDef.TransformVectorOLD(rBasis.binormal)),
-	nDest (_nDest)
+	CrySkinRigidBaseInfo() {}
+	CrySkinRigidBaseInfo(const Matrix44& matInvDef, const TangData& rBasis, unsigned _nDest) :
+		ptTangent(matInvDef.TransformVectorOLD(rBasis.tangent)),
+		ptBinormal(matInvDef.TransformVectorOLD(rBasis.binormal)),
+		nDest(_nDest)
 	{
 
 	}
 
 	// constructs the packed representation of the base: uses pDst[0] for tangent and destination
 	// vertex, and pDst[1] for binormal. Does not set the additional field of the pDst[1]
-	void build (CrySkinVertexAligned* pDst)const
+	void build(CrySkinVertexAligned* pDst)const
 	{
 		pDst[0].pt = ptTangent;
 		// we multiply to get the actual offset (to avoid multiplication in assembly)
@@ -157,21 +157,21 @@ struct CrySkinRigidBaseInfo
 
 //////////////////////////////////////////////////////////////////////////
 // Unpacked smooth vertex structure
-struct CrySkinSmoothVertex: public CrySkinRigidVertex
+struct CrySkinSmoothVertex : public CrySkinRigidVertex
 {
 	float fWeight;// the weight of the point
 
-	CrySkinSmoothVertex(){}
+	CrySkinSmoothVertex() {}
 
 	// initializes this smooth vertex structure
-	CrySkinSmoothVertex (const CryLink& rLink, unsigned _nDest):
+	CrySkinSmoothVertex(const CryLink& rLink, unsigned _nDest) :
 		CrySkinRigidVertex(rLink.offset, _nDest),
 		fWeight(rLink.Blending)
 	{
 	}
 
 	// constructs the packed rigid vertex data from this structure
-	void build (CrySkinVertexAligned& vDst)const
+	void build(CrySkinVertexAligned& vDst)const
 	{
 		vDst.pt = pt;
 		vDst.fWeight = fWeight;

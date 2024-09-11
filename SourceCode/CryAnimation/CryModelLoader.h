@@ -23,17 +23,17 @@ class CControllerManager;
 class CryModelLoader
 {
 public:
-	CryModelLoader (CControllerManager* pControllerManager);
+	CryModelLoader(CControllerManager* pControllerManager);
 	~CryModelLoader();
 
-	CryModel* loadNew (CryCharBody* pBody, const string& strGeomFileName, float fScale);
+	CryModel* loadNew(CryCharBody* pBody, const string& strGeomFileName, float fScale);
 
 	// cleans up the resources allocated during load
 	void clear();
 protected:
 	// tries to find out if there are any animations for this file; if there are some, 
 	// prepares to load them and returns true; otherwise returns false
-	bool searchAnimations ();
+	bool searchAnimations();
 
 	// searches for lod models for the given model; returns false in case of some error
 	bool preloadCGFs();
@@ -46,18 +46,18 @@ protected:
 
 	// loads animations for the given file from the given directory, loading all cal files
 	// which begin with the cgf file name and underscope (this is the convention for the cgf's that don't have cal file associated)
-	unsigned loadAnimationsNoCAL ();
+	unsigned loadAnimationsNoCAL();
 
 	// loads animations for this cgf from the given cal file
 	// does NOT close the file (the file belongs to the calling party)
-	unsigned loadAnimationsWithCAL ();
+	unsigned loadAnimationsWithCAL();
 
 
 	// loads the geometry files (LOD files, starting with the main one)
 	bool loadCGFs();
 
 	// loads the CCG (including all the LODs in it)
-	bool loadCCG ();
+	bool loadCCG();
 
 	// creates the skin objects for the geometry and morph targets
 	bool buildSkins();
@@ -70,15 +70,15 @@ protected:
 		string strFileName;
 		string strAnimName;
 		unsigned nAnimFlags; // combination of GlobalAnimation internal flags
-		SAnimFile (const string& fileName, const char* szAnimName, unsigned animflags):
-		strFileName(fileName), strAnimName(szAnimName), nAnimFlags(animflags) {}
-		SAnimFile():nAnimFlags(0) {}
+		SAnimFile(const string& fileName, const char* szAnimName, unsigned animflags) :
+			strFileName(fileName), strAnimName(szAnimName), nAnimFlags(animflags) {}
+		SAnimFile() :nAnimFlags(0) {}
 	};
 
 	// the animation file array
 	typedef std::vector<SAnimFile> AnimFileArray;
 	// loads the animations fromthe array
-	unsigned loadAnimationArray (const AnimFileArray& arrAnimFiles);
+	unsigned loadAnimationArray(const AnimFileArray& arrAnimFiles);
 
 	typedef CAutoClear<CryModelLoader> CAutoClearLoader;
 
@@ -86,14 +86,14 @@ protected:
 	// and returns it
 	CryModel* detachModel();
 
-	void indicateProgress(const char*szMsg=NULL);
+	void indicateProgress(const char* szMsg = NULL);
 
 	string getCCGFilePath()
 	{
-		return 
+		return
 			m_bExtCCG ? m_strGeomFileNameNoExt + ".ccg"
 			:
-			"CCGF_CACHE\\" + m_strGeomFileNameNoExt+".ccg";
+			"CCGF_CACHE\\" + m_strGeomFileNameNoExt + ".ccg";
 	}
 protected:
 
@@ -108,7 +108,7 @@ protected:
 	// the name of the cal file
 	string m_strCalFileName;
 	// the CAL file handle, or NULL if none
-	FILE * m_fCalFile;
+	FILE* m_fCalFile;
 	// the handle with which the animations are to be found, -1 by default
 	intptr_t m_nCafFindFileHandle;
 #ifndef __linux
