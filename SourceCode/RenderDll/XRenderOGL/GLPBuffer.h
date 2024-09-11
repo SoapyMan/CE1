@@ -2,9 +2,9 @@
   GLPBuffer.h : OpenGL PBuffer interface declaration.
   Copyright (c) 2001 Crytek Studios. All Rights Reserved.
 
-    Revision history:
-    * Created by Honitch Andrey
-  
+	Revision history:
+	* Created by Honitch Andrey
+
 =============================================================================*/
 
 #ifndef PBUFFERS_H
@@ -24,21 +24,21 @@
 class CPBuffer
 {
 private:
-  HDC          m_MyDC;      // Handle to a device context.
-  HGLRC        m_MyGLctx;   // Handle to a GL context.
-  HPBUFFERARB  m_Buffer;    // Handle to a pbuffer.
-  unsigned int m_Mode;      // Flags indicating the type of pbuffer.
+	HDC          m_MyDC;      // Handle to a device context.
+	HGLRC        m_MyGLctx;   // Handle to a GL context.
+	HPBUFFERARB  m_Buffer;    // Handle to a pbuffer.
+	unsigned int m_Mode;      // Flags indicating the type of pbuffer.
 public:
-  int          m_Width;
-  int          m_Height;
-  CPBuffer( int width, int height, unsigned int mode );
-  ~CPBuffer();
-  void  mfHandleModeSwitch();
-  bool mfMakeCurrent();
-  bool mfMakeMainCurrent();
-  BOOL mfTextureBind();
-  BOOL mfReleaseFromTexture();
-  bool mfInitialize(bool share = false);
+	int          m_Width;
+	int          m_Height;
+	CPBuffer(int width, int height, unsigned int mode);
+	~CPBuffer();
+	void  mfHandleModeSwitch();
+	bool mfMakeCurrent();
+	bool mfMakeMainCurrent();
+	BOOL mfTextureBind();
+	BOOL mfReleaseFromTexture();
+	bool mfInitialize(bool share = false);
 };
 
 #endif
