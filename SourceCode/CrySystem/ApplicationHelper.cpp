@@ -29,7 +29,7 @@ CApplicationHelper::~CApplicationHelper()
 
 void CApplicationHelper::ParseArguments(const char* inszCommandLine, ICmdlineArgumentSink* pEarlyCommands, ICmdlineArgumentSink* pConsoleCommands)
 {
-	assert(inszCommandLine);
+	CRYASSERT(inszCommandLine);
 
 	//	int iArgNo=0;
 	char* src = (char*)inszCommandLine;

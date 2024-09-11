@@ -43,7 +43,7 @@ void CExprTrack::SerializeKey(IExprKey& key, XmlNodeRef& keyNode, bool bLoading)
 //////////////////////////////////////////////////////////////////////////
 void CExprTrack::GetKeyInfo(int key, const char*& description, float& duration)
 {
-	assert(key >= 0 && key < (int)m_keys.size());
+	CRYASSERT(key >= 0 && key < (int)m_keys.size());
 	CheckValid();
 	duration = m_keys[key].fBlendIn + m_keys[key].fHold + m_keys[key].fBlendOut;
 	if (strlen(m_keys[key].pszName) > 0)

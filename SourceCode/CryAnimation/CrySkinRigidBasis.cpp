@@ -46,7 +46,7 @@ void CrySkinRigidBasis::CStatistics::initSetDests(const CrySkinRigidBasis* pSkin
 			for (; pVertex < pGroupEnd; pVertex += 2)
 			{
 				unsigned nDestOffset = pVertex[0].nDest & 0xFFFFFF;
-				assert(nDestOffset < pSkin->m_numDestBases * sizeof(SPipTangentsA) && nDestOffset % sizeof(SPipTangentsA) == 0);
+				CRYASSERT(nDestOffset < pSkin->m_numDestBases * sizeof(SPipTangentsA) && nDestOffset % sizeof(SPipTangentsA) == 0);
 				unsigned nDest = nDestOffset / sizeof(SPipTangentsA);
 				addDest(nDest);
 			}
@@ -88,7 +88,7 @@ void CrySkinRigidBasis::skin(const Matrix44* pBones, SPipTangentsA* pDest)const
 			for (; pVertex < pGroupEnd; pVertex += 2)
 			{
 				unsigned nDestOffset = pVertex[0].nDest & 0xFFFFFF;
-				assert(nDestOffset < m_numDestBases * sizeof(SPipTangentsA));
+				CRYASSERT(nDestOffset < m_numDestBases * sizeof(SPipTangentsA));
 				SPipTangentsA& rDest = *(SPipTangentsA*)(UINT_PTR(pDest) + nDestOffset);
 				Vec3d vTang = pBone->TransformVectorOLD(pVertex[0].pt);
 				Vec3d vBinorm = pBone->TransformVectorOLD(pVertex[1].pt);
@@ -102,7 +102,7 @@ void CrySkinRigidBasis::skin(const Matrix44* pBones, SPipTangentsA* pDest)const
 			for (; pVertex < pGroupEnd; pVertex += 2)
 			{
 				unsigned nDestOffset = pVertex[0].nDest & 0xFFFFFF;
-				assert(nDestOffset < m_numDestBases * sizeof(SPipTangentsA));
+				CRYASSERT(nDestOffset < m_numDestBases * sizeof(SPipTangentsA));
 				SPipTangentsA& rDest = *(SPipTangentsA*)(UINT_PTR(pDest) + nDestOffset);
 				Vec3d vTang = pBone->TransformVectorOLD(pVertex[0].pt);
 				Vec3d vBinorm = pBone->TransformVectorOLD(pVertex[1].pt);
@@ -376,7 +376,7 @@ void CrySkinRigidBasis::skinSSE(const Matrix44* pBones, SPipTangentsA* pDest)con
 
 	for (unsigned nBone = m_numSkipBones; nBone < m_numBones; ++nBone)
 	{
-		assert(numBases < size());
+		CRYASSERT(numBases < size());
 		const CrySkinAuxInt* pAux = &m_arrAux[(nBone - m_numSkipBones) * 2];
 		SPipTangentsA* pBTest;
 		SPipTangentsA* pBDest;
@@ -392,7 +392,7 @@ void CrySkinRigidBasis::skinSSE(const Matrix44* pBones, SPipTangentsA* pDest)con
 			dT = Distance2(pBTest->m_Tangent, pBDest->m_Tangent);
 			dB = Distance2(pBTest->m_Binormal, pBDest->m_Binormal);
 			dN = Distance2(pBTest->m_TNormal, pBDest->m_TNormal);
-			assert(dT < 1e-6 && dB < 1e-6 && dN < 1e-6);
+			CRYASSERT(dT < 1e-6 && dB < 1e-6 && dN < 1e-6);
 		}
 		for (j = 0; j < pAux[1]; ++j, ++numBases, pVertex += 2)
 		{
@@ -401,10 +401,10 @@ void CrySkinRigidBasis::skinSSE(const Matrix44* pBones, SPipTangentsA* pDest)con
 			dT = Distance2(pBTest->m_Tangent, pBDest->m_Tangent);
 			dB = Distance2(pBTest->m_Binormal, pBDest->m_Binormal);
 			dN = Distance2(pBTest->m_TNormal, pBDest->m_TNormal);
-			assert(dT < 1e-6 && dB < 1e-6 && dN < 1e-6);
+			CRYASSERT(dT < 1e-6 && dB < 1e-6 && dN < 1e-6);
 		}
 	}
-	assert(numBases == size());
+	CRYASSERT(numBases == size());
 #endif
 }
 #endif

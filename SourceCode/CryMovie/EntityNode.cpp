@@ -699,7 +699,7 @@ void CAnimEntityNode::ApplyEventKey(CEventTrack* track, int keyIndex, IEventKey&
 		if (pCharacter)
 		{
 			IAnimationSet* pAnimations = pCharacter->GetModel()->GetAnimationSet();
-			assert(pAnimations);
+			CRYASSERT(pAnimations);
 			float duration = pAnimations->GetLength(key.animation);
 			if (duration != key.duration)
 			{
@@ -805,7 +805,7 @@ void CAnimEntityNode::ReleaseAllAnims()
 	if (!pCharacter)
 		return;
 	ICryAnimationSet* pAnimations = pCharacter->GetModel()->GetAnimationSet();
-	assert(pAnimations);
+	CRYASSERT(pAnimations);
 	for (TStringSetIt It = m_setAnimationSinks.begin(); It != m_setAnimationSinks.end(); ++It)
 	{
 		const char* pszName = (*It).c_str();
@@ -828,7 +828,7 @@ void CAnimEntityNode::OnEndAnimation(const char* sAnimation)
 	if (!pCharacter)
 		return;
 	ICryAnimationSet* pAnimations = pCharacter->GetModel()->GetAnimationSet();
-	assert(pAnimations);
+	CRYASSERT(pAnimations);
 	pCharacter->RemoveAnimationEventSink(sAnimation, this);
 	pAnimations->UnloadAnimation(sAnimation);
 }
@@ -850,7 +850,7 @@ void CAnimEntityNode::AnimateCharacterTrack(class CCharacterTrack* track, SAnimC
 		{
 			// retrieve the animation collection for the model
 			ICryAnimationSet* pAnimations = pCharacter->GetModel()->GetAnimationSet();
-			assert(pAnimations);
+			CRYASSERT(pAnimations);
 
 			if (key.bUnload)
 			{

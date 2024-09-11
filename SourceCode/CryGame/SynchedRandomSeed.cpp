@@ -55,7 +55,7 @@ CSynchedRandomSeed::~CSynchedRandomSeed()
 
 void CSynchedRandomSeed::SetStartRandomSeedC( const uint8 Value )
 {
-	assert(m_pParentPlayer);
+	CRYASSERT(m_pParentPlayer);
 
 	m_ucStartRandomSeedCS=Value;
 }
@@ -67,14 +67,14 @@ uint8 CSynchedRandomSeed::GetStartRandomSeedS()
 
 void CSynchedRandomSeed::SetParent( CPlayer *pPlayer )
 {
-	assert(pPlayer);
+	CRYASSERT(pPlayer);
 
 	m_pParentPlayer=pPlayer;
 }
 
 void CSynchedRandomSeed::IncreaseRandomSeedC()
 {
-	assert(m_pParentPlayer);	// call SetParent()
+	CRYASSERT(m_pParentPlayer);	// call SetParent()
 
 	m_ucRandomSeedCS++;		// 0..255 -> 0..255 -> ..
 
@@ -84,7 +84,7 @@ void CSynchedRandomSeed::IncreaseRandomSeedC()
 
 uint8 CSynchedRandomSeed::GetRandomSeedC()
 {
-	assert(m_pParentPlayer);	// call SetParent()
+	CRYASSERT(m_pParentPlayer);	// call SetParent()
 
 	if(IsTimeToSyncToServerC())
 	{
@@ -97,7 +97,7 @@ uint8 CSynchedRandomSeed::GetRandomSeedC()
 
 bool CSynchedRandomSeed::IsTimeToSyncToServerC()
 {
-	assert(m_pParentPlayer);	// call SetParent()
+	CRYASSERT(m_pParentPlayer);	// call SetParent()
 
 	CTimeValue yet=m_pParentPlayer->m_pTimer->GetCurrTimePrecise();
 
@@ -109,7 +109,7 @@ bool CSynchedRandomSeed::IsTimeToSyncToServerC()
 
 uint8 CSynchedRandomSeed::GetStartRandomSeedC()
 {
-	assert(m_pParentPlayer);	// call SetParent()
+	CRYASSERT(m_pParentPlayer);	// call SetParent()
 
 	if(IsTimeToSyncToServerC())
 	{

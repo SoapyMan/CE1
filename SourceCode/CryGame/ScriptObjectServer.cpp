@@ -287,7 +287,7 @@ int CScriptObjectServer::BroadcastText(IFunctionHandler *pH)
 int CScriptObjectServer::RemoveEntity(IFunctionHandler *pH)
 {
 //	CHECK_PARAMETERS(1);
-	ASSERT(pH && (pH->GetParamCount() == 1 || pH->GetParamCount() == 2));
+	CRYASSERT(pH && (pH->GetParamCount() == 1 || pH->GetParamCount() == 2));
 
 	int iEntity=0;
 	bool	bRemoveNow=false;
@@ -320,7 +320,7 @@ int CScriptObjectServer::SpawnEntity(IFunctionHandler *pH)
 //	CHECK_PARAMETERS(1);
 	//static EntityId nEntityID=20000;
 	// Added optional position parameter so that position is valid during the objects OnInit()
-	ASSERT(pH && (pH->GetParamCount() == 1 || pH->GetParamCount() == 2));
+	CRYASSERT(pH && (pH->GetParamCount() == 1 || pH->GetParamCount() == 2));
 	
 	int iEntityClassID;
 	EntityClassId ClassId;
@@ -780,7 +780,7 @@ int CScriptObjectServer::DebugTest(IFunctionHandler *pH)
 			EntityClassId ClassId=pEnt->GetClassId();
 
 			EntityClass *pClass=m_pGame->GetClassRegistry()->GetByClassId(ClassId,false);
-			assert(pClass);
+			CRYASSERT(pClass);
 
 			// debugging
 			m_pGame->GetSystem()->GetILog()->Log("Cheat protection: %d/%d %p class=%s\n",(int)idChosen,dwCount,pEnt,pClass->strClassName.c_str());

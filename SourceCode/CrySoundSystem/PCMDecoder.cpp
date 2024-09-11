@@ -9,9 +9,9 @@ CPCMDecoder::CPCMDecoder(IMusicSystem* pMusicSystem) : m_b44KHz(true)
 {
 	m_pMusicSystem = pMusicSystem;
 	ISystem* pSystem = m_pMusicSystem->GetSystem();
-	ASSERT(pSystem);
+	CRYASSERT(pSystem);
 	m_pPak = pSystem->GetIPak();
-	ASSERT(m_pPak);
+	CRYASSERT(m_pPak);
 	m_pFile = NULL;
 }
 

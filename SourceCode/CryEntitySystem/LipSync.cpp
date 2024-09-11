@@ -135,9 +135,9 @@ bool CLipSync::LoadRandomExpressions(const char* pszExprScript, bool bRaiseError
 		return true;
 
 	ICryCharModel* pModel = m_pCharInst->GetModel();
-	assert(pModel);
+	CRYASSERT(pModel);
 	IAnimationSet* pAnimSet = pModel->GetAnimationSet();
-	assert(pAnimSet);
+	CRYASSERT(pAnimSet);
 
 	// parse random-expressions
 	if (m_pScriptSystem->ExecuteFile(pszExprScript, true, false))
@@ -288,9 +288,9 @@ void CLipSync::StreamOnComplete(IReadStream* pStream, unsigned nError)
 		return;
 	}
 	ICryCharModel* pModel = m_pCharInst->GetModel();
-	assert(pModel);
+	CRYASSERT(pModel);
 	IAnimationSet* pAnimSet = pModel->GetAnimationSet();
-	assert(pAnimSet);
+	CRYASSERT(pAnimSet);
 	const char* pBuffer = (char*)pStream->GetBuffer();
 	int nBufferSize = pStream->GetBytesRead();
 	const char* pEndBuffer = pBuffer + nBufferSize;
@@ -605,9 +605,9 @@ bool CLipSync::DoExpression(const char* pszMorphTarget, CryCharMorphParams& Morp
 	if (!m_pCharInst)
 		return false; // not initialized
 	ICryCharModel* pModel = m_pCharInst->GetModel();
-	assert(pModel);
+	CRYASSERT(pModel);
 	IAnimationSet* pAnimSet = pModel->GetAnimationSet();
-	assert(pAnimSet);
+	CRYASSERT(pAnimSet);
 	int nMorphTargetId = pAnimSet->FindMorphTarget(pszMorphTarget);
 	if (nMorphTargetId == -1)
 		return false;	// no such morph-target
@@ -624,9 +624,9 @@ bool CLipSync::StopExpression(const char* pszMorphTarget)
 	if (!m_pCharInst)
 		return false; // not initialized
 	ICryCharModel* pModel = m_pCharInst->GetModel();
-	assert(pModel);
+	CRYASSERT(pModel);
 	IAnimationSet* pAnimSet = pModel->GetAnimationSet();
-	assert(pAnimSet);
+	CRYASSERT(pAnimSet);
 	int nMorphTargetId = pAnimSet->FindMorphTarget(pszMorphTarget);
 	if (nMorphTargetId == -1)
 		return false;	// no such morph-target

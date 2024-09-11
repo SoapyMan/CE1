@@ -23,10 +23,6 @@
 
 #include "platform.h"
 
-#if !defined(LINUX)
-#include <assert.h>
-#endif
-
 ///////////////////////////////////////////////////////////////////////////////
 // Forward declarations                                                      //
 ///////////////////////////////////////////////////////////////////////////////
@@ -75,8 +71,8 @@ const real sqrt3 = (real)1.7320508075688772935274463415059;
 
 
 #if defined(LINUX)
-#undef assert
-#define assert(exp) (void)( (exp) || (printf("Assert: ' %s ' has failed\n", #exp), 0) )
+#undef CRYASSERT
+#define CRYASSERT(exp) (void)( (exp) || (printf("Assert: ' %s ' has failed\n", #exp), 0) )
 
 #endif
 

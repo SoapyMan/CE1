@@ -1084,7 +1084,7 @@ void CSoundSystem::SetSoundActiveState(CSound* pSound, ESoundActiveState State)	
 	{
 		//SoundVecItor It=std::find(m_vecSoundSpotsActive.begin(), m_vecSoundSpotsActive.end(), pSound);
 		SoundListItor It = m_lstSoundSpotsActive.find(pSound);
-		ASSERT(It != m_lstSoundSpotsActive.end());
+		CRYASSERT(It != m_lstSoundSpotsActive.end());
 		m_lstSoundSpotsActive.erase(It);
 		break;
 	}
@@ -1092,7 +1092,7 @@ void CSoundSystem::SetSoundActiveState(CSound* pSound, ESoundActiveState State)	
 	{
 		//SoundVecItor It=std::find(m_vecSoundSpotsInactive.begin(), m_vecSoundSpotsInactive.end(), pSound);
 		SoundListItor It = m_lstSoundSpotsInactive.find(pSound);
-		ASSERT(It != m_lstSoundSpotsInactive.end());
+		CRYASSERT(It != m_lstSoundSpotsInactive.end());
 		m_itLastInactivePos = m_lstSoundSpotsInactive.erase(It);
 		m_nInactiveSoundSpotsSize--;
 		break;
@@ -1284,7 +1284,7 @@ void CSoundSystem::RemoveReference(CSound* cs)
 
 	//if (It==m_vecSounds.end())	// double release
 	//	return;
-	ASSERT(It != m_vecSounds.end());
+	CRYASSERT(It != m_vecSounds.end());
 	m_vecSounds.erase(It);
 	switch (cs->m_State)
 	{
@@ -1908,6 +1908,6 @@ extern "C"
 {
 	void CheckMem(void* pData, size_t nSize)
 	{
-		assert(0 == IsBadReadPtr(pData, nSize));
+		CRYASSERT(0 == IsBadReadPtr(pData, nSize));
 	}
 }

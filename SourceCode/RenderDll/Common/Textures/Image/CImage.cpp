@@ -149,7 +149,7 @@ CImageFile* CImageFile::mfLoad_file(byte* buf, long size)
 	CImageFile::m_eError = eIFE_OK;
 
 	// Catch NULL pointers (for example, when ZIP file is corrupt)
-	assert(buf);
+	CRYASSERT(buf);
 
 	const char* ext = GetExtension(m_CurFileName);
 

@@ -120,8 +120,8 @@ bool CLMSerializationManager2::_Load(const char* pszFileName, std::vector<IEntit
 	}
 	else
 	{
-		assert(m_vLightPatches.empty());
-		assert(m_vTexCoords.empty());
+		CRYASSERT(m_vLightPatches.empty());
+		CRYASSERT(m_vTexCoords.empty());
 	}
 
 	// Open file
@@ -179,8 +179,8 @@ bool CLMSerializationManager2::_Load(const char* pszFileName, std::vector<IEntit
 			for (std::vector<int>::iterator itID = vGLM_IDs_UsingPatch.begin(); itID != vGLM_IDs_UsingPatch.end(); itID++)
 			{
 				// Shouldn't happen, probably need to fix something if. Might be wrong LM data, just
-				// delete the file or ignore the assert
-				assert(mapLMData.find(*itID) == mapLMData.end());
+				// delete the file or ignore the CRYASSERT
+				CRYASSERT(mapLMData.find(*itID) == mapLMData.end());
 
 				mapLMData[*itID] = pNewLM;
 			}
@@ -212,7 +212,7 @@ bool CLMSerializationManager2::_Load(const char* pszFileName, std::vector<IEntit
 			pUVh = new UVSetHeader3();
 		else
 			pUVh = new UVSetHeader();//old format
-		assert(pUVh);
+		CRYASSERT(pUVh);
 		std::unique_ptr<UVSetHeader> uvh(pUVh);
 		// Read position of GLM which uses this texture coordinate set
 		if (1 != GetPak()->FRead(pUVh, (sHeader.iVersion >= 3) ? sizeof(UVSetHeader3) : sizeof(UVSetHeader), 1, hFile))
@@ -255,7 +255,7 @@ bool CLMSerializationManager2::_Load(const char* pszFileName, std::vector<IEntit
 					if (itRenderLMData == mapLMData.end())
 					{
 						// We shouldn't have a texture coordinate set for a GLM that has no matching LM object
-						assert(itRenderLMData != mapLMData.end());
+						CRYASSERT(itRenderLMData != mapLMData.end());
 						break;
 					}
 
@@ -308,7 +308,7 @@ int m_numMips = 0;
 
 HRESULT SaveCompessedMipmapLevel(void* data, int miplevel, DWORD size, int width, int height, void* user_data)
 {
-	assert(MemBufferCounter);
+	CRYASSERT(MemBufferCounter);
 	uint8* src = (uint8*)data;
 	for (uint32 i = 0; i < size; i++)
 	{
@@ -690,16 +690,16 @@ RenderLMData* CLMSerializationManager2::CreateLightmap(const char* pszFileName, 
 	IRenderer* pIRenderer = GetSystem()->GetIRenderer();
 	int iColorLerpTex = 0, iHDRColorLerpTex = 0, iDomDirectionTex = 0, iOcclTex = 0;
 #ifndef __linux
-	assert(!IsBadReadPtr(pColorLerp4, sizeof(BYTE) * 4 * iWidth * iHeight));
+	CRYASSERT(!IsBadReadPtr(pColorLerp4, sizeof(BYTE) * 4 * iWidth * iHeight));
 #ifdef USE_DOT3_ALPHA
-	assert(!IsBadReadPtr(pDomDirection3, sizeof(BYTE) * 4 * iWidth * iHeight));
+	CRYASSERT(!IsBadReadPtr(pDomDirection3, sizeof(BYTE) * 4 * iWidth * iHeight));
 #else
-	assert(!IsBadReadPtr(pDomDirection3, sizeof(BYTE) * 3 * iWidth * iHeight));
+	CRYASSERT(!IsBadReadPtr(pDomDirection3, sizeof(BYTE) * 3 * iWidth * iHeight));
 #endif
 	if (pOccl2)
-		assert(!IsBadReadPtr(pOccl2, sizeof(BYTE) * 2 * iWidth * iHeight));
+		CRYASSERT(!IsBadReadPtr(pOccl2, sizeof(BYTE) * 2 * iWidth * iHeight));
 	if (pHDRColorLerp)
-		assert(!IsBadReadPtr(pHDRColorLerp, sizeof(BYTE) * 4 * iWidth * iHeight));
+		CRYASSERT(!IsBadReadPtr(pHDRColorLerp, sizeof(BYTE) * 4 * iWidth * iHeight));
 #endif
 	char szName[128];
 	if (pszFileName)
@@ -709,7 +709,7 @@ RenderLMData* CLMSerializationManager2::CreateLightmap(const char* pszFileName, 
 	}
 	else
 		iColorLerpTex = pIRenderer->DownLoadToVideoMemory(pColorLerp4, iWidth, iHeight, eTF_RGBA, eTF_RGBA, 0, false, FILTER_BILINEAR, 0, NULL);
-	assert(iColorLerpTex != 0);
+	CRYASSERT(iColorLerpTex != 0);
 
 #ifndef USE_DOT3_ALPHA
 	std::vector<BYTE> vRGBAData;
@@ -735,7 +735,7 @@ RenderLMData* CLMSerializationManager2::CreateLightmap(const char* pszFileName, 
 	else
 		iDomDirectionTex = pIRenderer->DownLoadToVideoMemory(pDomDirection3, iWidth, iHeight, eTF_RGBA, eTF_RGBA, 0, false, FILTER_BILINEAR, 0, NULL);
 #endif
-	assert(iDomDirectionTex != 0);
+	CRYASSERT(iDomDirectionTex != 0);
 	int nGPU = pIRenderer->GetFeatures() & RFT_HW_MASK;
 	bool bLow = (nGPU == RFT_HW_GF2);
 	if (!bLow && pOccl2 != 0 && (GetCVars()->e_light_maps_quality == 2))
@@ -767,7 +767,7 @@ RenderLMData* CLMSerializationManager2::CreateLightmap(const char* pszFileName, 
 		byte* pDataDirectionTex = pDomDirectionTex->GetData32();
 		int Width = pColorLerpTex->GetWidth();
 		int Height = pColorLerpTex->GetHeight();
-		assert(Width == pDomDirectionTex->GetWidth() && Height == pDomDirectionTex->GetHeight());
+		CRYASSERT(Width == pDomDirectionTex->GetWidth() && Height == pDomDirectionTex->GetHeight());
 		byte* pDst = new byte[Width * Height * 4];
 		for (int i = 0; i < Height; i++)
 		{
@@ -850,7 +850,7 @@ bool CLMSerializationManager2::ExportDLights(const char* pszFilePath, const CDLi
 		return true;
 	}
 #ifndef __linux
-	assert(!IsBadReadPtr(ppLights, sizeof(CDLight*) * iNumLights));
+	CRYASSERT(!IsBadReadPtr(ppLights, sizeof(CDLight*) * iNumLights));
 #endif
 	sHeader.iNumDLights = iNumLights;
 	fMem.Write(sHeader);
@@ -923,7 +923,7 @@ unsigned GenerateDDSMips(CTempFile& dds, int wdt, int hgt)
 			byte* src2 = src1;	 // running pointer to the previous mip's 2x2 block
 			for (j = 0; j < wdt; j++)
 			{
-				assert(dst1 < (byte*)dds.GetData() + dds.GetSize());
+				CRYASSERT(dst1 < (byte*)dds.GetData() + dds.GetSize());
 				dst1[0] = (src2[0] + src2[4] + src2[wd] + src2[wd + 4]) >> 2;
 				dst1[1] = (src2[1] + src2[5] + src2[wd + 1] + src2[wd + 5]) >> 2;
 				dst1[2] = (src2[2] + src2[6] + src2[wd + 2] + src2[wd + 6]) >> 2;
@@ -940,7 +940,7 @@ unsigned GenerateDDSMips(CTempFile& dds, int wdt, int hgt)
 		wdt >>= 1;						 // next mip dimension
 		hgt >>= 1;
 	}
-	assert(dst == (byte*)dds.GetData() + dds.GetSize());
+	CRYASSERT(dst == (byte*)dds.GetData() + dds.GetSize());
 	return num;
 }
 

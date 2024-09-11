@@ -97,7 +97,7 @@ void CryModelSubmesh::CopyLeafBuffers(CLeafBuffer** pLeafBuffers)
 	// copy leaf buffers
 	for (unsigned nLod = 0; nLod < m_pMesh->numLODs(); nLod++)
 	{
-		assert(pLeafBuffers[nLod]);
+		CRYASSERT(pLeafBuffers[nLod]);
 #ifdef UNIQUE_VERT_BUFF_PER_INSTANCE
 		CLeafBuffer* pSrcLeafBuffer = pLeafBuffers[nLod];
 		CLeafBuffer* pNewLeafBuffer = g_GetIRenderer()->CreateLeafBuffer(eBT_Dynamic);//new CLeafBuffer;
@@ -138,7 +138,7 @@ void CryModelSubmesh::DeleteLeafBuffers()
 			// during GenerateRenderArrays, we allocate this
 			if (m_pParent == m_pMesh->m_pDefaultModelState && m_pMesh->m_bDeleteLBMats)
 			{
-				assert(m_pParent->GetCryModelSubmesh(0) == this);
+				CRYASSERT(m_pParent->GetCryModelSubmesh(0) == this);
 				delete pMats;
 				pMats = NULL;
 			}
@@ -224,7 +224,7 @@ void CryModelSubmesh::GenerateRenderArrays(const char* szFileName)
 
 		}
 
-		//assert (m_pLeafBuffers[nLod]->m_pMats->size() == m_pMesh->numMaterials());
+		//CRYASSERT (m_pLeafBuffers[nLod]->m_pMats->size() == m_pMesh->numMaterials());
 
 		{
 			// this is for the new skinning pass
@@ -251,7 +251,7 @@ void CryModelSubmesh::GenerateRenderArrays(const char* szFileName)
 				{
 					for (int v = 0; v < 3; ++v)
 					{
-						assert(pVertReMaping[pInds[v]] < pGeomInfo->numExtToIntMapEntries());//flip
+						CRYASSERT(pVertReMaping[pInds[v]] < pGeomInfo->numExtToIntMapEntries());//flip
 						pGeomInfo->getExtToIntMapEntry(pVertReMaping[pInds[v]]) = face[v];//flip
 					}
 				}
@@ -316,7 +316,7 @@ void CryModelSubmesh::GenerateRenderArraysCCG(const char* szTextureDir)
 
 		/////////////////////////////////////////////////////////////////////////////////
 		// Construct the Leaf Buffer
-		//assert (m_pMesh->m_arrShaders.size() == m_pMesh->m_arrMaterials.size());
+		//CRYASSERT (m_pMesh->m_arrShaders.size() == m_pMesh->m_arrMaterials.size());
 		m_pLeafBuffers[nLod] = g_GetIRenderer()->CreateLeafBuffer(eBT_Dynamic, "ModelState");
 
 		VertexBufferSource vbs;
@@ -423,7 +423,7 @@ void CryModelSubmesh::AddCurrentRenderData(CCObject* obj, CCObject* obj1, const 
 				}
 			}
 
-			assert(nPrimGroup < (unsigned)pLeafBuffer->m_pMats->size() && pREOcLeaf);
+			CRYASSERT(nPrimGroup < (unsigned)pLeafBuffer->m_pMats->size() && pREOcLeaf);
 
 			if (si.m_pShader)
 			{
@@ -544,7 +544,7 @@ void CryModelSubmesh::Deform(int nLodToDeform, unsigned nDeformFlags)
 		if (!lb->m_pVertexBuffer)
 		{
 			// Strange: we are to copy to the videobuffer, but there's no videobuffer.
-			assert(0);
+			CRYASSERT(0);
 			return;
 		}
 	}
@@ -647,7 +647,7 @@ void CryModelSubmesh::Deform(int nLodToDeform, unsigned nDeformFlags)
 	Vec3d* pVideobuffer = (Vec3d*)pRenderVertexBuffer->m_VS[VSF_GENERAL].m_VData;
 
 	unsigned numVerts = (unsigned)lb->m_SecVertCount;
-	assert(numVerts == pGeomInfo->numExtToIntMapEntries());
+	CRYASSERT(numVerts == pGeomInfo->numExtToIntMapEntries());
 	if ((nDeformFlags & FLAG_DEFORM_UPDATE_VERTICES))
 	{
 		DEFINE_PROFILER_SECTION("ModelDeformVideoMemCopy1");
@@ -711,7 +711,7 @@ void CryModelSubmesh::Deform(int nLodToDeform, unsigned nDeformFlags)
 				// they are to be copied to the videomemory (directly)
 
 				pTangentBases = (SPipTangentsA*)g_Temp.data(); // use the same mem for the tangents
-				assert(m_pMesh->numBoneInfos());
+				CRYASSERT(m_pMesh->numBoneInfos());
 				numTangents = pTangSkin->size();
 #if defined(_CPU_X86) && !defined(LINUX)
 				if (g_GetCVars()->ca_SSEEnable() && cpu::hasSSE())
@@ -724,9 +724,9 @@ void CryModelSubmesh::Deform(int nLodToDeform, unsigned nDeformFlags)
 				for (unsigned nTang = 0; nTang < numTangents; ++nTang)
 				{
 					SPipTangentsA& t = pTangentBases[nTang];
-					assert(t.m_Binormal.Length2() > 0.4);
-					assert(t.m_Tangent.Length2() > 0.4);
-					assert(t.m_TNormal.Length2() > 0.4);
+					CRYASSERT(t.m_Binormal.Length2() > 0.4);
+					CRYASSERT(t.m_Tangent.Length2() > 0.4);
+					CRYASSERT(t.m_TNormal.Length2() > 0.4);
 				}
 #endif
 
@@ -738,7 +738,7 @@ void CryModelSubmesh::Deform(int nLodToDeform, unsigned nDeformFlags)
 				// we've calculated the tangents that are exactly in the same format as in videomem
 				// (packed 3-float vectors) so we may copy them directly
 				pSrc = (SPipTangents*)pTangentBases;
-				assert(pTangSkin->size() == pGeomInfo->numExtToIntMapEntries());
+				CRYASSERT(pTangSkin->size() == pGeomInfo->numExtToIntMapEntries());
 			}
 			else
 			{
@@ -917,7 +917,7 @@ void CryModelSubmesh::DeformFirst()
 	for (i = 0; i < (unsigned)lb->m_SecVertCount; i++, pPos += StrPos, pNor += StrNor)
 	{
 		unsigned sn = pExtToIntMap[i];
-		assert(sn < pGeomInfo->numVertices());
+		CRYASSERT(sn < pGeomInfo->numVertices());
 		if (pPos)
 		{
 			Vec3d* v = (Vec3d*)pPos;
@@ -925,7 +925,7 @@ void CryModelSubmesh::DeformFirst()
 			v->y = pGeomInfo->getVertex(sn).y;
 			v->z = pGeomInfo->getVertex(sn).z;
 		}
-		assert(GetLengthSquared(pGeomInfo->getNormal(sn)) > 0.4);
+		CRYASSERT(GetLengthSquared(pGeomInfo->getNormal(sn)) > 0.4);
 		if (pNor)
 		{
 			Vec3d* v = (Vec3d*)pNor;
@@ -947,7 +947,7 @@ void CryModelSubmesh::DeformFirst()
 	TangData* pExtTangents = pGeomInfo->getExtTangents();
 	for (i = 0; i < (unsigned)lb->m_SecVertCount; ++i)
 	{
-		assert(i < pGeomInfo->numExtTangents());
+		CRYASSERT(i < pGeomInfo->numExtTangents());
 
 		// For Debug:
 		// This is the current vertex:
@@ -956,9 +956,9 @@ void CryModelSubmesh::DeformFirst()
 		// (((*pGeomInfo).m_arrNormals).m_pData)[((*pGeomInfo).m_arrExtToIntMap).m_pData[i]]
 		// 
 		/*
-		assert (pTangBuff[i].m_Binormal.Length2() > 0.4);
-		assert (pTangBuff[i].m_Tangent.Length2() > 0.4);
-		assert (pTangBuff[i].m_TNormal.Length2() > 0.4);
+		CRYASSERT (pTangBuff[i].m_Binormal.Length2() > 0.4);
+		CRYASSERT (pTangBuff[i].m_Tangent.Length2() > 0.4);
+		CRYASSERT (pTangBuff[i].m_TNormal.Length2() > 0.4);
 		*/
 
 		pExtTangents[i].binormal = pTangBuff[i].m_Binormal;
@@ -1074,9 +1074,9 @@ void CryModelSubmesh::ProcessSkinning(const Vec3& t, const Matrix44& mtxModel, i
 			break;
 	}
 	IShader* ef;
-	assert(si.m_pShader);
+	CRYASSERT(si.m_pShader);
 	ef = si.m_pShader->GetTemplate(nTemplate);
-	assert(ef);
+	CRYASSERT(ef);
 
 #ifdef _DEBUG
 	bool bAllowToCopyIntoVideoBufferDirectly = ((ef->GetFlags3() & EF3_NEEDSYSBUF) == 0);
@@ -1202,10 +1202,10 @@ bool CryModelSubmesh::SetShaderTemplateName(const char* TemplName, int Id, const
 		if (!ShaderName)
 		{
 			int numMaterials = lb->m_pMats->Count();
-			assert(numMaterials >= 0);
+			CRYASSERT(numMaterials >= 0);
 			for (unsigned i = 0; i < (unsigned)numMaterials; i++)
 			{
-				//assert (m_pModelState->m_pMesh == m_pCryCharBody->GetModel());
+				//CRYASSERT (m_pModelState->m_pMesh == m_pCryCharBody->GetModel());
 				SShaderItem si = lb->m_pMats->Get(i)->shaderItem;
 				// Override object material.
 				if (pCustomMaterial)
@@ -1226,7 +1226,7 @@ bool CryModelSubmesh::SetShaderTemplateName(const char* TemplName, int Id, const
 		else
 			for (unsigned i = 0; i < getShaderTemplates(Id).size(); ++i)
 			{
-				//assert (m_pMesh == m_pModel );
+				//CRYASSERT (m_pMesh == m_pModel );
 				SShaderItem si = lb->m_pMats->Get(i)->shaderItem;
 
 				if (!si.m_pShader)
@@ -1270,7 +1270,7 @@ void CryModelSubmesh::SetShaderFloat(const char* Name, float Val, const char* Sh
 		{
 			CLeafBuffer* lb = m_pLeafBuffers[nLOD];
 			int numMaterials = lb->m_pMats->Count();
-			assert(numMaterials >= 0);
+			CRYASSERT(numMaterials >= 0);
 			for (i = 0; i < numMaterials; i++)
 			{
 				CMatInfo* mi = lb->m_pMats->Get(i);
@@ -1563,7 +1563,7 @@ void CryModelSubmesh::RunMorph(int nMorphTargetId, const CryCharMorphParams& Par
 
 bool CryModelSubmesh::RunMorph(const char* szMorphTarget, const CryCharMorphParams& Params, bool bShowNotFoundWarning)
 {
-	assert(IsValidString(szMorphTarget));
+	CRYASSERT(IsValidString(szMorphTarget));
 
 	int nMorphTargetId = m_pMesh->findMorphTarget(szMorphTarget);
 	if (nMorphTargetId < 0)

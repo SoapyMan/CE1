@@ -65,7 +65,7 @@ CCompressionHelper::CCompressionHelper()
 			Write(str,s);
 			Read(str,q,4);
 
-			assert(strcmp((const char *)s,(const char *)q)==0);
+			CRYASSERT(strcmp((const char *)s,(const char *)q)==0);
 		}
 	#endif
 	*/
@@ -110,7 +110,7 @@ bool CCompressionHelper::Read(CStream& inStream, unsigned char& outChar)
 
 bool CCompressionHelper::Write(CStream& outStream, const char* inszString)
 {
-	assert(inszString);
+	CRYASSERT(inszString);
 
 	const unsigned char* p = (unsigned char*)inszString;
 
@@ -142,8 +142,8 @@ bool CCompressionHelper::Write(CStream& outStream, const char* inszString)
 
 bool CCompressionHelper::Read(CStream& inStream, char* outszString, const DWORD indwStringSize)
 {
-	assert(outszString);
-	assert(indwStringSize);
+	CRYASSERT(outszString);
+	CRYASSERT(indwStringSize);
 
 	for (DWORD i = 0; i < indwStringSize; i++)
 	{

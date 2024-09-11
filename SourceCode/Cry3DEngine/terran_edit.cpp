@@ -28,7 +28,7 @@ bool CTerrain::AddStaticObject(int nObjectID, const Vec3d& vPos, const float fSc
 
 	if (nObjectID < 0 || nObjectID >= pObjManager->m_lstStaticTypes.Count())
 	{ // object id is out of range 
-		/*assert(0); */return 0;
+		/*CRYASSERT(0); */return 0;
 	}
 
 	//int ix=int(vPos.x)/CTerrain::GetSectorSize(), iy=int(vPos.y)/CTerrain::GetSectorSize();
@@ -168,7 +168,7 @@ bool CTerrain::RemoveStaticObject(int nObjectID, const Vec3d& vPos, CObjManager*
 
 void CTerrain::SetSurfaceType(int x, int y, int nType)
 {
-	assert(CTerrain::GetHeightMapUnitSize() == 2);
+	CRYASSERT(CTerrain::GetHeightMapUnitSize() == 2);
 
 	nType &= STYPE_BIT_MASK;
 

@@ -20,8 +20,6 @@
 #if defined(LINUX)
 #include "ILog.h"
 #include "ICryPak.h"
-#else
-#include <assert.h>
 #endif
 
 template <class T> class list2
@@ -85,10 +83,10 @@ public:
 #if defined(WIN32) && defined(_DEBUG)
 		if (m_nCount >= m_nAllocatedCount)
 		{
-			assert(&p < m_pElements || &p >= (m_pElements + m_nAllocatedCount));
+			CRYASSERT(&p < m_pElements || &p >= (m_pElements + m_nAllocatedCount));
 			m_nAllocatedCount = m_nCount * 2 + 8;
 			m_pElements = (T*)_realloc_dbg(m_pElements, m_nAllocatedCount * sizeof(T), _NORMAL_BLOCK, p__FILE__, n__LINE__);
-			assert(m_pElements);
+			CRYASSERT(m_pElements);
 		}
 
 		memcpy(&m_pElements[m_nCount], &p, sizeof(m_pElements[m_nCount]));
@@ -102,10 +100,10 @@ public:
 	{
 		if (m_nCount >= m_nAllocatedCount)
 		{
-			assert(&p < m_pElements || &p >= (m_pElements + m_nAllocatedCount));
+			CRYASSERT(&p < m_pElements || &p >= (m_pElements + m_nAllocatedCount));
 			m_nAllocatedCount = m_nCount * 2 + 8;
 			m_pElements = (T*)realloc(m_pElements, m_nAllocatedCount * sizeof(T));
-			assert(m_pElements);
+			CRYASSERT(m_pElements);
 		}
 
 		memcpy(&m_pElements[m_nCount], &p, sizeof(m_pElements[m_nCount]));
@@ -114,7 +112,7 @@ public:
 
 	void InsertBefore(const T& p, const unsigned int nBefore)
 	{
-		assert(nBefore >= 0 && nBefore <= (unsigned int)m_nCount);
+		CRYASSERT(nBefore >= 0 && nBefore <= (unsigned int)m_nCount);
 		T tmp; Add(tmp); // add empty object to increase memory buffer
 		memmove(&(m_pElements[nBefore + 1]), &(m_pElements[nBefore]), sizeof(T) * (m_nCount - nBefore - 1));
 		m_pElements[nBefore] = p;
@@ -127,7 +125,7 @@ public:
 			m_nAllocatedCount = elem_count;
 
 			T* new_elements = (T*)malloc(m_nAllocatedCount * sizeof(T));
-			assert(new_elements);
+			CRYASSERT(new_elements);
 			memset(new_elements, 0, sizeof(T) * m_nAllocatedCount);
 			memcpy(new_elements, m_pElements, sizeof(T) * m_nCount);
 			if (m_pElements)
@@ -141,7 +139,7 @@ public:
 
 	inline void Delete(const int nElemId, const int nElemCount = 1)
 	{
-		assert(nElemId >= 0 && nElemId + nElemCount <= m_nCount);
+		CRYASSERT(nElemId >= 0 && nElemId + nElemCount <= m_nCount);
 
 		const int last = nElemId + nElemCount;
 		const int rest = m_nCount - last;
@@ -153,7 +151,7 @@ public:
 
 	inline void DeleteFastUnsorted(const int nElemId, const int nElemCount = 1)
 	{
-		assert(nElemId >= 0 && nElemId + nElemCount <= m_nCount);
+		CRYASSERT(nElemId >= 0 && nElemId + nElemCount <= m_nCount);
 		memcpy(&(m_pElements[nElemId]), &(m_pElements[m_nCount - nElemCount]), sizeof(T) * nElemCount);
 		m_nCount -= nElemCount;
 	}
@@ -176,13 +174,13 @@ public:
 
 	inline int IsEmpty() const { return m_nCount == 0; }
 
-	inline T& operator [] (int i) const { assert(i >= 0 && i < m_nCount); return m_pElements[i]; }
-	inline T& GetAt(int i) const { assert(i >= 0 && i < m_nCount); return  m_pElements[i]; }
-	inline T* Get(int i) const { assert(i >= 0 && i < m_nCount); return &m_pElements[i]; }
+	inline T& operator [] (int i) const { CRYASSERT(i >= 0 && i < m_nCount); return m_pElements[i]; }
+	inline T& GetAt(int i) const { CRYASSERT(i >= 0 && i < m_nCount); return  m_pElements[i]; }
+	inline T* Get(int i) const { CRYASSERT(i >= 0 && i < m_nCount); return &m_pElements[i]; }
 	inline T* GetElements() { return m_pElements; }
 
-	inline T& Last() const { assert(m_nCount); return m_pElements[m_nCount - 1]; }
-	inline void DeleteLast() { assert(m_nCount); m_nCount--; }
+	inline T& Last() const { CRYASSERT(m_nCount); return m_pElements[m_nCount - 1]; }
+	inline void DeleteLast() { CRYASSERT(m_nCount); m_nCount--; }
 
 	inline list2<T>& operator = (list2<T>& source_list)
 	{
@@ -278,13 +276,13 @@ public:
 		// copy size of element
 		int nElemSize = 0;
 		memcpy(&nElemSize, (void*)&pBuffer[nPos], 4);
-		assert(nElemSize == sizeof(T));
+		CRYASSERT(nElemSize == sizeof(T));
 		nPos += 4;
 
 		// copy count
 		int nNewCount = 0;
 		memcpy((void*)&nNewCount, &pBuffer[nPos], 4);
-		assert(nNewCount >= 0 && nNewCount < 1000000);
+		CRYASSERT(nNewCount >= 0 && nNewCount < 1000000);
 		nPos += 4;
 
 		// copy data
@@ -389,7 +387,7 @@ public:
 	{
 		int nOldCount = m_nCount;
 		PreAllocate((int)numElements, (int)numElements);
-		assert(numElements == size());
+		CRYASSERT(numElements == size());
 		for (int nElement = nOldCount; nElement < m_nCount; ++nElement)
 			(*this)[nElement] = T();
 	}

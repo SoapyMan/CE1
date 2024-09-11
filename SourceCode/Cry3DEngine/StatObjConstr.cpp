@@ -133,7 +133,7 @@ CStatObj::~CStatObj()
 
 void CStatObj::ShutDown()
 {
-	//	assert (IsHeapValid());
+	//	CRYASSERT (IsHeapValid());
 	m_pReadStream = 0;
 
 	if (m_pTriData)
@@ -234,7 +234,7 @@ void CStatObj::MakeLeafBuffer(bool bSortAndShareVerts)
 	if (GetSystem()->IsDedicated())
 		return;
 
-	assert(!m_pLeafBuffer);
+	CRYASSERT(!m_pLeafBuffer);
 
 	m_pLeafBuffer = GetRenderer()->CreateLeafBuffer(eBT_Static, "StatObj");
 
@@ -545,7 +545,7 @@ bool CStatObj::CheckValidVegetation()
 
 bool CStatObj::EnableLightamapSupport()
 {
-	assert(m_eVertsSharing == evs_NoSharing);
+	CRYASSERT(m_eVertsSharing == evs_NoSharing);
 
 	if (m_eVertsSharing == evs_NoSharing)
 		return true;

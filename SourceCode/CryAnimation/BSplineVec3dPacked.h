@@ -212,12 +212,12 @@ struct TBSplineVec3dPackedDesc :
 
 	int numKnots()const
 	{
-		assert((this->m_numKnots >= 2 && this->m_numKnots < 10000) || (this->m_numKnots == 0 && this->m_nDegree == 1));// boundary check
+		CRYASSERT((this->m_numKnots >= 2 && this->m_numKnots < 10000) || (this->m_numKnots == 0 && this->m_nDegree == 1));// boundary check
 		return this->m_numKnots;
 	}
 	int numCPs()const
 	{
-		assert(this->m_nDegree >= 1 && this->m_nDegree < 5);// boundary check
+		CRYASSERT(this->m_nDegree >= 1 && this->m_nDegree < 5);// boundary check
 		return this->m_numKnots + (isOpen ? this->m_nDegree - 1 : -1);
 	}
 	// returns the number of raw data elements
@@ -378,13 +378,13 @@ template <bool isOpen, typename FixedPointType>
 void TBSplineVec3dPacked<isOpen, FixedPointType>::copy(BSplineVec3d* pSpline)
 {
 	int i, nCoord;
-	assert(isOpen == pSpline->isOpen());
+	CRYASSERT(isOpen == pSpline->isOpen());
 
 	clear();
 	this->m_nDegree = pSpline->getDegree();
 	this->m_numKnots = pSpline->numKnots();
 
-	assert(this->numCPs() == pSpline->numCPs());
+	CRYASSERT(this->numCPs() == pSpline->numCPs());
 
 	// find the time scale
 	this->m_TimeScale.initFromMinMax(pSpline->getKnotTime(0), pSpline->getKnotTime(this->m_numKnots - 1));
@@ -455,7 +455,7 @@ Vec3 TBSplineVec3dPacked<isOpen, FixedPointType>::getCP(int nCP)
 			nCP += this->numCPs();
 	}
 
-	assert(nCP >= 0 && nCP < this->numCPs());
+	CRYASSERT(nCP >= 0 && nCP < this->numCPs());
 	return this->m_PosScale->unpack(m_pData + this->numKnots() - 2 + 3 * nCP);
 }
 
@@ -477,7 +477,7 @@ float TBSplineVec3dPacked<isOpen, FixedPointType>::getKnotTime(int nKnot)const
 			return this->m_TimeScale.getMin() + this->m_TimeScale.getRange() * nBase;
 		else
 		{
-			assert(nKnot < this->numKnots() - 1);
+			CRYASSERT(nKnot < this->numKnots() - 1);
 			return this->m_TimeScale.getRange() * nBase + this->m_TimeScale.unpack(m_pData[nKnot - 1]);
 		}
 	}
@@ -545,7 +545,7 @@ template <bool isOpen, typename FixedPointType>
 Vec3 TBSplineVec3dPacked<isOpen, FixedPointType>::getValue(float fTime)
 {
 	int nInterval = findInterval(fTime);
-	assert(nInterval < 0 || nInterval >= this->numKnots() - 1 || (getKnotTime(nInterval) <= fTime && fTime <= getKnotTime(nInterval + 1)));
+	CRYASSERT(nInterval < 0 || nInterval >= this->numKnots() - 1 || (getKnotTime(nInterval) <= fTime && fTime <= getKnotTime(nInterval + 1)));
 
 	if (nInterval < 0)
 		return getCP(0);
@@ -597,7 +597,7 @@ template <bool isOpen, typename FixedPointType>
 float TBSplineVec3dPacked<isOpen, FixedPointType>::getBasis(int i, int d, float t) const
 {
 	// the requested basis must have defined supporting knots
-	assert(i >= -d && i < this->numKnots() - 1);
+	CRYASSERT(i >= -d && i < this->numKnots() - 1);
 
 	// starting and ending knots - they demark the support interval: [*begin,*(end-1)]
 	int nKnotBegin = i;
@@ -610,7 +610,7 @@ float TBSplineVec3dPacked<isOpen, FixedPointType>::getBasis(int i, int d, float 
 
 	if (nKnotAfterT == nKnotBegin)
 	{
-		assert(t < getKnotTime(nKnotBegin));
+		CRYASSERT(t < getKnotTime(nKnotBegin));
 		return 0; // the time t is before the supporting interval of the basis function
 	}
 
@@ -619,7 +619,7 @@ float TBSplineVec3dPacked<isOpen, FixedPointType>::getBasis(int i, int d, float 
 		if (t > getKnotTime(nKnotEnd - 1))
 			return 0; // the time t is after the supporting interval
 
-		assert(t == getKnotTime(nKnotEnd - 1));
+		CRYASSERT(t == getKnotTime(nKnotEnd - 1));
 		// scan down multiple knots
 		while (t == getKnotTime(nKnotAfterT - 1));
 		--nKnotAfterT;
@@ -635,7 +635,7 @@ float TBSplineVec3dPacked<isOpen, FixedPointType>::getBasis(int i, int d, float 
 	if (nIntervalT < -d || nIntervalT >= this->numKnots() - 1)
 		return 0;
 
-	assert(t >= getKnotTime(nIntervalT) && (t < getKnotTime(nIntervalT + 1) || (t == getKnotTime(nIntervalT + 1) && getKnotTime(nIntervalT + 1) == getKnotTime(nIntervalT))));
+	CRYASSERT(t >= getKnotTime(nIntervalT) && (t < getKnotTime(nIntervalT + 1) || (t == getKnotTime(nIntervalT + 1) && getKnotTime(nIntervalT + 1) == getKnotTime(nIntervalT))));
 
 	// the requested basis must have defined supporting knots
 	if (i < -d || i >= this->numKnots() - 1)
@@ -652,9 +652,9 @@ float TBSplineVec3dPacked<isOpen, FixedPointType>::getBasis(int i, int d, float 
 template <bool isOpen, typename FixedPointType>
 float TBSplineVec3dPacked<isOpen, FixedPointType>::getBasisUnsafe(int nKnotBegin, int d, float t, int nKnotBeforeT)const
 {
-	assert(t >= getKnotTime(nKnotBeforeT) && t <= getKnotTime(nKnotBeforeT + 1));
-	assert(nKnotBegin >= -d && nKnotBegin < this->numKnots() - 1);
-	assert(nKnotBeforeT >= nKnotBegin && nKnotBeforeT <= nKnotBegin + d);
+	CRYASSERT(t >= getKnotTime(nKnotBeforeT) && t <= getKnotTime(nKnotBeforeT + 1));
+	CRYASSERT(nKnotBegin >= -d && nKnotBegin < this->numKnots() - 1);
+	CRYASSERT(nKnotBeforeT >= nKnotBegin && nKnotBeforeT <= nKnotBegin + d);
 
 	switch (d)
 	{
@@ -669,7 +669,7 @@ float TBSplineVec3dPacked<isOpen, FixedPointType>::getBasisUnsafe(int nKnotBegin
 		}
 		else
 		{
-			assert(nKnotBeforeT == nKnotBegin + 1);
+			CRYASSERT(nKnotBeforeT == nKnotBegin + 1);
 			return (getKnotTime(nKnotBegin + 2) - t) / (getKnotTime(nKnotBegin + 2) - getKnotTime(nKnotBegin + 1));
 		}
 	default:

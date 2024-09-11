@@ -52,7 +52,7 @@ void CMusicTrack::SerializeKey(IMusicKey& key, XmlNodeRef& keyNode, bool bLoadin
 //////////////////////////////////////////////////////////////////////////
 void CMusicTrack::GetKeyInfo(int key, const char*& description, float& duration)
 {
-	assert(key >= 0 && key < (int)m_keys.size());
+	CRYASSERT(key >= 0 && key < (int)m_keys.size());
 	CheckValid();
 	description = 0;
 	duration = 0;

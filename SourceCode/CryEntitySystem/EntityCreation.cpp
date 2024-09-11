@@ -68,7 +68,7 @@ bool CEntity::LoadObject(unsigned int slot, const char* fileName, float scale, c
 	//[Timur] Yes it must be a warning, Script must not allow loading of empty filenames this is Designers bug
 	//	otherwise if it is by design that object is optional script should check it and not call LoadObject
 	//  there was alot of bugs on the maps where designers forgot to specify object while they were must to.
-	//assert( fileName );
+	//CRYASSERT( fileName );
 	if ((slot > ENTITY_MAX_OBJECTS) || !fileName || (strlen(fileName) == 0))
 	{
 		m_pISystem->Warning(VALIDATOR_MODULE_ENTITYSYSTEM, VALIDATOR_WARNING, 0, 0,
@@ -935,8 +935,8 @@ ILipSync* CEntity::GetLipSyncInterface()
 {
 	if (!m_pLipSync)
 	{
-		assert(m_pISystem);
-		assert(m_pISystem->GetIGame());
+		CRYASSERT(m_pISystem);
+		CRYASSERT(m_pISystem->GetIGame());
 
 		m_pLipSync = new CLipSync;
 		if (m_pLipSync != NULL && !m_pLipSync->Init(m_pISystem, this))
@@ -962,7 +962,7 @@ void CEntity::ReleaseLipSyncInterface()
 //////////////////////////////////////////////////////////////////////////
 void CEntity::SetCharacter(int pos, ICryCharInstance* character)
 {
-	assert(pos >= 0 && pos < MAX_ANIMATED_MODELS);
+	CRYASSERT(pos >= 0 && pos < MAX_ANIMATED_MODELS);
 
 	if (pos >= 0 && pos < MAX_ANIMATED_MODELS)
 		m_pCryCharInstance[pos] = character;

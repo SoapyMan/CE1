@@ -38,7 +38,7 @@ int CStatObj::FindInPosBuffer(const Vec3d& opt, Vec3d* _vbuff, int _vcount, list
 
 void CStatObj::CompactPosBuffer(Vec3d* _vbuff, int* _vcount, list2<int>* pindices)
 {
-	int before = *_vcount; assert(before);
+	int before = *_vcount; CRYASSERT(before);
 	if (!before)
 		GetConsole()->Exit("Error: CStatObj::CompactPosBuffer: Input vertex count is zero");
 
@@ -105,7 +105,7 @@ void CStatObj::Physicalize()
 		// find phys material id
 		if (strstr(m_pTriData->m_lstMatTable[m].sScriptMaterial, "mat_phys"))
 		{
-			assert(nPhysMatID < 0); nPhysMatID = m;
+			CRYASSERT(nPhysMatID < 0); nPhysMatID = m;
 		}
 
 		// find obstruct material id
@@ -125,7 +125,7 @@ void CStatObj::Physicalize()
 		// find occlusion material id
 		else if (strstr(m_pTriData->m_lstMatTable[m].sScriptMaterial, "mat_occl"))
 		{
-			assert(nOcclMatID < 0); nOcclMatID = m;
+			CRYASSERT(nOcclMatID < 0); nOcclMatID = m;
 		}
 	}
 
@@ -289,7 +289,7 @@ void CStatObj::Physicalize()
 					flags |= mesh_approx_box | mesh_approx_sphere | mesh_approx_cylinder;
 				if (lstPhysIndices.Count() < 600 && crymax(crymax(sz.x, sz.y), sz.z) > 6) // make more dense OBBs for large (wrt terrain grid) objects
 					nMinTrisPerNode = nMaxTrisPerNode = 1;
-				assert(nMesh < MAX_PHYS_GEOMS_IN_CGF);
+				CRYASSERT(nMesh < MAX_PHYS_GEOMS_IN_CGF);
 				m_arrPhysGeomInfo[nMesh] = pGeoman->RegisterGeometry(pGeoman->CreateMesh((vectorf*)&pExVerts[0], &lstPhysIndices[0],
 					(short*)&lstFaceMaterials[0], lstPhysIndices.Count() / 3, flags, true, true, tol, nMinTrisPerNode, nMaxTrisPerNode, 2.5f));
 				if (lstFaceMaterials.Count() > 0)
@@ -473,10 +473,10 @@ void CStatObj::PhysicalizeCompiled()
 					flags |= mesh_approx_box | mesh_approx_sphere | mesh_approx_cylinder;
 				if (lstPhysIndices.Count() < 600 && crymax(crymax(sz.x, sz.y), sz.z) > 6) // make more dense OBBs for large (wrt terrain grid) objects
 					nMinTrisPerNode = nMaxTrisPerNode = 1;
-				assert(!m_arrPhysGeomInfo[nMesh]);
+				CRYASSERT(!m_arrPhysGeomInfo[nMesh]);
 				m_arrPhysGeomInfo[nMesh] = pGeoman->RegisterGeometry(pGeoman->CreateMesh((vectorf*)&pExVerts[0], &lstPhysIndices[0],
 					(short*)&lstFaceMaterials[0], lstPhysIndices.Count() / 3, flags, true, true, tol, nMinTrisPerNode, nMaxTrisPerNode, 2.5f));
-				assert(m_arrPhysGeomInfo[nMesh]->nRefCount == 1);
+				CRYASSERT(m_arrPhysGeomInfo[nMesh]->nRefCount == 1);
 				if (lstFaceMaterials.Count() > 0)
 					m_arrPhysGeomInfo[nMesh]->surface_idx = lstFaceMaterials[0];
 			}

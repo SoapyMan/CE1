@@ -72,7 +72,7 @@ void CrySkinFull::skin(const Matrix44* pBones, Vec3d* pDest)
 				pDest[m_arrVertices[s].nDest] = m34 * m_arrVertices[s].pt;
 
 #ifdef _DEBUG
-				assert(arrW[m_arrVertices[s].nDest] == 0);
+				CRYASSERT(arrW[m_arrVertices[s].nDest] == 0);
 				arrW[m_arrVertices[s].nDest] = 1;
 #endif
 				s++;
@@ -87,7 +87,7 @@ void CrySkinFull::skin(const Matrix44* pBones, Vec3d* pDest)
 				pDest[m_arrAux[t]] = (m34 * m_arrVertices[s].pt) * m_arrVertices[s].fWeight;
 
 #ifdef _DEBUG
-				assert(arrW[m_arrAux[t]] == 0);
+				CRYASSERT(arrW[m_arrAux[t]] == 0);
 				arrW[m_arrAux[t]] = m_arrVertices[s].fWeight;
 #endif
 				s++;
@@ -102,9 +102,9 @@ void CrySkinFull::skin(const Matrix44* pBones, Vec3d* pDest)
 				pDest[m_arrAux[t]] += (m34 * m_arrVertices[s].pt) * m_arrVertices[s].fWeight;
 
 #ifdef _DEBUG
-				assert(arrW[m_arrAux[t]] > 0 && arrW[m_arrAux[t]] < 1.005f);
+				CRYASSERT(arrW[m_arrAux[t]] > 0 && arrW[m_arrAux[t]] < 1.005f);
 				arrW[m_arrAux[t]] += m_arrVertices[s].fWeight;
-				assert(arrW[m_arrAux[t]] > 0 && arrW[m_arrAux[t]] < 1.005f);
+				CRYASSERT(arrW[m_arrAux[t]] > 0 && arrW[m_arrAux[t]] < 1.005f);
 #endif
 				s++;
 				t++;
@@ -113,7 +113,7 @@ void CrySkinFull::skin(const Matrix44* pBones, Vec3d* pDest)
 
 		/*#ifdef _DEBUG
 		for (unsigned i = 0; i < m_numDests; ++i)
-			assert (arrW[i] > 0.995f && arrW[i] < 1.005f);
+			CRYASSERT (arrW[i] > 0.995f && arrW[i] < 1.005f);
 		#endif
 		*/
 
@@ -153,7 +153,7 @@ void CrySkinFull::skinAsVec3d16(const Matrix44* pBones, Vec3dA16* pDest)
 				//pDest[pVertex->nDest].v = GetTransposed44(*pBone) * (pVertex->pt);
 				//transformVectorNoTrans (pDest[pVertex->nDest].v, pVertex->pt, *pBone);
 #ifdef _DEBUG
-				assert(arrW[pVertex->nDest] == 0);
+				CRYASSERT(arrW[pVertex->nDest] == 0);
 				arrW[pVertex->nDest] = 1;
 #endif
 			}
@@ -164,7 +164,7 @@ void CrySkinFull::skinAsVec3d16(const Matrix44* pBones, Vec3dA16* pDest)
 			{
 				transformWVector(pDest[*pAux].v, *pBone, *pVertex);
 #ifdef _DEBUG
-				assert(arrW[*pAux] == 0);
+				CRYASSERT(arrW[*pAux] == 0);
 				arrW[*pAux] = pVertex->fWeight;
 #endif
 			}
@@ -175,15 +175,15 @@ void CrySkinFull::skinAsVec3d16(const Matrix44* pBones, Vec3dA16* pDest)
 			{
 				addWVector(pDest[*pAux].v, *pBone, *pVertex);
 #ifdef _DEBUG
-				assert(arrW[*pAux] > 0 && arrW[*pAux] < 1.005f);
+				CRYASSERT(arrW[*pAux] > 0 && arrW[*pAux] < 1.005f);
 				arrW[*pAux] += pVertex->fWeight;
-				assert(arrW[*pAux] > 0 && arrW[*pAux] < 1.005f);
+				CRYASSERT(arrW[*pAux] > 0 && arrW[*pAux] < 1.005f);
 #endif
 			}
 		}
 #ifdef _DEBUG
 		for (unsigned i = 0; i < m_numDests; ++i)
-			assert(arrW[i] > 0.995f && arrW[i] < 1.005f);
+			CRYASSERT(arrW[i] > 0.995f && arrW[i] < 1.005f);
 #endif
 	}
 }
@@ -213,7 +213,7 @@ void CrySkinFull::CStatistics::initSetDests(const CrySkinFull* pSkin)
 		{
 			unsigned nDest = pVertex->nDest;
 			addDest(nDest);
-			assert(arrNumLinks[nDest] == 1);
+			CRYASSERT(arrNumLinks[nDest] == 1);
 		}
 
 		// process the smooth1 vertices that were the first time met
@@ -222,7 +222,7 @@ void CrySkinFull::CStatistics::initSetDests(const CrySkinFull* pSkin)
 		{
 			unsigned nDest = *pAux;
 			addDest(nDest);
-			assert(arrNumLinks[nDest] == 1);
+			CRYASSERT(arrNumLinks[nDest] == 1);
 			//pVertex->fWeight is the weight of the vertex
 		}
 
@@ -232,7 +232,7 @@ void CrySkinFull::CStatistics::initSetDests(const CrySkinFull* pSkin)
 		{
 			unsigned nDest = *pAux;
 			addDest(nDest);
-			assert(arrNumLinks[nDest] > 1);
+			CRYASSERT(arrNumLinks[nDest] > 1);
 			// pVertex->fWeight contains the weight of the vertex
 		}
 	}
@@ -259,11 +259,11 @@ void CrySkinFull::validate(const ICrySkinSource* pGeometry)
 		{
 			unsigned nDest = pVertex->nDest;
 			const CryVertexBinding& rLink = pGeometry->getLink(nDest);
-			assert(arrNumLinks[nDest] == 0);
+			CRYASSERT(arrNumLinks[nDest] == 0);
 			arrNumLinks[nDest] = 1;
-			assert(rLink.size() == 1);
-			assert(rLink[0].Blending == 1);
-			assert(rLink[0].BoneID == nBone);
+			CRYASSERT(rLink.size() == 1);
+			CRYASSERT(rLink[0].Blending == 1);
+			CRYASSERT(rLink[0].BoneID == nBone);
 		}
 
 		// process the smooth1 vertices that were the first time met
@@ -272,10 +272,10 @@ void CrySkinFull::validate(const ICrySkinSource* pGeometry)
 		{
 			unsigned nDest = *pAux;
 			const CryVertexBinding& rLink = pGeometry->getLink(nDest);
-			assert(arrNumLinks[nDest]++ == 0);
-			assert(rLink.size() > 1);
+			CRYASSERT(arrNumLinks[nDest]++ == 0);
+			CRYASSERT(rLink.size() > 1);
 			float fLegacyWeight = rLink.getBoneWeight(nBone);
-			assert(pVertex->fWeight == fLegacyWeight);
+			CRYASSERT(pVertex->fWeight == fLegacyWeight);
 		}
 
 		// process the smooth vertices that were the first time met
@@ -284,16 +284,16 @@ void CrySkinFull::validate(const ICrySkinSource* pGeometry)
 		{
 			unsigned nDest = *pAux;
 			const CryVertexBinding& rLink = pGeometry->getLink(nDest);
-			assert(arrNumLinks[nDest]++ > 0);
-			assert(arrNumLinks[nDest] <= rLink.size());
-			assert(rLink.size() > 1);
+			CRYASSERT(arrNumLinks[nDest]++ > 0);
+			CRYASSERT(arrNumLinks[nDest] <= rLink.size());
+			CRYASSERT(rLink.size() > 1);
 			float fLegacyWeight = rLink.getBoneWeight(nBone);
-			assert(rLink.hasBoneWeight(nBone, pVertex->fWeight));
+			CRYASSERT(rLink.hasBoneWeight(nBone, pVertex->fWeight));
 		}
 	}
 
 	for (unsigned nVert = 0; nVert < pGeometry->numVertices(); ++nVert)
-		assert(arrNumLinks[nVert] == pGeometry->getLink(nVert).size());
+		CRYASSERT(arrNumLinks[nVert] == pGeometry->getLink(nVert).size());
 }
 #endif
 

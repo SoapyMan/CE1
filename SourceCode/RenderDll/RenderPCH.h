@@ -44,12 +44,10 @@
 #ifdef _XBOX
 
 //! Include standart headers.
-#include <assert.h>
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <assert.h>
 #include <memory.h>
 #include <io.h>
 #include <memory.h>
@@ -106,10 +104,6 @@ void CRTDeleteArray(void* pData);
 #include <set>
 #include <string>
 #include <algorithm>
-
-#if !defined(LINUX)
-#include <assert.h>
-#endif
 
 typedef const char* cstr;
 
@@ -613,7 +607,7 @@ _inline int CullBoxByPlane(float* Mins, float* Maxs, SPlane* p)
 	if (dist2 < p->m_Dist)
 		sides |= 2;
 
-	//ASSERT( sides != 0 );
+	//CRYASSERT( sides != 0 );
 
 	return sides;
 }
@@ -719,7 +713,7 @@ _inline void _SetVar(const char* szVarName, int nVal)
 		var->Set(nVal);
 	else
 	{
-		assert(0);
+		CRYASSERT(0);
 	}
 }
 
@@ -741,11 +735,11 @@ _inline void HeapCheck()
 {
 #if !defined(LINUX)
 	int Result = _heapchk();
-	assert(Result != _HEAPBADBEGIN);
-	assert(Result != _HEAPBADNODE);
-	assert(Result != _HEAPBADPTR);
-	assert(Result != _HEAPEMPTY);
-	assert(Result == _HEAPOK);
+	CRYASSERT(Result != _HEAPBADBEGIN);
+	CRYASSERT(Result != _HEAPBADNODE);
+	CRYASSERT(Result != _HEAPBADPTR);
+	CRYASSERT(Result != _HEAPEMPTY);
+	CRYASSERT(Result == _HEAPOK);
 #endif
 }
 

@@ -29,7 +29,7 @@ void CrySkinMorph::skin(const Matrix44* pBones, float fWeight, Vec3d* pDest)cons
 			pDest[pVertex->nDest] += pBone->TransformVectorOLD(pVertex->pt) * fWeight;
 			//pDest[pVertex->nDest] += (GetTransposed44(*pBone)*(pVertex->pt)) * fWeight;
 #ifdef _DEBUG
-			assert(arrW[pVertex->nDest] == 0);
+			CRYASSERT(arrW[pVertex->nDest] == 0);
 			arrW[pVertex->nDest] = 1;
 #endif
 		}
@@ -42,15 +42,15 @@ void CrySkinMorph::skin(const Matrix44* pBones, float fWeight, Vec3d* pDest)cons
 			//	pDest[*pAux] += (GetTransposed44(*pBone)*pVertex->pt) * fWeight * pVertex->fWeight;
 
 #ifdef _DEBUG
-			assert(arrW[*pAux] >= 0 && arrW[*pAux] < 1.005f);
+			CRYASSERT(arrW[*pAux] >= 0 && arrW[*pAux] < 1.005f);
 			arrW[*pAux] += pVertex->fWeight;
-			assert(arrW[*pAux] >= 0 && arrW[*pAux] < 1.005f);
+			CRYASSERT(arrW[*pAux] >= 0 && arrW[*pAux] < 1.005f);
 #endif
 		}
 	}
 #ifdef _DEBUG
 	for (unsigned i = 0; i < m_numDests; ++i)
-		assert(arrW[i] == 0 || (arrW[i] > 0.995f && arrW[i] < 1.005f));
+		CRYASSERT(arrW[i] == 0 || (arrW[i] > 0.995f && arrW[i] < 1.005f));
 #endif
 }
 
@@ -84,7 +84,7 @@ void CrySkinMorph::skin(const Matrix44* pBones, float fWeight, Vec3d* pDest, Vec
 			pDestNormalsA16[pVertex->nDest].v += vOffset * fAmplify;
 			//pDest[pVertex->nDest] += (GetTransposed44(*pBone)*(pVertex->pt)) * fWeight;
 #ifdef _DEBUG
-			assert(arrW[pVertex->nDest] == 0);
+			CRYASSERT(arrW[pVertex->nDest] == 0);
 			arrW[pVertex->nDest] = 1;
 #endif
 		}
@@ -99,15 +99,15 @@ void CrySkinMorph::skin(const Matrix44* pBones, float fWeight, Vec3d* pDest, Vec
 			//	pDest[*pAux] += (GetTransposed44(*pBone)*pVertex->pt) * fWeight * pVertex->fWeight;
 
 #ifdef _DEBUG
-			assert(arrW[*pAux] >= 0 && arrW[*pAux] < 1.005f);
+			CRYASSERT(arrW[*pAux] >= 0 && arrW[*pAux] < 1.005f);
 			arrW[*pAux] += pVertex->fWeight;
-			assert(arrW[*pAux] >= 0 && arrW[*pAux] < 1.005f);
+			CRYASSERT(arrW[*pAux] >= 0 && arrW[*pAux] < 1.005f);
 #endif
 		}
 	}
 #ifdef _DEBUG
 	for (unsigned i = 0; i < m_numDests; ++i)
-		assert(arrW[i] == 0 || (arrW[i] > 0.995f && arrW[i] < 1.005f));
+		CRYASSERT(arrW[i] == 0 || (arrW[i] > 0.995f && arrW[i] < 1.005f));
 #endif
 }
 

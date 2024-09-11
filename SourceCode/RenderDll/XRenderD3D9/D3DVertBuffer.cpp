@@ -53,7 +53,7 @@ void CD3D9Renderer::DrawDynVB(int nOffs, int Pool, int nVerts)
 	HRESULT h;
 
 	struct_VERTEX_FORMAT_P3F_COL4UB_TEX2F* pDst = (struct_VERTEX_FORMAT_P3F_COL4UB_TEX2F*)GetVBPtr3D(nVerts, nOffs);
-	//assert(pDst);
+	//CRYASSERT(pDst);
 	if (!pDst)
 		return;
 
@@ -98,7 +98,7 @@ void CD3D9Renderer::DrawDynVB(struct_VERTEX_FORMAT_P3F_COL4UB_TEX2F* pBuf, ushor
 
 	int nOffs, nIOffs;
 	struct_VERTEX_FORMAT_P3F_COL4UB_TEX2F* pDst = (struct_VERTEX_FORMAT_P3F_COL4UB_TEX2F*)GetVBPtr3D(nVerts, nOffs);
-	assert(pDst);
+	CRYASSERT(pDst);
 	if (!pDst)
 		return;
 
@@ -280,7 +280,7 @@ static char* szDescBuf[] =
 
 bool CD3D9Renderer::AllocateVBChunk(int bytes_count, TVertPool* Ptr, SVertexStream* pVB, const char* szSource)
 {
-	assert(bytes_count);
+	CRYASSERT(bytes_count);
 
 	if (!Ptr->m_alloc_info.Count())
 	{
@@ -365,7 +365,7 @@ bool CD3D9Renderer::ReleaseVBChunk(TVertPool* Ptr, SVertexStream* pVB)
 			// merge unused shunks
 			for (int s = 0; s < Ptr->m_alloc_info.Count() - 1; s++)
 			{
-				assert(Ptr->m_alloc_info[s].ptr < Ptr->m_alloc_info[s + 1].ptr);
+				CRYASSERT(Ptr->m_alloc_info[s].ptr < Ptr->m_alloc_info[s + 1].ptr);
 
 				if (Ptr->m_alloc_info[s].busy == false)
 				{
@@ -388,7 +388,7 @@ bool CD3D9Renderer::ReleaseVBChunk(TVertPool* Ptr, SVertexStream* pVB)
 
 void CD3D9Renderer::AllocVBInPool(int size, int nVFormat, SVertexStream* pVB)
 {
-	assert(nVFormat >= 0 && nVFormat < VERTEX_FORMAT_NUMS);
+	CRYASSERT(nVFormat >= 0 && nVFormat < VERTEX_FORMAT_NUMS);
 
 	const int Flags = D3DUSAGE_WRITEONLY;
 	const D3DPOOL Pool = D3DPOOL_MANAGED;
@@ -411,7 +411,7 @@ void CD3D9Renderer::AllocVBInPool(int size, int nVFormat, SVertexStream* pVB)
 		Ptr->PrevLink = &sVertPools;
 		if (sVertPools)
 		{
-			assert(sVertPools->PrevLink == &sVertPools);
+			CRYASSERT(sVertPools->PrevLink == &sVertPools);
 			sVertPools->PrevLink = &Ptr->Next;
 		}
 		sVertPools = Ptr;
@@ -649,7 +649,7 @@ void CD3D9Renderer::UpdateBuffer(CVertexBuffer* dest, const void* src, int verte
 		PROFILE_FRAME(Mesh_UpdateVBuffersLock);
 		stream.m_bLocked = true;
 		hr = tvert->Lock(nOffs, size * vertexcount, (void**)&pVertices, dest->m_bDynamic ? D3DLOCK_DISCARD : 0);
-		assert(!hr);
+		CRYASSERT(!hr);
 		stream.m_VData = pVertices;
 	}
 

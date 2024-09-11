@@ -69,7 +69,7 @@ extern bool g_bProfilerEnabled;
 	{						\
 		if(!(a))			\
 		{					\
-		assert (0);		\
+		CRYASSERT (0);		\
 		}					\
 	}						
 #else
@@ -103,9 +103,6 @@ typedef unsigned short		ushort;
 #include <stdio.h>
 #include <stdarg.h>
 #include <math.h>
-#if !defined(LINUX)
-#include <assert.h>
-#endif
 
 
 /*#ifdef USE_MEM_POOL

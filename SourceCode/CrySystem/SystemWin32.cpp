@@ -186,7 +186,7 @@ void CSystem::CollectMemStats(CrySizerImpl* pSizer, MemStatsPurposeEnum nPurpose
 		m_pIPhysicalWorld->GetMemoryStatistics(pSizer);
 	}
 
-	assert(m_pRenderer);
+	CRYASSERT(m_pRenderer);
 	{
 		SIZER_COMPONENT_NAME(pSizer, "Renderer");
 		m_pRenderer->GetMemoryUsage(pSizer);
@@ -507,10 +507,10 @@ void CSystem::DebugStats(bool checkpoint, bool leaks)
 		{
 			if (phe.wFlags & PROCESS_HEAP_REGION)
 			{
-				assert(++nPrevRegionIndex == phe.iRegionIndex);
+				CRYASSERT(++nPrevRegionIndex == phe.iRegionIndex);
 				nCommitted += phe.Region.dwCommittedSize;
 				nUncommitted += phe.Region.dwUnCommittedSize;
-				assert(phe.cbData == 0 || (phe.wFlags & PROCESS_HEAP_ENTRY_BUSY));
+				CRYASSERT(phe.cbData == 0 || (phe.wFlags & PROCESS_HEAP_ENTRY_BUSY));
 			}
 			else
 				if (phe.wFlags & PROCESS_HEAP_UNCOMMITTED_RANGE)
@@ -792,7 +792,7 @@ bool CSystem::GetSSFileInfo(const char* inszFileName, char* outszInfo, const DWO
 	{
 		// SSInfo is deavtivated
 		strcpy(outszInfo, "SourceSafe-Info is deactivated (sys_SSInfo=0)");
-		assert(indwBufferSize > strlen(outszInfo) + 1);
+		CRYASSERT(indwBufferSize > strlen(outszInfo) + 1);
 		return(true);
 	}
 
@@ -815,8 +815,8 @@ bool CSystem::GetSSFileInfo(const char* inszFileName, char* outszInfo, const DWO
 			break;
 		}
 
-		assert(szDatabase);
-		assert(szRoot);
+		CRYASSERT(szDatabase);
+		CRYASSERT(szRoot);
 
 		const int iSize = 256;
 

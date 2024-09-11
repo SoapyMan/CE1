@@ -1,10 +1,6 @@
 #include "StdAfx.h"
 #include <IPhysics.h>
 
-#if !defined(LINUX)
-#include <assert.h>
-#endif
-
 //#include <malloc.h>
 #include <Cry_Math.h>
 #include <ISystem.h>
@@ -3459,11 +3455,11 @@ static void PushFront(std::vector<Tri*>& arrTri, const std::list<Tri*>& lstTri)
 	std::list<Tri*>::const_iterator itList = lstTri.begin();
 	for (i = 0; i < nListSize; ++i, ++itList)
 	{
-		assert(itList != lstTri.end());
+		CRYASSERT(itList != lstTri.end());
 		arrTri[i] = *itList;
 	}
 
-	assert(itList == lstTri.end());
+	CRYASSERT(itList == lstTri.end());
 #else
 	arrTri.insert(arrTri.begin(), lstTri.begin(), lstTri.end());
 #endif
@@ -4233,7 +4229,7 @@ void CAISystem::AddForbiddenAreas(void)
 						{
 							ListNodes::iterator li;
 							li = std::find(itnext, m_lstNewNodes.end(), (*it));
-							assert(li == m_lstNewNodes.end());		// duplicated entry in list
+							CRYASSERT(li == m_lstNewNodes.end());		// duplicated entry in list
 						}
 
 						for (VectorOfLinks::iterator il = pCurrent->link.begin(); il != pCurrent->link.end(); il++)
@@ -4244,10 +4240,10 @@ void CAISystem::AddForbiddenAreas(void)
 					{
 						CutEdgeIdx curCut = (*cItr);
 						GraphNode* pNode = FindMarkNodeBy2Vertex(curCut.idx1, curCut.idx2, NULL);
-						assert(pNode);	// cut not found!!!!
+						CRYASSERT(pNode);	// cut not found!!!!
 						// find second node - on other side of cut
 	//					pNode = FindMarkNodeBy2Vertex( curCut.idx1, curCut.idx2, pNode );
-	//					assert( pNode );	// second cut not found!!!!
+	//					CRYASSERT( pNode );	// second cut not found!!!!
 						newSegCounter++;
 					}
 
@@ -6088,7 +6084,7 @@ GraphNode* CAISystem::FindMarkNodeBy2Vertex(int vIdx1, int vIdx2, GraphNode* exc
 
 void CAISystem::AddTheCut(int vIdx1, int vIdx2)
 {
-	assert(vIdx1 >= 0 && vIdx2 >= 0);
+	CRYASSERT(vIdx1 >= 0 && vIdx2 >= 0);
 	if (vIdx1 == vIdx2)
 		return;
 	m_NewCutsVector.push_back(CutEdgeIdx(vIdx1, vIdx2));
@@ -6114,7 +6110,7 @@ void	CAISystem::CreatePossibleCutList(const Vec3d& vStart, const Vec3d& vEnd, Li
 		if (offset < .0001f)
 		{
 			// can't find  node on the edge
-//			assert( 0 );
+//			CRYASSERT( 0 );
 			return;
 		}
 	}

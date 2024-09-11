@@ -94,8 +94,8 @@ public:
 
 	bool operator () (unsigned nLeft, unsigned nRight) const
 	{
-		assert(nLeft >= 0 && nLeft < m_numSize);
-		assert(nRight >= 0 && nRight < m_numSize);
+		CRYASSERT(nLeft >= 0 && nLeft < m_numSize);
+		CRYASSERT(nRight >= 0 && nRight < m_numSize);
 		return m_pTokenizers[nLeft] < m_pTokenizers[nRight];
 	}
 

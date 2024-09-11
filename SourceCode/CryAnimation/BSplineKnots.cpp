@@ -28,7 +28,7 @@ int BSplineKnots::findInterval(Time fTime)const
 BSplineKnots::Value BSplineKnots::getBasis(int i, int d, Time t) const
 {
 	// the requested basis must have defined supporting knots
-	assert(i >= 0 && i + d + 1 < m_numKnots);
+	CRYASSERT(i >= 0 && i + d + 1 < m_numKnots);
 
 	// starting and ending knots - they demark the support interval: [*begin,*(end-1)]
 	const Time* pKnotBegin = m_pKnots + i;
@@ -38,7 +38,7 @@ BSplineKnots::Value BSplineKnots::getBasis(int i, int d, Time t) const
 	const Time* pKnotAfterT = std::upper_bound(pKnotBegin, pKnotEnd, t);
 	if (pKnotAfterT == pKnotBegin)
 	{
-		assert(t < pKnotBegin[0]);
+		CRYASSERT(t < pKnotBegin[0]);
 		return 0; // the time t is before the supporting interval of the basis function
 	}
 
@@ -47,7 +47,7 @@ BSplineKnots::Value BSplineKnots::getBasis(int i, int d, Time t) const
 		if (t > pKnotEnd[-1])
 			return 0; // the time t is after the supporting interval
 
-		assert(t == pKnotEnd[-1]);
+		CRYASSERT(t == pKnotEnd[-1]);
 		// scan down multiple knots
 		while (t == pKnotAfterT[-1])
 			--pKnotAfterT;
@@ -65,7 +65,7 @@ BSplineKnots::Value BSplineKnots::getBasis(int i, int d, Time t, int nIntervalT)
 	if (nIntervalT < 0 || nIntervalT >= m_numKnots)
 		return 0;
 
-	assert(t >= m_pKnots[nIntervalT] && t < m_pKnots[nIntervalT + 1]);
+	CRYASSERT(t >= m_pKnots[nIntervalT] && t < m_pKnots[nIntervalT + 1]);
 
 	// the requested basis must have defined supporting knots
 	if (i < 0 || i + d + 1 >= m_numKnots)
@@ -83,9 +83,9 @@ BSplineKnots::Value BSplineKnots::getBasis(int i, int d, Time t, int nIntervalT)
 // the knots of the basis function start at pKnotBegin, and the first knot before t is pKnotBeforeT
 BSplineKnots::Value BSplineKnots::getBasis(const Time* pKnotBegin, int d, Time t, const Time* pKnotBeforeT)const
 {
-	assert(t >= pKnotBeforeT[0] && t <= pKnotBeforeT[1]);
-	assert(pKnotBegin >= m_pKnots && pKnotBegin + d + 1 < m_pKnots + m_numKnots);
-	assert(pKnotBeforeT >= pKnotBegin && pKnotBeforeT <= pKnotBegin + d);
+	CRYASSERT(t >= pKnotBeforeT[0] && t <= pKnotBeforeT[1]);
+	CRYASSERT(pKnotBegin >= m_pKnots && pKnotBegin + d + 1 < m_pKnots + m_numKnots);
+	CRYASSERT(pKnotBeforeT >= pKnotBegin && pKnotBeforeT <= pKnotBegin + d);
 
 	switch (d)
 	{
@@ -100,7 +100,7 @@ BSplineKnots::Value BSplineKnots::getBasis(const Time* pKnotBegin, int d, Time t
 		}
 		else
 		{
-			assert(pKnotBeforeT == pKnotBegin + 1);
+			CRYASSERT(pKnotBeforeT == pKnotBegin + 1);
 			return (pKnotBegin[2] - t) / (pKnotBegin[2] - pKnotBegin[1]);
 		}
 	default:
@@ -119,7 +119,7 @@ BSplineKnots::Value BSplineKnots::getBasis(const Time* pKnotBegin, int d, Time t
 // returns the time where the i-th given basis reaches its maximum
 BSplineKnots::Time BSplineKnots::getBasisPeak(int i/*nStartKnot*/, int d/*nDegree*/)
 {
-	assert(i >= 0 && i < m_numKnots - d - 1);
+	CRYASSERT(i >= 0 && i < m_numKnots - d - 1);
 	if (d == 1)
 		return m_pKnots[i + 1];
 
@@ -156,7 +156,7 @@ double BSplineKnots::getKnotProductPenalty(int nStartKnot, int nEndKnot)
 			fSum -= log_tpl(m_pKnots[nKnotInterval + 1] - m_pKnots[nKnotInterval]);
 		}
 
-		assert(fSum > -1e-10);
+		CRYASSERT(fSum > -1e-10);
 
 		return crymax(0.0, fSum);
 	}
@@ -170,7 +170,7 @@ double BSplineKnots::getKnotProductPenalty(int nStartKnot, int nEndKnot)
 BSplineKnots::Value BSplineKnots::getDelta(int i, int d, int k) const
 {
 	// the support interval is [i..i+d+1]
-	assert(k >= i && k <= i + d + 1);
+	CRYASSERT(k >= i && k <= i + d + 1);
 
 	double dResult = 1;
 	int j;

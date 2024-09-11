@@ -109,7 +109,7 @@ int CD3D9Renderer::EF_RegisterFogVolume(float fMaxFogDist, float fFogLayerZ, CFC
 	}
 	else
 	{
-		assert(nIndex < m_RP.m_FogVolumes.Num());
+		CRYASSERT(nIndex < m_RP.m_FogVolumes.Num());
 		SMFog* pFog = &m_RP.m_FogVolumes[nIndex];
 		pFog->m_fMaxDist = fMaxFogDist;
 		pFog->m_FogInfo.m_FogColor = color;
@@ -1835,7 +1835,7 @@ void CD3D9Renderer::EF_Eval_RGBAGen(SShaderPass* sfm)
 		break;
 
 	default:
-		assert(0);
+		CRYASSERT(0);
 	}
 
 	switch (sfm->m_eEvalAlpha)
@@ -2043,7 +2043,7 @@ void CD3D9Renderer::EF_Eval_RGBAGen(SShaderPass* sfm)
 		break;
 
 	default:
-		assert(0);
+		CRYASSERT(0);
 	}
 
 	if (bSetCol)
@@ -2176,7 +2176,7 @@ void CRenderer::EF_SetStencilState(int st, uint nStencRef, uint nStencMask)
 			dv->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_NOTEQUAL);
 			break;
 		default:
-			assert(false);
+			CRYASSERT(false);
 		}
 	}
 	if (Changed & FSS_STENCFAIL_MASK)
@@ -2206,7 +2206,7 @@ void CRenderer::EF_SetStencilState(int st, uint nStencRef, uint nStencMask)
 			dv->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_ZERO);
 			break;
 		default:
-			assert(false);
+			CRYASSERT(false);
 		}
 	}
 	if (Changed & FSS_STENCZFAIL_MASK)
@@ -2236,7 +2236,7 @@ void CRenderer::EF_SetStencilState(int st, uint nStencRef, uint nStencMask)
 			dv->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_ZERO);
 			break;
 		default:
-			assert(false);
+			CRYASSERT(false);
 		}
 	}
 	if (Changed & FSS_STENCPASS_MASK)
@@ -2266,7 +2266,7 @@ void CRenderer::EF_SetStencilState(int st, uint nStencRef, uint nStencMask)
 			dv->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_ZERO);
 			break;
 		default:
-			assert(false);
+			CRYASSERT(false);
 		}
 	}
 
@@ -2300,7 +2300,7 @@ void CRenderer::EF_SetStencilState(int st, uint nStencRef, uint nStencMask)
 			dv->SetRenderState(D3DRS_CCW_STENCILFUNC, D3DCMP_NOTEQUAL);
 			break;
 		default:
-			assert(false);
+			CRYASSERT(false);
 		}
 	}
 	if (Changed & (FSS_STENCFAIL_MASK << FSS_CCW_SHIFT))
@@ -2330,7 +2330,7 @@ void CRenderer::EF_SetStencilState(int st, uint nStencRef, uint nStencMask)
 			dv->SetRenderState(D3DRS_CCW_STENCILFAIL, D3DSTENCILOP_ZERO);
 			break;
 		default:
-			assert(false);
+			CRYASSERT(false);
 		}
 	}
 	if (Changed & (FSS_STENCZFAIL_MASK << FSS_CCW_SHIFT))
@@ -2360,7 +2360,7 @@ void CRenderer::EF_SetStencilState(int st, uint nStencRef, uint nStencMask)
 			dv->SetRenderState(D3DRS_CCW_STENCILZFAIL, D3DSTENCILOP_ZERO);
 			break;
 		default:
-			assert(false);
+			CRYASSERT(false);
 		}
 	}
 	if (Changed & (FSS_STENCPASS_MASK << FSS_CCW_SHIFT))
@@ -2390,7 +2390,7 @@ void CRenderer::EF_SetStencilState(int st, uint nStencRef, uint nStencMask)
 			dv->SetRenderState(D3DRS_CCW_STENCILPASS, D3DSTENCILOP_ZERO);
 			break;
 		default:
-			assert(false);
+			CRYASSERT(false);
 		}
 	}
 
@@ -3937,7 +3937,7 @@ void CD3D9Renderer::EF_DrawIndexedMesh(int nPrimType)
 	break;
 
 	default:
-		assert(0);
+		CRYASSERT(0);
 	}
 
 	if (nFaces)
@@ -4733,8 +4733,8 @@ int CD3D9Renderer::EF_DrawMultiShadowPasses(SShaderTechnique* hs, SShader* ef, i
 		nEndShadow = nStartShadow;
 	if (nEndAmb < 0)
 		nEndAmb = nStartAmb;
-	assert(nStartShadow >= 0);
-	assert(nStartLight >= 0);
+	CRYASSERT(nStartShadow >= 0);
+	CRYASSERT(nStartLight >= 0);
 
 	int nFrustrums = 0;
 	list2<ShadowMapLightSourceInstance> SmLI[16];
@@ -5135,13 +5135,13 @@ void CD3D9Renderer::EF_DrawInstances(SShader* ef, SShaderPassHW* slw, int nCurIn
 		if (!vd->m_pDeclaration)
 		{
 			hr = m_pd3dDevice->CreateVertexDeclaration(&vd->m_Declaration[0], &vd->m_pDeclaration);
-			assert(hr == S_OK);
+			CRYASSERT(hr == S_OK);
 		}
 		if (m_pLastVDeclaration != vd->m_pDeclaration)
 		{
 			m_pLastVDeclaration = vd->m_pDeclaration;
 			hr = m_pd3dDevice->SetVertexDeclaration(vd->m_pDeclaration);
-			assert(hr == S_OK);
+			CRYASSERT(hr == S_OK);
 		}
 	}
 	{
@@ -5738,7 +5738,7 @@ void CD3D9Renderer::EF_DrawLightPasses_PS30(SShaderTechnique* hs, SShader* ef, i
 		bool bUseOccl = false;
 		for (i = 0; i < lp->nLights; i++)
 		{
-			assert(lp->nLights <= nMaxLights);
+			CRYASSERT(lp->nLights <= nMaxLights);
 			CDLight* dl = lp->pLights[i];
 			if (dl->m_Flags & DLF_POINT)
 				Types[i] = SLMF_POINT;
@@ -6080,7 +6080,7 @@ void CD3D9Renderer::EF_DrawLightPasses(SShaderTechnique* hs, SShader* ef, int nS
 						continue;
 					if ((!m_RP.m_pShaderResources || !m_RP.m_pShaderResources->m_Textures[EFTT_LIGHTMAP_DIR]) && !m_RP.m_pCurObject->m_nLMId)
 						continue;
-					//assert (m_RP.m_pCurLight->m_SpecColor.r!=0 || m_RP.m_pCurLight->m_SpecColor.g!=0 || m_RP.m_pCurLight->m_SpecColor.b!=0);
+					//CRYASSERT (m_RP.m_pCurLight->m_SpecColor.r!=0 || m_RP.m_pCurLight->m_SpecColor.g!=0 || m_RP.m_pCurLight->m_SpecColor.b!=0);
 					// Ignore specular pass if specular is less threshold
 					if (m_RP.m_pCurLight->m_SpecColor.r <= 0.01f && m_RP.m_pCurLight->m_SpecColor.g <= 0.01f && m_RP.m_pCurLight->m_SpecColor.b <= 0.01f)
 						continue;
@@ -7351,7 +7351,7 @@ void CD3D9Renderer::EF_EndEf3D(int nFlags)
 		return;
 	}
 
-	assert(SRendItem::m_RecurseLevel >= 1);
+	CRYASSERT(SRendItem::m_RecurseLevel >= 1);
 	if (SRendItem::m_RecurseLevel < 1)
 	{
 		iLog->Log("Error: CRenderer::EF_EndEf3D without CRenderer::EF_StartEf");
@@ -7415,7 +7415,7 @@ void CD3D9Renderer::EF_EndEf3D(int nFlags)
 		// Set float render target for HDR rendering
 		if (tm->m_HDR_RT_FSAA)
 		{
-			assert(!m_pHDRTargetSurf);
+			CRYASSERT(!m_pHDRTargetSurf);
 			if (!m_pHDRTargetSurf)
 			{
 				m_pHDRTargetSurf = tm->m_HDR_RT_FSAA;
@@ -7427,11 +7427,11 @@ void CD3D9Renderer::EF_EndEf3D(int nFlags)
 		{
 			STexPic* tp = tm->m_Text_HDRTarget;
 			LPDIRECT3DTEXTURE9 pTexture = (LPDIRECT3DTEXTURE9)tp->m_RefTex.m_VidTex;
-			assert(pTexture);
-			assert(!m_pHDRTargetSurf);
+			CRYASSERT(pTexture);
+			CRYASSERT(!m_pHDRTargetSurf);
 			if (!m_pHDRTargetSurf)
 				pTexture->GetSurfaceLevel(0, &m_pHDRTargetSurf);
-			assert(m_pHDRTargetSurf);
+			CRYASSERT(m_pHDRTargetSurf);
 			//D3DSURFACE_DESC dtdsdRT;
 			//m_pHDRTargetSurf->GetDesc(&dtdsdRT);
 			HRESULT hr = m_pd3dDevice->SetRenderTarget(0, m_pHDRTargetSurf);

@@ -43,16 +43,16 @@ void CrySkinBuilder::initSkinFull(CrySkinFull* pSkin)
 		// for each bone, fill the three groups
 		// we start from the rigid vertices
 		fillRigidGroup(stream, nBone);
-		assert(stream.pAux <= streamEnd.pAux);
-		assert(stream.pVert <= streamEnd.pVert);
+		CRYASSERT(stream.pAux <= streamEnd.pAux);
+		CRYASSERT(stream.pVert <= streamEnd.pVert);
 		fillSmoothGroups(stream, nBone);
 		// only when we processed the last bone, we should have the pAux pointing to the end
-		assert(stream.pAux <= streamEnd.pAux);
-		assert(stream.pVert <= streamEnd.pVert);
+		CRYASSERT(stream.pAux <= streamEnd.pAux);
+		CRYASSERT(stream.pVert <= streamEnd.pVert);
 	}
 	m_arrSmoothVertHitCount.clear();
-	assert(stream.pAux == streamEnd.pAux);
-	assert(stream.pVert == streamEnd.pVert);
+	CRYASSERT(stream.pAux == streamEnd.pAux);
+	CRYASSERT(stream.pVert == streamEnd.pVert);
 #ifdef _DEBUG
 	validate(pSkin);
 	pSkin->validate(m_pGeometry);
@@ -89,7 +89,7 @@ void CrySkinBuilder::fillSmoothGroups(CrySkinStreams& streams, unsigned nBone)
 #ifdef _DEBUG
 		const CryVertexBinding& rLink = m_pGeometry->getLink(it->nDest);
 		float fLegacyWeight = rLink.getBoneWeight(nBone);
-		assert(rLink.hasBoneWeight(nBone, it->fWeight));
+		CRYASSERT(rLink.hasBoneWeight(nBone, it->fWeight));
 #endif
 		// check which time the vertex is met
 		if (nVertHitCount == 0)
@@ -131,7 +131,7 @@ void CrySkinBuilder::validate(CrySkinFull* pSkin)
 	{
 		/*
 		BoneVertexGroup& rGroup = m_arrBoneVerts[nBone];
-		assert (*stream.pAux++ == rGroup.arrRigid.size());
+		CRYASSERT (*stream.pAux++ == rGroup.arrRigid.size());
 
 		stream.pVert += rGroup.arrRigid.size();
 		*/

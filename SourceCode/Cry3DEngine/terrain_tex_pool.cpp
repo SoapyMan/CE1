@@ -35,7 +35,7 @@ CTexturePool::CTexturePool()
 		int nTexID = GetRenderer()->DownLoadToVideoMemory(pTmpBuff,
 		  nMaxTexSize, nMaxTexSize, eTF_DXT1, eTF_DXT1, 0, false, FILTER_LINEAR);
 
-		assert(nTexID);
+		CRYASSERT(nTexID);
 
 		TexInfo info;
 		info.nTexId = nTexID;
@@ -90,9 +90,9 @@ int CTexturePool::MakeTexture(uchar* pData, int nTexSize, CSectorInfo* pNewSecto
 		}
 
 	// free owning sector textures
-	assert(TexInfos[nTexInfoId].pSectorInfo);
+	CRYASSERT(TexInfos[nTexInfoId].pSectorInfo);
 	TexInfos[nTexInfoId].pSectorInfo->RemoveSectorTextures(nLod > 0);
-	assert(!TexInfos[nTexInfoId].pSectorInfo);
+	CRYASSERT(!TexInfos[nTexInfoId].pSectorInfo);
 
 	// update slot texture with new data
 	TexInfos[nTexInfoId].pSectorInfo = pNewSectorInfo;
@@ -116,7 +116,7 @@ void CTexturePool::RemoveTexture(int nId)
 		{
 			if (m_TexturePool[nLod][i].pSectorInfo && m_TexturePool[nLod][i].nTexId == nId)
 			{
-				assert(!bFound);
+				CRYASSERT(!bFound);
 				if (bFound)
 					GetLog()->Log("CTexturePool::RemoveTexture: texture id found twice");
 

@@ -122,7 +122,7 @@ public:
 		if (it != m_arrClients.end() && *it == pClient)
 			m_arrClients.erase(it);
 		else
-			assert(0); // the unregistered client tries to unregister
+			CRYASSERT(0); // the unregistered client tries to unregister
 	}
 
 	// finds the animation by name. Returns -1 if no animation was found

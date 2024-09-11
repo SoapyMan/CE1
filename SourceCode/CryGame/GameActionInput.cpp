@@ -994,7 +994,7 @@ void CXGame::InitConsoleVars()
 
 void CXGame::ResetInputMap()
 {
-	assert(m_pIActionMapManager);
+	CRYASSERT(m_pIActionMapManager);
 
 	m_pIActionMapManager->ResetAllBindings();
 

@@ -61,7 +61,7 @@ void CObjManager::ProcessActiveShadowReceiving(IEntityRender* pEnt, float fEntDi
 		vObjSpaceLightPos = (pLight ? pLight->m_Origin : m_p3DEngine->GetSunPosition()) - pEnt->GetPos();
 
 	// make shadow map frustum for receiving (include all objects into frustum)
-	assert(pLsource->GetShadowMapFrustum());
+	CRYASSERT(pLsource->GetShadowMapFrustum());
 	if (pLsource->GetShadowMapFrustum())
 	{
 		if (nTexSize != pLsource->GetShadowMapFrustum()->nTexSize ||
@@ -81,7 +81,7 @@ void CObjManager::ProcessActiveShadowReceiving(IEntityRender* pEnt, float fEntDi
 	}
 
 	// add frustum to the list of shadow casters
-	assert(pLsource);
+	CRYASSERT(pLsource);
 	{
 		ShadowMapLightSourceInstance LightSourceInfo;
 		LightSourceInfo.m_pLS = pLsource;
@@ -198,7 +198,7 @@ float CObjManager::GetSortOffset(const Vec3d& vPos, const Vec3d& vCamPos, float 
 void CObjManager::RenderObjectVegetationNonCastersNoFogVolume(IEntityRender* pEntityRS, uint nDLightMask,
 	const CCamera& EntViewCamera, bool bNotAllInFrustum, float fMaxViewDist, IEntityRenderInfo* pEntInfo)
 {
-	assert(pEntInfo);
+	CRYASSERT(pEntInfo);
 
 	Vec3d vCenter = pEntInfo->m_vWSCenter;
 	float fEntDistance = pEntInfo->m_fEntDistance;
@@ -233,7 +233,7 @@ void CObjManager::RenderObjectVegetationNonCastersNoFogVolume(IEntityRender* pEn
 		m_p3DEngine->CheckDistancesToLightSources(nDLightMask, vCenter, fEntRadius, pEntityRS, 8, &pStrongestLightForTranspGeom, 1, &vLightIntensity);
 
 	// check cvars
-	assert(pEntityRS->GetEntityRenderType() == eERType_Vegetation);
+	CRYASSERT(pEntityRS->GetEntityRenderType() == eERType_Vegetation);
 
 	// check all possible occlusions for outdoor objects
 	if (fEntRadius && pCVars->e_portals != 3)
@@ -319,7 +319,7 @@ void CObjManager::RenderObject(IEntityRender* pEntityRS,
 	}
 
 	// be sure fps weapon is not rendered this way
-	assert(!pEntityRS->GetEntityCharacter(0) || !(pEntityRS->GetEntityCharacter(0)->GetFlags() & CS_FLAG_DRAW_NEAR));
+	CRYASSERT(!pEntityRS->GetEntityCharacter(0) || !(pEntityRS->GetEntityCharacter(0)->GetFlags() & CS_FLAG_DRAW_NEAR));
 
 	// is position valid
 	if (!_finite(pEntityRS->GetPos().x) || !_finite(pEntityRS->GetPos().y))
@@ -362,7 +362,7 @@ void CObjManager::RenderObject(IEntityRender* pEntityRS,
 
 		// check max view distance
 		fEntDistance = cry_sqrtf(fEntDistanceSQ) * m_fZoomFactor;
-		assert(fEntDistance >= 0 && _finite(fEntDistance));
+		CRYASSERT(fEntDistance >= 0 && _finite(fEntDistance));
 		if (fEntDistance > fMaxViewDist)
 			if (!bLMapGeneration)
 				return;
@@ -607,9 +607,9 @@ void CObjManager::RenderObject(IEntityRender* pEntityRS,
 		DrawParams.dwFObjFlags |= FOB_SELECTED;
 	}
 
-	assert(DrawParams.vAmbientColor.x >= 0 && DrawParams.vAmbientColor.x <= 1.f);
-	assert(DrawParams.vAmbientColor.y >= 0 && DrawParams.vAmbientColor.y <= 1.f);
-	assert(DrawParams.vAmbientColor.z >= 0 && DrawParams.vAmbientColor.z <= 1.f);
+	CRYASSERT(DrawParams.vAmbientColor.x >= 0 && DrawParams.vAmbientColor.x <= 1.f);
+	CRYASSERT(DrawParams.vAmbientColor.y >= 0 && DrawParams.vAmbientColor.y <= 1.f);
+	CRYASSERT(DrawParams.vAmbientColor.z >= 0 && DrawParams.vAmbientColor.z <= 1.f);
 
 	if (pRend->EF_GetHeatVision())
 		DrawParams.nShaderTemplate = EFT_HEATVISION;
@@ -655,9 +655,9 @@ void CObjManager::RenderObject(IEntityRender* pEntityRS,
 			{
 				if (DrawParams.nDLightMask & 1)
 				{ // todo: remove EF_Query
-					assert(i < m_p3DEngine->GetDynamicLightSources()->Count());
+					CRYASSERT(i < m_p3DEngine->GetDynamicLightSources()->Count());
 					CDLight* pDLight = m_p3DEngine->GetDynamicLightSources()->Get(i);
-					assert(pDLight == (CDLight*)pRend->EF_Query(EFQ_LightSource, i));
+					CRYASSERT(pDLight == (CDLight*)pRend->EF_Query(EFQ_LightSource, i));
 					if (pDLight && (pDLight->m_Flags & DLF_CASTSHADOW_VOLUME))
 					{
 						nNewMask &= ~(1 << i); // remove this source from final mask
@@ -668,7 +668,7 @@ void CObjManager::RenderObject(IEntityRender* pEntityRS,
 							continue; // light is inside but caster is outside
 						}
 
-						assert(m_lstLightEntities[i].Find(pEntityRS) < 0);
+						CRYASSERT(m_lstLightEntities[i].Find(pEntityRS) < 0);
 						if (pEntityRS->IsEntityHasSomethingToRender())
 							m_lstLightEntities[i].Add(pEntityRS);
 					}
@@ -725,7 +725,7 @@ void CObjManager::RenderObject(IEntityRender* pEntityRS,
 
 		if (bFogNeeded && nFogVolumeID && !DrawParams.nFogVolumeID)
 		{ // render separate fog pass if still was not rendered
-			//    assert(nDLightMaskBewforeSeparatingShadowCasters != DrawParams.nDLightMask);
+			//    CRYASSERT(nDLightMaskBewforeSeparatingShadowCasters != DrawParams.nDLightMask);
 			DrawParams.nSortValue = eS_FogShader; // add fog to be rendered later, after light passes
 			DrawParams.nDLightMask = 0;
 			DrawParams.dwFObjFlags |= FOB_FOGPASS;
@@ -786,7 +786,7 @@ void CObjManager::DrawEntitiesLightPass()
 		if (!pDLight || !m_lstLightEntities[nLightId].Count())
 			continue;
 
-		assert(pDLight->m_Flags & DLF_CASTSHADOW_VOLUME);
+		CRYASSERT(pDLight->m_Flags & DLF_CASTSHADOW_VOLUME);
 
 		bool bUseStencilStateTest = false;
 		// clear stencil
@@ -862,8 +862,8 @@ void CObjManager::DrawEntitiesLightPass()
 				DrawParams.dwFObjFlags = FOB_LIGHTPASS;
 				if (bUseStencilStateTest)
 				{
-					assert(pDLight->m_Flags & DLF_CASTSHADOW_VOLUME);
-					assert(m_lstLightEntities[nLightId].Count());
+					CRYASSERT(pDLight->m_Flags & DLF_CASTSHADOW_VOLUME);
+					CRYASSERT(m_lstLightEntities[nLightId].Count());
 					DrawParams.pStateShader = m_p3DEngine->m_pSHStencilState;
 				}
 				DrawParams.fDistance = pEntityRS->m_arrfDistance[m_nRenderStackLevel];
@@ -923,8 +923,8 @@ void CObjManager::DrawEntitiesLightPass()
 				DrawParams.dwFObjFlags = FOB_LIGHTPASS;
 				if (bUseStencilStateTest)
 				{
-					assert(pDLight->m_Flags & DLF_CASTSHADOW_VOLUME);
-					assert(m_lstLightEntities[nLightId].Count());
+					CRYASSERT(pDLight->m_Flags & DLF_CASTSHADOW_VOLUME);
+					CRYASSERT(m_lstLightEntities[nLightId].Count());
 					DrawParams.pStateShader = m_p3DEngine->m_pSHStencilState;
 				}
 				DrawParams.fDistance = pEntityRS->m_arrfDistance[m_nRenderStackLevel];
@@ -987,8 +987,8 @@ void CObjManager::DrawEntitiesLightPass()
 							DrawParams.nSortValue = EFSLIST_STENCIL;
 							if (bUseStencilStateTest)
 							{
-								assert(pDLight->m_Flags & DLF_CASTSHADOW_VOLUME);
-								assert(m_lstLightEntities[nLightId].Count());
+								CRYASSERT(pDLight->m_Flags & DLF_CASTSHADOW_VOLUME);
+								CRYASSERT(m_lstLightEntities[nLightId].Count());
 								DrawParams.pStateShader = m_p3DEngine->m_pSHStencilStateInv;
 							}
 							DrawParams.fDistance = pEntityRS->m_arrfDistance[m_nRenderStackLevel];
@@ -1010,8 +1010,8 @@ void CObjManager::DrawEntitiesLightPass()
 							DrawParams.nShaderTemplate = EFT_INVLIGHT;
 							if (bUseStencilStateTest)
 							{
-								assert(pDLight->m_Flags & DLF_CASTSHADOW_VOLUME);
-								assert(m_lstLightEntities[nLightId].Count());
+								CRYASSERT(pDLight->m_Flags & DLF_CASTSHADOW_VOLUME);
+								CRYASSERT(m_lstLightEntities[nLightId].Count());
 								DrawParams.pStateShader = m_p3DEngine->m_pSHStencilStateInv;
 							}
 							DrawParams.fDistance = pEntityRS->m_arrfDistance[m_nRenderStackLevel];
@@ -1081,17 +1081,19 @@ void CObjManager::SetupEntityShadowMapping(IEntityRender* pEnt, SRendParams* pDr
 	list2<struct ShadowMapLightSourceInstance>* pLsList = pEnt->GetEntityRS()->pShadowMapInfo->pShadowMapCasters;
 	if (pLsList && pLsList->Count() && pLsList->Get(0)->m_pLS && pLsList->Get(0)->m_pLS->GetShadowMapFrustum())
 	{
-		assert(pLsList->Get(0)->m_pReceiver == pEnt || !pLsList->Get(0)->m_pReceiver);
+		CRYASSERT(pLsList->Get(0)->m_pReceiver == pEnt || !pLsList->Get(0)->m_pReceiver);
 		if (pLsList->Count() == 1 &&
 			pLsList->Get(0)->m_pLS->GetShadowMapFrustum()->pOwner == pLsList->Get(0)->m_pReceiver &&
 			!(pLsList->Get(0)->m_pLS->GetShadowMapFrustum()->dwFlags & SMFF_ACTIVE_SHADOW_MAP))
-			assert(pDrawParams->pShadowMapCasters == NULL); // skip single self shadowing pass
+		{
+			CRYASSERT(pDrawParams->pShadowMapCasters == NULL); // skip single self shadowing pass
+		}
 		else
 			pDrawParams->pShadowMapCasters = pLsList;
 	}
 
 	// if entity do not receive shadow - no more than this entity should be in the casters list
-	assert(pEnt->GetRndFlags() & ERF_RECVSHADOWMAPS ||
+	CRYASSERT(pEnt->GetRndFlags() & ERF_RECVSHADOWMAPS ||
 		((pDrawParams->pShadowMapCasters == 0) || (pDrawParams->pShadowMapCasters->Count() == 1)));
 
 	// add to list of outdoor shadow maps
@@ -1466,7 +1468,7 @@ bool CObjManager::ProcessShadowMapCasting(IEntityRender* pEnt, CDLight* pDLight)
 			vObjSpaceLightPos = (pDLight ? pDLight->m_Origin : m_p3DEngine->GetSunPosition()) - pEnt->GetPos();
 
 		// request shadow map update if needed
-		assert(pDLight);
+		CRYASSERT(pDLight);
 		if (!pDLight)
 			return true;
 
@@ -1513,7 +1515,7 @@ bool CObjManager::IsSphereAffectedByShadow(IEntityRender* pCaster, IEntityRender
 {
 	FUNCTION_PROFILER_FAST(GetSystem(), PROFILE_3DENGINE, m_bProfilerEnabled);
 
-	assert(pLight->m_Flags & DLF_DIRECTIONAL);
+	CRYASSERT(pLight->m_Flags & DLF_DIRECTIONAL);
 
 	// get spheres
 	Vec3d vBoxMin, vBoxMax;

@@ -116,7 +116,7 @@ public:
 			return m_arrLocalBoneLights[i];
 		else
 		{
-			assert(i < numGlobalBoneLights());
+			CRYASSERT(i < numGlobalBoneLights());
 			return m_arrGlobalBoneLights[i - numLocalBoneLights()];
 		}
 	}

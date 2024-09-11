@@ -278,7 +278,7 @@ bool CryStaticModel::OnLoadgeom(char* FileName, const char* szGeomName, bool bLo
 
 	CHUNK_HEADER* pChunks;
 	pChunks = (CHUNK_HEADER*)malloc(sizeof(CHUNK_HEADER) * n_chunks);
-	assert(pChunks);
+	CRYASSERT(pChunks);
 	res = f->FRead(pChunks, sizeof(CHUNK_HEADER), n_chunks);
 	if (res != n_chunks)
 		return 0;
@@ -290,7 +290,7 @@ bool CryStaticModel::OnLoadgeom(char* FileName, const char* szGeomName, bool bLo
 	m_ppNewObjs = (CBaseObj**)malloc(n_chunks * sizeof(CBaseObj*));
 	memset(m_ppNewObjs, 0, n_chunks * sizeof(CBaseObj*));
 
-	assert(m_ppNewObjs);
+	CRYASSERT(m_ppNewObjs);
 	m_nNewObjs = 0;
 
 	int nGeomToLoadID = -1;
@@ -433,7 +433,7 @@ bool CryStaticModel::OnLoadgeom(char* FileName, const char* szGeomName, bool bLo
 				inst.vPos = matNodeMatrix.GetTranslationOLD();
 
 			if (!pNode->m_pParent)
-				assert(IsEquivalent(pNode->m_Chunk.pos, inst.vPos, VEC_EPSILON));
+				CRYASSERT(IsEquivalent(pNode->m_Chunk.pos, inst.vPos, VEC_EPSILON));
 
 			strncpy(inst.szName, pNode->m_Chunk.name, sizeof(inst.szName));
 
@@ -467,7 +467,7 @@ bool CryStaticModel::OnLoadgeom(char* FileName, const char* szGeomName, bool bLo
 			/*
 						if(!pNode->m_pParent)
 						{
-							assert(inst.vPos == pNode->m_Chunk.pos);
+							CRYASSERT(inst.vPos == pNode->m_Chunk.pos);
 						float dot = inst.qRot.Dot(pNode->m_Chunk.rot);
 							dot=dot;
 						}

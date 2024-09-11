@@ -237,7 +237,7 @@ uchar CHighMap::GetSurfaceTypeID(int x, int y)
 
 int CHighMap::GetSurfaceType(int x, int y)
 {
-	assert(CTerrain::GetHeightMapUnitSize() == 2);
+	CRYASSERT(CTerrain::GetHeightMapUnitSize() == 2);
 	if (x > 0 && y > 0 && x < CTerrain::GetTerrainSize() && y < CTerrain::GetTerrainSize())
 	{
 		if ((m_arrusHightMapData[x >> HMAP_BIT_SHIFT][y >> HMAP_BIT_SHIFT] & STYPE_BIT_MASK) == STYPE_HOLE)

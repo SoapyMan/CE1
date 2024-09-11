@@ -110,18 +110,18 @@ public:
 	void UpdatePhysics(const BONE_ENTITY& entity, int nLod);
 	void setPhysics(int nLod, const BONE_PHYSICS& BonePhysics)
 	{
-		assert(nLod >= 0 && nLod < sizeof(m_PhysInfo) / sizeof(m_PhysInfo[0]));
+		CRYASSERT(nLod >= 0 && nLod < sizeof(m_PhysInfo) / sizeof(m_PhysInfo[0]));
 		m_PhysInfo[nLod] = BonePhysics;
 	}
 	// the physics for the given LOD is not available
 	void resetPhysics(int nLod)
 	{
-		assert(nLod >= 0 && nLod < sizeof(m_PhysInfo) / sizeof(m_PhysInfo[0]));
+		CRYASSERT(nLod >= 0 && nLod < sizeof(m_PhysInfo) / sizeof(m_PhysInfo[0]));
 		memset(&m_PhysInfo[nLod], 0, sizeof(m_PhysInfo[nLod]));
 	}
 	const BONE_PHYSICS& getPhysics(int nLod)const
 	{
-		assert(nLod >= 0 && nLod < sizeof(m_PhysInfo) / sizeof(m_PhysInfo[0]));
+		CRYASSERT(nLod >= 0 && nLod < sizeof(m_PhysInfo) / sizeof(m_PhysInfo[0]));
 		return m_PhysInfo[nLod];
 	}
 

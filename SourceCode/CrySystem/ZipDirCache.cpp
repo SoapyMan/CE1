@@ -53,10 +53,10 @@ ZipDir::FileEntry* ZipDir::Cache::FindFile(const char* szPath, bool bRefresh)
 	ZipDir::FindFile fd(this);
 	if (!fd.FindExact(szPath))
 	{
-		assert(!fd.GetFileEntry());
+		CRYASSERT(!fd.GetFileEntry());
 		return NULL;
 	}
-	assert(fd.GetFileEntry());
+	CRYASSERT(fd.GetFileEntry());
 	return fd.GetFileEntry();
 
 }
@@ -73,11 +73,11 @@ ZipDir::ErrorEnum ZipDir::Cache::ReadFile(FileEntry* pFileEntry, void* pCompress
 
 	if (pFileEntry->desc.lSizeUncompressed == 0)
 	{
-		assert(pFileEntry->desc.lSizeCompressed == 0);
+		CRYASSERT(pFileEntry->desc.lSizeCompressed == 0);
 		return ZD_ERROR_SUCCESS;
 	}
 
-	assert(pFileEntry->desc.lSizeCompressed > 0);
+	CRYASSERT(pFileEntry->desc.lSizeCompressed > 0);
 
 	ErrorEnum nError = Refresh(pFileEntry);
 	if (nError != ZD_ERROR_SUCCESS)
@@ -114,8 +114,8 @@ ZipDir::ErrorEnum ZipDir::Cache::ReadFile(FileEntry* pFileEntry, void* pCompress
 	{
 		if (pFileEntry->nMethod == 0)
 		{
-			assert(pBuffer == pUncompressed);
-			//assert (pFileEntry->desc.lSizeCompressed == pFileEntry->nSizeUncompressed);
+			CRYASSERT(pBuffer == pUncompressed);
+			//CRYASSERT (pFileEntry->desc.lSizeCompressed == pFileEntry->nSizeUncompressed);
 			//memcpy (pUncompressed, pBuffer, pFileEntry->desc.lSizeCompressed);
 		}
 		else

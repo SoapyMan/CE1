@@ -26,10 +26,6 @@
 
 #include "platform.h"
 
-#if !defined(LINUX)
-#include <assert.h>
-#endif
-
 #include "Cry_Math.h"
 #include <IXml.h>
 #include <IEntitySystem.h>

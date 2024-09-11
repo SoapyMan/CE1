@@ -10,7 +10,7 @@ bool CD3D9Renderer::FontUpdateTexture(int nTexId, int X, int Y, int USize, int V
 	WaitForDevice();
 
 	STexPicD3D* tp = (STexPicD3D*)gRenDev->m_TexMan->m_Textures[nTexId - TX_FIRSTBIND];
-	assert(tp && tp->m_Bind == nTexId);
+	CRYASSERT(tp && tp->m_Bind == nTexId);
 	if (tp)
 	{
 		m_TexMan->UpdateTextureRegion(tp, pData, X, Y, USize, VSize);
@@ -145,7 +145,7 @@ void CD3D9Renderer::FontSetTexture(int nTexId, int nFilterMode)
 	if (nTexId <= 0 || nTexId > TX_LASTBIND)
 		return;
 	STexPicD3D* tp = (STexPicD3D*)gRenDev->m_TexMan->m_Textures[nTexId - TX_FIRSTBIND];
-	assert(tp && tp->m_Bind == nTexId);
+	CRYASSERT(tp && tp->m_Bind == nTexId);
 
 	if (CV_d3d9_forcesoftware)
 		return;

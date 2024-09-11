@@ -173,7 +173,7 @@ typedef struct SOcclusionMapTexel
 		switch (eChannel)
 		{
 		case EOCCLCOLOURASSIGNMENT_NONE:
-			assert(true);
+			CRYASSERT(true);
 			return 0;
 			break;
 		case EOCCLCOLOURASSIGNMENT_BLUE:
@@ -193,11 +193,11 @@ typedef struct SOcclusionMapTexel
 	}
 	const SOcclusionMapTexel& SetValue(const EOCCLCOLOURASSIGNMENT eChannel, const uint8 cValue)
 	{
-		assert(cValue < 0x10);
+		CRYASSERT(cValue < 0x10);
 		switch (eChannel)
 		{
 		case EOCCLCOLOURASSIGNMENT_NONE:
-			assert(true);
+			CRYASSERT(true);
 			break;
 		case EOCCLCOLOURASSIGNMENT_BLUE:
 			colour &= 0xFFF0;

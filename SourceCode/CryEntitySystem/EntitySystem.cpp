@@ -193,13 +193,13 @@ CEntitySystem::~CEntitySystem()
 void CEntitySystem::InsertEntity(EntityId id, CEntity* pEntity)
 {
 	EntityMap::iterator it;
-	assert(pEntity);
+	CRYASSERT(pEntity);
 
 	it = m_mapEntities.find(id);
 
 	if (it != m_mapEntities.end())
 	{
-		//assert(false);
+		//CRYASSERT(false);
 
 		m_pISystem->GetILog()->Log("ENTITY id=%d class=\"%s\" already spawned on this client...override", it->second->GetId(), it->second->GetEntityClassName());
 	}
@@ -475,7 +475,7 @@ IEntity* CEntitySystem::SpawnEntity(CEntityDesc& ed, bool bAutoInit)
 //////////////////////////////////////////////////////////////////////////
 bool CEntitySystem::InitEntity(IEntity* pEntity, CEntityDesc& ed)
 {
-	assert(pEntity);
+	CRYASSERT(pEntity);
 	CEntity* pCEntity = (CEntity*)pEntity;
 	// initialize entity
 	if (!pCEntity->Init(ed))
@@ -558,7 +558,7 @@ IEntity* CEntitySystem::GetEntity(EntityId id)
 	}
 	*/
 
-	//  ASSERT(id==0);   // if we have a valid id here, someone is using the id after deleting the ent
+	//  CRYASSERT(id==0);   // if we have a valid id here, someone is using the id after deleting the ent
 	return NULL;
 }
 
@@ -627,7 +627,7 @@ int CEntitySystem::GetNumEntities() const
 //////////////////////////////////////////////////////////////////////
 void CEntitySystem::GetEntitiesInRadius(const Vec3d& origin, float radius, std::vector<IEntity*>& entities, int physFlags) const
 {
-	assert(m_pISystem);
+	CRYASSERT(m_pISystem);
 
 	IPhysicalEntity** pList;
 	Vec3d bmin = origin - Vec3d(radius, radius, radius);

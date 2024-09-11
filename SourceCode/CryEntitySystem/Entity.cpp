@@ -2978,7 +2978,7 @@ void CEntity::ReleaseStateTable(SScriptState& scriptState)
 	// Query state table for supported functions.
 	for (int stateFunc = 0; stateFunc < sizeof(scriptState.pFunction) / sizeof(scriptState.pFunction[0]); stateFunc++)
 	{
-		assert(stateFunc < sizeof(s_ScriptStateFunctions) / sizeof(s_ScriptStateFunctions[0]));
+		CRYASSERT(stateFunc < sizeof(s_ScriptStateFunctions) / sizeof(s_ScriptStateFunctions[0]));
 		if (scriptState.pFunction[stateFunc])
 			m_pScriptSystem->ReleaseFunc(scriptState.pFunction[stateFunc]);
 	}
@@ -2989,7 +2989,7 @@ void CEntity::InitializeStateTable(IScriptObject* pStateTable, SScriptState& scr
 	// Query state table for supported functions.
 	for (int stateFunc = 0; stateFunc < sizeof(scriptState.pFunction) / sizeof(scriptState.pFunction[0]); stateFunc++)
 	{
-		assert(stateFunc < sizeof(s_ScriptStateFunctions) / sizeof(s_ScriptStateFunctions[0]));
+		CRYASSERT(stateFunc < sizeof(s_ScriptStateFunctions) / sizeof(s_ScriptStateFunctions[0]));
 		scriptState.pFunction[stateFunc] = 0;
 		pStateTable->GetValue(s_ScriptStateFunctions[stateFunc], scriptState.pFunction[stateFunc]);
 	}

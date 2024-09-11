@@ -190,7 +190,7 @@ bool CGLRenderer::LoadLibrary()
 		return false;
 	}
 	m_hLibHandleGDI = ::LoadLibrary("GDI32.dll");
-	assert(m_hLibHandleGDI);
+	CRYASSERT(m_hLibHandleGDI);
 
 	return true;
 #endif
@@ -203,7 +203,7 @@ static PFNWGLGETEXTENSIONSSTRINGEXTPROC wglGetExtensionsStringEXT;
 
 #define GET_GL_PROC(functype,funcname) \
   static functype funcname = (functype)pwglGetProcAddress(#funcname);\
-  assert(funcname);\
+  CRYASSERT(funcname);\
 
 bool CGLRenderer::FindExt(const char* Name)
 {
@@ -1596,7 +1596,7 @@ static _inline void sUpdateTexSize(int target, int width, int height, int depth,
 	else
 		size = CGLTexMan::TexSize(width, height, depth, internalFormat);
 
-	assert(curBind >= 0 && curBind < TX_LASTBIND);
+	CRYASSERT(curBind >= 0 && curBind < TX_LASTBIND);
 	if (target == GL_TEXTURE_CUBE_MAP_POSITIVE_X_EXT)
 		size *= 6;
 
@@ -1683,7 +1683,7 @@ void __stdcall nglBindTexture(GLenum Parm0, GLuint Parm1)
 	}
 	fSize /= 1024.0f;
 	fSize /= 1024.0f;*/
-	assert(Parm1 >= 0 && Parm1 < TX_LASTBIND);
+	CRYASSERT(Parm1 >= 0 && Parm1 < TX_LASTBIND);
 
 	curBind = Parm1;
 	nnglBindTexture(Parm0, Parm1);

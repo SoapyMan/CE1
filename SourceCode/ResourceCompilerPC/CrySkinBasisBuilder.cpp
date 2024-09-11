@@ -45,7 +45,7 @@ void CrySkinBasisBuilder::setDestinationInterval(unsigned nBegin, unsigned nEnd)
 // initializes the given rigid basis builder
 void CrySkinBasisBuilder::initRigidBasisSkin(CrySkinRigidBasis* pSkin)
 {
-	assert(sizeof(SPipTangentsA16) == 0x30);
+	CRYASSERT(sizeof(SPipTangentsA16) == 0x30);
 	unsigned numAuxInts = 2 * (m_numBones - m_nFirstBone);
 	unsigned numBases = m_nDestIntervalEnd - m_nDestIntervalBegin;
 	pSkin->init(2 * numBases, numAuxInts, m_nFirstBone, m_numBones);
@@ -62,12 +62,12 @@ void CrySkinBasisBuilder::initRigidBasisSkin(CrySkinRigidBasis* pSkin)
 		// for each bone, fill the three groups
 		// we fill the left and right vertices
 		fillGroup(stream, m_arrBoneBases[nBone].arrRight);
-		assert(stream.pAux <= streamEnd.pAux);
-		assert(stream.pVert <= streamEnd.pVert);
+		CRYASSERT(stream.pAux <= streamEnd.pAux);
+		CRYASSERT(stream.pVert <= streamEnd.pVert);
 		fillGroup(stream, m_arrBoneBases[nBone].arrLeft);
 		// only when we processed the last bone, we should have the pAux pointing to the end
-		assert(stream.pAux <= streamEnd.pAux);
-		assert(stream.pVert <= streamEnd.pVert);
+		CRYASSERT(stream.pAux <= streamEnd.pAux);
+		CRYASSERT(stream.pVert <= streamEnd.pVert);
 	}
 }
 
@@ -106,7 +106,7 @@ void CrySkinBasisBuilder::makeBoneBases()
 		clipDenormals(rBasis.tangent);
 		const CryVertexBinding& rLink = m_pGeometry->getLink(nGeomVert);
 		unsigned nBone = rLink[0].BoneID;
-		assert(nBone < m_numBoneInfos);
+		CRYASSERT(nBone < m_numBoneInfos);
 
 		CrySkinRigidBasisArray* pTargetArray;
 		if ((rBasis.tangent ^ rBasis.binormal) * rBasis.tnormal > 0)

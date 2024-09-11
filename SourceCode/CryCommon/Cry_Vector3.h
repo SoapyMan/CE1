@@ -89,8 +89,8 @@ public:
 	ILINE Vec3_tpl& operator=(const Vec3_tpl<T>& v) { x = v.x; y = v.y; z = v.z; return *this; }
 
 
-	ILINE F& operator [] (int index) { assert(index >= 0 && index <= 2); return ((F*)this)[index]; }
-	ILINE F operator [] (int index) const { assert(index >= 0 && index <= 2); return ((F*)this)[index]; }
+	ILINE F& operator [] (int index) { CRYASSERT(index >= 0 && index <= 2); return ((F*)this)[index]; }
+	ILINE F operator [] (int index) const { CRYASSERT(index >= 0 && index <= 2); return ((F*)this)[index]; }
 
 
 
@@ -157,7 +157,7 @@ public:
 	//! normalize the vector and return the inverted length if successfull
 	ILINE f32	Normalize() {
 		f32 fLen = (f32)GetLength();
-		//assert(fLen>0.0f);
+		//CRYASSERT(fLen>0.0f);
 		if (fLen < 0.00001f) return(0);  //no good idea! not everybody will check this
 		f32 fInvLen = 1.0f / fLen;
 		x *= fInvLen; y *= fInvLen; z *= fInvLen;
@@ -167,7 +167,7 @@ public:
 	//! return a normalized vector
 	ILINE friend Vec3_tpl<F> GetNormalized(const Vec3_tpl<F>& v) {
 		F vlength = ::GetLength(v);
-		assert(vlength > 0.0f);
+		CRYASSERT(vlength > 0.0f);
 		F ivlength = 1.0f / vlength;
 		return (v * ivlength);
 	}
@@ -175,13 +175,13 @@ public:
 
 	ILINE Vec3_tpl& normalize() {
 		F rlen = sqrt_tpl(x * x + y * y + z * z);
-		//assert(rlen>0.00001f);
+		//CRYASSERT(rlen>0.00001f);
 		if (rlen > 0) { rlen = (F)1.0 / rlen; x *= rlen; y *= rlen; z *= rlen; }
 		else Set(0, 0, 1); return *this;
 	}
 	ILINE Vec3_tpl normalized() const {
 		F rlen = sqrt_tpl(x * x + y * y + z * z);
-		//assert(rlen>0.00001f);
+		//CRYASSERT(rlen>0.00001f);
 		if (rlen > 0) { rlen = (F)1.0 / rlen; return Vec3_tpl(x * rlen, y * rlen, z * rlen); }
 		else return Vec3_tpl(0, 0, 1);
 	}
@@ -190,7 +190,7 @@ public:
 
 	ILINE f32	NormalizeFast() {
 		f32 fLen = x * x + y * y + z * z;
-		//assert(fLen>0.00001f);
+		//CRYASSERT(fLen>0.00001f);
 		unsigned int* n1 = (unsigned int*)&fLen;
 		unsigned int n = 0x5f3759df - (*n1 >> 1);
 		f32* n2 = (f32*)&n;
@@ -477,9 +477,9 @@ struct Ang3_tpl : public Vec3_tpl<F>
 	ILINE void SetAnglesXYZ(const Matrix33_tpl<F, SI, SJ>& m)
 	{
 		//check if we have an orthonormal-base (assuming we are using a right-handed coordinate system)
-		assert(IsEquivalent(m.GetOrtX(), m.GetOrtY() % m.GetOrtZ(), 0.1f));
-		assert(IsEquivalent(m.GetOrtY(), m.GetOrtZ() % m.GetOrtX(), 0.1f));
-		assert(IsEquivalent(m.GetOrtZ(), m.GetOrtX() % m.GetOrtY(), 0.1f));
+		CRYASSERT(IsEquivalent(m.GetOrtX(), m.GetOrtY() % m.GetOrtZ(), 0.1f));
+		CRYASSERT(IsEquivalent(m.GetOrtY(), m.GetOrtZ() % m.GetOrtX(), 0.1f));
+		CRYASSERT(IsEquivalent(m.GetOrtZ(), m.GetOrtX() % m.GetOrtY(), 0.1f));
 		this->y = asin_tpl(MAX((F)-1.0, MIN((F)1.0, -m.data[SI * 2 + SJ * 0])));
 		if (fabs_tpl(fabs_tpl(this->y) - (F)(pi * 0.5)) < (F)0.01)
 		{

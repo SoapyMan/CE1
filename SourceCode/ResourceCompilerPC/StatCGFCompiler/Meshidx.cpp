@@ -468,7 +468,7 @@ bool CIndexedMesh::LoadCGF(const char* szFileName, const char* szGeomName, bool 
 
 				if (geom->m_pTexFaces)
 				{
-					assert(
+					CRYASSERT(
 						geom->m_pTexFaces[c].t0 < geom->m_Chunk.nTVerts &&
 						geom->m_pTexFaces[c].t1 < geom->m_Chunk.nTVerts &&
 						geom->m_pTexFaces[c].t2 < geom->m_Chunk.nTVerts);
@@ -549,7 +549,7 @@ bool CIndexedMesh::LoadCGF(const char* szFileName, const char* szGeomName, bool 
 				if(m_LoadedShaders[ns].pMesh == this && m_LoadedShaders[ns].nNewShaderID<m_lstMatTable.Count())
 				{ // if we still in the same object
 				pFace->shader_id = m_LoadedShaders[ns].nNewShaderID;
-				assert(pFace->shader_id<m_lstMatTable.Count());
+				CRYASSERT(pFace->shader_id<m_lstMatTable.Count());
 				}
 				else
 				{ // try to find id of such already registered material
@@ -572,9 +572,9 @@ bool CIndexedMesh::LoadCGF(const char* szFileName, const char* szGeomName, bool 
 				}*/
 
 				// check vertex id
-				assert(m_pFaces[c + m_nFaceCount].v[0] < m_nVertCount + chunk->nVerts);
-				assert(m_pFaces[c + m_nFaceCount].v[1] < m_nVertCount + chunk->nVerts);
-				assert(m_pFaces[c + m_nFaceCount].v[2] < m_nVertCount + chunk->nVerts);
+				CRYASSERT(m_pFaces[c + m_nFaceCount].v[0] < m_nVertCount + chunk->nVerts);
+				CRYASSERT(m_pFaces[c + m_nFaceCount].v[1] < m_nVertCount + chunk->nVerts);
+				CRYASSERT(m_pFaces[c + m_nFaceCount].v[2] < m_nVertCount + chunk->nVerts);
 			}
 
 			//			lstLMapsId.clear();
@@ -1192,9 +1192,9 @@ bool CIndexedMesh::CalcTangentSpace()
 		CObjFace& rFace = m_pFaces[i];
 		DWORD outdwBase[3] = { 0,0,0 };
 		TangBaseBuilder.GetTriangleBaseIndices(i, outdwBase);
-		assert((int)outdwBase[0] < nBaseCount);
-		assert((int)outdwBase[1] < nBaseCount);
-		assert((int)outdwBase[2] < nBaseCount);
+		CRYASSERT((int)outdwBase[0] < nBaseCount);
+		CRYASSERT((int)outdwBase[1] < nBaseCount);
+		CRYASSERT((int)outdwBase[2] < nBaseCount);
 		rFace.b[0] = ushort(outdwBase[0]);
 		rFace.b[1] = ushort(outdwBase[1]);
 		rFace.b[2] = ushort(outdwBase[2]);
@@ -1207,15 +1207,15 @@ bool CIndexedMesh::CalcTangentSpace()
 
 		TangBaseBuilder.GetBase(i, outU, outV, outN);
 
-		assert(outU[0] >= -1 && outU[0] <= 1);
-		assert(outU[1] >= -1 && outU[1] <= 1);
-		assert(outU[2] >= -1 && outU[2] <= 1);
-		assert(outV[0] >= -1 && outV[0] <= 1);
-		assert(outV[1] >= -1 && outV[1] <= 1);
-		assert(outV[2] >= -1 && outV[2] <= 1);
-		assert(outN[0] >= -1 && outN[0] <= 1);
-		assert(outN[1] >= -1 && outN[1] <= 1);
-		assert(outN[2] >= -1 && outN[2] <= 1);
+		CRYASSERT(outU[0] >= -1 && outU[0] <= 1);
+		CRYASSERT(outU[1] >= -1 && outU[1] <= 1);
+		CRYASSERT(outU[2] >= -1 && outU[2] <= 1);
+		CRYASSERT(outV[0] >= -1 && outV[0] <= 1);
+		CRYASSERT(outV[1] >= -1 && outV[1] <= 1);
+		CRYASSERT(outV[2] >= -1 && outV[2] <= 1);
+		CRYASSERT(outN[0] >= -1 && outN[0] <= 1);
+		CRYASSERT(outN[1] >= -1 && outN[1] <= 1);
+		CRYASSERT(outN[2] >= -1 && outN[2] <= 1);
 
 		m_pTangBasis[i].tangent = Vec3d(outU);
 		m_pTangBasis[i].binormal = Vec3d(outV);

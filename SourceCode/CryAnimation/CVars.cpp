@@ -21,10 +21,10 @@ CryAnimVars::CryAnimVars()
 	// if you get an assertion here, it means some variable couldn't be registered
 #define DECLARE_INT_VARIABLE_IMMEDIATE(_var, _default,_comment) m_##_var = _default; m_p_##_var = attach((#_var), &(m_##_var), _comment, VF_CHEAT|CVF_CHANGE_SOURCE);
 #define DECLARE_INT_VARIABLE_IMMEDIATE_DUMP(_var, _default,_comment) m_##_var = _default; m_p_##_var = attach((#_var), &(m_##_var), _comment, VF_DUMPTODISK);
-#define DECLARE_STRING_VARIABLE(_var, _default) m_##_var = pConsole->CreateVariable(#_var, (_default), VF_CHEAT); assert(m_##_var)
+#define DECLARE_STRING_VARIABLE(_var, _default) m_##_var = pConsole->CreateVariable(#_var, (_default), VF_CHEAT); CRYASSERT(m_##_var)
 #define DECLARE_INT_VARIABLE(_var, _default) m_##_var = declare (#_var,_default,VF_CHEAT);
-#define DECLARE_FLOAT_VARIABLE(_var, _default,_comment) m_##_var = pConsole->CreateVariable(#_var, (#_default), VF_CHEAT, _comment); assert(m_##_var)
-#define DECLARE_FLOAT_VARIABLE_DUMP(_var, _default,_comment) m_##_var = pConsole->CreateVariable(#_var, (#_default), VF_DUMPTODISK, _comment); assert(m_##_var)
+#define DECLARE_FLOAT_VARIABLE(_var, _default,_comment) m_##_var = pConsole->CreateVariable(#_var, (#_default), VF_CHEAT, _comment); CRYASSERT(m_##_var)
+#define DECLARE_FLOAT_VARIABLE_DUMP(_var, _default,_comment) m_##_var = pConsole->CreateVariable(#_var, (#_default), VF_DUMPTODISK, _comment); CRYASSERT(m_##_var)
 #include "CVars-list.h"
 #undef DECLARE_STRING_VARIABLE
 #undef DECLARE_INT_VARIABLE
@@ -97,7 +97,7 @@ ICVar* CryAnimVars::declare(const char* szVarName, int nDefault, int nFlags)
 		sprintf(szDefault, "%d", nDefault);
 		pVar = pConsole->CreateVariable(szVarName, szDefault, nFlags);
 	}
-	assert(pVar);
+	CRYASSERT(pVar);
 	return pVar;
 }
 
@@ -132,9 +132,9 @@ ICVar* CryAnimVars::attach(const char* szVarName, int* pContainer, const char* s
 
 #ifdef _DEBUG
 	// test if the variable really has this container
-	assert(*pContainer == pVar->GetIVal());
+	CRYASSERT(*pContainer == pVar->GetIVal());
 	++*pContainer;
-	assert(*pContainer == pVar->GetIVal());
+	CRYASSERT(*pContainer == pVar->GetIVal());
 	--*pContainer;
 #endif
 
@@ -159,9 +159,9 @@ void CryAnimVars::detach(const char* szVarName, int* pContainer)
 	{
 #ifdef _DEBUG
 		// test if the variable really has this container
-		assert(*pContainer == pVar->GetIVal());
+		CRYASSERT(*pContainer == pVar->GetIVal());
 		++*pContainer;
-		assert(*pContainer == pVar->GetIVal());
+		CRYASSERT(*pContainer == pVar->GetIVal());
 		--*pContainer;
 #endif
 		* pContainer = pVar->GetIVal();

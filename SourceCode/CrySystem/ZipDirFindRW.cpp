@@ -43,7 +43,7 @@ bool ZipDir::FindDataRW::MatchWildcard(const char* szName)
 	if (*p)
 	{
 		// there's an extension sign in the object, but it wasn't matched.. 
-		assert(*p == '.');
+		CRYASSERT(*p == '.');
 		return false;
 	}
 
@@ -117,7 +117,7 @@ bool ZipDir::FindDataRW::PreFind(const char* szWildcard)
 			}
 			m_pDirHeader = pDirEntry->GetDirectory();
 			++pPath;
-			assert(m_pDirHeader);
+			CRYASSERT(m_pDirHeader);
 		}
 		else
 		{
@@ -153,7 +153,7 @@ bool ZipDir::FindDirRW::FindNext()
 
 bool ZipDir::FindFileRW::SkipNonMatchingFiles()
 {
-	assert(m_pDirHeader);
+	CRYASSERT(m_pDirHeader);
 
 	for (; m_itFile != m_pDirHeader->GetFileEnd(); ++m_itFile)
 	{
@@ -166,7 +166,7 @@ bool ZipDir::FindFileRW::SkipNonMatchingFiles()
 
 bool ZipDir::FindDirRW::SkipNonMatchingDirs()
 {
-	assert(m_pDirHeader);
+	CRYASSERT(m_pDirHeader);
 
 	for (; m_itDir != m_pDirHeader->GetDirEnd(); ++m_itDir)
 	{

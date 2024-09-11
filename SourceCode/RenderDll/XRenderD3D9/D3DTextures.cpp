@@ -122,7 +122,7 @@ void STexPicD3D::ReleaseDriverTexture()
 		if (m_pPoolItem)
 		{
 			STexPoolItem* pPool = m_pPoolItem;
-			//assert(pPool->m_pAPITexture == m_RefTex.m_VidTex);
+			//CRYASSERT(pPool->m_pAPITexture == m_RefTex.m_VidTex);
 			RemoveFromPool();
 			pPool->Unlink();
 			delete pPool;
@@ -247,7 +247,7 @@ void CD3D9TexMan::SetTexture(int Id, ETexType eTT)
 		return;
 	}
 	STexPic* tp = it->second;
-	assert(tp);
+	CRYASSERT(tp);
 	if (tp)
 		tp->Set();
 }
@@ -804,7 +804,7 @@ STexPic* CD3D9TexMan::AddToHash(int Id, STexPic* ti)
 	else
 	{
 		STexPic* tpOther = it->second;
-		assert(ti == tpOther);
+		CRYASSERT(ti == tpOther);
 	}
 	return ti;
 }
@@ -815,7 +815,7 @@ void CD3D9TexMan::RemoveFromHash(int Id, STexPic* ti)
 	if (it != m_RefTexs.end())
 	{
 		if (ti)
-			assert(ti == it->second);
+			CRYASSERT(ti == it->second);
 		IDirect3DBaseTexture9* vt = (IDirect3DBaseTexture9*)ti->m_RefTex.m_VidTex;
 		//if (vt)
 		//  sRemoveTX(ti);
@@ -958,7 +958,7 @@ int STexPicD3D::DstFormatFromTexFormat(ETEX_Format eTF)
 	case eTF_DSDT_MAG:
 		return D3DFMT_X8L8V8U8;
 	default:
-		assert(0);
+		CRYASSERT(0);
 		return D3DFMT_UNKNOWN;
 	}
 }
@@ -1042,7 +1042,7 @@ int CD3D9TexMan::TexSize(int wdt, int hgt, int mode)
 		return wdt * hgt * 4;
 
 	default:
-		assert(0);
+		CRYASSERT(0);
 		break;
 
 	}
@@ -1739,7 +1739,7 @@ void CD3D9TexMan::D3DCreateVideoTexture(int tgt, byte* src, int wdt, int hgt, in
 			offset = 0;
 			if (tgt == TEXTGT_3D)
 			{
-				assert(SrcFormat == DstFormat);
+				CRYASSERT(SrcFormat == DstFormat);
 
 				// Fill the volume texture
 				D3DLOCKED_BOX LockedBox;
@@ -1806,7 +1806,7 @@ void CD3D9TexMan::D3DCreateVideoTexture(int tgt, byte* src, int wdt, int hgt, in
 							if (pID3DTexture)
 								hr = pID3DTexture->GetSurfaceLevel(i, &pDestSurf);
 							else
-								assert(0);
+								CRYASSERT(0);
 
 						RECT srcRect;
 						srcRect.left = 0;
@@ -1826,7 +1826,7 @@ void CD3D9TexMan::D3DCreateVideoTexture(int tgt, byte* src, int wdt, int hgt, in
 						hr = pDestSurf->LockRect(&d3dlr, NULL, 0);
 						hr = pDestSurf->UnlockRect();*/
 
-						assert(pDestSurf);
+						CRYASSERT(pDestSurf);
 						hr = D3DXLoadSurfaceFromMemory(pDestSurf, NULL, NULL, &src[offset], SrcFormat, nPitch, NULL, &srcRect, D3DX_FILTER_NONE, 0);
 
 						SAFE_RELEASE(pDestSurf);
@@ -1872,7 +1872,7 @@ void CD3D9TexMan::D3DCreateVideoTexture(int tgt, byte* src, int wdt, int hgt, in
 							hgt >>= 1;
 						}
 					}
-					assert(!wdt && !hgt);
+					CRYASSERT(!wdt && !hgt);
 					if (wdt || hgt)
 						Warning(0, ti->GetName(), "CD3D9TexMan::BuildMips: Texture has no requested mips: %s", ti->GetName());
 				}
@@ -2162,7 +2162,7 @@ STexPic* CD3D9TexMan::CreateTexture(const char* name, int wdt, int hgt, int dept
 
 	//int w = ilog2(wdt);
 	//int h = ilog2(hgt);
-	//assert (w == wdt && h == hgt);
+	//CRYASSERT (w == wdt && h == hgt);
 
 	if (!tp)
 	{
@@ -2392,7 +2392,7 @@ STexPic* CD3D9TexMan::CreateTexture(const char* name, int wdt, int hgt, int dept
 							format = D3DFMT_CxV8U8;
 						else
 						{
-							assert(0);
+							CRYASSERT(0);
 						}
 					srcFormat = format;
 					SizeSrc = ti->m_Width * ti->m_Height * 2;
@@ -2755,12 +2755,12 @@ void CD3D9TexMan::UpdateTextureRegion(STexPic* pic, byte* data, int X, int Y, in
 	if (ti->m_RefTex.m_Type == TEXTGT_2D)
 	{
 		pID3DTexture = (LPDIRECT3DTEXTURE9)ti->m_RefTex.m_VidTex;
-		assert(pID3DTexture);
+		CRYASSERT(pID3DTexture);
 	}
 	else
 	{
 		pID3DCubeTexture = (LPDIRECT3DCUBETEXTURE9)ti->m_RefTex.m_VidTex;
-		assert(pID3DCubeTexture);
+		CRYASSERT(pID3DCubeTexture);
 	}
 	RECT rc;
 	rc.left = X;
@@ -2790,12 +2790,12 @@ void CD3D9TexMan::UpdateTextureData(STexPic* pic, byte* data, int USize, int VSi
 	if (ti->m_RefTex.m_Type == TEXTGT_2D)
 	{
 		pID3DTexture = (LPDIRECT3DTEXTURE9)ti->m_RefTex.m_VidTex;
-		assert(pID3DTexture);
+		CRYASSERT(pID3DTexture);
 	}
 	else
 	{
 		pID3DCubeTexture = (LPDIRECT3DCUBETEXTURE9)ti->m_RefTex.m_VidTex;
-		assert(pID3DCubeTexture);
+		CRYASSERT(pID3DCubeTexture);
 	}
 	if (bPal)
 	{
@@ -3081,7 +3081,7 @@ bool CD3D9TexMan::ScanEnvironmentCM(const char* name, int size, Vec3d& Pos)
 
 void CD3D9TexMan::GetAverageColor(SEnvTexture* cm, int nSide)
 {
-	assert(nSide >= 0 && nSide <= 5);
+	CRYASSERT(nSide >= 0 && nSide <= 5);
 
 	if (!cm->m_RenderTargets[nSide])
 		return;
@@ -3255,7 +3255,7 @@ void CD3D9TexMan::ScanEnvironmentCube(SEnvTexture* cm, int RendFlags, int Size, 
 	Vec3d Pos;
 	gRenDev->m_RP.m_pRE->mfCenter(Pos, gRenDev->m_RP.m_pCurObject);
 	//Pos += cm->m_CamPos;
-  //  assert(cm->m_Id == 0);
+  //  CRYASSERT(cm->m_Id == 0);
 
 	HRESULT h;
 	int* pFR = (int*)gRenDev->EF_Query(EFQ_Pointer2FrameID);
@@ -3321,7 +3321,7 @@ void CD3D9TexMan::ScanEnvironmentCube(SEnvTexture* cm, int RendFlags, int Size, 
 			  SAFE_RELEASE (pID3DSysTexture);
 			}*/
 			cm->m_nFrameCreated[n] = r->GetFrameID();
-			assert(cm->m_RenderTargets[n]);
+			CRYASSERT(cm->m_RenderTargets[n]);
 			pSrcSurf = (LPDIRECT3DSURFACE9)cm->m_RenderTargets[n];
 			h = r->EF_SetRenderTarget(pSrcSurf, true);
 			r->SetViewport(0, 0, tex_size, tex_size);
@@ -4264,7 +4264,7 @@ void CD3D9TexMan::StartScreenTexMap(int Id)
 	// get data  
 	STexPic* pTex = GetByID(Id);
 	// this SHOULD be always valid, but ok...
-	assert(pTex);
+	CRYASSERT(pTex);
 
 	CD3D9Renderer* pRenderer = gcpRendD3D;
 	gRenDev->GetViewport(&m_TempX, &m_TempY, &m_TempWidth, &m_TempHeight);
@@ -4329,7 +4329,7 @@ void CD3D9TexMan::EndScreenTexMap()
 		tx = gRenDev->m_TexMan->m_Text_ScreenMap;
 
 	// this SHOULD be always valid, but ok...
-	assert(tx);
+	CRYASSERT(tx);
 
 	CD3D9Renderer* pRenderer = gcpRendD3D;
 
@@ -4339,7 +4339,7 @@ void CD3D9TexMan::EndScreenTexMap()
 	// get texture surface
 	LPDIRECT3DSURFACE9 pTexSurfCopy;
 	// this SHOULD be always valid, but ok...
-	assert(tx->m_RefTex.m_VidTex);
+	CRYASSERT(tx->m_RefTex.m_VidTex);
 	LPDIRECT3DTEXTURE9 plD3DTextureCopy = (LPDIRECT3DTEXTURE9)tx->m_RefTex.m_VidTex;
 	HRESULT hr = plD3DTextureCopy->GetSurfaceLevel(0, &pTexSurfCopy);
 
@@ -5052,7 +5052,7 @@ inline float frnd(float min, float max) { return min + (max - min) * INV_RAND_MA
 void CFurMap::Bind(float layer, int nTMU)
 {
 	gcpRendD3D->EF_SelectTMU(nTMU);
-	assert(m_nCurInst >= 0 && m_nCurInst < m_Inst.Num());
+	CRYASSERT(m_nCurInst >= 0 && m_nCurInst < m_Inst.Num());
 	SFurLayers* fl = m_Inst[m_nCurInst];
 	int temp = (int)floor(fl->m_Layers.Num() * max(0.0f, min(0.9999f, layer)));
 	fl->m_Layers[temp]->Set();
@@ -5220,10 +5220,10 @@ HRESULT CFurNormalMap::Initialize()
 
 void CFurNormalMap::Bind(int nTMU)
 {
-	assert(m_nCurInst >= 0 && m_nCurInst < m_Inst.Num());
+	CRYASSERT(m_nCurInst >= 0 && m_nCurInst < m_Inst.Num());
 
 	SDynFurInstance* fr = &m_Inst[m_nCurInst];
-	assert(fr->m_bPrepared && fr->m_pTexNormal);
+	CRYASSERT(fr->m_bPrepared && fr->m_pTexNormal);
 	gcpRendD3D->EF_SelectTMU(nTMU);
 	fr->m_pTexNormal->Set();
 }

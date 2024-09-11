@@ -174,7 +174,7 @@ DWORD CNetwork::GetLocalIP() const
 
 bool CNetwork::Init(IScriptSystem* pScriptSystem)
 {
-	assert(pScriptSystem);
+	CRYASSERT(pScriptSystem);
 
 	m_pScriptSystem = pScriptSystem;
 
@@ -252,7 +252,7 @@ void CNetwork::CreateConsoleVars()
 //////////////////////////////////////////////////////////////////////////
 IClient* CNetwork::CreateClient(IClientSink* pSink, bool bLocal)
 {
-	assert(!m_pClient);			// only one client at a time is allowed
+	CRYASSERT(!m_pClient);			// only one client at a time is allowed
 
 	m_bHaveClient = true;
 
@@ -305,7 +305,7 @@ IServer* CNetwork::CreateServer(IServerSlotFactory* pFactory, WORD nPort, bool l
 	}
 
 	IConsole* pConsole = GetISystem()->GetIConsole();
-	assert(pConsole);
+	CRYASSERT(pConsole);
 
 	ICVar* sv_punkbuster = pConsole->GetCVar("sv_punkbuster");
 
@@ -453,8 +453,8 @@ void CNetwork::UnregisterServer(WORD wPort)
 
 void CNetwork::UnregisterClient(IClient* pClient)
 {
-	assert(pClient);
-	assert(m_pClient == pClient);
+	CRYASSERT(pClient);
+	CRYASSERT(m_pClient == pClient);
 
 	m_pClient = 0;
 
@@ -745,8 +745,8 @@ IClient* CNetwork::GetClient()
 //////////////////////////////////////////////////////////////////////////
 void CNetwork::OnAfterServerLoadLevel(const char* szServerName, const uint32 dwPlayerCount, const WORD wPort)
 {
-	assert(szServerName);
-	assert(dwPlayerCount > 0);
+	CRYASSERT(szServerName);
+	CRYASSERT(dwPlayerCount > 0);
 
 	//	m_pSystem->GetILog()->Log("Ubi.com DEBUG OnAfterServerLoadLevel() 1");
 
@@ -754,7 +754,7 @@ void CNetwork::OnAfterServerLoadLevel(const char* szServerName, const uint32 dwP
 
 	if (!pServer)
 	{
-		assert(pServer);		// internal error
+		CRYASSERT(pServer);		// internal error
 		return;
 	}
 

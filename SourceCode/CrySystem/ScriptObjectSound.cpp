@@ -336,7 +336,7 @@ int CScriptObjectSound::Load3DSoundLocalized(IFunctionHandler *pH)
 	string szPath;
 
 	ICVar *g_language = m_pSystem->GetIConsole()->GetCVar("g_language");
-	assert(g_language);
+	CRYASSERT(g_language);
 
 	szPath = "LANGUAGES/";
 	szPath += g_language->GetString();
@@ -553,7 +553,7 @@ int CScriptObjectSound::LoadStreamSoundLocalized(IFunctionHandler *pH)
 	string szPath;
 
 	ICVar *g_language = m_pSystem->GetIConsole()->GetCVar("g_language");
-	assert(g_language);
+	CRYASSERT(g_language);
 
 	szPath = "LANGUAGES/";
 	szPath += g_language->GetString();
@@ -1258,7 +1258,7 @@ int CScriptObjectSound::GetMusicStatus(IFunctionHandler* pH)
 	CHECK_PARAMETERS(0);
 	SMusicSystemStatus* pStatus = m_pMusicSystem->GetStatus();
 	ILog* pLog = m_pSystem->GetILog();
-	assert(pLog);
+	CRYASSERT(pLog);
 	pLog->LogToConsole("--- MusicSystem Status Info ---");
 	pLog->LogToConsole("  Streaming: %s", pStatus->bPlaying ? "Yes" : "No");
 	pLog->LogToConsole("  Theme: %s", pStatus->sTheme.c_str());

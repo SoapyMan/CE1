@@ -337,9 +337,9 @@ void CSprite::Render(const PartProcessParams& PPP, IShader* pShader)
 					arrTailIndices[nIdxId++] = i * 2 + 2;
 					arrTailIndices[nIdxId++] = i * 2 + 3;
 
-					assert(i * 2 + 3 < m_nTailSteps * 2);
+					CRYASSERT(i * 2 + 3 < m_nTailSteps * 2);
 				}
-				assert(nIdxId == nTailIndsNum);
+				CRYASSERT(nIdxId == nTailIndsNum);
 			}
 
 			//			nTailIndsNum=0;

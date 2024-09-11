@@ -37,7 +37,7 @@ public:
 		m_Count = theElementsCount;
 
 		HRESULT hr = pD3D->CreateIndexBuffer(theElementsCount * sizeof(Type), D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC, sizeof(Type) == 2 ? D3DFMT_INDEX16 : D3DFMT_INDEX32, D3DPOOL_DEFAULT, &m_pIB, NULL);
-		assert((hr == D3D_OK) && (m_pIB));
+		CRYASSERT((hr == D3D_OK) && (m_pIB));
 	}
 
 	LPDIRECT3DVERTEXBUFFER9 GetInterface() const { return m_pIB; }
@@ -46,7 +46,7 @@ public:
 	{
 		if (theLockCount > m_Count)
 		{
-			assert(false);
+			CRYASSERT(false);
 			return NULL;
 		}
 
@@ -68,7 +68,7 @@ public:
 				nOffs = m_nOffs;
 				m_nOffs += theLockCount;
 			}
-			assert(m_pLockedData != NULL);
+			CRYASSERT(m_pLockedData != NULL);
 			m_bLocked = true;
 		}
 
@@ -80,7 +80,7 @@ public:
 		if ((m_bLocked) && (m_pIB))
 		{
 			HRESULT hr = m_pIB->Unlock();
-			assert(hr == D3D_OK);
+			CRYASSERT(hr == D3D_OK);
 			m_bLocked = false;
 		}
 	}

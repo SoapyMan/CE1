@@ -429,9 +429,9 @@ ICVar* CSystem::attachVariable(const char* szVarName, int* pContainer, const cha
 
 #ifdef _DEBUG
 	// test if the variable really has this container
-	assert(*pContainer == pVar->GetIVal());
+	CRYASSERT(*pContainer == pVar->GetIVal());
 	++*pContainer;
-	assert(*pContainer == pVar->GetIVal());
+	CRYASSERT(*pContainer == pVar->GetIVal());
 	--*pContainer;
 #endif
 
@@ -822,7 +822,7 @@ bool CSystem::InitScriptSystem()
 	if (m_pScriptSink)
 		m_pScriptSink->Init();
 
-	assert(m_pConsole);
+	CRYASSERT(m_pConsole);
 	//@HACK!
 	((CXConsole*)m_pConsole)->SetScriptSystem(m_pScriptSystem);
 
@@ -910,7 +910,7 @@ bool CSystem::InitFont()
 	}
 
 	int n = szFontPath.find("default.xml");
-	assert(n != string::npos);
+	CRYASSERT(n != string::npos);
 
 	szFontPath.replace(n, strlen("default.xml"), "console.xml");
 

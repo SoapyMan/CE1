@@ -49,7 +49,7 @@ inline void ValidateHeap()
 #if defined(WIN64) && defined(_DEBUG) // on AMD64, heap validation is extremely slow
 	if (g_nValidateHeapCounter > 1000*1000 || !((++g_nValidateHeapCounter)&0xFF))
 #endif
-		assert(IsHeapValid());
+		CRYASSERT(IsHeapValid());
 }
 */
 
@@ -535,14 +535,14 @@ void CPlayer::InitWeapons()
 	for (unsigned int i = 0; i < weaponCount; ++i)
 	{
 		CWeaponClass *pWC = GetGame()->GetWeaponSystemEx()->GetWeaponClass(i);
-		assert(pWC);
+		CRYASSERT(pWC);
 		WeaponInfo wi;
 		wi.fireTime = m_pTimer->GetCurrTime();
 		wi.fireLastShot = 0;
 		wi.reloading = false;
 		wi.iFireMode = 0;
 
-		assert(m_mapPlayerWeapons.count(pWC->GetID())==0);		// otherwise we produce memory leaks
+		CRYASSERT(m_mapPlayerWeapons.count(pWC->GetID())==0);		// otherwise we produce memory leaks
 
 		wi.owns = false;
 		m_mapPlayerWeapons[pWC->GetID()] = wi;
@@ -1302,7 +1302,7 @@ WeaponInfo & CPlayer::GetWeaponInfo(int nWeaponIndex /* = -1 */)
 	}
 
 	// this should NEVER EVER be reached
-	assert(false);
+	CRYASSERT(false);
 	return m_mapPlayerWeapons.begin()->second;
 }
 
@@ -4415,15 +4415,15 @@ bool CPlayer::Write( CStream &stream,EntityCloneState *cs)
 
 	if(bLocalHostEntity)
 	{
-		assert(m_stats.health>=0);
+		CRYASSERT(m_stats.health>=0);
 		if(m_stats.health>255)
 		{
 			GameWarning(" Player health=%d is bigger than 255 (name %s). Change properties", m_stats.health,m_pEntity->GetName());
 			m_stats.health = 255;
 		}
-//		assert(m_stats.health<=255);
-		assert(m_stats.armor>=0);
-		assert(m_stats.armor<=255);
+//		CRYASSERT(m_stats.health<=255);
+		CRYASSERT(m_stats.armor>=0);
+		CRYASSERT(m_stats.armor<=255);
 		if(m_stats.numofgrenades<0)
 		{
 			GameWarning(" Player numofgrenades=%d is less than 0 (name %s). Change properties", m_stats.numofgrenades,m_pEntity->GetName());
@@ -4435,9 +4435,9 @@ bool CPlayer::Write( CStream &stream,EntityCloneState *cs)
 			m_stats.numofgrenades = 255;
 		}
 
-		assert(m_stats.stamina>=0 && m_stats.stamina<255);
+		CRYASSERT(m_stats.stamina>=0 && m_stats.stamina<255);
 		stream.WritePkd( (BYTE)m_stats.stamina );
-//		assert(m_stats.breath>=0 && m_stats.breath<255);
+//		CRYASSERT(m_stats.breath>=0 && m_stats.breath<255);
 //		stream.WritePkd( (BYTE)m_stats.breath );
 
 		stream.WritePkd( (BYTE)m_stats.health );
@@ -4468,8 +4468,8 @@ bool CPlayer::Write( CStream &stream,EntityCloneState *cs)
 			stream.Write(m_vWeaponSlots[i]!=0);
 			if(m_vWeaponSlots[i]!=0)
 			{
-				assert(m_vWeaponSlots[i]>=0);
-				assert(m_vWeaponSlots[i]<=255);
+				CRYASSERT(m_vWeaponSlots[i]>=0);
+				CRYASSERT(m_vWeaponSlots[i]<=255);
 
 				stream.WritePkd((BYTE)m_vWeaponSlots[i]);
 			}
@@ -4758,7 +4758,7 @@ bool CPlayer::Save( CStream &stream)
 	stream.Write(m_bLightOn);
 	bool bRet=Write(stream,&cs);
 
-	ASSERT(bRet);
+	CRYASSERT(bRet);
 	
 	return true;
 }
@@ -4782,7 +4782,7 @@ bool CPlayer::SaveGame(CStream &stm)
     if(wi.owns)
     {
 			stm.Write(itor->first);
-			ASSERT(itor->first>=0 && itor->first<50);
+			CRYASSERT(itor->first>=0 && itor->first<50);
 			stm.Write(wi.iFireMode);
     }
 	}
@@ -6221,7 +6221,7 @@ Vec3d CPlayer::CalcSoundPos()
 //	calculates vertical and horizontal speed to make player jump on dist and height
 void CPlayer::CalcJumpSpeed( float dist, float height, float &horV, float &vertV  )
 {
-	assert(height>=0.0f);
+	CRYASSERT(height>=0.0f);
 //	vz = srtq(2*g*h) 
 //	vx = len*g/(2*vz) 
 	float fGravity;
@@ -6419,7 +6419,7 @@ void CPlayer::HoldWeapon(void)
 
 void CPlayer::SetWeaponPositionState(EWeaponPositionState weaponPositionState)
 {
-	assert (IsHeapValid());
+	CRYASSERT (IsHeapValid());
 
 	// attach to bone ?
 	if (m_nSelectedWeaponID != -1 && m_weaponPositionState != weaponPositionState)
@@ -6429,7 +6429,7 @@ void CPlayer::SetWeaponPositionState(EWeaponPositionState weaponPositionState)
 		ICryCharInstance *character = m_pEntity->GetCharInterface()->GetCharacter(PLAYER_MODEL_IDX);
 		WeaponInfo &wi = GetWeaponInfo();
 
-		assert (IsHeapValid());
+		CRYASSERT (IsHeapValid());
 		if (character)
 		{
 			wi.DetachBindingHandles(character);

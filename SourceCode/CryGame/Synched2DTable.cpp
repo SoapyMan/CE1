@@ -29,10 +29,10 @@ void CSynched2DTable::Update()
 	if(!GetISystem()->GetIGame()->GetModuleState(EGameServer))
 		return;	// only needed on the server, does nothing on the client
 
-	IXGame *pXGame = GetIXGame( GetISystem()->GetIGame() );			assert(pXGame);
-	CXServer *pXServer = pXGame->GetServer();										assert(pXServer);
+	IXGame *pXGame = GetIXGame( GetISystem()->GetIGame() );			CRYASSERT(pXGame);
+	CXServer *pXServer = pXGame->GetServer();										CRYASSERT(pXServer);
 
-	IServer *pIServer = pXServer->m_pIServer;										assert(pIServer);
+	IServer *pIServer = pXServer->m_pIServer;										CRYASSERT(pIServer);
 
 	// check for disconnected clients
 	{
@@ -145,7 +145,7 @@ bool CSynched2DTable::STableEntry::Read( CStream &stm )
 
 bool CSynched2DTable::Write(CStream &stm,EntityCloneState *cs)
 {
-	assert(cs);
+	CRYASSERT(cs);
 
 	uint8 ucClientId = cs->m_pServerSlot->GetID();
 
@@ -399,7 +399,7 @@ void CSynched2DTable::SetEntryXYFloat( const uint32 uiX, const uint32 uiY, const
 {
 	if(!GetISystem()->GetIGame()->GetModuleState(EGameServer))
 	{
-		assert(0);	// only call this on the server
+		CRYASSERT(0);	// only call this on the server
 		return;			// to prevent crash
 	}
 
@@ -418,7 +418,7 @@ void CSynched2DTable::SetEntryXYString( const uint32 uiX, const uint32 uiY, cons
 {
 	if(!GetISystem()->GetIGame()->GetModuleState(EGameServer))
 	{
-		assert(0);	// only call this on the server
+		CRYASSERT(0);	// only call this on the server
 		return;			// to prevent crash
 	}
 
@@ -438,7 +438,7 @@ void CSynched2DTable::SetEntriesYFloat( const uint32 uiY, const float fValue )
 {
 	if(!GetISystem()->GetIGame()->GetModuleState(EGameServer))
 	{
-		assert(0);	// only call this on the server
+		CRYASSERT(0);	// only call this on the server
 		return;			// to prevent crash
 	}
 
@@ -456,7 +456,7 @@ void CSynched2DTable::SetEntriesYString( const uint32 uiY, const string &sValue 
 {
 	if(!GetISystem()->GetIGame()->GetModuleState(EGameServer))
 	{
-		assert(0);	// only call this on the server
+		CRYASSERT(0);	// only call this on the server
 		return;			// to prevent crash
 	}
 

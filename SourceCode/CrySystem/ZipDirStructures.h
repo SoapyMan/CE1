@@ -284,12 +284,12 @@ struct DirHeader
 	// call this only for the actual instance of the structure at the head of dir record
 	const DirEntry* GetSubdirEntry(unsigned i)const
 	{
-		assert (i < numDirs);
+		CRYASSERT (i < numDirs);
 		return ((const DirEntry*)(this+1)) + i;
 	}
 	DirEntry* GetSubdirEntry(unsigned i)
 	{
-		assert (i < numDirs);
+		CRYASSERT (i < numDirs);
 		return ((DirEntry*)(this+1)) + i;
 	}
 
@@ -297,12 +297,12 @@ struct DirHeader
 	// call this only for the actual instance of the structure at the head of dir record
 	const FileEntry* GetFileEntry (unsigned i)const 
 	{
-		assert (i < numFiles);
+		CRYASSERT (i < numFiles);
 		return (const FileEntry*)(((const DirEntry*)(this+1)) + numDirs) + i;
 	}
 	FileEntry* GetFileEntry (unsigned i)
 	{
-		assert (i < numFiles);
+		CRYASSERT (i < numFiles);
 		return (FileEntry*)(((DirEntry*)(this+1)) + numDirs) + i;
 	}
 

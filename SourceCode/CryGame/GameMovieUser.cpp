@@ -251,7 +251,7 @@ void CMovieUser::SendGlobalEvent(const char *pszEvent)
 //////////////////////////////////////////////////////////////////////////
 void CMovieUser::PlaySubtitles( ISound *pSound )
 {
-	assert(pSound);
+	CRYASSERT(pSound);
 	
   bool bAlwaysDisplay=0;
   if(m_pGame->g_language)

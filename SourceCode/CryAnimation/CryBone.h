@@ -43,8 +43,8 @@ public:
 	void ScaleRelToParent(const Vec3& fScale);
 
 	unsigned numChildren()const { return getBoneInfo()->numChildren(); }
-	CryBone* getChild(unsigned i) { assert(i < numChildren()); return this + getBoneInfo()->m_nOffsetChildren + i; }
-	const CryBone* getChild(unsigned i) const { assert(i < numChildren()); return this + getBoneInfo()->m_nOffsetChildren + i; }
+	CryBone* getChild(unsigned i) { CRYASSERT(i < numChildren()); return this + getBoneInfo()->m_nOffsetChildren + i; }
+	const CryBone* getChild(unsigned i) const { CRYASSERT(i < numChildren()); return this + getBoneInfo()->m_nOffsetChildren + i; }
 	CryBone* getParent() { return getBoneInfo()->m_nOffsetParent ? this + getBoneInfo()->m_nOffsetParent : NULL; }
 	int getParentIndexOffset()const { return getBoneInfo()->m_nOffsetParent; }
 	const CryBone* getParent() const { return getBoneInfo()->m_nOffsetParent ? this + getBoneInfo()->m_nOffsetParent : NULL; }

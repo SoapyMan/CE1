@@ -326,7 +326,7 @@ Platform CStatCFGCompiler::GetPlatform(int index) const
 		//case 2:	return PLATFORM_PS2;
 		//case 3:	return PLATFORM_GAMECUBE;
 	};
-	//assert(0);
+	//CRYASSERT(0);
 	return PLATFORM_UNKNOWN;
 }
 

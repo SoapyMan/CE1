@@ -21,7 +21,7 @@
 bool _GetSSFileInfo(const char* inszSourceSafePath, const char* inszSSProject, const char* inszDirProject, const char* inszFileName,
 	char* outszName, char* outszComment, char* outszDate, const unsigned int innBufferSize)
 {
-	assert(innBufferSize > 0);
+	CRYASSERT(innBufferSize > 0);
 
 	// to make sure the result is empty if this function failes
 	outszName[0] = 0; outszComment[0] = 0; outszDate[0] = 0;

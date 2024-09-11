@@ -37,7 +37,7 @@ public:
 		m_BytesCount = theVertsCount * sizeof(VertexType);
 
 		HRESULT hr = pD3D->CreateVertexBuffer(m_BytesCount, D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC, theFVF, D3DPOOL_DEFAULT, &m_pVB, NULL);
-		assert((hr == D3D_OK) && (m_pVB));
+		CRYASSERT((hr == D3D_OK) && (m_pVB));
 	}
 
 	LPDIRECT3DVERTEXBUFFER9 GetInterface() const { return m_pVB; }
@@ -46,7 +46,7 @@ public:
 	{
 		if (theLockBytesCount > m_BytesCount)
 		{
-			assert(false);
+			CRYASSERT(false);
 			return NULL;
 		}
 
@@ -68,7 +68,7 @@ public:
 				nOffs = m_nBytesOffs;
 				m_nBytesOffs += theLockBytesCount;
 			}
-			assert(m_pLockedData != NULL);
+			CRYASSERT(m_pLockedData != NULL);
 			m_bLocked = true;
 		}
 
@@ -80,7 +80,7 @@ public:
 		if ((m_bLocked) && (m_pVB))
 		{
 			HRESULT hr = m_pVB->Unlock();
-			assert(hr == D3D_OK);
+			CRYASSERT(hr == D3D_OK);
 			m_bLocked = false;
 		}
 	}

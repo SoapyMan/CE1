@@ -31,6 +31,8 @@ public:
 		if (p)
 			p->Release();
 	}
+	_I* ptr() { return p; }
+	const _I* ptr() const { return p; }
 	operator _I* () const { return p; }
 	operator const _I* () const { return p; }
 	_I& operator*() const { return *p; }
@@ -147,7 +149,7 @@ public:
 
 	virtual ~_reference_target()
 	{
-		//assert (!m_nRefCounter);
+		//CRYASSERT (!m_nRefCounter);
 	}
 
 	void AddRef()

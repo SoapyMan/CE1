@@ -13,7 +13,7 @@
 
 bool struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F::operator == (struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F& other)
 {
-	assert(this != &other);
+	CRYASSERT(this != &other);
 
 	// do y check first since x was used for hash
 	return fabs(xyz.y - other.xyz.y) < PIP_VER_EPS && fabs(xyz.x - other.xyz.x) < PIP_VER_EPS && fabs(xyz.z - other.xyz.z) < PIP_VER_EPS &&
@@ -46,7 +46,7 @@ int CLeafBuffer::FindInBuffer(struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F& opt, SPip
 
 void CLeafBuffer::CompactBuffer(struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F* _vbuff, SPipTangents* _tbuff, int* _vcount, TArray<unsigned short>* pindices, bool bShareVerts[128], uint* uiInfo)
 {
-	//assert(*_vcount);
+	//CRYASSERT(*_vcount);
 	if (!*_vcount)
 	{
 		//    iLog->Log("CLeafBuffer::CompactBuffer: Mesh has no geometry for rendering");

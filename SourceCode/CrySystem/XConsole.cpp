@@ -450,8 +450,8 @@ void CXConsole::DumpCVars(ICVarDumpSink* pCallback, unsigned int nFlagsFilter)
 */
 ICVar* CXConsole::GetCVar(const char* sName, const bool bCaseSensitive)
 {
-	assert(this);
-	assert(sName);
+	CRYASSERT(this);
+	CRYASSERT(sName);
 
 	if (bCaseSensitive)
 	{
@@ -514,7 +514,7 @@ void CXConsole::Help(const char* command)
 */
 char* CXConsole::GetVariable(const char* szVarName, const char* szFileName, const char* def_val)
 {
-	assert(m_pSystem);
+	CRYASSERT(m_pSystem);
 	//return m_pSystem->GetIniVar( szVarName, szFileName, def_val);
 	return 0;
 }
@@ -527,7 +527,7 @@ char* CXConsole::GetVariable(const char* szVarName, const char* szFileName, cons
 */
 float CXConsole::GetVariable(const char* szVarName, const char* szFileName, float def_val)
 {
-	assert(m_pSystem);
+	CRYASSERT(m_pSystem);
 	//return m_pSystem->GetIniVar( szVarName, szFileName, def_val);
 	return 0;
 }
@@ -1006,8 +1006,8 @@ void CXConsole::DrawBuffer(int nScrollPos, const char* szEffect)
 
 bool CXConsole::GetLineNo(const DWORD indwLineNo, char* outszBuffer, const DWORD indwBufferSize) const
 {
-	assert(outszBuffer);
-	assert(indwBufferSize > 0);
+	CRYASSERT(outszBuffer);
+	CRYASSERT(indwBufferSize > 0);
 
 	outszBuffer[0] = 0;
 
@@ -1175,7 +1175,7 @@ void CXConsole::DisplayHelp(const char* help, const char* name)
 */
 void CXConsole::ExecuteString(const char* command, bool bNeedSlash, bool bIgnoreDevMode)
 {
-	ILog* pLog = m_pSystem->GetILog();				assert(pLog);
+	ILog* pLog = m_pSystem->GetILog();				CRYASSERT(pLog);
 	string sTemp = command;
 	string sCommand;
 	ConsoleCommandsMapItor itrCmd;
@@ -1189,7 +1189,7 @@ void CXConsole::ExecuteString(const char* command, bool bNeedSlash, bool bIgnore
 	if (command[0] == '#')
 	{
 		if (!bIgnoreDevMode) AddLine(sTemp);//don't put line in console if we are overriding devmode: TRay 3/4/04
-		IGame* pGame = m_pSystem->GetIGame();		assert(pGame);
+		IGame* pGame = m_pSystem->GetIGame();		CRYASSERT(pGame);
 
 		if (m_pSystem->IsDevMode() || bIgnoreDevMode)
 		{
@@ -1742,14 +1742,14 @@ void CXConsole::SetLoadingImage(const char* szFilename)
 
 void CXConsole::AddOutputPrintSink(IOutputPrintSink* inpSink)
 {
-	assert(inpSink);
+	CRYASSERT(inpSink);
 
 	m_OutputSinks.push_back(inpSink);
 }
 
 void CXConsole::RemoveOutputPrintSink(IOutputPrintSink* inpSink)
 {
-	assert(inpSink);
+	CRYASSERT(inpSink);
 
 	int nCount = m_OutputSinks.size();
 
@@ -1767,7 +1767,7 @@ void CXConsole::RemoveOutputPrintSink(IOutputPrintSink* inpSink)
 		}
 	}
 
-	assert(0);
+	CRYASSERT(0);
 }
 
 
@@ -1844,7 +1844,7 @@ void CXConsole::RemoveInputChar(bool bBackSpace)
 
 void CXConsole::AddCommandToHistory(const char* szCommand)
 {
-	assert(szCommand);
+	CRYASSERT(szCommand);
 
 	m_nHistoryPos = -1;
 
@@ -1937,7 +1937,7 @@ int CXConsole::GetNumVars()
 //////////////////////////////////////////////////////////////////////////
 void CXConsole::GetSortedVars(const char** pszArray, size_t numItems)
 {
-	assert(pszArray);
+	CRYASSERT(pszArray);
 
 	if (numItems == 0)
 		return;

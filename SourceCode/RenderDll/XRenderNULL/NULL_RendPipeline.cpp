@@ -53,7 +53,7 @@ int CNULLRenderer::EF_RegisterFogVolume(float fMaxFogDist, float fFogLayerZ, CFC
 	}
 	else
 	{
-		assert(nIndex < m_RP.m_FogVolumes.Num());
+		CRYASSERT(nIndex < m_RP.m_FogVolumes.Num());
 		SMFog* pFog = &m_RP.m_FogVolumes[nIndex];
 		pFog->m_fMaxDist = fMaxFogDist;
 		pFog->m_FogInfo.m_FogColor = color;

@@ -380,7 +380,7 @@ CryChunkedFile::MeshDesc::MeshDesc(const MESH_CHUNK_DESC* pChunk, unsigned nSize
 				float Blending = 0;
 				for (u32 i = 0; i < size; i++)	Blending += arrLinks[i].Blending;
 
-				assert(fabsf(Blending - 1.0f) < 0.005f);
+				CRYASSERT(fabsf(Blending - 1.0f) < 0.005f);
 
 			}
 

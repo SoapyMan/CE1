@@ -23,8 +23,8 @@ ZipDir::FileEntry* ZipDir::FileEntryTree::Add(const char* szPath)
 		// we have a subdirectory here - create the file in it
 		{
 			string strDirName(szPath, pSlash - szPath);
-			assert(strDirName.length() == pSlash - szPath);
-			assert(strlen(strDirName.c_str()) == pSlash - szPath);
+			CRYASSERT(strDirName.length() == pSlash - szPath);
+			CRYASSERT(strlen(strDirName.c_str()) == pSlash - szPath);
 			tolower(strDirName);
 
 			SubdirMap::iterator it = m_mapDirs.find(strDirName);
@@ -129,7 +129,7 @@ size_t ZipDir::FileEntryTree::Serialize(DirHeader* pDirHeader)const
 		++pDirEntry;
 	}
 
-	assert((FileEntry*)pDirEntry == pFileEntry);
+	CRYASSERT((FileEntry*)pDirEntry == pFileEntry);
 
 	// for each file, we need to have an entry in the name pool and in the file list
 	for (FileMap::const_iterator itFile = m_mapFiles.begin(); itFile != m_mapFiles.end(); ++itFile)
@@ -141,7 +141,7 @@ size_t ZipDir::FileEntryTree::Serialize(DirHeader* pDirHeader)const
 		pName += nNameLen + 1;
 		++pFileEntry;
 	}
-	assert((const char*)pFileEntry == pNamePool);
+	CRYASSERT((const char*)pFileEntry == pNamePool);
 
 	// now the name pool is full. Go on and fill the other directories
 	const char* pSubdirHeader = (const char*)(((UINT_PTR)(pName + 3)) & ~3);

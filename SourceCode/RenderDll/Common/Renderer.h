@@ -1213,7 +1213,7 @@ public:
 
 	static int CV_r_ShowVideoMemoryStats;
 
-	virtual void MakeMatrix(const Vec3& pos, const Vec3& angles, const Vec3& scale, Matrix44* mat) { assert(0); };
+	virtual void MakeMatrix(const Vec3& pos, const Vec3& angles, const Vec3& scale, Matrix44* mat) { CRYASSERT(0); };
 
 	list2<AnimTexInfo*> m_LoadedAnimatedTextures;
 	AnimTexInfo* GetAnimTexInfoFromId(int nId);

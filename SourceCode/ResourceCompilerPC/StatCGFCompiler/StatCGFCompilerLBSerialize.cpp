@@ -65,7 +65,7 @@ int CSimpleLeafBuffer__SetTexType(TextureMap3* tm)
 
 bool CSimpleLeafBuffer::Serialize(int& nPos, uchar* pSerBuf, bool bSave, const char* szFolderName)
 {
-	assert(bSave);
+	CRYASSERT(bSave);
 
 	SaveBuffer("LeafBuffer", 11, pSerBuf, nPos);
 
@@ -75,7 +75,7 @@ bool CSimpleLeafBuffer::Serialize(int& nPos, uchar* pSerBuf, bool bSave, const c
 	GetIndices().SaveToBuffer(pSerBuf, nPos);
 	m_pIndicesPreStrip->SaveToBuffer(pSerBuf, nPos);
 	SaveBuffer(&m_nPrimetiveType, sizeof(m_nPrimetiveType), pSerBuf, nPos);
-	//  assert(m_pBasises==0); // not needed
+	//  CRYASSERT(m_pBasises==0); // not needed
 	SaveBuffer(m_pLoadedColors, m_SecVertCount * sizeof(m_pLoadedColors[0]), pSerBuf, nPos);
 	m_pMats->SaveToBuffer(pSerBuf, nPos); // need to restore
 
@@ -87,8 +87,8 @@ bool CSimpleLeafBuffer::Serialize(int& nPos, uchar* pSerBuf, bool bSave, const c
 
 		if (m_pMats->GetAt(i).pRE)
 		{
-			assert(((CSimpleREOcLeaf*)m_pMats->GetAt(i).pRE)->m_pChunk->nNumIndices);
-			assert(((CSimpleREOcLeaf*)m_pMats->GetAt(i).pRE)->m_pChunk == m_pMats->Get(i));
+			CRYASSERT(((CSimpleREOcLeaf*)m_pMats->GetAt(i).pRE)->m_pChunk->nNumIndices);
+			CRYASSERT(((CSimpleREOcLeaf*)m_pMats->GetAt(i).pRE)->m_pChunk == m_pMats->Get(i));
 		}
 
 		// save primitive groups
@@ -102,7 +102,7 @@ bool CSimpleLeafBuffer::Serialize(int& nPos, uchar* pSerBuf, bool bSave, const c
 	SaveBuffer(m_pSecVertBuffer->m_VS[VSF_GENERAL].m_VData, m_SecVertCount * m_VertexSize[m_pSecVertBuffer->m_vertexformat], pSerBuf, nPos);
 	SaveBuffer(m_pSecVertBuffer->m_VS[VSF_TANGENTS].m_VData, m_SecVertCount * sizeof(SPipTangents), pSerBuf, nPos);
 
-	assert(!m_pVertexBuffer); // not needed
+	CRYASSERT(!m_pVertexBuffer); // not needed
 	SaveBuffer(&m_vBoxMax, sizeof(m_vBoxMax), pSerBuf, nPos);
 	SaveBuffer(&m_vBoxMin, sizeof(m_vBoxMin), pSerBuf, nPos);
 

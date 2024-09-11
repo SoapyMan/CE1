@@ -148,7 +148,7 @@ namespace cpu
 // NOTE: the matrix array must be aligned on 16-byte boundary
 void getBBoxSSE(const Matrix44* pBones, unsigned numBones, CryAABB* pBBox)
 {
-	assert(numBones > 0);
+	CRYASSERT(numBones > 0);
 	_asm
 	{
 		mov EBX, pBones
@@ -188,7 +188,7 @@ void getBBoxSSE(const Matrix44* pBones, unsigned numBones, CryAABB* pBBox)
 // NOTE: the matrix array must be aligned on 16-byte boundary
 void getBBoxSSE(const Matrix44* pBones, const CryBBoxA16* pBoneBBox, unsigned numBones, CryAABB* pBBox)
 {
-	assert(numBones > 0);
+	CRYASSERT(numBones > 0);
 	_asm
 	{
 		mov EBX, pBones

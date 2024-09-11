@@ -257,8 +257,8 @@ bool	CXArea::IsPointWithin(const Vec3d& point3d) const
 		return (cntr & 0x1);
 	}
 
-	// to keep the compiler happy and give more robustness to the code with the assert...
-	assert(0); // can never reach this part
+	// to keep the compiler happy and give more robustness to the code with the CRYASSERT...
+	CRYASSERT(0); // can never reach this part
 	return false; // default behavior
 }
 
@@ -425,7 +425,7 @@ void	CXArea::EnterArea( CXAreaUser& user )
 	for( unsigned int eIdx=0; eIdx<m_vEntityID.size(); eIdx++ )
 	{
 		pEntity = user.m_pGame->GetSystem()->GetIEntitySystem()->GetEntity(m_vEntityID[eIdx]);
-//		ASSERT(pEntity);
+//		CRYASSERT(pEntity);
 		if (pEntity)
 		{
 			if(user.m_pGame->a_LogArea->GetIVal())
@@ -448,7 +448,7 @@ void	CXArea::EnterArea( IEntity* const pEntity, ISystem *pSystem )
 	for( unsigned int eIdx=0; eIdx<m_vEntityID.size(); eIdx++ )
 	{
 		pAreaAttachedEntity = pSystem->GetIEntitySystem()->GetEntity(m_vEntityID[eIdx]);
-//		ASSERT(pEntity);
+//		CRYASSERT(pEntity);
 		if (pAreaAttachedEntity)
 		{
 			pAreaAttachedEntity->OnEnterArea( pEntity, m_AreaID);
@@ -473,7 +473,7 @@ void	CXArea::LeaveArea( CXAreaUser& user )
 	for( unsigned int eIdx=0; eIdx<m_vEntityID.size(); eIdx++ )
 	{
 		pEntity = user.m_pGame->GetSystem()->GetIEntitySystem()->GetEntity(m_vEntityID[eIdx]);
-//		ASSERT(pEntity);
+//		CRYASSERT(pEntity);
 		if (pEntity)
 		{
 			pEntity->OnLeaveArea( user.m_pEntity, m_AreaID);
@@ -596,7 +596,7 @@ void	CXArea::ProceedFade( CXAreaUser& user, const float fadeCoeff )
 	for( unsigned int eIdx=0; eIdx<m_vEntityID.size(); eIdx++ )
 	{
 		pEntity = user.m_pGame->GetSystem()->GetIEntitySystem()->GetEntity(m_vEntityID[eIdx]);
-//		ASSERT(pEntity);
+//		CRYASSERT(pEntity);
 		if (pEntity)
 			pEntity->OnProceedFadeArea( user.m_pEntity, m_AreaID, fadeCoeff);
 	}

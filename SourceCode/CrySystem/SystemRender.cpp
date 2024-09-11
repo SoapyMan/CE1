@@ -1068,7 +1068,7 @@ void CSystem::RenderMemStats()
 
 	TickMemStats();
 
-	assert(m_pMemStats);
+	CRYASSERT(m_pMemStats);
 	// render the statistics
 	{
 		CrySizerStatsRenderer StatsRenderer(this, m_pMemStats, m_cvMemStatsMaxDepth->GetIVal(), m_cvMemStatsThreshold->GetIVal());

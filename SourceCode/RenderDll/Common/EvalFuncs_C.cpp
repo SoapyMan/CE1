@@ -677,7 +677,7 @@ void SEvalFuncs_C::ETC_ShadowMap(int ns)
 	CRenderer* rd = gRenDev;
 	rd->m_RP.m_RECustomTexBind[ns] = -1;
 
-	assert(rd->m_RP.m_FlagsPerFlush & RBSI_SHADOWPASS);
+	CRYASSERT(rd->m_RP.m_FlagsPerFlush & RBSI_SHADOWPASS);
 	int nsFrust;
 	if (rd->m_RP.m_pShader->m_eSort == eS_TerrainShadowPass)
 		nsFrust = 0;

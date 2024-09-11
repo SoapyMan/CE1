@@ -52,8 +52,8 @@ inline Matrix44 OrthoUniformGetInverted(const Matrix44& b)
 #ifdef _DEBUG
 	for (int i = 0; i < 3; ++i)
 	{
-		assert(fabs(b.GetRow(i).len2() - 1) < 1e-2);
-		assert(fabs(b.GetColumn(i).len2() - 1) < 1e-2);
+		CRYASSERT(fabs(b.GetRow(i).len2() - 1) < 1e-2);
+		CRYASSERT(fabs(b.GetColumn(i).len2() - 1) < 1e-2);
 	}
 #endif
 	return GetInverted44(b);
@@ -65,7 +65,7 @@ inline Matrix44 OrthoUniformGetInverted(const Matrix44& b)
 
 #ifdef _DEBUG
 	Matrix44 e = b * m;
-	assert(e.GetTranslationOLD().GetLengthSquared() < 0.01f);
+	CRYASSERT(e.GetTranslationOLD().GetLengthSquared() < 0.01f);
 #endif
 	return m;
 }
@@ -139,7 +139,7 @@ __inline void quaternionExponentOptimized(const Vec3& rSrcVector, CryQuat& rDstQ
 	rDstQuat.v.y = fResultWXYZ[2];
 	rDstQuat.v.z = fResultWXYZ[3];
 
-	assert(isEqual(rDstQuat, exp(quaternionf(0, rSrcVector))));
+	CRYASSERT(isEqual(rDstQuat, exp(quaternionf(0, rSrcVector))));
 #else
 	CryQuat tmp;
 	tmp.v = rSrcVector;

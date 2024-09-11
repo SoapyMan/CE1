@@ -269,7 +269,7 @@ void CPartManager::Spawn(const ParticleParams& Params, float fMaxViewDist, CObjM
 void CPartManager::UpdateMan(CObjManager* pObjManager, CTerrain* pTerrain, int nRecursionLevel)
 {
 	// function not used
-	assert(0);
+	CRYASSERT_FAIL("should not be used");
 	//  if(!GetCVars()->e_particles || nRecursionLevel)
 	return;
 
@@ -524,7 +524,7 @@ IParticleEffect* CPartManager::CreateEffect()
 //////////////////////////////////////////////////////////////////////////
 void CPartManager::RenameEffect(IParticleEffect* pEffect, const char* sNewName)
 {
-	assert(pEffect);
+	CRYASSERT(pEffect);
 	const char* sOldName = pEffect->GetName();
 	if (strlen(sOldName) > 0)
 	{
@@ -541,7 +541,7 @@ void CPartManager::RenameEffect(IParticleEffect* pEffect, const char* sNewName)
 //////////////////////////////////////////////////////////////////////////
 void CPartManager::RemoveEffect(IParticleEffect* pEffect)
 {
-	assert(pEffect);
+	CRYASSERT(pEffect);
 	const char* sOldName = pEffect->GetName();
 	if (strlen(sOldName) > 0)
 	{
@@ -848,7 +848,7 @@ IParticleEmitter* CPartManager::CreateEmitter()
 //////////////////////////////////////////////////////////////////////////
 void CPartManager::DeleteEmitter(IParticleEmitter* pEmitter)
 {
-	assert(pEmitter);
+	CRYASSERT(pEmitter);
 
 	CParticleEmitter* pEmt = (CParticleEmitter*)pEmitter;
 	//////////////////////////////////////////////////////////////////////////

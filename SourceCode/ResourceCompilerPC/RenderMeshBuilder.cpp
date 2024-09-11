@@ -94,8 +94,8 @@ void CRenderMeshBuilder::prepareExtToIntMapping()
 bool CRenderMeshBuilder::addExtToIntMapEntry(DWORD FaceExt[3], const CryFace& FaceInt, const CryTexFace& TexFaceInt)
 {
 	unsigned numTBBTangents = m_TangBaseBuilder.GetBaseCount();
-	assert(m_arrExtTangMap.size() == m_arrExtUVMap.size() || m_arrExtUVMap.empty());
-	assert(m_arrExtTangMap.size() == m_arrExtTangents.size());
+	CRYASSERT(m_arrExtTangMap.size() == m_arrExtUVMap.size() || m_arrExtUVMap.empty());
+	CRYASSERT(m_arrExtTangMap.size() == m_arrExtTangents.size());
 
 	CryFace NewExtFace = FaceInt;
 
@@ -133,7 +133,7 @@ bool CRenderMeshBuilder::addExtToIntMapEntry(DWORD FaceExt[3], const CryFace& Fa
 		NewExtFace[i] = nExtEntry;
 	}
 
-	assert(!NewExtFace.isDegenerate());
+	CRYASSERT(!NewExtFace.isDegenerate());
 	m_arrExtFaces.push_back(NewExtFace);
 	return true;
 }
@@ -171,8 +171,8 @@ void CRenderMeshBuilder::buildExtToIntMaps()
 		CryFace& NewExtFace = m_arrExtFaces.back();
 		for (int j = 0; j < 3; ++j)
 		{
-			assert(m_arrExtUVMap[NewExtFace[j]] == TexFaceInt[j]);
-			assert(m_arrExtTangMap[NewExtFace[j]] == FaceInt[j]);
+			CRYASSERT(m_arrExtUVMap[NewExtFace[j]] == TexFaceInt[j]);
+			CRYASSERT(m_arrExtTangMap[NewExtFace[j]] == FaceInt[j]);
 		}
 #endif
 	}
@@ -212,7 +212,7 @@ void CRenderMeshBuilder::buildMtlFaces()
 			++numSkippedFaces;
 			continue;
 		}
-		assert(!rExtFace.isDegenerate());
+		CRYASSERT(!rExtFace.isDegenerate());
 		if (m_arrMtlFaces.size() <= (unsigned)nMatID)
 			m_arrMtlFaces.resize(nMatID + 1);
 		m_arrMtlFaces[nMatID].push_back(Face(rExtFace));
@@ -271,7 +271,7 @@ void CRenderMeshBuilder::remapIndicesForVBCache()
 template <class T>
 void Permutate(std::vector<T>& arrOld, unsigned* pPermutation, unsigned newSize)
 {
-	assert(newSize <= arrOld.size());
+	CRYASSERT(newSize <= arrOld.size());
 	std::vector<T> arrNew;
 	arrNew.resize(newSize);
 	for (unsigned nEntry = 0; nEntry < arrOld.size(); ++nEntry)
@@ -281,7 +281,7 @@ void Permutate(std::vector<T>& arrOld, unsigned* pPermutation, unsigned newSize)
 			arrNew[pPermutation[nEntry]] = arrOld[nEntry];
 		}
 		else
-			assert(pPermutation[nEntry] == -1);
+			CRYASSERT(pPermutation[nEntry] == -1);
 	}
 	arrOld.swap(arrNew);
 }
@@ -294,9 +294,9 @@ void CRenderMeshBuilder::remapExtIndices(unsigned* pPermutation, unsigned numNew
 	// remap the indices
 	for (unsigned nIndex = 0; nIndex < m_arrIndices.size(); ++nIndex)
 	{
-		assert(m_arrIndices[nIndex] < numVertices);
+		CRYASSERT(m_arrIndices[nIndex] < numVertices);
 		m_arrIndices[nIndex] = pPermutation[m_arrIndices[nIndex]];
-		assert(m_arrIndices[nIndex] < numNewVertices);
+		CRYASSERT(m_arrIndices[nIndex] < numNewVertices);
 	}
 
 	for (unsigned nFace = 0; nFace < m_arrExtFaces.size(); ++nFace)
@@ -307,19 +307,19 @@ void CRenderMeshBuilder::remapExtIndices(unsigned* pPermutation, unsigned numNew
 	}
 
 	// remap the ExtToInt mappings
-	assert(m_arrExtTangMap.size() == numVertices);
+	CRYASSERT(m_arrExtTangMap.size() == numVertices);
 	Permutate(m_arrExtTangMap, pPermutation, numNewVertices);
 
 	if (m_pMeshDesc->numTexFaces())
 	{
-		assert(m_arrExtUVMap.size() == numVertices);
+		CRYASSERT(m_arrExtUVMap.size() == numVertices);
 		Permutate(m_arrExtUVMap, pPermutation, numNewVertices);
 	}
 
-	assert(m_arrExtTangents.size() == numVertices);
+	CRYASSERT(m_arrExtTangents.size() == numVertices);
 	// remap the tangent bases
 	Permutate(m_arrExtTangents, pPermutation, numNewVertices);
-	assert(m_arrExtTangents.size() == numNewVertices);
+	CRYASSERT(m_arrExtTangents.size() == numNewVertices);
 
 }
 
@@ -391,7 +391,7 @@ void CRenderMeshBuilder::appendNvidiaStrip(const struct PrimitiveGroup& rGroup, 
 
 void CRenderMeshBuilder::selfValidate()
 {
-	assert(m_arrExtFaces.size() <= m_pMeshDesc->numFaces());
+	CRYASSERT(m_arrExtFaces.size() <= m_pMeshDesc->numFaces());
 	unsigned numFaces = m_arrExtFaces.size();
 	for (unsigned nFace = 0; nFace < numFaces; ++nFace)
 	{
@@ -402,8 +402,8 @@ void CRenderMeshBuilder::selfValidate()
 		for (int i = 0; i < 3; ++i)
 		{
 			// this is only applicable to a normal manifold mesh
-			assert(m_arrExtUVMap[ExtFace[i]] == TexFace[i]);
-			assert(m_arrExtTangMap[ExtFace[i]] == IntFace[i]);
+			CRYASSERT(m_arrExtUVMap[ExtFace[i]] == TexFace[i]);
+			CRYASSERT(m_arrExtTangMap[ExtFace[i]] == IntFace[i]);
 		}
 	}
 }
@@ -414,7 +414,7 @@ void CRenderMeshBuilder::AdjustBase(TangData& rBase)
 	/*
 		float fBinormal = rBase.binormal * rBase.tnormal;
 		float fTangent = rBase.tangent * rBase.tnormal;
-		assert (fabs(fBinormal) < 1e-2 && fabs(fTangent) < 1e-2);
+		CRYASSERT (fabs(fBinormal) < 1e-2 && fabs(fTangent) < 1e-2);
 	/*	// normalize the normal
 		float fEpsilon = 0.0005f;
 		float fSqrt1_2 = 0.70710678118654752440084436210485f; // square root of 1/2
@@ -435,13 +435,13 @@ void CRenderMeshBuilder::AdjustBase(TangData& rBase)
 
 		if (rBase.binormal * vBase > rBase.tangent * vBase)
 		{
-			assert (rBase.binormal * vBase > 0 && rBase.tangent * vBase < 0);
+			CRYASSERT (rBase.binormal * vBase > 0 && rBase.tangent * vBase < 0);
 			rBase.binormal = (vBisect + vBase) * fSqrt1_2;
 			rBase.tangent  = (vBisect - vBase) * fSqrt1_2;
 		}
 		else
 		{
-			assert (rBase.binormal * vBase < 0 && rBase.tangent * vBase > 0);
+			CRYASSERT (rBase.binormal * vBase < 0 && rBase.tangent * vBase > 0);
 			rBase.binormal = (vBisect - vBase) * fSqrt1_2;
 			rBase.tangent  = (vBisect + vBase) * fSqrt1_2;
 		}

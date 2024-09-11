@@ -130,7 +130,7 @@ void CTerrain::InitDetailTextureLayers()
 	for (int x = 0; x < CTerrain::GetSectorsTableSize(); x++)
 		for (int y = 0; y < CTerrain::GetSectorsTableSize(); y++)
 		{
-			assert(m_arrSecInfoTable[x][y]);
+			CRYASSERT(m_arrSecInfoTable[x][y]);
 			if (m_arrSecInfoTable[x][y])
 				m_arrSecInfoTable[x][y]->SetDetailLayersPalette();
 		}

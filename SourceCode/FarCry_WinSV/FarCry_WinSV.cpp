@@ -483,7 +483,7 @@ int main(int argc, char** argv)
 	}
 	RegisterExceptionHandler(signalMap);
 
-	assert(argc > 0);
+	CRYASSERT(argc > 0);
 	SetMasterCDFolder(argv[0]);
 
 	//copy punkbuster libraries if needed
@@ -551,7 +551,7 @@ struct ICmdlineArgumentSink
 
 void ParseArguments(const char* inszCommandLine, ICmdlineArgumentSink* pEarlyCommands, ICmdlineArgumentSink* pConsoleCommands)
 {
-	assert(inszCommandLine);
+	CRYASSERT(inszCommandLine);
 
 	//	int iArgNo=0;
 	char* src = (char*)inszCommandLine;
@@ -752,7 +752,7 @@ public:
 		}
 
 		IConsole* pConsole = GetISystem()->GetIConsole();
-		assert(pConsole);
+		CRYASSERT(pConsole);
 
 		unsigned long dwLineNo = m_dwFirstLine;
 
@@ -783,8 +783,8 @@ bool OnWinInKeyDown(unsigned int uiChar, unsigned int uiRepCnt, unsigned int uiF
 {
 	IConsole* pConsole((0 != GetISystem()) ? GetISystem()->GetIConsole() : 0);
 
-	assert(GetISystem());
-	assert(pConsole);
+	CRYASSERT(GetISystem());
+	CRYASSERT(pConsole);
 
 	if (0 != pConsole)
 	{
@@ -1090,7 +1090,7 @@ int MainWin32(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, in
 			return FALSE;					// if init failed
 
 		IConsole* pConsole = pSysten->GetIConsole();
-		assert(pConsole);
+		CRYASSERT(pConsole);
 
 		pConsole->AddOutputPrintSink(&g_Output);
 

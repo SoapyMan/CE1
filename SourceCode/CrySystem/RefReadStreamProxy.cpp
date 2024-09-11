@@ -73,7 +73,7 @@ unsigned int CRefReadStreamProxy::GetBytesRead(bool bWait)
 			if (GetOverlappedResult(m_pStream->GetFile(), &m_Overlapped, &dwBytesRead, bWait))
 			{
 				m_numBytesRead = m_nPieceOffset + dwBytesRead;
-				assert(dwBytesRead <= m_nPieceLength);
+				CRYASSERT(dwBytesRead <= m_nPieceLength);
 			}
 		}
 	}
@@ -108,7 +108,7 @@ void CRefReadStreamProxy::Abort()
 		m_bError = true;
 		m_nIOError = ERROR_USER_ABORT;
 	}
-	//assert (m_pCallback == NULL);
+	//CRYASSERT (m_pCallback == NULL);
 	// perhaps the callback was already called, or perhaps not. In any case we forget about the callback
 	m_pCallback = NULL;
 }
@@ -149,7 +149,7 @@ bool CRefReadStreamProxy::StartRead(unsigned nMemQuota)
 {
 	if (m_bError || m_bFinished || m_bPending)
 	{
-		// Why this assert happened?
+		// Why this CRYASSERT happened?
 		//---------------------------
 		// THe stream read was automatically initiated, while the stream is marked as
 		// having been read, being read, or failed, i.e. it can't be restarted again.
@@ -158,7 +158,7 @@ bool CRefReadStreamProxy::StartRead(unsigned nMemQuota)
 		// while being put on hold. When there are enough IO resources to start reading it,
 		// we detect that it's been already aborted and don't restart it.
 		// This is the only known reason for that.
-		assert(m_nIOError == ERROR_USER_ABORT);
+		CRYASSERT(m_nIOError == ERROR_USER_ABORT);
 		return true; // invalid call, no need to retry
 	}
 
@@ -278,14 +278,14 @@ VOID CALLBACK CRefReadStreamProxy::FileIOCompletionRoutine(
 )
 {
 #if defined(LINUX)
-	assert(lpOverlapped->pCaller != 0);
+	CRYASSERT(lpOverlapped->pCaller != 0);
 	CRefReadStreamProxy* pThis = (CRefReadStreamProxy*)lpOverlapped->pCaller;
 #else
 	const LONG_PTR nOOffset = (LONG_PTR)(&((CRefReadStreamProxy*)0)->m_Overlapped);
 	CRefReadStreamProxy* pThis = (CRefReadStreamProxy*)((LONG_PTR)lpOverlapped - nOOffset);
 #endif
 	// this is only called when the stream is overlapped
-	assert(pThis->m_pStream->isOverlapped());
+	CRYASSERT(pThis->m_pStream->isOverlapped());
 	pThis->OnIOComplete(dwErrorCode, dwNumberOfBytesTransfered);
 }
 
@@ -302,7 +302,7 @@ void CRefReadStreamProxy::OnIOComplete(unsigned nError, unsigned numBytesRead)
 
 	// calculate the next piece offset/length
 	m_nPieceOffset = m_numBytesRead;
-	assert(m_Params.nSize >= m_numBytesRead);
+	CRYASSERT(m_Params.nSize >= m_numBytesRead);
 
 	unsigned nMaxBlockLength = m_pStream->GetEngine()->GetPak()->GetPakVars()->nReadSlice * 1024;
 	if (!nMaxBlockLength)
@@ -415,7 +415,7 @@ DWORD CRefReadStreamProxy::CallReadFileEx()
 void CRefReadStreamProxy::OnFinishRead(unsigned nError)
 {
 	// [marco] commented out, according to sergiy this is harmless	
-	//assert (!m_bFinished && !m_bError); 
+	//CRYASSERT (!m_bFinished && !m_bError); 
 	if (!nError)
 		m_bFinished = true;
 	else

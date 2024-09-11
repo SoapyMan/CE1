@@ -1049,7 +1049,7 @@ void CPhysicalWorld::RepositionEntity(CPhysicalPlaceholder* pobj, int flags)
 			}
 			if (n > pcurobj->m_nGridThunksAlloc) {
 				// check the heap for integrity
-				//assert (IsHeapValid());
+				//CRYASSERT (IsHeapValid());
 				if (pcurobj->m_pGridThunks) delete[] pcurobj->m_pGridThunks;
 				pcurobj->m_pGridThunks = new pe_gridthunk[pcurobj->m_nGridThunksAlloc = n];
 				for (i = 0; i < n; i++) pcurobj->m_pGridThunks[i].pent = pcurobj;

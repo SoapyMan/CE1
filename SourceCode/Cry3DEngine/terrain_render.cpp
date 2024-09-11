@@ -202,7 +202,7 @@ void CTerrain::RenderLowResTerrain()
 
 		//    m_pLowResTerrainShader = GetRenderer()->EF_LoadShader("TerrainLowLOD", eSH_World, EF_SYSTEM);
 
-		assert(m_pLowResTerrainLeafBuffer);
+		CRYASSERT(m_pLowResTerrainLeafBuffer);
 
 		m_nLowResTerrainVertCount = lstLowResTerrainVertArray.Count();
 	}
@@ -282,7 +282,7 @@ void CTerrain::RenderReflectedTerrain()
 
 		//    m_pLowResTerrainShader = GetRenderer()->EF_LoadShader("TerrainLowLOD", eSH_World);
 
-		assert(m_pReflectedTerrainLeafBuffer);
+		CRYASSERT(m_pReflectedTerrainLeafBuffer);
 
 		//    m_nLowResTerrainVertCount = lstLowResTerrainVertArray.Count();
 	}

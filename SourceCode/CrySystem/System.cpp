@@ -281,7 +281,7 @@ void CSystem::SetGCFrequency(const float fRate)
 		m_pScriptSink->SetGCFreq(fRate);
 	else
 	{
-		assert(0);
+		CRYASSERT(0);
 	}
 }
 
@@ -757,7 +757,7 @@ void CSystem::SetIProcess(IProcess* process)
 //////////////////////////////////////////////////////////////////////////
 void CSystem::UpdateScriptSink()
 {
-	assert(m_pScriptSink);
+	CRYASSERT(m_pScriptSink);
 
 	if (m_pScriptSink)
 		m_pScriptSink->Update(false);		// LUA Garbage collection might be called in here

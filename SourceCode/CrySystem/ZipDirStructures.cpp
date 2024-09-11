@@ -190,7 +190,7 @@ ZipDir::ErrorEnum ZipDir::UpdateLocalHeader(FILE* f, FileEntry* pFileEntry)
 	if (1 != fread(&h, sizeof(h), 1, f))
 		return ZD_ERROR_IO_FAILED;
 
-	assert(h.lSignature == h.SIGNATURE);
+	CRYASSERT(h.lSignature == h.SIGNATURE);
 
 	h.desc.lCRC32 = pFileEntry->desc.lCRC32;
 	h.desc.lSizeCompressed = pFileEntry->desc.lSizeCompressed;

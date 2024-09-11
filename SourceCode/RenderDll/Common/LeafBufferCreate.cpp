@@ -223,7 +223,7 @@ public:
 	//! /param outfPos
 	void GetPos(const DWORD indwPos, float outfPos[3]) const
 	{
-		assert(indwPos < m_pData->m_nVertCount);
+		CRYASSERT(indwPos < m_pData->m_nVertCount);
 		Vec3& ref = m_pData->m_pVerts[indwPos];
 		outfPos[0] = ref.x;
 		outfPos[1] = ref.y;
@@ -234,7 +234,7 @@ public:
 	//! /param outfUV 
 	void GetUV(const DWORD indwPos, float outfUV[2]) const
 	{
-		assert(indwPos < m_pData->m_nCoorCount);
+		CRYASSERT(indwPos < m_pData->m_nCoorCount);
 		if (indwPos < m_pData->m_nCoorCount)
 		{
 			TexCoord& ref = m_pData->m_pCoors[indwPos];
@@ -324,9 +324,9 @@ void CLeafBuffer::CreateBuffer(CIndexedMesh* pTriData, bool bStripifyAndShareVer
 
 			tangents.GetTriangleBaseIndices(dwTri, dwBaseIndx);
 
-			assert(dwBaseIndx[0] < dwCnt);
-			assert(dwBaseIndx[1] < dwCnt);
-			assert(dwBaseIndx[2] < dwCnt);
+			CRYASSERT(dwBaseIndx[0] < dwCnt);
+			CRYASSERT(dwBaseIndx[1] < dwCnt);
+			CRYASSERT(dwBaseIndx[2] < dwCnt);
 
 			// for every vertex of the triangle
 			for (i = 0; i < 3; i++)
@@ -358,7 +358,7 @@ void CLeafBuffer::CreateBuffer(CIndexedMesh* pTriData, bool bStripifyAndShareVer
 					continue;
 			}
 
-			assert(pFace->shader_id >= 0 && pFace->shader_id < 512);
+			CRYASSERT(pFace->shader_id >= 0 && pFace->shader_id < 512);
 
 			if (pFace->shader_id >= m_pMats->Count())
 			{
@@ -391,7 +391,7 @@ void CLeafBuffer::CreateBuffer(CIndexedMesh* pTriData, bool bStripifyAndShareVer
 			CObjFace* pFace = _vhash_table[t][i];
 			SBasisFace* pTFace = &_thash_table[t][i];
 
-			assert(pFace->shader_id == t);
+			CRYASSERT(pFace->shader_id == t);
 
 			for (int v = 0; v < 3; ++v)
 			{
@@ -424,7 +424,7 @@ void CLeafBuffer::CreateBuffer(CIndexedMesh* pTriData, bool bStripifyAndShareVer
 				}
 
 				// normal
-				assert(pTriData->m_pNorms);
+				CRYASSERT(pTriData->m_pNorms);
 				pVBuff[buff_vert_count].normal = pTriData->m_pNorms[pFace->n[v]];
 				uiInfo[buff_vert_count] = 0;
 
@@ -466,7 +466,7 @@ void CLeafBuffer::CreateBuffer(CIndexedMesh* pTriData, bool bStripifyAndShareVer
 			re->m_pChunk = &(*m_pMats)[i];
 			re->m_pBuffer = this;
 
-			//assert (re->m_pChunk->nNumIndices < 60000);
+			//CRYASSERT (re->m_pChunk->nNumIndices < 60000);
 
 			re->m_pChunk->pRE = re;
 
@@ -576,7 +576,7 @@ void CLeafBuffer::CreateBuffer(CIndexedMesh* pTriData, bool bStripifyAndShareVer
 				int i0 = m_SecIndices[j + 0];
 				int i1 = m_SecIndices[j + 1];
 				int i2 = m_SecIndices[j + 2];
-				assert(i0 < 65536 && i1 < 65536 && i2 < 65536);
+				CRYASSERT(i0 < 65536 && i1 < 65536 && i2 < 65536);
 				// if the face is not degenerated, then add it; otherwise skip and finally it'll be deleted
 				if (i0 != i1 && i0 != i2 && i1 != i2)
 				{
@@ -616,7 +616,7 @@ void CLeafBuffer::CreateBuffer(CIndexedMesh* pTriData, bool bStripifyAndShareVer
 			continue;
 		if (mi->nNumIndices + mi->nFirstIndexId > m_NumIndices)
 		{
-			assert(0);
+			CRYASSERT(0);
 			continue;
 		}
 		SShaderItem Sh = mi->GetShaderItem();
@@ -881,7 +881,7 @@ public:
 	//! /param outfPos
 	void GetPos(const DWORD indwPos, float outfPos[3]) const
 	{
-		assert(indwPos < m_pLB->m_SecVertCount);
+		CRYASSERT(indwPos < m_pLB->m_SecVertCount);
 		byte* b = (byte*)m_pInPos + indwPos * m_nStridePos;
 		Vec3* ref = (Vec3*)b;
 		outfPos[0] = ref->x;
@@ -893,7 +893,7 @@ public:
 	//! /param outfUV 
 	void GetUV(const DWORD indwPos, float outfUV[2]) const
 	{
-		assert(indwPos < m_pLB->m_SecVertCount);
+		CRYASSERT(indwPos < m_pLB->m_SecVertCount);
 		byte* b = (byte*)m_pInUV + indwPos * m_nStrideUV;
 		Vec2* ref = (Vec2*)b;
 		outfUV[0] = ref->x;
@@ -925,10 +925,10 @@ public:
 bool CLeafBuffer::CreateTangBuffer()
 {
 	return false;
-	assert(m_pSecVertBuffer);
+	CRYASSERT(m_pSecVertBuffer);
 	if (!m_pSecVertBuffer)
 		return false;
-	assert(m_SecIndices.Num());
+	CRYASSERT(m_SecIndices.Num());
 	if (!m_SecIndices.Num())
 		return false;
 
@@ -959,9 +959,9 @@ bool CLeafBuffer::CreateTangBuffer()
 
 		tangents.GetTriangleBaseIndices(dwTri, dwBaseIndx);
 
-		assert(dwBaseIndx[0] < dwCnt);
-		assert(dwBaseIndx[1] < dwCnt);
-		assert(dwBaseIndx[2] < dwCnt);
+		CRYASSERT(dwBaseIndx[0] < dwCnt);
+		CRYASSERT(dwBaseIndx[1] < dwCnt);
+		CRYASSERT(dwBaseIndx[2] < dwCnt);
 
 		// for every vertex of the triangle
 		for (int i = 0; i < 3; i++)
@@ -975,7 +975,7 @@ bool CLeafBuffer::CreateTangBuffer()
 	{
 		tangents.GetBase(i, &pBasises[i].m_Tangent[0], &pBasises[i].m_Binormal[0], &pBasises[i].m_TNormal[0]);
 	}
-	assert(dwTris * 3 == m_SecIndices.Num());
+	CRYASSERT(dwTris * 3 == m_SecIndices.Num());
 	SAFE_DELETE_ARRAY(m_pSecVertBuffer->m_VS[VSF_TANGENTS].m_VData);
 	m_pSecVertBuffer->m_VS[VSF_TANGENTS].m_VData = new SPipTangents[m_SecVertCount];
 	SPipTangents* tn = (SPipTangents*)m_pSecVertBuffer->m_VS[VSF_TANGENTS].m_VData;
@@ -1012,12 +1012,12 @@ bool CLeafBuffer::CreateBuffer(struct VertexBufferSource* pSource)
 		}
 	}
 	else
-		assert(0); // this means we already have someone allocated the materials for us - not good!
+		CRYASSERT(0); // this means we already have someone allocated the materials for us - not good!
 	bool bBoxInited = false;
 	for (unsigned t = 0; t < pSource->numPrimGroups; ++t)
 	{
 		const CCFMaterialGroup& pg = pSource->pPrimGroups[t];
-		assert(pg.nMaterial < pSource->numMaterials);
+		CRYASSERT(pg.nMaterial < pSource->numMaterials);
 		CMatInfo& mi = (*m_pMats)[pg.nMaterial];
 
 		mi.nFirstIndexId = pg.nIndexBase;
@@ -1604,7 +1604,7 @@ void CLeafBuffer::Unload()
 	Unlink();
 	if (gRenDev)
 	{
-		assert(!m_pVertexBuffer || m_pVertexBuffer->m_NumVerts == m_SecVertCount);
+		CRYASSERT(!m_pVertexBuffer || m_pVertexBuffer->m_NumVerts == m_SecVertCount);
 		if (m_pVertexBuffer)
 			gRenDev->ReleaseBuffer(m_pVertexBuffer);
 		gRenDev->ReleaseIndexBuffer(&m_Indices);
@@ -1627,7 +1627,7 @@ void CLeafBuffer::UpdateDynBufPtr(int VertFormat)
 		int nOffsTangs, nOffsGen;
 		vBufGen = gRenDev->GetDynVBPtr(m_SecVertCount, nOffsGen, 1);
 		vBufTangs = gRenDev->GetDynVBPtr(m_SecVertCount, nOffsTangs, 2);
-		assert(vBufTangs && vBufGen && nOffsTangs == nOffsGen);
+		CRYASSERT(vBufTangs && vBufGen && nOffsTangs == nOffsGen);
 		m_pVertexBuffer->m_fence = nOffsTangs;
 		m_pVertexBuffer->m_bFenceSet = true;
 		m_pVertexBuffer->m_VS[VSF_GENERAL].m_VData = vBufGen;
@@ -1709,7 +1709,7 @@ void CLeafBuffer::SortTris()
 			int nEnd = nStart + pMI->nNumIndices;
 			int nTris = pMI->nNumIndices / 3;
 
-			assert(nEnd <= m_NumIndices);
+			CRYASSERT(nEnd <= m_NumIndices);
 
 			sSortTris.SetUse(nStart);
 			for (n = nStart; n < nEnd; n += 3)
@@ -1825,7 +1825,7 @@ bool CLeafBuffer::CheckUpdate(int VertFormat, int Flags, bool bNeedAddNormals)
 			else
 				if (!lb->m_bOnlyVideoBuffer)
 				{
-					//assert(lb->m_pSecVertBuffer);
+					//CRYASSERT(lb->m_pSecVertBuffer);
 					if (lb->m_pSecVertBuffer && lb->m_pSecVertBuffer->m_vertexformat != RequestedVertFormat)
 					{
 						PROFILE_FRAME(Mesh_CheckUpdateRecreateSystem);
@@ -1855,7 +1855,7 @@ bool CLeafBuffer::CheckUpdate(int VertFormat, int Flags, bool bNeedAddNormals)
 				PROFILE_FRAME(Mesh_CheckUpdateCreateSysTang);
 				lb->CreateTangBuffer();
 			}
-			assert(lb->m_pSecVertBuffer->m_VS[VSF_TANGENTS].m_VData);
+			CRYASSERT(lb->m_pSecVertBuffer->m_VS[VSF_TANGENTS].m_VData);
 			if (lb->m_pSecVertBuffer->m_VS[VSF_TANGENTS].m_VData)
 			{
 				if (!lb->m_pVertexBuffer->GetStream(VSF_TANGENTS, NULL))
@@ -2049,13 +2049,13 @@ void CLeafBuffer::UpdateVidVertices(void* pNewVertices, int nNewVerticesCount)
 
 void CLeafBuffer::CreateVidVertices(int nVerts, int VertFormat)
 {
-	//	assert(!m_Next && !m_Prev);
+	//	CRYASSERT(!m_Next && !m_Prev);
 	Unlink();
-	assert(!m_pVertexBuffer);
+	CRYASSERT(!m_pVertexBuffer);
 	m_pVertexBuffer = gRenDev->CreateBuffer(nVerts, VertFormat, "LeafBuffer", m_bDynamic);
 	if (!m_pVertexBuffer)
 		return;
-	assert(m_SecVertCount == m_pVertexBuffer->m_NumVerts);
+	CRYASSERT(m_SecVertCount == m_pVertexBuffer->m_NumVerts);
 	Link(&m_Root);
 }
 
@@ -2131,7 +2131,7 @@ void CLeafBuffer::SetChunk(IShader* pShader,
 		pMat->shaderItem.m_pShader = pShader;
 	}
 
-	assert(!pMat->pRE || pMat->pRE->m_pChunk->nFirstIndexId < 60000);
+	CRYASSERT(!pMat->pRE || pMat->pRE->m_pChunk->nFirstIndexId < 60000);
 
 	pMat->nFirstIndexId = nFirstIndexId;
 	pMat->nNumIndices = crymax(nIndexCount, 0);
@@ -2145,7 +2145,7 @@ void CLeafBuffer::SetChunk(IShader* pShader,
 			for(int i=pMat->nFirstIndexId; i<pMat->nFirstIndexId+pMat->nNumIndices; i++)
 			{
 				int id = pInds[i];
-				assert(id>=pMat->nFirstVertId && id<(pMat->nFirstVertId+pMat->nNumVerts));
+				CRYASSERT(id>=pMat->nFirstVertId && id<(pMat->nFirstVertId+pMat->nNumVerts));
 			}
 		}
 	#endif // _DEBUG*/

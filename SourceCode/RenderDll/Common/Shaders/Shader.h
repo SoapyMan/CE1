@@ -668,7 +668,7 @@ _inline CPShader* PShaderForName(CPShader*& Store, const char* szName)
 #ifndef NULL_RENDERER
 	if (!Store)
 		Store = CPShader::mfForName(szName);
-	assert(Store);
+	CRYASSERT(Store);
 #endif
 	return Store;
 }
@@ -678,7 +678,7 @@ _inline CVProgram* VShaderForName(CVProgram*& Store, const char* szName)
 #ifndef NULL_RENDERER
 	if (!Store)
 		Store = CVProgram::mfForName(szName);
-	assert(Store);
+	CRYASSERT(Store);
 #endif
 	return Store;
 }

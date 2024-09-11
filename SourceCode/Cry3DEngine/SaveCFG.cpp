@@ -217,7 +217,7 @@ bool C3DEngine::WriteNodeMesh(int nNode, MESH_CHUNK_DESC* chunk, FILE* out, TArr
 			if (!stricmp(sh->GetName(), Shaders[j]->GetName()))
 				break;
 		}
-		assert(j != Shaders.Num());
+		CRYASSERT(j != Shaders.Num());
 		fc.MatID = j;
 		fc.SmGroup = 0;
 		Faces.AddElem(fc);

@@ -284,7 +284,7 @@ void CServerSlotImpl::OnDisconnect(const char* szCause)
 
 void CServerSlotImpl::Release()
 {
-	assert(this);
+	CRYASSERT(this);
 	delete this;
 }
 
@@ -316,7 +316,7 @@ void CServerSlotImpl::OnCCPConnectResp(CStream& stm)
 
 	if (uiSize)
 	{
-		assert(uiSize % 8 == 0);
+		CRYASSERT(uiSize % 8 == 0);
 		m_pbAuthorizationID = new BYTE[uiSize / 8];
 		stm.ReadBits(m_pbAuthorizationID, uiSize);
 		m_uiAuthorizationSize = uiSize / 8;
@@ -508,7 +508,7 @@ void CServerSlotLocal::PushData(CStream& stm)
 
 void CServerSlotLocal::Release()
 {
-	assert(this);
+	CRYASSERT(this);
 	delete this;
 }
 
@@ -552,7 +552,7 @@ void CServerSlotLocal::OnCCPConnectResp(CStream& stm)
 	stm.Read(uiSize);
 	if (uiSize)
 	{
-		assert(uiSize % 8 == 0);
+		CRYASSERT(uiSize % 8 == 0);
 		m_pbAuthorizationID = new BYTE[uiSize / 8];
 		stm.ReadBits(m_pbAuthorizationID, uiSize);
 		m_uiAuthorizationSize = uiSize / 8;

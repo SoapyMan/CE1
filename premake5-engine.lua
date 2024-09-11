@@ -163,14 +163,22 @@ group "CryEngine"
 ----------------------------------------------
 
 project "CryCommon"
-    kind "None"
+    kind "StaticLib"
+	uses {
+		"SDL2",
+	}
     files {
+		"./SourceCode/CryCommon/**.cpp",
         "./SourceCode/CryCommon/**.h",
 	}
+	
 	
 usage "CryCommon"
 	includedirs {
 		"./SourceCode/CryCommon/"
+	}
+	links {
+		"CryCommon"
 	}
 
 project "CrySystem"

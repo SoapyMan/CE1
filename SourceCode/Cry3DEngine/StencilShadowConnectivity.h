@@ -55,7 +55,7 @@ public:
 	virtual void GetStats(DWORD& outVertexCount, DWORD& outTriangleCount) { outVertexCount = outTriangleCount = 0; }
 
 	//! Memorize the vertex buffer in this connectivity object. This is needed if a static object doesn't need this info
-	virtual void SetVertices(const Vec3d* pVertices, unsigned numVertices) { assert(0); }
+	virtual void SetVertices(const Vec3d* pVertices, unsigned numVertices) { CRYASSERT(0); }
 
 	//! Serializes this object to the given memory block; if it's NULL, only returns
 	//! the number of bytes required. If it's not NULL, returns the number of bytes written
@@ -150,7 +150,7 @@ public:
 		//! /param nIndex 0/1
 		inline unsigned operator [] (int nIndex)const
 		{
-			assert(nIndex == 0 || nIndex == 1);
+			CRYASSERT(nIndex == 0 || nIndex == 1);
 			return m_nVertex[nIndex];
 		}
 
@@ -219,7 +219,7 @@ public:
 		//! /return reference to the face data structure
 		const EdgeFace& getFace(int nFace) const
 		{
-			assert(nFace == 0 || nFace == 1);
+			CRYASSERT(nFace == 0 || nFace == 1);
 
 			return m_Face[nFace];
 		}
@@ -228,7 +228,7 @@ public:
 		//! /param ef reference to the edge datastructure
 		void setFace(int nFace, const EdgeFace& ef)
 		{
-			assert(nFace == 0 || nFace == 1);
+			CRYASSERT(nFace == 0 || nFace == 1);
 
 			m_Face[nFace] = ef;
 		}
@@ -282,7 +282,7 @@ public:
 		//! /return index of that triangle vertex
 		const vindex getVertex(int nVtx) const
 		{
-			assert(nVtx == 0 || nVtx == 1 || nVtx == 2);
+			CRYASSERT(nVtx == 0 || nVtx == 1 || nVtx == 2);
 
 			return m_nVertex[nVtx];
 		}
@@ -292,7 +292,7 @@ public:
 		//! /param nIndex index of the triangle vertex no <nVtx>
 		void setVertex(int nVtx, vindex nIndex)
 		{
-			assert(nVtx == 0 || nVtx == 1 || nVtx == 2);
+			CRYASSERT(nVtx == 0 || nVtx == 1 || nVtx == 2);
 
 			m_nVertex[nVtx] = nIndex;
 		}
@@ -304,9 +304,9 @@ public:
 	//! /return the nEdge'th edge
 	const Edge& getEdge(int nEdge)const
 	{
-		assert(m_pEdges);
-		assert(nEdge >= 0);
-		assert((unsigned)nEdge < m_numEdges);
+		CRYASSERT(m_pEdges);
+		CRYASSERT(nEdge >= 0);
+		CRYASSERT((unsigned)nEdge < m_numEdges);
 
 		return m_pEdges[nEdge];
 	}
@@ -316,9 +316,9 @@ public:
 	//! /return
 	const OrphanEdge& getOrphanEdge(int nEdge)const
 	{
-		assert(m_pOrphanEdges);
-		assert(nEdge >= 0);
-		assert((unsigned)nEdge < m_numOrphanEdges);
+		CRYASSERT(m_pOrphanEdges);
+		CRYASSERT(nEdge >= 0);
+		CRYASSERT((unsigned)nEdge < m_numOrphanEdges);
 
 		return m_pOrphanEdges[nEdge];
 	}
@@ -328,9 +328,9 @@ public:
 	//! /return reference to the face
 	const Face& getFace(int nFace) const
 	{
-		assert(m_pFaces);
-		assert(nFace >= 0);
-		assert((unsigned)nFace < m_numFaces);
+		CRYASSERT(m_pFaces);
+		CRYASSERT(nFace >= 0);
+		CRYASSERT((unsigned)nFace < m_numFaces);
 
 		return m_pFaces[nFace];
 	}
@@ -342,7 +342,7 @@ public:
 	// DO NOT call twice, this is only designed to be called once after construction
 	void SetFaces(const std::vector<Face>& arrFaces)
 	{
-		assert(!m_pFaces && m_numFaces <= arrFaces.size());
+		CRYASSERT(!m_pFaces && m_numFaces <= arrFaces.size());
 		if (!arrFaces.empty())
 		{
 			m_pFaces = new Face[m_numFaces = arrFaces.size()];
@@ -356,7 +356,7 @@ public:
 	// because the VTable was also allocated in the same module
 	virtual void Release()
 	{
-		assert(this);
+		CRYASSERT(this);
 		// this is a counterpart to the new that's called within the
 		// CStencilShadowConnectivityBuilder::ConstructConnectivity() method
 		delete this;
@@ -479,7 +479,7 @@ protected:
 			delete[] m_pPlanes;
 		if (pPlanes)
 		{
-			assert(numPlanes >= m_numFaces);
+			CRYASSERT(numPlanes >= m_numFaces);
 			m_pPlanes = new Plane[m_numFaces];
 			memcpy(m_pPlanes, pPlanes, sizeof(Plane) * m_numFaces);
 		}
@@ -493,7 +493,7 @@ protected:
 			delete[]m_pVertices;
 		if (pVertices)
 		{
-			assert(numVertices >= m_numVertices);
+			CRYASSERT(numVertices >= m_numVertices);
 			m_pVertices = new Vec3d[m_numVertices];
 			memcpy(m_pVertices, pVertices, sizeof(Vec3d) * m_numVertices);
 		}
@@ -506,11 +506,11 @@ protected:
 	{
 		if (m_pVertices)
 			delete[]m_pVertices;
-		assert(pNewVertices);
+		CRYASSERT(pNewVertices);
 		// we collected information about the vertices before . The number of used vertices is in
 		// m_numVertices. We assume the passed new vertex map can not make this number larger, because
 		// its sole purpose is optimization of number of vertex indices used (for storing the vertex info inside)
-		assert(numNewVertices <= m_numVertices);
+		CRYASSERT(numNewVertices <= m_numVertices);
 		m_numVertices = numNewVertices;
 		m_pVertices = new Vec3d[numNewVertices];
 		memcpy(m_pVertices, pNewVertices, sizeof(Vec3d) * numNewVertices);
@@ -623,9 +623,9 @@ public:
 		m_numVertices = *(pHeader++);
 		m_numFaces = *(pHeader++);
 		unsigned numPlanes = *(pHeader++);
-		assert(numPlanes == 0 || numPlanes == m_numFaces);
+		CRYASSERT(numPlanes == 0 || numPlanes == m_numFaces);
 		unsigned numVertices = *(pHeader++);
-		assert(numVertices == 0 || numVertices == m_numVertices);
+		CRYASSERT(numVertices == 0 || numVertices == m_numVertices);
 
 		unsigned nRequiredSize =
 			sizeof(unsigned) +
@@ -740,7 +740,7 @@ public:
 
 	// the plane equation, x*n+d == 0
 	bool hasPlanes() const { return m_pPlanes != NULL; }
-	const Plane& getPlane(unsigned i)const { assert(i < m_numFaces && m_pPlanes); return m_pPlanes[i]; }
+	const Plane& getPlane(unsigned i)const { CRYASSERT(i < m_numFaces && m_pPlanes); return m_pPlanes[i]; }
 
 	const Vec3d* getVertices() const { return m_pVertices; }
 
@@ -749,9 +749,9 @@ public:
 	void remapVertexIndices(const vindex* pMap, unsigned nMapSize)
 	{
 		unsigned i;
-#define REMAP(X) assert((X) < nMapSize);\
+#define REMAP(X) CRYASSERT((X) < nMapSize);\
 		(X) = pMap[X];\
-		assert ((vindex)(X) != (vindex)-1 && (X) < m_numVertices)
+		CRYASSERT ((vindex)(X) != (vindex)-1 && (X) < m_numVertices)
 
 		for (i = 0; i < m_numEdges; i++)
 		{

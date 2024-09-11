@@ -137,7 +137,7 @@ IAnimTrack* CMovieSystem::CreateTrack(EAnimTrackType type)
 	//ATRACK_BOOL,
 	// Unknown type of track.
 //	CLogFile::WriteLine( "Error: Requesting unknown type of animation track!" );
-	assert(0);
+	CRYASSERT(0);
 	return 0;
 }
 
@@ -217,7 +217,7 @@ ISequenceIt* CMovieSystem::GetSequences()
 //////////////////////////////////////////////////////////////////////////
 void CMovieSystem::RemoveSequence(IAnimSequence* seq)
 {
-	assert(seq != 0);
+	CRYASSERT(seq != 0);
 	if (seq)
 	{
 		IMovieCallback* pCallback = GetCallback();
@@ -263,7 +263,7 @@ IAnimNode* CMovieSystem::FindNode(const char* nodeName) const
 //////////////////////////////////////////////////////////////////////////
 void CMovieSystem::RemoveNode(IAnimNode* node)
 {
-	assert(node != 0);
+	CRYASSERT(node != 0);
 
 	{
 		// Remove this node from all sequences that reference this node.
@@ -340,7 +340,7 @@ void CMovieSystem::PlaySequence(const char* sequenceName, bool bResetFx)
 //////////////////////////////////////////////////////////////////////////
 void CMovieSystem::PlaySequence(IAnimSequence* seq, bool bResetFx)
 {
-	assert(seq != 0);
+	CRYASSERT(seq != 0);
 	if (!seq || IsPlaying(seq))
 		return;
 
@@ -378,7 +378,7 @@ void CMovieSystem::StopSequence(const char* sequenceName)
 //////////////////////////////////////////////////////////////////////////
 void CMovieSystem::StopSequence(IAnimSequence* seq)
 {
-	assert(seq != 0);
+	CRYASSERT(seq != 0);
 	for (PlayingSequences::iterator it = m_playingSequences.begin(); it != m_playingSequences.end(); ++it)
 	{
 		if (it->sequence == seq)
@@ -651,7 +651,7 @@ void CMovieSystem::Serialize(XmlNodeRef& xmlNode, bool bLoading, bool bRemoveOld
 			for (std::map<int, int>::iterator It = mapNodeTarget.begin(); It != mapNodeTarget.end(); ++It)
 			{
 				IAnimNode* pAnimNode = GetNode(It->first);
-				assert(pAnimNode);
+				CRYASSERT(pAnimNode);
 				pAnimNode->SetTarget(GetNode(It->second));
 			}
 		}

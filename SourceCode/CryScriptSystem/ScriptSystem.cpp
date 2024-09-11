@@ -81,7 +81,7 @@ inline void CScriptSystem::Validate()
 {
 	//#if defined(WIN64) && defined(_DEBUG)
 		//++g_numScriptSystemValidations;
-		//assert ((g_numScriptSystemValidations <135000) || IsHeapValid());
+		//CRYASSERT ((g_numScriptSystemValidations <135000) || IsHeapValid());
 	//#endif
 }
 

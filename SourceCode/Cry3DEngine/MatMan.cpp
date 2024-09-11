@@ -90,7 +90,7 @@ void CMatMan::DeleteMatInfo(IMatInfo* pMatInfo)
 		}
 	}
 	*/
-	assert(pMatInfo);
+	CRYASSERT(pMatInfo);
 	pMatInfo->SetFlags(pMatInfo->GetFlags() | MIF_INVALID);
 	m_mtlNameMap.erase(pMatInfo->GetName());
 	m_mtlSet.erase(pMatInfo);
@@ -99,7 +99,7 @@ void CMatMan::DeleteMatInfo(IMatInfo* pMatInfo)
 //////////////////////////////////////////////////////////////////////////
 void CMatMan::RenameMatInfo(IMatInfo* pMtl, const char* sNewName)
 {
-	assert(pMtl);
+	CRYASSERT(pMtl);
 	m_mtlNameMap.erase(pMtl->GetName());
 	pMtl->SetName(sNewName);
 	m_mtlNameMap[sNewName] = pMtl;

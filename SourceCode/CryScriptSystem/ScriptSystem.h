@@ -19,10 +19,6 @@ extern "C" {
 #include <string>
 #include <vector>
 #include "FunctionHandler.h"
-#if !defined(LINUX)
-#include <assert.h>
-#endif
-
 
 struct BreakPoint
 {

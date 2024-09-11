@@ -56,12 +56,12 @@ void CrySkinMorphBuilder::initSkinMorph(const SMeshMorphTargetVertex* pMorphVert
 		// for each bone, fill the three groups
 		// we start from the rigid vertices
 		fillRigidGroup(stream, nBone);
-		assert(stream.pAux <= streamEnd.pAux);
-		assert(stream.pVert <= streamEnd.pVert);
+		CRYASSERT(stream.pAux <= streamEnd.pAux);
+		CRYASSERT(stream.pVert <= streamEnd.pVert);
 		fillSmoothGroup(stream, nBone);
 		// only when we processed the last bone, we should have the pAux pointing to the end
-		assert(stream.pAux <= streamEnd.pAux);
-		assert(stream.pVert <= streamEnd.pVert);
+		CRYASSERT(stream.pAux <= streamEnd.pAux);
+		CRYASSERT(stream.pVert <= streamEnd.pVert);
 	}
 }
 
@@ -85,8 +85,8 @@ void CrySkinMorphBuilder::findAffectingBoneRange()
 		m_numAffectingBones = crymax(m_numAffectingBones, pLinks->maxBoneID() + 1);
 	}
 
-	assert(m_nFirstAffectingBone < m_numAffectingBones);
-	assert(m_numAffectingBones <= m_numBones);
+	CRYASSERT(m_nFirstAffectingBone < m_numAffectingBones);
+	CRYASSERT(m_numAffectingBones <= m_numBones);
 }
 
 
@@ -160,8 +160,8 @@ void CrySkinMorphBuilder::validate()
 #ifdef _DEBUG
 	unsigned nBone;
 	for (nBone = 0; nBone < m_nFirstAffectingBone; ++nBone)
-		assert(m_arrBoneVerts[nBone].empty());
-	assert(!m_arrBoneVerts[m_nFirstAffectingBone].empty());
+		CRYASSERT(m_arrBoneVerts[nBone].empty());
+	CRYASSERT(!m_arrBoneVerts[m_nFirstAffectingBone].empty());
 #endif
 }
 

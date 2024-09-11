@@ -103,7 +103,7 @@ void CXNetworkStats::AddPacket( const DWORD indwItem, const size_t inBitSize, co
 {
 	if(indwItem>=MAX_ITEMS)
 	{
-		assert(0);
+		CRYASSERT(0);
 		return;
 	}
 
@@ -151,7 +151,7 @@ bool CXNetworkStats::GetStats( const int iniN, DWORD &outdwItem, DWORD &outRelCo
 	outRelCount=ref.m_dwRelCount;
 	outUnrelCount=ref.m_dwUnrelCount;
 	outSumBitSize=ref.m_SumBitSize;
-	assert(outSumBitSize);
+	CRYASSERT(outSumBitSize);
 
 	return true;
 }
@@ -160,7 +160,7 @@ bool CXNetworkStats::GetStats( const int iniN, DWORD &outdwItem, DWORD &outRelCo
 //------------------------------------------------------------------------------------------------- 
 void CXNetworkStats::AddToSumGraph( const DWORD inPos, const DWORD indwDelta )
 {
-	assert(inPos<m_SumGraphDraw.size());
+	CRYASSERT(inPos<m_SumGraphDraw.size());
 
 	m_SumGraphGather[inPos] += indwDelta;
 }
@@ -169,7 +169,7 @@ void CXNetworkStats::AddToSumGraph( const DWORD inPos, const DWORD indwDelta )
 //------------------------------------------------------------------------------------------------- 
 float CXNetworkStats::GetSumGraphValue( const DWORD inPos ) const
 {
-	assert(inPos<m_SumGraphDraw.size());
+	CRYASSERT(inPos<m_SumGraphDraw.size());
 
 	return (float)(m_SumGraphDraw[inPos]);
 }

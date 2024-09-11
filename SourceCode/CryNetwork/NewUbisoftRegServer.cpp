@@ -7,11 +7,6 @@
 #include "CommonDefines.h"
 #include "IConsole.h"									// ICVar
 
-#if !defined(LINUX)
-#include <assert.h>
-#endif
-
-
 #if defined(WIN32) || defined(WIN64)
 #define WIN32_LEAN_AND_MEAN
 #include "windows.h"

@@ -335,7 +335,7 @@ void CryModelState::UnconvertBoneGlobalFromRelativeForm(bool bNonphysicalOnlyArg
 		bool bPhysical = pBoneInfo->getPhysInfo(nLod).pPhysGeom || pBoneInfo->getLimbId() >= 100;
 		if (!bNonphysicalOnly || !bPhysical)
 		{
-			assert(pBoneInfo->hasParent());
+			CRYASSERT(pBoneInfo->hasParent());
 			Matrix44& matBoneGlobal = getBoneMatrixGlobal(i);
 			matBoneGlobal = getBone(i).m_matRelativeToParent * getBoneMatrixGlobal(getBoneParentIndex(i));
 		}

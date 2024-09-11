@@ -369,7 +369,7 @@ void fxParserInit(void)
 		fxAddMacro("RADEON", NULL);
 		break;
 	default:
-		assert(0);
+		CRYASSERT(0);
 	}
 	if (gRenDev->GetFeatures() & RFT_HW_HDR)
 		fxAddMacro("HDR", NULL);
@@ -399,7 +399,7 @@ void fxStart()
 
 void fxIncrLevel()
 {
-	assert(sRecurse < 31);
+	CRYASSERT(sRecurse < 31);
 	sRecurse++;
 	sRecurse = crymin(sRecurse, 31);
 	SAFE_DELETE_ARRAY(sTempBuf1[sRecurse]);
@@ -407,7 +407,7 @@ void fxIncrLevel()
 
 void fxDecrLevel()
 {
-	assert(sRecurse > 0);
+	CRYASSERT(sRecurse > 0);
 	SAFE_DELETE_ARRAY(sTempBuf1[sRecurse]);
 	sRecurse--;
 	sRecurse = crymax(sRecurse, 0);
@@ -461,7 +461,7 @@ void fxPreprocess(char** buf, const char* command)
 {
 	if (!strcmp(&command[1], "include"))
 	{
-		assert(**buf == '"' || **buf == '<');
+		CRYASSERT(**buf == '"' || **buf == '<');
 		char brak = **buf;
 		++*buf;
 		char name[128];
@@ -470,7 +470,7 @@ void fxPreprocess(char** buf, const char* command)
 		{
 			if (**buf <= 0x20)
 			{
-				assert(0);
+				CRYASSERT(0);
 				break;
 			}
 			name[n++] = **buf;
@@ -802,7 +802,7 @@ long fxGetObject(char** buf, SFXTokenDesc* tokens, char** name, char** value, ch
 				if (**buf == '(')
 				{
 					char* s = strchr(*buf, '{');
-					assert(s);
+					CRYASSERT(s);
 					if (s)
 					{
 						int nRecurse = 0;
@@ -968,7 +968,7 @@ void fxGetParams(char* annot, std::vector <SFXParam>& prms)
 					prm.m_Value.m_Float = shGetInt(buf);
 					break;
 				default:
-					assert(0);
+					CRYASSERT(0);
 				}
 				while (*buf > 0x20) { ++buf; }
 			}
@@ -977,7 +977,7 @@ void fxGetParams(char* annot, std::vector <SFXParam>& prms)
 			prm.m_Value.m_Int = 0;
 		prms.push_back(prm);
 		SkipCharacters(&buf, kWhiteSpace);
-		assert(buf[0] == ';');
+		CRYASSERT(buf[0] == ';');
 		buf++;
 	}
 }

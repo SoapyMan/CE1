@@ -1049,7 +1049,7 @@ void __stdcall lglGenTextures(GLsizei n, GLuint* textures)
 {
 	gRenDev->Logv(SRendItem::m_RecurseLevel, "%s\n", "glGenTextures");
 	tglGenTextures(n, textures);
-	assert(textures[n - 1] < 14000);
+	CRYASSERT(textures[n - 1] < 14000);
 }
 void __stdcall lglGetBooleanv(GLenum pname, GLboolean* params)
 {

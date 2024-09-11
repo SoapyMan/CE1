@@ -1099,7 +1099,7 @@ bool COPLookAround::Execute(CPipeUser* pOperand)
 		float zcross = myDir.x *otherDir.y - myDir.y*otherDir.x;
 	//	pOperand->m_State.fValue =  (-zcross) * (acos(f)/pOperand->GetParameters().m_fResponsiveness);
 		pOperand->m_State.fValue =  (-zcross) * pOperand->GetParameters().m_fResponsiveness* GetAISystem()->m_pSystem->GetITimer()->GetFrameTime();
-		assert(-1e+9 < pOperand->m_State.fValue && pOperand->m_State.fValue < 1e+9);
+		CRYASSERT(-1e+9 < pOperand->m_State.fValue && pOperand->m_State.fValue < 1e+9);
 
 
 		if (zcross > 0)

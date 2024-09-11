@@ -55,7 +55,7 @@ CryGeometryInfo::~CryGeometryInfo()
 
 void CryGeometryInfo::buildGeomSkins(const CryBoneInfo* pBoneInfo, unsigned numBoneInfos)
 {
-	assert(m_SkinGeom.empty());
+	CRYASSERT(m_SkinGeom.empty());
 
 	// build the skinner that will skin the vertices
 	{
@@ -117,13 +117,13 @@ bool CryGeometryInfo::hasGeomSkin()const
 
 CrySkinFull* CryGeometryInfo::getGeomSkin()
 {
-	assert(!m_SkinGeom.empty());
+	CRYASSERT(!m_SkinGeom.empty());
 	return &m_SkinGeom;
 }
 
 CrySkinFull* CryGeometryInfo::getNormalSkin()
 {
-	assert(!m_SkinNormal.empty());
+	CRYASSERT(!m_SkinNormal.empty());
 	return &m_SkinNormal;
 }
 
@@ -159,7 +159,7 @@ void CryGeometryInfo::OutputOrphanedEdgeWarning(class IEdgeConnectivityBuilder* 
 		std::set<unsigned> setShaders; // the shaders to which the faces belong
 		for (unsigned i = 0; i < numOrphanedEdges; ++i)
 		{
-			assert(arrFaces[i] < m_arrFaceMtl.size());
+			CRYASSERT(arrFaces[i] < m_arrFaceMtl.size());
 			setShaders.insert(m_arrFaceMtl[arrFaces[i]]);
 		}
 
@@ -192,7 +192,7 @@ void CryGeometryInfo::OutputOrphanedEdgeWarning(class IEdgeConnectivityBuilder* 
 void CryGeometryInfo::buildStencilShadowConnectivity(const std::vector<MAT_ENTITY>& arrMaterials)
 {
 	IEdgeConnectivityBuilder* iEdgeBuilder = Get3DEngine()->GetNewConnectivityBuilder();
-	assert(iEdgeBuilder);						// should be always there
+	CRYASSERT(iEdgeBuilder);						// should be always there
 #ifdef _DEBUG
 	if (m_pStencilShadowConnectivity && g_GetCVars()->ca_DebugRebuildShadowVolumes())
 	{
@@ -210,7 +210,7 @@ void CryGeometryInfo::buildStencilShadowConnectivity(const std::vector<MAT_ENTIT
 		{
 			GeomFace Face = getFace(i);
 			GeomMtlID nMaterial = getFaceMtl(i);
-			assert(nMaterial < arrMaterials.size());
+			CRYASSERT(nMaterial < arrMaterials.size());
 			if (nMaterial < arrMaterials.size() && arrMaterials[nMaterial].Dyn_StaticFriction == 1)
 				continue;
 
@@ -266,7 +266,7 @@ void CryGeometryInfo::PrepareUVs(int numUVs)
 // Allocates texture face array
 void CryGeometryInfo::PrepareTexFaces(int numTexFaces)
 {
-	assert(numFaces() == numTexFaces);
+	CRYASSERT(numFaces() == numTexFaces);
 	m_arrTexFaces.reinit(numTexFaces);
 }
 
@@ -299,7 +299,7 @@ unsigned CryGeometryInfo::numTexFaces() const
 
 void CryGeometryInfo::PrepareLinks(int numVertices)
 {
-	assert(
+	CRYASSERT(
 		numVertices == this->numVertices()
 	);
 	m_arrLinks.reinit(numVertices);
@@ -351,7 +351,7 @@ void CryGeometryInfo::sortFacesByMaterial(std::vector<bool>& arrMtlUsage)
 		if ((unsigned)nMaterial < arrMtlUsage.size())
 			arrMtlUsage[nMaterial] = true;
 		else
-			assert(0); // material is out of range
+			CRYASSERT(0); // material is out of range
 	}
 
 	// Scan through all the faces and put the sorted face infos back into the original array
@@ -367,7 +367,7 @@ void CryGeometryInfo::sortFacesByMaterial(std::vector<bool>& arrMtlUsage)
 			++nNewFace;
 		}
 	}
-	assert(nNewFace == numFaces());
+	CRYASSERT(nNewFace == numFaces());
 }
 
 
@@ -454,7 +454,7 @@ unsigned CryGeometryInfo::Load(unsigned nLOD, const MESH_CHUNK_DESC_0744* pChunk
 		return 0;
 
 	PrepareVertices(pChunk->nVerts);
-	assert(pChunk->nVerts);
+	CRYASSERT(pChunk->nVerts);
 
 	const CryVertex* pSrcVertices = (const CryVertex*)pRawData;
 	if ((const char*)(pSrcVertices + pChunk->nVerts) > (const char*)pRawData + nChunkSize)
@@ -679,7 +679,7 @@ void CryGeometryInfo::recalculateNormals()
 		{
 			Vec3d& vNormal = getNormal(fc[v]);
 			Vec3d vNewNormal = vTmpNormal + vNormal;
-			//assert (vNewNormal.Length() > 1e-3);
+			//CRYASSERT (vNewNormal.Length() > 1e-3);
 			vNormal = vNewNormal;
 		}
 	}
@@ -701,7 +701,7 @@ void CryGeometryInfo::recalculateNormals()
 		{
 			Vec3d vOld = arrOldNormals[i];
 			Vec3d vNew = getNormal(i);
-			assert (GetDistance(vOld, vNew) < 0.5);
+			CRYASSERT (GetDistance(vOld, vNew) < 0.5);
 		}
 	#endif*/
 }
@@ -1001,7 +1001,7 @@ void CryGeometryInfo::GetSize(ICrySizer* pSizer)const
 		nSize = m_TangSkin.sizeofThis() - sizeof(m_TangSkin);
 		nSize += m_SkinGeom.sizeofThis() - sizeof(m_SkinGeom);
 		nSize += m_SkinNormal.sizeofThis() - sizeof(m_SkinNormal);
-		// NOTE: if this call will lead to assert, we should find some other id for these subcomponents
+		// NOTE: if this call will lead to CRYASSERT, we should find some other id for these subcomponents
 		pSizer->AddObject(&m_TangSkin, nSize);
 	}
 
@@ -1079,7 +1079,7 @@ char* CryGeometryInfo::getVertBuf(int nVertFormat)
 void CryGeometryInfo::selfValidate()
 {
 	for (unsigned i = 0; i < numNormals(); ++i)
-		assert (getNormal(i).Length2() > 0.9);
+		CRYASSERT (getNormal(i).Length2() > 0.9);
 }
 #endif
 */

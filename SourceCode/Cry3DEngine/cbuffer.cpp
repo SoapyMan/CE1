@@ -212,9 +212,9 @@ void CCoverageBuffer::AddMesh(const Vec3d* arrVerts3dOS, int nVertCount, const i
 	  // render tris
 	for (int i = 0; i < nIndCount; i += 3)
 	{
-		assert(pIndices[i + 0] < nVertCount);
-		assert(pIndices[i + 1] < nVertCount);
-		assert(pIndices[i + 2] < nVertCount);
+		CRYASSERT(pIndices[i + 0] < nVertCount);
+		CRYASSERT(pIndices[i + 1] < nVertCount);
+		CRYASSERT(pIndices[i + 2] < nVertCount);
 		/*
 			float x1 = arrVerts[pIndices[i+0]].x;
 			float y1 = arrVerts[pIndices[i+0]].y;
@@ -387,7 +387,7 @@ void CCoverageBuffer::ScanLine(int x1, int x2, int y, float& dxdyl, float& dxdyr
 	// draw line
 	for (int x = x1; x <= x2; x++)
 	{
-		assert(x >= 0 && x < COVERAGEBUFFER_SIZE);
+		CRYASSERT(x >= 0 && x < COVERAGEBUFFER_SIZE);
 		m_Buffer[x][y] = 1;
 	}
 }
@@ -409,7 +409,7 @@ int CCoverageBuffer::ClipEdge(const Vec3d& v1, const Vec3d& v2, const Plane& Cli
 	// calc new vertex
 	Vec3d vIntersectionPoint = v1 + (v2 - v1) * (Ffabs(d1) / (Ffabs(d2) + Ffabs(d1)));
 	float fNewDist = -ClipPlane.DistFromPlane(vIntersectionPoint);
-	assert(fabs(fNewDist) < 0.01f);
+	CRYASSERT(fabs(fNewDist) < 0.01f);
 
 	if (d1 >= 0 && d2 < 0)
 	{ // from vis to no vis
@@ -423,7 +423,7 @@ int CCoverageBuffer::ClipEdge(const Vec3d& v1, const Vec3d& v2, const Plane& Cli
 		return 2;
 	}
 
-	assert(0);
+	CRYASSERT_FAIL("ClipEdge fail");
 	return 0;
 }
 
@@ -447,10 +447,10 @@ void CCoverageBuffer::ClipPolygon(list2<Vec3d>* pPolygon, const Plane& ClipPlane
 	for (int i = 0; i < PolygonOut.Count(); i++)
 	{
 		float d1 = -ClipPlane.DistFromPlane(PolygonOut.GetAt(i));
-		assert(d1 >= -0.01f);
+		CRYASSERT(d1 >= -0.01f);
 	}
 
-	assert(PolygonOut.Count() == 0 || PolygonOut.Count() >= 3);
+	CRYASSERT(PolygonOut.Count() == 0 || PolygonOut.Count() >= 3);
 
 	//Timur, optimizes memory allocation here.
 	pPolygon->Clear();
@@ -493,7 +493,7 @@ void CCoverageBuffer::ScanTriangleWithCliping(Point2d p1, Point2d p2, Point2d p3
 	arrTriangle.Add(v2);
 	arrTriangle.Add(v3);
 
-	assert(
+	CRYASSERT(
 		!IsEquivalent(v1, v2, VEC_EPSILON) &&
 		!IsEquivalent(v1, v3, VEC_EPSILON) &&
 		!IsEquivalent(v2, v3, VEC_EPSILON)
@@ -518,7 +518,7 @@ void CCoverageBuffer::ScanTriangleWithCliping(Point2d p1, Point2d p2, Point2d p3
 		}
 	}
 
-	assert(arrTriangle.Count() < 8);
+	CRYASSERT(arrTriangle.Count() < 8);
 
 	// scan
 	if (arrTriangle.Count() > 2 && arrTriangle.Count() < 8)
@@ -529,10 +529,10 @@ void CCoverageBuffer::ScanTriangleWithCliping(Point2d p1, Point2d p2, Point2d p3
 		{ // transform into screen space
 			arrVerts[i] = ProjectToScreen(arrTriangle[i].x, arrTriangle[i].y, arrTriangle[i].z);
 
-			assert(arrVerts[i].x > -100);
-			assert(arrVerts[i].y > -100);
-			assert(arrVerts[i].x < 200);
-			assert(arrVerts[i].y < 200);
+			CRYASSERT(arrVerts[i].x > -100);
+			CRYASSERT(arrVerts[i].y > -100);
+			CRYASSERT(arrVerts[i].x < 200);
+			CRYASSERT(arrVerts[i].y < 200);
 		}
 
 		ScanTriangle(arrVerts[0], arrVerts[1], arrVerts[2]);

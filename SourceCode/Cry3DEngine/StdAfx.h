@@ -64,9 +64,6 @@ typedef unsigned int		uint;
 typedef unsigned short	ushort;
 #endif
 
-#if !defined(LINUX)
-#include <assert.h>
-#endif
 #include <vector>
 #include <list>
 #include <map>	
@@ -199,7 +196,7 @@ inline float GetDist2D(float x1, float y1, float x2, float y2)
 inline int vsnprintf(char* buf, int size, const char* format, va_list& args)
 {
 	int res = _vsnprintf(buf, size, format, args);
-	assert(res >= 0 && res < size); // just to know if there was problems in past
+	CRYASSERT(res >= 0 && res < size); // just to know if there was problems in past
 	buf[size - 1] = 0;
 	return res;
 }

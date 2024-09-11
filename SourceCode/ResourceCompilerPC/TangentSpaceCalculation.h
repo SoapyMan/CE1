@@ -215,9 +215,9 @@ private:
 	static CVec3 Rotate(const CVec3& vFrom, const CVec3& vTo, const CVec3& vInput)
 	{
 		// no mesh is perfect 	
-//		assert(IsNormalized(vFrom));
+//		CRYASSERT(IsNormalized(vFrom));
 		// no mesh is perfect 	
-//		assert(IsNormalized(vTo));
+//		CRYASSERT(IsNormalized(vTo));
 
 		CVec3 vRotAxis = cross(vFrom, vTo);												// rotation axis
 
@@ -270,13 +270,13 @@ void CTangentSpaceCalculation<InputProxy>::DebugMesh(const InputProxy& inInput) 
 
 			inInput.GetTriangleIndices(b, dwBPos, dwBNorm, dwBUV);
 
-			assert(!(dwAPos[0] == dwBPos[0] && dwAPos[1] == dwBPos[1] && dwAPos[2] == dwBPos[2]));
-			assert(!(dwAPos[1] == dwBPos[0] && dwAPos[2] == dwBPos[1] && dwAPos[0] == dwBPos[2]));
-			assert(!(dwAPos[2] == dwBPos[0] && dwAPos[0] == dwBPos[1] && dwAPos[1] == dwBPos[2]));
+			CRYASSERT(!(dwAPos[0] == dwBPos[0] && dwAPos[1] == dwBPos[1] && dwAPos[2] == dwBPos[2]));
+			CRYASSERT(!(dwAPos[1] == dwBPos[0] && dwAPos[2] == dwBPos[1] && dwAPos[0] == dwBPos[2]));
+			CRYASSERT(!(dwAPos[2] == dwBPos[0] && dwAPos[0] == dwBPos[1] && dwAPos[1] == dwBPos[2]));
 
-			assert(!(dwAPos[1] == dwBPos[0] && dwAPos[0] == dwBPos[1] && dwAPos[2] == dwBPos[2]));
-			assert(!(dwAPos[2] == dwBPos[0] && dwAPos[1] == dwBPos[1] && dwAPos[0] == dwBPos[2]));
-			assert(!(dwAPos[0] == dwBPos[0] && dwAPos[2] == dwBPos[1] && dwAPos[1] == dwBPos[2]));
+			CRYASSERT(!(dwAPos[1] == dwBPos[0] && dwAPos[0] == dwBPos[1] && dwAPos[2] == dwBPos[2]));
+			CRYASSERT(!(dwAPos[2] == dwBPos[0] && dwAPos[1] == dwBPos[1] && dwAPos[0] == dwBPos[2]));
+			CRYASSERT(!(dwAPos[0] == dwBPos[0] && dwAPos[2] == dwBPos[1] && dwAPos[1] == dwBPos[2]));
 		}
 	}
 }
@@ -293,8 +293,8 @@ void CTangentSpaceCalculation<InputProxy>::CalculateTangentSpace(const InputProx
 	m_BaseVectors.clear();
 	m_TriBaseAssigment.clear();
 	m_TriBaseAssigment.reserve(dwTriCount);
-	assert(m_BaseVectors.size() == 0);
-	assert(m_TriBaseAssigment.size() == 0);
+	CRYASSERT(m_BaseVectors.size() == 0);
+	CRYASSERT(m_TriBaseAssigment.size() == 0);
 
 	std::multimap<CBaseIndex, DWORD, CBaseIndexOrder>		mBaseMap;					// second=index into m_BaseVectors, generated output data
 	std::vector<CBase33> vTriangleBase;																	// base vectors per triangle
@@ -444,15 +444,15 @@ void CTangentSpaceCalculation<InputProxy>::CalculateTangentSpace(const InputProx
 
 				ref.u = normalize(vUout); ref.v = normalize(vVout); ref.n = vNout;
 
-				assert(ref.u.x >= -1 && ref.u.x <= 1);
-				assert(ref.u.y >= -1 && ref.u.y <= 1);
-				assert(ref.u.z >= -1 && ref.u.z <= 1);
-				assert(ref.v.x >= -1 && ref.v.x <= 1);
-				assert(ref.v.y >= -1 && ref.v.y <= 1);
-				assert(ref.v.z >= -1 && ref.v.z <= 1);
-				assert(ref.n.x >= -1 && ref.n.x <= 1);
-				assert(ref.n.y >= -1 && ref.n.y <= 1);
-				assert(ref.n.z >= -1 && ref.n.z <= 1);
+				CRYASSERT(ref.u.x >= -1 && ref.u.x <= 1);
+				CRYASSERT(ref.u.y >= -1 && ref.u.y <= 1);
+				CRYASSERT(ref.u.z >= -1 && ref.u.z <= 1);
+				CRYASSERT(ref.v.x >= -1 && ref.v.x <= 1);
+				CRYASSERT(ref.v.y >= -1 && ref.v.y <= 1);
+				CRYASSERT(ref.v.z >= -1 && ref.v.z <= 1);
+				CRYASSERT(ref.n.x >= -1 && ref.n.x <= 1);
+				CRYASSERT(ref.n.y >= -1 && ref.n.y <= 1);
+				CRYASSERT(ref.n.z >= -1 && ref.n.z <= 1);
 			}
 		}
 	}
@@ -465,7 +465,7 @@ DWORD CTangentSpaceCalculation<InputProxy>::AddUV2Base(std::multimap<CBaseIndex,
 	const DWORD indwPosNo, const DWORD indwNormNo, const CVec3& inU, const CVec3& inV, const CVec3& inNormN)
 {
 	// no mesh is perfect
-//	assert(IsNormalized(inNormN));
+//	CRYASSERT(IsNormalized(inNormN));
 
 	CBaseIndex Indx;
 
@@ -476,7 +476,7 @@ DWORD CTangentSpaceCalculation<InputProxy>::AddUV2Base(std::multimap<CBaseIndex,
 
 	iFind = inMap.lower_bound(Indx);
 
-	assert(iFind != inMap.end());
+	CRYASSERT(iFind != inMap.end());
 
 	CVec3 vNormal = m_BaseVectors[(*iFind).second].n;
 
@@ -530,10 +530,10 @@ DWORD CTangentSpaceCalculation<InputProxy>::AddUV2Base(std::multimap<CBaseIndex,
 
 	//no mesh is perfect 
 	if (inU.x != 0.0f || inU.y != 0.0f || inU.z != 0.0f)
-		assert(refBaseUV.u.x != 0.0f || refBaseUV.u.y != 0.0f || refBaseUV.u.z != 0.0f);
+		CRYASSERT(refBaseUV.u.x != 0.0f || refBaseUV.u.y != 0.0f || refBaseUV.u.z != 0.0f);
 	// no mesh is perfect
 	if (inV.x != 0.0f || inV.y != 0.0f || inV.z != 0.0f)
-		assert(refBaseUV.v.x != 0.0f || refBaseUV.v.y != 0.0f || refBaseUV.v.z != 0.0f);
+		CRYASSERT(refBaseUV.v.x != 0.0f || refBaseUV.v.y != 0.0f || refBaseUV.v.z != 0.0f);
 
 	return(dwBaseUVIndex);
 }
@@ -598,7 +598,7 @@ void CTangentSpaceCalculation<InputProxy>::GetBase(const DWORD indwPos, float ou
 template <class InputProxy>
 void CTangentSpaceCalculation<InputProxy>::GetTriangleBaseIndices(const DWORD indwTriNo, DWORD outdwBase[3])
 {
-	assert(indwTriNo < m_TriBaseAssigment.size());
+	CRYASSERT(indwTriNo < m_TriBaseAssigment.size());
 	CTriBaseIndex& indx = m_TriBaseAssigment[indwTriNo];
 
 	for (DWORD i = 0; i < 3; i++) outdwBase[i] = indx.p[i];

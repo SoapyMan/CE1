@@ -165,7 +165,7 @@ ICryPak* Cry3DEngineBase::m_pCryPak = 0;
 
 void CD3D9Renderer::DrawObjSprites_NoBend(list2<CStatObjInst*>* pList, float fMaxViewDist, CObjManager* pObjMan)
 {
-	assert(!"Texcoord correction not implemented");
+	CRYASSERT(!"Texcoord correction not implemented");
 
 	HRESULT hr;
 
@@ -219,7 +219,7 @@ void CD3D9Renderer::DrawObjSprites_NoBend(list2<CStatObjInst*>* pList, float fMa
 	o = pList->GetAt(pList->Count() - 1);
 	for (int i = pList->Count() - 1; i >= 0; i--)
 	{
-		assert(o);
+		CRYASSERT(o);
 		if (!o)
 			continue;
 		o = pList->GetAt(i);
@@ -231,7 +231,7 @@ void CD3D9Renderer::DrawObjSprites_NoBend(list2<CStatObjInst*>* pList, float fMa
 			cryPrefetchT0SSE(oNext);
 		}
 
-		assert(SRendItem::m_RecurseLevel >= 1 && SRendItem::m_RecurseLevel - 1 <= 2);
+		CRYASSERT(SRendItem::m_RecurseLevel >= 1 && SRendItem::m_RecurseLevel - 1 <= 2);
 		float fDistance = (((IEntityRender*)o))->m_arrfDistance[SRendItem::m_RecurseLevel - 1];
 
 		float fMaxDist = o->m_fWSMaxViewDist;// GetMaxViewDist();
@@ -263,7 +263,7 @@ void CD3D9Renderer::DrawObjSprites_NoBend(list2<CStatObjInst*>* pList, float fMa
 		if (pStatObjLOD0->m_nLoadedLodsNum && pStatObjLOD0->m_arrpLowLODs[pStatObjLOD0->m_nLoadedLodsNum - 1])
 			pStatObjLODLowest = pStatObjLOD0->m_arrpLowLODs[pStatObjLOD0->m_nLoadedLodsNum - 1];
 
-		assert(pStatObjLODLowest);
+		CRYASSERT(pStatObjLODLowest);
 		if (!pStatObjLODLowest)
 			continue;
 
@@ -277,7 +277,7 @@ void CD3D9Renderer::DrawObjSprites_NoBend(list2<CStatObjInst*>* pList, float fMa
 		while (fAngle < 0) fAngle += 360;
 
 		int nSlotId = (int)(fAngle / FAR_TEX_ANGLE + 0.5f) % FAR_TEX_COUNT;
-		assert(nSlotId >= 0 && nSlotId < FAR_TEX_COUNT);
+		CRYASSERT(nSlotId >= 0 && nSlotId < FAR_TEX_COUNT);
 		int tid = pStatObjLOD0->m_arrSpriteTexID[nSlotId];
 
 		if (SRendItem::m_RecurseLevel == 1)
@@ -587,7 +587,7 @@ void CD3D9Renderer::DrawObjSprites_NoBend_Merge(list2<CStatObjInst*>* pList, flo
 	for (i = pList->Count() - 1; i >= 0; i--)
 	{
 		o = pList->GetAt(i);
-		//assert(o);
+		//CRYASSERT(o);
 		//if(!o)
 	   // 	continue;
 
@@ -599,7 +599,7 @@ void CD3D9Renderer::DrawObjSprites_NoBend_Merge(list2<CStatObjInst*>* pList, flo
 			cryPrefetchT0SSE((byte*)oNext + 16);
 		}
 
-		assert(SRendItem::m_RecurseLevel >= 1 && SRendItem::m_RecurseLevel - 1 <= 2);
+		CRYASSERT(SRendItem::m_RecurseLevel >= 1 && SRendItem::m_RecurseLevel - 1 <= 2);
 		float fDistance = (((IEntityRender*)o))->m_arrfDistance[SRendItem::m_RecurseLevel - 1];
 
 		float fMaxDist = o->m_fWSMaxViewDist;// GetMaxViewDist();
@@ -631,7 +631,7 @@ void CD3D9Renderer::DrawObjSprites_NoBend_Merge(list2<CStatObjInst*>* pList, flo
 		if (pStatObjLOD0->m_nLoadedLodsNum && pStatObjLOD0->m_arrpLowLODs[pStatObjLOD0->m_nLoadedLodsNum - 1])
 			pStatObjLODLowest = pStatObjLOD0->m_arrpLowLODs[pStatObjLOD0->m_nLoadedLodsNum - 1];
 
-		assert(pStatObjLODLowest);
+		CRYASSERT(pStatObjLODLowest);
 		if (!pStatObjLODLowest)
 			continue;
 
@@ -649,7 +649,7 @@ void CD3D9Renderer::DrawObjSprites_NoBend_Merge(list2<CStatObjInst*>* pList, flo
 		while (fAngle < 0) fAngle += 360;
 
 		int nSlotId = FtoI(fAngle / FAR_TEX_ANGLE) % FAR_TEX_COUNT;
-		assert(nSlotId >= 0 && nSlotId < FAR_TEX_COUNT);
+		CRYASSERT(nSlotId >= 0 && nSlotId < FAR_TEX_COUNT);
 		pSP->m_TexID = pStatObjLOD0->m_arrSpriteTexID[nSlotId];
 
 		if (pStatObjLOD0->m_nSpriteTexRes)
@@ -988,7 +988,7 @@ void CD3D9Renderer::DrawObjSprites(list2<CStatObjInst*>* pList, float fMaxViewDi
 		return;
 	}
 
-	assert(!"Texcoord correction not implemented");
+	CRYASSERT(!"Texcoord correction not implemented");
 
 	// Sorting far objects front to back since we use alphablending
   //  ::Sort(&(*pList)[0], pList->Count());
@@ -1113,7 +1113,7 @@ void CD3D9Renderer::DrawObjSprites(list2<CStatObjInst*>* pList, float fMaxViewDi
 	for (int i = pList->Count() - 1; i >= 0; i--)
 	{
 		CStatObjInst* o = pList->GetAt(i);
-		assert(o);
+		CRYASSERT(o);
 		if (!o)
 			continue;
 		/*if (i)
@@ -1125,7 +1125,7 @@ void CD3D9Renderer::DrawObjSprites(list2<CStatObjInst*>* pList, float fMaxViewDi
 		  }
 		}*/
 
-		assert(SRendItem::m_RecurseLevel >= 1 && SRendItem::m_RecurseLevel - 1 <= 2);
+		CRYASSERT(SRendItem::m_RecurseLevel >= 1 && SRendItem::m_RecurseLevel - 1 <= 2);
 		float fDistance = (((IEntityRender*)o))->m_arrfDistance[SRendItem::m_RecurseLevel - 1];
 
 		float fMaxDist = o->m_fWSMaxViewDist;// GetMaxViewDist();
@@ -1164,12 +1164,12 @@ void CD3D9Renderer::DrawObjSprites(list2<CStatObjInst*>* pList, float fMaxViewDi
 		DX = o->m_vPos.x - vCamPos.x;
 		DY = o->m_vPos.y - vCamPos.y;
 
-		assert(pStatObjLODLowest);
+		CRYASSERT(pStatObjLODLowest);
 		if (!pStatObjLODLowest)
 			continue;
 
 		int nSlotId = int(fAngle / FAR_TEX_ANGLE + 0.5f) % FAR_TEX_COUNT;
-		assert(nSlotId >= 0 && nSlotId < FAR_TEX_COUNT);
+		CRYASSERT(nSlotId >= 0 && nSlotId < FAR_TEX_COUNT);
 		int tid = pStatObjLOD0->m_arrSpriteTexID[nSlotId];
 
 		if (SRendItem::m_RecurseLevel == 1)

@@ -87,10 +87,10 @@ void CryBoneInfo::UpdateHierarchyPhysics(const BONEANIM_CHUNK_DESC* pChunk, unsi
 	// the actual end of the chunk
 	const BONE_ENTITY* pBoneEntityEnd = (const BONE_ENTITY*)(((const char*)pChunk) + nChunkSize);
 
-	// if you get this assert, it means the lod 1 file is corrupted
+	// if you get this CRYASSERT, it means the lod 1 file is corrupted
 	if (pBoneEntity + pChunk->nBones > pBoneEntityEnd)
 	{
-		assert(0);
+		CRYASSERT(0);
 		return;
 	}
 

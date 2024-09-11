@@ -71,14 +71,14 @@ void CryCharReShadowVolume::prepare(unsigned numIndices, unsigned numVertices)
 
 	if (!m_pMesh)
 	{
-		assert(0);
+		CRYASSERT(0);
 		g_GetLog()->LogError("Cannot get the render element for the stencil shadow volume");
 		return;
 	}
 
 	if (!m_pLeafBuffer)
 	{
-		assert(!m_arrVertices.empty());
+		CRYASSERT(!m_arrVertices.empty());
 		m_pLeafBuffer = g_GetIRenderer()->CreateLeafBufferInitialized(&m_arrVertices[0], numVertices, VERTEX_FORMAT_P3F, NULL, 0, R_PRIMV_TRIANGLES, "Character ShadowVolume");
 		m_pLeafBuffer->SetChunk(0, 0, numVertices, 0, -1); // setup fake shunk to allow mfCheckUpdate
 		m_pMesh->m_arrLBuffers[0].pVB = m_pLeafBuffer; // use always slot 0
@@ -93,7 +93,7 @@ void CryCharReShadowVolume::submit(const SRendParams* rParams, IShader* pShadowC
 #ifdef _DEBUG
 	{
 		for (int i = 0; i < m_pLeafBuffer->m_Indices.m_nItems; ++i)
-			assert(m_arrIndices[i] < m_pLeafBuffer->m_SecVertCount);
+			CRYASSERT(m_arrIndices[i] < m_pLeafBuffer->m_SecVertCount);
 	}
 #endif
 

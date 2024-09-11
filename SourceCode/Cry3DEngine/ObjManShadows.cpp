@@ -113,7 +113,7 @@ void CObjManager::MakeShadowCastersList(IEntityRender* pReceiver, list2<IEntityR
 {
 	FUNCTION_PROFILER_FAST(GetSystem(), PROFILE_3DENGINE, m_bProfilerEnabled);
 
-	assert(vLightPos.len() > 1); // world space pos required
+	CRYASSERT(vLightPos.len() > 1); // world space pos required
 
 	pEntList->Clear();
 
@@ -312,7 +312,7 @@ void CObjManager::DrawAllShadowsOnTheGroundInSector(list2<IEntityRender*>* pEntL
 			if (pEnt->GetRndFlags() & ERF_CASTSHADOWINTOLIGHTMAP)
 				if (!pEnt->GetEntityVisArea())
 				{
-					assert(m_nRenderStackLevel == 0);
+					CRYASSERT(m_nRenderStackLevel == 0);
 					pEnt->SetDrawFrame(-100, m_nRenderStackLevel);
 
 					int nFlags = pEnt->GetRndFlags();
@@ -320,7 +320,7 @@ void CObjManager::DrawAllShadowsOnTheGroundInSector(list2<IEntityRender*>* pEntL
 					pEnt->SetRndFlags(ERF_CASTSHADOWINTOLIGHTMAP, false);
 
 					int nRealLightsNum = ((C3DEngine*)Get3DEngine())->GetRealLightsNum();
-					assert(nRealLightsNum == 1);
+					CRYASSERT(nRealLightsNum == 1);
 					RenderObject(pEnt, 0, 1, true, GetViewCamera(), NULL, 0, 0, false, pEnt->GetMaxViewDist());
 					RenderEntitiesShadowMapsOnTerrain(true, 0);
 

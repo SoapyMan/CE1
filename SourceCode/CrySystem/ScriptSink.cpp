@@ -31,7 +31,7 @@
 //////////////////////////////////////////////////////////////////////////
 CScriptSink::CScriptSink(CSystem* pSystem, CXConsole* pConsole)
 {
-	assert(pSystem);
+	CRYASSERT(pSystem);
 	m_pSystem = pSystem;
 	m_pConsole = pConsole;
 	m_lastGCTime = 0;

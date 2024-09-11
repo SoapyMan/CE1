@@ -111,7 +111,7 @@ int CGLRenderer::EF_RegisterFogVolume(float fMaxFogDist, float fFogLayerZ, CFCol
 	}
 	else
 	{
-		assert(nIndex < m_RP.m_FogVolumes.Num());
+		CRYASSERT(nIndex < m_RP.m_FogVolumes.Num());
 		SMFog* pFog = &m_RP.m_FogVolumes[nIndex];
 		pFog->m_fMaxDist = fMaxFogDist;
 		pFog->m_FogInfo.m_FogColor = color;
@@ -1214,7 +1214,7 @@ void CGLRenderer::EF_Eval_RGBAGen(SShaderPass* sfm)
 		break;
 
 	default:
-		assert(0);
+		CRYASSERT(0);
 	}
 
 	switch (sfm->m_eEvalAlpha)
@@ -1422,7 +1422,7 @@ void CGLRenderer::EF_Eval_RGBAGen(SShaderPass* sfm)
 		break;
 
 	default:
-		assert(0);
+		CRYASSERT(0);
 	}
 
 	if (bSetCol)
@@ -1543,7 +1543,7 @@ void CRenderer::EF_SetStencilState(int st, uint nStencRef, uint nStencMask)
 				nBackFunc = GL_NOTEQUAL;
 				break;
 			default:
-				assert(false);
+				CRYASSERT(false);
 			}
 		}
 		if ((Changed & (FSS_STENCFUNC_MASK << FSS_STENCIL_TWOSIDED)) || bChanged)
@@ -1578,7 +1578,7 @@ void CRenderer::EF_SetStencilState(int st, uint nStencRef, uint nStencMask)
 				nFrontFunc = GL_NOTEQUAL;
 				break;
 			default:
-				assert(false);
+				CRYASSERT(false);
 			}
 		}
 		if (bChanged)
@@ -1612,7 +1612,7 @@ void CRenderer::EF_SetStencilState(int st, uint nStencRef, uint nStencMask)
 				nFail = GL_ZERO;
 				break;
 			default:
-				assert(false);
+				CRYASSERT(false);
 			}
 			nCurOp = (st & FSS_STENCZFAIL_MASK);
 			switch (nCurOp >> FSS_STENCZFAIL_SHIFT)
@@ -1639,7 +1639,7 @@ void CRenderer::EF_SetStencilState(int st, uint nStencRef, uint nStencMask)
 				nZFail = GL_ZERO;
 				break;
 			default:
-				assert(false);
+				CRYASSERT(false);
 			}
 			nCurOp = (st & FSS_STENCPASS_MASK);
 			switch (nCurOp >> FSS_STENCPASS_SHIFT)
@@ -1666,7 +1666,7 @@ void CRenderer::EF_SetStencilState(int st, uint nStencRef, uint nStencMask)
 				nPass = GL_ZERO;
 				break;
 			default:
-				assert(false);
+				CRYASSERT(false);
 			}
 			glStencilOpSeparateATI(GL_FRONT, nFail, nZFail, nPass);
 		}
@@ -1699,7 +1699,7 @@ void CRenderer::EF_SetStencilState(int st, uint nStencRef, uint nStencMask)
 				nFail = GL_ZERO;
 				break;
 			default:
-				assert(false);
+				CRYASSERT(false);
 			}
 			nCurOp = (st & (FSS_STENCZFAIL_MASK << FSS_CCW_SHIFT));
 			switch (nCurOp >> (FSS_STENCZFAIL_SHIFT + FSS_CCW_SHIFT))
@@ -1726,7 +1726,7 @@ void CRenderer::EF_SetStencilState(int st, uint nStencRef, uint nStencMask)
 				nZFail = GL_ZERO;
 				break;
 			default:
-				assert(false);
+				CRYASSERT(false);
 			}
 			nCurOp = (st & (FSS_STENCPASS_MASK << FSS_CCW_SHIFT));
 			switch (nCurOp >> (FSS_STENCPASS_SHIFT + FSS_CCW_SHIFT))
@@ -1753,7 +1753,7 @@ void CRenderer::EF_SetStencilState(int st, uint nStencRef, uint nStencMask)
 				nPass = GL_ZERO;
 				break;
 			default:
-				assert(false);
+				CRYASSERT(false);
 			}
 			glStencilOpSeparateATI(GL_BACK, nFail, nZFail, nPass);
 		}
@@ -1810,7 +1810,7 @@ void CRenderer::EF_SetStencilState(int st, uint nStencRef, uint nStencMask)
 			glStencilFunc(GL_NOTEQUAL, nStencRef, nStencMask);
 			break;
 		default:
-			assert(false);
+			CRYASSERT(false);
 		}
 	}
 	if (Changed & (FSS_STENCFAIL_MASK | FSS_STENCZFAIL_MASK | FSS_STENCPASS_MASK))
@@ -1850,7 +1850,7 @@ void CRenderer::EF_SetStencilState(int st, uint nStencRef, uint nStencMask)
 			nFail = GL_ZERO;
 			break;
 		default:
-			assert(false);
+			CRYASSERT(false);
 		}
 		nCurOp = (st & FSS_STENCZFAIL_MASK);
 		switch (nCurOp >> FSS_STENCZFAIL_SHIFT)
@@ -1877,7 +1877,7 @@ void CRenderer::EF_SetStencilState(int st, uint nStencRef, uint nStencMask)
 			nZFail = GL_ZERO;
 			break;
 		default:
-			assert(false);
+			CRYASSERT(false);
 		}
 		nCurOp = (st & FSS_STENCPASS_MASK);
 		switch (nCurOp >> FSS_STENCPASS_SHIFT)
@@ -1904,7 +1904,7 @@ void CRenderer::EF_SetStencilState(int st, uint nStencRef, uint nStencMask)
 			nPass = GL_ZERO;
 			break;
 		default:
-			assert(false);
+			CRYASSERT(false);
 		}
 		glStencilOp(nFail, nZFail, nPass);
 	}
@@ -1946,7 +1946,7 @@ void CRenderer::EF_SetStencilState(int st, uint nStencRef, uint nStencMask)
 				glStencilFunc(GL_NOTEQUAL, nStencRef, nStencMask);
 				break;
 			default:
-				assert(false);
+				CRYASSERT(false);
 			}
 		}
 		if (Changed & ((FSS_STENCFAIL_MASK | FSS_STENCZFAIL_MASK | FSS_STENCPASS_MASK) << FSS_CCW_SHIFT))
@@ -1983,7 +1983,7 @@ void CRenderer::EF_SetStencilState(int st, uint nStencRef, uint nStencMask)
 				nFail = GL_ZERO;
 				break;
 			default:
-				assert(false);
+				CRYASSERT(false);
 			}
 			nCurOp = (st & (FSS_STENCZFAIL_MASK << FSS_CCW_SHIFT));
 			switch (nCurOp >> (FSS_STENCZFAIL_SHIFT + FSS_CCW_SHIFT))
@@ -2010,7 +2010,7 @@ void CRenderer::EF_SetStencilState(int st, uint nStencRef, uint nStencMask)
 				nZFail = GL_ZERO;
 				break;
 			default:
-				assert(false);
+				CRYASSERT(false);
 			}
 			nCurOp = (st & (FSS_STENCPASS_MASK << FSS_CCW_SHIFT));
 			switch (nCurOp >> (FSS_STENCPASS_SHIFT + FSS_CCW_SHIFT))
@@ -2037,7 +2037,7 @@ void CRenderer::EF_SetStencilState(int st, uint nStencRef, uint nStencMask)
 				nPass = GL_ZERO;
 				break;
 			default:
-				assert(false);
+				CRYASSERT(false);
 			}
 			glStencilOp(nFail, nZFail, nPass);
 		}
@@ -3554,7 +3554,7 @@ void CGLRenderer::EF_DrawIndexedMesh(int nPrimType)
 		if (mats)
 		{
 			CMatInfo* m = mats->Get(0);
-			//assert(m_RP.m_RendIndices[0]<60000);
+			//CRYASSERT(m_RP.m_RendIndices[0]<60000);
 			for (int i = 0; i < mats->Count(); i++, m++)
 			{
 				glDrawElements(GL_TRIANGLE_STRIP, m->nNumIndices, GL_UNSIGNED_SHORT, &m_RP.m_RendIndices[m->nFirstIndexId]);
@@ -4723,7 +4723,7 @@ void CGLRenderer::EF_DrawLightPasses(SShaderTechnique* hs, SShader* ef, int nSta
 						continue;
 					if ((!m_RP.m_pShaderResources || !m_RP.m_pShaderResources->m_Textures[EFTT_LIGHTMAP_DIR]) && !m_RP.m_pCurObject->m_nLMId)
 						continue;
-					assert(m_RP.m_pCurLight->m_SpecColor.r != 0 || m_RP.m_pCurLight->m_SpecColor.g != 0 || m_RP.m_pCurLight->m_SpecColor.b != 0);
+					CRYASSERT(m_RP.m_pCurLight->m_SpecColor.r != 0 || m_RP.m_pCurLight->m_SpecColor.g != 0 || m_RP.m_pCurLight->m_SpecColor.b != 0);
 					// Ignore specular pass if specular is less threshold
 					if (m_RP.m_pCurLight->m_SpecColor.r <= 0.01f && m_RP.m_pCurLight->m_SpecColor.g <= 0.01f && m_RP.m_pCurLight->m_SpecColor.b <= 0.01f)
 						continue;
@@ -5262,8 +5262,8 @@ int CGLRenderer::EF_DrawMultiShadowPasses(SShaderTechnique* hs, SShader* ef, int
 		nEndShadow = nStartShadow;
 	if (nEndShadowLM < 0)
 		nEndShadowLM = nStartShadowLM;
-	assert(nStartShadow >= 0);
-	assert(nStartLight >= 0);
+	CRYASSERT(nStartShadow >= 0);
+	CRYASSERT(nStartLight >= 0);
 
 	int nFrustrums = 0;
 	list2<ShadowMapLightSourceInstance> SmLI[16];
@@ -6456,7 +6456,7 @@ void CGLRenderer::EF_EndEf3D(int nFlags)
 	double time0 = 0;
 	ticks(time0);
 
-	assert(SRendItem::m_RecurseLevel >= 1);
+	CRYASSERT(SRendItem::m_RecurseLevel >= 1);
 	if (SRendItem::m_RecurseLevel < 1)
 	{
 		iLog->Log("Error: CRenderer::EF_EndEf3D without CRenderer::EF_StartEf");
@@ -7983,7 +7983,7 @@ void CGLRenderer::EF_EndEf2D(bool bSort)
 	SShader* Shader, * CurShader, * ShaderState, * CurShaderState;
 	SRenderShaderResources* Res, * CurRes;
 
-	assert(SRendItem::m_RecurseLevel >= 1);
+	CRYASSERT(SRendItem::m_RecurseLevel >= 1);
 	if (SRendItem::m_RecurseLevel < 1)
 	{
 		iLog->Log("Error: CRenderer::EF_EndEf2D without CRenderer::EF_StartEf");

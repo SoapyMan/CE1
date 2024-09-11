@@ -41,7 +41,7 @@ void* CGLRenderer::GetDynVBPtr(int nVerts, int& nOffs, int Pool)
 
 	case 1:
 	case 2:
-		assert(0);
+		CRYASSERT(0);
 		break;
 	}
 	return NULL;
@@ -248,7 +248,7 @@ void CGLRenderer::CreateBuffer(int size, int vertexformat, CVertexBuffer* buf, i
 {
 	PROFILE_FRAME(Mesh_CreateVBuffers);
 
-	assert(Type >= 0 && Type < VSF_NUM);
+	CRYASSERT(Type >= 0 && Type < VSF_NUM);
 
 	void* data;
 	if (IsVarPresent())
@@ -449,7 +449,7 @@ void CGLRenderer::UpdateBuffer(CVertexBuffer* dest, const void* src, int vertexc
 
 	if (!src)
 	{
-		assert(Type >= 0 && Type <= 3);
+		CRYASSERT(Type >= 0 && Type <= 3);
 
 		if (SUPPORTS_GL_ARB_vertex_buffer_object)
 		{
@@ -517,7 +517,7 @@ void CGLRenderer::UpdateBuffer(CVertexBuffer* dest, const void* src, int vertexc
 		// for that purpose, src may sometimes be NULL
 		if (src && vertexcount)
 		{
-			assert(vertexcount <= dest->m_NumVerts);
+			CRYASSERT(vertexcount <= dest->m_NumVerts);
 			if (vertexcount > dest->m_NumVerts)
 			{
 				iLog->Log("CGLRenderer::UpdateBuffer: vertexcount>dest->m_NumVerts, %s", GetBufferComment(dest));
@@ -575,7 +575,7 @@ void CGLRenderer::DrawBuffer(CVertexBuffer* src, SVertexStream* indicies, int nu
 	if (!numindices && !mi)
 		return;
 
-	assert(indicies || mi);
+	CRYASSERT(indicies || mi);
 	ushort* pInds;
 	if (SUPPORTS_GL_ARB_vertex_buffer_object)
 		pInds = NULL;
@@ -586,13 +586,13 @@ void CGLRenderer::DrawBuffer(CVertexBuffer* src, SVertexStream* indicies, int nu
 #ifdef _DEBUG
 	if (!SUPPORTS_GL_ARB_vertex_buffer_object)
 	{
-		assert(src);
+		CRYASSERT(src);
 		if (indicies)
 		{
 			for (int i = 0; i < numindices; i++)
 			{
 				int id = pInds[i];
-				assert(id < src->m_NumVerts);
+				CRYASSERT(id < src->m_NumVerts);
 			}
 		}
 	}
@@ -604,7 +604,7 @@ void CGLRenderer::DrawBuffer(CVertexBuffer* src, SVertexStream* indicies, int nu
 		return;
 	}
 
-	assert(numindices > 0);
+	CRYASSERT(numindices > 0);
 	SBufInfoTable* pOffs = &gBufInfoTable[src->m_vertexformat];
 
 	switch (src->m_vertexformat)
@@ -776,7 +776,7 @@ void CGLRenderer::DrawBuffer(CVertexBuffer* src, SVertexStream* indicies, int nu
 	break;
 	default:
 		iLog->Log("Error: CGLRenderer::DrawBuffer: vertex format not supported: %d", src->m_vertexformat);
-		assert(0);
+		CRYASSERT(0);
 		break;
 	}
 	// draw
@@ -1009,7 +1009,7 @@ void CGLRenderer::ShutDownVAR()
 
 void* CGLRenderer::AllocateVarShunk(int bytes_count, const char* szSource)
 {
-	assert(bytes_count);
+	CRYASSERT(bytes_count);
 
 	int best_i = -1;
 	int min_size = 10000000;
@@ -1095,7 +1095,7 @@ BOOL CGLRenderer::ReleaseVarShunk(void* p)
 			// merge unused shunks
 			for (int s = 0; s < m_alloc_info.Count() - 1; s++)
 			{
-				assert(m_alloc_info[s].ptr < m_alloc_info[s + 1].ptr);
+				CRYASSERT(m_alloc_info[s].ptr < m_alloc_info[s + 1].ptr);
 
 				if (m_alloc_info[s].busy == false)
 					if (m_alloc_info[s + 1].busy == false)
@@ -1238,7 +1238,7 @@ void CGLRenderer::DrawTriStrip(CVertexBuffer* src, int vert_num)
 	break;
 
 	default:
-		assert(0);
+		CRYASSERT(0);
 		break;
 	}
 	m_nPolygons += vert_num - 2;
@@ -1335,7 +1335,7 @@ void CLeafBuffer::DrawImmediately()
 
 	int nInds;
 	ushort* pInds = GetIndices(&nInds);
-	assert(nInds % 3 == 0);
+	CRYASSERT(nInds % 3 == 0);
 
 	glBegin(GL_TRIANGLES);
 	for (int i = 0; i < nInds; i += 3)

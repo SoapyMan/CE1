@@ -303,7 +303,7 @@ extern float g_costab[SINCOSTABSZ], g_sintab[SINCOSTABSZ];
 #define VALIDATORS_END
 #define ENTITY_VALIDATE(strSource,pStructure)*/
 #if defined(WIN64) || defined(LINUX64)
-#define DoBreak {assert(0);}
+#define DoBreak {CRYASSERT(0);}
 #else
 #define DoBreak { DEBUG_BREAK; }
 #endif

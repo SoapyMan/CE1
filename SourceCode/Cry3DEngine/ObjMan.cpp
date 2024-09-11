@@ -45,7 +45,7 @@ const int cryStrHash(const char* str, bool caseIns = false, int length = -1)
 	const int StringHashBits = 24;
 	const int StringHashMask = ((1 << StringHashBits) - 1);
 
-	assert(str);
+	CRYASSERT(str);
 	int len = length >= 0 ? length : strlen(str);
 	const char* ptr = str;
 
@@ -429,7 +429,7 @@ CStatObj* CObjManager::MakeObject(const char* __szFileName,
 {
 	AUTO_PROFILE_SECTION(GetTimer(), CObjManager::m_dMakeObjectTime);
 
-	assert(__szFileName && __szFileName[0]);
+	CRYASSERT(__szFileName && __szFileName[0]);
 
 	if (!strcmp(__szFileName, "NOFILE"))
 	{ // make ampty object to be filled from outside
@@ -484,7 +484,7 @@ CStatObj* CObjManager::MakeObject(const char* __szFileName,
 	if (it != m_lstLoadedObjects.end())
 	{
 		CStatObj* obj = it->second;
-		assert(stricmp(obj->m_szFileName, szFileName) == 0 && // compare file name
+		CRYASSERT(stricmp(obj->m_szFileName, szFileName) == 0 && // compare file name
 			(!_szGeomName || stricmp(obj->m_szGeomName, _szGeomName) == 0)); // compare geom name
 
 		obj->RegisterUser();
@@ -548,9 +548,9 @@ bool CObjManager::ReleaseObject(CStatObj* pObject)
 #ifdef _DEBUG
 			// check that there is no other copies
 //			ObjectsMap::iterator it_test = m_lstLoadedObjects.find( pObject );
-	//		assert(it_test == m_lstLoadedObjects.end());
+	//		CRYASSERT(it_test == m_lstLoadedObjects.end());
 			for (ObjectsMap::iterator it2 = m_lstLoadedObjects.begin(); it2 != m_lstLoadedObjects.end(); ++it2)
-				assert((CStatObj*)(*it2) != pObject);
+				CRYASSERT((CStatObj*)(*it2) != pObject);
 #endif
 
 			delete pObject;
@@ -627,7 +627,7 @@ CObjManager::~CObjManager()
 	m_pDefaultCGF = 0;
 
 	// free brushes
-	assert(!m_lstBrushContainer.Count());
+	CRYASSERT(!m_lstBrushContainer.Count());
 	for (int i = 0; i < m_lstBrushContainer.Count(); i++)
 	{
 		if (m_lstBrushContainer[i]->GetEntityStatObj(0))
@@ -638,7 +638,7 @@ CObjManager::~CObjManager()
 
 	UnloadObjects();
 
-	assert(m_lstLoadedObjects.size() == 0);
+	CRYASSERT(m_lstLoadedObjects.size() == 0);
 
 	m_REFarTreeSprites->Release();
 
@@ -720,7 +720,7 @@ void CObjManager::AddPolygonToRenderer(const int nTexBindId,
 	{ // transfer decal into object space
 		Matrix44 objMat;
 		IStatObj* pEntObject = pStatObjInst->GetEntityStatObj(0, &objMat);
-		assert(pEntObject);
+		CRYASSERT(pEntObject);
 		if (pEntObject)
 		{
 			objMat.Invert44();
@@ -784,13 +784,13 @@ void CObjManager::AddPolygonToRenderer(const int nTexBindId,
 		pStatObjInst->GetEntityStatObj(0, &pOb->m_Matrix);
 		pOb->m_ObjFlags |= FOB_TRANS_MASK;
 		CStatObj* pBody = m_lstStaticTypes[pStatObjInst->m_nObjectTypeID].GetStatObj();
-		assert(pBody);
+		CRYASSERT(pBody);
 		if (pStatObjInst && pBody && pStatObjInst->m_fFinalBending)
 			pBody->SetupBending(pOb, pStatObjInst->m_fFinalBending);
 	}
 
 	pOb->m_DynLMMask = nDynLMask;
-	assert(nTexBindId > 0);
+	CRYASSERT(nTexBindId > 0);
 	pOb->m_NumCM = nTexBindId;
 	pOb->m_AmbColor = vAmbientColor;
 	pOb->m_RenderState = nRenderState;
@@ -892,7 +892,7 @@ void CObjManager::ReregisterEntitiesInArea(Vec3d vBoxMin, Vec3d vBoxMax)
 		IVisArea* pPrevArea = lstEntitiesInArea[i]->GetEntityVisArea();
 		bool bFound = Get3DEngine()->UnRegisterEntity(lstEntitiesInArea[i]);
 
-		//    assert(!bFound);
+		//    CRYASSERT(!bFound);
 
 		/*    {
 			  Get3DEngine()->Un RegisterInAllSectors(lstEntitiesInArea[i]);
@@ -904,7 +904,7 @@ void CObjManager::ReregisterEntitiesInArea(Vec3d vBoxMin, Vec3d vBoxMax)
 				CBrush * pEnt = (CBrush *)lstEntitiesInArea[i];
 				Matrix mat;
 				CStatObj * pStatObj = (CStatObj*)lstEntitiesInArea[i]->GetEntityStatObj(0,&mat);
-				assert(CBrush::IsMatrixValid(mat));
+				CRYASSERT(CBrush::IsMatrixValid(mat));
 			  }
 			}
 			*/
@@ -924,7 +924,7 @@ int CObjManager::CountPhysGeomUsage(CStatObj * pStatObjToFind)
 	{
 		CBrush * pBrush = m_lstBrushContainer[i];
 		IStatObj * pStatObj = pBrush->GetEntityStatObj(0);
-//    assert(((CStatObj*)pStatObj)->m_bStreamable);
+//    CRYASSERT(((CStatObj*)pStatObj)->m_bStreamable);
 		if(pStatObjToFind == pStatObj)
 	{
 	  if(pBrush->GetPhysGeomId(0)>=0 || pBrush->GetPhysGeomId(1)>=0)
@@ -941,7 +941,7 @@ int CObjManager::CountPhysGeomUsage(CStatObj * pStatObjToFind)
 
 void CObjManager::FreeNotUsedCGFs()
 {
-	assert(!m_bLockCGFResources);
+	CRYASSERT(!m_bLockCGFResources);
 
 	if (!m_bLockCGFResources)
 	{

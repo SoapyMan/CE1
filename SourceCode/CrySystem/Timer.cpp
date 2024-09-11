@@ -114,7 +114,7 @@ void CTimer::RefreshCurrTime()
 
 	m_fCurrTime = (float)(dVal / (double)(m_lTicksPerSec));
 
-	assert(m_fCurrTime >= 0);
+	CRYASSERT(m_fCurrTime >= 0);
 }
 
 //update the timer
@@ -264,7 +264,7 @@ float CTimer::MeasureTime(LPCSTR szComment)
 
 	if (szComment && m_nCurProfLine >= 0 && m_nCurProfLine < TIME_PROFILE_PARAMS && strlen(szComment)>0)
 	{
-		assert((int)strlen(szComment) < sizeof(m_TimeInfoTable[m_nCurProfLine].param_name));
+		CRYASSERT((int)strlen(szComment) < sizeof(m_TimeInfoTable[m_nCurProfLine].param_name));
 		strcpy(m_TimeInfoTable[m_nCurProfLine].param_name, szComment);
 		m_TimeInfoTable[m_nCurProfLine].param_name[10] = 0;								// bad
 

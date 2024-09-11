@@ -108,20 +108,20 @@ float distanceToLine2DxyHint(const Vec3d& v0, float d0, const Vec3d& v1, float d
 	if (t <= 0)
 	{
 		float fDistance = d0;
-		assert(d1 > fDistance);
+		CRYASSERT(d1 > fDistance);
 		return fDistance;
 	}
 	else
 		if (t >= 1)
 		{
 			float fDistance = d1;
-			assert(d0 > fDistance);
+			CRYASSERT(d0 > fDistance);
 			return fDistance;
 		}
 		else
 		{
 			float fDistance = (float)fabs((v0.x * dy - v0.y * dx) / sqrt(f2));
-			assert(fabs(fDistance - (float)fabs((v1.x * dy - v1.y * dx) / sqrt(f2))) < 1e-3);
+			CRYASSERT(fabs(fDistance - (float)fabs((v1.x * dy - v1.y * dx) / sqrt(f2))) < 1e-3);
 			return fDistance;
 		}
 }
@@ -139,25 +139,25 @@ float distanceToLine2Dxy(const Vec3d& v0, const Vec3d& v1)
 
 	// the point of intersection of the normal from 00 with the line, 0 means v0, 1 means v1, > 1 means beyond v1, <0 means before v0
 	double t = -(v0.x * dx + v0.y * dy) / f2;
-	assert(fabs((v0.x + dx * t) * dx + (v0.y + dy * t) * dy) < cry_sqrtf(sqr(v0.x + v1.x) + sqr(v0.y + v1.y)) / 200000);
+	CRYASSERT(fabs((v0.x + dx * t) * dx + (v0.y + dy * t) * dy) < cry_sqrtf(sqr(v0.x + v1.x) + sqr(v0.y + v1.y)) / 200000);
 
 	if (t <= 0)
 	{
 		double fDistance = distanceToPoint2Dxy(v0);
-		assert(distanceToPoint2Dxy(v1) > fDistance);
+		CRYASSERT(distanceToPoint2Dxy(v1) > fDistance);
 		return (float)fDistance;
 	}
 	else
 		if (t >= 1)
 		{
 			double fDistance = distanceToPoint2Dxy(v1);
-			assert(distanceToPoint2Dxy(v0) > fDistance);
+			CRYASSERT(distanceToPoint2Dxy(v0) > fDistance);
 			return (float)fDistance;
 		}
 		else
 		{
 			float fDistance = (float)fabs((v0.x * dy - v0.y * dx) / sqrt(f2));
-			assert(fabs(fDistance - (float)fabs((v1.x * dy - v1.y * dx) / sqrt(f2))) < 1e-3);
+			CRYASSERT(fabs(fDistance - (float)fabs((v1.x * dy - v1.y * dx) / sqrt(f2))) < 1e-3);
 			return fDistance;
 		}
 }
@@ -213,11 +213,11 @@ float CryCharDecalBuilder::GetDistanceToTriangleBCS(GeomFace nVertex)
 		else
 			return -gf_INFINITY;
 
-	//assert (fabs(b1+b2+b3-1) < 0.01f);
+	//CRYASSERT (fabs(b1+b2+b3-1) < 0.01f);
 #ifdef _DEBUG
 	// the reconstructed by the barycentric coordinates point
 	//Vec3d ptReconstructed = b1 * v[0] + b2 * v[1] + b3 * v[2];
-	//assert (ptReconstructed.x < 1e-7/b0 && ptReconstructed.x > -1e-7/b0 && ptReconstructed.y < 1e-7/b0 && ptReconstructed.y > -1e-7/b0);
+	//CRYASSERT (ptReconstructed.x < 1e-7/b0 && ptReconstructed.x > -1e-7/b0 && ptReconstructed.y < 1e-7/b0 && ptReconstructed.y > -1e-7/b0);
 #endif
 	// b1, b2 and b3 are the barycentric coordinates of the point 0
 	// if they're all > 0, the point lies inside the triangle (triangle is on the way of the bullet
@@ -275,7 +275,7 @@ float CryCharDecalBuilder::GetDistanceToTriangleBCS(GeomFace nVertex)
 		}
 		else
 		{
-			assert(b3 > 0);
+			CRYASSERT(b3 > 0);
 			// 0 lies beside v2
 			return (float)distanceToPoint2Dxy(v[2]);
 			return max2((float)distanceToPoint2Dxy(v[2]), min3(v[0].z, v[1].z, v[2].z));

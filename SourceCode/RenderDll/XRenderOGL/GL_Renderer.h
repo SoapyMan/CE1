@@ -1230,7 +1230,7 @@ public:
 			EF_DrawFurPasses(hs, ef, nStart, nEnd, eShPass);
 			break;
 		default:
-			assert(false);
+			CRYASSERT(false);
 		}
 		return bLights;
 	}

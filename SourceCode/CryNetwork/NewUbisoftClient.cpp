@@ -22,11 +22,6 @@
 #endif
 
 #include "ScriptObjectNewUbisoftClient.h"		// CScriptObjectNewUbisoftClient
-#if !defined(LINUX)
-#include <assert.h>
-#endif
-
-
 #include "GSCDKeyInterface.h"
 #include "InitSockets.h"
 
@@ -74,7 +69,7 @@ m_pCDKeyServer(NULL), m_bCheckCDKeys(false), m_dwNextServerAbsTime(0),
 m_dwNextClientAbsTime(0), m_dwAccountCreateTime(0), m_bDisconnecting(0), sv_authport(0), sv_regserver_port(0),
 m_pLog(0), m_pSystem(0), m_usGamePort(0)
 {
-	assert(szLocalIPAddress);
+	CRYASSERT(szLocalIPAddress);
 
 	m_pScriptObject = 0;
 
@@ -434,13 +429,13 @@ bool NewUbisoftClient::DecodeHex(unsigned char* szOut, const unsigned char* szIn
 
 void NewUbisoftClient::Init(ISystem* inpSystem)
 {
-	m_pSystem = inpSystem;											assert(m_pSystem);
-	m_pLog = m_pSystem->GetILog();							assert(m_pLog);
+	m_pSystem = inpSystem;											CRYASSERT(m_pSystem);
+	m_pLog = m_pSystem->GetILog();							CRYASSERT(m_pLog);
 
 	IConsole* pConsole = m_pSystem->GetIConsole();
 
-	sv_authport = pConsole->GetCVar("sv_authport");									assert(sv_authport);
-	sv_regserver_port = pConsole->GetCVar("sv_regserver_port");			assert(sv_regserver_port);
+	sv_authport = pConsole->GetCVar("sv_authport");									CRYASSERT(sv_authport);
+	sv_regserver_port = pConsole->GetCVar("sv_regserver_port");			CRYASSERT(sv_regserver_port);
 }
 
 
@@ -486,8 +481,8 @@ bool NewUbisoftClient::Update()
 
 void NewUbisoftClient::SetScriptObject(CScriptObjectNewUbisoftClient* inpObject)
 {
-	assert(!m_pScriptObject);				// called twice?
-	assert(inpObject);							// param must be 0
+	CRYASSERT(!m_pScriptObject);				// called twice?
+	CRYASSERT(inpObject);							// param must be 0
 
 	m_pScriptObject = inpObject;
 }
@@ -555,7 +550,7 @@ bool NewUbisoftClient::DownloadGSini(const char* szUsername)
 	/*GShandle stHandle = GSHttpInitialize();
 	// Returns 0 on failure, but for now I don't care
 	int i=GSHttpSave(stHandle,connectURL,"gsinit.ini",GS_TRUE,NULL,NULL); // Store in the working dir
-	assert(i);
+	CRYASSERT(i);
 	GSHttpUninitialize();*/
 
 	//delete the current tmp file

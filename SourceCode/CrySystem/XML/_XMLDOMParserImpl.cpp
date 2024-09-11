@@ -8,11 +8,6 @@
 
 #include "_XMLDOMParserImpl.h"
 
-#if !defined(LINUX)
-#include <assert.h>
-#endif
-
-
 #define XMLPARSEAPI(type) type
 #include <expat.h>
 
@@ -60,7 +55,7 @@ void _XMLDOMParserImpl::StartElement(const char* name)
 
 void _XMLDOMParserImpl::EndElement()
 {
-	assert(!nodeStack.empty());
+	CRYASSERT(!nodeStack.empty());
 	if (!nodeStack.empty()) {
 		nodeStack.pop_back();
 	}
@@ -68,7 +63,7 @@ void _XMLDOMParserImpl::EndElement()
 
 void _XMLDOMParserImpl::Data(const char* data)
 {
-	assert(!nodeStack.empty());
+	CRYASSERT(!nodeStack.empty());
 	if (!nodeStack.empty())
 	{
 		XDOM::IXMLDOMNode* pNode = nodeStack.back();

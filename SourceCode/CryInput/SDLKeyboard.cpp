@@ -373,8 +373,8 @@ void CSDLKeyboard::FeedVirtualKey(int nVirtualKey, long lParam, bool bDown)
 //////////////////////////////////////////////////////////////////////////
 void CSDLKeyboard::ProcessKey(unsigned short cKey, bool bPressed, unsigned char* cTempKeys)
 {
-	assert(cKey < 256);
-	assert(cKey > 0);
+	CRYASSERT(cKey < 256);
+	CRYASSERT(cKey > 0);
 
 	if (bPressed)
 	{

@@ -335,7 +335,7 @@ bool CAnimNode::RemoveTrack(IAnimTrack* pTrack)
 //////////////////////////////////////////////////////////////////////////
 IAnimNode* CAnimNode::GetChild(int i) const
 {
-	assert(i >= 0 && i < (int)m_childs.size());
+	CRYASSERT(i >= 0 && i < (int)m_childs.size());
 	return m_childs[i];
 }
 
@@ -355,7 +355,7 @@ bool CAnimNode::IsChildOf(IAnimNode* node)
 //////////////////////////////////////////////////////////////////////////
 void CAnimNode::AttachChild(IAnimNode* child)
 {
-	assert(child);
+	CRYASSERT(child);
 	if (!child)
 		return;
 

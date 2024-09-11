@@ -1302,7 +1302,7 @@ GetEntity()->GetHelperPosition("gun",m_vWpnPos);
  	Vec3 GunViewDirection	=	GetNormalized(VehicleMat.T()*(vCrossHair3Dpos-m_vWpnPos));
 
 	float l = GetLength( Vec3(GunViewDirection.x, GunViewDirection.y, 0.0f ) );
-	assert(l); //throw assert if length=0
+	CRYASSERT(l); //throw CRYASSERT if length=0
 	m_AngleLimitBase = Vec3(0,0,180);
 
 	//calculate the sine&cosine and matrix for rotation around the X-axis

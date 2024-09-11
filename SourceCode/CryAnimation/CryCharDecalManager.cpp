@@ -191,10 +191,10 @@ void CryCharDecalManager::Realize(const Vec3d* pPositions)
 	// we write to the old videobuffer; in the case Realization reallocates the current buffer,
 	// the old videobuffer will still be rendered on this frame, so it must be updated now
 
-	// in case the following assert works, it means that the sequence of drawing/skinning
-	// has been changed; in this case remove this assert and switch the order of the following
+	// in case the following CRYASSERT works, it means that the sequence of drawing/skinning
+	// has been changed; in this case remove this CRYASSERT and switch the order of the following
 	// Refresh and Realize calls in order to avoid decal flickers.
-	//assert (!m_RE.getLeafBuffer() || GetRenderer()->GetFrameID() == m_RE.getLastRenderFrameID());
+	//CRYASSERT (!m_RE.getLeafBuffer() || GetRenderer()->GetFrameID() == m_RE.getLastRenderFrameID());
 
 	if (!m_arrDecalRequests.empty())
 	{
@@ -274,7 +274,7 @@ bool CryCharDecalManager::NeedRealize() const
 void CopyVertex(Vec3d& vDst, const Vec3d& vSrc)
 {
 	struct XYZ { unsigned x, y, z; };
-	assert(sizeof(XYZ) == 12 && sizeof(Vec3d) == 12);
+	CRYASSERT(sizeof(XYZ) == 12 && sizeof(Vec3d) == 12);
 	(XYZ&)vDst = (XYZ&)vSrc;
 }
 
@@ -393,7 +393,7 @@ void CryCharDecalManager::RefreshVertexBufferVertices(const Vec3d* pInPositions)
 			bNeedCopy = false;
 			break;
 		default:
-			assert(0);
+			CRYASSERT(0);
 			break;
 		}
 	}
@@ -511,7 +511,7 @@ void CryCharDecalManager::RefreshVertexBufferIndices()
 
 		// we scanned through all decals, and vertex indices must be in the range and coinside
 		// with the number that we calculated beforehand
-		assert(g_MeshInfo.numVertices == nBaseVertexIndex);
+		CRYASSERT(g_MeshInfo.numVertices == nBaseVertexIndex);
 		m_RE.updateIndices(&arrIndices[0], g_MeshInfo.numIndices);
 	}
 

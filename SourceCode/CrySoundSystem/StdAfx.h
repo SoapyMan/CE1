@@ -71,6 +71,7 @@ _inline void __cdecl __CRYTEKDLL_TRACE(const char* sFormat, ...)
 #define TRACE __CRYTEKDLL_TRACE
 
 #ifdef _DEBUG
+
 #ifdef WIN32
 #include <crtdbg.h>
 #define DEBUG_NEW_NORMAL_CLIENTBLOCK(file, line) new(_NORMAL_BLOCK, file, line)
@@ -80,25 +81,11 @@ _inline void __cdecl __CRYTEKDLL_TRACE(const char* sFormat, ...)
 #define   realloc(p, s)     _realloc_dbg(p, s, _NORMAL_BLOCK, __FILE__, __LINE__)
 #endif //WIN32
 
-#ifdef ASSERT
-#undef ASSERT
-#endif
-
-#ifdef WIN64
-#define ASSERT(x) {assert(x);}
-#else
-
-#define ASSERT(x)	{ if (!(x)) { TRACE("Assertion Failed (%s) File: \"%s\" Line: %d\n", #x, __FILE__, __LINE__); DebugBreak(); } }
-#endif // WIN64
-
-#else
-#define ASSERT(x) {assert(x);}
-
 #endif //_DEBUG
 
 class CHeapGuardian
 {
-public: CHeapGuardian() { assert(IsHeapValid()); } ~CHeapGuardian() { assert(IsHeapValid()); }
+public: CHeapGuardian() { CRYASSERT(IsHeapValid()); } ~CHeapGuardian() { CRYASSERT(IsHeapValid()); }
 };
 
 #ifdef _DEBUG

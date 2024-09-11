@@ -231,7 +231,7 @@ void CXGame::DrawRadar(float x, float y, float w, float h, float fRange, INT_PTR
   int  iTotalEntities=1;
 
   float fScale=(w*0.5f);
-  ASSERT(fScale>0.0f);
+  CRYASSERT(fScale>0.0f);
   Matrix33 mtxTransformNoMove;
   mtxTransformNoMove.SetScale(Vec3(fScale, (fScale)*fScaleY, 0.0f));
   mtxTransformNoMove=mtxTransformNoMove*Matrix33::CreateRotationZ(DEG2RAD(-pPlayer->GetAngles().z));
@@ -369,7 +369,7 @@ void CXGame::DrawRadar(float x, float y, float w, float h, float fRange, INT_PTR
 
     // [marco] temporay fix to be able
     // to run a version with debug info
-    // on and do not get an assert every frame
+    // on and do not get an CRYASSERT every frame
     if (fAngleZ<-360.0f)
     {
       fAngleZ+=360;

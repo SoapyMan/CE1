@@ -60,7 +60,7 @@ CNetEntityInfo::~CNetEntityInfo()
 //////////////////////////////////////////////////////////////////////////
 bool CNetEntityInfo::Write( CXServer *pServer, CStream &stm)
 {
-	assert(pServer);
+	CRYASSERT(pServer);
 
 	bool bRes;
 	m_ecsClone.m_fWriteStepBack = GetXServerSlot()->GetPlayerWriteStepBack();
@@ -121,7 +121,7 @@ void CNetEntityInfo::Update(Vec3d v3dViewer)
 	
 	if(!m_pEntity)
 	{
-		assert(m_pEntity);
+		CRYASSERT(m_pEntity);
 //		::OutputDebugString("Warning invalid CNetEntityInfo!!\n");
 //		m_bNeedUpdate=false;
 		m_nPriority=0;							// no update at all
@@ -143,7 +143,7 @@ void CNetEntityInfo::Update(Vec3d v3dViewer)
 		WRITE_COOKIE(stm);
 		pBitStream->WriteBitStream(stm,(EntityId)m_pEntity->GetId(),eEntityId);
 		//		stm.Write((EntityId)m_pEntity->GetId());
-		ASSERT(m_pEntity->IsInState(cState));
+		CRYASSERT(m_pEntity->IsInState(cState));
 		stm.Write(cState);
 		WRITE_COOKIE(stm);
 		GetXServerSlot()->SendReliableMsg(XSERVERMSG_SETENTITYSTATE,stm,false,m_pEntity->GetName());
@@ -256,7 +256,7 @@ float CNetEntityInfo::GetTimeAffectedPriority()
 //////////////////////////////////////////////////////////////////////////
 float CNetEntityInfo::GetDistanceTo( const Vec3d &vPos )
 {
-	assert(m_pEntity);	
+	CRYASSERT(m_pEntity);	
 
 	if(!m_pEntity)
 		return 0;

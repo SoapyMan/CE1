@@ -382,9 +382,9 @@ bool CXGame::InitClassRegistry()
 	CVehicleSystem *pVehicleSystem = GetVehicleSystem();
 	CWeaponSystemEx *pWeaponSystemEx = GetWeaponSystemEx();	// m10
 
-	assert( pPlayerSystem );
-	assert( pVehicleSystem );
-	assert( pWeaponSystemEx );
+	CRYASSERT( pPlayerSystem );
+	CRYASSERT( pVehicleSystem );
+	CRYASSERT( pWeaponSystemEx );
 
 	// Enumerate entity classes.
 	EntityClass *entCls = NULL;
@@ -811,7 +811,7 @@ bool CXGame::Update()
 	pTimer->MeasureTime("EnterGameUp");
 	//Timur[10/2/2002]
 	// Cannot Run Without System.
-	assert( m_pSystem );
+	CRYASSERT( m_pSystem );
 
 	float	maxFPS=g_maxfps->GetFVal();
 	if(maxFPS>0)
@@ -912,7 +912,7 @@ bool CXGame::Update()
 			m_pClient->UpdateClientNetwork();
 			pTimer->MeasureTime("Net");
 
-			assert(m_pClient);
+			CRYASSERT(m_pClient);
 			m_pClient->Update();
 			
 			if(m_pClient->DestructIfMarked())			//  to make sure the client is only released in one place - here
@@ -1452,7 +1452,7 @@ void CXGame::LoadLevelCS(bool keepclient, const char *szMapName, const char *szM
 
 	AutoSuspendTimeQuota AutoSuspender(GetSystem()->GetStreamEngine());
 
-	assert( szMissionName != 0 );
+	CRYASSERT( szMissionName != 0 );
 	
 	string sLevelFolder = szMapName;
 	if (sLevelFolder.find('\\') == string::npos && sLevelFolder.find('/') == string::npos)

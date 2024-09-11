@@ -5,11 +5,6 @@
 
 #include "platform.h"
 
-#if !defined(LINUX)
-#include <assert.h>
-#endif
-
-
 #include <string>
 #include "string.h"
 #include "StlUtils.h"
@@ -107,7 +102,7 @@ public:
 
 	CryBasicString& operator = (const char* szRight)
 	{
-		//assert (m_pString == m_pDuplicate);
+		//CRYASSERT (m_pString == m_pDuplicate);
 		free(m_pString);
 		m_pString = strdup(szRight);
 #ifdef _DEBUG
@@ -143,34 +138,34 @@ public:
 	//operator char*() {return m_pString;}
 	const char* c_str() const
 	{
-		//assert (m_pString == m_pDuplicate);
+		//CRYASSERT (m_pString == m_pDuplicate);
 		return m_pString ? m_pString : "";
 	}
 
 	char operator[] (int nIndex)const
 	{
-		//assert (m_pString == m_pDuplicate);
-		assert(nIndex >= 0 && nIndex < length());
+		//CRYASSERT (m_pString == m_pDuplicate);
+		CRYASSERT(nIndex >= 0 && nIndex < length());
 		return m_pString[nIndex];
 	}
 
 	char& operator[] (int nIndex)
 	{
-		//assert (m_pString == m_pDuplicate);
-		assert(nIndex >= 0 && nIndex < length());
+		//CRYASSERT (m_pString == m_pDuplicate);
+		CRYASSERT(nIndex >= 0 && nIndex < length());
 		return m_pString[nIndex];
 	}
 
 	int length()const
 	{
-		//assert (m_pString == m_pDuplicate);
+		//CRYASSERT (m_pString == m_pDuplicate);
 		return m_pString ? (int)strlen(m_pString) : 0;
 	}
 	int size()const { return length(); }
 
 	bool empty() const
 	{
-		//assert (m_pString == m_pDuplicate);
+		//CRYASSERT (m_pString == m_pDuplicate);
 		return !m_pString || !m_pString[0];
 	}
 

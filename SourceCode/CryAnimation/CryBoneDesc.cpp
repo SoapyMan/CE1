@@ -24,7 +24,7 @@ CryBoneDesc::~CryBoneDesc()
 bool CryBoneDesc::LoadRaw(const BONE_ENTITY* pEntity)
 {
 	//read  bone info
-	assert(pEntity->nChildren < 200);
+	CRYASSERT(pEntity->nChildren < 200);
 
 	// update the lod 0 physics of this bone
 	UpdatePhysics(*pEntity, 0);
@@ -40,7 +40,7 @@ bool CryBoneDesc::LoadRaw(const BONE_ENTITY* pEntity)
 // updates this bone physics, from the given entity descriptor, and of the given lod
 void CryBoneDesc::UpdatePhysics(const BONE_ENTITY& entity, int nLod)
 {
-	assert(nLod >= 0 && nLod < SIZEOF_ARRAY(m_PhysInfo));
+	CRYASSERT(nLod >= 0 && nLod < SIZEOF_ARRAY(m_PhysInfo));
 	CopyPhysInfo(m_PhysInfo[nLod], entity.phys);
 
 	int nFlags = 0;

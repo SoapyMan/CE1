@@ -196,7 +196,7 @@ bool CServer::Init(IServerSlotFactory* pFactory, WORD wPort, bool listen)
 		ipLocal.m_Address.ADDR = m_pNetwork->GetLocalIP();
 
 		// only create the multicast socket if it's not internet server
-		ICVar* sv_ServerType = GetISystem()->GetIConsole()->GetCVar("sv_ServerType");			assert(sv_ServerType);
+		ICVar* sv_ServerType = GetISystem()->GetIConsole()->GetCVar("sv_ServerType");			CRYASSERT(sv_ServerType);
 
 		m_MPServerType = eMPST_LAN;
 
@@ -256,10 +256,6 @@ bool CServer::Init(IServerSlotFactory* pFactory, WORD wPort, bool listen)
 
 #ifdef _INTERNET_SIMULATOR
 #include <stdlib.h>
-#if !defined(LINUX)
-#include <assert.h>
-#endif
-
 #include "ITimer.h"
 #endif
 
@@ -435,7 +431,7 @@ bool CServer::Send(CStream& stm, CIPAddress& ip)
 			delayed->m_fTimeToSend = GetISystem()->GetITimer()->GetCurrTime();
 		delayed->len = BITS2BYTES(stm.GetSize());
 		delayed->address = new CIPAddress(ip);
-		assert(delayed->len < sizeof(delayed->data) / sizeof(delayed->data[0]));
+		CRYASSERT(delayed->len < sizeof(delayed->data) / sizeof(delayed->data[0]));
 		memcpy(delayed->data, stm.GetPtr(), delayed->len);
 		m_delayedPacketList.push_back(delayed);
 		return true;
@@ -468,7 +464,7 @@ void CServer::OnDestructSlot(const CServerSlot* inpServerSlot)
 		++itr;
 	}
 
-	assert(0);			// can't be
+	CRYASSERT(0);			// can't be
 }
 
 void CServer::UnregisterSlot(CIPAddress& ip)
@@ -597,7 +593,7 @@ void CServer::ProcessPacket(CStream& stmPacket, CIPAddress& ip)
 
 void CServer::RegisterPacketSink(const unsigned char inID, INetworkPacketSink* inpSink)
 {
-	assert(m_PacketSinks.count(inID) == 0);
+	CRYASSERT(m_PacketSinks.count(inID) == 0);
 
 	m_PacketSinks[inID] = inpSink;
 }
@@ -706,7 +702,7 @@ void CServer::ProcessSetup(CNP& cnp, CStream& stmStream, CIPAddress& ip)
 
 			// get server password cvar
 			ICVar* sv_password = GetISystem()->GetIConsole()->GetCVar("sv_password");
-			assert(sv_password);
+			CRYASSERT(sv_password);
 
 			// check if server is password protected
 			if (sv_password->GetString() && (strlen(sv_password->GetString()) > 0))
@@ -796,15 +792,15 @@ void CServer::ProcessInfoRequest(CStream& stmIn, CIPAddress& ip)
 		return;
 	}
 
-	assert((stmIn.GetSize() % 8) == 0);
-	assert(m_pFactory);
+	CRYASSERT((stmIn.GetSize() % 8) == 0);
+	CRYASSERT(m_pFactory);
 
 	if (Query.szRequest == "ping")
 	{
 		Response.szResponse = "X";// identify the packet
 		Response.Save(stmPacket);
 
-		assert((stmPacket.GetSize() % 8) == 0);
+		CRYASSERT((stmPacket.GetSize() % 8) == 0);
 
 		if (stmPacket.GetSize())
 		{
@@ -829,7 +825,7 @@ void CServer::ProcessInfoRequest(CStream& stmIn, CIPAddress& ip)
 
 		Response.Save(stmPacket);
 
-		assert((stmPacket.GetSize() % 8) == 0);
+		CRYASSERT((stmPacket.GetSize() % 8) == 0);
 
 		if (stmPacket.GetSize())
 		{
@@ -848,7 +844,7 @@ void CServer::ProcessInfoRequest(CStream& stmIn, CIPAddress& ip)
 
 		Response.Save(stmPacket);
 
-		assert((stmPacket.GetSize() % 8) == 0);
+		CRYASSERT((stmPacket.GetSize() % 8) == 0);
 		m_socketMain.Send(stmPacket.GetPtr(), BITS2BYTES(stmPacket.GetSize()), &ip);
 	}
 	// players
@@ -874,7 +870,7 @@ void CServer::ProcessInfoRequest(CStream& stmIn, CIPAddress& ip)
 			Response.szResponse = *vszString[j];
 			Response.Save(stmPacket);
 
-			assert((stmPacket.GetSize() % 8) == 0);
+			CRYASSERT((stmPacket.GetSize() % 8) == 0);
 			m_socketMain.Send(stmPacket.GetPtr(), BITS2BYTES(stmPacket.GetSize()), &ip);
 
 			stmPacket.Reset();
@@ -940,7 +936,7 @@ unsigned char CServer::GenerateNewClientID()
 			return id;			// found one
 	}
 
-	assert(0);				// 256 players are already connected ?
+	CRYASSERT(0);				// 256 players are already connected ?
 	return 0;
 }
 

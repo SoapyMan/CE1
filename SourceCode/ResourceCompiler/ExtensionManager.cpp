@@ -45,7 +45,7 @@ IConvertor* ExtensionManager::FindConvertor(Platform platform, const char* ext) 
 	for (it = extMap->begin(); it != extMap->end(); it++)
 	{
 		CString strExtName = (*it).first;
-		assert((*it).second != NULL);
+		CRYASSERT((*it).second != NULL);
 	}
 
 
@@ -79,10 +79,10 @@ IConvertor* ExtensionManager::FindConvertor(Platform platform, const char* ext) 
 //////////////////////////////////////////////////////////////////////////
 void ExtensionManager::RegisterConvertor(IConvertor* conv, IResourceCompiler* rc)
 {
-	assert(conv);
-	assert(rc);
+	CRYASSERT(conv);
+	CRYASSERT(rc);
 
-	IRCLog* log = rc->GetIRCLog();				assert(log);
+	IRCLog* log = rc->GetIRCLog();				CRYASSERT(log);
 
 	m_convertors.push_back(conv);
 
@@ -105,14 +105,14 @@ void ExtensionManager::RegisterConvertor(IConvertor* conv, IResourceCompiler* rc
 	//	Info ("timestamp %s", szTime);
 	log->Log("    Registered convertor for %s", strExt.c_str());
 
-	assert(conv);
+	CRYASSERT(conv);
 	for (int k = 0; k < conv->GetNumPlatforms(); k++)
 	{
 		Platform platform = conv->GetPlatform(k);
 		for (int i = 0; i < conv->GetNumExt(); i++)
 		{
 			const char* ext = conv->GetExt(i);
-			assert(ext);
+			CRYASSERT(ext);
 			m_extMap[platform].insert(ExtMap::value_type(ext, conv));
 		}
 	}

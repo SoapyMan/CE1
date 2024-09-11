@@ -37,7 +37,7 @@ bool CResFile::mfActivate(bool bFirstTime)
 	if (m_nNumOpenResources > MAX_OPEN_RESFILES)
 	{
 		CResFile* rf = m_Root.m_Prev;
-		assert(rf && rf->m_handle);
+		CRYASSERT(rf && rf->m_handle);
 		rf->mfDeactivate();
 	}
 	if (!bFirstTime && m_szAccess[0] == 'w')
@@ -136,7 +136,7 @@ int CResFile::mfFileExist(int ID)
 	SDirEntry* de = mfGetEntry(ID);
 	if (!de)
 		return -1;
-	assert(ID == de->ID);
+	CRYASSERT(ID == de->ID);
 	return de->ID;
 }
 

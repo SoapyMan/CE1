@@ -34,10 +34,6 @@
 //////////////////////////////////////////////////////////////////////////
 #include <string.h>
 #include <memory.h>
-#if !defined(LINUX)
-#include <assert.h>
-#endif
-
 #include <malloc.h>
 #include <stdlib.h>
 #include <fcntl.h>

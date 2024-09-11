@@ -68,7 +68,7 @@ const char *CXServer::GetMsgName( XSERVERMSG inValue )
 		ADDNAME(EVENTSCHEDULE)
 		ADDNAME(UNIDENTIFIED)
 #undef ADDNAME
-		default: assert(0);
+		default: CRYASSERT(0);
 	}
 
 	return 0;
@@ -107,7 +107,7 @@ void CXServer::OnRemove(IEntity *ent)
 ///////////////////////////////////////////////
 unsigned int CXServer::GetMaxUpdateRate() const
 {
-	assert(sv_maxupdaterate);
+	CRYASSERT(sv_maxupdaterate);
 
 	return sv_maxupdaterate->GetIVal();
 }
@@ -117,11 +117,11 @@ unsigned int CXServer::GetMaxUpdateRate() const
 ///////////////////////////////////////////////
 CXServer::CXServer(CXGame *pGame, WORD nPort, const char *szName, bool listen)
 {
-	assert(pGame);
+	CRYASSERT(pGame);
 
 	m_pGame = pGame;
 	m_pTimer = pGame->m_pSystem->GetITimer(); 
-	IConsole *pConsole=m_pGame->GetSystem()->GetIConsole();			assert(pConsole);
+	IConsole *pConsole=m_pGame->GetSystem()->GetIConsole();			CRYASSERT(pConsole);
 
 	sv_name = pConsole->GetCVar("sv_name");
 	sv_password = pConsole->GetCVar("sv_password");
@@ -182,7 +182,7 @@ CXServer::CXServer(CXGame *pGame, WORD nPort, const char *szName, bool listen)
 	LoadBanList();
 
 	IScriptSystem *pScriptSystem = GetISystem()->GetIScriptSystem();
-	assert(pScriptSystem);
+	CRYASSERT(pScriptSystem);
 
 	_SmartScriptObject pMapCycle(pScriptSystem);
 	pScriptSystem->GetGlobalValue("MapCycle", pMapCycle);
@@ -781,7 +781,7 @@ void CXServer::Update()
 		}
 		else
 		{
-			ASSERT(pSlot->m_Snapshot.GetSendPerSecond());
+			CRYASSERT(pSlot->m_Snapshot.GetSendPerSecond());
 
 			float fRelTime = time - pSlot->m_Snapshot.GetLastUpdate();
 
@@ -969,7 +969,7 @@ ITagPoint* CXServer::GetRandomRespawnPoint(const char *sFilter)
 
 //  point = m_vRespawnPoints[RandomRespawn];
 	point = itr->second;
-	ASSERT(point);
+	CRYASSERT(point);
 /*
 	if(point)
 	{
@@ -1279,8 +1279,8 @@ void CXServer::SyncAIState(void )
 //////////////////////////////////////////////////////////////////////////
 unsigned int CXServer::GetSchedulingDelay()
 {
-	assert(sv_min_scheduling_delay);
-	assert(sv_max_scheduling_delay);
+	CRYASSERT(sv_min_scheduling_delay);
+	CRYASSERT(sv_max_scheduling_delay);
 
 	if(!sv_min_scheduling_delay || !sv_max_scheduling_delay)
 	{
@@ -1295,7 +1295,7 @@ unsigned int CXServer::GetSchedulingDelay()
 
 	for(;i!=m_mapXSlots.end();++i)
 	{
-		CXServerSlot *slot=i->second;			assert(slot);
+		CXServerSlot *slot=i->second;			CRYASSERT(slot);
 
 		if(slot)
 			nDelay = crymax(nDelay, crymin(nMaxDelay, slot->GetPing()*3>>2)); // half-ping multiplied by 1.5

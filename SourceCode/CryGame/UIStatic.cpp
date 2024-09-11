@@ -765,7 +765,7 @@ int CUIStatic::GetLineMetrics(UIStaticLine *pLine, IFFont *pFont)
 				}
 
 				fCurrentLineWidth = fCurrentLineWidth - fLastSpaceWidth + fCurrentCharWidth;
-				assert(fCurrentLineWidth >= 0);
+				CRYASSERT(fCurrentLineWidth >= 0);
 				fWidthSum += fCurrentLineWidth;
 			}
 			else

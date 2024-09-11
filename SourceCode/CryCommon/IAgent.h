@@ -574,7 +574,7 @@ typedef struct GraphNode
 	{
 		nRefCount--;
 
-		assert(nRefCount >= 0);
+		CRYASSERT(nRefCount >= 0);
 
 		if (nRefCount == 0)
 			return true;

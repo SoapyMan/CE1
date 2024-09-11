@@ -32,7 +32,7 @@ public:
 
 		if (hRes == SOCKET_ERROR)
 		{
-			INetwork* pNetwork = m_Ref.m_pSystem->GetINetwork();			assert(pNetwork);
+			INetwork* pNetwork = m_Ref.m_pSystem->GetINetwork();			CRYASSERT(pNetwork);
 
 			const char* szErrorRes = pNetwork->EnumerateError(hRes);
 
@@ -61,7 +61,7 @@ CRConSystem::~CRConSystem()
 
 bool CRConSystem::Create(ISystem* pSystem)
 {
-	assert(pSystem);
+	CRYASSERT(pSystem);
 
 	m_pSystem = pSystem;
 
@@ -106,7 +106,7 @@ void CRConSystem::Update(unsigned int dwTime, IClient* pClient)
 			}
 			else
 			{
-				assert(0);					// there should be no ther packets on this port
+				CRYASSERT(0);					// there should be no ther packets on this port
 				return;
 			}
 		}
@@ -120,7 +120,7 @@ void CRConSystem::Update(unsigned int dwTime, IClient* pClient)
 		CRConConsoleSink sink(*this, defCmd.m_ip);
 
 		IConsole* pConsole(m_pSystem->GetIConsole());
-		assert(pConsole);
+		CRYASSERT(pConsole);
 
 		pConsole->AddOutputPrintSink(&sink);
 		pConsole->ExecuteString(defCmd.m_sCommand.c_str());
@@ -133,7 +133,7 @@ void CRConSystem::Update(unsigned int dwTime, IClient* pClient)
 
 void CRConSystem::OnServerCreated(IServer* inpServer)
 {
-	assert(inpServer);
+	CRYASSERT(inpServer);
 
 	inpServer->RegisterPacketSink(FT_CQP_RCON_COMMAND, this);
 	m_pIServer = inpServer;
@@ -200,9 +200,9 @@ void CRConSystem::GetPassCode(const char* szString, unsigned int* nOutCode)
 
 void CRConSystem::OnReceivingPacket(const unsigned char inPacketID, CStream& stmPacket, CIPAddress& ip)
 {
-	IConsole* pConsole = m_pSystem->GetIConsole();			assert(pConsole);
+	IConsole* pConsole = m_pSystem->GetIConsole();			CRYASSERT(pConsole);
 
-	ICVar* pVar = pConsole->GetCVar("sv_rcon_password");			assert(pVar);
+	ICVar* pVar = pConsole->GetCVar("sv_rcon_password");			CRYASSERT(pVar);
 	string sv_RConPassword = pVar->GetString();
 
 	if (sv_RConPassword == "")
@@ -288,15 +288,15 @@ void CRConSystem::ExecuteRConCommand(const char* inszCommand)
 {
 	// get parameters
 
-	IConsole* pConsole = m_pSystem->GetIConsole();							assert(pConsole);
+	IConsole* pConsole = m_pSystem->GetIConsole();							CRYASSERT(pConsole);
 
-	ICVar* pVar1 = pConsole->GetCVar("cl_rcon_serverip");			assert(pVar1);
+	ICVar* pVar1 = pConsole->GetCVar("cl_rcon_serverip");			CRYASSERT(pVar1);
 	string serverip = pVar1->GetString();
 
-	ICVar* pVar2 = pConsole->GetCVar("cl_rcon_port");					assert(pVar2);
+	ICVar* pVar2 = pConsole->GetCVar("cl_rcon_port");					CRYASSERT(pVar2);
 	WORD wPort = pVar2->GetIVal();
 
-	ICVar* pVar3 = pConsole->GetCVar("cl_rcon_password");			assert(pVar3);
+	ICVar* pVar3 = pConsole->GetCVar("cl_rcon_password");			CRYASSERT(pVar3);
 	string sPasswd = pVar3->GetString();
 
 	// send packet

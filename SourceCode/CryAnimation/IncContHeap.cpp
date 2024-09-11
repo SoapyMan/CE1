@@ -7,7 +7,7 @@ void CTempStorage::done()
 	{
 		// read the offset to the actual memory
 		int nOffset = ((int*)m_pTemp)[-1];
-		assert(nOffset >= -16 && nOffset <= 4);
+		CRYASSERT(nOffset >= -16 && nOffset <= 4);
 		// the actual memory block start
 		void* pRealMem = (char*)m_pTemp + nOffset;
 		free(pRealMem); // free it

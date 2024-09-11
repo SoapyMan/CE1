@@ -176,7 +176,7 @@ void C3DEngine::RenderScene(unsigned int dwDrawFlags)
 
 	// it's correct only before StartEf()
 	int nRecursionLevel = (int)GetRenderer()->EF_Query(EFQ_RecurseLevel);
-	assert(nRecursionLevel >= 0);
+	CRYASSERT(nRecursionLevel >= 0);
 	m_pObjManager->m_nRenderStackLevel = m_pTerrain->m_nRenderStackLevel = nRecursionLevel;
 	if (m_pObjManager->m_nRenderStackLevel < 0 || m_pObjManager->m_nRenderStackLevel>1)
 		return;
@@ -231,7 +231,7 @@ void C3DEngine::RenderScene(unsigned int dwDrawFlags)
 	if (CStatObj::m_fStreamingTimePerFrame > 0.25f)
 		CStatObj::m_fStreamingTimePerFrame = 0.25f;
 
-	assert(Cry3DEngineBase::m_nRenderStackLevel >= 0 && Cry3DEngineBase::m_nRenderStackLevel <= 1);
+	CRYASSERT(Cry3DEngineBase::m_nRenderStackLevel >= 0 && Cry3DEngineBase::m_nRenderStackLevel <= 1);
 	m_pObjManager->m_dwRecursionDrawFlags[Cry3DEngineBase::m_nRenderStackLevel] = dwDrawFlags;
 
 	m_pVisAreaManager->DrawOcclusionAreasIntoCBuffer(m_pObjManager->m_pCoverageBuffer);
@@ -276,7 +276,7 @@ void C3DEngine::RenderScene(unsigned int dwDrawFlags)
 		pList->Clear();
 	}
 	else
-		assert(0);
+		CRYASSERT_FAIL("Not valid RenderStackLevel (%d)", m_nRenderStackLevel);
 
 	CCamera prevCam = GetViewCamera();
 	if (IsOutdoorVisible())
@@ -1152,7 +1152,7 @@ void C3DEngine::DrawTerrainParticles(IShader* pShader)
 			  m_pBFManager->Render(m_pTerrain);*/
 	}
 	//  else
-	  //  assert(0);
+	  //  CRYASSERT(0);
 }
 
 void C3DEngine::RenderTerrainParticles()

@@ -315,7 +315,7 @@ void CryCharManager::UnregisterBody(CryCharBody* pBody)
 			m_arrBodyCache.erase(itCache);
 		else
 		{
-			assert(false); // there must be no duplicate name pointers here
+			CRYASSERT(false); // there must be no duplicate name pointers here
 			while (++itCache != m_arrBodyCache.end())
 				if (*itCache == pBody)
 				{
@@ -325,7 +325,7 @@ void CryCharManager::UnregisterBody(CryCharBody* pBody)
 		}
 	}
 	else
-		assert(false); // this pointer must always be in the cache
+		CRYASSERT(false); // this pointer must always be in the cache
 	ValidateBodyCache();
 }
 
@@ -378,7 +378,7 @@ void CryCharManager::ValidateBodyCache()
 	for (CryCharBodyCache::iterator it = m_arrBodyCache.begin(); it != m_arrBodyCache.end(); ++it)
 	{
 		if (itPrev != m_arrBodyCache.end())
-			assert((*itPrev)->GetFilePath() < (*it)->GetFilePath());
+			CRYASSERT((*itPrev)->GetFilePath() < (*it)->GetFilePath());
 	}
 #endif
 }
@@ -403,7 +403,7 @@ void CryCharManager::CleanupBodyCache()
 		// if the body still stays in the cache, it means someone (who?!) still refers to it
 		if (m_arrBodyCache.back() == pBody)
 		{
-			assert(0); // actually ,after deleting all instances referring to the body, the body must be auto-deleted and deregistered.
+			CRYASSERT(0); // actually ,after deleting all instances referring to the body, the body must be auto-deleted and deregistered.
 			// if this doesn't happen, something is very wrong
 			//delete pBody; // still, we'll delete the body
 		}

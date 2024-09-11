@@ -130,7 +130,7 @@ CVehicle *CScriptObjectVehicle::GetVehicle()
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 int CScriptObjectVehicle::SetVehicleEngineHealth(IFunctionHandler *pH)
 {
-	ASSERT(pH->GetParamCount()>=1);
+	CRYASSERT(pH->GetParamCount()>=1);
 	
 	float fEngineHealth;
 	pH->GetParam(1,fEngineHealth);	
@@ -147,7 +147,7 @@ int CScriptObjectVehicle::SetVehicleEngineHealth(IFunctionHandler *pH)
 */
 int CScriptObjectVehicle::SetUser(IFunctionHandler *pH)
 {
-//	ASSERT(pH->GetParamCount()>=3);
+//	CRYASSERT(pH->GetParamCount()>=3);
 	CHECK_PARAMETERS(5);
 
 	int parCount = pH->GetParamCount();
@@ -252,7 +252,7 @@ int CScriptObjectVehicle::SetUser(IFunctionHandler *pH)
 int CScriptObjectVehicle::ReleaseUser(IFunctionHandler *pH)
 {
 //	CHECK_PARAMETERS(3);
-	ASSERT(pH->GetParamCount()>=3);
+	CRYASSERT(pH->GetParamCount()>=3);
 
 	int playerid;
 	pH->GetParam(1,playerid);
@@ -588,7 +588,7 @@ int CScriptObjectVehicle::SetCameraParameters(IFunctionHandler *pH)
 int CScriptObjectVehicle::SetWaterVehicleParameters(IFunctionHandler *pH)
 {
 
-	ASSERT(pH->GetParamCount()<=1);
+	CRYASSERT(pH->GetParamCount()<=1);
 //	CHECK_PARAMETERS(1);
 
 	if(pH->GetParamCount()==1)
@@ -680,7 +680,7 @@ int CScriptObjectVehicle::GetVertDeviation(IFunctionHandler *pH)
 // helper, texture, headLeftHelper, headRightHelper, shader, backLeftHelper, backRightHelper, shader
 int CScriptObjectVehicle::InitLights(IFunctionHandler *pH)
 {
-//	ASSERT(pH->GetParamCount()>=3);
+//	CRYASSERT(pH->GetParamCount()>=3);
 	CHECK_PARAMETERS(8);
 	const char *szName;
 

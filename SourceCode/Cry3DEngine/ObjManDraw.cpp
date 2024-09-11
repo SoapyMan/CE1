@@ -26,8 +26,8 @@ bool CObjManager::IsBoxOccluded(const Vec3d& vBoxMin, const Vec3d& vBoxMax, floa
 {
 	FUNCTION_PROFILER_FAST(GetSystem(), PROFILE_3DENGINE, m_bProfilerEnabled);
 
-	assert(pOcclTestVars);
-	assert(fDistance >= 0);
+	CRYASSERT(pOcclTestVars);
+	CRYASSERT(fDistance >= 0);
 
 	if (m_nRenderStackLevel)
 		return pOcclTestVars->bLastResult; // return result of base level test

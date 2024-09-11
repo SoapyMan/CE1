@@ -215,7 +215,7 @@ void SEvalFuncs_RE::FlareDeform(SDeform* df)
 		tm = new CRETempMesh;
 		rd->m_RP.m_CurTempMeshes->Get(n) = tm;
 	}
-	assert(!tm->m_VBuffer);
+	CRYASSERT(!tm->m_VBuffer);
 	tm->m_VBuffer = rd->CreateBuffer(16, VERTEX_FORMAT_P3F_COL4UB_TEX2F, "CRETempMesh", true);
 	rd->CreateIndexBuffer(&tm->m_Inds, &sFlareIndices[0][0], 54);
 	rd->m_RP.m_pRE = tm;
@@ -477,7 +477,7 @@ void SEvalFuncs_RE::BeamDeform(SDeform* df)
 		tm = new CRETempMesh;
 		rd->m_RP.m_CurTempMeshes->Get(n) = tm;
 	}
-	assert(!tm->m_VBuffer);
+	CRYASSERT(!tm->m_VBuffer);
 	tm->m_VBuffer = rd->CreateBuffer(nv, VERTEX_FORMAT_P3F_COL4UB_TEX2F, "CRETempMesh", true);
 	rd->CreateIndexBuffer(&tm->m_Inds, &pLB->m_SecIndices[0], ni);
 	rd->m_RP.m_pRE = tm;
@@ -795,7 +795,7 @@ void SEvalFuncs_RE::ETC_ShadowMap(int ns)
 	if (!rd->m_RP.m_pCurObject)
 		return;
 
-	assert(rd->m_RP.m_FlagsPerFlush & RBSI_SHADOWPASS);
+	CRYASSERT(rd->m_RP.m_FlagsPerFlush & RBSI_SHADOWPASS);
 	int nsFrust;
 	if (rd->m_RP.m_pShader->m_eSort == eS_TerrainShadowPass)
 		nsFrust = 0;

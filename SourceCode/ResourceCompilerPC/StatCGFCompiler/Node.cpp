@@ -64,7 +64,7 @@ bool CNodeCGF::Load(CXFile* f, int pos)
 	/*	if(m_Chunk.PropStrLen)
 		{
 			m_sPropStr=(char*)malloc(m_Chunk.PropStrLen+1);
-			assert(m_sPropStr);
+			CRYASSERT(m_sPropStr);
 			res=f->FRead(m_sPropStr,m_Chunk.PropStrLen,1);
 		m_sPropStr[m_Chunk.PropStrLen]=0;
 			if(res!=1) return true;
@@ -74,10 +74,10 @@ bool CNodeCGF::Load(CXFile* f, int pos)
 	/*	if(m_Chunk.nChildren)
 		{
 			m_pnChildrenIds = (int*) malloc(m_Chunk.nChildren*sizeof(int));
-			assert(m_pnChildrenIds);
+			CRYASSERT(m_pnChildrenIds);
 
 		m_ppChildren = (CNodeCGF **) malloc(m_Chunk.nChildren*sizeof(CNodeCGF*));
-			assert(m_pnChildrenIds);
+			CRYASSERT(m_pnChildrenIds);
 		memset(m_ppChildren,0,m_Chunk.nChildren*sizeof(CNodeCGF*));
 
 			int res=f->FRead(m_pnChildrenIds,sizeof(int),m_Chunk.nChildren);

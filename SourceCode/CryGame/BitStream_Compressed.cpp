@@ -87,7 +87,7 @@ bool CBitStream_Compressed::WriteBitStream( CStream &stm, const float Value, con
 	{
 		case eSignedUnitValueLQ:
 			{
-				assert(Value>=-1.0 && Value<=1.0);				// check valid range
+				CRYASSERT(Value>=-1.0 && Value<=1.0);				// check valid range
 				if(!stm.Write(Value!=0))
 					return false;
 				if(Value!=0)															// can be done better

@@ -31,7 +31,7 @@ void CStaticCharCompressor::InitFromStatistics(const DWORD indwPriority[256])
 		{
 			std::multiset<SPriIndex>::iterator top = Sorter.begin();
 
-			assert(top != Sorter.end());			// cannot be because we always remove two and add one
+			CRYASSERT(top != Sorter.end());			// cannot be because we always remove two and add one
 
 			const SPriIndex& ref = *top;
 
@@ -71,7 +71,7 @@ void CStaticCharCompressor::InitFromStatistics(const DWORD indwPriority[256])
 		{
 			bool bRet = GetCharFromBits_slow((unsigned char)i, m_dwRootIndex, m_CharToBit[i]);
 
-			assert(bRet);		// it must be there
+			CRYASSERT(bRet);		// it must be there
 		}
 	}
 }
@@ -89,7 +89,7 @@ bool CStaticCharCompressor::GetCharFromBits_slow(const unsigned char inVal, cons
 	else
 	{
 		outDat.m_BitCount++;
-		assert(outDat.m_BitCount < 16);
+		CRYASSERT(outDat.m_BitCount < 16);
 		outDat.m_Bitfield <<= 1;
 
 		// one
@@ -113,7 +113,7 @@ bool CStaticCharCompressor::GetCharFromBits_slow(const unsigned char inVal, cons
 
 bool CStaticCharCompressor::Write(CStream& outStream, const unsigned char inChar)
 {
-	assert(m_dwRootIndex != 0xffffffff);			// instance is not initialized
+	CRYASSERT(m_dwRootIndex != 0xffffffff);			// instance is not initialized
 
 	SBitToChar& ref = m_CharToBit[inChar];
 	/*
@@ -124,7 +124,7 @@ bool CStaticCharCompressor::Write(CStream& outStream, const unsigned char inChar
 
 		test.WriteNumberInBits((DWORD)(ref.m_Bitfield),ref.m_BitCount);
 		Read(test,cTest);
-		assert(cTest==inChar);
+		CRYASSERT(cTest==inChar);
 	#endif
 	*/
 
@@ -141,7 +141,7 @@ bool CStaticCharCompressor::Write(CStream& outStream, const unsigned char inChar
 
 bool CStaticCharCompressor::Read(CStream& inStream, unsigned char& outChar)
 {
-	assert(m_dwRootIndex != 0xffffffff);			// 
+	CRYASSERT(m_dwRootIndex != 0xffffffff);			// 
 
 	DWORD dwCurrentIndex = m_dwRootIndex;
 

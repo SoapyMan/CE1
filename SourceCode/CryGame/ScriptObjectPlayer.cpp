@@ -806,7 +806,7 @@ int CScriptObjectPlayer::RedirectInputTo(IFunctionHandler *pH)
 {
 //	CHECK_PARAMETERS(1);
 
-	ASSERT(pH->GetParamCount() == 1 || pH->GetParamCount() == 2);
+	CRYASSERT(pH->GetParamCount() == 1 || pH->GetParamCount() == 2);
 
 	int id;
 	pH->GetParam(1,id);
@@ -1339,7 +1339,7 @@ int	CScriptObjectPlayer::GetTPVHelper(IFunctionHandler *pH)
 //////////////////////////////////////////////////////////////////////////
 int	CScriptObjectPlayer::GetHelperPos(IFunctionHandler *pH)
 {
-	ASSERT(pH->GetParamCount() == 1 || pH->GetParamCount() == 2);
+	CRYASSERT(pH->GetParamCount() == 1 || pH->GetParamCount() == 2);
 
 	const char *helper;
 	bool bUseObjectSpace =	false;
@@ -2152,7 +2152,7 @@ IEntityRender * CScriptObjectPlayer::GetIEntityRender(const pe_params_foreign_da
 	else if(fd.iForeignData == 1)
 		pEntityRender = (IEntityRender*)fd.pForeignData;
 	else
-		assert(0); // unknown object type
+		CRYASSERT(0); // unknown object type
 	
 	return pEntityRender;
 }
@@ -2260,7 +2260,7 @@ int CScriptObjectPlayer::GetProjectedBloodPos(IFunctionHandler *pH)
 //
 int CScriptObjectPlayer::UseLadder(IFunctionHandler *pH)
 {
-	//ASSERT(pH->GetParamCount() == 1 || pH->GetParamCount() == 2);
+	//CRYASSERT(pH->GetParamCount() == 1 || pH->GetParamCount() == 2);
 	if (pH->GetParamCount()>0)
 	{
 		int	onLadder=0;

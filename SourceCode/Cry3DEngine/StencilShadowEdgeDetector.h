@@ -84,7 +84,7 @@ public:
 	// use this to determine the size of vertex buffer passed to meshShadowVolume (2*used vertices because of capping)
 	virtual unsigned numShadowVolumeVertices(void) const
 	{
-		assert(m_pConnectivity);
+		CRYASSERT(m_pConnectivity);
 
 		return(m_pConnectivity->numVertices() * 2);
 	}

@@ -124,7 +124,7 @@ int CScriptObjectRenderer::PushQuad(IFunctionHandler *pH)
 	vtx[3].u=u0;
 	vtx[3].v=v1;
 
-  assert (r<=1 && g<=1 && b<=1 && a<=1);
+  CRYASSERT (r<=1 && g<=1 && b<=1 && a<=1);
 
 	for(int i=0;i<4;i++)
 	{

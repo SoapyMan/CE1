@@ -101,7 +101,7 @@ public:
 
 	void selfValidate()
 	{
-		assert(m_fAnimTime <= m_fStopTime + 0.01f && m_fAnimTime >= m_fStartTime - 0.01f);
+		CRYASSERT(m_fAnimTime <= m_fStopTime + 0.01f && m_fAnimTime >= m_fStartTime - 0.01f);
 	}
 
 	string dump();

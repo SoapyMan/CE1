@@ -36,7 +36,7 @@ void CSelectTrack::SerializeKey(ISelectKey& key, XmlNodeRef& keyNode, bool bLoad
 //////////////////////////////////////////////////////////////////////////
 void CSelectTrack::GetKeyInfo(int key, const char*& description, float& duration)
 {
-	assert(key >= 0 && key < (int)m_keys.size());
+	CRYASSERT(key >= 0 && key < (int)m_keys.size());
 	CheckValid();
 	description = 0;
 	duration = m_keys[key].fDuration;

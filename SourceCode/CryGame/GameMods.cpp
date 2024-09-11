@@ -109,7 +109,7 @@ void CGameMods::CloseMod(SGameModDescription *pMod)
 //////////////////////////////////////////////////////////////////////////
 bool CGameMods::SetCurrentMod(const char *sModName,bool bNeedsRestart)
 {
-	ASSERT(sModName);
+	CRYASSERT(sModName);
 #if defined(LINUX)
 	RemoveCRLF(sModName);
 #endif

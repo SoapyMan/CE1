@@ -40,13 +40,13 @@ public:
 
 	Time& operator [] (int nKnot)
 	{
-		assert(nKnot >= 0 && nKnot < m_numKnots);
+		CRYASSERT(nKnot >= 0 && nKnot < m_numKnots);
 		return m_pKnots[nKnot];
 	}
 
 	Time operator [] (int nKnot) const
 	{
-		assert(nKnot >= 0 && nKnot < m_numKnots);
+		CRYASSERT(nKnot >= 0 && nKnot < m_numKnots);
 		return m_pKnots[nKnot];
 	}
 

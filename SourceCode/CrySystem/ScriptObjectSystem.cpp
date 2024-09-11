@@ -73,7 +73,7 @@ static unsigned int sGetBlendState(int nMode)
 		break;
 	case 2:
 	case 3:
-		assert(0);
+		CRYASSERT(0);
 		break;
 	case 4:
 		nBlend = GS_BLSRC_SRCALPHA | GS_BLDST_ONEMINUSSRCALPHA;
@@ -106,7 +106,7 @@ static unsigned int sGetBlendState(int nMode)
 		nBlend = GS_BLSRC_DSTCOL | GS_BLDST_SRCCOL;
 		break;
 	default:
-		assert(0);
+		CRYASSERT(0);
 	}
 	return nBlend;
 }
@@ -1833,7 +1833,7 @@ int CScriptObjectSystem::EnableMainView(IFunctionHandler* pH)
 {
 	CHECK_PARAMETERS(1);
 
-	assert(0); // feature unimplemented
+	CRYASSERT(0); // feature unimplemented
 
 	/*bool bEnable;
 	  pH->GetParam(1,bEnable);
@@ -2528,7 +2528,7 @@ int CScriptObjectSystem::GetViewCameraPos(IFunctionHandler* pH)
 
 int CScriptObjectSystem::RayWorldIntersection(IFunctionHandler* pH)
 {
-	assert(pH->GetParamCount() >= 3 && pH->GetParamCount() <= 6);
+	CRYASSERT(pH->GetParamCount() >= 3 && pH->GetParamCount() <= 6);
 
 	CScriptObjectVector vPos(m_pScriptSystem, true);
 	CScriptObjectVector vDir(m_pScriptSystem, true);
@@ -2936,7 +2936,7 @@ int CScriptObjectSystem::GetVideoMem(IFunctionHandler* pH)
 				sDDSCaps2.dwCaps = DDSCAPS_LOCALVIDMEM;
 
 				HRESULT hr(pDD7->GetAvailableVidMem(&sDDSCaps2, &s_dwTotalVideoMemory, 0));
-				assert(S_OK == hr);
+				CRYASSERT(S_OK == hr);
 
 				pDD7->Release();
 			}
@@ -2982,7 +2982,7 @@ int CScriptObjectSystem::IsDevModeEnable(IFunctionHandler* pH)
 	// to check if we are allowed to enable certain scripts
 	// function facilities (god mode, fly mode etc.)
 
-	IGame* pGame = m_pSystem->GetIGame();				assert(pGame);
+	IGame* pGame = m_pSystem->GetIGame();				CRYASSERT(pGame);
 
 	return pH->EndFunction(pGame->GetModuleState(EGameDevMode));
 }

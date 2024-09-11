@@ -123,14 +123,14 @@ void CryModelState::SetPoseFromBoneInfos()
 	{
 		Matrix44& matGlobal = getBoneMatrixGlobal(nBone);
 		const Matrix44& matInvGlobal = getBoneInfo(nBone)->getInvDefGlobal();
-		assert(IsOrthoUniform(matInvGlobal));
+		CRYASSERT(IsOrthoUniform(matInvGlobal));
 		// calculate the global from the inverse
 		matGlobal = OrthoUniformGetInverted(matInvGlobal);
 		Matrix44& matRelative = getBone(nBone).m_matRelativeToParent;
 		if (nBone)
 		{
 			unsigned nParent = (unsigned)(nBone + getBoneInfo(nBone)->getParentIndexOffset());
-			assert(nParent < nBone);
+			CRYASSERT(nParent < nBone);
 			const Matrix44& matInvGlobalParent = getBoneInfo(nParent)->getInvDefGlobal();
 			// this has a parent: calculate the relative-to-parent transform
 			matRelative = matGlobal * matInvGlobalParent;
@@ -196,7 +196,7 @@ void CryModelState::CreateBones()
 	Matrix44 matDefault;
 	matDefault.SetIdentity();
 	m_arrBoneGlobalMatrices.reinit(numBones, matDefault);
-	//assert (((unsigned)m_arrBoneGlobalMatrices.begin() & 0xF) == 0);
+	//CRYASSERT (((unsigned)m_arrBoneGlobalMatrices.begin() & 0xF) == 0);
 	setBoneParent();
 }
 
@@ -372,7 +372,7 @@ void CryModelState::UpdateAnimatedEffectors(float fDeltaTimeSec, ActiveLayerArra
 				if (layer.nDefaultIdleAnimID >= 0 && layer.bEnableDefaultIdleAnimRestart)
 				{
 					// re-run the default loop animation
-					assert((unsigned)layer.nDefaultIdleAnimID < m_pMesh->numAnimations());
+					CRYASSERT((unsigned)layer.nDefaultIdleAnimID < m_pMesh->numAnimations());
 					if (g_GetCVars()->ca_Debug())
 						g_GetLog()->Log("\003Restarting default idle animation %s in layer %d, blend in=%.2f, out=%.2f", m_pMesh->getAnimation(layer.nDefaultIdleAnimID).strName.c_str(), nLayer, layer.fDefaultAnimBlendTime, layer.fDefaultAnimBlendTime);
 					// we run the new animation with the current speed
@@ -609,7 +609,7 @@ void CryModelState::ApplyAnimationsToBones(const CAnimationLayerInfo* pAnims, un
 	SelfValidate();
 	for (unsigned i = 0; i < numAnims; ++i)
 		m_pMesh->OnAnimationApply(pAnims[i].nAnimId);
-	assert(numAnims > 1);
+	CRYASSERT(numAnims > 1);
 	CryBone* pBoneBegin = &m_arrBones[0], * pBone = pBoneBegin;
 	CryBone* pBoneEnd = pBone + numBones();
 	const CryBoneInfo* pBoneInfoBegin = getBoneInfo(0), * pBoneInfo = pBoneInfoBegin;
@@ -645,7 +645,7 @@ void CryModelState::ApplyAnimationsToBones(const CAnimationLayerInfo* pAnims, un
 				// each underlayer gather as little control as the overlay leaves for it;
 				// if the overlay animation doesn't leave any (if it's weight is 0.99+) we don't have to continue
 				fMaxBlending *= 1 - rAnim.fBlending;
-				assert(fMaxBlending >= 0);
+				CRYASSERT(fMaxBlending >= 0);
 				if (fMaxBlending <= 0.001f)
 					break;
 			}
@@ -761,12 +761,12 @@ void CryModelState::UpdateBoneMatricesGlobal()
 		pBone != pBoneEnd;
 		++pBone, ++pBoneInfo, ++pmatGlobal)
 	{
-		assert(IsOrthoUniform(pBone->m_matRelativeToParent));
+		CRYASSERT(IsOrthoUniform(pBone->m_matRelativeToParent));
 		// calculate the global matrix
 		// to calculate the global, we should search for the global matrix of the parent.
 		// the global matrix of the parent has the known offset, we apply it directly to the pointer to the child's global matrix
 		*pmatGlobal = pBone->m_matRelativeToParent * *(pmatGlobal + pBoneInfo->getParentIndexOffset());
-		assert(IsOrthoUniform(*pmatGlobal));
+		CRYASSERT(IsOrthoUniform(*pmatGlobal));
 	}
 }
 
@@ -861,12 +861,12 @@ void CryModelState::setBoneParent()
 CryModelState* CryModelState::MakeCopy()
 {
 	SelfValidate();
-	assert(this && m_pMesh);
+	CRYASSERT(this && m_pMesh);
 	if (!getRootBone() && !m_pMesh->numMorphTargets())
 		return NULL;
 
 	CryModelState* pCopy = new CryModelState(m_pMesh);
-	assert(pCopy);
+	CRYASSERT(pCopy);
 
 	pCopy->m_pShaderStateCull = m_pShaderStateCull;
 	pCopy->m_pShaderStateShadowCull = m_pShaderStateShadowCull;
@@ -997,7 +997,7 @@ bool CryModelState::StopAnimation(int nLayer)
 bool CryModelState::RunAnimation(const char* szAnimName, const struct CryCharAnimationParams& Params, float fSpeed)
 {
 	SelfValidate();
-	assert(szAnimName);
+	CRYASSERT(szAnimName);
 
 	bool bPrintDebugInfo = g_GetCVars()->ca_AnimWarningLevel() > 2;
 
@@ -1028,7 +1028,7 @@ bool CryModelState::RunAnimation(const char* szAnimName, const struct CryCharAni
 bool CryModelState::RunAnimation(int nAnimID, const CryCharAnimationParams& Params, float fSpeed, bool bInternal)
 {
 	SelfValidate();
-	assert(nAnimID >= 0 && (unsigned)nAnimID < m_pMesh->numAnimations());
+	CRYASSERT(nAnimID >= 0 && (unsigned)nAnimID < m_pMesh->numAnimations());
 	const AnimData* pAnim = m_pMesh->getAnimationInfo(nAnimID);
 	if (!pAnim)
 		return false;
@@ -1052,7 +1052,7 @@ bool CryModelState::RunAnimation(int nAnimID, const CryCharAnimationParams& Para
 		rLayer.bKeepLayer0Phase = (Params.nFlags & Params.FLAGS_SYNCHRONIZE_WITH_LAYER_0) != 0;
 	}
 
-	assert(rLayer.pEffector != (CCryModEffAnimation*)NULL);
+	CRYASSERT(rLayer.pEffector != (CCryModEffAnimation*)NULL);
 
 	if (!bInternal && rLayer.pEffector->isActive() && 0 != ((Params.nFlags | rLayer.pEffector->getStartAnimFlags()) & CryCharAnimationParams::FLAGS_ALIGNED))
 	{
@@ -1410,7 +1410,7 @@ Vec3d CryModelState::GetCenter()const
 // given the bone index, (INDEX, NOT ID), returns this bone's parent index
 int CryModelState::getBoneParentIndex(int nBoneIndex)
 {
-	assert(nBoneIndex >= 0 && nBoneIndex < (int)numBones());
+	CRYASSERT(nBoneIndex >= 0 && nBoneIndex < (int)numBones());
 	return nBoneIndex + getBoneInfo(nBoneIndex)->getParentIndexOffset();
 }
 
@@ -1434,7 +1434,7 @@ void CryModelState::initClass()
 
 void CryModelState::deinitClass()
 {
-	//assert(g_arrEmptyAnimEventArray.empty());
+	//CRYASSERT(g_arrEmptyAnimEventArray.empty());
 	g_arrActiveLayers.clear();
 }
 
@@ -1611,7 +1611,7 @@ CryBone* CryModelState::getBoneGrandChild(int nBone, int i, int j)
 //returns the j-th child of i-th child of the given bone
 int CryModelState::getBoneChildIndex(int nBone, int i)
 {
-	assert(i >= 0 && i < (int)getBoneInfo(nBone)->numChildren());
+	CRYASSERT(i >= 0 && i < (int)getBoneInfo(nBone)->numChildren());
 	return nBone + getBoneInfo(nBone)->getFirstChildIndexOffset() + i;
 }
 
@@ -1938,30 +1938,12 @@ void CryModelState::RemoveSubmesh(unsigned nSlot)
 
 ICryCharSubmesh* CryModelState::GetSubmesh(unsigned i)
 {
-#if defined(LINUX)
-	ICryCharSubmesh* pRes(0);
-	if (i < m_arrSubmeshes.size())
-	{
-		pRes = m_arrSubmeshes[i];
-	}
-	return(pRes);
-#else
-	return i < m_arrSubmeshes.size() ? m_arrSubmeshes[i] : NULL;
-#endif
+	return i < m_arrSubmeshes.size() ? m_arrSubmeshes[i].ptr() : NULL;
 }
 
 CryModelSubmesh* CryModelState::GetCryModelSubmesh(unsigned i)
 {
-#if defined(LINUX)
-	CryModelSubmesh* pRes(0);
-	if (i < m_arrSubmeshes.size())
-	{
-		pRes = m_arrSubmeshes[i];
-	}
-	return(pRes);
-#else
-	return i < m_arrSubmeshes.size() ? m_arrSubmeshes[i] : NULL;
-#endif
+	return i < m_arrSubmeshes.size() ? m_arrSubmeshes[i].ptr() : NULL;
 }
 
 bool CryModelState::SetShaderTemplateName(const char* TemplName, int Id, const char* ShaderName, IMatInfo* pCustomMaterial, unsigned nFlags)
@@ -1994,7 +1976,7 @@ int CryModelState::numLODs() // number of LODs in the 0th submesh
 //////////////////////////////////////////////////////////////////////
 void CryModelState::RenderShadowVolumes(const SRendParams* rParams, int nLimitLOD)
 {
-	assert(Get3DEngine());						// should be always there
+	CRYASSERT(Get3DEngine());						// should be always there
 
 	for (SubmeshArray::iterator it = m_arrSubmeshes.begin(); it != m_arrSubmeshes.end(); ++it)
 		if (*it)(*it)->RenderShadowVolumes(rParams, nLimitLOD);

@@ -83,20 +83,19 @@ const char* CBrush::GetEntityClassName() const
 
 const Vec3d& CBrush::GetPos(bool bWorldOnly) const
 {
-	assert(bWorldOnly);
+	CRYASSERT(bWorldOnly);
 	return m_vPos;
 }
 
 const Vec3d& CBrush::GetAngles(int realA) const
 {
-	assert(0);
 	return m_vAngles;
 }
 
 float CBrush::GetScale() const
 {
 	return 1.f;
-	//	assert(0);
+	//	CRYASSERT(0);
 		//return m_fScale;
 }
 
@@ -130,7 +129,7 @@ bool CBrush::DrawEntity(const struct SRendParams& _EntDrawParams)
 {
 	FUNCTION_PROFILER_FAST(GetSystem(), PROFILE_3DENGINE, m_bProfilerEnabled);
 
-	assert(m_nObjectTypeID >= 0 && m_nObjectTypeID < m_lstBrushTypes.Count());
+	CRYASSERT(m_nObjectTypeID >= 0 && m_nObjectTypeID < m_lstBrushTypes.Count());
 
 	if (m_dwRndFlags & ERF_HIDDEN)
 		return false;
@@ -189,7 +188,7 @@ bool CBrush::DrawEntity(const struct SRendParams& _EntDrawParams)
 						for (int k = 0; m_arrOcclusionLightOwners[k] && k < 4; k++)
 							if ((IEntityRender*)-1 == m_arrOcclusionLightOwners[k])
 							{
-								assert(k >= 0 && k < 4);
+								CRYASSERT(k >= 0 && k < 4);
 								rParms.arrOcclusionLightIds[k] = pDynLight->m_Id + 1;
 							}
 					}
@@ -198,7 +197,7 @@ bool CBrush::DrawEntity(const struct SRendParams& _EntDrawParams)
 						for (int k = 0; m_arrOcclusionLightOwners[k] && k < 4; k++)
 							if (pDynLight->m_pOwner == m_arrOcclusionLightOwners[k])
 							{
-								assert(k >= 0 && k < 4);
+								CRYASSERT(k >= 0 && k < 4);
 								rParms.arrOcclusionLightIds[k] = pDynLight->m_Id + 1;
 							}
 					}
@@ -413,7 +412,7 @@ CBrush::~CBrush()
 	//if(GetRndFlags() & ERF_MERGED_NEW && m_nObjectTypeID>=0)
 	//{
 	//	CStatObj * pBody = (CStatObj*)m_lstBrushTypes[m_nObjectTypeID];
-	//	assert(pBody->m_nUsers==1);
+	//	CRYASSERT(pBody->m_nUsers==1);
 	//	delete pBody;
 	//	m_lstBrushTypes[m_nObjectTypeID] = NULL;
 	//	m_nObjectTypeID=-1;
@@ -424,7 +423,7 @@ CBrush::~CBrush()
 
 void CBrush::Physicalize(bool bInstant)
 {
-	assert(m_nObjectTypeID >= 0);
+	CRYASSERT(m_nObjectTypeID >= 0);
 	CStatObj* pBody = (CStatObj*)m_lstBrushTypes[m_nObjectTypeID];
 
 	float fScaleX = m_Matrix.GetOrtX().len();
@@ -865,7 +864,7 @@ void CObjManager::MergeBrushes()
 				continue;
 
 			const EERType eType = pBrush->GetEntityRenderType();
-			assert(eType == eERType_Brush);
+			CRYASSERT(eType == eERType_Brush);
 			if (eType != eERType_Brush)
 				continue;
 
@@ -993,7 +992,7 @@ void CObjManager::MergeBrushes()
 				if (newMatInfo.nNumIndices)
 					lstChunks.Add(newMatInfo);
 				else
-					assert(!newMatInfo.nNumVerts);
+					CRYASSERT(!newMatInfo.nNumVerts);
 			}
 			nCurVertsNum += pLB->m_SecVertCount;
 
@@ -1047,8 +1046,8 @@ void CObjManager::MergeBrushes()
 				lstChunks[i].nFirstVertId, lstChunks[i].nNumVerts,
 				lstChunks[i].nFirstIndexId, lstChunks[i].nNumIndices, i, true);
 
-			assert(lstChunks[i].GetShaderItem().m_pShaderResources);
-			assert(lstChunks[i].GetShaderItem().m_pShader);
+			CRYASSERT(lstChunks[i].GetShaderItem().m_pShaderResources);
+			CRYASSERT(lstChunks[i].GetShaderItem().m_pShader);
 			pNewLB->m_pMats->Get(i)->shaderItem = lstChunks[i].GetShaderItem();
 
 			pNewLB->m_pMats->Get(i)->shaderItem.m_pShader->AddRef();
@@ -1102,8 +1101,8 @@ void CObjManager::MergeBrushes()
 		Vec3d vCenter = (pNewBrush->m_vWSBoxMin + pNewBrush->m_vWSBoxMax) * 0.5f;
 		float fEntDistance = GetDist2D(vCamPos.x, vCamPos.y, vCenter.x, vCenter.y);
 
-		assert(fEntDistance >= 0);
-		assert(_finite(fEntDistance));
+		CRYASSERT(fEntDistance >= 0);
+		CRYASSERT(_finite(fEntDistance));
 
 		newBrushes.Add(pNewBrush);
 	}
@@ -1145,7 +1144,7 @@ void CObjManager::MergeBrushes()
 void CObjManager::LoadBrushes()
 {
 	GetLog()->UpdateLoadingScreen("\003Loading brushes ... ");
-	assert(!m_lstBrushContainer.Count());
+	CRYASSERT(!m_lstBrushContainer.Count());
 	for (int i = 0; i < m_lstBrushContainer.Count(); i++)
 	{
 		UnRegisterEntity(m_lstBrushContainer[i]);
@@ -1250,7 +1249,7 @@ void CObjManager::LoadBrushes()
 			nBrushGeomId = CBrush::m_lstBrushTypes.Count() - 1;
 		}
 
-		assert(nBrushGeomId >= 0);
+		CRYASSERT(nBrushGeomId >= 0);
 
 		if (GetCVars()->e_stream_cgf)
 		{
@@ -1364,7 +1363,7 @@ void CBrush::CheckPhysicalized()
 
 int CBrush::DestroyPhysicalEntityCallback(IPhysicalEntity* pent)
 {
-	//  assert(pent == m_pPhysEnt);
+	//  CRYASSERT(pent == m_pPhysEnt);
 
 	/*  for(int i=0; i<2; i++)
 	  {
@@ -1413,7 +1412,7 @@ void CBrush::Serialize(bool bSave, ICryPak* pPak, FILE* f)
 
 			pPak->FWrite(&m_pLMTCBuffer->m_SecVertCount, sizeof(m_pLMTCBuffer->m_SecVertCount), 1, f);
 			byte* pData = (byte*)m_pLMTCBuffer->m_pSecVertBuffer->m_VS[VSF_GENERAL].m_VData;
-			assert(m_VertexSize[m_pLMTCBuffer->m_pSecVertBuffer->m_vertexformat] == 12);
+			CRYASSERT(m_VertexSize[m_pLMTCBuffer->m_pSecVertBuffer->m_vertexformat] == 12);
 			int nSize = m_VertexSize[m_pLMTCBuffer->m_pSecVertBuffer->m_vertexformat] * m_pLMTCBuffer->m_SecVertCount;
 			pPak->FWrite(&m_pLMTCBuffer->m_SecVertCount, sizeof(m_pLMTCBuffer->m_SecVertCount), 1, f);
 		}
@@ -1440,7 +1439,6 @@ void CBrush::Serialize(bool bSave, ICryPak* pPak, FILE* f)
 
 		if (nSize)
 		{
-			assert(0);
 			int nVertCount = 0;
 			pPak->FRead(&nVertCount, sizeof(nVertCount), 1, f);
 			byte* pData = new byte[nVertCount * 12];
@@ -1451,7 +1449,7 @@ void CBrush::Serialize(bool bSave, ICryPak* pPak, FILE* f)
 				pData, nVertCount, VERTEX_FORMAT_P3F,
 				0, 0, R_PRIMV_TRIANGLES, "LMapTexCoordsStreamed", eBT_Static);
 
-			assert(m_VertexSize[m_pLMTCBuffer->m_pSecVertBuffer->m_vertexformat] == 12);
+			CRYASSERT(m_VertexSize[m_pLMTCBuffer->m_pSecVertBuffer->m_vertexformat] == 12);
 		}
 		else
 		{

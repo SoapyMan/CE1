@@ -23,10 +23,10 @@ CMTSafeHeap::CMTSafeHeap(unsigned nInitialSize, unsigned nMaxSize)
 CMTSafeHeap::~CMTSafeHeap()
 {
 #if !defined(LINUX)
-	assert(m_numAllocations == 0);
+	CRYASSERT(m_numAllocations == 0);
 #endif
 #if !USE_CRT
-	assert(HeapValidate(m_hHeap, 0, NULL));
+	CRYASSERT(HeapValidate(m_hHeap, 0, NULL));
 	HeapDestroy(m_hHeap);
 #endif
 }
@@ -87,6 +87,6 @@ void CMTSafeHeap::Free(void* p)
 		bFreed = true;
 #endif
 		InterlockedDecrement(&m_numAllocations);
-		assert(bFreed);
+		CRYASSERT(bFreed);
 	}
 }

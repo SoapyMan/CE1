@@ -23,7 +23,7 @@
 //////////////////////////////////////////////////////////////////////////
 CParticleEffect::CParticleEffect(CPartManager* pPartManager)
 {
-	assert(pPartManager);
+	CRYASSERT(pPartManager);
 	m_pPartManager = pPartManager;
 	m_bLoaded = false;
 	m_bEnabled = true;
@@ -81,21 +81,21 @@ int CParticleEffect::GetChildCount() const
 //////////////////////////////////////////////////////////////////////////
 IParticleEffect* CParticleEffect::GetChild(int index) const
 {
-	assert(index >= 0 && index < (int)m_childs.size());
+	CRYASSERT(index >= 0 && index < (int)m_childs.size());
 	return m_childs[index];
 }
 
 //////////////////////////////////////////////////////////////////////////
 void CParticleEffect::AddChild(IParticleEffect* pEffect)
 {
-	assert(pEffect);
+	CRYASSERT(pEffect);
 	m_childs.push_back(pEffect);
 }
 
 //////////////////////////////////////////////////////////////////////////
 void CParticleEffect::RemoveChild(IParticleEffect* pEffect)
 {
-	assert(pEffect);
+	CRYASSERT(pEffect);
 	stl::find_and_erase(m_childs, pEffect);
 }
 
@@ -113,7 +113,7 @@ void CParticleEffect::InsertChild(int slot, IParticleEffect* pEffect)
 	if (slot > (int)m_childs.size())
 		slot = (int)m_childs.size();
 
-	assert(pEffect);
+	CRYASSERT(pEffect);
 	m_childs.insert(m_childs.begin() + slot, pEffect);
 }
 
@@ -341,7 +341,7 @@ bool CParticleEffect::IsResourcesLoaded()
 //////////////////////////////////////////////////////////////////////////
 void CParticleEffect::SetMaterial(int process, IMatInfo* pMaterial)
 {
-	assert(process >= 0 && process < NUM_PARTICLE_PROCESSES);
+	CRYASSERT(process >= 0 && process < NUM_PARTICLE_PROCESSES);
 	m_pMaterials[process] = pMaterial;
 	if (pMaterial)
 		pMaterial->SetFlags(pMaterial->GetFlags() | MIF_WASUSED);
@@ -357,7 +357,7 @@ void CParticleEffect::SetMaterial(int process, IMatInfo* pMaterial)
 //////////////////////////////////////////////////////////////////////////
 void CParticleEffect::SetMaterialName(int process, const char* sMtlName)
 {
-	assert(process >= 0 && process < NUM_PARTICLE_PROCESSES);
+	CRYASSERT(process >= 0 && process < NUM_PARTICLE_PROCESSES);
 	m_material[process] = sMtlName;
 	AssignMaterial(process);
 }
@@ -365,14 +365,14 @@ void CParticleEffect::SetMaterialName(int process, const char* sMtlName)
 //////////////////////////////////////////////////////////////////////////
 const char* CParticleEffect::GetMaterialName(int process) const
 {
-	assert(process >= 0 && process < NUM_PARTICLE_PROCESSES);
+	CRYASSERT(process >= 0 && process < NUM_PARTICLE_PROCESSES);
 	return m_material[process].c_str();
 }
 
 //////////////////////////////////////////////////////////////////////////
 void CParticleEffect::AssignMaterial(int process)
 {
-	assert(process >= 0 && process < NUM_PARTICLE_PROCESSES);
+	CRYASSERT(process >= 0 && process < NUM_PARTICLE_PROCESSES);
 	IMatInfo* pMtl = 0;
 	if (m_material[process].empty())
 	{

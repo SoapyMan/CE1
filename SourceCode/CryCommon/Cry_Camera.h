@@ -156,7 +156,7 @@ public:
 		case 2:	return crtp;
 		case 3:	return crbp;
 		}
-		assert(0);
+		CRYASSERT_FAIL("invalid id %d", nId);
 		return Vec3d(0, 0, 0);
 	}
 
@@ -169,7 +169,7 @@ public:
 		case 2:	crtp = vVert;		return;
 		case 3:	crbp = vVert;		return;
 		}
-		assert(0);
+		CRYASSERT_FAIL("invalid id %d", nId);
 	}
 
 	Vec3 m_vOffset;
@@ -314,9 +314,9 @@ public:
 */
 inline void	CCamera::Init(int nWidth, int nHeight, float fFova = DEFAULT_FOV, float fZMAX = DEFAULT_ZMAX, float fProjectionRatio = 0, float fZMIN = DEFAULT_ZMIN)
 {
-	assert(fZMIN > 0.01f); //check if near-plane is valid
-	assert(fZMAX > 0.01f); //check if far-plane is valid
-	assert(fZMAX > fZMIN); //check if far-plane bigger then near-plane
+	CRYASSERT(fZMIN > 0.01f); //check if near-plane is valid
+	CRYASSERT(fZMAX > 0.01f); //check if far-plane is valid
+	CRYASSERT(fZMAX > fZMIN); //check if far-plane bigger then near-plane
 
 	m_ViewSurfaceX = (float)(nWidth);		//suface x-resolution
 	m_ViewSurfaceZ = (float)(nHeight);	//suface z-resolution
@@ -346,9 +346,9 @@ inline void CCamera::Update(int nWidth = -1, int nHeight = -1) {
 	if (nWidth != -1) m_ViewSurfaceX = (float)(nWidth);		//suface x-resolution
 	if (nHeight != -1) m_ViewSurfaceZ = (float)(nHeight);	//suface z-resolution
 
-	assert(m_edge_nlt.y > 0.009f);	//check if near-plane is valid
-	assert(m_ZMax > 0.01f);				//check if far-plane is valid
-	assert(m_ZMax > m_edge_nlt.y); //check if far-plane bigger then near-plane
+	CRYASSERT(m_edge_nlt.y > 0.009f);	//check if near-plane is valid
+	CRYASSERT(m_ZMax > 0.01f);				//check if far-plane is valid
+	CRYASSERT(m_ZMax > m_edge_nlt.y); //check if far-plane bigger then near-plane
 
 	Ang3 ca = ConvertToRad(m_GameAnglesDeg);
 	Matrix34 t = Matrix34::CreateTranslationMat(-m_Position);

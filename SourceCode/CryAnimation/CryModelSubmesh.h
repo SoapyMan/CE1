@@ -199,7 +199,7 @@ protected:
 	ShaderTemplates m_arrShaderTemplates[2];
 	ShaderTemplates& getShaderTemplates(int nId)
 	{
-		assert(nId >= 0 && nId < 2);
+		CRYASSERT(nId >= 0 && nId < 2);
 		return m_arrShaderTemplates[nId];
 	}
 

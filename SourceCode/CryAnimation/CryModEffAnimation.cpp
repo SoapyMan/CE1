@@ -242,7 +242,7 @@ unsigned CCryModEffAnimation::Tick(
 	float fBlendWeight = 1;
 
 	// Compute the current blend factor
-	assert(m_fBlendInTime >= m_fBlendInCountdown);
+	CRYASSERT(m_fBlendInTime >= m_fBlendInCountdown);
 	if (m_fBlendInCountdown > 0)
 	{
 		m_fBlendInCountdown -= (float)fabs(fDeltaTime);

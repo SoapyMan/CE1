@@ -1,8 +1,6 @@
 #ifndef _CRY_ANIMATION_QUATERNION_EXPONENT_HDR_
 #define _CRY_ANIMATION_QUATERNION_EXPONENT_HDR_
 
-#include "platform.h"
-
 #if defined(_CPU_X86) && !defined(LINUX)
 #ifdef __cplusplus
 extern "C" {

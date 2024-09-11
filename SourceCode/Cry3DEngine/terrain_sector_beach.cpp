@@ -148,7 +148,7 @@ int CBeachGenerator::MarkWaterAreas()
 			}
 			else
 			{
-				assert(0);
+				CRYASSERT(0);
 			}
 
 		}
@@ -343,7 +343,7 @@ void CSectorInfo::MakeBeachStage2(FILE* hFileToSave)
 					t++;
 				}
 
-				//  assert(t<100);
+				//  CRYASSERT(t<100);
 
 			/*      if( border_pos.x>=m_nOriginX &&
 					  border_pos.y>=m_nOriginY &&
@@ -732,7 +732,7 @@ void CSectorInfo::MakeBeachStage2(FILE* hFileToSave)
 		0, m_nVertNumBeach,
 		0, lstBeachIndices.Count());
 
-	assert(m_pLeafBufferBeach);
+	CRYASSERT(m_pLeafBufferBeach);
 	delete[] m_pVertBufferBeach; m_pVertBufferBeach = 0;
 }
 
@@ -752,7 +752,7 @@ void CSectorInfo::LoadBeach(FILE* hFileToLoad)
 	if (nReadedIndex != GetSecIndex())
 	{
 		GetConsole()->Exit("CSectorInfo::LoadBeach: File beach.tmp is corrupted, try to delete this file (or all *.tmp files) and run again");
-		assert(0); // Exit should do exit 
+		CRYASSERT(0); // Exit should do exit 
 	}
 
 	m_bBeachPresent = true;
@@ -765,7 +765,7 @@ void CSectorInfo::LoadBeach(FILE* hFileToLoad)
 	if (!m_nVertNumBeach)
 		return; // no beach here
 
-	assert(m_nVertNumBeach <= 2048);
+	CRYASSERT(m_nVertNumBeach <= 2048);
 
 	if (m_nVertNumBeach > 2048)
 		return; // no beach here
@@ -804,7 +804,7 @@ void CSectorInfo::LoadBeach(FILE* hFileToLoad)
 			0, m_nVertNumBeach,
 			0, lstBeachIndices.Count());
 
-	assert(m_pLeafBufferBeach);
+	CRYASSERT(m_pLeafBufferBeach);
 	delete[] m_pVertBufferBeach; m_pVertBufferBeach = 0;
 }
 

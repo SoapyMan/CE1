@@ -163,7 +163,7 @@ void CCGPShader_D3D::mfAddFXParameter(SFXParam* pr, const char* ParamName, SShad
 		}
 		break;
 		default:
-			assert(0);
+			CRYASSERT(0);
 		}
 		m_ParamsNoObj.AddElem(CGpr);
 	}
@@ -236,8 +236,8 @@ struct SAliasSampler
 
 void CCGPShader_D3D::mfGatherFXParameters(const char* buf, SShaderPassHW* pSHPass, std::vector<SFXParam>& Params, std::vector<SFXSampler>& Samplers, std::vector<SFXTexture>& Textures, SShader* ef)
 {
-	assert(m_Insts.Num());
-	assert(!pSHPass->m_TUnits.Num());
+	CRYASSERT(m_Insts.Num());
+	CRYASSERT(!pSHPass->m_TUnits.Num());
 
 	if (!m_Insts.Num())
 		return;
@@ -245,7 +245,7 @@ void CCGPShader_D3D::mfGatherFXParameters(const char* buf, SShaderPassHW* pSHPas
 	if (!cgi->m_BindVars)
 		return;
 	int i, j;
-	assert(*buf == '(');
+	CRYASSERT(*buf == '(');
 	buf++;
 	SAliasSampler samps[MAX_TMU];
 	int nMaxSampler = -1;
@@ -273,7 +273,7 @@ void CCGPShader_D3D::mfGatherFXParameters(const char* buf, SShaderPassHW* pSHPas
 					an.NameINT = PSParam;
 				else
 				{
-					assert(0);
+					CRYASSERT(0);
 					an.NameINT = szParam;
 				}
 				Aliases.push_back(an);
@@ -294,7 +294,7 @@ void CCGPShader_D3D::mfGatherFXParameters(const char* buf, SShaderPassHW* pSHPas
 						an.NameINT = PSParam;
 					else
 					{
-						assert(0);
+						CRYASSERT(0);
 						an.NameINT = szParam;
 					}
 					Aliases.push_back(an);
@@ -318,9 +318,13 @@ void CCGPShader_D3D::mfGatherFXParameters(const char* buf, SShaderPassHW* pSHPas
 			if (al->NameINT == paramINT)
 			{
 				if (!bSampler)
-					assert(al->bParam);
+				{
+					CRYASSERT(al->bParam);
+				}
 				else
-					assert(!al->bParam);
+				{
+					CRYASSERT(!al->bParam);
+				}
 				param = al->Name.c_str();
 				break;
 			}
@@ -339,7 +343,7 @@ void CCGPShader_D3D::mfGatherFXParameters(const char* buf, SShaderPassHW* pSHPas
 			if (j == Params.size())
 			{
 				// const parameters aren't listed in Params
-				// assert(0);
+				// CRYASSERT(0);
 			}
 		}
 		else
@@ -357,7 +361,7 @@ void CCGPShader_D3D::mfGatherFXParameters(const char* buf, SShaderPassHW* pSHPas
 				}
 			}
 			if (j == Samplers.size())
-				assert(0);
+				CRYASSERT(0);
 		}
 	}
 	for (i = 0; i <= nMaxSampler; i++)
@@ -365,7 +369,7 @@ void CCGPShader_D3D::mfGatherFXParameters(const char* buf, SShaderPassHW* pSHPas
 		SFXSampler* smp = samps[i].fxSampler;
 		if (!smp)
 			continue;
-		assert(smp->m_nTextureID < Textures.size());
+		CRYASSERT(smp->m_nTextureID < Textures.size());
 		SFXTexture* tx = &Textures[smp->m_nTextureID];
 #ifdef USE_FX
 		gRenDev->m_cEF.mfParseFXTechnique_LoadShaderTexture(smp, tx, pSHPass, ef, i, eCO_NOSET, eCO_NOSET, DEF_TEXARG0, DEF_TEXARG0);
@@ -1090,7 +1094,7 @@ void CCGPShader_D3D::mfSetVariables(TArray<SCGParam4f>* Vars)
 		{
 			float matr[4][4];
 			int nLast = i + p->m_nComponents;
-			assert(nLast <= Vars->Num());
+			CRYASSERT(nLast <= Vars->Num());
 			int n = 0;
 			for (; i < nLast; i++, n++)
 			{
@@ -1598,7 +1602,7 @@ bool CCGPShader_D3D::mfActivate()
 							m_CGProfileType = CG_PROFILE_PS_1_1;
 			}
 		}
-		assert(!m_Insts[m_CurInst].m_BindVars);
+		CRYASSERT(!m_Insts[m_CurInst].m_BindVars);
 		if (pbuf)
 		{
 			RemoveCR(pbuf);
@@ -1680,7 +1684,7 @@ bool CCGPShader_D3D::mfActivate()
 									m_Insts[m_CurInst].m_BindVars = new TArray<SCGBind>;
 								cgp.m_nComponents = 1;
 								cgp.m_Name = szName;
-								assert(!strncmp(szhReg, "texunit", 7));
+								CRYASSERT(!strncmp(szhReg, "texunit", 7));
 								char* szSize = sGetText(&token);
 								cgp.m_dwBind = atoi(szSize) | SHADER_BIND_SAMPLER;
 								m_Insts[m_CurInst].m_BindVars->AddElem(cgp);
@@ -1742,7 +1746,7 @@ bool CCGPShader_D3D::mfActivate()
 					}
 				}
 			}
-			assert(!m_Insts[m_CurInst].m_BindVars || m_Insts[m_CurInst].m_BindVars->Num() <= 30);
+			CRYASSERT(!m_Insts[m_CurInst].m_BindVars || m_Insts[m_CurInst].m_BindVars->Num() <= 30);
 			SAFE_DELETE_ARRAY(pbuf);
 			if (pCode && !bUseACIICache)
 				CreateCacheItem(m_Insts[m_CurInst].m_LightMask, (byte*)pCode->GetBufferPointer(), pCode->GetBufferSize());
@@ -1937,7 +1941,7 @@ char* CCGPShader_D3D::mfLoadCG_Int(char* prog_text)
 		FILE* fp = fopen("$$in.cg", "w");
 		if (!fp)
 			return NULL;
-		assert(*prog_text);
+		CRYASSERT(*prog_text);
 		fputs(prog_text, fp);
 		fclose(fp);
 

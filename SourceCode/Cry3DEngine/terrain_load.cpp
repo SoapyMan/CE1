@@ -274,7 +274,7 @@ int __cdecl CTerrain__Cmp_Int(const void* v1, const void* v2)
 
 void CTerrain::LoadStatObjInstances()
 {
-	assert(this); if (!this) return;
+	CRYASSERT(this); if (!this) return;
 
 	GetLog()->Log("Loading static object positions ...");
 

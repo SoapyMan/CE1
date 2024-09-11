@@ -178,7 +178,7 @@ static char* sETFToStr(ETEX_Format ETF)
 		sETF = "RGBA";
 		break;
 	default:
-		assert(0);
+		CRYASSERT(0);
 		sETF = "Unknown";		// for better behaviour in non debug
 		break;
 	}
@@ -476,7 +476,7 @@ void CTextureStreamCallback::StreamOnComplete(IReadStream* pStream, unsigned nEr
 	for (i = pTexCacheFileInfo->m_nStartLoadMip; i <= pTexCacheFileInfo->m_nEndLoadMip; i++)
 	{
 		SMipmap* mp = tp->m_Mips[nS][i];
-		assert(mp);
+		CRYASSERT(mp);
 
 		mp->m_bLoading = false;
 		if (!mp->m_bUploaded || (CRenderer::CV_r_texturesstreamingonlyvideo && !mp->DataArray.GetSize())) // Already uploaded synchronously
@@ -705,7 +705,7 @@ void STexPic::LoadFromCache(int Flags, float fDist)
 				return;  // Should never happen
 			m_CacheID = rf->mfFileGetNum(name);
 		}
-		assert(m_CacheID >= 0);
+		CRYASSERT(m_CacheID >= 0);
 		rf->mfFileSeek(m_CacheID, 0, SEEK_SET);
 		rf->mfFileRead2(m_CacheID, sizeof(STexCacheFileHeader), &m_CacheFileHeader);
 		nSides = m_CacheFileHeader.m_nSides;
@@ -719,7 +719,7 @@ void STexPic::LoadFromCache(int Flags, float fDist)
 	nSides = fh->m_nSides;
 	nMips = fh->m_nMips;
 
-	assert(nMips == m_nMips);
+	CRYASSERT(nMips == m_nMips);
 
 	if (!m_Mips[0])
 		CreateMips();
@@ -806,7 +806,7 @@ void STexPic::LoadFromCache(int Flags, float fDist)
 	{
 		PROFILE_FRAME(Texture_LoadFromCacheSync);
 
-		assert(nSyncStartMip <= nSyncEndMip);
+		CRYASSERT(nSyncStartMip <= nSyncEndMip);
 		int nSeekFromStart = 0;
 		for (i = 0; i < nSyncStartMip; i++)
 		{
@@ -872,7 +872,7 @@ void STexPic::LoadFromCache(int Flags, float fDist)
 				mp = m_Mips[j][i];
 				if (!mp->DataArray.GetSize())
 					mp->DataArray.Alloc(mh[i].m_Size);
-				assert(!mp->m_bUploaded);
+				CRYASSERT(!mp->m_bUploaded);
 				gRenDev->m_TexMan->m_LoadBytes += mh[i].m_Size;
 				SizeToLoad += mh[i].m_Size;
 				if (fp)
@@ -946,7 +946,7 @@ void STexPic::LoadFromCache(int Flags, float fDist)
 	{
 		PROFILE_FRAME(Texture_LoadFromCacheASync);
 
-		assert(nASyncStartMip <= nASyncEndMip);
+		CRYASSERT(nASyncStartMip <= nASyncEndMip);
 		int nSeekFromStart = 0;
 		for (i = 0; i < nASyncStartMip; i++)
 		{
@@ -1070,7 +1070,7 @@ static ETEX_Format sStrToETF(const char* sETF)
 		return eTF_DSDT_MAG;
 	if (!stricmp(sETF, "DSDT"))
 		return eTF_DSDT;
-	assert(0);
+	CRYASSERT(0);
 	return eTF_8888;
 }
 
@@ -1082,7 +1082,7 @@ static ETexType sStrToETT(const char* sETT)
 		return eTT_Rectangle;
 	if (!stricmp(sETT, "Cubemap"))
 		return eTT_Cubemap;
-	assert(0);
+	CRYASSERT(0);
 	return eTT_Base;
 }
 
@@ -1263,7 +1263,7 @@ STexPic* CTexMan::LoadFromCache(STexPic* ti, int flags, int flags2, char* name, 
 			int hgt = im.mfGet_height();
 			for (i = 0; i < nMips; i++)
 			{
-				assert(wdt || hgt);
+				CRYASSERT(wdt || hgt);
 				if (!wdt)
 					wdt = 1;
 				if (!hgt)
@@ -1405,7 +1405,7 @@ STexPic* CTexMan::LoadFromCache(STexPic* ti, int flags, int flags2, char* name, 
 	{
 		tgt = TEXTGT_CUBEMAP;
 		int n = strlen(ti->m_SearchName.c_str()) - 4;
-		assert(n > 0);
+		CRYASSERT(n > 0);
 		if (!strcmp(&ti->m_SearchName.c_str()[n], "posx"))
 			CubeSide = 0;
 		else
@@ -1495,7 +1495,7 @@ STexPic* CTexMan::LoadFromCache(STexPic* ti, int flags, int flags2, char* name, 
 
 		if (nSyncStartMip >= 0)
 		{
-			assert(nSyncStartMip <= nSyncEndMip);
+			CRYASSERT(nSyncStartMip <= nSyncEndMip);
 			int nSeekFromStart = 0;
 			for (i = 0; i < nSyncStartMip; i++)
 			{
@@ -1561,7 +1561,7 @@ STexPic* CTexMan::LoadFromCache(STexPic* ti, int flags, int flags2, char* name, 
 					mp = ti->m_Mips[j][i];
 					if (!mp->DataArray.GetSize())
 						mp->DataArray.Alloc(mh[i].m_Size);
-					assert(!mp->m_bUploaded);
+					CRYASSERT(!mp->m_bUploaded);
 					gRenDev->m_TexMan->m_LoadBytes += mh[i].m_Size;
 					SizeToLoad += mh[i].m_Size;
 					if (fp)

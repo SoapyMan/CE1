@@ -276,7 +276,7 @@ inline bool CIndexedMesh__LoadMaterial(const char* szFileName, const char* szFol
 
 	if (!pRenderer)
 	{ // in compiler remember also source MAT_ENTITY
-		assert(newMat.pMatEnt != me);
+		CRYASSERT(newMat.pMatEnt != me);
 		newMat.pMatEnt = new MAT_ENTITY;
 		*newMat.pMatEnt = *me;
 	}

@@ -47,7 +47,7 @@ void CXSystemServer::Release()
 //////////////////////////////////////////////////////////////////////
 bool CXSystemServer::LoadLevel(const char *szLevelDir,const char *szMissionName, bool bEditor)
 {
-	assert(!m_pGame->m_pServer->m_bIsLoadingLevel);
+	CRYASSERT(!m_pGame->m_pServer->m_bIsLoadingLevel);
 	m_pGame->m_pServer->m_bIsLoadingLevel=true;
 
 	//////////////////////////////////////////////////////////////////////////
@@ -103,7 +103,7 @@ void CXSystemServer::OnReadyToLoadLevel( SMissionInfo &missionInfo )
 {
 	IGameMods *pGameMods=m_pGame->GetModsInterface();
 
-	assert(pGameMods);			// Game Init failed?
+	CRYASSERT(pGameMods);			// Game Init failed?
 
 	///////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////
@@ -205,7 +205,7 @@ void	CXSystemServer::UnbindEntity(EntityId idParent,EntityId idChild)
 bool CXSystemServer::LoadCharacter(IEntity* pEntity, const char *szModel)
 {
 	// Timur[8/23/2001] 
-	ASSERT(pEntity);
+	CRYASSERT(pEntity);
 	
 	return true;
 }

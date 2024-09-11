@@ -253,7 +253,7 @@ GSvoid NewUbisoftClient::RcvAuthorizationID(PREPLY_INFORMATION psReplyInfo,
 		BYTE bFakeAuthorizationID[AUTHORIZATION_ID_SIZE];
 		memset(bFakeAuthorizationID, 0, AUTHORIZATION_ID_SIZE);
 
-		assert(m_pSystem->GetINetwork()->GetClient());
+		CRYASSERT(m_pSystem->GetINetwork()->GetClient());
 		m_pSystem->GetINetwork()->GetClient()->OnCDKeyAuthorization(bFakeAuthorizationID);
 		return;
 	}
@@ -267,7 +267,7 @@ GSvoid NewUbisoftClient::RcvAuthorizationID(PREPLY_INFORMATION psReplyInfo,
 	m_pLog->Log("\001Ubi.com: CDKey RcvAuthorizationID Success");
 	//TODO: Send the Authorization ID to the game server.
 
-	assert(m_pSystem->GetINetwork()->GetClient());
+	CRYASSERT(m_pSystem->GetINetwork()->GetClient());
 	m_pSystem->GetINetwork()->GetClient()->OnCDKeyAuthorization(pucAuthorizationID);
 }
 
@@ -361,7 +361,7 @@ void NewUbisoftClient::RcvValidationResponse(PREPLY_INFORMATION psReplyInfo,
 	IServer* pServer = m_pSystem->GetINetwork()->GetServerByPort(m_usGamePort);
 	if (!pServer)
 	{
-		assert(pServer);
+		CRYASSERT(pServer);
 		return;						// better we ignore this
 	}
 
@@ -431,7 +431,7 @@ void NewUbisoftClient::RcvPlayerStatusRequest(PVALIDATION_SERVER_INFO psValidati
 		IServer* pServer = m_pSystem->GetINetwork()->GetServerByPort(m_usGamePort);
 		if (!pServer)
 		{
-			assert(pServer);
+			CRYASSERT(pServer);
 			return;						// better we ignore this
 		}
 

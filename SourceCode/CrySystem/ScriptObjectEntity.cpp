@@ -60,10 +60,10 @@ bool CScriptObjectEntity::Create(IScriptSystem* pScriptSystem, ISystem* pSystem)
 	m_pSoundSystem = m_pISystem->GetISoundSystem();
 	m_nCurrSoundId = -1;
 	Init(pScriptSystem, this);
-	assert(m_pScriptThis);
+	CRYASSERT(m_pScriptThis);
 	m_pScriptThis->RegisterParent(this);
 
-	assert(m_pScriptThis);
+	CRYASSERT(m_pScriptThis);
 	return true;
 }
 
@@ -80,14 +80,14 @@ void CScriptObjectEntity::SetMemberVector(SOE_MEMBER_LUA_TABLES member, const Ve
 
 void CScriptObjectEntity::SetEntity(IEntity* pEntity)
 {
-	assert(m_pScriptThis);
+	CRYASSERT(m_pScriptThis);
 	m_pEntity = pEntity;
-	assert(m_pScriptThis);
+	CRYASSERT(m_pScriptThis);
 	_SmartScriptObject pObj(m_pScriptSystem, true);
-	assert(m_pScriptThis);
+	CRYASSERT(m_pScriptThis);
 
 	string sClassname = m_pEntity->GetEntityClassName();
-	assert(m_pScriptThis);
+	CRYASSERT(m_pScriptThis);
 	if (!m_pScriptSystem->GetGlobalValue(sClassname.c_str(), *pObj))
 	{
 		m_pISystem->GetILog()->LogToFile("[FATAL ERROR] Script table %s not found. Probably script was not loaded because of an error.", sClassname.c_str());
@@ -100,30 +100,30 @@ void CScriptObjectEntity::SetEntity(IEntity* pEntity)
 
 		//m_pISystem->Quit();
 	}
-	assert(m_pScriptThis);
+	CRYASSERT(m_pScriptThis);
 	m_pScriptThis->Clone(*pObj);
-	assert(m_pScriptThis);
+	CRYASSERT(m_pScriptThis);
 	if (m_pEntity != NULL)
 	{
-		assert(m_pScriptThis);
+		CRYASSERT(m_pScriptThis);
 		m_pScriptThis->SetValue("id", ((int)m_pEntity->GetId()));
-		assert(m_pScriptThis);
+		CRYASSERT(m_pScriptThis);
 		m_pScriptThis->SetValue("classid", ((int)m_pEntity->GetClassId()));
-		assert(m_pScriptThis);
+		CRYASSERT(m_pScriptThis);
 		m_pScriptThis->SetValue("classname", m_pEntity->GetEntityClassName());
-		assert(m_pScriptThis);
+		CRYASSERT(m_pScriptThis);
 	}
 	else
 	{
-		assert(m_pScriptThis);
+		CRYASSERT(m_pScriptThis);
 		m_pScriptThis->SetToNull("id");
-		assert(m_pScriptThis);
+		CRYASSERT(m_pScriptThis);
 		m_pScriptThis->SetToNull("classid");
-		assert(m_pScriptThis);
+		CRYASSERT(m_pScriptThis);
 		m_pScriptThis->SetToNull("classname");
-		assert(m_pScriptThis);
+		CRYASSERT(m_pScriptThis);
 	}
-	assert(m_pScriptThis);
+	CRYASSERT(m_pScriptThis);
 }
 
 void CScriptObjectEntity::ReleaseTemplate()
@@ -594,7 +594,7 @@ int CScriptObjectEntity::KillCharacter(IFunctionHandler* pH)
 */
 int CScriptObjectEntity::LoadObject(IFunctionHandler* pH)
 {
-	assert((unsigned int)(pH->GetParamCount() - 3) < 2u);
+	CRYASSERT((unsigned int)(pH->GetParamCount() - 3) < 2u);
 	const char* sFileName;
 	const char* sGeomName;
 	int nPos;
@@ -791,7 +791,7 @@ int CScriptObjectEntity::EnablePhysics(IFunctionHandler* pH)
 int CScriptObjectEntity::CreateParticlePhys(IFunctionHandler* pH)
 {
 	// CHECK_PARAMETERS(2);
-	assert(pH->GetParamCount() == 2 || pH->GetParamCount() == 3);
+	CRYASSERT(pH->GetParamCount() == 2 || pH->GetParamCount() == 3);
 	float fSize;
 	float fMass;
 	//int nSurfaceID=m_pGame->m_XSurfaceMgr.GetSurfaceIDByMaterialName("mat_bounce");
@@ -818,7 +818,7 @@ int CScriptObjectEntity::CreateArticulatedBody(IFunctionHandler* pH)
 
 int CScriptObjectEntity::CreateRigidOrArticulatedBody(pe_type type, IFunctionHandler* pH)
 {
-	assert(pH->GetParamCount() == 3 || pH->GetParamCount() == 4 || pH->GetParamCount() == 5);
+	CRYASSERT(pH->GetParamCount() == 3 || pH->GetParamCount() == 4 || pH->GetParamCount() == 5);
 	float fDensity;
 	float fMass;
 	int nSurfaceID = 0;
@@ -860,7 +860,7 @@ int CScriptObjectEntity::CreateRigidOrArticulatedBody(pe_type type, IFunctionHan
 
 int CScriptObjectEntity::CreateRigidBodyPiece(IFunctionHandler* pH)
 {
-	assert(pH->GetParamCount() == 3 || pH->GetParamCount() == 4);
+	CRYASSERT(pH->GetParamCount() == 3 || pH->GetParamCount() == 4);
 	float fDensity;
 	float fMass;
 	int nSurfaceID = 0;
@@ -886,7 +886,7 @@ int CScriptObjectEntity::CreateRigidBodyPiece(IFunctionHandler* pH)
 int CScriptObjectEntity::CreateStaticEntity(IFunctionHandler* pH)
 {
 	//	CHECK_PARAMETERS(2);
-	assert((unsigned int)pH->GetParamCount() - 1u < 3u);
+	CRYASSERT((unsigned int)pH->GetParamCount() - 1u < 3u);
 
 	float fMass;
 	int nSurfaceID = -1;
@@ -904,7 +904,7 @@ int CScriptObjectEntity::CreateStaticEntity(IFunctionHandler* pH)
 
 int CScriptObjectEntity::CreateSoftEntity(IFunctionHandler* pH)
 {
-	assert(pH->GetParamCount() >= 2);
+	CRYASSERT(pH->GetParamCount() >= 2);
 	float fMass, fDensity;
 	int bCloth = 1;
 	IEntity* pEnt;
@@ -931,7 +931,7 @@ int CScriptObjectEntity::SetAngles(IFunctionHandler* pH)
 {
 	//	CHECK_PARAMETERS(1);
 	int parCount = pH->GetParamCount();
-	assert(parCount > 0 && parCount < 3);
+	CRYASSERT(parCount > 0 && parCount < 3);
 	Vec3 vec;
 	CScriptObjectVector oVec(m_pScriptSystem, true);
 	pH->GetParam(1, *oVec);
@@ -964,7 +964,7 @@ int CScriptObjectEntity::SetStatObjScale(IFunctionHandler* pH)
 int CScriptObjectEntity::GetAngles(IFunctionHandler* pH)
 {
 	//	CHECK_PARAMETERS(0);
-	assert(pH->GetParamCount() == 0 || pH->GetParamCount() == 1);
+	CRYASSERT(pH->GetParamCount() == 0 || pH->GetParamCount() == 1);
 
 	Ang3 vec;
 	if (pH->GetParamCount() == 0)
@@ -988,7 +988,7 @@ int CScriptObjectEntity::GetAngles(IFunctionHandler* pH)
 int CScriptObjectEntity::GetDirectionVector(IFunctionHandler* pH)
 {
 	//	CHECK_PARAMETERS(0);
-	assert(pH->GetParamCount() == 0 || pH->GetParamCount() == 1);
+	CRYASSERT(pH->GetParamCount() == 0 || pH->GetParamCount() == 1);
 
 	//forward default
 	Vec3 vec(0, -1, 0);
@@ -1115,7 +1115,7 @@ int CScriptObjectEntity::AttachToBone(IFunctionHandler* pH)
 
 int CScriptObjectEntity::Bind(IFunctionHandler* pH)
 {
-	assert(pH->GetParamCount() == 1 || pH->GetParamCount() == 2);
+	CRYASSERT(pH->GetParamCount() == 1 || pH->GetParamCount() == 2);
 	//	CHECK_PARAMETERS(1);
 	int nID;
 	int cParam = 0;
@@ -1137,7 +1137,7 @@ int CScriptObjectEntity::Bind(IFunctionHandler* pH)
 
 int CScriptObjectEntity::Unbind(IFunctionHandler* pH)
 {
-	assert(pH->GetParamCount() == 1 || pH->GetParamCount() == 2);
+	CRYASSERT(pH->GetParamCount() == 1 || pH->GetParamCount() == 2);
 	//	CHECK_PARAMETERS(1);
 	int nID;
 	int cParam = 0;
@@ -1458,7 +1458,7 @@ int CScriptObjectEntity::ResetAnimation(IFunctionHandler* pH)
 int CScriptObjectEntity::GetHelperPos(IFunctionHandler* pH)
 {
 	//	CHECK_PARAMETERS(1);
-	assert(pH->GetParamCount() == 1 || pH->GetParamCount() == 2);
+	CRYASSERT(pH->GetParamCount() == 1 || pH->GetParamCount() == 2);
 
 	const char* helper;
 	bool bUseObjectSpace = false;
@@ -1595,7 +1595,7 @@ int CScriptObjectEntity::ResetPhysics(IFunctionHandler* pH)
 
 int CScriptObjectEntity::AwakeCharacterPhysics(IFunctionHandler* pH)
 {
-	assert(pH->GetParamCount() == 2 || pH->GetParamCount() == 3);
+	CRYASSERT(pH->GetParamCount() == 2 || pH->GetParamCount() == 3);
 	int iSlot, nAwake = 1;
 	pe_action_awake aa;
 	const char* pRootBoneName;
@@ -2182,7 +2182,7 @@ int CScriptObjectEntity::IsAnimationRunning(IFunctionHandler* pH)
 
 int CScriptObjectEntity::AddImpulse(IFunctionHandler* pH)
 {
-	assert(pH->GetParamCount() == 4 || pH->GetParamCount() == 5);
+	CRYASSERT(pH->GetParamCount() == 4 || pH->GetParamCount() == 5);
 
 
 	//	float hitImpulse = m_pGame->p_HitImpulse->GetFVal();
@@ -4673,7 +4673,7 @@ int CScriptObjectEntity::GetEntitiesInContact(IFunctionHandler* pH)
 int CScriptObjectEntity::SetDefaultIdleAnimations(IFunctionHandler* pH)
 {
 	//CHECK_PARAMETERS(1);
-	assert(pH->GetParamCount() == 1 || pH->GetParamCount() == 2);
+	CRYASSERT(pH->GetParamCount() == 1 || pH->GetParamCount() == 2);
 
 	const char* animname = NULL;
 	int pos;
@@ -4700,7 +4700,7 @@ int CScriptObjectEntity::GetAnimationLength(IFunctionHandler* pH)
 		const char *pszAnimName;
 		float fSecLen = 0.0f;
 
-		assert(m_pEntity->GetCharInterface());
+		CRYASSERT(m_pEntity->GetCharInterface());
 
 		CHECK_PARAMETERS(2);
 
@@ -4712,7 +4712,7 @@ int CScriptObjectEntity::GetAnimationLength(IFunctionHandler* pH)
 			return pH->EndFunction(fSecLen);
 
 		IAnimationSet* pAnimations = pCharacter->GetModel()->GetAnimationSet();
-		assert (pAnimations);
+		CRYASSERT (pAnimations);
 		int nAnimationId = pAnimations->Find (pszAnimName);
 		if (nAnimationId >= 0)
 			return pH->EndFunction(pAnimations->GetLength(nAnimationId));
@@ -5067,7 +5067,7 @@ int CScriptObjectEntity::Hide(IFunctionHandler* pH)
 //////////////////////////////////////////////////////////////////////////
 int CScriptObjectEntity::CheckCollisions(IFunctionHandler* pH)
 {
-	assert(pH->GetParamCount() <= 2);
+	CRYASSERT(pH->GetParamCount() <= 2);
 	int iEntTypes = ent_sleeping_rigid | ent_rigid | ent_living, iCollTypes = -1;
 	pH->GetParam(1, iEntTypes);
 	pH->GetParam(2, iCollTypes);

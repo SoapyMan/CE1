@@ -251,7 +251,7 @@ bool CSoundBuffer::Load(bool bLooping, CSound* pSound)
 	}
 	else
 	{
-		ASSERT(m_pSoundSystem->m_pStreamEngine);
+		CRYASSERT(m_pSoundSystem->m_pStreamEngine);
 		//TRACE("Starting Sound-Streaming for %s.", m_Props.sName.c_str());
 		m_pReadStream = m_pSoundSystem->m_pStreamEngine->StartRead("SoundSystem", m_Props.sName.c_str(), this);
 		if (pSound->m_nFlags & FLAG_SOUND_LOAD_SYNCHRONOUSLY)

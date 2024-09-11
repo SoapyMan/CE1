@@ -141,7 +141,7 @@ bool CfgFile::Save(void)
 
 void CfgFile::UpdateOrCreateEntry(const char* inszSection, const char* inszKey, const char* inszValue)
 {
-	Section* sec = FindSection(inszSection);				assert(sec);
+	Section* sec = FindSection(inszSection);				CRYASSERT(sec);
 
 	for (std::list<Entry>::iterator it = sec->entries.begin(); it != sec->entries.end(); ++it)
 	{
@@ -273,7 +273,7 @@ CfgFile::Section* CfgFile::FindSection(const CString& section)
 //////////////////////////////////////////////////////////////////////////
 bool CfgFile::SetConfig(const char* section, IConfig* config)
 {
-	Section* sec = FindSection(section);					assert(sec);
+	Section* sec = FindSection(section);					CRYASSERT(sec);
 
 	for (std::list<Entry>::iterator it = sec->entries.begin(); it != sec->entries.end(); ++it)
 	{

@@ -644,7 +644,7 @@ public:
 	void operator delete(void* Ptr)
 	{
 		byte* bActualPtr = ((byte**)Ptr)[-1];
-		assert(bActualPtr <= (byte*)Ptr && (byte*)Ptr - bActualPtr < 20);
+		CRYASSERT(bActualPtr <= (byte*)Ptr && (byte*)Ptr - bActualPtr < 20);
 		free((void*)bActualPtr);
 	}
 
@@ -1429,7 +1429,7 @@ struct SRenderShaderResources : SBaseShaderResources
 
 	void AddTextureMap(int Id)
 	{
-		assert(Id >= 0 && Id < EFTT_MAX);
+		CRYASSERT(Id >= 0 && Id < EFTT_MAX);
 		m_Textures[Id] = new SEfResTexture;
 	}
 	int Size()
@@ -2168,13 +2168,13 @@ struct CMatInfo : public IMatInfo
 	}
 	virtual IMatInfo* GetSubMtl(int i)
 	{
-		assert(pSubMtls);
-		//ASSERT( i >= 0 && i < pSubMtls->size() );
+		CRYASSERT(pSubMtls);
+		//CRYASSERT( i >= 0 && i < pSubMtls->size() );
 		return (*pSubMtls)[i];
 	}
 	virtual void AddSubMtl(IMatInfo* pMtl)
 	{
-		assert(pMtl);
+		CRYASSERT(pMtl);
 		if (!pSubMtls)
 			pSubMtls = new SubMtls;
 		pSubMtls->push_back(pMtl);
@@ -2183,7 +2183,7 @@ struct CMatInfo : public IMatInfo
 	}
 	virtual void RemoveSubMtl(IMatInfo* pMtl)
 	{
-		assert(pMtl);
+		CRYASSERT(pMtl);
 		if (pSubMtls)
 		{
 			for (unsigned int i = 0; i < pSubMtls->size(); i++)

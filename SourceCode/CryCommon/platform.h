@@ -17,7 +17,8 @@
 #ifndef _PLATFORM_H_
 #define _PLATFORM_H_
 
-#include "ProjectDefines.h"							// to get some defines available in every CryEngine project 
+#include "ProjectDefines.h"							// to get some defines available in every CryEngine project
+#include "Assert.h"
 
 #if _MSC_VER > 1000
 #pragma once
@@ -36,8 +37,8 @@ typedef void* EVENT_HANDLE;
 #endif
 
 #if defined(LINUX)
-#undef assert
-#define assert(exp) (void)( (exp) || (printf("Assert: ' %s ' has failed\n", #exp), 0) )
+#undef CRYASSERT
+#define CRYASSERT(exp) (void)( (exp) || (printf("Assert: ' %s ' has failed\n", #exp), 0) )
 
 #include <stdlib.h> 
 #include <time.h>
@@ -102,8 +103,8 @@ typedef void* EVENT_HANDLE;
 #define FNAME(X) X.d_name
 #endif
 
-#define crymax(a,b)            (((a) > (b)) ? (a) : (b))
-#define crymin(a,b)            (((a) < (b)) ? (a) : (b))
+#define crymax(a,b)	(((a) > (b)) ? (a) : (b))
+#define crymin(a,b)	(((a) < (b)) ? (a) : (b))
 
 //////////////////////////////////////////////////////////////////////////
 // Use our own memory manager.

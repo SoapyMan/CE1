@@ -119,16 +119,16 @@ void CSystem::CreateEntityScriptBinding(IEntity* ent)
 {
 	CScriptObjectEntity* pSEntity = new CScriptObjectEntity();
 	pSEntity->Create(m_pScriptSystem, this);
-	assert(pSEntity->GetScriptObject());
+	CRYASSERT(pSEntity->GetScriptObject());
 	if (ent->GetContainer()) {
 		IScriptObject* pObj = ent->GetContainer()->GetScriptObject();
 		if (pObj)
 			pSEntity->SetContainer(pObj);
 	}
-	assert(pSEntity->GetScriptObject());
+	CRYASSERT(pSEntity->GetScriptObject());
 	pSEntity->SetEntity(ent);
-	assert(pSEntity->GetScriptObject());
+	CRYASSERT(pSEntity->GetScriptObject());
 	ent->SetScriptObject(pSEntity->GetScriptObject());
-	assert(pSEntity->GetScriptObject());
-	assert(ent->GetScriptObject());
+	CRYASSERT(pSEntity->GetScriptObject());
+	CRYASSERT(ent->GetScriptObject());
 }

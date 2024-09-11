@@ -37,7 +37,7 @@ template <class T> struct Array2d
 
 	T* operator [] (const int& nPos) const
 	{
-		assert(nPos >= 0 && nPos < m_nSize);
+		CRYASSERT(nPos >= 0 && nPos < m_nSize);
 		return &m_pData[nPos * m_nSize];
 	}
 

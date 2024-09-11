@@ -136,7 +136,7 @@ void CCGVProgram_D3D::mfAddFXParameter(SFXParam* pr, const char* ParamName, SSha
 										mt.m_eCGParamType = ECGP_Matr_Obj_IT;
 		if (mt.m_eCGParamType != ECGP_Unknown)
 		{
-			assert(pr->m_nRows == 4 && pr->m_nColumns == 4);
+			CRYASSERT(pr->m_nRows == 4 && pr->m_nColumns == 4);
 			mt.m_Name = ParamName;
 			m_MatrixObj.AddElem(mt);
 		}
@@ -160,7 +160,7 @@ void CCGVProgram_D3D::mfAddFXParameter(SFXParam* pr, const char* ParamName, SSha
 			if (scr[0])
 				gRenDev->m_cEF.mfCompileCGParam(scr, ef, &m_ParamsNoObj);
 			else
-				assert(0);
+				CRYASSERT(0);
 		}
 	}
 	else
@@ -192,7 +192,7 @@ void CCGVProgram_D3D::mfAddFXParameter(SFXParam* pr, const char* ParamName, SSha
 		}
 		break;
 		default:
-			assert(0);
+			CRYASSERT(0);
 		}
 		m_ParamsNoObj.AddElem(CGpr);
 	}
@@ -265,8 +265,8 @@ struct SVSAliasSampler
 
 void CCGVProgram_D3D::mfGatherFXParameters(const char* buf, SShaderPassHW* pSHPass, std::vector<SFXParam>& Params, std::vector<SFXSampler>& Samplers, std::vector<SFXTexture>& Textures, SShader* ef)
 {
-	assert(m_Insts.Num());
-	assert(!pSHPass->m_TUnits.Num());
+	CRYASSERT(m_Insts.Num());
+	CRYASSERT(!pSHPass->m_TUnits.Num());
 
 	if (!m_Insts.Num())
 		return;
@@ -274,7 +274,7 @@ void CCGVProgram_D3D::mfGatherFXParameters(const char* buf, SShaderPassHW* pSHPa
 	if (!cgi->m_BindVars)
 		return;
 	int i, j;
-	assert(*buf == '(');
+	CRYASSERT(*buf == '(');
 	buf++;
 	SVSAliasSampler samps[MAX_TMU];
 	int nMaxSampler = -1;
@@ -302,7 +302,7 @@ void CCGVProgram_D3D::mfGatherFXParameters(const char* buf, SShaderPassHW* pSHPa
 					an.NameINT = VSParam;
 				else
 				{
-					assert(0);
+					CRYASSERT(0);
 					an.NameINT = szParam;
 				}
 				Aliases.push_back(an);
@@ -323,7 +323,7 @@ void CCGVProgram_D3D::mfGatherFXParameters(const char* buf, SShaderPassHW* pSHPa
 						an.NameINT = VSParam;
 					else
 					{
-						assert(0);
+						CRYASSERT(0);
 						an.NameINT = szParam;
 					}
 					Aliases.push_back(an);
@@ -347,9 +347,13 @@ void CCGVProgram_D3D::mfGatherFXParameters(const char* buf, SShaderPassHW* pSHPa
 			if (al->NameINT == paramINT)
 			{
 				if (!bSampler)
-					assert(al->bParam);
+				{
+					CRYASSERT(al->bParam);
+				}
 				else
-					assert(!al->bParam);
+				{
+					CRYASSERT(!al->bParam);
+				}
 				param = al->Name.c_str();
 				break;
 			}
@@ -366,7 +370,7 @@ void CCGVProgram_D3D::mfGatherFXParameters(const char* buf, SShaderPassHW* pSHPa
 				}
 			}
 			if (j == Params.size())
-				assert(0);
+				CRYASSERT(0);
 		}
 		else
 		{
@@ -383,13 +387,13 @@ void CCGVProgram_D3D::mfGatherFXParameters(const char* buf, SShaderPassHW* pSHPa
 				}
 			}
 			if (j == Samplers.size())
-				assert(0);
+				CRYASSERT(0);
 		}
 	}
 	for (i = 0; i <= nMaxSampler; i++)
 	{
 		SFXSampler* smp = samps[i].fxSampler;
-		assert(smp->m_nTextureID < Textures.size());
+		CRYASSERT(smp->m_nTextureID < Textures.size());
 		SFXTexture* tx = &Textures[smp->m_nTextureID];
 #ifdef USE_FX
 		gRenDev->m_cEF.mfParseFXTechnique_LoadShaderTexture(smp, tx, pSHPass, ef, i, eCO_NOSET, eCO_NOSET, DEF_TEXARG0, DEF_TEXARG0);
@@ -433,7 +437,7 @@ int CCGVProgram_D3D::mfVertexFormat(bool& bUseTangents, bool& bUseLM)
 					}
 					if (j == m_Functions.size())
 					{
-						assert(0);
+						CRYASSERT(0);
 						return nVFormat;
 					}
 					pSTR1 = m_Functions[j].m_Struct.c_str();
@@ -2568,7 +2572,7 @@ bool CCGVProgram_D3D::mfActivate(CVProgram* pPosVP)
 							m_CGProfileType = CG_PROFILE_VS_1_1;
 			}
 		}
-		assert(!m_Insts[m_CurInst].m_BindVars);
+		CRYASSERT(!m_Insts[m_CurInst].m_BindVars);
 		if (pbuf)
 		{
 			RemoveCR(pbuf);
@@ -2606,7 +2610,7 @@ bool CCGVProgram_D3D::mfActivate(CVProgram* pPosVP)
 					m_Insts[m_CurInst].m_BindVars->Get(FoundNames[i].nId).m_nComponents = FoundNames[i].nComponents;
 			}
 
-			assert(!m_Insts[m_CurInst].m_BindVars || m_Insts[m_CurInst].m_BindVars->Num() <= 30);
+			CRYASSERT(!m_Insts[m_CurInst].m_BindVars || m_Insts[m_CurInst].m_BindVars->Num() <= 30);
 			SAFE_DELETE_ARRAY(pbuf);
 			if (pCode && !bUseACIICache)
 				CreateCacheItem(m_Insts[m_CurInst].m_LightMask, (byte*)pCode->GetBufferPointer(), pCode->GetBufferSize());

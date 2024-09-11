@@ -34,7 +34,7 @@ void CryModelAnimationContainer::OnAnimationGlobalUnload(int nGlobalAnimId)
 {
 	std::vector<LocalAnimId>::iterator it = std::lower_bound(m_arrAnimByGlobalId.begin(), m_arrAnimByGlobalId.end(), nGlobalAnimId, AnimationGlobIdPred(m_arrAnimations));
 
-	assert(it == m_arrAnimByGlobalId.begin() || m_arrAnimations[(it - 1)->nAnimId].nGlobalAnimId < nGlobalAnimId);
+	CRYASSERT(it == m_arrAnimByGlobalId.begin() || m_arrAnimations[(it - 1)->nAnimId].nGlobalAnimId < nGlobalAnimId);
 
 	for (; it != m_arrAnimByGlobalId.end() && m_arrAnimations[it->nAnimId].nGlobalAnimId == nGlobalAnimId; ++it)
 	{
@@ -52,7 +52,7 @@ void CryModelAnimationContainer::OnAnimationGlobalLoad(int nGlobalAnimId)
 {
 	std::vector<LocalAnimId>::iterator it = std::lower_bound(m_arrAnimByGlobalId.begin(), m_arrAnimByGlobalId.end(), nGlobalAnimId, AnimationGlobIdPred(m_arrAnimations));
 
-	assert(it == m_arrAnimByGlobalId.begin() || m_arrAnimations[(it - 1)->nAnimId].nGlobalAnimId < nGlobalAnimId);
+	CRYASSERT(it == m_arrAnimByGlobalId.begin() || m_arrAnimations[(it - 1)->nAnimId].nGlobalAnimId < nGlobalAnimId);
 
 	// scan through the sequence of animations with the given Global AnimId
 	// and bind each of them to the bones
@@ -69,7 +69,7 @@ void CryModelAnimationContainer::OnAnimationGlobalLoad(int nGlobalAnimId)
 
 		do {
 			AnimData& LocalAnim = m_arrAnimations[it->nAnimId];
-			assert(LocalAnim.nGlobalAnimId == nGlobalAnimId);
+			CRYASSERT(LocalAnim.nGlobalAnimId == nGlobalAnimId);
 			LocalAnim.fStart = fStart;
 			LocalAnim.fStop = fStop;
 
@@ -201,7 +201,7 @@ int CryModelAnimationContainer::findAnimation(const char* szAnimationName)
 			break;
 		}
 
-	assert(nTestResult == nResult);
+	CRYASSERT(nTestResult == nResult);
 #endif
 
 	return nResult;
@@ -321,7 +321,7 @@ int CryModelAnimationContainer::findBone(const char* szName)const
 
 	int nResult = find_in_map(m_mapBoneNameIndex, szName, -1);
 #ifdef _DEBUG
-	assert(nResult == nTestResult);
+	CRYASSERT(nResult == nTestResult);
 #endif
 	return nResult;
 }
@@ -411,7 +411,7 @@ const CryGeomMorphTarget& CryModelAnimationContainer::getMorphTarget(int nMorphT
 		return m_arrMorphTargets[nMorphTargetId];
 	else
 	{
-		assert(0);// this will lead to a memory leak, if it is called
+		CRYASSERT(0);// this will lead to a memory leak, if it is called
 		static const CryGeomMorphTarget DefaultMorphTarget;
 		return DefaultMorphTarget;
 	}
@@ -495,12 +495,12 @@ void CryModelAnimationContainer::scaleBones(float fScale)
 void CryModelAnimationContainer::selfValidate()
 {
 #ifdef _DEBUG
-	assert(m_arrAnimByGlobalId.size() == m_arrAnimations.size());
-	assert(m_arrAnimByLocalName.size() == m_arrAnimations.size());
+	CRYASSERT(m_arrAnimByGlobalId.size() == m_arrAnimations.size());
+	CRYASSERT(m_arrAnimByLocalName.size() == m_arrAnimations.size());
 	for (unsigned i = 0; i < m_arrAnimByGlobalId.size() - 1; ++i)
 	{
-		assert(m_arrAnimations[m_arrAnimByGlobalId[i].nAnimId].nGlobalAnimId <= m_arrAnimations[m_arrAnimByGlobalId[i + 1].nAnimId].nGlobalAnimId);
-		assert(stricmp(m_arrAnimations[m_arrAnimByLocalName[i]].strName.c_str(), m_arrAnimations[m_arrAnimByLocalName[i + 1]].strName.c_str()) < 0);
+		CRYASSERT(m_arrAnimations[m_arrAnimByGlobalId[i].nAnimId].nGlobalAnimId <= m_arrAnimations[m_arrAnimByGlobalId[i + 1].nAnimId].nGlobalAnimId);
+		CRYASSERT(stricmp(m_arrAnimations[m_arrAnimByLocalName[i]].strName.c_str(), m_arrAnimations[m_arrAnimByLocalName[i + 1]].strName.c_str()) < 0);
 	}
 #endif
 }

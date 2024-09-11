@@ -1763,7 +1763,7 @@ struct I3DEngine : public IProcess
 	//! physicalize area if not physicalized yet
 	virtual void CheckPhysicalized(const Vec3& vBoxMin, const Vec3& vBoxMax) = 0;
 
-	//! in debug mode check memory heap and makes assert, do nothing in release
+	//! in debug mode check memory heap and makes CRYASSERT, do nothing in release
 	virtual void CheckMemoryHeap() = 0;
 
 	//! return value of e_obj_lod_ratio cvar(about 10.f), used for entities

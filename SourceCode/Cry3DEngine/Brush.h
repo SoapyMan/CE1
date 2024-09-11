@@ -45,7 +45,7 @@ public:
 	virtual bool HasLightmap(int nLod)
 	{
 		// only 2 conditions are valid
-		//assert((m_pLMData != NULL && m_pLMTCBuffer != NULL) || (m_pLMData == NULL && m_pLMTCBuffer == NULL));
+		//CRYASSERT((m_pLMData != NULL && m_pLMTCBuffer != NULL) || (m_pLMData == NULL && m_pLMTCBuffer == NULL));
 #if !defined(LINUX64)
 		if (m_arrLMData[nLod].m_pLMData == NULL || m_arrLMData[nLod].m_pLMTCBuffer == NULL)
 #else

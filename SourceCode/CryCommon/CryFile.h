@@ -120,21 +120,21 @@ inline void CCryFile::Close()
 //////////////////////////////////////////////////////////////////////////
 inline size_t CCryFile::Write(void* lpBuf, size_t nSize)
 {
-	assert(m_file);
+	CRYASSERT(m_file);
 	return m_pIPak->FWrite(lpBuf, 1, nSize, m_file);
 }
 
 //////////////////////////////////////////////////////////////////////////
 inline size_t CCryFile::Read(void* lpBuf, size_t nSize)
 {
-	assert(m_file);
+	CRYASSERT(m_file);
 	return m_pIPak->FRead(lpBuf, 1, nSize, m_file);
 }
 
 //////////////////////////////////////////////////////////////////////////
 inline size_t CCryFile::GetLength()
 {
-	assert(m_file);
+	CRYASSERT(m_file);
 	long curr = m_pIPak->FTell(m_file);
 	m_pIPak->FSeek(m_file, 0, SEEK_END);
 	long size = m_pIPak->FTell(m_file);
@@ -150,7 +150,7 @@ inline size_t CCryFile::GetLength()
 //////////////////////////////////////////////////////////////////////////
 inline size_t CCryFile::Seek(size_t seek, int mode)
 {
-	assert(m_file);
+	CRYASSERT(m_file);
 	return m_pIPak->FSeek(m_file, seek, mode);
 }
 
@@ -173,21 +173,21 @@ inline size_t CCryFile::SeekToEnd()
 //////////////////////////////////////////////////////////////////////////
 inline size_t CCryFile::GetPosition()
 {
-	assert(m_file);
+	CRYASSERT(m_file);
 	return m_pIPak->FTell(m_file);
 }
 
 //////////////////////////////////////////////////////////////////////////
 inline bool CCryFile::IsEof()
 {
-	assert(m_file);
+	CRYASSERT(m_file);
 	return m_pIPak->FEof(m_file) != 0;
 }
 
 //////////////////////////////////////////////////////////////////////////
 inline void CCryFile::Flush()
 {
-	assert(m_file);
+	CRYASSERT(m_file);
 	m_pIPak->FFlush(m_file);
 }
 

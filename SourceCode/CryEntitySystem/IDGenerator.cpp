@@ -81,14 +81,14 @@ WORD CIDGenerator::GetNewStatic()
 ///////////////////////////////////////////////
 void CIDGenerator::Remove(WORD nID)
 {
-	assert(m_vUsedIDs[nID] == true);
+	CRYASSERT(m_vUsedIDs[nID] == true);
 	m_vUsedIDs[nID] = false;
 }
 
 ////////////////////////////////////////////
 void CIDGenerator::Mark(WORD nID)
 {
-	assert(m_vUsedIDs[nID] == false);
+	CRYASSERT(m_vUsedIDs[nID] == false);
 	m_vUsedIDs[nID] = true;
 }
 

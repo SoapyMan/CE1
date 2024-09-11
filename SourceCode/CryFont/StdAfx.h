@@ -82,10 +82,6 @@
 #endif
 
 #include <IFont.h>
-#if !defined(LINUX)
-#include <assert.h>
-#endif
-
 
 //! Include main interfaces.
 #include <IEntitySystem.h>

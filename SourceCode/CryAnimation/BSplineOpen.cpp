@@ -7,7 +7,7 @@
 // NOTE: end knot may be < start knot; it means the support interval is cyclic
 void BSplineVec3d::getInfluenceInterval(int nControlPoint, int pTime[2])const
 {
-	assert(nControlPoint >= 0 && nControlPoint < numCPs());
+	CRYASSERT(nControlPoint >= 0 && nControlPoint < numCPs());
 	if (m_isOpen)
 	{
 		pTime[0] = nControlPoint - m_nDegree;
@@ -30,7 +30,7 @@ void BSplineVec3d::getInfluenceInterval(int nControlPoint, int pTime[2])const
 // get the d+1 derivative (delta) amplitude at knot k (so-called "comb" delta amplitude)
 BSplineVec3d::Value BSplineVec3d::getDelta(int nKnot)
 {
-	assert(nKnot >= 1 && nKnot < numKnots() - 1);
+	CRYASSERT(nKnot >= 1 && nKnot < numKnots() - 1);
 
 	Value ptResult = m_arrCPs[nKnot - 1] * m_Knots.getDelta(nKnot - 1, m_nDegree, nKnot + m_nDegree);
 	for (int i = 0; i <= m_nDegree; ++i)
@@ -77,8 +77,8 @@ BSplineVec3d::Value BSplineVec3d::getValue(Time fTime)const
 	else
 	{
 		// as the result of clamping, ..
-		assert(nInterval >= m_nDegree);
-		assert(nInterval - m_nDegree <= numCPs()); // == only if the time is at the end of the loop
+		CRYASSERT(nInterval >= m_nDegree);
+		CRYASSERT(nInterval - m_nDegree <= numCPs()); // == only if the time is at the end of the loop
 		if (nInterval - m_nDegree >= numCPs()) // cycle to the start of the loop
 		{
 			nInterval = m_nDegree;
@@ -98,7 +98,7 @@ BSplineVec3d::Value BSplineVec3d::getValue(Time fTime)const
 		if (!m_isOpen)
 		{	// the CP is cyclic in closed splines; in case the number of CPs is less than the degree,
 			// we have to run this cycle (otherwise we could just make (nCurrentCP + numCPs()) % numCPs()
-			assert(numCPs() > 0);
+			CRYASSERT(numCPs() > 0);
 			while (nCurrentCP < 0)
 				nCurrentCP += numCPs();
 			nCurrentCP %= numCPs();
@@ -116,7 +116,7 @@ BSplineVec3d::Value BSplineVec3d::getValue(Time fTime)const
 // Sets the given knot time, maintaining boundary knot multiplicity
 void BSplineVec3d::setKnotTime(int nKnot, Time fTime)
 {
-	assert(nKnot >= 0 && nKnot < numKnots());
+	CRYASSERT(nKnot >= 0 && nKnot < numKnots());
 
 	m_Knots[nKnot + m_nDegree] = fTime;
 }

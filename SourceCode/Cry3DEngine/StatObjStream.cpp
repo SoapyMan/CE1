@@ -55,10 +55,10 @@ void CStatObj::ProcessStreamOnCompleteError()
 	// still error - make nice default object
 	m_eCCGFStreamingStatus = ecss_NotLoaded;
 	Load("Objects\\default.cgf","",evs_NoSharing,false,false,false,false);
-	assert(	m_eCCGFStreamingStatus == ecss_Ready);
+	CRYASSERT(	m_eCCGFStreamingStatus == ecss_Ready);
 	m_bDefaultObject=true;*/
 
-	assert(0);
+	CRYASSERT_FAIL("Error loading CCGF %s", m_szFileName);
 	GetSystem()->Error("Error loading CCGF for: %s", m_szFileName);
 }
 
@@ -75,12 +75,12 @@ void CStatObj::StreamOnComplete(IReadStream* pStream, unsigned nError)
 	// load header
 	CCGFHeader* pFileHeader = (CCGFHeader*)pStream->GetBuffer();
 #if !defined(LINUX)
-	assert(pFileHeader->nDataSize == pStream->GetBytesRead() - sizeof(CCGFHeader));
+	CRYASSERT(pFileHeader->nDataSize == pStream->GetBytesRead() - sizeof(CCGFHeader));
 #endif
 
 	if (!pFileHeader->nDataSize)
 	{ // should happend only in case of sync loading
-		assert(m_szGeomName[0]);
+		CRYASSERT(m_szGeomName[0]);
 		m_eCCGFStreamingStatus = ecss_GeomNotFound;
 		return; // geom name was specified but not found in source sgf during compilation
 	}
@@ -97,11 +97,11 @@ void CStatObj::StreamOnComplete(IReadStream* pStream, unsigned nError)
 	uchar* pData = ((uchar*)pStream->GetBuffer() + sizeof(CCGFHeader));
 	int nPos = 0;
 	Serialize(nPos, pData, false, m_szFolderName);
-	assert(nPos == pFileHeader->nDataSize);
+	CRYASSERT(nPos == pFileHeader->nDataSize);
 
 	// original tris count
 	m_nLoadedTrisCount = pFileHeader->nFacesInCGFNum;
-	assert(m_nLoadedTrisCount);
+	CRYASSERT(m_nLoadedTrisCount);
 
 	m_bPhysicsExistInCompiledFile = (pFileHeader->dwFlags & CCGFHF_PHYSICS_EXIST);
 
@@ -159,7 +159,7 @@ void CStatObj::CheckLoaded()
 
 	if (m_eCCGFStreamingStatus == ecss_NotLoaded)
 	{ // load now
-		assert(m_bUseStreaming == true);
+		CRYASSERT(m_bUseStreaming == true);
 		m_fStreamingTimePerFrame -= GetTimer()->GetAsyncCurTime();
 		bool bRes = Load(m_szFileName, m_szGeomName[0] ? m_szGeomName : 0, m_eVertsSharing,
 			m_bLoadAdditinalInfo, m_bKeepInLocalSpace, false, m_bMakePhysics);
@@ -172,8 +172,8 @@ void CStatObj::CheckLoaded()
 	}
 	else
 	{ // object is ready
-		assert(m_eCCGFStreamingStatus == ecss_Ready);
-		assert(m_pLeafBuffer && m_nLoadedTrisCount);
+		CRYASSERT(m_eCCGFStreamingStatus == ecss_Ready);
+		CRYASSERT(m_pLeafBuffer && m_nLoadedTrisCount);
 	}
 }
 

@@ -497,7 +497,7 @@ void CD3D9Renderer::ChangeViewport(unsigned int x, unsigned int y, unsigned int 
 {
 	if (m_bDeviceLost)
 		return;
-	assert(m_CurrContext);
+	CRYASSERT(m_CurrContext);
 	m_CurrContext->m_X = x;
 	m_CurrContext->m_Y = y;
 	m_CurrContext->m_Width = width;
@@ -603,7 +603,7 @@ void CD3D9Renderer::BeginFrame()
 	// Set up everything so we can start rendering
 	//////////////////////////////////////////////////////////////////////
 
-	assert(m_pd3dDevice);
+	CRYASSERT(m_pd3dDevice);
 
 	g_bProfilerEnabled = iSystem->GetIProfileSystem()->IsProfiling();
 
@@ -967,7 +967,7 @@ void CD3D9Renderer::Update()
 	//////////////////////////////////////////////////////////////////////
 
 	// Check for the presence of a D3D device
-	assert(m_pd3dDevice);
+	CRYASSERT(m_pd3dDevice);
 
 	if (!m_SceneRecurseCount)
 	{
@@ -2082,7 +2082,7 @@ void	CD3D9Renderer::Draw2dImage(float xpos, float ypos, float w, float h, int te
 	//////////////////////////////////////////////////////////////////////
 
 	// Check for the presence of a D3D device
-	assert(m_pd3dDevice);
+	CRYASSERT(m_pd3dDevice);
 
 	if (!m_SceneRecurseCount)
 	{
@@ -2228,7 +2228,7 @@ void	CD3D9Renderer::Draw2dImage(float xpos, float ypos, float w, float h, int te
 	m_pd3dDevice->SetTransform(D3DTS_PROJECTION, m);
 	if (FAILED(hReturn))
 	{
-		assert(hReturn);
+		CRYASSERT(hReturn);
 		return;
 	}
 }
@@ -2243,7 +2243,7 @@ void	CD3D9Renderer::DrawImage(float xpos, float ypos, float w, float h, int text
 	//////////////////////////////////////////////////////////////////////
 
 	// Check for the presence of a D3D device
-	assert(m_pd3dDevice);
+	CRYASSERT(m_pd3dDevice);
 
 	if (!m_SceneRecurseCount)
 	{
@@ -2324,7 +2324,7 @@ void	CD3D9Renderer::DrawImage(float xpos, float ypos, float w, float h, int text
 
 	if (FAILED(hReturn))
 	{
-		assert(hReturn);
+		CRYASSERT(hReturn);
 		return;
 	}
 }
@@ -2374,7 +2374,7 @@ void CD3D9Renderer::Draw2dLine(float x1, float y1, float x2, float y2)
 
 	if (FAILED(hr))
 	{
-		assert(hr);
+		CRYASSERT(hr);
 		return;
 	}
 }
@@ -2431,7 +2431,7 @@ void CD3D9Renderer::DrawLines(Vec3d v[], int nump, CFColor& col, int flags, floa
 		HRESULT hr = m_pd3dDevice->DrawPrimitive(D3DPT_LINELIST, nOffs, nump);
 		if (FAILED(hr))
 		{
-			assert(hr);
+			CRYASSERT(hr);
 			return;
 		}
 	}
@@ -2455,7 +2455,7 @@ void CD3D9Renderer::DrawLines(Vec3d v[], int nump, CFColor& col, int flags, floa
 		HRESULT hr = m_pd3dDevice->DrawPrimitive(D3DPT_LINESTRIP, nOffs, nump - 1);
 		if (FAILED(hr))
 		{
-			assert(hr);
+			CRYASSERT(hr);
 			return;
 		}
 	}
@@ -2500,7 +2500,7 @@ void CD3D9Renderer::DrawLine(const Vec3d& vPos1, const Vec3d& vPos2)
 
 	if (FAILED(hr))
 	{
-		assert(hr);
+		CRYASSERT(hr);
 		return;
 	}
 
@@ -2552,7 +2552,7 @@ void CD3D9Renderer::DrawLineColor(const Vec3d& vPos1, const CFColor& vColor1, co
 
 	if (FAILED(hr))
 	{
-		assert(hr);
+		CRYASSERT(hr);
 		return;
 	}
 }
@@ -2572,7 +2572,7 @@ void CD3D9Renderer::GetProjectionMatrix(float* mat)
 ///////////////////////////////////////////
 void CD3D9Renderer::PushMatrix()
 {
-	assert(m_pd3dDevice);
+	CRYASSERT(m_pd3dDevice);
 
 	EF_PushMatrix();
 }
@@ -2580,7 +2580,7 @@ void CD3D9Renderer::PushMatrix()
 ///////////////////////////////////////////
 void CD3D9Renderer::PopMatrix()
 {
-	assert(m_pd3dDevice);
+	CRYASSERT(m_pd3dDevice);
 
 	EF_PopMatrix();
 }
@@ -2588,7 +2588,7 @@ void CD3D9Renderer::PopMatrix()
 ///////////////////////////////////////////
 void CD3D9Renderer::RotateMatrix(float a, float x, float y, float z)
 {
-	assert(m_pd3dDevice);
+	CRYASSERT(m_pd3dDevice);
 
 	D3DXVECTOR3 v;
 	v[0] = x;
@@ -2632,7 +2632,7 @@ void CD3D9Renderer::MultMatrix(float* mat)
 ///////////////////////////////////////////
 void CD3D9Renderer::ScaleMatrix(float x, float y, float z)
 {
-	assert(m_pd3dDevice);
+	CRYASSERT(m_pd3dDevice);
 
 	m_matView->ScaleLocal(x, y, z);
 	m_pd3dDevice->SetTransform(D3DTS_VIEW, m_matView->GetTop());
@@ -2642,7 +2642,7 @@ void CD3D9Renderer::ScaleMatrix(float x, float y, float z)
 ///////////////////////////////////////////
 void CD3D9Renderer::TranslateMatrix(float x, float y, float z)
 {
-	assert(m_pd3dDevice);
+	CRYASSERT(m_pd3dDevice);
 
 	m_matView->TranslateLocal(x, y, z);
 	m_pd3dDevice->SetTransform(D3DTS_VIEW, m_matView->GetTop());
@@ -2651,7 +2651,7 @@ void CD3D9Renderer::TranslateMatrix(float x, float y, float z)
 
 void CD3D9Renderer::TranslateMatrix(const Vec3d& pos)
 {
-	assert(m_pd3dDevice);
+	CRYASSERT(m_pd3dDevice);
 
 	float x = pos[0];
 	float y = pos[1];
@@ -2712,7 +2712,7 @@ D3DXMATRIX OffCenterProjection(const CCamera& cam, const Vec3& nv, unsigned shor
 
 void CD3D9Renderer::SetCamera(const CCamera& cam)
 {
-	assert(m_pd3dDevice);
+	CRYASSERT(m_pd3dDevice);
 
 	Matrix44 mat = cam.GetVCMatrixD3D9();
 	D3DXMATRIX* m = m_matView->GetTop();
@@ -2973,7 +2973,7 @@ void CD3D9Renderer::SetCullMode(int mode)
 	// Change the culling mode
 	//////////////////////////////////////////////////////////////////////
 
-	assert(m_pd3dDevice);
+	CRYASSERT(m_pd3dDevice);
 
 	switch (mode)
 	{
@@ -2997,7 +2997,7 @@ void CD3D9Renderer::SetFog(float density, float fogstart, float fogend, const fl
 
 	D3DCOLOR dwColor;
 
-	assert(m_pd3dDevice);
+	CRYASSERT(m_pd3dDevice);
 
 	m_pd3dDevice->SetRenderState(D3DRS_FOGVERTEXMODE, D3DFOG_NONE);
 
@@ -3058,7 +3058,7 @@ bool CD3D9Renderer::EnableFog(bool enable)
 	// Enable or disable fog
 	//////////////////////////////////////////////////////////////////////
 
-	assert(m_pd3dDevice);
+	CRYASSERT(m_pd3dDevice);
 
 	bool bPrevFog = m_FS.m_bEnable; // remember fog value
 
@@ -3088,7 +3088,7 @@ void CD3D9Renderer::EnableTexGen(bool enable)
 
 void CD3D9Renderer::SetTexgen3D(float x1, float y1, float z1, float x2, float y2, float z2)
 {
-	assert(m_pd3dDevice);
+	CRYASSERT(m_pd3dDevice);
 
 	D3DXMATRIX mat, * mi;
 
@@ -3112,7 +3112,7 @@ void CD3D9Renderer::SetTexgen(float scaleX, float scaleY, float translateX, floa
 	//////////////////////////////////////////////////////////////////////
 	//
 	//////////////////////////////////////////////////////////////////////
-	assert(m_pd3dDevice);
+	CRYASSERT(m_pd3dDevice);
 
 	D3DXMATRIX mat, * mi;
 
@@ -3136,7 +3136,7 @@ void CD3D9Renderer::SetLodBias(float value)
 	// Set the mip-map LOD bias
 	//////////////////////////////////////////////////////////////////////
 
-	assert(m_pd3dDevice);
+	CRYASSERT(m_pd3dDevice);
 
 	value = -value;
 	m_pd3dDevice->SetSamplerState(m_TexMan->m_CurStage, D3DSAMP_MIPMAPLODBIAS, *((LPDWORD)(&value)));
@@ -3149,7 +3149,7 @@ void CD3D9Renderer::SelectTMU(int tnum)
 
 void CD3D9Renderer::EnableTMU(bool enable)
 {
-	assert(m_pd3dDevice);
+	CRYASSERT(m_pd3dDevice);
 
 	byte eCO = (enable ? eCO_MODULATE : eCO_DISABLE);
 	EF_SetColorOp(eCO, eCO, 255, 255);
@@ -3461,7 +3461,7 @@ void CD3D9Renderer::DrawTriStrip(CVertexBuffer* src, int vert_num)
 	break;
 
 	default:
-		assert(0);
+		CRYASSERT(0);
 		break;
 	}
 
@@ -3697,7 +3697,7 @@ void CD3D9Renderer::DrawBall(float x, float y, float z, float radius)
 	if (m_bDeviceLost)
 		return;
 
-	assert(m_pSphere);
+	CRYASSERT(m_pSphere);
 	EF_PushMatrix();
 	EnableTMU(true);
 	gRenDev->m_TexMan->m_Text_White->Set();
@@ -3715,7 +3715,7 @@ void CD3D9Renderer::DrawBall(const Vec3d& pos, float radius)
 	if (m_bDeviceLost)
 		return;
 
-	assert(m_pSphere);
+	CRYASSERT(m_pSphere);
 
 	EF_PushMatrix();
 	EnableTMU(true);
@@ -3821,7 +3821,7 @@ void CD3D9Renderer::ClearColorBuffer(const Vec3d vColor)
 
 void CD3D9Renderer::EnableAALines(bool bEnable)
 {
-	assert(0);
+	CRYASSERT(0);
 }
 
 void CD3D9Renderer::Set2DMode(bool enable, int ortox, int ortoy)
@@ -3958,7 +3958,7 @@ void CD3D9Renderer::UpdateTextureInVideoMemory(uint tnum, unsigned char* newdata
 					srcformat = D3DFMT_A4R4G4B4;
 
 	if (srcformat == D3DFMT_UNKNOWN)
-		assert(0);
+		CRYASSERT(0);
 
 	if (tnum > TX_FIRSTBIND && srcformat != D3DFMT_UNKNOWN)
 	{
@@ -4233,7 +4233,7 @@ void CD3D9Renderer::GetMemoryUsage(ICrySizer* Sizer)
 {
 	int i, nSize;
 
-	assert(Sizer);
+	CRYASSERT(Sizer);
 
 	//SIZER_COMPONENT_NAME(Sizer, "GLRenderer");
 	{

@@ -137,7 +137,7 @@ void CCCPEndpoint::SendSetup()
 
 	ICVar* cl_password = GetISystem()->GetIConsole()->GetCVar("cl_password");
 
-	assert(cl_password);
+	CRYASSERT(cl_password);
 
 	if (cl_password->GetString())
 	{

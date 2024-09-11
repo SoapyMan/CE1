@@ -17,7 +17,7 @@ void CrySizerImpl::Push(const char* szComponentName)
 {
 	m_stackNames.push_back(getNameIndex(getCurrentName(), szComponentName));
 	// if the depth is too deep, something is wrong, perhaps an infinite loop
-	assert(m_stackNames.size() < 128);
+	CRYASSERT(m_stackNames.size() < 128);
 }
 
 void CrySizerImpl::PushSubcomponent(const char* szSubcomponentName)
@@ -31,13 +31,13 @@ void CrySizerImpl::Pop()
 	if (!m_stackNames.empty())
 		m_stackNames.pop_back();
 	else
-		assert(0);
+		CRYASSERT(0);
 }
 
 // returns the index of the current name on the top of the name stack
 size_t CrySizerImpl::getCurrentName()const
 {
-	assert(!m_stackNames.empty());
+	CRYASSERT(!m_stackNames.empty());
 	return m_stackNames.empty() ? 0 : m_stackNames.back();
 }
 
@@ -83,7 +83,7 @@ bool CrySizerImpl::AddObject(const void* pIdentifier, size_t sizeBytes)
 	// check if the last object was the same
 	if (NewObject == m_LastObject)
 	{
-		assert(m_LastObject.nSize == sizeBytes);
+		CRYASSERT(m_LastObject.nSize == sizeBytes);
 		return false;
 	}
 
@@ -104,8 +104,8 @@ bool CrySizerImpl::AddObject(const void* pIdentifier, size_t sizeBytes)
 
 		if (sizeBytes != it->nSize)
 		{
-			// if the following assert fails:
-			assert(0);
+			// if the following CRYASSERT fails:
+			CRYASSERT(0);
 			// .. it means we have one object that's added two times with different sizes; that's screws up the whole idea
 			// we assume there are two different objects that are for some reason assigned the same id
 			Object* pObj = const_cast<Object*>(&(*it));
@@ -127,7 +127,7 @@ void CrySizerImpl::end()
 	size_t i;
 	for (i = 0; i < m_arrNames.size(); ++i)
 	{
-		assert(i == 0 || (m_arrNames[i].nParent < i && m_arrNames[i].nParent >= 0));
+		CRYASSERT(i == 0 || (m_arrNames[i].nParent < i && m_arrNames[i].nParent >= 0));
 		m_arrNames[i].sizeObjectsTotal = m_arrNames[i].sizeObjects;
 	}
 

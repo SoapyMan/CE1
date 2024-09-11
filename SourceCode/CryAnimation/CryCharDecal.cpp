@@ -21,8 +21,8 @@ void CryCharDecal::buildFrom(CryCharDecalBuilder& builder)
 	m_fDeathTime = m_fBuildTime + 60 * 60 * 24; // die in very distant future - in one day
 	m_fFadeOutTime = -1; // no fade out
 
-	assert(builder.numDecalFaces());
-	assert(builder.numDecalVertices());
+	CRYASSERT(builder.numDecalFaces());
+	CRYASSERT(builder.numDecalVertices());
 
 	m_nTextureId = builder.getDecalInfo().nTid;
 	m_arrFaces.resize(builder.numDecalFaces());
@@ -54,7 +54,7 @@ void CryCharDecal::debugDraw(const Matrix& matCharacter)
 
 Vec3d CryCharDecal::getHelperVertex(unsigned i) const
 {
-	assert(i < numHelperVertices());
+	CRYASSERT(i < numHelperVertices());
 	static const float fForward = 0.18f, fUp = fForward / 10, fRight = fUp;
 	static const Vec3d arrOctahedronVtx[6] = {
 		Vec3d(0,0,fForward / 10),
@@ -70,7 +70,7 @@ Vec3d CryCharDecal::getHelperVertex(unsigned i) const
 
 CryCharDecalFace CryCharDecal::getHelperFace(unsigned i) const
 {
-	assert(i < numHelperFaces());
+	CRYASSERT(i < numHelperFaces());
 	if (i < 4)
 		return CryCharDecalFace(0, i + 1, (i + 1) % 4 + 1);
 	else
@@ -79,7 +79,7 @@ CryCharDecalFace CryCharDecal::getHelperFace(unsigned i) const
 
 CryUV CryCharDecal::getHelperUV(unsigned i) const
 {
-	assert(i < numHelperVertices());
+	CRYASSERT(i < numHelperVertices());
 	CryUV uv;
 	if (i == 0 || i == 5)
 		uv.u = uv.v = 0;

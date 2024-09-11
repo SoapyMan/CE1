@@ -34,7 +34,7 @@ bool CryCharRenderElement::canDestruct()
 // can only be called for a clean (without initialized leaf buffer) object
 void CryCharRenderElement::create(int nVertCount, int nVertFormat, const char* szSource, unsigned numMaterials, bool bOnlyVideoBuffer)
 {
-	assert(!m_pLeafBuffer);
+	CRYASSERT(!m_pLeafBuffer);
 	m_numVertBufVertices = nVertCount;
 
 	m_pLeafBuffer = GetIRenderer()->CreateLeafBufferInitialized(NULL, 0, nVertFormat, NULL, 0, R_PRIMV_TRIANGLES, szSource, eBT_Dynamic, numMaterials, 0, NULL, NULL, true);
@@ -48,7 +48,7 @@ void CryCharRenderElement::create(int nVertCount, int nVertFormat, const char* s
 // can only be called for a clean (without initialized leaf buffer) object
 void CryCharRenderElement::create(int nVertCount, const struct_VERTEX_FORMAT_P3F_COL4UB_TEX2F* pSourceData, const char* szSource, unsigned numMaterials, bool bOnlyVideoBuffer)
 {
-	assert(!m_pLeafBuffer);
+	CRYASSERT(!m_pLeafBuffer);
 	m_numVertBufVertices = nVertCount;
 
 	m_pLeafBuffer = g_GetIRenderer()->CreateLeafBufferInitialized((void*)pSourceData, nVertCount, VERTEX_FORMAT_P3F_COL4UB_TEX2F, NULL, 0, R_PRIMV_TRIANGLES, szSource, eBT_Dynamic, numMaterials, 0, NULL, NULL, bOnlyVideoBuffer);
@@ -100,7 +100,7 @@ void CryCharRenderElement::resizeMaterials(unsigned numMaterials, IShader* pShad
 void CryCharRenderElement::destruct()
 {
 	// when we exit from the game, we can destruct this 
-	//assert (canDestruct());
+	//CRYASSERT (canDestruct());
 	if (m_pLeafBuffer)
 	{
 		g_GetIRenderer()->DeleteLeafBuffer(m_pLeafBuffer);

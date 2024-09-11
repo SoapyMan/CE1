@@ -36,7 +36,7 @@ static DWORD FormatSize(D3DFORMAT Format)
 	case D3DFMT_A16B16G16R16F:
 		return 8;
 	default:
-		assert(0);
+		CRYASSERT(0);
 	}
 	return 4;
 }
@@ -1081,7 +1081,7 @@ PDIRECT3DSURFACE9 GetSurfaceTP(STexPic* tp)
 	if (tp)
 	{
 		LPDIRECT3DTEXTURE9 pTexture = (LPDIRECT3DTEXTURE9)tp->m_RefTex.m_VidTex;
-		assert(pTexture);
+		CRYASSERT(pTexture);
 		HRESULT hr = pTexture->GetSurfaceLevel(0, &pSurf);
 	}
 	return pSurf;
@@ -1578,7 +1578,7 @@ bool HDR_SceneToSceneScaled()
 		SetTexture(rd, rd->m_TexMan->m_Text_White, 1, D3DTEXF_POINT, D3DTEXF_POINT, true);
 		dv->SetRenderTarget(0, pSurfTempScene);
 		fpTemp = (CCGPShader_D3D*)PShaderForName(rd->m_RP.m_PS_HDRTemp, "CGRC_HDR_MRTK_2_FP16_PS20");
-		assert(fpTemp);
+		CRYASSERT(fpTemp);
 		if (fpTemp)
 		{
 			fpTemp->mfSet(true);
@@ -1631,7 +1631,7 @@ bool HDR_SceneToSceneScaled()
 		{
 			// Get the sample offsets used within the pixel shader
 			SCGBind* bind = fpDownScale->mfGetParameterBind("vSampleOffsets");
-			assert(bind);
+			CRYASSERT(bind);
 			if (rd->m_bDeviceSupportsFP16Filter)
 			{
 				GetSampleOffsets_DownScale4x4Bilinear(rd->GetWidth(), rd->GetHeight(), avSampleOffsets);
@@ -1720,7 +1720,7 @@ bool HDR_MeasureLuminance()
 		goto LCleanReturn;
 	fpSampleAvgLum->mfSet(true, 0);
 	bind = fpSampleAvgLum->mfGetParameterBind("vSampleOffsets");
-	assert(bind);
+	CRYASSERT(bind);
 	fpSampleAvgLum->mfParameter(bind, &avSampleOffsets[0].x, 9);
 
 	if (rd->m_bDeviceSupportsMRT)
@@ -1755,7 +1755,7 @@ bool HDR_MeasureLuminance()
 				goto LCleanReturn;
 			fpResampleAvgLum->mfSet(true, 0);
 			bind = fpResampleAvgLum->mfGetParameterBind("vSampleOffsets");
-			assert(bind);
+			CRYASSERT(bind);
 			fpResampleAvgLum->mfParameter(bind, &avSampleOffsets[0].x, 4);
 			dv->SetRenderTarget(0, apSurfToneMap[dwCurTexture]);
 			SetTexture(rd, rd->m_TexMan->m_Text_HDRToneMaps[dwCurTexture + 1], 0, D3DTEXF_LINEAR, D3DTEXF_LINEAR, true);
@@ -1772,7 +1772,7 @@ bool HDR_MeasureLuminance()
 				goto LCleanReturn;
 			fpResampleAvgLum->mfSet(true, 0);
 			bind = fpResampleAvgLum->mfGetParameterBind("vSampleOffsets");
-			assert(bind);
+			CRYASSERT(bind);
 			fpResampleAvgLum->mfParameter(bind, &avSampleOffsets[0].x, 16);
 			SetTexture(rd, rd->m_TexMan->m_Text_HDRToneMaps[dwCurTexture + 1], 0, D3DTEXF_POINT, D3DTEXF_POINT, true);
 		}
@@ -1795,7 +1795,7 @@ bool HDR_MeasureLuminance()
 			goto LCleanReturn;
 		fpResampleAvgLumExp->mfSet(true, 0);
 		bind = fpResampleAvgLumExp->mfGetParameterBind("vSampleOffsets");
-		assert(bind);
+		CRYASSERT(bind);
 		fpResampleAvgLumExp->mfParameter(bind, &avSampleOffsets[0].x, 4);
 		SetTexture(rd, rd->m_TexMan->m_Text_HDRToneMaps[1], 0, D3DTEXF_LINEAR, D3DTEXF_LINEAR, true);
 	}
@@ -1811,7 +1811,7 @@ bool HDR_MeasureLuminance()
 			goto LCleanReturn;
 		fpResampleAvgLumExp->mfSet(true, 0);
 		bind = fpResampleAvgLumExp->mfGetParameterBind("vSampleOffsets");
-		assert(bind);
+		CRYASSERT(bind);
 		fpResampleAvgLumExp->mfParameter(bind, &avSampleOffsets[0].x, 16);
 		SetTexture(rd, rd->m_TexMan->m_Text_HDRToneMaps[1], 0, D3DTEXF_POINT, D3DTEXF_POINT, true);
 	}
@@ -2034,14 +2034,14 @@ bool HDR_BrightPassToStarSource()
 	fpGaussBlur5x5->mfSet(true, 0);
 
 	bind = fpGaussBlur5x5->mfGetParameterBind("vSampleOffsets");
-	assert(bind);
+	CRYASSERT(bind);
 	if (rd->m_bDeviceSupportsFP16Filter)
 		fpGaussBlur5x5->mfParameter(bind, &avSampleOffsets[0].x, 9);
 	else
 		fpGaussBlur5x5->mfParameter(bind, &avSampleOffsets[0].x, 13);
 
 	bind = fpGaussBlur5x5->mfGetParameterBind("vSampleWeights");
-	assert(bind);
+	CRYASSERT(bind);
 	if (rd->m_bDeviceSupportsFP16Filter)
 		fpGaussBlur5x5->mfParameter(bind, &avSampleWeights[0].x, 9);
 	else
@@ -2128,7 +2128,7 @@ bool HDR_StarSourceToBloomSource()
 	fpDownScale2x2->mfSet(true, 0);
 
 	bind = fpDownScale2x2->mfGetParameterBind("vSampleOffsets");
-	assert(bind);
+	CRYASSERT(bind);
 	if (rd->m_bDeviceSupportsFP16Filter)
 		fpDownScale2x2->mfParameter(bind, &avSampleOffsets[0].x, 1);
 	else
@@ -2218,14 +2218,14 @@ bool HDR_RenderBloom()
 	fpGaussBlur5x5->mfSet(true, 0);
 
 	bind = fpGaussBlur5x5->mfGetParameterBind("vSampleOffsets");
-	assert(bind);
+	CRYASSERT(bind);
 	if (rd->m_bDeviceSupportsFP16Filter)
 		fpGaussBlur5x5->mfParameter(bind, &avSampleOffsets[0].x, 9);
 	else
 		fpGaussBlur5x5->mfParameter(bind, &avSampleOffsets[0].x, 13);
 
 	bind = fpGaussBlur5x5->mfGetParameterBind("vSampleWeights");
-	assert(bind);
+	CRYASSERT(bind);
 	if (rd->m_bDeviceSupportsFP16Filter)
 		fpGaussBlur5x5->mfParameter(bind, &avSampleWeights[0].x, 9);
 	else
@@ -2267,11 +2267,11 @@ bool HDR_RenderBloom()
 	fpBloom->mfSet(true, 0);
 
 	bind = fpBloom->mfGetParameterBind("vSampleOffsets");
-	assert(bind);
+	CRYASSERT(bind);
 	fpBloom->mfParameter(bind, &avSampleOffsets[0].x, n);
 
 	bind = fpBloom->mfGetParameterBind("vSampleWeights");
-	assert(bind);
+	CRYASSERT(bind);
 	fpBloom->mfParameter(bind, &avSampleWeights[0].x, n);
 
 	dv->SetRenderTarget(0, pSurfTempBloom);
@@ -2308,11 +2308,11 @@ bool HDR_RenderBloom()
 	GetTextureCoords(tm->m_Text_HDRBloomMaps[1], &rectSrc, tm->m_Text_HDRBloomMaps[0], NULL, &coords);
 
 	bind = fpBloom->mfGetParameterBind("vSampleOffsets");
-	assert(bind);
+	CRYASSERT(bind);
 	fpBloom->mfParameter(bind, &avSampleOffsets[0].x, n);
 
 	bind = fpBloom->mfGetParameterBind("vSampleWeights");
-	assert(bind);
+	CRYASSERT(bind);
 	fpBloom->mfParameter(bind, &avSampleWeights[0].x, n);
 
 	dv->SetRenderTarget(0, pSurfBloom);
@@ -2513,7 +2513,7 @@ bool HDR_RenderStar()
 			fpStar->mfSet(true, 0);
 
 			bind = fpStar->mfGetParameterBind("vSampleOffsets");
-			assert(bind);
+			CRYASSERT(bind);
 			fpStar->mfParameter(bind, &avSampleOffsets[0].x, nSamples);
 
 			for (int iBitPlane = 0; iBitPlane < nBitPlanes; iBitPlane++)
@@ -2531,7 +2531,7 @@ bool HDR_RenderStar()
 					}
 				}
 				bind = fpStar->mfGetParameterBind("vSampleWeights");
-				assert(bind);
+				CRYASSERT(bind);
 				fpStar->mfParameter(bind, &avSampleWeights[0].x, nSamples);
 
 				dv->SetRenderTarget(0, pSurfDest[iBitPlane]);
@@ -2584,7 +2584,7 @@ bool HDR_RenderStar()
 		fpMergeTextures->mfSet(true, 0);
 
 		bind = fpMergeTextures->mfGetParameterBind("vSampleWeights");
-		assert(bind);
+		CRYASSERT(bind);
 		fpMergeTextures->mfParameter(bind, &avSampleWeights[0].x, starDef.m_nStarLines);
 
 		dv->SetRenderTarget(0, pSurfDest[iBitPlane]);
@@ -2799,10 +2799,10 @@ void CD3D9Renderer::EF_HDRPostProcessing()
 	{
 		STexPic* tp = tm->m_Text_HDRTarget;
 		LPDIRECT3DTEXTURE9 pTexture = (LPDIRECT3DTEXTURE9)tp->m_RefTex.m_VidTex;
-		assert(pTexture);
+		CRYASSERT(pTexture);
 		LPDIRECT3DSURFACE9 pSurf;
 		pTexture->GetSurfaceLevel(0, &pSurf);
-		assert(pSurf);
+		CRYASSERT(pSurf);
 
 		HRESULT hr = m_pd3dDevice->StretchRect(tm->m_HDR_RT_FSAA, 0, pSurf, 0, D3DTEXF_NONE);
 		pSurf->Release();

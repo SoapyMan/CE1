@@ -158,15 +158,15 @@ void CAdvCamSystem::ProcessKeys( CXEntityProcessingCmd &epc )
 	if(m_eiPlayerA && m_eiPlayerB)
 	{
 		// get entities
-		IEntitySystem *pEntitySystem=m_pGame->m_pSystem->GetIEntitySystem();	assert(pEntitySystem);
-		IEntity *pEntityA = pEntitySystem->GetEntity(m_eiPlayerA);						assert(pEntityA);if(!pEntityA)return;
-		IEntity *pEntityB = pEntitySystem->GetEntity(m_eiPlayerB);						assert(pEntityB);if(!pEntityB)return;
+		IEntitySystem *pEntitySystem=m_pGame->m_pSystem->GetIEntitySystem();	CRYASSERT(pEntitySystem);
+		IEntity *pEntityA = pEntitySystem->GetEntity(m_eiPlayerA);						CRYASSERT(pEntityA);if(!pEntityA)return;
+		IEntity *pEntityB = pEntitySystem->GetEntity(m_eiPlayerB);						CRYASSERT(pEntityB);if(!pEntityB)return;
 		
 		// get player containers of the entities
 		CPlayer *pPlayerA = NULL;
-		pEntityA->GetContainer()->QueryContainerInterface(CIT_IPLAYER,(void **) &pPlayerA);		assert(pPlayerA);
+		pEntityA->GetContainer()->QueryContainerInterface(CIT_IPLAYER,(void **) &pPlayerA);		CRYASSERT(pPlayerA);
 		CPlayer *pPlayerB = NULL;
-		pEntityB->GetContainer()->QueryContainerInterface(CIT_IPLAYER,(void **) &pPlayerB);		assert(pPlayerB);
+		pEntityB->GetContainer()->QueryContainerInterface(CIT_IPLAYER,(void **) &pPlayerB);		CRYASSERT(pPlayerB);
 
 		// determine which direction we are moving in
 		// build camera matrix
@@ -339,9 +339,9 @@ Vec3 CAdvCamSystem::CalcPlayerMoveDirection(const Matrix33 &matCamera, unsigned 
 
 	// get input system
 	ISystem *pSystem = m_pGame->GetSystem();
-	assert(pSystem); if (!pSystem) return vMoveDir;
+	CRYASSERT(pSystem); if (!pSystem) return vMoveDir;
 	IInput *pInput = pSystem->GetIInput();
-	assert(pInput); if (!pInput) return vMoveDir;
+	CRYASSERT(pInput); if (!pInput) return vMoveDir;
 
 	Vec3 vControllerDir = (pInput)->JoyGetAnalog1Dir(joyID);
 
@@ -392,8 +392,8 @@ void CAdvCamSystem::CalcCameraVectors(_SmartScriptObject &scriptObject, Vec3& vS
 
 	if(m_eiPlayerA)
 	{
-		IEntitySystem *pEntitySystem=m_pGame->m_pSystem->GetIEntitySystem();								assert(pEntitySystem);
-		IEntity *pEntity=pEntitySystem->GetEntity(m_eiPlayerA);															assert(pEntity);if(!pEntity)return;
+		IEntitySystem *pEntitySystem=m_pGame->m_pSystem->GetIEntitySystem();								CRYASSERT(pEntitySystem);
+		IEntity *pEntity=pEntitySystem->GetEntity(m_eiPlayerA);															CRYASSERT(pEntity);if(!pEntity)return;
 
 		vA=pEntity->GetPos();
 
@@ -404,8 +404,8 @@ void CAdvCamSystem::CalcCameraVectors(_SmartScriptObject &scriptObject, Vec3& vS
 
 	if(m_eiPlayerB)
 	{
-		IEntitySystem *pEntitySystem=m_pGame->m_pSystem->GetIEntitySystem();								assert(pEntitySystem);
-		IEntity *pEntity=pEntitySystem->GetEntity(m_eiPlayerB);															assert(pEntity);if(!pEntity)return;
+		IEntitySystem *pEntitySystem=m_pGame->m_pSystem->GetIEntitySystem();								CRYASSERT(pEntitySystem);
+		IEntity *pEntity=pEntitySystem->GetEntity(m_eiPlayerB);															CRYASSERT(pEntity);if(!pEntity)return;
 
 		vB=pEntity->GetPos();
 

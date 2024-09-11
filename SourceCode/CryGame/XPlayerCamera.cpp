@@ -524,7 +524,7 @@ void CPlayer::UpdateFirstPersonView()
 				if (frameTime > 0.5f)
 					frameTime = 0.5f;
 
-				assert(_finite(frameTime));
+				CRYASSERT(_finite(frameTime));
 				float maxAngleMovement = 100.0f * frameTime;
 				if (m_vDeltaCamAngles.len2()>0.0f || m_vDeltaCamPos.len2()>0.0f)
 				{
@@ -534,10 +534,10 @@ void CPlayer::UpdateFirstPersonView()
 					if (m_vDeltaCamPos.z>0.0f) m_vDeltaCamPos.z *= 0.3f;
 					m_vWeaponAngles.x += 30.0f * m_vDeltaCamPos.z;
 
-					assert(_finite(m_vDeltaCamAngles.x));
-					assert(_finite(m_vDeltaCamAngles.z));
-					assert(_finite(m_vWeaponAngles.x));
-					assert(_finite(m_vWeaponAngles.z));
+					CRYASSERT(_finite(m_vDeltaCamAngles.x));
+					CRYASSERT(_finite(m_vDeltaCamAngles.z));
+					CRYASSERT(_finite(m_vWeaponAngles.x));
+					CRYASSERT(_finite(m_vWeaponAngles.z));
 
 					m_vWeaponAngles.x = CLAMP(m_vWeaponAngles.x, -10.0f, 10.0f);
 					m_vWeaponAngles.y = CLAMP(m_vWeaponAngles.y, -10.0f, 10.0f);

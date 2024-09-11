@@ -91,10 +91,10 @@ bool CWeaponClass::Init(const string& sName)
 	Reset();
 
 	ILog *pLog = m_rWeaponSystem.GetGame()->GetSystem()->GetILog();
-	assert(pLog);
+	CRYASSERT(pLog);
 
 	m_pScriptSystem = m_rWeaponSystem.GetGame()->GetSystem()->GetIScriptSystem();
-	assert(m_pScriptSystem);
+	CRYASSERT(m_pScriptSystem);
 
 	m_sName	= sName;
 
@@ -357,7 +357,7 @@ void CWeaponClass::SetFirstPersonWeaponPos( const Vec3 &pos,const Vec3 &angles )
 
 Vec3	CWeaponClass::GetFirePos( IEntity *pIEntity ) const
 {
-	ASSERT( pIEntity != 0 );
+	CRYASSERT( pIEntity != 0 );
 	Vec3 firepos = pIEntity->GetCamera()->GetPos();
 
 	return firepos;
@@ -453,7 +453,7 @@ unsigned CWeaponClass::MemStats() const
 bool CWeaponClass::InitWeaponClassVariables()
 {
 	ILog *pLog = m_rWeaponSystem.GetGame()->GetSystem()->GetILog();
-	assert(pLog);
+	CRYASSERT(pLog);
 
 	m_ssoFireTable.Create(m_pScriptSystem);
 	m_ssoProcessHit.Create(m_pScriptSystem);
@@ -502,7 +502,7 @@ bool CWeaponClass::InitWeaponClassVariables()
 bool CWeaponClass::InitScripts()
 {
 	ILog *pLog = m_rWeaponSystem.GetGame()->GetSystem()->GetILog();
-	assert(pLog);
+	CRYASSERT(pLog);
 
 	// execute weapon script
 	if (!m_rWeaponSystem.ExecuteScript(m_sScript))
@@ -516,7 +516,7 @@ bool CWeaponClass::InitScripts()
 		return false;
 
 	m_soWeaponClass = soWC->GetScriptObject();
-	ASSERT(m_soWeaponClass)
+	CRYASSERT(m_soWeaponClass)
 
 	// get client/server functions
 	bool bOnClient = m_rWeaponSystem.GetGame()->IsClient();
@@ -565,9 +565,9 @@ bool CWeaponClass::InitModels()
 {
 	// prepare to load models
 	ILog *pLog = m_rWeaponSystem.GetGame()->GetSystem()->GetILog();
-	assert(pLog);
+	CRYASSERT(pLog);
 	ISystem*		pSystem = m_rWeaponSystem.GetGame()->GetSystem();
-	assert(pSystem);
+	CRYASSERT(pSystem);
 
 	// load 3rd person model
 	const char* pszObject;
@@ -598,7 +598,7 @@ bool CWeaponClass::InitModels()
 bool CWeaponClass::LoadMuzzleFlash(const string& sGeometryName)
 {
 	ISystem*		pSystem = m_rWeaponSystem.GetGame()->GetSystem();
-	assert(pSystem);
+	CRYASSERT(pSystem);
 
 	if (m_pMuzzleFlash && !m_pMuzzleFlash->IsSameObject(sGeometryName.c_str(), NULL))
 	{
@@ -677,7 +677,7 @@ void CWeaponClass::Update(CPlayer *pPlayer)
 		m_rWeaponSystem.GetGame()->GetSystem()->GetILog()->Log("\001 CWeaponClass::Update - ERROR -> pPlayer == NULL");
 		return;
 	}
-	assert(pPlayer->m_stats.firemode>=0 && pPlayer->m_stats.firemode<int(m_vFireModes.size()));
+	CRYASSERT(pPlayer->m_stats.firemode>=0 && pPlayer->m_stats.firemode<int(m_vFireModes.size()));
 	if (m_vFireModes[pPlayer->m_stats.firemode] == NULL)
 	{
 		m_rWeaponSystem.GetGame()->GetSystem()->GetILog()->Log("\001 CWeaponClass::Update - ERROR -> m_vFireModes[pPlayer->m_stats.firemode] == NULL");
@@ -715,7 +715,7 @@ int CWeaponClass::Fire(const Vec3d &origin, const Vec3d &angles, CPlayer *pPlaye
 		m_rWeaponSystem.GetGame()->GetSystem()->GetILog()->Log("\001 CWeaponClass::Fire - ERROR -> pPlayer == NULL");
 		return 0;
 	}
-	assert(pPlayer->m_stats.firemode>=0 && pPlayer->m_stats.firemode<int(m_vFireModes.size()));
+	CRYASSERT(pPlayer->m_stats.firemode>=0 && pPlayer->m_stats.firemode<int(m_vFireModes.size()));
 	if (m_vFireModes[pPlayer->m_stats.firemode] == NULL)
 	{
 		m_rWeaponSystem.GetGame()->GetSystem()->GetILog()->Log("\001 CWeaponClass::Fire - ERROR -> m_vFireModes[pPlayer->m_stats.firemode] == NULL");
@@ -876,7 +876,7 @@ int CWeaponClass::Fire(const Vec3d &origin, const Vec3d &angles, CPlayer *pPlaye
 #ifdef _DEBUG
 				m_rWeaponSystem.GetGame()->GetClassRegistry()->Debug();			// OutputDebugString
 #endif
-				assert(false);
+				CRYASSERT(false);
 				return 1;
 			}
 
@@ -890,7 +890,7 @@ int CWeaponClass::Fire(const Vec3d &origin, const Vec3d &angles, CPlayer *pPlaye
 			if((pEntity = m_rWeaponSystem.GetGame()->GetSystem()->GetIEntitySystem()->SpawnEntity(ed)) == NULL)
 			{
 				// Spawn failed
-				assert(false);
+				CRYASSERT(false);
 			}
 			{
 				FRAME_PROFILER( "CWeaponClass::Launch",GetISystem(),PROFILE_GAME );

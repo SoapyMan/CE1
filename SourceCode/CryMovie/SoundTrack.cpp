@@ -55,7 +55,7 @@ void CSoundTrack::SerializeKey(ISoundKey& key, XmlNodeRef& keyNode, bool bLoadin
 //////////////////////////////////////////////////////////////////////////
 void CSoundTrack::GetKeyInfo(int key, const char*& description, float& duration)
 {
-	assert(key >= 0 && key < (int)m_keys.size());
+	CRYASSERT(key >= 0 && key < (int)m_keys.size());
 	CheckValid();
 	description = 0;
 	duration = m_keys[key].fDuration;

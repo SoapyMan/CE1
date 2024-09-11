@@ -19,8 +19,6 @@ typedef CPortableString CString;
 #include <atlstr.h>
 #endif
 
-#include <assert.h>
-
 #include <string>
 #include <set>
 #include <map>

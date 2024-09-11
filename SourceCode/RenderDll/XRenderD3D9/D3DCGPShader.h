@@ -218,7 +218,7 @@ public:
 		{
 			cgD3D9SetDevice(gcpRendD3D->mfGetD3DDevice());
 			gcpRendD3D->m_CGContext = cgCreateContext();
-			assert(gcpRendD3D->m_CGContext);
+			CRYASSERT(gcpRendD3D->m_CGContext);
 #ifdef _DEBUG
 			cgD3D9EnableDebugTracing(true);
 #endif
@@ -331,7 +331,7 @@ public:
 			while (line[n] == 0x20 || line[n] == 0x9) { n++; }
 			if (line[n] == 0)
 				return str;
-			assert(line[n] == 't');
+			CRYASSERT(line[n] == 't');
 			Op0 = atoi(&line[n + 1]);
 			n += 2;
 			while (line[n] != 0x20 && line[n] != 0x9 && line[n] != 0) { n++; }
@@ -340,7 +340,7 @@ public:
 			while (line[n] == 0x20 || line[n] == 0x9) { n++; }
 			if (line[n] == 0)
 				return str;
-			assert(line[n] == 't');
+			CRYASSERT(line[n] == 't');
 			Op1 = atoi(&line[n + 1]);
 			return str;
 		}
@@ -503,7 +503,7 @@ public:
 					SCGBind* p = &m_Insts[m_CurInst].m_BindVars->Get(i);
 					if (p->m_Name == ParamBind->m_Name)
 					{
-						assert(p->m_nComponents <= nComps);
+						CRYASSERT(p->m_nComponents <= nComps);
 						ParamBind->m_dwBind = p->m_dwBind;
 						ParamBind->m_nBindComponents = p->m_nComponents;
 						if (!ParamBind->m_dwBind)

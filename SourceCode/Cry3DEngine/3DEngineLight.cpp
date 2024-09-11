@@ -74,15 +74,15 @@ void C3DEngine::RegisterLightSourceInSectors(CDLight* pDynLight)
 			{
 				CSectorInfo* pSecInfo = m_pTerrain->m_arrSecInfoTable[x][y];
 
-				assert(pSecInfo->m_nDynLightMask >= 0);
-				assert(pSecInfo->m_nDynLightMaskNoSun >= 0);
+				CRYASSERT(pSecInfo->m_nDynLightMask >= 0);
+				CRYASSERT(pSecInfo->m_nDynLightMaskNoSun >= 0);
 
 				pSecInfo->m_nDynLightMask |= (1 << pDynLight->m_Id);
 				if (!(pDynLight->m_Flags & DLF_SUN)) // skip sun for static world
 					pSecInfo->m_nDynLightMaskNoSun |= (1 << pDynLight->m_Id);
 
-				assert(pSecInfo->m_nDynLightMask > 0);
-				assert(pSecInfo->m_nDynLightMaskNoSun >= 0);
+				CRYASSERT(pSecInfo->m_nDynLightMask > 0);
+				CRYASSERT(pSecInfo->m_nDynLightMaskNoSun >= 0);
 			}
 }
 
@@ -252,7 +252,7 @@ void C3DEngine::AddDynamicLightSource(const class CDLight& LSource, IEntityRende
 	// Check errors
 	////////////////////////////////////////////////////////////////////////////////////////////////
 
-	assert(pEnt);
+	CRYASSERT(pEnt);
 
 	if (!pEnt)
 	{
@@ -357,7 +357,7 @@ void C3DEngine::AddDynamicLightSource(const class CDLight& LSource, IEntityRende
 		{
 			// copy lsource (do not owerwrite m_arrLightLeafBuffers, pEntityRS and nEntityLightId)
 			CLeafBuffer* TmpLightLeafBuffers[8];
-			assert(sizeof(TmpLightLeafBuffers) == sizeof(m_lstDynLights[i].m_arrLightLeafBuffers));
+			CRYASSERT(sizeof(TmpLightLeafBuffers) == sizeof(m_lstDynLights[i].m_arrLightLeafBuffers));
 
 			memcpy(TmpLightLeafBuffers, m_lstDynLights[i].m_arrLightLeafBuffers, sizeof(TmpLightLeafBuffers));
 
@@ -471,7 +471,7 @@ void C3DEngine::PrepareLightSourcesForRendering()
 		{
 			m_lstDynLights[i].m_Id = -1;
 			GetRenderer()->EF_ADDDlight(&m_lstDynLights[i]);
-			assert(m_lstDynLights[i].m_Id == i);
+			CRYASSERT(m_lstDynLights[i].m_Id == i);
 			if (m_lstDynLights[i].m_Id != -1)
 				RegisterLightSourceInSectors(&m_lstDynLights[i]);
 		}
@@ -549,7 +549,7 @@ void C3DEngine::PrepareLightSourcesForRendering()
 			if (m_lstDynLights[i].m_Id == -1)
 			{ // ignored by renderer
 
-				assert(i >= MAX_LIGHTS_NUM);
+				CRYASSERT(i >= MAX_LIGHTS_NUM);
 
 				if (i >= MAX_LIGHTS_NUM)
 				{ // no more sources can be accepted by renderer
@@ -563,7 +563,7 @@ void C3DEngine::PrepareLightSourcesForRendering()
 
 			if (m_lstDynLights[i].m_pShader != 0 && (m_lstDynLights[i].m_pShader->GetLFlags() & LMF_DISABLE))
 			{ // fake
-				assert(0); // should not be called, but no problem
+				CRYASSERT_FAIL("should not be here"); // should not be called, but no problem
 				FreeLightSourceComponents(&m_lstDynLights[i]);
 				m_lstDynLights.Delete(i); i--;
 				continue;
@@ -588,7 +588,7 @@ void C3DEngine::PrepareLightSourcesForRendering()
 
 			if (m_lstDynLights[i].m_fRadius >= 0.5f)
 			{
-				assert(m_lstDynLights[i].m_fRadius >= 0.5f && !(m_lstDynLights[i].m_Flags & DLF_FAKE));
+				CRYASSERT(m_lstDynLights[i].m_fRadius >= 0.5f && !(m_lstDynLights[i].m_Flags & DLF_FAKE));
 				RegisterLightSourceInSectors(&m_lstDynLights[i]);
 			}
 		}
@@ -600,7 +600,7 @@ void C3DEngine::PrepareLightSourcesForRendering()
 		{ // ignored by renderer
 			m_lstDynLights[i].m_Id = -1;
 			GetRenderer()->EF_ADDDlight(&m_lstDynLights[i]);
-			assert(m_lstDynLights[i].m_Id == -1);
+			CRYASSERT(m_lstDynLights[i].m_Id == -1);
 		}
 
 		m_lstDynLightsNoLight.Clear();
@@ -889,7 +889,7 @@ uint C3DEngine::GetFullLightMask()
 	for (int n = 0; n < m_nRealLightsNum/*m_lstDynLights.Count()*/; n++)
 	{
 		const int nId = m_lstDynLights[n].m_Id;
-		assert(nId >= 0);
+		CRYASSERT(nId >= 0);
 		nRes |= (1 << nId);
 	}
 
@@ -916,15 +916,15 @@ CDLight* C3DEngine::CheckDistancesToLightSources(uint& nDLightMask,
 		const int nId = m_lstDynLights[n].m_Id;
 
 		// [marco] commented out 'cos it happens every frame 
-		assert(nId == n);
+		CRYASSERT(nId == n);
 
 		if (nId >= 0 && nDLightMask & (1 << nId) && nId == n)
 		{
 			CDLight* pDLight = &m_lstDynLights[n];
 
-			assert(!pEntityRender || pDLight == (CDLight*)GetRenderer()->EF_Query(EFQ_LightSource, nId));
-			assert(pDLight->m_Id == n);
-			assert(!pDLight->m_pShader || !(pDLight->m_pShader->GetLFlags() & LMF_DISABLE));
+			CRYASSERT(!pEntityRender || pDLight == (CDLight*)GetRenderer()->EF_Query(EFQ_LightSource, nId));
+			CRYASSERT(pDLight->m_Id == n);
+			CRYASSERT(!pDLight->m_pShader || !(pDLight->m_pShader->GetLFlags() & LMF_DISABLE));
 
 			// todo: remove another similar check 
 			if (pEntityRender && pDLight->m_Flags & DLF_THIS_AREA_ONLY)

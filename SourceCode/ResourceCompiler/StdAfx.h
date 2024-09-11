@@ -24,7 +24,6 @@ typedef CPortableString CString;
 
 // Standart C headers.
 #include <direct.h>
-#include <assert.h>
 
 // STL headers.
 #include <vector>

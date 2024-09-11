@@ -519,16 +519,16 @@ bool CREOcLeaf::mfPreDraw(SShaderPass* sl)
 
 	if (CRenderer::CV_r_cullgeometryforlights && rd->EF_IsOnlyLightPass((SShaderPassHW*)sl) && rd->m_RP.m_pCurLightIndices != &rd->m_RP.m_FakeLightIndices)
 	{
-		assert(rd->m_RP.m_pCurLightIndices);
+		CRYASSERT(rd->m_RP.m_pCurLightIndices);
 		SVertexStream* vi = rd->m_RP.m_pCurLightIndices->GetIndexBuffer();
 		IDirect3DIndexBuffer9* pIndBuf = (IDirect3DIndexBuffer9*)vi->m_VertBuf.m_pPtr;
-		assert(pIndBuf);
+		CRYASSERT(pIndBuf);
 		h = dv->SetIndices(pIndBuf);
 	}
 	else
 	{
 		IDirect3DIndexBuffer9* pIndBuf = (IDirect3DIndexBuffer9*)m_pBuffer->m_Indices.m_VertBuf.m_pPtr;
-		//assert(pIndBuf);
+		//CRYASSERT(pIndBuf);
 		h = dv->SetIndices(pIndBuf);
 	}
 
@@ -680,7 +680,7 @@ bool CRETriMeshShadow::mfDraw(SShader* ef, SShaderPass* sfm)
 			else
 				nIndices = Indices->m_nItems;
 
-			assert(nIndices);
+			CRYASSERT(nIndices);
 
 			if (Indices->m_bLocked)
 				rd->UpdateIndexBuffer(Indices, NULL, 0, true);
@@ -711,7 +711,7 @@ bool CRETriMeshShadow::mfDraw(SShader* ef, SShaderPass* sfm)
 			else
 				nIndices = Indices->m_nItems;
 
-			assert(nIndices);
+			CRYASSERT(nIndices);
 
 			if (Indices->m_bLocked)
 				rd->UpdateIndexBuffer(Indices, NULL, 0, true);
@@ -1811,8 +1811,8 @@ bool CREClearStencil::mfDraw(SShader* ef, SShaderPass* sfm)
 
 bool CREHDRProcess::mfDraw(SShader* ef, SShaderPass* sfm)
 {
-	assert(gcpRendD3D->m_RP.m_PersFlags & RBPF_HDR);
-	assert(gcpRendD3D->m_pHDRTargetSurf);
+	CRYASSERT(gcpRendD3D->m_RP.m_PersFlags & RBPF_HDR);
+	CRYASSERT(gcpRendD3D->m_pHDRTargetSurf);
 	if (!(gcpRendD3D->m_RP.m_PersFlags & RBPF_HDR))
 		return false;
 	if (!gcpRendD3D->m_pHDRTargetSurf)

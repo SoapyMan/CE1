@@ -2360,7 +2360,7 @@ SParamComp* SParamComp::mfAdd(SParamComp* pPC)
 	}
 	else
 	{
-		assert(pc->m_eType == pPC->m_eType);
+		CRYASSERT(pc->m_eType == pPC->m_eType);
 
 		pc->mfCopy(pPC);
 		m_ParamComps.AddElem(pc);

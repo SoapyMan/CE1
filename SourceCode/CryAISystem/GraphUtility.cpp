@@ -3,13 +3,6 @@
 #include "Heuristic.h"
 #include "CAISystem.h"
 
-
-#if !defined(LINUX)
-#include <assert.h>
-#endif
-
-
-
 #include "Cry_Math.h"
 #include <ISystem.h>
 #include <Cry_Camera.h>
@@ -77,7 +70,7 @@ int CGraph::ProcessMegaMerge(ListNodes& nodesList, const Vec3d& vCutStart, const
 		m_pAISystem->m_pSystem->GetILog()->Log("\001 CGraph::ProcessMegaMerge  cut is not in m_VertexList %d %d", cutStart, cutEnd);
 		AIWarning("CGraph::ProcessMegaMerge  cut is not in m_VertexList %d %d", cutStart, cutEnd);
 
-		assert(0);
+		CRYASSERT(0);
 		return 0;
 	}
 
@@ -131,7 +124,7 @@ int CGraph::ProcessMegaMerge(ListNodes& nodesList, const Vec3d& vCutStart, const
 
 	if (leftSideNodes.size() != rightSideNodes.size())
 	{
-		assert(0);	// triangulation optimisation error -- newly-marked nodes are not simmetrical
+		CRYASSERT(0);	// triangulation optimisation error -- newly-marked nodes are not simmetrical
 		return 0;
 	}
 
@@ -389,7 +382,7 @@ bool CGraph::CreateOutline(ListNodes& insideNodes, ListNodes& nodesList, Obstacl
 		{
 			m_pAISystem->m_pSystem->GetILog()->Log("\001 CGraph::CreateOutline can't find OutlineBegin  ");
 			AIWarning("CGraph::CreateOutline can't find OutlineBegin  ");
-			assert(0);
+			CRYASSERT(0);
 			return false;
 		}
 
@@ -406,7 +399,7 @@ bool CGraph::CreateOutline(ListNodes& insideNodes, ListNodes& nodesList, Obstacl
 					if (std::find(outline.begin(), outline.end(), theOtherVertexIdx) == outline.end())
 						outline.push_front(theOtherVertexIdx);
 					//					else
-					//						assert(0);
+					//						CRYASSERT(0);
 					it = insideNodesCurrent.erase(it);
 					doneHere = true;
 					break;
@@ -416,12 +409,12 @@ bool CGraph::CreateOutline(ListNodes& insideNodes, ListNodes& nodesList, Obstacl
 			break;
 	}
 
-	//	assert(curNode);	//
+	//	CRYASSERT(curNode);	//
 	if (!curNode)
 	{
 		m_pAISystem->m_pSystem->GetILog()->Log("\001 CGraph::CreateOutline curNode is NULL  ");
 		AIWarning("CGraph::CreateOutline curNode is NULL  ");
-		assert(0);
+		CRYASSERT(0);
 		return false;
 	}
 
@@ -488,12 +481,12 @@ bool CGraph::CreateOutline(ListNodes& insideNodes, ListNodes& nodesList, Obstacl
 		}
 		theOtherVertexIdx = nextOtherVertexIdx;
 
-		//		assert(nextCandidate);	//
+		//		CRYASSERT(nextCandidate);	//
 		if (!nextCandidate)
 		{
 			m_pAISystem->m_pSystem->GetILog()->Log("\001 CGraph::CreateOutline nextCandidate is NULL  ");
 			AIWarning("CGraph::CreateOutline nextCandidate is NULL  ");
-			assert(0);
+			CRYASSERT(0);
 			return false;
 		}
 		curNode = nextCandidate;
@@ -609,7 +602,7 @@ void CGraph::TriangulateOutline(ListNodes& nodesList, ObstacleIndexList& outline
 		candidateNode->MakeAntiClockwise();
 		FillGraphNodeData(candidateNode);
 		nodesList.push_back(candidateNode);
-		assert(candidateRemove != outline.end());
+		CRYASSERT(candidateRemove != outline.end());
 		outline.erase(candidateRemove);
 	}
 
@@ -808,7 +801,7 @@ GraphNode	tmpNode;
 
 
 		nodesList.push_back( candidateNode );
-		assert(candidateRemove != outline.end());
+		CRYASSERT(candidateRemove != outline.end());
 
 ListPositions::iterator dbg=std::find(m_DEBUG_outlineListR.begin(), m_DEBUG_outlineListR.end(), *candidateRemove);
 if(dbg!=m_DEBUG_outlineListR.end())

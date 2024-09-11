@@ -60,21 +60,21 @@ int CAnimSequence::GetNodeCount() const
 //////////////////////////////////////////////////////////////////////////
 IAnimNode* CAnimSequence::GetNode(int index) const
 {
-	assert(index >= 0 && index < (int)m_nodes.size());
+	CRYASSERT(index >= 0 && index < (int)m_nodes.size());
 	return m_nodes[index].node;
 }
 
 //////////////////////////////////////////////////////////////////////////
 IAnimBlock* CAnimSequence::GetAnimBlock(int index) const
 {
-	assert(index >= 0 && index < (int)m_nodes.size());
+	CRYASSERT(index >= 0 && index < (int)m_nodes.size());
 	return m_nodes[index].anim;
 }
 
 //////////////////////////////////////////////////////////////////////////
 bool CAnimSequence::AddNode(IAnimNode* node)
 {
-	assert(node != 0);
+	CRYASSERT(node != 0);
 
 	// Check if this node already in sequence.
 	for (int i = 0; i < (int)m_nodes.size(); i++)
@@ -99,7 +99,7 @@ bool CAnimSequence::AddNode(IAnimNode* node)
 //////////////////////////////////////////////////////////////////////////
 void CAnimSequence::RemoveNode(IAnimNode* node)
 {
-	assert(node != 0);
+	CRYASSERT(node != 0);
 	for (int i = 0; i < (int)m_nodes.size(); i++)
 	{
 		if (node == m_nodes[i].node)

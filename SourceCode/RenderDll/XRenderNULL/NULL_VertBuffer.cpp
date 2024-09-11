@@ -34,7 +34,7 @@ void CNULLRenderer::DrawDynVB(struct_VERTEX_FORMAT_P3F_COL4UB_TEX2F* pBuf, ushor
 // allocates vertex buffer
 void CNULLRenderer::CreateBuffer(int size, int vertexformat, CVertexBuffer* buf, int Type, const char* szSource)
 {
-	assert(Type >= 0 && Type <= 3);
+	CRYASSERT(Type >= 0 && Type <= 3);
 
 	void* data;
 
@@ -76,13 +76,13 @@ void CNULLRenderer::SetFenceCompleted(CVertexBuffer* buffer)
 // NOTE: src may be NULL, in which case the data will not be copied
 void CNULLRenderer::UpdateBuffer(CVertexBuffer* dest, const void* src, int vertexcount, bool bUnlock, int offs, int Type)
 {
-	assert(Type >= 0 && Type <= 2);
+	CRYASSERT(Type >= 0 && Type <= 2);
 
 	// NOTE: some subsystems need to initialize the system buffer without actually intializing its values;
 	  // for that purpose, src may sometimes be NULL
 	if (src && vertexcount)
 	{
-		assert(vertexcount <= dest->m_NumVerts);
+		CRYASSERT(vertexcount <= dest->m_NumVerts);
 		if (vertexcount > dest->m_NumVerts)
 		{
 			iLog->Log("CNULLRenderer::UpdateBuffer: vertexcount>dest->m_NumVerts");

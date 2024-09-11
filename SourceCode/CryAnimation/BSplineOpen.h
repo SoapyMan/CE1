@@ -59,7 +59,7 @@ public:
 	// retrieves a reference to the i-th control point
 	Value& operator [] (int i)
 	{
-		assert(i >= 0 && i < numCPs());
+		CRYASSERT(i >= 0 && i < numCPs());
 		return m_arrCPs[i];
 	}
 
@@ -72,14 +72,14 @@ public:
 	// retrieves a reference to the i-th control point
 	const Value& getCP(int i) const
 	{
-		assert(i >= 0 && i < numCPs());
+		CRYASSERT(i >= 0 && i < numCPs());
 		return m_arrCPs[i];
 	}
 
 	// sets the given control point
 	void setCP(int i, const Value& pt)
 	{
-		assert(i >= 0 && i < numCPs());
+		CRYASSERT(i >= 0 && i < numCPs());
 		m_arrCPs[i] = pt;
 	}
 

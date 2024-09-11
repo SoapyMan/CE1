@@ -427,7 +427,7 @@ namespace CryStringUtils
 		case '?':
 			return MatchWildcard(pString + 1, pWildcard + 1) || MatchWildcard(pString, pWildcard + 1);
 		default:
-			assert(0);
+			CRYASSERT(0);
 			return false;
 		}
 	}

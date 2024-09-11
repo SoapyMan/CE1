@@ -175,7 +175,7 @@ void CTerrain::ExplodeTerrain(Vec3d vExploPos, float fExploRadius, CObjManager* 
 
 void CTerrain::GetObjectsAround(Vec3d vExploPos, float fExploRadius, list2<IEntityRender*>* pEntList)
 {
-	assert(pEntList);
+	CRYASSERT(pEntList);
 
 	// calc area
 	int x1 = int(vExploPos.x - fExploRadius - TERRAIN_SECTORS_MAX_OVERLAPPING);

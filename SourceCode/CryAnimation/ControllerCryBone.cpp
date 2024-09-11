@@ -106,7 +106,7 @@ bool CControllerCryBone::Load(const CONTROLLER_CHUNK_DESC_0827* pChunk, unsigned
 // may be optimal for motion interpolation
 void CControllerCryBone::GetValue2(float fTime, PQLog& pq)
 {
-	assert(numKeys());
+	CRYASSERT(numKeys());
 
 	if (!(m_arrTimes[0] < fTime))
 	{
@@ -120,7 +120,7 @@ void CControllerCryBone::GetValue2(float fTime, PQLog& pq)
 		return;
 	}
 
-	assert(numKeys() > 1);
+	CRYASSERT(numKeys() > 1);
 
 	int nPos = numKeys() >> 1;
 	int nStep = numKeys() >> 2;
@@ -146,8 +146,8 @@ void CControllerCryBone::GetValue2(float fTime, PQLog& pq)
 	while (fTime < m_arrTimes[nPos - 1])
 		nPos--;
 
-	assert(nPos > 0 && nPos < (int)numKeys());
-	assert(m_arrTimes[nPos] != m_arrTimes[nPos - 1]);
+	CRYASSERT(nPos > 0 && nPos < (int)numKeys());
+	CRYASSERT(m_arrTimes[nPos] != m_arrTimes[nPos - 1]);
 
 	float t = (float(fTime - m_arrTimes[nPos - 1])) / (m_arrTimes[nPos] - m_arrTimes[nPos - 1]);
 	PQLog pKeys[2] = { m_arrKeys[nPos - 1], m_arrKeys[nPos] };

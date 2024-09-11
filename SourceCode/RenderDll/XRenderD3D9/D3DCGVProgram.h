@@ -177,7 +177,7 @@ public:
 		{
 			cgD3D9SetDevice(gcpRendD3D->mfGetD3DDevice());
 			gcpRendD3D->m_CGContext = cgCreateContext();
-			assert(gcpRendD3D->m_CGContext);
+			CRYASSERT(gcpRendD3D->m_CGContext);
 #ifdef _DEBUG
 			cgD3D9EnableDebugTracing(true);
 #endif
@@ -598,7 +598,7 @@ public:
 					SCGBind* p = &m_Insts[m_CurInst].m_BindVars->Get(i);
 					if (p->m_Name == ParamBind->m_Name)
 					{
-						assert(p->m_nComponents <= nComps);
+						CRYASSERT(p->m_nComponents <= nComps);
 						ParamBind->m_dwBind = p->m_dwBind;
 						if (ParamBind->m_dwBind == 0)
 							ParamBind->m_dwBind = 65536;
@@ -755,7 +755,7 @@ public:
 		break;
 		default:
 			Warning(0, 0, "Unknown matrix state type %d int CG program '%s'", m_Name.c_str());
-			assert(0);
+			CRYASSERT(0);
 		}
 	}
 

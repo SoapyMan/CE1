@@ -68,7 +68,7 @@ void SetTexture(STexPic* pTex, int iStage, int iMinFilter, int iMagFilter, bool 
 LPDIRECT3DSURFACE9 GetTextureSurface(const STexPic* pTex, int iLevel = 0)
 {
 	LPDIRECT3DTEXTURE9 pTexture = (LPDIRECT3DTEXTURE9)pTex->m_RefTex.m_VidTex;
-	assert(pTexture);
+	CRYASSERT(pTexture);
 
 	LPDIRECT3DSURFACE9 pSurf = 0;
 	HRESULT hr = pTexture->GetSurfaceLevel(iLevel, &pSurf);

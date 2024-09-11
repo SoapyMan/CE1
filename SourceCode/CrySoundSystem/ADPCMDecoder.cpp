@@ -23,9 +23,9 @@ CADPCMDecoder::CADPCMDecoder(IMusicSystem* pMusicSystem) : m_bOpen(false)
 {
 	m_pMusicSystem = pMusicSystem;
 	ISystem* pSystem = m_pMusicSystem->GetSystem();
-	ASSERT(pSystem);
+	CRYASSERT(pSystem);
 	m_pPak = pSystem->GetIPak();
-	ASSERT(m_pPak);
+	CRYASSERT(m_pPak);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -173,8 +173,8 @@ inline CADPCMDecoderInstance::CADPCMDecoderInstance(CADPCMDecoder* pDecoder)
 	: m_iFilePos(0), m_pFile(NULL), m_nPos(0), m_uiDataStartPos(0), m_uiNumSamples(0), m_sCoefs(7), m_psSamplePtr(NULL),
 	m_bInitialized(false), m_bCopyFromLastFrame(false), m_uiCurrentBlockSize(scuiBlockSize), m_uiCurrentSamplesPerBlock(scuiSamplesPerBlock)
 {
-	assert(pDecoder);
-	assert(pDecoder->m_pPak);
+	CRYASSERT(pDecoder);
+	CRYASSERT(pDecoder->m_pPak);
 
 	m_pDecoder = pDecoder;
 	//init wav stream

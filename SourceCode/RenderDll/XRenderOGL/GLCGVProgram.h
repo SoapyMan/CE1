@@ -337,7 +337,7 @@ public:
 		if (!gcpOGL->m_CGContext)
 		{
 			gcpOGL->m_CGContext = cgCreateContext();
-			assert(gcpOGL->m_CGContext != NULL);
+			CRYASSERT(gcpOGL->m_CGContext != NULL);
 			//CGSetCompilerExe("cgc.exe");
 
 			//cgSetErrorCallback(mfErrorCallback);
@@ -447,7 +447,7 @@ public:
 		FILE* fp = fopen("$$in.cg", "w");
 		if (!fp)
 			return NULL;
-		assert(*prog_text);
+		CRYASSERT(*prog_text);
 		fputs(prog_text, fp);
 		fclose(fp);
 
@@ -586,7 +586,7 @@ public:
 					SCGBind* p = &m_Insts[m_CurInst].m_BindVars->Get(i);
 					if (p->m_Name == ParamBind->m_Name)
 					{
-						assert(p->m_nComponents <= nComps);
+						CRYASSERT(p->m_nComponents <= nComps);
 						ParamBind->m_dwBind = p->m_dwBind;
 						ParamBind->m_nBindComponents = p->m_nComponents;
 						break;
@@ -674,7 +674,7 @@ public:
 					SCGBind* p = &m_Insts[m_CurInst].m_BindVars->Get(i);
 					if (p->m_Name == tm->m_Name)
 					{
-						assert(p->m_nComponents == 4);
+						CRYASSERT(p->m_nComponents == 4);
 						tm->m_dwBind = p->m_dwBind;
 						if (tm->m_dwBind == 0)
 							tm->m_dwBind = 65536;
@@ -729,7 +729,7 @@ public:
 			break;
 		default:
 			iLog->Log("Unknown matrix state type %d int CG program '%s'", m_Name.c_str());
-			assert(0);
+			CRYASSERT(0);
 		}
 		if (v)
 		{

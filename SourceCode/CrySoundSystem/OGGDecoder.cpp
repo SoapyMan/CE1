@@ -10,9 +10,9 @@ COGGDecoder::COGGDecoder(IMusicSystem* pMusicSystem)
 {
 	m_pMusicSystem = pMusicSystem;
 	ISystem* pSystem = m_pMusicSystem->GetSystem();
-	ASSERT(pSystem);
+	CRYASSERT(pSystem);
 	m_FileAccess.pPak = pSystem->GetIPak();
-	ASSERT(m_FileAccess.pPak);
+	CRYASSERT(m_FileAccess.pPak);
 }
 
 COGGDecoder::~COGGDecoder()
@@ -143,7 +143,7 @@ COGGDecoderInstance::COGGDecoderInstance(COGGDecoder* pDecoder)
 {
 	//	int64 nStartTime, nEndTime;
 	//	getTicks(&nStartTime);
-	ASSERT(pDecoder);
+	CRYASSERT(pDecoder);
 	m_pDecoder = pDecoder;
 	m_pDecoder->m_FileAccess.pPak->FSeek(m_pDecoder->m_FileAccess.pFile, 0, SEEK_SET);
 	ov_callbacks Callbacks;

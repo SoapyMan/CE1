@@ -251,7 +251,7 @@ bool CryModelGeometryLoader::hasBoneInfoInitPos()
 void CryModelGeometryLoader::buildBoneIndicesByNames()
 {
 	// We don't keep the bone id map in the model anymore - so we map ids by names anyway
-	assert(m_nLOD > 0 && m_arrTempBoneIdToIndex.empty());
+	CRYASSERT(m_nLOD > 0 && m_arrTempBoneIdToIndex.empty());
 
 	// since the bone map is not native to this file, map the bone indices by names:
 	// take the names of bones in the LOD file and try to match them against the bone names
@@ -720,7 +720,7 @@ bool CryModelGeometryLoader::loadBoneMesh(const CHUNK_HEADER& chunkHeader, const
 				(GeomInfo.numFaces() <= 20 ? mesh_SingleBB : mesh_OBB | mesh_AABB)
 				| mesh_multicontact0 | mesh_uchar_ids | mesh_approx_box | mesh_approx_sphere | mesh_approx_cylinder
 			);
-			assert(pPhysicalGeometry);
+			CRYASSERT(pPhysicalGeometry);
 			m_mapLimbPhysGeoms[chunkHeader.ChunkID] =
 				m_pPhysicalGeometryManager->RegisterGeometry(pPhysicalGeometry, pmats.empty() ? 0 : pmats[0]);
 		}

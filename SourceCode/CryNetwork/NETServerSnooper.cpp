@@ -24,8 +24,8 @@ CNETServerSnooper::~CNETServerSnooper()
 //------------------------------------------------------------------------------------------------- 
 bool CNETServerSnooper::Create(ISystem* pSystem, INETServerSnooperSink* pSink)
 {
-	assert(pSystem);
-	assert(pSink);
+	CRYASSERT(pSystem);
+	CRYASSERT(pSink);
 
 	m_pSystem = pSystem;
 	m_pSink = pSink;
@@ -188,7 +188,7 @@ void CNETServerSnooper::ProcessPacket(CStream& stmPacket, CIPAddress& ip)
 		}
 
 		--m_iWaitingCount;
-		assert(m_iWaitingCount >= 0);
+		CRYASSERT(m_iWaitingCount >= 0);
 
 		// remove server from table
 		m_hmServerTable.erase(it);
@@ -237,7 +237,7 @@ void CNETServerSnooper::ProcessTimeout()
 				it = m_hmServerTable.erase(it);
 #endif
 				--m_iWaitingCount;
-				assert(m_iWaitingCount >= 0);
+				CRYASSERT(m_iWaitingCount >= 0);
 			}
 			else
 			{

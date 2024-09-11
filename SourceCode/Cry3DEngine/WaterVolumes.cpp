@@ -197,7 +197,7 @@ bool CWaterVolume::TesselateFace(list2<struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F>&
 	else if (fMaxDist == fDist20)
 		fCameraDist = GetSquaredDistance(GetViewCamera().GetPos(), (v2.xyz + v0.xyz) * 0.5f);
 	else
-		assert(0);
+		CRYASSERT(0);
 
 	if (fMaxDist < m_fTriMaxSize)
 	{
@@ -763,7 +763,7 @@ void CWaterVolume::SetPositionOffset(const Vec3d& vNewOffset)
 
 bool CWaterVolume::IsWaterVolumeAreasVisible()
 {
-	assert(m_lstVisAreas.Count());
+	CRYASSERT(m_lstVisAreas.Count());
 
 	// water in indoors
 	int v;

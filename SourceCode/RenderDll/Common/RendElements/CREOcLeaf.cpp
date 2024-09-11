@@ -452,7 +452,7 @@ void CREOcLeaf::mfFillRB(CCObject* pObj)
 	case VERTEX_FORMAT_P3F_COL4UB_COL4UB_TEX2F:
 	{
 		// Used mostly for vegetations
-		assert(pOffs->OffsColor);
+		CRYASSERT(pOffs->OffsColor);
 		if (pOffs->OffsColor)
 		{
 			OffsD = &OffsP[pOffs->OffsColor];
@@ -607,7 +607,7 @@ void CREOcLeaf::mfFillRB(CCObject* pObj)
 	}
 	break;
 	default:
-		assert(false);
+		CRYASSERT(false);
 	}
 	if (nFlags & (FHF_TANGENTS | FHF_LMTC))
 	{
@@ -1083,7 +1083,7 @@ SLightIndicies* CREOcLeaf::mfGetIndiciesForLight(CDLight* pDLight)
 		break;
 
 		default:
-			assert(0);
+			CRYASSERT(0);
 		}
 		li->m_pIndicies.Shrink();
 	}
@@ -1220,14 +1220,14 @@ bool CREOcLeaf::mfCheckUpdate(int nVertFormat, int Flags)
 #ifndef OPENGL
 	if (!m_pBuffer->m_Indices.m_VData)
 	{
-		//assert(!m_pChunk->nNumIndices);
+		//CRYASSERT(!m_pChunk->nNumIndices);
 		return false;
 	}
 #else
 	if (!m_pBuffer->m_SecIndices.Num())
 	{
 #ifndef WIN64
-		//assert(!m_pChunk->nNumIndices);
+		//CRYASSERT(!m_pChunk->nNumIndices);
 #endif //WIN64
 		return false;
 	}
@@ -1261,7 +1261,7 @@ static _inline byte* sGetBuf(CLeafBuffer* lb, int* Stride, int Stream, int Flags
 		if (Stream == VSF_TANGENTS)
 			*Stride = sizeof(SPipTangents);
 		else
-			assert(0);
+			CRYASSERT(0);
 	int Offs = gRenDev->m_RP.m_FirstVertex * (*Stride);
 	if (Flags & FGP_REAL)
 		pD = &pD[Offs];
@@ -1307,7 +1307,7 @@ void* CREOcLeaf::mfGetPointer(ESrcPointer ePT, int* Stride, int Type, ESrcPointe
 		if (gRenDev->m_RP.m_pCurObject && gRenDev->m_RP.m_pCurObject->m_pLMTCBufferO)
 		{ // separate stream for lightmaps
 			CVertexBuffer* pVideoBuffer = gRenDev->m_RP.m_pCurObject->m_pLMTCBufferO->m_pVertexBuffer;
-			assert(pVideoBuffer->m_vertexformat == VERTEX_FORMAT_TEX2F);    // M.M.
+			CRYASSERT(pVideoBuffer->m_vertexformat == VERTEX_FORMAT_TEX2F);    // M.M.
 			*Stride = m_VertexSize[pVideoBuffer->m_vertexformat];
 			gRenDev->m_RP.m_nCurBufferOffset = 0;
 			gRenDev->m_RP.m_nCurBufferID = pVideoBuffer->m_VS[VSF_GENERAL].m_VertBuf.m_nID;
@@ -2033,7 +2033,7 @@ void* CREOcLeaf::mfGetPointer(ESrcPointer ePT, int* Stride, int Type, ESrcPointe
 	break;
 
 	default:
-		assert(false);
+		CRYASSERT(false);
 		break;
 	}
 	return NULL;

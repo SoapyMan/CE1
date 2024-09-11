@@ -141,7 +141,7 @@ public:
 	}
 	bool EnablePropertiesMapping(void* pBase)
 	{
-		assert(pBase);
+		CRYASSERT(pBase);
 
 		m_nBase = (UINT_PTR)pBase;
 		/*#ifndef NO_USERDATA_FOR_PROPERTIES
@@ -256,7 +256,7 @@ protected:
 				Property* prop = ((Property*)nP);
 				if (nCookie != -1)
 					CryError("Scriptable EX:Set Thunk");
-				assert(pThis->m_nBase);
+				CRYASSERT(pThis->m_nBase);
 				void* val = (void*)(pThis->m_nBase + prop->val);
 				switch (prop->nType)
 				{
@@ -322,7 +322,7 @@ protected:
 				Property* prop = ((Property*)nP);
 				if (nCookie != -1)
 					CryError("Scriptable EX:GetParam:GetUdValue");
-				assert(pThis->m_nBase);
+				CRYASSERT(pThis->m_nBase);
 				void* val = (void*)(pThis->m_nBase + prop->val);
 				switch (prop->nType)
 				{

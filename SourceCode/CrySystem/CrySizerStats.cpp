@@ -37,7 +37,7 @@ void CrySizerStatsBuilder::processNames()
 // adds nothing
 size_t CrySizerStatsBuilder::addNameSubtree(unsigned nDepth, size_t nName)
 {
-	assert(nName < m_pSizer->m_arrNames.size());
+	CRYASSERT(nName < m_pSizer->m_arrNames.size());
 
 	CrySizerImpl::ComponentName& rCompName = m_pSizer->m_arrNames[nName];
 	size_t sizeObjectsTotal = rCompName.sizeObjectsTotal;
@@ -119,7 +119,7 @@ CrySizerStats::CrySizerStats()
 // and to the component array nad returns its index
 CrySizerStatsBuilder::Component& CrySizerStatsBuilder::mapName(unsigned nName)
 {
-	assert(m_mapNames[nName] != -1);
+	CRYASSERT(m_mapNames[nName] != -1);
 	return m_pStats->m_arrComponents[m_mapNames[nName]];
 	/*
 	IdToIdMap::iterator it = m_mapNames.find (nName);
@@ -133,7 +133,7 @@ CrySizerStatsBuilder::Component& CrySizerStatsBuilder::mapName(unsigned nName)
 	}
 	else
 	{
-		assert (it->second < m_arrComponents.size());
+		CRYASSERT (it->second < m_arrComponents.size());
 		return m_arrComponents[it->second];
 	}
 	*/
@@ -251,7 +251,7 @@ void CrySizerStatsRenderer::render(bool bRefreshMark)
 		}
 		else
 		{
-			assert(rComp.sizeBytesTotal > 0);
+			CRYASSERT(rComp.sizeBytesTotal > 0);
 			sprintf(szSize, "%7.3f         ", rComp.getTotalSizeMBytes());
 		}
 		char szCount[16];
@@ -335,7 +335,7 @@ void CrySizerStatsRenderer::dump()
 		}
 		else
 		{
-			assert(rComp.sizeBytesTotal > 0);
+			CRYASSERT(rComp.sizeBytesTotal > 0);
 			sprintf(szSize, "%7.3f         ", rComp.getTotalSizeMBytes());
 		}
 		char szCount[16];
@@ -352,12 +352,12 @@ void CrySizerStatsRenderer::dump()
 
 void CrySizerStats::startTimer(unsigned nTimer, ITimer* pTimer)
 {
-	assert(nTimer < g_numTimers);
+	CRYASSERT(nTimer < g_numTimers);
 	m_fTime[nTimer] = pTimer->GetAsyncCurTime();
 }
 
 void CrySizerStats::stopTimer(unsigned nTimer, ITimer* pTimer)
 {
-	assert(nTimer < g_numTimers);
+	CRYASSERT(nTimer < g_numTimers);
 	m_fTime[nTimer] = 1000 * (pTimer->GetAsyncCurTime() - m_fTime[nTimer]);
 }

@@ -20,7 +20,7 @@ struct TFace
 		v[1] = f.v[1];
 		v[2] = f.v[2];
 	}
-	//unsigned operator [] (unsigned nIndex) const {assert(nIndex < 3); return nVertex[nIndex];}
+	//unsigned operator [] (unsigned nIndex) const {CRYASSERT(nIndex < 3); return nVertex[nIndex];}
 	operator T* () { return v; }
 	operator const T* ()const { return v; }
 };

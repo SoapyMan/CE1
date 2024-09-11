@@ -4,10 +4,6 @@
 #include "CAISystem.h"
 #include <Cry_Math.h>
 
-#if !defined(LINUX)
-#include <assert.h>
-#endif
-
 //#include <malloc.h>
 //#include <Cry_Matrix.h>
 #include <ISystem.h>

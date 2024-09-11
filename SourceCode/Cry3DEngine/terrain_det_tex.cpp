@@ -53,12 +53,12 @@ void CTerrain::SetDetailVertNormal(struct_VERTEX_FORMAT_P3F_N_COL4UB& v0)
 		if (nVertId >= 0 && nVertId < pSec0->m_pLeafBuffer->m_SecVertCount && pPos && pNorm)
 		{
 			Vec3d* pvPos = (Vec3d*)&pPos[nPosStride * nVertId];
-			assert(pSec0->m_cGeometryMML != 0 || (fabs(pvPos->x - v0.xyz.x) < 0.25f && fabs(pvPos->y - v0.xyz.y) < 0.25f));
+			CRYASSERT(pSec0->m_cGeometryMML != 0 || (fabs(pvPos->x - v0.xyz.x) < 0.25f && fabs(pvPos->y - v0.xyz.y) < 0.25f));
 			Vec3d* pvNorm = (Vec3d*)&pNorm[nNormStride * nVertId];
 			v0.normal = *pvNorm;
 		}
 		else
-			assert(0);
+			CRYASSERT(0);
 	}
 }
 
@@ -252,7 +252,7 @@ void CTerrain::DrawDetailTextures(float _fFogNearDistance, float _fFogFarDistanc
 				int nVertCount = lstVerts.Count();
 				if (!lstInds.Count() && nVertCount)
 				{
-					nVertCount = 0; assert(0);
+					nVertCount = 0; CRYASSERT(0);
 				}
 
 				bool bUpdated = false;
@@ -284,7 +284,7 @@ void CTerrain::DrawDetailTextures(float _fFogNearDistance, float _fFogFarDistanc
 								}
 								else if (!m_nRenderStackLevel)
 								{
-									assert(MAX_DETAIL_LAYERS_IN_SECTOR <= MAX_CUSTOM_TEX_BINDS_NUM);
+									CRYASSERT(MAX_DETAIL_LAYERS_IN_SECTOR <= MAX_CUSTOM_TEX_BINDS_NUM);
 
 									float* pOutParams = m_DetailTexInfo[nTexID].arrTexOffsets;
 
@@ -338,7 +338,7 @@ void CTerrain::DrawDetailTextures(float _fFogNearDistance, float _fFogFarDistanc
 
 				if (m_DetailTexInfo[nTexID].pVertBuff)
 				{
-					assert(lstInds.Count() && nVertCount);
+					CRYASSERT(lstInds.Count() && nVertCount);
 					if (!bUpdated)
 					{
 						m_DetailTexInfo[nTexID].pVertBuff->UpdateSysVertices(&lstVerts[0], lstVerts.Count());

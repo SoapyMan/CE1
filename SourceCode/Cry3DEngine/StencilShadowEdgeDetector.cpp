@@ -17,7 +17,7 @@ void CStencilShadowEdgeDetector::reinit(
 	const Vec3d* pDeformedVertices
 )
 {
-	assert(pConnectivity);
+	CRYASSERT(pConnectivity);
 
 	m_pConnectivity = pConnectivity->GetInternalRepresentation();
 	m_pModelVertices = pDeformedVertices;
@@ -25,7 +25,7 @@ void CStencilShadowEdgeDetector::reinit(
 	if (!m_pModelVertices || m_pConnectivity->IsStandalone())
 		m_pModelVertices = m_pConnectivity->getVertices();
 
-	assert(pDeformedVertices);
+	CRYASSERT(pDeformedVertices);
 
 	m_arrShadowEdges.clear();
 	m_arrShadowFaces.clear();
@@ -43,7 +43,7 @@ CStencilShadowEdgeDetector::~CStencilShadowEdgeDetector(void)
 // - detected shadow faces for the given light source and model
 void CStencilShadowEdgeDetector::detectShadowFaces()
 {
-	assert(m_pConnectivity);
+	CRYASSERT(m_pConnectivity);
 	if (!m_pConnectivity)
 	{
 #if !defined(LINUX)
@@ -60,7 +60,7 @@ void CStencilShadowEdgeDetector::detectShadowFaces()
 		return;
 	}
 
-	assert(!m_arrFaceOrientations.empty());
+	CRYASSERT(!m_arrFaceOrientations.empty());
 
 	// scan all faces and fill the backfacing ones
 	unsigned nNumFaces = m_pConnectivity->numFaces();
@@ -88,9 +88,9 @@ void CStencilShadowEdgeDetector::detectShadowFaces()
 // returns true if the given face faces the light, and false otherwise
 bool CStencilShadowEdgeDetector::IsFaceTurnedToLight(unsigned nFace, const Vec3d& vLight)
 {
-	assert(m_pModelVertices);
-	assert(m_pConnectivity);
-	assert(nFace >= 0 && nFace < m_pConnectivity->numFaces());
+	CRYASSERT(m_pModelVertices);
+	CRYASSERT(m_pConnectivity);
+	CRYASSERT(nFace >= 0 && nFace < m_pConnectivity->numFaces());
 
 
 	if (m_pConnectivity->hasPlanes())
@@ -156,7 +156,7 @@ void CStencilShadowEdgeDetector::computeFaceOrientations(Vec3d vLight)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CStencilShadowEdgeDetector::detectShadowEdges(void)
 {
-	assert(m_bBitFieldIsSet);		// call	computeFaceOrientations(vLight) before or create the triangle orientation bitfield yourself
+	CRYASSERT(m_bBitFieldIsSet);		// call	computeFaceOrientations(vLight) before or create the triangle orientation bitfield yourself
 
 	// number of vertices in the original model
 	unsigned nModelNumVertices = m_pConnectivity->numVertices();
@@ -250,7 +250,7 @@ void CStencilShadowEdgeDetector::AddFace(vindex nVertex0, vindex nVertex1, vinde
 CStencilShadowEdgeDetector::EdgeTypeEnum
 CStencilShadowEdgeDetector::CheckEdgeType(unsigned nFace0, unsigned nFace1)
 {
-	assert(m_arrFaceOrientations.size());
+	CRYASSERT(m_arrFaceOrientations.size());
 
 	if ((m_arrFaceOrientations[nFace0 >> 5] & (1 << (nFace0 & 0x1F))) == 0)
 	{
@@ -288,7 +288,7 @@ CStencilShadowEdgeDetector::CheckEdgeType(unsigned nFace0, unsigned nFace1)
 CStencilShadowEdgeDetector::EdgeTypeEnum
 CStencilShadowEdgeDetector::CheckOrphanEdgeType(unsigned nFace0)
 {
-	assert(m_arrFaceOrientations.size());
+	CRYASSERT(m_arrFaceOrientations.size());
 
 	if ((m_arrFaceOrientations[nFace0 >> 5] & (1 << (nFace0 & 0x1F))) == 0)
 	{
@@ -330,7 +330,7 @@ const CStencilShadowEdgeDetector::vindex* CStencilShadowEdgeDetector::getShadowE
 void CStencilShadowEdgeDetector::BuildSilhuetteFromPos(const IStencilShadowConnectivity* pConnectivity, const Vec3d& invLightPos,
 	const Vec3d* inpDeformedVertices)
 {
-	assert(pConnectivity);
+	CRYASSERT(pConnectivity);
 
 	m_pConnectivity = pConnectivity->GetInternalRepresentation();
 	m_pModelVertices = m_pConnectivity->getVertices();
@@ -340,7 +340,7 @@ void CStencilShadowEdgeDetector::BuildSilhuetteFromPos(const IStencilShadowConne
 			m_pModelVertices = inpDeformedVertices;
 	}
 
-	assert(m_pModelVertices);
+	CRYASSERT(m_pModelVertices);
 
 	m_arrShadowEdges.clear();
 	m_arrShadowFaces.clear();
@@ -351,7 +351,7 @@ void CStencilShadowEdgeDetector::BuildSilhuetteFromPos(const IStencilShadowConne
 	detectShadowEdges();		// call computeFaceOrientations(vLight) before or create the triangle orientation bitfield yourself
 	detectShadowFaces();
 
-	//	assert(m_bBitFieldIsSet);
+	//	CRYASSERT(m_bBitFieldIsSet);
 	if (!m_bBitFieldIsSet)
 		Warning(0, 0, "CStencilShadowEdgeDetector::BuildSilhuetteFromPos: !m_bBitFieldIsSet");
 }
@@ -359,16 +359,16 @@ void CStencilShadowEdgeDetector::BuildSilhuetteFromPos(const IStencilShadowConne
 
 void CStencilShadowEdgeDetector::BuildSilhuetteFromBitfield(const IStencilShadowConnectivity* pConnectivity, const Vec3d* inpVertices)
 {
-	assert(pConnectivity);
+	CRYASSERT(pConnectivity);
 
-	assert(m_bBitFieldIsSet);		// call	computeFaceOrientations(vLight) before or create the triangle orientation bitfield yourself
+	CRYASSERT(m_bBitFieldIsSet);		// call	computeFaceOrientations(vLight) before or create the triangle orientation bitfield yourself
 
 	m_pConnectivity = pConnectivity->GetInternalRepresentation();
 	m_pModelVertices = m_pConnectivity->getVertices();
 	if (!m_pModelVertices)
 		m_pModelVertices = inpVertices;
 
-	assert(m_pModelVertices);
+	CRYASSERT(m_pModelVertices);
 
 	m_arrShadowEdges.clear();
 	m_arrShadowFaces.clear();
@@ -378,14 +378,14 @@ void CStencilShadowEdgeDetector::BuildSilhuetteFromBitfield(const IStencilShadow
 	detectShadowEdges();	// call computeFaceOrientations(vLight) before or create the triangle orientation bitfield yourself
 	detectShadowFaces();
 
-	assert(m_bBitFieldIsSet);		// call	computeFaceOrientations(vLight) before or create the triangle orientation bitfield yourself
+	CRYASSERT(m_bBitFieldIsSet);		// call	computeFaceOrientations(vLight) before or create the triangle orientation bitfield yourself
 }
 
 
 //!
 unsigned* CStencilShadowEdgeDetector::getOrientationBitfield(int iniNumTriangles)
 {
-	assert(iniNumTriangles);
+	CRYASSERT(iniNumTriangles);
 
 	// mask that masks out the bits that address the bit in an unsigned
 	//const nBitIndexMask = (sizeof(m_arrFaceOrientations[0])*8) - 1;
@@ -414,7 +414,7 @@ unsigned* CStencilShadowEdgeDetector::getOrientationBitfield(int iniNumTriangles
 //////////////////////////////////////////////////////////////////////////////
 void CStencilShadowEdgeDetector::meshShadowVolume(Vec3d vLight, float fFactor, Vec3d* outpVertexBuf, unsigned short* pIndexBuf)
 {
-	assert(outpVertexBuf);
+	CRYASSERT(outpVertexBuf);
 
 	// The Algorithm
 	// We have the edges and their vertex array in m_pShadowEdges
@@ -451,8 +451,8 @@ void CStencilShadowEdgeDetector::meshShadowVolume(Vec3d vLight, float fFactor, V
 	{
 		unsigned short Edge1 = *pEdgeArray++, Edge2 = *pEdgeArray++;
 
-		assert(Edge1 < nNumVerts);
-		assert(Edge2 < nNumVerts);
+		CRYASSERT(Edge1 < nNumVerts);
+		CRYASSERT(Edge2 < nNumVerts);
 
 		*(pIndex++) = Edge2;
 		*(pIndex++) = Edge1;
@@ -480,15 +480,15 @@ void CStencilShadowEdgeDetector::meshShadowVolume(Vec3d vLight, float fFactor, V
 	for (; pFaceIndex < pFaceIndexEnd; pFaceIndex += 3)
 	{
 		// for each face..
-		assert(pFaceIndex[0] < nNumVerts);
-		assert(pFaceIndex[1] < nNumVerts);
-		assert(pFaceIndex[2] < nNumVerts);
+		CRYASSERT(pFaceIndex[0] < nNumVerts);
+		CRYASSERT(pFaceIndex[1] < nNumVerts);
+		CRYASSERT(pFaceIndex[2] < nNumVerts);
 
 		*(pIndex++) = pFaceIndex[0] + nNumVerts;
 		*(pIndex++) = pFaceIndex[2] + nNumVerts;
 		*(pIndex++) = pFaceIndex[1] + nNumVerts;
 	}
 
-	assert(numShadowVolumeVertices() == nNumVerts * 2);
-	assert(numShadowVolumeIndices() == (int)(pIndex - pIndexBuf));
+	CRYASSERT(numShadowVolumeVertices() == nNumVerts * 2);
+	CRYASSERT(numShadowVolumeIndices() == (int)(pIndex - pIndexBuf));
 }

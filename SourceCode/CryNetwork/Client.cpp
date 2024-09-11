@@ -78,10 +78,6 @@ bool CClient::Init(IClientSink* pSink)
 
 #ifdef _INTERNET_SIMULATOR
 #include <stdlib.h>
-#if !defined(LINUX)
-#include <assert.h>
-#endif
-
 #include "IConsole.h"
 #include "ITimer.h"
 #endif
@@ -118,7 +114,7 @@ bool CClient::Send(CStream& stm)
 		else
 			delayed->m_fTimeToSend = GetISystem()->GetITimer()->GetCurrTime();
 		delayed->m_dwLengthInBytes = BITS2BYTES(stm.GetSize());
-		assert(delayed->m_dwLengthInBytes < sizeof(delayed->m_Data) / sizeof(delayed->m_Data[0]));
+		CRYASSERT(delayed->m_dwLengthInBytes < sizeof(delayed->m_Data) / sizeof(delayed->m_Data[0]));
 		memcpy(delayed->m_Data, stm.GetPtr(), delayed->m_dwLengthInBytes);
 		m_delayedPacketList.push_back(delayed);
 		return true;
@@ -281,8 +277,8 @@ void CClient::OnCCPDisconnect(const char* szCause)
 
 void CClient::Connect(const char* szIP, WORD wPort, const BYTE* pbAuthorizationID, unsigned int uiAuthorizationSize)
 {
-	assert(pbAuthorizationID);
-	assert(uiAuthorizationSize > 0);
+	CRYASSERT(pbAuthorizationID);
+	CRYASSERT(uiAuthorizationSize > 0);
 	NET_ASSERT(m_pSink != NULL); // you forgot something
 
 	CIPAddress ip(wPort, szIP);

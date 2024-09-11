@@ -4,8 +4,6 @@
 #include 	"platform.h"
 #if defined(LINUX)
 #include "ILog.h"
-#else
-#include <assert.h>
 #endif
 
 #ifndef CLAMP
@@ -90,7 +88,7 @@ public:
 		if (!_Ptr)
 			return;
 		int nOffset = ((int*)_Ptr)[-1];
-		assert(nOffset >= -16 && nOffset <= -4);
+		CRYASSERT(nOffset >= -16 && nOffset <= -4);
 #if defined(_DEBUG) && defined(_INC_CRTDBG) && !defined(WIN64)
 		_free_dbg(((char*)_Ptr) + nOffset, _NORMAL_BLOCK);
 #else
@@ -251,7 +249,7 @@ public:
 	{
 		m_pElements = (T*)realloc(m_pElements, m_nAllocatedCount * sizeof(T));
 		if (m_nAllocatedCount * sizeof(T))
-			assert(m_pElements);
+			CRYASSERT(m_pElements);
 	}
 
 	void Remove(int Index, int Count = 1)
@@ -271,7 +269,7 @@ public:
 	{
 		if (m_nCount <= 0)
 			return;
-		assert(m_nAllocatedCount >= m_nCount);
+		CRYASSERT(m_nAllocatedCount >= m_nCount);
 		if (m_nAllocatedCount != m_nCount)
 		{
 			m_nAllocatedCount = m_nCount;
@@ -281,9 +279,9 @@ public:
 
 	void _Remove(int Index, int Count)
 	{
-		assert(Index >= 0);
-		assert(Index <= m_nCount);
-		assert((Index + Count) <= m_nCount);
+		CRYASSERT(Index >= 0);
+		CRYASSERT(Index <= m_nCount);
+		CRYASSERT((Index + Count) <= m_nCount);
 
 		Remove(Index, Count);
 	}
@@ -513,13 +511,13 @@ public:
 		// copy size of element
 		int nElemSize = 0;
 		memcpy(&nElemSize, (void*)&pBuffer[nPos], 4);
-		assert(nElemSize == sizeof(T));
+		CRYASSERT(nElemSize == sizeof(T));
 		nPos += 4;
 
 		// copy count
 		int nNewCount = 0;
 		memcpy((void*)&nNewCount, &pBuffer[nPos], 4);
-		assert(nNewCount >= 0 && nNewCount < 1000000);
+		CRYASSERT(nNewCount >= 0 && nNewCount < 1000000);
 		nPos += 4;
 
 		// copy data

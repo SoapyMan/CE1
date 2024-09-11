@@ -93,7 +93,7 @@ public:
 	// returns the end time
 	float GetTimeEnd()
 	{
-		assert(numKeys() > 0);
+		CRYASSERT(numKeys() > 0);
 		return float(m_arrTimes[numKeys() - 1]);
 	}
 

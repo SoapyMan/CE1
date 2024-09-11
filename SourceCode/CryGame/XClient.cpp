@@ -150,7 +150,7 @@ bool CXClient::Init(CXGame *pGame,bool bLocal)
 ///////////////////////////////////////////////
 CXClient::~CXClient()
 {
-	assert(m_bSelfDestruct);		//  to make sure the client is only released in one place
+	CRYASSERT(m_bSelfDestruct);		//  to make sure the client is only released in one place
 
 	if (m_pSavedConsoleVars)
 	{
@@ -465,7 +465,7 @@ void CXClient::OnXContextSetup(CStream &stm)
 
 	IGameMods *pModInterface=m_pGame->GetModsInterface();
 
-	assert(pModInterface);		// otherwise the Game::Init failed
+	CRYASSERT(pModInterface);		// otherwise the Game::Init failed
 
 	//if(m_GameContext.strMod!=string(pModInterface->GetCurrentMod()))
 	if (stricmp(m_GameContext.strMod.c_str(),pModInterface->GetCurrentMod())!=0)
@@ -673,7 +673,7 @@ void CXClient::OnXContextSetup(CStream &stm)
 ///////////////////////////////////////////////
 void CXClient::UpdateClientNetwork()
 {
-	assert(this);
+	CRYASSERT(this);
 	if(m_bPlaybackDemo)
 	{
 		m_pGame->PlaybackChunk();
@@ -689,7 +689,7 @@ void CXClient::UpdateClientNetwork()
 		}
 	}
 
-	assert(m_pTimer);
+	CRYASSERT(m_pTimer);
 
 	m_NetStats.Update(m_pTimer->GetCurrTimePrecise());		// keep statistics for one sec
 }
@@ -998,7 +998,7 @@ void CXClient::SendInputToServer( const bool bTimeToSend )
 	CAdvCamSystem *pAdvCamSystem=NULL;
 
 	CStream &stm = m_Snapshot.GetReliableStream();
-	assert(!stm.GetSize());
+	CRYASSERT(!stm.GetSize());
 
 	//////////////////////////////////////////////////////////////////////////////////////
 	//HANDLE A PLAYER CONTAINER
@@ -1201,7 +1201,7 @@ const char *CXClient::GetMsgName( XCLIENTMSG inValue )
 		ADDNAME(RATE)
 		ADDNAME(ENTSOFFSYNC)
 #undef ADDNAME
-		default: assert(0);
+		default: CRYASSERT(0);
 	}
 	return 0;
 }
@@ -2028,7 +2028,7 @@ bool CXClient::ParseIncomingStream(CStream &stm)
 
 					OnServerMsgScoreBoard(stm);
 
-					assert(stm.GetReadPos()==readpos+size);		// just for testing
+					CRYASSERT(stm.GetReadPos()==readpos+size);		// just for testing
 
 					stm.Seek(readpos+size);			// jump over it in the case the packet wasn't processable
 				}
@@ -2095,7 +2095,7 @@ bool CXClient::ParseIncomingStream(CStream &stm)
 			
 			default:
 				m_pLog->LogError("lastSuccessfulPacketID=%i currentPacketID=%i - wrong data chunk.", (int)lastSuccessfulPacketID, (int)msg);
-				assert(0);
+				CRYASSERT(0);
 				return false;
 				break;
 		}
@@ -2364,7 +2364,7 @@ todo: Sorter is needed because lua table don't have a fixed order
 //					char *szKey;
 //					pPath->GetCurrentKey(szKey);			
 					
-//					assert(szKey);
+//					CRYASSERT(szKey);
 
 //					m_pGame->m_pSystem->GetILog()->Log("GetCurrentFuncData hash=%p '%s' size=%d",dwLocalHash,szKey,iSize);
 				}

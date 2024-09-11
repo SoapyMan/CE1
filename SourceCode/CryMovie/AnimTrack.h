@@ -85,19 +85,19 @@ public:
 	// Get track value at specified time.
 	// Interpolates keys if needed.
 	//////////////////////////////////////////////////////////////////////////
-	virtual void GetValue(float time, float& value) { assert(0); };
-	virtual void GetValue(float time, Vec3& value) { assert(0); };
-	virtual void GetValue(float time, Quat& value) { assert(0); };
-	virtual void GetValue(float time, bool& value) { assert(0); };
+	virtual void GetValue(float time, float& value) { CRYASSERT(0); };
+	virtual void GetValue(float time, Vec3& value) { CRYASSERT(0); };
+	virtual void GetValue(float time, Quat& value) { CRYASSERT(0); };
+	virtual void GetValue(float time, bool& value) { CRYASSERT(0); };
 
 	//////////////////////////////////////////////////////////////////////////
 	// Set track value at specified time.
 	// Adds new keys if required.
 	//////////////////////////////////////////////////////////////////////////
-	virtual void SetValue(float time, const float& value, bool bDefault = false) { assert(0); };
-	virtual void SetValue(float time, const Vec3& value, bool bDefault = false) { assert(0); };
-	virtual void SetValue(float time, const Quat& value, bool bDefault = false) { assert(0); };
-	virtual void SetValue(float time, const bool& value, bool bDefault = false) { assert(0); };
+	virtual void SetValue(float time, const float& value, bool bDefault = false) { CRYASSERT(0); };
+	virtual void SetValue(float time, const Vec3& value, bool bDefault = false) { CRYASSERT(0); };
+	virtual void SetValue(float time, const Quat& value, bool bDefault = false) { CRYASSERT(0); };
+	virtual void SetValue(float time, const bool& value, bool bDefault = false) { CRYASSERT(0); };
 
 	/** Assign active time range for this track.
 	*/
@@ -155,7 +155,7 @@ inline TAnimTrack<KeyType>::TAnimTrack()
 template <class KeyType>
 inline void TAnimTrack<KeyType>::RemoveKey(int index)
 {
-	assert(index >= 0 && index < (int)m_keys.size());
+	CRYASSERT(index >= 0 && index < (int)m_keys.size());
 	m_keys.erase(m_keys.begin() + index);
 	Invalidate();
 }
@@ -164,8 +164,8 @@ inline void TAnimTrack<KeyType>::RemoveKey(int index)
 template <class KeyType>
 inline void TAnimTrack<KeyType>::GetKey(int index, IKey* key)
 {
-	assert(index >= 0 && index < (int)m_keys.size());
-	assert(key != 0);
+	CRYASSERT(index >= 0 && index < (int)m_keys.size());
+	CRYASSERT(key != 0);
 	*(KeyType*)key = m_keys[index];
 }
 
@@ -173,8 +173,8 @@ inline void TAnimTrack<KeyType>::GetKey(int index, IKey* key)
 template <class KeyType>
 inline void TAnimTrack<KeyType>::SetKey(int index, IKey* key)
 {
-	assert(index >= 0 && index < (int)m_keys.size());
-	assert(key != 0);
+	CRYASSERT(index >= 0 && index < (int)m_keys.size());
+	CRYASSERT(key != 0);
 	m_keys[index] = *(KeyType*)key;
 	Invalidate();
 }
@@ -183,7 +183,7 @@ inline void TAnimTrack<KeyType>::SetKey(int index, IKey* key)
 template <class KeyType>
 inline float TAnimTrack<KeyType>::GetKeyTime(int index)
 {
-	assert(index >= 0 && index < (int)m_keys.size());
+	CRYASSERT(index >= 0 && index < (int)m_keys.size());
 	return m_keys[index].time;
 }
 
@@ -191,7 +191,7 @@ inline float TAnimTrack<KeyType>::GetKeyTime(int index)
 template <class KeyType>
 inline void TAnimTrack<KeyType>::SetKeyTime(int index, float time)
 {
-	assert(index >= 0 && index < (int)m_keys.size());
+	CRYASSERT(index >= 0 && index < (int)m_keys.size());
 	m_keys[index].time = time;
 	Invalidate();
 }
@@ -212,7 +212,7 @@ inline int TAnimTrack<KeyType>::FindKey(float time)
 template <class KeyType>
 inline int TAnimTrack<KeyType>::GetKeyFlags(int index)
 {
-	assert(index >= 0 && index < (int)m_keys.size());
+	CRYASSERT(index >= 0 && index < (int)m_keys.size());
 	return m_keys[index].flags;
 }
 
@@ -220,7 +220,7 @@ inline int TAnimTrack<KeyType>::GetKeyFlags(int index)
 template <class KeyType>
 inline void TAnimTrack<KeyType>::SetKeyFlags(int index, int flags)
 {
-	assert(index >= 0 && index < (int)m_keys.size());
+	CRYASSERT(index >= 0 && index < (int)m_keys.size());
 	m_keys[index].flags = flags;
 	Invalidate();
 }

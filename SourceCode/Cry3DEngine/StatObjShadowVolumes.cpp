@@ -93,7 +93,7 @@ ItShadowVolume* CStatObj::MakeConnectivityInfoFromCompiledData(void* pStream, in
 // NOTE: Current implementation doesn't take the limit LOD parameter into account
 void CStatObj::RenderShadowVolumes(const SRendParams* pParams, int nLimitLod)
 {
-	//  assert(pParams->lSource);
+	//  CRYASSERT(pParams->lSource);
 
 	CDLight tTempLight;
 	tTempLight = *(pParams->pShadowVolumeLightSource);
@@ -226,9 +226,9 @@ CVolume::~CVolume()
 
 bool CShadowVolObject::CreateConnectivityInfo(void)
 {
-	//IStatObj *ob=m_lstStatObjs[0];							assert(ob);
+	//IStatObj *ob=m_lstStatObjs[0];							CRYASSERT(ob);
 	IStatObj* ob = m_lstObjects[0].pObj;
-	assert(ob);
+	CRYASSERT(ob);
 	CIndexedMesh* pMesh = ob->GetTriData();
 
 	if (!pMesh)
@@ -241,7 +241,7 @@ bool CShadowVolObject::CreateConnectivityInfo(void)
 
 	IEdgeConnectivityBuilder* iBuilder = Get3DEngine()->GetNewStaticConnectivityBuilder();
 
-	assert(iBuilder);
+	CRYASSERT(iBuilder);
 
 	iBuilder->ReserveForTriangles(nNumFaces, pMesh->m_nVertCount);
 
@@ -394,7 +394,7 @@ void CShadowVolObject::RebuildShadowVolumeBuffer(const CDLight& lSource, float f
 	IStatObj* ob = m_lstObjects[0].pObj;
 	CIndexedMesh* pMesh = ob->GetTriData();
 
-	assert(m_pEdgeConnectivity->IsStandalone());
+	CRYASSERT(m_pEdgeConnectivity->IsStandalone());
 
 	if (m_pEdgeConnectivity->IsStandalone())
 	{
@@ -462,7 +462,7 @@ void CShadowVolObject::RebuildShadowVolumeBuffer(const CDLight& lSource, float f
 			// calculate the minimum extrusion level (to get the object bounding box extruded outside of the room)
 			fShadowVolumeExtent = inpArea->CalculateMinimumShadowExtrusion(vWorldSpaceLight,vMinObjBBox,vMaxObjBBox);
 
-	//		assert(fShadowVolumeExtent>=1.0f);
+	//		CRYASSERT(fShadowVolumeExtent>=1.0f);
 		}
 		else
 		*/
@@ -512,9 +512,9 @@ void CShadowVolObject::RebuildShadowVolumeBuffer(const CDLight& lSource, float f
 			pSVI->pVB = GetRenderer()->CreateLeafBufferInitialized(
 				m_pSystemVertexBuffer, m_nNumVertices, VERTEX_FORMAT_P3F,
 				&m_arrIndices[0], nNumIndices, R_PRIMV_TRIANGLES, "ShadowVolume", eBT_Dynamic, 1, 0, 0, this);
-			assert(m_nNumVertices && nNumIndices);
+			CRYASSERT(m_nNumVertices && nNumIndices);
 			pSVI->pVB->SetChunk(0, 0, m_nNumVertices, 0, nNumIndices);
-			assert((*(pSVI->pVB)).m_pMats->Count());
+			CRYASSERT((*(pSVI->pVB)).m_pMats->Count());
 		}
 
 		/*
@@ -529,7 +529,7 @@ void CShadowVolObject::RebuildShadowVolumeBuffer(const CDLight& lSource, float f
 		  #ifdef _DEBUG
 				  {
 					  for (unsigned i = 0; i < nNumIndices; ++i)
-						  assert(m_arrIndices[i] < nNumVertices);
+						  CRYASSERT(m_arrIndices[i] < nNumVertices);
 				  }
 		  #endif
 		  */
@@ -556,8 +556,8 @@ void CShadowVolObject::RebuildShadowVolumeBuffer(const CDLight& lSource, float f
   //		m_pReMeshShadow->m_nNumIndices = nNumIndices;	
   //    m_pReMeshShadow->mfCheckUpdate(0);			// call before update, to make sure video buffer is there
 
-  //		assert(m_pRenShadowVolumeLBuffer);
-  //		assert(m_pRenShadowVolumeLBuffer->m_pVertexBuffer);
+  //		CRYASSERT(m_pRenShadowVolumeLBuffer);
+  //		CRYASSERT(m_pRenShadowVolumeLBuffer->m_pVertexBuffer);
 
   //		GetRenderer()->UpdateBuffer(m_pRenShadowVolumeLBuffer->m_pVertexBuffer,pSystemBuffer,nNumVertices,true);		
 	  //	GetRenderer()->UpdateIndices(m_pRenShadowVolumeLBuffer->m_pVertexBuffer,&m_arrIndices[0],nNumIndices);		
@@ -637,13 +637,13 @@ void CShadowVolObject::PrepareShadowVolumeVertexBuffer(unsigned nNumIndices, uns
 		}
 	}
 
-	assert(m_pReMeshShadow); // should be called from inside this object
+	CRYASSERT(m_pReMeshShadow); // should be called from inside this object
 	//		m_pReMeshShadow = (CRETriMeshShadow *)GetRenderer()->EF_CreateRE(eDATA_TriMeshShadow);
 
 	if (!m_pSystemVertexBuffer)
 	{
-		assert(m_nNumVertices);
+		CRYASSERT(m_nNumVertices);
 		m_pSystemVertexBuffer = new Vec3d[m_nNumVertices];
-		assert(m_pSystemVertexBuffer);
+		CRYASSERT(m_pSystemVertexBuffer);
 	}
 }

@@ -34,7 +34,7 @@ right now this code is not GPL or LGPL in any way
 // Debug functions / macros
 ///////////////////////////////////////////////////////////////////////////////////////////
 #if defined(WIN64) || defined(LINUX64)
-#define _TinyVerify(x) { if (!(x)) assert(0); }
+#define _TinyVerify(x) { if (!(x)) CRYASSERT(0); }
 #else
 #define _TinyVerify(x) { if (!(x)) { DEBUG_BREAK; }; }
 #endif

@@ -150,7 +150,7 @@ namespace Path
 		else
 		{
 			// srcpath is not a leading part in filepath
-			assert(strstr(CStr(filepath), ":") == 0);		// the following code assumes a relative path name
+			CRYASSERT(strstr(CStr(filepath), ":") == 0);		// the following code assumes a relative path name
 
 			return Make(CStr(destpath), CStr(filepath));
 		}

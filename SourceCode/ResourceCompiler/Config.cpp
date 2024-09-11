@@ -111,7 +111,7 @@ void Config::Merge(IConfig* inpConfig)
 {
 	Config* pConfig = inpConfig->GetInternalRepresentation();
 
-	assert(pConfig); if (!pConfig)return;
+	CRYASSERT(pConfig); if (!pConfig)return;
 
 	Map::iterator it;
 

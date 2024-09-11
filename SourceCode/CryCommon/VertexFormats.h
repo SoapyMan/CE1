@@ -246,7 +246,7 @@ _inline void* CreateVertexBuffer(int nFormat, int nVerts)
 		return new struct_VERTEX_FORMAT_TEX2F[nVerts];
 
 	default:
-		assert(0);
+		CRYASSERT(0);
 	}
 	return NULL;
 }

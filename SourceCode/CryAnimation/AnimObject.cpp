@@ -273,7 +273,7 @@ Matrix44& CAnimObject::GetNodeMatrix(Node* node)
 	node->m_bMatrixValid = false;
 
 
-	assert(node);
+	CRYASSERT(node);
 	if (!node->m_bMatrixValid)
 	{
 		// Make local matrix.
@@ -466,7 +466,7 @@ void CAnimObject::CreateDecal(CryEngineDecalInfo& Decal)
 IPhysicalEntity* CAnimObject::CreateCharacterPhysics(IPhysicalEntity* pHost, float mass, int surface_idx, float stiffness_scale, int nLod)
 {
 	//m_physic = GetPhysicalWorld()->CreatePhysicalEntity(PE_STATIC,&partpos,(IEntity*)this);
-	assert(pHost);
+	CRYASSERT(pHost);
 	m_physic = pHost;
 	return 0;
 }
@@ -474,7 +474,7 @@ IPhysicalEntity* CAnimObject::CreateCharacterPhysics(IPhysicalEntity* pHost, flo
 //////////////////////////////////////////////////////////////////////////
 int CAnimObject::CreateAuxilaryPhysics(IPhysicalEntity* pHost, int nLod)
 {
-	//assert( pHost );
+	//CRYASSERT( pHost );
 	//m_physic = pHost;
 	return 0;
 }
@@ -482,7 +482,7 @@ int CAnimObject::CreateAuxilaryPhysics(IPhysicalEntity* pHost, int nLod)
 //////////////////////////////////////////////////////////////////////////
 void CAnimObject::BuildPhysicalEntity(IPhysicalEntity* pent, float mass, int surface_idx, float stiffness_scale, int nLod)
 {
-	assert(pent);
+	CRYASSERT(pent);
 
 	m_physic = pent;
 
@@ -614,8 +614,8 @@ CAnimObject::ObjectBindingHandle CAnimObject::AttachObjectToBone(IBindable* pWea
 {
 	if (!szBoneName)
 	{
-		// if you find this assert, this means someone passed here a model and NO bone to attach it to. What should it mean anyway??
-		assert(!pWeaponModel);
+		// if you find this CRYASSERT, this means someone passed here a model and NO bone to attach it to. What should it mean anyway??
+		CRYASSERT(!pWeaponModel);
 		// just detach everything
 		DetachAll();
 		return nInvalidObjectBindingHandle;
@@ -635,8 +635,8 @@ CAnimObject::ObjectBindingHandle CAnimObject::AttachObjectToBone(IBindable* pWea
 
 			g_GetLog()->LogError("\002AttachObjectToBone is called for bone \"%s\", which is not in the model \"%s\". Ignoring, but this may cause a crash because the corresponding object won't be detached after it's destroyed", szBoneName, GetFileName());
 #ifdef _DEBUG
-			// this assert will only happen if the ca_NoAttachAssert is off
-			// assert (GetCVars()->ca_NoAttachAssert());
+			// this CRYASSERT will only happen if the ca_NoAttachAssert is off
+			// CRYASSERT (GetCVars()->ca_NoAttachAssert());
 #endif
 		}
 		return nInvalidObjectBindingHandle; // bone not found, do nothing

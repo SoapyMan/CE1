@@ -210,7 +210,7 @@ public:
 		if (!gcpOGL->m_CGContext)
 		{
 			gcpOGL->m_CGContext = cgCreateContext();
-			assert(gcpOGL->m_CGContext != NULL);
+			CRYASSERT(gcpOGL->m_CGContext != NULL);
 		}
 #endif
 		m_dwFrame = 1;
@@ -246,7 +246,7 @@ public:
 						int nComb = (Reg >> 28) - 1;
 						if (reg >= 65536)
 							reg -= 65536;
-						assert(reg >= 0 && reg < 2);
+						CRYASSERT(reg >= 0 && reg < 2);
 						if (reg < 0 || reg >= 2)
 							continue;
 						int n = nComb * 2 + reg;
@@ -424,7 +424,7 @@ public:
 		FILE* fp = fopen("$$in.cg", "w");
 		if (!fp)
 			return NULL;
-		assert(*prog_text);
+		CRYASSERT(*prog_text);
 		fputs(prog_text, fp);
 		fclose(fp);
 
@@ -599,7 +599,7 @@ public:
 								sprintf(code, "!!TS1.0\n %s\n %s\n %s\n %s\n", sLine[0], sLine[1], sLine[2], sLine[3]);
 								break;
 							default:
-								assert(0);
+								CRYASSERT(0);
 							}
 							uint listTS = glGenLists(1);
 							glNewList(listTS, GL_COMPILE);
@@ -659,7 +659,7 @@ public:
 					SCGBind* p = &m_Insts[m_CurInst].m_BindVars->Get(i);
 					if (p->m_Name == ParamBind->m_Name)
 					{
-						assert(p->m_nComponents <= nComps);
+						CRYASSERT(p->m_nComponents <= nComps);
 						ParamBind->m_dwBind = (ParamBind->m_dwBind & 0x80000) | p->m_dwBind;
 						if (!(ParamBind->m_dwBind & 0xffff))
 							ParamBind->m_dwBind |= 0x10000;
@@ -713,7 +713,7 @@ public:
 					{
 						if (reg & 0x10000)
 							reg = 0;
-						assert(reg >= 0 && reg < 2);
+						CRYASSERT(reg >= 0 && reg < 2);
 						int n = nComb * 2 + reg;
 						if (m_CurParams[n][0] != v[0] || m_CurParams[n][1] != v[1] || m_CurParams[n][2] != v[2] || m_CurParams[n][3] != v[3])
 						{

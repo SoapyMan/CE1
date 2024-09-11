@@ -10,14 +10,11 @@ project "Launcher"
 
 	--unitybuild "on"
     uses {
+		"CryCommon",
 		"SDL2"
 	}
     files {
 		"./SourceCode/FarCry/**",
-	}
-
-    includedirs {
-		"./SourceCode/CryCommon"
 	}
 
     filter "system:Windows"
@@ -31,16 +28,12 @@ project "DedicatedServer"
 
 	--unitybuild "on"
     uses {
+		"CryCommon",
 		"SDL2"
 	}
     files {
 		"./SourceCode/FarCry_WinSV/**",
 	}
-
-    includedirs {
-		"./SourceCode/CryCommon"
-	}
-
     filter "system:Windows"
 		linkoptions {
 			"/SAFESEH:NO", -- Image Has Safe Exception Handers: No. Because of openal-soft

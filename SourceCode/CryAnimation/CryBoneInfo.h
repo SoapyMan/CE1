@@ -24,8 +24,8 @@ public:
 	CryBoneInfo();
 	~CryBoneInfo();
 
-	CryBoneInfo* getChild(unsigned i) { assert(i < numChildren()); return this + m_nOffsetChildren + i; }
-	const CryBoneInfo* getChild(unsigned i) const { assert(i < numChildren()); return this + m_nOffsetChildren + i; }
+	CryBoneInfo* getChild(unsigned i) { CRYASSERT(i < numChildren()); return this + m_nOffsetChildren + i; }
+	const CryBoneInfo* getChild(unsigned i) const { CRYASSERT(i < numChildren()); return this + m_nOffsetChildren + i; }
 	CryBoneInfo* getParent() { return m_nOffsetParent ? this + m_nOffsetParent : NULL; }
 	const CryBoneInfo* getParent() const { return m_nOffsetParent ? this + m_nOffsetParent : NULL; }
 

@@ -1815,9 +1815,9 @@ void SShaderTexUnit::mfUpdate(void)
 {
 	if (m_AnimInfo && m_AnimInfo->m_Time && gRenDev->m_bPauseTimer == 0)
 	{
-		assert(gRenDev->m_RP.m_RealTime >= 0);
+		CRYASSERT(gRenDev->m_RP.m_RealTime >= 0);
 		uint m = (uint)(gRenDev->m_RP.m_RealTime / m_AnimInfo->m_Time) % m_AnimInfo->m_NumAnimTexs;
-		assert(m < (uint)m_AnimInfo->m_TexPics.Num());
+		CRYASSERT(m < (uint)m_AnimInfo->m_TexPics.Num());
 		m_TexPic = m_AnimInfo->m_TexPics[m];
 	}
 }
@@ -2624,11 +2624,11 @@ bool CShader::FlushCacheFile(SShaderCache* pCache)
 
 bool CShader::AddCacheItem(SShaderCache* pCache, SShaderCacheHeaderItem* pItem, byte* pData, int nLen, bool bFlush)
 {
-	assert(pCache && pCache->m_pRes);
+	CRYASSERT(pCache && pCache->m_pRes);
 	if (!pCache || !pCache->m_pRes)
 		return false;
 
-	assert(pItem->m_nVariables < 32);
+	CRYASSERT(pItem->m_nVariables < 32);
 
 	byte* pNew = new byte[sizeof(SShaderCacheHeaderItem) + nLen];
 	memcpy(pNew, pItem, sizeof(SShaderCacheHeaderItem));
@@ -2649,7 +2649,7 @@ bool CShader::AddCacheItem(SShaderCache* pCache, SShaderCacheHeaderItem* pItem, 
 
 bool CShader::FreeCacheItem(SShaderCache* pCache, int nMask)
 {
-	assert(pCache && pCache->m_pRes);
+	CRYASSERT(pCache && pCache->m_pRes);
 	if (!pCache || !pCache->m_pRes)
 		return false;
 	CResFile* rf = pCache->m_pRes;
@@ -2662,7 +2662,7 @@ bool CShader::FreeCacheItem(SShaderCache* pCache, int nMask)
 
 SShaderCacheHeaderItem* CShader::GetCacheItem(SShaderCache* pCache, int nMask)
 {
-	assert(pCache && pCache->m_pRes);
+	CRYASSERT(pCache && pCache->m_pRes);
 	if (!pCache || !pCache->m_pRes)
 		return NULL;
 	CResFile* rf = pCache->m_pRes;

@@ -395,7 +395,7 @@ static void GetPixel(unsigned char* data, int depth, unsigned long& a, unsigned 
 		break;
 
 	default:
-		assert(0);
+		CRYASSERT(0);
 		break;
 	}
 }
@@ -473,7 +473,7 @@ void WriteTGA(byte* data, int width, int height, char* filename, int dest_bits_p
 
 	if (!top)
 	{
-		assert(src_bits_per_pixel == 32);
+		CRYASSERT(src_bits_per_pixel == 32);
 
 		swap = (DWORD*) new DWORD[hxw];
 

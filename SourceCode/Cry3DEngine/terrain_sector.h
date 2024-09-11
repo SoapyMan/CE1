@@ -106,7 +106,7 @@ protected:
 
 		inline void EndStrip()
 		{
-			assert(strip_info.Count());
+			CRYASSERT(strip_info.Count());
 			strip_info.Last().end = idx_array.Count();
 		}
 

@@ -7,12 +7,6 @@
 #include "Heuristic.h"
 #include "CAISystem.h"
 
-
-#if !defined(LINUX)
-#include <assert.h>
-#endif
-
-
 #include "Cry_Math.h"
 #include <ISystem.h>
 #include <Cry_Camera.h>
@@ -1330,7 +1324,7 @@ bool CGraph::ReadFromFile(const char* szName)
 // reads all the nodes in a map
 bool CGraph::ReadNodes(CCryFile& file)
 {
-	//assert(_heapchk()==_HEAPOK);
+	//CRYASSERT(_heapchk()==_HEAPOK);
 
 	//DWORD read;
 	int iNumber;
@@ -1502,7 +1496,7 @@ bool CGraph::ReadNodes(CCryFile& file)
 	m_vBuffer.clear();
 	m_mapReadNodes.clear();
 	m_vLinksDesc.clear();
-	//assert(_heapchk()==_HEAPOK);
+	//CRYASSERT(_heapchk()==_HEAPOK);
 	return true;
 }
 #endif  

@@ -308,7 +308,7 @@ bool CStringTableMgr::LoadStringTable(string sFileName)
 //////////////////////////////////////////////////////////////////////////
 bool CStringTableMgr::LookupString( const char *sKey,wstring &sLocalizedString )
 {
-	assert(sKey);
+	CRYASSERT(sKey);
 	size_t i;
 
 	// Label sign.
@@ -354,7 +354,7 @@ bool CStringTableMgr::LookupString( const char *sKey,wstring &sLocalizedString )
 //////////////////////////////////////////////////////////////////////////
 bool CStringTableMgr::LookupEnglishString( const char *sKey, string &sLocalizedString )
 {
-	assert(sKey);
+	CRYASSERT(sKey);
 	size_t i;
 
 	// Label sign.

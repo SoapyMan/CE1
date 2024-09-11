@@ -28,7 +28,7 @@ bool CRETriMeshShadow::mfDraw(SShader* ef, SShaderPass* sfm)
 		return false;
 	}
 
-	//	assert(m_arrLBuffers[m_nCurrInst].pVB);
+	//	CRYASSERT(m_arrLBuffers[m_nCurrInst].pVB);
 
 	CGLRenderer* rd = gcpOGL;
 	CDLight* pDL = NULL;
@@ -85,7 +85,7 @@ bool CRETriMeshShadow::mfDraw(SShader* ef, SShaderPass* sfm)
 			else
 				nIndices = Indices->m_nItems;
 
-			assert(nIndices);
+			CRYASSERT(nIndices);
 
 			rd->DrawBuffer(pVB, Indices, nIndices, 0, R_PRIMV_TRIANGLES);
 
@@ -111,7 +111,7 @@ bool CRETriMeshShadow::mfDraw(SShader* ef, SShaderPass* sfm)
 			else
 				nIndices = Indices->m_nItems;
 
-			assert(nIndices);
+			CRYASSERT(nIndices);
 
 			rd->DrawBuffer(pVB, Indices, nIndices, 0, R_PRIMV_TRIANGLES);
 

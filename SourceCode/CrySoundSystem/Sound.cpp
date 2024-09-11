@@ -36,8 +36,8 @@ int CSound::m_PlayingChannels = 0;
 //////////////////////////////////////////////////////////////////////
 CSound::CSound(CSoundSystem* pSSys, const char* szFile)
 {
-	ASSERT(pSSys);
-	ASSERT(pSSys->m_pISystem);
+	CRYASSERT(pSSys);
+	CRYASSERT(pSSys->m_pISystem);
 	m_pSSys = pSSys;
 	m_pTimer = pSSys->m_pISystem->GetITimer();
 	//	m_refCount = 0;
@@ -738,7 +738,7 @@ void CSound::SetMinMaxDistance(float fMinDist, float fMaxDist)
 //////////////////////////////////////////////////////////////////////
 void CSound::SetAttrib(int nVolume, float fRatio, int nPan, int nFreq, bool bSetRatio)
 {
-	ASSERT(nFreq == 1000);
+	CRYASSERT(nFreq == 1000);
 	if (bSetRatio)
 		m_fRatio = fRatio;
 	m_nVolume = nVolume;

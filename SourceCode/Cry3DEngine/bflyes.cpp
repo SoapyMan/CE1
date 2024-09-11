@@ -263,7 +263,7 @@ CBFManager::CBFManager()
 	pInds[i++] = b*6+3;
 	pInds[i++] = b*6+4;
 	pInds[i++] = b*6+5;
-//		assert(i<BF_COUNT*12);
+//		CRYASSERT(i<BF_COUNT*12);
   }
   GetRenderer()->UpdateIndexBuffer(&m_Indixes, NULL, 0, true);
 

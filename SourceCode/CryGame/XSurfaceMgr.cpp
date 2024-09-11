@@ -321,7 +321,7 @@ void CXSurfaceMgr::SetMaterialGameplayPhysic( int nId, _SmartScriptObject &table
 	float fFriction=1.0f;
 	int		iPiercingResistence=sf_max_pierceable;	// physics taces range 0-15
 	PhysicalSurfacesPropsMapItor It=m_mapMaterialProps.find(nId);
-	ASSERT(It!=m_mapMaterialProps.end());
+	CRYASSERT(It!=m_mapMaterialProps.end());
 	SMatProps &MatProps=It->second;
 
 	if(table->GetValue("gameplay_physic",*pGameplayPhysic))

@@ -469,7 +469,7 @@ public:
 		struct_VERTEX_FORMAT_TRP3F_COL4UB_TEX2F* pVertices = NULL;
 		if (nVerts > m_nVertsDMesh2D)
 		{
-			assert(false);
+			CRYASSERT(false);
 			return NULL;
 		}
 		if (nVerts + m_nOffsDMesh2D > m_nVertsDMesh2D)
@@ -499,7 +499,7 @@ public:
 		ushort* pInds = NULL;
 		if (nInds > m_nIndsDMesh)
 		{
-			assert(0);
+			CRYASSERT(0);
 			return NULL;
 		}
 		if (nInds + m_nIOffsDMesh > m_nIndsDMesh)
@@ -527,7 +527,7 @@ public:
 		void* pVertices = NULL;
 		if (nVerts > m_nVertsDMesh3D[Pool])
 		{
-			assert(0);
+			CRYASSERT(0);
 			return NULL;
 		}
 		if (!m_pVB3DAr[Pool][0])
@@ -1102,7 +1102,7 @@ public:
 					if (bEnable)
 					{
 						SEfResTexture* pRT = m_RP.m_ShaderTexResources[i];
-						assert(m_RP.m_TexStages[i].Texture);
+						CRYASSERT(m_RP.m_TexStages[i].Texture);
 						if (m_RP.m_TexStages[i].Texture->m_eTT == eTT_Cubemap)
 							m_pd3dDevice->SetTextureStageState(i, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_COUNT3);
 						else
@@ -1267,7 +1267,7 @@ public:
 			if (m_bTempHDRWasSet)
 			{
 				m_bTempHDRWasSet = false;
-				assert(m_pHDRTargetSurf);
+				CRYASSERT(m_pHDRTargetSurf);
 				pTargSurf = m_pHDRTargetSurf;
 			}
 			else
@@ -1293,7 +1293,7 @@ public:
 	{
 		HRESULT hr;
 
-		assert(nVFormat >= 0 && nVFormat < VERTEX_FORMAT_NUMS);
+		CRYASSERT(nVFormat >= 0 && nVFormat < VERTEX_FORMAT_NUMS);
 
 		if (!m_RP.m_D3DFixedPipeline[StreamMask][nVFormat].m_pDeclaration)
 		{
@@ -1539,7 +1539,7 @@ public:
 			EF_DrawFurPasses(hs, ef, nStart, nEnd, eShPass);
 			break;
 		default:
-			assert(false);
+			CRYASSERT(false);
 		}
 		return bLights;
 	}
@@ -1886,7 +1886,7 @@ _inline void sAddVB(IDirect3DResource9* pRes, SVertexStream* pStr, CVertexBuffer
 	for (i = 0; i < gDVB.Num(); i++)
 	{
 		if (gDVB[i].m_pRes == pRes)
-			assert(0);
+			CRYASSERT(0);
 	}
 	SDynVB VB;
 	VB.m_pRes = pRes;
@@ -1913,7 +1913,7 @@ _inline void sRemoveVB(IDirect3DResource9* pRes, SVertexStream* pStr)
 			return;
 		}
 	}
-	assert(0);
+	CRYASSERT(0);
 }
 
 /*_inline void sAddTX(STexPic *tp, const char *szDesc)
@@ -1923,7 +1923,7 @@ _inline void sRemoveVB(IDirect3DResource9* pRes, SVertexStream* pStr)
   for (i=0; i<gDTX.Num(); i++)
   {
 	if (gDTX[i].m_pRes == pRes)
-	  assert(0);
+	  CRYASSERT(0);
   }
   SDynTX TX;
   TX.m_pRes = pRes;
@@ -1971,7 +1971,7 @@ _inline void sRemoveTX(STexPic *tp)
 	  return;
 	}
   }
-  assert(0);
+  CRYASSERT(0);
 }*/
 #endif
 

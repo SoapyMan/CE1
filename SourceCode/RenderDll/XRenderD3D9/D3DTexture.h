@@ -4,17 +4,17 @@
 class D3DDataFormat
 {
 public:
-	virtual void GetData(const D3DLOCKED_RECT& LockData, DWORD i, DWORD j, DWORD& dwValue) { assert(0); };
-	virtual void SetData(const D3DLOCKED_RECT& LockData, DWORD i, DWORD j, DWORD dwValue) { assert(0); };
+	virtual void GetData(const D3DLOCKED_RECT& LockData, DWORD i, DWORD j, DWORD& dwValue) { CRYASSERT(0); };
+	virtual void SetData(const D3DLOCKED_RECT& LockData, DWORD i, DWORD j, DWORD dwValue) { CRYASSERT(0); };
 
-	virtual void GetColors(const D3DLOCKED_RECT& LockData, DWORD i, DWORD j, float& fRed, float& fGreen, float& fBlue, float& fAlpha) { assert(0); };
-	virtual void SetColors(const D3DLOCKED_RECT& LockData, DWORD i, DWORD j, float fRed, float fGreen, float fBlue, float fAlpha) { assert(0); };
+	virtual void GetColors(const D3DLOCKED_RECT& LockData, DWORD i, DWORD j, float& fRed, float& fGreen, float& fBlue, float& fAlpha) { CRYASSERT(0); };
+	virtual void SetColors(const D3DLOCKED_RECT& LockData, DWORD i, DWORD j, float fRed, float fGreen, float fBlue, float fAlpha) { CRYASSERT(0); };
 
-	virtual void GetLuminance(const D3DLOCKED_RECT& LockData, DWORD i, DWORD j, float& Luminance) { assert(0); };
-	virtual void SetLuminance(const D3DLOCKED_RECT& LockData, DWORD i, DWORD j, float Luminance) { assert(0); };
+	virtual void GetLuminance(const D3DLOCKED_RECT& LockData, DWORD i, DWORD j, float& Luminance) { CRYASSERT(0); };
+	virtual void SetLuminance(const D3DLOCKED_RECT& LockData, DWORD i, DWORD j, float Luminance) { CRYASSERT(0); };
 
-	virtual void GetVector(const D3DLOCKED_RECT& LockData, DWORD i, DWORD j, D3DXVECTOR3& inVector) { assert(0); };
-	virtual void SetVector(const D3DLOCKED_RECT& LockData, DWORD i, DWORD j, const D3DXVECTOR3& inVector) { assert(0); };
+	virtual void GetVector(const D3DLOCKED_RECT& LockData, DWORD i, DWORD j, D3DXVECTOR3& inVector) { CRYASSERT(0); };
+	virtual void SetVector(const D3DLOCKED_RECT& LockData, DWORD i, DWORD j, const D3DXVECTOR3& inVector) { CRYASSERT(0); };
 };
 
 class D3DDataFormat_32Bit : public D3DDataFormat
@@ -262,11 +262,11 @@ public:
 #ifndef _XBOX
 		case D3DFMT_DXT5:
 		default:
-			assert(!"Don't understand surface format");
+			CRYASSERT(!"Don't understand surface format");
 			break;
 
 		case D3DFMT_R8G8B8:
-			assert(!"Don't handle 24 bit surfaces");
+			CRYASSERT(!"Don't handle 24 bit surfaces");
 			break;
 
 		case D3DFMT_X8L8V8U8:
@@ -290,7 +290,7 @@ public:
 			break;
 		}
 
-		assert(m_pDataFormat);
+		CRYASSERT(m_pDataFormat);
 	}
 
 	virtual ~D3D2DTextureLocker()
@@ -310,8 +310,8 @@ public:
 	bool Lock(DWORD dwLevel)
 	{
 		HRESULT hr;
-		assert(dwLevel < m_dwLevels);
-		assert(!m_bLocked[dwLevel]);
+		CRYASSERT(dwLevel < m_dwLevels);
+		CRYASSERT(!m_bLocked[dwLevel]);
 
 		m_bLocked[dwLevel] = true;
 		hr = m_pTexture->LockRect(dwLevel, &m_LockData[dwLevel], NULL, 0);
@@ -327,8 +327,8 @@ public:
 	{
 		HRESULT hr;
 
-		assert(dwLevel < m_dwLevels);
-		assert(m_bLocked[dwLevel]);
+		CRYASSERT(dwLevel < m_dwLevels);
+		CRYASSERT(m_bLocked[dwLevel]);
 
 		m_bLocked[dwLevel] = false;
 		hr = m_pTexture->UnlockRect(dwLevel);
@@ -357,22 +357,22 @@ public:
 		{
 			j = (m_LevelDesc[dwLevel].Height - 1) + (j % m_LevelDesc[dwLevel].Height);
 		}
-		assert(i >= 0);
-		assert(j >= 0);
-		assert(i < m_LevelDesc[dwLevel].Width);
-		assert(j < m_LevelDesc[dwLevel].Height);
+		CRYASSERT(i >= 0);
+		CRYASSERT(j >= 0);
+		CRYASSERT(i < m_LevelDesc[dwLevel].Width);
+		CRYASSERT(j < m_LevelDesc[dwLevel].Height);
 	}
 
 	void GetMapData(DWORD dwLevel, DWORD i, DWORD j, DWORD& dwValue)
 	{
-		assert(m_bLocked[dwLevel]);
+		CRYASSERT(m_bLocked[dwLevel]);
 		WrapAddress(dwLevel, i, j);
 		m_pDataFormat->GetData(m_LockData[dwLevel], i, j, dwValue);
 	}
 
 	void SetMapData(DWORD dwLevel, DWORD i, DWORD j, DWORD dwValue)
 	{
-		assert(m_bLocked[dwLevel]);
+		CRYASSERT(m_bLocked[dwLevel]);
 		WrapAddress(dwLevel, i, j);
 		m_pDataFormat->SetData(m_LockData[dwLevel], i, j, dwValue);
 	}
@@ -380,28 +380,28 @@ public:
 
 	void GetMapColors(DWORD dwLevel, DWORD i, DWORD j, float& fRed, float& fGreen, float& fBlue, float& fAlpha)
 	{
-		assert(m_bLocked[dwLevel]);
+		CRYASSERT(m_bLocked[dwLevel]);
 		WrapAddress(dwLevel, i, j);
 		m_pDataFormat->GetColors(m_LockData[dwLevel], i, j, fRed, fGreen, fBlue, fAlpha);
 	}
 
 	void GetMapLuminance(DWORD dwLevel, DWORD i, DWORD j, float& Luminance)
 	{
-		assert(m_bLocked[dwLevel]);
+		CRYASSERT(m_bLocked[dwLevel]);
 		WrapAddress(dwLevel, i, j);
 		m_pDataFormat->GetLuminance(m_LockData[dwLevel], i, j, Luminance);
 	}
 
 	void SetMapVector(DWORD dwLevel, DWORD i, DWORD j, const D3DXVECTOR3& inVector)
 	{
-		assert(m_bLocked[dwLevel]);
+		CRYASSERT(m_bLocked[dwLevel]);
 		WrapAddress(dwLevel, i, j);
 		m_pDataFormat->SetVector(m_LockData[dwLevel], i, j, inVector);
 	}
 
 	void GetMapVector(DWORD dwLevel, DWORD i, DWORD j, D3DXVECTOR3& inVector)
 	{
-		assert(m_bLocked[dwLevel]);
+		CRYASSERT(m_bLocked[dwLevel]);
 		WrapAddress(dwLevel, i, j);
 		m_pDataFormat->GetVector(m_LockData[dwLevel], i, j, inVector);
 	}
@@ -446,11 +446,11 @@ public:
 		case D3DFMT_DXT4:
 		case D3DFMT_DXT5:
 		default:
-			assert(!"Don't understand surface format");
+			CRYASSERT(!"Don't understand surface format");
 			break;
 
 		case D3DFMT_R8G8B8:
-			assert(!"Don't handle 24 bit surfaces");
+			CRYASSERT(!"Don't handle 24 bit surfaces");
 			break;
 
 		case D3DFMT_X8L8V8U8:
@@ -475,7 +475,7 @@ public:
 			break;
 		}
 
-		assert(m_pDataFormat);
+		CRYASSERT(m_pDataFormat);
 	}
 
 	virtual ~D3D2DSurfaceLocker()
@@ -492,7 +492,7 @@ public:
 	bool Lock()
 	{
 		HRESULT hr;
-		assert(!m_bLocked);
+		CRYASSERT(!m_bLocked);
 
 		m_bLocked = true;
 		hr = m_pSurface->LockRect(&m_LockData, NULL, 0);
@@ -505,7 +505,7 @@ public:
 	bool Unlock()
 	{
 		HRESULT hr;
-		assert(m_bLocked);
+		CRYASSERT(m_bLocked);
 
 		m_bLocked = false;
 		hr = m_pSurface->UnlockRect();
@@ -534,22 +534,22 @@ public:
 		{
 			j = (m_LevelDesc.Height - 1) + (j % m_LevelDesc.Height);
 		}
-		assert(i >= 0);
-		assert(j >= 0);
-		assert(i < m_LevelDesc.Width);
-		assert(j < m_LevelDesc.Height);
+		CRYASSERT(i >= 0);
+		CRYASSERT(j >= 0);
+		CRYASSERT(i < m_LevelDesc.Width);
+		CRYASSERT(j < m_LevelDesc.Height);
 	}
 
 	void GetMapData(DWORD i, DWORD j, DWORD& dwValue)
 	{
-		assert(m_bLocked);
+		CRYASSERT(m_bLocked);
 		WrapAddress(i, j);
 		m_pDataFormat->GetData(m_LockData, i, j, dwValue);
 	}
 
 	void SetMapData(DWORD i, DWORD j, DWORD dwValue)
 	{
-		assert(m_bLocked);
+		CRYASSERT(m_bLocked);
 		WrapAddress(i, j);
 		m_pDataFormat->SetData(m_LockData, i, j, dwValue);
 	}
@@ -557,28 +557,28 @@ public:
 
 	void GetMapColors(DWORD i, DWORD j, float& fRed, float& fGreen, float& fBlue, float& fAlpha)
 	{
-		assert(m_bLocked);
+		CRYASSERT(m_bLocked);
 		WrapAddress(i, j);
 		m_pDataFormat->GetColors(m_LockData, i, j, fRed, fGreen, fBlue, fAlpha);
 	}
 
 	void GetMapLuminance(DWORD i, DWORD j, float& Luminance)
 	{
-		assert(m_bLocked);
+		CRYASSERT(m_bLocked);
 		WrapAddress(i, j);
 		m_pDataFormat->GetLuminance(m_LockData, i, j, Luminance);
 	}
 
 	void SetMapVector(DWORD i, DWORD j, const D3DXVECTOR3& inVector)
 	{
-		assert(m_bLocked);
+		CRYASSERT(m_bLocked);
 		WrapAddress(i, j);
 		m_pDataFormat->SetVector(m_LockData, i, j, inVector);
 	}
 
 	void GetMapVector(DWORD i, DWORD j, D3DXVECTOR3& inVector)
 	{
-		assert(m_bLocked);
+		CRYASSERT(m_bLocked);
 		WrapAddress(i, j);
 		m_pDataFormat->GetVector(m_LockData, i, j, inVector);
 	}
@@ -608,7 +608,7 @@ public:
 		DWORD i, j;
 		LPDIRECT3DTEXTURE9 pNewTex = NULL;
 
-		assert(pSource && pSource->GetType() == D3DRTYPE_TEXTURE);
+		CRYASSERT(pSource && pSource->GetType() == D3DRTYPE_TEXTURE);
 		if (!pSource)
 			return NULL;
 
@@ -799,7 +799,7 @@ public:
 							Normal = D3DXVECTOR3(-w, -h, -1.0f);
 							break;
 						default:
-							assert(0);
+							CRYASSERT(0);
 							break;
 						}
 

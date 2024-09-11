@@ -35,9 +35,9 @@ public:
 	//!
 	static bool DoCompression(const DWORD indwMask)
 	{
-		ISystem* pSystem = GetISystem();														assert(pSystem);
-		IGame* pGame = pSystem->GetIGame();													assert(pGame);
-		IStreamEngine* pStreamE = pSystem->GetStreamEngine();				assert(pStreamE);
+		ISystem* pSystem = GetISystem();														CRYASSERT(pSystem);
+		IGame* pGame = pSystem->GetIGame();													CRYASSERT(pGame);
+		IStreamEngine* pStreamE = pSystem->GetStreamEngine();				CRYASSERT(pStreamE);
 
 		if (!pGame->GetModuleState(EGameMultiplayer))
 			return false;									// compression is only needed to save bandwidth
@@ -75,8 +75,8 @@ public:	// --------------------------
 
 	static bool IsActive()
 	{
-		ISystem* pSystem = GetISystem();														assert(pSystem);
-		IGame* pGame = pSystem->GetIGame();													assert(pGame);
+		ISystem* pSystem = GetISystem();														CRYASSERT(pSystem);
+		IGame* pGame = pSystem->GetIGame();													CRYASSERT(pGame);
 
 		//		return DoCompression(0x1);
 		return pGame->GetModuleState(EGameMultiplayer);			// compression is only needed to save bandwidth
@@ -167,8 +167,8 @@ public:	// --------------------------
 
 	static bool IsActive()
 	{
-		ISystem* pSystem = GetISystem();														assert(pSystem);
-		IGame* pGame = pSystem->GetIGame();													assert(pGame);
+		ISystem* pSystem = GetISystem();														CRYASSERT(pSystem);
+		IGame* pGame = pSystem->GetIGame();													CRYASSERT(pGame);
 
 		//		return DoCompression(0x4);
 		return pGame->GetModuleState(EGameMultiplayer);			// compression is only needed to save bandwidth
@@ -201,7 +201,7 @@ public:	// --------------------------
 		case 3: m_vData[0] = -1.0f;		m_vData[1] = fX;			m_vData[2] = fY;		break;
 		case 4: m_vData[0] = fY;			m_vData[1] = -1.0f;		m_vData[2] = fX;		break;
 		case 5: m_vData[0] = fX;			m_vData[1] = fY;			m_vData[2] = -1.0f;	break;
-		default: assert(0);
+		default: CRYASSERT(0);
 		}
 
 		m_vData.Normalize();
@@ -229,7 +229,7 @@ public:	// --------------------------
 			else
 				if (vAbs[2] >= vAbs[1] && vAbs[2] >= vAbs[0])iDominantDirection = 2;
 
-		assert(iDominantDirection != -1 && "this should never hapen or the vector has zero length");
+		CRYASSERT(iDominantDirection != -1 && "this should never hapen or the vector has zero length");
 		if (iDominantDirection == -1)iDominantDirection = 0;
 
 		float fX = m_vData[(iDominantDirection + 1) % 3];

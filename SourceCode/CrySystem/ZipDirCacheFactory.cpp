@@ -164,7 +164,7 @@ ZipDir::CachePtr ZipDir::CacheFactory::MakeCache(const char* szFile)
 	// try to serialize into the memory
 	size_t nSizeSerialized = m_treeFileEntries.Serialize(cache->GetRoot());
 
-	assert(nSizeSerialized == nSizeRequired);
+	CRYASSERT(nSizeSerialized == nSizeRequired);
 
 	char* pZipPath = ((char*)(pCacheInstance + 1)) + nSizeRequired;
 
@@ -227,7 +227,7 @@ void ZipDir::CacheFactory::FindCDREnd()
 		else
 		{
 			nNewBufPos = nOldBufPos - g_nCDRSearchWindowSize;
-			assert(nNewBufPos > 0);
+			CRYASSERT(nNewBufPos > 0);
 		}
 
 		// if the new buffer pos is beyond 64k limit for the comment size
@@ -342,7 +342,7 @@ void ZipDir::CacheFactory::AddFileEntry(const string& strFilePath, const ZipFile
 void ZipDir::CacheFactory::InitDataOffset(FileEntry& fileEntry, const ZipFile::CDRFileHeader* pFileHeader)
 {
 	// make sure it's the same file and the fileEntry structure is properly initialized
-	assert(fileEntry.nFileHeaderOffset == pFileHeader->lLocalHeaderOffset);
+	CRYASSERT(fileEntry.nFileHeaderOffset == pFileHeader->lLocalHeaderOffset);
 
 	/*
 	// without validation, it would be like this:
@@ -398,7 +398,7 @@ void ZipDir::CacheFactory::Validate(const FileEntry& fileEntry)
 	char* pUncompressed = &pBuffer[fileEntry.desc.lSizeCompressed];
 	char* pCompressed = &pBuffer[0];
 
-	assert(fileEntry.nFileDataOffset != FileEntry::INVALID_DATA_OFFSET);
+	CRYASSERT(fileEntry.nFileDataOffset != FileEntry::INVALID_DATA_OFFSET);
 	Seek(fileEntry.nFileDataOffset);
 
 	Read(pCompressed, fileEntry.desc.lSizeCompressed);
@@ -411,7 +411,7 @@ void ZipDir::CacheFactory::Validate(const FileEntry& fileEntry)
 	}
 	else
 	{
-		assert(fileEntry.desc.lSizeCompressed == fileEntry.desc.lSizeUncompressed);
+		CRYASSERT(fileEntry.desc.lSizeCompressed == fileEntry.desc.lSizeUncompressed);
 		memcpy(pUncompressed, pCompressed, fileEntry.desc.lSizeUncompressed);
 	}
 	switch (nError)
@@ -456,8 +456,8 @@ string ZipDir::CacheFactory::GetFilePath(const char* pFileName, ZipFile::ushort 
 	string strResult(pFileName, nFileNameLength);
 	tolower(strResult);
 
-	assert(strResult.length() == nFileNameLength);
-	assert(strlen(strResult.c_str()) == nFileNameLength);
+	CRYASSERT(strResult.length() == nFileNameLength);
+	CRYASSERT(strlen(strResult.c_str()) == nFileNameLength);
 	return strResult;
 }
 

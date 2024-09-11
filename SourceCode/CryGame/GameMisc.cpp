@@ -67,7 +67,7 @@ bool CXGame::IsUIOverlay()
 //! Check if a sound is potentially hearable (used to check if loading a dialog is needed)
 bool CXGame::IsSoundPotentiallyHearable(Vec3d &SoundPos, float fClipRadius)
 {
-	ASSERT(m_pSystem);
+	CRYASSERT(m_pSystem);
 	ISoundSystem *pSoundSystem=m_pSystem->GetISoundSystem();
 	if (!pSoundSystem)
 		return false;

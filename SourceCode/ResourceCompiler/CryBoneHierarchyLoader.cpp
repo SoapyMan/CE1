@@ -163,7 +163,7 @@ int CryBoneHierarchyLoader::allocateBones(int numBones)
 
 	int nResult = m_nNextBone;
 	m_nNextBone += numBones;
-	assert(m_nNextBone <= (int)this->numBones());
+	CRYASSERT(m_nNextBone <= (int)this->numBones());
 	return nResult;
 }
 

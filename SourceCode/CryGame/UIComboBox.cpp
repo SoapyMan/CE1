@@ -203,7 +203,7 @@ LRESULT CUIComboBox::Update(unsigned int iMessage, WPARAM wParam, LPARAM lParam)
 							--iItem;
 						}
 
-						assert(iItem >= 0 && iItem < (int)m_vItemList.size());
+						CRYASSERT(iItem >= 0 && iItem < (int)m_vItemList.size());
 
 						m_iSelectionIndex = m_vItemList[iItem]->iIndex;
 
@@ -307,7 +307,7 @@ LRESULT CUIComboBox::Update(unsigned int iMessage, WPARAM wParam, LPARAM lParam)
 			{
 				m_pUISystem->CreateScrollBar(&m_pVScroll, this, "vscrollbar", UIRect(0, 0, m_fButtonSize, m_iMaxItems * m_fItemHeight), UIFLAG_ENABLED, 0, UISCROLLBARTYPE_VERTICAL);
 			}
-			assert(m_pVScroll);
+			CRYASSERT(m_pVScroll);
 
 			if (!m_bVerticalScrollBar)
 			{
@@ -361,7 +361,7 @@ LRESULT CUIComboBox::Update(unsigned int iMessage, WPARAM wParam, LPARAM lParam)
 				m_iFirstItem = (int)floorf(m_pVScroll->GetValue() * (m_vItemList.size() - m_iMaxItems) + 0.5f);
 			}
 
-			assert(m_iFirstItem < (int)m_vItemList.size() && m_iFirstItem >= 0);
+			CRYASSERT(m_iFirstItem < (int)m_vItemList.size() && m_iFirstItem >= 0);
 		}
 		else if (m_pVScroll)
 		{
@@ -454,7 +454,7 @@ int CUIComboBox::Draw(int iPass)
 		{	
 			UIComboItem *pItem = GetItem(m_iSelectionIndex);
 
-			assert(pItem);
+			CRYASSERT(pItem);
 
 			if (pItem->pTexture.iTextureID > -1)
 			{

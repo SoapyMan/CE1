@@ -25,8 +25,8 @@
 
 
 #if defined(LINUX)
-#undef assert
-#define assert(exp) (void)( (exp) || (printf("Assert: ' %s ' has failed\n", #exp), 0) )
+#undef CRYASSERT
+#define CRYASSERT(exp) (void)( (exp) || (printf("Assert: ' %s ' has failed\n", #exp), 0) )
 #endif
 
 
@@ -214,7 +214,7 @@ template<class F, int SI, int SJ> struct Matrix33_tpl {
 	Matrix33_tpl() {}
 
 	ILINE Matrix33_tpl(const Matrix33_tpl& m) {
-		assert((void*)this != (void*)&m);
+		CRYASSERT((void*)this != (void*)&m);
 		M00 = m.M00;	M01 = m.M01;	M02 = m.M02;
 		M10 = m.M10;	M11 = m.M11;	M12 = m.M12;
 		M20 = m.M20;	M21 = m.M21;	M22 = m.M22;
@@ -222,7 +222,7 @@ template<class F, int SI, int SJ> struct Matrix33_tpl {
 
 	template<class F1, int SI1, int SJ1>
 	ILINE Matrix33_tpl(const Matrix33_tpl<F1, SI1, SJ1>& m) {
-		assert((SI == SI1) | ((void*)this != (void*)&m));
+		CRYASSERT((SI == SI1) | ((void*)this != (void*)&m));
 		M00 = m_00;	M01 = m_01;	M02 = m_02;
 		M10 = m_10;	M11 = m_11;	M12 = m_12;
 		M20 = m_20;	M21 = m_21;	M22 = m_22;
@@ -250,7 +250,7 @@ template<class F, int SI, int SJ> struct Matrix33_tpl {
 	}
 	template<class F1, int SI1, int SJ1>
 	ILINE Matrix33_tpl& operator = (const Matrix33_tpl<F1, SI1, SJ1>& m) {
-		assert((SI == SI1) | ((void*)this != (void*)&m));
+		CRYASSERT((SI == SI1) | ((void*)this != (void*)&m));
 		M00 = m_00;	M01 = m_01;		M02 = m_02;
 		M10 = m_10;	M11 = m_11;		M12 = m_12;
 		M20 = m_20;	M21 = m_21;		M22 = m_22;
@@ -277,7 +277,7 @@ template<class F, int SI, int SJ> struct Matrix33_tpl {
 
 	//Convert unit quaternion to matrix.
 	explicit ILINE Matrix33_tpl(const Quaternion_tpl<F>& q) {
-		assert((fabs_tpl(1 - (q | q))) < 0.1); //check if unit-quaternion
+		CRYASSERT((fabs_tpl(1 - (q | q))) < 0.1); //check if unit-quaternion
 		F vxvx = q.v.x * q.v.x;		F	vzvz = q.v.z * q.v.z;		F	vyvy = q.v.y * q.v.y;
 		F	vxvy = q.v.x * q.v.y;		F	vxvz = q.v.x * q.v.z;		F	vyvz = q.v.y * q.v.z;
 		F	svx = q.w * q.v.x;			F	svy = q.w * q.v.y;			F	svz = q.w * q.v.z;
@@ -308,7 +308,7 @@ template<class F, int SI, int SJ> struct Matrix33_tpl {
 
 	ILINE void SetRotationAA(F angle, Vec3_tpl<F> axis) { F cs[2]; sincos_tpl(angle, cs);	SetRotationAA(cs[0], cs[1], axis); }
 	ILINE void SetRotationAA(F c, F s, Vec3_tpl<F> axis) {
-		assert((fabs_tpl(1 - (axis | axis))) < 0.001); //check if unit-vector
+		CRYASSERT((fabs_tpl(1 - (axis | axis))) < 0.001); //check if unit-vector
 		F	mc = (F)1.0 - c;
 		M00 = mc * axis.x * axis.x + c;					M01 = mc * axis.x * axis.y - axis.z * s;	M02 = mc * axis.x * axis.z + axis.y * s;
 		M10 = mc * axis.y * axis.x + axis.z * s;	M11 = mc * axis.y * axis.y + c;					M12 = mc * axis.y * axis.z - axis.x * s;
@@ -382,8 +382,8 @@ template<class F, int SI, int SJ> struct Matrix33_tpl {
 	   *
 	   */
 	ILINE void SetRotationV0V1(const Vec3_tpl<F>& v0, const Vec3_tpl<F>& v1) {
-		assert((fabs_tpl(1 - (v0 | v0))) < 0.001); //check if unit-vector
-		assert((fabs_tpl(1 - (v1 | v1))) < 0.001); //check if unit-vector
+		CRYASSERT((fabs_tpl(1 - (v0 | v0))) < 0.001); //check if unit-vector
+		CRYASSERT((fabs_tpl(1 - (v1 | v1))) < 0.001); //check if unit-vector
 		F e = v0 | v1;
 		M00 = e;	M01 = 0;	M02 = 0;
 		M10 = 0;	M11 = 1;	M12 = 0;
@@ -402,7 +402,7 @@ template<class F, int SI, int SJ> struct Matrix33_tpl {
 	   *  This is an optimized version of SetRotationV0V1();
 	   */
 	ILINE void SetRotationV0(const Vec3_tpl<F>& n) {
-		assert((fabs_tpl(1 - (n | n))) < 0.001); //check if unit-vector
+		CRYASSERT((fabs_tpl(1 - (n | n))) < 0.001); //check if unit-vector
 		F div = (n.x * n.x + n.y * n.y);
 		M00 = n.z;	M01 = 0;	M02 = 0;
 		M10 = 0;		M11 = +1;	M12 = 0;
@@ -480,7 +480,7 @@ template<class F, int SI, int SJ> struct Matrix33_tpl {
 	*  Example 1:
 	*		Matrix33 im33;
 	*		bool st=i33.Invert();
-	*   assert(st);
+	*   CRYASSERT(st);
   *
 	*  Example 2:
 	*   matrix33 im33=Matrix33::GetInverted(m33);
@@ -517,8 +517,8 @@ template<class F, int SI, int SJ> struct Matrix33_tpl {
 	ILINE const Matrix33_tpl<F, SJ, SI>& T() const { return (const Matrix33_tpl<F, SJ, SI>&) * (&data[0]); }
 	ILINE Matrix33_tpl<F, SJ, SI>& T() { return (Matrix33_tpl<F, SJ, SI>&) * (&data[0]); }
 
-	ILINE F operator () (unsigned i, unsigned j) const { assert((i < 3) && (j < 3));	return data[i * SI + j * SJ]; }
-	ILINE F& operator () (unsigned i, unsigned j) { assert((i < 3) && (j < 3));	return data[i * SI + j * SJ]; }
+	ILINE F operator () (unsigned i, unsigned j) const { CRYASSERT((i < 3) && (j < 3));	return data[i * SI + j * SJ]; }
+	ILINE F& operator () (unsigned i, unsigned j) { CRYASSERT((i < 3) && (j < 3));	return data[i * SI + j * SJ]; }
 
 	ILINE Vec3_tpl<F> GetRow(int iRow) const { return Vec3_tpl<F>(data[iRow * SI + 0 * SJ], data[iRow * SI + 1 * SJ], data[iRow * SI + 2 * SJ]); }
 	ILINE void SetRow(int iRow, const Vec3_tpl<F>& row) { data[iRow * SI + 0 * SJ] = row.x; data[iRow * SI + 1 * SJ] = row.y;		data[iRow * SI + 2 * SJ] = row.z; }
@@ -900,12 +900,12 @@ template <typename F> struct Matrix34_tpl {
 	Matrix34_tpl<F> GetInverted();
 
 	ILINE F operator () (unsigned i, unsigned j) const {
-		assert((i < 3) && (j < 4));
+		CRYASSERT((i < 3) && (j < 4));
 		F* p_data = (F*)(&m00);
 		return p_data[i * 4 + j];
 	}
 	ILINE F& operator () (unsigned i, unsigned j) {
-		assert((i < 3) && (j < 4));
+		CRYASSERT((i < 3) && (j < 4));
 		F* p_data = (F*)(&m00);
 		return p_data[i * 4 + j];
 	}
@@ -1134,7 +1134,7 @@ ILINE Vec3_tpl<F> Matrix34_tpl<F>::GetTranslation() const { return Vec3_tpl<F>(m
 */
 template<class F>
 ILINE void Matrix34_tpl<F>::SetRotationAA(const F rad, const Vec3_tpl<F>& axis, const Vec3_tpl<F>& t) {
-	assert((fabs_tpl(1 - (axis | axis))) < 0.001); //check if unit-vector
+	CRYASSERT((fabs_tpl(1 - (axis | axis))) < 0.001); //check if unit-vector
 	*this = Matrix33::CreateRotationAA(rad, axis); this->SetTranslation(t);
 }
 template<class F>
@@ -1262,7 +1262,7 @@ ILINE void Matrix34_tpl<F>::Invert(void) {
 	m23 = (m.m20 * m.m11 * m.m03 + m.m00 * m.m21 * m.m13 + m.m10 * m.m01 * m.m23) - (m.m10 * m.m21 * m.m03 + m.m20 * m.m01 * m.m13 + m.m00 * m.m11 * m.m23);
 	// calculate determinant
 	F det = 1.0f / (m.m00 * m00 + m.m10 * m01 + m.m20 * m02);
-	assert(det > 0.0001);
+	CRYASSERT(det > 0.0001);
 	// calculate matrix inverse/
 	m00 *= det; m01 *= det; m02 *= det; m03 *= det;
 	m10 *= det; m11 *= det; m12 *= det; m13 *= det;
@@ -1344,7 +1344,7 @@ template<class F, int SI, int SJ> struct Matrix44_tpl {
 	}
 	template<int SI1, int SJ1>
 	ILINE Matrix44_tpl(const Matrix44_tpl<F, SI1, SJ1>& m) {
-		assert((SI == SI1) | ((void*)this != (void*)&m));
+		CRYASSERT((SI == SI1) | ((void*)this != (void*)&m));
 		M00 = m.M00;		M01 = m.M01;		M02 = m.M02;	M03 = m.M03;
 		M10 = m.M10;		M11 = m.M11;		M12 = m.M12;	M13 = m.M13;
 		M20 = m.M20;		M21 = m.M21;		M22 = m.M22;	M23 = m.M23;
@@ -1381,7 +1381,7 @@ template<class F, int SI, int SJ> struct Matrix44_tpl {
 	}
 	template<class F1, int SI1, int SJ1>
 	ILINE  Matrix44_tpl& operator = (const Matrix44_tpl<F1, SI1, SJ1>& m) {
-		assert((SI == SI1) | ((void*)this != (void*)&m));
+		CRYASSERT((SI == SI1) | ((void*)this != (void*)&m));
 		M00 = m_00;	M01 = m_01;		M02 = m_02;		M03 = m_03;
 		M10 = m_10;	M11 = m_11;		M12 = m_12;		M13 = m_13;
 		M20 = m_20;	M21 = m_21;		M22 = m_22; 	M23 = m_23;
@@ -1489,8 +1489,8 @@ template<class F, int SI, int SJ> struct Matrix44_tpl {
 	F* GetData() { return data; }
 	const F* GetData() const { return data; }
 
-	F operator () (unsigned i, unsigned j) const { assert((i < 4) && (j < 4));	return data[i * SI + j * SJ]; }
-	F& operator () (unsigned i, unsigned j) { assert((i < 4) && (j < 4)); return data[i * SI + j * SJ]; }
+	F operator () (unsigned i, unsigned j) const { CRYASSERT((i < 4) && (j < 4));	return data[i * SI + j * SJ]; }
+	F& operator () (unsigned i, unsigned j) { CRYASSERT((i < 4) && (j < 4)); return data[i * SI + j * SJ]; }
 
 	ILINE	F* operator [] (int index) { return &data[index * SI]; }
 	ILINE	const F* operator [] (int index) const { return &data[index * SI]; }
@@ -1551,7 +1551,7 @@ template<class F, int SI, int SJ> struct Matrix44_tpl {
 	*/
 	//member function
 /*	ILINE void SetRotationAA44(f32 rad, const Vec3_tpl<F>& axis, const Vec3_tpl<F>& t=Vec3(0.0f,0.0f,0.0f) ) {
-		assert((fabs_tpl(1-(axis|axis)))<0.001); //check if unit-vector
+		CRYASSERT((fabs_tpl(1-(axis|axis)))<0.001); //check if unit-vector
 		F	c		= cos_tpl(rad);
 		F	s		= sin_tpl(rad);
 		F	mc	=	(F)1.0-c;
@@ -1835,7 +1835,7 @@ template<class F, int SI, int SJ> struct Matrix44_tpl {
 
 		/* calculate determinant */
 		F det = (m.M00 * M00 + m.M10 * M01 + m.M20 * M02 + m.M30 * M03);
-		if (fabs_tpl(det) < 0.0001f) assert(0);
+		if (fabs_tpl(det) < 0.0001f) CRYASSERT(0);
 
 		//devide the cofactor-matrix by the determinat
 		F idet = (F)1.0 / det;

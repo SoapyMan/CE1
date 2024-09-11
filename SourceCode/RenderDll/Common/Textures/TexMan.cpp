@@ -323,7 +323,7 @@ void STexPic::RemoveFromSearchHash()
 				for (int nnn=nn+1; nnn<tl->m_NumTextures; nnn++)
 				{
 				  if (tl->m_Textures[nn]->m_eTT == tl->m_Textures[nnn]->m_eTT)
-					assert(0);
+					CRYASSERT(0);
 				}
 			  }
 		#endif*/
@@ -366,7 +366,7 @@ void STexPic::AddToSearchHash()
 		gRenDev->m_TexMan->m_TexsMap.insert(LoadedTexsMapItor::value_type(nmf.GetIndex(), tl));
 		m_TL = tl;
 	}
-	assert(tl->m_NumTextures < 4);
+	CRYASSERT(tl->m_NumTextures < 4);
 
 #ifdef _DEBUG
 	for (int nn = 0; nn < tl->m_NumTextures; nn++)
@@ -374,7 +374,7 @@ void STexPic::AddToSearchHash()
 		for (int nnn = nn + 1; nnn < tl->m_NumTextures; nnn++)
 		{
 			if (tl->m_Textures[nn]->m_eTT == tl->m_Textures[nnn]->m_eTT)
-				assert(0);
+				CRYASSERT(0);
 		}
 	}
 #endif
@@ -408,7 +408,7 @@ void CTexMan::ValidateTexSize()
 		nSize += pIT->m_pOwner->m_Size;
 		pIT = pIT->m_PrevFree;
 	}
-	assert(nSize == m_StatsCurTexMem);
+	CRYASSERT(nSize == m_StatsCurTexMem);
 }
 
 void sLogTexture(const char* name, int Size)
@@ -552,7 +552,7 @@ create:
 				break;
 			if (j == 6)
 			{
-				assert(0);
+				CRYASSERT(0);
 				Warning(VALIDATOR_FLAG_TEXTURE, fullnm, "Too many texture types for name '%s'\n", fullnm);
 				break;
 			}
@@ -561,7 +561,7 @@ create:
 		{
 			tl->m_NumTextures = j + 1;
 			tl->m_Textures[j] = ti;
-			assert(tl->m_NumTextures < 8);
+			CRYASSERT(tl->m_NumTextures < 8);
 		}
 	}
 	else
@@ -585,7 +585,7 @@ create:
 		for (int nnn=nn+1; nnn<tl->m_NumTextures; nnn++)
 		{
 		  if (tl->m_Textures[nn]->m_eTT == tl->m_Textures[nnn]->m_eTT)
-			assert(0);
+			CRYASSERT(0);
 		}
 	  }
 	#endif*/
@@ -613,7 +613,7 @@ static inline void sAddTexToArray(TArray<STexPic*>& arrTex, STexPic* tx)
 {
 	if (tx && tx->m_NextCMSide)
 	{
-		assert(tx->m_NextCMSide != tx);
+		CRYASSERT(tx->m_NextCMSide != tx);
 		sAddTexToArray(arrTex, tx->m_NextCMSide);
 		tx->m_NextCMSide = NULL;
 	}
@@ -1072,7 +1072,7 @@ STexPic* CTexMan::UploadImage(CImageFile* im, const char* name, uint flags, uint
 		if (im->mfGet_Flags() & FIM_DSDT)
 			txf = eTF_DSDT_MAG;
 		else
-			assert(0);
+			CRYASSERT(0);
 		break;
 
 	case eIF_DDS_LUMINANCE:
@@ -1083,21 +1083,21 @@ STexPic* CTexMan::UploadImage(CImageFile* im, const char* name, uint flags, uint
 		if (im->mfGet_Flags() & FIM_NORMALMAP)
 			txf = eTF_SIGNED_RGB8;
 		else
-			assert(0);
+			CRYASSERT(0);
 		break;
 
 	case eIF_DDS_SIGNED_HILO8:
 		if (im->mfGet_Flags() & FIM_NORMALMAP)
 			txf = eTF_SIGNED_HILO8;
 		else
-			assert(0);
+			CRYASSERT(0);
 		break;
 
 	case eIF_DDS_SIGNED_HILO16:
 		if (im->mfGet_Flags() & FIM_NORMALMAP)
 			txf = eTF_SIGNED_HILO16;
 		else
-			assert(0);
+			CRYASSERT(0);
 		break;
 	}
 
@@ -1380,7 +1380,7 @@ ETEX_Format sImageFormat2TexFormat(EImFormat eImF)
 	case eIF_DXT5:
 		return eTF_DXT5;
 	default:
-		assert(0);
+		CRYASSERT(0);
 		return eTF_Unknown;
 	}
 
@@ -2790,7 +2790,7 @@ byte* CTexMan::ImgConvertRGBA_DXT(byte* dst, STexPic* ti, int& DXTSize, int& nMi
 #if !defined(PS2) && !defined(WIN64) && !defined(LINUX) && defined(ENABLE_DXT)
 	// NOTE: AMD64 port: implement
 
-	assert(bits == 24 || bits == 32);
+	CRYASSERT(bits == 24 || bits == 32);
 
 	CompressionOptions opt;
 	int i, j;
@@ -2847,7 +2847,7 @@ byte* CTexMan::ImgConvertRGBA_DXT(byte* dst, STexPic* ti, int& DXTSize, int& nMi
 			int Size = sAData.Num() - Offs;
 			int blockSize = (ti->m_Flags & FT_DXT1) ? 8 : 16;
 			int mipsize = ((w + 3) / 4) * ((h + 3) / 4) * blockSize;
-			assert(mipsize == Size);
+			CRYASSERT(mipsize == Size);
 			Data.Grow(Size);
 			cryMemcpy(&Data[n], &sAData[Offs], Size);
 			w >>= 1;
@@ -3076,7 +3076,7 @@ int STexPic::GetTextureID()
 }
 bool STexPic::IsTextureLoaded()
 {
-	assert(gRenDev);
+	CRYASSERT(gRenDev);
 	return GetTextureID() != gRenDev->m_TexMan->m_Text_NoTexture->GetTextureID();
 }
 

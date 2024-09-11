@@ -1721,7 +1721,7 @@ void SArrayPointer_Normal::mfSet(int Id)
 void SArrayPointer_Texture::mfSet(int Id)
 {
 	int nIndex = ePT - eSrcPointer_Tex;
-	assert(nIndex < 2);
+	CRYASSERT(nIndex < 2);
 	if (gcpRendD3D->m_RP.m_TexStages[Stage].TCIndex != nIndex)
 	{
 		gcpRendD3D->m_RP.m_TexStages[Stage].TCIndex = nIndex;

@@ -71,7 +71,7 @@ void CREClientPoly2D::mfPrepare(void)
 		}
 		break;
 	default:
-		assert(false);
+		CRYASSERT(false);
 	}
 
 	if (rd->m_RP.m_OffsD && gbRgb)

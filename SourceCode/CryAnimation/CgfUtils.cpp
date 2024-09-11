@@ -429,8 +429,8 @@ void ConstructReversePermutation(const unsigned* pIn, unsigned* pOut, unsigned n
 
 	for (i = 0; i < num; ++i)
 	{
-		assert(pIn[i] < num);
-		assert((int)pOut[pIn[i]] == (unsigned)-1);
+		CRYASSERT(pIn[i] < num);
+		CRYASSERT((int)pOut[pIn[i]] == (unsigned)-1);
 		pOut[pIn[i]] = i;
 	}
 

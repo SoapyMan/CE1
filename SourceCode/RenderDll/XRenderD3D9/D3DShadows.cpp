@@ -194,11 +194,11 @@ void CD3D9Renderer::BlurImage(int nSizeX, int nSizeY, int nType, ShadowMapTexInf
 				fpGaussBlur5x5->mfSet(true);
 
 				SCGBind* bind = fpGaussBlur5x5->mfGetParameterBind("vSampleOffsets");
-				assert(bind);
+				CRYASSERT(bind);
 				fpGaussBlur5x5->mfParameter(bind, &avSampleOffsets[0].x, 9);
 
 				bind = fpGaussBlur5x5->mfGetParameterBind("vSampleWeights");
-				assert(bind);
+				CRYASSERT(bind);
 				fpGaussBlur5x5->mfParameter(bind, &avSampleWeights[0].x, 9);
 
 				// Draw a fullscreen quad to sample the RT
@@ -256,14 +256,14 @@ void CD3D9Renderer::BlurImage(int nSizeX, int nSizeY, int nType, ShadowMapTexInf
 					v[2] = 0;
 					v[3] = 0;
 					SCGBind* bindOffs = vpGaussSep->mfGetParameterBind("PixelOffset");
-					assert(bindOffs);
+					CRYASSERT(bindOffs);
 					vpGaussSep->mfParameter(bindOffs, v, 1);
 
 					// X Blur
 					v[0] = 1.0f / (float)nSizeX;
 					v[1] = 0;
 					bindOffs = fpGaussSep->mfGetParameterBind("BlurOffset");
-					assert(bindOffs);
+					CRYASSERT(bindOffs);
 					fpGaussSep->mfParameter(bindOffs, v, 1);
 
 					vec4_t vWeight[8];
@@ -275,7 +275,7 @@ void CD3D9Renderer::BlurImage(int nSizeX, int nSizeY, int nType, ShadowMapTexInf
 						vWeight[i][3] = sW[i];
 					}
 					SCGBind* bindW = fpGaussSep->mfGetParameterBind("vPixelWeights");
-					assert(bindW);
+					CRYASSERT(bindW);
 					fpGaussSep->mfParameter(bindW, &vWeight[0][0], 8);
 
 					// Draw a fullscreen quad to sample the RT
@@ -498,9 +498,9 @@ void CD3D9Renderer::PrepareDepthMap(ShadowMapFrustum* lof, bool make_new_tid)
 
 	if (make_new_tid)
 	{ // new id for static objects
-		assert(!lof->depth_tex_id);
+		CRYASSERT(!lof->depth_tex_id);
 		lof->depth_tex_id = GenShadowTexture(nShadowTexSize, true);
-		assert(lof->depth_tex_id < 14000);
+		CRYASSERT(lof->depth_tex_id < 14000);
 	}
 	else
 	{
@@ -538,19 +538,19 @@ void CD3D9Renderer::PrepareDepthMap(ShadowMapFrustum* lof, bool make_new_tid)
 
 		if (!m_ShadowTexIDBuffer[nCurTexIdSlot].nTexId0)
 		{
-			//assert(false);
+			//CRYASSERT(false);
 			m_ShadowTexIDBuffer[nCurTexIdSlot].nTexId0 = GenShadowTexture(nShadowTexSize, true);
-			assert(m_ShadowTexIDBuffer[nCurTexIdSlot].nTexId0 < 14000);
-			//assert(m_TexMan->GetByID(m_ShadowTexIDBuffer[nCurTexIdSlot].nTexId));
+			CRYASSERT(m_ShadowTexIDBuffer[nCurTexIdSlot].nTexId0 < 14000);
+			//CRYASSERT(m_TexMan->GetByID(m_ShadowTexIDBuffer[nCurTexIdSlot].nTexId));
 			make_new_tid = true;
 		}
 
 		lof->nTexIdSlot = nCurTexIdSlot;
 		STexPic* tpOld = m_TexMan->GetByID(m_ShadowTexIDBuffer[nCurTexIdSlot].nTexId0);
-		assert(tpOld);
+		CRYASSERT(tpOld);
 		if (!tpOld || tpOld->m_Width != nShadowTexSize)
 		{
-			//assert (false);
+			//CRYASSERT (false);
 			//ResetToDefault();
 			if (tpOld)
 				tpOld->Release(0);
@@ -567,8 +567,8 @@ void CD3D9Renderer::PrepareDepthMap(ShadowMapFrustum* lof, bool make_new_tid)
 		m_ShadowTexIDBuffer[nCurTexIdSlot].nTexSize = nShadowTexSize;
 	}
 
-	assert(m_ShadowTexIDBuffer[0].nTexId0 ? m_TexMan->GetByID(m_ShadowTexIDBuffer[0].nTexId0) != NULL : 1);
-	//	assert(m_ShadowTexIDBuffer[1].nTexId ? m_TexMan->GetByID(m_ShadowTexIDBuffer[1].nTexId)!=NULL : 1);
+	CRYASSERT(m_ShadowTexIDBuffer[0].nTexId0 ? m_TexMan->GetByID(m_ShadowTexIDBuffer[0].nTexId0) != NULL : 1);
+	//	CRYASSERT(m_ShadowTexIDBuffer[1].nTexId ? m_TexMan->GetByID(m_ShadowTexIDBuffer[1].nTexId)!=NULL : 1);
 
 	ShadowMapTexInfo* st = NULL;
 	HRESULT hReturn;
@@ -584,7 +584,7 @@ void CD3D9Renderer::PrepareDepthMap(ShadowMapFrustum* lof, bool make_new_tid)
 		bStatus = true;
 		// Set render target
 		STexPicD3D* tp = (STexPicD3D*)m_TexMan->GetByID(lof->depth_tex_id);
-		assert(tp->m_ETF == eTF_DEPTH);
+		CRYASSERT(tp->m_ETF == eTF_DEPTH);
 		int i;
 		for (i = 0; i < m_TempShadowTextures.Num(); i++)
 		{
@@ -627,7 +627,7 @@ void CD3D9Renderer::PrepareDepthMap(ShadowMapFrustum* lof, bool make_new_tid)
 		bStatus = true;
 		// Set render target
 		STexPicD3D* tp = (STexPicD3D*)m_TexMan->GetByID(lof->depth_tex_id);
-		//assert(tp->m_ETF == eTF_DEPTH);
+		//CRYASSERT(tp->m_ETF == eTF_DEPTH);
 		if (tp)
 			pID3DTexture = (LPDIRECT3DTEXTURE9)tp->m_RefTex.m_VidTex;
 		if (CV_r_shadowblur)
@@ -895,7 +895,7 @@ void CD3D9Renderer::PrepareDepthMap(ShadowMapFrustum* lof, bool make_new_tid)
 	if (!m_SceneRecurseCount)
 		m_pd3dDevice->EndScene();
 
-	assert(m_ShadowTexIDBuffer[0].nTexId0 ? m_TexMan->GetByID(m_ShadowTexIDBuffer[0].nTexId0) != NULL : 1);
+	CRYASSERT(m_ShadowTexIDBuffer[0].nTexId0 ? m_TexMan->GetByID(m_ShadowTexIDBuffer[0].nTexId0) != NULL : 1);
 
 	if (lof->pPenumbra && lof->pPenumbra->bUpdateRequested)
 		PrepareDepthMap(lof->pPenumbra, make_new_tid);

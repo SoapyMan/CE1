@@ -120,7 +120,7 @@ void C3DEngine::ClearRenderResources(bool bEditorMode)
 void C3DEngine::SetLevelPath(const char* szFolderName)
 {
 	// make folder path
-	assert(strlen(szFolderName) < 1024);
+	CRYASSERT(strlen(szFolderName) < 1024);
 	strcpy(m_szLevelFolder, szFolderName);
 	if (strlen(m_szLevelFolder) > 0)
 	{
@@ -183,7 +183,7 @@ bool C3DEngine::LoadLevel(const char* szFolderName, const char* szMissionName, b
 	if (!m_pVisAreaManager)
 		m_pVisAreaManager = new CVisAreaManager();
 
-	assert(GetSystem()->GetIAnimationSystem());
+	CRYASSERT(GetSystem()->GetIAnimationSystem());
 
 	if (!bEditorMode)
 	{

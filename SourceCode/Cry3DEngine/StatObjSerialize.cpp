@@ -38,7 +38,7 @@ bool CStatObj::Serialize(int& nPos, uchar* pSerBuf, bool bSave, char* szFolderNa
 	LoadBuffer(&m_vBoxMin, sizeof(m_vBoxMin), pSerBuf, nPos);
 	LoadBuffer(&m_vBoxMax, sizeof(m_vBoxMax), pSerBuf, nPos);
 
-	assert(m_pSvObj == 0x00000000);
+	CRYASSERT(m_pSvObj == 0x00000000);
 
 	m_lstHelpers.LoadFromBuffer(pSerBuf, nPos);
 	m_lstLSources.LoadFromBuffer(pSerBuf, nPos);

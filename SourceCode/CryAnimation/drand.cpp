@@ -52,7 +52,7 @@ double drand()
 	drand_z_lo = (unsigned int)x.d;
 	x.d = (double)drand_z_hi + d_x;           x.i[3] -= 0X01b0;
 
-	assert (x.d > 0 && x.d < 1);
+	CRYASSERT (x.d > 0 && x.d < 1);
 	return (x.d);
 }
 

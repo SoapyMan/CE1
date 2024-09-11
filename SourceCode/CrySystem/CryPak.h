@@ -123,7 +123,7 @@ struct CZipPseudoFile
 	// this object needs to be freed manually when the CryPak shuts down..
 	void Destruct()
 	{
-		assert((bool)m_pFileData);
+		CRYASSERT((bool)m_pFileData);
 		// mark it free, and deallocate the pseudofile memory
 		m_pFileData = NULL;
 		if (m_fDirect)
@@ -485,14 +485,14 @@ public:
 	// returns the size of the file (unpacked) by the handle
 	unsigned GetFileSize(Handle h)
 	{
-		assert(m_pCache->IsOwnerOf((ZipDir::FileEntry*)h));
+		CRYASSERT(m_pCache->IsOwnerOf((ZipDir::FileEntry*)h));
 		return ((ZipDir::FileEntry*)h)->desc.lSizeUncompressed;
 	}
 
 	// reads the file into the preallocated buffer (must be at least the size of GetFileSize())
 	int ReadFile(Handle h, void* pBuffer)
 	{
-		assert(m_pCache->IsOwnerOf((ZipDir::FileEntry*)h));
+		CRYASSERT(m_pCache->IsOwnerOf((ZipDir::FileEntry*)h));
 		return m_pCache->ReadFile((ZipDir::FileEntry*)h, NULL, pBuffer);
 	}
 

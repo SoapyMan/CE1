@@ -423,7 +423,7 @@ HRESULT CD3D9Renderer::RestoreDeviceObjects()
 	hr = m_pd3dDevice->CreateQuery(D3DQUERYTYPE_EVENT, &m_pQuery);
 	if (hr != D3DERR_NOTAVAILABLE)
 	{
-		assert(m_pQuery);
+		CRYASSERT(m_pQuery);
 		m_pQuery->Issue(D3DISSUE_END);
 	}
 
@@ -1037,7 +1037,7 @@ WIN_HWND CD3D9Renderer::Init(int x, int y, int width, int height, unsigned int c
 	if (!m_CGContext)
 	{
 		m_CGContext = cgCreateContext();
-		assert(m_CGContext);
+		CRYASSERT(m_CGContext);
 		cgD3D9SetDevice(mfGetD3DDevice());
 #ifdef _DEBUG
 		cgD3D9EnableDebugTracing(true);
@@ -1877,7 +1877,7 @@ HRESULT CD3D9Renderer::Reset3DEnvironment()
 		D3DINDEXBUFFER_DESC desc;
 		IDirect3DIndexBuffer9 *pIB = (IDirect3DIndexBuffer9 *)vb->m_pRes;
 		pIB->GetDesc(&desc);
-		assert(desc.Pool != D3DPOOL_DEFAULT);
+		CRYASSERT(desc.Pool != D3DPOOL_DEFAULT);
 	  }
 	  else
 	  if (vb->m_pRes->GetType() == D3DRTYPE_VERTEXBUFFER)
@@ -1885,10 +1885,10 @@ HRESULT CD3D9Renderer::Reset3DEnvironment()
 		D3DVERTEXBUFFER_DESC desc;
 		IDirect3DVertexBuffer9 *pIB = (IDirect3DVertexBuffer9 *)vb->m_pRes;
 		pIB->GetDesc(&desc);
-		assert(desc.Pool != D3DPOOL_DEFAULT);
+		CRYASSERT(desc.Pool != D3DPOOL_DEFAULT);
 	  }
 	  else
-		assert(0);
+		CRYASSERT(0);
 	}*/
 
 	// Reset the device

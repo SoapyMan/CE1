@@ -12,11 +12,6 @@
 #include "windows.h"
 #endif
 
-#if !defined(LINUX)
-#include <assert.h>
-#endif
-
-
 #include "ScriptObjectNewUbisoftClient.h"		// CScriptObjectNewUbisoftClient
 
 

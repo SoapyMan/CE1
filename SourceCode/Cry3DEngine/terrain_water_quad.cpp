@@ -236,7 +236,7 @@ void CWaterOcean::DrawWaterQuad(const int nRecursionLevel)
 	  in[3] = 1.0;
 
 	  CWaterOcean__transform_point(out, matCombinedInv, in);
-	  assert(out[3] != 0.0);
+	  CRYASSERT(out[3] != 0.0);
 
 	  p.x = out[0] / out[3];
 	  p.y = out[1] / out[3];

@@ -63,11 +63,11 @@ void CryBone::BuildRelToParentFromQP(const IController::PQLog& pqNew)
 	if (g_GetCVars()->ca_Debug())
 	{
 		// we don't have translations that are millions of kilometers away
-		assert(GetLengthSquared(m_matRelativeToParent.GetTranslationOLD()) < 1e22);
+		CRYASSERT(GetLengthSquared(m_matRelativeToParent.GetTranslationOLD()) < 1e22);
 		// we should have the normal orthogonal and unitary matrix
-		assert(isone(GetLengthSquared(m_matRelativeToParent.GetRow(0))));
-		assert(isone(GetLengthSquared(m_matRelativeToParent.GetRow(1))));
-		assert(isone(GetLengthSquared(m_matRelativeToParent.GetRow(2))));
+		CRYASSERT(isone(GetLengthSquared(m_matRelativeToParent.GetRow(0))));
+		CRYASSERT(isone(GetLengthSquared(m_matRelativeToParent.GetRow(1))));
+		CRYASSERT(isone(GetLengthSquared(m_matRelativeToParent.GetRow(2))));
 	}
 #endif
 }
@@ -106,7 +106,7 @@ Vec3d CryBone::GetBonePosition()
 
 Vec3d CryBone::GetBoneAxis(char cAxis)
 {
-	assert(cAxis == 'x' || cAxis == 'y' || cAxis == 'z');
+	CRYASSERT(cAxis == 'x' || cAxis == 'y' || cAxis == 'z');
 	switch (cAxis)
 	{
 	case 'x':
@@ -238,7 +238,7 @@ CryQuat CryBone::GetParentWQuat()
 
 		for (int i = 0; i < 3; i++)
 			for (int j = 0; j < 3; ++j)
-				assert(fabs(matTest(i, j) - matParent(i, j)) < 0.02f);
+				CRYASSERT(fabs(matTest(i, j) - matParent(i, j)) < 0.02f);
 	}
 #endif
 

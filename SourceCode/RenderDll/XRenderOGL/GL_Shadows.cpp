@@ -140,7 +140,7 @@ void CGLRenderer::BlurImage(int nSizeX, int nSizeY, int nType, int nTexIdSrc, in
 	else
 		if (nType == 2)
 		{
-			assert(false);
+			CRYASSERT(false);
 		}
 }
 
@@ -179,7 +179,7 @@ void CGLRenderer::PrepareDepthMap(ShadowMapFrustum* lof, bool make_new_tid)
 
 	int nShadowTexSize = lof->nTexSize;
 	lof->bUpdateRequested = false;
-	//assert(lof->nTexSize);
+	//CRYASSERT(lof->nTexSize);
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //  Render objects into frame and Z buffers
@@ -301,7 +301,7 @@ void CGLRenderer::PrepareDepthMap(ShadowMapFrustum* lof, bool make_new_tid)
 	if (make_new_tid)
 	{ // new id for static objects
 		glGenTextures(1, &lof->depth_tex_id);
-		assert(lof->depth_tex_id < 14000);
+		CRYASSERT(lof->depth_tex_id < 14000);
 	}
 	else
 	{
@@ -342,7 +342,7 @@ void CGLRenderer::PrepareDepthMap(ShadowMapFrustum* lof, bool make_new_tid)
 		if (!m_ShadowTexIDBuffer[nCurTexIdSlot].nTexId)
 		{
 			glGenTextures(1, &m_ShadowTexIDBuffer[nCurTexIdSlot].nTexId);
-			assert(m_ShadowTexIDBuffer[nCurTexIdSlot].nTexId < 14000);
+			CRYASSERT(m_ShadowTexIDBuffer[nCurTexIdSlot].nTexId < 14000);
 			make_new_tid = true;
 		}
 		if (m_ShadowTexIDBuffer[nCurTexIdSlot].nTexSize != nShadowTexSize)
@@ -387,8 +387,8 @@ void CGLRenderer::PrepareDepthMap(ShadowMapFrustum* lof, bool make_new_tid)
 			BlurType = 1;
 		BlurImage(nShadowTexSize, nShadowTexSize, BlurType, st->nTexId, st->nTexIdTemp);
 	}
-	//assert(nShadowTexSize);
-	//assert(lof->nTexSize);
+	//CRYASSERT(nShadowTexSize);
+	//CRYASSERT(lof->nTexSize);
 
 	static ICVar* pVar = iConsole->GetCVar("e_shadow_maps_debug");
 	if (pVar && pVar->GetIVal() == 1)
@@ -438,7 +438,7 @@ void CGLRenderer::PrepareDepthMap(ShadowMapFrustum* lof, bool make_new_tid)
 		WriteTGA8(pDepthMap, width, height, "_DepthMap.tga");
 
 		byte* pPenumbra = new byte[width * height];
-		assert(width == height);
+		CRYASSERT(width == height);
 		MakePenumbraTextureFromDepthMap(pDepthMap, width, pPenumbra);
 		WriteTGA8(pPenumbra, width, height, "_Penumbra.tga");
 		delete[] pDepthMap;
@@ -458,7 +458,7 @@ void CGLRenderer::PrepareDepthMap(ShadowMapFrustum* lof, bool make_new_tid)
 		}
 		else
 		{ // static objects
-			assert(nShadowTexSize <= 512);
+			CRYASSERT(nShadowTexSize <= 512);
 			byte* depth_map = new byte[512 * 512];
 			glReadPixels(0, 0, nShadowTexSize, nShadowTexSize, GL_RED, GL_UNSIGNED_BYTE, depth_map);
 
@@ -640,7 +640,7 @@ int MakeShadowIdentityTexture()
 
 	unsigned int tid;
 	glGenTextures(1, &tid);
-	assert(tid < 14000);
+	CRYASSERT(tid < 14000);
 	glBindTexture(GL_TEXTURE_1D, tid);
 	glTexImage1D(GL_TEXTURE_1D, 0, GL_INTENSITY8, 256, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, texmap);
 	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -734,7 +734,7 @@ void CGLRenderer::ConfigShadowTexgen(int Num, int rangeMap, ShadowMapFrustum* pF
 	}
 	else
 	{
-		assert(false);
+		CRYASSERT(false);
 	}
 }
 
@@ -824,7 +824,7 @@ void CGLRenderer::ConfigShadowTexgen(int Num, int rangeMap, ShadowMapFrustum* pF
 	  glEnable(GL_REGISTER_COMBINERS_NV);
 
 	  char * const * const p = nvparse_get_errors();
-	  assert(!p[0]);
+	  CRYASSERT(!p[0]);
 
 	  gRenDev->EnableAlphaTest(true);
 	  gRenDev->SetCullMode(R_CULL_NONE);

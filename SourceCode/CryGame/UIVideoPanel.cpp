@@ -184,7 +184,7 @@ int CUIVideoPanel::LoadVideo(const string& szFileName, bool bSound)
 
 	if (!m_pSwapBuffer)
 	{
-		assert(!"Failed to create video swap buffer for blitting video!");
+		CRYASSERT(!"Failed to create video swap buffer for blitting video!");
 
 		BinkClose(m_hBink);
 		m_hBink = 0;
@@ -205,7 +205,7 @@ int CUIVideoPanel::LoadVideo(const string& szFileName, bool bSound)
 
 	if (m_iTextureID == -1)
 	{
-		assert(!"Failed to create video memory surface for blitting video!");
+		CRYASSERT(!"Failed to create video memory surface for blitting video!");
 
 		delete[] m_pSwapBuffer;
 		m_pSwapBuffer = 0;

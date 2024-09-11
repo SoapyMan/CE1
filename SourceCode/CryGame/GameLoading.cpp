@@ -145,8 +145,8 @@ struct PropertyWriter : IScriptObjectDumpSink
 //////////////////////////////////////////////////////////////////////////
 void LoadProperties(IScriptObject* table, CStream& stm, IScriptSystem* ss, char* parent)
 {
-	ASSERT(table);
-	ASSERT(ss);  // martin made me do it
+	CRYASSERT(table);
+	CRYASSERT(ss);  // martin made me do it
 	for (;;)
 	{
 		char what;
@@ -227,14 +227,14 @@ bool CXGame::SaveToStream(CStream& stm, Vec3d* pos, Vec3d* angles, string sFilen
 	IEntity* pPlayerEnt = NULL;
 	if (m_pClient)
 		pPlayerEnt = pEntitySystem->GetEntity(m_pClient->GetPlayerId());
-	//ASSERT(pPlayerEnt);
+	//CRYASSERT(pPlayerEnt);
 	if (!pPlayerEnt)
 		//CryError("Saving to checkpoint - Current player not set or invalid - data error - possible reasons: \n - the first respawn point might be inside a checkpoint \n - something else other than shapes is used to trigger game events \n the trigger used to trigger checkpoint is not trigger once \n solution: check out the map and fix");
 		CryError("A checkpoint has been triggered to save data when the player is not existing yet, generally right after respawning. \n This is a data error, and must be fixed by the designer working on this map. \n Possible data errors are: \n - the first respawn point might be inside a checkpoint \n - something else other than shapes is used to trigger game events; \n - the area trigger used to trigger checkpoint is not trigger once; \n how to proceed: get the designer working on this map to fix this");
 
 	CPlayer* pPlayer = NULL;
 	if (pPlayerEnt->GetContainer()) pPlayerEnt->GetContainer()->QueryContainerInterface(CIT_IPLAYER, (void**)&pPlayer);
-	//ASSERT(pPlayer);
+	//CRYASSERT(pPlayer);
 	if (!pPlayer)
 		CryError("Cannot get player container");
 
@@ -316,7 +316,7 @@ bool CXGame::SaveToStream(CStream& stm, Vec3d* pos, Vec3d* angles, string sFilen
 	stm.Write(nCount);
 	CCVarSerializeGameSave t(&stm, true);
 	m_pSystem->GetIConsole()->DumpCVars(&t, VF_SAVEGAME); // save them
-	ASSERT(t.GetCount() == nCount);
+	CRYASSERT(t.GetCount() == nCount);
 
 	//[petar] save autobalancing stuff
 	IAISystem* pAISystem = m_pSystem->GetAISystem();
@@ -435,7 +435,7 @@ bool CXGame::SaveToStream(CStream& stm, Vec3d* pos, Vec3d* angles, string sFilen
 			m_pLog->Log("SAVED entity name %s classname %s classid=%d id=%d", pEnt->GetName(), pClass->strClassName.c_str(), (int)pClass->ClassId, pEnt->GetId());
 
 		IScriptObject* so = pEnt->GetScriptObject();
-		ASSERT(so);
+		CRYASSERT(so);
 
 		WRITE_COOKIE_NO(stm, 77);
 
@@ -485,7 +485,7 @@ bool CXGame::SaveToStream(CStream& stm, Vec3d* pos, Vec3d* angles, string sFilen
 	stm.Write(pPlayer->m_bFirstPerson);
 
 	IEntityCamera* pCam = pPlayerEnt->GetCamera();
-	ASSERT(pCam);
+	CRYASSERT(pCam);
 
 	if (pos && angles)
 	{
@@ -654,7 +654,7 @@ void CXGame::Save(string sFileName, Vec3d* pos, Vec3d* angles, bool bFirstCheckp
 	if (SaveToStream(stm, pos, angles, sFileName))
 	{
 		m_strLastSaveGame = sFileName;
-		assert(g_playerprofile);
+		CRYASSERT(g_playerprofile);
 
 		if (g_playerprofile->GetString() && strlen(g_playerprofile->GetString()))
 		{
@@ -710,7 +710,7 @@ bool CXGame::LoadFromStream(CStream& stm, bool isdemo)
 
 	if (IsMultiplayer())
 	{
-		assert(0);
+		CRYASSERT(0);
 		m_pLog->LogError("ERROR: LoadFromStream IsMultiplayer=true");				// severe problem - stream is different for MP
 		return false;
 	}
@@ -787,7 +787,7 @@ bool CXGame::LoadFromStream(CStream& stm, bool isdemo)
 	bool bS = IsServer();
 	bool bC = IsClient();
 
-	assert(!IsMultiplayer());
+	CRYASSERT(!IsMultiplayer());
 
 	VERIFY_COOKIE_NO(stm, 0x22);
 
@@ -838,7 +838,7 @@ bool CXGame::LoadFromStream(CStream& stm, bool isdemo)
 	bool			bLoadBar = false;
 	IConsole* pConsole = m_pSystem->GetIConsole();
 
-	assert(pConsole);
+	CRYASSERT(pConsole);
 
 	if (stricmp(g_LevelName->GetString(), sLevelName.c_str()) != 0 || !m_pServer || (stricmp(m_pServer->m_GameContext.strMission.c_str(), sMissionName.c_str()) != 0))
 	{
@@ -992,7 +992,7 @@ bool CXGame::LoadFromStream(CStream& stm, bool isdemo)
 			pBitStream->ReadBitStream(stm, ClassID, eEntityClassId);
 
 			EntityClass* pClass = pECR->GetByClassId(ClassID);
-			ASSERT(pClass);
+			CRYASSERT(pClass);
 			ed.className = pClass->strClassName;
 			ed.ClassId = pClass->ClassId;
 
@@ -1066,7 +1066,7 @@ bool CXGame::LoadFromStream(CStream& stm, bool isdemo)
 			//m_pScriptSystem->PushFuncParam(props);
 			//m_pScriptSystem->EndCall();
 
-			//ASSERT(!pEntitySystem->GetEntity(id));    // entity already exists in map
+			//CRYASSERT(!pEntitySystem->GetEntity(id));    // entity already exists in map
 			//IEntity* dbgEnt=pEntitySystem->GetEntity(id);
 
 			if (pEntitySystem->GetEntity(id))
@@ -1078,7 +1078,7 @@ bool CXGame::LoadFromStream(CStream& stm, bool isdemo)
 			ed.pPropertiesInstance = propsi;
 			ed.name = name;
 			pEnt = pEntitySystem->SpawnEntity(ed);
-			//ASSERT(pEnt);
+			//CRYASSERT(pEnt);
 			if (!pEnt)
 				CryError("entity classname %s classid=%02d id=%3id CANNOT BE SPAWNED", pClass->strClassName.c_str(), (int)pClass->ClassId, id);
 
@@ -1106,7 +1106,7 @@ bool CXGame::LoadFromStream(CStream& stm, bool isdemo)
 			///pEnt->SetName(name.c_str());
 
 			IScriptObject* so = pEnt->GetScriptObject();
-			ASSERT(so);
+			CRYASSERT(so);
 
 			//so->SetValue("Properties", props);
 			//so->SetValue("PropertiesInstance", propsi);
@@ -1138,7 +1138,7 @@ bool CXGame::LoadFromStream(CStream& stm, bool isdemo)
 			bool b = pEnt->Load(stm, scriptStream.GetScriptObject());
 			if (!b)
 				CryError("entity classname %s classid=%02d id=%3id CANNOT BE LOADED", pClass->strClassName.c_str(), (int)pClass->ClassId, id);
-			//ASSERT(b);
+			//CRYASSERT(b);
 
 			// [anton] proper state serialization was absent BasicEntity.lua,
 			// we'll have to at least make sure that activated rigid bodies that were initially not active 
@@ -1201,7 +1201,7 @@ bool CXGame::LoadFromStream(CStream& stm, bool isdemo)
 		{
 			EntityId wPlayerID = 0;
 			bool b = stm.Read(wPlayerID);
-			ASSERT(b);
+			CRYASSERT(b);
 
 			if (wPlayerID == 0)				// we write 0 for localplayer on save
 				wPlayerID = localPlayerId;
@@ -1212,11 +1212,11 @@ bool CXGame::LoadFromStream(CStream& stm, bool isdemo)
 			//					pEnt=m_pClient->m_pISystem->GetLocalPlayer();
 			if (!pEnt)
 				CryError("player id=%3id NOT FOUND", wPlayerID);
-			//ASSERT(pEnt);
+			//CRYASSERT(pEnt);
 
 			CPlayer* pPlayer = NULL;
 			if (pEnt->GetContainer()) pEnt->GetContainer()->QueryContainerInterface(CIT_IPLAYER, (void**)&pPlayer);
-			ASSERT(pPlayer);
+			CRYASSERT(pPlayer);
 			stm.Read(pPlayer->m_bFirstPerson);
 			SetViewMode(!pPlayer->m_bFirstPerson); // hack, but works
 
@@ -1240,7 +1240,7 @@ bool CXGame::LoadFromStream(CStream& stm, bool isdemo)
 				pPlayer->m_stats.health = 128;
 			*/
 			IEntityCamera* pCam = pEnt->GetCamera();
-			ASSERT(pCam);
+			CRYASSERT(pCam);
 
 			Vec3d vPos;
 			stm.Read(vPos);
@@ -1264,7 +1264,7 @@ bool CXGame::LoadFromStream(CStream& stm, bool isdemo)
 			if (!isdemo)
 			{
 				CXServer::XSlotMap::iterator itor;
-				ASSERT(m_pServer->GetSlotsMap().size() == 1);
+				CRYASSERT(m_pServer->GetSlotsMap().size() == 1);
 				itor = m_pServer->GetSlotsMap().begin();
 
 				CXServerSlot* pSSlot = itor->second;							// serverslot associated with the player
@@ -1352,7 +1352,7 @@ bool CXGame::LoadFromStream(CStream& stm, bool isdemo)
 		break;
 
 		default:
-			ASSERT(0);
+			CRYASSERT(0);
 		};
 
 		if (bLoadBar)
@@ -1404,7 +1404,7 @@ bool CXGame::Load(string sFileName)
 {
 	m_pSystem->VTuneResume();
 
-	assert(g_playerprofile);
+	CRYASSERT(g_playerprofile);
 
 	string tmp(g_playerprofile->GetString());
 	SaveName(sFileName, tmp);
@@ -1622,7 +1622,7 @@ void CXGame::SaveConfiguration(const char* pszSystemCfg, const char* pszGameCfg,
 	else
 	{
 		if (IsClient() && !IsServer())		// only a client
-			assert(0);			// shouldn't be - saving config while connected to a client means you save the server synced variables of the server
+			CRYASSERT(0);			// shouldn't be - saving config while connected to a client means you save the server synced variables of the server
 	}
 
 	string sSystemCfg = pszSystemCfg;
@@ -1821,7 +1821,7 @@ bool CXGame::LoadFromStream_RELEASEVERSION(CStream& stm, bool isdemo, CScriptObj
 	bool bS = IsServer();
 	bool bC = IsClient();
 
-	assert(!IsMultiplayer());
+	CRYASSERT(!IsMultiplayer());
 
 	VERIFY_COOKIE_NO(stm, 0x22);
 
@@ -1872,7 +1872,7 @@ bool CXGame::LoadFromStream_RELEASEVERSION(CStream& stm, bool isdemo, CScriptObj
 	bool			bLoadBar = false;
 	IConsole* pConsole = m_pSystem->GetIConsole();
 
-	assert(pConsole);
+	CRYASSERT(pConsole);
 
 	if (stricmp(g_LevelName->GetString(), sLevelName.c_str()) != 0 || !m_pServer || (stricmp(m_pServer->m_GameContext.strMission.c_str(), sMissionName.c_str()) != 0))
 	{
@@ -2027,7 +2027,7 @@ bool CXGame::LoadFromStream_RELEASEVERSION(CStream& stm, bool isdemo, CScriptObj
 			pBitStream->ReadBitStream(stm, ClassID, eEntityClassId);
 
 			EntityClass* pClass = pECR->GetByClassId(ClassID);
-			ASSERT(pClass);
+			CRYASSERT(pClass);
 			ed.className = pClass->strClassName;
 			ed.ClassId = pClass->ClassId;
 
@@ -2101,7 +2101,7 @@ bool CXGame::LoadFromStream_RELEASEVERSION(CStream& stm, bool isdemo, CScriptObj
 			//m_pScriptSystem->PushFuncParam(props);
 			//m_pScriptSystem->EndCall();
 
-			//ASSERT(!pEntitySystem->GetEntity(id));    // entity already exists in map
+			//CRYASSERT(!pEntitySystem->GetEntity(id));    // entity already exists in map
 			//IEntity* dbgEnt=pEntitySystem->GetEntity(id);
 
 			if (pEntitySystem->GetEntity(id))
@@ -2113,7 +2113,7 @@ bool CXGame::LoadFromStream_RELEASEVERSION(CStream& stm, bool isdemo, CScriptObj
 			ed.pPropertiesInstance = propsi;
 			ed.name = name;
 			pEnt = pEntitySystem->SpawnEntity(ed);
-			//ASSERT(pEnt);
+			//CRYASSERT(pEnt);
 			if (!pEnt)
 				CryError("entity classname %s classid=%02d id=%3id CANNOT BE SPAWNED", pClass->strClassName.c_str(), (int)pClass->ClassId, id);
 
@@ -2141,7 +2141,7 @@ bool CXGame::LoadFromStream_RELEASEVERSION(CStream& stm, bool isdemo, CScriptObj
 			///pEnt->SetName(name.c_str());
 
 			IScriptObject* so = pEnt->GetScriptObject();
-			ASSERT(so);
+			CRYASSERT(so);
 
 			//so->SetValue("Properties", props);
 			//so->SetValue("PropertiesInstance", propsi);
@@ -2173,7 +2173,7 @@ bool CXGame::LoadFromStream_RELEASEVERSION(CStream& stm, bool isdemo, CScriptObj
 			bool b = pEnt->LoadRELEASE(stm, scriptStream.GetScriptObject());
 			if (!b)
 				CryError("entity classname %s classid=%02d id=%3id CANNOT BE LOADED", pClass->strClassName.c_str(), (int)pClass->ClassId, id);
-			//ASSERT(b);
+			//CRYASSERT(b);
 
 			// [anton] proper state serialization was absent BasicEntity.lua,
 			// we'll have to at least make sure that activated rigid bodies that were initially not active 
@@ -2207,7 +2207,7 @@ bool CXGame::LoadFromStream_RELEASEVERSION(CStream& stm, bool isdemo, CScriptObj
 		{
 			EntityId wPlayerID = 0;
 			bool b = stm.Read(wPlayerID);
-			ASSERT(b);
+			CRYASSERT(b);
 
 			if (wPlayerID == 0)				// we write 0 for localplayer on save
 				wPlayerID = localPlayerId;
@@ -2218,11 +2218,11 @@ bool CXGame::LoadFromStream_RELEASEVERSION(CStream& stm, bool isdemo, CScriptObj
 			//					pEnt=m_pClient->m_pISystem->GetLocalPlayer();
 			if (!pEnt)
 				CryError("player id=%3id NOT FOUND", wPlayerID);
-			//ASSERT(pEnt);
+			//CRYASSERT(pEnt);
 
 			CPlayer* pPlayer = NULL;
 			if (pEnt->GetContainer()) pEnt->GetContainer()->QueryContainerInterface(CIT_IPLAYER, (void**)&pPlayer);
-			ASSERT(pPlayer);
+			CRYASSERT(pPlayer);
 			stm.Read(pPlayer->m_bFirstPerson);
 			SetViewMode(!pPlayer->m_bFirstPerson); // hack, but works
 			// do we want to overwrite health with half of maximum
@@ -2243,7 +2243,7 @@ bool CXGame::LoadFromStream_RELEASEVERSION(CStream& stm, bool isdemo, CScriptObj
 				pPlayer->m_stats.health = 128;
 
 			IEntityCamera* pCam = pEnt->GetCamera();
-			ASSERT(pCam);
+			CRYASSERT(pCam);
 
 			Vec3d vPos;
 			stm.Read(vPos);
@@ -2265,7 +2265,7 @@ bool CXGame::LoadFromStream_RELEASEVERSION(CStream& stm, bool isdemo, CScriptObj
 			if (!isdemo)
 			{
 				CXServer::XSlotMap::iterator itor;
-				ASSERT(m_pServer->GetSlotsMap().size() == 1);
+				CRYASSERT(m_pServer->GetSlotsMap().size() == 1);
 				itor = m_pServer->GetSlotsMap().begin();
 
 				CXServerSlot* pSSlot = itor->second;							// serverslot associated with the player
@@ -2297,7 +2297,7 @@ bool CXGame::LoadFromStream_RELEASEVERSION(CStream& stm, bool isdemo, CScriptObj
 		}
 		break;
 		default:
-			ASSERT(0);
+			CRYASSERT(0);
 		};
 
 		if (bLoadBar)
@@ -2385,7 +2385,7 @@ bool CXGame::LoadFromStream_PATCH_1(CStream& stm, bool isdemo, CScriptObjectStre
 	bool bS = IsServer();
 	bool bC = IsClient();
 
-	assert(!IsMultiplayer());
+	CRYASSERT(!IsMultiplayer());
 
 	VERIFY_COOKIE_NO(stm, 0x22);
 
@@ -2436,7 +2436,7 @@ bool CXGame::LoadFromStream_PATCH_1(CStream& stm, bool isdemo, CScriptObjectStre
 	bool			bLoadBar = false;
 	IConsole* pConsole = m_pSystem->GetIConsole();
 
-	assert(pConsole);
+	CRYASSERT(pConsole);
 
 	if (stricmp(g_LevelName->GetString(), sLevelName.c_str()) != 0 || !m_pServer || (stricmp(m_pServer->m_GameContext.strMission.c_str(), sMissionName.c_str()) != 0))
 	{
@@ -2591,7 +2591,7 @@ bool CXGame::LoadFromStream_PATCH_1(CStream& stm, bool isdemo, CScriptObjectStre
 			pBitStream->ReadBitStream(stm, ClassID, eEntityClassId);
 
 			EntityClass* pClass = pECR->GetByClassId(ClassID);
-			ASSERT(pClass);
+			CRYASSERT(pClass);
 			ed.className = pClass->strClassName;
 			ed.ClassId = pClass->ClassId;
 
@@ -2665,7 +2665,7 @@ bool CXGame::LoadFromStream_PATCH_1(CStream& stm, bool isdemo, CScriptObjectStre
 			//m_pScriptSystem->PushFuncParam(props);
 			//m_pScriptSystem->EndCall();
 
-			//ASSERT(!pEntitySystem->GetEntity(id));    // entity already exists in map
+			//CRYASSERT(!pEntitySystem->GetEntity(id));    // entity already exists in map
 			//IEntity* dbgEnt=pEntitySystem->GetEntity(id);
 
 			if (pEntitySystem->GetEntity(id))
@@ -2677,7 +2677,7 @@ bool CXGame::LoadFromStream_PATCH_1(CStream& stm, bool isdemo, CScriptObjectStre
 			ed.pPropertiesInstance = propsi;
 			ed.name = name;
 			pEnt = pEntitySystem->SpawnEntity(ed);
-			//ASSERT(pEnt);
+			//CRYASSERT(pEnt);
 			if (!pEnt)
 				CryError("entity classname %s classid=%02d id=%3id CANNOT BE SPAWNED", pClass->strClassName.c_str(), (int)pClass->ClassId, id);
 
@@ -2705,7 +2705,7 @@ bool CXGame::LoadFromStream_PATCH_1(CStream& stm, bool isdemo, CScriptObjectStre
 			///pEnt->SetName(name.c_str());
 
 			IScriptObject* so = pEnt->GetScriptObject();
-			ASSERT(so);
+			CRYASSERT(so);
 
 			//so->SetValue("Properties", props);
 			//so->SetValue("PropertiesInstance", propsi);
@@ -2737,7 +2737,7 @@ bool CXGame::LoadFromStream_PATCH_1(CStream& stm, bool isdemo, CScriptObjectStre
 			bool b = pEnt->LoadPATCH1(stm, scriptStream.GetScriptObject());
 			if (!b)
 				CryError("entity classname %s classid=%02d id=%3id CANNOT BE LOADED", pClass->strClassName.c_str(), (int)pClass->ClassId, id);
-			//ASSERT(b);
+			//CRYASSERT(b);
 
 			// [anton] proper state serialization was absent BasicEntity.lua,
 			// we'll have to at least make sure that activated rigid bodies that were initially not active 
@@ -2800,7 +2800,7 @@ bool CXGame::LoadFromStream_PATCH_1(CStream& stm, bool isdemo, CScriptObjectStre
 		{
 			EntityId wPlayerID = 0;
 			bool b = stm.Read(wPlayerID);
-			ASSERT(b);
+			CRYASSERT(b);
 
 			if (wPlayerID == 0)				// we write 0 for localplayer on save
 				wPlayerID = localPlayerId;
@@ -2811,11 +2811,11 @@ bool CXGame::LoadFromStream_PATCH_1(CStream& stm, bool isdemo, CScriptObjectStre
 			//					pEnt=m_pClient->m_pISystem->GetLocalPlayer();
 			if (!pEnt)
 				CryError("player id=%3id NOT FOUND", wPlayerID);
-			//ASSERT(pEnt);
+			//CRYASSERT(pEnt);
 
 			CPlayer* pPlayer = NULL;
 			if (pEnt->GetContainer()) pEnt->GetContainer()->QueryContainerInterface(CIT_IPLAYER, (void**)&pPlayer);
-			ASSERT(pPlayer);
+			CRYASSERT(pPlayer);
 			stm.Read(pPlayer->m_bFirstPerson);
 			SetViewMode(!pPlayer->m_bFirstPerson); // hack, but works
 
@@ -2839,7 +2839,7 @@ bool CXGame::LoadFromStream_PATCH_1(CStream& stm, bool isdemo, CScriptObjectStre
 			pPlayer->m_stats.health = 128;
 			*/
 			IEntityCamera* pCam = pEnt->GetCamera();
-			ASSERT(pCam);
+			CRYASSERT(pCam);
 
 			Vec3d vPos;
 			stm.Read(vPos);
@@ -2863,7 +2863,7 @@ bool CXGame::LoadFromStream_PATCH_1(CStream& stm, bool isdemo, CScriptObjectStre
 			if (!isdemo)
 			{
 				CXServer::XSlotMap::iterator itor;
-				ASSERT(m_pServer->GetSlotsMap().size() == 1);
+				CRYASSERT(m_pServer->GetSlotsMap().size() == 1);
 				itor = m_pServer->GetSlotsMap().begin();
 
 				CXServerSlot* pSSlot = itor->second;							// serverslot associated with the player
@@ -2948,7 +2948,7 @@ bool CXGame::LoadFromStream_PATCH_1(CStream& stm, bool isdemo, CScriptObjectStre
 		break;
 
 		default:
-			ASSERT(0);
+			CRYASSERT(0);
 		};
 
 		if (bLoadBar)

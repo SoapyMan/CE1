@@ -34,7 +34,7 @@ int CGLRenderer::FontCreateTexture(int Width, int Height, byte* pData, ETEX_Form
 bool CGLRenderer::FontUpdateTexture(int nTexId, int X, int Y, int USize, int VSize, byte* pData)
 {
 	STexPic* tp = gRenDev->m_TexMan->m_Textures[nTexId - TX_FIRSTBIND];
-	assert(tp && tp->m_Bind == nTexId);
+	CRYASSERT(tp && tp->m_Bind == nTexId);
 	if (tp)
 	{
 		m_TexMan->UpdateTextureRegion(tp, pData, X, Y, USize, VSize);
@@ -115,7 +115,7 @@ void CGLRenderer::FontSetTexture(int nTexId, int nFilterMode)
 {
 	// NOTE: we don't have mips for font texture
 	STexPic* tp = gRenDev->m_TexMan->m_Textures[nTexId - TX_FIRSTBIND];
-	assert(tp && tp->m_Bind == nTexId);
+	CRYASSERT(tp && tp->m_Bind == nTexId);
 	tp->Set();
 	//tp->SaveTGA("Font.tga", 0);
 	switch (nFilterMode)

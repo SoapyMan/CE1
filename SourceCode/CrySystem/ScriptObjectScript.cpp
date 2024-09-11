@@ -32,7 +32,7 @@ void CScriptObjectScript::Init(IScriptSystem* pScriptSystem)
 
 void CScriptObjectScript::Debug_Full_recursive(IScriptObject* pCurrent, string& sPath, std::set<const void*>& setVisited)
 {
-	assert(pCurrent);
+	CRYASSERT(pCurrent);
 
 	pCurrent->BeginIteration();
 
@@ -102,7 +102,7 @@ void CScriptObjectScript::Debug_Full_recursive(IScriptObject* pCurrent, string& 
 DWORD CScriptObjectScript::Debug_Buckets_recursive(IScriptObject* pCurrent, string& sPath, std::set<const void*>& setVisited,
 	const DWORD dwMinBucket)
 {
-	assert(pCurrent);
+	CRYASSERT(pCurrent);
 
 	DWORD dwTableElementCount = 0;
 
@@ -178,7 +178,7 @@ DWORD CScriptObjectScript::Debug_Buckets_recursive(IScriptObject* pCurrent, stri
 
 void CScriptObjectScript::Debug_Elements(IScriptObject* pCurrent, string& sPath, std::set<const void*>& setVisited)
 {
-	assert(pCurrent);
+	CRYASSERT(pCurrent);
 
 	pCurrent->BeginIteration();
 

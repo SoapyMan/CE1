@@ -41,7 +41,7 @@ void STexPicD3D::BuildMips()
 		for (int i = 0; i < m_nMips; i++)
 		{
 			pID3DTexture->GetLevelDesc(i, &ddsdDescDest);
-			assert(ddsdDescDest.Width && ddsdDescDest.Height);
+			CRYASSERT(ddsdDescDest.Width && ddsdDescDest.Height);
 			int size = CD3D9TexMan::TexSize(ddsdDescDest.Width, ddsdDescDest.Height, ddsdDescDest.Format);
 			SAFE_DELETE(m_Mips[0][i]);
 			SMipmap* mp = new SMipmap(ddsdDescDest.Width, ddsdDescDest.Height, size);
@@ -60,7 +60,7 @@ void STexPicD3D::BuildMips()
 			for (int i = 0; i < m_nMips; i++)
 			{
 				pID3DCubeTexture->GetLevelDesc(i, &ddsdDescDest);
-				assert(ddsdDescDest.Width && ddsdDescDest.Height);
+				CRYASSERT(ddsdDescDest.Width && ddsdDescDest.Height);
 				int size = CD3D9TexMan::TexSize(ddsdDescDest.Width, ddsdDescDest.Height, ddsdDescDest.Format);
 				SAFE_DELETE(m_Mips[n][i]);
 				SMipmap* mp = new SMipmap(ddsdDescDest.Width, ddsdDescDest.Height, size);
@@ -96,7 +96,7 @@ void STexPic::FakeUploadMips(int nStartMip, int nEndMip)
 			while (nI <= nEndMip)
 			{
 				SMipmap* mp = m_Mips[0][nI];
-				assert(mp && mp->m_bUploaded);
+				CRYASSERT(mp && mp->m_bUploaded);
 				nI++;
 			}
 #endif
@@ -157,7 +157,7 @@ bool STexPicD3D::UploadMips(int nStartMip, int nEndMip)
 					nD3DSize = (d3dlr.Pitch / 4) * ((mp->VSize + 3) & ~3);
 				else
 					nD3DSize = d3dlr.Pitch * mp->VSize;
-				assert(nD3DSize == m_pFileTexMips[i].m_Size);
+				CRYASSERT(nD3DSize == m_pFileTexMips[i].m_Size);
 #endif
 				SizeToLoad += m_pFileTexMips[i].m_Size;
 				// Copy data to system texture 
@@ -183,7 +183,7 @@ bool STexPicD3D::UploadMips(int nStartMip, int nEndMip)
 					while (nI <= nEndMip)
 					{
 						SMipmap* mp = m_Mips[0][nI];
-						assert(mp && mp->m_bUploaded);
+						CRYASSERT(mp && mp->m_bUploaded);
 						nI++;
 					}
 #endif
@@ -199,7 +199,7 @@ bool STexPicD3D::UploadMips(int nStartMip, int nEndMip)
 					nD3DSize = (d3dlr.Pitch / 4) * ((mp->VSize + 3) & ~3);
 				else
 					nD3DSize = d3dlr.Pitch * mp->VSize;
-				assert(nD3DSize == m_pFileTexMips[i].m_Size);
+				CRYASSERT(nD3DSize == m_pFileTexMips[i].m_Size);
 #endif
 				SizeToLoad += m_pFileTexMips[i].m_Size;
 				// Copy data to video texture 
@@ -245,7 +245,7 @@ bool STexPicD3D::UploadMips(int nStartMip, int nEndMip)
 						nD3DSize = (d3dlr.Pitch / 4) * ((mp->VSize + 3) & ~3);
 					else
 						nD3DSize = d3dlr.Pitch * mp->VSize;
-					assert(nD3DSize == m_pFileTexMips[i].m_Size);
+					CRYASSERT(nD3DSize == m_pFileTexMips[i].m_Size);
 #endif
 					SizeToLoad += m_pFileTexMips[i].m_Size;
 					// Copy data to system texture 
@@ -270,7 +270,7 @@ bool STexPicD3D::UploadMips(int nStartMip, int nEndMip)
 						while (nI <= nEndMip)
 						{
 							SMipmap* mp = m_Mips[n][nI];
-							assert(mp && mp->m_bUploaded);
+							CRYASSERT(mp && mp->m_bUploaded);
 							nI++;
 						}
 #endif
@@ -288,7 +288,7 @@ bool STexPicD3D::UploadMips(int nStartMip, int nEndMip)
 						nD3DSize = (d3dlr.Pitch / 4) * ((mp->VSize + 3) & ~3);
 					else
 						nD3DSize = d3dlr.Pitch * mp->VSize;
-					assert(nD3DSize == m_pFileTexMips[i].m_Size);
+					CRYASSERT(nD3DSize == m_pFileTexMips[i].m_Size);
 #endif
 					SizeToLoad += m_pFileTexMips[i].m_Size;
 					// Copy data to video texture 
@@ -324,7 +324,7 @@ void STexPic::RemoveFromPool()
 
 bool STexPic::AddToPool(int nStartMip, int nMips)
 {
-	assert(m_Mips && nStartMip < m_nMips && m_Mips[0][nStartMip]);
+	CRYASSERT(m_Mips && nStartMip < m_nMips && m_Mips[0][nStartMip]);
 	SMipmap* mp = m_Mips[0][nStartMip];
 	STexPool* pPool = NULL;
 	LPDIRECT3DDEVICE9 dv = gcpRendD3D->mfGetD3DDevice();
@@ -387,7 +387,7 @@ bool STexPic::AddToPool(int nStartMip, int nMips)
 		{
 			if (FAILED(h = dv->CreateTexture(mp->USize, mp->VSize, nMips, TEXUSAGE, (D3DFORMAT)m_DstFormat, D3DPOOL_DEFAULT, &pID3DTexture, NULL)))
 			{
-				assert(0);
+				CRYASSERT(0);
 				return false;
 			}
 			pIT->m_pAPITexture = pID3DTexture;
@@ -396,7 +396,7 @@ bool STexPic::AddToPool(int nStartMip, int nMips)
 		{
 			if (FAILED(h = dv->CreateCubeTexture(mp->USize, nMips, TEXUSAGE, (D3DFORMAT)m_DstFormat, D3DPOOL_DEFAULT, &pID3DCubeTexture, NULL)))
 			{
-				assert(0);
+				CRYASSERT(0);
 				return false;
 			}
 			pIT->m_pAPITexture = pID3DCubeTexture;
@@ -516,7 +516,7 @@ void CTexMan::UnloadOldTextures(STexPic* pExclude)
 	STexPoolItem* pIT = gRenDev->m_TexMan->m_FreeTexPoolItems.m_PrevFree;
 	while (pIT != &gRenDev->m_TexMan->m_FreeTexPoolItems)
 	{
-		assert(!pIT->m_pTex);
+		CRYASSERT(!pIT->m_pTex);
 		STexPoolItem* pITNext = pIT->m_PrevFree;
 		IDirect3DBaseTexture9* pTex = (IDirect3DBaseTexture9*)pIT->m_pAPITexture;
 		SAFE_RELEASE(pTex);
@@ -678,7 +678,7 @@ void CTexMan::CheckTexLimits(STexPic* pExclude)
 		STexPoolItem* pIT = gRenDev->m_TexMan->m_FreeTexPoolItems.m_PrevFree;
 		while (pIT != &gRenDev->m_TexMan->m_FreeTexPoolItems)
 		{
-			assert(!pIT->m_pTex);
+			CRYASSERT(!pIT->m_pTex);
 			STexPoolItem* pITNext = pIT->m_PrevFree;
 			if (fTime - pIT->m_fLastTimeUsed > 2.0f)
 			{

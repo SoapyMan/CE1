@@ -197,7 +197,7 @@ C3DEngine::C3DEngine(ISystem* pSystem)
 //////////////////////////////////////////////////////////////////////
 C3DEngine::~C3DEngine()
 {
-	assert(IsHeapValid());
+	CRYASSERT(IsHeapValid());
 
 	ShutDown();
 
@@ -413,7 +413,7 @@ void C3DEngine::ShutDown(bool bEditorMode)
 //////////////////////////////////////////////////////////////////////
 void C3DEngine::ActivateLight(const char* szName, bool bActivate)
 {
-	assert(0);
+	CRYASSERT_FAIL("Not implemented");
 	//	GetBuildingManager()->ActivateLight(szName,bActivate);
 }
 
@@ -576,8 +576,8 @@ void C3DEngine::RegisterEntity(IEntityRender* pEntityRS)
 		return;
 
 	pEntityRS->GetRenderBBox(pEntityRS->m_vWSBoxMin, pEntityRS->m_vWSBoxMax);
-	assert(_finite(pEntityRS->m_vWSBoxMin.x) && _finite(pEntityRS->m_vWSBoxMin.y) && _finite(pEntityRS->m_vWSBoxMin.z));
-	assert(_finite(pEntityRS->m_vWSBoxMax.x) && _finite(pEntityRS->m_vWSBoxMax.y) && _finite(pEntityRS->m_vWSBoxMax.z));
+	CRYASSERT(_finite(pEntityRS->m_vWSBoxMin.x) && _finite(pEntityRS->m_vWSBoxMin.y) && _finite(pEntityRS->m_vWSBoxMin.z));
+	CRYASSERT(_finite(pEntityRS->m_vWSBoxMax.x) && _finite(pEntityRS->m_vWSBoxMax.y) && _finite(pEntityRS->m_vWSBoxMax.z));
 	pEntityRS->m_fWSRadius = GetDistance(pEntityRS->m_vWSBoxMin, pEntityRS->m_vWSBoxMax) * 0.5f;
 
 	//  if(!pEntityRS->GetEntityRS()->pOcclState)
@@ -590,7 +590,7 @@ void C3DEngine::RegisterEntity(IEntityRender* pEntityRS)
 		m_pVisAreaManager && m_pVisAreaManager->SetEntityArea(pEntityRS))
 		return;
 
-	assert(m_pTerrain == m_pObjManager->m_pTerrain);
+	CRYASSERT(m_pTerrain == m_pObjManager->m_pTerrain);
 	if (m_pObjManager)
 		m_pObjManager->RegisterEntity(pEntityRS);
 }
@@ -616,7 +616,7 @@ bool C3DEngine::UnRegisterEntity(IEntityRender* pEntityRS)
 
 	if (m_pTerrain)
 	{
-		assert(m_pTerrain == m_pObjManager->m_pTerrain);
+		CRYASSERT(m_pTerrain == m_pObjManager->m_pTerrain);
 		if (m_pObjManager && m_pTerrain == m_pObjManager->m_pTerrain)
 			bFound |= m_pObjManager->UnRegisterEntity(pEntityRS);
 	}
@@ -628,7 +628,7 @@ bool C3DEngine::UnRegisterEntity(IEntityRender* pEntityRS)
 	  {
 		const char * szName = pEntityRS->GetName();
 		GetLog()->Log("Error: C3DEngine::UnRegisterEntity: Entity %s(ptr=%d) was not fully unregistered", szName, (int)pEntityRS);
-		assert(0);
+		CRYASSERT(0);
 	  }
 
 	  if((m_pTerrain && m_pTerrain->UnRegisterInAllSectors(pEntityRS)) ||
@@ -636,7 +636,7 @@ bool C3DEngine::UnRegisterEntity(IEntityRender* pEntityRS)
 		{
 			const char * szName = pEntityRS->GetName();
 		GetLog()->Log("Error: C3DEngine::UnRegisterEntity: Entity %s(ptr=%d) was found after unregistration", szName, (int)pEntityRS);
-			assert(0);
+			CRYASSERT(0);
 		}
 
 	#endif
@@ -725,7 +725,7 @@ void C3DEngine::CreateDecal(const CryEngineDecalInfo& DecalInfo)
 ICryCharInstance* C3DEngine::MakeCharacter(const char* cid_file_name, unsigned int dwFlags)
 {
 	ICryCharManager* pCharManager = GetSystem()->GetIAnimationSystem();
-	assert(pCharManager);
+	CRYASSERT(pCharManager);
 
 	// NOTE: The returned class is not necessarily CryCharInstance. It can be AnimObject as well
 	return pCharManager->MakeCharacter(cid_file_name, dwFlags);
@@ -1153,7 +1153,7 @@ bool C3DEngine::MakeSectorLightMap(int nSectorOriginX, int nSectorOriginY, uchar
 
 	// only sun should be
 	int nRealLightsNum = ((C3DEngine*)Get3DEngine())->GetRealLightsNum();
-	assert(nRealLightsNum == 1);
+	CRYASSERT(nRealLightsNum == 1);
 
 	// increase frame id to help shadow map manager in renderer
 	unsigned short* pPtr2FrameID = (unsigned short*)GetRenderer()->EF_Query(EFQ_Pointer2FrameID);
@@ -1458,7 +1458,7 @@ uint C3DEngine::GetLightMaskFromPosition(const Vec3d& vPos, float fRadius)
 		nMask |= pSectorInfo4 ? pSectorInfo4->m_nDynLightMask : 0;
 	}
 
-	assert(nMask >= 0);
+	CRYASSERT(nMask >= 0);
 
 	if (!nMask)
 	{
@@ -1578,7 +1578,7 @@ void C3DEngine::FreeEntityRenderState(IEntityRender* pEntityRnd)
 		  {
 			  if(pEntityRnd->m_pSector->m_lstEntities[t][e]->GetEntityRS() == pEntRendState)
 			  {
-				  assert(0); // UnRegisterInAllSectors do this already
+				  CRYASSERT(0); // UnRegisterInAllSectors do this already
 				  pEntityRnd->m_pSector->m_lstEntities[t].Delete(e);
 			  }
 		  }
@@ -1687,7 +1687,7 @@ IParticleEmitter* C3DEngine::CreateParticleEmitter()
 //////////////////////////////////////////////////////////////////////////
 void C3DEngine::DeleteParticleEmitter(IParticleEmitter* pPartEmitter)
 {
-	assert(pPartEmitter);
+	CRYASSERT(pPartEmitter);
 	if (m_pPartManager)
 		m_pPartManager->DeleteEmitter(pPartEmitter);
 }
@@ -1974,8 +1974,8 @@ void C3DEngine::DeleteVisArea(IVisArea* pVisArea)
 		for (int i = 0; i < lstEntitiesInArea.Count(); i++)
 			Get3DEngine()->UnRegisterEntity(lstEntitiesInArea[i]);
 
-		assert(((CVisArea*)pVisArea)->m_lstEntities[STATIC_ENTITIES].Count() == 0);
-		assert(((CVisArea*)pVisArea)->m_lstEntities[DYNAMIC_ENTITIES].Count() == 0);
+		CRYASSERT(((CVisArea*)pVisArea)->m_lstEntities[STATIC_ENTITIES].Count() == 0);
+		CRYASSERT(((CVisArea*)pVisArea)->m_lstEntities[DYNAMIC_ENTITIES].Count() == 0);
 
 		m_pVisAreaManager->DeleteVisArea((CVisArea*)pVisArea);
 
@@ -2338,7 +2338,7 @@ bool C3DEngine::IsPotentiallyVisible(IEntityRender* pEntityRender, float fAdditi
 
 IEdgeConnectivityBuilder* C3DEngine::GetNewConnectivityBuilder(void)
 {
-	assert(m_pConnectivityBuilder);
+	CRYASSERT(m_pConnectivityBuilder);
 
 	m_pConnectivityBuilder->Reinit();
 
@@ -2353,7 +2353,7 @@ IStencilShadowConnectivity* C3DEngine::NewConnectivity()
 
 IEdgeConnectivityBuilder* C3DEngine::GetNewStaticConnectivityBuilder(void)
 {
-	assert(m_pStaticConnectivityBuilder);
+	CRYASSERT(m_pStaticConnectivityBuilder);
 
 	m_pStaticConnectivityBuilder->Reinit();
 
@@ -2417,7 +2417,7 @@ void C3DEngine::CheckPhysicalized(const Vec3d& vBoxMin, const Vec3d& vBoxMax)
 
 void C3DEngine::CheckMemoryHeap()
 {
-	assert(IsHeapValid());
+	CRYASSERT(IsHeapValid());
 }
 
 void C3DEngine::RecompileBeaches()
@@ -2554,7 +2554,7 @@ void C3DEngine::OnLevelLoaded()
 			for(int v=0 ;v<nVertCount && pVerts; v++)
 			{
 				Vec3d vPos = *((Vec3d*)&pVerts[nPosStride*v]);
-				assert(pVerts);
+				CRYASSERT(pVerts);
 			}
 		}*/
 }

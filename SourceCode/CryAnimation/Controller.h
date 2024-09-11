@@ -121,8 +121,8 @@ extern void AdjustLogRotation(Vec3& vRotLog);
 class AnimCtrlSortPred
 {
 public:
-	bool operator() (const IController_AutoPtr& a, const IController_AutoPtr& b) { assert(a != (IController*)NULL && b != (IController*)NULL); return a->GetID() < b->GetID(); }
-	bool operator() (const IController_AutoPtr& a, unsigned nID) { assert(a != (IController*)NULL); return a->GetID() < nID; }
+	bool operator() (const IController_AutoPtr& a, const IController_AutoPtr& b) { CRYASSERT(a != (IController*)NULL && b != (IController*)NULL); return a->GetID() < b->GetID(); }
+	bool operator() (const IController_AutoPtr& a, unsigned nID) { CRYASSERT(a != (IController*)NULL); return a->GetID() < nID; }
 };
 
 

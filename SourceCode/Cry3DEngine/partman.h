@@ -155,32 +155,32 @@ class CPartList
 public:
 
   CPartList() { memset(this,0,sizeof(CPartList)); }
-  ~CPartList() { assert(!m_nCount && !m_pFirst); }
+  ~CPartList() { CRYASSERT(!m_nCount && !m_pFirst); }
   int Count() { return m_nCount; }
   CParticle * GetFirst() { return m_pFirst; }
   CParticle * GetLast() { return m_pLast; }
 
   void Add(CParticle * pElem)
   {
-	assert(!pElem->m_pNext && !pElem->m_pPrev);
+	CRYASSERT(!pElem->m_pNext && !pElem->m_pPrev);
 
 	if(!m_pFirst)
 	{ // insert first element
 	  m_pFirst = m_pLast = pElem;
 	  pElem->m_pNext = pElem->m_pPrev = 0;
 
-	  assert(!m_nCount);
+	  CRYASSERT(!m_nCount);
 	}
 	else
 	{
-	  assert(!m_pLast->m_pNext && !m_pFirst->m_pPrev);
+	  CRYASSERT(!m_pLast->m_pNext && !m_pFirst->m_pPrev);
 
 	  pElem->m_pPrev = m_pLast;
 	  pElem->m_pNext = 0;
 	  m_pLast->m_pNext = pElem;
 	  m_pLast = pElem;
 
-	  assert(m_nCount);
+	  CRYASSERT(m_nCount);
 	}
 	m_nCount++;
   }
@@ -195,13 +195,13 @@ public:
 
 	if(pElem->m_pNext)
 	{
-	  assert(pElem->m_pNext->m_pPrev == pElem);
+	  CRYASSERT(pElem->m_pNext->m_pPrev == pElem);
 	  pElem->m_pNext->m_pPrev = pElem->m_pPrev;
 	}
 
 	if(pElem->m_pPrev)
 	{
-	  assert(pElem->m_pPrev->m_pNext == pElem);
+	  CRYASSERT(pElem->m_pPrev->m_pNext == pElem);
 	  pElem->m_pPrev->m_pNext = pElem->m_pNext;
 	}
 

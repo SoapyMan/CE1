@@ -29,7 +29,7 @@ bool CCGVProgram_GL::m_bCreateNoise = false;
 
 CVProgram* CVProgram::mfForName(const char* name, std::vector<SFXStruct>& Structs, std::vector<SPair>& Macros, char* entryFunc, EShaderVersion eSHV, uint64 nMaskGen)
 {
-	assert(0);
+	CRYASSERT(0);
 	return 0;
 }
 
@@ -1184,7 +1184,7 @@ void CCGVProgram_GL::mfSetVariables(TArray<SCGParam4f>* Vars)
 		{
 			float matr[16][4];
 			int nLast = i + p->m_nComponents;
-			assert(nLast <= Vars->Num());
+			CRYASSERT(nLast <= Vars->Num());
 			int n = 0;
 			for (; i < nLast; i++, n++)
 			{

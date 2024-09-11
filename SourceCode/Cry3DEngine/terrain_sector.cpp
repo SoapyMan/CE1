@@ -47,7 +47,7 @@ CSectorInfo::~CSectorInfo()
 	UnregisterDynamicEntities();
 
 	GetRenderer()->DeleteLeafBuffer(m_pLeafBufferBeach);
-	assert(m_pLeafBuffer == 0);
+	CRYASSERT(m_pLeafBuffer == 0);
 }
 
 int CSectorInfo::GetMML(int nDist, int mmMin, int mmMax)
@@ -98,7 +98,7 @@ void CSectorInfo::SetLOD()
 /*
 BOOL CSectorInfo::IsCanBeReflected()
 {
-  assert(m_pTerrain->m_pViewCamera);
+  CRYASSERT(m_pTerrain->m_pViewCamera);
 
   if(m_pTerrain->m_pViewCamera->GetPos().x<0 || m_pTerrain->m_pViewCamera->GetPos().y<0 || m_pTerrain->m_pViewCamera->GetPos().x>=CTerrain::GetTerrainSize() || m_pTerrain->m_pViewCamera->GetPos().y>=CTerrain::GetTerrainSize())
 	return 1;
@@ -150,11 +150,11 @@ void CSectorInfo::SetMinMaxMidZ()
 
 void CSectorInfo::InitSectorBoundsAndErrorLevels(int _x1, int _y1, FILE* geom_file_to_read, FILE* geom_file_to_write)
 {
-	assert(m_nLowLodTextureID == 0);
-	assert(m_nTextureID == 0);
-	assert(m_bHasHoles == 0);
-	assert(m_lstEntities[STATIC_ENTITIES].Count() == 0);
-	assert(m_lstEntities[DYNAMIC_ENTITIES].Count() == 0);
+	CRYASSERT(m_nLowLodTextureID == 0);
+	CRYASSERT(m_nTextureID == 0);
+	CRYASSERT(m_bHasHoles == 0);
+	CRYASSERT(m_lstEntities[STATIC_ENTITIES].Count() == 0);
+	CRYASSERT(m_lstEntities[DYNAMIC_ENTITIES].Count() == 0);
 
 	m_nOriginX = _x1;
 	m_nOriginY = _y1;
@@ -297,7 +297,7 @@ void CSectorInfo::SetDetailLayersPalette()
 	for (int i = 0, n = 0; n < 3 && i < MAX_DETAIL_LAYERS_IN_SECTOR && lstSurfaceTypesInSector[i].nUnitsNum; i++)
 	{
 		uchar ucSurfaceTypeID = lstSurfaceTypesInSector[i].ucSurfaceType;
-		assert(ucSurfaceTypeID >= 0 && ucSurfaceTypeID < MAX_SURFACE_TYPES_COUNT);
+		CRYASSERT(ucSurfaceTypeID >= 0 && ucSurfaceTypeID < MAX_SURFACE_TYPES_COUNT);
 		if (m_pTerrain->m_DetailTexInfo[ucSurfaceTypeID].ucProjAxis != 'Z')
 			m_arrDetailTexInfo[n++] = &m_pTerrain->m_DetailTexInfo[ucSurfaceTypeID];
 	}
@@ -305,7 +305,7 @@ void CSectorInfo::SetDetailLayersPalette()
 	for (int i = 0, n = 0; n < 4 && i < MAX_DETAIL_LAYERS_IN_SECTOR && lstSurfaceTypesInSector[i].nUnitsNum; i++)
 	{
 		uchar ucSurfaceTypeID = lstSurfaceTypesInSector[i].ucSurfaceType;
-		assert(ucSurfaceTypeID >= 0 && ucSurfaceTypeID < MAX_SURFACE_TYPES_COUNT);
+		CRYASSERT(ucSurfaceTypeID >= 0 && ucSurfaceTypeID < MAX_SURFACE_TYPES_COUNT);
 		if (m_pTerrain->m_DetailTexInfo[ucSurfaceTypeID].ucProjAxis == 'Z')
 			m_arrDetailTexInfo[3 + n++] = &m_pTerrain->m_DetailTexInfo[ucSurfaceTypeID];
 	}

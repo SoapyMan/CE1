@@ -47,8 +47,8 @@ CClientLocal::~CClientLocal()
 
 void CClientLocal::Connect(const char* szIP, WORD wPort, const BYTE* pbAuthorizationID, unsigned int uiAuthorizationSize)
 {
-	assert(pbAuthorizationID);
-	assert(uiAuthorizationSize > 0);
+	CRYASSERT(pbAuthorizationID);
+	CRYASSERT(uiAuthorizationSize > 0);
 
 	m_pServerSlot = m_pNetwork->ConnectToLocalServerSlot(this, wPort);
 	if (m_pSink)m_pSink->OnXConnect();
@@ -126,10 +126,10 @@ bool CClientLocal::Update(unsigned int nTime)
 
 			m_pSink->OnXData(m_qData.front());
 
-			//		assert(m_qData.size()==dwQueueSize);		// the OnData might add data to the stack
+			//		CRYASSERT(m_qData.size()==dwQueueSize);		// the OnData might add data to the stack
 
 						// [Sergiy] iCount can reach more than 1000 right after loading a level (in Editor, at least)
-			assert(iCount < 10000);		// otherwise an endless loop would occur
+			CRYASSERT(iCount < 10000);		// otherwise an endless loop would occur
 
 			iCount++;
 		}

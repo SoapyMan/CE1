@@ -233,7 +233,7 @@ void CAnimObjectLoader::LoadNodeChunk(int chunkID, const void* pChunk, bool bMak
 //////////////////////////////////////////////////////////////////////////
 void CAnimObjectLoader::LoadControllerChunk(int chunkID, const void* pChunk)
 {
-	assert(chunkID >= 0 && chunkID < m_numChunks);
+	CRYASSERT(chunkID >= 0 && chunkID < m_numChunks);
 	const CONTROLLER_CHUNK_DESC_0826* pCtrlChunk = static_cast<const CONTROLLER_CHUNK_DESC_0826*>(pChunk);
 	IController* ctrl = 0;
 	switch (pCtrlChunk->type)
@@ -286,7 +286,7 @@ void CAnimObjectLoader::InitNodes()
 		// find controllers.
 		if (nd.pos_cont_id >= 0)
 		{
-			assert(nd.pos_cont_id >= 0 && nd.pos_cont_id < m_numChunks);
+			CRYASSERT(nd.pos_cont_id >= 0 && nd.pos_cont_id < m_numChunks);
 			nodeAnim->m_posTrack = m_controllers[nd.pos_cont_id];
 			if (nodeAnim->m_posTrack)
 			{
@@ -296,7 +296,7 @@ void CAnimObjectLoader::InitNodes()
 		}
 		if (nd.rot_cont_id >= 0)
 		{
-			assert(nd.rot_cont_id >= 0 && nd.rot_cont_id < m_numChunks);
+			CRYASSERT(nd.rot_cont_id >= 0 && nd.rot_cont_id < m_numChunks);
 			nodeAnim->m_rotTrack = m_controllers[nd.rot_cont_id];
 			if (nodeAnim->m_rotTrack)
 			{
@@ -306,7 +306,7 @@ void CAnimObjectLoader::InitNodes()
 		}
 		if (nd.scl_cont_id >= 0)
 		{
-			assert(nd.scl_cont_id >= 0 && nd.scl_cont_id < m_numChunks);
+			CRYASSERT(nd.scl_cont_id >= 0 && nd.scl_cont_id < m_numChunks);
 			nodeAnim->m_scaleTrack = m_controllers[nd.scl_cont_id];
 			if (nodeAnim->m_scaleTrack)
 			{

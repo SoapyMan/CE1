@@ -904,7 +904,7 @@ int CScriptObjectWeaponClass::DrawScopeFlare(IFunctionHandler *pH)
 	if (pITable->GetValueChain("shooterid", shooterid))
 	{
 		pShooter = m_pGame->GetSystem()->GetIEntitySystem()->GetEntity(shooterid);
-		assert(pShooter);
+		CRYASSERT(pShooter);
 		if (pShooter->GetEntityVisArea() != 0)
 			return pH->EndFunction();	
 
@@ -918,7 +918,7 @@ int CScriptObjectWeaponClass::DrawScopeFlare(IFunctionHandler *pH)
 
 		CPlayer *pShooterPlayer=NULL;
 		if (pShooter->GetContainer()) pShooter->GetContainer()->QueryContainerInterface(CIT_IPLAYER,(void**) &pShooterPlayer);
-		assert(pShooterPlayer);
+		CRYASSERT(pShooterPlayer);
 		
 		// position flare relative to weapon_bone
 		if (pShooter->GetCharInterface()->GetCharacter(0) == NULL)

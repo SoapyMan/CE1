@@ -225,7 +225,7 @@ public:
 				g_arrStack[g_nStackTop - 1]->startDelay();
 			g_arrStack[g_nStackTop] = this;
 			++g_nStackTop;
-			assert(g_nStackTop < nStackDepth);
+			CRYASSERT(g_nStackTop < nStackDepth);
 		}
 	}
 	~CRecursiveFrameProfiler()
@@ -236,7 +236,7 @@ public:
 			--g_nStackTop;
 			if (g_nStackTop > 0)
 				g_arrStack[g_nStackTop - 1]->endDelay();
-			assert(g_nStackTop >= 0);
+			CRYASSERT(g_nStackTop >= 0);
 		}
 	}
 
@@ -245,7 +245,7 @@ protected:
 	{
 		// this is only called for the profilers on the stack; only the profilers
 		// with non-NULL profiler info are placed on the stack
-		assert(m_pInfo);
+		CRYASSERT(m_pInfo);
 		m_pInfo->startDelay();
 	}
 
@@ -253,7 +253,7 @@ protected:
 	{
 		// this is only called for the profilers on the stack; only the profilers
 		// with non-NULL profiler info are placed on the stack
-		assert(m_pInfo);
+		CRYASSERT(m_pInfo);
 		m_pInfo->endDelay();
 	}
 protected:

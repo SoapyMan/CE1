@@ -66,7 +66,7 @@ void CDecal::Process(bool& active, IRenderer* pIRenderer, const float fCurTime, 
 			if (!m_pDecalOwner->GetEntityStatObj(m_nDecalOwnerComponentId, &objMat))
 			{
 				//				GetLog()->Log("Error: CDecal::Process: m_nDecalOwnerComponentId is out of range: %d", m_nDecalOwnerComponentId);
-				assert(0);
+				CRYASSERT_FAIL("m_nDecalOwnerComponentId is out of range: %d", m_nDecalOwnerComponentId);
 				return;
 			}
 
@@ -122,7 +122,7 @@ void CDecal::Process(bool& active, IRenderer* pIRenderer, const float fCurTime, 
 				CObjManager* pObjManager = ((C3DEngine*)p3DEngine)->GetObjManager();
 				CStatObjInst* pStatObjInst = (CStatObjInst*)m_pDecalOwner;
 				CStatObj* pBody = pObjManager->m_lstStaticTypes[pStatObjInst->m_nObjectTypeID].GetStatObj();
-				assert(pObjManager && pStatObjInst && pBody);
+				CRYASSERT(pObjManager && pStatObjInst && pBody);
 
 				if (pObjManager && pStatObjInst && pBody && pStatObjInst->m_fFinalBending)
 				{
@@ -139,7 +139,7 @@ void CDecal::Process(bool& active, IRenderer* pIRenderer, const float fCurTime, 
 			// transform decal in software from owner space into world space and render as quad
 			Matrix44 objMat;
 			IStatObj* pEntObject = m_pDecalOwner->GetEntityStatObj(m_nDecalOwnerComponentId, &objMat);
-			assert(pEntObject);
+			CRYASSERT(pEntObject);
 
 			Vec3d vPos = objMat.TransformPointOLD(m_vPos);
 			Vec3d vRight = objMat.TransformVectorOLD(m_vRight * m_fSize / m_pDecalOwner->GetScale());

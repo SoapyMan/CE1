@@ -125,7 +125,7 @@ void CSimpleLeafBuffer::CreateLeafBuffer(CIndexedMesh* pTriData, int Stripify, b
 			if (strstr(szMatName, "(nodraw)") || strstr(szMatName, "(no_draw)"))
 				continue;
 
-			assert(pFace->shader_id >= 0 && pFace->shader_id < 512);
+			CRYASSERT(pFace->shader_id >= 0 && pFace->shader_id < 512);
 
 			if (pFace->shader_id >= m_pMats->Count())
 			{
@@ -149,7 +149,7 @@ void CSimpleLeafBuffer::CreateLeafBuffer(CIndexedMesh* pTriData, int Stripify, b
 		{
 			CObjFace* pFace = _hash_table[t][i];
 
-			assert(pFace->shader_id == t);
+			CRYASSERT(pFace->shader_id == t);
 
 			for (int v = 0; v < 3; ++v)
 			{
@@ -213,7 +213,7 @@ void CSimpleLeafBuffer::CreateLeafBuffer(CIndexedMesh* pTriData, int Stripify, b
 			CSimpleREOcLeaf* re = new CSimpleREOcLeaf; // (CRE OcLeaf *)gRenDev->EF_CreateRE(eDATA_OcLeaf);
 			re->m_pChunk = &(*m_pMats)[i];
 			re->m_pBuffer = this;
-			assert(re->m_pChunk->nNumIndices < 60000);
+			CRYASSERT(re->m_pChunk->nNumIndices < 60000);
 			re->m_pChunk->pRE = (CREOcLeaf*)re;
 
 			// always enable sharing if there is 'flareproc' in shader/material name
@@ -330,7 +330,7 @@ void CSimpleLeafBuffer::CreateLeafBuffer(CIndexedMesh* pTriData, int Stripify, b
 			continue;
 		if (mi->nNumIndices + mi->nFirstIndexId > GetIndices().Count())
 		{
-			assert(0); continue;
+			CRYASSERT(0); continue;
 		}
 		int nMin = 999999;
 		int nMax = -999999;
@@ -399,7 +399,7 @@ void CSimpleLeafBuffer::CompactBuffer(struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F* _
 	list2<unsigned short>* pindices, bool bShareVerts[128], uint* uiInfo,
 	CBasis* pBasises)
 {
-	assert(*_vcount);
+	CRYASSERT(*_vcount);
 	if (!*_vcount)
 		m_pLog->ThrowError("CLeafBuffer::CompactBuffer error");
 
@@ -650,7 +650,7 @@ void CSimpleLeafBuffer::CalcFaceNormals()
 	}
 	else
 	{
-		//    assert(0);
+		//    CRYASSERT(0);
 
 		unsigned int n;
 		for (i = 0; i < m_pMats->Count(); i++)
@@ -727,7 +727,7 @@ bool CSimpleLeafBuffer::CreateTangBuffer(CBasis* pBasises)
 {
 	//  if (!m_pBasises)
 	  //  PrepareTexSpaceBasis();
-	assert(pBasises);
+	CRYASSERT(pBasises);
 
 	SAFE_DELETE_ARRAY(m_pSecVertBuffer->m_VS[VSF_TANGENTS].m_VData);
 	//  if (!m_pBasises)
@@ -762,7 +762,7 @@ bool CSimpleLeafBuffer::CreateTangBuffer(CBasis* pBasises)
 
 bool struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F::operator == (struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F& other)
 {
-	assert(this != &other);
+	CRYASSERT(this != &other);
 
 	return fabs(xyz.x - other.xyz.x) < PIP_VER_EPS && fabs(xyz.y - other.xyz.y) < PIP_VER_EPS && fabs(xyz.z - other.xyz.z) < PIP_VER_EPS &&
 		fabs(normal.x - other.normal.x) < PIP_VER_EPS && fabs(normal.y - other.normal.y) < PIP_VER_EPS && fabs(normal.z - other.normal.z) < PIP_VER_EPS &&
@@ -817,7 +817,7 @@ void CSimpleLeafBuffer::CorrectTangentBasisesForPolyBump(TangData* pDuplTangData
 			int nStart = pMI->nFirstIndexId;
 			int nEnd = nStart + pMI->nNumIndices;
 
-			assert(nEnd <= GetIndices().Count());
+			CRYASSERT(nEnd <= GetIndices().Count());
 
 			for (int i = nStart; i < nEnd; i++)
 			{
@@ -853,7 +853,7 @@ void CSimpleLeafBuffer::CorrectTangentBasisesForPolyBump(TangData* pDuplTangData
 				if (pDuplTangData)
 				{
 					//        int sn = pGeomInfo->m_rDupVertToNorVert[nVertId];
-					//        assert(nVertId<pGeomInfo->m_nAllocatedTangNum);
+					//        CRYASSERT(nVertId<pGeomInfo->m_nAllocatedTangNum);
 					pDuplTangData[nVertId].binormal = vBin;
 					pDuplTangData[nVertId].tangent = vTan;
 					pDuplTangData[nVertId].tnormal = vTnor;
@@ -900,7 +900,7 @@ void CSimpleLeafBuffer::CorrectTangentBasisesForPolyBump(TangData* pDuplTangData
 					if (pDuplTangData)
 					{
 						//        int sn = pGeomInfo->m_rDupVertToNorVert[nVertId];
-						//        assert(nVertId<pGeomInfo->m_nAllocatedTangNum);
+						//        CRYASSERT(nVertId<pGeomInfo->m_nAllocatedTangNum);
 						pDuplTangData[nVertId].binormal = vBin;
 						pDuplTangData[nVertId].tangent = vTan;
 						pDuplTangData[nVertId].tnormal = vTnor;

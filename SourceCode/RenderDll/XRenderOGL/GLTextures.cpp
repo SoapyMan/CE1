@@ -586,7 +586,7 @@ void CGLTexMan::RemoveFromHash(int Id, STexPic* ti)
 	if (it != m_RefTexs.end())
 	{
 		if (ti)
-			assert(ti == it->second);
+			CRYASSERT(ti == it->second);
 		m_RefTexs.erase(Id);
 	}
 }
@@ -597,7 +597,7 @@ STexPic* CGLTexMan::AddToHash(int Id, STexPic* ti)
 	if (it == m_RefTexs.end())
 		m_RefTexs.insert(TTextureMapItor::value_type(Id, ti));
 	else
-		assert(ti == it->second);
+		CRYASSERT(ti == it->second);
 	return ti;
 }
 
@@ -727,7 +727,7 @@ void STexPic::Set(int nTexSlot)
 		}
 	}
 
-	assert(m_Bind >= 0 && m_Bind < TX_LASTBIND);
+	CRYASSERT(m_Bind >= 0 && m_Bind < TX_LASTBIND);
 	if ((m_Flags2 & (FT2_WASUNLOADED | FT2_PARTIALLYLOADED)))
 	{
 		int Size = m_LoadedSize;
@@ -747,7 +747,7 @@ void STexPic::Set(int nTexSlot)
 		gRenDev->m_RP.m_PS.m_TexturesSize += m_Size;
 	}
 	//if (m_Bind != 0x1000)
-	//  assert (m_Size == BindSizes[m_Bind]);
+	//  CRYASSERT (m_Size == BindSizes[m_Bind]);
 
 	if (CGLTexMan::m_TUState[i].m_Bind != m_Bind)
 	{
@@ -899,7 +899,7 @@ int SShaderTexUnit::mfSetTexture(int nt)
 								//tp->SaveJPG("CubeProj.jpg", true);
 							}
 							else
-								assert(tp);
+								CRYASSERT(tp);
 							//tp->SaveJPG("CubeLight");
 						}
 					}
@@ -1203,7 +1203,7 @@ ETEX_Format CGLTexMan::GetTexFormat(int GLFormat)
 	case GL_ALPHA8:
 		return eTF_8000;
 	default:
-		assert(0);
+		CRYASSERT(0);
 	}
 	return eTF_Unknown;
 }
@@ -1249,7 +1249,7 @@ int CGLTexMan::GetTexDstFormat(ETEX_Format eTF)
 	case eTF_V16U16:
 		return GL_HILO16_NV;
 	default:
-		assert(0);
+		CRYASSERT(0);
 	}
 	return 0;
 }
@@ -1291,7 +1291,7 @@ int CGLTexMan::GetTexSrcFormat(ETEX_Format eTF)
 	case eTF_DSDT:
 		return GL_DSDT_NV;
 	default:
-		assert(0);
+		CRYASSERT(0);
 	}
 	return 0;
 }
@@ -1380,7 +1380,7 @@ int CGLTexMan::TexSize(int wdt, int hgt, int depth, int mode)
 		return wdt * hgt * depth * 2;
 
 	default:
-		assert(0);
+		CRYASSERT(0);
 		break;
 
 	}
@@ -1693,7 +1693,7 @@ void CGLTexMan::BuildMips(GLenum tgt, byte* src, int wdt, int hgt, int depth, ST
 										h >>= 1;
 									}
 								}
-								assert(!w && !h);
+								CRYASSERT(!w && !h);
 								if (w || h)
 									Warning(0, ti->GetName(), "CGLTexMan::BuildMips_DXT: Texture has no requested mips: %s", ti->GetName());
 							}
@@ -1786,7 +1786,7 @@ byte* CGLTexMan::GenerateDXT_HW(STexPic* ti, EImFormat eF, byte* dst, int* numMi
 
 	uint tnum = 0;
 	glGenTextures(1, &tnum);
-	assert(tnum < 14000);
+	CRYASSERT(tnum < 14000);
 	SetTexture(tnum, eTT_Base);
 
 	if (eF == eIF_DXT1)
@@ -1938,7 +1938,7 @@ STexPic* CGLTexMan::CreateTexture(const char* name, int wdt, int hgt, int depth,
 
 	int w = ilog2(wdt);
 	int h = ilog2(hgt);
-	assert(w == wdt && h == hgt);
+	CRYASSERT(w == wdt && h == hgt);
 
 	if (!ti)
 	{
@@ -2607,7 +2607,7 @@ void CGLTexMan::UpdateTextureRegion(STexPic* pic, byte* data, int X, int Y, int 
 		break;
 	}
 	default:
-		assert(0);
+		CRYASSERT(0);
 	}
 	//pic->SaveTGA("Font.tga", 0);
 }
@@ -4037,9 +4037,9 @@ void CGLTexMan::DrawFlashBangMap(int iId, int iRenderFlags, CREFlashBang* pRE)
 	  // get fragment program
 	  CPShader *fpBlur=gRenDev->m_RP.m_RCBlur;//CPShader::mfForName("RCBlur", false);
 
-	  assert(pRenderer && "CREFlashBang::mfDraw - Invalid CGLRenderer pointer");
-	  assert(vpBlur && "CREFlashBang::mfDraw - Invalid CCGVProgram_GL pointer");
-	  assert(fpBlur && "CREFlashBang::mfDraw - Invalid CPShader pointer");
+	  CRYASSERT(pRenderer && "CREFlashBang::mfDraw - Invalid CGLRenderer pointer");
+	  CRYASSERT(vpBlur && "CREFlashBang::mfDraw - Invalid CCGVProgram_GL pointer");
+	  CRYASSERT(fpBlur && "CREFlashBang::mfDraw - Invalid CPShader pointer");
 
 	  // setup vertex/fragment program
 
@@ -4304,7 +4304,7 @@ void CGLTexMan::DrawToTextureForGlare(int Id)
 	  CGLRenderer *pRenderer = gcpOGL;
 	  // get fragment program
 	  CCGPShader_GL *fpGlareMap=(CCGPShader_GL *)gRenDev->m_RP.m_RCGlareMap; //CPShader::mfForName("RCGlareMap", false);
-	  assert(fpGlareMap && "CGLTexMan::DrawToTextureForGlare - Invalid CPShader pointer");
+	  CRYASSERT(fpGlareMap && "CGLTexMan::DrawToTextureForGlare - Invalid CPShader pointer");
 
 	  // set fragment program
 	  fpGlareMap->mfSet(true, 0);
@@ -4360,9 +4360,9 @@ void CGLTexMan::DrawToTextureForGlare(int Id)
 	  // get fragment program
 	  CPShader *fpBlur=gRenDev->m_RP.m_RCBlur;//CPShader::mfForName("RCBlur", false);
 
-	  assert(pRenderer && "CGLTexMan::DrawToTextureForGlare - Invalid CGLRenderer pointer");
-	  assert(vpBlur && "CGLTexMan::DrawToTextureForGlare - Invalid CCGVProgram_GL pointer");
-	  assert(fpBlur && "CGLTexMan::DrawToTextureForGlare - Invalid CPShader pointer");
+	  CRYASSERT(pRenderer && "CGLTexMan::DrawToTextureForGlare - Invalid CGLRenderer pointer");
+	  CRYASSERT(vpBlur && "CGLTexMan::DrawToTextureForGlare - Invalid CCGVProgram_GL pointer");
+	  CRYASSERT(fpBlur && "CGLTexMan::DrawToTextureForGlare - Invalid CPShader pointer");
 
 	  // setup vertex/fragment program
 
@@ -5530,7 +5530,7 @@ bool CGLRenderer::EF_SetLightHole(Vec3d vPos, Vec3d vNormal, int idTex, float fS
 	  GL_TEXTURE_CUBE_MAP_NEGATIVE_Z_EXT,
 	};
 
-	assert(idTex);
+	CRYASSERT(idTex);
 
 	//ITexPic *pi = EF_LoadTexture("ricochet32b", 0, 0, eTT_Base);
 	//idTex = pi->GetTextureID();
@@ -5540,7 +5540,7 @@ bool CGLRenderer::EF_SetLightHole(Vec3d vPos, Vec3d vNormal, int idTex, float fS
 	STexPic* Pic = m_TexMan->GetByID(idTex);
 	if (!Pic)
 		Pic = gRenDev->m_TexMan->m_Text_White;
-	assert(Pic->m_Flags2 & FT2_WASLOADED);
+	CRYASSERT(Pic->m_Flags2 & FT2_WASLOADED);
 	//Pic = (STexPic *)EF_LoadTexture("textures/decal/default", 0, 0, eTT_Base);
 
 	/*static bool bFreeze;
@@ -5586,7 +5586,7 @@ bool CGLRenderer::EF_SetLightHole(Vec3d vPos, Vec3d vNormal, int idTex, float fS
 
 	CDLight* pLight = m_RP.m_DLights[SRendItem::m_RecurseLevel][i];
 
-	assert(pLight);
+	CRYASSERT(pLight);
 
 	/*if ((GetAsyncKeyState('R') & 0x8000) && m_RP.m_RealTime-fLastTime > 1.0f)
 	{

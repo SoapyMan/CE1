@@ -85,7 +85,7 @@ uint CGLRenderer::Make3DSprite(int nTexSize, float fAngleStep, IStatObj* pStatOb
 		glPopMatrix();
 
 		// read into buffer and make texture
-		assert(nTexSize <= 1024);//just warning
+		CRYASSERT(nTexSize <= 1024);//just warning
 
 		glReadPixels(0, 0, nTexSize, nTexSize, GL_RGBA, GL_UNSIGNED_BYTE, &pMemBuffer[nTexSize * nTexSize * i * 4]);
 

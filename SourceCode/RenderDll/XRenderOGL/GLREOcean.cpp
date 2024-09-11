@@ -223,7 +223,7 @@ void CREOcean::UpdateTexture()
 	{
 		uint tnum = 0;
 		glGenTextures(1, &tnum);
-		assert(tnum < 14000);
+		CRYASSERT(tnum < 14000);
 		m_CustomTexBind[0] = tnum;
 		r->SetTexture(tnum, eTT_Base);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_DSDT_NV, OCEANGRID, OCEANGRID, 0, GL_DSDT_NV, GL_FLOAT, 0);

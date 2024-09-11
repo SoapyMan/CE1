@@ -243,7 +243,7 @@ void CryModel::InvertMarkedTangentBasises()
 
 	for (unsigned nLodLevel = 0; nLodLevel < numLODs(); nLodLevel++)
 	{
-		assert(pLeafBuffers[nLodLevel]);
+		CRYASSERT(pLeafBuffers[nLodLevel]);
 		//pLeafBuffers[nLodLevel]->CorrectTangentBasisesForPolyBump(getGeometryInfo(nLodLevel)->getExtTangents());
 	}
 }
@@ -284,13 +284,13 @@ IStencilShadowConnectivity* CryModel::getStencilShadowConnectivity(unsigned nLOD
 // returns the geometry of the given lod (0 is the highest detail lod)
 CryGeometryInfo* CryModel::getGeometryInfo(unsigned  nLodLevel)
 {
-	assert(nLodLevel >= 0 && nLodLevel < m_arrGeomInfo.size());
+	CRYASSERT(nLodLevel >= 0 && nLodLevel < m_arrGeomInfo.size());
 	return &m_arrGeomInfo[nLodLevel];
 }
 // returns the geometry of the given lod (0 is the highest detail lod)
 const CryGeometryInfo* CryModel::getGeometryInfo(unsigned nLodLevel)const
 {
-	assert(nLodLevel >= 0 && nLodLevel < m_arrGeomInfo.size());
+	CRYASSERT(nLodLevel >= 0 && nLodLevel < m_arrGeomInfo.size());
 	return &m_arrGeomInfo[nLodLevel];
 }
 
@@ -335,7 +335,7 @@ const CrySkinMorph& CryModel::getMorphSkin(unsigned nLOD, int nMorphTargetId)
 		return m_arrMorphSkins[nMorphTargetId];
 	else
 	{
-		assert(0); // memory leaks possible
+		CRYASSERT(0); // memory leaks possible
 		static const CrySkinMorph DefaultMorphSkin;
 		return DefaultMorphSkin;
 	}
@@ -406,7 +406,7 @@ void CryModel::deleteUnusedMaterials()
 	for (nLOD = 0; nLOD < numLODs(); ++nLOD)
 	{
 		CryGeometryInfo* pLOD = getGeometryInfo(nLOD);
-		assert(pLOD->numFaces());
+		CRYASSERT(pLOD->numFaces());
 		for (unsigned nFace = 0; nFace < pLOD->numFaces(); ++nFace)
 		{
 			pUsed[pLOD->getFaceMtl(nFace)] |= 1 << nLOD;
@@ -658,10 +658,10 @@ bool CryModel::loadCCGBoneGeom(IGeomManager* pGeomManager, unsigned nLOD, float 
 	IGeometry* pPhysicalGeometry = pGeomManager->CreateMesh(&arrVertices[0], &arrIndices[0], &arrMtls[0], pHeader->numFaces,
 		(pHeader->numFaces <= 20 ? mesh_SingleBB : mesh_OBB | mesh_AABB) | mesh_multicontact0 | mesh_approx_box | mesh_approx_sphere | mesh_approx_cylinder);
 
-	assert(pPhysicalGeometry);
+	CRYASSERT(pPhysicalGeometry);
 
 	phys_geometry* pRegisteredGeometry = pGeomManager->RegisterGeometry(pPhysicalGeometry, arrMtls.empty() ? 0 : arrMtls[0]);
-	assert(pRegisteredGeometry);
+	CRYASSERT(pRegisteredGeometry);
 
 	getBoneInfo(pHeader->nBone).getPhysInfo(nLOD).pPhysGeom = pRegisteredGeometry;
 
@@ -724,7 +724,7 @@ bool CryModel::loadCCGLights(const CCFCharLightDesc* pData, unsigned nSize, floa
 			return false;
 		arrBoneLights[nLight].scale(fScale);
 		pRawData += (numReadBytes + 3) & ~3;
-		assert(pRawData <= pDataEnd);
+		CRYASSERT(pRawData <= pDataEnd);
 	}
 
 	addBoneLights(arrBoneLights);

@@ -152,7 +152,7 @@ const char* ResourceCompiler::GetSectionName(Platform platform) const
 	default:
 		// unknown platform.
 		MessageBoxError(_T("Section name requested for unknown platform"));
-		assert(0);
+		CRYASSERT(0);
 	}
 	return "";
 }
@@ -559,7 +559,7 @@ void ResourceCompiler::LogLine(const ELogType ineType, const char* szText)
 		}
 		break;
 
-	default:assert(0);
+	default:CRYASSERT(0);
 	}
 
 	if (m_hLogFile)
@@ -673,7 +673,7 @@ static Platform GetPlatformFromName(const char* sPlatform)
 //////////////////////////////////////////////////////////////////////////
 void RegisterConvertors(IResourceCompiler* rc)
 {
-	IRCLog* log = rc->GetIRCLog();					assert(log);
+	IRCLog* log = rc->GetIRCLog();					CRYASSERT(log);
 
 	string strDir;
 	{

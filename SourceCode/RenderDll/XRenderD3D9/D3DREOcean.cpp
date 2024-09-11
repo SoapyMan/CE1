@@ -294,7 +294,7 @@ void CREOcean::UpdateTexture()
 			}
 			break;
 			default:
-				assert(0);
+				CRYASSERT(0);
 			}
 		}
 		h = pID3DTexture->UnlockRect(0);
@@ -512,7 +512,7 @@ struct_VERTEX_FORMAT_TEX2F* CREOcean::GetVBPtr(int nVerts)
 	struct_VERTEX_FORMAT_TEX2F* pVertices = NULL;
 	if (nVerts > m_nNumVertsInPool)
 	{
-		assert(0);
+		CRYASSERT(0);
 		return NULL;
 	}
 	if (m_bLockedVB)

@@ -425,7 +425,7 @@ void CEntity::ProcessEntityLightSources()
 		ICryCharInstance* cmodel = m_pCryCharInstance[i];
 		if (cmodel && (cmodel->GetFlags() & CS_FLAG_DRAW_MODEL) && cmodel->GetBoundLight(0))
 		{
-			assert(!IsStatic());
+			CRYASSERT(!IsStatic());
 			Matrix44 LightMatrix;
 			if (m_pContainer)
 			{ // use character angles and entity pos
@@ -506,7 +506,7 @@ ICryCharInstance* CEntity::GetEntityCharacter(unsigned int nSlot, Matrix44* pMat
 	if (nSlot >= 0 && nSlot < MAX_ANIMATED_MODELS)
 	{
 		if (pMatrix)
-			assert(0); // todo: entity should have matrix calculated once in entity Update()
+			CRYASSERT(0); // todo: entity should have matrix calculated once in entity Update()
 
 		return m_pCryCharInstance[nSlot];
 	}

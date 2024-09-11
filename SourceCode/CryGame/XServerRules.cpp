@@ -37,7 +37,7 @@ CXServerRules::~CXServerRules()
 
 bool CXServerRules::ChangeGameRules( const char *inszGameType )
 {
-	assert(inszGameType);
+	CRYASSERT(inszGameType);
 	char filename[512];
 
 	sprintf(filename,"Scripts\\%s\\GameRules.lua",inszGameType);
@@ -329,7 +329,7 @@ void CXServerRules::OnClientMsgText(EntityId sender, TextMessage &tm)
 			break;
 	}
 
-	assert(szMessageType);
+	CRYASSERT(szMessageType);
 
 	if(szMessageType)
 	{

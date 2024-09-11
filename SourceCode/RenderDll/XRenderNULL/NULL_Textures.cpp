@@ -73,7 +73,7 @@ void CNULLTexMan::RemoveFromHash(int Id, STexPic* ti)
 	if (it != m_RefTexs.end())
 	{
 		if (ti)
-			assert(ti == it->second);
+			CRYASSERT(ti == it->second);
 		m_RefTexs.erase(Id);
 	}
 }
@@ -84,7 +84,7 @@ STexPic* CNULLTexMan::AddToHash(int Id, STexPic* ti)
 	if (it == m_RefTexs.end())
 		m_RefTexs.insert(TTextureMapItor::value_type(Id, ti));
 	else
-		assert(ti == it->second);
+		CRYASSERT(ti == it->second);
 	return ti;
 }
 

@@ -224,11 +224,11 @@ ZipDir::ErrorEnum ZipDir::CacheRW::ReadFile(FileEntry* pFileEntry, void* pCompre
 
 	if (pFileEntry->desc.lSizeUncompressed == 0)
 	{
-		assert(pFileEntry->desc.lSizeCompressed == 0);
+		CRYASSERT(pFileEntry->desc.lSizeCompressed == 0);
 		return ZD_ERROR_SUCCESS;
 	}
 
-	assert(pFileEntry->desc.lSizeCompressed > 0);
+	CRYASSERT(pFileEntry->desc.lSizeCompressed > 0);
 
 	ErrorEnum nError = Refresh(pFileEntry);
 	if (nError != ZD_ERROR_SUCCESS)
@@ -265,8 +265,8 @@ ZipDir::ErrorEnum ZipDir::CacheRW::ReadFile(FileEntry* pFileEntry, void* pCompre
 	{
 		if (pFileEntry->nMethod == 0)
 		{
-			assert(pBuffer == pUncompressed);
-			//assert (pFileEntry->nSizeCompressed == pFileEntry->nSizeUncompressed);
+			CRYASSERT(pBuffer == pUncompressed);
+			//CRYASSERT (pFileEntry->nSizeCompressed == pFileEntry->nSizeUncompressed);
 			//memcpy (pUncompressed, pBuffer, pFileEntry->nSizeCompressed);
 		}
 		else
@@ -290,10 +290,10 @@ ZipDir::FileEntry* ZipDir::CacheRW::FindFile(const char* szPath, bool bFullInfo)
 	ZipDir::FindFileRW fd(GetRoot());
 	if (!fd.FindExact(szPath))
 	{
-		assert(!fd.GetFileEntry());
+		CRYASSERT(!fd.GetFileEntry());
 		return NULL;
 	}
-	assert(fd.GetFileEntry());
+	CRYASSERT(fd.GetFileEntry());
 	return fd.GetFileEntry();
 }
 
@@ -333,7 +333,7 @@ bool ZipDir::CacheRW::WriteCDR(FILE* fTarget)
 	size_t nSizeCDR = arrFiles.GetStats().nSizeCDR;
 	void* pCDR = m_pHeap->Alloc(nSizeCDR, "ZipDir::CacheRW::WriteCDR");
 	size_t nSizeCDRSerialized = arrFiles.MakeZipCDR(m_lCDROffset, pCDR);
-	assert(nSizeCDRSerialized == nSizeCDR);
+	CRYASSERT(nSizeCDRSerialized == nSizeCDR);
 	size_t nWriteRes = fwrite(pCDR, nSizeCDR, 1, fTarget);
 	m_pHeap->Free(pCDR);
 	return nWriteRes == 1;
@@ -488,7 +488,7 @@ bool ZipDir::CacheRW::WriteZipFiles(std::vector<FileDataRecordPtr>& queFiles, FI
 		if ((*it)->pFileEntry->desc.lSizeCompressed && fwrite((*it)->GetData(), (*it)->pFileEntry->desc.lSizeCompressed, 1, fTmp) != 1)
 			return false;
 
-		assert((*it)->pFileEntry->nEOFOffset == ftell(fTmp));
+		CRYASSERT((*it)->pFileEntry->nEOFOffset == ftell(fTmp));
 	}
 	queFiles.clear();
 	queFiles.reserve(g_nMaxItemsRelinkBuffer);

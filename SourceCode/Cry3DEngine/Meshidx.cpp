@@ -408,7 +408,7 @@ bool CIndexedMesh::LoadCGF(const char* szFileName, const char* szGeomName, bool 
 
 				if (geom->m_pTexFaces)
 				{
-					assert(
+					CRYASSERT(
 						geom->m_pTexFaces[c].t0 < geom->m_Chunk.nTVerts &&
 						geom->m_pTexFaces[c].t1 < geom->m_Chunk.nTVerts &&
 						geom->m_pTexFaces[c].t2 < geom->m_Chunk.nTVerts);
@@ -495,7 +495,7 @@ bool CIndexedMesh::LoadCGF(const char* szFileName, const char* szGeomName, bool 
 					if(m_LoadedShaders[ns].pMesh == this && m_LoadedShaders[ns].nNewShaderID<m_lstMatTable.Count())
 					{ // if we still in the same object
 					  pFace->shader_id = m_LoadedShaders[ns].nNewShaderID;
-					  assert(pFace->shader_id<m_lstMatTable.Count());
+					  CRYASSERT(pFace->shader_id<m_lstMatTable.Count());
 					}
 					else
 					{ // try to find id of such already registered material
@@ -518,9 +518,9 @@ bool CIndexedMesh::LoadCGF(const char* szFileName, const char* szGeomName, bool 
 				}*/
 
 				// check vertex id
-				assert(m_pFaces[c + m_nFaceCount].v[0] < m_nVertCount + chunk->nVerts);
-				assert(m_pFaces[c + m_nFaceCount].v[1] < m_nVertCount + chunk->nVerts);
-				assert(m_pFaces[c + m_nFaceCount].v[2] < m_nVertCount + chunk->nVerts);
+				CRYASSERT(m_pFaces[c + m_nFaceCount].v[0] < m_nVertCount + chunk->nVerts);
+				CRYASSERT(m_pFaces[c + m_nFaceCount].v[1] < m_nVertCount + chunk->nVerts);
+				CRYASSERT(m_pFaces[c + m_nFaceCount].v[2] < m_nVertCount + chunk->nVerts);
 			}
 
 			//			lstLMapsId.clear();
@@ -552,7 +552,7 @@ bool CIndexedMesh::LoadCGF(const char* szFileName, const char* szGeomName, bool 
 
 	for (int f = 0; f < m_nFaceCount; f++)
 	{
-		assert(m_pFaces[f].shader_id < 127);
+		CRYASSERT(m_pFaces[f].shader_id < 127);
 		arrMats[m_pFaces[f].shader_id & 127] = true;
 	}
 
@@ -584,7 +584,7 @@ bool CIndexedMesh::LoadCGF(const char* szFileName, const char* szGeomName, bool 
 		// remap faces
 		for (int f = 0; f < m_nFaceCount; f++)
 		{
-			assert(m_pFaces[f].shader_id >= arrNewId[m_pFaces[f].shader_id & 127]);
+			CRYASSERT(m_pFaces[f].shader_id >= arrNewId[m_pFaces[f].shader_id & 127]);
 			m_pFaces[f].shader_id = arrNewId[m_pFaces[f].shader_id & 127];
 		}
 	}

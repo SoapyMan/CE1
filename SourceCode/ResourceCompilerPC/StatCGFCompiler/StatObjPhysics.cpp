@@ -44,7 +44,7 @@ int CSimpleStatObj::FindInPosBuffer(const Vec3d& opt, Vec3d* _vbuff, int _vcount
 
 void CSimpleStatObj::CompactPosBuffer(Vec3d* _vbuff, int* _vcount, list2<int>* pindices)
 {
-	int before = *_vcount; assert(before);
+	int before = *_vcount; CRYASSERT(before);
 	if (!before)
 		m_pLog->ThrowError("Error: CSimpleStatObj::CompactPosBuffer: Input vertex count is zero");
 
@@ -270,7 +270,7 @@ void CSimpleStatObj::Physicalize()
 				if (lstPhysIndices.Count() < 600 && crymax(crymax(sz.x, sz.y), sz.z) > 6) // make more dense OBBs for large (wrt terrain grid) objects
 					nMinTrisPerNode = nMaxTrisPerNode = 1;
 
-				//        assert(0);
+				//        CRYASSERT(0);
 						// serialize data here
 
 				/////        m_arrPhysGeomInfo[nMesh] = pGeoman->RegisterGeometry(pGeoman->CreateMesh((vectorf*)
@@ -326,7 +326,7 @@ void CSimpleStatObj::InitGeometry()
 
 void CSimpleStatObj::Serialize(int& nPos, uchar* pSerBuf, bool bSave)
 {
-	assert(bSave);
+	CRYASSERT(bSave);
 
 	SaveBuffer("StatObj", 8, pSerBuf, nPos);
 

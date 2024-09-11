@@ -135,7 +135,7 @@ IStencilShadowConnectivity* CStencilShadowConnectivityBuilder::ConstructConnecti
 {
 	CStencilShadowConnectivity* pConnectivity = new CStencilShadowConnectivity(m_vDoubleEdges);
 
-	assert(pConnectivity);		// low memeory?
+	CRYASSERT(pConnectivity);		// low memeory?
 
 	pConnectivity->SetOrphanEdges(m_mapSingleEdges);
 	pConnectivity->SetFaces(m_vFaces);
@@ -149,11 +149,11 @@ IStencilShadowConnectivity* CStencilShadowConnectivityBuilder::ConstructConnecti
 	unsigned nBufSize = pConnectivity->Serialize(true, NULL, 0);
 	void* pBuf = malloc(nBufSize);
 	unsigned nSaved = pConnectivity->Serialize(true, pBuf, nBufSize);
-	assert(nSaved == nBufSize);
+	CRYASSERT(nSaved == nBufSize);
 	pConnectivity->Release();
 	pConnectivity = new CStencilShadowConnectivity();
 	unsigned nLoaded = pConnectivity->Serialize(false, pBuf, nBufSize);
-	assert(nLoaded == nBufSize);
+	CRYASSERT(nLoaded == nBufSize);
 	free(pBuf);
 #endif
 

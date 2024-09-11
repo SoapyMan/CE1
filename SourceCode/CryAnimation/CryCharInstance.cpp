@@ -277,8 +277,8 @@ ICryCharInstance::ObjectBindingHandle CryCharInstance::AttachObjectToBone(IBinda
 {
 	if (!szBoneName)
 	{
-		// if you find this assert, this means someone passed here a model and NO bone to attach it to. What should it mean anyway??
-		assert(!pWeaponModel);
+		// if you find this CRYASSERT, this means someone passed here a model and NO bone to attach it to. What should it mean anyway??
+		CRYASSERT(!pWeaponModel);
 		// just detach everything
 		DetachAll();
 		return nInvalidObjectBindingHandle;
@@ -298,8 +298,8 @@ ICryCharInstance::ObjectBindingHandle CryCharInstance::AttachObjectToBone(IBinda
 
 			g_GetLog()->LogError("\002AttachObjectToBone is called for bone \"%s\", which is not in the model \"%s\". Ignoring, but this may cause a crash because the corresponding object won't be detached after it's destroyed", szBoneName, m_pCryCharBody->GetFilePathCStr());
 #ifdef _DEBUG
-			// this assert will only happen if the ca_NoAttachAssert is off
-			// assert (g_GetCVars()->ca_NoAttachAssert());
+			// this CRYASSERT will only happen if the ca_NoAttachAssert is off
+			// CRYASSERT (g_GetCVars()->ca_NoAttachAssert());
 #endif
 		}
 		return nInvalidObjectBindingHandle; // bone not found, do nothing
@@ -376,13 +376,13 @@ CryCharInstanceBase::ObjectBindingHandle CryCharInstanceBase::AttachToBone(IBind
 // the binding becomes invalid immediately after detach
 bool CryCharInstanceBase::Detach(ObjectBindingHandle nHandle)
 {
-	assert(IsHeapValid());
+	CRYASSERT(IsHeapValid());
 	for (BindArray::iterator it = m_arrBinds.begin(); it != m_arrBinds.end(); )
 		if (nHandle == (ObjectBindingHandle)*it)
 		{
 			delete* it;
 			it = m_arrBinds.erase(it);
-			assert(IsHeapValid());
+			CRYASSERT(IsHeapValid());
 			return true;
 		}
 		else
@@ -524,8 +524,8 @@ Vec3d CryCharInstance::GetTPVWeaponHelper(const char* szHelperName, ObjectBindin
 
 	IBindable* pBoundObject = ((StatObjBind*)nHandle)->pObj;
 	unsigned nBone = ((StatObjBind*)nHandle)->nBone;
-	assert(nBone < m_pModelState->numBones());
-	assert(pBoundObject);
+	CRYASSERT(nBone < m_pModelState->numBones());
+	CRYASSERT(pBoundObject);
 
 	Vec3d vPos = pBoundObject->GetHelperPos(szHelperName);
 
@@ -548,14 +548,14 @@ bool CryCharInstance::GetTPVWeaponHelperMatrix(const char* szHelperName, ObjectB
 {
 	if (!IsBindingValid(nHandle))
 	{
-		assert(0);// the binding handle is invalid!
+		CRYASSERT(0);// the binding handle is invalid!
 		return false;
 	}
 
 	IBindable* pBoundObject = ((StatObjBind*)nHandle)->pObj;
 	unsigned nBone = ((StatObjBind*)nHandle)->nBone;
-	assert(nBone < m_pModelState->numBones());
-	assert(pBoundObject);
+	CRYASSERT(nBone < m_pModelState->numBones());
+	CRYASSERT(pBoundObject);
 
 	const Matrix44* pHelperMatrix = pBoundObject->GetHelperMatrixByName(szHelperName);
 
@@ -590,9 +590,9 @@ void CryCharInstance::RenderShadowVolumes(const SRendParams* rParams, int nLimit
 		for (BindArray::iterator it = m_arrBinds.begin(); it != m_arrBinds.end(); ++it)
 		{
 			unsigned nBone = (*it)->nBone;
-			assert(nBone < m_pCryCharBody->GetModel()->numBoneInfos());
+			CRYASSERT(nBone < m_pCryCharBody->GetModel()->numBoneInfos());
 			IBindable* pBoundObject = (*it)->pObj;
-			assert(pBoundObject);
+			CRYASSERT(pBoundObject);
 
 			if (pBoundObject)
 			{ // get weapon position
@@ -794,7 +794,7 @@ void CryCharInstance::Update(Vec3d vPos, float fRadius, unsigned uFlags)
 		fFrameTime = (fAnimUpdateTime - m_fLastAnimUpdateTime) * m_fAnimSpeedScale;
 
 		// the time should actually go forward
-		//assert(fFrameTime >= 0);
+		//CRYASSERT(fFrameTime >= 0);
 
 		if (fFrameTime <= 0) {
 			//just in case we reset the timer
@@ -902,7 +902,7 @@ const char* CryCharInstance::GetShaderTemplateName()
 
 bool CryCharInstance::SetShaderTemplateName(const char* TemplName, int Id, const char* ShaderName, IMatInfo* pCustomMaterial, unsigned nFlags)
 {
-	assert(Id <= 1);
+	CRYASSERT(Id <= 1);
 
 	if (TemplName)
 	{
@@ -913,7 +913,7 @@ bool CryCharInstance::SetShaderTemplateName(const char* TemplName, int Id, const
 	else
 		m_sShaderTemplateName[Id][0] = 0;
 
-	assert(Id <= 1);
+	CRYASSERT(Id <= 1);
 
 	m_nShaderTemplateFlags = nFlags;
 
@@ -1230,7 +1230,7 @@ void CryCharInstance::RemoveAnimationEventSink(const char* szAnimName, ICharInst
 	else
 	{
 		//g_GetLog()->LogToFile("\005CryCharInstance(0x%p)::RemoveAnimationEventSink(\"%s\",0x%p) - animation not found (model \"%s\")", this, szAnimName, pCharInstanceSink, m_pCryCharBody->GetFilePathCStr());
-		assert(m_pModelState->getAnimationEventSink(nAnimId) == pCharInstanceSink);
+		CRYASSERT(m_pModelState->getAnimationEventSink(nAnimId) == pCharInstanceSink);
 		m_pModelState->setAnimationEventSink(nAnimId, NULL);
 	}
 }

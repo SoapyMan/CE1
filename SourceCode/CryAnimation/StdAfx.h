@@ -1,8 +1,4 @@
 //! Include standard headers.
-#if !defined(LINUX)
-#include <assert.h>
-#endif
-
 
 //////////////////////////////////////////////////////////////////////////
 // THIS MUST BE AT THE VERY BEGINING OF STDAFX.H FILE.
@@ -29,12 +25,10 @@
 #ifdef _XBOX
 
 //! Include standard headers.
-#include <assert.h>
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <assert.h>
 #include <memory.h>
 #include <memory.h>
 #include <time.h>
@@ -54,13 +48,11 @@ typedef unsigned char BYTE;
 #endif
 
 #ifdef GAMECUBE
-//#include <assert.h>
 //#include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
 //#include <string.h>
-//#include <assert.h>
 //#include <time.h>
 #include <dolphin.h>
 #include <stdarg.h>
@@ -182,9 +174,9 @@ enum { g_nMaxGeomLodLevels = 3 };
 #define DECLARE_VECTOR_GETTER_METHODS(Type, Singular, Plural, member) \
 	Type* get##Plural() {return member.empty()?NULL:&member[0];}												\
 	const Type* get##Plural()const {return member.empty()?NULL:&member[0];}							\
-	Type& get##Singular(unsigned i) {assert (i < num##Plural()); return member[i];}             \
-	const Type& get##Singular(unsigned i)const {assert (i < num##Plural()); return member[i];}	\
-	void set##Singular (unsigned i, const Type& newValue) {assert (i < num##Plural()); member[i] = newValue;} \
+	Type& get##Singular(unsigned i) {CRYASSERT (i < num##Plural()); return member[i];}             \
+	const Type& get##Singular(unsigned i)const {CRYASSERT (i < num##Plural()); return member[i];}	\
+	void set##Singular (unsigned i, const Type& newValue) {CRYASSERT (i < num##Plural()); member[i] = newValue;} \
 	unsigned num##Plural() const{return (unsigned)member.size();}
 
 #ifdef _DEBUG

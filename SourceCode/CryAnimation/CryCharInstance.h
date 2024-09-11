@@ -40,7 +40,7 @@ public:
 		unsigned nFlags;
 		StatObjBind(IBindable* obj, unsigned bone, unsigned flags) :
 			pObj(obj), nBone(bone), nFlags(flags) {
-			assert(pObj);
+			CRYASSERT(pObj);
 		}
 	};
 	typedef std::vector<StatObjBind*> BindArray;

@@ -359,7 +359,7 @@ void GC_CGFConvertor::UpdateDeadBodyPhysics()
 			rBoneMain.resetPhysics(1);
 			continue;
 		}
-		assert((unsigned)nLODBone < arrSecBones.size());
+		CRYASSERT((unsigned)nLODBone < arrSecBones.size());
 		CryBoneDesc& rBoneSec = arrSecBones[nLODBone];
 		//if (!rBoneMain.isEqual(rBoneSec))
 		//	throw Error ("LOD 0 and 1 bone #%d are different", nBone);
@@ -426,7 +426,7 @@ Platform GC_CGFConvertor::GetPlatform(int index) const
 	case 2:	return PLATFORM_PS2;
 	case 3:	return PLATFORM_GAMECUBE;
 	};
-	//assert(0);
+	//CRYASSERT(0);
 	return PLATFORM_UNKNOWN;
 }
 
@@ -574,7 +574,7 @@ void GC_CGFConvertor::writeBGBone(unsigned nLOD, unsigned nBone, CryChunkedFile:
 {
 	CCFBGBone bgb;
 	bgb.nBone = nBone;
-	assert(pMesh);
+	CRYASSERT(pMesh);
 	bgb.numVertices = pMesh->numVertices();
 	bgb.numFaces = pMesh->numFaces();
 	//write (bgb);

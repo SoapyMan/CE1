@@ -242,7 +242,7 @@ Vec3d CVisArea::GetConnectionNormal(CVisArea* pPortal)
 	//	if(strstr(pPortal->m_sName,"ab09_portal11"))
 		//	int t=0;
 
-	assert(m_lstShapePoints.Count() >= 3);
+	CRYASSERT(m_lstShapePoints.Count() >= 3);
 	// find side of shape intersecting with portal
 	int nIntersNum = 0;
 	Vec3d arrNormals[2] = { Vec3d(0,0,0),Vec3d(0,0,0) };
@@ -340,10 +340,10 @@ bool CVisArea::UpdatePortalCameraScissor(CCamera& cam, list2<Vec3d>* lstVerts, b
 	if (vMax2d.x <= vMin2d.x || vMax2d.y < vMin2d.y)
 		return false;
 
-	assert(vMin2d.x >= 0 && vMin2d.x <= GetRenderer()->GetWidth());
-	assert(vMin2d.y >= 0 && vMin2d.y <= GetRenderer()->GetHeight());
-	assert(vMax2d.x >= 0 && vMax2d.x <= GetRenderer()->GetWidth());
-	assert(vMax2d.y >= 0 && vMax2d.y <= GetRenderer()->GetHeight());
+	CRYASSERT(vMin2d.x >= 0 && vMin2d.x <= GetRenderer()->GetWidth());
+	CRYASSERT(vMin2d.y >= 0 && vMin2d.y <= GetRenderer()->GetHeight());
+	CRYASSERT(vMax2d.x >= 0 && vMax2d.x <= GetRenderer()->GetWidth());
+	CRYASSERT(vMax2d.y >= 0 && vMax2d.y <= GetRenderer()->GetHeight());
 
 	cam.m_ScissorInfo.x1 = ushort(vMin2d.x);
 	cam.m_ScissorInfo.y1 = ushort(vMin2d.y);
@@ -718,7 +718,7 @@ int CVisArea::GetVisAreaConnections(IVisArea** pAreas, int nMaxConnNum, bool bSk
 		for (int nPort = 0; nPort < m_lstConnections.Count(); nPort++)
 		{
 			CVisArea* pPortal = m_lstConnections[nPort];
-			assert(pPortal->IsPortal());
+			CRYASSERT(pPortal->IsPortal());
 			for (int nArea = 0; nArea < pPortal->m_lstConnections.Count(); nArea++)
 			{
 				if (pPortal->m_lstConnections[nArea] != this)

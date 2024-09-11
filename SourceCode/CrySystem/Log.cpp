@@ -262,7 +262,7 @@ void CLog::LogStringToConsole(const char* szString, bool bAdd)
 
 	size_t nLen = strlen(szTemp);
 
-	assert(nLen < sizeof(szTemp));
+	CRYASSERT(nLen < sizeof(szTemp));
 
 	//check if Tony wanna output only wanrning or error messages
 	if (strstr(szTemp, "rror") || strstr(szTemp, "ERROR"))

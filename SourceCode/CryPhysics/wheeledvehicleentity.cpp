@@ -1028,7 +1028,7 @@ void CWheeledVehicleEntity::AddAdditionalImpulses(float time_interval)
 
 #ifdef _DEBUG
 #ifdef WIN64
-		assert(m_Ffriction.len2() >= 0);
+		CRYASSERT(m_Ffriction.len2() >= 0);
 #else
 		if (!(m_Ffriction.len2() >= 0))
 			DEBUG_BREAK;

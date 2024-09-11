@@ -33,7 +33,7 @@ public:
 
 	void Init(const Vec3d vPos, const int nObjectTypeID, const uchar ucBright, const float fScale)
 	{
-		assert(nObjectTypeID < 256);
+		CRYASSERT(nObjectTypeID < 256);
 		m_vPos = vPos;
 		m_nObjectTypeID = nObjectTypeID;
 		m_ucBright = ucBright;

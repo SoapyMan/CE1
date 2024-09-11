@@ -428,7 +428,7 @@ void CUISystem::Update()
 	{
 		if (std::find(m_vActiveScreenList.begin(), m_vActiveScreenList.end(), pMouseOver->m_pScreen) == m_vActiveScreenList.end())
 		{
-			//assert(0);
+			//CRYASSERT(0);
 
 			pMouseOver = 0;
 		}
@@ -1656,7 +1656,7 @@ UIRect &CUISystem::GetWidgetRect(CUIWidget *pWidget)
 //------------------------------------------------------------------------------------------------- 
 CUIWidget *CUISystem::GetTabStop(int iTabStop)
 {
-	assert(iTabStop >= 0 && iTabStop < (int)m_pTabStopList.size());
+	CRYASSERT(iTabStop >= 0 && iTabStop < (int)m_pTabStopList.size());
 
 	return m_pTabStopList[iTabStop];
 }
@@ -2782,7 +2782,7 @@ int CUISystem::DrawToolTip()
 	
 	IFFont	*pFont = GetIFont(m_pToolTipFont);
 
-	assert(pFont);
+	CRYASSERT(pFont);
 
 	vector2f vTextSize = pFont->GetTextSizeW(m_szwToolTipText.c_str());
 	UIRect pRect(m_fToolTipX, m_fToolTipY, vTextSize.x + 2.0f * fSpace, vTextSize.y + 2.0f * fSpace);

@@ -20,8 +20,8 @@
 
 
 #if defined(LINUX)
-#undef assert
-#define assert(exp) (void)( (exp) || (printf("Assert: ' %s ' has failed\n", #exp), 0) )
+#undef CRYASSERT
+#define CRYASSERT(exp) (void)( (exp) || (printf("Assert: ' %s ' has failed\n", #exp), 0) )
 #endif
 
 
@@ -353,7 +353,7 @@ ILINE Quaternion_tpl<F1>	operator *(f32 t, const Quaternion_tpl<F1>& q) {
 template<class F1, class F2>
 ILINE Vec3_tpl<F2> operator*(const Quaternion_tpl<F1>& q, const Vec3_tpl<F2>& v) {
 #if !defined(LINUX)
-	assert((fabs_tpl(1 - (q | q))) < 0.05); //check if unit-quaternion
+	CRYASSERT((fabs_tpl(1 - (q | q))) < 0.05); //check if unit-quaternion
 #endif
 	F1 vxvx = q.v.x * q.v.x;
 	F1 vzvz = q.v.z * q.v.z;
@@ -381,7 +381,7 @@ ILINE Vec3_tpl<F2> operator*(const Quaternion_tpl<F1>& q, const Vec3_tpl<F2>& v)
 template<class F1, class F2>
 ILINE Vec3_tpl<F1> operator*(const Vec3_tpl<F1>& v, const Quaternion_tpl<F2>& q) {
 #if !defined(LINUX)
-	assert((fabs_tpl(1 - (q | q))) < 0.001); //check if unit-quaternion
+	CRYASSERT((fabs_tpl(1 - (q | q))) < 0.001); //check if unit-quaternion
 #endif
 	F2 vxvx = q.v.x * q.v.x;
 	F2 vzvz = q.v.z * q.v.z;
@@ -419,7 +419,7 @@ ILINE Vec3_tpl<F1> operator*(const Vec3_tpl<F1>& v, const Quaternion_tpl<F2>& q)
 */
 template<class F> ILINE Quaternion_tpl<F> Quaternion_tpl<F>::operator ! () const {
 #if !defined(LINUX)
-	assert((fabs_tpl(1 - (*this | *this))) < 0.001); //check if unit-quaternion
+	CRYASSERT((fabs_tpl(1 - (*this | *this))) < 0.001); //check if unit-quaternion
 #endif
 	return Quaternion_tpl(w, -v);
 }
@@ -448,7 +448,7 @@ ILINE Quaternion_tpl<F> GetRotationAA(F rad, const Vec3_tpl<F>& axis) { Quaterni
 
 template<class F>ILINE void Quaternion_tpl<F>::SetRotationAA(F cosha, F sinha, const Vec3_tpl<F>& axis) {
 #if !defined(LINUX)
-	assert((fabs_tpl(1 - (axis | axis))) < 0.001); //check if unit-vector
+	CRYASSERT((fabs_tpl(1 - (axis | axis))) < 0.001); //check if unit-vector
 #endif
 	w = cosha; v = axis * sinha;
 }
@@ -471,8 +471,8 @@ template<class F>
 void Quaternion_tpl<F>::SetRotationV0V1(const Vec3_tpl<F>& v0, const Vec3_tpl<F>& v1)
 {
 #if !defined(LINUX)
-	assert((fabs_tpl(1 - (v0 | v0))) < 0.001); //check if unit-vector
-	assert((fabs_tpl(1 - (v1 | v1))) < 0.001); //check if unit-vector
+	CRYASSERT((fabs_tpl(1 - (v0 | v0))) < 0.001); //check if unit-vector
+	CRYASSERT((fabs_tpl(1 - (v1 | v1))) < 0.001); //check if unit-vector
 #endif
 	w = sqrt_tpl(crymax((F)0.0, (1 + v0 * v1) * (F)0.5));
 	if (w > 0.001) {
@@ -545,7 +545,7 @@ ILINE Quaternion_tpl<F> GetIdentity(void) { return Quaternion_tpl<F>(1, 0, 0, 0)
 template <class F>
 ILINE void	Quaternion_tpl<F>::Normalize(void) {
 #if !defined(LINUX)
-	assert((*this | *this) > 0.00001f);
+	CRYASSERT((*this | *this) > 0.00001f);
 #endif
 	F d = GetLength(*this);
 	d = (F)1 / d;		w *= d;	v *= d;
@@ -584,8 +584,8 @@ ILINE F GetLength(const Quaternion_tpl<F>& q) { return sqrt_tpl(q | q); }
 template<class F>
 ILINE Quaternion_tpl<F> qlerp(const Quaternion_tpl<F>& p, const Quaternion_tpl<F>& q, f32 t) {
 #if !defined(LINUX)
-	assert((fabs_tpl(1 - (p | p))) < 0.001); //check if unit-quaternion
-	assert((fabs_tpl(1 - (q | q))) < 0.001); //check if unit-quaternion
+	CRYASSERT((fabs_tpl(1 - (p | p))) < 0.001); //check if unit-quaternion
+	CRYASSERT((fabs_tpl(1 - (q | q))) < 0.001); //check if unit-quaternion
 #endif
 	return p * (1.0f - t) + q * t;
 }
@@ -604,8 +604,8 @@ ILINE Quaternion_tpl<F> qlerp(const Quaternion_tpl<F>& p, const Quaternion_tpl<F
 template<class F>
 ILINE Quaternion_tpl<F> Slerp(const Quaternion_tpl<F>& p, const Quaternion_tpl<F>& tq, f32 t) {
 #if !defined(LINUX)
-	assert((fabs_tpl(1 - (p | p))) < 0.001); //check if unit-quaternion
-	assert((fabs_tpl(1 - (tq | tq))) < 0.001); //check if unit-quaternion
+	CRYASSERT((fabs_tpl(1 - (p | p))) < 0.001); //check if unit-quaternion
+	CRYASSERT((fabs_tpl(1 - (tq | tq))) < 0.001); //check if unit-quaternion
 #endif
 	Quaternion_tpl<F> q = tq;
 
@@ -642,8 +642,8 @@ ILINE Quaternion_tpl<F> Slerp(const Quaternion_tpl<F>& p, const Quaternion_tpl<F
 /*template <class F>
 ILINE Quaternion_tpl<F> Slerp(const Quaternion_tpl<F>& a, const Quaternion_tpl<F>& b, f32 t )
 {
-	assert((fabs_tpl(1-(a|a)))<0.001); //check if unit-quaternion
-	assert((fabs_tpl(1-(b|b)))<0.001); //check if unit-quaternion
+	CRYASSERT((fabs_tpl(1-(a|a)))<0.001); //check if unit-quaternion
+	CRYASSERT((fabs_tpl(1-(b|b)))<0.001); //check if unit-quaternion
 
 	Quaternion_tpl<F> q;
 
@@ -752,7 +752,7 @@ ILINE Quaternion_tpl<F> exp(const Quaternion_tpl<F>& q) {
 template <class F>
 ILINE Quaternion_tpl<F> log(const Quaternion_tpl<F>& q) {
 #if !defined(LINUX)
-	assert((fabs_tpl(1 - (q | q))) < 0.01); //check if unit-quaternion
+	CRYASSERT((fabs_tpl(1 - (q | q))) < 0.01); //check if unit-quaternion
 #endif
 	double d = sqrt(double(q.v.x * q.v.x + q.v.y * q.v.y + q.v.z * q.v.z));
 	if (d > 1e-7) {
@@ -771,8 +771,8 @@ ILINE Quaternion_tpl<F> log(const Quaternion_tpl<F>& q) {
 template <class F>
 ILINE Quaternion_tpl<F> LnDif(const Quaternion_tpl<F>& q1, const Quaternion_tpl<F>& q2) {
 #if !defined(LINUX)
-	assert((fabs_tpl(1 - (q1 | q1))) < 0.001); //check if unit-quaternion
-	assert((fabs_tpl(1 - (q2 | q2))) < 0.001); //check if unit-quaternion
+	CRYASSERT((fabs_tpl(1 - (q1 | q1))) < 0.001); //check if unit-quaternion
+	CRYASSERT((fabs_tpl(1 - (q2 | q2))) < 0.001); //check if unit-quaternion
 #endif
 	return log(q2 / q1);
 	//Quaternion_tpl<F> r = q2/q1;
@@ -812,8 +812,8 @@ ILINE Quaternion_tpl<F> CompQuatA( const Quaternion_tpl<F>& qprev,const Quaterni
 template<class F>
 ILINE Quaternion_tpl<F> qslerp_a(const Quaternion_tpl<F>& p, const Quaternion_tpl<F>& tq, F t) {
 #if !defined(LINUX)
-	assert((fabs_tpl(1 - (p | p))) < 0.001); //check if unit-quaternion
-	assert((fabs_tpl(1 - (tq | tq))) < 0.001); //check if unit-quaternion
+	CRYASSERT((fabs_tpl(1 - (p | p))) < 0.001); //check if unit-quaternion
+	CRYASSERT((fabs_tpl(1 - (tq | tq))) < 0.001); //check if unit-quaternion
 #endif
 	Quaternion_tpl<F> q = tq;
 
@@ -857,13 +857,13 @@ template<class F, int SI, int SJ>
 inline Quaternion_tpl<F> GetQuatFromMat33(const Matrix33_tpl<F, SI, SJ>& m) {
 	Quaternion_tpl<f32> q;
 	//check if we have an orthonormal-base (assuming we are using a right-handed coordinate system)
-	//assert removed by ivo: it was impossible to load a level bacause of this asser!
+	//CRYASSERT removed by ivo: it was impossible to load a level bacause of this asser!
 	//but be warned, if you convert a non-uniform-scaled matrix into a quaternion 
 	//you get a worthless bullshit-quaternion!
 	//vlad: still impossible to load
-	//assert( IsEquivalent(m.GetOrtX(),m.GetOrtY()%m.GetOrtZ(),0.1f) );
-	//assert( IsEquivalent(m.GetOrtY(),m.GetOrtZ()%m.GetOrtX(),0.1f) );
-	//assert( IsEquivalent(m.GetOrtZ(),m.GetOrtX()%m.GetOrtY(),0.1f) );
+	//CRYASSERT( IsEquivalent(m.GetOrtX(),m.GetOrtY()%m.GetOrtZ(),0.1f) );
+	//CRYASSERT( IsEquivalent(m.GetOrtY(),m.GetOrtZ()%m.GetOrtX(),0.1f) );
+	//CRYASSERT( IsEquivalent(m.GetOrtZ(),m.GetOrtX()%m.GetOrtY(),0.1f) );
 
 	F tr, s, p;
 	tr = m.M00 + m.M11 + m.M22;
@@ -890,7 +890,7 @@ inline Quaternion_tpl<F> GetQuatFromMat33(const Matrix33_tpl<F, SI, SJ>& m) {
 		q.w = (m.M10 - m.M01) * p; q.v((m.M02 + m.M20) * p, (m.M12 + m.M21) * p, s * 0.5f); return q;
 	}
 #if !defined(LINUX)
-	assert(0);
+	CRYASSERT(0);
 #endif
 	return q;//if it ends here, then we have no valid rotation matrix
 }

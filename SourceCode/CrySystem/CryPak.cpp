@@ -147,7 +147,9 @@ CCryPak::~CCryPak()
 	size_t numDatasForcedToDestruct = m_setCachedFiles.size();
 	for (size_t i = 0; i < numDatasForcedToDestruct; ++i)
 		if (m_setCachedFiles.empty())
-			assert(0);
+		{
+			CRYASSERT(0);
+		}
 		else
 			delete* m_setCachedFiles.begin();
 
@@ -412,7 +414,7 @@ FClose(f);
 else
 return (false);
 
-assert(f > m_OpenFiles.Num());
+CRYASSERT(f > m_OpenFiles.Num());
 
 f = FOpen(szCompiledName,"rb");
 if (f)
@@ -420,7 +422,7 @@ FClose(f);
 else
 return (true);
 
-assert(f > m_OpenFiles.Num());
+CRYASSERT(f > m_OpenFiles.Num());
 
 #ifdef WIN32
 
@@ -503,7 +505,7 @@ FILE* CCryPak::FOpen(const char* pName, const char* szMode, unsigned nFlags2)
 			}
 			else
 			{
-				assert(0);
+				CRYASSERT(0);
 				// this is strange - AdjustFileName() found a file, but fopen() didn't find one.. this should be impossible with FLAGS_ONLY_MOD_DIRS
 			}
 		}
@@ -685,7 +687,7 @@ CCachedFileDataPtr CCryPak::GetFileData(const char* szName)
 				CachedFileDataSet::iterator it = m_setCachedFiles.find(&Result);
 				if (it != m_setCachedFiles.end())
 				{
-					assert((*it)->GetFileEntry() == pFileEntry); // cached data
+					CRYASSERT((*it)->GetFileEntry() == pFileEntry); // cached data
 					return *it;
 				}
 				else
@@ -1358,7 +1360,7 @@ int CZipPseudoFile::FSeek(long nOffset, int nMode)
 		m_nCurSeek = GetFileSize() - nOffset;
 		break;
 	default:
-		assert(0);
+		CRYASSERT(0);
 		return -1;
 	}
 	if (m_fDirect)
@@ -1532,8 +1534,8 @@ void* CCachedFileData::GetData(bool bRefreshCache)
 	// nobody's going to release it until this object is destructed.
 	if (bRefreshCache && !m_pFileData)
 	{
-		assert((bool)m_pZip);
-		assert(m_pFileEntry && m_pZip->IsOwnerOf(m_pFileEntry));
+		CRYASSERT((bool)m_pZip);
+		CRYASSERT(m_pFileEntry && m_pZip->IsOwnerOf(m_pFileEntry));
 
 		// Then, lock it and check whether the data is still not there.
 		// if it's not, allocate memory and unpack the file
@@ -2083,7 +2085,7 @@ void CCryPak::Unregister(ICryArchive* pArchive)
 	if (it != m_arrArchives.end() && *it == pArchive)
 		m_arrArchives.erase(it);
 	else
-		assert(0); // unregistration of unregistered archive
+		CRYASSERT(0); // unregistration of unregistered archive
 }
 
 ICryArchive* CCryPak::FindArchive(const char* szFullPath)
@@ -2134,7 +2136,7 @@ void CCryPak::RecordFileOpen(bool bEnable)
 //////////////////////////////////////////////////////////////////////////
 void CCryPak::EnumerateRecordedFiles(RecordedFilesEnumCallback enumCallback)
 {
-	assert(enumCallback);
+	CRYASSERT(enumCallback);
 	for (RecordedFilesSet::const_iterator it = m_recordedFilesSet.begin(); it != m_recordedFilesSet.end(); ++it)
 	{
 		enumCallback((*it).c_str());

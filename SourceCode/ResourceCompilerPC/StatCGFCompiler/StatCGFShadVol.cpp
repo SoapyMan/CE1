@@ -46,7 +46,7 @@ void CShadowVolObject::CreateConnectivityInfo(CIndexedMesh* pIndexedMesh, ILog* 
 	IEdgeConnectivityBuilder* iBuilder = new CStencilShadowStaticConnectivityBuilder();
 	iBuilder->Reinit();
 
-	assert(iBuilder);
+	CRYASSERT(iBuilder);
 
 	iBuilder->ReserveForTriangles(m_nNumFaces, pIndexedMesh->m_nVertCount);
 

@@ -95,7 +95,7 @@ bool CStatObjInst::DrawEntity(const struct SRendParams& _EntDrawParams)
 
 	//  Vec3d vBoxMin = pBody->m_vBoxMin*m_fScale+m_vPos;
 	  //Vec3d vBoxMax = pBody->m_vBoxMax*m_fScale+m_vPos;
-	/*  assert(!_EntDrawParams.bAllInFrustum || cam.IsBoxVisible(vBoxMin,vBoxMax)); // test of bAllInFrustum flag
+	/*  CRYASSERT(!_EntDrawParams.bAllInFrustum || cam.IsBoxVisible(vBoxMin,vBoxMax)); // test of bAllInFrustum flag
 
 	  if( bNotAllIN && !cam.IsBoxVisibleFast( vBoxMin, vBoxMax)) // NOTE: bNotAllIN can work wrong
 	  {
@@ -104,7 +104,7 @@ bool CStatObjInst::DrawEntity(const struct SRendParams& _EntDrawParams)
 	  }*/
 
 	  //  int nLastVisibleFrameID = m_OcclTestVars.nLastVisibleFrameID;
-		//assert(m_pObjManager->m_nRenderStackLevel || nLastVisibleFrameID != GetFrameID());
+		//CRYASSERT(m_pObjManager->m_nRenderStackLevel || nLastVisibleFrameID != GetFrameID());
 
 		// recursion is handeled inside IsBoxOccluded()
 	  //  if(m_pObjManager->IsBoxOccluded(vBoxMin, vBoxMax, m_fDistance, &m_OcclTestVars))
@@ -129,7 +129,7 @@ bool CStatObjInst::DrawEntity(const struct SRendParams& _EntDrawParams)
 	for (int i = 0; i < pSources->Count(); i++)
 	{
 		CDLight* pDynLight = pSources->Get(i);
-		assert(pDynLight->m_Id == i || pDynLight->m_Id == -1);
+		CRYASSERT(pDynLight->m_Id == i || pDynLight->m_Id == -1);
 		if (pDynLight->m_Flags & DLF_SUN)
 		{
 			nDynMask &= ~(1 << pDynLight->m_Id);
@@ -303,7 +303,7 @@ bool CStatObjInst::DrawEntity(const struct SRendParams& _EntDrawParams)
 			float fRealAngle = rad2deg * cry_atan2f(DX, DY);
 			while (fRealAngle < 0) fRealAngle += 360;
 			while (fRealAngle >= 360) fRealAngle -= 360;
-			assert(fRealAngle >= 0 && fRealAngle < 360.f);
+			CRYASSERT(fRealAngle >= 0 && fRealAngle < 360.f);
 			float fNewAngle = (float)int(fRealAngle / FAR_TEX_ANGLE + 0.5f) * FAR_TEX_ANGLE;
 			/*      if(fPrevDist0 >= m_fDistance0 &&
 					m_ucAngleSlotId!=255 &&
@@ -318,7 +318,7 @@ bool CStatObjInst::DrawEntity(const struct SRendParams& _EntDrawParams)
 			while (fDiffAngle <= -180)
 				fDiffAngle += 360;
 
-			//        assert(fDiffAngle<=0.5f*FAR_TEX_ANGLE); // can fail if we continue to use sprite angle
+			//        CRYASSERT(fDiffAngle<=0.5f*FAR_TEX_ANGLE); // can fail if we continue to use sprite angle
 
 			float fAngle1 = fDiffAngle * (1.f - fLodSwitchCountDown);
 			float fAngle2 = cry_atanf(DZ / fDistance) * gf_RADTODEG * (1.f - fLodSwitchCountDown);
@@ -421,7 +421,7 @@ float CStatObjInst::GetRenderRadius(void) const
 	if (pBody)
 		return pBody->GetRadius() * m_fScale;
 
-	assert(0);
+	CRYASSERT(0);
 	return 0;
 }
 
@@ -453,13 +453,13 @@ float CStatObjInst::GetMaxViewDist()
 
 float CStatObjInst::GetViewDistRatioNormilized()
 {
-	assert(GetStatObj());
+	CRYASSERT(GetStatObj());
 	return m_pObjManager->m_lstStaticTypes[m_nObjectTypeID].fMaxViewDistRatio;
 }
 
 void CStatObjInst::Physicalize(bool bInstant)
 {
-	assert(m_nObjectTypeID >= 0);
+	CRYASSERT(m_nObjectTypeID >= 0);
 	CStatObj* pBody = m_pObjManager->m_lstStaticTypes[m_nObjectTypeID].GetStatObj();
 	if (!pBody || !pBody->IsPhysicsExist())
 		return;
@@ -583,19 +583,19 @@ int CStatObjInst::GetMemoryUsage()
 
 unsigned int CStatObjInst::GetRndFlags()
 {
-	assert(m_nObjectTypeID >= 0 && m_nObjectTypeID < m_pObjManager->m_lstStaticTypes.Count());
+	CRYASSERT(m_nObjectTypeID >= 0 && m_nObjectTypeID < m_pObjManager->m_lstStaticTypes.Count());
 	return m_pObjManager->m_lstStaticTypes[m_nObjectTypeID].m_dwRndFlags;
 }
 
 void CStatObjInst::SetRndFlags(unsigned int dwFlags)
 {
-	assert(m_nObjectTypeID >= 0 && m_nObjectTypeID < m_pObjManager->m_lstStaticTypes.Count());
+	CRYASSERT(m_nObjectTypeID >= 0 && m_nObjectTypeID < m_pObjManager->m_lstStaticTypes.Count());
 	m_pObjManager->m_lstStaticTypes[m_nObjectTypeID].m_dwRndFlags = dwFlags;
 }
 
 void CStatObjInst::SetRndFlags(unsigned int dwFlags, bool bEnable)
 {
-	assert(m_nObjectTypeID >= 0 && m_nObjectTypeID < m_pObjManager->m_lstStaticTypes.Count());
+	CRYASSERT(m_nObjectTypeID >= 0 && m_nObjectTypeID < m_pObjManager->m_lstStaticTypes.Count());
 
 	if (bEnable)
 		m_pObjManager->m_lstStaticTypes[m_nObjectTypeID].m_dwRndFlags |= dwFlags;

@@ -495,7 +495,7 @@ bool CScriptObject::GetValue(const char* sKey, IScriptObject* pObj)
 
 bool CScriptObject::GetValueRecursive(const char* szPath, IScriptObject* pObj)
 {
-	assert(pObj);
+	CRYASSERT(pObj);
 	_GUARD_STACK(m_pLS);
 
 	const char* pSrc = szPath;
@@ -551,7 +551,7 @@ bool CScriptObject::GetUDValue(const char* sKey, USER_DATA& nValue, int& nCookie
 
 void CScriptObject::SetAt(int nIdx, int nVal)
 {
-	assert(nIdx >= 0);		// nIdx=1 -> first element
+	CRYASSERT(nIdx >= 0);		// nIdx=1 -> first element
 
 	_GUARD_STACK(m_pLS);
 	if (!_GET_THIS())
@@ -563,7 +563,7 @@ void CScriptObject::SetAt(int nIdx, int nVal)
 
 void CScriptObject::SetAt(int nIdx, float fVal)
 {
-	assert(nIdx >= 0);		// nIdx=1 -> first element
+	CRYASSERT(nIdx >= 0);		// nIdx=1 -> first element
 
 	_GUARD_STACK(m_pLS);
 	if (!_GET_THIS())
@@ -575,7 +575,7 @@ void CScriptObject::SetAt(int nIdx, float fVal)
 
 void CScriptObject::SetAt(int nIdx, bool bVal)
 {
-	assert(nIdx >= 0);		// nIdx=1 -> first element
+	CRYASSERT(nIdx >= 0);		// nIdx=1 -> first element
 
 	_GUARD_STACK(m_pLS);
 	if (!_GET_THIS())
@@ -590,7 +590,7 @@ void CScriptObject::SetAt(int nIdx, bool bVal)
 
 void CScriptObject::SetAt(int nIdx, const char* sVal)
 {
-	assert(nIdx >= 0);		// nIdx=1 -> first element
+	CRYASSERT(nIdx >= 0);		// nIdx=1 -> first element
 
 	_GUARD_STACK(m_pLS);
 	if (!_GET_THIS())
@@ -876,7 +876,7 @@ bool CScriptObject::AddSetGetHandlers(SCRIPT_FUNCTION pSetThunk, SCRIPT_FUNCTION
 
 #ifdef _DEBUG
 #if defined(WIN64) || defined(LINUX64)
-#define FIXME_ASSERT(cond) assert (cond)
+#define FIXME_ASSERT(cond) CRYASSERT (cond)
 #else
 #define FIXME_ASSERT(cond) { if(!(cond)) { DEBUG_BREAK; } }
 #endif
@@ -884,7 +884,7 @@ bool CScriptObject::AddSetGetHandlers(SCRIPT_FUNCTION pSetThunk, SCRIPT_FUNCTION
 //Timur[2/20/2003]
 //@FIXME Should be removed in gold Release.
 // Debugging mod
-#define FIXME_ASSERT(cond)  { if(!(cond)) { CryError( "<ScriptSystem> ASSERT %s",#cond ); }}
+#define FIXME_ASSERT(cond)  { if(!(cond)) { CryError( "<ScriptSystem> CRYASSERT %s",#cond ); }}
 #endif
 
 #endif

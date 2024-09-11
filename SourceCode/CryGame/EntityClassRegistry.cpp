@@ -221,7 +221,7 @@ int CEntityClassRegistry::Count()
 //////////////////////////////////////////////////////////////////////////
 bool CEntityClassRegistry::LoadRegistryEntry(EntityClass * pClass,bool bForceReload )
 {
-	assert( pClass );
+	CRYASSERT( pClass );
 	ILog *pLog = m_pSystem->GetILog();
 
 	if (pClass->bLoaded && !bForceReload)
@@ -312,7 +312,7 @@ bool CEntityClassRegistry::InitRegistry()
 				continue;
 			}
 			pEntityClass = GetByClassId(ClassId,false);
-			assert( pEntityClass ); // Cannot happen.
+			CRYASSERT( pEntityClass ); // Cannot happen.
 
 			pEntityClass->bReserved = true;
 			pEntityClass->strGameType = entity_type;

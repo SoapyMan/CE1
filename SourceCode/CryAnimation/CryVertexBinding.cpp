@@ -18,7 +18,7 @@ void CryVertexBinding::normalizeBlendWeights()
 	for (j = 0; j < size(); j++)
 		fBlendSumm += (*this)[j].Blending;
 
-	assert(fBlendSumm > 0.1f && fBlendSumm <= 1.001f);
+	CRYASSERT(fBlendSumm > 0.1f && fBlendSumm <= 1.001f);
 
 	for (j = 0; j < size(); j++)
 		(*this)[j].Blending /= fBlendSumm;
@@ -33,11 +33,11 @@ void CryVertexBinding::pruneSmallWeights(float fMinBlending, unsigned numMinLink
 	unsigned j;
 	for (j = numMinLinks; j < size(); j++)
 	{
-		assert(j == 0 || (*this)[j].Blending <= (*this)[j - 1].Blending);
+		CRYASSERT(j == 0 || (*this)[j].Blending <= (*this)[j - 1].Blending);
 		if ((*this)[j].Blending <= fMinBlending)
 		{
 			resize(j);
-			assert(j);
+			CRYASSERT(j);
 			break;
 		}
 	}
@@ -61,7 +61,7 @@ void CryVertexBinding::remapBoneIds(const unsigned* arrBoneIdMap, unsigned numBo
 {
 	for (iterator it = begin(); it != end(); ++it)
 	{
-		// if you get this assert, most probably there is dissynchronization between different LODs of the same model
+		// if you get this CRYASSERT, most probably there is dissynchronization between different LODs of the same model
 		// - all of them must be exported with exactly the same skeletons.
 		if (it->BoneID >= 0 && it->BoneID < (int)numBoneIds)
 			it->BoneID = arrBoneIdMap[it->BoneID];

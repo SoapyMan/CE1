@@ -191,7 +191,7 @@ struct ShadowMapFrustum
 			  float fDistance2 = arrFrusrumPlanes[2].DistFromPlane(vSphereCenter);
 			  float fDistance3 = arrFrusrumPlanes[3].DistFromPlane(vSphereCenter);
 			  bool bResTest = fDistance0>-fSphereRadius && fDistance1>-fSphereRadius && fDistance2>-fSphereRadius && fDistance3>-fSphereRadius;
-			  assert(bResTest == bRes);
+			  CRYASSERT(bResTest == bRes);
 			}
 		#endif
 		*/

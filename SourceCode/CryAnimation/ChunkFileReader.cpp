@@ -79,13 +79,13 @@ bool CChunkFileReader::open(CFileMapping* pFile)
 						{
 							// find the next offset
 							std::set<int>::const_iterator it = setOffsets.find(nOffset);
-							assert(it != setOffsets.end());
-							assert(*it == nOffset);
+							CRYASSERT(it != setOffsets.end());
+							CRYASSERT(*it == nOffset);
 							++it;
 							nSize = (it == setOffsets.end() ? fileHeader.ChunkTableOffset : *it) - nOffset;
 						}
 
-						assert(nSize >= 0);
+						CRYASSERT(nSize >= 0);
 						m_arrChunkSize[nChunk] = nSize;
 					}
 
@@ -199,7 +199,7 @@ bool CChunkFileReader::isValid() const
 // or the end of the raw data portion of the file
 int CChunkFileReader::getChunkSize(int nChunkIdx) const
 {
-	assert(nChunkIdx >= 0 && nChunkIdx < numChunks());
+	CRYASSERT(nChunkIdx >= 0 && nChunkIdx < numChunks());
 	return m_arrChunkSize[nChunkIdx];
 }
 

@@ -68,9 +68,9 @@ struct STimeDemoFrame
 CTimeDemoRecorder::CTimeDemoRecorder( ISystem *pSystem )
 {
 	m_pSystem = pSystem;
-	assert(m_pSystem);
+	CRYASSERT(m_pSystem);
 	m_pGame = pSystem->GetIGame();
-	assert(m_pGame);
+	CRYASSERT(m_pGame);
 
 	m_bRecording = false;
 	m_bPlaying = false;

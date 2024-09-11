@@ -25,7 +25,7 @@ void CLeafBuffer::AddRE(CCObject* obj, IShader* ef, int nNumSort, IShader* pStat
 		sr = (*m_pMats)[i].shaderItem.m_pShaderResources;
 		if (e)
 		{
-			assert((*m_pMats)[i].pRE->m_pChunk->nFirstIndexId < 60000);
+			CRYASSERT((*m_pMats)[i].pRE->m_pChunk->nFirstIndexId < 60000);
 
 			if (e->GetREs()->Num())
 				gRenDev->EF_AddEf_NotVirtual(0, e->GetREs()->Get(0), e, sr, obj, nGlobalShaderTemplateId, pStateEff, nNumSort);
@@ -67,7 +67,7 @@ void CLeafBuffer::UpdateCustomLighting(float fBackSideLevel, Vec3d vStatObjAmbie
 		for (int j = mi->nFirstIndexId; j < mi->nNumIndices + mi->nFirstIndexId; j++)
 		{
 			int nIndex = pInds[j];
-			assert(nIndex >= 0 && nIndex < m_SecVertCount);
+			CRYASSERT(nIndex >= 0 && nIndex < m_SecVertCount);
 			arrCullInfo[nIndex] = bTwoSided;
 		}
 	}
@@ -88,8 +88,8 @@ void CLeafBuffer::UpdateCustomLighting(float fBackSideLevel, Vec3d vStatObjAmbie
 	byte* pTNorm = GetTNormalPtr(nTNormStride);
 	byte* pSecCol = GetSecColorPtr(nSecColStride);
 
-	assert(pNorm && pPos && pColor);
-	assert(m_pMats);
+	CRYASSERT(pNorm && pPos && pColor);
+	CRYASSERT(m_pMats);
 
 	float fAlpha = 1.0f; // m_pMats->Get(0)->fAlpha;
 
@@ -240,7 +240,7 @@ void CLeafBuffer::AddRenderElements(CCObject* pObj, int DLightMask, int nTemplat
 	if (!m_NumIndices || !m_pMats->Count())
 		return;
 
-	assert(m_pMats);
+	CRYASSERT(m_pMats);
 
 	if (nTemplate < 0)
 	{
@@ -275,7 +275,7 @@ void CLeafBuffer::AddRenderElements(CCObject* pObj, int DLightMask, int nTemplat
 			if (nTemplate < EFT_USER_FIRST)
 				e->AddTemplate(sr, nTemplate);
 
-			assert(pOrigRE->m_pChunk->nFirstIndexId < 60000);
+			CRYASSERT(pOrigRE->m_pChunk->nFirstIndexId < 60000);
 
 			if (pREs && pREs->Num())
 				gRenDev->EF_AddEf_NotVirtual(nFogVolumeID, pREs->Get(0), e, sr, pObj, nTemplate, 0, nSortId);

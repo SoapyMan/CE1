@@ -113,7 +113,7 @@ public:
 			nTexID = GetRenderer()->LoadTexture("none");
 		}
 
-		//	assert(nTexID>=4096);
+		//	CRYASSERT(nTexID>=4096);
 	}
 
 	~GrassType()
@@ -246,7 +246,7 @@ CDetailGrass::CDetailGrass(XDOM::IXMLDOMNodeListPtr pDetTexTagList)
 		m_GrassIndices.GetElements(), m_GrassIndices.Count(), R_PRIMV_TRIANGLES, "Grass", eBT_Dynamic, 1, 0, PrepareBufferCallback, this);
 	m_pLeafBuffer->SetRECustomData(m_arrfShaderInfo);
 
-	assert(m_pLeafBuffer);
+	CRYASSERT(m_pLeafBuffer);
 
 	m_pLeafBuffer->SetChunk(m_pShader, 0, DETAIL_GRASS_PIP_BUFFER_SIZE, 0, m_GrassIndices.Count(), 0);
 }
@@ -309,7 +309,7 @@ bool CDetailGrass::PrepareBufferCallback(CLeafBuffer* pLeafBuffer, bool bNeedTan
 			}
 			else
 			{
-				assert(0);
+				CRYASSERT_FAIL("No vertex buffer or format does not match VERTEX_FORMAT_P3F_COL4UB_TEX2F");
 			}
 		}
 
@@ -318,7 +318,7 @@ bool CDetailGrass::PrepareBufferCallback(CLeafBuffer* pLeafBuffer, bool bNeedTan
 		pThis->m_arrfShaderInfo[2] = fDistFadeK;
 		pThis->m_arrfShaderInfo[3] = 0.5f - vCamPos.y * fDistFadeK;
 		pThis->m_arrfShaderInfo[4] = 0.5f - vCamPos.x * fDistFadeK;
-		//		assert(pThis->m_pLeafBuffer && pThis->m_pLeafBuffer == pLeafBuffer);
+		//		CRYASSERT(pThis->m_pLeafBuffer && pThis->m_pLeafBuffer == pLeafBuffer);
 		if (pThis->m_pLeafBuffer) // lb may be not created yet, this call can come from CreateLeafBufferInitialized()
 			pThis->m_pLeafBuffer->SetRECustomData(pThis->m_arrfShaderInfo);
 	}
@@ -352,17 +352,17 @@ void CDetailGrass::AddIndexedArray(GrassType* o, float X, float Y, float Z, floa
 
 	fObjBr *= 255.f;
 
-	assert(o->nIndCount % 3 == 0);
+	CRYASSERT(o->nIndCount % 3 == 0);
 
 	for (uint i = 0; i < o->nIndCount; i += 3)
 	{
-		assert(o->uipIndices[i] < o->nVertCount);
+		CRYASSERT(o->uipIndices[i] < o->nVertCount);
 		m_GrassIndices.Add(o->uipIndices[i + 0] + m_GrassVerticesCount);
 
-		assert(o->uipIndices[i + 1] < o->nVertCount);
+		CRYASSERT(o->uipIndices[i + 1] < o->nVertCount);
 		m_GrassIndices.Add(o->uipIndices[i + 1] + m_GrassVerticesCount);
 
-		assert(o->uipIndices[i + 2] < o->nVertCount);
+		CRYASSERT(o->uipIndices[i + 2] < o->nVertCount);
 		m_GrassIndices.Add(o->uipIndices[i + 2] + m_GrassVerticesCount);
 	}
 
@@ -442,12 +442,12 @@ void CDetailGrass::CreateSectorGrassInUnit(const int x, const int y, const int n
 	nSurfaceID = m_pTerrain->GetSurfaceTypeID(m_GrassFocusX + x, m_GrassFocusY + y);
 	if (nSurfaceID == STYPE_HOLE) return;
 
-	assert(nSurfaceID < MAX_SURFACE_TYPES_COUNT);
+	CRYASSERT(nSurfaceID < MAX_SURFACE_TYPES_COUNT);
 
 	if (!m_arrlstSurfaceObjects[nSurfaceID].Count())
 		return;
 
-	assert(nStep == 1);
+	CRYASSERT(nStep == 1);
 
 	CVars* pCVars = GetCVars();
 

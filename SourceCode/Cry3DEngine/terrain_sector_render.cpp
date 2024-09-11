@@ -38,7 +38,7 @@ void CSectorInfo::DrawArray(CArrayInfo* pArrayInfo, CCObject* pTerrainCCObject)
 		}
 		else if (!m_pTerrain->m_nRenderStackLevel)
 		{
-			assert(MAX_DETAIL_LAYERS_IN_SECTOR <= MAX_CUSTOM_TEX_BINDS_NUM);
+			CRYASSERT(MAX_DETAIL_LAYERS_IN_SECTOR <= MAX_CUSTOM_TEX_BINDS_NUM);
 
 			for (int i = 0; i < MAX_DETAIL_LAYERS_IN_SECTOR; i++)
 				m_pLeafBuffer->m_pMats->GetAt(0).pRE->m_CustomTexBind[i + 1] = m_arrDetailTexInfo[i] ? m_arrDetailTexInfo[i]->nTexID : 0;
@@ -47,7 +47,7 @@ void CSectorInfo::DrawArray(CArrayInfo* pArrayInfo, CCObject* pTerrainCCObject)
 			for (int t = 0; t < MAX_DETAIL_LAYERS_IN_SECTOR; t++)
 				if (m_arrDetailTexInfo[t])
 				{
-					assert(4 + t * 8 < ARR_TEX_OFFSETS_SIZE);
+					CRYASSERT(4 + t * 8 < ARR_TEX_OFFSETS_SIZE);
 					float* pOutParams = m_arrTexOffsets + 4 + t * 8;
 
 					float fMinDist = m_arrTexOffsets[3] = 0;
@@ -190,7 +190,7 @@ void CSectorInfo::UpdateVarBuffer()
 			CTerrain::GetSectorSize() + 16,
 			m_nTextureID ? m_nTextureID : 0x1000, NULL, NULL, false, false);
 
-		assert(m_pLeafBuffer);
+		CRYASSERT(m_pLeafBuffer);
 
 		m_nSecVertsCount = m_pTerrain->m_lstSectorVertArray.Count();
 
@@ -227,7 +227,7 @@ void CSectorInfo::UpdateVarBuffer()
 			m_pLeafBuffer->m_pMats->Get(i - j)->pRE->m_CustomData = m_arrTexOffsets;
 	}
 
-	assert(m_pLeafBuffer->m_pMats->Count() <= CTerrain::GetSectorSize() + 16);
+	CRYASSERT(m_pLeafBuffer->m_pMats->Count() <= CTerrain::GetSectorSize() + 16);
 }
 
 void CSectorInfo::ReleaseHeightMapVertBuffer()
@@ -312,7 +312,7 @@ void CSectorInfo::RenderSector(CCObject* pTerrainCCObject)
 	//	if(m_pTerrain->GetSecInfo(GetViewCamera().GetPos())!=this)
 		//	return;
 
-	assert(m_cGeometryMML >= 0 && m_cGeometryMML <= MAX_MML_LEVEL);
+	CRYASSERT(m_cGeometryMML >= 0 && m_cGeometryMML <= MAX_MML_LEVEL);
 
 	int nStep = (1 << m_cGeometryMML) * CTerrain::GetHeightMapUnitSize();
 
@@ -335,7 +335,7 @@ void CSectorInfo::RenderSector(CCObject* pTerrainCCObject)
 
 	m_cCurrBoundCode = nBoundCode;
 
-	assert(nStep);
+	CRYASSERT(nStep);
 
 	if (nStep > (CTerrain::GetSectorSize() >> 1))
 		nStep = (CTerrain::GetSectorSize() >> 1);
@@ -534,7 +534,7 @@ void CSectorInfo::RenderSector(CCObject* pTerrainCCObject)
 		//&m_ArrayInfo.idx_array[0],m_ArrayInfo.idx_array.Count());
 	/*
 	  CArrayInfo * pArrayInfo = &m_ArrayInfo;
-	  assert(m_pLeafBuffer->m_Indices.Count() >= pArrayInfo->idx_array.Count());
+	  CRYASSERT(m_pLeafBuffer->m_Indices.Count() >= pArrayInfo->idx_array.Count());
 	  memcpy(&m_pLeafBuffer->m_Indices[0], &pArrayInfo->idx_array[0], m_pLeafBuffer->m_Indices.Count()*sizeof(unsigned short));
 	  */
 
@@ -581,7 +581,7 @@ void CSectorInfo::MergeSectorIntoLowResTerrain(bool bCalcFarTerrain)
 
 	if (bCalcFarTerrain)
 	{ // low res optimized rendering can be used only on low res sectors
-		assert(m_cGeometryMML == MAX_MML_LEVEL);
+		CRYASSERT(m_cGeometryMML == MAX_MML_LEVEL);
 		m_pTerrain->MergeLowResTerrainSectorIndices(&m_lstLowResTerrainIdxArray[0]);
 		m_cPrevGeomMML = -1;
 		m_nLastMergedFrameID = GetFrameID();

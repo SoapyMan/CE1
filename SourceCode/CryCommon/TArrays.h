@@ -2,9 +2,6 @@
 #define _CRY_COMMON_TARRAYS_HDR_
 
 #include "platform.h"
-#if !defined(LINUX)
-#include <assert.h>
-#endif
 
 #include "TAlloc.h"
 
@@ -67,13 +64,13 @@ private:
 	TElementaryArray(const TElementaryArray<T, A>& that) :
 		m_pData(NULL)
 	{
-		assert(0);
+		CRYASSERT(0);
 	}
 
 	// assignment is impossible because the size is unknown
 	TElementaryArray<T, A>& operator = (const TElementaryArray<T, A>& src)
 	{
-		assert(0);
+		CRYASSERT(0);
 	}
 
 public:
@@ -136,14 +133,14 @@ public:
 	// returns the first element of the array
 	reference front()
 	{
-		assert(!empty());
+		CRYASSERT(!empty());
 		return m_pData[0];
 	}
 
 	// returns the first element of the array
 	const_reference front() const
 	{
-		assert(!empty());
+		CRYASSERT(!empty());
 		return m_pData[0];
 	}
 
@@ -164,9 +161,9 @@ public:
 	reference operator [] (size_t i)
 	{
 		// it is unlikely that the array is more than 1 gigabyte long, so check the index for saneness
-		assert(i < 0x40000000 / sizeof(T));
+		CRYASSERT(i < 0x40000000 / sizeof(T));
 #if defined(_DEBUG) && defined(_INC_CRTDBG)
-		assert(i < m_nSize);
+		CRYASSERT(i < m_nSize);
 #endif
 		return m_pData[i];
 	}
@@ -174,9 +171,9 @@ public:
 	const_reference operator [] (size_t i) const
 	{
 		// it is unlikely that the array is more than 1 gigabyte long, so check the index for saneness
-		assert(i < 0x40000000 / sizeof(T));
+		CRYASSERT(i < 0x40000000 / sizeof(T));
 #if defined(_DEBUG) && defined(_INC_CRTDBG)
-		assert(i < m_nSize);
+		CRYASSERT(i < m_nSize);
 #endif
 		return m_pData[i];
 	}
@@ -397,13 +394,13 @@ public:
 		if (size() > 0)
 			resize(size() - 1);
 		else
-			assert(0);
+			CRYASSERT(0);
 	}
 
 	// inserts the element in place of the given iterator
 	void insert(iterator it, const T& element)
 	{
-		assert(it >= begin() && it <= end());
+		CRYASSERT(it >= begin() && it <= end());
 		insert(it - begin(), element);
 	}
 
@@ -411,14 +408,14 @@ public:
 	// (inserts before the given element)
 	void insert(size_t nIndex, const T& element)
 	{
-		assert(nIndex <= size());
+		CRYASSERT(nIndex <= size());
 
 		T* pData = m_Allocator.allocate_construct(size() + 1);
 		size_t i;
 		// copy the pre-array
 		for (i = 0; i < nIndex; ++i)
 			pData[i] = m_pData[i];
-		assert(i = nIndex);
+		CRYASSERT(i = nIndex);
 		pData[i] = element;
 		// copy the post-array
 		for (; i < m_nSize; ++i)
@@ -441,7 +438,7 @@ public:
 				// copy the pre-array
 				for (i = 0; i < nIndex; ++i)
 					pData[i] = m_pData[i];
-				assert(i = nIndex);
+				CRYASSERT(i = nIndex);
 				// copy the post-array
 				for (; i < m_nSize - 1; ++i)
 					pData[i] = m_pData[i + 1];
@@ -459,28 +456,28 @@ public:
 	// returns the last element of the array
 	reference back()
 	{
-		assert(!empty());
+		CRYASSERT(!empty());
 		return m_pData[m_nSize - 1];
 	}
 
 	// returns the last element of the array
 	const_reference back() const
 	{
-		assert(!empty());
+		CRYASSERT(!empty());
 		return m_pData[m_nSize - 1];
 	}
 
 	// returns the first element of the array
 	reference front()
 	{
-		assert(!empty());
+		CRYASSERT(!empty());
 		return m_pData[0];
 	}
 
 	// returns the first element of the array
 	const_reference front() const
 	{
-		assert(!empty());
+		CRYASSERT(!empty());
 		return m_pData[0];
 	}
 
@@ -512,7 +509,7 @@ public:
 	{
 		// the i==0 is left here to allow extract the pointer to the 0th element
 		// even when the array is empty. In case index is not 0, it must be < size
-		assert(i == 0 || i < m_nSize);
+		CRYASSERT(i == 0 || i < m_nSize);
 
 		return m_pData[i];
 	}
@@ -521,7 +518,7 @@ public:
 	{
 		// the i==0 is left here to allow extract the pointer to the 0th element
 		// even when the array is empty. In case index is not 0, it must be < size
-		assert(i == 0 || i < m_nSize);
+		CRYASSERT(i == 0 || i < m_nSize);
 
 		return m_pData[i];
 	}
@@ -704,13 +701,13 @@ public:
 		if (m_nSize > 0)
 			--m_nSize;
 		else
-			assert(0);
+			CRYASSERT(0);
 	}
 
 	// inserts the element in place of the given iterator
 	void insert(iterator it, const T& element)
 	{
-		assert(it >= begin() && it <= end());
+		CRYASSERT(it >= begin() && it <= end());
 		insert(it - begin(), element);
 	}
 
@@ -718,7 +715,7 @@ public:
 	// (inserts before the given element)
 	void insert(size_t nIndex, const T& element)
 	{
-		assert(nIndex <= size());
+		CRYASSERT(nIndex <= size());
 		resize(size() + 1);
 		for (size_t i = size() - 1; i > nIndex; --i)
 			(*this)[i] = (*this)[i - 1];
@@ -728,14 +725,14 @@ public:
 	// erases an element at the given position
 	void erase(iterator it)
 	{
-		assert(it >= begin() && it < end());
+		CRYASSERT(it >= begin() && it < end());
 		erase(it - begin());
 	}
 
 	// erases an element at the given position
 	void erase(size_t nIndex)
 	{
-		assert(nIndex < size());
+		CRYASSERT(nIndex < size());
 		for (size_t i = nIndex; i < size() - 1; ++i)
 			(*this)[i] = (*this)[i + 1];
 		resize(size() - 1);
@@ -758,7 +755,7 @@ public:
 	// makes sure capacity() returns the same value as size()
 	void shrink()
 	{
-		assert(capacity() >= size());
+		CRYASSERT(capacity() >= size());
 		if (size() == 0)
 		{
 			// clear the reserve
@@ -788,28 +785,28 @@ public:
 	// returns the last element of the array
 	reference back()
 	{
-		assert(!empty());
+		CRYASSERT(!empty());
 		return this->m_pData[m_nSize - 1];
 	}
 
 	// returns the last element of the array
 	const_reference back() const
 	{
-		assert(!empty());
+		CRYASSERT(!empty());
 		return this->m_pData[m_nSize - 1];
 	}
 
 	// returns the first element of the array
 	reference front()
 	{
-		assert(!empty());
+		CRYASSERT(!empty());
 		return this->m_pData[0];
 	}
 
 	// returns the first element of the array
 	const_reference front() const
 	{
-		assert(!empty());
+		CRYASSERT(!empty());
 		return this->m_pData[0];
 	}
 
@@ -840,9 +837,13 @@ public:
 	reference operator [] (size_t i)
 	{
 		if (this->m_pData)
-			assert(i >= 0 && i < m_nSize);
+		{
+			CRYASSERT(i >= 0 && i < m_nSize);
+		}
 		else
-			assert(i == 0);
+		{
+			CRYASSERT(i == 0);
+		}
 
 		return this->m_pData[i];
 	}
@@ -850,9 +851,13 @@ public:
 	const T& operator [] (size_t i) const
 	{
 		if (this->m_pData)
-			assert(i >= 0 && i < m_nSize);
+		{
+			CRYASSERT(i >= 0 && i < m_nSize);
+		}
 		else
-			assert(i == 0);
+		{
+			CRYASSERT(i == 0);
+		}
 
 		return this->m_pData[i];
 	}
@@ -875,15 +880,15 @@ protected:
 #define DECLARE_ELEMENTARY_ARRAY_GETTER_METHODS(Type, Singular, Plural, member) \
 Type* get##Plural() {return member.begin();}												\
 const Type* get##Plural()const {return member.begin();}							\
-Type& get##Singular(unsigned i) {assert (i < num##Plural()); return member[i];}             \
-const Type& get##Singular(unsigned i)const {assert (i < num##Plural()); return member[i];}
+Type& get##Singular(unsigned i) {CRYASSERT (i < num##Plural()); return member[i];}             \
+const Type& get##Singular(unsigned i)const {CRYASSERT (i < num##Plural()); return member[i];}
 
 #define DECLARE_PLAIN_ARRAY_GETTER_METHODS(Type, Singular, Plural, member) \
 	Type* get##Plural() {return member;}												\
 	const Type* get##Plural()const {return member;}							\
-	Type& get##Singular(unsigned i) {assert (i < num##Plural()); return member[i];}             \
-	const Type& get##Singular(unsigned i)const {assert (i < num##Plural()); return member[i];}	\
-	void set##Singular (unsigned i, const Type& newValue) {assert (i < num##Plural()); member[i] = newValue;}
+	Type& get##Singular(unsigned i) {CRYASSERT (i < num##Plural()); return member[i];}             \
+	const Type& get##Singular(unsigned i)const {CRYASSERT (i < num##Plural()); return member[i];}	\
+	void set##Singular (unsigned i, const Type& newValue) {CRYASSERT (i < num##Plural()); member[i] = newValue;}
 
 
 #define DECLARE_ARRAY_GETTER_METHODS(Type, Singular, Plural, member) \

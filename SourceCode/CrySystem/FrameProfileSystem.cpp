@@ -287,7 +287,7 @@ void CFrameProfileSystem::SetProfiling(bool on, bool display, char* prefix, ISys
 				// Write global profiler.
 				fwrite("__frametime", strlen("__frametime") + 1, 1, f);
 				int len = (int)m_frameTimeOfflineHistory.m_selfTime.size();
-				assert(len == numSamples);
+				CRYASSERT(len == numSamples);
 				for (i = 0; i < len; i++)
 				{
 					fwrite(&m_frameTimeOfflineHistory.m_selfTime[i], 1, sizeof(int), f);
@@ -306,7 +306,7 @@ void CFrameProfileSystem::SetProfiling(bool on, bool display, char* prefix, ISys
 					fwrite(name, strlen(name) + 1, 1, f);
 
 					len = (int)pProfiler->m_pOfflineHistory->m_selfTime.size();
-					assert(len == numSamples);
+					CRYASSERT(len == numSamples);
 					for (int i = 0; i < len; i++)
 					{
 						fwrite(&pProfiler->m_pOfflineHistory->m_selfTime[i], 1, sizeof(int), f);
@@ -352,7 +352,7 @@ void CFrameProfileSystem::EnableHistograms(bool bEnableHistograms)
 //////////////////////////////////////////////////////////////////////////
 CFrameProfiler* CFrameProfileSystem::GetProfiler(int index) const
 {
-	assert(index >= 0 && index < (int)m_profilers.size());
+	CRYASSERT(index >= 0 && index < (int)m_profilers.size());
 	return m_profilers[index];
 }
 

@@ -515,7 +515,7 @@ int CScriptObjectGame::ClearServerInfo(IFunctionHandler *pH)
 	CHECK_PARAMETERS(0);
 
 	INETServerSnooper *pSnooper = m_pGame->GetNETSnooper();
-	assert(pSnooper);
+	CRYASSERT(pSnooper);
 
 	pSnooper->ClearList();
 
@@ -528,7 +528,7 @@ int CScriptObjectGame::GetServerInfo(IFunctionHandler *pH)
 	CHECK_PARAMETERS(2);
 
 	INETServerSnooper *pSnooper = m_pGame->GetNETSnooper();
-	assert(pSnooper);
+	CRYASSERT(pSnooper);
 
 	int		iPort;
 	char	*szIP = 0;
@@ -549,7 +549,7 @@ int CScriptObjectGame::ExecuteRConCommand(IFunctionHandler *pH)
 	CHECK_PARAMETERS(1);
 
 	IRConSystem *pRCon = m_pGame->GetIRConSystem();
-	assert(pRCon);
+	CRYASSERT(pRCon);
 
 	char *szCommand = 0;
 
@@ -567,7 +567,7 @@ int CScriptObjectGame::GetServerListInfo(IFunctionHandler *pH)
 	CHECK_PARAMETERS(1);
 
 	INETServerSnooper *pSnooper = m_pGame->GetNETSnooper();
-	assert(pSnooper);
+	CRYASSERT(pSnooper);
 
 	if (pH->GetParamType(1) != svtObject)
 		return pH->EndFunctionNull();
@@ -684,7 +684,7 @@ int CScriptObjectGame::GetHudStringSize(IFunctionHandler *pH)
 	}
 
 	IFFont *pFont = m_pGame->GetHud()->Getfont();
-	assert(pFont);
+	CRYASSERT(pFont);
 
 	pFont->Reset();
 	pFont->SetSize(vector2f(xsize, ysize));
@@ -1289,7 +1289,7 @@ int CScriptObjectGame::GetVersionString(IFunctionHandler *pH)
 		dwMonth = 12;
 		break;
 	default:
-		assert(0);
+		CRYASSERT(0);
 	}
 
   szDay[2] = 0;
@@ -1313,7 +1313,7 @@ int CScriptObjectGame::GetVersionString(IFunctionHandler *pH)
 
 		if (!pData)
 		{
-			assert(0);
+			CRYASSERT(0);
 		}
 		else
 		{
@@ -1955,8 +1955,8 @@ int CScriptObjectGame::GetPlayerEntitiesInRadius(IFunctionHandler *pH)
     return pH->EndFunction();
   }
 
-  ASSERT(m_pGame);
-  ASSERT(m_pEntitySystem);
+  CRYASSERT(m_pGame);
+  CRYASSERT(m_pEntitySystem);
   _SmartScriptObject pVec(m_pScriptSystem, true);
   Vec3 Center;
   pH->GetParam(1, *pVec);
@@ -1987,15 +1987,15 @@ int CScriptObjectGame::GetPlayerEntitiesInRadius(IFunctionHandler *pH)
   if (m_pGame->IsServer())
   {
     CXServer *pServer=m_pGame->GetServer();
-    ASSERT(pServer);
-    ASSERT(pServer->m_pISystem);
+    CRYASSERT(pServer);
+    CRYASSERT(pServer->m_pISystem);
     psetPlayers=&(pServer->m_pISystem->GetPlayerEntities());
   }
   else
   {
     CXClient *pClient=m_pGame->GetClient();
-    ASSERT(pClient);
-    ASSERT(pClient->m_pISystem)
+    CRYASSERT(pClient);
+    CRYASSERT(pClient->m_pISystem)
       psetPlayers=&(pClient->m_pISystem->GetPlayerEntities());
   }
 
@@ -2082,7 +2082,7 @@ int CScriptObjectGame::DrawRadar(IFunctionHandler *pH)
 {
   CHECK_PARAMETERS(14);
 
-  ASSERT(m_pEntitySystem);  
+  CRYASSERT(m_pEntitySystem);  
   float x, y, w, h, fRange;
   char *pRadarObjective;
   int nCookie=0;
@@ -2468,7 +2468,7 @@ int CScriptObjectGame::GetTeamScore(IFunctionHandler *pH)
 	}
 	else
 	{
-		assert(0);				// don't pass nil as team name
+		CRYASSERT(0);				// don't pass nil as team name
 	}
 
 	return pH->EndFunction();
@@ -3915,7 +3915,7 @@ int CScriptObjectGame::GetCurrentModName(IFunctionHandler * pH)
 	if(!pMods)
 		return pH->EndFunctionNull();				// game was not Init
 
-	assert(pMods->GetCurrentMod());
+	CRYASSERT(pMods->GetCurrentMod());
 
 	return pH->EndFunction(pMods->GetCurrentMod());
 }

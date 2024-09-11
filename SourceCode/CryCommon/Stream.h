@@ -61,7 +61,7 @@ class CStream;
 				sprintf(str,"Entity read typedcookie error %d!=%d file '%s' @ line %d",												\
 					(DWORD)t1,(DWORD)t2,__FILE__,__LINE__);																											\
 				Debug(str);																																										\
-				assert(0);																																										\
+				CRYASSERT(0);																																										\
 				return false;																																									\
 			}																																																\
 		}}
@@ -117,8 +117,8 @@ public:
 	//! \param sa pointer to the memory allocation helper, must not be 0
 	CStream(const size_t indwByteSize, IStreamAllocator* sa)
 	{
-		assert(indwByteSize > 0);
-		assert(sa);
+		CRYASSERT(indwByteSize > 0);
+		CRYASSERT(sa);
 
 		m_sa = sa;
 		m_bStackBuffer = false;
@@ -134,8 +134,8 @@ public:
 	//! \param inpBuffer
 	CStream(const size_t indwByteSize, BYTE* inpBuffer)
 	{
-		assert(indwByteSize);
-		assert(inpBuffer);
+		CRYASSERT(indwByteSize);
+		CRYASSERT(inpBuffer);
 		m_sa = NULL;
 		m_bStackBuffer = true;
 		m_dwAllocatedBitSize = m_dwBitSize = indwByteSize * 8;
@@ -429,7 +429,7 @@ inline bool CStream::SetBit(size_t nPos, DWORD_PTR nValue)
 //////////////////////////////////////////////////////////////////////////
 inline void CStream::Debug(const char* inTxt)
 {
-	assert(0);
+	CRYASSERT(0);
 
 #if (defined(WIN32)||defined(WIN64))
 	{
@@ -569,7 +569,7 @@ inline bool CStream::ReadBits(BYTE* pBits, size_t nSize)
 inline bool CStream::WriteNumberInBits(unsigned int n, size_t nSize)
 {
 	STREAM_VERIFY_TYPE_WRITE(50);
-	assert(nSize > 0 && nSize <= 32);
+	CRYASSERT(nSize > 0 && nSize <= 32);
 	unsigned int nSwapped;
 	if (nSize > 32)
 	{
@@ -584,7 +584,7 @@ inline bool CStream::WriteNumberInBits(unsigned int n, size_t nSize)
 inline bool CStream::ReadNumberInBits(unsigned int& n, size_t nSize)
 {
 	STREAM_VERIFY_TYPE_READ(50);
-	assert(nSize > 0 && nSize <= 32);
+	CRYASSERT(nSize > 0 && nSize <= 32);
 	unsigned int nSwapped;
 	if (nSize > 32)
 	{
@@ -600,7 +600,7 @@ inline bool CStream::ReadNumberInBits(unsigned int& n, size_t nSize)
 inline bool CStream::WriteNumberInBits(int n, size_t nSize)
 {
 	STREAM_VERIFY_TYPE_WRITE(51);
-	assert(nSize > 0 && nSize <= 32);
+	CRYASSERT(nSize > 0 && nSize <= 32);
 	unsigned int nSwapped;
 	if (nSize > 32)
 	{
@@ -615,7 +615,7 @@ inline bool CStream::WriteNumberInBits(int n, size_t nSize)
 inline bool CStream::ReadNumberInBits(int& n, size_t nSize)
 {
 	STREAM_VERIFY_TYPE_READ(51);
-	assert(nSize > 0 && nSize <= 32);
+	CRYASSERT(nSize > 0 && nSize <= 32);
 	unsigned int nSwapped = 0;
 	if (nSize > 32)
 	{

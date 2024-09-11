@@ -40,7 +40,7 @@ bool CStatObj::CompileInNeeded()
 	if (f)
 	{
 		int nReaded = GetSystem()->GetIPak()->FRead(&fileHeader, 1, sizeof(fileHeader), f);
-		assert(nReaded == sizeof(CCGFHeader));
+		CRYASSERT(nReaded == sizeof(CCGFHeader));
 		GetSystem()->GetIPak()->FClose(f);
 	}
 
@@ -72,7 +72,7 @@ bool CStatObj::CompileInNeeded()
 			{
 				if (!fileHeader.nDataSize)
 				{
-					assert(m_szGeomName[0]);
+					CRYASSERT(m_szGeomName[0]);
 					return false; // geom name was specified but not found in source sgf during compilation (valid state)
 				}
 

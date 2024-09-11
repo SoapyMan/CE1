@@ -52,7 +52,7 @@ CControllerManager::~CControllerManager()
 {
 #ifdef _DEBUG
 	for (AnimationArray::iterator it = m_arrAnims.begin(); it != m_arrAnims.end(); ++it)
-		assert(it->nRefCount == 0);
+		CRYASSERT(it->nRefCount == 0);
 #endif
 	for (int nAttempt = 0; nAttempt < 40 && !m_setPendingAnimLoads.empty(); ++nAttempt)
 	{
@@ -194,7 +194,7 @@ bool CControllerManager::LoadAnimation(int nAnimId)
 void CControllerManager::StreamOnComplete(IReadStream* pStream, unsigned nError)
 {
 	PendingAnimLoad_AutoPtr pAnimLoad = (PendingAnimLoad*)pStream->GetUserData();
-	assert(m_setPendingAnimLoads.find(pAnimLoad) != m_setPendingAnimLoads.end());
+	CRYASSERT(m_setPendingAnimLoads.find(pAnimLoad) != m_setPendingAnimLoads.end());
 	Animation& Anim = m_arrAnims[pAnimLoad->nAnimId];
 	m_setPendingAnimLoads.erase(pAnimLoad);
 	// flag the animation as being loaded
@@ -279,7 +279,7 @@ bool CControllerManager::LoadAnimation(int nAnimId, CChunkFileReader* pReader)
 					return false;
 				}
 
-				assert(nController < Anim.arrCtrls.size());
+				CRYASSERT(nController < Anim.arrCtrls.size());
 				Anim.arrCtrls[nController++] = pController;
 			}
 			break;
@@ -290,7 +290,7 @@ bool CControllerManager::LoadAnimation(int nAnimId, CChunkFileReader* pReader)
 				CControllerCryBone_AutoPtr pController = new CControllerCryBone();
 				if (pController->Load(pCtrlChunk, nChunkSize, Anim.fScale))
 				{
-					assert(nController < Anim.arrCtrls.size());
+					CRYASSERT(nController < Anim.arrCtrls.size());
 					Anim.arrCtrls[nController++] = static_cast<IController*>(pController);
 				}
 				else
@@ -349,10 +349,10 @@ bool CControllerManager::UpdateAnimation(int nGlobalAnimId, const CCFAnimInfo* p
 #if !defined(LINUX)
 	/*	if (Anim.IsInfoLoaded())
 		{
-			assert (Anim.fSecsPerTick      == pAnimInfo->fSecsPerTick);
-			assert (Anim.nTicksPerFrame    == pAnimInfo->nTicksPerFrame);
-			assert (Anim.rangeGlobal.start == pAnimInfo->nRangeStart);
-			assert (Anim.rangeGlobal.end   == pAnimInfo->nRangeEnd);
+			CRYASSERT (Anim.fSecsPerTick      == pAnimInfo->fSecsPerTick);
+			CRYASSERT (Anim.nTicksPerFrame    == pAnimInfo->nTicksPerFrame);
+			CRYASSERT (Anim.rangeGlobal.start == pAnimInfo->nRangeStart);
+			CRYASSERT (Anim.rangeGlobal.end   == pAnimInfo->nRangeEnd);
 			return true;
 		}*/
 #endif
@@ -379,7 +379,7 @@ void CControllerManager::FireAnimationGlobalLoad(int nAnimId)
 // these calls must be balanced with AnimationRelease() calls
 void CControllerManager::AnimationAddRef(int nGlobalAnimId, CryModelAnimationContainer* pClient)
 {
-	assert((unsigned)nGlobalAnimId < m_arrAnims.size());
+	CRYASSERT((unsigned)nGlobalAnimId < m_arrAnims.size());
 	// the new client, though it might have received "OnLoad" events from this global animation,
 	// might have missed it because it wasn't interested in them; now we re-send this event if needed
 	m_arrAnims[nGlobalAnimId].AddRef();
@@ -391,7 +391,7 @@ void CControllerManager::AnimationAddRef(int nGlobalAnimId, CryModelAnimationCon
 // these calls must be balanced with AnimationAddRef() calls
 void CControllerManager::AnimationRelease(int nGlobalAnimId, CryModelAnimationContainer* pClient)
 {
-	assert((unsigned)nGlobalAnimId < m_arrAnims.size());
+	CRYASSERT((unsigned)nGlobalAnimId < m_arrAnims.size());
 	// if the given client is still interested in unload events, it will receive them all anyway,
 	// so we don't force anything but pure release. Normally during this call the client doesn't need
 	// any information about the animation being released
@@ -488,7 +488,7 @@ CControllerManager::Animation& CControllerManager::GetAnimation(int nAnimID)
 		return m_arrAnims[nAnimID];
 	else
 	{
-		assert(0);
+		CRYASSERT(0);
 		static Animation dummy;
 		return dummy;
 	}
@@ -555,7 +555,7 @@ bool CControllerManager::UnloadAnimation(int nGlobAnimId)
 		for (std::vector<CryModelAnimationContainer*>::iterator it = m_arrClients.begin(); it != m_arrClients.end(); ++it)
 			(*it)->OnAnimationGlobalUnload(nGlobAnimId);
 #if !defined(LINUX)
-		assert(m_arrAnims[nGlobAnimId].MaxControllerRefCount() == 1);
+		CRYASSERT(m_arrAnims[nGlobAnimId].nRefCount == 1);
 #endif
 		m_arrAnims[nGlobAnimId].arrCtrls.clear();
 		return true;
@@ -565,21 +565,21 @@ bool CControllerManager::UnloadAnimation(int nGlobAnimId)
 
 void CControllerManager::OnStartAnimation(int nGlobalAnimId)
 {
-	assert((unsigned)nGlobalAnimId < m_arrAnims.size());
+	CRYASSERT((unsigned)nGlobalAnimId < m_arrAnims.size());
 	LoadAnimation(nGlobalAnimId);
 	m_arrAnims[nGlobalAnimId].OnStart();
 }
 
 void CControllerManager::OnTickAnimation(int nGlobalAnimId)
 {
-	assert((unsigned)nGlobalAnimId < m_arrAnims.size());
+	CRYASSERT((unsigned)nGlobalAnimId < m_arrAnims.size());
 	LoadAnimation(nGlobalAnimId);
 	m_arrAnims[nGlobalAnimId].OnTick();
 }
 
 void CControllerManager::OnApplyAnimation(int nGlobalAnimId)
 {
-	assert((unsigned)nGlobalAnimId < m_arrAnims.size());
+	CRYASSERT((unsigned)nGlobalAnimId < m_arrAnims.size());
 	LoadAnimation(nGlobalAnimId);
 	m_arrAnims[nGlobalAnimId].OnApply();
 }
@@ -621,9 +621,9 @@ size_t CControllerManager::Animation::sizeofThis()const
 void CControllerManager::selfValidate()
 {
 #ifdef _DEBUG
-	assert(m_arrAnimByFile.size() == m_arrAnims.size());
+	CRYASSERT(m_arrAnimByFile.size() == m_arrAnims.size());
 	for (int i = 0; i < (int)m_arrAnimByFile.size() - 1; ++i)
-		assert(stricmp(m_arrAnims[m_arrAnimByFile[i]].strFileName.c_str(), m_arrAnims[m_arrAnimByFile[i + 1]].strFileName.c_str()) < 0);
+		CRYASSERT(stricmp(m_arrAnims[m_arrAnimByFile[i]].strFileName.c_str(), m_arrAnims[m_arrAnimByFile[i + 1]].strFileName.c_str()) < 0);
 #endif
 }
 

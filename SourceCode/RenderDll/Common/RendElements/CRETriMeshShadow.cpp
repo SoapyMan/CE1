@@ -77,7 +77,7 @@ bool CRETriMeshShadow::mfCheckUpdate(int nVertFormat, int Flags)
 
 	m_nCRETriMeshShadowShadowsPerFrrame++;
 
-	assert(m_nCurrInst == -1);
+	CRYASSERT(m_nCurrInst == -1);
 
 	// find light of this shadow
 	CDLight* pDLight = NULL;
@@ -104,11 +104,11 @@ bool CRETriMeshShadow::mfCheckUpdate(int nVertFormat, int Flags)
 
 	fakeLight.m_vObjectSpacePos = tInvRot.TransformPointOLD(fakeLight.m_Origin);
 
-	//  assert(m_nCurrInst==-1);
+	//  CRYASSERT(m_nCurrInst==-1);
 
 	  // todo: take radius into account
 
-	  //assert(pObj->m_CustomData);
+	  //CRYASSERT(pObj->m_CustomData);
 
 	  // find buffer for this case
 	ShadVolInstanceInfo* pSVInfo = 0;
@@ -194,7 +194,7 @@ bool CRETriMeshShadow::mfCheckUpdate(int nVertFormat, int Flags)
 	fakeLight.m_vObjectSpacePos = Vec3d(0, 0, 0);
 
 #ifdef DIRECT3D8
-	assert(0); // not tested, what this line do?
+	CRYASSERT(0); // not tested, what this line do?
 	gRenDev->m_RP.m_CurD3DVFormat = pSVInfo->pVB->m_pSecVertBuffer->m_vertexformat + 16;
 #endif
 	return true;

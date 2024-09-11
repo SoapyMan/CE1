@@ -96,32 +96,6 @@ _inline void __cdecl __CRYTEKDLL_TRACE(const char *sFormat, ... )
 
 #if 1
 
-/*
-#ifndef _XBOX
-#ifdef WIN32
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#include <stdarg.h>
-#endif
-
-#else
-#include <xtl.h>
-#endif
-*/
-//Timur[9/3/2001] #include <windows.h>
-
-/*
-#define ASSERT(x)																									\
-{																													\
-    if (!(x)) {																										\
-	static char sAssertionMessage[1024];																				\
-	\
-	sprintf(sAssertionMessage, "Assertion Failed!!\n\nFile: \"%s\"\n\nLine: %d\n", __FILE__, __LINE__);	\
-	::MessageBox(NULL, sAssertionMessage, "Assertion Failed", MB_OK | MB_ICONERROR);						\
-	DEBUG_BREAK;																								\
-    }																												\
-}   */
-
 //#define ENABLE_NET_TRACE					// enable for network debugging
 
 //@FIXME this function should not be inline.
@@ -138,27 +112,7 @@ _inline void __cdecl __CRYTEKDLL_TRACE(const char *sFormat, ... )
 #	endif
 #endif
 
-#ifdef ASSERT
-#undef ASSERT
-#endif
-
-#if defined(WIN64) || defined(LINUX64)
-#define ASSERT(x) {assert(x);}
 #else
-#define ASSERT(x)	{ if (!(x)) { TRACE("Assertion Failed (%s) File: \"%s\" Line: %d\n", #x, __FILE__, __LINE__); DEBUG_BREAK; } }
-#endif
-
-
-#else
-
-#define ASSERT(x)
-
-#if defined(LINUX)
-#undef assert
-#define assert(exp) (void)( (exp) || (printf("Assert: ' %s ' has failed\n", #exp), 0) )
-#undef ASSERT
-#define ASSERT(exp) (void)( (exp) || (printf("Assert: ' %s ' has failed\n", #exp), 0) )
-#endif
 
 #ifndef PS2
 #define TRACE 1?(void)0 : __CRYTEKDLL_TRACE;
@@ -170,7 +124,7 @@ _inline void __cdecl __CRYTEKDLL_TRACE(const char *sFormat, ... )
 
 
 #ifdef _DEBUG
-#define _VERIFY(x) ASSERT(x)
+#define _VERIFY(x) CRYASSERT(x)
 #else
 #define _VERIFY(x) x
 #endif

@@ -1637,7 +1637,7 @@ ShadowMapFrustum* CRenderer::MakeShadowMapFrustum(ShadowMapFrustum* lof, ShadowM
 	{
 		if (pStatObjects->Count() && !lof->pModelsList)
 		{
-			assert(0);
+			CRYASSERT(0);
 			lof->pModelsList = new list2<IStatObj*>;
 		}
 
@@ -1673,7 +1673,7 @@ typedef struct
 
 bool  CRenderer::SaveTga(unsigned char* sourcedata, int sourceformat, int w, int h, const char* filename, bool flip)
 {
-	//assert(0);
+	//CRYASSERT(0);
   //  return CImage::SaveTga(sourcedata,sourceformat,w,h,filename,flip);
 
 	if (flip)
@@ -2284,8 +2284,8 @@ static float sMatIdent[16] =
 
 void CRenderer::EF_AddEf_NotVirtual(int NumFog, CRendElement* re, IShader* ef, SRenderShaderResources* sr, CCObject* obj, int nTempl, IShader* efState, int nSort)
 {
-	assert(nSort >= 0);
-	assert(NumFog >= 0);
+	CRYASSERT(nSort >= 0);
+	CRYASSERT(NumFog >= 0);
 	if (re && ef)
 	{
 		SShader* eft = (SShader*)ef->GetTemplate(nTempl);
@@ -2320,7 +2320,7 @@ void CRenderer::EF_AddEf_NotVirtual(int NumFog, CRendElement* re, IShader* ef, S
 			{
 				if (!(obj->m_ObjFlags & FOB_TRANS_MASK))
 				{
-					assert(0);
+					CRYASSERT(0);
 				}
 			}
 #endif
@@ -2782,7 +2782,7 @@ CCObject* CRenderer::EF_GetObject(bool bTemp, int num)
 						if (Objs->Num() != MAX_REND_OBJECTS - 1)
 							Objs->AddIndex(1);
 						else
-							assert(false);
+							CRYASSERT(false);
 					}
 				}
 				else
@@ -3041,7 +3041,7 @@ CCObject* CRenderer::EF_AddSpriteToScene(int Ef, int numPts, SColorVert* verts, 
 
 	if (inds && ninds)
 	{
-		assert(ninds <= (16 - 2) * 3);
+		CRYASSERT(ninds <= (16 - 2) * 3);
 		memcpy(vrtind, inds, ninds);
 		pl->mNumIndices = ninds;
 	}
@@ -3480,7 +3480,7 @@ void CRenderer::EF_ADDDlight(CDLight* Source)
 		Source->m_Id = -1;
 	else
 	{
-		assert((Source->m_Flags & DLF_LIGHTTYPE_MASK) != 0);
+		CRYASSERT((Source->m_Flags & DLF_LIGHTTYPE_MASK) != 0);
 		Source->m_Id = m_RP.m_DLights[SRendItem::m_RecurseLevel].Num();
 		if (Source->m_Id >= 32)
 		{
@@ -3772,7 +3772,7 @@ void* CRenderer::EF_Query(int Query, int Param)
 	}
 	break;
 	default:
-		assert(0);
+		CRYASSERT(0);
 	}
 	return NULL;
 }
@@ -3872,7 +3872,7 @@ CLeafBuffer* CRenderer::CreateLeafBufferInitialized(
 	if (CV_r_precachemesh && pLeafBuffer->m_SecVertCount && bPrecache)
 	{
 		pLeafBuffer->CheckUpdate(nVertFormat, 0, false);
-		assert(!pLeafBuffer->m_pVertexBuffer || pLeafBuffer->m_pVertexBuffer->m_NumVerts == pLeafBuffer->m_SecVertCount);
+		CRYASSERT(!pLeafBuffer->m_pVertexBuffer || pLeafBuffer->m_pVertexBuffer->m_NumVerts == pLeafBuffer->m_SecVertCount);
 	}
 
 	return pLeafBuffer;
@@ -4225,7 +4225,7 @@ bool CRenderer::DXTDecompress(byte* srcData, byte* dstData, int nWidth, int nHei
 			int n = width * height;
 			if (planes == 4)
 			{
-				assert(nDstBytesPerPix == 3);
+				CRYASSERT(nDstBytesPerPix == 3);
 				byte* data1 = _data;
 				byte* dd1 = dstData;
 
@@ -4241,7 +4241,7 @@ bool CRenderer::DXTDecompress(byte* srcData, byte* dstData, int nWidth, int nHei
 			else
 				if (planes == 3)
 				{
-					assert(nDstBytesPerPix == 4);
+					CRYASSERT(nDstBytesPerPix == 4);
 					byte* data1 = _data;
 					byte* dd1 = dstData;
 
@@ -4275,7 +4275,7 @@ bool CRenderer::DXTCompress(byte* raw_data, int nWidth, int nHeight, ETEX_Format
 #ifndef __linux
 	if (IsBadReadPtr(raw_data, nWidth * nHeight * nSrcBytesPerPix))
 	{
-		assert(0);
+		CRYASSERT(0);
 		iLog->Log("Warning: CRenderer::DXTCompress: invalid data passed to the function");
 		return false;
 	}
@@ -4300,7 +4300,7 @@ bool CRenderer::DXTCompress(byte* raw_data, int nWidth, int nHeight, ETEX_Format
 			opt.TextureFormat = kDXT5;
 			break;
 		default:
-			assert(0);
+			CRYASSERT(0);
 			return false;
 		}
 		opt.MIPFilterType = kMIPFilterQuadratic;
@@ -4344,7 +4344,7 @@ bool CRenderer::DXTCompress(byte* raw_data, int nWidth, int nHeight, ETEX_Format
 			eF = eIF_DXT5;
 			break;
 		default:
-			assert(0);
+			CRYASSERT(0);
 			return false;
 		}
 		byte* data = m_TexMan->GenerateDXT_HW(&ti, eF, nDst, &nMips, &DXTSize, bGenMips);
@@ -4361,7 +4361,7 @@ bool CRenderer::DXTCompress(byte* raw_data, int nWidth, int nHeight, ETEX_Format
 				if (!hgt)
 					hgt = 1;
 				int nSize = ((wdt + 3) / 4) * ((hgt + 3) / 4) * blockSize;
-				assert(nSize + nOffs <= DXTSize);
+				CRYASSERT(nSize + nOffs <= DXTSize);
 				(*callback)(&data[nOffs], i, nSize, wdt, hgt, NULL);
 				nOffs += nSize;
 				wdt >>= 1;
@@ -4379,7 +4379,7 @@ void CRenderer::RemoveAnimatedTexture(AnimTexInfo* pInfo)
 {
 	if (m_LoadedAnimatedTextures.Find(pInfo) < 0)
 	{
-		assert(!"Attempt to remove invalid animated texture");
+		CRYASSERT(!"Attempt to remove invalid animated texture");
 		return;
 	}
 
@@ -4396,7 +4396,7 @@ void CRenderer::RemoveAnimatedTexture(AnimTexInfo* pInfo)
 		delete pInfo;
 	}
 	else
-		assert(0); // texture not found
+		CRYASSERT(0); // texture not found
 }
 
 void CRenderer::WriteJPG(byte* dat, int wdt, int hgt, char* name)

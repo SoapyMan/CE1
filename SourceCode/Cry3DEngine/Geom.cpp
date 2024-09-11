@@ -72,13 +72,13 @@ bool CGeom::Load(CXFile* f, int pos)
 
 	//read verts
 	m_pVertices = (CryVertex*)malloc(sizeof(CryVertex) * m_Chunk.nVerts);
-	assert(m_pVertices);
+	CRYASSERT(m_pVertices);
 	res = f->FRead(m_pVertices, sizeof(CryVertex), m_Chunk.nVerts);
 	if (res != m_Chunk.nVerts) return true;
 
 	//read m_pFaces
 	m_pFaces = (CryFace*)malloc(sizeof(CryFace) * m_Chunk.nFaces);
-	assert(m_pFaces);
+	CRYASSERT(m_pFaces);
 	res = f->FRead(m_pFaces, sizeof(CryFace), m_Chunk.nFaces);
 	if (res != m_Chunk.nFaces) return true;
 
@@ -86,7 +86,7 @@ bool CGeom::Load(CXFile* f, int pos)
 	if (m_Chunk.nTVerts)
 	{
 		m_pUVs = (CryUV*)malloc(sizeof(CryUV) * m_Chunk.nTVerts);
-		assert(m_pUVs);
+		CRYASSERT(m_pUVs);
 		res = f->FRead(m_pUVs, sizeof(CryUV), m_Chunk.nTVerts);
 		if (res != m_Chunk.nTVerts) return true;
 
@@ -99,7 +99,7 @@ bool CGeom::Load(CXFile* f, int pos)
 		if (m_Chunk.nVerts != 12 || pos != 692)//hack to make old grass objects working
 		{
 			m_pTexFaces = (CryTexFace*)malloc(sizeof(CryTexFace) * m_Chunk.nFaces);
-			assert(m_pTexFaces);
+			CRYASSERT(m_pTexFaces);
 
 			res = f->FRead(m_pTexFaces, sizeof(CryTexFace), m_Chunk.nFaces);
 			if (res != m_Chunk.nFaces) return true;
@@ -110,7 +110,7 @@ bool CGeom::Load(CXFile* f, int pos)
 	if (m_Chunk.HasVertexCol)
 	{
 		m_pVcols = (CryIRGB*)malloc(m_Chunk.nVerts * sizeof(CryIRGB));
-		assert(m_pVcols);
+		CRYASSERT(m_pVcols);
 
 		int res = f->FRead(m_pVcols, sizeof(CryIRGB), m_Chunk.nVerts);
 
@@ -132,7 +132,7 @@ bool CGeom::Load(CXFile* f, int pos)
 		m_pVcols = 0;
 		/*
 		m_pVcols=(CryIRGB *)malloc(m_Chunk.nVerts*sizeof(CryIRGB));
-		assert(m_pVcols);
+		CRYASSERT(m_pVcols);
 
 		for (int k=0;k<m_Chunk.nVerts;k++)
 		{

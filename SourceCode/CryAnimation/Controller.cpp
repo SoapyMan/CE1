@@ -40,7 +40,7 @@ Vec3 IController::PQLog::getComplementaryRotLog() const
 #ifdef _DEBUG
 	//CryQuat qOrig = exp(vRotLog);
 	//CryQuat qNew = exp(vResult);
-	//assert (qOrig.Dot(qNew) < -0.99);
+	//CRYASSERT (qOrig.Dot(qNew) < -0.99);
 #endif
 	return vResult;
 }
@@ -48,7 +48,7 @@ Vec3 IController::PQLog::getComplementaryRotLog() const
 // blends the pqFrom and pqTo with weights 1-fBlend and fBlend into pqResult
 void IController::PQLog::blendPQ(const PQLog& pqFrom, const PQLog& pqTo, float fBlend)
 {
-	assert(fBlend >= 0 && fBlend <= 1);
+	CRYASSERT(fBlend >= 0 && fBlend <= 1);
 	vPos = pqFrom.vPos * (1 - fBlend) + pqTo.vPos * fBlend;
 	vRotLog = pqFrom.vRotLog * (1 - fBlend) + pqTo.vRotLog * fBlend;
 }
@@ -83,7 +83,7 @@ void IController::PQLog::assignFromMatrix(const Matrix44& mat)
 	buildMatrix(t);
 	for (int i = 0; i < 3; ++i)
 		for (int j = 0; j < 3; ++j)
-			assert(fabs(m(i, j) - t(i, j)) < 0.5);
+			CRYASSERT(fabs(m(i, j) - t(i, j)) < 0.5);
 #endif
 }
 

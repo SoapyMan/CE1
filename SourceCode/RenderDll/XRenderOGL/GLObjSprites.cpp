@@ -74,7 +74,7 @@ void CGLRenderer::DrawObjSprites_NoBend(list2<CStatObjInst*>* pList, float fMaxV
 	o = pList->GetAt(pList->Count() - 1);
 	for (int i = pList->Count() - 1; i >= 0; i--)
 	{
-		assert(o);
+		CRYASSERT(o);
 		if (!o)
 			continue;
 		o = pList->GetAt(i);
@@ -86,7 +86,7 @@ void CGLRenderer::DrawObjSprites_NoBend(list2<CStatObjInst*>* pList, float fMaxV
 			cryPrefetchT0SSE(oNext);
 		}
 
-		assert(SRendItem::m_RecurseLevel >= 1 && SRendItem::m_RecurseLevel - 1 <= 2);
+		CRYASSERT(SRendItem::m_RecurseLevel >= 1 && SRendItem::m_RecurseLevel - 1 <= 2);
 		float fDistance = (((IEntityRender*)o))->m_arrfDistance[SRendItem::m_RecurseLevel - 1];
 
 		float fMaxDist = o->GetMaxViewDist();
@@ -118,7 +118,7 @@ void CGLRenderer::DrawObjSprites_NoBend(list2<CStatObjInst*>* pList, float fMaxV
 		if (pStatObjLOD0->m_nLoadedLodsNum && pStatObjLOD0->m_arrpLowLODs[pStatObjLOD0->m_nLoadedLodsNum - 1])
 			pStatObjLODLowest = pStatObjLOD0->m_arrpLowLODs[pStatObjLOD0->m_nLoadedLodsNum - 1];
 
-		assert(pStatObjLODLowest);
+		CRYASSERT(pStatObjLODLowest);
 		if (!pStatObjLODLowest)
 			continue;
 
@@ -132,7 +132,7 @@ void CGLRenderer::DrawObjSprites_NoBend(list2<CStatObjInst*>* pList, float fMaxV
 		while (fAngle < 0) fAngle += 360;
 
 		int nSlotId = QRound(fAngle / FAR_TEX_ANGLE + 0.5f) % FAR_TEX_COUNT;
-		assert(nSlotId >= 0 && nSlotId < FAR_TEX_COUNT);
+		CRYASSERT(nSlotId >= 0 && nSlotId < FAR_TEX_COUNT);
 		int tid = pStatObjLOD0->m_arrSpriteTexID[nSlotId];
 
 		if (SRendItem::m_RecurseLevel == 1)
@@ -393,7 +393,7 @@ void CGLRenderer::DrawObjSprites_NoBend_Merge(list2<CStatObjInst*>* pList, float
 	for (i = pList->Count() - 1; i >= 0; i--)
 	{
 		o = pList->GetAt(i);
-		//assert(o);
+		//CRYASSERT(o);
 		//if(!o)
 	   // 	continue;
 
@@ -404,7 +404,7 @@ void CGLRenderer::DrawObjSprites_NoBend_Merge(list2<CStatObjInst*>* pList, float
 			cryPrefetchT0SSE(oNext);
 		}
 
-		assert(SRendItem::m_RecurseLevel >= 1 && SRendItem::m_RecurseLevel - 1 <= 2);
+		CRYASSERT(SRendItem::m_RecurseLevel >= 1 && SRendItem::m_RecurseLevel - 1 <= 2);
 		float fDistance = (((IEntityRender*)o))->m_arrfDistance[SRendItem::m_RecurseLevel - 1];
 
 		float fMaxDist = o->GetMaxViewDist();
@@ -436,7 +436,7 @@ void CGLRenderer::DrawObjSprites_NoBend_Merge(list2<CStatObjInst*>* pList, float
 		if (pStatObjLOD0->m_nLoadedLodsNum && pStatObjLOD0->m_arrpLowLODs[pStatObjLOD0->m_nLoadedLodsNum - 1])
 			pStatObjLODLowest = pStatObjLOD0->m_arrpLowLODs[pStatObjLOD0->m_nLoadedLodsNum - 1];
 
-		assert(pStatObjLODLowest);
+		CRYASSERT(pStatObjLODLowest);
 		if (!pStatObjLODLowest)
 			continue;
 
@@ -454,7 +454,7 @@ void CGLRenderer::DrawObjSprites_NoBend_Merge(list2<CStatObjInst*>* pList, float
 		while (fAngle < 0) fAngle += 360;
 
 		int nSlotId = QRound(fAngle / FAR_TEX_ANGLE + 0.5f) % FAR_TEX_COUNT;
-		assert(nSlotId >= 0 && nSlotId < FAR_TEX_COUNT);
+		CRYASSERT(nSlotId >= 0 && nSlotId < FAR_TEX_COUNT);
 		pSP->m_TexID = pStatObjLOD0->m_arrSpriteTexID[nSlotId];
 
 		if (SRendItem::m_RecurseLevel == 1)
@@ -832,11 +832,11 @@ void CGLRenderer::DrawObjSprites(list2<CStatObjInst*>* pList, float fMaxViewDist
 	for (int i = pList->Count() - 1; i >= 0; i--)
 	{
 		CStatObjInst* o = pList->GetAt(i);
-		assert(o);
+		CRYASSERT(o);
 		if (!o)
 			continue;
 
-		assert(SRendItem::m_RecurseLevel >= 1 && SRendItem::m_RecurseLevel - 1 <= 2);
+		CRYASSERT(SRendItem::m_RecurseLevel >= 1 && SRendItem::m_RecurseLevel - 1 <= 2);
 		float fDistance = (((IEntityRender*)o))->m_arrfDistance[SRendItem::m_RecurseLevel - 1];
 
 		//    if(SRendItem::m_RecurseLevel==1) // m_fDistance was changed during reqursion
@@ -875,12 +875,12 @@ void CGLRenderer::DrawObjSprites(list2<CStatObjInst*>* pList, float fMaxViewDist
 		DX = o->m_vPos.x - vCamPos.x;
 		DY = o->m_vPos.y - vCamPos.y;
 
-		assert(pStatObjLODLowest);
+		CRYASSERT(pStatObjLODLowest);
 		if (!pStatObjLODLowest)
 			continue;
 
 		int nSlotId = int(fAngle / FAR_TEX_ANGLE + 0.5f) % FAR_TEX_COUNT;
-		assert(nSlotId >= 0 && nSlotId < FAR_TEX_COUNT);
+		CRYASSERT(nSlotId >= 0 && nSlotId < FAR_TEX_COUNT);
 		int tid = pStatObjLOD0->m_arrSpriteTexID[nSlotId];
 
 		if (SRendItem::m_RecurseLevel == 1)
@@ -1218,7 +1218,7 @@ uint CGLRenderer::MakeSprite(float _fSpriteDistance, int nTexSize, float angle, 
 
 	// read into buffer and make texture
 
-	assert(nTexSize <= 1024);//just warning
+	CRYASSERT(nTexSize <= 1024);//just warning
 	uchar* pMemBuffer = _pTmpBuffer;
 	if (!pMemBuffer)
 		pMemBuffer = new uchar[nTexSize * nTexSize * 4];

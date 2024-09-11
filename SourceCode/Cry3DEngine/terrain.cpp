@@ -28,12 +28,6 @@ void CTerrain::PreCacheArea(const Vec3d& vPos, float fRadius)
 	//  if(!m_pObjManager)
 	return;
 
-#ifndef _DEBUG
-#if !defined(_XBOX) && !defined(LINUX)
-	assert(GetConsole()->Exit("Assert should do nothing in release mode")); // just check
-#endif // _XBOX
-#endif // DEBUG
-
 	m_nUploadsInFrame = -10000;
 
 	GetLog()->UpdateLoadingScreen("Preloading terrain textures for (%.1f, %.1f, %.1f) ...",
@@ -68,10 +62,10 @@ void CTerrain::PreCacheArea(const Vec3d& vPos, float fRadius)
 
 int CTerrain::GetSecMML(int x, int y)
 {
-	assert(x / CTerrain::GetSectorSize() >= 0);
-	assert(y / CTerrain::GetSectorSize() >= 0);
-	assert(x / CTerrain::GetSectorSize() < CTerrain::GetSectorsTableSize());
-	assert(y / CTerrain::GetSectorSize() < CTerrain::GetSectorsTableSize());
+	CRYASSERT(x / CTerrain::GetSectorSize() >= 0);
+	CRYASSERT(y / CTerrain::GetSectorSize() >= 0);
+	CRYASSERT(x / CTerrain::GetSectorSize() < CTerrain::GetSectorsTableSize());
+	CRYASSERT(y / CTerrain::GetSectorSize() < CTerrain::GetSectorsTableSize());
 
 	CSectorInfo* info = m_arrSecInfoTable[x / CTerrain::GetSectorSize()][y / CTerrain::GetSectorSize()];
 	return info->m_cGeometryMML;
@@ -441,7 +435,7 @@ void CTerrain::ResetDLightMaskInSectors()
 	CSectorInfo** pEnd = &m_arrSecInfoTable[CTerrain::GetSectorsTableSize() - 1][CTerrain::GetSectorsTableSize() - 1];
 	while (p <= pEnd)
 	{
-		register CSectorInfo* pSector = *p;
+		CSectorInfo* pSector = *p;
 		pSector->m_nDynLightMaskNoSun = 0;
 		pSector->m_nDynLightMask = 0;
 		++p;
@@ -564,7 +558,7 @@ Vec3d CTerrain::GetTerrainSurfaceNormal(Vec3d vPos)
 
 bool CTerrain::UnRegisterInAllSectors(IEntityRender* pEntityRS)
 {
-	assert(pEntityRS);
+	CRYASSERT(pEntityRS);
 
 	bool bRes = 0;
 
@@ -729,8 +723,8 @@ bool CTerrain::PreloadResources()
 			m_pDetailObjects->PreloadResources();
 	}
 
-	assert(nCurTexPreloadX >= 0 && nCurTexPreloadX < CTerrain::GetSectorsTableSize());
-	assert(nCurTexPreloadY >= 0 && nCurTexPreloadY < CTerrain::GetSectorsTableSize());
+	CRYASSERT(nCurTexPreloadX >= 0 && nCurTexPreloadX < CTerrain::GetSectorsTableSize());
+	CRYASSERT(nCurTexPreloadY >= 0 && nCurTexPreloadY < CTerrain::GetSectorsTableSize());
 
 	CSectorInfo* pSecInfo = m_arrSecInfoTable[nCurTexPreloadX][nCurTexPreloadY];
 	if (pSecInfo)

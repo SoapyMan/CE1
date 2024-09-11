@@ -27,7 +27,7 @@ void STexPic::BuildMips()
 			int w, h;
 			glGetTexLevelParameteriv(m_TargetType, i, GL_TEXTURE_WIDTH, &w);
 			glGetTexLevelParameteriv(m_TargetType, i, GL_TEXTURE_HEIGHT, &h);
-			assert(w && h);
+			CRYASSERT(w && h);
 			int tf = CGLTexMan::GetTexSrcFormat(m_ETF);
 			int tfd = CGLTexMan::GetTexDstFormat(m_ETF);
 			int size = CGLTexMan::TexSize(w, h, 1, tfd);
@@ -61,7 +61,7 @@ void STexPic::BuildMips()
 				int w, h;
 				glGetTexLevelParameteriv(tgt, i, GL_TEXTURE_WIDTH, &w);
 				glGetTexLevelParameteriv(tgt, i, GL_TEXTURE_HEIGHT, &h);
-				assert(w && h);
+				CRYASSERT(w && h);
 				int tf = CGLTexMan::GetTexSrcFormat(m_ETF);
 				int tfd = CGLTexMan::GetTexDstFormat(m_ETF);
 				int size = CGLTexMan::TexSize(w, h, 1, tfd);

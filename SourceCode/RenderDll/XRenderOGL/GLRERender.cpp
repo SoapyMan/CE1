@@ -175,8 +175,8 @@ bool CREOcLeaf::mfPreDraw(SShaderPass* sl)
 {
 	CLeafBuffer* lb = m_pBuffer->GetVertexContainer();
 
-	assert(!lb->m_pVertexBuffer->m_VS[VSF_GENERAL].m_bLocked);
-	assert(!lb->m_pVertexBuffer->m_VS[VSF_TANGENTS].m_bLocked);
+	CRYASSERT(!lb->m_pVertexBuffer->m_VS[VSF_GENERAL].m_bLocked);
+	CRYASSERT(!lb->m_pVertexBuffer->m_VS[VSF_TANGENTS].m_bLocked);
 
 	if (SUPPORTS_GL_ARB_vertex_buffer_object)
 	{
@@ -365,7 +365,7 @@ bool CREOcLeaf::mfDraw(SShader* ef, SShaderPass* sl)
 	// Hardware effector
 	if (ef->m_HWTechniques.Num())
 	{
-		assert(m_pChunk->nFirstIndexId < 60000);
+		CRYASSERT(m_pChunk->nFirstIndexId < 60000);
 
 		ushort* pInds;
 		int nInds;
@@ -422,7 +422,7 @@ bool CREOcLeaf::mfDraw(SShader* ef, SShaderPass* sl)
 		iLog->Log("Warning: CREOcLeaf::mfDraw m_pBuffer->m_pVertexBuffer==0 '%s'", lb->m_sSource != 0 ? lb->m_sSource : "<NULL>"); return(true);
 	}
 
-	assert(lb->m_pVertexBuffer);
+	CRYASSERT(lb->m_pVertexBuffer);
 	r->DrawBuffer(lb->m_pVertexBuffer, &lb->m_Indices, m_pChunk->nNumIndices, m_pChunk->nFirstIndexId, lb->m_nPrimetiveType, m_pChunk->nFirstVertId, m_pChunk->nNumVerts, m_pChunk);
 
 	// restore fog
@@ -740,7 +740,7 @@ bool CREFlare::mfCheckVis(CCObject* obj)
 			if (!obj->m_TexId0)
 			{
 				glGenTextures(1, (uint*)&obj->m_TexId0);
-				assert(obj->m_TexId0 < 14000);
+				CRYASSERT(obj->m_TexId0 < 14000);
 				rd->m_TexMan->SetTexture(obj->m_TexId0, eTT_Base);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -751,7 +751,7 @@ bool CREFlare::mfCheckVis(CCObject* obj)
 			if (!obj->m_TexId1)
 			{
 				glGenTextures(1, (uint*)&obj->m_TexId1);
-				assert(obj->m_TexId0 < 14000);
+				CRYASSERT(obj->m_TexId0 < 14000);
 				rd->m_TexMan->SetTexture(obj->m_TexId1, eTT_Base);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

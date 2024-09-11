@@ -39,7 +39,7 @@ bool inline LoadBuffer(void* pData, uint nMaxBytesToLoad, uchar* pSerialBuffer, 
 	if (!nSize)
 		return true;
 
-	assert(pData);
+	CRYASSERT(pData);
 
 	if (nSize)
 		memcpy(pData, pSerialBuffer + nSaveBufferPos, nSize);

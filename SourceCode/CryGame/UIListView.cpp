@@ -98,7 +98,7 @@ LRESULT CUIListView::Update(unsigned int iMessage, WPARAM wParam, LPARAM lParam)
 			{
 				m_pUISystem->CreateScrollBar(&m_pHScroll, this, "hscrollbar", UIRect(0, 0, 0, 16.0f), UIFLAG_ENABLED, 0, UISCROLLBARTYPE_HORIZONTAL);
 			}
-			assert(m_pHScroll);
+			CRYASSERT(m_pHScroll);
 
 			if (!m_bHorizontalScrollBar)
 			{
@@ -121,7 +121,7 @@ LRESULT CUIListView::Update(unsigned int iMessage, WPARAM wParam, LPARAM lParam)
 			{
 				m_pUISystem->CreateScrollBar(&m_pVScroll, this, "vscrollbar", UIRect(0, 0, 16.0f, 0.0f), UIFLAG_ENABLED, 0, UISCROLLBARTYPE_VERTICAL);
 			}
-			assert(m_pVScroll);
+			CRYASSERT(m_pVScroll);
 
 			if (!m_bVerticalScrollBar)
 			{
@@ -159,7 +159,7 @@ LRESULT CUIListView::Update(unsigned int iMessage, WPARAM wParam, LPARAM lParam)
 				pVScrollRect.fHeight -= m_fHeaderHeight;
 			}
 
-			assert(m_pVScroll);
+			CRYASSERT(m_pVScroll);
 
 			m_pVScroll->SetRect(pVScrollRect, 1);
 			m_pVScroll->SetStep(crymax(m_fItemHeight / (m_fTotalHeight - pListRect.fHeight), 0.05f));
@@ -191,7 +191,7 @@ LRESULT CUIListView::Update(unsigned int iMessage, WPARAM wParam, LPARAM lParam)
 			pHScrollRect.fWidth = pListRect.fWidth - (bVScroll ? m_pUISystem->GetWidgetRect(m_pVScroll).fWidth : 0);
 			pHScrollRect.fHeight = m_pUISystem->GetWidgetRect(m_pHScroll).fHeight;
 
-			assert(m_pHScroll);
+			CRYASSERT(m_pHScroll);
 
 			m_pHScroll->SetRect(pHScrollRect, 1);
 			
@@ -479,7 +479,7 @@ LRESULT CUIListView::Update(unsigned int iMessage, WPARAM wParam, LPARAM lParam)
 
 				UIListItem *pSelectedItem = GetItem(iIndex);
 
-				assert(pItem);
+				CRYASSERT(pItem);
 
 				if (!pItem->bSelectable)
 				{
@@ -1393,7 +1393,7 @@ int CUIListView::DrawListColumn(int iIndex, const UIRect &pColumnRect, const UIR
 	if (!m_vColumnList.empty())
 	{
 		UIListColumn *pColumn = &m_vColumnList[iIndex];
-		assert(pColumn);
+		CRYASSERT(pColumn);
 
 		cItemColor = m_cColor;
 

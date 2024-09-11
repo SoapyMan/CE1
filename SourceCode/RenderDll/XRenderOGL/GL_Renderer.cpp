@@ -1074,7 +1074,7 @@ void CGLRenderer::GetMemoryUsage(ICrySizer* Sizer)
 {
 	int i, nSize;
 
-	assert(Sizer);
+	CRYASSERT(Sizer);
 
 	//SIZER_COMPONENT_NAME(Sizer, "GLRenderer");
 	{
@@ -1320,7 +1320,7 @@ void CGLRenderer::SetTexture(int tnum)
   if(tnum > INT_MAX/2)
   { // tnum is a shifted pointer to CImage structure
 	CImage * pImage = (CImage *)(tnum - INT_MAX/2);
-	ASSERT(pImage && pImage->m_valid_test == 123);
+	CRYASSERT(pImage && pImage->m_valid_test == 123);
 
 	if(!pImage->GetTextureId())
 	{ // if not loaded
@@ -1429,7 +1429,7 @@ unsigned int CGLRenderer::DownLoadToVideoMemory(unsigned char* data, int w, int 
 	}
 	if (tnum == 0)
 		glGenTextures(1, &tnum);
-	assert(tnum < 14000);
+	CRYASSERT(tnum < 14000);
 
 	SetTexture(tnum, eTT);
 	int tgt = GL_TEXTURE_2D;
@@ -1569,7 +1569,7 @@ void CGLRenderer::UpdateTextureInVideoMemory(uint tnum, unsigned char* newdata, 
 	if (eTF == eTF_4444)
 	{
 		srcformat = GL_RGBA4;
-		assert(0); // not supported in opengl as source format
+		CRYASSERT(0); // not supported in opengl as source format
 	}
 
 	if (eTF == eTF_DXT1)
@@ -3231,7 +3231,7 @@ int crtReportHook(int nRptType, char* szMsg, int* retVal)
 		crtdebug("<CRT ERROR> %s\n", szMsg);
 		break;
 	case _CRT_ASSERT:
-		crtdebug("<CRT ASSERT> %s\n", szMsg);
+		crtdebug("<CRT CRYASSERT> %s\n", szMsg);
 		break;
 	}
 	gl_num_asserts--;

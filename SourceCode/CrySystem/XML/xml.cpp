@@ -219,7 +219,7 @@ XmlNodeRef CXmlNode::findChild(const char* tag) const
 //! Adds new child node.
 void CXmlNode::addChild(XmlNodeRef& node)
 {
-	assert(node != 0);
+	CRYASSERT(node != 0);
 	m_childs.push_back(node);
 	IXmlNode* n = node;
 	((CXmlNode*)n)->m_parent = this;
@@ -249,7 +249,7 @@ void CXmlNode::removeAllChilds()
 //! Get XML Node child nodes.
 XmlNodeRef CXmlNode::getChild(int i) const
 {
-	assert(i >= 0 && i < (int)m_childs.size());
+	CRYASSERT(i >= 0 && i < (int)m_childs.size());
 	return m_childs[i];
 }
 
@@ -384,7 +384,7 @@ protected:
 	}
 	static void characterData(void* userData, const char* s, int len) {
 		char str[32768];
-		assert(len < 32768);
+		CRYASSERT(len < 32768);
 		strncpy(str, s, len);
 		str[len] = 0;
 		((XmlParserImp*)userData)->onRawData(str);
@@ -437,7 +437,7 @@ void	XmlParserImp::onStartElement(const char* tagName, const char** atts)
 
 void	XmlParserImp::onEndElement(const char* tagName)
 {
-	assert(!nodeStack.empty());
+	CRYASSERT(!nodeStack.empty());
 	if (!nodeStack.empty()) {
 		nodeStack.pop_back();
 	}
@@ -445,7 +445,7 @@ void	XmlParserImp::onEndElement(const char* tagName)
 
 void	XmlParserImp::onRawData(const char* data)
 {
-	assert(!nodeStack.empty());
+	CRYASSERT(!nodeStack.empty());
 	if (!nodeStack.empty())
 	{
 		IXmlNode* node = nodeStack.back();

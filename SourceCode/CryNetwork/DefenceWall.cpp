@@ -278,7 +278,7 @@ void CDefenceWall::RandomClientValidation(ClientInfo* pClientInfo)
 	while (bRepeat) {
 		bRepeat = false;
 		n = rand() % m_stdServerProbes.size();
-		assert(n < m_stdServerProbes.size());
+		CRYASSERT(n < m_stdServerProbes.size());
 		if (n >= m_stdServerProbes.size())
 			bRepeat = true;
 		if (m_stdServerProbes[n].bExecutableCode && pClientInfo->b64bit != m_b64bit) // Cannot compare clients with 32/64bit difference.

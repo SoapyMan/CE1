@@ -64,7 +64,7 @@ CName::CName(const char* str, EFindName efn)
 	char tstr[MAX_SNAME_LEN];
 	SNameEntry* sFNE;
 
-	assert(str);
+	CRYASSERT(str);
 
 	if (!mNames.Num())
 		mfInitTables();
@@ -177,7 +177,7 @@ void CName::mfInitSubsystem(void)
 
 	CName("None");
 
-	assert(mNames.Num());
+	CRYASSERT(mNames.Num());
 
 	if (mDuplicate)
 	{
@@ -224,8 +224,8 @@ void CName::mfDeleteEntry(int num)
 
 	sFNE = mNames[num];
 
-	assert(sFNE);
-	assert(!(sFNE->mFlags & NF_Intrinsic));
+	CRYASSERT(sFNE);
+	CRYASSERT(!(sFNE->mFlags & NF_Intrinsic));
 
 	hash = mfGetHash(sFNE->mName);
 	sFNE1 = &mNameHash[hash];

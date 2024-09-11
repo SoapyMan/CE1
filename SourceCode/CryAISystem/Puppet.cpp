@@ -916,7 +916,7 @@ void CPuppet::Navigate(CAIObject* pTarget)
 		else
 			m_bAccurateDirectionFire = false;
 
-		assert(-1e+9 < m_State.fValue && m_State.fValue < 1e+9);
+		CRYASSERT(-1e+9 < m_State.fValue && m_State.fValue < 1e+9);
 
 
 		if ((TargetType == AIOBJECT_PLAYER) || (TargetType == AIOBJECT_PUPPET) || m_bLooseAttention)
@@ -940,7 +940,7 @@ void CPuppet::Navigate(CAIObject* pTarget)
 					//float DifferenceX( const Ang3d_tpl& ang2 ) {return Snap180( x- ang2.x );}
 					//	m_State.fValueAux = ang.DifferenceX( puppetAngles )*0.1f;
 			m_State.fValueAux = Snap_s180(ang.x - puppetAngles.x) * fTime * 5.f;//0.1f;
-			assert(-1e+9 < m_State.fValueAux && m_State.fValueAux < 1e+9);
+			CRYASSERT(-1e+9 < m_State.fValueAux && m_State.fValueAux < 1e+9);
 		}
 
 	}

@@ -29,7 +29,7 @@
 
 void CBrush::SetLightmap(RenderLMData* pLMData, float* pTexCoords, UINT iNumTexCoords, const unsigned char cucOcclIDCount, const std::vector<std::pair<EntityId, EntityId> >& aIDs)
 {
-	assert(cucOcclIDCount <= 4);
+	CRYASSERT(cucOcclIDCount <= 4);
 
 	memset(m_arrOcclusionLightOwners, 0, sizeof(m_arrOcclusionLightOwners));
 
@@ -45,7 +45,7 @@ void CBrush::SetLightmap(RenderLMData* pLMData, float* pTexCoords, UINT iNumTexC
 					pEnt = (IEntityRender*)-1; // sun
 				else
 					pEnt = GetSystem()->GetIEntitySystem()->GetEntity(nEntId);
-				//			assert(pEnt);
+				//			CRYASSERT(pEnt);
 				m_arrOcclusionLightOwners[i] = pEnt;
 			}
 		}
@@ -60,7 +60,7 @@ void CBrush::SetLightmap(RenderLMData* pLMData, float* pTexCoords, UINT iNumTexC
 					pEnt = (IEntityRender*)-1; // sun
 				else
 					pEnt = pStaticLights->GetAt(nEntId)->m_pOwner;
-				assert(pEnt);
+				CRYASSERT(pEnt);
 				m_arrOcclusionLightOwners[i] = pEnt;
 			}
 		}
@@ -77,9 +77,9 @@ void CBrush::SetLightmap(RenderLMData* pLMData, float* pTexCoords, UINT iNumTexC
 
 	IRenderer* pIRenderer = GetRenderer();
 
-	assert(iNumTexCoords);
+	CRYASSERT(iNumTexCoords);
 #ifndef __linux
-	assert(!IsBadReadPtr(pTexCoords, sizeof(float) * 2 * iNumTexCoords));
+	CRYASSERT(!IsBadReadPtr(pTexCoords, sizeof(float) * 2 * iNumTexCoords));
 #endif
 	m_arrLMData[nLod].m_pLMData = pLMData;
 
@@ -120,7 +120,7 @@ void CBrush::SetLightmap(RenderLMData* pLMData, float* pTexCoords, UINT iNumTexC
 			GetPos().x, GetPos().y, GetPos().z,
 			iNumTexCoords, pLeafBuffer->m_SecVertCount);
 		Warning(0, pIStatObj->GetFileName(), szBuffer);
-		// assert(pLeafBuffer->m_SecVertCount == iNumTexCoords);
+		// CRYASSERT(pLeafBuffer->m_SecVertCount == iNumTexCoords);
 		return;
 	}
 

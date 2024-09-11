@@ -195,9 +195,9 @@ void CStatObj::Render(const SRendParams& rParams, const Vec3& t, int nLodLevel)
 	pObj->m_fHeatFactor = rParams.fHeatAmount;
 
 	pObj->m_AmbColor = rParams.vAmbientColor;
-	assert(pObj->m_AmbColor.x >= 0 && pObj->m_AmbColor.x <= 1.f);
-	assert(pObj->m_AmbColor.y >= 0 && pObj->m_AmbColor.y <= 1.f);
-	assert(pObj->m_AmbColor.z >= 0 && pObj->m_AmbColor.z <= 1.f);
+	CRYASSERT(pObj->m_AmbColor.x >= 0 && pObj->m_AmbColor.x <= 1.f);
+	CRYASSERT(pObj->m_AmbColor.y >= 0 && pObj->m_AmbColor.y <= 1.f);
+	CRYASSERT(pObj->m_AmbColor.z >= 0 && pObj->m_AmbColor.z <= 1.f);
 
 	if (GetCVars()->e_shadow_maps)
 		pObj->m_pShadowCasters = rParams.pShadowMapCasters;
@@ -392,7 +392,7 @@ void CStatObj::RenderLeafBuffer(const SRendParams & rParams, CCObject * pObj)
 			int nMatId = pMat->m_nCGFMaterialID;
 			if(nMatId<0)
 			{
-				//				assert(0);
+				//				CRYASSERT(0);
 				continue;
 			}
 
@@ -408,7 +408,7 @@ void CStatObj::RenderLeafBuffer(const SRendParams & rParams, CCObject * pObj)
 		IShader					* e  = pMat->shaderItem.m_pShader;
 		SRenderShaderResources* sr = pMat->shaderItem.m_pShaderResources;
 
-		//		assert(e && pREOcLeaf);
+		//		CRYASSERT(e && pREOcLeaf);
 
 		if (pREOcLeaf && e)
 		{
@@ -420,7 +420,7 @@ void CStatObj::RenderLeafBuffer(const SRendParams & rParams, CCObject * pObj)
 
 			if(rParams.pfCustomData)
 			{
-				assert(!pREOcLeaf->m_CustomData);
+				CRYASSERT(!pREOcLeaf->m_CustomData);
 				pREOcLeaf->m_CustomData = rParams.pfCustomData;
 			}
 

@@ -117,7 +117,7 @@ void CObjManager::DrawObjSpritesSorted(list2<CStatObjInst*>* pList, float fMaxVi
 
 			while (angle < 0) angle += 360;
 
-			assert(angle >= 0 && angle / FAR_TEX_ANGLE < FAR_TEX_COUNT);
+			CRYASSERT(angle >= 0 && angle / FAR_TEX_ANGLE < FAR_TEX_COUNT);
 
 			int tid = pBody->m_arrSpriteTexID[angle / FAR_TEX_ANGLE];
 
@@ -213,8 +213,8 @@ void CObjManager::DrawObjSpritesSorted(list2<CStatObjInst*>* pList, float fMaxVi
 					*/
 				struct_VERTEX_FORMAT_P3F_TEX2F* pVerts = (struct_VERTEX_FORMAT_P3F_TEX2F*)(arrVideoBuffers[nCurrBufId])->m_VS[VSF_GENERAL].m_VData;
 
-				assert(i * 6 + 5 < (MAX_VERTS_NUM * 3 / 2));
-				assert(i * 4 + 3 < MAX_VERTS_NUM);
+				CRYASSERT(i * 6 + 5 < (MAX_VERTS_NUM * 3 / 2));
+				CRYASSERT(i * 4 + 3 < MAX_VERTS_NUM);
 
 				struct_VERTEX_FORMAT_P3F_TEX2F VertQuad[4];
 

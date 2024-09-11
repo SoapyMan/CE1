@@ -61,7 +61,7 @@ void CBasicArea::SerializeArea(bool bSave)
 	}
 	else
 	{
-		assert(m_lstEntities[STATIC_ENTITIES].Count() == 0);
+		CRYASSERT(m_lstEntities[STATIC_ENTITIES].Count() == 0);
 		m_lstEntities[STATIC_ENTITIES].Reset();
 
 		m_eSStatus = eSStatus_Ready;
@@ -102,7 +102,7 @@ void CBasicArea::UnmakeAreaBrush()
 		{
 			IEntityRender* pEntityRender = m_lstEntities[STATIC_ENTITIES].GetAt(i);
 			pEntityRender->m_dwRndFlags &= ~ERF_MERGED;
-			assert(!(pEntityRender->m_dwRndFlags & ERF_MERGED));
+			CRYASSERT(!(pEntityRender->m_dwRndFlags & ERF_MERGED));
 		}
 
 	m_lstAreaBrush.Clear();
@@ -139,7 +139,7 @@ void CBasicArea::DrawEntities(int nFogVolumeID, int nDLightMask,
 	for (int i = 0; i < pSources->Count(); i++)
 	{
 		CDLight* pDynLight = pSources->Get(i);
-		assert(pDynLight->m_Id == i || pDynLight->m_Id == -1);
+		CRYASSERT(pDynLight->m_Id == i || pDynLight->m_Id == -1);
 		if (pDynLight->m_Flags & DLF_SUN)
 		{
 			nDLightMaskNoSun &= ~(1 << pDynLight->m_Id);
@@ -184,8 +184,8 @@ void CBasicArea::DrawEntities(int nFogVolumeID, int nDLightMask,
 
 				// get view distance
 				inf.m_fEntDistance = cry_sqrtf(fEntDistanceSQ);
-				assert(inf.m_fEntDistance >= 0 && _finite(inf.m_fEntDistance));
-				assert(inf.m_fEntDistance <= inf.m_fWSMaxViewDist);
+				CRYASSERT(inf.m_fEntDistance >= 0 && _finite(inf.m_fEntDistance));
+				CRYASSERT(inf.m_fEntDistance <= inf.m_fWSMaxViewDist);
 
 				TmpEntList.Add(&inf);
 			}
@@ -202,7 +202,7 @@ void CBasicArea::DrawEntities(int nFogVolumeID, int nDLightMask,
 					cryPrefetchT0SSE(pNext);
 				}
 
-				assert(fSectorMinDist < pEntityRender->m_fWSMaxViewDist);
+				CRYASSERT(fSectorMinDist < pEntityRender->m_fWSMaxViewDist);
 
 				pObjManager->RenderObjectVegetationNonCastersNoFogVolume(pEntityRender,
 					nDLightMaskNoSun, EntViewCamera, bNotAllInFrustum,
@@ -238,8 +238,8 @@ void CBasicArea::DrawEntities(int nFogVolumeID, int nDLightMask,
 
 				// get view distance
 				inf.m_fEntDistance = cry_sqrtf(fEntDistanceSQ);
-				assert(inf.m_fEntDistance >= 0 && _finite(inf.m_fEntDistance));
-				assert(inf.m_fEntDistance <= inf.m_fWSMaxViewDist);
+				CRYASSERT(inf.m_fEntDistance >= 0 && _finite(inf.m_fEntDistance));
+				CRYASSERT(inf.m_fEntDistance <= inf.m_fWSMaxViewDist);
 
 				TmpEntList.Add(&inf);
 			}
@@ -256,7 +256,7 @@ void CBasicArea::DrawEntities(int nFogVolumeID, int nDLightMask,
 					cryPrefetchT0SSE(pNext);
 				}
 
-				assert(fSectorMinDist < pEntityRender->m_fWSMaxViewDist);
+				CRYASSERT(fSectorMinDist < pEntityRender->m_fWSMaxViewDist);
 
 				pObjManager->RenderObject(pEntityRender, nFogVolumeID,
 					nDLightMask, bLMapGeneration, EntViewCamera, pvAmbColor, pvDynAmbColor, pFogVolume, bNotAllInFrustum,
@@ -324,7 +324,7 @@ void CBasicArea::DrawEntities(int nFogVolumeID, int nDLightMask,
 	}
 	else if (nStatics || GetCVars()->e_entities)
 	{ // render dynamics or statics uncompiled
-		assert(!m_StaticEntitiesSorted || !nStatics);
+		CRYASSERT(!m_StaticEntitiesSorted || !nStatics);
 		list2<struct IEntityRender*>& EntList = m_lstEntities[nStatics];
 		for (int i = 0; i < EntList.Count(); i++)
 		{
@@ -355,7 +355,7 @@ void CBasicArea::Unload(bool bUnloadOnlyVegetations, const Vec3d& vVegetPos)
 				{
 					int nCountBefore = m_lstEntities[STATIC_ENTITIES].Count();
 					delete m_lstEntities[STATIC_ENTITIES].GetAt(i); // will also remove it from this list
-					assert(m_lstEntities[STATIC_ENTITIES].Count() == (nCountBefore - 1));
+					CRYASSERT(m_lstEntities[STATIC_ENTITIES].Count() == (nCountBefore - 1));
 					i--;
 				}
 			}
@@ -366,7 +366,7 @@ void CBasicArea::Unload(bool bUnloadOnlyVegetations, const Vec3d& vVegetPos)
 		while (m_lstEntities[STATIC_ENTITIES].Count())
 		{
 			EERType eType = m_lstEntities[STATIC_ENTITIES].GetAt(0)->GetEntityRenderType();
-			assert(eType == eERType_Brush || eType == eERType_Vegetation);
+			CRYASSERT(eType == eERType_Brush || eType == eERType_Vegetation);
 			int nCountBefore = m_lstEntities[STATIC_ENTITIES].Count();
 
 			if (eType != eERType_Vegetation)
@@ -376,9 +376,9 @@ void CBasicArea::Unload(bool bUnloadOnlyVegetations, const Vec3d& vVegetPos)
 			IEntityRender* pEntityRender = m_lstEntities[STATIC_ENTITIES].GetAt(0); // will also remove it from this list
 			delete pEntityRender; // will also remove it from this list
 
-			assert(m_lstEntities[STATIC_ENTITIES].Count() == (nCountBefore - 1));
+			CRYASSERT(m_lstEntities[STATIC_ENTITIES].Count() == (nCountBefore - 1));
 		}
-		assert(m_lstEntities[STATIC_ENTITIES].Count() == 0);
+		CRYASSERT(m_lstEntities[STATIC_ENTITIES].Count() == 0);
 		m_eSStatus = eSStatus_Unloaded;
 	}
 
@@ -430,13 +430,13 @@ void CBasicArea::UnregisterDynamicEntities()
 	while (m_lstEntities[DYNAMIC_ENTITIES].Count())
 	{
 		EERType eType = m_lstEntities[DYNAMIC_ENTITIES].GetAt(0)->GetEntityRenderType();
-		assert(eType != eERType_Brush && eType != eERType_Vegetation);
+		CRYASSERT(eType != eERType_Brush && eType != eERType_Vegetation);
 		int nCountBefore = m_lstEntities[DYNAMIC_ENTITIES].Count();
 		//		delete m_lstEntities[DYNAMIC_ENTITIES].GetAt(0); // will also remove it from this list
 		Get3DEngine()->UnRegisterEntity(m_lstEntities[DYNAMIC_ENTITIES].GetAt(0));
-		assert(m_lstEntities[DYNAMIC_ENTITIES].Count() == (nCountBefore - 1));
+		CRYASSERT(m_lstEntities[DYNAMIC_ENTITIES].Count() == (nCountBefore - 1));
 	}
-	assert(m_lstEntities[DYNAMIC_ENTITIES].Count() == 0);
+	CRYASSERT(m_lstEntities[DYNAMIC_ENTITIES].Count() == 0);
 }
 
 int __cdecl CObjManager__Cmp_EntTmpDistance(const void* v1, const void* v2);
@@ -476,7 +476,7 @@ void CBasicArea::SortStaticInstancesBySize(VolumeInfo* pFogVolume)
 		if (pFogVolume)
 		{ // fog is set only for outdoors
 			Vec3d vBoxMin, vBoxMax;
-			assert(pEntityRender->m_pSector);
+			CRYASSERT(pEntityRender->m_pSector);
 			pEntityRender->GetBBox(vBoxMin, vBoxMax);
 			if (pFogVolume->IntersectBBox(vBoxMin, vBoxMax))
 				bInFogVolume = true;
@@ -728,7 +728,7 @@ void CBasicArea::MakeAreaBrush()
 					lstChunks.Add(newMatInfo);
 				}
 				else
-					assert(!newMatInfo.nNumVerts);
+					CRYASSERT(!newMatInfo.nNumVerts);
 			}
 			nCurVertsNum += pLB->m_SecVertCount;
 
@@ -786,8 +786,8 @@ void CBasicArea::MakeAreaBrush()
 				lstChunks[i].nFirstVertId, lstChunks[i].nNumVerts,
 				lstChunks[i].nFirstIndexId, lstChunks[i].nNumIndices, i, true);
 
-			assert(lstChunks[i].GetShaderItem().m_pShaderResources);
-			assert(lstChunks[i].GetShaderItem().m_pShader);
+			CRYASSERT(lstChunks[i].GetShaderItem().m_pShaderResources);
+			CRYASSERT(lstChunks[i].GetShaderItem().m_pShader);
 			pAreaLB->m_pMats->Get(i)->shaderItem = lstChunks[i].GetShaderItem();
 
 			pAreaLB->m_pMats->Get(i)->shaderItem.m_pShader->AddRef();
@@ -832,8 +832,8 @@ void CBasicArea::MakeAreaBrush()
 		Vec3d vCenter = (pAreaBrush->m_vWSBoxMin + pAreaBrush->m_vWSBoxMax) * 0.5f;
 		float fEntDistance = GetDist2D(vCamPos.x, vCamPos.y, vCenter.x, vCenter.y);
 
-		assert(fEntDistance >= 0);
-		assert(_finite(fEntDistance));
+		CRYASSERT(fEntDistance >= 0);
+		CRYASSERT(_finite(fEntDistance));
 
 		m_lstAreaBrush.Add(pAreaBrush);
 	}

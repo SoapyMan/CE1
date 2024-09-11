@@ -95,7 +95,7 @@ bool CXDebugKeyboard::Init(CInput * pInput, ILog *pLog)
 
   // Init the debug keyboard
   dwReturn = XInputDebugInitKeyboardQueue(&xdkp);
-  assert(dwReturn == ERROR_SUCCESS);
+  CRYASSERT(dwReturn == ERROR_SUCCESS);
 
   DWORD dwDeviceMask = XGetDevices( XDEVICE_TYPE_DEBUG_KEYBOARD );
 

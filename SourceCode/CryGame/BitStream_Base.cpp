@@ -137,7 +137,7 @@ bool CBitStream_Base::ReadBitStream( CStream &stm, Vec3 &Value, const eBitStream
 
 bool CBitStream_Base::WriteBitStream( CStream &stm, const char *Value, const DWORD nBufferSize, const eBitStreamHint eHint )
 {
-	assert(strlen(Value)<nBufferSize);
+	CRYASSERT(strlen(Value)<nBufferSize);
 	return stm.Write(Value);
 }
 

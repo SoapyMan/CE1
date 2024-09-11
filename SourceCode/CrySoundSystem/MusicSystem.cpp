@@ -1188,10 +1188,10 @@ void CMusicSystem::MixStreams(void* pBuffer, int nSamples)
 			  }
 			/**/
 
-			/*assert (arrBuffer[nSize-1] == 0xCECECECE);
-				   assert (IsHeapValid());
+			/*CRYASSERT (arrBuffer[nSize-1] == 0xCECECECE);
+				   CRYASSERT (IsHeapValid());
 				   memcpy (pBuffer, arrBuffer, nSamplesToRead*4);
-				   assert (IsHeapValid());*/
+				   CRYASSERT (IsHeapValid());*/
 		}
 		if (bStreamEnd)
 		{
@@ -1403,7 +1403,7 @@ CMusicPatternInstance* CMusicSystem::ChoosePattern(SMusicMood* pMood, int nLayer
 			break;
 		}
 	}
-	ASSERT(strlen(sPattern) > 0);
+	CRYASSERT(strlen(sPattern) > 0);
 	if (nLayer == MUSICLAYER_INCIDENTAL)	// make sure we dont choose a pattern which is already played
 	{
 		bool bPatternFound;

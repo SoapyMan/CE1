@@ -54,7 +54,7 @@ bool CMusicPattern::Open(const char* pszFilename)
 
 	ISystem* pSystem(m_pMusicSystem->GetSystem());
 	ICryPak* pPak(pSystem->GetIPak());
-	assert(0 != pPak);
+	CRYASSERT(0 != pPak);
 
 	string strFilename(pszFilename);
 	if (0 != stricmp(strFilename.c_str() + strFilename.size() - 4, ".ogg"))

@@ -135,7 +135,7 @@ bool CWeaponSystemEx::Init(CXGame *pGame, bool bRaiseError)
 	while(m_soWeaponClassesTable->MoveNext())
 	{
 		// we assume that the WeaponParams table always contains 'key = subtable' pairs
-		assert(m_soWeaponClassesTable->GetCurrentType() == svtObject);
+		CRYASSERT(m_soWeaponClassesTable->GetCurrentType() == svtObject);
 		const char *sWeaponClassName;
 
 		m_soWeaponClassesTable->GetCurrentKey(sWeaponClassName);
@@ -172,7 +172,7 @@ bool CWeaponSystemEx::Init(CXGame *pGame, bool bRaiseError)
 	while(m_soProjectileTable->MoveNext())
 	{
 		// we assume that the Projectiles table always contains 'key = subtable' pairs
-		assert(m_soProjectileTable->GetCurrentType() == svtObject);
+		CRYASSERT(m_soProjectileTable->GetCurrentType() == svtObject);
 		const char *sProjectileName;
 
 		_SmartScriptObject soProjectile(m_pScriptSystem);
@@ -181,7 +181,7 @@ bool CWeaponSystemEx::Init(CXGame *pGame, bool bRaiseError)
 
 		{
 			const char *model="";
-			bool bOk=soProjectile->GetValue("model",model);				assert(bOk);
+			bool bOk=soProjectile->GetValue("model",model);				CRYASSERT(bOk);
 
 			if(!bOk)continue;
 
@@ -189,7 +189,7 @@ bool CWeaponSystemEx::Init(CXGame *pGame, bool bRaiseError)
 
 			IEntityClassRegistry *pReg=GetGame()->GetClassRegistry();
 
-			EntityClass *pClass = pReg->GetByClass(sProjectileName);					assert(pClass);
+			EntityClass *pClass = pReg->GetByClass(sProjectileName);					CRYASSERT(pClass);
 
 			if (pClass)
 			{
@@ -369,7 +369,7 @@ void CWeaponSystemEx::Read(CStream &stm)
 
 void CWeaponSystemEx::Write(CStream &stm) const
 {
-	assert(m_vWeaponClasses.size() <= 255);
+	CRYASSERT(m_vWeaponClasses.size() <= 255);
 
 	// number of weapon classes
 	stm.Write((BYTE)m_vWeaponClasses.size());

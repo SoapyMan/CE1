@@ -346,7 +346,7 @@ unsigned CRefStreamEngine::FinalizeIOJobs(unsigned nFlags)
 		// to avoid locking the whole array during execution of the callbacks:
 		AUTO_UNLOCK(m_csIOExecuted);
 
-		assert(pProxy->IsIOExecuted());
+		CRYASSERT(pProxy->IsIOExecuted());
 
 		int64 nStartTime, nEndTime;
 		QueryPerformanceCounter((LARGE_INTEGER*)&nStartTime);

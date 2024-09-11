@@ -60,7 +60,7 @@ void CCharacterTrack::SerializeKey(ICharacterKey& key, XmlNodeRef& keyNode, bool
 
 void CCharacterTrack::GetKeyInfo(int key, const char*& description, float& duration)
 {
-	assert(key >= 0 && key < (int)m_keys.size());
+	CRYASSERT(key >= 0 && key < (int)m_keys.size());
 	CheckValid();
 	description = 0;
 	duration = 0;

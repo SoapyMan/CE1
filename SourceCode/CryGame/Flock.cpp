@@ -1277,7 +1277,7 @@ void CFlock::SetPercentEnabled( int percent )
 //////////////////////////////////////////////////////////////////////////
 void CFlock::SetEntity( IEntity* entity )
 {
-	assert( entity );
+	CRYASSERT( entity );
 	m_pEntity = entity;
 	m_pEntity->SetContainer( this );
 	m_pEntity->SetNeedUpdate(true);

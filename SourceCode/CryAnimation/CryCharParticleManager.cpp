@@ -245,7 +245,7 @@ void CryCharParticleManager::validateThis()
 	for (unsigned i = 0; i < m_arrEmitters.size(); ++i)
 		if (m_arrEmitters[i].m_bActive)
 			++numActiveEmitters;
-	assert(numActiveEmitters == m_numActive);
+	CRYASSERT(numActiveEmitters == m_numActive);
 #endif
 }
 

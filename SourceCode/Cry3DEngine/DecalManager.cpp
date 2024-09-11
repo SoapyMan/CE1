@@ -152,7 +152,7 @@ bool CDecalManager::RayLeafBufferIntersection(CLeafBuffer* pLeafBuffer, const Ve
 	// get indices
 	ushort* pInds = pLeafBuffer->GetIndices(0);
 	int nInds = pLeafBuffer->m_Indices.m_nItems;
-	assert(nInds % 3 == 0);
+	CRYASSERT(nInds % 3 == 0);
 
 	HitPosInfo arrResult[16];
 	memset(arrResult, 0, sizeof(arrResult));
@@ -316,7 +316,7 @@ void CDecalManager::Spawn(CryEngineDecalInfo DecalInfo, float fMaxViewDistance, 
 	{ // transform decal from world space into entity space
 		Matrix44 objMat;
 		IStatObj* pEntObject = DecalInfo.pDecalOwner->GetEntityStatObj(DecalInfo.nPartID, &objMat);
-		assert(pEntObject);
+		CRYASSERT(pEntObject);
 		objMat.Invert44();
 
 		DecalInfo.vNormal = objMat.TransformVectorOLD(DecalInfo.vNormal);
@@ -505,7 +505,7 @@ void CDecalManager::OnEntityDeleted(IEntityRender* pEntityRender)
 		{
 			if (m_arrDecals[i].m_pDecalOwner == pEntityRender)
 			{
-				assert(pEntityRender->GetEntityRS());
+				CRYASSERT(pEntityRender->GetEntityRS());
 				m_arrbActiveDecals[i] = false;
 				if (m_arrDecals[i].m_pBigDecalLeafBuffer)
 				{
@@ -527,7 +527,7 @@ void CDecalManager::FillBigDecalIndices(CLeafBuffer* pLeafBuffer, Vec3d vPos, fl
 	ushort* pInds = pLeafBuffer->GetIndices(0);
 	int nInds = pLeafBuffer->m_Indices.m_nItems;
 
-	assert(nInds % 3 == 0);
+	CRYASSERT(nInds % 3 == 0);
 
 	plstIndices->Clear();
 	vProjDir.Normalize();

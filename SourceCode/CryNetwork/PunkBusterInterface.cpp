@@ -226,7 +226,7 @@ bool CPunkBusterInterface::ReadStringFromRegistry(const string& szKeyName, const
 void CPunkBusterInterface::OnAddClient(CIPAddress& clientIP)
 {
 	// Must have server by this point.
-//	assert( m_pServer );
+//	CRYASSERT( m_pServer );
 	if (!m_pServer) return;//happens in single-player mode
 
 	//at this point in the process, just add the client address and idhash, see PBgetClientInfo() later in this source file

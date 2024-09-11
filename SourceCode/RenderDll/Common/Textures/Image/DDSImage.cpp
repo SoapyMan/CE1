@@ -58,7 +58,7 @@ static int sDDSSize(int sx, int sy, EImFormat eF)
 		return sx * sy * 3;
 		break;
 	default:
-		assert(0);
+		CRYASSERT(0);
 	}
 	return 0;
 }
@@ -68,7 +68,7 @@ int CImageDDSFile::mfSizeWithMips(int filesize, int sx, int sy, int nMips)
 	int nSize = 0;
 	for (int i = 0; i < nMips; i++)
 	{
-		assert(sx || sy);
+		CRYASSERT(sx || sy);
 		if (!sx)
 			sx = 1;
 		if (!sy)
@@ -77,7 +77,7 @@ int CImageDDSFile::mfSizeWithMips(int filesize, int sx, int sy, int nMips)
 		sx >>= 1;
 		sy >>= 1;
 	}
-	assert((int)(filesize - sizeof(DDS_HEADER) - 4) >= nSize);
+	CRYASSERT((int)(filesize - sizeof(DDS_HEADER) - 4) >= nSize);
 	return nSize;
 }
 
@@ -298,7 +298,7 @@ void WriteDDS(byte* dat, int wdt, int hgt, int Size, const char* name, EImFormat
 		ddsh.ddspf = DDSPF_A8R8G8B8;
 		break;
 	default:
-		assert(0);
+		CRYASSERT(0);
 		return;
 	}
 	fwrite(&ddsh, 1, sizeof(ddsh), fp);

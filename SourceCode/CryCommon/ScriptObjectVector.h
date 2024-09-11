@@ -43,7 +43,7 @@ public:
 			m_pSO->GetValueChain("z", v.z);
 			m_pSO->EndSetGetChain();
 		}
-		else assert(0 && "validate before calling Get()");
+		else CRYASSERT(0 && "validate before calling Get()");
 
 		return v;
 	}

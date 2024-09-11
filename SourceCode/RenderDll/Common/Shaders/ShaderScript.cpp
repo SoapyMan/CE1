@@ -871,7 +871,7 @@ char* CShader::mfPreprCheckIncludes(char* buf, const char* drn, const char* name
 		pbuf[li] = 0;
 		RemoveCR(pbuf);
 		char* npbuf = RemoveComments(pbuf);
-		assert(npbuf == pbuf);
+		CRYASSERT(npbuf == pbuf);
 		npbuf = mfPreprCheckIncludes(pbuf, drnn, name);
 		if (pbuf != npbuf)
 		{
@@ -943,7 +943,7 @@ int CShader::mfRemoveScript_ifdef(char* posStart, char* posEnd, bool bRemoveAll,
 	}
 	if (nNewPos > 0)
 	{
-		assert(nNewPos < nPos);
+		CRYASSERT(nNewPos < nPos);
 		char ch = buf[nPos];
 		buf[nPos] = 0;
 		mfPreprCheckConditions(&buf[nNewPos], fileName);
@@ -1828,9 +1828,9 @@ char* CShader::mfScriptForFileName(const char* name, SShader* shGen, uint64 nMas
 	if (shGen && shGen->m_ShaderGenParams)
 	{
 		int i;
-		//assert(nMaskGen);
+		//CRYASSERT(nMaskGen);
 		SShaderGen* shG = shGen->m_ShaderGenParams;
-		assert(shG);
+		CRYASSERT(shG);
 		for (i = 0; i < shG->m_BitMask.Num(); i++)
 		{
 			if (shG->m_BitMask[i]->m_Mask & nMaskGen)
@@ -1895,7 +1895,7 @@ int CShader::mfLoadSubdir(char* drn, int n)
 	  handle = iSystem->GetIPak()->FindFirst ("Shaders\\HWScripts\\Declarations\\CGVShaders\\*.crycg", &fileinfo);
 	  if (handle == -1)
 	  {
-		assert(0);
+		CRYASSERT(0);
 	  }
 
 	  do
@@ -2005,7 +2005,7 @@ int CShader::mfLoadSubdir(char* drn, int n)
 			  }
 			  else
 			  {
-				assert(0);
+				CRYASSERT(0);
 				bValid = 0;
 			  }
 			  if (bValid)
@@ -2104,7 +2104,7 @@ int CShader::mfLoadSubdir(char* drn, int n)
 				bValid = false;
 			  else
 			  {
-				assert(0);
+				CRYASSERT(0);
 				bValid = 0;
 			  }
 			  if (bValid)
@@ -2146,7 +2146,7 @@ int CShader::mfLoadSubdir(char* drn, int n)
 	  handle = iSystem->GetIPak()->FindFirst ("Shaders\\HWScripts\\Declarations\\CGPShaders\\*.crycg", &fileinfo);
 	  if (handle == -1)
 	  {
-		assert(0);
+		CRYASSERT(0);
 	  }
 
 	  do
@@ -2259,7 +2259,7 @@ int CShader::mfLoadSubdir(char* drn, int n)
 				bValid = false;
 			  else
 			  {
-				assert(0);
+				CRYASSERT(0);
 				bValid = 0;
 			  }
 			  if (bValid)
@@ -2551,7 +2551,7 @@ SShader* CShader::mfSpawn(char* name, SShader* ef, SShader* efGen, uint64 nMaskG
 		if (ef1)
 			ef1->m_WriteTime = m_WriteTime[m_CurEfsNum][sFE->m_Ind];
 		else
-			assert(0);
+			CRYASSERT(0);
 		gShObjectNotFound = BackEr;
 		delete[] pScriptBuf;
 		m_CurEfsNum = BackCurEfsNum;
@@ -2610,8 +2610,8 @@ SShader* CShader::mfForName(const char* nameSh, EShClass Class, int flags, const
 			fe = &it->second;
 		if (fe)
 		{
-			assert(fe->m_Ef->m_nMaskGen == nMaskGen);
-			assert(fe->m_Ef->m_pGenShader == efGen);
+			CRYASSERT(fe->m_Ef->m_nMaskGen == nMaskGen);
+			CRYASSERT(fe->m_Ef->m_pGenShader == efGen);
 		}
 	}
 
@@ -2679,7 +2679,7 @@ SShader* CShader::mfForName(const char* nameSh, EShClass Class, int flags, const
 		}
 		if (efGen && ef)
 		{
-			assert(efGen != ef);
+			CRYASSERT(efGen != ef);
 			if (!efGen->m_DerivedShaders)
 				efGen->m_DerivedShaders = new TArray<SShader*>;
 			efGen->m_DerivedShaders->AddElem(ef);

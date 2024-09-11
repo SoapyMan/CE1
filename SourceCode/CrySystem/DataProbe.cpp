@@ -653,9 +653,9 @@ static void GetModuleCodeAddress(void* base, void** pCodeStartAddress, int* nCod
 {
 	const IMAGE_DOS_HEADER* dos_head = (IMAGE_DOS_HEADER*)base;
 
-	assert(base);
-	assert(pCodeStartAddress);
-	assert(nCodeSize);
+	CRYASSERT(base);
+	CRYASSERT(pCodeStartAddress);
+	CRYASSERT(nCodeSize);
 
 	*pCodeStartAddress = 0;
 	*nCodeSize = 0;

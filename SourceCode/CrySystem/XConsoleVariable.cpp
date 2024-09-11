@@ -16,7 +16,7 @@
 
 CXConsoleVariable::CXConsoleVariable(CXConsole* pConsole, IScriptSystem* pSS, const char* sName, int nFlags, int nType, const char* help)
 {
-	assert(pConsole);
+	CRYASSERT(pConsole);
 
 	m_psHelp = help;
 
@@ -60,7 +60,7 @@ CXConsoleVariable::CXConsoleVariable(CXConsole* pConsole, IScriptSystem* pSS, co
 
 CXConsoleVariable::CXConsoleVariable(CXConsole* pConsole, IScriptSystem* pSS, const char* sName, void* pVar, int nFlags, int nType, const char* help)
 {
-	assert(pConsole);
+	CRYASSERT(pConsole);
 
 	m_psHelp = help;
 	m_pConsole = pConsole;

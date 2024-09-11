@@ -84,7 +84,7 @@ static double measure_clock_speed(double& SecondsPerCycle)
 	QueryPerformanceFrequency(&Freq);
 
 	double Frequency = double((INT64)(Freq.HighPart) * ((INT64)65536 * (INT64)65536) + (INT64)Freq.LowPart);
-	assert(Frequency != 0);
+	CRYASSERT(Frequency != 0);
 
 	QueryPerformanceCounter(&c0);
 	double ts0 = sCycles2();

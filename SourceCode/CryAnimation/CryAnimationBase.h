@@ -51,7 +51,7 @@ extern CryAnimVars* g_pCVariables;
 // CryCharManager instance). Also initializes the console variables
 __forceinline void g_InitInterfaces(ISystem* pISystem)
 {
-	assert(pISystem);
+	CRYASSERT(pISystem);
 	g_pISystem = pISystem;
 	g_pIConsole = pISystem->GetIConsole();
 	g_pITimer = pISystem->GetITimer();

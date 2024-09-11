@@ -154,7 +154,7 @@ struct GlobalAnimation
 		{
 #ifdef _DEBUG
 			for (ControllerArray::iterator it = arrCtrls.begin(); it != arrCtrls.end(); ++it)
-				assert((*it)->NumRefs() == 1); // only this object references the controllers now
+				CRYASSERT((*it)->NumRefs() == 1); // only this object references the controllers now
 #endif
 			arrCtrls.clear(); // nobody uses the controllers; clean them up. This makes the animation effectively unloaded
 		}

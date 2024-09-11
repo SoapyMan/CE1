@@ -51,8 +51,8 @@ void CSectorInfo::SetTextures(bool bMakeUncompressedForEditing)
 				if (m_nTextureID != m_nLowLodTextureID)
 				{
 					m_pTerrain->m_pTexturePool->RemoveTexture(m_nTextureID);
-					assert(m_nTextureID);
-					assert(m_nTextureID != m_nLowLodTextureID);
+					CRYASSERT(m_nTextureID);
+					CRYASSERT(m_nTextureID != m_nLowLodTextureID);
 					m_nTextureID = m_nLowLodTextureID;
 					m_cTextureMML = MAX_TEX_MML_LEVEL;
 				}
@@ -137,7 +137,7 @@ int CSectorInfo::MakeSectorTextureDDS(int sec_id, int nMipMapLevelToLoad, bool b
 		nTexSize = nTexSize / 2;
 	}
 
-	assert(m_pTerrain->m_nSectorTextureDataSizeBytes >= (GetCVars()->e_terrain_texture_mipmaps ? nDataSize : nTexSize * nTexSize / 2));
+	CRYASSERT(m_pTerrain->m_nSectorTextureDataSizeBytes >= (GetCVars()->e_terrain_texture_mipmaps ? nDataSize : nTexSize * nTexSize / 2));
 
 	// read texture
 	GetSystem()->GetIPak()->FSeek(m_pTerrain->m_fpTerrainTextureFile, file_offset, SEEK_SET);
@@ -172,7 +172,7 @@ void CSectorInfo::UpdateSectorTexture(unsigned char * pTexData, int nSizeOffTexD
   }
   else
   {
-	assert(0);
+	CRYASSERT(0);
 //    m_nTextureID = GetRenderer()->DownLoadToVideo Memory(pTexData,
   //    nTexSize,nTexSize,eTF_0888,eTF_DXT1,0,false);
   }
@@ -195,7 +195,7 @@ void CSectorInfo::RemoveSectorTextures(bool bRemoveLowLod)
 	if (m_nTextureID)
 	{
 		m_pTerrain->m_pTexturePool->RemoveTexture(m_nTextureID);
-		assert(m_nLowLodTextureID);
+		CRYASSERT(m_nLowLodTextureID);
 		m_nTextureID = m_nLowLodTextureID;
 		m_cTextureMML = MAX_TEX_MML_LEVEL;
 	}

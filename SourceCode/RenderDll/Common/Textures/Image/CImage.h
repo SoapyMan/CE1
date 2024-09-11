@@ -2,8 +2,6 @@
 #ifndef CIMAGE_H
 #define CIMAGE_H
 
-#include <assert.h>
-
 #define CHK(x) x
 
 #define SH_LITTLE_ENDIAN

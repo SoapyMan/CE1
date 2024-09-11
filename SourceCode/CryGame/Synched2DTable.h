@@ -95,7 +95,7 @@ private: // --------------------------------------------------------------------
 		//! only if IsFloat() returns true
 		float GetFloat() const
 		{
-			assert(IsFloat());
+			CRYASSERT(IsFloat());
 
 			return m_fValue;
 		}
@@ -103,14 +103,14 @@ private: // --------------------------------------------------------------------
 		//! only if IsFloat() returns false
 		string GetString() const
 		{
-			assert(!IsFloat());
+			CRYASSERT(!IsFloat());
 
 			return m_sValue;
 		}
 		//!
 		void SetFloat( const float fValue )
 		{
-			assert(fValue!=FLT_MAX);
+			CRYASSERT(fValue!=FLT_MAX);
 
 			m_fValue=fValue;
 		}
@@ -149,7 +149,7 @@ private: // --------------------------------------------------------------------
 		void SetX( const uint32 uiX, const STableEntry &rValue )
 		{
 			if(uiX==0xff)
-				{ assert(0); return; }	// (0xff is used to mark the whole line dirty)
+				{ CRYASSERT(0); return; }	// (0xff is used to mark the whole line dirty)
 
 			EnsureSize(uiX);
 			m_Entries[uiX]=rValue;
@@ -159,7 +159,7 @@ private: // --------------------------------------------------------------------
 		STableEntry GetX( const uint32 uiX )
 		{
 			if(uiX==0xff)
-				{ assert(0); return STableEntry(); }	// (0xff is used to mark the whole line dirty)
+				{ CRYASSERT(0); return STableEntry(); }	// (0xff is used to mark the whole line dirty)
 
 			if(uiX>=m_Entries.size())
 				return STableEntry();
@@ -188,7 +188,7 @@ private: // --------------------------------------------------------------------
 		void SetXY( const uint32 uiX, const uint32 uiY, const STableEntry &rValue )
 		{
 			if(uiX==0xff)
-				{ assert(0); return; }	// (0xff is used to mark the whole line dirty)
+				{ CRYASSERT(0); return; }	// (0xff is used to mark the whole line dirty)
 
 			EnsureSize(uiY);
 			m_Lines[uiY].SetX(uiX,rValue);
@@ -197,7 +197,7 @@ private: // --------------------------------------------------------------------
 		STableEntry GetXY( const uint32 uiX, const uint32 uiY )
 		{
 			if(uiX==0xff)
-				{ assert(0); return STableEntry(); }	// (0xff is used to mark the whole line dirty)
+				{ CRYASSERT(0); return STableEntry(); }	// (0xff is used to mark the whole line dirty)
 
 			if(uiY>=m_Lines.size())
 				return STableEntry();
@@ -207,7 +207,7 @@ private: // --------------------------------------------------------------------
 
 		uint32 GetColumnCountY( const uint32 uiY ) const
 		{
-			assert(uiY<m_Lines.size());
+			CRYASSERT(uiY<m_Lines.size());
 
 			return m_Lines[uiY].GetColumnCount();
 		}

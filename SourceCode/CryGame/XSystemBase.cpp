@@ -332,7 +332,7 @@ void CXSystemBase::LoadXMLNode(XDOM::IXMLDOMNode *pInputNode, bool bSpawn)
 							if (pID)
 							{
 								iID = atoi(pID->getText());
-								ASSERT(m_pSystem->GetIEntitySystem()->IsIDUsed(iID) == false);
+								CRYASSERT(m_pSystem->GetIEntitySystem()->IsIDUsed(iID) == false);
 							}
 							if(pWeaponName)
 							{
@@ -1906,7 +1906,7 @@ void CXSystemBase::OnSpawn(IEntity *ent, CEntityDesc & ed)
 
 	// property table stuff
 	// first clone the property table
-	ASSERT(ent->GetScriptObject());
+	CRYASSERT(ent->GetScriptObject());
 	{
 		_SmartScriptObject pProperties(m_pGame->GetScriptSystem());
 		_SmartScriptObject pTemp(m_pGame->GetScriptSystem(),true);
@@ -2145,8 +2145,8 @@ bool CXSystemBase::GetTeamName(int nTeamId,char *ret)
 	TeamsMapItor itor=m_mapTeams.find(nTeamId);
 	if(itor!=m_mapTeams.end())
 	{
-		assert(ret);
-		assert(itor->second.sName.size()<256);
+		CRYASSERT(ret);
+		CRYASSERT(itor->second.sName.size()<256);
 		strcpy(ret,itor->second.sName.c_str());
 		return true;
 	}

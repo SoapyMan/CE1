@@ -263,8 +263,8 @@ void CXServerSlot::OnRemoveEntity(IEntity *pEntity)
 //////////////////////////////////////////////////////////////////////////
 void CXServerSlot::ConvertToValidPlayerName( const char *szName, char* outName, size_t sizeOfOutName )
 {
-	assert(szName);
-	assert(sizeOfOutName);
+	CRYASSERT(szName);
+	CRYASSERT(sizeOfOutName);
 
 	outName[0]=0;
 
@@ -430,7 +430,7 @@ void CXServerSlot::OnData(CStream &stm)
 ///////////////////////////////////////////////
 void CXServerSlot::SendReliable(CStream &stm,bool bSecondaryChannel)
 {
-	assert(m_pParent);
+	CRYASSERT(m_pParent);
 	m_pParent->m_NetStats.AddPacket(XSERVERMSG_UNIDENTIFIED,stm.GetSize(),true);
 
 	m_pISSlot->SendReliable(stm,bSecondaryChannel);
@@ -439,7 +439,7 @@ void CXServerSlot::SendReliable(CStream &stm,bool bSecondaryChannel)
 ///////////////////////////////////////////////
 void CXServerSlot::SendUnreliable(CStream &stm)
 {
-	assert(m_pParent);
+	CRYASSERT(m_pParent);
 	m_pParent->m_NetStats.AddPacket(XSERVERMSG_UNIDENTIFIED,stm.GetSize(),false);
 
 	m_pISSlot->SendUnreliable(stm);
@@ -502,7 +502,7 @@ void CXServerSlot::SendCommand(const char *sCmd, const Vec3 &_invPos, const Vec3
 ///////////////////////////////////////////////
 size_t CXServerSlot::SendReliableMsg( XSERVERMSG msg, CStream &stm,bool bSecondaryChannel, const char *inszName )
 {
-	assert(m_pParent);
+	CRYASSERT(m_pParent);
 
 	CStream istm;
 	istm.WritePkd(msg);
@@ -548,7 +548,7 @@ size_t CXServerSlot::SendReliableMsg( XSERVERMSG msg, CStream &stm,bool bSeconda
 ///////////////////////////////////////////////
 size_t CXServerSlot::SendUnreliableMsg(XSERVERMSG msg, CStream &stm, const char *inszName, const bool bWithSize )
 {
-	assert(m_pParent);
+	CRYASSERT(m_pParent);
 
 	CStream istm;
 	istm.WritePkd(msg);
@@ -676,7 +676,7 @@ void CXServerSlot::SetPlayerID(EntityId idPlayer)
   }
 
   IEntity *pPlayer = m_pParent->m_pISystem->GetEntity(idPlayer);
-  ASSERT(pPlayer);
+  CRYASSERT(pPlayer);
   if(pPlayer)
   {
     m_wPlayerId=idPlayer;
@@ -745,7 +745,7 @@ bool CXServerSlot::ParseIncomingStream(CStream &stm)
 
 					OnClientMsgPlayerProcessingCmd(stm);
 
-//					assert(stm.GetReadPos()==readpos+size);		// just for testing
+//					CRYASSERT(stm.GetReadPos()==readpos+size);		// just for testing
 
 					stm.Seek(readpos+size);
 				}
@@ -845,7 +845,7 @@ void CXServerSlot::OnClientMsgRate(CStream &stm)
 			break;
 
 		default:
-			assert(0);
+			CRYASSERT(0);
 			break;
 	}
 }
@@ -1292,7 +1292,7 @@ void CXServerSlot::OnClientMsgPlayerProcessingCmd(CStream &stm)
 	}
 	else if (pSlotPlayerEntity->GetClassId()==SPECTATOR_CLASS_ID)
 	{
-//		assert(!bHasVehicle);
+//		CRYASSERT(!bHasVehicle);
 
 		pe_player_dynamics pd;
 		if (!m_bLocalHost && bClientPos)

@@ -8,7 +8,7 @@
 // Name index.
 typedef INT NAME_INDEX;
 
-#define checkName ASSERT
+#define checkName CRYASSERT
 
 enum EFindName
 {

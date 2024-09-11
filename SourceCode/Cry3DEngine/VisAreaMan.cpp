@@ -394,7 +394,7 @@ void CVisAreaManager::PortalsDrawDebug()
 
 bool CVisAreaManager::SetEntityArea(IEntityRender* pEntityRS)
 {
-	assert(pEntityRS);
+	CRYASSERT(pEntityRS);
 
 	CVisArea** pVisArea = &pEntityRS->m_pVisArea;
 
@@ -475,7 +475,7 @@ bool CVisAreaManager::SetEntityArea(IEntityRender* pEntityRS)
 
 bool CVisAreaManager::UnRegisterEntity(IEntityRender* pEntityRS)
 {
-	assert(pEntityRS);
+	CRYASSERT(pEntityRS);
 
 	bool bFound = false;
 
@@ -495,7 +495,7 @@ bool CVisAreaManager::UnRegisterEntity(IEntityRender* pEntityRS)
 				if(m_lstVisAreas[i]->m_lstEntities[nStatic].Find(pEntityRS)>=0)
 				{
 					m_lstVisAreas[i]->m_lstEntities[nStatic].Delete(pEntityRS);
-					assert(0);
+					CRYASSERT(0);
 				}
 			}
 
@@ -504,7 +504,7 @@ bool CVisAreaManager::UnRegisterEntity(IEntityRender* pEntityRS)
 				if(m_lstPortals[i]->m_lstEntities[nStatic].Find(pEntityRS)>=0)
 				{
 					m_lstPortals[i]->m_lstEntities[nStatic].Delete(pEntityRS);
-					assert(0);
+					CRYASSERT(0);
 				}
 			}
 		}
@@ -1073,7 +1073,7 @@ void CVisAreaManager::MakeActiveEntransePortalsList(const CCamera& curCamera, li
 
 void CVisAreaManager::MergeCameras(CCamera& cam1, const CCamera& cam2)
 {
-	assert(0); // under development
+	CRYASSERT(0); // under development
 	/*	{
 			float fDotLR1 =  cam1.GetFrustumPlane(FR_PLANE_LEFT )->n.Dot(cam1.GetFrustumPlane(FR_PLANE_RIGHT)->n);
 			float fDotRL2 =  cam2.GetFrustumPlane(FR_PLANE_RIGHT)->n.Dot(cam2.GetFrustumPlane(FR_PLANE_LEFT)->n);

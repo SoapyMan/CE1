@@ -59,8 +59,8 @@ public:
 
 	void GetKey(int index, IKey* key)
 	{
-		assert(index >= 0 && index < GetNumKeys());
-		assert(key != 0);
+		CRYASSERT(index >= 0 && index < GetNumKeys());
+		CRYASSERT(key != 0);
 		Spline::key_type& k = m_spline->key(index);
 		ITcbKey* tcbkey = (ITcbKey*)key;
 		tcbkey->time = k.time;
@@ -77,8 +77,8 @@ public:
 
 	void SetKey(int index, IKey* key)
 	{
-		assert(index >= 0 && index < GetNumKeys());
-		assert(key != 0);
+		CRYASSERT(index >= 0 && index < GetNumKeys());
+		CRYASSERT(key != 0);
 		Spline::key_type& k = m_spline->key(index);
 		ITcbKey* tcbkey = (ITcbKey*)key;
 		k.time = tcbkey->time;
@@ -94,38 +94,38 @@ public:
 
 	float GetKeyTime(int index)
 	{
-		assert(index >= 0 && index < GetNumKeys());
+		CRYASSERT(index >= 0 && index < GetNumKeys());
 		return m_spline->time(index);
 	}
 	void SetKeyTime(int index, float time)
 	{
-		assert(index >= 0 && index < GetNumKeys());
+		CRYASSERT(index >= 0 && index < GetNumKeys());
 		m_spline->key(index).time = time;
 		Invalidate();
 	}
 	int GetKeyFlags(int index)
 	{
-		assert(index >= 0 && index < GetNumKeys());
+		CRYASSERT(index >= 0 && index < GetNumKeys());
 		return m_spline->key(index).flags;
 	}
 	void SetKeyFlags(int index, int flags)
 	{
-		assert(index >= 0 && index < GetNumKeys());
+		CRYASSERT(index >= 0 && index < GetNumKeys());
 		m_spline->key(index).flags = flags;
 	}
 
-	virtual EAnimTrackType GetType() { assert(0); return 0; }
-	virtual EAnimValue GetValueType() { assert(0); return 0; }
+	virtual EAnimTrackType GetType() { CRYASSERT(0); return 0; }
+	virtual EAnimValue GetValueType() { CRYASSERT(0); return 0; }
 
-	virtual void GetValue(float time, float& value) { assert(0); }
-	virtual void GetValue(float time, Vec3& value) { assert(0); }
-	virtual void GetValue(float time, Quat& value) { assert(0); }
-	virtual void GetValue(float time, bool& value) { assert(0); }
+	virtual void GetValue(float time, float& value) { CRYASSERT(0); }
+	virtual void GetValue(float time, Vec3& value) { CRYASSERT(0); }
+	virtual void GetValue(float time, Quat& value) { CRYASSERT(0); }
+	virtual void GetValue(float time, bool& value) { CRYASSERT(0); }
 
-	virtual void SetValue(float time, const float& value, bool bDefault = false) { assert(0); }
-	virtual void SetValue(float time, const Vec3& value, bool bDefault = false) { assert(0); }
-	virtual void SetValue(float time, const Quat& value, bool bDefault = false) { assert(0); }
-	virtual void SetValue(float time, const bool& value, bool bDefault = false) { assert(0); }
+	virtual void SetValue(float time, const float& value, bool bDefault = false) { CRYASSERT(0); }
+	virtual void SetValue(float time, const Vec3& value, bool bDefault = false) { CRYASSERT(0); }
+	virtual void SetValue(float time, const Quat& value, bool bDefault = false) { CRYASSERT(0); }
+	virtual void SetValue(float time, const bool& value, bool bDefault = false) { CRYASSERT(0); }
 
 	bool Serialize(XmlNodeRef& xmlNode, bool bLoading, bool bLoadEmptyTracks);
 
@@ -236,7 +236,7 @@ public:
 	//! If key not exist adds key at this time.
 	void SetKeyAtTime(float time, IKey* key)
 	{
-		assert(key != 0);
+		CRYASSERT(key != 0);
 
 		key->time = time;
 
@@ -374,7 +374,7 @@ template<> void TAnimTcbTrack<float>::GetKeyInfo(int index, const char*& descrip
 
 	static char str[64];
 	description = str;
-	assert(index >= 0 && index < GetNumKeys());
+	CRYASSERT(index >= 0 && index < GetNumKeys());
 	Spline::key_type& k = m_spline->key(index);
 	sprintf(str, "%g", k.value);
 }
@@ -410,7 +410,7 @@ template <> void TAnimTcbTrack<Vec3>::GetKeyInfo(int index, const char*& descrip
 	static char str[64];
 	description = str;
 
-	assert(index >= 0 && index < GetNumKeys());
+	CRYASSERT(index >= 0 && index < GetNumKeys());
 	Spline::key_type& k = m_spline->key(index);
 	sprintf(str, "%g,%g,%g", k.value[0], k.value[1], k.value[2]);
 }
@@ -448,7 +448,7 @@ template <> void TAnimTcbTrack<Quat>::GetKeyInfo(int index, const char*& descrip
 	static char str[64];
 	description = str;
 
-	assert(index >= 0 && index < GetNumKeys());
+	CRYASSERT(index >= 0 && index < GetNumKeys());
 	Spline::key_type& k = m_spline->key(index);
 	Vec3 Angles = RAD2DEG(Ang3::GetAnglesXYZ(Matrix33(k.value)));
 	sprintf(str, "%g,%g,%g", Angles.x, Angles.y, Angles.z);

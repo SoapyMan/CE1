@@ -274,6 +274,6 @@ void CXGame::PlaybackChunk()
 bool CXGame::AddDemoChunk(CStream &stm)
 {
 	IEntity *e = GetXSystem()->GetEntity(m_pClient->GetPlayerId());
-	assert(e);
+	CRYASSERT(e);
 	return m_XDemoMgr.AddChunk(GetSystem()->GetITimer()->GetCurrTime(), stm, e);
 }

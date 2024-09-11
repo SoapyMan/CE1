@@ -296,7 +296,7 @@ vector2f& CFFont::GetSize()
 float CFFont::GetCharWidth()
 {
 	IRenderer* pRenderer = m_pISystem->GetIRenderer();
-	assert(pRenderer);
+	CRYASSERT(pRenderer);
 
 	if (m_vCharSize.x == -1.0f)
 	{
@@ -343,7 +343,7 @@ float CFFont::GetCharWidth()
 float CFFont::GetCharHeight()
 {
 	IRenderer* pRenderer = m_pISystem->GetIRenderer();
-	assert(pRenderer);
+	CRYASSERT(pRenderer);
 
 	if (m_vCharSize.y == -1.0f)
 	{
@@ -435,10 +435,10 @@ void CFFont::DrawStringW(float fBaseX, float fBaseY, const wchar_t* szMsg, const
 	// please terminate your strings with a '\0'
 	// if you want to draw a string with more than 682 char, tell me (marcio)
 	// and will allocate two buffers
-	//assert(wcslen(szMsg) <= 682);
+	//CRYASSERT(wcslen(szMsg) <= 682);
 
 	IRenderer* pRenderer = m_pISystem->GetIRenderer();
-	assert(pRenderer);
+	CRYASSERT(pRenderer);
 
 	if (!szMsg)
 	{
@@ -499,7 +499,7 @@ void CFFont::DrawStringW(float fBaseX, float fBaseY, const wchar_t* szMsg, const
 
 		pRenderer->FontSetBlending(Pass->blendSrc, Pass->blendDest);
 		pVertex = (struct_VERTEX_FORMAT_P3F_COL4UB_TEX2F*)pRenderer->GetDynVBPtr(iTextLength * 6, iVertexOffset, 0);
-		assert(pVertex);
+		CRYASSERT(pVertex);
 
 		wchar_t* pcChar = (wchar_t*)szMsg;
 		wchar_t ch;
@@ -789,7 +789,7 @@ vector2f CFFont::GetTextSize(const char* szMsg, const bool bASCIIMultiLine)
 vector2f CFFont::GetTextSizeW(const wchar_t* szMsg, const bool bASCIIMultiLine)
 {
 	IRenderer* pRenderer = m_pISystem->GetIRenderer();
-	assert(pRenderer);
+	CRYASSERT(pRenderer);
 
 	if (wcslen(szMsg) == 1 && *szMsg == L'$')
 	{

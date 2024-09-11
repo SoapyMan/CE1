@@ -384,8 +384,8 @@ unsigned CryModelLoader::loadAnimationsNoCAL()
 
 			//if (!stricmp(FindExtension(fileinfo.name), "caf")) // actually ,according to the search mask, this should be met automatically
 			char* szExtension = StripFileExtension(FNAME(m_fileinfo));
-			assert(!stricmp(szExtension, "caf"));
-			assert(strlen(FNAME(m_fileinfo)) > nBaseNameLength);
+			CRYASSERT(!stricmp(szExtension, "caf"));
+			CRYASSERT(strlen(FNAME(m_fileinfo)) > nBaseNameLength);
 
 			AnimFile.strAnimName = FNAME(m_fileinfo) + nBaseNameLength;
 			arrAnimFiles.push_back(AnimFile);

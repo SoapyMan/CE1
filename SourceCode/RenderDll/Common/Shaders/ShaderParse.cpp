@@ -476,7 +476,7 @@ void CShader::mfParseLightStyle(CLightStyle* ls, char* lstr)
 		lstr = pstr2;
 	}
 	ls->m_Map.Shrink();
-	assert(ls->m_Map.Num() == n);
+	CRYASSERT(ls->m_Map.Num() == n);
 }
 
 bool CShader::mfCompileLightStyle(SShader* ef, int num, char* scr)

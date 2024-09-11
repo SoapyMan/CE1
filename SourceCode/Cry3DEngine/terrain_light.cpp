@@ -39,9 +39,9 @@ bool CTerrain::RenderAreaLeafBuffers(Vec3d vPos, float fRadius,
 	}
 
 	// should be alligned already
-	assert(vPos.x == float(int(vPos.x + 0.5f * CTerrain::GetHeightMapUnitSize()) / CTerrain::GetHeightMapUnitSize() * CTerrain::GetHeightMapUnitSize()));
-	assert(vPos.y == float(int(vPos.y + 0.5f * CTerrain::GetHeightMapUnitSize()) / CTerrain::GetHeightMapUnitSize() * CTerrain::GetHeightMapUnitSize()));
-	assert(fRadius == float(int(fRadius + 0.5f * CTerrain::GetHeightMapUnitSize()) / CTerrain::GetHeightMapUnitSize() * CTerrain::GetHeightMapUnitSize()));
+	CRYASSERT(vPos.x == float(int(vPos.x + 0.5f * CTerrain::GetHeightMapUnitSize()) / CTerrain::GetHeightMapUnitSize() * CTerrain::GetHeightMapUnitSize()));
+	CRYASSERT(vPos.y == float(int(vPos.y + 0.5f * CTerrain::GetHeightMapUnitSize()) / CTerrain::GetHeightMapUnitSize() * CTerrain::GetHeightMapUnitSize()));
+	CRYASSERT(fRadius == float(int(fRadius + 0.5f * CTerrain::GetHeightMapUnitSize()) / CTerrain::GetHeightMapUnitSize() * CTerrain::GetHeightMapUnitSize()));
 
 	// get 2d bounds in sectors array
 	int min_x = (int)(((vPos.x - fRadius) / CTerrain::GetSectorSize()));

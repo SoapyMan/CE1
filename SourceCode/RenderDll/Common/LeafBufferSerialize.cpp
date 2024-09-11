@@ -77,7 +77,7 @@ bool CLeafBuffer::Serialize(int& nPos, uchar* pSerBuf, bool bSave, char* _szFold
 	if ((*((int*)&pSerBuf[nPos])))
 	{
 		m_pLoadedColors = new Vec3d[(*((int*)&pSerBuf[nPos])) / sizeof(m_pLoadedColors[0])];
-		assert((*((int*)&pSerBuf[nPos])) / sizeof(m_pLoadedColors[0]) == m_SecVertCount);
+		CRYASSERT((*((int*)&pSerBuf[nPos])) / sizeof(m_pLoadedColors[0]) == m_SecVertCount);
 	}
 	LoadBuffer(m_pLoadedColors, m_SecVertCount * sizeof(m_pLoadedColors[0]), pSerBuf, nPos);
 
@@ -121,26 +121,26 @@ bool CLeafBuffer::Serialize(int& nPos, uchar* pSerBuf, bool bSave, char* _szFold
 	// load positions
 	if (*((int*)&pSerBuf[nPos]))
 	{
-		assert(m_pSecVertBuffer->m_VS[VSF_GENERAL].m_VData); // should not be zero before saving
+		CRYASSERT(m_pSecVertBuffer->m_VS[VSF_GENERAL].m_VData); // should not be zero before saving
 		m_pSecVertBuffer->m_VS[VSF_GENERAL].m_VData = new uchar[m_SecVertCount * m_VertexSize[m_pSecVertBuffer->m_vertexformat]];
 	}
 	else
-		assert(!m_pSecVertBuffer->m_VS[VSF_GENERAL].m_VData);
-	assert(m_SecVertCount * m_VertexSize[m_pSecVertBuffer->m_vertexformat] == (*((int*)&pSerBuf[nPos])));
+		CRYASSERT(!m_pSecVertBuffer->m_VS[VSF_GENERAL].m_VData);
+	CRYASSERT(m_SecVertCount * m_VertexSize[m_pSecVertBuffer->m_vertexformat] == (*((int*)&pSerBuf[nPos])));
 	LoadBuffer(m_pSecVertBuffer->m_VS[VSF_GENERAL].m_VData, m_SecVertCount * m_VertexSize[m_pSecVertBuffer->m_vertexformat], pSerBuf, nPos);
 
 	// load tangents
 	if (*((int*)&pSerBuf[nPos]))
 	{
-		assert(m_pSecVertBuffer->m_VS[VSF_TANGENTS].m_VData); // should not be zero before saving
+		CRYASSERT(m_pSecVertBuffer->m_VS[VSF_TANGENTS].m_VData); // should not be zero before saving
 		m_pSecVertBuffer->m_VS[VSF_TANGENTS].m_VData = new SPipTangents[m_SecVertCount];
 	}
 	else
-		assert(!m_pSecVertBuffer->m_VS[VSF_TANGENTS].m_VData);
-	assert(m_SecVertCount * sizeof(SPipTangents) == (*((int*)&pSerBuf[nPos])));
+		CRYASSERT(!m_pSecVertBuffer->m_VS[VSF_TANGENTS].m_VData);
+	CRYASSERT(m_SecVertCount * sizeof(SPipTangents) == (*((int*)&pSerBuf[nPos])));
 	LoadBuffer(m_pSecVertBuffer->m_VS[VSF_TANGENTS].m_VData, m_SecVertCount * sizeof(SPipTangents), pSerBuf, nPos);
 
-	assert(!m_pVertexBuffer); // not needed
+	CRYASSERT(!m_pVertexBuffer); // not needed
 	LoadBuffer(&m_vBoxMax, sizeof(m_vBoxMax), pSerBuf, nPos);
 	LoadBuffer(&m_vBoxMin, sizeof(m_vBoxMin), pSerBuf, nPos);
 
@@ -160,7 +160,7 @@ bool CLeafBuffer::Serialize(int& nPos, uchar* pSerBuf, bool bSave, char* _szFold
 			CREOcLeaf* re = (CREOcLeaf*)gRenDev->EF_CreateRE(eDATA_OcLeaf);
 			re->m_pChunk = &(*m_pMats)[i];
 			re->m_pBuffer = this;
-			assert(re->m_pChunk->nNumIndices < 60000);
+			CRYASSERT(re->m_pChunk->nNumIndices < 60000);
 			re->m_pChunk->pRE = re;
 
 			// set sort offset
@@ -188,7 +188,7 @@ bool CLeafBuffer::LoadMaterial(int m,
 		return false;
 	}
 
-	//  assert(strlen(szFolderName)+strlen(pCGF->m_lstMaterials[m].map_d.name)<1024);
+	//  CRYASSERT(strlen(szFolderName)+strlen(pCGF->m_lstMaterials[m].map_d.name)<1024);
 	//    m_pSystem->GetIConsole()->Exit("LoadCGF: texture path len error");
 
 	SInputShaderResources Res;

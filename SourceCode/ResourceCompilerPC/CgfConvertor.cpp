@@ -50,10 +50,10 @@ extern unsigned g_nFrameID;
 void ValidateHeap()
 {
 #ifdef WIN64
-	//assert (_CrtCheckMemory());
+	//CRYASSERT (_CrtCheckMemory());
 #else
 	int nHeapCheck = _heapchk();
-	assert(nHeapCheck == _HEAPEMPTY || nHeapCheck == _HEAPOK);
+	CRYASSERT(nHeapCheck == _HEAPEMPTY || nHeapCheck == _HEAPOK);
 #endif
 }
 
@@ -421,7 +421,7 @@ void CGFConvertor::UpdateDeadBodyPhysics()
 			rBoneMain.resetPhysics(1);
 			continue;
 		}
-		assert((unsigned)nLODBone < arrSecBones.size());
+		CRYASSERT((unsigned)nLODBone < arrSecBones.size());
 		CryBoneDesc& rBoneSec = arrSecBones[nLODBone];
 		//if (!rBoneMain.isEqual(rBoneSec))
 		//	throw Error ("LOD 0 and 1 bone #%d are different", nBone);
@@ -495,7 +495,7 @@ Platform CGFConvertor::GetPlatform(int index) const
 		//case 2:	return PLATFORM_PS2;
 		//case 3:	return PLATFORM_GAMECUBE;
 	};
-	//assert(0);
+	//CRYASSERT(0);
 	return PLATFORM_UNKNOWN;
 }
 
@@ -649,7 +649,7 @@ void CGFConvertor::writeBGBone(unsigned nLOD, unsigned nBone, CryChunkedFile::Me
 {
 	CCFBGBone bgb;
 	bgb.nBone = nBone;
-	assert(pMesh);
+	CRYASSERT(pMesh);
 	bgb.numVertices = pMesh->numVertices();
 	bgb.numFaces = pMesh->numFaces();
 	write(bgb);
@@ -1238,7 +1238,7 @@ bool CGFConvertor::isAnimatedFastCheck(const char* filename)
 
 void CGFConvertor::WriteAnimListWithCAL(FILE* fCal)
 {
-	assert(fCal);
+	CRYASSERT(fCal);
 	// Load cal file and load animations from animations folder
 	// make anim folder name
 	// make search path
@@ -1427,8 +1427,8 @@ void CGFConvertor::WriteAnimListNoCAL()
 
 			//if (!stricmp(FindExtension(fileinfo.name), "caf")) // actually ,according to the search mask, this should be met automatically
 			char* szExtension = CryStringUtils::StripFileExtension(fd.name);
-			assert(!stricmp(szExtension, "caf"));
-			assert(strlen(fd.name) > nBaseNameLength);
+			CRYASSERT(!stricmp(szExtension, "caf"));
+			CRYASSERT(strlen(fd.name) > nBaseNameLength);
 
 			const char* szAnimName = fd.name + nBaseNameLength;
 			WriteAnimInfo(SubChunks, szAnimName, strFileName, 0);
