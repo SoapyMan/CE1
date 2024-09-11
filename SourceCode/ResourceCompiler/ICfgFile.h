@@ -29,22 +29,22 @@ struct ICfgFile
 
 	//! Load configuration file.
 	//! @return true=success, false otherwise
-	virtual bool Load( const CString &fileName ) = 0;
+	virtual bool Load(const CString& fileName) = 0;
 
 	//! Save configuration file, with the stored name in m_fileName
 	//! @return true=success, false otherwise
-	virtual bool Save( void ) = 0;
+	virtual bool Save(void) = 0;
 
 	//!
 	//! @param inszSection
 	//! @param inszKey
 	//! @param inszValue
-	virtual void UpdateOrCreateEntry( const char *inszSection, const char *inszKey, const char *inszValue ) = 0;
+	virtual void UpdateOrCreateEntry(const char* inszSection, const char* inszKey, const char* inszValue) = 0;
 
-	virtual bool SetConfig( const char *section, IConfig *config ) = 0;
+	virtual bool SetConfig(const char* section, IConfig* config) = 0;
 
-	virtual const char *GetSectionName(unsigned int n) = 0;
-	virtual int Find(const char *sectionname) = 0;
+	virtual const char* GetSectionName(unsigned int n) = 0;
+	virtual int Find(const char* sectionname) = 0;
 };
 
 #endif // __icfgfile_h__

@@ -34,24 +34,24 @@ public:
 	virtual IConfig* Clone() const;
 
 	//! Check if configuration has this key.
-	virtual bool HasKey( const char *key ) const;
+	virtual bool HasKey(const char* key) const;
 
 	//! Get value of key.
 	//! @return true if option found, false if not.
-	virtual bool Get( const char *key,float &value ) const;
-	virtual bool Get( const char *key,int &value ) const;
-	virtual bool Get( const char *key,bool &value ) const;
-	virtual bool Get( const char *key,CString &value ) const;
+	virtual bool Get(const char* key, float& value) const;
+	virtual bool Get(const char* key, int& value) const;
+	virtual bool Get(const char* key, bool& value) const;
+	virtual bool Get(const char* key, CString& value) const;
 
 	//////////////////////////////////////////////////////////////////////////
-	void Set( const char *key,const char* value );
+	void Set(const char* key, const char* value);
 
-	void Merge( IConfig *inpConfig );
+	void Merge(IConfig* inpConfig);
 
-	virtual Config *GetInternalRepresentation( void );
+	virtual Config* GetInternalRepresentation(void);
 
 private:
-	typedef std::unordered_map<CString,CString,stl::hash_stricmp<CString> > Map;
+	typedef std::unordered_map<CString, CString, stl::hash_stricmp<CString> > Map;
 	Map m_map;
 };
 

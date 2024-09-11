@@ -28,24 +28,24 @@ class CfgFile :public ICfgFile
 {
 public:
 	// Config file entry structure, filled by readSection method.
-	struct Entry 
+	struct Entry
 	{
 		CString			key;			//!< keys (for comments this is "")
 		CString			value;		//!< values and comments (with leading ; or //)
 
-		bool IsComment( void ) const
+		bool IsComment(void) const
 		{
-			const char *pBegin=value.GetString();
-			while(*pBegin==' ' || *pBegin=='\t')pBegin++;
+			const char* pBegin = value.GetString();
+			while (*pBegin == ' ' || *pBegin == '\t')pBegin++;
 
 			// "//" (comment)
-			if(pBegin[0]=='/' && pBegin[1]=='/')return(true);
+			if (pBegin[0] == '/' && pBegin[1] == '/')return(true);
 
 			// ';' (comment)
-			if(pBegin[0] == ';')return(true);
+			if (pBegin[0] == ';')return(true);
 
 			// emptyline (comment)
-			if(pBegin[0]==0)return(true);
+			if (pBegin[0] == 0)return(true);
 
 			return(false);
 		}
@@ -58,31 +58,31 @@ public:
 	~CfgFile();
 
 	//!
-	void SetFileName( const CString &fileName );
+	void SetFileName(const CString& fileName);
 
 	//! Automatically load new config file.
-	explicit CfgFile( const CString &fileName );
+	explicit CfgFile(const CString& fileName);
 
 	//! Load config from memory buffer.
-	CfgFile( const char *buf, int bufSize );
+	CfgFile(const char* buf, int bufSize);
 
 	//////////////////////////////////////////////////////////////////////////
 
 	// interface ICfgFile - described in ICfgFile.h
-	
+
 	virtual void Release() { delete(this); }
-	virtual bool Load( const CString &fileName );
-	virtual bool Save( void );
-	virtual void UpdateOrCreateEntry( const char *inszSection, const char *inszKey, const char *inszValue );
+	virtual bool Load(const CString& fileName);
+	virtual bool Save(void);
+	virtual void UpdateOrCreateEntry(const char* inszSection, const char* inszKey, const char* inszValue);
 
 	//////////////////////////////////////////////////////////////////////////
 	//! Copy section keys to config.
 	//! @return true if success, false if section not found.
-	bool SetConfig( const char *section, IConfig *config );
+	bool SetConfig(const char* section, IConfig* config);
 
 private:
 
-	void	LoadBuf( const char *buf,size_t bufSize );
+	void	LoadBuf(const char* buf, size_t bufSize);
 
 	struct Section
 	{
@@ -93,7 +93,7 @@ private:
 	// Private methods.
 
 	//! @return pointer to the section with the given name or pointer to the first unnamed section ""
-	Section* FindSection( const CString &section );
+	Section* FindSection(const CString& section);
 
 	// Private fields.
 	CString							m_fileName;			//!< Configuration file name.
@@ -103,19 +103,19 @@ private:
 
 public:
 
-	const char *GetSectionName(unsigned int n)
+	const char* GetSectionName(unsigned int n)
 	{
-		if(n>=m_sections.size())
+		if (n >= m_sections.size())
 			return(NULL);
-		
+
 		return(m_sections[n].name.GetString());
 	};
-	
-	int Find(const char *sectionname)
+
+	int Find(const char* sectionname)
 	{
-		for(std::vector<Section>::iterator it = m_sections.begin(); it!=m_sections.end(); ++it)
+		for (std::vector<Section>::iterator it = m_sections.begin(); it != m_sections.end(); ++it)
 		{
-			if (stricmp(it->name.GetString(), sectionname) == 0) return it-m_sections.begin();
+			if (stricmp(it->name.GetString(), sectionname) == 0) return it - m_sections.begin();
 		};
 		return 0;
 	};

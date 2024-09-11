@@ -20,7 +20,7 @@
 namespace FileUtil
 {
 	// Find all files matching filespec.
-	bool ScanDirectory( const CString &path,const CString &filespec,std::vector<CString> &files,bool recursive );
+	bool ScanDirectory(const CString& path, const CString& filespec, std::vector<CString>& files, bool recursive);
 	// converts the FILETIME to the C Timestamp (compatible with dbghelp.dll)
 	DWORD FiletimeToUnixTime(const FILETIME& ft);
 	// converts the C Timestamp (compatible with dbghelp.dll) to FILETIME

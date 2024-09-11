@@ -28,13 +28,13 @@
 // No exceptions are thrown.
 ////////////////////////////////////////////////////////////////
 
-class CFileMapping: public _reference_target_t
+class CFileMapping : public _reference_target_t
 {
 public:
 	// Initializes an empty file mapping object
 	CFileMapping();
 	// initializes the object and tries to open the given file mapping
-	CFileMapping (const char* szFileName, unsigned nFlags = 0);
+	CFileMapping(const char* szFileName, unsigned nFlags = 0);
 	// closes file mapping
 	~CFileMapping();
 
@@ -45,26 +45,26 @@ public:
 #ifdef USE_FILE_MAPPING
 		const
 #endif
-		void * PData;
+		void* PData;
 
 	// Returns the pointer to the mapped file start in memory, or NULL if the file
 	// wasn't mapped
 	PData getData() const;
-	
+
 	// Returns the file data at the given offset
 	PData getData(unsigned nOffset) const;
 
 #ifndef USE_FILE_MAPPING
 	// sets the given (already allocated) buffer to this object
 	// the memory must be allocated with malloc()
-	void attach (PData pData, unsigned nSize);
+	void attach(PData pData, unsigned nSize);
 #endif
 
 	// initializes the object, opening the given file
 	// if file open has failed, subsequent getData() and
 	// getSize() will return zeros
 	// Returns true if open was successful
-	bool open (const char* szFileName, unsigned nFlags = 0);
+	bool open(const char* szFileName, unsigned nFlags = 0);
 
 	// closes file mapping
 	void close();

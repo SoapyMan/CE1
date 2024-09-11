@@ -21,56 +21,56 @@
 
 // This interface is used to log events inside the convertors,
 // including information and warning messages
-struct IRCLog: public ILog
+struct IRCLog : public ILog
 {
 
 	// interface IRCLog ---------------------------------------------
 
 	//! is used by LogV, you only have to implement this
-	virtual void LogLine ( const ELogType ineType, const char* szText) = 0;
+	virtual void LogLine(const ELogType ineType, const char* szText) = 0;
 
 	// interface ILog -----------------------------------------------
 
 	// use only these three methods (\n is auto splitting in lines)
 
 	// 
-	virtual void Log( const char* szFormat, ...);
+	virtual void Log(const char* szFormat, ...);
 
 	// 
-	virtual void LogWarning( const char* szFormat, ...);
+	virtual void LogWarning(const char* szFormat, ...);
 
 	// 
-	virtual void LogError( const char* szFormat, ...);
-	
+	virtual void LogError(const char* szFormat, ...);
+
 	// --------------------------------------------------------------
 
 	//! split in lines (empty lines if given) and print with Log function
-	virtual void LogV( const ELogType ineType, const char* szFormat, va_list args )
+	virtual void LogV(const ELogType ineType, const char* szFormat, va_list args)
 	{
-		char str[16*1024],*p=str;
+		char str[16 * 1024], * p = str;
 
-		vsprintf(str,szFormat, args);
+		vsprintf(str, szFormat, args);
 
-		bool bRun=true;
+		bool bRun = true;
 
-		while(bRun)
+		while (bRun)
 		{
-			char *start=p;
+			char* start = p;
 
 			// search for end marker
-			while(*p!=0 && *p!=10)
+			while (*p != 0 && *p != 10)
 			{
-				if(*p<32)*p=' ';  // remove nonprintable characters
+				if (*p < 32)*p = ' ';  // remove nonprintable characters
 
 				p++;
 			}
 
-			if(*p==0)
-				bRun=false;
+			if (*p == 0)
+				bRun = false;
 
-			*p=0;
+			*p = 0;
 
-			LogLine(ineType,start);
+			LogLine(ineType, start);
 
 			p++;	// jump over end marker
 		}
@@ -90,7 +90,7 @@ struct IRCLog: public ILog
 	void LogPlus(const char* szFormat, ...); // print message on the prev line (maybe not needed)
 
 	virtual void Release() {}
-	/* 
+	/*
 	void	Log(int dwFlags,const char *szCommand,...)
 	{
 		va_list arg;
@@ -101,48 +101,48 @@ struct IRCLog: public ILog
 	*/
 
 	//set the file used to log to disk
-	virtual void SetFileName (const char *command = NULL) {}
-	virtual const char*	GetFileName() {return "stdout";}
-	virtual void	LogToFile(const char *szCommand,...)
+	virtual void SetFileName(const char* command = NULL) {}
+	virtual const char* GetFileName() { return "stdout"; }
+	virtual void	LogToFile(const char* szCommand, ...)
 	{
 		va_list arg;
 		va_start(arg, szCommand);
-		LogV (eMessage, szCommand, arg);
+		LogV(eMessage, szCommand, arg);
 		va_end(arg);
 	}
 
-	virtual void	LogToFilePlus(const char *szCommand,...)
+	virtual void	LogToFilePlus(const char* szCommand, ...)
 	{
 		va_list arg;
 		va_start(arg, szCommand);
-		LogV (eMessage, szCommand, arg);
+		LogV(eMessage, szCommand, arg);
 		va_end(arg);
 	}
 
 	//log to console only
-	virtual void	LogToConsole(const char *szCommand,...)
+	virtual void	LogToConsole(const char* szCommand, ...)
 	{
 		va_list arg;
 		va_start(arg, szCommand);
-		LogV (eMessage, szCommand, arg);
+		LogV(eMessage, szCommand, arg);
 		va_end(arg);
 	}
 
 	//
-	virtual void	LogToConsolePlus(const char *szCommand,...) {}
+	virtual void	LogToConsolePlus(const char* szCommand, ...) {}
 
 	//
-	virtual void	UpdateLoadingScreen(const char *szCommand,...) {}
+	virtual void	UpdateLoadingScreen(const char* szCommand, ...) {}
 
 	//
-	virtual void	UpdateLoadingScreenPlus(const char *szCommand,...) {}
+	virtual void	UpdateLoadingScreenPlus(const char* szCommand, ...) {}
 
 	//
-	virtual void	EnableVerbosity( bool bEnable ) {}
+	virtual void	EnableVerbosity(bool bEnable) {}
 
 	//
-	virtual void	SetVerbosity( int verbosity ) {}
-	virtual int GetVerbosityLevel (bool) const {return 5;}
+	virtual void	SetVerbosity(int verbosity) {}
+	virtual int GetVerbosityLevel(bool) const { return 5; }
 	virtual int GetFileVerbosityLevel(bool) const { return 5; }
 };
 
@@ -150,7 +150,7 @@ inline void IRCLog::Log(const char* szFormat, ...)
 {
 	va_list arg;
 	va_start(arg, szFormat);
-	LogV (eMessage, szFormat, arg);
+	LogV(eMessage, szFormat, arg);
 	va_end(arg);
 }
 
@@ -159,7 +159,7 @@ inline void IRCLog::LogWarning(const char* szFormat, ...)
 {
 	va_list arg;
 	va_start(arg, szFormat);
-	LogV (eWarning, szFormat, arg);
+	LogV(eWarning, szFormat, arg);
 	va_end(arg);
 }
 
@@ -168,7 +168,7 @@ inline void IRCLog::LogError(const char* szFormat, ...)
 {
 	va_list arg;
 	va_start(arg, szFormat);
-	LogV (eError, szFormat, arg);
+	LogV(eError, szFormat, arg);
 	va_end(arg);
 }
 
@@ -177,7 +177,7 @@ inline void IRCLog::LogPlus(const char* szFormat, ...)
 {
 	va_list arg;
 	va_start(arg, szFormat);
-	LogV (eMessage, szFormat, arg);
+	LogV(eMessage, szFormat, arg);
 	va_end(arg);
 }
 
@@ -185,10 +185,10 @@ inline void IRCLog::ThrowError(const char* szFormat, ...)
 {
 	va_list arg;
 	va_start(arg, szFormat);
-	LogV (eError, szFormat, arg);
+	LogV(eError, szFormat, arg);
 	va_end(arg);
-//  Beep(1000,1000);
-//	exit(0);
+	//  Beep(1000,1000);
+	//	exit(0);
 	throw "ThrowError";
 }
 

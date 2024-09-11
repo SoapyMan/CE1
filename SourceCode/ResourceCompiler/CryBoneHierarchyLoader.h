@@ -29,32 +29,32 @@ public:
 	// loads the default positions of each bone; if the bone chunk is loaded,
 	// updates the bone inverse default pose matrices
 	// returns number of bytes read if successful, 0 if not
-	unsigned load (const BONEINITIALPOS_CHUNK_DESC_0001*pChunk, unsigned nChunkSize);
+	unsigned load(const BONEINITIALPOS_CHUNK_DESC_0001* pChunk, unsigned nChunkSize);
 
-	void scale (float fScale);
+	void scale(float fScale);
 
 	// maps the given index of the bone into the id with which the bone is identified in the file
-	int mapIndexToId(int nIndex) const {return m_arrIndexToId[nIndex];}
-	const int* getIndexToIdMap ()const {return &m_arrIndexToId[0];}
-	int mapIdToIndex (int nId)const {return m_arrIdToIndex[nId];}
-	const int* getIdToIndexMap ()const {return &m_arrIdToIndex[0];}
-	
-	// initializes the map id->index (inverse of mapIndexToId)
-	void getIdToIndexMap (unsigned* pMap)const;
+	int mapIndexToId(int nIndex) const { return m_arrIndexToId[nIndex]; }
+	const int* getIndexToIdMap()const { return &m_arrIndexToId[0]; }
+	int mapIdToIndex(int nId)const { return m_arrIdToIndex[nId]; }
+	const int* getIdToIndexMap()const { return &m_arrIdToIndex[0]; }
 
-	const CryBoneDesc& getBoneByIndex (unsigned nIndex) const {return m_arrBones[nIndex];}
+	// initializes the map id->index (inverse of mapIndexToId)
+	void getIdToIndexMap(unsigned* pMap)const;
+
+	const CryBoneDesc& getBoneByIndex(unsigned nIndex) const { return m_arrBones[nIndex]; }
 
 	// compares the two bone structures. Returns true if they're equal
 	// (e.g. for validation of different lods)
 	bool isEqual(const CryBoneHierarchyLoader& right)const;
 
 	// returns the number of loaded bones, or 0 if no bones were loaded yet
-	unsigned numBones() const {return m_pChunkBoneAnim ? m_pChunkBoneAnim->nBones : 0;}
+	unsigned numBones() const { return m_pChunkBoneAnim ? m_pChunkBoneAnim->nBones : 0; }
 
-	bool hasInitPos () const {return !m_arrInitPose.empty();}
-	const Matrix44& getInitPosMatrixByIndex(int nBoneIndex){return m_arrInitPose[mapIndexToId(nBoneIndex)];}
+	bool hasInitPos() const { return !m_arrInitPose.empty(); }
+	const Matrix44& getInitPosMatrixByIndex(int nBoneIndex) { return m_arrInitPose[mapIndexToId(nBoneIndex)]; }
 
-	const char* getLastError() const {return m_szLastError;}
+	const char* getLastError() const { return m_szLastError; }
 
 	// array of bones that's initialized in the constructor
 	// this array is allocated and is not reallocated afterwards; it gives the number of entries in the id<->index map tables
@@ -72,7 +72,7 @@ public:
 	std::vector<Matrix44> m_arrInitPose;
 protected:
 	// loads the whole hierarchy of bones, using the state machine
-	bool load (int nBoneParentIndex, int nBoneIndex);
+	bool load(int nBoneParentIndex, int nBoneIndex);
 
 	// allocates the required number of bones in the plain hierarchy array, starting at the next available place
 	int allocateBones(int numBones);
@@ -85,7 +85,7 @@ protected:
 	unsigned m_pChunkBoneAnimSize;
 
 	// the current raw data pointer
-	const void* m_pBoneAnimRawData, *m_pBoneAnimRawDataEnd;
+	const void* m_pBoneAnimRawData, * m_pBoneAnimRawDataEnd;
 
 	// the currently free position in the array of bones
 	int m_nNextBone;

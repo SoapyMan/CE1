@@ -30,16 +30,16 @@ public:
 	//! Register new convertor with extension manager.
 	//!  \param conv must not be 0
 	//!  \param rc must not be 0
-	void RegisterConvertor( IConvertor *conv, IResourceCompiler *rc );
+	void RegisterConvertor(IConvertor* conv, IResourceCompiler* rc);
 	//! Unregister all convertors.
 	void UnregisterAll();
 
 	//! Find convertor that matches given platform and extension.
-	IConvertor* FindConvertor( Platform platform,const char *ext ) const;
+	IConvertor* FindConvertor(Platform platform, const char* ext) const;
 
 private:
 	// Maps extension to convertors.
-	typedef std::multimap<CString,IConvertor*,stl::less_stricmp<CString> > ExtMap;
+	typedef std::multimap<CString, IConvertor*, stl::less_stricmp<CString> > ExtMap;
 	ExtMap m_extMap[PLATFORM_LAST];
 	std::vector<IConvertor*> m_convertors;
 };

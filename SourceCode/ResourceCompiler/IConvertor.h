@@ -31,25 +31,25 @@ struct IConvertor
 
 	//! Process file
 	//! \return success
-	virtual bool Process( ConvertContext &cc ) = 0;
+	virtual bool Process(ConvertContext& cc) = 0;
 
 	//! Construct the name of the file that will be produced from the source file.
 	//! Put this name into outputFile field, if successful
 	//! Returns true if successful or false if can't convert this file
 	// @param cc is the context of conversion; it contains valid sourceFile and may or may not contain outputFile
-	virtual bool GetOutputFile(ConvertContext &cc) = 0;
+	virtual bool GetOutputFile(ConvertContext& cc) = 0;
 
 	//! Return platforms supported by this convertor.
 	virtual int GetNumPlatforms() const = 0;
 	//! Get supported platform.
 	//! @param index Index of platform must be in range 0 < index < GetNumPlatforms().
-	virtual Platform GetPlatform( int index ) const = 0;
+	virtual Platform GetPlatform(int index) const = 0;
 
 	//! Get number of supported extensions.
 	virtual int GetNumExt() const = 0;
 	//! Get supported extension.
 	//! @param index Index of extension must be in range 0 < index < GetNumExt().
-	virtual const char* GetExt( int index ) const = 0;
+	virtual const char* GetExt(int index) const = 0;
 
 	// this should retrieve the timestamp of the convertor executable:
 	// when it was created by the linker, normally. This date/time is used to

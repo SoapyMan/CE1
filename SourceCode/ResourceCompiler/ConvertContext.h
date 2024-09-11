@@ -50,9 +50,9 @@ struct ConvertContext
 	//! Output file that would be created from sourceFile. (relative or absolute)
 	CString outputFile;
 
-	CString getSourcePath() {return masterFolder + Path::Make(sourceFolder,sourceFile);}
-	CString getOutputPath() {return masterFolder + Path::Make(outputFolder,outputFile);}
-	CString getOutputFolderPath(){return masterFolder + outputFolder;}
+	CString getSourcePath() { return masterFolder + Path::Make(sourceFolder, sourceFile); }
+	CString getOutputPath() { return masterFolder + Path::Make(outputFolder, outputFile); }
+	CString getOutputFolderPath() { return masterFolder + outputFolder; }
 
 	//! Source file folder, so that the source file can be opened regardless whether the 
 	//! path is given in sourceFile or not
@@ -61,21 +61,21 @@ struct ConvertContext
 	CString outputFolder;
 
 	//! Pointer to resource compiler interface.
-	IResourceCompiler *pRC;
+	IResourceCompiler* pRC;
 	//! Configuration settings for this file.
-	IConfig *config;
+	IConfig* config;
 	//! Returns the log to put the messages during conversion to:
 	//! use Log(), LogWarning() and LogError()
-	IRCLog *pLog;
+	IRCLog* pLog;
 
 	//! Dont log much info into log.
 	bool bQuiet;
 
 	//! file specific config file, must not be 0 (if there was no file, a empty instace with the right filename is created)
-	ICfgFile *pFileSpecificConfig;
+	ICfgFile* pFileSpecificConfig;
 
 	//! presets config (for use with the image compiler)
-	ICfgFile *presets;
+	ICfgFile* presets;
 
 	//! Platform to which file must be processed.
 	Platform platform;

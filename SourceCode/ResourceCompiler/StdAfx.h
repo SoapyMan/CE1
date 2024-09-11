@@ -60,7 +60,7 @@ typedef CPortableString CString;
 //////////////////////////////////////////////////////////////////////////
 // globals.
 //////////////////////////////////////////////////////////////////////////
-extern void MessageBoxError( const char *format,... );
+extern void MessageBoxError(const char* format, ...);
 // extern void Log( const char *format,... );
 
 #ifndef SIZEOF_ARRAY

@@ -26,8 +26,8 @@ class CmdLine
 public:
 	CmdLine();
 
-	void Parse ( int argc, char **argv,Config *config );
-	void ParseParam ( const char *param,bool bFlag,bool bLast );
+	void Parse(int argc, char** argv, Config* config);
+	void ParseParam(const char* param, bool bFlag, bool bLast);
 
 	CString m_fileSpec;
 	bool m_bHelp;

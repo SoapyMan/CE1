@@ -30,23 +30,23 @@ struct IConfig
 	virtual IConfig* Clone() const = 0;
 
 	//! Check if configuration has this key.
-	virtual bool HasKey( const char *key ) const = 0;
+	virtual bool HasKey(const char* key) const = 0;
 
 	//! Get value of key. the value isn't modified if the key isn't found
 	//! @return true if option found, false if not.
-	virtual bool Get( const char *key,float &value ) const = 0;
-	virtual bool Get( const char *key,int &value ) const = 0;
-	virtual bool Get( const char *key,bool &value ) const = 0;
-	virtual bool Get( const char *key,CString &value ) const = 0;
+	virtual bool Get(const char* key, float& value) const = 0;
+	virtual bool Get(const char* key, int& value) const = 0;
+	virtual bool Get(const char* key, bool& value) const = 0;
+	virtual bool Get(const char* key, CString& value) const = 0;
 
-	virtual void Set( const char *key,const char* value ) = 0;
+	virtual void Set(const char* key, const char* value) = 0;
 
-	virtual Config *GetInternalRepresentation( void )=0;
+	virtual Config* GetInternalRepresentation(void) = 0;
 
 	template <typename T>
-	T GetAs (const char* key, T defaultValue)
+	T GetAs(const char* key, T defaultValue)
 	{
-		Get (key, defaultValue);
+		Get(key, defaultValue);
 		return defaultValue;
 	}
 };
