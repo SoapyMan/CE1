@@ -8,78 +8,78 @@
 
 template < class IndexType > class StaticIB
 {
-  private :
+private:
 
-    LPDIRECT3DINDEXBUFFER9 mpIB;
+	LPDIRECT3DINDEXBUFFER9 mpIB;
 
-    uint mIndexCount;
-    bool    mbLocked;
-    IndexType* m_pLockedData;
+	uint mIndexCount;
+	bool    mbLocked;
+	IndexType* m_pLockedData;
 
-  public :
+public:
 
-    unsigned int GetIndexCount() const 
-    { 
-      return mIndexCount; 
-    }
+	unsigned int GetIndexCount() const
+	{
+		return mIndexCount;
+	}
 
-    StaticIB( const LPDIRECT3DDEVICE9 pD3D, const unsigned int& theIndexCount )
-    {
-      mpIB = 0;
-      mbLocked = false;
+	StaticIB(const LPDIRECT3DDEVICE9 pD3D, const unsigned int& theIndexCount)
+	{
+		mpIB = 0;
+		mbLocked = false;
 
-      mIndexCount = theIndexCount;
-    
-      HRESULT hr = pD3D->CreateIndexBuffer( mIndexCount * sizeof( IndexType ), D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC, D3DFMT_INDEX16, D3DPOOL_DEFAULT, &mpIB, NULL);
+		mIndexCount = theIndexCount;
 
-      ASSERT( ( hr == D3D_OK ) && ( mpIB ) );
-    }
+		HRESULT hr = pD3D->CreateIndexBuffer(mIndexCount * sizeof(IndexType), D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC, D3DFMT_INDEX16, D3DPOOL_DEFAULT, &mpIB, NULL);
 
-    LPDIRECT3DINDEXBUFFER9 GetInterface() const { return mpIB; }
+		ASSERT((hr == D3D_OK) && (mpIB));
+	}
 
-    IndexType* Lock( const unsigned int& theLockCount, unsigned int& theStartIndex )
-    {
-      // Ensure there is enough space in the IB for this data
-      ASSERT ( theLockCount <= mIndexCount );
+	LPDIRECT3DINDEXBUFFER9 GetInterface() const { return mpIB; }
 
-      if  (mbLocked)
-        return m_pLockedData;
+	IndexType* Lock(const unsigned int& theLockCount, unsigned int& theStartIndex)
+	{
+		// Ensure there is enough space in the IB for this data
+		ASSERT(theLockCount <= mIndexCount);
 
-      if ( mpIB )
-      {
-        DWORD dwFlags = D3DLOCK_DISCARD;
-        DWORD dwSize = 0;
+		if (mbLocked)
+			return m_pLockedData;
 
-        HRESULT hr = mpIB->Lock( 0, 0, reinterpret_cast<void**>( &m_pLockedData ), dwFlags );
+		if (mpIB)
+		{
+			DWORD dwFlags = D3DLOCK_DISCARD;
+			DWORD dwSize = 0;
 
-        ASSERT( hr == D3D_OK );
-        ASSERT( m_pLockedData != 0 );
-        mbLocked = true;
-        theStartIndex = 0;
-      }
+			HRESULT hr = mpIB->Lock(0, 0, reinterpret_cast<void**>(&m_pLockedData), dwFlags);
 
-      return m_pLockedData;
-    }
+			ASSERT(hr == D3D_OK);
+			ASSERT(m_pLockedData != 0);
+			mbLocked = true;
+			theStartIndex = 0;
+		}
 
-    void Unlock()
-    {
-      if ( ( mbLocked ) && ( mpIB ) )
-      {
-        HRESULT hr = mpIB->Unlock();        
-        ASSERT( hr == D3D_OK );
-        mbLocked = false;
-      }
-    }
+		return m_pLockedData;
+	}
 
-    ~StaticIB()
-    {
-      Unlock();
-      if ( mpIB )
-      {
-        mpIB->Release();
-      }
-    }
-  
+	void Unlock()
+	{
+		if ((mbLocked) && (mpIB))
+		{
+			HRESULT hr = mpIB->Unlock();
+			ASSERT(hr == D3D_OK);
+			mbLocked = false;
+		}
+	}
+
+	~StaticIB()
+	{
+		Unlock();
+		if (mpIB)
+		{
+			mpIB->Release();
+		}
+	}
+
 };
 
 typedef StaticIB< unsigned short > StaticIB16;

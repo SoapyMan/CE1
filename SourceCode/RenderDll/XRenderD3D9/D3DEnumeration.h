@@ -8,10 +8,10 @@
 //-----------------------------------------------------------------------------
 enum VertexProcessingType
 {
-    SOFTWARE_VP,
-    MIXED_VP,
-    HARDWARE_VP,
-    PURE_HARDWARE_VP
+	SOFTWARE_VP,
+	MIXED_VP,
+	HARDWARE_VP,
+	PURE_HARDWARE_VP
 };
 
 //-----------------------------------------------------------------------------
@@ -21,8 +21,8 @@ enum VertexProcessingType
 //-----------------------------------------------------------------------------
 struct D3DDSMSConflict
 {
-  D3DFORMAT DSFormat;
-  D3DMULTISAMPLE_TYPE MSType;
+	D3DFORMAT DSFormat;
+	D3DMULTISAMPLE_TYPE MSType;
 };
 
 
@@ -33,20 +33,20 @@ struct D3DDSMSConflict
 //-----------------------------------------------------------------------------
 struct D3DDeviceCombo
 {
-  int AdapterOrdinal;
-  D3DDEVTYPE DevType;
-  D3DFORMAT AdapterFormat;
-  D3DFORMAT BackBufferFormat;
-  bool IsWindowed;
-  TArray<D3DFORMAT> *pDepthStencilFormatList; // List of D3DFORMATs
-  TArray<D3DMULTISAMPLE_TYPE> *pMultiSampleTypeList; // List of D3DMULTISAMPLE_TYPEs
-  TArray<DWORD> *pMultiSampleQualityList; // List of DWORDs (number of quality 
-  // levels for each multisample type)
-  TArray<D3DDSMSConflict> *pDSMSConflictList; // List of D3DDSMSConflicts
-  TArray<VertexProcessingType> *pVertexProcessingTypeList; // List of VertexProcessingTypes
-  TArray<UINT> *pPresentIntervalList; // List of D3DPRESENT_INTERVALs
+	int AdapterOrdinal;
+	D3DDEVTYPE DevType;
+	D3DFORMAT AdapterFormat;
+	D3DFORMAT BackBufferFormat;
+	bool IsWindowed;
+	TArray<D3DFORMAT>* pDepthStencilFormatList; // List of D3DFORMATs
+	TArray<D3DMULTISAMPLE_TYPE>* pMultiSampleTypeList; // List of D3DMULTISAMPLE_TYPEs
+	TArray<DWORD>* pMultiSampleQualityList; // List of DWORDs (number of quality 
+	// levels for each multisample type)
+	TArray<D3DDSMSConflict>* pDSMSConflictList; // List of D3DDSMSConflicts
+	TArray<VertexProcessingType>* pVertexProcessingTypeList; // List of VertexProcessingTypes
+	TArray<UINT>* pPresentIntervalList; // List of D3DPRESENT_INTERVALs
 
-  ~D3DDeviceCombo( void );
+	~D3DDeviceCombo(void);
 };
 
 
@@ -57,11 +57,11 @@ struct D3DDeviceCombo
 //-----------------------------------------------------------------------------
 struct D3DDeviceInfo
 {
-  int AdapterOrdinal;
-  D3DDEVTYPE DevType;
-  D3DCAPS9 Caps;
-  TArray<D3DDeviceCombo *> *pDeviceComboList; // List of D3DDeviceCombo pointers
-  ~D3DDeviceInfo( void );
+	int AdapterOrdinal;
+	D3DDEVTYPE DevType;
+	D3DCAPS9 Caps;
+	TArray<D3DDeviceCombo*>* pDeviceComboList; // List of D3DDeviceCombo pointers
+	~D3DDeviceInfo(void);
 };
 
 
@@ -71,18 +71,18 @@ struct D3DDeviceInfo
 //-----------------------------------------------------------------------------
 struct D3DAdapterInfo
 {
-    int AdapterOrdinal;
-    uint m_MaxWidth;
-    uint m_MaxHeight;
-    D3DADAPTER_IDENTIFIER9 AdapterIdentifier;
-    TArray<D3DDISPLAYMODE> *pDisplayModeList; // List of D3DDISPLAYMODEs
-    TArray<D3DDeviceInfo*> *pDeviceInfoList; // List of D3DDeviceInfo pointers
-    ~D3DAdapterInfo( void );
+	int AdapterOrdinal;
+	uint m_MaxWidth;
+	uint m_MaxHeight;
+	D3DADAPTER_IDENTIFIER9 AdapterIdentifier;
+	TArray<D3DDISPLAYMODE>* pDisplayModeList; // List of D3DDISPLAYMODEs
+	TArray<D3DDeviceInfo*>* pDeviceInfoList; // List of D3DDeviceInfo pointers
+	~D3DAdapterInfo(void);
 };
 
 
-typedef bool(* CONFIRMDEVICECALLBACK)( D3DCAPS9* pCaps, VertexProcessingType vertexProcessingType, 
-									   D3DFORMAT adapterFormat, D3DFORMAT backBufferFormat );
+typedef bool(*CONFIRMDEVICECALLBACK)(D3DCAPS9* pCaps, VertexProcessingType vertexProcessingType,
+	D3DFORMAT adapterFormat, D3DFORMAT backBufferFormat);
 
 
 //-----------------------------------------------------------------------------
@@ -92,39 +92,39 @@ typedef bool(* CONFIRMDEVICECALLBACK)( D3DCAPS9* pCaps, VertexProcessingType ver
 class CD3DEnumeration
 {
 private:
-    IDirect3D9* m_pD3D;
+	IDirect3D9* m_pD3D;
 
 private:
-    HRESULT EnumerateDevices( D3DAdapterInfo* pAdapterInfo, TArray<D3DFORMAT> *pAdapterFormatList );
-    HRESULT EnumerateDeviceCombos( D3DDeviceInfo* pDeviceInfo, TArray<D3DFORMAT> *pAdapterFormatList );
-    void BuildDepthStencilFormatList( D3DDeviceCombo* pDeviceCombo );
-    void BuildMultiSampleTypeList( D3DDeviceCombo* pDeviceCombo );
-    void BuildDSMSConflictList( D3DDeviceCombo* pDeviceCombo );
-    void BuildVertexProcessingTypeList( D3DDeviceInfo* pDeviceInfo, D3DDeviceCombo* pDeviceCombo );
-    void BuildPresentIntervalList( D3DDeviceInfo* pDeviceInfo, D3DDeviceCombo* pDeviceCombo );
+	HRESULT EnumerateDevices(D3DAdapterInfo* pAdapterInfo, TArray<D3DFORMAT>* pAdapterFormatList);
+	HRESULT EnumerateDeviceCombos(D3DDeviceInfo* pDeviceInfo, TArray<D3DFORMAT>* pAdapterFormatList);
+	void BuildDepthStencilFormatList(D3DDeviceCombo* pDeviceCombo);
+	void BuildMultiSampleTypeList(D3DDeviceCombo* pDeviceCombo);
+	void BuildDSMSConflictList(D3DDeviceCombo* pDeviceCombo);
+	void BuildVertexProcessingTypeList(D3DDeviceInfo* pDeviceInfo, D3DDeviceCombo* pDeviceCombo);
+	void BuildPresentIntervalList(D3DDeviceInfo* pDeviceInfo, D3DDeviceCombo* pDeviceCombo);
 
 public:
-    TArray<D3DAdapterInfo *> *m_pAdapterInfoList;
-    // The following variables can be used to limit what modes, formats, 
-    // etc. are enumerated.  Set them to the values you want before calling
-    // Enumerate().
-    CONFIRMDEVICECALLBACK ConfirmDeviceCallback;
-    UINT AppMinFullscreenWidth;
-    UINT AppMinFullscreenHeight;
-    UINT AppMinColorChannelBits; // min color bits per channel in adapter format
-    UINT AppMinAlphaChannelBits; // min alpha bits per pixel in back buffer format
-    UINT AppMinDepthBits;
-    UINT AppMinStencilBits;
-    bool AppUsesDepthBuffer;
-    bool AppUsesMixedVP; // whether app can take advantage of mixed vp mode
-    bool AppRequiresWindowed;
-    bool AppRequiresFullscreen;
-    TArray<D3DFORMAT> *m_pAllowedAdapterFormatList; // list of D3DFORMATs
+	TArray<D3DAdapterInfo*>* m_pAdapterInfoList;
+	// The following variables can be used to limit what modes, formats, 
+	// etc. are enumerated.  Set them to the values you want before calling
+	// Enumerate().
+	CONFIRMDEVICECALLBACK ConfirmDeviceCallback;
+	UINT AppMinFullscreenWidth;
+	UINT AppMinFullscreenHeight;
+	UINT AppMinColorChannelBits; // min color bits per channel in adapter format
+	UINT AppMinAlphaChannelBits; // min alpha bits per pixel in back buffer format
+	UINT AppMinDepthBits;
+	UINT AppMinStencilBits;
+	bool AppUsesDepthBuffer;
+	bool AppUsesMixedVP; // whether app can take advantage of mixed vp mode
+	bool AppRequiresWindowed;
+	bool AppRequiresFullscreen;
+	TArray<D3DFORMAT>* m_pAllowedAdapterFormatList; // list of D3DFORMATs
 
-    CD3DEnumeration();
-    ~CD3DEnumeration();
-    void SetD3D(IDirect3D9* pD3D) { m_pD3D = pD3D; }
-    HRESULT Enumerate();
+	CD3DEnumeration();
+	~CD3DEnumeration();
+	void SetD3D(IDirect3D9* pD3D) { m_pD3D = pD3D; }
+	HRESULT Enumerate();
 };
 
 #endif

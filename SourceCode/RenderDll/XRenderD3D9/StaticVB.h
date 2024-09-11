@@ -1,81 +1,81 @@
 #ifndef _StaticVB_H_
 #define _StaticVB_H_
 
-template <class VertexType> class StaticVB 
+template <class VertexType> class StaticVB
 {
-  private :
+private:
 
-    LPDIRECT3DVERTEXBUFFER9 mpVB;
-    uint mVertexCount;
-    bool    mbLocked;
-    VertexType* m_pLockedData;
+	LPDIRECT3DVERTEXBUFFER9 mpVB;
+	uint mVertexCount;
+	bool    mbLocked;
+	VertexType* m_pLockedData;
 
-  public :
+public:
 
-    uint GetVertexCount() const 
-    { 
-      return mVertexCount; 
-    }
+	uint GetVertexCount() const
+	{
+		return mVertexCount;
+	}
 
-    StaticVB( const LPDIRECT3DDEVICE9 pD3D, const DWORD& theFVF, const unsigned int& theVertexCount )
-    {
-      mpVB = 0;
+	StaticVB(const LPDIRECT3DDEVICE9 pD3D, const DWORD& theFVF, const unsigned int& theVertexCount)
+	{
+		mpVB = 0;
 
-      mbLocked = false;
-      m_pLockedData = NULL;
+		mbLocked = false;
+		m_pLockedData = NULL;
 
-      mVertexCount = theVertexCount;
-    
-      HRESULT hr = pD3D->CreateVertexBuffer( mVertexCount * sizeof( VertexType ), D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC, theFVF, D3DPOOL_DEFAULT, &mpVB, NULL);
-      ASSERT( ( hr == D3D_OK ) && ( mpVB ) );
-    }
+		mVertexCount = theVertexCount;
 
-    LPDIRECT3DVERTEXBUFFER9 GetInterface() const { return mpVB; }
+		HRESULT hr = pD3D->CreateVertexBuffer(mVertexCount * sizeof(VertexType), D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC, theFVF, D3DPOOL_DEFAULT, &mpVB, NULL);
+		ASSERT((hr == D3D_OK) && (mpVB));
+	}
 
-    VertexType* Lock( const unsigned int& theLockCount, unsigned int& theStartVertex )
-    {
-      theStartVertex = 0;
+	LPDIRECT3DVERTEXBUFFER9 GetInterface() const { return mpVB; }
 
-      // Ensure there is enough space in the VB for this data
-      ASSERT ( theLockCount <= mVertexCount );
+	VertexType* Lock(const unsigned int& theLockCount, unsigned int& theStartVertex)
+	{
+		theStartVertex = 0;
 
-      if (mbLocked)
-        return m_pLockedData;
+		// Ensure there is enough space in the VB for this data
+		ASSERT(theLockCount <= mVertexCount);
 
-      if ( mpVB )
-      {
-        DWORD dwFlags = D3DLOCK_DISCARD;
-        DWORD dwSize = 0;
+		if (mbLocked)
+			return m_pLockedData;
 
-        HRESULT hr = mpVB->Lock( 0, 0, reinterpret_cast<void**>( &m_pLockedData ), dwFlags );
+		if (mpVB)
+		{
+			DWORD dwFlags = D3DLOCK_DISCARD;
+			DWORD dwSize = 0;
 
-        ASSERT( hr == D3D_OK );
-        ASSERT( m_pLockedData != 0 );
-        mbLocked = true;
-      }
+			HRESULT hr = mpVB->Lock(0, 0, reinterpret_cast<void**>(&m_pLockedData), dwFlags);
 
-      return m_pLockedData;
-    }
+			ASSERT(hr == D3D_OK);
+			ASSERT(m_pLockedData != 0);
+			mbLocked = true;
+		}
 
-    void Unlock()
-    {
-      if ( ( mbLocked ) && ( mpVB ) )
-      {
-        HRESULT hr = mpVB->Unlock();        
-        ASSERT( hr == D3D_OK );
-        mbLocked = false;
-      }
-    }
+		return m_pLockedData;
+	}
 
-    ~StaticVB()
-    {
-      Unlock();
-      if ( mpVB )
-      {
-        mpVB->Release();
-      }
-    }
-  
+	void Unlock()
+	{
+		if ((mbLocked) && (mpVB))
+		{
+			HRESULT hr = mpVB->Unlock();
+			ASSERT(hr == D3D_OK);
+			mbLocked = false;
+		}
+	}
+
+	~StaticVB()
+	{
+		Unlock();
+		if (mpVB)
+		{
+			mpVB->Release();
+		}
+	}
+
 };
 
 #endif  _StaticVB_H_
