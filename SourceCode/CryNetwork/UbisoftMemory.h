@@ -7,8 +7,8 @@
 #	define GS_LINUX
 #endif
 
-extern "C"  void * __stdcall ExtAlloc_Malloc(unsigned int lSize);
-extern "C"  void __stdcall ExtAlloc_Free(void *ptr);
-extern "C"  void * __stdcall ExtAlloc_Realloc(void *ptr, unsigned int uiSize);
+extern "C"  void* __stdcall ExtAlloc_Malloc(unsigned int lSize);
+extern "C"  void __stdcall ExtAlloc_Free(void* ptr);
+extern "C"  void* __stdcall ExtAlloc_Realloc(void* ptr, unsigned int uiSize);
 
 #endif

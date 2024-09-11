@@ -67,30 +67,30 @@ struct SClientCheckContext
 class CDefenceWall
 {
 public:
-	CDefenceWall( CNetwork *pNetwork );
+	CDefenceWall(CNetwork* pNetwork);
 	~CDefenceWall();
 
 	// This is server.
-	void SetServer( CServer *pServer );
+	void SetServer(CServer* pServer);
 	// This is client.
-	void SetClient( CClient *pClient );
+	void SetClient(CClient* pClient);
 
 	void ClearProtectedFiles();
-	void AddProtectedFile( const char *sFilename );
+	void AddProtectedFile(const char* sFilename);
 
 	void ServerUpdate();
 
 	//////////////////////////////////////////////////////////////////////////
 	// Some important events.
 	//////////////////////////////////////////////////////////////////////////
-	void OnAddClient(  CIPAddress &clientIP );
-	void OnDisconnectClient( CIPAddress &clientIP );
+	void OnAddClient(CIPAddress& clientIP);
+	void OnDisconnectClient(CIPAddress& clientIP);
 	void ClearClients();
 
 	// When client recieves server request.
-	void OnServerRequest( CStream &stm );
+	void OnServerRequest(CStream& stm);
 	// When server recieves client response.
-	void OnClientResponse( CIPAddress &clientIP,CStream &stm );
+	void OnClientResponse(CIPAddress& clientIP, CStream& stm);
 
 private:
 	// This structure describe connected client on server.
@@ -106,48 +106,48 @@ private:
 		ClientInfo() { bSuspectedPunk = false; b64bit = false; };
 	};
 
-	void SendSecurityQueryToClient( CIPAddress &clientIP,CStream &stm );
-	void SendSecurityRespToServer( CStream &stm );
+	void SendSecurityQueryToClient(CIPAddress& clientIP, CStream& stm);
+	void SendSecurityRespToServer(CStream& stm);
 
 	// Called on client, in response to server request.
-	void OnValidateClientContext( SClientCheckContext &ctx );
+	void OnValidateClientContext(SClientCheckContext& ctx);
 
 	// Validate data on specified client IP.
-	void FirstTimeClientValidation( ClientInfo *pClientInfo );
-	void RandomClientValidation( ClientInfo *pClientInfo );
+	void FirstTimeClientValidation(ClientInfo* pClientInfo);
+	void RandomClientValidation(ClientInfo* pClientInfo);
 
-	void IssueRequest( ClientInfo *pClientInfo,CStream &outstream,SClientCheckContext &ctx );
-	void WriteStreamRequest( SClientCheckContext &ctx,CStream &stm );
-	void ReadStreamRequest( SClientCheckContext &ctx,CStream &stm );
-	void WriteStreamResponse( SClientCheckContext &ctx,CStream &stm );
-	void ReadStreamResponse( SClientCheckContext &ctx,CStream &stm );
-	SClientCheckContext* FindRequest( int nRequestId );
-	void RemoveRequest( SClientCheckContext* pCtx );
+	void IssueRequest(ClientInfo* pClientInfo, CStream& outstream, SClientCheckContext& ctx);
+	void WriteStreamRequest(SClientCheckContext& ctx, CStream& stm);
+	void ReadStreamRequest(SClientCheckContext& ctx, CStream& stm);
+	void WriteStreamResponse(SClientCheckContext& ctx, CStream& stm);
+	void ReadStreamResponse(SClientCheckContext& ctx, CStream& stm);
+	SClientCheckContext* FindRequest(int nRequestId);
+	void RemoveRequest(SClientCheckContext* pCtx);
 	void ClearAllPendingRequests();
 
 	// Make all filenames compatable.
-	void UnifyFilename( string &sFilename );
-	void GetRelativeFilename( string &sFilename );
-	ClientInfo* FindClientInfo( CIPAddress &clientIP ) const;
-	void PunkDetected( CIPAddress &clientIP,int type );
+	void UnifyFilename(string& sFilename);
+	void GetRelativeFilename(string& sFilename);
+	ClientInfo* FindClientInfo(CIPAddress& clientIP) const;
+	void PunkDetected(CIPAddress& clientIP, int type);
 
-	void EncryptStream( CStream &stm );
-	void DecryptStream( CStream &stm );
+	void EncryptStream(CStream& stm);
+	void DecryptStream(CStream& stm);
 
 	void FillStdServerProbes();
-	bool ServerCreateFileProbe( const char *sFilename,SClientCheckContext &ctx,bool bRandomPart );
-	bool ServerCreateModuleProbe( const char *sFilename,SClientCheckContext &ctx );
+	bool ServerCreateFileProbe(const char* sFilename, SClientCheckContext& ctx, bool bRandomPart);
+	bool ServerCreateModuleProbe(const char* sFilename, SClientCheckContext& ctx);
 	int GetSystemStatusFlags();
 
 private:
 	typedef std::list<SClientCheckContext*> PendingChecks;
 	PendingChecks m_pendingChecks;
-	CNetwork *m_pNetwork;
+	CNetwork* m_pNetwork;
 	unsigned int m_nNextRequestId;
 
-	ISystem *m_pSystem;
-	CServer *m_pServer;
-	CClient *m_pClient;
+	ISystem* m_pSystem;
+	CServer* m_pServer;
+	CClient* m_pClient;
 	// True if server, false if client.
 	bool m_bServer;
 	bool m_b64bit; // Running in 64bit version.

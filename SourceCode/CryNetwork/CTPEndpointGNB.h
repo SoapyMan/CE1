@@ -21,7 +21,7 @@
 
 #include <queue>
 
-typedef struct tagBuffer{
+typedef struct tagBuffer {
 	CStream stmData;
 	DWORD dwTimeout;
 	LONG nSeq;//only for retrasmission
@@ -32,53 +32,53 @@ typedef std::queue<CStream> STREAM_QUEUE;
 class CCTPEndpointGNB
 {
 public:
-	CCTPEndpointGNB( CNetwork *pNetwork );
+	CCTPEndpointGNB(CNetwork* pNetwork);
 	virtual ~CCTPEndpointGNB(void);
 	void Reset();
-	void Init(_IEndpointUser *pParent,bool bSecondary){m_pParent=pParent;m_bSecondary=bSecondary;}
-	bool SendUnreliable(CStream &stmData);
-	bool SendReliable(CStream &stmData);
-	void Update(unsigned int nTime,unsigned char cFrameType = 0,CStream *pStm=NULL);
+	void Init(_IEndpointUser* pParent, bool bSecondary) { m_pParent = pParent; m_bSecondary = bSecondary; }
+	bool SendUnreliable(CStream& stmData);
+	bool SendReliable(CStream& stmData);
+	void Update(unsigned int nTime, unsigned char cFrameType = 0, CStream* pStm = NULL);
 	void SetRate(unsigned int nBytePerSec);
 	void Dump();
-	unsigned int GetRemoteTimestamp(unsigned int nTime){
+	unsigned int GetRemoteTimestamp(unsigned int nTime) {
 		return m_LatencyCalculator.GetCurrentRemoteTimestamp(nTime);
 	}
-	void GetMemoryStatistics(ICrySizer *pSizer);
-  //
+	void GetMemoryStatistics(ICrySizer* pSizer);
+	//
 	unsigned int GetPing();
-	unsigned int GetLostPackets(){return m_nLostPackets;}
-	unsigned int GetUnreliableLostPackets(){return m_nUnreliableLostPackets;}
+	unsigned int GetLostPackets() { return m_nLostPackets; }
+	unsigned int GetUnreliableLostPackets() { return m_nUnreliableLostPackets; }
 
 
-	void EnableCompression(bool bEnable){m_bCompress=bEnable;}
+	void EnableCompression(bool bEnable) { m_bCompress = bEnable; }
 	// Changes crypt key specifically for this connection.
-	void SetPublicCryptKey( unsigned int key );
+	void SetPublicCryptKey(unsigned int key);
 
 protected:
 	virtual void BuildOutgoingFrame();
 	virtual bool IsTimeToSend();
-	
+
 private:
-//	CStream CompressStream(CStream &stmUncompressed);
-//	CStream UncompressStream(CStream &stmCompressed);
+	//	CStream CompressStream(CStream &stmUncompressed);
+	//	CStream UncompressStream(CStream &stmCompressed);
 	void ProcessBufferTimers();
 	void ProcessAckTimer();
 	void HandleAckTimeout();
-	void HandleDataFrame(CTPData &f);
+	void HandleDataFrame(CTPData& f);
 	void HandleTimeout(LONG nOldestFrame);
-	void SendFrame(LONG nType,LONG nFrameNum,LONG nFrameExpected,CStream *pUnreliable = NULL,bool bUnreliable=false);
+	void SendFrame(LONG nType, LONG nFrameNum, LONG nFrameExpected, CStream* pUnreliable = NULL, bool bUnreliable = false);
 	void StopTimer(LONG nIndex);
 	void SetTimer(LONG nIndex);
 	void StopAckTimer();
 	void SetAckTimer();
 
-	void CryptPacket( CTPData &data );
-	void UncryptPacket( CTPData &data );
+	void CryptPacket(CTPData& data);
+	void UncryptPacket(CTPData& data);
 
-//////////////////////////////////////
-	CNetwork *m_pNetwork;
-	_IEndpointUser *m_pParent;
+	//////////////////////////////////////
+	CNetwork* m_pNetwork;
+	_IEndpointUser* m_pParent;
 	bool m_bSecondary;
 
 	Buffer m_OutBuffers[NUM_OF_BUFS];
@@ -93,7 +93,7 @@ private:
 	DWORD m_dwPingTime;
 	DWORD m_nAllowedBytes;
 	DWORD m_nLastPacketSent;
-  DWORD m_nLostPackets;
+	DWORD m_nLostPackets;
 	DWORD m_nUnreliableLostPackets;
 	unsigned int m_nCurrentTime;
 	CPingCalculator m_LatencyCalculator;

@@ -58,45 +58,45 @@ public:
 	//! constructor
 	CDatagramSocket()
 	{
-		m_hSocket=INVALID_SOCKET;
+		m_hSocket = INVALID_SOCKET;
 
-		m_nSentBytesInThisSec=0;
-		m_nReceivedBytesInThisSec=0;
-		m_nSentPacketsInThisSec=0;
-		m_nReceivedPacketsInThisSec=0;
+		m_nSentBytesInThisSec = 0;
+		m_nReceivedBytesInThisSec = 0;
+		m_nSentPacketsInThisSec = 0;
+		m_nReceivedPacketsInThisSec = 0;
 
-		m_fIncomingKbPerSec=0.0f;
-		m_fOutgoingKbPerSec=0.0f;
-		m_nIncomingPacketsPerSec=0;
-		m_nOutgoingPacketsPerSec=0;
+		m_fIncomingKbPerSec = 0.0f;
+		m_fOutgoingKbPerSec = 0.0f;
+		m_nIncomingPacketsPerSec = 0;
+		m_nOutgoingPacketsPerSec = 0;
 	}
 	//! destructor
 	virtual ~CDatagramSocket()
 	{
-		Close(); 
+		Close();
 		//<<FIXME>>
 	}
 	//!
 	NRESULT Create(SocketType st = NonBlocking);
 	//!
-	NRESULT Listen(WORD wPort, CIPAddress *xaMulticastAddress = NULL, CIPAddress *ipLocalAddress = 0);
+	NRESULT Listen(WORD wPort, CIPAddress* xaMulticastAddress = NULL, CIPAddress* ipLocalAddress = 0);
 	//!
-	void SetDefaultTarget(CIPAddress &saAddress)
+	void SetDefaultTarget(CIPAddress& saAddress)
 	{
 		m_saDefaultAddress.Set(saAddress);
 	}
 	//!
-	NRESULT Send(BYTE *pBuffer, int nLenBytes, CIPAddress *saAddress = NULL);
+	NRESULT Send(BYTE* pBuffer, int nLenBytes, CIPAddress* saAddress = NULL);
 	//!
-	NRESULT Receive(unsigned char *pBuf/*[MAX_UDP_PACKET_SIZE]*/, int nBufLen, int &nRecvBytes, CIPAddress &pFrom);
+	NRESULT Receive(unsigned char* pBuf/*[MAX_UDP_PACKET_SIZE]*/, int nBufLen, int& nRecvBytes, CIPAddress& pFrom);
 
-	const char *GetHostName();
+	const char* GetHostName();
 	//!
 	void ComputeBandwidth();
 	//!
-	NRESULT GetSocketAddresses(CIPAddress *pAddr, DWORD nMaCIPAddresses);
+	NRESULT GetSocketAddresses(CIPAddress* pAddr, DWORD nMaCIPAddresses);
 	//!
-	int GetLastError(){return WSAGetLastError();}
+	int GetLastError() { return WSAGetLastError(); }
 	//!
 	void Close();
 
@@ -105,7 +105,7 @@ private:
 	SocketType				m_stSocketType;								//!<
 	CIPAddress				m_saDefaultAddress;						//!< Default target host and port [optional] for Send()
 	unsigned int			m_nStartTick;									//!< tick for bandwitdh computation
-	
+
 	unsigned int			m_nSentBytesInThisSec;				//!< is counting up and reseted every second
 	unsigned int			m_nReceivedBytesInThisSec;		//!< is counting up and reseted every second
 	unsigned int			m_nSentPacketsInThisSec;			//!< is counting up and reseted every second

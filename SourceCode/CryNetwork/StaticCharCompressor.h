@@ -15,13 +15,13 @@ public:
 	CStaticCharCompressor();
 
 	//! \param indwPriority table of the priorites of the character set
-	void InitFromStatistics( const DWORD indwPriority[256] );
+	void InitFromStatistics(const DWORD indwPriority[256]);
 
 	//! \return stream error
-	bool Write( CStream &outStream, const unsigned char inChar );
+	bool Write(CStream& outStream, const unsigned char inChar);
 
 	//! \return stream error
-	bool Read( CStream &inStream, unsigned char &outChar );
+	bool Read(CStream& inStream, unsigned char& outChar);
 
 
 private: // ---------------------------------------------------------
@@ -29,17 +29,17 @@ private: // ---------------------------------------------------------
 	struct SNode
 	{
 		//! constructor for a leaf
-		SNode( const unsigned char inValue )
+		SNode(const unsigned char inValue)
 			:m_Value(inValue)
 		{
-			m_dwIndexZero=0xffffffff;m_dwIndexOne=0xffffffff;		// unused
+			m_dwIndexZero = 0xffffffff; m_dwIndexOne = 0xffffffff;		// unused
 		}
 
 		//! constructor for a node
-		SNode( const DWORD indwIndexZero, const DWORD indwIndexOne )
-			:m_dwIndexZero(indwIndexZero),m_dwIndexOne(indwIndexOne)
+		SNode(const DWORD indwIndexZero, const DWORD indwIndexOne)
+			:m_dwIndexZero(indwIndexZero), m_dwIndexOne(indwIndexOne)
 		{
-			m_Value=0;																					// unused
+			m_Value = 0;																					// unused
 		}
 
 		DWORD							m_dwIndexZero;			//!< 0xffffffff or index to the subtree for bit = 0
@@ -49,17 +49,17 @@ private: // ---------------------------------------------------------
 
 		bool IsLeaf()
 		{
-			return m_dwIndexZero==0xffffffff && m_dwIndexOne==0xffffffff;
+			return m_dwIndexZero == 0xffffffff && m_dwIndexOne == 0xffffffff;
 		}
 	};
-	
+
 	// ------------------------------------------------------------------
 
 	struct SPriIndex
 	{
 		//! constructor
-		SPriIndex( const DWORD indwIndex, const DWORD indwPriority ) 
-			:m_dwIndex(indwIndex),m_dwPriority(indwPriority)
+		SPriIndex(const DWORD indwIndex, const DWORD indwPriority)
+			:m_dwIndex(indwIndex), m_dwPriority(indwPriority)
 		{
 		}
 
@@ -67,9 +67,9 @@ private: // ---------------------------------------------------------
 		DWORD								m_dwPriority;				//!<
 
 		//! used for sorting (from low to hight values)
-		bool operator<( const SPriIndex &inRhs ) const
+		bool operator<(const SPriIndex& inRhs) const
 		{
-			return m_dwPriority<inRhs.m_dwPriority;
+			return m_dwPriority < inRhs.m_dwPriority;
 		}
 	};
 
@@ -80,7 +80,7 @@ private: // ---------------------------------------------------------
 		//! constructor
 		SBitToChar()
 		{
-			m_Bitfield=0;m_BitCount=0;
+			m_Bitfield = 0; m_BitCount = 0;
 		}
 
 		unsigned short			m_Bitfield;					//!<
@@ -93,6 +93,6 @@ private: // ---------------------------------------------------------
 	std::vector<SNode>		m_Nodes;						//!<
 	SBitToChar						m_CharToBit[256];		//!<
 
-	bool GetCharFromBits_slow( const unsigned char inVal, const DWORD indwIndex, SBitToChar &outDat );
+	bool GetCharFromBits_slow(const unsigned char inVal, const DWORD indwIndex, SBitToChar& outDat);
 };
 

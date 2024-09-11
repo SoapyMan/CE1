@@ -40,10 +40,10 @@
 #include <CryMemoryManager.h>
 
 #if defined(LINUX)
-	#include <unistd.h>
-	#include <fcntl.h>
-	static inline int closesocket(int s) { return ::close(s); }
-	static inline int WSAGetLastError() { return errno; }
+#include <unistd.h>
+#include <fcntl.h>
+static inline int closesocket(int s) { return ::close(s); }
+static inline int WSAGetLastError() { return errno; }
 #endif
 
 #include <map>
@@ -64,8 +64,8 @@
 
 
 #if _MSC_VER > 1000
-	#pragma warning( disable : 4786 )
-	//#pragma warning( disable : 4716 )
+#pragma warning( disable : 4786 )
+//#pragma warning( disable : 4716 )
 #endif // _MSC_VER > 1000
 
 
@@ -82,24 +82,24 @@ typedef int	BOOL;
 
 #if defined(WIN64)
 
-	#define NET_ASSERT(x) 
+#define NET_ASSERT(x) 
 
 #elif defined(_XBOX)
 
-	#define NET_ASSERT(x) 
+#define NET_ASSERT(x) 
 
 #elif defined(PS2)
-	#include <iostream.h>
-	inline void NET_ASSERT(void * x)
+#include <iostream.h>
+inline void NET_ASSERT(void* x)
+{
+	if (!(x))
 	{
-		if (!(x))  
-		{
-			cout <<	"Assertion Failed!!\n\nFile: " << __FILE__ <<"\n\nLine: " << __LINE__ << "\n";
-			DEBUG_BREAK;
-		}
+		cout << "Assertion Failed!!\n\nFile: " << __FILE__ << "\n\nLine: " << __LINE__ << "\n";
+		DEBUG_BREAK;
 	}
+}
 #elif defined(WIN32)
-	#define NET_ASSERT(x)																									\
+#define NET_ASSERT(x)																									\
 	{																													\
 			if (!(x)) {																										\
 			static char sAssertionMessage[500];																				\
@@ -111,7 +111,7 @@ typedef int	BOOL;
 	}   
 #else
 
-	#define NET_ASSERT(x) 
+#define NET_ASSERT(x) 
 
 #endif
 
@@ -149,7 +149,7 @@ typedef int	BOOL;
 #define TEA_GETSIZE( len ) ((len) & (~7))
 
 #ifndef PS2
-inline void __cdecl __NET_TRACE(const char *sFormat, ... )
+inline void __cdecl __NET_TRACE(const char* sFormat, ...)
 {
 	/*
 	va_list vl;
@@ -158,7 +158,7 @@ inline void __cdecl __NET_TRACE(const char *sFormat, ... )
 	va_start(vl, sFormat);
 	vsprintf(sTraceString, sFormat, vl);
 	va_end(vl);
-	NET_ASSERT(strlen(sTraceString) < 500) 
+	NET_ASSERT(strlen(sTraceString) < 500)
 	CryLogAlways( sTraceString );
 
 	va_list vl;
@@ -167,12 +167,12 @@ inline void __cdecl __NET_TRACE(const char *sFormat, ... )
 	va_start(vl, sFormat);
 	vsprintf(sTraceString, sFormat, vl);
 	va_end(vl);
-	NET_ASSERT(strlen(sTraceString) < 500) 
+	NET_ASSERT(strlen(sTraceString) < 500)
 	::OutputDebugString(sTraceString);*/
-	
+
 }
 #else
-inline void __NET_TRACE(const char *sFormat, ... )
+inline void __NET_TRACE(const char* sFormat, ...)
 {
 	va_list vl;
 	static char sTraceString[500];
@@ -181,8 +181,8 @@ inline void __NET_TRACE(const char *sFormat, ... )
 	vsprintf(sTraceString, sFormat, vl);
 	va_end(vl);
 	NET_ASSERT(strlen(sTraceString) < 500)
-	cout << sTraceString;
-	
+		cout << sTraceString;
+
 }
 
 #endif	//PS2

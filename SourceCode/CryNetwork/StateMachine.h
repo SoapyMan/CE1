@@ -44,7 +44,7 @@
 	break; \
 	};	\
 	} \
-		
+
 #define BEGIN_SIGNAL_HANDLER(signal)	switch(signal){	\
 
 #define IF_SIGNAL(signal)	case signal:{
@@ -69,23 +69,23 @@
 		break; \
 		};	\
 	return ANY_SIGNAL_HANDLED; 
-		
+
 class CStateMachine
 {
 protected:
-	virtual void _ProcessSignal(unsigned int dwIncomingSignal,ULONG_PTR dwParam)=0;
-	void SetTimer(unsigned int dwName,unsigned int dwElapsed)
+	virtual void _ProcessSignal(unsigned int dwIncomingSignal, ULONG_PTR dwParam) = 0;
+	void SetTimer(unsigned int dwName, unsigned int dwElapsed)
 	{
-		m_dwTimerName=dwName;
-		m_dwTimerElapsed=dwElapsed;
-		m_dwTimerStart=::GetTickCount();
+		m_dwTimerName = dwName;
+		m_dwTimerElapsed = dwElapsed;
+		m_dwTimerStart = ::GetTickCount();
 	}
 	void ResetTimer()
 	{
-		m_dwTimerStart=0;
-		m_dwTimerElapsed=0;
-		m_dwTimerName=0;
-		
+		m_dwTimerStart = 0;
+		m_dwTimerElapsed = 0;
+		m_dwTimerName = 0;
+
 	}
 	void SetStatus(unsigned int dwStatus)
 	{
@@ -93,23 +93,23 @@ protected:
 		_Trace(">>");
 		_TraceStatus(dwStatus);
 		_Trace("\n");
-		m_dwStatus=dwStatus;
+		m_dwStatus = dwStatus;
 	}
-	virtual unsigned int HandleANY(unsigned int dwIncomingSignal,DWORD_PTR dwParam)
+	virtual unsigned int HandleANY(unsigned int dwIncomingSignal, DWORD_PTR dwParam)
 	{
 		return ANY_SIGNAL_NOT_HANDLED;
 	}
-	virtual void OnSignal(unsigned int dwOutgoingSignal,DWORD_PTR  dwParam)
+	virtual void OnSignal(unsigned int dwOutgoingSignal, DWORD_PTR  dwParam)
 	{
 		NET_TRACE("WARNING default OnSignal called\n");
 	}
-	virtual void _Trace(char *s){};
-	virtual void _TraceStatus(unsigned int dwStatus){};
-	
+	virtual void _Trace(char* s) {};
+	virtual void _TraceStatus(unsigned int dwStatus) {};
+
 public:
 	CStateMachine()
 	{
-		m_dwStatus=0;
+		m_dwStatus = 0;
 		Reset();
 	}
 	virtual void Reset()
@@ -117,27 +117,27 @@ public:
 		SetStatus(STATUS_IDLE);
 		ResetTimer();
 	}
-	BOOL Update(unsigned int dwIncomingSignal=0,DWORD_PTR dwParam=0)
+	BOOL Update(unsigned int dwIncomingSignal = 0, DWORD_PTR dwParam = 0)
 	{
-		if(m_dwTimerName)
-			if((::GetTickCount()-m_dwTimerStart)>=m_dwTimerElapsed)
+		if (m_dwTimerName)
+			if ((::GetTickCount() - m_dwTimerStart) >= m_dwTimerElapsed)
 			{
-				unsigned int dwTimerName=m_dwTimerName;
+				unsigned int dwTimerName = m_dwTimerName;
 				ResetTimer();
-				_ProcessSignal(dwTimerName,0);
+				_ProcessSignal(dwTimerName, 0);
 			}
-		
-		if(dwIncomingSignal)
+
+		if (dwIncomingSignal)
 		{
-			_ProcessSignal(dwIncomingSignal,dwParam);	// this pointer might be destroyed after this call
+			_ProcessSignal(dwIncomingSignal, dwParam);	// this pointer might be destroyed after this call
 		}
-		
+
 		return TRUE;
 	}
-	
-	unsigned int GetCurrentStatus(){return m_dwStatus;}
+
+	unsigned int GetCurrentStatus() { return m_dwStatus; }
 	unsigned int m_dwStatus;
-//
+	//
 	unsigned int m_dwTimerStart;
 	unsigned int m_dwTimerElapsed;
 	unsigned int m_dwTimerName;

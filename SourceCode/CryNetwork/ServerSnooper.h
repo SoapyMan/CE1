@@ -8,19 +8,19 @@ class CServerSnooper :
 public:
 	CServerSnooper(void);
 	virtual ~CServerSnooper(void);
-	bool Init(IServerSnooperSink *pSink);
+	bool Init(IServerSnooperSink* pSink);
 public:
-//IServerSnooper
+	//IServerSnooper
 	void SearchForLANServers(unsigned int nTime);
 	void Update(unsigned int nTime);
-	void Release(){delete this;}
+	void Release() { delete this; }
 protected:
-	void ProcessPacket(CStream &stmPacket,CIPAddress &ip);
+	void ProcessPacket(CStream& stmPacket, CIPAddress& ip);
 private:
 	CDatagramSocket m_socket;
 	unsigned int m_nStartTime;
 	unsigned int m_nCurrentTime;
-	IServerSnooperSink *m_pSink;
+	IServerSnooperSink* m_pSink;
 };
 
 #endif //_SERVERSNOOPER_H_

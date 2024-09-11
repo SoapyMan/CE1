@@ -21,10 +21,10 @@ public:
 
 	// interface ICompressionHelper ---------------------------------------------
 
-	virtual bool Write( CStream &outStream, const unsigned char inChar );
-	virtual bool Read( CStream &inStream, unsigned char &outChar );
-	virtual bool Write( CStream &outStream, const char *inszString );
-	virtual bool Read( CStream &inStream, char *outszString, const DWORD indwStringSize );
+	virtual bool Write(CStream& outStream, const unsigned char inChar);
+	virtual bool Read(CStream& inStream, unsigned char& outChar);
+	virtual bool Write(CStream& outStream, const char* inszString);
+	virtual bool Read(CStream& inStream, char* outszString, const DWORD indwStringSize);
 
 private: // -------------------------------------------------------------------
 

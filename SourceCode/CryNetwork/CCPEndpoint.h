@@ -25,9 +25,9 @@
 #define INC_BOOL(xxx) xxx=!(xxx)
 #define TM_BUFFER_TIMER 1000
 
-typedef std::queue<CCPPayload *> CCP_QUEUE;
+typedef std::queue<CCPPayload*> CCP_QUEUE;
 
-class CCCPEndpoint   
+class CCCPEndpoint
 {
 public:
 
@@ -37,31 +37,31 @@ public:
 	virtual ~CCCPEndpoint();
 
 	//!
-	void Init( _ICCPUser *pParent );
+	void Init(_ICCPUser* pParent);
 
 	void SendDisconnect(const char* szCause);
-	void SendConnectResp(CStream &stm);
-	void SendContextSetup(CStream &stm);
-	void SendContextReady(CStream &stm);
+	void SendConnectResp(CStream& stm);
+	void SendContextSetup(CStream& stm);
+	void SendContextReady(CStream& stm);
 	void SendServerReady();
-	void SendConnect(CNPServerVariables &sv);
+	void SendConnect(CNPServerVariables& sv);
 	void SendSetup();
-	void SendPunkBusterMsg(CStream &stm);
+	void SendPunkBusterMsg(CStream& stm);
 
-	void SendSecurityQuery(CStream &stm);
-	void SendSecurityResp(CStream &stm);
-	void SetPublicCryptKey( unsigned int nKey ) { m_nPublicKey = nKey; };
-	unsigned int GetPublicCryptKey( unsigned int nKey ) { return m_nPublicKey; };
+	void SendSecurityQuery(CStream& stm);
+	void SendSecurityResp(CStream& stm);
+	void SetPublicCryptKey(unsigned int nKey) { m_nPublicKey = nKey; };
+	unsigned int GetPublicCryptKey(unsigned int nKey) { return m_nPublicKey; };
 
 	//! @return true=disconnect and this pointer is destrozed, false otherwise
-	bool Update(unsigned int nTime,unsigned char cFrameType,CStream *pStm);
+	bool Update(unsigned int nTime, unsigned char cFrameType, CStream* pStm);
 	void Reset();
 
-	void GetMemoryStatistics(ICrySizer *pSizer);
+	void GetMemoryStatistics(ICrySizer* pSizer);
 protected:
 
 	//! @return true=disconnect and this pointer is destrozed, false otherwise
-	bool ProcessPayload(unsigned char cFrameType,CStream &stmStrea);
+	bool ProcessPayload(unsigned char cFrameType, CStream& stmStrea);
 	void HandleTimeout();
 	void ProcessTimers();
 	void SetTimer();
@@ -80,7 +80,7 @@ private:		// --------------------------------------------------------------
 	bool							m_bReadyToSend;							//!<
 	unsigned int			m_ulTimeout;								//!<
 
-	_ICCPUser *				m_pParent;									//!< pointer to the parent object (is not released), is 0 is you forgot to call Init()
+	_ICCPUser* m_pParent;									//!< pointer to the parent object (is not released), is 0 is you forgot to call Init()
 
 	CCP_QUEUE					m_qOutgoingData;						//!<
 	CStream						m_stmRetrasmissionBuffer;		//!<

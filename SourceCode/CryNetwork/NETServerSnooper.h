@@ -23,7 +23,7 @@ typedef std::map<CIPAddress, NETSnooperServer>					 HMServerTable;
 typedef std::map<CIPAddress, NETSnooperServer>::iterator HMServerTableItor;
 
 
-class CNETServerSnooper: public INETServerSnooper, public INetworkPacketSink
+class CNETServerSnooper : public INETServerSnooper, public INetworkPacketSink
 {
 public:
 	//! constructor
@@ -31,39 +31,39 @@ public:
 	//! destructor
 	~CNETServerSnooper();
 
-	bool Create(ISystem *pSystem, INETServerSnooperSink *pSink);
+	bool Create(ISystem* pSystem, INETServerSnooperSink* pSink);
 
 	// interface INetworkPacketSink --------------------------------------
 
-	virtual void OnReceivingPacket( const unsigned char inPacketID, CStream &stmPacket, CIPAddress &ip );
+	virtual void OnReceivingPacket(const unsigned char inPacketID, CStream& stmPacket, CIPAddress& ip);
 
 	// interface INETServerSnooper ----------------------------------------
 
 	virtual void Release();
 	virtual void Update(unsigned int dwTime);
-	virtual void AddServer(const CIPAddress &ip);
-	virtual void AddServerList(const std::vector<CIPAddress> &vIP);
+	virtual void AddServer(const CIPAddress& ip);
+	virtual void AddServerList(const std::vector<CIPAddress>& vIP);
 	virtual void ClearList();
 
 private: 	// ------------------------------------------------------------
 
-	void QueryServer(CIPAddress &ip);
-	void ProcessPacket(CStream &stmPacket, CIPAddress &ip);
+	void QueryServer(CIPAddress& ip);
+	void ProcessPacket(CStream& stmPacket, CIPAddress& ip);
 	void ProcessTimeout();
 	bool ProcessNext();
 
-	ISystem	*									m_pSystem;						//!<
-	
+	ISystem* m_pSystem;						//!<
+
 	unsigned int							m_dwCurrentTime;			//!<
 	int												m_iWaitingCount;			//!<
 
-	INETServerSnooperSink	*		m_pSink;							//!<
+	INETServerSnooperSink* m_pSink;							//!<
 	CDatagramSocket						m_sSocket;						//!<
 	HMServerTable							m_hmServerTable;			//!<
 
-	ICVar	*										cl_snooptimeout;			//!<
-	ICVar	*										cl_snoopretries;			//!<
-	ICVar	*										cl_snoopcount;				//!<
+	ICVar* cl_snooptimeout;			//!<
+	ICVar* cl_snoopretries;			//!<
+	ICVar* cl_snoopcount;				//!<
 };
 
 #endif // NETSERVERSNOOPER_H

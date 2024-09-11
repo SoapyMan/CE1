@@ -39,7 +39,7 @@
 
 typedef std::queue<CStream> STREAM_QUEUE;
 
-typedef struct tagBuffer{
+typedef struct tagBuffer {
 	CStream stmData;
 	DWORD dwTimeout;
 	LONG nSeq;//only for retrasmission
@@ -48,50 +48,50 @@ typedef struct tagBuffer{
 
 /*! Implements a CTP endpoint
 */
-class CCTPEndpoint  
+class CCTPEndpoint
 {
 public:
 	CCTPEndpoint();
 	virtual ~CCTPEndpoint();
 public:
 	void Reset();
-	void Init(_IEndpointUser *pParent,bool bSecondary){m_pParent=pParent;m_bSecondary=bSecondary;}
-	bool SendUnreliable(CStream &stmData);
-	bool SendReliable(CStream &stmData);
-	void Update(unsigned int nTime,unsigned char cFrameType = 0,CStream *pStm=NULL);
+	void Init(_IEndpointUser* pParent, bool bSecondary) { m_pParent = pParent; m_bSecondary = bSecondary; }
+	bool SendUnreliable(CStream& stmData);
+	bool SendReliable(CStream& stmData);
+	void Update(unsigned int nTime, unsigned char cFrameType = 0, CStream* pStm = NULL);
 	void SetRate(unsigned int nBytePerSec);
 	void Dump();
-	unsigned int GetRemoteTimestamp(unsigned int nTime){
+	unsigned int GetRemoteTimestamp(unsigned int nTime) {
 		return m_LatencyCalculator.GetCurrentRemoteTimestamp(nTime);
 	}
 	//
 	unsigned int GetPing();
-	unsigned int GetLostPackets(){return m_nLostPackets;}
+	unsigned int GetLostPackets() { return m_nLostPackets; }
 	// Changes crypt key specifically for this connection.
-	void SetPublicCryptKey( unsigned int key );
+	void SetPublicCryptKey(unsigned int key);
 protected:
-	virtual void BuildOutgoingFrame()=0;
-	virtual bool IsTimeToSend()=0;
+	virtual void BuildOutgoingFrame() = 0;
+	virtual bool IsTimeToSend() = 0;
 
 	void ProcessBufferTimers();
 	void ProcessAckTimer();
 	void HandleAckTimeout();
-	void HandleDataFrame(CTPData &f);
-	void HandleNak(CTPNak &f);
+	void HandleDataFrame(CTPData& f);
+	void HandleNak(CTPNak& f);
 	void HandleTimeout(LONG nOldestFrame);
-	void SendFrame(LONG nType,LONG nFrameNum,LONG nFrameExpected,CStream *pUnreliable = NULL,bool bUnreliable=false);
+	void SendFrame(LONG nType, LONG nFrameNum, LONG nFrameExpected, CStream* pUnreliable = NULL, bool bUnreliable = false);
 	void StopTimer(LONG nIndex);
 	void SetTimer(LONG nIndex);
 	void StopAckTimer();
 	void SetAckTimer();
 
-	void CryptStream( CStream &stm );
-	void UncyptStream( CStream &stm );
+	void CryptStream(CStream& stm);
+	void UncyptStream(CStream& stm);
 
-//	CStream CompressStream(CStream &stm);
-//	CStream UncompressStream(CStream &stm);
+	//	CStream CompressStream(CStream &stm);
+	//	CStream UncompressStream(CStream &stm);
 
-	// ............................................................
+		// ............................................................
 
 	bool									m_nArrived[NUM_OF_BUFS];
 	LONG									m_nFrameExpected;
@@ -103,20 +103,20 @@ protected:
 	CStream								m_stmInBuffers[NUM_OF_BUFS];
 	Buffer								m_OutBuffers[NUM_OF_BUFS];
 	LONG									m_nOldestFrame;
-//TIMERS=0 mean disabled
-	//DWORD m_dwTimers[NUM_OF_BUFS]; //expected ack timers
+	//TIMERS=0 mean disabled
+		//DWORD m_dwTimers[NUM_OF_BUFS]; //expected ack timers
 	DWORD									m_dwOutAckTimer;							//!< outgoing ack timer
 	STREAM_QUEUE					m_qOutgoingReliableData;
 	STREAM_QUEUE					m_qOutgoingUnreliableData;
 
-	_IEndpointUser *			m_pParent;
+	_IEndpointUser* m_pParent;
 
 	bool									m_bSecondary;
 	class CPingCalculator m_LatencyCalculator;					//!< Ping calculation stuff
 	DWORD									m_nLostPackets;
 	DWORD									m_dwPingTime;									//!< store the timestamp of the latest pong request
 	//<<FIXME>> implement the rate control
-	unsigned int					m_nRate; 
+	unsigned int					m_nRate;
 	float									m_fBytePerMillisec;						//!< only used when RATE_CONTROL is defined
 	int									m_nAllowedBytes;
 	unsigned int					m_nLastPacketSent;
@@ -130,7 +130,7 @@ protected:
 class CCTPClient :public CCTPEndpoint
 {
 protected:
-//	virtual void BuildOutgoingFrame();
+	//	virtual void BuildOutgoingFrame();
 	virtual bool IsTimeToSend();
 };
 
@@ -141,8 +141,8 @@ public:
 	{
 	}
 protected:
-	
-//	virtual void BuildOutgoingFrame();
+
+	//	virtual void BuildOutgoingFrame();
 	virtual bool IsTimeToSend();
 
 };

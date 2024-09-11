@@ -56,22 +56,22 @@
 enum EClientFlags
 {
 	// This client running 64 bit version.
-	CLIENT_FLAGS_64BIT				= (1 << 0),
+	CLIENT_FLAGS_64BIT = (1 << 0),
 	// This client running with PunkBuster enabled.
-	CLIENT_FLAGS_PUNK_BUSTER	= (1 << 1),
+	CLIENT_FLAGS_PUNK_BUSTER = (1 << 1),
 	// This client is/has cheated
-	CLIENT_FLAGS_DEVMODE			= (1 << 3),
+	CLIENT_FLAGS_DEVMODE = (1 << 3),
 };
 
 ///////////////////////////////////////////////////////////////
 struct CNPServerVariables
 {
-	void Save(CStream &stm)
+	void Save(CStream& stm)
 	{
 		stm.Write(nPublicKey);
 		stm.Write(nDataStreamTimeout);
 	}
-	void Load(CStream &stm)
+	void Load(CStream& stm)
 	{
 		stm.Read(nPublicKey);
 		stm.Read(nDataStreamTimeout);
@@ -87,23 +87,23 @@ struct CNP
 	{
 		//m_cClientID = 0;
 		m_cFrameType = 0;
-		m_bSecondaryTC=false;
+		m_bSecondaryTC = false;
 	}
-	virtual ~CNP(){}
+	virtual ~CNP() {}
 	//BYTE m_cClientID;
 	BYTE m_cFrameType;
 	bool m_bSecondaryTC;
-	void Save(CStream &stm)
+	void Save(CStream& stm)
 	{
 		stm.WritePkd(m_cFrameType);
 		stm.Write(m_bSecondaryTC);
 	}
-	void Load(CStream &stm)
+	void Load(CStream& stm)
 	{
 		stm.ReadPkd(m_cFrameType);
 		stm.Read(m_bSecondaryTC);
 	}
-	void LoadAndSeekToZero(CStream &stm)
+	void LoadAndSeekToZero(CStream& stm)
 	{
 		CNP::Load(stm);
 		//stm.Read(m_cFrameType);
@@ -120,12 +120,12 @@ struct CTP :public CNP
 		m_bPingRequest = false;
 		m_bUnreliable = false;
 	}
-	virtual ~CTP(){}
+	virtual ~CTP() {}
 	BYTE m_cSequenceNumber;//<<FIXME>> will be 6 bits
 	BYTE m_cAck;//<<FIXME>> will be 6 bits
 	bool m_bPingRequest;
 	bool m_bUnreliable;
-	virtual void Save(CStream &stm)
+	virtual void Save(CStream& stm)
 	{
 		CNP::Save(stm);
 		stm.WritePkd(m_cSequenceNumber);
@@ -133,7 +133,7 @@ struct CTP :public CNP
 		stm.Write(m_bPingRequest);
 		stm.Write(m_bUnreliable);
 	}
-	virtual void Load(CStream &stm)
+	virtual void Load(CStream& stm)
 	{
 		CNP::Load(stm);
 		stm.ReadPkd(m_cSequenceNumber);
@@ -146,12 +146,12 @@ struct CTP :public CNP
 ///////////////////////////////////////////////////////////////
 struct CCP :public CNP
 {
-	virtual ~CCP(){}
-	virtual void Save(CStream &stm)
+	virtual ~CCP() {}
+	virtual void Save(CStream& stm)
 	{
 		CNP::Save(stm);
 	}
-	virtual void Load(CStream &stm)
+	virtual void Load(CStream& stm)
 	{
 		CNP::Load(stm);
 	}
@@ -167,37 +167,37 @@ struct CQP :public CNP
 	CQP()
 	{
 		m_bSecondaryTC = true;
-		for (int i=0; i<6; i++)
+		for (int i = 0; i < 6; i++)
 			m_bControlBits[i] = 0;
 		m_cControlBytes[0] = 0;
 		m_cControlBytes[1] = 0;
 	}
-	virtual ~CQP(){}
+	virtual ~CQP() {}
 
 	bool		m_bControlBits[6];				// control bits, must be all 1
 	unsigned char m_cControlBytes[2];	// control bytes, must be all 0xff;
 
-	virtual void Save(CStream &stm)
+	virtual void Save(CStream& stm)
 	{
 		CNP::Save(stm);
-		for(int i=0; i<6; i++) // write 6 control bits
+		for (int i = 0; i < 6; i++) // write 6 control bits
 			stm.Write(true);
 		stm.Write((unsigned char)0xff); // write the two control bytes
 		stm.Write((unsigned char)0xff);
 	}
 
-	virtual void Load(CStream &stm)
+	virtual void Load(CStream& stm)
 	{
 		CNP::Load(stm);
 
-		for(int i=0; i<6; i++)
+		for (int i = 0; i < 6; i++)
 		{
 			if (stm.GetReadPos() < stm.GetSize())
 				stm.Read(m_bControlBits[i]);
 			else
 				return;
 		}
-		if (stm.GetSize()-stm.GetReadPos() >= 16)
+		if (stm.GetSize() - stm.GetReadPos() >= 16)
 		{
 			stm.Read(m_cControlBytes[0]);
 			stm.Read(m_cControlBytes[1]);
@@ -206,7 +206,7 @@ struct CQP :public CNP
 
 	bool IsOk()
 	{
-		for (int i=0; i < 6; i++)
+		for (int i = 0; i < 6; i++)
 		{
 			if (!m_bControlBits[i])
 				return false;
@@ -215,28 +215,28 @@ struct CQP :public CNP
 	}
 };
 ///////////////////////////////////////////////////////////////
-struct CQPInfoRequest: public CQP
+struct CQPInfoRequest : public CQP
 {
 	CQPInfoRequest() { m_cFrameType = FT_CQP_INFO_REQUEST; };
-	CQPInfoRequest(const string &szQuery): szRequest(szQuery) { m_cFrameType = FT_CQP_INFO_REQUEST; };
-	virtual ~CQPInfoRequest(){}
+	CQPInfoRequest(const string& szQuery) : szRequest(szQuery) { m_cFrameType = FT_CQP_INFO_REQUEST; };
+	virtual ~CQPInfoRequest() {}
 
 	string	szRequest;
 
-	virtual void Save(CStream &stm)
+	virtual void Save(CStream& stm)
 	{
 		CQP::Save(stm);
 		// write every byte, because if we write the string, it will get compressed :(
-		for (uint32 i=0; i<szRequest.size(); i++)
+		for (uint32 i = 0; i < szRequest.size(); i++)
 			stm.Write(szRequest[i]);
 	}
-	virtual void Load(CStream &stm)
+	virtual void Load(CStream& stm)
 	{
 		szRequest.resize(0);
 
 		CQP::Load(stm);
 
-		while(stm.GetSize()-stm.GetReadPos() >= 8)
+		while (stm.GetSize() - stm.GetReadPos() >= 8)
 		{
 			char cByte;
 			stm.Read(cByte);
@@ -251,23 +251,23 @@ struct CQPInfoResponse :public CQP
 	{
 		m_cFrameType = FT_CQP_INFO_RESPONSE;
 	}
-	virtual ~CQPInfoResponse(){}
+	virtual ~CQPInfoResponse() {}
 	string szResponse;
-	virtual void Save(CStream &stm)
+	virtual void Save(CStream& stm)
 	{
 		CQP::Save(stm);
 		// write every byte, because if we write the string, it will get compressed :(
-		for (uint32 i=0; i<szResponse.size(); i++)
+		for (uint32 i = 0; i < szResponse.size(); i++)
 			stm.Write(szResponse[i]);
 
 	}
-	virtual void Load(CStream &stm)
+	virtual void Load(CStream& stm)
 	{
 		szResponse.resize(0);
 
 		CQP::Load(stm);
 
-		while(stm.GetSize()-stm.GetReadPos() >= 8)
+		while (stm.GetSize() - stm.GetReadPos() >= 8)
 		{
 			char cByte;
 			stm.Read(cByte);
@@ -283,20 +283,20 @@ struct CQPXMLRequest :public CQP
 	{
 		m_cFrameType = FT_CQP_XML_REQUEST;
 	}
-	virtual ~CQPXMLRequest(){}
-	virtual void Save(CStream &stm)
+	virtual ~CQPXMLRequest() {}
+	virtual void Save(CStream& stm)
 	{
 		CQP::Save(stm);
 		if (m_sXML.size() > MAX_REQUEST_XML_LENGTH)
 			m_sXML.resize(MAX_REQUEST_XML_LENGTH);
 		stm.Write(m_sXML.c_str());
 	}
-	virtual void Load(CStream &stm)
+	virtual void Load(CStream& stm)
 	{
 		CQP::Load(stm);
-		static char sTemp[MAX_REQUEST_XML_LENGTH+1];
-		stm.Read( (char*)sTemp,sizeof(sTemp)-1 );
-		sTemp[sizeof(sTemp)-1] = 0;
+		static char sTemp[MAX_REQUEST_XML_LENGTH + 1];
+		stm.Read((char*)sTemp, sizeof(sTemp) - 1);
+		sTemp[sizeof(sTemp) - 1] = 0;
 		m_sXML = sTemp;
 	}
 	string m_sXML;
@@ -308,20 +308,20 @@ struct CQPXMLResponse :public CQP
 	{
 		m_cFrameType = FT_CQP_XML_RESPONSE;
 	}
-	virtual ~CQPXMLResponse(){}
-	virtual void Save(CStream &stm)
+	virtual ~CQPXMLResponse() {}
+	virtual void Save(CStream& stm)
 	{
 		CQP::Save(stm);
 		if (m_sXML.size() > MAX_REQUEST_XML_LENGTH)
 			m_sXML.resize(MAX_REQUEST_XML_LENGTH);
 		stm.Write(m_sXML.c_str());
 	}
-	virtual void Load(CStream &stm)
+	virtual void Load(CStream& stm)
 	{
 		CQP::Load(stm);
-		static char sTemp[MAX_REQUEST_XML_LENGTH+1];
-		stm.Read( (char*)sTemp,sizeof(sTemp)-1 );
-		sTemp[sizeof(sTemp)-1] = 0;
+		static char sTemp[MAX_REQUEST_XML_LENGTH + 1];
+		stm.Read((char*)sTemp, sizeof(sTemp) - 1);
+		sTemp[sizeof(sTemp) - 1] = 0;
 		m_sXML = sTemp;
 	}
 	string m_sXML;
@@ -334,21 +334,21 @@ struct CQPRConCommand :public CQP
 	{
 		m_cFrameType = FT_CQP_RCON_COMMAND;
 	}
-	virtual ~CQPRConCommand(){}
-	virtual void Save(CStream &stm)
+	virtual ~CQPRConCommand() {}
+	virtual void Save(CStream& stm)
 	{
 		CQP::Save(stm);
-		stm.WriteData( &m_nRConPasswordCode,16 );
+		stm.WriteData(&m_nRConPasswordCode, 16);
 		stm.Write(m_sRConCommand.c_str());
 	}
-	virtual void Load(CStream &stm)
+	virtual void Load(CStream& stm)
 	{
 		static char sTemp[512];
 		CQP::Load(stm);
-		
-		stm.ReadData( &m_nRConPasswordCode,16 );
-		stm.Read((char *)sTemp,sizeof(sTemp)-1 );
-		sTemp[sizeof(sTemp)-1] = 0;
+
+		stm.ReadData(&m_nRConPasswordCode, 16);
+		stm.Read((char*)sTemp, sizeof(sTemp) - 1);
+		sTemp[sizeof(sTemp) - 1] = 0;
 		m_sRConCommand = sTemp;
 	}
 
@@ -363,18 +363,18 @@ struct CQPRConResponse :public CQP
 	{
 		m_cFrameType = FT_CQP_RCON_RESPONSE;
 	}
-	virtual ~CQPRConResponse(){}
-	virtual void Save(CStream &stm)
+	virtual ~CQPRConResponse() {}
+	virtual void Save(CStream& stm)
 	{
 		CQP::Save(stm);
 		stm.Write(m_sText.c_str());
 	}
-	virtual void Load(CStream &stm)
+	virtual void Load(CStream& stm)
 	{
 		static char sTemp[512];
 		CQP::Load(stm);
-		
-		stm.Read((char *)sTemp,512);
+
+		stm.Read((char*)sTemp, 512);
 		m_sText = sTemp;
 	}
 	string				m_sText;				//!<
@@ -382,17 +382,17 @@ struct CQPRConResponse :public CQP
 ///////////////////////////////////////////////////////////////
 struct CCPPayload :public CCP
 {
-	CCPPayload(){
+	CCPPayload() {
 		m_bSequenceNumber = 0;
 	}
-	virtual ~CCPPayload(){}
+	virtual ~CCPPayload() {}
 	bool m_bSequenceNumber;
-	virtual void Save(CStream &stm)
+	virtual void Save(CStream& stm)
 	{
 		CCP::Save(stm);
 		stm.Write(m_bSequenceNumber);
 	}
-	virtual void Load(CStream &stm)
+	virtual void Load(CStream& stm)
 	{
 		CCP::Load(stm);
 		stm.Read(m_bSequenceNumber);
@@ -406,13 +406,13 @@ struct CCPAck :public CCP
 	{
 		m_cFrameType = FT_CCP_ACK;
 	}
-	virtual ~CCPAck(){}
-	virtual void Save(CStream &stm)
+	virtual ~CCPAck() {}
+	virtual void Save(CStream& stm)
 	{
 		CCP::Save(stm);
 		stm.Write(m_bAck);
 	}
-	virtual void Load(CStream &stm)
+	virtual void Load(CStream& stm)
 	{
 		CCP::Load(stm);
 		stm.Read(m_bAck);
@@ -429,7 +429,7 @@ struct CCPSetup :public CCPPayload
 		m_nClientOSMinor = 0;
 		m_nClientOSMajor = 0;
 	}
-	virtual ~CCPSetup(){}
+	virtual ~CCPSetup() {}
 	BYTE m_cProtocolVersion;
 	string m_sPlayerPassword;
 	// What version client is running.
@@ -438,7 +438,7 @@ struct CCPSetup :public CCPPayload
 	unsigned int m_nClientOSMinor;
 	unsigned int m_nClientOSMajor;
 	//string m_sSpectatorPassword;
-	virtual void Save(CStream &stm)
+	virtual void Save(CStream& stm)
 	{
 		CCPPayload::Save(stm);
 		stm.Write(m_cProtocolVersion);
@@ -448,12 +448,12 @@ struct CCPSetup :public CCPPayload
 		stm.Write(m_nClientOSMajor);
 		//stm.Write(m_sSpectatorPassword.c_str());
 	}
-	virtual void Load(CStream &stm)
+	virtual void Load(CStream& stm)
 	{
 		static char sTemp[512];
 		CCPPayload::Load(stm);
 		stm.Read(m_cProtocolVersion);
-		stm.Read((char *)sTemp,512);
+		stm.Read((char*)sTemp, 512);
 		m_sPlayerPassword = sTemp;
 		stm.Read(m_nClientFlags);
 		stm.Read(m_nClientOSMinor);
@@ -471,13 +471,13 @@ struct CCPConnect :public CCPPayload
 		m_cResponse = 0;
 		//m_cNewClientID = 0;
 	}
-	virtual ~CCPConnect(){}
+	virtual ~CCPConnect() {}
 	BYTE m_cResponse;		//!< bitflag to specify early information about the server! i.e. punkbuster or not..
 	// Random part of key used for encryption.
 	//BYTE m_cNewClientID;
 	// protocol variables
 	CNPServerVariables m_ServerVariables;
-	virtual void Save(CStream &stm)
+	virtual void Save(CStream& stm)
 	{
 		CCPPayload::Save(stm);
 		stm.Write(m_cResponse);
@@ -485,7 +485,7 @@ struct CCPConnect :public CCPPayload
 		// protocol variables
 		m_ServerVariables.Save(stm);
 	}
-	virtual void Load(CStream &stm)
+	virtual void Load(CStream& stm)
 	{
 		CCPPayload::Load(stm);
 		stm.Read(m_cResponse);
@@ -502,10 +502,10 @@ struct CCPConnectResp :public CCPPayload
 		m_cFrameType = FT_CCP_CONNECT_RESP;
 		m_cResponse = 0;
 	}
-	virtual ~CCPConnectResp(){}
+	virtual ~CCPConnectResp() {}
 	BYTE m_cResponse;
 	CStream m_stmAuthorizationID;
-	virtual void Save(CStream &stm)
+	virtual void Save(CStream& stm)
 	{
 		unsigned int uiSize;
 
@@ -516,7 +516,7 @@ struct CCPConnectResp :public CCPPayload
 		stm.Write(uiSize);
 		stm.Write(m_stmAuthorizationID);
 	}
-	virtual void Load(CStream &stm)
+	virtual void Load(CStream& stm)
 	{
 		unsigned int uiSize;
 		CCPPayload::Load(stm);
@@ -524,20 +524,20 @@ struct CCPConnectResp :public CCPPayload
 		stm.Read(uiSize);
 		m_stmAuthorizationID.Reset();
 		m_stmAuthorizationID.SetSize(uiSize);
-		stm.ReadBits(m_stmAuthorizationID.GetPtr(),uiSize);
+		stm.ReadBits(m_stmAuthorizationID.GetPtr(), uiSize);
 		//stm.Read(m_stmAuthorizationID);		
 	}
 };
 ///////////////////////////////////////////////////////////////
-struct CCPContextSetup:public CCPPayload
+struct CCPContextSetup :public CCPPayload
 {
 	CCPContextSetup()
 	{
 		m_cFrameType = FT_CCP_CONTEXT_SETUP;
 	}
-	virtual ~CCPContextSetup(){}
+	virtual ~CCPContextSetup() {}
 	CStream m_stmData;
-	virtual void Save(CStream &stm)
+	virtual void Save(CStream& stm)
 	{
 		unsigned short usSize;
 		usSize = (unsigned short)m_stmData.GetSize();
@@ -545,7 +545,7 @@ struct CCPContextSetup:public CCPPayload
 		stm.Write(usSize);
 		stm.Write(m_stmData);
 	}
-	virtual void Load(CStream &stm)
+	virtual void Load(CStream& stm)
 	{
 		unsigned short usSize;
 		CCPPayload::Load(stm);
@@ -562,9 +562,9 @@ struct CCPContextReady :public CCPPayload
 	{
 		m_cFrameType = FT_CCP_CONTEXT_READY;
 	}
-	virtual ~CCPContextReady(){}
+	virtual ~CCPContextReady() {}
 	CStream m_stmData;
-	virtual void Save(CStream &stm)
+	virtual void Save(CStream& stm)
 	{
 		unsigned short usSize;
 		usSize = (unsigned short)m_stmData.GetSize();
@@ -572,7 +572,7 @@ struct CCPContextReady :public CCPPayload
 		stm.Write(usSize);
 		stm.Write(m_stmData);
 	}
-	virtual void Load(CStream &stm)
+	virtual void Load(CStream& stm)
 	{
 		unsigned short usSize;
 		CCPPayload::Load(stm);
@@ -589,12 +589,12 @@ struct CCPServerReady :public CCPPayload
 	{
 		m_cFrameType = FT_CCP_SERVER_READY;
 	}
-	virtual ~CCPServerReady(){}
-	virtual void Save(CStream &stm)
+	virtual ~CCPServerReady() {}
+	virtual void Save(CStream& stm)
 	{
 		CCPPayload::Save(stm);
 	}
-	virtual void Load(CStream &stm)
+	virtual void Load(CStream& stm)
 	{
 		CCPPayload::Load(stm);
 	}
@@ -606,14 +606,14 @@ struct CCPDisconnect :public CCPPayload
 	{
 		m_cFrameType = FT_CCP_DISCONNECT;
 	}
-	virtual ~CCPDisconnect(){}
+	virtual ~CCPDisconnect() {}
 	string m_sCause;
-	virtual void Save(CStream &stm)
+	virtual void Save(CStream& stm)
 	{
 		CCPPayload::Save(stm);
 		stm.Write(m_sCause);
 	}
-	virtual void Load(CStream &stm)
+	virtual void Load(CStream& stm)
 	{
 		CCPPayload::Load(stm);
 		stm.Read(m_sCause);
@@ -626,9 +626,9 @@ struct CCPSecurityQuery :public CCPPayload
 	{
 		m_cFrameType = FT_CCP_SECURITY_QUERY;
 	}
-	virtual ~CCPSecurityQuery(){}
+	virtual ~CCPSecurityQuery() {}
 	CStream m_stmData;
-	virtual void Save(CStream &stm)
+	virtual void Save(CStream& stm)
 	{
 		unsigned short usSize;
 		usSize = (unsigned short)m_stmData.GetSize();
@@ -636,7 +636,7 @@ struct CCPSecurityQuery :public CCPPayload
 		stm.Write(usSize);
 		stm.Write(m_stmData);
 	}
-	virtual void Load(CStream &stm)
+	virtual void Load(CStream& stm)
 	{
 		unsigned short usSize;
 		CCPPayload::Load(stm);
@@ -673,11 +673,11 @@ struct CTPData :public CTP
 		m_bCompressed = false;
 		m_nUncompressedSize = 0;
 	}
-	virtual ~CTPData(){}
+	virtual ~CTPData() {}
 	CStream m_stmData;
 	bool m_bCompressed; // Compressed data.
 	unsigned short m_nUncompressedSize;
-	virtual void Save(CStream &stm)
+	virtual void Save(CStream& stm)
 	{
 		unsigned short usSize;
 		usSize = (unsigned short)m_stmData.GetSize();
@@ -688,7 +688,7 @@ struct CTPData :public CTP
 		stm.WritePkd(usSize);
 		stm.Write(m_stmData);
 	}
-	virtual void Load(CStream &stm)
+	virtual void Load(CStream& stm)
 	{
 		unsigned short usSize;
 		CTP::Load(stm);
@@ -708,12 +708,12 @@ struct CTPNak :public CTP
 	{
 		m_cFrameType = FT_CTP_NAK;
 	}
-	virtual ~CTPNak(){}
-	virtual void Save(CStream &stm)
+	virtual ~CTPNak() {}
+	virtual void Save(CStream& stm)
 	{
 		CTP::Save(stm);
 	}
-	virtual void Load(CStream &stm)
+	virtual void Load(CStream& stm)
 	{
 		CTP::Load(stm);
 	}
@@ -725,12 +725,12 @@ struct CTPAck :public CTP
 	{
 		m_cFrameType = FT_CTP_ACK;
 	}
-	virtual ~CTPAck(){}
-	virtual void Save(CStream &stm)
+	virtual ~CTPAck() {}
+	virtual void Save(CStream& stm)
 	{
 		CTP::Save(stm);
 	}
-	virtual void Load(CStream &stm)
+	virtual void Load(CStream& stm)
 	{
 		CTP::Load(stm);
 	}
@@ -745,14 +745,14 @@ struct CTPPong :public CTP
 		m_cFrameType = FT_CTP_PONG;
 		m_nTimestamp = 0;
 	}
-	virtual ~CTPPong(){}
+	virtual ~CTPPong() {}
 	unsigned int m_nTimestamp;
-	virtual void Save(CStream &stm)
+	virtual void Save(CStream& stm)
 	{
 		CTP::Save(stm);
 		stm.Write(m_nTimestamp);
 	}
-	virtual void Load(CStream &stm)
+	virtual void Load(CStream& stm)
 	{
 		CTP::Load(stm);
 		stm.Read(m_nTimestamp);

@@ -49,9 +49,9 @@
 #define TM_CONNECT_RESP									TIMER_BASE+1
 
 #ifdef _DEBUG
-	#define TM_CONNECT_RESP_ET						200000
+#define TM_CONNECT_RESP_ET						200000
 #else
-	#define TM_CONNECT_RESP_ET						20000
+#define TM_CONNECT_RESP_ET						20000
 #endif
 
 #define TM_CONTEXT_READY								TIMER_BASE+2
@@ -62,27 +62,27 @@
 class CServerStateMachine :public CStateMachine
 {
 	BEGIN_STATUS_MAP()
-		STATUS_ENTRY(STATUS_IDLE,HandleIDLE)
-			// goes to the next state when getting the CCPSetup packet (PlayerPassword,ProtocolVersion) from the client
-			//   or to STATUS_SRV_DISCONNECTED when the version doesn't match
+		STATUS_ENTRY(STATUS_IDLE, HandleIDLE)
+		// goes to the next state when getting the CCPSetup packet (PlayerPassword,ProtocolVersion) from the client
+		//   or to STATUS_SRV_DISCONNECTED when the version doesn't match
 
-		STATUS_ENTRY(STATUS_SRV_WAIT_FOR_CONNECT_RESP,HandleWAIT_FOR_CONNECT_RESP)
-			// goes to the next state when getting the CCPConnectResp packet (AuthorizationID) from the client
+		STATUS_ENTRY(STATUS_SRV_WAIT_FOR_CONNECT_RESP, HandleWAIT_FOR_CONNECT_RESP)
+		// goes to the next state when getting the CCPConnectResp packet (AuthorizationID) from the client
 
-		STATUS_ENTRY(STATUS_SRV_CONNECTED,HandleCONNECTED)
-			// goes to the next state when the authorization is ok
+		STATUS_ENTRY(STATUS_SRV_CONNECTED, HandleCONNECTED)
+		// goes to the next state when the authorization is ok
 
-		STATUS_ENTRY(STATUS_SRV_WAIT_FOR_CONTEXT_READY,HandleWAIT_FOR_CONTEXT_READY)
-			// the client is currently loading the map and we wait 
-			//   when getting the CCPContextReady packet (bHost,p_name,p_model) from the client
-			//     we sends all entities to the client (CXServerSlot::OnContextReady) and go to the next state
+		STATUS_ENTRY(STATUS_SRV_WAIT_FOR_CONTEXT_READY, HandleWAIT_FOR_CONTEXT_READY)
+		// the client is currently loading the map and we wait 
+		//   when getting the CCPContextReady packet (bHost,p_name,p_model) from the client
+		//     we sends all entities to the client (CXServerSlot::OnContextReady) and go to the next state
 
-		STATUS_ENTRY(STATUS_SRV_READY,HandleREADY)
-			// goes back to STATUS_SRV_WAIT_FOR_CONTEXT_READY when CServerSlot::ContextSetup() was called
-			//   to change the map/mod and sync the server variables once again 
+		STATUS_ENTRY(STATUS_SRV_READY, HandleREADY)
+		// goes back to STATUS_SRV_WAIT_FOR_CONTEXT_READY when CServerSlot::ContextSetup() was called
+		//   to change the map/mod and sync the server variables once again 
 
-		STATUS_ENTRY(STATUS_SRV_DISCONNECTED,HandleDISCONNECTED)
-			// when going in this state send the SIG_DISCONNECTED signal and the system will remove the client soon
+		STATUS_ENTRY(STATUS_SRV_DISCONNECTED, HandleDISCONNECTED)
+		// when going in this state send the SIG_DISCONNECTED signal and the system will remove the client soon
 
 	END_STATUS_MAP()
 
@@ -93,25 +93,25 @@ public:  // --------------------------------------------------------------------
 	//! destructor
 	virtual ~CServerStateMachine();
 	//!
-	void Init(_IServerSlotServices *pParent);
+	void Init(_IServerSlotServices* pParent);
 
 private: // ---------------------------------------------------------------------
 
 	//status handlers
-	void HandleIDLE(unsigned int dwIncomingSignal,DWORD_PTR dwParam);
-	void HandleWAIT_FOR_CONNECT_RESP(unsigned int dwIncomingSignal,DWORD_PTR dwParam);
-	void HandleCONNECTED(unsigned int dwIncomingSignal,DWORD_PTR dwParam);
-	void HandleWAIT_FOR_CONTEXT_READY(unsigned int dwIncomingSignal,DWORD_PTR dwParam);
-	void HandleREADY(unsigned int dwIncomingSignal,DWORD_PTR dwParam);
-	void HandleDISCONNECTED(unsigned int dwIncomingSignal,DWORD_PTR dwParam);
+	void HandleIDLE(unsigned int dwIncomingSignal, DWORD_PTR dwParam);
+	void HandleWAIT_FOR_CONNECT_RESP(unsigned int dwIncomingSignal, DWORD_PTR dwParam);
+	void HandleCONNECTED(unsigned int dwIncomingSignal, DWORD_PTR dwParam);
+	void HandleWAIT_FOR_CONTEXT_READY(unsigned int dwIncomingSignal, DWORD_PTR dwParam);
+	void HandleREADY(unsigned int dwIncomingSignal, DWORD_PTR dwParam);
+	void HandleDISCONNECTED(unsigned int dwIncomingSignal, DWORD_PTR dwParam);
 
-	void OnSignal(unsigned int dwOutgoingSignal,DWORD_PTR dwParam);
+	void OnSignal(unsigned int dwOutgoingSignal, DWORD_PTR dwParam);
 
 	//tracing
-	void _Trace(char *s);
+	void _Trace(char* s);
 	void _TraceStatus(unsigned int dwStatus);
 
-	_IServerSlotServices *						m_pParent;		//!< pointer to the parent object (is not released), is 0 is you forgot to call Init()
+	_IServerSlotServices* m_pParent;		//!< pointer to the parent object (is not released), is 0 is you forgot to call Init()
 };
 
 #endif //_SERVER_STATE_MACHINE_H_
