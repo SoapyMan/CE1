@@ -46,19 +46,14 @@ const int cryStrHash(const char* str, bool caseIns = false, int length = -1)
 	const int StringHashMask = ((1 << StringHashBits) - 1);
 
 	CRYASSERT(str);
-	int len = length >= 0 ? length : strlen(str);
-	const char* ptr = str;
 
-	int hash = len;
-	for (; len > 0; --len)
+	constexpr int MULTIPLIER = 37;
+
+	int hash = 0;
+	for (const char* p = str; *p; p++)
 	{
-		int v1 = hash >> 19;
-		int v0 = hash << 5;
-
-		int chr = caseIns ? tolower(*ptr) : *ptr;
-
-		hash = ((v0 | v1) + chr) & StringHashMask;
-		++ptr;
+		int chr = caseIns ? tolower(*p) : *p;
+		hash = (MULTIPLIER * hash + chr) & StringHashMask;
 	}
 
 	return hash;
@@ -71,8 +66,9 @@ const int objManHashObj(const char* __szFileName,
 	bool bLoadAdditinalInfo,
 	bool bKeepInLocalSpace)
 {
-	int hash = cryStrHash(__szFileName, true) | ((eVertsSharing | bKeepInLocalSpace << 1 | bLoadAdditinalInfo << 2) << 24);
-	hash = cryHash(hash, cryStrHash(_szGeomName ? _szGeomName : "", true));
+	int hash = cryStrHash(__szFileName) | ((eVertsSharing | bKeepInLocalSpace << 1 | bLoadAdditinalInfo << 2) << 24);
+	if(_szGeomName)
+		hash = cryHash(hash, cryStrHash(_szGeomName));
 	return hash;
 }
 
@@ -472,8 +468,12 @@ CStatObj* CObjManager::MakeObject(const char* __szFileName,
 	if (it != m_lstLoadedObjects.end())
 	{
 		CStatObj* obj = it->second;
-		CRYASSERT(stricmp(obj->m_szFileName, szFileName) == 0 && // compare file name
-			(!_szGeomName || stricmp(obj->m_szGeomName, _szGeomName) == 0)); // compare geom name
+		CRYASSERT_MSG(
+			stricmp(obj->m_szFileName, szFileName) == 0 &&
+			(!_szGeomName || stricmp(obj->m_szGeomName, _szGeomName) == 0), "Hash collision - %s-%s, %s-%s, %d-%d %d-%d %d-%d", 
+			obj->m_szFileName, szFileName,
+			obj->m_szGeomName, _szGeomName,
+			obj->m_eVertsSharing, eVertsSharing, obj->m_bLoadAdditinalInfo, bLoadAdditinalInfo, obj->m_bKeepInLocalSpace, bKeepInLocalSpace);
 
 		obj->RegisterUser();
 		return obj;
