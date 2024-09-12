@@ -20,13 +20,13 @@ struct ICVar;
 #define		TOGGLE_SCROLLLOCK		(1 << 2)
 
 #define KEYFLAG_BUFFERSIZE 32
-class CInput;
+class CInputSDL;
 
 class CSDLKeyboard :
 	public IKeyboard
 {
 public:
-	bool Init(CInput*, ISystem* pSystem);
+	bool Init(CInputSDL*, ISystem* pSystem);
 	CSDLKeyboard();
 	virtual ~CSDLKeyboard();
 	void ShutDown();
@@ -61,7 +61,7 @@ protected:
 	unsigned char	m_cKeysState[256];
 	unsigned char	m_cOldKeysState[256];
 	unsigned char m_cTempKeys[256];
-	CInput* m_pInput;
+	CInputSDL* m_pInput;
 	bool m_bExclusiveMode;
 	ISystem* m_pSystem;
 	ILog* m_pLog;

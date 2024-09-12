@@ -6,7 +6,7 @@
 #include <ILog.h>
 #include <ISystem.h>
 #include <IConsole.h>
-#include "Input.h"
+#include "InputSDL.h"
 #include <IGame.h>
 
 #ifdef WIN32

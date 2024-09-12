@@ -758,12 +758,18 @@ struct IInputEventListener
 The input system give access and initialize Keyboard,Mouse and Joystick SubSystems.
 */
 
+struct ISystem;
+
 ////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////
 /*! Main Input system interface.
  */
 struct IInput
 {
+	virtual ~IInput() = default;
+
+	virtual bool Init(ISystem* pSystem, void* hinst, void* hwnd) = 0;
+
 	//////////////////////////////////////////////////////////////////////////
 	//! Register new input events listener.
 	virtual void AddEventListener(IInputEventListener* pListener) = 0;

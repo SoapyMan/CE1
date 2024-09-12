@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "Input.h"
+#include "InputSDL.h"
 #include <ILog.h>
 #include <stdio.h>
 #include "SDLKeyboard.h"
@@ -13,7 +13,6 @@
 #include <SDL2/SDL.h>
 #define STUBMSG(X) printf("%s", X)
 #endif
-#include "Input.h"
 
 CSDLKeyboard::CSDLKeyboard()
 {
@@ -27,7 +26,7 @@ CSDLKeyboard::~CSDLKeyboard()
 
 }
 
-bool CSDLKeyboard::Init(CInput* pInput, ISystem* pSystem)
+bool CSDLKeyboard::Init(CInputSDL* pInput, ISystem* pSystem)
 {
 	m_pSystem = pSystem;
 	m_pLog = pSystem->GetILog();

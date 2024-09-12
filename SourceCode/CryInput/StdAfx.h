@@ -22,14 +22,6 @@
 
 #include "platform.h"
 
-#ifdef WIN32
-#define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
-#include <windows.h>
-#ifndef USE_SDL_INPUT
-#include <dinput.h>
-#endif
-#endif
-
 //////////////////////////////////////////////////////////////////////
 #define USE_NEWPOOL
 #include <CryMemoryManager.h>

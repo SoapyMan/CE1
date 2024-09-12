@@ -141,12 +141,13 @@ typedef ActionNamesMap::iterator ActionNamesMapItor;
 typedef std::map<string, CXActionMap*> ActionMapMap;
 typedef ActionMapMap::iterator ActionMapMapItor;
 
-class CInput;
+struct IInput;
 
-class CXActionMapManager : public IActionMapManager, public IInputEventListener
+class CXActionMapManager 
+	: public IActionMapManager, public IInputEventListener
 {
 public:
-	CXActionMapManager(CInput* pInput);
+	CXActionMapManager(IInput* pInput);
 	virtual ~CXActionMapManager();
 public:
 	//!IActionMapManager
@@ -198,7 +199,7 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	virtual bool OnInputEvent(const SInputEvent& event);
 
-	CInput* m_pInput;
+	IInput* m_pInput;
 private:
 
 	ActionIDsMap m_mapActionIDs;

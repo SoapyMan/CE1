@@ -330,15 +330,19 @@ project "CryInput"
 	}
 	
 	removefiles {
-		"./SourceCode/CryInput/XKeyboard*",
-		"./SourceCode/CryInput/XMouse*",
 		"./SourceCode/CryInput/XGamepad*",
 	}
 	
 	defines {
 		"CRYINPUT_EXPORTS",
-		"USE_SDL_INPUT"
 	}
+	
+	filter "system:linux"
+		removefiles {
+			"./SourceCode/CryInput/InputDirectInput*",
+			"./SourceCode/CryInput/XKeyboard*",
+			"./SourceCode/CryInput/XMouse*",
+		}
 	
 project "CryAISystem"
     kind "SharedLib"

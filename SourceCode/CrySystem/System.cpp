@@ -185,7 +185,7 @@ CSystem::CSystem() :
 	//[Timur] m_CreateDOMDocument = nullptr;
 
 	m_cvAIUpdate = nullptr;
-	i_direct_input = nullptr;
+	i_sdl_input = nullptr;
 
 	m_pScriptSink = nullptr;
 	m_pUserCallback = nullptr;
@@ -543,6 +543,8 @@ void CSystem::ShutDown(bool bRelaunch)
 	// Log must be last thing released.
 	SAFE_RELEASE(m_pLog);
 	SAFE_DELETE(m_pCpu);
+
+	SDL_QuitSubSystem(SDL_INIT_EVENTS | SDL_INIT_GAMECONTROLLER);
 }
 
 /////////////////////////////////////////////////////////////////////////////////

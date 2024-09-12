@@ -366,9 +366,9 @@ bool CSystem::InitInput(WIN_HINSTANCE hinst, WIN_HWND hwnd)
 	if (!m_dll.hInput)
 		return false;
 
-	bool bUseDirectInput = i_direct_input->GetIVal() ? true : false;
+	bool bUseDirectInput = i_sdl_input->GetIVal() ? false : true;
 	if (m_bEditor)
-		bUseDirectInput = false;
+		bUseDirectInput = true;
 
 	CRY_PTRCREATEINPUTFNC* pfnCreateInput;
 	pfnCreateInput = (CRY_PTRCREATEINPUTFNC*)CryGetProcAddress(m_dll.hInput, "CreateInput");
@@ -1088,7 +1088,7 @@ public:
 /////////////////////////////////////////////////////////////////////////////////
 bool CSystem::Init(const SSystemInitParams& params)
 {
-	SDL_Init(SDL_INIT_EVENTS | SDL_INIT_GAMECONTROLLER);
+	SDL_InitSubSystem(SDL_INIT_EVENTS | SDL_INIT_GAMECONTROLLER);
 
 	// parse command line arguments minus e.g. "-IP:23.34.2.2" "-DEVMODE"
 	CCommandLineSink_EarlyCommands CmdlineSink(*this);
@@ -1101,10 +1101,7 @@ bool CSystem::Init(const SSystemInitParams& params)
 	m_FrameProfileSystem.Init(this);
 
 	m_hInst = params.hInstance;
-	if (params.hWnd)
-		m_hWnd = SDL_CreateWindowFrom(params.hWnd);
-	else
-		m_hWnd = nullptr;
+	m_hWnd = params.hWnd;
 
 	m_bEditor = params.bEditor;
 	m_bTestMode = params.bTestMode;
@@ -1402,9 +1399,9 @@ void CSystem::CreateSystemVars()
 {
 	m_pCVarQuit = GetIConsole()->CreateVariable("ExitOnQuit", "1", VF_DUMPTODISK);
 
-	i_direct_input = GetIConsole()->CreateVariable("i_direct_input", "1", VF_DUMPTODISK,
-		"Toggles direct input capability.\n"
-		"Usage: i_direct_input [0/1]\n"
+	i_sdl_input = GetIConsole()->CreateVariable("i_sdl_input", "1", VF_DUMPTODISK,
+		"Toggles SDL input capability.\n"
+		"Usage: i_sdl_input [0/1]\n"
 		"Default is 1 (on).");
 
 	//////////////////////////////////////////////////////////////////////////

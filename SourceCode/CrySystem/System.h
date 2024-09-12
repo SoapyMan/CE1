@@ -438,7 +438,7 @@ private: // ------------------------------------------------------
 	ICVar* m_rDriver;
 	ICVar* m_rDisplayInfo;
 	ICVar* m_sysNoUpdate;
-	ICVar* i_direct_input;
+	ICVar* i_sdl_input;
 	ICVar* sys_script_debugger;
 	ICVar* m_cvEntitySuppressionLevel;
 	ICVar* m_pCVarQuit;

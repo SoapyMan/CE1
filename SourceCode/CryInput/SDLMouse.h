@@ -6,6 +6,7 @@ struct ITimer;
 struct ILog;
 
 struct ICVar;
+class CInputSDL;
 
 #define XMOUSE_MAX_MOUSE_EVENTS		12				// e.g. mouse buttons, axis, ..
 
@@ -23,7 +24,7 @@ public:
 	{
 	}
 
-	class CInput* m_pInput;
+	CInputSDL* m_pInput;
 
 	bool	Init(ISystem* pSystem);
 	void	Shutdown();

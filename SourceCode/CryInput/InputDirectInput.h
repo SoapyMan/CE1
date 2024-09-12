@@ -10,15 +10,15 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#ifndef INPUT_H
-#define INPUT_H
+#ifndef INPUTDIRECTINPUT_H
+#define INPUTDIRECTINPUT_H
 
 #if _MSC_VER > 1000
 # pragma once
 #endif
 
 #ifndef _XBOX
-#if defined(WIN32) && !defined(USE_SDL_INPUT)
+#if defined(WIN32)
 #include <dinput.h>
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -35,15 +35,9 @@
 #include <string>
 #include <queue>
 
-
 // PC devices
-#ifndef USE_SDL_INPUT
 #include "XKeyboard.h"
 #include "XMouse.h"
-#else
-#include "SDLKeyboard.h"
-#include "SDLMouse.h"
-#endif
 
 #include "Joystick.h"
 
@@ -69,29 +63,24 @@ typedef KeyNamesMap::iterator KeyNamesMapItor;
 
 typedef std::queue<int> VirtualKeyQueue;
 //////////////////////////////////////////////////////////////////////
-class CInput :
+class CInputDirectInput :
 	public IInput
 {
 private:
 
 public:
 
-	CInput()
+	CInputDirectInput()
 	{
 		m_console = 0;
 		m_pSystem = nullptr;
 		m_pLog = nullptr;
-#if !defined(_XBOX) && !defined(PS2) && !defined(USE_SDL_INPUT)
+#if !defined(_XBOX) && !defined(PS2)
 		m_g_pdi = nullptr;
 #endif
 	}
-#ifndef USE_SDL_INPUT
-	bool	Init(ISystem* pSystem, HINSTANCE hinst, HWND hwnd, bool usedinput);
-#else
-	bool	Init(ISystem* pSystem);
 
-#endif
-
+	bool	Init(ISystem* pSystem, void* hinst, void* hwnd);
 	void	ShutDown();
 	void	Update(bool bFocus);
 	void	ClearKeyState();
@@ -191,9 +180,9 @@ public:
 	int GetKeyID(const char* sName);
 	IActionMapManager* CreateActionMapManager();
 	const char* GetXKeyPressedName();
-#ifdef _WIN32
+
 	int VK2XKEY(int nKey);
-#endif
+
 	void EnableBufferedInput(bool bEnable)
 	{
 		m_bBufferedInput = bEnable;
@@ -234,13 +223,10 @@ private:
 	//////////////////////////////////////////////////////////////////////////
 
 	IConsole* m_console;
-#ifdef USE_SDL_INPUT
-	CSDLKeyboard	m_Keyboard;
-	CSDLMouse		m_Mouse;
-#else
+
 	CXKeyboard	m_Keyboard;
 	CXMouse		m_Mouse;
-#endif
+
 	CJoystick	m_Joystick;
 #ifdef _XBOX
 	CXGamepad m_Gamepad;
@@ -251,7 +237,7 @@ private:
 
 
 	ILog* m_pLog;
-#if !defined(_XBOX) && !defined(PS2) && !defined(USE_SDL_INPUT)
+#if !defined(_XBOX) && !defined(PS2)
 	LPDIRECTINPUT8	m_g_pdi;
 	HINSTANCE		m_hinst;
 	HWND			m_hwnd;
