@@ -17,7 +17,7 @@ ZipDir::CacheFactory::CacheFactory(CMTSafeHeap* pHeap, InitMethodEnum nInitMetho
 	m_pHeap(pHeap)
 {
 	m_nCDREndPos = 0;
-	m_f = NULL;
+	m_f = nullptr;
 	m_bBuildFileEntryMap = false; // we only need it for validation/debugging
 	m_bBuildFileEntryTree = true; // we need it to actually build the optimized structure of directories
 
@@ -71,14 +71,14 @@ ZipDir::CacheRWPtr ZipDir::CacheFactory::NewRW(const char* szFileName)
 	}
 	else
 	{
-		m_f = NULL;
+		m_f = nullptr;
 		if (!(m_nFlags & FLAGS_CREATE_NEW))
 			m_f = fopen(szFileName, "r+b");
 
 		if (m_f)
 			Read(*pCache);
 		else
-			if ((m_f = fopen(szFileName, "w+b")) != NULL)
+			if ((m_f = fopen(szFileName, "w+b")) != nullptr)
 			{
 				// there's no such file, but we'll create one. We'll need to write out the CDR here
 				pCache->m_lCDROffset = 0;
@@ -93,7 +93,7 @@ ZipDir::CacheRWPtr ZipDir::CacheFactory::NewRW(const char* szFileName)
 	// give the cache the file handle:
 	pCache->m_pFile = m_f;
 	// the factory doesn't own it after that
-	m_f = NULL;
+	m_f = nullptr;
 
 	return pCache;
 }
@@ -159,7 +159,7 @@ ZipDir::CachePtr ZipDir::CacheFactory::MakeCache(const char* szFile)
 	Cache* pCacheInstance = (Cache*)m_pHeap->Alloc(nCacheInstanceSize, "ZipDir::CacheFactory::New");
 	pCacheInstance->Construct(m_f, m_pHeap, nSizeRequired);
 	CachePtr cache = pCacheInstance;
-	m_f = NULL; // we don't own the file anymore - it's in possession of the cache instance
+	m_f = nullptr; // we don't own the file anymore - it's in possession of the cache instance
 
 	// try to serialize into the memory
 	size_t nSizeSerialized = m_treeFileEntries.Serialize(cache->GetRoot());

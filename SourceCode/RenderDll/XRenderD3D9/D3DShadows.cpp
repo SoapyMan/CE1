@@ -38,10 +38,10 @@ HRESULT GetTextureCoords(STexPic* pTexSrc, RECT* pRectSrc, STexPic* pTexDest, RE
 
 void CD3D9Renderer::BlurImage(int nSizeX, int nSizeY, int nType, ShadowMapTexInfo* st, int nTexDst)
 {
-	IDirect3DSurface9* pIRGBTargetSurf = NULL;
-	IDirect3DSurface9* pIZBufferSurf = NULL;
-	LPDIRECT3DTEXTURE9 pID3DTexture = NULL;
-	LPDIRECT3DTEXTURE9 pIRGBTarget = NULL;
+	IDirect3DSurface9* pIRGBTargetSurf = nullptr;
+	IDirect3DSurface9* pIZBufferSurf = nullptr;
+	LPDIRECT3DTEXTURE9 pID3DTexture = nullptr;
+	LPDIRECT3DTEXTURE9 pIRGBTarget = nullptr;
 	HRESULT hReturn;
 
 	STexPicD3D* tpSrc = (STexPicD3D*)m_TexMan->GetByID(st->nTexId0);
@@ -214,8 +214,8 @@ void CD3D9Renderer::BlurImage(int nSizeX, int nSizeY, int nType, ShadowMapTexInf
 				if (!st->nTexId1)
 					st->nTexId1 = GenShadowTexture(st->nTexSize, false);
 				STexPicD3D* tpDst2 = (STexPicD3D*)m_TexMan->GetByID(st->nTexId1);
-				LPDIRECT3DTEXTURE9 pIRGBTarget2 = NULL;
-				IDirect3DSurface9* pIRGBTargetSurf2 = NULL;
+				LPDIRECT3DTEXTURE9 pIRGBTarget2 = nullptr;
+				IDirect3DSurface9* pIRGBTargetSurf2 = nullptr;
 				pIRGBTarget2 = (LPDIRECT3DTEXTURE9)tpDst2->m_RefTex.m_VidTex;
 				hReturn = pIRGBTarget2->GetSurfaceLevel(0, &pIRGBTargetSurf2);
 				hReturn = m_pd3dDevice->SetRenderTarget(0, pIRGBTargetSurf2);
@@ -315,9 +315,9 @@ unsigned int CD3D9Renderer::GenShadowTexture(int nSize, bool bProjected)
 		eTF = eTF_DEPTH;
 	else
 		eTF = eTF_8888;
-	STexPic* tp = m_TexMan->CreateTexture(name, nSize, nSize, 1, flags, flags2, data, eTT_Base, -1.0f, -1.0f, 0, NULL, 0, eTF);
+	STexPic* tp = m_TexMan->CreateTexture(name, nSize, nSize, 1, flags, flags2, data, eTT_Base, -1.0f, -1.0f, 0, nullptr, 0, eTF);
 	STexPicD3D* t = (STexPicD3D*)tp;
-	LPDIRECT3DTEXTURE9 pID3DTexture = NULL;
+	LPDIRECT3DTEXTURE9 pID3DTexture = nullptr;
 	delete[] data;
 	if (!t)
 		return 0;
@@ -344,7 +344,7 @@ void CD3D9Renderer::OnEntityDeleted(IEntityRender* pEntityRender)
 	{
 		ShadowMapTexInfo* pInf = &m_ShadowTexIDBuffer[i];
 		if (pInf->pOwner == pEntityRender)
-			pInf->pOwner = NULL;
+			pInf->pOwner = nullptr;
 	}
 }
 
@@ -567,15 +567,15 @@ void CD3D9Renderer::PrepareDepthMap(ShadowMapFrustum* lof, bool make_new_tid)
 		m_ShadowTexIDBuffer[nCurTexIdSlot].nTexSize = nShadowTexSize;
 	}
 
-	CRYASSERT(m_ShadowTexIDBuffer[0].nTexId0 ? m_TexMan->GetByID(m_ShadowTexIDBuffer[0].nTexId0) != NULL : 1);
-	//	CRYASSERT(m_ShadowTexIDBuffer[1].nTexId ? m_TexMan->GetByID(m_ShadowTexIDBuffer[1].nTexId)!=NULL : 1);
+	CRYASSERT(m_ShadowTexIDBuffer[0].nTexId0 ? m_TexMan->GetByID(m_ShadowTexIDBuffer[0].nTexId0) != nullptr : 1);
+	//	CRYASSERT(m_ShadowTexIDBuffer[1].nTexId ? m_TexMan->GetByID(m_ShadowTexIDBuffer[1].nTexId)!=nullptr : 1);
 
-	ShadowMapTexInfo* st = NULL;
+	ShadowMapTexInfo* st = nullptr;
 	HRESULT hReturn;
-	IDirect3DSurface9* pIRGBTargetSurf = NULL;
-	IDirect3DSurface9* pIZBufferSurf = NULL;
-	LPDIRECT3DTEXTURE9 pID3DTexture = NULL;
-	LPDIRECT3DTEXTURE9 pIRGBTarget = NULL;
+	IDirect3DSurface9* pIRGBTargetSurf = nullptr;
+	IDirect3DSurface9* pIZBufferSurf = nullptr;
+	LPDIRECT3DTEXTURE9 pID3DTexture = nullptr;
+	LPDIRECT3DTEXTURE9 pIRGBTarget = nullptr;
 	// Create color buffer render target. We aren't actually going to use it for anything,
 	// but D3D required one as rendertarget
 	bool bStatus = false;
@@ -609,7 +609,7 @@ void CD3D9Renderer::PrepareDepthMap(ShadowMapFrustum* lof, bool make_new_tid)
 			if (pID3DTexture)
 				hReturn = pID3DTexture->GetSurfaceLevel(0, &pIZBufferSurf);
 		}
-		//hReturn = m_pd3dDevice->CreateTexture(nShadowTexSize, nShadowTexSize, 1, D3DUSAGE_RENDERTARGET, m_d3dsdBackBuffer.Format, D3DPOOL_DEFAULT, &pIRGBTarget, NULL);
+		//hReturn = m_pd3dDevice->CreateTexture(nShadowTexSize, nShadowTexSize, 1, D3DUSAGE_RENDERTARGET, m_d3dsdBackBuffer.Format, D3DPOOL_DEFAULT, &pIRGBTarget, nullptr);
 		if (tpRGB)
 		{
 			pIRGBTarget = (LPDIRECT3DTEXTURE9)tpRGB->m_RefTex.m_VidTex;
@@ -794,7 +794,7 @@ void CD3D9Renderer::PrepareDepthMap(ShadowMapFrustum* lof, bool make_new_tid)
 				hReturn = D3DXCreateTexture(m_pd3dDevice, nShadowTexSize, nShadowTexSize, 1, 0, m_d3dsdBackBuffer.Format, D3DPOOL_SYSTEMMEM, &pID3DSysTexture);
 				hReturn = pID3DSysTexture->GetSurfaceLevel(0, &pSysSurf);
 				hReturn = m_pd3dDevice->GetRenderTargetData(pIRGBTargetSurf, pSysSurf);
-				hReturn = pID3DSysTexture->LockRect(0, &d3dlrSys, NULL, 0);
+				hReturn = pID3DSysTexture->LockRect(0, &d3dlrSys, nullptr, 0);
 				byte* pic = new byte[nShadowTexSize * nShadowTexSize * 4];
 				// Copy data to the texture 
 				cryMemcpy(pic, d3dlrSys.pBits, nShadowTexSize * nShadowTexSize * 4);
@@ -817,7 +817,7 @@ void CD3D9Renderer::PrepareDepthMap(ShadowMapFrustum* lof, bool make_new_tid)
 				hReturn = D3DXCreateTexture(m_pd3dDevice, nShadowTexSize, nShadowTexSize, 1, 0, D3DFMT_A8R8G8B8, D3DPOOL_SYSTEMMEM, &pID3DSysTexture);
 				hReturn = pID3DSysTexture->GetSurfaceLevel(0, &pSysSurf);
 				hReturn = m_pd3dDevice->GetRenderTargetData(pIRGBTargetSurf, pSysSurf);
-				hReturn = pID3DSysTexture->LockRect(0, &d3dlrSys, NULL, 0);
+				hReturn = pID3DSysTexture->LockRect(0, &d3dlrSys, nullptr, 0);
 				byte* pic = new byte[nShadowTexSize * nShadowTexSize * 4];
 				byte* ds = (byte*)d3dlrSys.pBits;
 				memcpy(pic, ds, nShadowTexSize * nShadowTexSize * 4);
@@ -895,7 +895,7 @@ void CD3D9Renderer::PrepareDepthMap(ShadowMapFrustum* lof, bool make_new_tid)
 	if (!m_SceneRecurseCount)
 		m_pd3dDevice->EndScene();
 
-	CRYASSERT(m_ShadowTexIDBuffer[0].nTexId0 ? m_TexMan->GetByID(m_ShadowTexIDBuffer[0].nTexId0) != NULL : 1);
+	CRYASSERT(m_ShadowTexIDBuffer[0].nTexId0 ? m_TexMan->GetByID(m_ShadowTexIDBuffer[0].nTexId0) != nullptr : 1);
 
 	if (lof->pPenumbra && lof->pPenumbra->bUpdateRequested)
 		PrepareDepthMap(lof->pPenumbra, make_new_tid);

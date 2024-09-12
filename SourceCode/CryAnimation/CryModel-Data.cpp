@@ -26,7 +26,7 @@ const char* CryModel::g_szDamageBonesHead[] =
 	"Bip01 Neck",
 	"Bip01 Neck1",
 	"Bip01 Head",
-	NULL
+	nullptr
 };
 
 // the following string tables are for recognition of different parts of the body
@@ -37,7 +37,7 @@ const char* CryModel::g_szDamageBonesTorso[] =
 	"Bip01 Spine",
 	"Bip01 Spine1",
 	"Bip01 Spine2",
-	NULL
+	nullptr
 };
 
 // the following string tables are for recognition of different parts of the body
@@ -55,7 +55,7 @@ const char* CryModel::g_szDamageBonesArmL[] =
 	"Bip01 L Finger11",
 	"Bip01 L Finger2",
 	"Bip01 L Finger21",
-	NULL
+	nullptr
 };
 
 // the following string tables are for recognition of different parts of the body
@@ -73,7 +73,7 @@ const char* CryModel::g_szDamageBonesArmR[] =
 	"Bip01 R Finger11",
 	"Bip01 R Finger2",
 	"Bip01 R Finger21",
-	NULL
+	nullptr
 };
 
 
@@ -85,7 +85,7 @@ const char* CryModel::g_szDamageBonesLegL[] =
 	"Bip01 L Calf",
 	"Bip01 L Foot",
 	"Bip01 L Toe0",
-	NULL
+	nullptr
 };
 
 // the following string tables are for recognition of different parts of the body
@@ -96,5 +96,5 @@ const char* CryModel::g_szDamageBonesLegR[] =
 	"Bip01 R Calf",
 	"Bip01 R Foot",
 	"Bip01 R Toe0",
-	NULL
+	nullptr
 };

@@ -431,7 +431,7 @@ void CREOcean::mfDrawOceanSectors()
 		}
 	}
 	float fWaterLevel = eng->GetWaterLevel();
-	CVProgram* vp = NULL;
+	CVProgram* vp = nullptr;
 	int nMaxSplashes = CLAMP(CRenderer::CV_r_oceanmaxsplashes, 0, 16);
 
 	//x = y = 0;
@@ -575,7 +575,7 @@ void CREOcean::mfDrawOceanSectors()
 		if (vp != curVP)
 		{
 			vp = curVP;
-			vp->mfSet(true, NULL, 0);
+			vp->mfSet(true, nullptr, 0);
 		}
 		int nFloats = (os->m_Flags & OSF_NEEDHEIGHTS) ? 1 : 0;
 		if (nSplashes)

@@ -25,7 +25,7 @@ public:
 	};
 
 	bool IsEnd() { return (m_itEntityMap == m_pEntityMap->end()); };
-	IEntity* Next() { return IsEnd() ? NULL : (IEntity*)(*m_itEntityMap++).second; };
+	IEntity* Next() { return IsEnd() ? nullptr : (IEntity*)(*m_itEntityMap++).second; };
 	void MoveFirst() { m_itEntityMap = m_pEntityMap->begin(); };
 	void AddRef() { m_nRefCount++; }
 	void Release() { --m_nRefCount; if (m_nRefCount <= 0) { delete this; } };
@@ -48,7 +48,7 @@ public:
 	};
 
 	bool IsEnd() { return (m_itEntityVec == m_pEntityVec->end()); };
-	IEntity* Next() { return IsEnd() ? NULL : (*m_itEntityVec++); };
+	IEntity* Next() { return IsEnd() ? nullptr : (*m_itEntityVec++); };
 	void MoveFirst() { m_itEntityVec = m_pEntityVec->begin(); };
 	void AddRef() { m_nRefCount++; }
 	void Release() { --m_nRefCount; if (m_nRefCount <= 0) { delete this; } };

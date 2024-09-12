@@ -31,10 +31,10 @@ template <class _T>
 class TSmartPtr {
 	_T* p;
 public:
-	TSmartPtr() : p(NULL) {}
+	TSmartPtr() : p(nullptr) {}
 	TSmartPtr(_T* p_) : p(p_) { if (p) (p)->AddRef(); }
 	TSmartPtr(const TSmartPtr<_T>& p_) : p(p_.p) { if (p) (p)->AddRef(); }  // Copy constructor.
-	TSmartPtr(int Null) : p(NULL) {}
+	TSmartPtr(int Null) : p(nullptr) {}
 	~TSmartPtr() { if (p) (p)->Release(); }
 
 	operator _T* () const { return p; }
@@ -62,10 +62,10 @@ public:
 
 	//_T* ptr() const { return p; };
 
-	//operator bool() { return p != NULL; };
-	operator bool() const { return p != NULL; };
-	//bool  operator !() { return p == NULL; };
-	bool  operator !() const { return p == NULL; };
+	//operator bool() { return p != nullptr; };
+	operator bool() const { return p != nullptr; };
+	//bool  operator !() { return p == nullptr; };
+	bool  operator !() const { return p == nullptr; };
 
 	// Misc compare functions.
 	bool  operator == (const _T* p2) const { return p == p2; };

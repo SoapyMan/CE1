@@ -28,7 +28,7 @@ protected:
 private:
 	bool m_b44KHz;	//keeps track of encoded frequency
 
-	int ReadFile(void* pBuf, int nSize, int nCount, int* pNewFilePos = NULL);
+	int ReadFile(void* pBuf, int nSize, int nCount, int* pNewFilePos = nullptr);
 	bool InitStreamWAV();
 protected:
 	virtual ~CPCMDecoder();

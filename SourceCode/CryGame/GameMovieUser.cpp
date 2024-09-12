@@ -232,7 +232,7 @@ void CMovieUser::EndCutScene()
 //////////////////////////////////////////////////////////////////////////
 void CMovieUser::SendGlobalEvent(const char *pszEvent)
 {
-	HSCRIPTFUNCTION pEventFunc=NULL;
+	HSCRIPTFUNCTION pEventFunc = HSCRIPT_NULL;
 	IScriptSystem *pScriptSystem=m_pGame->GetSystem()->GetIScriptSystem();
 	if (!pScriptSystem)
 		return;

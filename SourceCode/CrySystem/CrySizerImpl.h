@@ -123,7 +123,7 @@ protected:
 
 		void clear()
 		{
-			pId = NULL;
+			pId = nullptr;
 			nSize = 0;
 			nName = 0;
 		}

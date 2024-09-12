@@ -321,7 +321,7 @@ void CTimeDemoRecorder::RecordFrame()
 	FrameRecord rec;
 	rec.frameTime = frameTime;
 
-	IEntity *pPlayer = NULL;
+	IEntity *pPlayer = nullptr;
 
 	pPlayer = GetIXGame( m_pGame )->GetMyPlayer();
 
@@ -364,7 +364,7 @@ void CTimeDemoRecorder::PlayFrame()
 
 	FrameRecord &rec = *m_currFrameIter;
 
-	IEntity *pPlayer = NULL;
+	IEntity *pPlayer = nullptr;
 	pPlayer = GetIXGame( m_pGame )->GetMyPlayer();
 
 	if (pPlayer)

@@ -149,7 +149,7 @@ public:
 	{
 		mfSetType(eDATA_Flare);
 		mfUpdateFlags(FCEF_TRANSFORM);
-		m_Map = NULL;
+		m_Map = nullptr;
 		m_fMinLight = 0.0f;
 		m_eLightRGB = eLIGHT_Identity;
 		m_fColor = Col_White;
@@ -165,8 +165,8 @@ public:
 		m_fFadeTime = -1.0f;
 		m_bBlind = false;
 		m_fScaleCorona = 0.6f;
-		m_pScaleCoronaParams = NULL;
-		m_Pass = NULL;
+		m_pScaleCoronaParams = nullptr;
+		m_Pass = nullptr;
 		m_Importance = 1;
 	}
 	virtual ~CREFlare()
@@ -174,7 +174,7 @@ public:
 		if (m_Map)
 		{
 			m_Map->Release(false);
-			m_Map = NULL;
+			m_Map = nullptr;
 		}
 		SAFE_DELETE(m_Pass);
 	}

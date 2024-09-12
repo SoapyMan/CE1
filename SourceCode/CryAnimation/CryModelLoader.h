@@ -86,7 +86,7 @@ protected:
 	// and returns it
 	CryModel* detachModel();
 
-	void indicateProgress(const char* szMsg = NULL);
+	void indicateProgress(const char* szMsg = nullptr);
 
 	string getCCGFilePath()
 	{
@@ -107,7 +107,7 @@ protected:
 
 	// the name of the cal file
 	string m_strCalFileName;
-	// the CAL file handle, or NULL if none
+	// the CAL file handle, or nullptr if none
 	FILE* m_fCalFile;
 	// the handle with which the animations are to be found, -1 by default
 	intptr_t m_nCafFindFileHandle;

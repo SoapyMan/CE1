@@ -8,7 +8,7 @@ Matrix44 debugGetMatrix(CCObject* pObj)
 	return pObj->m_Matrix;
 }
 
-void debugDrawBBoxWCS(const Matrix44& matModel, const Vec3& vMin, const Vec3& vMax, const float pColor[4] = NULL)
+void debugDrawBBoxWCS(const Matrix44& matModel, const Vec3& vMin, const Vec3& vMax, const float pColor[4] = nullptr)
 {
 	Vec3 vMinW, vMaxW;
 	vMinW = vMaxW = matModel.TransformPointOLD(vMin);
@@ -35,7 +35,7 @@ void debugDrawLine(const Matrix44& matLCS, const Vec3& a, const Vec3& b, const f
 	debugDrawLine(matLCS.TransformPointOLD(a), matLCS.TransformPointOLD(b), pColor);
 }
 
-void debugDrawCircle(const Matrix34& m34, float fRadius, int nAxis, const float* pColor = NULL)
+void debugDrawCircle(const Matrix34& m34, float fRadius, int nAxis, const float* pColor = nullptr)
 {
 	IRenderer* pRenderer = g_GetIRenderer();
 	Vec3 ptPrev(0, 0, 0);
@@ -56,7 +56,7 @@ void debugDrawCircle(const Matrix34& m34, float fRadius, int nAxis, const float*
 	}
 }
 
-void debugDrawLines(const Vec3& a, const Vec3& b, const Vec3& d, int nSubdiv, const float* pColor = NULL)
+void debugDrawLines(const Vec3& a, const Vec3& b, const Vec3& d, int nSubdiv, const float* pColor = nullptr)
 {
 	IRenderer* pRenderer = g_GetIRenderer();
 	pRenderer->Draw3dPrim(a, b, DPRIM_LINE, pColor);

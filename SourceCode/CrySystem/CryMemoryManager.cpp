@@ -81,7 +81,7 @@ int numpools = 0;
 PoolContext *AllocPool(PoolContext *pCtx, int size)
 {
 	// TODO: replace "malloc" with however we obtain memory on other platforms
-	void *buf = VirtualAlloc(NULL,size,MEM_COMMIT,PAGE_READWRITE);
+	void *buf = VirtualAlloc(nullptr,size,MEM_COMMIT,PAGE_READWRITE);
 	if(!buf)
 	{
 		CryError( "<CrySystem> (AllocPool) malloc() Failed" );
@@ -186,8 +186,8 @@ public:
 
 	PageBucketAllocator()
 	{
-		pages = NULL;
-		for (int i = 0; i < MAXBUCKETS; i++) reuse[i] = NULL;
+		pages = nullptr;
+		for (int i = 0; i < MAXBUCKETS; i++) reuse[i] = nullptr;
 	};
 
 	void* alloc(unsigned int size)
@@ -269,7 +269,7 @@ CRYMEMORYMANAGER_API void CryFree(void* p)
 {
 	if (!g_bProfilerEnabled)
 	{
-		if (p != NULL)
+		if (p != nullptr)
 		{
 			unsigned int* t = (unsigned int*)p;
 			unsigned int size = *--t;
@@ -292,7 +292,7 @@ CRYMEMORYMANAGER_API void CryFree(void* p)
 	else
 	{
 		// With profiler.
-		if (p != NULL)
+		if (p != nullptr)
 		{
 			FUNCTION_PROFILER_FAST(g_System, PROFILE_SYSTEM, g_bProfilerEnabled);
 			unsigned int* t = (unsigned int*)p;
@@ -321,7 +321,7 @@ CRYMEMORYMANAGER_API void CryFreeSize(void* p, size_t size)
 	g_TotalAllocatedMemory -= size;
 	if (!g_bProfilerEnabled)
 	{
-		if (p != NULL)
+		if (p != nullptr)
 		{
 #ifdef MINIMALDEBUG
 			if (size >= 100000000)
@@ -339,7 +339,7 @@ CRYMEMORYMANAGER_API void CryFreeSize(void* p, size_t size)
 	else
 	{
 		// With profiler.
-		if (p != NULL)
+		if (p != nullptr)
 		{
 			FUNCTION_PROFILER_FAST(g_System, PROFILE_SYSTEM, g_bProfilerEnabled);
 #ifdef MINIMALDEBUG
@@ -362,7 +362,7 @@ CRYMEMORYMANAGER_API void* CryRealloc(void* memblock, size_t size)
 	if (!g_bProfilerEnabled)
 	{
 		// Without profiler.
-		if (memblock == NULL)
+		if (memblock == nullptr)
 			return CryMalloc(size);
 		else
 		{
@@ -377,7 +377,7 @@ CRYMEMORYMANAGER_API void* CryRealloc(void* memblock, size_t size)
 	{
 		// With Profiler.
 		FUNCTION_PROFILER_FAST(g_System, PROFILE_SYSTEM, g_bProfilerEnabled);
-		if (memblock == NULL)
+		if (memblock == nullptr)
 			return CryMalloc(size);
 		else
 		{
@@ -396,7 +396,7 @@ CRYMEMORYMANAGER_API void* CryReallocSize(void* memblock, size_t oldsize, size_t
 	g_TotalAllocatedMemory += size;
 	if (!g_bProfilerEnabled)
 	{
-		if (memblock == NULL)
+		if (memblock == nullptr)
 		{
 			return (char*)g_GlobPageBucketAllocator.alloc(size) + g_nPrecaution;
 		}
@@ -411,7 +411,7 @@ CRYMEMORYMANAGER_API void* CryReallocSize(void* memblock, size_t oldsize, size_t
 	else
 	{
 		FUNCTION_PROFILER_FAST(g_System, PROFILE_SYSTEM, g_bProfilerEnabled);
-		if (memblock == NULL)
+		if (memblock == nullptr)
 		{
 			return (char*)g_GlobPageBucketAllocator.alloc(size) + g_nPrecaution;
 		}

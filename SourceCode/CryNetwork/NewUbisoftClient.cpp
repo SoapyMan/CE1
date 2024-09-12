@@ -65,7 +65,7 @@ static const char RegistryKeyName[] = "SOFTWARE\\Crytek\\FarCry";
 
 NewUbisoftClient::NewUbisoftClient(const char* szLocalIPAddress) :m_strUsername(""), m_iJoinedLobbyID(0), m_iJoinedRoomID(0),
 m_bDownloadedGSini(false), m_eServerState(NoUbiServer), m_eClientState(NoUbiClient), m_hCDKey(0),
-m_pCDKeyServer(NULL), m_bCheckCDKeys(false), m_dwNextServerAbsTime(0),
+m_pCDKeyServer(nullptr), m_bCheckCDKeys(false), m_dwNextServerAbsTime(0),
 m_dwNextClientAbsTime(0), m_dwAccountCreateTime(0), m_bDisconnecting(0), sv_authport(0), sv_regserver_port(0),
 m_pLog(0), m_pSystem(0), m_usGamePort(0)
 {
@@ -503,17 +503,17 @@ bool NewUbisoftClient::DownloadGSini(const char* szUsername)
 	// if we can, otherwise use the default URL
 	// http://gsconnect.ubisoft.com/gsinit.php?user=%s&dp=%s
 	// If that doesn't work check the local directory
-	char* connectURL = NULL;
+	char* connectURL = nullptr;
 	DWORD dwBufLen = 0;
 #if !defined(LINUX)
 	//connectURL[0]=0;
 	HKEY hKey;
 	if (RegOpenKeyEx(HKEY_LOCAL_MACHINE, "SOFTWARE\\Ubi Soft\\Game Service", 0, KEY_QUERY_VALUE, &hKey) == ERROR_SUCCESS)
 	{
-		if (RegQueryValueEx(hKey, "ConnectURL", NULL, NULL, NULL, &dwBufLen) == ERROR_SUCCESS)
+		if (RegQueryValueEx(hKey, "ConnectURL", nullptr, nullptr, nullptr, &dwBufLen) == ERROR_SUCCESS)
 		{
 			connectURL = (char*)malloc(dwBufLen);
-			RegQueryValueEx(hKey, "ConnectURL", NULL, NULL, (LPBYTE)connectURL, &dwBufLen);
+			RegQueryValueEx(hKey, "ConnectURL", nullptr, nullptr, (LPBYTE)connectURL, &dwBufLen);
 			RegCloseKey(hKey);
 		}
 	}
@@ -532,7 +532,7 @@ bool NewUbisoftClient::DownloadGSini(const char* szUsername)
 		strcpy(connectURL, iniEntry);
 	}
 #endif
-	if (connectURL == NULL) // We didn't get the key from the registry so try the default url
+	if (connectURL == nullptr) // We didn't get the key from the registry so try the default url
 	{
 		char defURL[] = "http://gsconnect.ubisoft.com/gsinit.php?user=%s&dp=%s";
 		dwBufLen = sizeof(defURL);
@@ -549,7 +549,7 @@ bool NewUbisoftClient::DownloadGSini(const char* szUsername)
 
 	/*GShandle stHandle = GSHttpInitialize();
 	// Returns 0 on failure, but for now I don't care
-	int i=GSHttpSave(stHandle,connectURL,"gsinit.ini",GS_TRUE,NULL,NULL); // Store in the working dir
+	int i=GSHttpSave(stHandle,connectURL,"gsinit.ini",GS_TRUE,nullptr,nullptr); // Store in the working dir
 	CRYASSERT(i);
 	GSHttpUninitialize();*/
 
@@ -558,7 +558,7 @@ bool NewUbisoftClient::DownloadGSini(const char* szUsername)
 
 
 #if !defined(LINUX)
-	HINTERNET hNet = InternetOpen("", INTERNET_OPEN_TYPE_PRECONFIG, NULL, NULL, NULL);
+	HINTERNET hNet = InternetOpen("", INTERNET_OPEN_TYPE_PRECONFIG, nullptr, nullptr, nullptr);
 	if (!hNet)
 	{
 		free(szGSURL);
@@ -566,7 +566,7 @@ bool NewUbisoftClient::DownloadGSini(const char* szUsername)
 	}
 	else
 	{
-		HINTERNET hURL = InternetOpenUrl(hNet, szGSURL, NULL, 0, INTERNET_FLAG_HYPERLINK, NULL);
+		HINTERNET hURL = InternetOpenUrl(hNet, szGSURL, nullptr, 0, INTERNET_FLAG_HYPERLINK, nullptr);
 		free(szGSURL);
 		if (!hURL)
 			return false;
@@ -606,7 +606,7 @@ bool NewUbisoftClient::DownloadGSini(const char* szUsername)
 	free(szGSURL);
 	// write file
 	FILE* pFile = fopen(GSINIFILETMP, "wb");
-	if (NULL != pFile)
+	if (nullptr != pFile)
 	{
 		fwrite(strText.c_str(), 1, strText.size(), pFile);
 		fclose(pFile);

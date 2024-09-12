@@ -59,7 +59,7 @@ static char THIS_FILE[] = __FILE__;
 //////////////////////////////////////////////////////////////////////
 CJoystick::CJoystick()
 {
-	m_pLog = NULL;
+	m_pLog = nullptr;
 	memset(m_dirs, 0, sizeof(m_dirs));
 	memset(m_buttons, 0, sizeof(m_buttons));
 	memset(m_hatdirs, 0, sizeof(m_hatdirs));
@@ -69,8 +69,8 @@ CJoystick::CJoystick()
 	m_joytime = 0;
 	m_numjoysticks = 0;
 
-	m_vAnalog1Dir = NULL;
-	m_vAnalog2Dir = NULL;
+	m_vAnalog1Dir = nullptr;
+	m_vAnalog2Dir = nullptr;
 
 	//PS2 SPECIFIC initialization
 #ifdef PS2

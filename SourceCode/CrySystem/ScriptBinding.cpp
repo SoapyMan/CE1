@@ -30,12 +30,12 @@ private:
 
 CScriptBindings::CScriptBindings()
 {
-	m_pScriptObjectSystem = NULL;
-	m_pScriptObjectParticle = NULL;
-	m_pScriptObjectAnimation = NULL;
-	m_pScriptObjectSound = NULL;
-	m_pScriptObjectMovie = NULL;
-	m_pScriptObjectScript = NULL;
+	m_pScriptObjectSystem = nullptr;
+	m_pScriptObjectParticle = nullptr;
+	m_pScriptObjectAnimation = nullptr;
+	m_pScriptObjectSound = nullptr;
+	m_pScriptObjectMovie = nullptr;
+	m_pScriptObjectScript = nullptr;
 }
 
 bool CScriptBindings::Init(CSystem* pSystem)

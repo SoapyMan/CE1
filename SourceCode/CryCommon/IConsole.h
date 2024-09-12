@@ -192,7 +192,7 @@ struct IConsole
 		/*! Retrieve a console variable by name
 			@param sName variable name
 			@param bCaseSensitive true=faster, false=much slower but allowes names with wrong case (use only where performce doesn't matter)
-			@return a pointer to the ICVar interface, NULL if is not found
+			@return a pointer to the ICVar interface, nullptr if is not found
 			@see ICVar
 		*/
 	virtual ICVar* GetCVar(const char* name, const bool bCaseSensitive = true) = 0;
@@ -200,7 +200,7 @@ struct IConsole
 		/*! legacy function */
 	virtual CXFont* GetFont() = 0;
 	/*! legacy function */
-	virtual void Help(const char* command = NULL) = 0;
+	virtual void Help(const char* command = nullptr) = 0;
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		/*! Read a value from a configuration file (.ini) and return the value
 			@param szVarName variable name

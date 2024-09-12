@@ -29,7 +29,7 @@ static char THIS_FILE[] = __FILE__;
 CryBone::CryBone() :
 	m_bUseMatPlus(false),
 	m_bUseReadyRelativeToParentMatrix(false),
-	m_pParent(NULL)
+	m_pParent(nullptr)
 {
 	//m_MatPlus.Identity();
 	m_matRelativeToParent.SetIdentity();; // current result of animation

@@ -51,7 +51,7 @@ public:
 	}
 
 	GC_CCFFileWriter() :
-		m_pFile(NULL), m_nLastChunk(-1)
+		m_pFile(nullptr), m_nLastChunk(-1)
 	{
 	}
 
@@ -151,8 +151,8 @@ public:
 	};
 
 	GC_CGFConvertor() :
-		m_fTarget(NULL),
-		m_pStatCGFCompiler(NULL)
+		m_fTarget(nullptr),
+		m_pStatCGFCompiler(nullptr)
 	{
 	}
 

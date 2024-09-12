@@ -195,7 +195,7 @@ struct ICryBone
 	// Description:
 	//     Get the parent bone.
 	// Return Value:
-	//     A pointer to a ICryBone derived class representing the parent bone. If there's none, NULL will be returned.
+	//     A pointer to a ICryBone derived class representing the parent bone. If there's none, nullptr will be returned.
 	// Summary:
 	//     Get the parent bone
 	virtual ICryBone* GetParent() = 0;
@@ -219,7 +219,7 @@ struct ICryBone
 
 struct AnimSinkEventData
 {
-	AnimSinkEventData(void* _p = NULL) :
+	AnimSinkEventData(void* _p = nullptr) :
 		p(_p),
 		n((INT_PTR)_p)
 	{
@@ -723,7 +723,7 @@ struct ICryCharInstance : public IBindable
 	//     ShaderName - Name of the shader
 	// Summary:
 	//     Set a float value associated with a shader
-	virtual void SetShaderFloat(const char* Name, float fVal, const char* ShaderName = NULL) = 0;
+	virtual void SetShaderFloat(const char* Name, float fVal, const char* ShaderName = nullptr) = 0;
 
 	// Description:
 	//     Set the color to be used by the character instance
@@ -754,7 +754,7 @@ struct ICryCharInstance : public IBindable
 	//     List of material info
 	// Summary:
 	//     Return the leaf buffer materials
-	virtual const list2<struct CMatInfo>* getLeafBufferMaterials() { return NULL; }
+	virtual const list2<struct CMatInfo>* getLeafBufferMaterials() { return nullptr; }
 
 	//! Interface for the renderer - returns the CDLight describing the light in this character;
 	//! returns NULL if there's no light with such index
@@ -936,7 +936,7 @@ struct ICryCharInstance : public IBindable
 	//! Detaches the light by the handle retuned by AttachLight
 	virtual void DetachLight(LightHandle nHandle) {}
 	//! Returns the light by the light handle; returns NULL if no such light found
-	virtual CDLight* GetLight(LightHandle nHandle) { return NULL; }
+	virtual CDLight* GetLight(LightHandle nHandle) { return nullptr; }
 	//! Returns the light handle if the light is attached; returns invalid handle, if this light is not attached
 	//! NOTE: if your light was attached with copying, then you won't get the handle for the original light pointer
 	//! because the original light might have been attached several times and have several pointers in this case
@@ -1114,7 +1114,7 @@ struct ICryCharInstance : public IBindable
 	virtual Vec3 GetHelperPos(const char* szHelperName) { return Vec3(0, 0, 0); }
 	//! Returns the matrix of the specified helper ( exported into cgf file )
 	//! Actually returns the given bone's matrix
-	virtual const Matrix44* GetHelperMatrixByName(const char* szHelperName) { return NULL; }
+	virtual const Matrix44* GetHelperMatrixByName(const char* szHelperName) { return nullptr; }
 
 	//! Returns the matrix of the helper object (in matOut), like GetTPVWeaponHelper returns the position.
 	//! When the return value is true, matOut contains the matrix of the helper object
@@ -1184,9 +1184,9 @@ struct ICryCharInstance : public IBindable
 	//! submesh creation/destruction is heavy operations, so the clients must use they rarely,
 	//! and set visible/invisible when they need to turn them on/off
 	//! But creating many submeshes is memory-consuming so the number of them must be kept low at all times
-	virtual ICryCharSubmesh* NewSubmesh(ICryCharModel* pModel, bool bVisible = false) { return NULL; }
+	virtual ICryCharSubmesh* NewSubmesh(ICryCharModel* pModel, bool bVisible = false) { return nullptr; }
 	// adds submesh to the specified slot; replaces submesh if there's some there
-	virtual ICryCharSubmesh* NewSubmesh(unsigned nSlot, ICryCharModel* pModel, bool bVisible = false) { return NULL; }
+	virtual ICryCharSubmesh* NewSubmesh(unsigned nSlot, ICryCharModel* pModel, bool bVisible = false) { return nullptr; }
 
 	//! removes submesh from the character
 	//! does not change slot assignments. That is, removing a submesh from slot 1, you don't shift models from upper slots
@@ -1197,11 +1197,11 @@ struct ICryCharInstance : public IBindable
 	//! enumeration of submeshes
 	//! returns the number of currently allocated submesh slots
 	virtual size_t NumSubmeshes() { return 0; }
-	//! returns submesh from the i-th slot. Some submesh slots may be empty (NULL)
-	virtual ICryCharSubmesh* GetSubmesh(unsigned i) { return NULL; }
+	//! returns submesh from the i-th slot. Some submesh slots may be empty (nullptr)
+	virtual ICryCharSubmesh* GetSubmesh(unsigned i) { return nullptr; }
 
 
-	virtual ICryCharFxTrail* NewFxTrail(unsigned nSlot, const struct CryCharFxTrailParams&) { return NULL; }
+	virtual ICryCharFxTrail* NewFxTrail(unsigned nSlot, const struct CryCharFxTrailParams&) { return nullptr; }
 	virtual void RemoveFxTrail(unsigned nSlot) {}
 
 
@@ -1289,7 +1289,7 @@ struct ICryCharManager
 	// Return Value:
 	//     A pointer to a ICryCharInstance class if the model could be loaded 
 	//     properly.
-	//     NULL if the model couldn't be loaded.
+	//     nullptr if the model couldn't be loaded.
 	// Summary:
 	//     Create a new instance of a model
 	virtual ICryCharInstance* MakeCharacter(const char* szFilename, unsigned nFlags = 0) = 0;
@@ -1307,7 +1307,7 @@ struct ICryCharManager
 	// Return Value:
 	//     A pointer to a ICryCharModel class if the model could be loaded 
 	//     properly.
-	//     NULL if the model couldn't be loaded.
+	//     nullptr if the model couldn't be loaded.
 	// Summary:
 	//     Load model file
 	virtual ICryCharModel* LoadModel(const char* szFileName, unsigned nFlags = 0) = 0;
@@ -1350,7 +1350,7 @@ struct ICryCharManager
 	//     false if it wasn't executed
 	// Summary:
 	//     Executes a script command
-	virtual bool ExecScriptCommand(int nCommand, void* pParams = NULL, void* pResult = NULL) { return false; }
+	virtual bool ExecScriptCommand(int nCommand, void* pParams = nullptr, void* pResult = nullptr) { return false; }
 
 	// Description:
 	//     Update the Animation System. It's important to call this function at every frame. This should perform very fast.

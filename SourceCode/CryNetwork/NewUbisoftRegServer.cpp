@@ -106,7 +106,7 @@ bool NewUbisoftClient::Server_RecreateServer()
 
 bool NewUbisoftClient::Server_UpdateServer(unsigned int uiMaxPlayers, unsigned short usPort)
 {
-	if (RegServerSend_UpdateGroupSettings(m_iServerRoomID, -1, -1, -1, uiMaxPlayers, -1, NULL, NULL, -1, NULL, -1, NULL, -1, usPort))
+	if (RegServerSend_UpdateGroupSettings(m_iServerRoomID, -1, -1, -1, uiMaxPlayers, -1, nullptr, nullptr, -1, nullptr, -1, nullptr, -1, usPort))
 		return true;
 	else
 		return false;
@@ -207,7 +207,7 @@ GSvoid NewUbisoftClient::RegServerRcv_RequestParentGroupResult(GSubyte ucType,
 			m_pLog->Log("\001Ubi.com: RequestParentGroupResult success");
 			// We will let the library pick the best parent group to register on.
 			CRegisterServer::RegServerSend_RegisterServerOnLobby(0, 0, m_strGameServerName.c_str(),
-				GAME_NAME, ROOM_UBI_CLIENTHOST_REGSERVER, m_uiMaxPlayers, 0, "", szData, sizeof(szData), NULL, 0, NULL, 0,
+				GAME_NAME, ROOM_UBI_CLIENTHOST_REGSERVER, m_uiMaxPlayers, 0, "", szData, sizeof(szData), nullptr, 0, nullptr, 0,
 				m_usGamePort, "", GSGAMEVERSION, GS_FALSE, GS_FALSE);
 		}
 	}

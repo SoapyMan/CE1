@@ -77,7 +77,7 @@ public:
 		if (m_pZipEntry)
 			return m_pZipEntry->GetData();
 		else
-			return NULL;
+			return nullptr;
 	}
 private:
 	// the clients are not allowed to destroy this object directly; only via Release()

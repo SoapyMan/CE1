@@ -51,7 +51,7 @@
 #define INDEX(r,g,b)	(r + (g << HIST_R_BITS) + (b << (HIST_R_BITS + HIST_G_BITS)))
 
 // The storage for color usage histogram
-static ushort* hist = NULL;
+static ushort* hist = nullptr;
 // Total number of colors that were used to create the histogram
 static unsigned hist_pixels;
 
@@ -247,11 +247,11 @@ struct shColorBox
 };
 
 // The storage for color space boxes
-static shColorBox* box = NULL;
+static shColorBox* box = nullptr;
 // Number of valid color boxes
 static int boxcount;
 // The storage for color indices
-static byte* color_index = NULL;
+static byte* color_index = nullptr;
 
 static int __cdecl compare_boxes(const void* i1, const void* i2)
 {
@@ -288,9 +288,9 @@ void shQuantizeBegin()
 
 void shQuantizeEnd()
 {
-	delete[] color_index; color_index = NULL;
-	delete[] box; box = NULL;
-	delete[] hist; hist = NULL;
+	delete[] color_index; color_index = nullptr;
+	delete[] box; box = nullptr;
+	delete[] hist; hist = nullptr;
 }
 
 void shQuantizeCount(SRGBPixel* image, int pixels, SRGBPixel* transp)

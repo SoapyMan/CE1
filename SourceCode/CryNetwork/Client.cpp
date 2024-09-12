@@ -39,7 +39,7 @@ static char THIS_FILE[] = __FILE__;
 
 CClient::CClient(CNetwork* pNetwork)
 	: m_ctpEndpoint(pNetwork), m_ctpEndpoint2(pNetwork),
-	cl_timeout(0), m_pbAuthorizationID(NULL), m_uiAuthorizationSize(0), m_bWaiting(0)
+	cl_timeout(0), m_pbAuthorizationID(nullptr), m_uiAuthorizationSize(0), m_bWaiting(0)
 {
 	m_pNetwork = pNetwork;
 	m_ccpEndpoint.Init(this);
@@ -49,7 +49,7 @@ CClient::CClient(CNetwork* pNetwork)
 CClient::~CClient()
 {
 	m_pNetwork->UnregisterClient(this);
-	m_pSink = NULL;
+	m_pSink = nullptr;
 	if (m_pbAuthorizationID)
 		delete[] m_pbAuthorizationID;
 }
@@ -195,7 +195,7 @@ void CClient::OnDisconnect(const char* szCause)
 {
 	if (m_pSink)
 	{
-		if (szCause == NULL)szCause = "Undefined";
+		if (szCause == nullptr)szCause = "Undefined";
 		m_pSink->OnXClientDisconnect(szCause);	// this pointer is destroyed after this call
 	}
 }
@@ -279,7 +279,7 @@ void CClient::Connect(const char* szIP, WORD wPort, const BYTE* pbAuthorizationI
 {
 	CRYASSERT(pbAuthorizationID);
 	CRYASSERT(uiAuthorizationSize > 0);
-	NET_ASSERT(m_pSink != NULL); // you forgot something
+	NET_ASSERT(m_pSink != nullptr); // you forgot something
 
 	CIPAddress ip(wPort, szIP);
 	m_bLocalHost = ip.IsLocalHost();
@@ -389,14 +389,14 @@ bool CClient::Update(unsigned int nTime)
 	/////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////
 
-	m_ccpEndpoint.Update(m_nCurrentTime, 0, NULL);
+	m_ccpEndpoint.Update(m_nCurrentTime, 0, nullptr);
 	m_smCCPMachine.Update();
 	unsigned int CurrState = m_smCCPMachine.GetCurrentStatus();
 	if (CurrState == STATUS_READY || CurrState == STATUS_WAIT_FOR_SERVER_READY)
 	{
 		static char szCause[] = "@ServerTimeout";
-		m_ctpEndpoint.Update(m_nCurrentTime, 0, NULL);
-		m_ctpEndpoint2.Update(m_nCurrentTime, 0, NULL);
+		m_ctpEndpoint.Update(m_nCurrentTime, 0, nullptr);
+		m_ctpEndpoint2.Update(m_nCurrentTime, 0, nullptr);
 
 		if (cl_timeout && cl_timeout->GetFVal() && GetISystem()->GetIGame()->GetModuleState(EGameMultiplayer))
 		{

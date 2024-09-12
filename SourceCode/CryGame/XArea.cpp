@@ -746,7 +746,7 @@ CXArea*	CXAreaMgr::AddArea(const Vec3d& center, const float radius, const std::v
 
 	// no building/sector  must be outside
 	if(radius<=0)
-		return NULL;
+		return nullptr;
 
 	newArea = new CXArea;
 
@@ -779,7 +779,7 @@ CXArea*	CXAreaMgr::AddArea(const int nBuilding, const int nSectorId, const Entit
 
 	// no building/sector  must be outside
 	if(nBuilding<0 || nSectorId<0)
-		return NULL;
+		return nullptr;
 
 	newArea = new CXArea;
 
@@ -811,7 +811,7 @@ CXArea*	CXAreaMgr::AddArea(const Vec3d* const vPoints, const int count, const st
 
 	// at least three points needed to create closed shape
 	if(count<3)
-		return NULL;
+		return nullptr;
 
 	newArea = new CXArea;
 
@@ -852,7 +852,7 @@ CXArea*	CXAreaMgr::GetArea(const int nBuilding, const int nSectorId, const Entit
 				return curArea;
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 */
 
@@ -862,7 +862,7 @@ CXArea*	CXAreaMgr::GetArea( const Vec3d& point )
 {
 	float		dist;
 	float		closeDist=-1;
-	CXArea*	closeArea=NULL;
+	CXArea*	closeArea=nullptr;
 
 	for(unsigned int aIdx=0; aIdx<m_vpAreas.size(); aIdx++)
 	{
@@ -904,7 +904,7 @@ void	CXAreaMgr::UpdatePlayer(CXAreaUser& user)
 
 	unsigned int aIdx;
 //	int	building=0, sector=0;
-//	IVisArea *sector=NULL;
+//	IVisArea *sector=nullptr;
 
 //fixme - localplayer check should be earlier
 //	if( player->GetEntity() != player->GetGame()->GetMyPlayer() )
@@ -1185,7 +1185,7 @@ int	building = 0;
 void CXAreaMgr::Init( ISystem * pSystem )
 {
 	m_pSystem = pSystem;
-	m_pCurrArea=m_pPrevArea=NULL;
+	m_pCurrArea=m_pPrevArea=nullptr;
 }
 
 // [marco] functions common for game and editor mode
@@ -1193,7 +1193,7 @@ void CXAreaMgr::Init( ISystem * pSystem )
 //////////////////////////////////////////////////////////////////////////
 void CXGame::CheckSoundVisAreas()
 {
-	m_XAreaMgr.m_pPrevArea=m_XAreaMgr.m_pCurrArea=NULL;
+	m_XAreaMgr.m_pPrevArea=m_XAreaMgr.m_pCurrArea=nullptr;
 	
 	if (m_pSystem->GetISoundSystem())	
 		m_XAreaMgr.m_pPrevArea=m_pSystem->GetISoundSystem()->GetListenerArea();		

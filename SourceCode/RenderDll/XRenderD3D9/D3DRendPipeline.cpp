@@ -149,7 +149,7 @@ void CD3D9Renderer::EF_InitD3DFixedPipeline()
 			if (elem[i++].Stream == 0xff) break;
 		}
 		m_RP.m_D3DFixedPipeline[0][n].m_Declaration.Shrink();
-		m_RP.m_D3DFixedPipeline[0][n].m_pDeclaration = NULL;
+		m_RP.m_D3DFixedPipeline[0][n].m_pDeclaration = nullptr;
 	}
 	n = 1;
 	pOffs = &gBufInfoTable[n];
@@ -168,7 +168,7 @@ void CD3D9Renderer::EF_InitD3DFixedPipeline()
 			if (elem[i++].Stream == 0xff) break;
 		}
 		m_RP.m_D3DFixedPipeline[0][n].m_Declaration.Shrink();
-		m_RP.m_D3DFixedPipeline[0][n].m_pDeclaration = NULL;
+		m_RP.m_D3DFixedPipeline[0][n].m_pDeclaration = nullptr;
 	}
 	n = 2;
 	pOffs = &gBufInfoTable[n];
@@ -188,7 +188,7 @@ void CD3D9Renderer::EF_InitD3DFixedPipeline()
 			if (elem[i++].Stream == 0xff) break;
 		}
 		m_RP.m_D3DFixedPipeline[0][n].m_Declaration.Shrink();
-		m_RP.m_D3DFixedPipeline[0][n].m_pDeclaration = NULL;
+		m_RP.m_D3DFixedPipeline[0][n].m_pDeclaration = nullptr;
 	}
 	n = 3;
 	pOffs = &gBufInfoTable[n];
@@ -208,7 +208,7 @@ void CD3D9Renderer::EF_InitD3DFixedPipeline()
 			if (elem[i++].Stream == 0xff) break;
 		}
 		m_RP.m_D3DFixedPipeline[0][n].m_Declaration.Shrink();
-		m_RP.m_D3DFixedPipeline[0][n].m_pDeclaration = NULL;
+		m_RP.m_D3DFixedPipeline[0][n].m_pDeclaration = nullptr;
 	}
 	n = 4;
 	pOffs = &gBufInfoTable[n];
@@ -229,7 +229,7 @@ void CD3D9Renderer::EF_InitD3DFixedPipeline()
 			if (elem[i++].Stream == 0xff) break;
 		}
 		m_RP.m_D3DFixedPipeline[0][n].m_Declaration.Shrink();
-		m_RP.m_D3DFixedPipeline[0][n].m_pDeclaration = NULL;
+		m_RP.m_D3DFixedPipeline[0][n].m_pDeclaration = nullptr;
 	}
 	n = 5;
 	pOffs = &gBufInfoTable[n];
@@ -250,7 +250,7 @@ void CD3D9Renderer::EF_InitD3DFixedPipeline()
 			if (elem[i++].Stream == 0xff) break;
 		}
 		m_RP.m_D3DFixedPipeline[0][n].m_Declaration.Shrink();
-		m_RP.m_D3DFixedPipeline[0][n].m_pDeclaration = NULL;
+		m_RP.m_D3DFixedPipeline[0][n].m_pDeclaration = nullptr;
 	}
 	n = 6;
 	pOffs = &gBufInfoTable[n];
@@ -271,7 +271,7 @@ void CD3D9Renderer::EF_InitD3DFixedPipeline()
 			if (elem[i++].Stream == 0xff) break;
 		}
 		m_RP.m_D3DFixedPipeline[0][n].m_Declaration.Shrink();
-		m_RP.m_D3DFixedPipeline[0][n].m_pDeclaration = NULL;
+		m_RP.m_D3DFixedPipeline[0][n].m_pDeclaration = nullptr;
 	}
 	n = 7;
 	pOffs = &gBufInfoTable[n];
@@ -291,7 +291,7 @@ void CD3D9Renderer::EF_InitD3DFixedPipeline()
 			if (elem[i++].Stream == 0xff) break;
 		}
 		m_RP.m_D3DFixedPipeline[0][n].m_Declaration.Shrink();
-		m_RP.m_D3DFixedPipeline[0][n].m_pDeclaration = NULL;
+		m_RP.m_D3DFixedPipeline[0][n].m_pDeclaration = nullptr;
 	}
 	n = 8;
 	pOffs = &gBufInfoTable[n];
@@ -312,7 +312,7 @@ void CD3D9Renderer::EF_InitD3DFixedPipeline()
 			if (elem[i++].Stream == 0xff) break;
 		}
 		m_RP.m_D3DFixedPipeline[0][n].m_Declaration.Shrink();
-		m_RP.m_D3DFixedPipeline[0][n].m_pDeclaration = NULL;
+		m_RP.m_D3DFixedPipeline[0][n].m_pDeclaration = nullptr;
 	}
 	n = 9;
 	pOffs = &gBufInfoTable[n];
@@ -333,7 +333,7 @@ void CD3D9Renderer::EF_InitD3DFixedPipeline()
 			if (elem[i++].Stream == 0xff) break;
 		}
 		m_RP.m_D3DFixedPipeline[0][n].m_Declaration.Shrink();
-		m_RP.m_D3DFixedPipeline[0][n].m_pDeclaration = NULL;
+		m_RP.m_D3DFixedPipeline[0][n].m_pDeclaration = nullptr;
 	}
 	n = 10;
 	pOffs = &gBufInfoTable[n];
@@ -355,7 +355,7 @@ void CD3D9Renderer::EF_InitD3DFixedPipeline()
 			if (elem[i++].Stream == 0xff) break;
 		}
 		m_RP.m_D3DFixedPipeline[0][n].m_Declaration.Shrink();
-		m_RP.m_D3DFixedPipeline[0][n].m_pDeclaration = NULL;
+		m_RP.m_D3DFixedPipeline[0][n].m_pDeclaration = nullptr;
 	}
 	n = 11;
 	pOffs = &gBufInfoTable[n];
@@ -377,7 +377,7 @@ void CD3D9Renderer::EF_InitD3DFixedPipeline()
 			if (elem[i++].Stream == 0xff) break;
 		}
 		m_RP.m_D3DFixedPipeline[0][n].m_Declaration.Shrink();
-		m_RP.m_D3DFixedPipeline[0][n].m_pDeclaration = NULL;
+		m_RP.m_D3DFixedPipeline[0][n].m_pDeclaration = nullptr;
 	}
 	n = 12;
 	pOffs = &gBufInfoTable[n];
@@ -399,7 +399,7 @@ void CD3D9Renderer::EF_InitD3DFixedPipeline()
 			if (elem[i++].Stream == 0xff) break;
 		}
 		m_RP.m_D3DFixedPipeline[0][n].m_Declaration.Shrink();
-		m_RP.m_D3DFixedPipeline[0][n].m_pDeclaration = NULL;
+		m_RP.m_D3DFixedPipeline[0][n].m_pDeclaration = nullptr;
 	}
 	n = 13;
 	pOffs = &gBufInfoTable[n];
@@ -422,7 +422,7 @@ void CD3D9Renderer::EF_InitD3DFixedPipeline()
 			if (elem[i++].Stream == 0xff) break;
 		}
 		m_RP.m_D3DFixedPipeline[0][n].m_Declaration.Shrink();
-		m_RP.m_D3DFixedPipeline[0][n].m_pDeclaration = NULL;
+		m_RP.m_D3DFixedPipeline[0][n].m_pDeclaration = nullptr;
 	}
 	n = 14;
 	pOffs = &gBufInfoTable[n];
@@ -443,7 +443,7 @@ void CD3D9Renderer::EF_InitD3DFixedPipeline()
 			if (elem[i++].Stream == 0xff) break;
 		}
 		m_RP.m_D3DFixedPipeline[0][n].m_Declaration.Shrink();
-		m_RP.m_D3DFixedPipeline[0][n].m_pDeclaration = NULL;
+		m_RP.m_D3DFixedPipeline[0][n].m_pDeclaration = nullptr;
 	}
 	n = 15;
 	pOffs = &gBufInfoTable[n];
@@ -462,7 +462,7 @@ void CD3D9Renderer::EF_InitD3DFixedPipeline()
 			if (elem[i++].Stream == 0xff) break;
 		}
 		m_RP.m_D3DFixedPipeline[0][n].m_Declaration.Shrink();
-		m_RP.m_D3DFixedPipeline[0][n].m_pDeclaration = NULL;
+		m_RP.m_D3DFixedPipeline[0][n].m_pDeclaration = nullptr;
 	}
 	n = 16;
 	pOffs = &gBufInfoTable[n];
@@ -484,7 +484,7 @@ void CD3D9Renderer::EF_InitD3DFixedPipeline()
 			if (elem[i++].Stream == 0xff) break;
 		}
 		m_RP.m_D3DFixedPipeline[0][n].m_Declaration.Shrink();
-		m_RP.m_D3DFixedPipeline[0][n].m_pDeclaration = NULL;
+		m_RP.m_D3DFixedPipeline[0][n].m_pDeclaration = nullptr;
 	}
 
 	// Additional streams:
@@ -512,7 +512,7 @@ void CD3D9Renderer::EF_InitD3DFixedPipeline()
 			if (elem[n++].Stream == 0xff) break;
 		}
 		m_RP.m_D3DFixedPipeline[1][i].m_Declaration.Shrink();
-		m_RP.m_D3DFixedPipeline[1][i].m_pDeclaration = NULL;
+		m_RP.m_D3DFixedPipeline[1][i].m_pDeclaration = nullptr;
 	}
 
 	// stream 2 (LM texcoords)
@@ -537,7 +537,7 @@ void CD3D9Renderer::EF_InitD3DFixedPipeline()
 			if (elem[n++].Stream == 0xff) break;
 		}
 		m_RP.m_D3DFixedPipeline[2][i].m_Declaration.Shrink();
-		m_RP.m_D3DFixedPipeline[2][i].m_pDeclaration = NULL;
+		m_RP.m_D3DFixedPipeline[2][i].m_pDeclaration = nullptr;
 	}
 
 	// stream 1 and 2 (tangent vectors and LM texcoords)
@@ -565,7 +565,7 @@ void CD3D9Renderer::EF_InitD3DFixedPipeline()
 			if (elem[n++].Stream == 0xff) break;
 		}
 		m_RP.m_D3DFixedPipeline[3][i].m_Declaration.Shrink();
-		m_RP.m_D3DFixedPipeline[3][i].m_pDeclaration = NULL;
+		m_RP.m_D3DFixedPipeline[3][i].m_pDeclaration = nullptr;
 	}
 	// stream 4 (BendInfo)
 	for (int i = 0; i < VERTEX_FORMAT_NUMS; i++)
@@ -590,7 +590,7 @@ void CD3D9Renderer::EF_InitD3DFixedPipeline()
 			if (elem[n++].Stream == 0xff) break;
 		}
 		m_RP.m_D3DFixedPipeline[4][i].m_Declaration.Shrink();
-		m_RP.m_D3DFixedPipeline[4][i].m_pDeclaration = NULL;
+		m_RP.m_D3DFixedPipeline[4][i].m_pDeclaration = nullptr;
 	}
 	// stream 1 and 4 (BendInfo)
 	for (int i = 0; i < VERTEX_FORMAT_NUMS; i++)
@@ -618,7 +618,7 @@ void CD3D9Renderer::EF_InitD3DFixedPipeline()
 			if (elem[n++].Stream == 0xff) break;
 		}
 		m_RP.m_D3DFixedPipeline[5][i].m_Declaration.Shrink();
-		m_RP.m_D3DFixedPipeline[5][i].m_pDeclaration = NULL;
+		m_RP.m_D3DFixedPipeline[5][i].m_pDeclaration = nullptr;
 	}
 
 	m_MaxVertBufferSize = CLAMP((int)(CV_d3d9_pip_buff_size), 5, 100) * 1024 * 1024;
@@ -661,7 +661,7 @@ void CD3D9Renderer::EF_Init()
 		}
 	}
 
-	m_RP.m_pCurFuncs = NULL;
+	m_RP.m_pCurFuncs = nullptr;
 	m_RP.m_MaxVerts = CV_d3d9_rb_verts;
 	m_RP.m_MaxTris = CV_d3d9_rb_tris;
 
@@ -935,7 +935,7 @@ void CD3D9Renderer::EF_ClearBuffers(bool bForce, bool bOnlyDepth, float* Colors)
 		// Fill float buffer by HDR fog color
 		if (m_RP.m_PersFlags & RBPF_HDR)
 		{
-			CCGPShader_D3D* fpHDR = NULL;
+			CCGPShader_D3D* fpHDR = nullptr;
 			//if (m_nHDRType == 1)
 			fpHDR = (CCGPShader_D3D*)PShaderForName(m_RP.m_PS_HDR_ClearScreen, "CGRC_HDR_ClearScreen_PS20");
 			//else
@@ -955,7 +955,7 @@ void CD3D9Renderer::EF_ClearBuffers(bool bForce, bool bOnlyDepth, float* Colors)
 		else
 			nFlags |= D3DCLEAR_TARGET;
 	}
-	m_pd3dDevice->Clear(0, NULL, nFlags, cColor, 1.0f, 0);
+	m_pd3dDevice->Clear(0, nullptr, nFlags, cColor, 1.0f, 0);
 
 	if (CV_r_measureoverdraw)
 	{
@@ -1013,7 +1013,7 @@ void CD3D9Renderer::EF_SetCameraInfo()
 	GetProjectionMatrix(&m_ProjMatrix(0, 0));
 
 	D3DXMatrixMultiply((D3DXMATRIXA16*)m_CameraProjMatrix.GetData(), (D3DXMATRIXA16*)m_CameraMatrix.GetData(), (D3DXMATRIXA16*)m_ProjMatrix.GetData());
-	D3DXMatrixInverse((D3DXMATRIXA16*)m_InvCameraProjMatrix.GetData(), NULL, (D3DXMATRIXA16*)m_CameraProjMatrix.GetData());
+	D3DXMatrixInverse((D3DXMATRIXA16*)m_InvCameraProjMatrix.GetData(), nullptr, (D3DXMATRIXA16*)m_CameraProjMatrix.GetData());
 
 	m_RP.m_PersFlags &= ~RBPF_WASWORLDSPACE;
 	m_RP.m_ObjFlags = FOB_TRANS_MASK;
@@ -3012,7 +3012,7 @@ void CD3D9Renderer::EF_PreRender(int Stage)
 		m_RP.m_RealTime = iTimer->GetCurrTime();
 
 		m_RP.m_Flags = 0;
-		m_RP.m_pPrevObject = NULL;
+		m_RP.m_pPrevObject = nullptr;
 		m_RP.m_FrameObject++;
 
 		EF_SetCameraInfo();
@@ -3044,10 +3044,10 @@ void CD3D9Renderer::EF_PreRender(int Stage)
 		if (!m_RP.m_bStartPipeline && !m_bWasCleared && !(m_RP.m_PersFlags & RBPF_NOCLEARBUF))
 		{
 			m_RP.m_bStartPipeline = true;
-			EF_ClearBuffers(false, false, NULL);
+			EF_ClearBuffers(false, false, nullptr);
 		}
 	}
-	m_RP.m_pCurLight = NULL;
+	m_RP.m_pCurLight = nullptr;
 }
 
 // Restore states after rendering of the scene
@@ -3055,23 +3055,23 @@ void CD3D9Renderer::EF_PostRender()
 {
 	//FrameProfiler f("CD3D9Renderer:EF_PostRender", iSystem );
 
-	EF_ObjectChange(NULL, NULL, 0, NULL);
-	m_RP.m_pRE = NULL;
+	EF_ObjectChange(nullptr, nullptr, 0, nullptr);
+	m_RP.m_pRE = nullptr;
 
 	HRESULT h;
 	if (m_RP.m_PersFlags & RBPF_USESTREAM1)
 	{
 		m_RP.m_PersFlags &= ~RBPF_USESTREAM1;
-		h = m_pd3dDevice->SetStreamSource(1, NULL, 0, 0);
+		h = m_pd3dDevice->SetStreamSource(1, nullptr, 0, 0);
 	}
 	if (m_RP.m_PersFlags & RBPF_USESTREAM2)
 	{
 		m_RP.m_PersFlags &= ~RBPF_USESTREAM2;
-		h = m_pd3dDevice->SetStreamSource(2, NULL, 0, 0);
+		h = m_pd3dDevice->SetStreamSource(2, nullptr, 0, 0);
 	}
 	if (m_RP.m_PersFlags & RBPF_SETCLIPPLANE)
 	{
-		EF_SetClipPlane(false, NULL, false);
+		EF_SetClipPlane(false, nullptr, false);
 		m_RP.m_PersFlags &= ~RBPF_SETCLIPPLANE;
 	}
 	m_Viewport.MaxZ = 1.0f;
@@ -3091,7 +3091,7 @@ void CD3D9Renderer::EF_PostRender()
 		m_pd3dDevice->SetTextureStageState(0, D3DTSS_TEXCOORDINDEX, D3DTSS_TCI_PASSTHRU | 0);
 	}
 	EF_Scissor(false, 0, 0, 0, 0);
-	m_RP.m_pShader = NULL;
+	m_RP.m_pShader = nullptr;
 	m_RP.m_pCurObject = m_RP.m_VisObjects[0];
 
 	//ResetToDefault();
@@ -3134,13 +3134,13 @@ void CD3D9Renderer::EF_Start(SShader* ef, SShader* efState, SRenderShaderResourc
 #ifdef PIPE_USE_INSTANCING
 	m_RP.m_MergedObjects.SetUse(0);
 #endif
-	m_RP.m_pCurLightMaterial = NULL;
+	m_RP.m_pCurLightMaterial = nullptr;
 	m_RP.m_pStateShader = efState;
 	m_RP.m_pShaderResources = Res;
 	m_RP.m_FlagsPerFlush = 0;
 	m_RP.m_FlagsModificators = 0;
-	m_RP.m_pFogVolume = NULL;
-	m_RP.m_pRE = NULL;
+	m_RP.m_pFogVolume = nullptr;
+	m_RP.m_pRE = nullptr;
 	m_RP.m_fCurOpacity = 1.0f;
 
 	// Choose appropriate shader technique depend on some input parameters
@@ -3150,10 +3150,10 @@ void CD3D9Renderer::EF_Start(SShader* ef, SShader* efState, SRenderShaderResourc
 		if (nHW >= 0)
 			m_RP.m_pCurTechnique = ef->m_HWTechniques[nHW];
 		else
-			m_RP.m_pCurTechnique = NULL;
+			m_RP.m_pCurTechnique = nullptr;
 	}
 	else
-		m_RP.m_pCurTechnique = NULL;
+		m_RP.m_pCurTechnique = nullptr;
 
 	m_RP.m_Frame++;
 }
@@ -3170,18 +3170,18 @@ void CD3D9Renderer::EF_Start(SShader* ef, SShader* efState, SRenderShaderResourc
 	m_RP.m_pShader = ef;
 	m_RP.m_pStateShader = efState;
 	m_RP.m_pShaderResources = Res;
-	m_RP.m_pCurEnvTexture = NULL;
+	m_RP.m_pCurEnvTexture = nullptr;
 #ifdef PIPE_USE_INSTANCING
 	m_RP.m_MergedObjects.SetUse(0);
 #endif
-	m_RP.m_pCurLightMaterial = NULL;
+	m_RP.m_pCurLightMaterial = nullptr;
 	m_RP.m_FlagsPerFlush = 0;
 	m_RP.m_FlagsModificators = 0;
 	m_RP.m_fCurOpacity = 1.0f;
 	if (numFog && CV_r_VolumetricFog)
 		m_RP.m_pFogVolume = &m_RP.m_FogVolumes[numFog];
 	else
-		m_RP.m_pFogVolume = NULL;
+		m_RP.m_pFogVolume = nullptr;
 	m_RP.m_ObjFlags = m_RP.m_pCurObject->m_ObjFlags;
 
 	m_RP.m_CurVFormat = ef->m_VertexFormatId;
@@ -3208,12 +3208,12 @@ void CD3D9Renderer::EF_Start(SShader* ef, SShader* efState, SRenderShaderResourc
 		if (nHW >= 0)
 			m_RP.m_pCurTechnique = ef->m_HWTechniques[nHW];
 		else
-			m_RP.m_pCurTechnique = NULL;
+			m_RP.m_pCurTechnique = nullptr;
 	}
 	else
-		m_RP.m_pCurTechnique = NULL;
+		m_RP.m_pCurTechnique = nullptr;
 
-	m_RP.m_pRE = NULL;
+	m_RP.m_pRE = nullptr;
 
 	m_RP.m_Frame++;
 }
@@ -3502,7 +3502,7 @@ void CD3D9Renderer::EF_ApplyMatrixOps(TArray<SMatrixTransform>* MatrixOps, bool 
 
 	LPDIRECT3DDEVICE9 dv = m_pd3dDevice;
 	int CurMatrix = D3DTS_VIEW;
-	m_CurOpMatrix = NULL;
+	m_CurOpMatrix = nullptr;
 	int Stage = -1;
 	bool bProjected;
 	int nCoords = 2;
@@ -3522,7 +3522,7 @@ void CD3D9Renderer::EF_ApplyMatrixOps(TArray<SMatrixTransform>* MatrixOps, bool 
 				if (Stage >= 0)
 					dv->SetTextureStageState(Stage, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_COUNT2);
 				dv->SetTransform((D3DTRANSFORMSTATETYPE)CurMatrix, m_CurOpMatrix);
-				m_CurOpMatrix = NULL;
+				m_CurOpMatrix = nullptr;
 			}
 			switch (nCurMatrix)
 			{
@@ -3788,7 +3788,7 @@ bool CD3D9Renderer::EF_PreDraw(SShaderPass* sl, bool bSetVertexDecl)
 			if (m_RP.m_PersFlags & RBPF_USESTREAM1)
 			{
 				m_RP.m_PersFlags &= ~RBPF_USESTREAM1;
-				m_pd3dDevice->SetStreamSource(1, NULL, 0, 0);
+				m_pd3dDevice->SetStreamSource(1, nullptr, 0, 0);
 			}
 		if (m_RP.m_FlagsModificators & RBMF_LMTCUSED)
 		{
@@ -3832,7 +3832,7 @@ bool CD3D9Renderer::EF_PreDraw(SShaderPass* sl, bool bSetVertexDecl)
 			if (m_RP.m_PersFlags & RBPF_USESTREAM2)
 			{
 				m_RP.m_PersFlags &= ~RBPF_USESTREAM2;
-				m_pd3dDevice->SetStreamSource(2, NULL, 0, 0);
+				m_pd3dDevice->SetStreamSource(2, nullptr, 0, 0);
 			}
 	}
 	else
@@ -3973,7 +3973,7 @@ void CD3D9Renderer::EF_DrawFogOverlayPasses()
 
 	float fWatLevel = iSystem->GetI3DEngine()->GetWaterLevel();
 	SMFog* fb = m_RP.m_pFogVolume;
-	SShader* sh = NULL;
+	SShader* sh = nullptr;
 	bool bVFFP = false;
 	if (!(m_Features & RFT_HW_VS) || CV_r_Quality_BumpMapping == 0)
 		bVFFP = true;
@@ -4159,10 +4159,10 @@ void CD3D9Renderer::EF_DrawDetailOverlayPasses()
 #endif
 
 			// Draw primitives
-			EF_Draw(sh, NULL);
+			EF_Draw(sh, nullptr);
 #else
 			int bFogOverrided = 0;
-			EF_PreDraw(NULL);
+			EF_PreDraw(nullptr);
 			if (m_FS.m_bEnable)
 				bFogOverrided = EF_FogCorrection(false, false);
 
@@ -4233,7 +4233,7 @@ void CD3D9Renderer::EF_DrawDetailOverlayPasses()
 					{
 						//PROFILE_FRAME(Draw_ShaderIndexMesh);
 						if (m_RP.m_pRE)
-							m_RP.m_pRE->mfDraw(sh, NULL);
+							m_RP.m_pRE->mfDraw(sh, nullptr);
 						else
 							EF_DrawIndexedMesh(R_PRIMV_TRIANGLES);
 					}
@@ -4282,8 +4282,8 @@ void CD3D9Renderer::EF_DrawDetailOverlayPasses()
 
 		CCGVProgram_D3D* vpD3D = (CCGVProgram_D3D*)m_RP.m_VPDetail;
 
-		vpD3D->mfSet(true, NULL, VPF_DONTSETMATRICES);
-		vpD3D->mfSetVariables(false, NULL);
+		vpD3D->mfSet(true, nullptr, VPF_DONTSETMATRICES);
+		vpD3D->mfSetVariables(false, nullptr);
 		vpD3D->mfSetStateMatrices();
 		SCGBind* pBindScale = vpD3D->mfGetParameterBind("DetailScaling");
 		SCGBind* pBindTG0 = vpD3D->mfGetParameterBind("TexGen00");
@@ -4326,10 +4326,10 @@ void CD3D9Renderer::EF_DrawDetailOverlayPasses()
 #endif
 
 			// Draw primitives
-			EF_Draw(sh, NULL);
+			EF_Draw(sh, nullptr);
 #else
 			int bFogOverrided = 0;
-			EF_PreDraw(NULL);
+			EF_PreDraw(nullptr);
 			if (m_FS.m_bEnable)
 				bFogOverrided = EF_FogCorrection(false, false);
 
@@ -4357,7 +4357,7 @@ void CD3D9Renderer::EF_DrawDetailOverlayPasses()
 					if (pBindTG1)
 						vpD3D->mfParameter4f(pBindTG1, Vals);
 
-					vpD3D->mfSetVariables(true, NULL);
+					vpD3D->mfSetVariables(true, nullptr);
 					vpD3D->mfSetStateMatrices();
 
 #ifdef DO_RENDERLOG
@@ -4371,7 +4371,7 @@ void CD3D9Renderer::EF_DrawDetailOverlayPasses()
 					{
 						//PROFILE_FRAME(Draw_ShaderIndexMesh);
 						if (m_RP.m_pRE)
-							m_RP.m_pRE->mfDraw(sh, NULL);
+							m_RP.m_pRE->mfDraw(sh, nullptr);
 						else
 							EF_DrawIndexedMesh(R_PRIMV_TRIANGLES);
 					}
@@ -4412,7 +4412,7 @@ void CD3D9Renderer::EF_DrawFurPasses(SShaderTechnique* hs, SShader* ef, int nSta
 	SShaderPassHW* slw;
 	int i;
 
-	CVProgram* curVP = NULL;
+	CVProgram* curVP = nullptr;
 	CVProgram* newVP;
 
 	m_RP.m_FlagsPerFlush |= RBSI_FURPASS;
@@ -4463,7 +4463,7 @@ void CD3D9Renderer::EF_DrawFurPasses(SShaderTechnique* hs, SShader* ef, int nSta
 				curVP->mfSet(true, slw, VPF_DONTSETMATRICES);
 			}
 			else
-				curVP = NULL;
+				curVP = nullptr;
 		}
 
 		EF_ApplyMatrixOps(slw->m_MatrixOps, true);
@@ -4636,7 +4636,7 @@ void CD3D9Renderer::EF_DrawFurPasses(SShaderTechnique* hs, SShader* ef, int nSta
 		slw->mfResetTextures();
 		EF_ApplyMatrixOps(slw->m_MatrixOps, false);
 	}
-	m_RP.m_pCurLight = NULL;
+	m_RP.m_pCurLight = nullptr;
 }
 
 struct SShadowLight
@@ -4820,7 +4820,7 @@ void CD3D9Renderer::EF_DrawShadowPasses(SShaderTechnique* hs, SShader* ef, int n
 		return;
 
 	m_RP.m_nCurLight = 0;
-	CVProgram* curVP = NULL;
+	CVProgram* curVP = nullptr;
 	CVProgram* newVP;
 
 	list2<ShadowMapLightSourceInstance>* lsources = (list2<ShadowMapLightSourceInstance>*)m_RP.m_pCurObject->m_pShadowCasters;
@@ -4918,7 +4918,7 @@ void CD3D9Renderer::EF_DrawShadowPasses(SShaderTechnique* hs, SShader* ef, int n
 						curVP->mfSet(true, slw, VPF_DONTSETMATRICES);
 					}
 					else
-						curVP = NULL;
+						curVP = nullptr;
 				}
 
 				EF_ApplyMatrixOps(slw->m_MatrixOps, true);
@@ -5108,7 +5108,7 @@ void CD3D9Renderer::EF_DrawInstances(SShader* ef, SShaderPassHW* slw, int nCurIn
 			vd->StreamMask = StreamMask;
 			vd->VertFormat = m_RP.m_CurVFormat;
 			vd->InstMask = nInstMask;
-			vd->m_pDeclaration = NULL;
+			vd->m_pDeclaration = nullptr;
 			for (i = 0; i < m_RP.m_D3DFixedPipeline[StreamMask][m_RP.m_CurVFormat].m_Declaration.Num() - 1; i++)
 			{
 				vd->m_Declaration.AddElem(m_RP.m_D3DFixedPipeline[StreamMask][m_RP.m_CurVFormat].m_Declaration[i]);
@@ -5311,7 +5311,7 @@ void CD3D9Renderer::EF_DrawGeometryInstancing_VS30(SShader* ef, SShaderPassHW* s
 		}
 	}
 
-	m_pd3dDevice->SetStreamSource(3, NULL, 0, 0);
+	m_pd3dDevice->SetStreamSource(3, nullptr, 0, 0);
 	m_pd3dDevice->SetStreamSourceFreq(0, 1);
 }
 
@@ -5329,7 +5329,7 @@ void CD3D9Renderer::EF_DrawGeneralPasses(SShaderTechnique* hs, SShader* ef, bool
 	PROFILE_FRAME(DrawShader_GeneralPasses);
 
 	m_RP.m_nCurLight = 0;
-	CVProgram* curVP = NULL;
+	CVProgram* curVP = nullptr;
 	CVProgram* newVP;
 
 	slw = &hs->m_Passes[nStart];
@@ -5368,7 +5368,7 @@ void CD3D9Renderer::EF_DrawGeneralPasses(SShaderTechnique* hs, SShader* ef, bool
 					curVP->mfSet(true, slw, nFlags);
 				}
 				else
-					curVP = NULL;
+					curVP = nullptr;
 			}
 
 			EF_ApplyMatrixOps(slw->m_MatrixOps, true);
@@ -5585,7 +5585,7 @@ void CD3D9Renderer::EF_DrawLightPasses_PS30(SShaderTechnique* hs, SShader* ef, i
 	int i;
 
 	m_RP.m_nCurLight = 0;
-	CVProgram* curVP = NULL;
+	CVProgram* curVP = nullptr;
 
 	PROFILE_FRAME(DrawShader_MultiLight_Passes);
 
@@ -5733,7 +5733,7 @@ void CD3D9Renderer::EF_DrawLightPasses_PS30(SShaderTechnique* hs, SShader* ef, i
 		m_RP.m_nCurLightPass = nPass;
 		SLightPass* lp = &m_RP.m_LPasses[nPass];
 		m_RP.m_ShaderLightMask = lp->nLights;
-		m_RP.m_pCurLight = NULL;
+		m_RP.m_pCurLight = nullptr;
 		int Types[4];
 		bool bUseOccl = false;
 		for (i = 0; i < lp->nLights; i++)
@@ -6020,7 +6020,7 @@ void CD3D9Renderer::EF_DrawLightPasses(SShaderTechnique* hs, SShader* ef, int nS
 	int nl = 0;
 	int n;
 
-	CVProgram* curVP = NULL;
+	CVProgram* curVP = nullptr;
 	CVProgram* newVP;
 
 	PROFILE_FRAME(DrawShader_LightPasses);
@@ -6104,7 +6104,7 @@ void CD3D9Renderer::EF_DrawLightPasses(SShaderTechnique* hs, SShader* ef, int nS
 			if (CV_r_bumpselfshadow && bOnlyLightPass && m_RP.m_pShaderResources && m_RP.m_pShaderResources->m_Textures[EFTT_BUMP] && m_RP.m_pShaderResources->m_Textures[EFTT_BUMP]->m_TU.m_TexPic && m_RP.m_pShaderResources->m_Textures[EFTT_BUMP]->m_TU.m_TexPic->m_pSH)
 			{
 				EF_DrawLightShadowMask(l);
-				curVP = NULL;
+				curVP = nullptr;
 				bShadowMask = true;
 			}
 
@@ -6150,7 +6150,7 @@ void CD3D9Renderer::EF_DrawLightPasses(SShaderTechnique* hs, SShader* ef, int nS
 						curVP->mfSet(true, slw, VPF_DONTSETMATRICES);
 					}
 					else
-						curVP = NULL;
+						curVP = nullptr;
 				}
 
 				EF_ApplyMatrixOps(slw->m_MatrixOps, true);
@@ -6348,7 +6348,7 @@ void CD3D9Renderer::EF_DrawLightPasses(SShaderTechnique* hs, SShader* ef, int nS
 	}
 
 	//m_RP.m_nCurLight = -1;
-	//m_RP.m_pCurLight = NULL;
+	//m_RP.m_pCurLight = nullptr;
 }
 
 // Draw bump self-shadowing pass using horizon-maps technique (used in programmable pipeline shaders only)
@@ -6377,9 +6377,9 @@ void CD3D9Renderer::EF_DrawLightShadowMask(int nLight)
 
 	m_RP.m_FlagsModificators = (m_RP.m_FlagsModificators & ~0xf) | RBMF_TANGENTSUSED;
 
-	m_RP.m_VPTexShadow->mfSet(true, NULL, VPF_DONTSETMATRICES);
-	m_RP.m_VPTexShadow->mfSetVariables(false, NULL);
-	m_RP.m_RCTexShadow->mfSet(true, NULL);
+	m_RP.m_VPTexShadow->mfSet(true, nullptr, VPF_DONTSETMATRICES);
+	m_RP.m_VPTexShadow->mfSetVariables(false, nullptr);
+	m_RP.m_RCTexShadow->mfSet(true, nullptr);
 #ifndef PIPE_USE_INSTANCING
 
 #ifdef DO_RENDERLOG
@@ -6388,11 +6388,11 @@ void CD3D9Renderer::EF_DrawLightShadowMask(int nLight)
 #endif
 
 	m_RP.m_VPTexShadow->mfSetStateMatrices();
-	m_RP.m_VPTexShadow->mfSetVariables(true, NULL);
-	m_RP.m_RCTexShadow->mfSetVariables(true, NULL);
-	EF_Draw(m_RP.m_pShader, NULL);
+	m_RP.m_VPTexShadow->mfSetVariables(true, nullptr);
+	m_RP.m_RCTexShadow->mfSetVariables(true, nullptr);
+	EF_Draw(m_RP.m_pShader, nullptr);
 #else
-	EF_PreDraw(NULL);
+	EF_PreDraw(nullptr);
 
 	int nObj = 0;
 	CCObject* pSaveObj = m_RP.m_pCurObject;
@@ -6417,15 +6417,15 @@ void CD3D9Renderer::EF_DrawLightShadowMask(int nLight)
 		if (m_RP.m_VPTexShadow)
 		{
 			m_RP.m_VPTexShadow->mfSetStateMatrices();
-			m_RP.m_VPTexShadow->mfSetVariables(true, NULL);
+			m_RP.m_VPTexShadow->mfSetVariables(true, nullptr);
 		}
 		if (m_RP.m_RCTexShadow)
-			m_RP.m_RCTexShadow->mfSetVariables(true, NULL);
+			m_RP.m_RCTexShadow->mfSetVariables(true, nullptr);
 
 		{
 			//PROFILE_FRAME(Draw_ShaderIndexMesh);
 			if (m_RP.m_pRE)
-				m_RP.m_pRE->mfDraw(m_RP.m_pShader, NULL);
+				m_RP.m_pRE->mfDraw(m_RP.m_pShader, nullptr);
 			else
 				EF_DrawIndexedMesh(R_PRIMV_TRIANGLES);
 		}
@@ -6517,10 +6517,10 @@ void CD3D9Renderer::EF_DrawSubsurfacePasses(SShaderTechnique* hs, SShader* ef)
 			return;
 		}
 
-		m_VP->mfSet(true, NULL);
-		m_VP->mfSetVariables(false, NULL);
-		m_RC->mfSet(true, NULL);
-		m_RC->mfSetVariables(false, NULL);
+		m_VP->mfSet(true, nullptr);
+		m_VP->mfSetVariables(false, nullptr);
+		m_RC->mfSet(true, nullptr);
+		m_RC->mfSetVariables(false, nullptr);
 
 #ifndef PIPE_USE_INSTANCING
 
@@ -6529,11 +6529,11 @@ void CD3D9Renderer::EF_DrawSubsurfacePasses(SShaderTechnique* hs, SShader* ef)
 			Logv(SRendItem::m_RecurseLevel, "+++ Subsurface scattering pass %d [light %d]\n", m_RP.m_RendPass, l);
 #endif
 
-		m_VP->mfSetVariables(true, NULL);
-		m_RC->mfSetVariables(true, NULL);
-		EF_Draw(m_RP.m_pShader, NULL);
+		m_VP->mfSetVariables(true, nullptr);
+		m_RC->mfSetVariables(true, nullptr);
+		EF_Draw(m_RP.m_pShader, nullptr);
 #else
-		EF_PreDraw(NULL);
+		EF_PreDraw(nullptr);
 
 		int nObj = 0;
 		CCObject* pSaveObj = m_RP.m_pCurObject;
@@ -6556,13 +6556,13 @@ void CD3D9Renderer::EF_DrawSubsurfacePasses(SShaderTechnique* hs, SShader* ef)
 #endif
 
 			m_VP->mfSetStateMatrices();
-			m_VP->mfSetVariables(true, NULL);
-			m_RC->mfSetVariables(true, NULL);
+			m_VP->mfSetVariables(true, nullptr);
+			m_RC->mfSetVariables(true, nullptr);
 
 			{
 				//PROFILE_FRAME(Draw_ShaderIndexMesh);
 				if (m_RP.m_pRE)
-					m_RP.m_pRE->mfDraw(m_RP.m_pShader, NULL);
+					m_RP.m_pRE->mfDraw(m_RP.m_pShader, nullptr);
 				else
 					EF_DrawIndexedMesh(R_PRIMV_TRIANGLES);
 			}
@@ -6604,7 +6604,7 @@ void CD3D9Renderer::EF_FlushHW()
 			if (ef->m_Flags2 & EF2_USELIGHTMATERIAL)
 				m_RP.m_pCurLightMaterial = &m_RP.m_DefLightMaterial;
 			else
-				m_RP.m_pCurLightMaterial = NULL;
+				m_RP.m_pCurLightMaterial = nullptr;
 
 		// Set Z-Bias
 		if (ef->m_Flags & EF_POLYGONOFFSET)
@@ -6791,7 +6791,7 @@ void CD3D9Renderer::EF_SetStateShaderState()
 	SEfState* st = ef->m_State;
 
 	if (st->m_bClearStencil)
-		m_pd3dDevice->Clear(0, NULL, D3DCLEAR_STENCIL, 0, 1.0f, 0);
+		m_pd3dDevice->Clear(0, nullptr, D3DCLEAR_STENCIL, 0, 1.0f, 0);
 
 	if (st->m_Stencil)
 		st->m_Stencil->mfSet();
@@ -7045,7 +7045,7 @@ void CD3D9Renderer::EF_FlushShader()
 
 				// Set per-object alpha blending state
 				if (pObj->m_ObjFlags & FOB_HASALPHA)
-					pObj->SetAlphaState(NULL, nState);
+					pObj->SetAlphaState(nullptr, nState);
 
 				// Commit per-texture states / color ops
 				EF_CommitTexStageState();
@@ -7243,7 +7243,7 @@ void CD3D9Renderer::EF_Flush()
 	else
 		if (!(ef->m_Flags3 & EF3_CLIPPLANE) && (rd->m_RP.m_PersFlags & RBPF_SETCLIPPLANE))
 		{
-			rd->EF_SetClipPlane(false, NULL, false);
+			rd->EF_SetClipPlane(false, nullptr, false);
 			rd->m_RP.m_PersFlags &= ~RBPF_SETCLIPPLANE;
 		}
 
@@ -7314,7 +7314,7 @@ void CD3D9Renderer::EF_Flush()
 			str = "FlushHW";
 		else
 			str = "Flush";
-		rd->Logv(SRendItem::m_RecurseLevel, "%s: '%s', (St: %s) Id:%d, ResId:%d, Obj:%d, Tech: %d, Cp: %d, Fog:%d, VF:%d, NL:%d, LPas:%d, Pas:%d (time: %f, %d polys)\n", str, ef->m_Name.c_str(), rd->m_RP.m_pStateShader ? rd->m_RP.m_pStateShader->m_Name.c_str() : "NULL", ef->m_Id, rd->m_RP.m_pShaderResources ? rd->m_RP.m_pShaderResources->m_Id : -1, rd->m_RP.m_pCurObject->m_VisId, rd->m_RP.m_pCurTechnique ? rd->m_RP.m_pCurTechnique->m_Id : -1, rd->m_RP.m_ClipPlaneEnabled, rd->m_RP.m_pFogVolume ? (rd->m_RP.m_pFogVolume - &rd->m_RP.m_FogVolumes[0]) : 0, ef->m_VertexFormatId, rd->m_RP.m_StatNumLights, rd->m_RP.m_StatNumLightPasses, rd->m_RP.m_StatNumPasses, time0, nNumPolys);
+		rd->Logv(SRendItem::m_RecurseLevel, "%s: '%s', (St: %s) Id:%d, ResId:%d, Obj:%d, Tech: %d, Cp: %d, Fog:%d, VF:%d, NL:%d, LPas:%d, Pas:%d (time: %f, %d polys)\n", str, ef->m_Name.c_str(), rd->m_RP.m_pStateShader ? rd->m_RP.m_pStateShader->m_Name.c_str() : "nullptr", ef->m_Id, rd->m_RP.m_pShaderResources ? rd->m_RP.m_pShaderResources->m_Id : -1, rd->m_RP.m_pCurObject->m_VisId, rd->m_RP.m_pCurTechnique ? rd->m_RP.m_pCurTechnique->m_Id : -1, rd->m_RP.m_ClipPlaneEnabled, rd->m_RP.m_pFogVolume ? (rd->m_RP.m_pFogVolume - &rd->m_RP.m_FogVolumes[0]) : 0, ef->m_VertexFormatId, rd->m_RP.m_StatNumLights, rd->m_RP.m_StatNumLightPasses, rd->m_RP.m_StatNumPasses, time0, nNumPolys);
 		if (rd->m_RP.m_ObjFlags & FOB_SELECTED)
 		{
 			if (rd->m_RP.m_FlagsPerFlush & RBSI_ALPHATEST)
@@ -7361,7 +7361,7 @@ void CD3D9Renderer::EF_EndEf3D(int nFlags)
 	if (CV_r_nodrawshaders == 1)
 	{
 		SetClearColor(Vec3d(0, 0, 0));
-		EF_ClearBuffers(false, false, NULL);
+		EF_ClearBuffers(false, false, nullptr);
 		SRendItem::m_RecurseLevel--;
 		return;
 	}
@@ -7383,12 +7383,12 @@ void CD3D9Renderer::EF_EndEf3D(int nFlags)
 	if (CV_r_excludeshader->GetString()[0] != '0')
 		m_RP.m_ExcludeShader = CV_r_excludeshader->GetString();
 	else
-		m_RP.m_ExcludeShader = NULL;
+		m_RP.m_ExcludeShader = nullptr;
 
 	if (CV_r_showonlyshader->GetString()[0] != '0')
 		m_RP.m_ShowOnlyShader = CV_r_showonlyshader->GetString();
 	else
-		m_RP.m_ShowOnlyShader = NULL;
+		m_RP.m_ShowOnlyShader = nullptr;
 
 	EF_UpdateSplashes(m_RP.m_RealTime);
 	EF_AddClientPolys3D();
@@ -7396,7 +7396,7 @@ void CD3D9Renderer::EF_EndEf3D(int nFlags)
 
 #ifdef USE_HDR
 	if (bUseHDR)
-		EF_AddEf(0, m_RP.m_pREHDR, CShader::m_ShaderHDRProcess, NULL, NULL, 0, 0, EFSLIST_LAST | eS_HDR);
+		EF_AddEf(0, m_RP.m_pREHDR, CShader::m_ShaderHDRProcess, nullptr, nullptr, 0, 0, EFSLIST_LAST | eS_HDR);
 #endif
 
 	SRendItem::m_EndRI[SRendItem::m_RecurseLevel - 1][EFSLIST_PREPROCESS_ID] = SRendItem::m_RendItems[EFSLIST_PREPROCESS_ID].Num();
@@ -7580,9 +7580,9 @@ void CD3D9Renderer::EF_PipeLine(int nums, int nume, int nList, void (*RenderFunc
 	oldVal.SortVal = -1;
 	nCurObject = -2;
 	nCurFog = 0;
-	pCurShader = NULL;
-	pCurShaderState = NULL;
-	pCurRes = NULL;
+	pCurShader = nullptr;
+	pCurShaderState = nullptr;
+	pCurRes = nullptr;
 	bool bIgnore = false;
 	bool bChanged;
 	bool bUseBatching = (RenderFunc == EF_Flush);
@@ -7630,7 +7630,7 @@ void CD3D9Renderer::EF_PipeLine(int nums, int nume, int nList, void (*RenderFunc
 			if (pCurShader)
 			{
 				m_RP.m_pRenderFunc();
-				pCurShader = NULL;
+				pCurShader = nullptr;
 				bChanged = true;
 			}
 			if (!EF_ObjectChange(pShader, pRes, nObject, pRE))
@@ -7688,10 +7688,10 @@ void CD3D9Renderer::EF_DrawWire()
 		gcpRendD3D->m_RP.m_pRE->mfCheckUpdate(gcpRendD3D->m_RP.m_pShader->m_VertexFormatId, 0);
 	int StrVrt;
 
-	gcpRendD3D->EF_SetObjectTransform(gcpRendD3D->m_RP.m_pCurObject, NULL, gcpRendD3D->m_RP.m_pCurObject->m_ObjFlags);
+	gcpRendD3D->EF_SetObjectTransform(gcpRendD3D->m_RP.m_pCurObject, nullptr, gcpRendD3D->m_RP.m_pCurObject->m_ObjFlags);
 
 	void* verts = (void*)gcpRendD3D->EF_GetPointer(eSrcPointer_Vert, &StrVrt, GL_FLOAT, eSrcPointer_Vert, 0);
-	gcpRendD3D->EF_Draw(gcpRendD3D->m_RP.m_pShader, NULL);
+	gcpRendD3D->EF_Draw(gcpRendD3D->m_RP.m_pShader, nullptr);
 }
 
 // Draw geometry normal vectors
@@ -7706,7 +7706,7 @@ void CD3D9Renderer::EF_DrawNormals()
 	byte* norms = (byte*)gcpRendD3D->EF_GetPointer(eSrcPointer_Normal, &StrNrm, GL_FLOAT, eSrcPointer_Normal, FGP_SRC | FGP_REAL);
 	if ((INT_PTR)norms > 256 && (INT_PTR)verts > 256)
 	{
-		gcpRendD3D->EF_SetObjectTransform(gcpRendD3D->m_RP.m_pCurObject, NULL, gcpRendD3D->m_RP.m_pCurObject->m_ObjFlags);
+		gcpRendD3D->EF_SetObjectTransform(gcpRendD3D->m_RP.m_pCurObject, nullptr, gcpRendD3D->m_RP.m_pCurObject->m_ObjFlags);
 
 		int numVerts = gcpRendD3D->m_RP.m_RendNumVerts;
 
@@ -7747,10 +7747,10 @@ void CD3D9Renderer::EF_DrawTangents()
 	//if (gcpRendD3D->m_RP.m_pRE)
 	//  gcpRendD3D->m_RP.m_pRE->mfCheckUpdate(gcpRendD3D->m_RP.m_pShader->m_VertexFormatId, SHPF_TANGENTS);
 	int StrVrt, StrTang, StrBinorm, StrTNorm;
-	byte* verts = NULL;
-	byte* tangs = NULL;
-	byte* binorm = NULL;
-	byte* tnorm = NULL;
+	byte* verts = nullptr;
+	byte* tangs = nullptr;
+	byte* binorm = nullptr;
+	byte* tnorm = nullptr;
 	int flags = 0;
 	if (CRenderer::CV_r_showtangents == 1)
 		flags = FGP_SRC | FGP_REAL;
@@ -7762,7 +7762,7 @@ void CD3D9Renderer::EF_DrawTangents()
 	tnorm = (byte*)gcpRendD3D->EF_GetPointer(eSrcPointer_TNormal, &StrTNorm, GL_FLOAT, eSrcPointer_TNormal, flags);
 	if ((INT_PTR)tangs > 256 && (INT_PTR)binorm > 256 && (INT_PTR)tnorm > 256)
 	{
-		gcpRendD3D->EF_SetObjectTransform(gcpRendD3D->m_RP.m_pCurObject, NULL, gcpRendD3D->m_RP.m_pCurObject->m_ObjFlags);
+		gcpRendD3D->EF_SetObjectTransform(gcpRendD3D->m_RP.m_pCurObject, nullptr, gcpRendD3D->m_RP.m_pCurObject->m_ObjFlags);
 
 		int numVerts = gcpRendD3D->m_RP.m_RendNumVerts;
 
@@ -8064,14 +8064,14 @@ void CD3D9Renderer::EF_PrintProfileInfo()
 	  ticks(timeC);
 	  for (i=0; i<100000; i++)
 	  {
-		cam.IsAABBVisible_exact(aabb, NULL);
+		cam.IsAABBVisible_exact(aabb, nullptr);
 	  }
 	  unticks(timeC);
 
 	  ticks(timeSSE);
 	  for (i=0; i<100000; i++)
 	  {
-		cam.IsAABBVisible_exact_SSE(Origin, Extent, NULL);
+		cam.IsAABBVisible_exact_SSE(Origin, Extent, nullptr);
 	  }
 	  unticks(timeSSE);
 
@@ -8378,9 +8378,9 @@ void CD3D9Renderer::EF_DrawREPreprocess(SRendItemPreprocess* ris, int Nums)
 	oldVal.SortVal = -1;
 	nCurObject = -2;
 	nCurFog = 0;
-	CurShader = NULL;
-	CurShaderState = NULL;
-	CurRes = NULL;
+	CurShader = nullptr;
+	CurShaderState = nullptr;
+	CurRes = nullptr;
 
 	for (i = 0; i < Nums; i++)
 	{
@@ -8628,7 +8628,7 @@ void CD3D9Renderer::EF_FlushRefractedObjects(SShader* pSHRefr[], CRendElement* p
 		Vec3d Pos = GetCamera().GetPos();
 		m_RP.m_PersFlags |= RBPF_IGNOREREFRACTED;
 		if (nRefrObjects > 1)
-			pSHRefr[0] = NULL;
+			pSHRefr[0] = nullptr;
 		float fMinDist = 99999.0f;
 		int nSelectObj = -1;
 		for (int i = 0; i < nRefrObjects; i++)
@@ -8644,7 +8644,7 @@ void CD3D9Renderer::EF_FlushRefractedObjects(SShader* pSHRefr[], CRendElement* p
 		{
 			m_RP.m_pRE = pRERefr[nSelectObj];
 			m_RP.m_pCurObject = pObjRefr[nSelectObj];
-			SEnvTexture* cm = gRenDev->m_cEF.mfFindSuitableEnvTex(Pos, Angs, false, DLDFlags, true, pSHRefr[0], NULL, NULL, false, NULL);
+			SEnvTexture* cm = gRenDev->m_cEF.mfFindSuitableEnvTex(Pos, Angs, false, DLDFlags, true, pSHRefr[0], nullptr, nullptr, false, nullptr);
 		}
 		m_RP.m_PersFlags &= ~RBPF_IGNOREREFRACTED;
 	}
@@ -8841,7 +8841,7 @@ int CD3D9Renderer::EF_Preprocess(SRendItemPre* ri, int nums, int nume)
 						}
 						CCObject* savedObj = m_RP.m_pCurObject;
 						CCObject* objIgn = m_RP.m_pIgnoreObject;
-						CCObject* obj = NULL;
+						CCObject* obj = nullptr;
 						if (pr->m_nObject > 0)
 							obj = m_RP.m_VisObjects[pr->m_nObject];
 						m_RP.m_PersFlags |= RBPF_DONTDRAWSUN;
@@ -8897,7 +8897,7 @@ int CD3D9Renderer::EF_Preprocess(SRendItemPre* ri, int nums, int nume)
 							m_RP.m_pCurObject = obj;
 							m_RP.m_pIgnoreObject = obj;
 							SEnvTexture* cm = gRenDev->m_cEF.mfFindSuitableEnvTex(Pos, Angs, false, pr->m_Shader->m_DLDFlags, false, pr->m_Shader, pr->m_pRes, obj, bReflect, pr->m_RE);
-							m_RP.m_pIgnoreObject = NULL;
+							m_RP.m_pIgnoreObject = nullptr;
 							m_RP.m_PersFlags &= ~RBPF_DONTDRAWSUN;
 						}
 						else
@@ -9055,8 +9055,8 @@ int CD3D9Renderer::EF_Preprocess(SRendItemPre* ri, int nums, int nume)
 
 			// Render translucent mirror surface(s)
 			int nObj = -1;
-			SShader* sh = NULL;
-			SRenderShaderResources* Res = NULL;
+			SShader* sh = nullptr;
+			SRenderShaderResources* Res = nullptr;
 			for (int j = 0; j < wp->numSrf; j++)
 			{
 				SWarpSurf* ws = &wp->Surfs[j];
@@ -9074,10 +9074,10 @@ int CD3D9Renderer::EF_Preprocess(SRendItemPre* ri, int nums, int nume)
 					if (sh)
 					{
 						m_RP.m_pRenderFunc();
-						sh = NULL;
+						sh = nullptr;
 					}
 
-					EF_Start(ws->Shader, NULL, ws->ShaderRes, 0, ws->srf);
+					EF_Start(ws->Shader, nullptr, ws->ShaderRes, 0, ws->srf);
 
 					sh = ws->Shader;
 				}
@@ -9130,9 +9130,9 @@ void CD3D9Renderer::EF_EndEf2D(bool bSort)
 	EF_PreRender(1);
 	//ResetToDefault();
 
-	CurShader = NULL;
-	CurRes = NULL;
-	CurShaderState = NULL;
+	CurShader = nullptr;
+	CurRes = nullptr;
+	CurShaderState = nullptr;
 	UnINT64 oldVal;
 	oldVal.SortVal = -1;
 	m_RP.m_Flags = RBF_2D;

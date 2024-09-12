@@ -138,12 +138,12 @@ void CXGame::ShutdownClient()
 
 	m_pClient->MarkForDestruct();
 	m_pClient->DestructIfMarked();
-	m_pClient=NULL;
+	m_pClient=nullptr;
 }
 
 bool CXGame::IsClient()
 {
-	return m_pClient!=NULL && !m_pClient->m_bSelfDestruct;
+	return m_pClient!=nullptr && !m_pClient->m_bSelfDestruct;
 }
 
 //////////////////////////////////////////////////////////////////////

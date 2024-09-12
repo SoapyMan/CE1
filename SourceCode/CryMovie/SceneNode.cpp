@@ -53,7 +53,7 @@ CAnimSceneNode::CAnimSceneNode(IMovieSystem* sys)
 	for (int i = 0; i < SCENE_SOUNDTRACKS; i++)
 	{
 		m_SoundInfo[i].nLastKey = -1;
-		m_SoundInfo[i].pSound = NULL;
+		m_SoundInfo[i].pSound = nullptr;
 		m_SoundInfo[i].sLastFilename = "";
 	}
 	m_bMusicMoodSet = false;
@@ -141,12 +141,12 @@ void CAnimSceneNode::Animate(SAnimContext& ec)
 	if (ec.bResetting)
 		return;
 
-	CSelectTrack* cameraTrack = NULL;
-	CEventTrack* pEventTrack = NULL;
-	CSoundTrack* pSoundTrack[3] = { NULL,NULL,NULL };
-	CSelectTrack* pSequenceTrack = NULL;
-	CConsoleTrack* pConsoleTrack = NULL;
-	CMusicTrack* pMusicTrack = NULL;
+	CSelectTrack* cameraTrack = nullptr;
+	CEventTrack* pEventTrack = nullptr;
+	CSoundTrack* pSoundTrack[3] = { nullptr,nullptr,nullptr };
+	CSelectTrack* pSequenceTrack = nullptr;
+	CConsoleTrack* pConsoleTrack = nullptr;
+	CMusicTrack* pMusicTrack = nullptr;
 	/*
 	bool bTimeJump = false;
 	if (ec.time < m_time)
@@ -270,7 +270,7 @@ void CAnimSceneNode::ReleaseSounds()
 			m_SoundInfo[i].pSound->Stop();
 		m_SoundInfo[i].nLastKey = -1;
 		m_SoundInfo[i].sLastFilename = "";
-		m_SoundInfo[i].pSound = NULL;
+		m_SoundInfo[i].pSound = nullptr;
 	}
 	// enable music-event processing
 	if (m_bMusicMoodSet)
@@ -290,7 +290,7 @@ void CAnimSceneNode::Reset()
 	SCameraParams CamParams = m_pMovie->GetCameraParams();
 	if (CamParams.nCameraId != 0 && CamParams.nCameraId == m_sequenceCameraId)
 	{
-		CamParams.cameraNode = NULL;
+		CamParams.cameraNode = nullptr;
 		CamParams.nCameraId = 0;
 		m_pMovie->SetCameraParams(CamParams);
 	}
@@ -355,7 +355,7 @@ void CAnimSceneNode::ApplySoundKey(IAnimTrack* pTrack, int nCurrKey, int nLayer,
 	{
 		if (m_SoundInfo[nLayer].pSound)
 			m_SoundInfo[nLayer].pSound->Stop();
-		m_SoundInfo[nLayer].pSound = NULL;
+		m_SoundInfo[nLayer].pSound = nullptr;
 		return;
 	}
 	if (((strcmp(m_SoundInfo[nLayer].sLastFilename.c_str(), key.pszFilename)) || (!m_SoundInfo[nLayer].pSound)))

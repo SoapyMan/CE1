@@ -129,7 +129,7 @@ const SMeshMorphTargetVertex* CryGeomMorphTarget::getMorphVertices(unsigned nLOD
 	if (nLOD < g_nMaxLodLevels)
 		return m_arrVertex[nLOD].begin();
 	else
-		return NULL;
+		return nullptr;
 }
 
 unsigned CryGeomMorphTarget::numMorphVertices(unsigned nLOD) const

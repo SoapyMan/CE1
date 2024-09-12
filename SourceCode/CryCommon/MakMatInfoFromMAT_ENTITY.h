@@ -13,7 +13,7 @@ inline int SetTexType(TextureMap3* tm)
 	return eTT_Base;
 }
 
-// szFileName - [May be NULL] the file name (without the path) of the file containing the MAT_ENTITY chunk
+// szFileName - [May be nullptr] the file name (without the path) of the file containing the MAT_ENTITY chunk
 // szFolderName - the folder path where the file containing the MAT_ENTITY chunk resides; with the trailing shash.
 //                This is used for searching textures.
 inline bool CIndexedMesh__LoadMaterial(const char* szFileName, const char* szFolderName,
@@ -229,7 +229,7 @@ inline bool CIndexedMesh__LoadMaterial(const char* szFileName, const char* szFol
 		newMat.sScriptMaterial[0] = 0;
 	}
 
-	char* templName = NULL;;
+	char* templName = nullptr;;
 	if (strnicmp(mName, "$s_", 3) == 0)
 	{
 		templName = &mName[3];

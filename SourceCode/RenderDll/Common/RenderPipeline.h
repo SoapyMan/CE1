@@ -108,10 +108,10 @@ struct SRendItem : SRendItemPre
 		*numFog = flag.i.Low & 0x3f;
 		*Shader = SShader::m_Shaders_known[(flag.i.High >> 14) & 0xfff];
 		int n = (flag.i.Low >> 8) & 0xfff;
-		*ShaderState = n ? SShader::m_Shaders_known[n] : NULL;
+		*ShaderState = n ? SShader::m_Shaders_known[n] : nullptr;
 		*nObject = (flag.i.Low >> 20) & 0xfff;
 		n = flag.i.High & 0x3fff;
-		*Res = (n) ? SShader::m_ShaderResources_known[n] : NULL;
+		*Res = (n) ? SShader::m_ShaderResources_known[n] : nullptr;
 	}
 	static _inline void mfGetObj(UnINT64 flag, int* nObject)
 	{
@@ -121,9 +121,9 @@ struct SRendItem : SRendItemPre
 	{
 		*Shader = SShader::m_Shaders_known[(flag.i.High >> 14) & 0xfff];
 		int n = (flag.i.Low >> 8) & 0xfff;
-		*ShaderState = n ? SShader::m_Shaders_known[n] : NULL;
+		*ShaderState = n ? SShader::m_Shaders_known[n] : nullptr;
 		n = flag.i.High & 0x3fff;
-		*Res = (n) ? SShader::m_ShaderResources_known[n] : NULL;
+		*Res = (n) ? SShader::m_ShaderResources_known[n] : nullptr;
 	}
 	static _inline SShader* mfGetShader(UnINT64 flag)
 	{
@@ -149,18 +149,18 @@ struct SRendItem : SRendItemPre
 		*numFog = flag.i.Low & 0x3f;
 		*Shader = SShader::m_Shaders_known[(flag.i.Low >> 20) & 0xfff];
 		int n = (flag.i.Low >> 8) & 0xfff;
-		*ShaderState = n ? SShader::m_Shaders_known[n] : NULL;
+		*ShaderState = n ? SShader::m_Shaders_known[n] : nullptr;
 		*nObject = (flag.i.High >> 15) & 0x7ff;
 		n = flag.i.High & 0x3fff;
-		*Res = (n) ? SShader::m_ShaderResources_known[n] : NULL;
+		*Res = (n) ? SShader::m_ShaderResources_known[n] : nullptr;
 	}
 	static _inline void mfGet(UnINT64 flag, SShader** Shader, SShader** ShaderState, SRenderShaderResources** Res)
 	{
 		*Shader = SShader::m_Shaders_known[(flag.i.Low >> 20) & 0xfff];
 		int n = (flag.i.Low >> 8) & 0xfff;
-		*ShaderState = n ? SShader::m_Shaders_known[n] : NULL;
+		*ShaderState = n ? SShader::m_Shaders_known[n] : nullptr;
 		n = flag.i.High & 0x3fff;
-		*Res = (n) ? SShader::m_ShaderResources_known[n] : NULL;
+		*Res = (n) ? SShader::m_ShaderResources_known[n] : nullptr;
 	}
 #endif
 
@@ -461,11 +461,11 @@ struct STexStageInfo
 		nMipFilter = -1;
 		Repeat = (bool)-1;
 		Anisotropic = 255;
-		Texture = NULL;
+		Texture = nullptr;
 #ifndef _XBOX
 		Palette = -1;
 #else
-		Palette = NULL;
+		Palette = nullptr;
 #endif
 	}
 };

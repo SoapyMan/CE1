@@ -1093,7 +1093,7 @@ CDLight* C3DEngine::CheckDistancesToLightSources(uint& nDLightMask,
 		nMaxLightBitsNum++;
 
 	// limit number of effective light sources
-	CDLight* pStrongestShadowCaster = NULL;
+	CDLight* pStrongestShadowCaster = nullptr;
 	for (int n = 0; n < nMaxLightBitsNum && n < m_lstDL_CDTLS.Count(); n++)
 	{
 		const int nId = m_lstDL_CDTLS[n].pDLight->m_Id;
@@ -1297,7 +1297,7 @@ bool C3DEngine::LoadStaticLightSources(const char* pszFileName)
 
 	FILE* hFile = GetSystem()->GetIPak()->FOpen(pszFileName, "rb");
 
-	if (hFile == NULL)
+	if (hFile == nullptr)
 		return false;
 
 	if (GetSystem()->GetIPak()->FRead(&sHeader, sizeof(LightFileHeader), 1, hFile) != 1)
@@ -1372,7 +1372,7 @@ bool C3DEngine::LoadStaticLightSources(const char* pszFileName)
 
 	FILE* hFile = GetSystem()->GetIPak()->FOpen(pszFileName, "rb");
 
-	if (hFile == NULL)
+	if (hFile == nullptr)
 		return false;
 
 	if (GetSystem()->GetIPak()->FRead(&sHeader, sizeof(LightFileHeader), 1, hFile) != 1)

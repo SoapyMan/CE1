@@ -407,7 +407,7 @@ public:
 
 #define FUNCTION_PROFILER_FAST( pISystem,subsystem,bProfileEnabled ) \
 	static CFrameProfiler staticFrameProfiler( pISystem,__FUNCTION__,subsystem ); \
-	CFrameProfilerSection frameProfilerSection( (bProfileEnabled)?&staticFrameProfiler:NULL );
+	CFrameProfilerSection frameProfilerSection( (bProfileEnabled)?&staticFrameProfiler:nullptr );
 
 //////////////////////////////////////////////////////////////////////////
 //! Place this macro when you need to profile any code block.
@@ -425,7 +425,7 @@ public:
 //! Faster version of FRAME_PROFILE macro, also accept a pointer to boolean variable which turn on/off profiler.
 #define FRAME_PROFILER_FAST( szProfilerName,pISystem,subsystem,bProfileEnabled ) \
 	static CFrameProfiler staticFrameProfiler( pISystem,szProfilerName,subsystem ); \
-	CFrameProfilerSection frameProfilerSection( (bProfileEnabled)?&staticFrameProfiler:NULL );
+	CFrameProfilerSection frameProfilerSection( (bProfileEnabled)?&staticFrameProfiler:nullptr );
 
 #else //#if !defined(_RELEASE) || defined(WIN64)
 

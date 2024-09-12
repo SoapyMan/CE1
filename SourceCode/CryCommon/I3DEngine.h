@@ -924,7 +924,7 @@ struct I3DEngine : public IProcess
 	//DOC-IGNORE-BEGIN
 		/*! Unregister all entities in all sectors (or only one if specified)
 			Returns true if specified entity was found */
-	virtual bool UnRegisterInAllSectors(IEntityRender* pEntity = NULL) = 0;
+	virtual bool UnRegisterInAllSectors(IEntityRender* pEntity = nullptr) = 0;
 	//DOC-IGNORE-END
 
 		/*! Get water level in specified point (taking into account global water level and water volumes)
@@ -941,7 +941,7 @@ struct I3DEngine : public IProcess
 				//     A float value which indicate the water level. In case no water was 
 				//     found at the specified location, the value WATER_LEVEL_UNKNOWN will 
 				//     be returned.
-	virtual float GetWaterLevel(const Vec3* pvPos = NULL, Vec3* pvFlowDir = NULL) = 0;
+	virtual float GetWaterLevel(const Vec3* pvPos = nullptr, Vec3* pvFlowDir = nullptr) = 0;
 
 	/*! Get water level in position of specified object taking into account global water level
 	  and water volumes. For indoor objects global water level is ignored.
@@ -957,7 +957,7 @@ struct I3DEngine : public IProcess
 			// Return Value:
 			//     A float value which indicate the water level. In case no water was 
 			//     found at the location, the value WATER_LEVEL_UNKNOWN will be returned.
-	virtual float GetWaterLevel(IEntityRender* pEntityRender, Vec3* pvFlowDir = NULL) = 0;
+	virtual float GetWaterLevel(IEntityRender* pEntityRender, Vec3* pvFlowDir = nullptr) = 0;
 
 	// Summary:
 	//     Spawns particles using information from a ParticleParams struture
@@ -1310,7 +1310,7 @@ struct I3DEngine : public IProcess
 	virtual void LoadEnvironmentSettingsFromXML(const char* szMissionName, bool bEditorMode, const char* szMissionXMLString = 0, bool bUpdateLightingOnVegetations = true) = 0;
 
 	//! Load detail texture and detail object settings from XML doc (load from current LevelData.xml if pDoc is 0)
-	virtual void	LoadTerrainSurfacesFromXML(void* pDoc = NULL) = 0;
+	virtual void	LoadTerrainSurfacesFromXML(void* pDoc = nullptr) = 0;
 
 	//Unused
 
@@ -1342,7 +1342,7 @@ struct I3DEngine : public IProcess
 	//   pEnt - ...
 	//   nEntityLightId - ...
 	//   pMatrix - ...
-	virtual void AddDynamicLightSource(const class CDLight& LSource, IEntityRender* pEnt, int nEntityLightId = -1, const Matrix44* pMatrix = NULL) = 0;
+	virtual void AddDynamicLightSource(const class CDLight& LSource, IEntityRender* pEnt, int nEntityLightId = -1, const Matrix44* pMatrix = nullptr) = 0;
 
 	//! Make move/bend vegetations in specified area (not implemented yet)
 
@@ -1425,9 +1425,9 @@ struct I3DEngine : public IProcess
 	virtual Vec3 GetSunColor() = 0;
 
 	//! check object visibility taking into account portals and terrain occlusion test
-	//  virtual bool IsBoxVisibleOnTheScreen(const Vec3 & vBoxMin, const Vec3 & vBoxMax, OcclusionTestClient * pOcclusionTestClient = NULL)=0;
+	//  virtual bool IsBoxVisibleOnTheScreen(const Vec3 & vBoxMin, const Vec3 & vBoxMax, OcclusionTestClient * pOcclusionTestClient = nullptr)=0;
 	//! check object visibility taking into account portals and terrain occlusion test
-	//  virtual bool IsSphereVisibleOnTheScreen(const Vec3 & vPos, const float fRadius, OcclusionTestClient * pOcclusionTestClient = NULL)=0;
+	//  virtual bool IsSphereVisibleOnTheScreen(const Vec3 & vPos, const float fRadius, OcclusionTestClient * pOcclusionTestClient = nullptr)=0;
 
 	//! Clears all rendering resources, should be called before LoadLevel() and before loading of any textures from script
 
@@ -1701,7 +1701,7 @@ struct I3DEngine : public IProcess
 	//   Creates a new static light source
 	// Return Value:
 	//   An integer which hold the id of the newly created light.
-	virtual INT_PTR AddStaticLightSource(const class CDLight& LSource, IEntityRender* pCreator, ICryCharInstance* pCryCharInstance = NULL, const char* szBoneName = NULL) = 0;	//## AMD Port
+	virtual INT_PTR AddStaticLightSource(const class CDLight& LSource, IEntityRender* pCreator, ICryCharInstance* pCryCharInstance = nullptr, const char* szBoneName = nullptr) = 0;	//## AMD Port
 
 	//! delete static lsource (return false if not found)
 

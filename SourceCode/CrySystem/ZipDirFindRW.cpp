@@ -62,21 +62,21 @@ bool ZipDir::FindDataRW::MatchWildcard(const char* szName)
 ZipDir::FileEntry* ZipDir::FindFileRW::FindExact(const char* szPath)
 {
 	if (!PreFind(szPath))
-		return NULL;
+		return nullptr;
 
 	FileEntryTree::FileMap::iterator itFile = m_pDirHeader->FindFile(m_szWildcard);
 	if (itFile != m_pDirHeader->GetFileEnd())
 		m_itFile = itFile;
 	else
-		m_pDirHeader = NULL; // we didn't find it, fail the search
+		m_pDirHeader = nullptr; // we didn't find it, fail the search
 
-	return m_pDirHeader ? m_pDirHeader->GetFileEntry(itFile) : NULL;
+	return m_pDirHeader ? m_pDirHeader->GetFileEntry(itFile) : nullptr;
 }
 
 ZipDir::FileEntryTree* ZipDir::FindDirRW::FindExact(const char* szPath)
 {
 	if (!PreFind(szPath))
-		return NULL;
+		return nullptr;
 
 	// the wildcard will contain the target directory name
 	return m_pDirHeader->FindDir(m_szWildcard);
@@ -112,7 +112,7 @@ bool ZipDir::FindDataRW::PreFind(const char* szWildcard)
 			FileEntryTree* pDirEntry = m_pDirHeader->FindDir(m_szWildcard);
 			if (!pDirEntry)
 			{
-				m_pDirHeader = NULL; // finish the search
+				m_pDirHeader = nullptr; // finish the search
 				return false;
 			}
 			m_pDirHeader = pDirEntry->GetDirectory();
@@ -180,11 +180,11 @@ bool ZipDir::FindDirRW::SkipNonMatchingDirs()
 
 ZipDir::FileEntry* ZipDir::FindFileRW::GetFileEntry()
 {
-	return m_pDirHeader && m_itFile != m_pDirHeader->GetFileEnd() ? m_pDirHeader->GetFileEntry(m_itFile) : NULL;
+	return m_pDirHeader && m_itFile != m_pDirHeader->GetFileEnd() ? m_pDirHeader->GetFileEntry(m_itFile) : nullptr;
 }
 ZipDir::FileEntryTree* ZipDir::FindDirRW::GetDirEntry()
 {
-	return m_pDirHeader && m_itDir != m_pDirHeader->GetDirEnd() ? m_pDirHeader->GetDirEntry(m_itDir) : NULL;
+	return m_pDirHeader && m_itDir != m_pDirHeader->GetDirEnd() ? m_pDirHeader->GetDirEntry(m_itDir) : nullptr;
 }
 
 const char* ZipDir::FindFileRW::GetFileName()

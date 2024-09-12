@@ -110,7 +110,7 @@ void CTerrain::InitSectors(bool bEditorMode)
 		for (int y = 0; y < CTerrain::GetSectorsTableSize(); y++)
 		{
 			m_arrSecInfoTable[x][y] = new CSectorInfo(this);
-			m_arrSecInfoTable[x][y]->InitSectorBoundsAndErrorLevels(x * CTerrain::GetSectorSize(), y * CTerrain::GetSectorSize(), NULL, NULL);//file_to_read, file_to_write);
+			m_arrSecInfoTable[x][y]->InitSectorBoundsAndErrorLevels(x * CTerrain::GetSectorSize(), y * CTerrain::GetSectorSize(), nullptr, nullptr);//file_to_read, file_to_write);
 		}
 	/*
 	  if(file_to_write)

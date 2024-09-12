@@ -222,7 +222,7 @@ void CGLRenderer::DrawObjSprites_NoBend(list2<CStatObjInst*>* pList, float fMaxV
 				float param[4];
 				if (m_RP.m_RCSprites_FV)
 				{
-					m_RP.m_RCSprites_FV->mfSet(true, NULL);
+					m_RP.m_RCSprites_FV->mfSet(true, nullptr);
 					param[0] = FogColor[0]; param[1] = FogColor[1]; param[2] = FogColor[2]; param[3] = FogColor[3];
 					CCGPShader_GL* pRC = (CCGPShader_GL*)m_RP.m_RCSprites_FV;
 					pRC->mfParameter4f("FogColor", param);
@@ -591,7 +591,7 @@ void CGLRenderer::DrawObjSprites_NoBend_Merge(list2<CStatObjInst*>* pList, float
 				float param[4];
 				if (m_RP.m_RCSprites_FV)
 				{
-					m_RP.m_RCSprites_FV->mfSet(true, NULL);
+					m_RP.m_RCSprites_FV->mfSet(true, nullptr);
 					param[0] = FogColor[0]; param[1] = FogColor[1]; param[2] = FogColor[2]; param[3] = FogColor[3];
 					CCGPShader_GL* pRC = (CCGPShader_GL*)m_RP.m_RCSprites_FV;
 					pRC->mfParameter4f("FogColor", param);
@@ -737,8 +737,8 @@ void CGLRenderer::DrawObjSprites(list2<CStatObjInst*>* pList, float fMaxViewDist
 
 	float v[4];
 	v[3] = 1.0f;
-	CVProgram* pVP = NULL;
-	CVProgram* pVP_FV = NULL;
+	CVProgram* pVP = nullptr;
+	CVProgram* pVP_FV = nullptr;
 	// If device supports vertex shaders use advanced bending for sprites
 	if (!m_RP.m_VPPlantBendingSpr && (GetFeatures() & RFT_HW_VS))
 	{
@@ -754,24 +754,24 @@ void CGLRenderer::DrawObjSprites(list2<CStatObjInst*>* pList, float fMaxViewDist
 		pVP_FV = m_RP.m_VPPlantBendingSpr_FV;
 	}
 
-	SCGBind* pBindBend = NULL;
-	SCGBind* pBindPos = NULL;
-	CCGVProgram_GL* vpGL = NULL;
+	SCGBind* pBindBend = nullptr;
+	SCGBind* pBindPos = nullptr;
+	CCGVProgram_GL* vpGL = nullptr;
 
-	SMFog* fb = NULL;
+	SMFog* fb = nullptr;
 
 	SCGBind* pBindTG00, * pBindTG01, * pBindTG10, * pBindTG11;
 
-	SCGBind* pBindBend_FV = NULL;
-	SCGBind* pBindPos_FV = NULL;
-	CCGVProgram_GL* vpGL_FV = NULL;
+	SCGBind* pBindBend_FV = nullptr;
+	SCGBind* pBindPos_FV = nullptr;
+	CCGVProgram_GL* vpGL_FV = nullptr;
 	CFColor FogColor;
 	Plane plane00, plane01, plane10, plane11;
 
-	SCGBind* pCurBindBend = NULL;
-	SCGBind* pCurBindPos = NULL;
+	SCGBind* pCurBindBend = nullptr;
+	SCGBind* pCurBindPos = nullptr;
 
-	CCGVProgram_GL* lastvpGL = NULL;
+	CCGVProgram_GL* lastvpGL = nullptr;
 
 	SWaveForm2 wfMain;
 	if (!m_RP.m_RCSprites)
@@ -781,8 +781,8 @@ void CGLRenderer::DrawObjSprites(list2<CStatObjInst*>* pList, float fMaxViewDist
 		wfMain.m_eWFType = eWF_Sin;
 		wfMain.m_Amp = 0.002f;
 		wfMain.m_Level = 0;
-		pVP->mfSet(true, NULL);
-		pVP->mfSetVariables(false, NULL);
+		pVP->mfSet(true, nullptr);
+		pVP->mfSetVariables(false, nullptr);
 
 		vpGL = (CCGVProgram_GL*)pVP;
 		lastvpGL = vpGL;
@@ -933,8 +933,8 @@ void CGLRenderer::DrawObjSprites(list2<CStatObjInst*>* pList, float fMaxViewDist
 				vpGL_FV = (CCGVProgram_GL*)pVP_FV;
 				pBindBend_FV = vpGL->mfGetParameterBind("Bend");
 				pBindPos_FV = vpGL->mfGetParameterBind("ObjPos");
-				pVP_FV->mfSet(true, NULL);
-				pVP_FV->mfSetVariables(false, NULL);
+				pVP_FV->mfSet(true, nullptr);
+				pVP_FV->mfSetVariables(false, nullptr);
 
 				if (!m_RP.m_RCSprites_FV)
 					m_RP.m_RCSprites_FV = CPShader::mfForName("CGRCTreeSprites_FV");
@@ -990,8 +990,8 @@ void CGLRenderer::DrawObjSprites(list2<CStatObjInst*>* pList, float fMaxViewDist
 				curRC = (CCGPShader_GL*)m_RP.m_RCSprites_FV;
 				if (pVP_FV)
 				{
-					pVP_FV->mfSet(true, NULL);
-					pVP->mfSetVariables(false, NULL);
+					pVP_FV->mfSet(true, nullptr);
+					pVP->mfSetVariables(false, nullptr);
 
 					if (pBindTG00)
 						vpGL_FV->mfParameter4f(pBindTG00, &plane00.n.x);
@@ -1012,7 +1012,7 @@ void CGLRenderer::DrawObjSprites(list2<CStatObjInst*>* pList, float fMaxViewDist
 				float param[4];
 				if (curRC)
 				{
-					curRC->mfSet(true, NULL);
+					curRC->mfSet(true, nullptr);
 					param[0] = FogColor[0]; param[1] = FogColor[1]; param[2] = FogColor[2]; param[3] = FogColor[3];
 					curRC->mfParameter4f("FogColor", param);
 					param0[0] = m_WorldColor[0]; param0[1] = m_WorldColor[1]; param0[2] = m_WorldColor[2]; param0[3] = m_WorldColor[3];
@@ -1035,12 +1035,12 @@ void CGLRenderer::DrawObjSprites(list2<CStatObjInst*>* pList, float fMaxViewDist
 				lastvpGL = vpGL;
 				if (pVP)
 				{
-					pVP->mfSet(true, NULL);
-					pVP->mfSetVariables(false, NULL);
+					pVP->mfSet(true, nullptr);
+					pVP->mfSetVariables(false, nullptr);
 				}
 				if (curRC)
 				{
-					curRC->mfSet(true, NULL);
+					curRC->mfSet(true, nullptr);
 					float param0[4];
 					param0[0] = m_WorldColor[0]; param0[1] = m_WorldColor[1]; param0[2] = m_WorldColor[2]; param0[3] = m_WorldColor[3];
 					curRC->mfParameter4f("Ambient", param0);
@@ -1119,7 +1119,7 @@ void CGLRenderer::DrawObjSprites(list2<CStatObjInst*>* pList, float fMaxViewDist
 			EnableTMU(false);
 			EF_SelectTMU(0);
 		}
-		lastvpGL->mfSet(false, NULL);
+		lastvpGL->mfSet(false, nullptr);
 	}
 
 	if (m_bHeatVision)
@@ -1131,7 +1131,7 @@ void CGLRenderer::DrawObjSprites(list2<CStatObjInst*>* pList, float fMaxViewDist
 		if (m_RP.m_RCSprites)
 			m_RP.m_RCSprites->mfSet(false);
 
-	m_RP.m_LastVP = NULL;
+	m_RP.m_LastVP = nullptr;
 
 	m_TexMan->SetTexture(0, eTT_Base);
 }
@@ -1149,7 +1149,7 @@ uint CGLRenderer::MakeSprite(float _fSpriteDistance, int nTexSize, float angle, 
 		pStatObj->GetFileName(), (int)angle, (int)_fSpriteDistance, nTexSize,
 		vSunColor.x, vSunColor.y, vSunColor.z,
 		vSunPos.x, vSunPos.y, vSunPos.z);
-	STexPic* ti = m_TexMan->LoadFromCache(NULL, flags, flags2, name, pStatObj->GetFileName(), eTT_Base);
+	STexPic* ti = m_TexMan->LoadFromCache(nullptr, flags, flags2, name, pStatObj->GetFileName(), eTT_Base);
 	if (ti)
 		return ti->m_Bind;
 
@@ -1204,7 +1204,7 @@ uint CGLRenderer::MakeSprite(float _fSpriteDistance, int nTexSize, float angle, 
 
 	//  float plane[] = {0,0,1,0};
 	  //gRenDev->SetClipPlane(0,plane);
-	gRenDev->SetClipPlane(0, NULL);
+	gRenDev->SetClipPlane(0, nullptr);
 
 	EF_StartEf();
 	SRendParams rParms;
@@ -1212,7 +1212,7 @@ uint CGLRenderer::MakeSprite(float _fSpriteDistance, int nTexSize, float angle, 
 	pStatObj->Render(rParms, Vec3(zero), 0);
 	EF_EndEf3D(true);
 
-	gRenDev->SetClipPlane(0, NULL);
+	gRenDev->SetClipPlane(0, nullptr);
 
 	glPopMatrix();
 
@@ -1227,7 +1227,7 @@ uint CGLRenderer::MakeSprite(float _fSpriteDistance, int nTexSize, float angle, 
 
 	SetTextureAlphaChannelFromRGB(pMemBuffer, nTexSize);
 
-	STexPic* tp = m_TexMan->CreateTexture(name, nTexSize, nTexSize, 1, flags, flags2, pMemBuffer, eTT_Base, -1.0f, -1.0f, 0, NULL, 0, eTF_8888, pStatObj->GetFileName());
+	STexPic* tp = m_TexMan->CreateTexture(name, nTexSize, nTexSize, 1, flags, flags2, pMemBuffer, eTT_Base, -1.0f, -1.0f, 0, nullptr, 0, eTF_8888, pStatObj->GetFileName());
 	/*{
 	  int width = 64;
 	  int height = 64;

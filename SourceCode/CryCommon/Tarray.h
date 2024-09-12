@@ -16,19 +16,19 @@
 
 // Safe memory freeing
 #ifndef SAFE_DELETE
-#define SAFE_DELETE(p)			{ if(p) { delete (p);		(p)=NULL; } }
+#define SAFE_DELETE(p)			{ if(p) { delete (p);		(p)=nullptr; } }
 #endif
 
 #ifndef SAFE_DELETE_ARRAY
-#define SAFE_DELETE_ARRAY(p)	{ if(p) { delete[] (p);		(p)=NULL; } }
+#define SAFE_DELETE_ARRAY(p)	{ if(p) { delete[] (p);		(p)=nullptr; } }
 #endif
 
 #ifndef SAFE_RELEASE
-#define SAFE_RELEASE(p)			{ if(p) { (p)->Release();	(p)=NULL; } }
+#define SAFE_RELEASE(p)			{ if(p) { (p)->Release();	(p)=nullptr; } }
 #endif
 
 #ifndef SAFE_RELEASE_FORCE
-#define SAFE_RELEASE_FORCE(p)			{ if(p) { (p)->Release(1);	(p)=NULL; } }
+#define SAFE_RELEASE_FORCE(p)			{ if(p) { (p)->Release(1);	(p)=nullptr; } }
 #endif
 
 // this is an allocator that's allocates 16-byte-aligned blocks,
@@ -203,8 +203,8 @@ protected:
 public:
 	typedef T value_type;
 
-	TArray(void) { m_pElements = NULL, m_nCount = m_nAllocatedCount = 0; }
-	TArray(int Count) { m_pElements = NULL; m_nCount = Count; m_nAllocatedCount = Count; Realloc(); }
+	TArray(void) { m_pElements = nullptr, m_nCount = m_nAllocatedCount = 0; }
+	TArray(int Count) { m_pElements = nullptr; m_nCount = Count; m_nAllocatedCount = Count; Realloc(); }
 	TArray(int Use, int Max) { m_nCount = Use; m_nAllocatedCount = Max; Realloc(); }
 	~TArray(void)
 	{
@@ -218,15 +218,15 @@ public:
 		if (m_pElements)
 		{
 			free(m_pElements);
-			m_pElements = NULL;
+			m_pElements = nullptr;
 		}
 		m_nCount = m_nAllocatedCount = 0;
 	}
 
-	void Create(int Count) { m_pElements = NULL; m_nCount = Count; m_nAllocatedCount = Count; Realloc(); Clear(); }
+	void Create(int Count) { m_pElements = nullptr; m_nCount = Count; m_nAllocatedCount = Count; Realloc(); Clear(); }
 	void Copy(const TArray<T>& src)
 	{
-		m_pElements = NULL;
+		m_pElements = nullptr;
 		m_nCount = m_nAllocatedCount = src.Num();
 		Realloc();
 		memcpy(m_pElements, src.m_pElements, src.Num() * sizeof(T));
@@ -358,7 +358,7 @@ public:
 
 	TArray(const TArray<T>& cTA)
 	{
-		m_pElements = NULL;
+		m_pElements = nullptr;
 		m_nCount = m_nAllocatedCount = cTA.Num();
 		Realloc();
 		m_nCount = 0;

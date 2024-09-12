@@ -227,7 +227,7 @@ const char* CCryPak::AdjustFileName(const char* src, char* dst, unsigned nFlags,
 		{
 			fprintf(stderr, "realpath failed for ../!\n");
 			__builtin_trap();
-			return NULL;
+			return nullptr;
 		}
 
 		strcpy(dst, rp);
@@ -372,7 +372,7 @@ const char* CCryPak::AdjustFileName(const char* src, char* dst, unsigned nFlags,
 		if (it == m_arrMods.rend())
 		{
 			if (nFlags & FLAGS_ONLY_MOD_DIRS)
-				return NULL; // we didn't find the corresponding file
+				return nullptr; // we didn't find the corresponding file
 			else
 			{
 				string strPrepend; // = "";
@@ -384,7 +384,7 @@ const char* CCryPak::AdjustFileName(const char* src, char* dst, unsigned nFlags,
 	}
 	else
 		if (nFlags & FLAGS_ONLY_MOD_DIRS) // only in MOD dirs, but no MODs found
-			return NULL;
+			return nullptr;
 
 	return dst; // the last MOD scanned, or the absolute path outside MasterCD
 }
@@ -396,10 +396,10 @@ FILETIME writetime;
 memset(&writetime, 0, sizeof(writetime));
 #ifdef WIN32
 HANDLE hFile = CreateFile(szFileName, GENERIC_READ, FILE_SHARE_READ,
-NULL, OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL);
+nullptr, OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, nullptr);
 if (hFile != INVALID_HANDLE_VALUE)
 {
-::GetFileTime(hFile, NULL, NULL, &writetime);
+::GetFileTime(hFile, nullptr, nullptr, &writetime);
 CloseHandle(hFile);
 }
 #endif
@@ -427,15 +427,15 @@ CRYASSERT(f > m_OpenFiles.Num());
 #ifdef WIN32
 
 HANDLE status1 = CreateFile(szCompiledName,GENERIC_READ,FILE_SHARE_READ,
-NULL,OPEN_EXISTING,FILE_FLAG_SEQUENTIAL_SCAN,NULL);
+nullptr,OPEN_EXISTING,FILE_FLAG_SEQUENTIAL_SCAN,nullptr);
 
 HANDLE status2 = CreateFile(szMasterFile,GENERIC_READ,FILE_SHARE_READ,
-NULL,OPEN_EXISTING,FILE_FLAG_SEQUENTIAL_SCAN,NULL);
+nullptr,OPEN_EXISTING,FILE_FLAG_SEQUENTIAL_SCAN,nullptr);
 
 FILETIME writetime1,writetime2;
 
-GetFileTime(status1,NULL,NULL,&writetime1);
-GetFileTime(status2,NULL,NULL,&writetime2);
+GetFileTime(status1,nullptr,nullptr,&writetime1);
+GetFileTime(status2,nullptr,nullptr,&writetime2);
 
 CloseHandle(status1);
 CloseHandle(status2);
@@ -456,7 +456,7 @@ return (false);
 FILE* CCryPak::FOpen(const char* pName, const char* szMode, char* szFileGamePath, int nLen)
 {
 	AUTO_LOCK(m_csMain);
-	FILE* fp = NULL;
+	FILE* fp = nullptr;
 	char szFullPathBuf[g_nMaxPath];
 	const char* szFullPath = AdjustFileName(pName, szFullPathBuf, 0);
 	if (nLen > g_nMaxPath)
@@ -476,7 +476,7 @@ FILE* CCryPak::FOpen(const char* pName, const char* szMode, char* szFileGamePath
 FILE* CCryPak::FOpen(const char* pName, const char* szMode, unsigned nFlags2)
 {
 	AUTO_LOCK(m_csMain);
-	FILE* fp = NULL;
+	FILE* fp = nullptr;
 	char szFullPathBuf[g_nMaxPath];
 
 	// get the priority into local variable to avoid it changing in the course of
@@ -592,7 +592,7 @@ FILE* CCryPak::FOpen(const char* pName, const char* szMode, unsigned nFlags2)
 		// the only reason that can be is that there are no directories for that file.
 		// now create those dirs
 		if (!MakeDir(CryStringUtils::GetParentDirectory(string(szFullPath)).c_str()))
-			return NULL;
+			return nullptr;
 
 		FILE* file = fopen(szFullPath, szMode);
 		if (file)
@@ -620,7 +620,7 @@ FILE* CCryPak::FOpen(const char* pName, const char* szMode, unsigned nFlags2)
 		}
 		if (!(nFlags2 & FOPEN_HINT_QUIET))
 			OnMissingFile(pName);
-		return NULL; // we can't find such file in the pack files
+		return nullptr; // we can't find such file in the pack files
 	}
 
 	RecordFile(pName);
@@ -635,11 +635,7 @@ FILE* CCryPak::FOpen(const char* pName, const char* szMode, unsigned nFlags2)
 		m_arrOpenFiles.resize(nFile + 1);
 	}
 
-#if defined(LINUX64)
-	if (pFileData != 0 && (nFlags2 & FOPEN_HINT_DIRECT_OPERATION))
-#else
-	if (pFileData != NULL && (nFlags2 & FOPEN_HINT_DIRECT_OPERATION))
-#endif
+	if (pFileData && (nFlags2 & FOPEN_HINT_DIRECT_OPERATION))
 		nFlags |= CZipPseudoFile::_O_DIRECT_OPERATION;
 	m_arrOpenFiles[nFile].Construct(pFileData, nFlags);
 	return (FILE*)(nFile + g_nPseudoFileIdxOffset); // the handle to the file
@@ -681,7 +677,7 @@ CCachedFileDataPtr CCryPak::GetFileData(const char* szName)
 			ZipDir::FileEntry* pFileEntry = itZip->pZip->FindFile(szName + nBindRootLen);
 			if (pFileEntry)
 			{
-				CCachedFileData Result(NULL, itZip->pZip, pFileEntry);
+				CCachedFileData Result(nullptr, itZip->pZip, pFileEntry);
 				AUTO_LOCK(m_csCachedFiles);
 
 				CachedFileDataSet::iterator it = m_setCachedFiles.find(&Result);
@@ -695,7 +691,7 @@ CCachedFileDataPtr CCryPak::GetFileData(const char* szName)
 			}
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 
@@ -746,7 +742,7 @@ const char* CCryPak::GetFileArchivePath(FILE* hFile)
 	if ((UINT_PTR)nPseudoFile < m_arrOpenFiles.size())
 		return m_arrOpenFiles[nPseudoFile].GetArchivePath();
 	else
-		return NULL;
+		return nullptr;
 }
 
 FILETIME UnixTimeToFileTime(time_t t)
@@ -930,7 +926,7 @@ const char* GetExtension(const char* in)
 			return in;
 		in++;
 	}
-	return NULL;
+	return nullptr;
 }
 #else
 const char* GetExtension(const char* in);
@@ -1222,13 +1218,13 @@ bool CCryPak::OpenPacksCommon(const char* szDir, char* cWork, unsigned nFlags)
 	}
 
 	fdir = opendir(buf);
-	if (fdir == NULL)
+	if (fdir == nullptr)
 	{
 		return false;
 	}
 
 	p1 = buf;
-	rp = realpath(".", NULL);
+	rp = realpath(".", nullptr);
 	if (!rp)
 	{
 		closedir(fdir);
@@ -1243,7 +1239,7 @@ bool CCryPak::OpenPacksCommon(const char* szDir, char* cWork, unsigned nFlags)
 	p1++;
 	free(rp);
 
-	while ((d = readdir(fdir)) != NULL)
+	while ((d = readdir(fdir)) != nullptr)
 	{
 		ext = strstr(d->d_name, ".");
 		if (ext && !strcasecmp(ext, ".pak"))
@@ -1280,12 +1276,12 @@ bool CCryPak::ClosePacks(const char* pWildcardIn, unsigned nFlags)
 	}
 
 	fdir = opendir(buf);
-	if (fdir == NULL)
+	if (fdir == nullptr)
 	{
 		return false;
 	}
 
-	while ((d = readdir(fdir)) != NULL)
+	while ((d = readdir(fdir)) != nullptr)
 	{
 		ext = strstr(d->d_name, ".");
 		if (ext && !strcasecmp(ext, wildcard.c_str()))
@@ -1307,12 +1303,12 @@ bool CCryPak::InitPack(const char* szBasePath, unsigned nFlags)
 	struct dirent* fileinfo;
 	char* ext;
 	DIR* fdir = opendir(cWork);
-	if (fdir == NULL)
+	if (fdir == nullptr)
 	{
 		return true;
 	}
 
-	while ((fileinfo = readdir(fdir)) != NULL)
+	while ((fileinfo = readdir(fdir)) != nullptr)
 	{
 		ext = strstr(fileinfo->d_name, ".");
 		if (ext && !strcasecmp(ext, ".cpk"))
@@ -1440,10 +1436,10 @@ int CZipPseudoFile::FScanfv(const char* szFormat, va_list args)
 char* CZipPseudoFile::FGets(char* pBuf, int n)
 {
 	if (!GetFile())
-		return NULL;
+		return nullptr;
 	char* pData = (char*)GetFile()->GetData();
 	if (!pData)
-		return NULL;
+		return nullptr;
 	int nn = 0;
 	int i;
 	for (i = 0; i < n; i++)
@@ -1465,7 +1461,7 @@ char* CZipPseudoFile::FGets(char* pBuf, int n)
 	pBuf[nn] = 0;
 	m_nCurSeek += i;
 	if (m_nCurSeek == GetFileSize())
-		return NULL;
+		return nullptr;
 	return pBuf;
 }
 
@@ -1501,7 +1497,7 @@ int CZipPseudoFile::Ungetc(int c)
 CCachedFileData::CCachedFileData(class CCryPak* pPak, ZipDir::Cache* pZip, ZipDir::FileEntry* pFileEntry)
 {
 	m_pPak = pPak;
-	m_pFileData = NULL;
+	m_pFileData = nullptr;
 	m_nRefCounter = 0;
 	m_pZip = pZip;
 	m_pFileEntry = pFileEntry;
@@ -1519,11 +1515,11 @@ CCachedFileData::~CCachedFileData()
 	if (m_pFileData)
 	{
 		m_pZip->Free(m_pFileData);
-		m_pFileData = NULL;
+		m_pFileData = nullptr;
 	}
 
-	m_pZip = NULL;
-	m_pFileEntry = NULL;
+	m_pZip = nullptr;
+	m_pFileEntry = nullptr;
 }
 
 // return the data in the file, or NULL if error
@@ -1544,10 +1540,10 @@ void* CCachedFileData::GetData(bool bRefreshCache)
 		if (!m_pFileData)
 		{
 			m_pFileData = g_pBigHeap->Alloc(m_pFileEntry->desc.lSizeUncompressed, "CCachedFileData::GetData");
-			if (ZipDir::ZD_ERROR_SUCCESS != m_pZip->ReadFile(m_pFileEntry, NULL, m_pFileData))
+			if (ZipDir::ZD_ERROR_SUCCESS != m_pZip->ReadFile(m_pFileEntry, nullptr, m_pFileData))
 			{
 				g_pBigHeap->Free(m_pFileData);
-				m_pFileData = NULL;
+				m_pFileData = nullptr;
 			}
 		}
 	}
@@ -1623,7 +1619,7 @@ void CCryPakFindData::ScanFS(CCryPak* pPak, const char* szDirIn)
 		}
 	}
 
-	first = second = NULL;
+	first = second = nullptr;
 
 	if (strcmp(buf + (len - 3), "*.*"))
 	{
@@ -1643,7 +1639,7 @@ void CCryPakFindData::ScanFS(CCryPak* pPak, const char* szDirIn)
 		*first = '\0';
 		first++;
 		second++;
-		if (strrchr(second, "*") != NULL)
+		if (strrchr(second, "*") != nullptr)
 		{
 			fprintf(stderr, "%s - Cannot handle multiple wildcards\n", szDirIn);
 			return;
@@ -1661,13 +1657,13 @@ void CCryPakFindData::ScanFS(CCryPak* pPak, const char* szDirIn)
 	}
 
 	fdir = opendir(buf);
-	if (fdir == NULL)
+	if (fdir == nullptr)
 	{
 		fprintf(stderr, "Failed to open %s\n", buf);
 		return;
 	}
 
-	while ((d = readdir(fdir)) != NULL)
+	while ((d = readdir(fdir)) != nullptr)
 	{
 		if (ext.compare("*") != 0)
 		{
@@ -1684,7 +1680,7 @@ void CCryPakFindData::ScanFS(CCryPak* pPak, const char* szDirIn)
 				continue;
 			}
 
-			if (first != NULL && strlen(first) > 0)
+			if (first != nullptr && strlen(first) > 0)
 			{
 				if (strncmp(d->d_name, first, strlen(first)))
 				{
@@ -1971,20 +1967,20 @@ ICryArchive* CCryPak::OpenArchive(const char* szPath, unsigned nFlags)
 				return pArchive; // we can return an optimized archive
 
 			//if (!(pArchive->GetFlags() & ICryArchive::FLAGS_READ_ONLY))
-			return NULL; // we can't let it open read-only optimized while it's open for RW access
+			return nullptr; // we can't let it open read-only optimized while it's open for RW access
 		}
 		else
 		{
 			if (!(nFlags & ICryArchive::FLAGS_READ_ONLY) && (pArchive->GetFlags() & ICryArchive::FLAGS_READ_ONLY))
 			{
 				// we don't support upgrading from ReadOnly to ReadWrite
-				return NULL;
+				return nullptr;
 			}
 
 			return pArchive;
 		}
 
-		return NULL;
+		return nullptr;
 	}
 
 	string strBindRoot;
@@ -2003,7 +1999,7 @@ ICryArchive* CCryPak::OpenArchive(const char* szPath, unsigned nFlags)
 	catch (ZipDir::Error e)
 	{
 		m_pLog->LogError("can't create the archive \"%s\"==\"%s\": error %s (code %d) in %s at %s:%d. %s.", szPath, szFullPath, e.getError(), e.nError, e.szFunction, e.szFile, e.nLine, e.getDescription());
-		return NULL;
+		return nullptr;
 	}
 }
 
@@ -2094,7 +2090,7 @@ ICryArchive* CCryPak::FindArchive(const char* szFullPath)
 	if (it != m_arrArchives.end() && !stricmp(szFullPath, (*it)->GetFullPath()))
 		return *it;
 	else
-		return NULL;
+		return nullptr;
 }
 
 

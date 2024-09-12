@@ -29,7 +29,7 @@ public:
 		m_fTerrainWaterLevel = 0;
 		m_fAlpha = 1;
 		m_nSphereListId = 0;
-		m_parrFogLayer = m_parrFogLayer2 = NULL;
+		m_parrFogLayer = m_parrFogLayer2 = nullptr;
 		m_fSkyBoxStretching = 1.f;
 		memset(m_arrvPortalVerts, 0, sizeof(m_arrvPortalVerts));
 	}

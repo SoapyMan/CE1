@@ -146,7 +146,7 @@ void CAIObject::UpdateHierarchy()
 
 void	CAIObject::CreateBoundObject(unsigned short type, const Vec3d& vBindPos, const Vec3d& vBindAngl)
 {
-	CAIObject* pChild = (CAIObject*)m_pAISystem->CreateAIObject(type, NULL);
+	CAIObject* pChild = (CAIObject*)m_pAISystem->CreateAIObject(type, nullptr);
 	string name;
 	char	buffer[5];
 	sprintf(buffer, "%d\0", m_lstBindings.size() + 1);
@@ -283,7 +283,7 @@ void CAIObject::SetSignal(int nSignalID, const char* szText, void* pSender)
 	}
 	if (!stricmp(szText, "wakeup"))
 	{
-		Event(AIEVENT_WAKEUP, NULL);
+		Event(AIEVENT_WAKEUP, nullptr);
 		//		return;
 	}
 

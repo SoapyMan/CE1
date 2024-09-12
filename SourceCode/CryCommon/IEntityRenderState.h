@@ -122,9 +122,9 @@ struct IEntityRender
 	virtual bool HasChanged() { return false; }
 	virtual bool DrawEntity(const struct SRendParams& EntDrawParams) = 0;
 	virtual bool IsStatic() const = 0;
-	virtual struct IStatObj* GetEntityStatObj(unsigned int nSlot, Matrix44* pMatrix = NULL, bool bReturnOnlyVisible = false) { return 0; }
-	virtual void SetEntityStatObj(unsigned int nSlot, IStatObj* pStatObj, Matrix44* pMatrix = NULL) {};
-	virtual struct ICryCharInstance* GetEntityCharacter(unsigned int nSlot, Matrix44* pMatrix = NULL) { return 0; }
+	virtual struct IStatObj* GetEntityStatObj(unsigned int nSlot, Matrix44* pMatrix = nullptr, bool bReturnOnlyVisible = false) { return 0; }
+	virtual void SetEntityStatObj(unsigned int nSlot, IStatObj* pStatObj, Matrix44* pMatrix = nullptr) {};
+	virtual struct ICryCharInstance* GetEntityCharacter(unsigned int nSlot, Matrix44* pMatrix = nullptr) { return 0; }
 	virtual void Physicalize(bool bInstant = false) {}
 	virtual class CDLight* GetLight() { return 0; }
 	virtual struct IEntityContainer* GetContainer() const { return 0; }

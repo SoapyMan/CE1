@@ -208,8 +208,8 @@ GSvoid NewUbisoftClient::RcvActivationID(PREPLY_INFORMATION psReplyInfo,
 			m_pLog->Log("\001Ubi.com: CDKey RcvActivationID Failed: timeout");
 		}
 		// Since it didn't succeed we don't know if the cdkey is valid so delete it.
-		SaveCDKey(NULL);
-		SaveActivationID(NULL);
+		SaveCDKey(nullptr);
+		SaveActivationID(nullptr);
 		//Ask to for the cdkey again.
 		string strError;
 		GetCDKeyErrorText(psReplyInfo->usErrorID, strError);
@@ -290,7 +290,7 @@ bool NewUbisoftClient::Server_CheckPlayerAuthorizationID(BYTE bPlayerID,
 		IServerSlot* pServerSlot = pServer->GetServerSlotbyID(bPlayerID);
 
 		//CXServerSlot *pSlot = itSlot->second;
-		pServerSlot->OnPlayerAuthorization(true, "", NULL, 0);
+		pServerSlot->OnPlayerAuthorization(true, "", nullptr, 0);
 		return true;
 	}
 
@@ -388,7 +388,7 @@ void NewUbisoftClient::RcvValidationResponse(PREPLY_INFORMATION psReplyInfo,
 		string strError;
 		GetCDKeyErrorText(psReplyInfo->usErrorID, strError);
 		m_pLog->Log("\001Ubi.com: CDKey RcvValidationResponse Failed: %s", strError.c_str());
-		pServerSlot->OnPlayerAuthorization(false, strError.c_str(), NULL, 0);
+		pServerSlot->OnPlayerAuthorization(false, strError.c_str(), nullptr, 0);
 		RemoveAuthorizedID(stID);
 		//}
 		return;
@@ -397,13 +397,13 @@ void NewUbisoftClient::RcvValidationResponse(PREPLY_INFORMATION psReplyInfo,
 	if (eStatus == E_PLAYER_UNKNOWN)
 	{
 		m_pLog->Log("\001Ubi.com: CDKey RcvValidationResponse Success: PLAYERUNKNOWN");
-		pServerSlot->OnPlayerAuthorization(false, INVALIDCDKEY, NULL, 0);
+		pServerSlot->OnPlayerAuthorization(false, INVALIDCDKEY, nullptr, 0);
 		RemoveAuthorizedID(stID);
 	}
 	else if (eStatus == E_PLAYER_INVALID)
 	{
 		m_pLog->Log("\001Ubi.com: CDKey RcvValidationResponse Success: INVALIDCDKEY");
-		pServerSlot->OnPlayerAuthorization(false, INVALIDCDKEY, NULL, 0);
+		pServerSlot->OnPlayerAuthorization(false, INVALIDCDKEY, nullptr, 0);
 		RemoveAuthorizedID(stID);
 	}
 	else if (eStatus == E_PLAYER_VALID)

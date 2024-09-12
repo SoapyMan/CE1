@@ -130,7 +130,7 @@ public:
 	bool LoadRandomExpressions(const char* pszExprScript, bool bRaiseError = true);			// load expressions from script
 	bool UnloadRandomExpressions();																										// release expressions
 	// loads a dialog for later playback
-	bool LoadDialog(const char* pszFilename, int nSoundVolume, float fMinSoundRadius, float fMaxSoundRadius, float fClipDist, int nSoundFlags = 0, IScriptObject* pAITable = NULL);
+	bool LoadDialog(const char* pszFilename, int nSoundVolume, float fMinSoundRadius, float fMaxSoundRadius, float fClipDist, int nSoundFlags = 0, IScriptObject* pAITable = nullptr);
 	bool UnloadDialog();																															// releases all resources
 	bool PlayDialog(bool bUnloadWhenDone = true);																				// plays a loaded dialog
 	bool StopDialog();																																// stops (aborts) a dialog

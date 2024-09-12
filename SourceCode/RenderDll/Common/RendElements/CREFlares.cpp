@@ -18,7 +18,7 @@ void CopyLightStyle(int dest, int src);
 
 CRendElement* CREFlareProp::mfCreateWorldRE(SShader* ef, SInpData* ds)
 {
-	return NULL;
+	return nullptr;
 }
 
 
@@ -68,7 +68,7 @@ bool CREFlare::mfCompile(SShader* ef, char* scr)
 	CFColor col;
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else

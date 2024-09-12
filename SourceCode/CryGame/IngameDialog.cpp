@@ -19,8 +19,8 @@ CIngameDialog::CIngameDialog()
 	m_fW=0.0f;
 	m_fH=0.0f;
 	m_sText="";
-	m_pRenderer=NULL;
-	m_pFont=NULL;
+	m_pRenderer=nullptr;
+	m_pFont=nullptr;
 	m_nFillId=0;
 	m_bInited=false;
 }
@@ -118,8 +118,8 @@ CIngameDialogMgr::CIngameDialogMgr()
 {
 	m_nNextId=0;
 	m_nDefaultFillId=-1;
-	m_pRenderer=NULL;
-	m_pTimer=NULL;
+	m_pRenderer=nullptr;
+	m_pTimer=nullptr;
 }
 
 //////////////////////////////////////////////////////////////////////////

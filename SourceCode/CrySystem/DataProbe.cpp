@@ -230,9 +230,9 @@ CDataProbe::CDataProbe()
 	char sPath[_MAX_PATH];
 	char dir[_MAX_DIR];
 	char drive[_MAX_DRIVE];
-	GetModuleFileName(GetModuleHandle(NULL), sPath, sizeof(sPath));
-	_splitpath(sPath, drive, dir, NULL, NULL);
-	_makepath(sPath, drive, dir, NULL, NULL);
+	GetModuleFileName(GetModuleHandle(nullptr), sPath, sizeof(sPath));
+	_splitpath(sPath, drive, dir, nullptr, nullptr);
+	_makepath(sPath, drive, dir, nullptr, nullptr);
 	m_sBinPath = sPath;
 #endif
 }

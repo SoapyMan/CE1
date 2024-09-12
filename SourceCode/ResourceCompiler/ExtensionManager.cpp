@@ -45,7 +45,7 @@ IConvertor* ExtensionManager::FindConvertor(Platform platform, const char* ext) 
 	for (it = extMap->begin(); it != extMap->end(); it++)
 	{
 		CString strExtName = (*it).first;
-		CRYASSERT((*it).second != NULL);
+		CRYASSERT((*it).second != nullptr);
 	}
 
 

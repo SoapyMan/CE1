@@ -150,15 +150,15 @@ _inline void __cdecl __CRYTEKDLL_TRACE(const char *sFormat, ... )
 #endif
 
 #ifndef SAFE_DELETE
-#define SAFE_DELETE(p)			{ if(p) { delete (p);		(p)=NULL; } }
+#define SAFE_DELETE(p)			{ if(p) { delete (p);		(p)=nullptr; } }
 #endif
 
 #ifndef SAFE_DELETE_ARRAY
-#define SAFE_DELETE_ARRAY(p)	{ if(p) { delete[] (p);		(p)=NULL; } }
+#define SAFE_DELETE_ARRAY(p)	{ if(p) { delete[] (p);		(p)=nullptr; } }
 #endif
 
 #ifndef SAFE_RELEASE
-#define SAFE_RELEASE(p)			{ if(p) { (p)->Release();	(p)=NULL; } }
+#define SAFE_RELEASE(p)			{ if(p) { (p)->Release();	(p)=nullptr; } }
 #endif
 
 
@@ -216,12 +216,12 @@ inline void GameWarning( const char *format,... )
 
 inline void __DumpEntity(ILog *pLog,IEntity *pEntity)
 {
-	const char *sTemp=NULL;
+	const char *sTemp=nullptr;
 	Vec3 v;
 	pLog->Log("************************************");
 	if(!pEntity)
 	{
-		pLog->Log("DUMPING ENTITY .... the pEntity IS NULL");
+		pLog->Log("DUMPING ENTITY .... the pEntity IS nullptr");
 		return;
 	}
 	pLog->Log("DUMPING ENTITY %d",pEntity->GetId());
@@ -240,7 +240,7 @@ inline void __DumpEntity(ILog *pLog,IEntity *pEntity)
 
 inline void __DumpEntity(ILog *pLog,const CEntityDesc &desc)
 {
-	const char *sTemp=NULL;
+	const char *sTemp=nullptr;
 	Vec3 v;
 	pLog->Log("*************ENTITYDESCDUMP****************");
 	pLog->Log("CLASSID [%03d]",(int)desc.ClassId);

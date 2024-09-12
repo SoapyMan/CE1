@@ -220,7 +220,7 @@ public:
 	CREOcean()
 	{
 		m_nFrameLoad = 0;
-		m_pBuffer = NULL;
+		m_pBuffer = nullptr;
 		mfSetType(eDATA_Ocean);
 		mfUpdateFlags(FCEF_TRANSFORM);
 		GenerateGeometry();

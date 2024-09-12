@@ -11,11 +11,11 @@ void CREBeam::mfPrepare(void)
 	if (!m_pBuffer)
 	{
 		I3DEngine* eng = (I3DEngine*)iSystem->GetI3DEngine();
-		IStatObj* pObj = eng->MakeObject(m_ModelName.c_str(), NULL, evs_ShareAndSortForCache, false, false);
+		IStatObj* pObj = eng->MakeObject(m_ModelName.c_str(), nullptr, evs_ShareAndSortForCache, false, false);
 		m_pBuffer = pObj->GetLeafBuffer();
 		if (!m_pBuffer)
 		{
-			gRenDev->m_RP.m_pRE = NULL;
+			gRenDev->m_RP.m_pRE = nullptr;
 			gRenDev->m_RP.m_RendNumIndices = 0;
 			gRenDev->m_RP.m_RendNumVerts = 0;
 			return;
@@ -41,10 +41,10 @@ void CREBeam::mfPrepare(void)
 		if (nHW >= 0)
 			gRenDev->m_RP.m_pCurTechnique = gRenDev->m_RP.m_pShader->m_HWTechniques[nHW];
 		else
-			gRenDev->m_RP.m_pCurTechnique = NULL;
+			gRenDev->m_RP.m_pCurTechnique = nullptr;
 	}
 	else
-		gRenDev->m_RP.m_pCurTechnique = NULL;
+		gRenDev->m_RP.m_pCurTechnique = nullptr;
 
 	CCObject* obj = gRenDev->m_RP.m_pCurObject;
 	obj->m_RE = this;
@@ -120,7 +120,7 @@ bool CREBeam::mfCompile(SShader* ef, char* scr)
 
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else
@@ -132,7 +132,7 @@ bool CREBeam::mfCompile(SShader* ef, char* scr)
 		case eModel:
 		{
 			m_ModelName = data;
-			//IStatObj *pObj = eng->MakeObject(data, NULL, 0, false, false);	
+			//IStatObj *pObj = eng->MakeObject(data, nullptr, 0, false, false);	
 			//m_pBuffer = pObj->GetLeafBuffer();
 		}
 		break;

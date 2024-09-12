@@ -393,7 +393,7 @@ struct CObjFace
 		/*		if (m_lInfo)
 				{
 					delete m_lInfo;
-					m_lInfo=NULL;
+					m_lInfo=nullptr;
 				}*/
 	}
 
@@ -464,14 +464,14 @@ struct SVertexStream
 		Reset();
 		m_bDynamic = false;
 		m_nBufOffset = 0;
-		m_pPool = NULL;
+		m_pPool = nullptr;
 	}
 
 	void Reset()
 	{
-		m_VData = NULL;
-		m_VertBuf.m_pPtr = NULL;
-		m_nItems = NULL;
+		m_VData = nullptr;
+		m_VertBuf.m_pPtr = nullptr;
+		m_nItems = 0;
 		m_bLocked = false;
 	}
 };
@@ -497,8 +497,8 @@ public:
 	{
 		for (int i = 0; i < VSF_NUM; i++)
 		{
-			m_VS[i].m_VData = NULL;
-			m_VS[i].m_VertBuf.m_pPtr = NULL;
+			m_VS[i].m_VData = nullptr;
+			m_VS[i].m_VertBuf.m_pPtr = nullptr;
 			m_VS[i].m_bLocked = false;
 		}
 		m_VS[VSF_GENERAL].m_VData = pData;
@@ -747,7 +747,7 @@ struct IRenderer//: public IRendererCallbackServer
 	virtual void	ReleaseBuffer(CVertexBuffer* bufptr) = 0;
 
 	//! Draw a vertex buffer
-	virtual void	DrawBuffer(CVertexBuffer* src, SVertexStream* indicies, int numindices, int offsindex, int prmode, int vert_start = 0, int vert_stop = 0, CMatInfo* mi = NULL) = 0;
+	virtual void	DrawBuffer(CVertexBuffer* src, SVertexStream* indicies, int numindices, int offsindex, int prmode, int vert_start = 0, int vert_stop = 0, CMatInfo* mi = nullptr) = 0;
 
 	//! Update a vertex buffer
 	virtual void	UpdateBuffer(CVertexBuffer* dest, const void* src, int vertexcount, bool bUnLock, int nOffs = 0, int Type = 0) = 0;
@@ -766,7 +766,7 @@ struct IRenderer//: public IRendererCallbackServer
 	//! Draw a primitive specified by min/max vertex (for debug purposes)
 	//! because of legacy code, the default implementation calls Draw3dBBox.
 	//! in the newly changed renderer implementations, this will be the principal function and Draw3dBBox will eventually only draw 3dbboxes
-	virtual	void	Draw3dPrim(const Vec3& mins, const Vec3& maxs, int nPrimType = DPRIM_WHIRE_BOX, const float* fRGBA = NULL)
+	virtual	void	Draw3dPrim(const Vec3& mins, const Vec3& maxs, int nPrimType = DPRIM_WHIRE_BOX, const float* fRGBA = nullptr)
 	{
 		// default implementaiton ignores color
 		Draw3dBBox(mins, maxs, nPrimType);
@@ -821,7 +821,7 @@ struct IRenderer//: public IRendererCallbackServer
 	virtual void GetMemoryUsage(ICrySizer* Sizer) = 0;
 
 	//! Get a screenshot and save to a file
-	virtual void ScreenShot(const char* filename = NULL) = 0;
+	virtual void ScreenShot(const char* filename = nullptr) = 0;
 
 	//! Get current bpp
 	virtual int	GetColorBpp() = 0;
@@ -899,10 +899,10 @@ struct IRenderer//: public IRendererCallbackServer
 	virtual void EF_PolygonOffset(bool bEnable, float fFactor, float fUnits) = 0;
 
 	// Add 3D polygon to the list
-	virtual void EF_AddPolyToScene3D(int Ef, int numPts, SColorVert* verts, CCObject* obj = NULL, int nFogID = 0) = 0;
+	virtual void EF_AddPolyToScene3D(int Ef, int numPts, SColorVert* verts, CCObject* obj = nullptr, int nFogID = 0) = 0;
 
 	// Add Sprite to the list
-	virtual CCObject* EF_AddSpriteToScene(int Ef, int numPts, SColorVert* verts, CCObject* obj, byte* inds = NULL, int ninds = 0, int nFogID = 0) = 0;
+	virtual CCObject* EF_AddSpriteToScene(int Ef, int numPts, SColorVert* verts, CCObject* obj, byte* inds = nullptr, int ninds = 0, int nFogID = 0) = 0;
 
 	// Add 2D polygon to the list
 	virtual void EF_AddPolyToScene2D(int Ef, int numPts, SColorVert2D* verts) = 0;
@@ -914,7 +914,7 @@ struct IRenderer//: public IRendererCallbackServer
 	// Load shader for name (name)
 	virtual IShader* EF_LoadShader(const char* name, EShClass Class, int flags = 0, uint64 nMaskGen = 0) = 0;
 	// Load shader item for name (name)
-	virtual SShaderItem EF_LoadShaderItem(const char* name, EShClass Class, bool bShare, const char* templName, int flags = 0, SInputShaderResources* Res = NULL, uint64 nMaskGen = 0) = 0;
+	virtual SShaderItem EF_LoadShaderItem(const char* name, EShClass Class, bool bShare, const char* templName, int flags = 0, SInputShaderResources* Res = nullptr, uint64 nMaskGen = 0) = 0;
 	// reload file
 	virtual bool					EF_ReloadFile(const char* szFileName) = 0;
 	// Reinit all shader files (build hash tables)
@@ -1012,8 +1012,8 @@ struct IRenderer//: public IRendererCallbackServer
 		ushort* pIndices, int nIndices,
 		int nPrimetiveType, const char* szSource, EBufferType eBufType = eBT_Dynamic,
 		int nMatInfoCount = 1, int nClientTextureBindID = 0,
-		bool (*PrepareBufferCallback)(CLeafBuffer*, bool) = NULL,
-		void* CustomData = NULL,
+		bool (*PrepareBufferCallback)(CLeafBuffer*, bool) = nullptr,
+		void* CustomData = nullptr,
 		bool bOnlyVideoBuffer = false, bool bPrecache = true) = 0;
 
 	virtual void DeleteLeafBuffer(CLeafBuffer* pLBuffer) = 0;
@@ -1062,9 +1062,9 @@ struct IRenderer//: public IRendererCallbackServer
 	virtual void	PopMatrix() = 0;
 	virtual	void	EnableTMU(bool enable) = 0;
 	virtual void	SelectTMU(int tnum) = 0;
-	virtual	unsigned int DownLoadToVideoMemory(unsigned char* data, int w, int h, ETEX_Format eTFSrc, ETEX_Format eTFDst, int nummipmap, bool repeat = true, int filter = FILTER_BILINEAR, int Id = 0, char* szCacheName = NULL, int flags = 0) = 0;
+	virtual	unsigned int DownLoadToVideoMemory(unsigned char* data, int w, int h, ETEX_Format eTFSrc, ETEX_Format eTFDst, int nummipmap, bool repeat = true, int filter = FILTER_BILINEAR, int Id = 0, char* szCacheName = nullptr, int flags = 0) = 0;
 	virtual	void UpdateTextureInVideoMemory(uint tnum, unsigned char* newdata, int posx, int posy, int w, int h, ETEX_Format eTFSrc = eTF_0888) = 0;
-	virtual unsigned int LoadTexture(const char* filename, int* tex_type = NULL, unsigned int def_tid = 0, bool compresstodisk = true, bool bWarn = true) = 0;
+	virtual unsigned int LoadTexture(const char* filename, int* tex_type = nullptr, unsigned int def_tid = 0, bool compresstodisk = true, bool bWarn = true) = 0;
 	virtual bool DXTCompress(byte* raw_data, int nWidth, int nHeight, ETEX_Format eTF, bool bUseHW, bool bGenMips, int nSrcBytesPerPix, MIPDXTcallback callback = 0) = 0;
 	virtual bool DXTDecompress(byte* srcData, byte* dstData, int nWidth, int nHeight, ETEX_Format eSrcTF, bool bUseHW, int nDstBytesPerPix) = 0;
 	virtual	void	RemoveTexture(unsigned int TextureId) = 0;

@@ -3,8 +3,8 @@
 #include "StencilShadowEdgeDetector.h"
 
 CStencilShadowEdgeDetector::CStencilShadowEdgeDetector() :
-	m_pConnectivity(NULL),
-	m_pModelVertices(NULL)
+	m_pConnectivity(nullptr),
+	m_pModelVertices(nullptr)
 {
 	m_bBitFieldIsSet = false;
 }

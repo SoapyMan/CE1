@@ -115,7 +115,7 @@ ZipDir::DirEntry* ZipDir::DirHeader::FindSubdirEntry(const char* szName)
 #endif
 			return pEntry;
 	}
-	return NULL;
+	return nullptr;
 }
 
 // finds the file entry by the name, using the names from the name pool
@@ -137,7 +137,7 @@ ZipDir::FileEntry* ZipDir::DirHeader::FindFileEntry(const char* szName)
 #endif
 			return pEntry;
 	}
-	return NULL;
+	return nullptr;
 }
 
 

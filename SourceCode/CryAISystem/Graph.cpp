@@ -96,7 +96,7 @@ GraphNode* CGraph::GetEnclosing(const Vec3d& pos, GraphNode* pNode, bool bOutdoo
 	if (!m_pAISystem->CheckInside(pos, nGoalBuilding, pGoalArea))
 	{
 		nGoalBuilding = -1;
-		pGoalArea = NULL;
+		pGoalArea = nullptr;
 	}
 
 	if (nGoalBuilding < 0)
@@ -213,8 +213,8 @@ void CGraph::WriteToFile(const char* pname)
 		file.Write(&iNumber, sizeof(int));
 		file.Write(&m_vBuffer[0], iNumber * sizeof(NodeDescriptor));
 		//iNumber = m_vLinks.size();
-		//WriteFile(hf,&iNumber,sizeof(int),&written,NULL);
-		//WriteFile(hf,&m_vLinks[0],iNumber*sizeof(int),&written,NULL);
+		//WriteFile(hf,&iNumber,sizeof(int),&written,nullptr);
+		//WriteFile(hf,&m_vLinks[0],iNumber*sizeof(int),&written,nullptr);
 
 		m_pAISystem->m_VertexList.WriteToFile(file);
 
@@ -371,7 +371,7 @@ GraphNode* CGraph::WriteLine(GraphNode* pNode)
 	//		delete pNode;
 
 	if (m_lstSaveStack.empty())
-		return NULL;
+		return nullptr;
 	else
 	{
 		GraphNode* pNext;
@@ -385,7 +385,7 @@ GraphNode* CGraph::WriteLine(GraphNode* pNode)
 		}
 
 		if (pNext->mark)
-			return NULL;
+			return nullptr;
 		else
 			return pNext;
 	}
@@ -428,7 +428,7 @@ void CGraph::DebugWalk(GraphNode* pNode, const Vec3d& pos)
 	m_mapGreedyWalkCandidates.clear();
 
 	if (!m_pCurrent)
-		CryError("[AIERROR] located in NULL graph node... Try regenerating triangulation, or submit a bug report.");
+		CryError("[AIERROR] located in nullptr graph node... Try regenerating triangulation, or submit a bug report.");
 
 }
 
@@ -1040,7 +1040,7 @@ void CGraph::IndoorDebugWalk(GraphNode* pNode, const Vec3d& pos, IVisArea* pTarg
 	}
 
 	if (!m_pCurrent)
-		CryError("[AIERROR] located in NULL graph node... Try regenerating triangulation, or submit a bug report.");
+		CryError("[AIERROR] located in nullptr graph node... Try regenerating triangulation, or submit a bug report.");
 }
 
 // Clears the tags of the graph without time-slicing the operation
@@ -1303,7 +1303,7 @@ bool CGraph::ReadFromFile(const char* szName)
 	/*
 
 	HANDLE hf;
-	hf = CreateFile(szName,GENERIC_READ,0,NULL,OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0 );
+	hf = CreateFile(szName,GENERIC_READ,0,nullptr,OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0 );
 
 	if (hf != INVALID_HANDLE_VALUE)
 	{
@@ -2532,7 +2532,7 @@ GraphNode* CGraph::GetThirdNode(const Vec3d& vFirst, const Vec3d& vSecond, const
 				return (*vli).pLink;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 void CGraph::Reset(void)

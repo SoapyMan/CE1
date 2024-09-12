@@ -36,7 +36,7 @@ class CCGPShader_D3D : public CPShader
 		SCacheInstance()
 		{
 			m_Mask = 0;
-			m_pCache = NULL;
+			m_pCache = nullptr;
 		}
 		int Size()
 		{
@@ -61,12 +61,12 @@ class CCGPShader_D3D : public CPShader
 		{
 			m_Mask = 0;
 			m_LightMask = 0;
-			m_ParamsNoObj = NULL;
-			m_ParamsObj = NULL;
-			m_MatrixObj = NULL;
-			m_BindConstants = NULL;
-			m_BindVars = NULL;
-			m_pHandle = NULL;
+			m_ParamsNoObj = nullptr;
+			m_ParamsObj = nullptr;
+			m_MatrixObj = nullptr;
+			m_BindConstants = nullptr;
+			m_BindVars = nullptr;
+			m_pHandle = nullptr;
 			m_nCacheID = -1;
 		}
 
@@ -122,7 +122,7 @@ public:
 		}
 		return nSize;
 	}
-	int mfGetCacheInstanceID(int Mask, const char* name = NULL)
+	int mfGetCacheInstanceID(int Mask, const char* name = nullptr)
 	{
 		int i;
 
@@ -164,11 +164,11 @@ public:
 		SCGInstance cg;
 		cg.m_Mask = Type;
 		cg.m_LightMask = LightMask;
-		cg.m_pHandle = NULL;
-		cg.m_ParamsNoObj = NULL;
-		cg.m_ParamsObj = NULL;
-		cg.m_BindConstants = NULL;
-		cg.m_BindVars = NULL;
+		cg.m_pHandle = nullptr;
+		cg.m_ParamsNoObj = nullptr;
+		cg.m_ParamsObj = nullptr;
+		cg.m_BindConstants = nullptr;
+		cg.m_BindVars = nullptr;
 		cg.m_nCacheID = -1;
 
 		m_CurInst = m_Insts.Num();
@@ -226,10 +226,10 @@ public:
 #endif
 		m_dwFrame = 1;
 		m_CurInst = -1;
-		m_CoreScript = NULL;
-		m_InputParmsScript = NULL;
-		m_SubroutinesScript = NULL;
-		m_DeclarationsScript = NULL;
+		m_CoreScript = nullptr;
+		m_InputParmsScript = nullptr;
+		m_SubroutinesScript = nullptr;
+		m_DeclarationsScript = nullptr;
 		m_bCGType = true;
 	}
 
@@ -296,7 +296,7 @@ public:
 			if (!strncmp(line, "def", 3))
 				continue;
 			if (strncmp(line, "tex", 3) != 0)
-				return NULL;
+				return nullptr;
 			int n = 0;
 			while (line[n] != 0x20 && line[n] != 0x9 && line[n] != 0) { n++; }
 			if (line[n] == 0)
@@ -317,15 +317,15 @@ public:
 			Op1 = atoi(&line[n + 1]);
 			return str;
 		}
-		return NULL;
+		return nullptr;
 	}
 	LPD3DXBUFFER mfLoad(const char* prog_text)
 	{
 		// Assemble and create pixel shader
 		HRESULT hr;
 		LPD3DXBUFFER pCode;
-		LPD3DXBUFFER pBuffer = NULL;
-		char* pNewText = NULL;
+		LPD3DXBUFFER pBuffer = nullptr;
+		char* pNewText = nullptr;
 		if (m_Insts[m_CurInst].m_Mask & VPVST_CLIPPLANES3)
 		{
 			const char* str;
@@ -355,13 +355,13 @@ public:
 			}
 		}
 		if (pNewText)
-			hr = D3DXAssembleShader(pNewText, strlen(pNewText), NULL, NULL, 0, &pCode, &pBuffer);
+			hr = D3DXAssembleShader(pNewText, strlen(pNewText), nullptr, nullptr, 0, &pCode, &pBuffer);
 		else
-			hr = D3DXAssembleShader(prog_text, strlen(prog_text), NULL, NULL, 0, &pCode, &pBuffer);
+			hr = D3DXAssembleShader(prog_text, strlen(prog_text), nullptr, nullptr, 0, &pCode, &pBuffer);
 		if (FAILED(hr))
 		{
 			Warning(0, 0, "WARNING: CCGPShader_D3D::mfLoad: Could not assemble pixel shader '%s'(0x%x) (%s)\n", m_Name.c_str(), m_nMaskGen, gcpRendD3D->D3DError(hr));
-			if (pBuffer != NULL)
+			if (pBuffer != nullptr)
 			{
 				TCHAR* pstr;
 				TCHAR strOut[4096];
@@ -391,7 +391,7 @@ public:
 				SAFE_RELEASE(pBuffer);
 				SAFE_DELETE_ARRAY(pNewText);
 			}
-			return NULL;
+			return nullptr;
 		}
 		if (pCode && !(m_Flags & PSFI_PRECACHEPHASE))
 			hr = gcpRendD3D->mfGetD3DDevice()->CreatePixelShader((DWORD*)pCode->GetBufferPointer(), (IDirect3DPixelShader9**)&m_Insts[m_CurInst].m_pHandle);
@@ -400,7 +400,7 @@ public:
 		if (FAILED(hr))
 		{
 			Warning(0, 0, "CCGPShader_D3D::mfLoad: Could not create pixel shader '%s'(0x%x) (%s)\n", m_Name.c_str(), m_nMaskGen, gcpRendD3D->D3DError(hr));
-			return NULL;
+			return nullptr;
 		}
 		return pCode;
 	}
@@ -558,7 +558,7 @@ public:
 			if (nm == m_Insts[m_CurInst].m_BindVars->Get(i).m_Name)
 				return &m_Insts[m_CurInst].m_BindVars->Get(i);
 		}
-		return NULL;
+		return nullptr;
 	}
 	void mfParameter4f(const char* Name, const float* v)
 	{
@@ -589,12 +589,12 @@ public:
 			IDirect3DPixelShader9* pVS = (IDirect3DPixelShader9*)m_Insts[m_CurInst].m_pHandle;
 			SAFE_RELEASE(pVS);
 		}
-		m_Insts[m_CurInst].m_pHandle = NULL;
+		m_Insts[m_CurInst].m_pHandle = nullptr;
 	}
 
 	void mfSetVariables(TArray<SCGParam4f>* Parms);
 
-	bool mfIsValid(int Num) const { return (m_Insts[m_CurInst].m_pHandle != NULL); }
+	bool mfIsValid(int Num) const { return (m_Insts[m_CurInst].m_pHandle != nullptr); }
 	void mfGetSrcFileName(char* srcname, int nSize);
 	void mfGetDstFileName(char* dstname, int nSize, bool bUseASCIICache);
 	void mfPrecacheLights(int nMask);
@@ -612,7 +612,7 @@ public:
 	virtual ~CCGPShader_D3D();
 	virtual void Release();
 	virtual bool mfCompile(char* scr);
-	virtual bool mfSet(bool bStat, SShaderPassHW* slw = NULL, int nFlags = 0);
+	virtual bool mfSet(bool bStat, SShaderPassHW* slw = nullptr, int nFlags = 0);
 	virtual void mfSetVariables(bool bObj, TArray<SCGParam4f>* Vars);
 	virtual void mfReset();
 	virtual void mfPrecache();

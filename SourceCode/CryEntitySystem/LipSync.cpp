@@ -51,19 +51,19 @@ inline void GameWarning(const char* format, ...)
 
 CLipSync::CLipSync()
 {
-	m_pSystem = NULL;
-	m_pSoundSystem = NULL;
-	m_pScriptSystem = NULL;
-	m_pStreamEngine = NULL;
-	m_pLog = NULL;
-	m_pPak = NULL;
-	m_pTimer = NULL;
-	m_pSound = NULL;
-	m_pEntity = NULL;
-	m_pCharInst = NULL;
-	m_pSink = NULL;
+	m_pSystem = nullptr;
+	m_pSoundSystem = nullptr;
+	m_pScriptSystem = nullptr;
+	m_pStreamEngine = nullptr;
+	m_pLog = nullptr;
+	m_pPak = nullptr;
+	m_pTimer = nullptr;
+	m_pSound = nullptr;
+	m_pEntity = nullptr;
+	m_pCharInst = nullptr;
+	m_pSink = nullptr;
 	m_bUnload = false;
-	m_pAITable = NULL;
+	m_pAITable = nullptr;
 }
 
 CLipSync::~CLipSync()
@@ -99,7 +99,7 @@ bool CLipSync::Init(ISystem* pSystem, IEntity* pEntity)
 	m_pPak = pSystem->GetIPak();
 	if (!m_pPak)
 		return false;
-	m_pSound = NULL;
+	m_pSound = nullptr;
 	m_pEntity = pEntity;
 	if (!m_pEntity)
 		return false;
@@ -233,7 +233,7 @@ void CLipSync::OnSoundEvent(ESoundCallbackEvent event, ISound* pSound)
 void CLipSync::SyncFileLoaded()
 {
 	//m_pLog->LogToFile("\006CLipSync(%p)::SyncFileLoaded", this);
-	m_pReadStream = NULL;
+	m_pReadStream = nullptr;
 	m_bSyncFileLoaded = true;
 	CheckIfDialogLoaded();
 }
@@ -241,7 +241,7 @@ void CLipSync::SyncFileLoaded()
 void CLipSync::SyncFileLoadFailed()
 {
 	//m_pLog->LogToFile("\006CLipSync(%p)::SyncFileLoadFailed", this);
-	m_pReadStream = NULL;
+	m_pReadStream = nullptr;
 	// for now we also want the dialog to succeed without lip-syncing so regardless if the sync-load fails or not... we proceed
 	m_bSyncFileLoaded = true;
 	CheckIfDialogLoaded();
@@ -251,17 +251,13 @@ void CLipSync::SyncFileLoadFailed()
 
 void CLipSync::AbortLoading()
 {
-#if !defined(LINUX64)
-	if (m_pReadStream != NULL)
-#else
-	if (m_pReadStream != 0)
-#endif
-	{
-		//m_pLog->LogToFile("\006CLipSync(%p)::AbortLoading", this);
-		m_pReadStream->Abort();
-		m_pReadStream = NULL;
-		LoadFailed();
-	}
+	if (!m_pReadStream)
+		return;
+
+	//m_pLog->LogToFile("\006CLipSync(%p)::AbortLoading", this);
+	m_pReadStream->Abort();
+	m_pReadStream = nullptr;
+	LoadFailed();
 }
 
 #define PUSH_DATA(_nIdx) \
@@ -332,7 +328,7 @@ void CLipSync::StreamOnComplete(IReadStream* pStream, unsigned nError)
 				{
 					const char* pCheckBuffer = pBuffer;
 					const char* pLastCheckBuffer = pCheckBuffer;
-					while (((pCheckBuffer = strnstr(pLastCheckBuffer, ",", pEndBuffer - pLastCheckBuffer)) != NULL) && (pCheckBuffer < strnstr(pLastCheckBuffer, "\n", pEndBuffer - pLastCheckBuffer)))
+					while (((pCheckBuffer = strnstr(pLastCheckBuffer, ",", pEndBuffer - pLastCheckBuffer)) != nullptr) && (pCheckBuffer < strnstr(pLastCheckBuffer, "\n", pEndBuffer - pLastCheckBuffer)))
 					{
 						m_nLipSyncTracks++;
 						pLastCheckBuffer = pCheckBuffer + 1;
@@ -360,7 +356,7 @@ void CLipSync::StreamOnComplete(IReadStream* pStream, unsigned nError)
 			const char* pLastScanBuffer = pBuffer;
 			const char* pScanBufferComma;
 			const char* pScanBufferBreak;
-			while (((pScanBufferComma = strnstr(pLastScanBuffer, ",", int(pEndBuffer - pLastScanBuffer))) != NULL) || ((pScanBufferBreak = strnstr(pLastScanBuffer, "\n", int(pEndBuffer - pLastScanBuffer))) != NULL))
+			while (((pScanBufferComma = strnstr(pLastScanBuffer, ",", int(pEndBuffer - pLastScanBuffer))) != nullptr) || ((pScanBufferBreak = strnstr(pLastScanBuffer, "\n", int(pEndBuffer - pLastScanBuffer))) != nullptr))
 			{
 				pScanBufferComma = strnstr(pLastScanBuffer, ",", int(pEndBuffer - pLastScanBuffer));
 				pScanBufferBreak = strnstr(pLastScanBuffer, "\n", int(pEndBuffer - pLastScanBuffer));
@@ -527,7 +523,7 @@ bool CLipSync::LoadDialog(const char* pszFilename, int nSoundVolume, float fMinS
 	if (m_pReadStream->IsFinished())
 	{
 		//m_pLog->LogToFile("\006io:CLipSync(%p)::LoadDialog IsFinished", this);
-		m_pReadStream = NULL;
+		m_pReadStream = nullptr;
 	}
 	return true;
 }
@@ -546,7 +542,7 @@ bool CLipSync::UnloadDialog()
 		TRACE("DIALOG UNLOADED !!!");
 		m_pSound->RemoveEventListener(this);
 	}
-	m_pSound = NULL;
+	m_pSound = nullptr;
 	m_bUnload = false;
 	return true;
 }
@@ -572,15 +568,15 @@ bool CLipSync::PlayDialog(bool bUnloadWhenDone)
 	m_pSound->Play();
 
 	// if there is an AI conversation table, set timer for the next conversation
-	if (m_pAITable != NULL)
+	if (m_pAITable != nullptr)
 	{
 		m_pSystem->GetILog()->Log("\002 Now adding a conversation timer at time %d for the duration of %d seconds", (unsigned long)(m_pTimer->GetCurrTime() * 1000), (unsigned long)(m_pSound->GetLengthMs()));
 
 		// Far Cry specific code...
 #ifndef _ISNOTFARCRY
-		GetIXGame(m_pSystem->GetIGame())->AddTimer(m_pAITable, (unsigned long)(m_pTimer->GetCurrTime() * 1000), (unsigned long)(m_pSound->GetLengthMs()), NULL, false);
+		GetIXGame(m_pSystem->GetIGame())->AddTimer(m_pAITable, (unsigned long)(m_pTimer->GetCurrTime() * 1000), (unsigned long)(m_pSound->GetLengthMs()), nullptr, false);
 #endif
-		m_pAITable = NULL;
+		m_pAITable = nullptr;
 	}
 
 #ifndef PS2	

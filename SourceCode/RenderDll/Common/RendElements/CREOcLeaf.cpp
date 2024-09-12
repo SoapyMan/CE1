@@ -632,7 +632,7 @@ void CREOcLeaf::mfPrepare()
 			{
 				rd->EF_CheckOverflow(0, 0, this);
 				// Completly culled by plane (nothing to do with it)
-				rd->m_RP.m_pRE = NULL;
+				rd->m_RP.m_pRE = nullptr;
 				rd->m_RP.m_RendNumIndices = 0;
 				rd->m_RP.m_RendNumVerts = 0;
 				return;
@@ -678,10 +678,10 @@ void CREOcLeaf::mfPrepare()
 				if (nHW >= 0)
 					rd->m_RP.m_pCurTechnique = ef->m_HWTechniques[nHW];
 				else
-					rd->m_RP.m_pCurTechnique = NULL;
+					rd->m_RP.m_pCurTechnique = nullptr;
 			}
 			else
-				rd->m_RP.m_pCurTechnique = NULL;
+				rd->m_RP.m_pCurTechnique = nullptr;
 		}
 
 		if (lb->m_nPrimetiveType == R_PRIMV_TRIANGLE_STRIP)
@@ -826,7 +826,7 @@ SLightIndicies* CREOcLeaf::mfGetIndiciesForLight(CDLight* pDLight)
 	CMatInfo* mi = m_pChunk;
 	int i, j;
 
-	ushort* pInds = lb->GetIndices(NULL);
+	ushort* pInds = lb->GetIndices(nullptr);
 
 	if (!m_Faces || (m_Flags & FCEF_DYNAMIC))
 		return &gRenDev->m_RP.m_FakeLightIndices;
@@ -847,7 +847,7 @@ SLightIndicies* CREOcLeaf::mfGetIndiciesForLight(CDLight* pDLight)
 	objAng = Vec3d(0, 0, 0);
 	fObjScale = gRenDev->m_RP.m_pCurObject->GetScaleX();
 
-	SLightIndicies* li = NULL;
+	SLightIndicies* li = nullptr;
 	int Best = -1;
 	for (i = 0; i < m_LIndicies->Num(); i++)
 	{
@@ -936,7 +936,7 @@ SLightIndicies* CREOcLeaf::mfGetIndiciesForLight(CDLight* pDLight)
 					{
 						return li;
 					}
-					return NULL;
+					return nullptr;
 				}
 				else
 				{
@@ -945,7 +945,7 @@ SLightIndicies* CREOcLeaf::mfGetIndiciesForLight(CDLight* pDLight)
 					{
 						return li;
 					}
-					return NULL;
+					return nullptr;
 				}
 			}
 			else
@@ -1097,7 +1097,7 @@ SLightIndicies* CREOcLeaf::mfGetIndiciesForLight(CDLight* pDLight)
 #endif
 			return li;
 		}
-		return NULL;
+		return nullptr;
 	}
 	else
 	{
@@ -1109,7 +1109,7 @@ SLightIndicies* CREOcLeaf::mfGetIndiciesForLight(CDLight* pDLight)
 #endif
 			return li;
 		}
-		return NULL;
+		return nullptr;
 	}
 }
 
@@ -1240,7 +1240,7 @@ static _inline byte* sGetBuf(CLeafBuffer* lb, int* Stride, int Stream, int Flags
 {
 	byte* pD;
 	if (Flags & FGP_WAIT)
-		gRenDev->UpdateBuffer(lb->m_pVertexBuffer, NULL, 0, false, 0, Stream);
+		gRenDev->UpdateBuffer(lb->m_pVertexBuffer, nullptr, 0, false, 0, Stream);
 	if (!(Flags & FGP_SRC))
 	{
 		pD = (byte*)lb->m_pVertexBuffer->m_VS[Stream].m_VData;
@@ -1249,7 +1249,7 @@ static _inline byte* sGetBuf(CLeafBuffer* lb, int* Stride, int Stream, int Flags
 	else
 	{
 		if (!lb->m_pSecVertBuffer)
-			pD = NULL;
+			pD = nullptr;
 		else
 			pD = (byte*)lb->m_pSecVertBuffer->m_VS[Stream].m_VData;
 	}
@@ -1294,7 +1294,7 @@ void* CREOcLeaf::mfGetPointer(ESrcPointer ePT, int* Stride, int Type, ESrcPointe
 			if (!(Flags & FGP_SRC))
 			{
 				Warning(0, 0, "Error: Missed texcoord pointer for shader '%s'", gRenDev->m_RP.m_pShader->m_Name.c_str());
-				return NULL;
+				return nullptr;
 			}
 			*Stride = sizeof(SMRendTexVert);
 			if (Flags & FGP_REAL)
@@ -1330,7 +1330,7 @@ void* CREOcLeaf::mfGetPointer(ESrcPointer ePT, int* Stride, int Type, ESrcPointe
 			if (!(Flags & FGP_SRC))
 			{
 				Warning(0, 0, "Error: Missed normal pointer for shader '%s'", gRenDev->m_RP.m_pShader->m_Name.c_str());
-				return NULL;
+				return nullptr;
 			}
 			*Stride = sizeof(Vec3d);
 			if (Flags & FGP_REAL)
@@ -1381,7 +1381,7 @@ void* CREOcLeaf::mfGetPointer(ESrcPointer ePT, int* Stride, int Type, ESrcPointe
 		if (!(Flags & FGP_NOCALC))
 		{
 			if (!(Flags & (FGP_SRC | FGP_WAIT)))
-				gRenDev->UpdateBuffer(lb->m_pVertexBuffer, NULL, 0, false, 0);
+				gRenDev->UpdateBuffer(lb->m_pVertexBuffer, nullptr, 0, false, 0);
 
 			int Offs = gRenDev->m_RP.m_FirstVertex * (*Stride);
 			if ((gRenDev->m_RP.m_pShader->m_Flags3 & EF3_PREPARELV) && Dst != eSrcPointer_LightVector)
@@ -1445,7 +1445,7 @@ void* CREOcLeaf::mfGetPointer(ESrcPointer ePT, int* Stride, int Type, ESrcPointe
 		if (!(Flags & FGP_NOCALC))
 		{
 			if (!(Flags & (FGP_SRC | FGP_WAIT)))
-				gRenDev->UpdateBuffer(lb->m_pVertexBuffer, NULL, 0, false, 0);
+				gRenDev->UpdateBuffer(lb->m_pVertexBuffer, nullptr, 0, false, 0);
 
 			int Offs = gRenDev->m_RP.m_FirstVertex * (*Stride);
 			if ((gRenDev->m_RP.m_pShader->m_Flags3 & EF3_PREPARELV) && Dst != eSrcPointer_LightVector_Terrain)
@@ -1509,7 +1509,7 @@ void* CREOcLeaf::mfGetPointer(ESrcPointer ePT, int* Stride, int Type, ESrcPointe
 		if (!(Flags & FGP_NOCALC))
 		{
 			if (!(Flags & (FGP_SRC | FGP_WAIT)))
-				gRenDev->UpdateBuffer(lb->m_pVertexBuffer, NULL, 0, false, 0);
+				gRenDev->UpdateBuffer(lb->m_pVertexBuffer, nullptr, 0, false, 0);
 			int Offs = gRenDev->m_RP.m_FirstVertex * (*Stride);
 			if ((gRenDev->m_RP.m_pShader->m_Flags3 & EF3_PREPARELV) && Dst != eSrcPointer_NormLightVector)
 			{
@@ -1589,7 +1589,7 @@ void* CREOcLeaf::mfGetPointer(ESrcPointer ePT, int* Stride, int Type, ESrcPointe
 		if (!(Flags & FGP_NOCALC))
 		{
 			if (!(Flags & (FGP_SRC | FGP_WAIT)))
-				gRenDev->UpdateBuffer(lb->m_pVertexBuffer, NULL, 0, false, 0);
+				gRenDev->UpdateBuffer(lb->m_pVertexBuffer, nullptr, 0, false, 0);
 			int Offs = gRenDev->m_RP.m_FirstVertex * (*Stride);
 			if ((gRenDev->m_RP.m_pShader->m_Flags3 & EF3_PREPAREHAV) && Dst != eSrcPointer_HalfAngleVector)
 			{
@@ -1654,7 +1654,7 @@ void* CREOcLeaf::mfGetPointer(ESrcPointer ePT, int* Stride, int Type, ESrcPointe
 		if (!(Flags & FGP_NOCALC))
 		{
 			if (!(Flags & (FGP_SRC | FGP_WAIT)))
-				gRenDev->UpdateBuffer(lb->m_pVertexBuffer, NULL, 0, false, 0);
+				gRenDev->UpdateBuffer(lb->m_pVertexBuffer, nullptr, 0, false, 0);
 			int Offs = gRenDev->m_RP.m_FirstVertex * (*Stride);
 			if ((gRenDev->m_RP.m_pShader->m_Flags3 & EF3_PREPAREHAV) && Dst != eSrcPointer_HalfAngleVector_Terrain)
 			{
@@ -1717,7 +1717,7 @@ void* CREOcLeaf::mfGetPointer(ESrcPointer ePT, int* Stride, int Type, ESrcPointe
 		if (!(Flags & FGP_NOCALC))
 		{
 			if (!(Flags & (FGP_SRC | FGP_WAIT)))
-				gRenDev->UpdateBuffer(lb->m_pVertexBuffer, NULL, 0, false, 0);
+				gRenDev->UpdateBuffer(lb->m_pVertexBuffer, nullptr, 0, false, 0);
 			int Offs = gRenDev->m_RP.m_FirstVertex * (*Stride);
 			if ((gRenDev->m_RP.m_pShader->m_Flags3 & EF3_PREPARELAS0) && Dst != eSrcPointer_LAttenuationSpec0)
 			{
@@ -1800,7 +1800,7 @@ void* CREOcLeaf::mfGetPointer(ESrcPointer ePT, int* Stride, int Type, ESrcPointe
 		if (!(Flags & FGP_NOCALC))
 		{
 			if (!(Flags & (FGP_SRC | FGP_WAIT)))
-				gRenDev->UpdateBuffer(lb->m_pVertexBuffer, NULL, 0, false, 0);
+				gRenDev->UpdateBuffer(lb->m_pVertexBuffer, nullptr, 0, false, 0);
 			int Offs = gRenDev->m_RP.m_FirstVertex * (*Stride);
 			if ((gRenDev->m_RP.m_pShader->m_Flags3 & EF3_PREPARELAS1) && Dst != eSrcPointer_LAttenuationSpec1)
 			{
@@ -1877,7 +1877,7 @@ void* CREOcLeaf::mfGetPointer(ESrcPointer ePT, int* Stride, int Type, ESrcPointe
 		if (!(Flags & FGP_NOCALC))
 		{
 			if (!(Flags & (FGP_SRC | FGP_WAIT)))
-				gRenDev->UpdateBuffer(lb->m_pVertexBuffer, NULL, 0, false, 0);
+				gRenDev->UpdateBuffer(lb->m_pVertexBuffer, nullptr, 0, false, 0);
 			int Offs = gRenDev->m_RP.m_FirstVertex * (*Stride);
 			if (gRenDev->m_RP.m_Frame != mFrameCalcRefract)
 			{
@@ -1922,7 +1922,7 @@ void* CREOcLeaf::mfGetPointer(ESrcPointer ePT, int* Stride, int Type, ESrcPointe
 			  0.5f, 0.5f, 0.5f, 1.0f
 			};
 			if (!(Flags & (FGP_SRC | FGP_WAIT)))
-				gRenDev->UpdateBuffer(lb->m_pVertexBuffer, NULL, 0, false, 0);
+				gRenDev->UpdateBuffer(lb->m_pVertexBuffer, nullptr, 0, false, 0);
 			int Offs = gRenDev->m_RP.m_FirstVertex * (*Stride);
 			if (gRenDev->m_RP.m_Frame != mFrameCalcProject)
 			{
@@ -1966,7 +1966,7 @@ void* CREOcLeaf::mfGetPointer(ESrcPointer ePT, int* Stride, int Type, ESrcPointe
 		if (!(Flags & FGP_NOCALC))
 		{
 			if (!(Flags & (FGP_SRC | FGP_WAIT)))
-				gRenDev->UpdateBuffer(lb->m_pVertexBuffer, NULL, 0, false, 0);
+				gRenDev->UpdateBuffer(lb->m_pVertexBuffer, nullptr, 0, false, 0);
 			int Offs = gRenDev->m_RP.m_FirstVertex * (*Stride);
 			if (gRenDev->m_RP.m_Frame != mFrameCalcProject)
 			{
@@ -2010,7 +2010,7 @@ void* CREOcLeaf::mfGetPointer(ESrcPointer ePT, int* Stride, int Type, ESrcPointe
 		if (!(Flags & FGP_NOCALC))
 		{
 			if (!(Flags & (FGP_SRC | FGP_WAIT)))
-				gRenDev->UpdateBuffer(lb->m_pVertexBuffer, NULL, 0, false, 0);
+				gRenDev->UpdateBuffer(lb->m_pVertexBuffer, nullptr, 0, false, 0);
 			int Offs = gRenDev->m_RP.m_FirstVertex * (*Stride);
 			if (gRenDev->m_RP.m_Frame != mFrameCalcAtten)
 			{
@@ -2036,7 +2036,7 @@ void* CREOcLeaf::mfGetPointer(ESrcPointer ePT, int* Stride, int Type, ESrcPointe
 		CRYASSERT(false);
 		break;
 	}
-	return NULL;
+	return nullptr;
 }
 
 #include "../NvTriStrip/NvTriStrip.h"
@@ -2049,7 +2049,7 @@ void CREOcLeaf::mfGetPlane(Plane& pl)
 	int size = m_VertexSize[lb->m_pSecVertBuffer->m_vertexformat];
 
 	ushort* inds;
-	inds = &lb->GetIndices(NULL)[0] + m_pChunk->nFirstIndexId;
+	inds = &lb->GetIndices(nullptr)[0] + m_pChunk->nFirstIndexId;
 	float* f0 = (float*)&p[inds[0] * size];
 	float* f1 = (float*)&p[inds[1] * size];
 	float* f2 = (float*)&p[inds[2] * size];

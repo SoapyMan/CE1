@@ -27,7 +27,7 @@ void CObjManager::RenderFarObjects()
 	{
 		CCObject* pObj = GetRenderer()->EF_GetObject(true, -1);
 		pObj->m_Matrix.SetIdentity();
-		GetRenderer()->EF_AddEf(0, m_REFarTreeSprites, m_p3DEngine->m_pSHFarTreeSprites, NULL, pObj, 0, NULL,
+		GetRenderer()->EF_AddEf(0, m_REFarTreeSprites, m_p3DEngine->m_pSHFarTreeSprites, nullptr, pObj, 0, nullptr,
 			/*(GetViewCamera().GetPos().z<m_pTerrain->GetWaterLevel()) ? */eS_Trees /*: eS_Sprites*/
 		);
 	}
@@ -174,10 +174,10 @@ void CObjManager::DrawObjSpritesSorted(list2<CStatObjInst*>* pList, float fMaxVi
 
 			static SVertexStream Inds;
 			if (!Inds.m_VData)
-				pRenderer->CreateIndexBuffer(&Inds, NULL, MAX_VERTS_NUM * 3 / 2);
+				pRenderer->CreateIndexBuffer(&Inds, nullptr, MAX_VERTS_NUM * 3 / 2);
 
 			// Lock the index buffer
-			pRenderer->UpdateIndexBuffer(&Inds, NULL, 0, false);
+			pRenderer->UpdateIndexBuffer(&Inds, nullptr, 0, false);
 			ushort* pInds = (ushort*)Inds.m_VData;
 
 			pRenderer->UpdateBuffer(arrVideoBuffers[nCurrBufId], 0, 0, true);
@@ -246,7 +246,7 @@ void CObjManager::DrawObjSpritesSorted(list2<CStatObjInst*>* pList, float fMaxVi
 			}
 
 			// Unlock the index buffer
-			pRenderer->UpdateIndexBuffer(&Inds, NULL, 0, true);
+			pRenderer->UpdateIndexBuffer(&Inds, nullptr, 0, true);
 			pRenderer->SetTexture(tid);
 			pRenderer->DrawBuffer(arrVideoBuffers[nCurrBufId], &Inds, arrSortedInstances[tid]->Count() * 6, 0, R_PRIMV_TRIANGLES);
 

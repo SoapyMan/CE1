@@ -126,7 +126,7 @@ bool CLMSerializationManager2::_Load(const char* pszFileName, std::vector<IEntit
 
 	// Open file
 	FILE* hFile = GetPak()->FOpen(pszFileName, "rb");
-	if (hFile == NULL)
+	if (hFile == nullptr)
 	{
 		GetSystem()->GetILog()->Log("Could not load lightmap file");
 		return false;
@@ -207,7 +207,7 @@ bool CLMSerializationManager2::_Load(const char* pszFileName, std::vector<IEntit
 	// Read texture coordinate data
 	for (UINT iNumTexCoordSets = 0; iNumTexCoordSets < sHeader.iNumTexCoordSets; iNumTexCoordSets++)
 	{
-		UVSetHeader* pUVh(NULL);
+		UVSetHeader* pUVh(nullptr);
 		if (sHeader.iVersion >= 3)
 			pUVh = new UVSetHeader3();
 		else
@@ -347,7 +347,7 @@ unsigned int CLMSerializationManager2::Save(const char* pszFilePath, LMGenParam 
 			char fileName[10];
 			//create filename
 			sprintf(fileName, "x%d.dds", uiStartIndex);
-			if (pPak->FindFile(fileName) == NULL)
+			if (pPak->FindFile(fileName) == nullptr)
 				break;
 			uiStartIndex++;
 		}
@@ -355,8 +355,8 @@ unsigned int CLMSerializationManager2::Save(const char* pszFilePath, LMGenParam 
 
 	FileHeader sHeader;
 	std::map<int, RawTexCoordData>::iterator itTexCrdData;
-	RawLMData* pCurRawLMData = NULL;
-	RawTexCoordData* pCurRawTexCrdData = NULL;
+	RawLMData* pCurRawLMData = nullptr;
+	RawTexCoordData* pCurRawTexCrdData = nullptr;
 
 	CTempFile fMem;
 	// Write header
@@ -708,7 +708,7 @@ RenderLMData* CLMSerializationManager2::CreateLightmap(const char* pszFileName, 
 		iColorLerpTex = pIRenderer->DownLoadToVideoMemory(pColorLerp4, iWidth, iHeight, eTF_RGBA, eTF_RGBA, 0, false, FILTER_BILINEAR, 0, szName);
 	}
 	else
-		iColorLerpTex = pIRenderer->DownLoadToVideoMemory(pColorLerp4, iWidth, iHeight, eTF_RGBA, eTF_RGBA, 0, false, FILTER_BILINEAR, 0, NULL);
+		iColorLerpTex = pIRenderer->DownLoadToVideoMemory(pColorLerp4, iWidth, iHeight, eTF_RGBA, eTF_RGBA, 0, false, FILTER_BILINEAR, 0, nullptr);
 	CRYASSERT(iColorLerpTex != 0);
 
 #ifndef USE_DOT3_ALPHA
@@ -725,7 +725,7 @@ RenderLMData* CLMSerializationManager2::CreateLightmap(const char* pszFileName, 
 		iDomDirectionTex = pIRenderer->DownLoadToVideoMemory(&vRGBAData[0], iWidth, iHeight, eTF_RGBA, eTF_RGBA, 0, false, FILTER_BILINEAR, 0, szName);
 	}
 	else
-		iDomDirectionTex = pIRenderer->DownLoadToVideoMemory(&vRGBAData[0], iWidth, iHeight, eTF_RGBA, eTF_RGBA, 0, false, FILTER_BILINEAR, 0, NULL);
+		iDomDirectionTex = pIRenderer->DownLoadToVideoMemory(&vRGBAData[0], iWidth, iHeight, eTF_RGBA, eTF_RGBA, 0, false, FILTER_BILINEAR, 0, nullptr);
 #else
 	if (pszFileName)
 	{
@@ -733,7 +733,7 @@ RenderLMData* CLMSerializationManager2::CreateLightmap(const char* pszFileName, 
 		iDomDirectionTex = pIRenderer->DownLoadToVideoMemory(pDomDirection3, iWidth, iHeight, eTF_RGBA, eTF_RGBA, 0, false, FILTER_BILINEAR, 0, szName);
 	}
 	else
-		iDomDirectionTex = pIRenderer->DownLoadToVideoMemory(pDomDirection3, iWidth, iHeight, eTF_RGBA, eTF_RGBA, 0, false, FILTER_BILINEAR, 0, NULL);
+		iDomDirectionTex = pIRenderer->DownLoadToVideoMemory(pDomDirection3, iWidth, iHeight, eTF_RGBA, eTF_RGBA, 0, false, FILTER_BILINEAR, 0, nullptr);
 #endif
 	CRYASSERT(iDomDirectionTex != 0);
 	int nGPU = pIRenderer->GetFeatures() & RFT_HW_MASK;
@@ -746,7 +746,7 @@ RenderLMData* CLMSerializationManager2::CreateLightmap(const char* pszFileName, 
 			iOcclTex = pIRenderer->DownLoadToVideoMemory(pOccl2, iWidth, iHeight, eTF_4444, eTF_4444, 0, false, FILTER_BILINEAR, 0, szName);
 		}
 		else
-			iOcclTex = pIRenderer->DownLoadToVideoMemory(pOccl2, iWidth, iHeight, eTF_4444, eTF_4444, 0, false, FILTER_BILINEAR, 0, NULL);
+			iOcclTex = pIRenderer->DownLoadToVideoMemory(pOccl2, iWidth, iHeight, eTF_4444, eTF_4444, 0, false, FILTER_BILINEAR, 0, nullptr);
 	}
 	if (!bLow && pHDRColorLerp != 0 && (GetCVars()->e_light_maps_quality == 2) && (pIRenderer->GetFeatures() & RFT_HW_HDR))
 	{
@@ -756,7 +756,7 @@ RenderLMData* CLMSerializationManager2::CreateLightmap(const char* pszFileName, 
 			iHDRColorLerpTex = pIRenderer->DownLoadToVideoMemory(pHDRColorLerp, iWidth, iHeight, eTF_RGBA, eTF_RGBA, 0, false, FILTER_BILINEAR, 0, szName);
 		}
 		else
-			iHDRColorLerpTex = pIRenderer->DownLoadToVideoMemory(pHDRColorLerp, iWidth, iHeight, eTF_RGBA, eTF_RGBA, 0, false, FILTER_BILINEAR, 0, NULL);
+			iHDRColorLerpTex = pIRenderer->DownLoadToVideoMemory(pHDRColorLerp, iWidth, iHeight, eTF_RGBA, eTF_RGBA, 0, false, FILTER_BILINEAR, 0, nullptr);
 	}
 
 	if (GetCVars()->e_light_maps_quality == 0 || bLow)
@@ -812,7 +812,7 @@ RenderLMData* CLMSerializationManager2::CreateLightmap(const char* pszFileName, 
 			iColorLerpTex = pIRenderer->DownLoadToVideoMemory(pDst, Width, Height, eTF_8888, eTF_8888, 0, false, FILTER_BILINEAR, 0, szCacheName);
 		}
 		else
-			iColorLerpTex = pIRenderer->DownLoadToVideoMemory(pDst, Width, Height, eTF_8888, eTF_8888, 0, false, FILTER_BILINEAR, 0, NULL);
+			iColorLerpTex = pIRenderer->DownLoadToVideoMemory(pDst, Width, Height, eTF_8888, eTF_8888, 0, false, FILTER_BILINEAR, 0, nullptr);
 		iDomDirectionTex = 0;
 	}
 

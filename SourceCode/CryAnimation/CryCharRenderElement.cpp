@@ -12,7 +12,7 @@
 #include "CVars.h"
 
 CryCharRenderElement::CryCharRenderElement() :
-	m_pLeafBuffer(NULL),
+	m_pLeafBuffer(nullptr),
 	m_nLeafBufferLastRenderFrame(0),
 	m_numVertBufVertices(0)
 {
@@ -37,7 +37,7 @@ void CryCharRenderElement::create(int nVertCount, int nVertFormat, const char* s
 	CRYASSERT(!m_pLeafBuffer);
 	m_numVertBufVertices = nVertCount;
 
-	m_pLeafBuffer = GetIRenderer()->CreateLeafBufferInitialized(NULL, 0, nVertFormat, NULL, 0, R_PRIMV_TRIANGLES, szSource, eBT_Dynamic, numMaterials, 0, NULL, NULL, true);
+	m_pLeafBuffer = GetIRenderer()->CreateLeafBufferInitialized(nullptr, 0, nVertFormat, nullptr, 0, R_PRIMV_TRIANGLES, szSource, eBT_Dynamic, numMaterials, 0, nullptr, nullptr, true);
 	m_pLeafBuffer->m_bOnlyVideoBuffer = bOnlyVideoBuffer;
 	// I suppose we can delete it just afterwards, but just incase let's pretend we've already rendered i in this frame
 	m_nLeafBufferLastRenderFrame = GetIRenderer()->GetFrameID(false);
@@ -51,7 +51,7 @@ void CryCharRenderElement::create(int nVertCount, const struct_VERTEX_FORMAT_P3F
 	CRYASSERT(!m_pLeafBuffer);
 	m_numVertBufVertices = nVertCount;
 
-	m_pLeafBuffer = g_GetIRenderer()->CreateLeafBufferInitialized((void*)pSourceData, nVertCount, VERTEX_FORMAT_P3F_COL4UB_TEX2F, NULL, 0, R_PRIMV_TRIANGLES, szSource, eBT_Dynamic, numMaterials, 0, NULL, NULL, bOnlyVideoBuffer);
+	m_pLeafBuffer = g_GetIRenderer()->CreateLeafBufferInitialized((void*)pSourceData, nVertCount, VERTEX_FORMAT_P3F_COL4UB_TEX2F, nullptr, 0, R_PRIMV_TRIANGLES, szSource, eBT_Dynamic, numMaterials, 0, nullptr, nullptr, bOnlyVideoBuffer);
 
 	// I suppose we can delete it just afterwards, but just incase let's pretend we've already rendered i in this frame
 	m_nLeafBufferLastRenderFrame = g_GetIRenderer()->GetFrameID(false);
@@ -112,7 +112,7 @@ void CryCharRenderElement::destruct()
 void CryCharRenderElement::detach()
 {
 	m_numVertBufVertices = 0;
-	m_pLeafBuffer = NULL;
+	m_pLeafBuffer = nullptr;
 	m_nLeafBufferLastRenderFrame = 0;
 }
 

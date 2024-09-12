@@ -275,8 +275,8 @@ protected:
 #include "CVars.h"
 #define DECLARE_FRAME_PROFILER(id,name) extern CSimpleFrameProfilerInfo __##id##_frame_profiler
 #define DEFINE_FRAME_PROFILER(id,name) CSimpleFrameProfilerInfo __##id##_frame_profiler(name)
-#define PROFILE_FRAME_SELF(id) CRecursiveFrameProfiler __##id##_auto_frame_profile_locker(CryAnimationBase::GetCVars()->ca_Profile()?&__##id##_frame_profiler:NULL)
-#define PROFILE_FRAME_TOTAL(id) CSimpleFrameProfiler __##id##_auto_frame_profile_locker(CryAnimationBase::GetCVars()->ca_Profile()?&__##id##_frame_profiler:NULL)
+#define PROFILE_FRAME_SELF(id) CRecursiveFrameProfiler __##id##_auto_frame_profile_locker(CryAnimationBase::GetCVars()->ca_Profile()?&__##id##_frame_profiler:nullptr)
+#define PROFILE_FRAME_TOTAL(id) CSimpleFrameProfiler __##id##_auto_frame_profile_locker(CryAnimationBase::GetCVars()->ca_Profile()?&__##id##_frame_profiler:nullptr)
 #define PROFILE_FRAME(id) PROFILE_FRAME_SELF(id)
 // flushes the given profiler: makes sure it's called this frame (to draw)
 #define FLUSH_PROFILER(id) do{if (CryAnimationBase::GetCVars()->ca_Profile())__##id##_frame_profiler.flush();}while(false)

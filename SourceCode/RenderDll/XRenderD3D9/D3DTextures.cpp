@@ -22,7 +22,7 @@
 
 int CD3D9TexMan::m_Format = D3DFMT_A8R8G8B8;
 int CD3D9TexMan::m_FirstBind = 1;
-FILE* STexPicD3D::m_TexUseLogFile = NULL;
+FILE* STexPicD3D::m_TexUseLogFile = nullptr;
 int STexPicD3D::CV_r_LogTextureUsage;
 
 //TTextureMap CD3D9TexMan::m_RefTexs;
@@ -133,7 +133,7 @@ void STexPicD3D::ReleaseDriverTexture()
 		IDirect3DBaseTexture9* pTex = (IDirect3DBaseTexture9*)m_RefTex.m_VidTex;
 		//sRemoveTX(this);
 		SAFE_RELEASE(pTex);
-		m_RefTex.m_VidTex = NULL;
+		m_RefTex.m_VidTex = nullptr;
 	}
 	else
 		if (m_Bind == TX_FIRSTBIND && !m_Id)
@@ -147,16 +147,16 @@ void STexPicD3D::ReleaseDriverTexture()
 
 byte* STexPic::GetData32()
 {
-	return NULL;
+	return nullptr;
 }
 
 byte* STexPicD3D::GetData32()
 {
 	CD3D9Renderer* r = gcpRendD3D;
 	LPDIRECT3DDEVICE9 dv = r->mfGetD3DDevice();
-	IDirect3DTexture9* pID3DTexture = NULL;
-	IDirect3DCubeTexture9* pID3DCubeTexture = NULL;
-	LPDIRECT3DTEXTURE9 pID3DDstTexture = NULL;
+	IDirect3DTexture9* pID3DTexture = nullptr;
+	IDirect3DCubeTexture9* pID3DCubeTexture = nullptr;
+	LPDIRECT3DTEXTURE9 pID3DDstTexture = nullptr;
 	D3DLOCKED_RECT d3dlr;
 	int wdt = m_Width;
 	int hgt = m_Height;
@@ -165,7 +165,7 @@ byte* STexPicD3D::GetData32()
 	LPDIRECT3DSURFACE9 pSourceSurf;
 
 	if (FAILED(h = D3DXCreateTexture(dv, wdt, hgt, 1, 0, D3DFMT_A8R8G8B8, D3DPOOL_SYSTEMMEM, &pID3DDstTexture)))
-		return NULL;
+		return nullptr;
 	h = pID3DDstTexture->GetSurfaceLevel(0, &pDestSurf);
 
 	int nPrevStr = CRenderer::CV_r_texturesstreamingsync;
@@ -179,7 +179,7 @@ byte* STexPicD3D::GetData32()
 		pID3DCubeTexture = (IDirect3DCubeTexture9*)m_RefTex.m_VidTex;
 	else
 		pID3DTexture = (IDirect3DTexture9*)m_RefTex.m_VidTex;
-	byte* pDst = NULL;
+	byte* pDst = nullptr;
 
 	if (pID3DCubeTexture)
 	{
@@ -187,8 +187,8 @@ byte* STexPicD3D::GetData32()
 		for (int CubeSide = 0; CubeSide < 6; CubeSide++)
 		{
 			h = pID3DCubeTexture->GetCubeMapSurface((D3DCUBEMAP_FACES)CubeSide, 0, &pSourceSurf);
-			h = D3DXLoadSurfaceFromSurface(pDestSurf, NULL, NULL, pSourceSurf, NULL, NULL, D3DX_FILTER_NONE, 0);
-			pDestSurf->LockRect(&d3dlr, NULL, 0);
+			h = D3DXLoadSurfaceFromSurface(pDestSurf, nullptr, nullptr, pSourceSurf, nullptr, nullptr, D3DX_FILTER_NONE, 0);
+			pDestSurf->LockRect(&d3dlr, nullptr, 0);
 			cryMemcpy(&pDst[wdt * hgt * 4 * CubeSide], d3dlr.pBits, wdt * hgt * 4);
 			pDestSurf->UnlockRect();
 			SAFE_RELEASE(pDestSurf);
@@ -198,8 +198,8 @@ byte* STexPicD3D::GetData32()
 	{
 		pDst = new byte[wdt * hgt * 4];
 		h = pID3DTexture->GetSurfaceLevel(0, &pSourceSurf);
-		h = D3DXLoadSurfaceFromSurface(pDestSurf, NULL, NULL, pSourceSurf, NULL, NULL, D3DX_FILTER_NONE, 0);
-		pDestSurf->LockRect(&d3dlr, NULL, 0);
+		h = D3DXLoadSurfaceFromSurface(pDestSurf, nullptr, nullptr, pSourceSurf, nullptr, nullptr, D3DX_FILTER_NONE, 0);
+		pDestSurf->LockRect(&d3dlr, nullptr, 0);
 		cryMemcpy(pDst, d3dlr.pBits, wdt * hgt * 4);
 		pDestSurf->UnlockRect();
 		SAFE_RELEASE(pSourceSurf);
@@ -229,7 +229,7 @@ void CD3D9TexMan::SetTexture(int Id, ETexType eTT)
 	LPDIRECT3DDEVICE9 dv = r->mfGetD3DDevice();
 	int tmu = r->m_TexMan->m_CurStage;
 
-	STexPic* t = NULL;
+	STexPic* t = nullptr;
 	if (Id >= TX_FIRSTBIND)
 	{
 		STexPicD3D* tp = (STexPicD3D*)m_Textures[Id - TX_FIRSTBIND];
@@ -242,8 +242,8 @@ void CD3D9TexMan::SetTexture(int Id, ETexType eTT)
 	TTextureMapItor it = m_RefTexs.find(Id);
 	if (it == m_RefTexs.end())
 	{
-		dv->SetTexture(tmu, NULL);
-		r->m_RP.m_TexStages[tmu].Texture = NULL;
+		dv->SetTexture(tmu, nullptr);
+		r->m_RP.m_TexStages[tmu].Texture = nullptr;
 		return;
 	}
 	STexPic* tp = it->second;
@@ -318,7 +318,7 @@ void STexPicD3D::Set(int nTexSlot)
 		int Size = m_LoadedSize;
 		Restore();
 		if (Size != m_LoadedSize)
-			r->m_RP.m_TexStages[tmu].Texture = NULL;
+			r->m_RP.m_TexStages[tmu].Texture = nullptr;
 	}
 	else
 		Relink(&STexPic::m_Root);
@@ -550,7 +550,7 @@ int SShaderTexUnit::mfSetTexture(int nt)
 
 				case TO_ENVIRONMENT_CUBE_MAP:
 				{
-					SEnvTexture* cm = NULL;
+					SEnvTexture* cm = nullptr;
 					cm = rd->m_cEF.mfFindSuitableEnvCMap(rd->m_RP.m_pCurObject->GetTranslation(), true, 0, 0);
 					if (cm && cm->m_Tex)
 						cm->m_Tex->Set();
@@ -561,7 +561,7 @@ int SShaderTexUnit::mfSetTexture(int nt)
 
 				case TO_ENVIRONMENT_LIGHTCUBE_MAP:
 				{
-					SEnvTexture* cm = NULL;
+					SEnvTexture* cm = nullptr;
 					cm = rd->m_cEF.mfFindSuitableEnvLCMap(rd->m_RP.m_pCurObject->GetTranslation(), true, 0, 0);
 					if (cm && cm->m_Tex)
 						cm->m_Tex->Set();
@@ -572,7 +572,7 @@ int SShaderTexUnit::mfSetTexture(int nt)
 
 				case TO_ENVIRONMENT_TEX:
 				{
-					SEnvTexture* cm = NULL;
+					SEnvTexture* cm = nullptr;
 					CCamera cam = rd->GetCamera();
 					Vec3d Angs = cam.GetAngles();
 					Vec3d Pos = cam.GetPos();
@@ -629,8 +629,8 @@ int SShaderTexUnit::mfSetTexture(int nt)
 	}
 	else
 	{
-		rd->m_pd3dDevice->SetTexture(nt, NULL);
-		rd->m_RP.m_TexStages[nt].Texture = NULL;
+		rd->m_pd3dDevice->SetTexture(nt, nullptr);
+		rd->m_RP.m_TexStages[nt].Texture = nullptr;
 	}
 
 	// Override texture sampler settings
@@ -700,10 +700,10 @@ int SShaderTexUnit::mfSetTexture(int nt)
 			rd->m_RP.m_FrameGTC = rd->m_RP.m_Frame;
 		}
 		else
-			rd->m_RP.m_pGTC[nt] = NULL;
+			rd->m_RP.m_pGTC[nt] = nullptr;
 	}
 	else
-		rd->m_RP.m_pGTC[nt] = NULL;
+		rd->m_RP.m_pGTC[nt] = nullptr;
 
 	// Set texture color ops. (for fixed pipeline)
 	if (m_eColorOp != eCO_NOSET)
@@ -793,7 +793,7 @@ STexPic* CD3D9TexMan::GetByID(int Id)
 	TTextureMapItor it = m_RefTexs.find(Id);
 	if (it != m_RefTexs.end())
 		return it->second;
-	return NULL;
+	return nullptr;
 }
 
 STexPic* CD3D9TexMan::AddToHash(int Id, STexPic* ti)
@@ -820,19 +820,19 @@ void CD3D9TexMan::RemoveFromHash(int Id, STexPic* ti)
 		//if (vt)
 		//  sRemoveTX(ti);
 		SAFE_RELEASE(vt);
-		ti->m_RefTex.m_VidTex = NULL;
+		ti->m_RefTex.m_VidTex = nullptr;
 		m_RefTexs.erase(Id);
 	}
 }
 
 CD3D9TexMan::~CD3D9TexMan()
 {
-	if (STexPicD3D::m_TexUseLogFile != NULL)
+	if (STexPicD3D::m_TexUseLogFile != nullptr)
 	{
 		fclose(STexPicD3D::m_TexUseLogFile);
 	}
 
-	STexPicD3D::m_TexUseLogFile = NULL;
+	STexPicD3D::m_TexUseLogFile = nullptr;
 	SAFE_DELETE(m_TexCache);
 }
 
@@ -1086,8 +1086,8 @@ void STexPicD3D::SaveTGA(const char* name, bool bMips)
 		return;
 	CD3D9Renderer* r = gcpRendD3D;
 	LPDIRECT3DDEVICE9 dv = r->mfGetD3DDevice();
-	IDirect3DTexture9* pID3DTexture = NULL;
-	IDirect3DCubeTexture9* pID3DCubeTexture = NULL;
+	IDirect3DTexture9* pID3DTexture = nullptr;
+	IDirect3DCubeTexture9* pID3DCubeTexture = nullptr;
 	if (m_eTT == eTT_Cubemap)
 		pID3DCubeTexture = (IDirect3DCubeTexture9*)m_RefTex.m_VidTex;
 	else
@@ -1125,7 +1125,7 @@ void STexPicD3D::SaveTGA(const char* name, bool bMips)
 				sprintf(nm, "%s_%d", name, CubeSide);
 
 				// Lock the texture to copy the image data into the texture
-				h = pID3DCubeTexture->LockRect((D3DCUBEMAP_FACES)CubeSide, 0, &d3dlr, NULL, 0);
+				h = pID3DCubeTexture->LockRect((D3DCUBEMAP_FACES)CubeSide, 0, &d3dlr, nullptr, 0);
 				// Copy data to the texture 
 				byte* pSrc = (byte*)d3dlr.pBits;
 				byte* pd = pDst;
@@ -1147,7 +1147,7 @@ void STexPicD3D::SaveTGA(const char* name, bool bMips)
 		else
 		{
 			// Lock the texture to copy the image data into the texture
-			h = pID3DTexture->LockRect(0, &d3dlr, NULL, 0);
+			h = pID3DTexture->LockRect(0, &d3dlr, nullptr, 0);
 			// Copy data to the texture 
 			byte* pSrc = (byte*)d3dlr.pBits;
 			byte* pd = pDst;
@@ -1177,9 +1177,9 @@ void STexPicD3D::SaveJPG(const char* nam, bool bMips)
 	StripExtension(nam, name);
 	CD3D9Renderer* r = gcpRendD3D;
 	LPDIRECT3DDEVICE9 dv = r->mfGetD3DDevice();
-	IDirect3DTexture9* pID3DTexture = NULL;
-	IDirect3DTexture9* pID3DSrcTexture = NULL;
-	IDirect3DCubeTexture9* pID3DCubeTexture = NULL;
+	IDirect3DTexture9* pID3DTexture = nullptr;
+	IDirect3DTexture9* pID3DSrcTexture = nullptr;
+	IDirect3DCubeTexture9* pID3DCubeTexture = nullptr;
 	LPDIRECT3DSURFACE9 pDestSurf;
 	LPDIRECT3DSURFACE9 pSourceSurf;
 	if (m_eTT == eTT_Cubemap)
@@ -1205,14 +1205,14 @@ void STexPicD3D::SaveJPG(const char* nam, bool bMips)
 
 			h = pID3DCubeTexture->GetCubeMapSurface((D3DCUBEMAP_FACES)CubeSide, 0, &pDestSurf);
 			h = pID3DSrcTexture->GetSurfaceLevel(0, &pSourceSurf);
-			h = D3DXLoadSurfaceFromSurface(pSourceSurf, NULL, NULL, pDestSurf, NULL, NULL, D3DX_FILTER_NONE, 0);
+			h = D3DXLoadSurfaceFromSurface(pSourceSurf, nullptr, nullptr, pDestSurf, nullptr, nullptr, D3DX_FILTER_NONE, 0);
 			SAFE_RELEASE(pDestSurf);
 			SAFE_RELEASE(pSourceSurf);
 
 			pID3DCubeTexture->GetLevelDesc(0, &ddsdDescDest);
 
 			// Lock the texture to copy the image data into the texture
-			h = pID3DSrcTexture->LockRect(0, &d3dlr, NULL, 0);
+			h = pID3DSrcTexture->LockRect(0, &d3dlr, nullptr, 0);
 			// Copy data to the texture 
 			byte* pSrc = (byte*)d3dlr.pBits;
 #ifndef _XBOX
@@ -1230,14 +1230,14 @@ void STexPicD3D::SaveJPG(const char* nam, bool bMips)
 
 			h = pID3DTexture->GetSurfaceLevel(0, &pDestSurf);
 			h = pID3DSrcTexture->GetSurfaceLevel(0, &pSourceSurf);
-			h = D3DXLoadSurfaceFromSurface(pSourceSurf, NULL, NULL, pDestSurf, NULL, NULL, D3DX_FILTER_NONE, 0);
+			h = D3DXLoadSurfaceFromSurface(pSourceSurf, nullptr, nullptr, pDestSurf, nullptr, nullptr, D3DX_FILTER_NONE, 0);
 			SAFE_RELEASE(pDestSurf);
 			SAFE_RELEASE(pSourceSurf);
 
 			pID3DTexture->GetLevelDesc(0, &ddsdDescDest);
 
 			// Lock the texture to copy the image data into the texture
-			h = pID3DSrcTexture->LockRect(0, &d3dlr, NULL, 0);
+			h = pID3DSrcTexture->LockRect(0, &d3dlr, nullptr, 0);
 			// Copy data to the texture 
 			byte* pSrc = (byte*)d3dlr.pBits;
 #ifndef _XBOX
@@ -1255,13 +1255,13 @@ void STexPicD3D::SaveJPG(const char* nam, bool bMips)
 
 				h = pID3DTexture->GetSurfaceLevel(i, &pDestSurf);
 				h = pID3DSrcTexture->GetSurfaceLevel(i, &pSourceSurf);
-				h = D3DXLoadSurfaceFromSurface(pSourceSurf, NULL, NULL, pDestSurf, NULL, NULL, D3DX_FILTER_NONE, 0);
+				h = D3DXLoadSurfaceFromSurface(pSourceSurf, nullptr, nullptr, pDestSurf, nullptr, nullptr, D3DX_FILTER_NONE, 0);
 				SAFE_RELEASE(pDestSurf);
 				SAFE_RELEASE(pSourceSurf);
 
 				pID3DTexture->GetLevelDesc(i, &ddsdDescDest);
 				// Lock the texture to copy the image data into the texture
-				h = pID3DTexture->LockRect(i, &d3dlr, NULL, 0);
+				h = pID3DTexture->LockRect(i, &d3dlr, nullptr, 0);
 				// Copy data to the texture 
 				byte* pSrc = (byte*)d3dlr.pBits;
 #ifndef _XBOX
@@ -1277,7 +1277,7 @@ void STexPicD3D::SaveJPG(const char* nam, bool bMips)
 LPDIRECT3DTEXTURE9 CD3D9TexMan::D3DCreateSrcTexture(STexPicD3D* ti, byte* src, D3DFORMAT srcFormat, int SizeSrc, int DXTSize)
 {
 	LPDIRECT3DDEVICE9 dv = gcpRendD3D->mfGetD3DDevice();
-	LPDIRECT3DTEXTURE9 pID3DSrcTexture = NULL;
+	LPDIRECT3DTEXTURE9 pID3DSrcTexture = nullptr;
 	D3DLOCKED_RECT d3dlr;
 	int wdt = ti->m_Width;
 	int hgt = ti->m_Height;
@@ -1287,7 +1287,7 @@ LPDIRECT3DTEXTURE9 CD3D9TexMan::D3DCreateSrcTexture(STexPicD3D* ti, byte* src, D
 	HRESULT hr;
 
 	if (FAILED(hr = D3DXCreateTexture(dv, wdt, hgt, ti->m_nMips ? ti->m_nMips : 1, 0, srcFormat, D3DPOOL_SYSTEMMEM, &pID3DSrcTexture)))
-		return NULL;
+		return nullptr;
 	if (ti->m_nMips)
 	{
 		int w = wdt;
@@ -1306,7 +1306,7 @@ LPDIRECT3DTEXTURE9 CD3D9TexMan::D3DCreateSrcTexture(STexPicD3D* ti, byte* src, D
 				size = ((w + 3) / 4) * ((h + 3) / 4) * blockSize;
 
 				// Lock the texture to copy the image data into the texture
-				hr = pID3DSrcTexture->LockRect(i, &d3dlr, NULL, 0);
+				hr = pID3DSrcTexture->LockRect(i, &d3dlr, nullptr, 0);
 				// Copy data to the texture 
 				cryMemcpy(d3dlr.pBits, &src[offset], size);
 				// Unlock the texture
@@ -1319,7 +1319,7 @@ LPDIRECT3DTEXTURE9 CD3D9TexMan::D3DCreateSrcTexture(STexPicD3D* ti, byte* src, D
 				{
 					size = w * h * 4;
 					// Lock the texture to copy the image data into the texture
-					hr = pID3DSrcTexture->LockRect(i, &d3dlr, NULL, 0);
+					hr = pID3DSrcTexture->LockRect(i, &d3dlr, nullptr, 0);
 					// Copy data to the texture 
 					cryMemcpy(d3dlr.pBits, src, size);
 					// Unlock the texture
@@ -1331,7 +1331,7 @@ LPDIRECT3DTEXTURE9 CD3D9TexMan::D3DCreateSrcTexture(STexPicD3D* ti, byte* src, D
 					{
 						size = w * h;
 						// Lock the texture to copy the image data into the texture
-						hr = pID3DSrcTexture->LockRect(i, &d3dlr, NULL, 0);
+						hr = pID3DSrcTexture->LockRect(i, &d3dlr, nullptr, 0);
 						// Copy data to the texture 
 						cryMemcpy(d3dlr.pBits, src, size);
 						// Unlock the texture
@@ -1345,7 +1345,7 @@ LPDIRECT3DTEXTURE9 CD3D9TexMan::D3DCreateSrcTexture(STexPicD3D* ti, byte* src, D
 	else
 	{
 		// Lock the texture to copy the image data into the texture
-		hr = pID3DSrcTexture->LockRect(0, &d3dlr, NULL, 0);
+		hr = pID3DSrcTexture->LockRect(0, &d3dlr, nullptr, 0);
 		// Copy data to the texture 
 		cryMemcpy(d3dlr.pBits, src, SizeSrc);
 		// Unlock the texture
@@ -1362,16 +1362,16 @@ void CD3D9TexMan::D3DCreateVideoTexture(int tgt, byte* src, int wdt, int hgt, in
 
 	LPDIRECT3DSURFACE9 pDestSurf;
 
-	byte* pTemp = NULL;
+	byte* pTemp = nullptr;
 
 	HRESULT hr;
 	D3DLOCKED_RECT d3dlr;
 	LPDIRECT3DDEVICE9 dv = gcpRendD3D->mfGetD3DDevice();
 
-	LPDIRECT3DTEXTURE9 pID3DTexture = NULL;
-	LPDIRECT3DCUBETEXTURE9 pID3DCubeTexture = NULL;
-	LPDIRECT3DTEXTURE9 pID3DSrcTexture = NULL;
-	LPDIRECT3DVOLUMETEXTURE9 pID3DVolTexture = NULL;
+	LPDIRECT3DTEXTURE9 pID3DTexture = nullptr;
+	LPDIRECT3DCUBETEXTURE9 pID3DCubeTexture = nullptr;
+	LPDIRECT3DTEXTURE9 pID3DSrcTexture = nullptr;
+	LPDIRECT3DVOLUMETEXTURE9 pID3DVolTexture = nullptr;
 
 	ti->m_DstFormat = DstFormat;
 	ti->m_CubeSide = CubeSide;
@@ -1395,12 +1395,12 @@ void CD3D9TexMan::D3DCreateVideoTexture(int tgt, byte* src, int wdt, int hgt, in
 		if (FAILED(hr = D3DXCreateTexture(dv, wdt, hgt, D3DX_DEFAULT, 0, SrcFormat, D3DPOOL_SYSTEMMEM, &pID3DSrcTexture)))
 			return;
 		size = TexSize(wdt, hgt, SrcFormat);
-		hr = pID3DSrcTexture->LockRect(0, &d3dlr, NULL, 0);
+		hr = pID3DSrcTexture->LockRect(0, &d3dlr, nullptr, 0);
 		// Copy data to src texture
 		cryMemcpy((byte*)d3dlr.pBits, src, size);
 		// Unlock the system texture
 		pID3DSrcTexture->UnlockRect(0);
-		hr = D3DXFilterTexture(pID3DSrcTexture, NULL, 0, D3DX_FILTER_LINEAR);
+		hr = D3DXFilterTexture(pID3DSrcTexture, nullptr, 0, D3DX_FILTER_LINEAR);
 		size = 0;
 		int w = wdt;
 		int h = hgt;
@@ -1423,7 +1423,7 @@ void CD3D9TexMan::D3DCreateVideoTexture(int tgt, byte* src, int wdt, int hgt, in
 		while (w || h)
 		{
 			size = TexSize(w, h, SrcFormat);
-			hr = pID3DSrcTexture->LockRect(i, &d3dlr, NULL, 0);
+			hr = pID3DSrcTexture->LockRect(i, &d3dlr, nullptr, 0);
 			// Copy data to src texture
 			cryMemcpy(&pTemp[offs], (byte*)d3dlr.pBits, size);
 			// Unlock the system texture
@@ -1517,7 +1517,7 @@ void CD3D9TexMan::D3DCreateVideoTexture(int tgt, byte* src, int wdt, int hgt, in
 				w >>= 1;
 				h >>= 1;
 			}
-			if (FAILED(hr = dv->CreateTexture(wdt, hgt, nMips, D3DUsage, DstFormat, D3DPool, &pID3DTexture, NULL)))
+			if (FAILED(hr = dv->CreateTexture(wdt, hgt, nMips, D3DUsage, DstFormat, D3DPool, &pID3DTexture, nullptr)))
 			{
 				iLog->Log("Error: CD3D9TexMan::D3DCreateVideoTexture: failed to create the texture %s (%s)", ti->m_SourceName.c_str(), gcpRendD3D->D3DError(hr));
 				return;
@@ -1527,7 +1527,7 @@ void CD3D9TexMan::D3DCreateVideoTexture(int tgt, byte* src, int wdt, int hgt, in
 			hr = pID3DTexture->SetAutoGenFilterType(MipFilter);
 		ti->m_RefTex.m_VidTex = pID3DTexture;
 		//if (D3DPool == D3DPOOL_DEFAULT)
-		//  sAddTX(ti, NULL);
+		//  sAddTX(ti, nullptr);
 		if (D3DUsage & D3DUSAGE_RENDERTARGET)
 			return;
 		if (DstFormat == D3DFMT_D24S8 || DstFormat == D3DFMT_D16)
@@ -1552,7 +1552,7 @@ void CD3D9TexMan::D3DCreateVideoTexture(int tgt, byte* src, int wdt, int hgt, in
 					hr = pID3DCubeTexture->SetAutoGenFilterType(MipFilter);
 				m_pCurCubeTexture = pID3DCubeTexture;
 				//if (D3DPool == D3DPOOL_DEFAULT)
-				//  sAddTX(ti, NULL);
+				//  sAddTX(ti, nullptr);
 			}
 			else
 				pID3DCubeTexture = (LPDIRECT3DCUBETEXTURE9)m_pCurCubeTexture;
@@ -1575,7 +1575,7 @@ void CD3D9TexMan::D3DCreateVideoTexture(int tgt, byte* src, int wdt, int hgt, in
 				if (D3DUsage & D3DUSAGE_AUTOGENMIPMAP)
 					hr = pID3DVolTexture->SetAutoGenFilterType(MipFilter);
 				//if (D3DPool == D3DPOOL_DEFAULT)
-				//  sAddTX(ti, NULL);
+				//  sAddTX(ti, nullptr);
 				if (ti->m_Flags2 & FT2_RENDERTARGET)
 					return;
 			}
@@ -1600,9 +1600,9 @@ void CD3D9TexMan::D3DCreateVideoTexture(int tgt, byte* src, int wdt, int hgt, in
 
 			// Lock the texture to copy the image data into the texture
 			if (pID3DCubeTexture)
-				h = pID3DCubeTexture->LockRect((D3DCUBEMAP_FACES)CubeSide, i, &d3dlr, NULL, 0);
+				h = pID3DCubeTexture->LockRect((D3DCUBEMAP_FACES)CubeSide, i, &d3dlr, nullptr, 0);
 			else
-				h = pID3DTexture->LockRect(i, &d3dlr, NULL, 0);
+				h = pID3DTexture->LockRect(i, &d3dlr, nullptr, 0);
 			// Copy data to video texture 
 			cryMemcpy((byte*)d3dlr.pBits, &src[offset], size);
 			// Unlock the system texture
@@ -1657,9 +1657,9 @@ void CD3D9TexMan::D3DCreateVideoTexture(int tgt, byte* src, int wdt, int hgt, in
 
 			// Lock the texture to copy the image data into the texture
 			if (pID3DCubeTexture)
-				h = pID3DCubeTexture->LockRect((D3DCUBEMAP_FACES)CubeSide, i, &d3dlr, NULL, 0);
+				h = pID3DCubeTexture->LockRect((D3DCUBEMAP_FACES)CubeSide, i, &d3dlr, nullptr, 0);
 			else
-				h = pID3DTexture->LockRect(i, &d3dlr, NULL, 0);
+				h = pID3DTexture->LockRect(i, &d3dlr, nullptr, 0);
 			// Copy data to video texture P8
 			cryMemcpy((byte*)d3dlr.pBits, src, wdt * hgt);
 			// Unlock the system texture
@@ -1707,9 +1707,9 @@ void CD3D9TexMan::D3DCreateVideoTexture(int tgt, byte* src, int wdt, int hgt, in
 
 				// Lock the texture to copy the image data into the texture
 				if (pID3DCubeTexture)
-					h = pID3DCubeTexture->LockRect((D3DCUBEMAP_FACES)CubeSide, i, &d3dlr, NULL, 0);
+					h = pID3DCubeTexture->LockRect((D3DCUBEMAP_FACES)CubeSide, i, &d3dlr, nullptr, 0);
 				else
-					h = pID3DTexture->LockRect(i, &d3dlr, NULL, 0);
+					h = pID3DTexture->LockRect(i, &d3dlr, nullptr, 0);
 				// Copy data to video texture 
 				cryMemcpy((byte*)d3dlr.pBits, &src[offset], size);
 				// Unlock the system texture
@@ -1792,7 +1792,7 @@ void CD3D9TexMan::D3DCreateVideoTexture(int tgt, byte* src, int wdt, int hgt, in
 						DWORD lockFlag = 0;
 						if (i == 0)                                       // Figure out our locking flags, we can only discard on level 0
 							lockFlag |= D3DLOCK_DISCARD;
-						hr = pID3DTexture->LockRect(i, &d3dlr, NULL, lockFlag);
+						hr = pID3DTexture->LockRect(i, &d3dlr, nullptr, lockFlag);
 						// 3DC Workaround: we can't load mips less than 4x4 size
 						if (wdt >= 4 && hgt >= 4)
 							memcpy(d3dlr.pBits, &src[offset], size);
@@ -1823,11 +1823,11 @@ void CD3D9TexMan::D3DCreateVideoTexture(int tgt, byte* src, int wdt, int hgt, in
 						}
 						/*D3DSURFACE_DESC ddsdDescDest;
 						pID3DTexture->GetLevelDesc(0, &ddsdDescDest);
-						hr = pDestSurf->LockRect(&d3dlr, NULL, 0);
+						hr = pDestSurf->LockRect(&d3dlr, nullptr, 0);
 						hr = pDestSurf->UnlockRect();*/
 
 						CRYASSERT(pDestSurf);
-						hr = D3DXLoadSurfaceFromMemory(pDestSurf, NULL, NULL, &src[offset], SrcFormat, nPitch, NULL, &srcRect, D3DX_FILTER_NONE, 0);
+						hr = D3DXLoadSurfaceFromMemory(pDestSurf, nullptr, nullptr, &src[offset], SrcFormat, nPitch, nullptr, &srcRect, D3DX_FILTER_NONE, 0);
 
 						SAFE_RELEASE(pDestSurf);
 					}
@@ -1864,7 +1864,7 @@ void CD3D9TexMan::D3DCreateVideoTexture(int tgt, byte* src, int wdt, int hgt, in
 								int blockSize = (ti->m_Flags & FT_DXT1) ? 8 : 16;
 								nPitch = (wdt + 3) / 4 * blockSize;
 							}
-							hr = D3DXLoadSurfaceFromMemory(pDestSurf, NULL, NULL, &src[offset], SrcFormat, nPitch, NULL, &srcRect, D3DX_FILTER_NONE, 0);
+							hr = D3DXLoadSurfaceFromMemory(pDestSurf, nullptr, nullptr, &src[offset], SrcFormat, nPitch, nullptr, &srcRect, D3DX_FILTER_NONE, 0);
 							SAFE_RELEASE(pDestSurf);
 							i++;
 
@@ -1898,10 +1898,10 @@ void CD3D9TexMan::D3DCompressTexture(int tgt, STexPicD3D* ti, int CubeSide)
 	LPDIRECT3DDEVICE9 dv = gcpRendD3D->mfGetD3DDevice();
 	int i;
 
-	LPDIRECT3DTEXTURE9 pID3DSrcTexture = NULL;
-	LPDIRECT3DCUBETEXTURE9 pID3DSrcCubeTexture = NULL;
-	LPDIRECT3DTEXTURE9 pID3DTexture = NULL;
-	LPDIRECT3DCUBETEXTURE9 pID3DCubeTexture = NULL;
+	LPDIRECT3DTEXTURE9 pID3DSrcTexture = nullptr;
+	LPDIRECT3DCUBETEXTURE9 pID3DSrcCubeTexture = nullptr;
+	LPDIRECT3DTEXTURE9 pID3DTexture = nullptr;
+	LPDIRECT3DCUBETEXTURE9 pID3DCubeTexture = nullptr;
 	if (tgt == TEXTGT_2D)
 		pID3DSrcTexture = (LPDIRECT3DTEXTURE9)ti->m_RefTex.m_VidTex;
 	else
@@ -1943,7 +1943,7 @@ void CD3D9TexMan::D3DCompressTexture(int tgt, STexPicD3D* ti, int CubeSide)
 			LPDIRECT3DSURFACE9 pSourceSurf;
 			pID3DTexture->GetSurfaceLevel(i, &pDestSurf);
 			pID3DSrcTexture->GetSurfaceLevel(i, &pSourceSurf);
-			D3DXLoadSurfaceFromSurface(pDestSurf, NULL, NULL, pSourceSurf, NULL, NULL, D3DX_FILTER_NONE, 0);
+			D3DXLoadSurfaceFromSurface(pDestSurf, nullptr, nullptr, pSourceSurf, nullptr, nullptr, D3DX_FILTER_NONE, 0);
 			SAFE_RELEASE(pDestSurf);
 			SAFE_RELEASE(pSourceSurf);
 		}
@@ -1967,7 +1967,7 @@ void CD3D9TexMan::D3DCompressTexture(int tgt, STexPicD3D* ti, int CubeSide)
 					LPDIRECT3DSURFACE9 pSourceSurf;
 					pID3DCubeTexture->GetCubeMapSurface((D3DCUBEMAP_FACES)side, i, &pDestSurf);
 					pID3DSrcCubeTexture->GetCubeMapSurface((D3DCUBEMAP_FACES)side, i, &pSourceSurf);
-					D3DXLoadSurfaceFromSurface(pDestSurf, NULL, NULL, pSourceSurf, NULL, NULL, D3DX_FILTER_NONE, 0);
+					D3DXLoadSurfaceFromSurface(pDestSurf, nullptr, nullptr, pSourceSurf, nullptr, nullptr, D3DX_FILTER_NONE, 0);
 					SAFE_RELEASE(pDestSurf);
 					SAFE_RELEASE(pSourceSurf);
 				}
@@ -1992,15 +1992,15 @@ byte* CD3D9TexMan::GenerateDXT_HW(STexPic* ti, EImFormat eF, byte* dst, int* num
 
 	int Size = wdt * hgt * 4;
 
-	LPDIRECT3DTEXTURE9 pID3DSrcTexture = NULL;
-	LPDIRECT3DTEXTURE9 pID3DTexture = NULL;
+	LPDIRECT3DTEXTURE9 pID3DSrcTexture = nullptr;
+	LPDIRECT3DTEXTURE9 pID3DTexture = nullptr;
 
 	HRESULT h;
 
 	if (FAILED(h = D3DXCreateTexture(dv, wdt, hgt, bMips ? D3DX_DEFAULT : 1, 0, D3DFMT_A8R8G8B8, D3DPOOL_SYSTEMMEM, &pID3DSrcTexture)))
-		return NULL;
+		return nullptr;
 	// Lock the texture to copy the image data into the texture
-	h = pID3DSrcTexture->LockRect(0, &d3dlr, NULL, 0);
+	h = pID3DSrcTexture->LockRect(0, &d3dlr, nullptr, 0);
 	// Copy data to the texture 
 	cryMemcpy(d3dlr.pBits, dst, Size);
 	// Unlock the texture
@@ -2034,12 +2034,12 @@ byte* CD3D9TexMan::GenerateDXT_HW(STexPic* ti, EImFormat eF, byte* dst, int* num
 	}
 
 	if (bMips)
-		h = D3DXFilterTexture(pID3DSrcTexture, NULL, 0, MipFilter);
+		h = D3DXFilterTexture(pID3DSrcTexture, nullptr, 0, MipFilter);
 
 	if (FAILED(h = D3DXCreateTexture(dv, wdt, hgt, bMips ? D3DX_DEFAULT : 1, 0, Format, D3DPOOL_SYSTEMMEM, &pID3DTexture)))
 	{
 		SAFE_RELEASE(pID3DSrcTexture);
-		return NULL;
+		return nullptr;
 	}
 
 	for (i = 0; i < (int)pID3DSrcTexture->GetLevelCount(); i++)
@@ -2048,7 +2048,7 @@ byte* CD3D9TexMan::GenerateDXT_HW(STexPic* ti, EImFormat eF, byte* dst, int* num
 		LPDIRECT3DSURFACE9 pSourceSurf;
 		pID3DTexture->GetSurfaceLevel(i, &pDestSurf);
 		pID3DSrcTexture->GetSurfaceLevel(i, &pSourceSurf);
-		D3DXLoadSurfaceFromSurface(pDestSurf, NULL, NULL, pSourceSurf, NULL, NULL, D3DX_FILTER_NONE, 0);
+		D3DXLoadSurfaceFromSurface(pDestSurf, nullptr, nullptr, pSourceSurf, nullptr, nullptr, D3DX_FILTER_NONE, 0);
 		SAFE_RELEASE(pDestSurf);
 		SAFE_RELEASE(pSourceSurf);
 	}
@@ -2059,7 +2059,7 @@ byte* CD3D9TexMan::GenerateDXT_HW(STexPic* ti, EImFormat eF, byte* dst, int* num
 	Size = 0;
 	for (i = 0; i < (int)pID3DTexture->GetLevelCount(); i++)
 	{
-		h = pID3DTexture->LockRect(i, &d3dlr, NULL, 0);
+		h = pID3DTexture->LockRect(i, &d3dlr, nullptr, 0);
 		Size += TexSize(wdt, hgt, Format);
 		h = pID3DTexture->UnlockRect(i);
 		wdt >>= 1;
@@ -2076,7 +2076,7 @@ byte* CD3D9TexMan::GenerateDXT_HW(STexPic* ti, EImFormat eF, byte* dst, int* num
 	byte* data = new byte[Size];
 	for (i = 0; i < (int)pID3DTexture->GetLevelCount(); i++)
 	{
-		h = pID3DTexture->LockRect(i, &d3dlr, NULL, 0);
+		h = pID3DTexture->LockRect(i, &d3dlr, nullptr, 0);
 		Size = TexSize(wdt, hgt, Format);
 		cryMemcpy(&data[nOffs], d3dlr.pBits, Size);
 		nOffs += Size;
@@ -2113,8 +2113,8 @@ STexPic* CD3D9TexMan::CopyTexture(const char* name, STexPic* tiSrc, int CubeSide
 
 	LPDIRECT3DSURFACE9 pDestSurf;
 	LPDIRECT3DSURFACE9 pSrcSurf;
-	LPDIRECT3DCUBETEXTURE9 pID3DCubeTexture = NULL;
-	LPDIRECT3DTEXTURE9 pID3DTexture = NULL;
+	LPDIRECT3DCUBETEXTURE9 pID3DCubeTexture = nullptr;
+	LPDIRECT3DTEXTURE9 pID3DTexture = nullptr;
 	HRESULT h;
 
 	if (tiSrc->m_eTT == eTT_Cubemap)
@@ -2124,7 +2124,7 @@ STexPic* CD3D9TexMan::CopyTexture(const char* name, STexPic* tiSrc, int CubeSide
 		{
 			h = pID3DCubeTexture->GetCubeMapSurface((D3DCUBEMAP_FACES)ti->m_CubeSide, i, &pDestSurf);
 			h = pID3DCubeTexture->GetCubeMapSurface((D3DCUBEMAP_FACES)tiSrc->m_CubeSide, i, &pSrcSurf);
-			h = D3DXLoadSurfaceFromSurface(pDestSurf, NULL, NULL, pSrcSurf, NULL, NULL, D3DX_FILTER_NONE, 0);
+			h = D3DXLoadSurfaceFromSurface(pDestSurf, nullptr, nullptr, pSrcSurf, nullptr, nullptr, D3DX_FILTER_NONE, 0);
 			SAFE_RELEASE(pDestSurf);
 			SAFE_RELEASE(pSrcSurf);
 		}
@@ -2132,14 +2132,14 @@ STexPic* CD3D9TexMan::CopyTexture(const char* name, STexPic* tiSrc, int CubeSide
 	else
 	{
 		if (FAILED(h = D3DXCreateTexture(dv, ti->m_Width, ti->m_Height, tiSrc->m_nMips, 0, (D3DFORMAT)ti->m_DstFormat, D3DPOOL_MANAGED, &pID3DTexture)))
-			return NULL;
+			return nullptr;
 		ti->m_RefTex.m_VidTex = (void*)pID3DTexture;
 		LPDIRECT3DTEXTURE9 pID3DSrcTexture = (LPDIRECT3DTEXTURE9)tiSrc->m_RefTex.m_VidTex;
 		for (int i = 0; i < tiSrc->m_nMips; i++)
 		{
 			h = pID3DTexture->GetSurfaceLevel(i, &pDestSurf);
 			h = pID3DSrcTexture->GetSurfaceLevel(i, &pSrcSurf);
-			h = D3DXLoadSurfaceFromSurface(pDestSurf, NULL, NULL, pSrcSurf, NULL, NULL, D3DX_FILTER_NONE, 0);
+			h = D3DXLoadSurfaceFromSurface(pDestSurf, nullptr, nullptr, pSrcSurf, nullptr, nullptr, D3DX_FILTER_NONE, 0);
 			SAFE_RELEASE(pDestSurf);
 			SAFE_RELEASE(pSrcSurf);
 		}
@@ -2149,11 +2149,11 @@ STexPic* CD3D9TexMan::CopyTexture(const char* name, STexPic* tiSrc, int CubeSide
 
 STexPic* CD3D9TexMan::CreateTexture(const char* name, int wdt, int hgt, int depth, uint flags, uint flags2, byte* dst, ETexType eTT, float fAmount1, float fAmount2, int DXTSize, STexPic* tp, int bind, ETEX_Format eTF, const char* szSourceName)
 {
-	byte* dst1 = NULL;
+	byte* dst1 = nullptr;
 	int i;
 	LPDIRECT3DDEVICE9 dv = gcpRendD3D->mfGetD3DDevice();
 	LPDIRECT3DTEXTURE9 pID3DTexture;
-	pID3DTexture = NULL;
+	pID3DTexture = nullptr;
 	int DxtBlockSize = 0;
 	int DxtOneSize = 0;
 	bool bMips;
@@ -2313,7 +2313,7 @@ STexPic* CD3D9TexMan::CreateTexture(const char* name, int wdt, int hgt, int dept
 									format = gcpRendD3D->mFormatDepth24.Format;
 								}
 								else
-									return NULL;
+									return nullptr;
 						}
 						else
 							if (eTF == eTF_DXT1 || eTF == eTF_DXT3 || eTF == eTF_DXT5)
@@ -2687,7 +2687,7 @@ STexPic* CD3D9TexMan::CreateTexture(const char* name, int wdt, int hgt, int dept
 						//m_CurCubeFaces[i]->SaveJPG("Cube.jpg", false);
 					}
 					else
-						m_CurCubeFaces[i]->m_RefTex.m_VidTex = NULL;
+						m_CurCubeFaces[i]->m_RefTex.m_VidTex = nullptr;
 				}
 			}
 
@@ -2707,7 +2707,7 @@ STexPic* CD3D9TexMan::CreateTexture(const char* name, int wdt, int hgt, int dept
 			if (m_LastCMSide)
 				m_LastCMSide->m_NextCMSide = ti;
 		if (CubeSide == 5)
-			m_LastCMSide = NULL;
+			m_LastCMSide = nullptr;
 		else
 			m_LastCMSide = ti;
 	}
@@ -2718,7 +2718,7 @@ STexPic* CD3D9TexMan::CreateTexture(const char* name, int wdt, int hgt, int dept
 		ti->Link(&STexPic::m_Root);
 		//sTestStr.AddElem(ti);
 	}
-	CheckTexLimits(NULL);
+	CheckTexLimits(nullptr);
 
 	if (ti->m_eTT != eTT_Cubemap || ti->m_CubeSide == 5)
 	{
@@ -2746,8 +2746,8 @@ void CD3D9TexMan::BuildMipsSub(byte* src, int wdt, int hgt)
 void CD3D9TexMan::UpdateTextureRegion(STexPic* pic, byte* data, int X, int Y, int USize, int VSize)
 {
 	STexPicD3D* ti = (STexPicD3D*)pic;
-	LPDIRECT3DTEXTURE9 pID3DTexture = NULL;
-	LPDIRECT3DCUBETEXTURE9 pID3DCubeTexture = NULL;
+	LPDIRECT3DTEXTURE9 pID3DTexture = nullptr;
+	LPDIRECT3DCUBETEXTURE9 pID3DCubeTexture = nullptr;
 	int CubeSide = ti->m_CubeSide;
 	HRESULT h;
 	LPDIRECT3DDEVICE9 dv = gcpRendD3D->mfGetD3DDevice();
@@ -2773,15 +2773,15 @@ void CD3D9TexMan::UpdateTextureRegion(STexPic* pic, byte* data, int X, int Y, in
 	rcs.top = 0;
 	rcs.bottom = VSize;
 	h = pID3DTexture->GetSurfaceLevel(0, &pDestSurf);
-	h = D3DXLoadSurfaceFromMemory(pDestSurf, NULL, &rc, data, D3DFMT_A8R8G8B8, USize * 4, NULL, &rcs, D3DX_FILTER_NONE, 0);
+	h = D3DXLoadSurfaceFromMemory(pDestSurf, nullptr, &rc, data, D3DFMT_A8R8G8B8, USize * 4, nullptr, &rcs, D3DX_FILTER_NONE, 0);
 	SAFE_RELEASE(pDestSurf);
 }
 
 void CD3D9TexMan::UpdateTextureData(STexPic* pic, byte* data, int USize, int VSize, bool bProc, int State, bool bPal)
 {
 	STexPicD3D* ti = (STexPicD3D*)pic;
-	LPDIRECT3DTEXTURE9 pID3DTexture = NULL;
-	LPDIRECT3DCUBETEXTURE9 pID3DCubeTexture = NULL;
+	LPDIRECT3DTEXTURE9 pID3DTexture = nullptr;
+	LPDIRECT3DCUBETEXTURE9 pID3DCubeTexture = nullptr;
 	int CubeSide = ti->m_CubeSide;
 	HRESULT h;
 	D3DLOCKED_RECT d3dlr;
@@ -2822,12 +2822,12 @@ void CD3D9TexMan::UpdateTextureData(STexPic* pic, byte* data, int USize, int VSi
 			// Lock the texture to copy the image data into the texture
 			if (pID3DCubeTexture)
 			{
-				h = pID3DCubeTexture->LockRect((D3DCUBEMAP_FACES)CubeSide, i, &d3dlr, NULL, 0);
+				h = pID3DCubeTexture->LockRect((D3DCUBEMAP_FACES)CubeSide, i, &d3dlr, nullptr, 0);
 				pID3DCubeTexture->GetLevelDesc(i, &ddsdDescDest);
 			}
 			else
 			{
-				h = pID3DTexture->LockRect(i, &d3dlr, NULL, 0);
+				h = pID3DTexture->LockRect(i, &d3dlr, nullptr, 0);
 				pID3DTexture->GetLevelDesc(i, &ddsdDescDest);
 			}
 			// Copy data to video texture P8
@@ -2876,12 +2876,12 @@ void CD3D9TexMan::UpdateTextureData(STexPic* pic, byte* data, int USize, int VSi
 			// Lock the texture to copy the image data into the texture
 			if (pID3DCubeTexture)
 			{
-				h = pID3DCubeTexture->LockRect((D3DCUBEMAP_FACES)CubeSide, i, &d3dlr, NULL, 0);
+				h = pID3DCubeTexture->LockRect((D3DCUBEMAP_FACES)CubeSide, i, &d3dlr, nullptr, 0);
 				pID3DCubeTexture->GetLevelDesc(i, &ddsdDescDest);
 			}
 			else
 			{
-				h = pID3DTexture->LockRect(i, &d3dlr, NULL, 0);
+				h = pID3DTexture->LockRect(i, &d3dlr, nullptr, 0);
 				pID3DTexture->GetLevelDesc(i, &ddsdDescDest);
 			}
 			// Copy data to video texture A8R8G8B8
@@ -2927,7 +2927,7 @@ void ClearBufferWithQuad(int x2, int y2, int x1, int y1, float fR, float fG, flo
 
 void CD3D9TexMan::ClearBuffer(int Width, int Height, bool bEnd, STexPic* pImage, int Side)
 {
-	gcpRendD3D->EF_ClearBuffers(true, true, NULL);
+	gcpRendD3D->EF_ClearBuffers(true, true, nullptr);
 }
 
 //===================================================================================
@@ -3006,7 +3006,7 @@ bool CD3D9TexMan::ScanEnvironmentCM(const char* name, int size, Vec3d& Pos)
 	gcpRendD3D->m_SceneRecurseCount++;
 
 	LPDIRECT3DDEVICE9 dv = gcpRendD3D->mfGetD3DDevice();
-	LPDIRECT3DCUBETEXTURE9 pID3DTexture = NULL;
+	LPDIRECT3DCUBETEXTURE9 pID3DTexture = nullptr;
 	LPDIRECT3DSURFACE9 pSrcSurf;
 	LPDIRECT3DTEXTURE9 pID3DSysTexture;
 	LPDIRECT3DSURFACE9 pSysSurf;
@@ -3032,7 +3032,7 @@ bool CD3D9TexMan::ScanEnvironmentCM(const char* name, int size, Vec3d& Pos)
 
 		D3DCOLOR cColor = D3DRGBA(0.0f, 0.0f, 0.0f, 0.0f);
 		// render object
-		dv->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, cColor, 1.0f, 0);
+		dv->Clear(0, nullptr, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, cColor, 1.0f, 0);
 
 		DrawCubeSide(&sAngles[n][0], Pos, size, n, RendFlags, fMaxDist);
 		SAFE_RELEASE(pSrcSurf);
@@ -3043,7 +3043,7 @@ bool CD3D9TexMan::ScanEnvironmentCM(const char* name, int size, Vec3d& Pos)
 		int width = size;
 		int height = size;
 		h = dv->GetRenderTargetData(pSrcSurf, pSysSurf);
-		h = pID3DSysTexture->LockRect(0, &d3dlrSys, NULL, 0);
+		h = pID3DSysTexture->LockRect(0, &d3dlrSys, nullptr, 0);
 		byte* pic = new byte[size * size * 4];
 		byte* src = (byte*)d3dlrSys.pBits;
 		for (int i = 0; i < size; i++)
@@ -3090,7 +3090,7 @@ void CD3D9TexMan::GetAverageColor(SEnvTexture* cm, int nSide)
 	HRESULT hr;
 	LPDIRECT3DSURFACE9 pTargSurf = (LPDIRECT3DSURFACE9)cm->m_RenderTargets[nSide];
 	D3DLOCKED_RECT d3dlr;
-	hr = pTargSurf->LockRect(&d3dlr, NULL, D3DLOCK_READONLY);
+	hr = pTargSurf->LockRect(&d3dlr, nullptr, D3DLOCK_READONLY);
 
 	CFColor Col;
 	int r = 0;
@@ -3146,7 +3146,7 @@ void CD3D9TexMan::ScanEnvironmentCube(SEnvTexture* cm, int RendFlags, int Size, 
 			for (i = 0; i < 6; i++)
 			{
 				IDirect3DSurface9* pSurface;
-				hr = r->mfGetD3DDevice()->CreateRenderTarget(tex_size, tex_size, D3DFMT_X8R8G8B8, D3DMULTISAMPLE_NONE, 0, TRUE, &pSurface, NULL);
+				hr = r->mfGetD3DDevice()->CreateRenderTarget(tex_size, tex_size, D3DFMT_X8R8G8B8, D3DMULTISAMPLE_NONE, 0, TRUE, &pSurface, nullptr);
 				if (!FAILED(hr))
 				{
 					cm->m_RenderTargets[i] = pSurface;
@@ -3161,7 +3161,7 @@ void CD3D9TexMan::ScanEnvironmentCube(SEnvTexture* cm, int RendFlags, int Size, 
 			char name[128];
 			sprintf(name, "$TempLCMap%d", cm->m_Id);
 			byte* data = new byte[nSizeTemp * nSizeTemp * 4];
-			cm->m_TexTemp = gRenDev->m_TexMan->CreateTexture(name, nSizeTemp, nSizeTemp, 1, FT_NOMIPS, FT2_NODXT | FT2_RENDERTARGET, data, eTT_Base, -1.0f, -1.0f, 0, NULL);
+			cm->m_TexTemp = gRenDev->m_TexMan->CreateTexture(name, nSizeTemp, nSizeTemp, 1, FT_NOMIPS, FT2_NODXT | FT2_RENDERTARGET, data, eTT_Base, -1.0f, -1.0f, 0, nullptr);
 			delete[] data;
 		}
 	}
@@ -3217,7 +3217,7 @@ void CD3D9TexMan::ScanEnvironmentCube(SEnvTexture* cm, int RendFlags, int Size, 
 			cm->m_Tex->m_Height = tex_size;
 			cm->m_TexSize = tex_size;
 			byte* data = new byte[tex_size * tex_size * 4];
-			gRenDev->m_TexMan->CreateTexture(NULL, tex_size, tex_size, 1, FT_NOMIPS, cm->m_Tex->m_Flags2, data, eTT_Cubemap, -1.0f, -1.0f, 0, cm->m_Tex);
+			gRenDev->m_TexMan->CreateTexture(nullptr, tex_size, tex_size, 1, FT_NOMIPS, cm->m_Tex->m_Flags2, data, eTT_Cubemap, -1.0f, -1.0f, 0, cm->m_Tex);
 			SetTexture(0, eTT_Cubemap);
 			delete[] data;
 		}
@@ -3226,8 +3226,8 @@ void CD3D9TexMan::ScanEnvironmentCube(SEnvTexture* cm, int RendFlags, int Size, 
 
 	STexPicD3D* tp = (STexPicD3D*)cm->m_Tex;
 	STexPicD3D* tpTemp = (STexPicD3D*)cm->m_TexTemp;
-	LPDIRECT3DCUBETEXTURE9 pID3DTargetTextureCM = NULL;
-	LPDIRECT3DTEXTURE9 pID3DTargetTexture = NULL;
+	LPDIRECT3DCUBETEXTURE9 pID3DTargetTextureCM = nullptr;
+	LPDIRECT3DTEXTURE9 pID3DTargetTexture = nullptr;
 	if (tpTemp)
 		pID3DTargetTexture = (LPDIRECT3DTEXTURE9)tpTemp->m_RefTex.m_VidTex;
 	if (tp)
@@ -3284,7 +3284,7 @@ void CD3D9TexMan::ScanEnvironmentCube(SEnvTexture* cm, int RendFlags, int Size, 
 
 		D3DCOLOR cColor = D3DRGBA(0.0f, 0.0f, 0.0f, 0.0f);
 		// render object
-		r->m_pd3dDevice->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, cColor, 1.0f, 0);
+		r->m_pd3dDevice->Clear(0, nullptr, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, cColor, 1.0f, 0);
 		if (pID3DTargetTexture)
 			DrawCubeSide(&sAngles[n][0], Pos, nSizeTemp, n, RendFlags, fMaxDist);
 		else
@@ -3306,7 +3306,7 @@ void CD3D9TexMan::ScanEnvironmentCube(SEnvTexture* cm, int RendFlags, int Size, 
 			  h = D3DXCreateTexture(r->m_pd3dDevice, nSizeTemp, nSizeTemp, 1, 0, D3DFMT_X8R8G8B8, D3DPOOL_SYSTEMMEM, &pID3DSysTexture );
 			  h = pID3DSysTexture->GetSurfaceLevel(0, &pSysSurf);
 			  h = r->m_pd3dDevice->GetRenderTargetData(pTargetSurf, pSysSurf);
-			  h = pID3DSysTexture->LockRect(0, &d3dlrSys, NULL, 0);
+			  h = pID3DSysTexture->LockRect(0, &d3dlrSys, nullptr, 0);
 			  byte *src = (byte *)d3dlrSys.pBits;
 			  for (int i=0; i<width*height; i++)
 			  {
@@ -3419,10 +3419,10 @@ void CD3D9TexMan::ScanEnvironmentCube(SEnvTexture* cm, int RendFlags, int Size, 
 			h = D3DXCreateTexture(r->m_pd3dDevice, tex_size, tex_size, 1, 0, D3DFMT_X8R8G8B8, D3DPOOL_SYSTEMMEM, &pID3DSysTexture);
 			h = pID3DSysTexture->GetSurfaceLevel(0, &pSysSurf);
 			if (pID3DTargetTexture)
-				h = D3DXLoadSurfaceFromSurface(pSysSurf, NULL, NULL, pTargetSurf, NULL, NULL, D3DX_FILTER_NONE, 0);
+				h = D3DXLoadSurfaceFromSurface(pSysSurf, nullptr, nullptr, pTargetSurf, nullptr, nullptr, D3DX_FILTER_NONE, 0);
 			else
 				h = r->m_pd3dDevice->GetRenderTargetData(pTargetSurf, pSysSurf);
-			h = pID3DSysTexture->LockRect(0, &d3dlrSys, NULL, 0);
+			h = pID3DSysTexture->LockRect(0, &d3dlrSys, nullptr, 0);
 			byte* src = (byte*)d3dlrSys.pBits;
 			for (int i = 0; i < width * height; i++)
 			{
@@ -3444,7 +3444,7 @@ void CD3D9TexMan::ScanEnvironmentCube(SEnvTexture* cm, int RendFlags, int Size, 
 	cm->m_Tex->m_Bind = tid;
 
 	gRenDev->SetViewport(vX, vY, vWidth, vHeight);
-	ClearBuffer(tex_size, tex_size, true, NULL, 0);
+	ClearBuffer(tex_size, tex_size, true, nullptr, 0);
 	cm->m_bInprogress = false;
 	cm->m_MaskReady = End;
 	if (cm->m_MaskReady == 6)
@@ -3628,7 +3628,7 @@ void CD3D9TexMan::ScanEnvironmentTexture(SEnvTexture* cm, SShader* pSH, SRenderS
 		cm->m_Tex->m_Width = cm->m_Tex->m_Height = tex_size;
 		cm->m_Tex->m_nMips = 0;
 		byte* data = new byte[tex_size * tex_size * 4];
-		r->m_TexMan->CreateTexture(NULL, tex_size, tex_size, 1, FT_NOMIPS | FT_CLAMP, FT2_NODXT | FT2_RENDERTARGET, data, eTT_Base, -1.0f, -1.0f, 0, cm->m_Tex);
+		r->m_TexMan->CreateTexture(nullptr, tex_size, tex_size, 1, FT_NOMIPS | FT_CLAMP, FT2_NODXT | FT2_RENDERTARGET, data, eTT_Base, -1.0f, -1.0f, 0, cm->m_Tex);
 		delete[] data;
 	}
 
@@ -3643,9 +3643,9 @@ void CD3D9TexMan::ScanEnvironmentTexture(SEnvTexture* cm, SShader* pSH, SRenderS
 
 	DWORD cColor = D3DRGBA(gRenDev->m_vClearColor[0], gRenDev->m_vClearColor[1], gRenDev->m_vClearColor[2], 0);
 	if (r->m_sbpp)
-		r->m_pd3dDevice->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER | D3DCLEAR_STENCIL, cColor, 1.0f, 0);
+		r->m_pd3dDevice->Clear(0, nullptr, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER | D3DCLEAR_STENCIL, cColor, 1.0f, 0);
 	else
-		r->m_pd3dDevice->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, cColor, 1.0f, 0);
+		r->m_pd3dDevice->Clear(0, nullptr, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, cColor, 1.0f, 0);
 
 	int vX, vY, vWidth, vHeight;
 	r->GetViewport(&vX, &vY, &vWidth, &vHeight);
@@ -3756,12 +3756,12 @@ void CD3D9TexMan::ScanEnvironmentTexture(SEnvTexture* cm, SShader* pSH, SRenderS
 	r->EF_RestoreRenderTarget();
 
 	if (bUseClipPlanes)
-		r->EF_SetClipPlane(false, NULL, false);
+		r->EF_SetClipPlane(false, nullptr, false);
 
 	if (r->m_sbpp)
-		r->m_pd3dDevice->Clear(0, NULL, D3DCLEAR_ZBUFFER | D3DCLEAR_STENCIL, cColor, 1.0f, 0);
+		r->m_pd3dDevice->Clear(0, nullptr, D3DCLEAR_ZBUFFER | D3DCLEAR_STENCIL, cColor, 1.0f, 0);
 	else
-		r->m_pd3dDevice->Clear(0, NULL, D3DCLEAR_ZBUFFER, cColor, 1.0f, 0);
+		r->m_pd3dDevice->Clear(0, nullptr, D3DCLEAR_ZBUFFER, cColor, 1.0f, 0);
 
 	r->m_RP.m_PersFlags &= ~(RBPF_DRAWMIRROR | RBPF_DRAWPORTAL);
 	r->m_RP.m_PersFlags |= prevFlags & (RBPF_DRAWMIRROR | RBPF_DRAWPORTAL);
@@ -3775,7 +3775,7 @@ void CD3D9TexMan::ScanEnvironmentTexture(SEnvTexture* cm, SShader* pSH, SRenderS
 	  h = D3DXCreateTexture(r->m_pd3dDevice, tex_size, tex_size, 1, 0, D3DFMT_X8R8G8B8, D3DPOOL_SYSTEMMEM, &pID3DSysTexture );
 	  h = pID3DSysTexture->GetSurfaceLevel(0, &pSysSurf);
 	  h = r->m_pd3dDevice->GetRenderTargetData(pTargetSurf, pSysSurf);
-	  h = pID3DSysTexture->LockRect(0, &d3dlr, NULL, 0);
+	  h = pID3DSysTexture->LockRect(0, &d3dlr, nullptr, 0);
 	  // Copy data to the texture
 	  WriteTGA((byte *)d3dlr.pBits, tex_size, tex_size, "Problem.tga");
 	  // Unlock the texture
@@ -3859,10 +3859,10 @@ void CD3D9TexMan::DrawToTexture(Plane& Pl, STexPic* Tex, int RendFlags)
 		Tex->m_nMips = 0;
 		AddToHash(Tex->m_Bind, Tex);
 #ifndef WATTEST
-		r->m_TexMan->CreateTexture(NULL, tex_size, tex_size, 1, FT_NOMIPS | FT_CLAMP, FT2_NODXT | FT2_RENDERTARGET, data, eTT_Base, -1.0f, -1.0f, 0, Tex);
+		r->m_TexMan->CreateTexture(nullptr, tex_size, tex_size, 1, FT_NOMIPS | FT_CLAMP, FT2_NODXT | FT2_RENDERTARGET, data, eTT_Base, -1.0f, -1.0f, 0, Tex);
 #else
 		STexPic* tp =
-			r->m_TexMan->CreateTexture(NULL, tex_size, tex_size, 1, FT_NOMIPS | FT_ALLOCATED, FT2_NODXT, data, eTT_Base, -1.0f, -1.0f, 0, Tex);
+			r->m_TexMan->CreateTexture(nullptr, tex_size, tex_size, 1, FT_NOMIPS | FT_ALLOCATED, FT2_NODXT, data, eTT_Base, -1.0f, -1.0f, 0, Tex);
 
 		IDirect3DSurface9* pTar = r->mfGetBackSurface();
 		D3DSURFACE_DESC dc;
@@ -3931,9 +3931,9 @@ void CD3D9TexMan::DrawToTexture(Plane& Pl, STexPic* Tex, int RendFlags)
 	Vec3d vCol = r->m_vClearColor;
 	DWORD cColor = D3DRGBA(r->m_vClearColor[0], r->m_vClearColor[1], r->m_vClearColor[2], 0);
 	if (r->m_sbpp)
-		r->m_pd3dDevice->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER | D3DCLEAR_STENCIL, cColor, 1.0f, 0);
+		r->m_pd3dDevice->Clear(0, nullptr, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER | D3DCLEAR_STENCIL, cColor, 1.0f, 0);
 	else
-		r->m_pd3dDevice->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, cColor, 1.0f, 0);
+		r->m_pd3dDevice->Clear(0, nullptr, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, cColor, 1.0f, 0);
 
 	eng->SetCamera(tmp_cam, false);
 
@@ -3970,7 +3970,7 @@ void CD3D9TexMan::DrawToTexture(Plane& Pl, STexPic* Tex, int RendFlags)
 	  h = D3DXCreateTexture(r->m_pd3dDevice, tex_size, tex_size, 1, 0, D3DFMT_X8R8G8B8, D3DPOOL_SYSTEMMEM, &pID3DSysTexture );
 	  h = pID3DSysTexture->GetSurfaceLevel(0, &pSysSurf);
 	  h = r->m_pd3dDevice->GetRenderTargetData(pTargetSurf, pSysSurf);
-	  h = pID3DSysTexture->LockRect(0, &d3dlr, NULL, 0);
+	  h = pID3DSysTexture->LockRect(0, &d3dlr, nullptr, 0);
 	  // Copy data to the texture
 	  ::WriteJPG((byte *)d3dlr.pBits, tex_size, tex_size, "Problem.jpg");
 	  // Unlock the texture
@@ -3996,7 +3996,7 @@ void CD3D9TexMan::DrawToTexture(Plane& Pl, STexPic* Tex, int RendFlags)
 	SAFE_RELEASE(pSrcSurf);
 #else
 
-	r->m_pd3dDevice->Clear(0, NULL, D3DCLEAR_ZBUFFER, D3DCOLOR_ARGB(0x00, 0x00, 0x00, 0x00), 1.0f, 0);
+	r->m_pd3dDevice->Clear(0, nullptr, D3DCLEAR_ZBUFFER, D3DCOLOR_ARGB(0x00, 0x00, 0x00, 0x00), 1.0f, 0);
 
 	STexPicD3D* tp = (STexPicD3D*)Tex;
 	LPDIRECT3DTEXTURE9 pID3DTargetTexture = (LPDIRECT3DTEXTURE9)tp->m_RefTex.m_VidTex;
@@ -4064,7 +4064,7 @@ void CD3D9TexMan::DrawToTextureForRainMap(int Id)
 		Tex->m_Flags |= FT_NOMIPS | FT_HASALPHA;
 		Tex->m_Flags2 |= FT2_NODXT | FT2_RENDERTARGET;
 		AddToHash(Tex->m_Bind, Tex);
-		gRenDev->m_TexMan->CreateTexture(NULL, Tex->m_Width, Tex->m_Height, 1, FT_NOMIPS | FT_HASALPHA, FT2_NODXT | FT2_RENDERTARGET, data, eTT_Base, -1.0f, -1.0f, 0, Tex);
+		gRenDev->m_TexMan->CreateTexture(nullptr, Tex->m_Width, Tex->m_Height, 1, FT_NOMIPS | FT_HASALPHA, FT2_NODXT | FT2_RENDERTARGET, data, eTT_Base, -1.0f, -1.0f, 0, Tex);
 		delete[] data;
 	}
 
@@ -4093,7 +4093,7 @@ void CD3D9TexMan::DrawToTextureForRainMap(int Id)
 	h = r->EF_SetRenderTarget(pSrcSurf, true);
 
 	DWORD cColor = D3DRGBA(gRenDev->m_vClearColor[0], gRenDev->m_vClearColor[1], gRenDev->m_vClearColor[2], 0);
-	r->m_pd3dDevice->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, cColor, 1.0f, 0);
+	r->m_pd3dDevice->Clear(0, nullptr, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, cColor, 1.0f, 0);
 
 	r->m_RP.m_PersFlags |= RBPF_NOCLEARBUF;
 
@@ -4118,7 +4118,7 @@ void CD3D9TexMan::DrawToTextureForRainMap(int Id)
 	  h = D3DXCreateTexture(r->m_pd3dDevice, tex_size, tex_size, 1, 0, D3DFMT_X8R8G8B8, D3DPOOL_SYSTEMMEM, &pID3DSysTexture );
 	  h = pID3DSysTexture->GetSurfaceLevel(0, &pSysSurf);
 	  h = r->m_pd3dDevice->GetRenderTargetData(pTargetSurf, pSysSurf);
-	  h = pID3DSysTexture->LockRect(0, &d3dlr, NULL, 0);
+	  h = pID3DSysTexture->LockRect(0, &d3dlr, nullptr, 0);
 	  // Copy data to the texture
 	  WriteTGA((byte *)d3dlr.pBits, tex_size, tex_size, "Problem.tga", 32);
 	  // Unlock the texture
@@ -4291,7 +4291,7 @@ void CD3D9TexMan::StartScreenTexMap(int Id)
 		// must pass empty buffer into create texture..
 		byte* pData = new byte[pTex->m_Width * pTex->m_Height * 4];
 
-		if (!pRenderer->m_TexMan->CreateTexture(NULL, pTex->m_Width, pTex->m_Height, 1, pTex->m_Flags, pTex->m_Flags2, pData, eTT_Base, -1.0f, -1.0f, 0, pTex))
+		if (!pRenderer->m_TexMan->CreateTexture(nullptr, pTex->m_Width, pTex->m_Height, 1, pTex->m_Flags, pTex->m_Flags2, pData, eTT_Base, -1.0f, -1.0f, 0, pTex))
 		{
 			// error creating texure
 			delete[] pData;
@@ -4310,7 +4310,7 @@ void CD3D9TexMan::StartScreenTexMap(int Id)
 
 	D3DCOLOR cColor = D3DRGBA(0.0f, 0.0f, 0.0f, 0.0f);
 	// render object
-	//pRenderer->m_pd3dDevice->Clear(0, NULL, D3DCLEAR_ZBUFFER, cColor, 1.0f, 0); 
+	//pRenderer->m_pd3dDevice->Clear(0, nullptr, D3DCLEAR_ZBUFFER, cColor, 1.0f, 0); 
 }
 
 // restore back-buffer
@@ -4322,7 +4322,7 @@ void CD3D9TexMan::EndScreenTexMap()
 	}
 
 	// get data
-	STexPic* tx = NULL;
+	STexPic* tx = nullptr;
 	if (gRenDev->m_RP.m_PersFlags & RBPF_HDR)
 		tx = gRenDev->m_TexMan->m_Text_ScreenMap_HDR;
 	else
@@ -4396,7 +4396,7 @@ void CD3D9TexMan::Update()
 	int i;
 	char buf[256] = "";
 
-	CheckTexLimits(NULL);
+	CheckTexLimits(nullptr);
 
 	bool bChangedNormalMapCompressed = false;
 #ifdef USE_3DC
@@ -4465,7 +4465,7 @@ void CD3D9TexMan::Update()
 
 	if (CRenderer::CV_r_logusedtextures == 1 || CRenderer::CV_r_logusedtextures == 3 || CRenderer::CV_r_logusedtextures == 4)
 	{
-		FILE* fp = NULL;
+		FILE* fp = nullptr;
 		TArray<STexPic*> Texs;
 		int Size = 0;
 		int PartSize = 0;
@@ -4798,14 +4798,14 @@ STexPic* CD3D9Renderer::EF_MakePhongTexture(int Exp)
 		D3DLOCKED_RECT d3dlr;
 
 		// Lock the texture to copy the image data into the texture
-		HRESULT hr = pPhongTexture->LockRect(0, &d3dlr, NULL, 0);
+		HRESULT hr = pPhongTexture->LockRect(0, &d3dlr, nullptr, 0);
 		if (SUCCEEDED(hr))
 		{
 			cryMemcpy((byte*)d3dlr.pBits, img, imgsize * imgsize * 4);
 
 			// Unlock the texture
 			pPhongTexture->UnlockRect(0);
-			hr = D3DXFilterTexture(pPhongTexture, NULL, 0, D3DX_FILTER_LINEAR);
+			hr = D3DXFilterTexture(pPhongTexture, nullptr, 0, D3DX_FILTER_LINEAR);
 		}
 	}
 	//::WriteTGA(img, imgsize, imgsize, "Phong.tga", 32); 
@@ -4855,11 +4855,11 @@ STexPic* CD3D9Renderer::EF_MakeSpecularTexture(float fExp)
 	int nWidth = 256;
 	int nHeight = 256;
 	// Create attenuation texture
-	if (FAILED(gcpRendD3D->mfGetD3DDevice()->CreateTexture(nWidth, nHeight, 1, 0, d3dFMT, D3DPOOL_MANAGED, &pTexture, NULL)))
-		return NULL;
+	if (FAILED(gcpRendD3D->mfGetD3DDevice()->CreateTexture(nWidth, nHeight, 1, 0, d3dFMT, D3DPOOL_MANAGED, &pTexture, nullptr)))
+		return nullptr;
 	sfExp = fExp * 2;
 	if (FAILED(D3DXFillTexture(pTexture, FillSpecularTexture, 0)))
-		return NULL;
+		return nullptr;
 
 	if (!bMips)
 		nFlags |= FT_NOMIPS;
@@ -4966,7 +4966,7 @@ void CD3D9TexMan::GenerateFogMaps()
 				Data1[j][i][3] = (byte)iFog;
 			}
 		}
-		gRenDev->m_TexMan->m_Text_Fog = CreateTexture("$Fog", 128, 128, 1, FT_CLAMP | FT_NOMIPS | FT_NOREMOVE | FT_HASALPHA, FT2_NODXT | FT2_NOANISO, &Data1[0][0][0], eTT_Base, -1.0f, -1.0f, 0, NULL, 0, eTF_8888);
+		gRenDev->m_TexMan->m_Text_Fog = CreateTexture("$Fog", 128, 128, 1, FT_CLAMP | FT_NOMIPS | FT_NOREMOVE | FT_HASALPHA, FT2_NODXT | FT2_NOANISO, &Data1[0][0][0], eTT_Base, -1.0f, -1.0f, 0, nullptr, 0, eTF_8888);
 		//gRenDev->m_TexMan->m_Text_Fog->SaveTGA("Fog.tga", false);
 
 		/*byte Data2[64][64][4];
@@ -4990,7 +4990,7 @@ void CD3D9TexMan::GenerateFogMaps()
 		}
 		}*/
 
-		//gRenDev->m_TexMan->m_Text_Fog_Enter = DownloadTexture("(FogEnter)", 64, 64, FT_CLAMP | FT_NOMIPS | FT_NOREMOVE | FT_HASALPHA, FT2_NODXT, &Data2[0][0][0], eTT_Base, 0, NULL, 0, eTF_8888);
+		//gRenDev->m_TexMan->m_Text_Fog_Enter = DownloadTexture("(FogEnter)", 64, 64, FT_CLAMP | FT_NOMIPS | FT_NOREMOVE | FT_HASALPHA, FT2_NODXT, &Data2[0][0][0], eTT_Base, 0, nullptr, 0, eTF_8888);
 		//gRenDev->m_TexMan->m_Text_Fog_Enter->SaveTGA("FogEnter.tga", false);
 		gRenDev->m_TexMan->m_Text_Fog_Enter = LoadTexture("Textures/FogEnter", FT_CLAMP | FT_NOMIPS | FT_NOREMOVE | FT_HASALPHA, FT2_NODXT | FT2_NOANISO);
 		gRenDev->m_TexMan->m_Text_VFog = LoadTexture("Textures/FogTex", FT_CLAMP | FT_NOMIPS | FT_NOREMOVE | FT_HASALPHA, FT2_NODXT | FT2_NOANISO);
@@ -5020,7 +5020,7 @@ HRESULT CFnMap9::Initialize()
 		return hr;
 	}
 
-	if (FAILED(hr = dv->CreateTexture(m_dwWidth, m_dwHeight, 0, 0, m_Format, D3DPOOL_MANAGED, &pTexture, NULL)))
+	if (FAILED(hr = dv->CreateTexture(m_dwWidth, m_dwHeight, 0, 0, m_Format, D3DPOOL_MANAGED, &pTexture, nullptr)))
 	{
 		OutputDebugString("Can't create texture\n");
 		return hr;
@@ -5399,7 +5399,7 @@ void CFurNormalMap::Update(EShaderPassType eShPass, float dt, SShaderPassHW* slw
 
 		rd->SetCullMode(R_CULL_NONE);
 		rd->EF_SetState(GS_NODEPTHTEST);
-		rd->EF_Draw(rd->m_RP.m_pShader, NULL);
+		rd->EF_Draw(rd->m_RP.m_pShader, nullptr);
 
 		vpOffsGen->mfSet(false, 0);
 		fpOffsGen->mfSet(false, 0);
@@ -5481,7 +5481,7 @@ void CD3D9TexMan::GenerateFurLightMap()
 				*p++ = (unsigned char)(255 * CLAMP(specular * shadow, 0.0f, 1.0f));
 			}
 
-	gRenDev->m_TexMan->m_Text_FurLightMap = CreateTexture("$FurLightMap", s_size, t_size, r_size, FT_CLAMP | FT_NOMIPS, FT2_NODXT, pixels, eTT_3D, -1, -1, 0, NULL, 0, eTF_0088);
+	gRenDev->m_TexMan->m_Text_FurLightMap = CreateTexture("$FurLightMap", s_size, t_size, r_size, FT_CLAMP | FT_NOMIPS, FT2_NODXT, pixels, eTT_3D, -1, -1, 0, nullptr, 0, eTF_0088);
 	gRenDev->m_TexMan->m_Text_FurLightMap->m_RefTex.bRepeats = 2;
 }
 
@@ -5510,7 +5510,7 @@ void CD3D9TexMan::GenerateFlareMap()
 			data[j][i][3] = 255;
 		}
 	}
-	gRenDev->m_TexMan->m_Text_Flare = CreateTexture("$Flare", 32, 4, 1, FT_CLAMP | FT_NOREMOVE, FT2_NODXT | FT2_NOANISO, &data[0][0][0], eTT_Base, -1.0f, -1.0f, 0, NULL, 0, eTF_8888);
+	gRenDev->m_TexMan->m_Text_Flare = CreateTexture("$Flare", 32, 4, 1, FT_CLAMP | FT_NOREMOVE, FT2_NODXT | FT2_NOANISO, &data[0][0][0], eTT_Base, -1.0f, -1.0f, 0, nullptr, 0, eTF_8888);
 }
 
 #define NOISE_DIMENSION 128
@@ -5625,12 +5625,12 @@ void CD3D9TexMan::GenerateNoiseVolumeMap()
 	InitWhiteNoiseArray();
 
 	HRESULT hr;
-	LPDIRECT3DVOLUMETEXTURE9 pID3DVolTexture = NULL;
+	LPDIRECT3DVOLUMETEXTURE9 pID3DVolTexture = nullptr;
 
 	if (FAILED(hr = D3DXCreateVolumeTexture(gcpRendD3D->mfGetD3DDevice(), NOISE_DIMENSION, NOISE_DIMENSION, NOISE_DIMENSION, NOISE_MIP_LEVELS, 0, D3DFMT_A8, D3DPOOL_MANAGED, &pID3DVolTexture)))
 		return;
 
-	if (FAILED(hr = D3DXFillVolumeTexture(pID3DVolTexture, turbulenceFill, NULL)))
+	if (FAILED(hr = D3DXFillVolumeTexture(pID3DVolTexture, turbulenceFill, nullptr)))
 		return;
 
 	if (!gRenDev->m_TexMan->m_Text_NoiseVolumeMap)
@@ -5724,7 +5724,7 @@ void CD3D9TexMan::GenerateAttenMap()
 	int nWidth = ATTENUATION_WIDTH;
 	int nHeight = NUM_ATTENUATION_FUNCTIONS * BILERP_PROTECTION;
 	// Create attenuation texture
-	if (FAILED(gcpRendD3D->mfGetD3DDevice()->CreateTexture(nWidth, nHeight, 1, 0, d3dFMT, D3DPOOL_MANAGED, &pTexture, NULL)))
+	if (FAILED(gcpRendD3D->mfGetD3DDevice()->CreateTexture(nWidth, nHeight, 1, 0, d3dFMT, D3DPOOL_MANAGED, &pTexture, nullptr)))
 		return;
 	if (FAILED(D3DXFillTexture(pTexture, FillAttenuationTexture, 0)))
 		return;
@@ -5760,7 +5760,7 @@ void CD3D9TexMan::GenerateDepthLookup()
 	{
 		*pMap++ = D3DCOLOR_RGBA(i & 0xFF, (i & 0xFF00) >> 3, 0, 0);
 	}
-	gRenDev->m_TexMan->m_Text_DepthLookup = CreateTexture("$DepthMap", 2048, 1, 1, FT_CLAMP | FT_NOREMOVE | FT_HASALPHA | FT_NOMIPS | FT_PROJECTED, FT2_NODXT | FT2_NOANISO, (byte*)&data[0], eTT_Base, -1.0f, -1.0f, 0, NULL, 0, eTF_8888);
+	gRenDev->m_TexMan->m_Text_DepthLookup = CreateTexture("$DepthMap", 2048, 1, 1, FT_CLAMP | FT_NOREMOVE | FT_HASALPHA | FT_NOMIPS | FT_PROJECTED, FT2_NODXT | FT2_NOANISO, (byte*)&data[0], eTT_Base, -1.0f, -1.0f, 0, nullptr, 0, eTF_8888);
 
 
 	DWORD data2[4][4];
@@ -5769,14 +5769,14 @@ void CD3D9TexMan::GenerateDepthLookup()
 	{
 		*pMap++ = D3DCOLOR_RGBA(0xff, 0xe0, 0, 0);
 	}
-	gRenDev->m_TexMan->m_Text_Depth = CreateTexture("$Depth", 4, 4, 1, FT_CLAMP | FT_NOREMOVE | FT_HASALPHA | FT_NOMIPS, FT2_NODXT, (byte*)&data2[0], eTT_Base, -1.0f, -1.0f, 0, NULL, 0, eTF_8888);
+	gRenDev->m_TexMan->m_Text_Depth = CreateTexture("$Depth", 4, 4, 1, FT_CLAMP | FT_NOREMOVE | FT_HASALPHA | FT_NOMIPS, FT2_NODXT, (byte*)&data2[0], eTT_Base, -1.0f, -1.0f, 0, nullptr, 0, eTF_8888);
 
 	pMap = &data2[0][0];
 	for (i = 0; i < 4 * 4; i++)
 	{
 		*pMap++ = D3DCOLOR_RGBA(0xff, 0xff, 0xff, 0);
 	}
-	gRenDev->m_TexMan->m_Text_WhiteShadow = CreateTexture("$WhiteShadow", 4, 4, 1, FT_CLAMP | FT_NOREMOVE | FT_HASALPHA | FT_NOMIPS, FT2_NODXT | FT2_NOANISO, (byte*)&data2[0], eTT_Base, -1.0f, -1.0f, 0, NULL, 0, eTF_8888);
+	gRenDev->m_TexMan->m_Text_WhiteShadow = CreateTexture("$WhiteShadow", 4, 4, 1, FT_CLAMP | FT_NOREMOVE | FT_HASALPHA | FT_NOMIPS, FT2_NODXT | FT2_NOANISO, (byte*)&data2[0], eTT_Base, -1.0f, -1.0f, 0, nullptr, 0, eTF_8888);
 
 	byte data3[256];
 	byte* pbMap = &data3[0];
@@ -5784,7 +5784,7 @@ void CD3D9TexMan::GenerateDepthLookup()
 	{
 		*pbMap++ = i;
 	}
-	gRenDev->m_TexMan->m_Text_Gradient = CreateTexture("$AlphaGradient", 256, 1, 1, FT_NOREMOVE | FT_HASALPHA | FT_NOMIPS, FT2_NODXT | FT2_NOANISO, (byte*)&data3[0], eTT_Base, -1.0f, -1.0f, 0, NULL, 0, eTF_8000);
+	gRenDev->m_TexMan->m_Text_Gradient = CreateTexture("$AlphaGradient", 256, 1, 1, FT_NOREMOVE | FT_HASALPHA | FT_NOMIPS, FT2_NODXT | FT2_NOANISO, (byte*)&data3[0], eTT_Base, -1.0f, -1.0f, 0, nullptr, 0, eTF_8000);
 	//gRenDev->m_TexMan->m_Text_Depth->SaveTGA("Depth.tga", false);
 }
 
@@ -5824,7 +5824,7 @@ void CD3D9TexMan::GenerateFuncTextures()
 		ti->Unlink();
 		ti->Link(&STexPic::m_Root);
 		gRenDev->m_TexMan->m_StatsCurTexMem += ti->m_Size;
-		CheckTexLimits(NULL);
+		CheckTexLimits(nullptr);
 	}
 
 	GenerateFogMaps();
@@ -5849,8 +5849,8 @@ void STexPic::Preload(int Flags)
 }
 void STexPicD3D::Preload(int Flags)
 {
-	IDirect3DTexture9* pID3DTexture = NULL;
-	IDirect3DCubeTexture9* pID3DCubeTexture = NULL;
+	IDirect3DTexture9* pID3DTexture = nullptr;
+	IDirect3DCubeTexture9* pID3DCubeTexture = nullptr;
 	if (m_Flags2 & FT2_RENDERTARGET)
 		return;
 	if (m_eTT == eTT_Cubemap)

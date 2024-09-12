@@ -5,7 +5,7 @@
 #include "I3DEngine.h"
 
 SREOceanStats CREOcean::m_RS;
-CREOcean* CREOcean::m_pStaticOcean = NULL;
+CREOcean* CREOcean::m_pStaticOcean = nullptr;
 
 DEFINE_ALIGNED_DATA(float, CREOcean::m_HX[OCEANGRID][OCEANGRID], 16);
 DEFINE_ALIGNED_DATA(float, CREOcean::m_HY[OCEANGRID][OCEANGRID], 16);
@@ -18,11 +18,11 @@ DEFINE_ALIGNED_DATA(float, CREOcean::m_DY[OCEANGRID][OCEANGRID], 16);
 
 CREOcean::~CREOcean()
 {
-	m_pStaticOcean = NULL;
+	m_pStaticOcean = nullptr;
 	if (m_pBuffer)
 	{
 		gRenDev->ReleaseBuffer(m_pBuffer);
-		m_pBuffer = NULL;
+		m_pBuffer = nullptr;
 	}
 	SAFE_DELETE_ARRAY(m_HMap);
 	for (int i = 0; i < NUM_LODS; i++)
@@ -192,7 +192,7 @@ void CREOcean::mfPrepare()
 
 	if (!m_pBuffer)
 		m_pBuffer = gRenDev->CreateBuffer((OCEANGRID + 1) * (OCEANGRID + 1), VERTEX_FORMAT_P3F_N, "Ocean", true);
-	rd->UpdateBuffer(m_pBuffer, NULL, 0, 0, 0, 1);
+	rd->UpdateBuffer(m_pBuffer, nullptr, 0, 0, 0, 1);
 
 	static const float fScale = 1.0f / (float)OCEANGRID;
 
@@ -261,7 +261,7 @@ void* CREOcean::mfGetPointer(ESrcPointer ePT, int* Stride, int Type, ESrcPointer
 		return &pVertices->normal.x;
 	}
 	}
-	return NULL;
+	return nullptr;
 }
 
 
@@ -643,7 +643,7 @@ bool CREOcean::mfCompile(SShader* ef, char* scr)
 
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else

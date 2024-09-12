@@ -54,12 +54,12 @@ inline int CScriptObject::GetThisRef()
 CScriptObject::CScriptObject(int nCreationNumber)
 {
 	m_nRef = nCreationNumber;
-	m_pLS = NULL;
+	m_pLS = nullptr;
 
 	m_hDelegationTag = 0;
-	m_pSink = NULL;
+	m_pSink = nullptr;
 	m_nIterationCounter = -1;
-	m_pSetGetParams = NULL;
+	m_pSetGetParams = nullptr;
 	m_bAttached = false;
 	m_bDeleted = false;
 }
@@ -87,9 +87,9 @@ void CScriptObject::Attach()
 void CScriptObject::Recreate()
 {
 	m_hDelegationTag = 0;
-	m_pSink = NULL;
+	m_pSink = nullptr;
 	m_nIterationCounter = -1;
-	m_pSetGetParams = NULL;
+	m_pSetGetParams = nullptr;
 
 	m_bAttached = false;
 	m_bDeleted = false;
@@ -268,7 +268,7 @@ void CScriptObject::SetValueChain(const char* sKey, IScriptObject* pObj)
 	lua_pushstring(m_pLS, sKey);
 	if (!pObj)
 	{
-		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "\001 ERROR! Passing NULL IScriptObject to SETVALUE CHAIN!");
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "\001 ERROR! Passing nullptr IScriptObject to SETVALUE CHAIN!");
 #if defined(_DEBUG) && !defined(WIN64)
 		DEBUG_BREAK;
 #endif
@@ -802,7 +802,7 @@ bool CScriptObject::GetAtUD(int nIdx, USER_DATA& nVal, int& nCookie)
 
 THIS_PTR CScriptObject::GetThis()
 {
-	THIS_PTR res = NULL;
+	THIS_PTR res = nullptr;
 	return m_pThis;
 }*/
 
@@ -862,10 +862,10 @@ bool CScriptObject::AddSetGetHandlers(SCRIPT_FUNCTION pSetThunk, SCRIPT_FUNCTION
 				lua_settagmethod(m_pLS, m_pSetGetParams->m_hSetGetTag, "settable");
 				/*lua_pushnil(m_pLS);
 				lua_settagmethod(m_pLS, m_pSetGetParams->m_hSetGetTag, "gettable");;*/
-				m_pSetGetParams->m_hSetGetTag = NULL;
+				m_pSetGetParams->m_hSetGetTag = 0;
 			}
 			delete m_pSetGetParams;
-			m_pSetGetParams = NULL;
+			m_pSetGetParams = nullptr;
 		}
 	}
 	return true;
@@ -892,7 +892,7 @@ int CScriptObject::GetTableTagHandler(lua_State* L)
 {
 	CScriptObject* pThis = (CScriptObject*)lua_touserdata(L, -1);
 	int nRet;
-	FIXME_ASSERT(pThis->m_pSetGetParams->m_pGetThunk != NULL);
+	FIXME_ASSERT(pThis->m_pSetGetParams->m_pGetThunk != nullptr);
 	/*{
 		//lua_pop(L,2);
 		FIXME_ASSERT(lua_istable(L,1));
@@ -917,7 +917,7 @@ int CScriptObject::SetTableTagHandler(lua_State* L)
 {
 	CScriptObject* pThis = (CScriptObject*)lua_touserdata(L, -1);
 	int nRet;
-	FIXME_ASSERT(pThis->m_pSetGetParams->m_pGetThunk != NULL);
+	FIXME_ASSERT(pThis->m_pSetGetParams->m_pGetThunk != nullptr);
 	/*if(!pThis->m_pSetThunk)
 	{
 		FIXME_ASSERT(lua_istable(L,1));
@@ -1148,7 +1148,7 @@ void CScriptObject::Detach()
 void CScriptObject::Release()
 {
 
-	AddSetGetHandlers(NULL, NULL);
+	AddSetGetHandlers(nullptr, nullptr);
 	if (m_pSink)
 	{
 		m_pSink->OnRelease();
@@ -1156,14 +1156,14 @@ void CScriptObject::Release()
 		{
 			if (_GET_THIS())
 			{
-				lua_setnativedata(m_pLS, -1, NULL);
+				lua_setnativedata(m_pLS, -1, nullptr);
 				lua_pop(m_pLS, 1);
 			}
 		}
 	}
-	m_pSink = NULL;
+	m_pSink = nullptr;
 	Detach();
-	//m_hSetGetTag=NULL;
+	//m_hSetGetTag=nullptr;
 	CScriptSystem* pScriptSystem = (CScriptSystem*)lua_getuserptr(m_pLS);
 	pScriptSystem->ReleaseScriptObject(this);
 	m_bDeleted = true;
@@ -1428,7 +1428,7 @@ void* CScriptObject::GetNativeData()
 {
 	_GUARD_STACK(m_pLS);
 	if (!_GET_THIS())
-		return NULL;
+		return nullptr;
 	return lua_getnativedata(m_pLS, -1);
 }
 

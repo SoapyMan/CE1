@@ -82,7 +82,7 @@ void CShader::mfCompileRGBAStyle(char* scr, SShader* ef, SShaderPass* sm, bool b
 
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else
@@ -155,7 +155,7 @@ void CShader::mfCompileRGBNoise(SRGBGenNoise* cn, char* scr, SShader* ef)
 
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else
@@ -237,7 +237,7 @@ void CShader::mfCompileAlphaNoise(SAlphaGenNoise* cn, char* scr, SShader* ef)
 
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else
@@ -509,7 +509,7 @@ bool CShader::mfCompileLightStyle(SShader* ef, int num, char* scr)
 
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else
@@ -605,7 +605,7 @@ SShaderGenBit* CShader::mfCompileShaderGenProperty(SShader* ef, char* scr)
 
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else
@@ -665,7 +665,7 @@ bool CShader::mfCompileShaderGen(SShader* ef, SShaderGen* shg, char* scr)
 
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else
@@ -769,7 +769,7 @@ bool CShader::mfCompileParams(SShader* ef, char* scr)
 
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else
@@ -1201,7 +1201,7 @@ bool CShader::mfCompilePublic(SShader* ef, char* scr)
 
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else
@@ -1309,7 +1309,7 @@ bool CShader::mfCompileRenderParams(SShader* ef, char* scr)
 
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else
@@ -1392,7 +1392,7 @@ void sGetBlend(char* data, SShader* ef, uint* src, uint* dst)
 		return;
 	}
 	strcpy(sbfsrc, token);
-	token = strtok(NULL, " ");
+	token = strtok(nullptr, " ");
 	if (!token)
 	{
 		Warning(0, 0, "Warning: invalid Blend name '%s' in Shader '%s'\n", data, ef->m_Name.c_str());
@@ -1499,7 +1499,7 @@ uint CShader::mfCompileRendState(SShader* ef, SShaderPass* sm, char* scr)
 
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (params)
 			data = params;
 		else
@@ -1796,7 +1796,7 @@ bool CShader::mfCompileLayer(SShader* ef, int nl, char* scr, SShaderPass* sm)
 
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else
@@ -2473,7 +2473,7 @@ void CShader::mfCompileOrient(SShader* ef, int num, char* scr)
 
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else
@@ -2535,7 +2535,7 @@ void CShader::mfCompileLightMove(SShader* ef, char* nameMove, SLightEval* le, ch
 
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else
@@ -2584,7 +2584,7 @@ void CShader::mfCompileEvalLight(SShader* ef, char* scr)
 
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else
@@ -2672,7 +2672,7 @@ void CShader::mfCompileStencil(SShader* ef, char* scr)
 
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else
@@ -2760,7 +2760,7 @@ void CShader::mfCompileState(SShader* ef, char* scr)
 	};
 
 	ef->m_State = new SEfState;
-	ef->m_State->m_Stencil = NULL;
+	ef->m_State->m_Stencil = nullptr;
 	ef->m_State->m_Flags = 0;
 	ef->m_State->m_bClearStencil = false;
 	ef->m_State->m_State = 0;
@@ -2775,7 +2775,7 @@ void CShader::mfCompileState(SShader* ef, char* scr)
 
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else
@@ -3070,7 +3070,7 @@ SShader* CShader::mfCompile(SShader* ef, char* scr)
 			break;
 
 		case eLayer:
-			if (mfCompileLayer(ef, n, params, NULL))
+			if (mfCompileLayer(ef, n, params, nullptr))
 			{
 				if (n > 0)
 				{
@@ -3125,7 +3125,7 @@ SShader* CShader::mfCompileShader(SShader* ef, char* scr)
 	  {0,0}
 	};
 
-	SShader* ef1 = NULL;
+	SShader* ef1 = nullptr;
 	float ver;
 
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
@@ -3141,7 +3141,7 @@ SShader* CShader::mfCompileShader(SShader* ef, char* scr)
 			if (ver != SHADER_VERSION)
 			{
 				Warning(0, 0, "Warning: Shader Script version (%f) must be %f\n", ver, SHADER_VERSION);
-				return NULL;
+				return nullptr;
 			}
 			break;
 		}
@@ -3179,7 +3179,7 @@ bool CShader::mfCompileSequence(SShader* ef, SShaderTexUnit* tl, int nLayer, cha
 
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else
@@ -3242,7 +3242,7 @@ bool CShader::mfCompileSequence(SShader* ef, SShaderTexUnit* tl, int nLayer, cha
 	if (!tl->m_TexPic && !tl->m_AnimInfo->m_TexPics.Num())
 	{
 		delete at;
-		tl->m_AnimInfo = NULL;
+		tl->m_AnimInfo = nullptr;
 		return false;
 	}
 
@@ -3296,7 +3296,7 @@ int CShader::mfReadTexSequence(SShader* ef, TArray<STexPic*>& tl, const char* na
 	int startn, endn, nums;
 	char name[128];
 
-	tx = NULL;
+	tx = nullptr;
 
 	StripExtension(na, name);
 
@@ -3363,7 +3363,7 @@ int CShader::mfReadTexSequence(SShader* ef, TArray<STexPic*>& tl, const char* na
 			m++;
 		}
 		dig[l] = 0;
-		startn = strtol(dig, NULL, 10);
+		startn = strtol(dig, nullptr, 10);
 		m++;
 
 		l = 0;
@@ -3373,7 +3373,7 @@ int CShader::mfReadTexSequence(SShader* ef, TArray<STexPic*>& tl, const char* na
 			m++;
 		}
 		dig[l] = 0;
-		endn = strtol(dig, NULL, 10);
+		endn = strtol(dig, nullptr, 10);
 
 		strcpy(postfix, &name[m]);
 	}
@@ -3422,9 +3422,9 @@ int CShader::mfReadAllImgFiles(SShader* ef, SShaderTexUnit* tl, STexAnim* ta, ch
 	char* path, * pt, nm[1024];
 
 	int fl = 0;
-	tx = NULL;
+	tx = nullptr;
 
-	pt = NULL;
+	pt = nullptr;
 	path = strtok(name, "%");
 	if (path)
 	{
@@ -3597,7 +3597,7 @@ void CShader::mfClEfCompile(SShader* ef, char* scr, char* name)
 									else
 										if (!stricmp(name, "SkyZone"))
 										{
-											CRESkyZone* ps = NULL;//new CRESkyZone;
+											CRESkyZone* ps = nullptr;//new CRESkyZone;
 											if (ps->mfCompile(ef, scr))
 												ef->m_REs.AddElem(ps);
 											else
@@ -3628,7 +3628,7 @@ void CShader::mfClEfCompile(SShader* ef, char* scr, char* name)
 //=========================================================================
 
 TArray<CSunFlares*> CSunFlares::m_SunFlares;
-CSunFlares* CSunFlares::m_CurFlares = NULL;
+CSunFlares* CSunFlares::m_CurFlares = nullptr;
 
 CSunFlares* CSunFlares::mfForName(char* name)
 {
@@ -3639,7 +3639,7 @@ CSunFlares* CSunFlares::mfForName(char* name)
 		if (!stricmp(m_SunFlares[i]->m_Name, name))
 			return m_SunFlares[i];
 	}
-	return NULL;
+	return nullptr;
 }
 
 bool CShader::mfCompileFlare(SShader* ef, SSunFlare* fl, char* scr)
@@ -3663,7 +3663,7 @@ bool CShader::mfCompileFlare(SShader* ef, SSunFlare* fl, char* scr)
 
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else
@@ -3740,7 +3740,7 @@ bool CShader::mfCompileSunFlares(SShader* ef, char* namefl, char* scr)
 
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else

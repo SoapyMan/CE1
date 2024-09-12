@@ -51,7 +51,7 @@ const float epsilon = 0.001f;
 
 CAISystem::CAISystem(ISystem* pSystem)
 	: m_nNumPuppets(0),
-	m_pTheSkip(NULL)
+	m_pTheSkip(nullptr)
 {
 	m_fLastPathfindTimeStart = 0.f;
 	m_bRepopulateUpdateList = true;
@@ -63,7 +63,7 @@ CAISystem::CAISystem(ISystem* pSystem)
 	m_nTickCount = 0;
 	m_pTriangulator = 0;
 	m_pSystem = pSystem;
-	DEBUG_object = NULL;
+	DEBUG_object = nullptr;
 	m_pGraph = 0;
 	m_pHideGraph = 0;
 	m_pCurrentRequest = 0;
@@ -71,7 +71,7 @@ CAISystem::CAISystem(ISystem* pSystem)
 	m_pLastHidePlace = 0;
 
 	m_cvSoundPerception = 0;
-	m_cvCalcIndoorGraph = NULL;
+	m_cvCalcIndoorGraph = nullptr;
 	m_cvCalcIndoorGraph = pSystem->GetIConsole()->CreateVariable("ai_createindoorgraph", "0", VF_CHEAT);
 	m_cvTriangulate = pSystem->GetIConsole()->CreateVariable("ai_triangulate", "0", 0);
 
@@ -2476,7 +2476,7 @@ void CAISystem::RemoveObject(IAIObject* pObject)
 		return;
 
 	if (pObject->GetProxy() && pObject->GetProxy()->GetPhysics() == m_pTheSkip)
-		m_pTheSkip = NULL;
+		m_pTheSkip = nullptr;
 
 	if ((ai = m_Objects.find(pObject->GetType())) != m_Objects.end())
 	{
@@ -3093,7 +3093,7 @@ CAIObject* CAISystem::GetFormationPoint(CPipeUser* pRequester)
 		return (fi->second)->GetFormationPoint((CAIObject*)pRequester);
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 
@@ -3103,7 +3103,7 @@ void CAISystem::Reset(void)
 	if (!m_bInitialized)
 		return;
 
-	m_pTheSkip = NULL;
+	m_pTheSkip = nullptr;
 
 	if (!m_pGraph)
 		return;
@@ -3916,7 +3916,7 @@ IAIObject* CAISystem::GetNearestObjectOfType(const Vec3d& pos, unsigned int nTyp
 	float	fRadiusSQR = fRadius * fRadius;
 
 	if (ai == m_Objects.end())
-		return NULL;
+		return nullptr;
 
 	IAIObject* pRet = 0;
 	float mindist = 100000000;
@@ -3981,7 +3981,7 @@ CAIObject* CAISystem::GetBeacon(unsigned short nGroupID)
 	BeaconMap::iterator bi;
 	bi = m_mapBeacons.find(nGroupID);
 	if (bi == m_mapBeacons.end())
-		return NULL;
+		return nullptr;
 
 	return (bi->second).pBeacon;
 }
@@ -4033,7 +4033,7 @@ IAIObject* CAISystem::GetNearestToObject(IAIObject* pRef, unsigned short nType, 
 	float	fRadiusSQR = fRadius * fRadius;
 
 	if (ai == m_Objects.end())
-		return NULL;
+		return nullptr;
 
 	CPipeUser* pPipeUser = 0;
 	CAIObject* pAttTarget = 0;
@@ -4239,7 +4239,7 @@ void CAISystem::AddForbiddenAreas(void)
 					for (NewCutsVector::iterator cItr = m_NewCutsVector.begin(); cItr != m_NewCutsVector.end(); cItr++)
 					{
 						CutEdgeIdx curCut = (*cItr);
-						GraphNode* pNode = FindMarkNodeBy2Vertex(curCut.idx1, curCut.idx2, NULL);
+						GraphNode* pNode = FindMarkNodeBy2Vertex(curCut.idx1, curCut.idx2, nullptr);
 						CRYASSERT(pNode);	// cut not found!!!!
 						// find second node - on other side of cut
 	//					pNode = FindMarkNodeBy2Vertex( curCut.idx1, curCut.idx2, pNode );
@@ -4632,14 +4632,14 @@ IAIObject* CAISystem::GetNearestObjectOfType(IAIObject* pObject, unsigned int nT
 	ai = m_Objects.find(nTypeID);
 
 	if (ai == m_Objects.end())
-		return NULL;
+		return nullptr;
 
 	float	fRadiusSQR = fRadius * fRadius;
 
 	CPuppet* pPuppet = 0;
 	if (!pObject->CanBeConvertedTo(AIOBJECT_CPUPPET, (void**)&pPuppet))
 		if (!pObject->CanBeConvertedTo(AIOBJECT_CVEHICLE, (void**)&pPuppet))
-			return NULL;
+			return nullptr;
 
 
 
@@ -6079,7 +6079,7 @@ GraphNode* CAISystem::FindMarkNodeBy2Vertex(int vIdx1, int vIdx2, GraphNode* exc
 			}
 
 	}
-	return NULL;
+	return nullptr;
 }
 
 void CAISystem::AddTheCut(int vIdx1, int vIdx2)

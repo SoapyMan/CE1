@@ -84,16 +84,16 @@ public:
 	void SetSample(FSOUND_SAMPLE* pPtr);
 	void SetStream(FSOUND_STREAM* pPtr);
 	SSoundBufferProps GetProps() { return (m_Props); }
-	FSOUND_SAMPLE* GetSample() { return (m_Type == btSAMPLE) ? m_Data.m_pSample : NULL; }
-	FSOUND_STREAM* GetStream() { return (m_Type == btSTREAM) ? m_Data.m_pStream : NULL; }
+	FSOUND_SAMPLE* GetSample() { return (m_Type == btSAMPLE) ? m_Data.m_pSample : nullptr; }
+	FSOUND_STREAM* GetStream() { return (m_Type == btSTREAM) ? m_Data.m_pStream : nullptr; }
 	BufferType GetType() { return m_Type; }
 	float GetLengthInSeconds() { return m_fLength; }
 	int GetBaseFreq() { return m_nBaseFreq; }
 	//void AddFlags(int nFlags) { m_Props.nFlags|=nFlags; }
 	//void RemoveFlags(int nFlags) { m_Props.nFlags&=~nFlags; }
-	bool NotLoaded() { return (m_Data.m_pData == NULL) && (!m_pReadStream); }
-	bool Loaded() { return (m_Data.m_pData != NULL) && (!m_pReadStream); }
-	bool Loading() { return (m_Data.m_pData == NULL) && (m_pReadStream); }
+	bool NotLoaded() { return (m_Data.m_pData == nullptr) && (!m_pReadStream); }
+	bool Loaded() { return (m_Data.m_pData != nullptr) && (!m_pReadStream); }
+	bool Loading() { return (m_Data.m_pData == nullptr) && (m_pReadStream); }
 	bool LoadFailure() { return m_bLoadFailure; }
 };
 

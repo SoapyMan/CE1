@@ -58,7 +58,7 @@ void CSystem::QueryVersionInfo()
 
 	char ver[1024 * 8];
 
-	//	GetModuleFileName( NULL, moduleName, _MAX_PATH );//retrieves the PATH for the current module
+	//	GetModuleFileName( nullptr, moduleName, _MAX_PATH );//retrieves the PATH for the current module
 	strcpy(moduleName, "CrySystem.dll");	// we want to version from the system dll (FarCry.exe we cannot change because of CopyProtection)
 
 	int verSize = GetFileVersionInfoSize(moduleName, &dwHandle);
@@ -119,7 +119,7 @@ void CSystem::SaveConfiguration()
 	}
 	// always save the current profile in the root, otherwise, nexttime, the game will have the default one
 	// wich is annoying
-	m_pGame->SaveConfiguration("system.cfg", "game.cfg", NULL);
+	m_pGame->SaveConfiguration("system.cfg", "game.cfg", nullptr);
 
 	m_rDriver->Set(sSave.c_str());
 }

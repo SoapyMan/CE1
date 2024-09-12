@@ -210,7 +210,7 @@ template <class FunctionOfDirection> void MakeCubeMap(FunctionOfDirection& f, GL
 		glTexParameteri(GL_TEXTURE_CUBE_MAP_EXT, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP_EXT, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	gRenDev->m_TexMan->CheckTexLimits(NULL);
+	gRenDev->m_TexMan->CheckTexLimits(nullptr);
 }
 
 #endif

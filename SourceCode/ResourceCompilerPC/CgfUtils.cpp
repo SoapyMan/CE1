@@ -219,7 +219,7 @@ static void ltrim(const char*& szString)
 
 
 CMatEntityNameTokenizer::CMatEntityNameTokenizer() :
-	m_szMtlName(NULL),
+	m_szMtlName(nullptr),
 	szName(""),
 	szTemplate(""),
 	szPhysMtl(""),
@@ -234,7 +234,7 @@ void CMatEntityNameTokenizer::tokenize(const char* szMtlFullName)
 	if (m_szMtlName)
 	{
 		free(m_szMtlName);
-		m_szMtlName = NULL;
+		m_szMtlName = nullptr;
 	}
 	if (!szMtlFullName)
 		return;
@@ -243,9 +243,9 @@ void CMatEntityNameTokenizer::tokenize(const char* szMtlFullName)
 	m_szMtlName = (char*)malloc(nLen + 1);
 	memcpy(m_szMtlName, szMtlFullName, nLen + 1);
 
-	szName = NULL;
-	szTemplate = NULL;
-	szPhysMtl = NULL;
+	szName = nullptr;
+	szTemplate = nullptr;
+	szPhysMtl = nullptr;
 	nSortValue = 0;
 	bInvert = false;
 

@@ -26,8 +26,8 @@ void STexPicD3D::BuildMips()
 {
 	CD3D9Renderer* r = gcpRendD3D;
 	LPDIRECT3DDEVICE9 dv = r->mfGetD3DDevice();
-	IDirect3DTexture9* pID3DTexture = NULL;
-	IDirect3DCubeTexture9* pID3DCubeTexture = NULL;
+	IDirect3DTexture9* pID3DTexture = nullptr;
+	IDirect3DCubeTexture9* pID3DCubeTexture = nullptr;
 	HRESULT h;
 	D3DLOCKED_RECT d3dlr;
 	D3DSURFACE_DESC ddsdDescDest;
@@ -47,7 +47,7 @@ void STexPicD3D::BuildMips()
 			SMipmap* mp = new SMipmap(ddsdDescDest.Width, ddsdDescDest.Height, size);
 			m_Mips[0][i] = mp;
 			mp->m_bUploaded = true;
-			h = pID3DTexture->LockRect(i, &d3dlr, NULL, 0);
+			h = pID3DTexture->LockRect(i, &d3dlr, nullptr, 0);
 			cryMemcpy(&mp->DataArray[0], d3dlr.pBits, size);
 			pID3DTexture->UnlockRect(i);
 		}
@@ -66,7 +66,7 @@ void STexPicD3D::BuildMips()
 				SMipmap* mp = new SMipmap(ddsdDescDest.Width, ddsdDescDest.Height, size);
 				m_Mips[n][i] = mp;
 				mp->m_bUploaded = true;
-				h = pID3DCubeTexture->LockRect((D3DCUBEMAP_FACES)n, i, &d3dlr, NULL, 0);
+				h = pID3DCubeTexture->LockRect((D3DCUBEMAP_FACES)n, i, &d3dlr, nullptr, 0);
 				cryMemcpy(&mp->DataArray[0], d3dlr.pBits, size);
 				pID3DCubeTexture->UnlockRect((D3DCUBEMAP_FACES)n, i);
 			}
@@ -114,8 +114,8 @@ bool STexPicD3D::UploadMips(int nStartMip, int nEndMip)
 
 	CD3D9Renderer* r = gcpRendD3D;
 	LPDIRECT3DDEVICE9 dv = r->mfGetD3DDevice();
-	IDirect3DTexture9* pID3DTexture = NULL;
-	IDirect3DCubeTexture9* pID3DCubeTexture = NULL;
+	IDirect3DTexture9* pID3DTexture = nullptr;
+	IDirect3DCubeTexture9* pID3DCubeTexture = nullptr;
 	HRESULT h;
 	D3DLOCKED_RECT d3dlr;
 	int i;
@@ -133,7 +133,7 @@ bool STexPicD3D::UploadMips(int nStartMip, int nEndMip)
 		pID3DTexture = (IDirect3DTexture9*)m_RefTex.m_VidTex;
 		if (!pID3DTexture)
 		{
-			if (FAILED(h = dv->CreateTexture(m_Width >> m_nBaseMip, m_Height >> m_nBaseMip, m_nMips - m_nBaseMip, TEXUSAGE, (D3DFORMAT)m_DstFormat, TEXPOOL, &pID3DTexture, NULL)))
+			if (FAILED(h = dv->CreateTexture(m_Width >> m_nBaseMip, m_Height >> m_nBaseMip, m_nMips - m_nBaseMip, TEXUSAGE, (D3DFORMAT)m_DstFormat, TEXPOOL, &pID3DTexture, nullptr)))
 				return true;
 			m_RefTex.m_VidTex = pID3DTexture;
 		}
@@ -150,7 +150,7 @@ bool STexPicD3D::UploadMips(int nStartMip, int nEndMip)
 				LPDIRECT3DSURFACE9 pDestSurf, pSrcSurf;
 				h = pID3DTexture->GetSurfaceLevel(nLod, &pDestSurf);
 				pSrcSurf = (LPDIRECT3DSURFACE9)m_pPoolItem->m_pOwner->m_SysSurfaces[nLod];
-				h = pSrcSurf->LockRect(&d3dlr, NULL, 0);
+				h = pSrcSurf->LockRect(&d3dlr, nullptr, 0);
 #ifdef _DEBUG
 				int nD3DSize;
 				if (m_DstFormat == D3DFMT_DXT1 || m_DstFormat == D3DFMT_DXT3 || m_DstFormat == D3DFMT_DXT5)
@@ -192,7 +192,7 @@ bool STexPicD3D::UploadMips(int nStartMip, int nEndMip)
 				m_LoadedSize += m_pFileTexMips[i].m_Size;
 				gRenDev->m_TexMan->m_StatsCurTexMem += m_pFileTexMips[i].m_Size;
 				gRenDev->m_TexMan->m_UpLoadBytes += m_pFileTexMips[i].m_Size;
-				h = pID3DTexture->LockRect(nLod, &d3dlr, NULL, 0);
+				h = pID3DTexture->LockRect(nLod, &d3dlr, nullptr, 0);
 #ifdef _DEBUG
 				int nD3DSize;
 				if (m_DstFormat == D3DFMT_DXT1 || m_DstFormat == D3DFMT_DXT3 || m_DstFormat == D3DFMT_DXT5)
@@ -217,7 +217,7 @@ bool STexPicD3D::UploadMips(int nStartMip, int nEndMip)
 		pID3DCubeTexture = (IDirect3DCubeTexture9*)m_RefTex.m_VidTex;
 		if (!pID3DCubeTexture)
 		{
-			if (FAILED(h = dv->CreateCubeTexture(m_Width >> m_nBaseMip, m_nMips - m_nBaseMip, TEXUSAGE, (D3DFORMAT)m_DstFormat, TEXPOOL, &pID3DCubeTexture, NULL)))
+			if (FAILED(h = dv->CreateCubeTexture(m_Width >> m_nBaseMip, m_nMips - m_nBaseMip, TEXUSAGE, (D3DFORMAT)m_DstFormat, TEXPOOL, &pID3DCubeTexture, nullptr)))
 				return true;
 			m_RefTex.m_VidTex = pID3DCubeTexture;
 		}
@@ -238,7 +238,7 @@ bool STexPicD3D::UploadMips(int nStartMip, int nEndMip)
 					LPDIRECT3DSURFACE9 pDestSurf, pSrcSurf;
 					h = pID3DCubeTexture->GetCubeMapSurface((D3DCUBEMAP_FACES)n, nLod, &pDestSurf);
 					pSrcSurf = (LPDIRECT3DSURFACE9)m_pPoolItem->m_pOwner->m_SysSurfaces[nLod];
-					h = pSrcSurf->LockRect(&d3dlr, NULL, 0);
+					h = pSrcSurf->LockRect(&d3dlr, nullptr, 0);
 #ifdef _DEBUG
 					int nD3DSize;
 					if (m_DstFormat == D3DFMT_DXT1 || m_DstFormat == D3DFMT_DXT3 || m_DstFormat == D3DFMT_DXT5)
@@ -281,7 +281,7 @@ bool STexPicD3D::UploadMips(int nStartMip, int nEndMip)
 					m_LoadedSize += m_pFileTexMips[i].m_Size;
 					gRenDev->m_TexMan->m_StatsCurTexMem += m_pFileTexMips[i].m_Size;
 					gRenDev->m_TexMan->m_UpLoadBytes += m_pFileTexMips[i].m_Size;
-					h = pID3DCubeTexture->LockRect((D3DCUBEMAP_FACES)n, nLod, &d3dlr, NULL, 0);
+					h = pID3DCubeTexture->LockRect((D3DCUBEMAP_FACES)n, nLod, &d3dlr, nullptr, 0);
 #ifdef _DEBUG
 					int nD3DSize;
 					if (m_DstFormat == D3DFMT_DXT1 || m_DstFormat == D3DFMT_DXT3 || m_DstFormat == D3DFMT_DXT5)
@@ -315,20 +315,20 @@ void STexPic::RemoveFromPool()
 	if (!m_pPoolItem)
 		return;
 	STexPoolItem* pIT = m_pPoolItem;
-	m_pPoolItem = NULL;
-	pIT->m_pTex = NULL;
+	m_pPoolItem = nullptr;
+	pIT->m_pTex = nullptr;
 	pIT->m_fLastTimeUsed = gRenDev->m_RP.m_RealTime;
 	m_LoadedSize = -1;
-	m_RefTex.m_VidTex = NULL;
+	m_RefTex.m_VidTex = nullptr;
 }
 
 bool STexPic::AddToPool(int nStartMip, int nMips)
 {
 	CRYASSERT(m_Mips && nStartMip < m_nMips && m_Mips[0][nStartMip]);
 	SMipmap* mp = m_Mips[0][nStartMip];
-	STexPool* pPool = NULL;
+	STexPool* pPool = nullptr;
 	LPDIRECT3DDEVICE9 dv = gcpRendD3D->mfGetD3DDevice();
-	IDirect3DTexture9* pID3DTexture = NULL;
+	IDirect3DTexture9* pID3DTexture = nullptr;
 	HRESULT h;
 
 	if (m_pPoolItem)
@@ -381,11 +381,11 @@ bool STexPic::AddToPool(int nStartMip, int nMips)
 		pIT->Link(&pPool->m_ItemsList);
 
 		// Create API texture for the item in DEFAULT pool
-		IDirect3DCubeTexture9* pID3DCubeTexture = NULL;
-		pID3DTexture = NULL;
+		IDirect3DCubeTexture9* pID3DCubeTexture = nullptr;
+		pID3DTexture = nullptr;
 		if (m_eTT != eTT_Cubemap)
 		{
-			if (FAILED(h = dv->CreateTexture(mp->USize, mp->VSize, nMips, TEXUSAGE, (D3DFORMAT)m_DstFormat, D3DPOOL_DEFAULT, &pID3DTexture, NULL)))
+			if (FAILED(h = dv->CreateTexture(mp->USize, mp->VSize, nMips, TEXUSAGE, (D3DFORMAT)m_DstFormat, D3DPOOL_DEFAULT, &pID3DTexture, nullptr)))
 			{
 				CRYASSERT(0);
 				return false;
@@ -394,7 +394,7 @@ bool STexPic::AddToPool(int nStartMip, int nMips)
 		}
 		else
 		{
-			if (FAILED(h = dv->CreateCubeTexture(mp->USize, nMips, TEXUSAGE, (D3DFORMAT)m_DstFormat, D3DPOOL_DEFAULT, &pID3DCubeTexture, NULL)))
+			if (FAILED(h = dv->CreateCubeTexture(mp->USize, nMips, TEXUSAGE, (D3DFORMAT)m_DstFormat, D3DPOOL_DEFAULT, &pID3DCubeTexture, nullptr)))
 			{
 				CRYASSERT(0);
 				return false;
@@ -415,9 +415,9 @@ STexPool* CTexMan::CreatePool(int nWidth, int nHeight, int nMips, int nFormat, E
 	LPDIRECT3DDEVICE9 dv = gcpRendD3D->mfGetD3DDevice();
 	HRESULT h;
 	int i;
-	IDirect3DTexture9* pID3DTexture = NULL;
+	IDirect3DTexture9* pID3DTexture = nullptr;
 
-	STexPool* pPool = NULL;
+	STexPool* pPool = nullptr;
 
 	for (i = 0; i < m_TexPools.Num(); i++)
 	{
@@ -450,8 +450,8 @@ STexPool* CTexMan::CreatePool(int nWidth, int nHeight, int nMips, int nFormat, E
 		if (eTT == eTT_Cubemap)
 			pPool->m_Size *= 6;
 
-		if (FAILED(h = dv->CreateTexture(nWidth, nHeight, nMips, TEXUSAGE, (D3DFORMAT)nFormat, D3DPOOL_SYSTEMMEM, &pID3DTexture, NULL)))
-			return NULL;
+		if (FAILED(h = dv->CreateTexture(nWidth, nHeight, nMips, TEXUSAGE, (D3DFORMAT)nFormat, D3DPOOL_SYSTEMMEM, &pID3DTexture, nullptr)))
+			return nullptr;
 		pPool->m_pSysTexture = pID3DTexture;
 		for (i = 0; i < nMips; i++)
 		{
@@ -701,7 +701,7 @@ void CTexMan::CheckTexLimits(STexPic* pExclude)
 			if (pIT == &gRenDev->m_TexMan->m_FreeTexPoolItems)
 			{
 				m_nProcessedTextureID1 = 0;
-				m_pProcessedTexture1 = NULL;
+				m_pProcessedTexture1 = nullptr;
 				m_nPhaseProcessingTextures = 2;
 			}
 	}
@@ -764,7 +764,7 @@ void CTexMan::CheckTexLimits(STexPic* pExclude)
 		if (tp == &STexPic::m_Root)
 		{
 			m_nProcessedTextureID2 = 0;
-			m_pProcessedTexture2 = NULL;
+			m_pProcessedTexture2 = nullptr;
 		}
 		else
 		{

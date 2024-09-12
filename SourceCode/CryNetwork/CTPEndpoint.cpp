@@ -195,7 +195,7 @@ void CCTPEndpoint::Update(unsigned int nTime, unsigned char cFrameType, CStream*
 {
 	m_nCurrentTime = nTime;
 	// if there is a incoming frame
-	CTP* pFrame = NULL;
+	CTP* pFrame = nullptr;
 	CTPAck ack;
 	CTPData data;
 	CTPNak nak;
@@ -441,7 +441,7 @@ CStream CCTPEndpoint::CompressStream(CStream &stmUncompressed)
 {
 	CStream stmCompressed;
 #ifdef USE_PACKET_COMPRESSION
-	BYTE *pUncompressed=NULL;
+	BYTE *pUncompressed=nullptr;
 	pUncompressed=stmUncompressed.GetPtr();
 	unsigned short nUncompressedSizeInBits=stmUncompressed.GetSize();
 	unsigned short nUncompressedSize=BITS2BYTES(nUncompressedSizeInBits);

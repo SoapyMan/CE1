@@ -237,8 +237,8 @@ CBFManager::CBFManager()
 {
   m_pBFArray = new Cry_Butterfly[MAX_BF_COUNT];
   m_Indixes.Reset();
-  GetRenderer()->CreateIndexBuffer(&m_Indixes, NULL, MAX_BF_COUNT*12);
-  GetRenderer()->UpdateIndexBuffer(&m_Indixes, NULL, 0, false);
+  GetRenderer()->CreateIndexBuffer(&m_Indixes, nullptr, MAX_BF_COUNT*12);
+  GetRenderer()->UpdateIndexBuffer(&m_Indixes, nullptr, 0, false);
   ushort *pInds = (ushort *)m_Indixes.m_VData;
   m_nTexID = 0;
   m_pVideoBuffer = 0;
@@ -265,7 +265,7 @@ CBFManager::CBFManager()
 	pInds[i++] = b*6+5;
 //		CRYASSERT(i<BF_COUNT*12);
   }
-  GetRenderer()->UpdateIndexBuffer(&m_Indixes, NULL, 0, true);
+  GetRenderer()->UpdateIndexBuffer(&m_Indixes, nullptr, 0, true);
 
   m_pVideoBuffer = GetRenderer()->CreateBuffer(MAX_BF_COUNT*6,VERTEX_FORMAT_P3F_COL4UB_TEX2F, "BFlyes");
   m_nCurrentObjectsCount = 0;

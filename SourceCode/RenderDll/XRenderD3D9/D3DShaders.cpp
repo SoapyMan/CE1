@@ -101,7 +101,7 @@ char* D3DCompileShader(const char* name, const char* shaderSource, const char* s
 
 	// Disassemble the shader bytecode to get the assembly output
 	ID3DBlob* pDisassembly = nullptr;
-	hr = s_D3DDisassembleFunc(pShaderBlob->GetBufferPointer(), pShaderBlob->GetBufferSize(), 0, NULL, &pDisassembly);
+	hr = s_D3DDisassembleFunc(pShaderBlob->GetBufferPointer(), pShaderBlob->GetBufferSize(), 0, nullptr, &pDisassembly);
 	if (SUCCEEDED(hr) && pDisassembly)
 	{
 		pBuf = new char[pDisassembly->GetBufferSize() + 1];
@@ -220,7 +220,7 @@ bool CShader::mfCompileHWShadeLayer(SShader* ef, char* scr, TArray<SShaderPassHW
 	int nl;
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else
@@ -521,7 +521,7 @@ void CShader::mfCompileLayers(SShader* ef, char* scr, TArray<SShaderPassHW>& Lay
 
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else
@@ -613,7 +613,7 @@ void CShader::mfCompileHWConditions(SShader* ef, char* scr, SShaderTechnique* hs
 
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else
@@ -762,7 +762,7 @@ SShaderTechnique* CShader::mfCompileHW(SShader* ef, char* scr, int Id)
 	if (!m_CurEfsNum)
 	{
 		Warning(0, 0, "Hardware section not allowed for Shader '%s'\n", ef->m_Name.c_str());
-		return NULL;
+		return nullptr;
 	}
 
 	char* name;
@@ -803,7 +803,7 @@ SShaderTechnique* CShader::mfCompileHW(SShader* ef, char* scr, int Id)
 
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else
@@ -1114,7 +1114,7 @@ void SGenTC_ObjectLinear::mfCompile(char* scr, SShader* ef)
 
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else
@@ -1244,7 +1244,7 @@ void SGenTC_EyeLinear::mfCompile(char* scr, SShader* ef)
 
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else
@@ -1298,7 +1298,7 @@ bool CShader::mfCompileTexGen(char* name, char* params, SShader* ef, SShaderTexU
 	if (!name)
 	{
 		name = params;
-		params = NULL;
+		params = nullptr;
 	}
 	if (!stricmp(name, "HW_NormalMap"))
 	{
@@ -1391,7 +1391,7 @@ void CShader::mfCompileMatrixOp(TArray<SMatrixTransform>* List, char* scr, char*
 	int Stage = 0;
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else

@@ -145,7 +145,7 @@ extern "C" {
 CServer::CServer(CNetwork* pNetwork)
 {
 	m_cLastClientID = 0;
-	m_pFactory = NULL;
+	m_pFactory = nullptr;
 	m_ServerVariables.nDataStreamTimeout = 30000;// 30 seconds
 	m_pNetwork = pNetwork;
 	m_wPort = 0;
@@ -353,7 +353,7 @@ void CServer::Update(unsigned int nTime)
 		CServerSlot* pSlot = itr->second;
 		if (pSlot->IsActive())
 		{
-			pSlot->Update(m_nCurrentTime, NULL, NULL);
+			pSlot->Update(m_nCurrentTime, nullptr, nullptr);
 		}
 		++itr;
 	}
@@ -474,7 +474,7 @@ void CServer::UnregisterSlot(CIPAddress& ip)
 	{
 		IServerSlot* pServerSlot = itor->second;
 
-		pServerSlot->Advise(NULL);		// remove connection to IServerSlotSink (CXServerSlot)
+		pServerSlot->Advise(nullptr);		// remove connection to IServerSlotSink (CXServerSlot)
 	}
 }
 
@@ -658,7 +658,7 @@ void CServer::ProcessSetup(CNP& cnp, CStream& stmStream, CIPAddress& ip)
 	CServerSlot* pSSlot;
 	CServerSlot* pTemp = GetPacketOwner(ip);
 
-	if (pTemp != NULL)
+	if (pTemp != nullptr)
 	{
 		NET_TRACE("Setup discarded for IP [%s]\n", pTemp->GetIP().GetAsString(true));
 		return;
@@ -725,7 +725,7 @@ void CServer::ProcessSetup(CNP& cnp, CStream& stmStream, CIPAddress& ip)
 			//<<FIXME>> ?!?!?!?
 			//pSSlot->Update(m_nCurrentTime, &cnp, &stmStream);
 			pSSlot->Disconnect("@ConnectionRejected");
-			//pSSlot->Update(m_nCurrentTime, NULL, NULL);
+			//pSSlot->Update(m_nCurrentTime, nullptr, nullptr);
 		}
 	}
 }

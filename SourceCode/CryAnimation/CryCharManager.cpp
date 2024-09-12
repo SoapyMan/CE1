@@ -190,7 +190,7 @@ ICryCharInstance* CryCharManager::MakeCharacter(const char* szCharacterFileName,
 	g_pI3DEngine = g_pISystem->GetI3DEngine();
 
 	if (!szCharacterFileName)
-		return (NULL);	// to prevent a crash in the frequent case the designers will mess 
+		return (nullptr);	// to prevent a crash in the frequent case the designers will mess 
 	// around with the entity parameters in the editor
 
 	string strPath = szCharacterFileName;
@@ -208,7 +208,7 @@ ICryCharInstance* CryCharManager::MakeCharacter(const char* szCharacterFileName,
 	if (!pCryCharBody)
 	{
 		// the model has not been loaded
-		return NULL;
+		return nullptr;
 	}
 
 	CryCharInstance* pCryCharInstance = new CryCharInstance(pCryCharBody);
@@ -222,7 +222,7 @@ ICryCharInstance* CryCharManager::MakeCharacter(const char* szCharacterFileName,
 ICryCharModel* CryCharManager::LoadModel(const char* szFileName, unsigned nFlags)
 {
 	if (!szFileName)
-		return NULL;
+		return nullptr;
 
 	string strPath = szFileName;
 	UnifyFilePath(strPath);
@@ -230,7 +230,7 @@ ICryCharModel* CryCharManager::LoadModel(const char* szFileName, unsigned nFlags
 	if (strstr(strPath.c_str(), ".cga") || (nFlags & nMakeAnimObject))
 	{
 		// Loading cga file: not supported at this time
-		return NULL;
+		return nullptr;
 	}
 
 	// try to find already loaded model, or load a new one
@@ -354,7 +354,7 @@ CryCharBody* CryCharManager::FetchBody(const string& strFileName)
 	else
 	{
 		delete pBody;
-		return NULL;
+		return nullptr;
 	}
 }
 

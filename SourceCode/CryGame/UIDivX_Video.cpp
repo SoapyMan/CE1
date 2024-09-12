@@ -110,7 +110,7 @@ bool CDivXPlayer::Load_DivX( CUIVideoPanel* pPanel, const string &szFileName ) {
 		retVal = DivxSetAudioBuffer( divxFile, (void*)m_pAudioBuffer );
 		CRYASSERT(!retVal);
 
-		m_hNotificationEvent = CreateEvent( NULL, FALSE, FALSE, NULL );
+		m_hNotificationEvent = CreateEvent( nullptr, FALSE, FALSE, nullptr );
 		CRYASSERT(g_DivXPlayer.m_hNotificationEvent);
 
 		//Create a static IDirectSound in the CSound class.  
@@ -118,9 +118,9 @@ bool CDivXPlayer::Load_DivX( CUIVideoPanel* pPanel, const string &szFileName ) {
 	
 		if (hr==S_OK) {
 			// Create a thread to handle DSound notifications
-			m_hNotifyThread = CreateThread( NULL, 0, NotificationProc, hwnd, 0, &m_dwNotifyThreadID );
+			m_hNotifyThread = CreateThread( nullptr, 0, NotificationProc, hwnd, 0, &m_dwNotifyThreadID );
 			// Create a timer, so we can check for when the soundbuffer is stopped
-			SetTimer( hwnd, 0, 250, NULL );
+			SetTimer( hwnd, 0, 250, nullptr );
 
 			//-----------------------------------------------------------------------------
 			// create a DirectSound buffer.  
@@ -162,7 +162,7 @@ bool CDivXPlayer::Load_DivX( CUIVideoPanel* pPanel, const string &szFileName ) {
 	if (divxFileInfo.width==640 && divxFileInfo.height==480)
 	  pPanel->m_iTextureID = 	pPanel->GetUISystem()->GetIRenderer()->DownLoadToVideoMemory((uint8*)m_pFrameBuffer, divxFileInfo.width, divxFileInfo.height, eTF_0888, eTF_0888, 0, 0, FILTER_LINEAR, 0, "$VideoPanel", FT_DYNAMIC);
   else
-    pPanel->m_iTextureID = 	pPanel->GetUISystem()->GetIRenderer()->DownLoadToVideoMemory((uint8*)m_pFrameBuffer, divxFileInfo.width, divxFileInfo.height, eTF_0888, eTF_0888, 0, 0, FILTER_LINEAR, 0, NULL, FT_DYNAMIC);
+    pPanel->m_iTextureID = 	pPanel->GetUISystem()->GetIRenderer()->DownLoadToVideoMemory((uint8*)m_pFrameBuffer, divxFileInfo.width, divxFileInfo.height, eTF_0888, eTF_0888, 0, 0, FILTER_LINEAR, 0, nullptr, FT_DYNAMIC);
 
 	if (pPanel->m_iTextureID == -1)
 	{
@@ -337,7 +337,7 @@ HRESULT CDivXPlayer::PlaySound( )
     
 		HRESULT hr;
     
-    if( NULL == g_DivXPlayer.m_StreamingSound.m_SoundEnabled )
+    if( nullptr == g_DivXPlayer.m_StreamingSound.m_SoundEnabled )
         return E_FAIL; // Sanity check
 
     hr = g_DivXPlayer.m_StreamingSound.Reset();
@@ -368,7 +368,7 @@ HRESULT CDivXPlayer::StopSound( )
 {
 	HRESULT hr;
 
-	if( NULL == g_DivXPlayer.m_StreamingSound.m_SoundEnabled )	return E_FAIL; // Sanity check
+	if( nullptr == g_DivXPlayer.m_StreamingSound.m_SoundEnabled )	return E_FAIL; // Sanity check
 
 	hr = g_DivXPlayer.m_StreamingSound.Stop();
 	CRYASSERT(hr==S_OK);
@@ -415,7 +415,7 @@ HRESULT CSoundManager::Initialize( HWND  hWnd, DWORD dwCoopLevel )
 	HRESULT	hr04=DSERR_OUTOFMEMORY;
 
     // Create IDirectSound using the primary sound device
-    hr = DirectSoundCreate8( NULL, &m_pDS, NULL );
+    hr = DirectSoundCreate8( nullptr, &m_pDS, nullptr );
 	if (hr) return hr;
 	CRYASSERT(hr==S_OK);
 
@@ -445,9 +445,9 @@ HRESULT CSoundManager::SetPrimaryBufferFormat( DWORD dwPrimaryChannels,
                                                DWORD dwPrimaryBitRate )
 {
     HRESULT             hr;
-    LPDIRECTSOUNDBUFFER pDSBPrimary = NULL;
+    LPDIRECTSOUNDBUFFER pDSBPrimary = nullptr;
 
-    if( m_pDS == NULL )
+    if( m_pDS == nullptr )
         return CO_E_NOTINITIALIZED;
 
     // Get the primary buffer 
@@ -456,9 +456,9 @@ HRESULT CSoundManager::SetPrimaryBufferFormat( DWORD dwPrimaryChannels,
     dsbd.dwSize        = sizeof(DSBUFFERDESC);
     dsbd.dwFlags       = DSBCAPS_PRIMARYBUFFER;
     dsbd.dwBufferBytes = 0;
-    dsbd.lpwfxFormat   = NULL;
+    dsbd.lpwfxFormat   = nullptr;
        
-    hr = m_pDS->CreateSoundBuffer( &dsbd, &pDSBPrimary, NULL );
+    hr = m_pDS->CreateSoundBuffer( &dsbd, &pDSBPrimary, nullptr );
 		CRYASSERT(hr==S_OK);
 
     WAVEFORMATEX wfx;
@@ -501,16 +501,16 @@ HRESULT CSoundManager::CreateStreaming(
 {
     HRESULT hr;
 
-    if( m_pDS == NULL )
+    if( m_pDS == nullptr )
         return CO_E_NOTINITIALIZED;
 
-		if(  hNotifyEvent == NULL )
+		if(  hNotifyEvent == nullptr )
         return E_INVALIDARG;
 
-    LPDIRECTSOUNDBUFFER pDSBuffer      = NULL;
-    DWORD               dwDSBufferSize = NULL;
-    DSBPOSITIONNOTIFY*  aPosNotify     = NULL; 
-    LPDIRECTSOUNDNOTIFY pDSNotify      = NULL;
+    LPDIRECTSOUNDBUFFER pDSBuffer      = nullptr;
+    DWORD               dwDSBufferSize = nullptr;
+    DSBPOSITIONNOTIFY*  aPosNotify     = nullptr; 
+    LPDIRECTSOUNDNOTIFY pDSNotify      = nullptr;
 
 		uint32 frequency=44100/1;
 
@@ -553,7 +553,7 @@ HRESULT CSoundManager::CreateStreaming(
     dsbd.guid3DAlgorithm = guid3DAlgorithm;
     dsbd.lpwfxFormat     = &m_WaveFile.m_wfx;
 
-    hr = m_pDS->CreateSoundBuffer( &dsbd, &pDSBuffer, NULL );
+    hr = m_pDS->CreateSoundBuffer( &dsbd, &pDSBuffer, nullptr );
 		CRYASSERT(hr==S_OK);
 
     // Create the notification events, so that we know when to fill
@@ -562,7 +562,7 @@ HRESULT CSoundManager::CreateStreaming(
 		CRYASSERT(hr==S_OK);
 
     aPosNotify = new DSBPOSITIONNOTIFY[ dwNotifyCount ];
-    if( aPosNotify == NULL )
+    if( aPosNotify == nullptr )
         return E_OUTOFMEMORY;
 
     for( DWORD i = 0; i < dwNotifyCount; i++ )
@@ -599,22 +599,22 @@ HRESULT CSoundManager::CreateStreaming(
 HRESULT CStreamingSound::FillBufferWithSound( LPDIRECTSOUNDBUFFER pDSB, BOOL bRepeatWavIfBufferLarger )
 {
     HRESULT hr; 
-    VOID*   pDSLockedBuffer      = NULL; // Pointer to locked buffer memory
+    VOID*   pDSLockedBuffer      = nullptr; // Pointer to locked buffer memory
     DWORD   dwDSLockedBufferSize = 0;    // Size of the locked DirectSound buffer
     DWORD   dwWavDataRead        = 0;    // Amount of data read from the wav file 
 
-    if( pDSB == NULL )
+    if( pDSB == nullptr )
         return CO_E_NOTINITIALIZED;
 
     // Make sure we have focus, and we didn't just switch in from
     // an app which had a DirectSound device
-   // hr = RestoreBuffer( pDSB, NULL ); 
+   // hr = RestoreBuffer( pDSB, nullptr ); 
 		//CRYASSERT(hr==S_OK);
 
-		hr = RestoreBuffer( pDSB, NULL ); 
+		hr = RestoreBuffer( pDSB, nullptr ); 
 
     // Lock the buffer down
-    hr = pDSB->Lock( 0, m_dwDSBufferSize,&pDSLockedBuffer, &dwDSLockedBufferSize, NULL, NULL, 0L );
+    hr = pDSB->Lock( 0, m_dwDSBufferSize,&pDSLockedBuffer, &dwDSLockedBufferSize, nullptr, nullptr, 0L );
 		CRYASSERT(hr==S_OK);
 		CRYASSERT(dwDSLockedBufferSize==0x00081330);
     // Reset the wave file to the beginning 
@@ -678,7 +678,7 @@ HRESULT CStreamingSound::FillBufferWithSound( LPDIRECTSOUNDBUFFER pDSB, BOOL bRe
     }
 
     // Unlock the buffer, we don't need it anymore.
-    pDSB->Unlock( pDSLockedBuffer, dwDSLockedBufferSize, NULL, 0 );
+    pDSB->Unlock( pDSLockedBuffer, dwDSLockedBufferSize, nullptr, 0 );
 
     return S_OK;
 }
@@ -695,7 +695,7 @@ HRESULT CStreamingSound::RestoreBuffer( LPDIRECTSOUNDBUFFER pDSB, BOOL* pbWasRes
 {
     HRESULT hr;
 
-    if( pDSB == NULL )
+    if( pDSB == nullptr )
         return CO_E_NOTINITIALIZED;
 
 		if( pbWasRestored )
@@ -721,7 +721,7 @@ HRESULT CStreamingSound::RestoreBuffer( LPDIRECTSOUNDBUFFER pDSB, BOOL* pbWasRes
         }
         while( ( hr = pDSB->Restore() ) == DSERR_BUFFERLOST );
 
-        if( pbWasRestored != NULL )
+        if( pbWasRestored != nullptr )
             *pbWasRestored = TRUE;
 
         return S_OK;
@@ -742,7 +742,7 @@ HRESULT CStreamingSound::RestoreBuffer( LPDIRECTSOUNDBUFFER pDSB, BOOL* pbWasRes
 //-----------------------------------------------------------------------------
 LPDIRECTSOUNDBUFFER CStreamingSound::GetFreeBuffer()
 {
-    if( m_apDSBuffer == NULL )
+    if( m_apDSBuffer == nullptr )
         return FALSE; 
 
     DWORD i = 0;
@@ -772,10 +772,10 @@ LPDIRECTSOUNDBUFFER CStreamingSound::GetFreeBuffer()
 //-----------------------------------------------------------------------------
 LPDIRECTSOUNDBUFFER CStreamingSound::GetBuffer( DWORD dwIndex )
 {
-    if( m_apDSBuffer == NULL )
-        return NULL;
+    if( m_apDSBuffer == nullptr )
+        return nullptr;
     if( dwIndex >= m_dwNumBuffers )
-        return NULL;
+        return nullptr;
 
     return m_apDSBuffer[dwIndex];
 }
@@ -794,7 +794,7 @@ HRESULT CStreamingSound::Play( DWORD dwPriority, DWORD dwFlags, LONG lVolume, LO
     HRESULT hr;
     BOOL    bRestored;
 
-    if( m_apDSBuffer == NULL )
+    if( m_apDSBuffer == nullptr )
         return CO_E_NOTINITIALIZED;
 
     LPDIRECTSOUNDBUFFER pDSB = GetFreeBuffer();
@@ -840,7 +840,7 @@ HRESULT CStreamingSound::Play( DWORD dwPriority, DWORD dwFlags, LONG lVolume, LO
 //-----------------------------------------------------------------------------
 HRESULT CStreamingSound::Stop()
 {
-    if( m_apDSBuffer == NULL )
+    if( m_apDSBuffer == nullptr )
         return CO_E_NOTINITIALIZED;
 
     HRESULT hr = 0;
@@ -870,13 +870,13 @@ HRESULT CStreamingSound::HandleWaveStreamNotification( BOOL bLoopedPlay )
     DWORD   dwCurrentPlayPos;
     DWORD   dwPlayDelta;
     DWORD   dwBytesWrittenToBuffer;
-    VOID*   pDSLockedBuffer = NULL;
-    VOID*   pDSLockedBuffer2 = NULL;
+    VOID*   pDSLockedBuffer = nullptr;
+    VOID*   pDSLockedBuffer2 = nullptr;
 
 		DWORD   dwDSLockedBufferSize;
     DWORD   dwDSLockedBufferSize2;
 
-    if( m_apDSBuffer == NULL )
+    if( m_apDSBuffer == nullptr )
         return CO_E_NOTINITIALIZED;
 
     // Restore the buffer if it was lost
@@ -899,7 +899,7 @@ HRESULT CStreamingSound::HandleWaveStreamNotification( BOOL bLoopedPlay )
 
     // m_dwDSBufferSize and m_dwNextWriteOffset are both multiples of m_dwNotifySize, 
     // it should the second buffer, so it should never be valid
-    if( pDSLockedBuffer2 != NULL )
+    if( pDSLockedBuffer2 != nullptr )
         return E_UNEXPECTED; 
 
     if( !m_bFillNextNotificationWithSilence )
@@ -988,13 +988,13 @@ HRESULT CStreamingSound::HandleWaveStreamNotification( BOOL bLoopedPlay )
     }
 
     // Unlock the DirectSound buffer
-    m_apDSBuffer[0]->Unlock( pDSLockedBuffer, dwDSLockedBufferSize, NULL, 0 );
+    m_apDSBuffer[0]->Unlock( pDSLockedBuffer, dwDSLockedBufferSize, nullptr, 0 );
 
     // Figure out how much data has been played so far.  When we have played
     // past the end of the file, we will either need to start filling the
     // buffer with silence or starting reading from the beginning of the file, 
     // depending if the user wants to loop the sound
-    hr = m_apDSBuffer[0]->GetCurrentPosition( &dwCurrentPlayPos, NULL );
+    hr = m_apDSBuffer[0]->GetCurrentPosition( &dwCurrentPlayPos, nullptr );
 		CRYASSERT(hr==S_OK);
 
     // Check to see if the position counter looped
@@ -1035,7 +1035,7 @@ HRESULT CStreamingSound::Reset()
 {
     HRESULT hr;
 
-    if( m_apDSBuffer[0] == NULL )
+    if( m_apDSBuffer[0] == nullptr )
         return CO_E_NOTINITIALIZED;
 
     m_dwLastPlayPos     = 0;
@@ -1094,7 +1094,7 @@ DWORD WINAPI NotificationProc( LPVOID lpParameter )
 
             case WAIT_OBJECT_0 + 1:
                 // Messages are available
-                while( PeekMessage( &msg, NULL, 0, 0, PM_REMOVE ) ) 
+                while( PeekMessage( &msg, nullptr, 0, 0, PM_REMOVE ) ) 
                 { 
                     if( msg.message == WM_QUIT )
                         bDone = TRUE;

@@ -233,7 +233,7 @@ public:
 
 	D3D2DTextureLocker(LPDIRECT3DTEXTURE9 pTexture)
 		: m_pTexture(pTexture),
-		m_pDataFormat(NULL)
+		m_pDataFormat(nullptr)
 	{
 		m_pTexture->AddRef();
 		for (DWORD i = 0; i < MAX_LOCK_LEVELS; i++)
@@ -314,7 +314,7 @@ public:
 		CRYASSERT(!m_bLocked[dwLevel]);
 
 		m_bLocked[dwLevel] = true;
-		hr = m_pTexture->LockRect(dwLevel, &m_LockData[dwLevel], NULL, 0);
+		hr = m_pTexture->LockRect(dwLevel, &m_LockData[dwLevel], nullptr, 0);
 		m_pTexture->GetLevelDesc(dwLevel, &m_LevelDesc[dwLevel]);
 
 		if (FAILED(hr))
@@ -424,7 +424,7 @@ public:
 
 	D3D2DSurfaceLocker(LPDIRECT3DSURFACE9 pSurface)
 		: m_pSurface(pSurface),
-		m_pDataFormat(NULL)
+		m_pDataFormat(nullptr)
 	{
 		m_pSurface->AddRef();
 		m_bLocked = false;
@@ -495,7 +495,7 @@ public:
 		CRYASSERT(!m_bLocked);
 
 		m_bLocked = true;
-		hr = m_pSurface->LockRect(&m_LockData, NULL, 0);
+		hr = m_pSurface->LockRect(&m_LockData, nullptr, 0);
 		if (FAILED(hr))
 			return false;
 
@@ -600,17 +600,17 @@ public:
 	// Gets height from luminance value
 	static LPDIRECT3DTEXTURE9 CreateNormalMap(LPDIRECT3DDEVICE9 pD3DDev, LPDIRECT3DTEXTURE9 pSource, STexPic* ti, bool bMips, D3DXVECTOR3 Scale, D3DFORMAT Format = D3DFMT_Q8W8V8U8, D3DPOOL Pool = D3DPOOL_MANAGED)
 	{
-		LPDIRECT3DTEXTURE9 pNormalMap = NULL;
+		LPDIRECT3DTEXTURE9 pNormalMap = nullptr;
 		D3DSURFACE_DESC ddsdDescDest;
 		D3DSURFACE_DESC ddsdDescSource;
 		D3DXVECTOR3 Normal;
 		HRESULT hr;
 		DWORD i, j;
-		LPDIRECT3DTEXTURE9 pNewTex = NULL;
+		LPDIRECT3DTEXTURE9 pNewTex = nullptr;
 
 		CRYASSERT(pSource && pSource->GetType() == D3DRTYPE_TEXTURE);
 		if (!pSource)
-			return NULL;
+			return nullptr;
 
 		(pSource)->GetLevelDesc(0, &ddsdDescSource);
 
@@ -625,7 +625,7 @@ public:
 		{
 			hr = D3DXCreateTexture(pD3DDev, ddsdDescSource.Width, ddsdDescSource.Height, bMips ? D3DX_DEFAULT : 1, 0, Format, D3DPOOL_SYSTEMMEM, &pNewTex);
 			if (FAILED(hr))
-				return NULL;
+				return nullptr;
 
 			// Copy the levels to RGB textures
 			for (i = 0; i < 1; i++)
@@ -634,7 +634,7 @@ public:
 				LPDIRECT3DSURFACE9 pSourceSurf;
 				pNewTex->GetSurfaceLevel(i, &pDestSurf);
 				pSource->GetSurfaceLevel(i, &pSourceSurf);
-				D3DXLoadSurfaceFromSurface(pDestSurf, NULL, NULL, pSourceSurf, NULL, NULL, D3DX_FILTER_NONE, 0);
+				D3DXLoadSurfaceFromSurface(pDestSurf, nullptr, nullptr, pSourceSurf, nullptr, nullptr, D3DX_FILTER_NONE, 0);
 				SAFE_RELEASE(pDestSurf);
 				SAFE_RELEASE(pSourceSurf);
 			}
@@ -649,7 +649,7 @@ public:
 		if (FAILED(hr))
 		{
 			SAFE_RELEASE(pNewTex);
-			return NULL;
+			return nullptr;
 		}
 
 		D3D2DTextureLocker SourceLocker(pSource);
@@ -744,7 +744,7 @@ public:
 		hr = D3DXCreateCubeTexture(pD3DDev, dwWidth, dwMipmaps, 0, D3DFMT_X8R8G8B8, Pool, &pCubeTexture);
 		if (FAILED(hr))
 		{
-			return NULL;
+			return nullptr;
 		}
 
 		if (dwMipmaps == 0)
@@ -761,7 +761,7 @@ public:
 
 				pCubeTexture->GetLevelDesc(dwLevel, &ddsdDesc);
 
-				pCubeTexture->LockRect((D3DCUBEMAP_FACES)i, dwLevel, &Locked, NULL, 0);
+				pCubeTexture->LockRect((D3DCUBEMAP_FACES)i, dwLevel, &Locked, nullptr, 0);
 
 				for (unsigned int y = 0; y < ddsdDesc.Height; y++)
 				{

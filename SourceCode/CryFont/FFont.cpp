@@ -30,7 +30,7 @@ CFFont::CFFont(struct ISystem* pISystem, class CCryFont* pCryFont, const char* p
 	m_bRealPixels = false;
 	m_fWidthScale = 1.0f;
 	m_bSameSize = false;
-	//	m_pBitmap = NULL;
+	//	m_pBitmap = nullptr;
 	m_pISystem = pISystem;
 	m_pCryFont = pCryFont;
 	m_szName = pszName;
@@ -71,7 +71,7 @@ CFFont::~CFFont()
 	itor=m_pCryFont->m_mapFonts.find(m_sName.c_str());
 	if (itor!=m_pCryFont->m_mapFonts.end())
 	m_pCryFont->m_mapFonts.erase(itor);
-	m_pCryFont=NULL;
+	m_pCryFont=nullptr;
 	}*/
 	Free();
 }
@@ -202,7 +202,7 @@ void CFFont::Free()
 // Set the current effect to use
 void CFFont::SetEffect(const char* szEffect)
 {
-	m_pCurrentEffect = NULL;
+	m_pCurrentEffect = nullptr;
 	if (!szEffect)
 		szEffect = "default";
 
@@ -441,9 +441,7 @@ void CFFont::DrawStringW(float fBaseX, float fBaseY, const wchar_t* szMsg, const
 	CRYASSERT(pRenderer);
 
 	if (!szMsg)
-	{
 		return;
-	}
 
 	Prepare(szMsg);
 
@@ -460,9 +458,7 @@ void CFFont::DrawStringW(float fBaseX, float fBaseY, const wchar_t* szMsg, const
 	for (int i = m_pCurrentEffect->vPass.size() - 1; i >= 0; --i)
 	{
 		if (!i)
-		{
 			fAlpha = 1.0f;
-		}
 
 		SRenderingPass* Pass = &m_pCurrentEffect->vPass[i];
 
@@ -482,18 +478,14 @@ void CFFont::DrawStringW(float fBaseX, float fBaseY, const wchar_t* szMsg, const
 			vBaseXY.y = pRenderer->ScaleCoordY(vBaseXY.y);
 		}
 
-		float			fRcpCellWidth = (1.0f / (float)m_pFontTexture.GetCellWidth()) * vSize.x;
-		float			fCharX = vBaseXY.x + vOffset.x;
-		float			fCharY = vBaseXY.y + vOffset.y;
+		float fRcpCellWidth = (1.0f / (float)m_pFontTexture.GetCellWidth()) * vSize.x;
+		float fCharX = vBaseXY.x + vOffset.x;
+		float fCharY = vBaseXY.y + vOffset.y;
 
 		if (bRGB)
-		{
 			dwPassColor = FONT_RGBA(Pass->cColor.r, Pass->cColor.g, Pass->cColor.b, Pass->cColor.a * fAlpha);
-		}
 		else
-		{
 			dwPassColor = FONT_RGBA(Pass->cColor.b, Pass->cColor.g, Pass->cColor.r, Pass->cColor.a * fAlpha);
-		}
 
 		dwColor = dwPassColor;
 
@@ -512,9 +504,7 @@ void CFFont::DrawStringW(float fBaseX, float fBaseY, const wchar_t* szMsg, const
 			case L'\\':
 			{
 				if (*pcChar != L'n' || !bASCIIMultiLine)
-				{
 					break;
-				}
 				++pcChar;
 			}
 			case L'\n':
@@ -527,20 +517,15 @@ void CFFont::DrawStringW(float fBaseX, float fBaseY, const wchar_t* szMsg, const
 			case L'\r':
 			{
 				fCharX = vBaseXY.x + vOffset.x;
-
 				continue;
 			}
 			break;
 			case L'\t':
 			{
 				if (m_bSameSize)
-				{
 					fCharX += 4 * vSize.x * m_fWidthScale;
-				}
 				else
-				{
 					fCharX += FONT_SPACE_SIZE * 4 * vSize.x;
-				}
 
 				continue;
 			}
@@ -548,14 +533,9 @@ void CFFont::DrawStringW(float fBaseX, float fBaseY, const wchar_t* szMsg, const
 			case L' ':
 			{
 				if (m_bSameSize)
-				{
 					fCharX += vSize.x * m_fWidthScale;
-				}
 				else
-				{
 					fCharX += FONT_SPACE_SIZE * vSize.x;
-				}
-
 				continue;
 			}
 			break;
@@ -570,32 +550,23 @@ void CFFont::DrawStringW(float fBaseX, float fBaseY, const wchar_t* szMsg, const
 					if (!i)
 					{
 						int iColorIndex = (*pcChar) - L'0';
-
 						dwColor = m_vColorTable[iColorIndex];
 
 						if (bRGB)
-						{
 							dwColor = m_vColorTable[iColorIndex];
-						}
 						else
-						{
 							dwColor = COLCONV(m_vColorTable[iColorIndex]);
-						}
 
 						// apply the correct alpha
 						dwColor = (dwColor & 0x00ffffff) | ((long)((Pass->cColor.a * fAlpha) * 255.0f)) << 24;
 					}
-
 					++pcChar;
-
 					continue;
 				}
 				else if ((*pcChar == L'O' || *pcChar == L'o') && !i)
 				{
 					if (!i)
-					{
 						dwColor = dwPassColor;
-					}
 
 					++pcChar;
 
@@ -604,7 +575,6 @@ void CFFont::DrawStringW(float fBaseX, float fBaseY, const wchar_t* szMsg, const
 				else if (*pcChar)
 				{
 					++pcChar;
-
 					continue;
 				}
 			}
@@ -650,7 +620,6 @@ void CFFont::DrawStringW(float fBaseX, float fBaseY, const wchar_t* szMsg, const
 				if ((fX >= m_fClipR) || (fY >= m_fClipB) || (fR < m_fClipX) || (fB < m_fClipY))
 				{
 					fCharX += fAdvance;
-
 					continue;
 				}
 				// clip partially visible
@@ -659,7 +628,6 @@ void CFFont::DrawStringW(float fBaseX, float fBaseY, const wchar_t* szMsg, const
 					if ((fWidth <= 0.0f) || (vSize.y <= 0.0f))
 					{
 						fCharX += fAdvance;
-
 						continue;
 					}
 
@@ -731,12 +699,9 @@ void CFFont::DrawStringW(float fBaseX, float fBaseY, const wchar_t* szMsg, const
 			pVertex[iOffset++].st[1] = vTexCoord[1];
 
 			if (iVBLen >= 682)
-			{
 				break;
-			}
 
 			++iVBLen;
-
 			fCharX += fAdvance;
 		}
 

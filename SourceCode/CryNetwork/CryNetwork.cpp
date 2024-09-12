@@ -53,7 +53,7 @@ INetwork* CreateNetwork(ISystem* pSystem)
 	if (!pNetwork->Init(gISystem->GetIScriptSystem()))
 	{
 		delete pNetwork;
-		return NULL;
+		return nullptr;
 	}
 	return pNetwork;
 }

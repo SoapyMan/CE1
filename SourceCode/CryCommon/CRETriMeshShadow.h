@@ -18,7 +18,7 @@ public:
 		mfSetType(eDATA_TriMeshShadow);
 		mfUpdateFlags(FCEF_TRANSFORM | FCEF_NODEL);
 		memset(m_arrLBuffers, 0, sizeof(m_arrLBuffers));
-		m_pSvObj = NULL;
+		m_pSvObj = nullptr;
 		m_nCurrInst = 0;
 		m_nRendIndices = 0;
 		m_bAnimatedObject = false;

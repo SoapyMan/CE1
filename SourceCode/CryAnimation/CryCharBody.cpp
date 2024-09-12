@@ -27,7 +27,7 @@ using namespace CryStringUtils;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 CryCharBody::CryCharBody(CryCharManager* pManager, const string& strFileName) :
-	m_pCryModel(NULL),
+	m_pCryModel(nullptr),
 	m_fAnimationFrameRate(30), // the default animation rate
 	m_strFilePath(strFileName), // we're optimistic and think that the object will be loaded successfully
 	m_pManager(pManager)
@@ -70,7 +70,7 @@ CryCharBody::~CryCharBody()
 	if (m_pCryModel)
 	{
 		delete m_pCryModel;
-		m_pCryModel = NULL;
+		m_pCryModel = nullptr;
 	}
 
 	m_pManager->UnregisterBody(this);

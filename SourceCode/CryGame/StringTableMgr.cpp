@@ -30,8 +30,8 @@
 //////////////////////////////////////////////////////////////////////
 CStringTableMgr::CStringTableMgr()
 {
-	m_pSystem=NULL;
-	m_pLanguageStriptObject=NULL;
+	m_pSystem=nullptr;
+	m_pLanguageStriptObject=nullptr;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -127,7 +127,7 @@ bool CStringTableMgr::LoadExcelXmlSpreadsheet( const string &sFileName )
 	if (!pDoc->load(sPath.c_str()))
 		return (false);
 
-	m_mapLoadedTables[sFileName] = NULL;
+	m_mapLoadedTables[sFileName] = nullptr;
 
 	XDOM::IXMLDOMNodeListPtr pNodeList;
 
@@ -173,11 +173,8 @@ bool CStringTableMgr::LoadExcelXmlSpreadsheet( const string &sFileName )
 		while (pCellNode = pCellList->nextNode())
 		{
 			XDOM::IXMLDOMNodeListPtr pDataList = pCellNode->getElementsByTagName("Data");
-#if !defined(LINUX64)
-			if (pDataList==NULL)
-#else
-			if (pDataList==0)
-#endif
+
+			if (!pDataList)
 				continue;
 
 			pDataList->reset();
@@ -268,7 +265,7 @@ bool CStringTableMgr::LoadStringTable(string sFileName)
 	if (!pDoc->load(sPath.c_str()))
 		return (false);
 
-	m_mapLoadedTables[sFileName] = NULL;
+	m_mapLoadedTables[sFileName] = nullptr;
 
 	XDOM::IXMLDOMNodeListPtr pNodeList;
 	XDOM::IXMLDOMNodePtr pString;
@@ -284,7 +281,7 @@ bool CStringTableMgr::LoadStringTable(string sFileName)
 	{
 		pEnum=pString->getAttribute("enum");
 		pValue=pString->getAttribute("value");
-		if((pEnum!=NULL) && (pValue!=NULL))
+		if((pEnum!=nullptr) && (pValue!=nullptr))
 		{
 			wstring::size_type nPos;
 			int nID=m_vStrings.size();

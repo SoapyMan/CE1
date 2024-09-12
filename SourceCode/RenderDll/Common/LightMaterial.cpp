@@ -23,7 +23,7 @@ void SLightMaterial::Release()
 	m_nRefCounter--;
 	if (!m_nRefCounter)
 	{
-		SLightMaterial::known_materials[Id] = NULL;
+		SLightMaterial::known_materials[Id] = nullptr;
 		delete this;
 	}
 }
@@ -107,7 +107,7 @@ SLightMaterial* SLightMaterial::mfAdd(char* name, SLightMaterial* Compare)
 	}
 
 	if (!name || !name[0])
-		iConsole->Exit("SLightMaterial::mfAdd: NULL name\n");
+		iConsole->Exit("SLightMaterial::mfAdd: nullptr name\n");
 
 	//
 	// search the currently loaded materials
@@ -139,7 +139,7 @@ SLightMaterial* SLightMaterial::mfGet(char* name)
 	SLightMaterial* mat;
 
 	if (!name || !name[0])
-		iConsole->Exit("SLightMaterial::mfGet: NULL name\n");
+		iConsole->Exit("SLightMaterial::mfGet: nullptr name\n");
 
 	//
 	// search the currently loaded materials
@@ -158,7 +158,7 @@ SLightMaterial* SLightMaterial::mfGet(char* name)
 	if (known_materials.Num())
 		return known_materials[0];
 
-	return NULL;
+	return nullptr;
 }
 
 

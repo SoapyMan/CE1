@@ -23,9 +23,9 @@
 CXServerRules::CXServerRules()
 {
 	m_init=false;	
-	m_pScriptSystem=NULL;
-	m_pGameRulesObj=NULL;
-	m_pGame=NULL;
+	m_pScriptSystem=nullptr;
+	m_pGameRulesObj=nullptr;
+	m_pGame=nullptr;
 }
 
 ///////////////////////////////////////////////
@@ -104,7 +104,7 @@ bool CXServerRules::Init(CXGame *pGame, IConsole *pConsole,IScriptSystem *pScrip
 void CXServerRules::Update()
 {
 	FUNCTION_PROFILER( GetISystem(), PROFILE_GAME );
-	if(m_pGameRulesObj==NULL)
+	if(m_pGameRulesObj==nullptr)
 		return;
 	m_pScriptSystem->BeginCall("GameRules","OnUpdate");
 	m_pScriptSystem->PushFuncParam(m_pGameRulesObj);
@@ -495,7 +495,7 @@ void CXServerRules::OnSpectatorSwitchModeRequest(IEntity *spec)
 
 void CXServerRules::OnAfterLoad()
 {
-	HSCRIPTFUNCTION hFunc = NULL;
+	HSCRIPTFUNCTION hFunc = HSCRIPT_NULL;
 
 	if (m_pGameRulesObj->GetValue("OnAfterLoad", hFunc))
 	{

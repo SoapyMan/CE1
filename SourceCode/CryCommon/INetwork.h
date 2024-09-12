@@ -433,7 +433,7 @@ struct IRConSystem
 {
 	//! query response packets
 	//! Can specify optional client, to get server ip from.
-	virtual void Update(unsigned int dwTime, IClient* pClient = NULL) = 0;
+	virtual void Update(unsigned int dwTime, IClient* pClient = nullptr) = 0;
 	//! release the interface(and delete the object that implements it)
 	virtual void Release() = 0;
 	//!

@@ -559,7 +559,7 @@ typedef struct GraphNode
 		mark = false;
 		nRefCount = 0;
 		fHeuristic = -9999.f;
-		pArea = NULL;	// this is outside
+		pArea = nullptr;	// this is outside
 		nBuildingID = -1; // outside
 		fDistance = 0;
 	}

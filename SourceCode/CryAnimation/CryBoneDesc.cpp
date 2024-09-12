@@ -84,7 +84,7 @@ bool CryBoneDesc::PostInitPhysGeom(ChunkIdToPhysGeomMap& mapChunkIdToPhysGeom, i
 	}
 	else
 	{
-		pPhysGeom = NULL;
+		pPhysGeom = nullptr;
 		return false;
 	}
 }

@@ -72,7 +72,7 @@ void CXSystemDummy::DeleteAllEntities()
 ///////////////////////////////////////////////
 void CXSystemDummy::Disconnected(const char *szCause)
 {
-	if(!szCause) szCause = "NULL ERROR";
+	if(!szCause) szCause = "nullptr ERROR";
 	TRACE("Client Disconnected");
 	TRACE(szCause);
 

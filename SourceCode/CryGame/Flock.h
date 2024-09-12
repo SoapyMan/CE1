@@ -280,7 +280,7 @@ public:
 	virtual void Update();
 	virtual void SetEntity( IEntity* entity );
 	virtual void OnSetAngles( const Vec3 &ang ) {};
-	virtual bool Write(CStream &stm,EntityCloneState *cs=NULL) { return true; };
+	virtual bool Write(CStream &stm,EntityCloneState *cs=nullptr) { return true; };
 	virtual bool Read(CStream &stm) { return true; };
 	virtual IScriptObject *GetScriptObject() { return 0; };
 	virtual void SetScriptObject(IScriptObject *object) {};

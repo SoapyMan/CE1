@@ -113,10 +113,10 @@ public:
 
 	virtual bool SetShaderTemplateName(const char* TemplName, int Id, const char* ShaderName = 0, IMatInfo* pCustomMaterial = 0, unsigned nFlags = 0);
 	//! Sets shader template for rendering
-	virtual bool SetShaderTemplate(int nTemplate, const char* TemplName, const char* ShaderName, bool bOnlyRegister = false, int* pnNewTemplateId = NULL);
+	virtual bool SetShaderTemplate(int nTemplate, const char* TemplName, const char* ShaderName, bool bOnlyRegister = false, int* pnNewTemplateId = nullptr);
 
 
-	virtual void SetShaderFloat(const char* Name, float fVal, const char* ShaderName = NULL);
+	virtual void SetShaderFloat(const char* Name, float fVal, const char* ShaderName = nullptr);
 	//! Sets color parameter
 	virtual void SetColor(float fR, float fG, float fB, float fA);
 

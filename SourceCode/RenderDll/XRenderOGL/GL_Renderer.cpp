@@ -118,10 +118,10 @@ CGLRenderer::CGLRenderer()
 #define new DEBUG_CLIENTBLOCK
 #endif
 
-	m_LogFile = NULL;
+	m_LogFile = nullptr;
 	m_Features = RFT_DIRECTACCESSTOVIDEOMEMORY;
 	m_numvidmodes = 0;
-	m_vidmodes = NULL;
+	m_vidmodes = nullptr;
 
 	mMinDepth = 0;
 	mMaxDepth = 1.0f;
@@ -225,14 +225,14 @@ CGLRenderer::CGLRenderer()
 
 }
 
-CGLRenderer* gcpOGL = NULL;
+CGLRenderer* gcpOGL = nullptr;
 
 #include <stdio.h>
 //////////////////////////////////////////////////////////////////////
 CGLRenderer::~CGLRenderer()
 {
 	ShutDown();
-	gcpOGL = NULL;
+	gcpOGL = nullptr;
 }
 
 void CGLRenderer::GLSetDefaultState()
@@ -366,7 +366,7 @@ void CGLRenderer::ChangeLog()
 			fprintf(m_LogFile, "==========================================\n");
 
 			fclose(m_LogFile);
-			m_LogFile = NULL;
+			m_LogFile = nullptr;
 			iLog->Log("OpenGL log file '%s' closed\n", "OpenGLLog.txt");
 		}
 }
@@ -449,7 +449,7 @@ void CGLRenderer::BeginFrame()
 		if (re->m_VBuffer)
 		{
 			ReleaseBuffer(re->m_VBuffer);
-			re->m_VBuffer = NULL;
+			re->m_VBuffer = nullptr;
 		}
 		ReleaseIndexBuffer(&re->m_Inds);
 	}
@@ -482,7 +482,7 @@ bool CGLRenderer::ChangeDisplay(unsigned int width, unsigned int height, unsigne
 
 	ZeroMemory(&dm, sizeof(dm));
 
-	EnumDisplaySettings(NULL, ENUM_CURRENT_SETTINGS, &dm);
+	EnumDisplaySettings(nullptr, ENUM_CURRENT_SETTINGS, &dm);
 
 	dm.dmFields = 0;
 
@@ -510,7 +510,7 @@ bool CGLRenderer::ChangeDisplay(unsigned int width, unsigned int height, unsigne
 	}
 	else
 	{
-		lRes = ChangeDisplaySettings(NULL, 0);
+		lRes = ChangeDisplaySettings(nullptr, 0);
 	}
 
 	switch (lRes)
@@ -528,7 +528,7 @@ bool CGLRenderer::ChangeDisplay(unsigned int width, unsigned int height, unsigne
 	case DISP_CHANGE_FAILED:
 	case DISP_CHANGE_BADMODE:
 	case DISP_CHANGE_NOTUPDATED:
-		//ChangeDisplaySettings(NULL, 0);
+		//ChangeDisplaySettings(nullptr, 0);
 		return (false);
 		iLog->Log("Cannot change display settings\n");
 		break;
@@ -683,7 +683,7 @@ void CGLRenderer::Update()
 			if (fg)
 			{
 				delete[] fg;
-				fg = NULL;
+				fg = nullptr;
 			}
 			sPrevWidth = wdt;
 			sPrevHeight = hgt;
@@ -1290,7 +1290,7 @@ const char* CGLRenderer::ErrorString(GLenum errorCode)
 	else if (errorCode == GL_OUT_OF_MEMORY) {
 		return "out of memory";
 	}
-	return NULL;
+	return nullptr;
 }
 
 void CGLRenderer::CheckError(const char* comment)
@@ -1414,7 +1414,7 @@ unsigned int CGLRenderer::DownLoadToVideoMemory(unsigned char* data, int w, int 
 	  if (eTFDst==eTF_8888)
 		flags |= FT_HASALPHA;
 
-	  STexPic *tp = m_TexMan->DownloadTexture(name, w, h, flags, FT2_NODXT, data, eTT_Base, DXTSize, NULL, 0, eTFSrc);
+	  STexPic *tp = m_TexMan->DownloadTexture(name, w, h, flags, FT2_NODXT, data, eTT_Base, DXTSize, nullptr, 0, eTFSrc);
 
 	  return (tp->m_Bind);  */
 
@@ -2569,7 +2569,7 @@ void CGLRenderer::ResetToDefault()
 		m_eCurAlphaArg[i] = -1;
 		m_fCurRGBScale[i] = -1.0f;
 		CGLTexMan::m_TUState[i].m_Bind = 0;
-		SArrayPointer_Texture::m_pLastPointer[i] = NULL;
+		SArrayPointer_Texture::m_pLastPointer[i] = nullptr;
 		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE_EXT);
 
 		// tiago: added
@@ -2636,10 +2636,10 @@ void CGLRenderer::ResetToDefault()
 	m_CurState = GS_DEPTHWRITE;
 	m_RP.m_eCull = (ECull)-1;
 	SArrayPointer::m_CurEnabled = PFE_POINTER_VERT;
-	SArrayPointer_Vertex::m_pLastPointer = NULL;
-	SArrayPointer_Normal::m_pLastPointer = NULL;
-	SArrayPointer_Color::m_pLastPointer = NULL;
-	SArrayPointer_SecColor::m_pLastPointer = NULL;
+	SArrayPointer_Vertex::m_pLastPointer = nullptr;
+	SArrayPointer_Normal::m_pLastPointer = nullptr;
+	SArrayPointer_Color::m_pLastPointer = nullptr;
+	SArrayPointer_SecColor::m_pLastPointer = nullptr;
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	glDisableClientState(GL_COLOR_ARRAY);
@@ -2656,9 +2656,9 @@ void CGLRenderer::ResetToDefault()
 	if (m_LogFile && CV_r_log == 3)
 		Logv(SRendItem::m_RecurseLevel, ".... End ResetToDefault ....\n");
 
-	CPShader::m_CurRC = NULL;
-	CVProgram::m_LastVP = NULL;
-	CPShader::m_LastVP = NULL;
+	CPShader::m_CurRC = nullptr;
+	CVProgram::m_LastVP = nullptr;
+	CPShader::m_LastVP = nullptr;
 }
 
 int CGLRenderer::GenerateAlphaGlowTexture(float k)
@@ -2891,7 +2891,7 @@ void CGLRenderer::SetClipPlane(int id, float* params)
 	if (params)
 		EF_SetClipPlane(true, params, false);
 	else
-		EF_SetClipPlane(false, NULL, false);
+		EF_SetClipPlane(false, nullptr, false);
 }
 
 

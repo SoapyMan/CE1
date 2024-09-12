@@ -281,13 +281,13 @@ void STexPic::SaveToCache()
 					int nCompares = 0;
 					for (i = 0; i < nFiles; i++)
 					{
-						HANDLE status2 = CreateFile(nameFile[i], GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL);
+						HANDLE status2 = CreateFile(nameFile[i], GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, nullptr);
 						if (status2 != INVALID_HANDLE_VALUE)
 						{
 							FILETIME writetime1, writetime2;
 							writetime1 = fh.m_WriteTime[i];
 
-							GetFileTime(status2, NULL, NULL, &writetime2);
+							GetFileTime(status2, nullptr, nullptr, &writetime2);
 
 							CloseHandle(status2);
 							if (CompareFileTime(&writetime1, &writetime2) == 0)
@@ -339,11 +339,11 @@ void STexPic::SaveToCache()
 	int nFiles = GetFileNames(nameFile[0], nameFile[1], 128);
 	for (i = 0; i < nFiles; i++)
 	{
-		HANDLE status = CreateFile(nameFile[i], GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL);
+		HANDLE status = CreateFile(nameFile[i], GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, nullptr);
 		if (status != INVALID_HANDLE_VALUE)
 		{
 			FILETIME writetime;
-			GetFileTime(status, NULL, NULL, &writetime);
+			GetFileTime(status, nullptr, nullptr, &writetime);
 			CloseHandle(status);
 			fh.m_WriteTime[i] = writetime;
 		}
@@ -590,7 +590,7 @@ void CTextureStreamCallback::StreamOnComplete(IReadStream* pStream, unsigned nEr
 				tp->m_Flags2 &= ~FT2_PARTIALLYLOADED;
 		}
 		tp->Relink(&STexPic::m_Root);
-		gRenDev->m_TexMan->CheckTexLimits(NULL);
+		gRenDev->m_TexMan->CheckTexLimits(nullptr);
 	}
 	SAFE_DELETE(pTexCacheFileInfo);
 	tp->m_Flags2 &= ~FT2_STREAMINGINPROGRESS;
@@ -798,7 +798,7 @@ void STexPic::LoadFromCache(int Flags, float fDist)
 	Relink(&STexPic::m_Root);
 
 	IStreamEngine* pSE = iSystem->GetStreamEngine();
-	FILE* fp = NULL;
+	FILE* fp = nullptr;
 
 	// Synchronous loading
 	static char* cubefaces[6] = { "posx","negx","posy","negy","posz","negz" };
@@ -1094,13 +1094,13 @@ static ETexType sStrToETT(const char* sETT)
 STexPic* CTexMan::LoadFromCache(STexPic* ti, int flags, int flags2, char* name, const char* szModelName, ETexType eTT)
 {
 	if (!(m_Streamed & 1))
-		return NULL;
+		return nullptr;
 
 	if (flags & FT_NOSTREAM)
-		return NULL;
+		return nullptr;
 
 	int i, n;
-	FILE* fp = NULL;
+	FILE* fp = nullptr;
 	CResFile* rf = gRenDev->m_TexMan->m_TexCache;
 	char szName[512];
 	if (ti && !(flags2 & FT2_DISCARDINCACHE))
@@ -1114,7 +1114,7 @@ STexPic* CTexMan::LoadFromCache(STexPic* ti, int flags, int flags2, char* name, 
 			if (fp)
 			{
 				iSystem->GetIPak()->FClose(fp);
-				fp = NULL;
+				fp = nullptr;
 			}
 			iLog->Log("Warning: streaming of heightmap texture %s.dds are not supported (texture name should contain _ddn substring)", ti->m_SourceName.c_str());
 		}
@@ -1123,7 +1123,7 @@ STexPic* CTexMan::LoadFromCache(STexPic* ti, int flags, int flags2, char* name, 
 			if (fp)
 			{
 				iSystem->GetIPak()->FClose(fp);
-				fp = NULL;
+				fp = nullptr;
 			}
 			iLog->Log("Warning: streaming of heightmap texture %s.dds are not supported (texture name should contain _ddt substring)", ti->m_SourceName.c_str());
 		}
@@ -1132,7 +1132,7 @@ STexPic* CTexMan::LoadFromCache(STexPic* ti, int flags, int flags2, char* name, 
 	if (!fp && !rf)
 	{
 		if (!CreateCacheFile())
-			return NULL;
+			return nullptr;
 		rf = gRenDev->m_TexMan->m_TexCache;
 	}
 	bool bSprite = false;
@@ -1193,12 +1193,12 @@ STexPic* CTexMan::LoadFromCache(STexPic* ti, int flags, int flags2, char* name, 
 								CubeSide = 0;
 		if (m_LastCMStreamed->m_CubeSide >= CubeSide)
 		{
-			m_LastCMStreamed = NULL;
-			return NULL;
+			m_LastCMStreamed = nullptr;
+			return nullptr;
 		}
 		ti->m_DstFormat = m_LastCMStreamed->m_DstFormat;
 		if (CubeSide == 5)
-			m_LastCMStreamed = NULL;
+			m_LastCMStreamed = nullptr;
 		ti->m_CubeSide = CubeSide;
 
 		ti->m_Flags2 |= FT2_WASUNLOADED;
@@ -1209,7 +1209,7 @@ STexPic* CTexMan::LoadFromCache(STexPic* ti, int flags, int flags2, char* name, 
 	}
 
 	if (!fp && rf->mfFileExist(name) < 0)
-		return NULL;
+		return nullptr;
 	if (!ti)
 	{
 		bSprite = true;
@@ -1290,7 +1290,7 @@ STexPic* CTexMan::LoadFromCache(STexPic* ti, int flags, int flags2, char* name, 
 			}
 		}
 		else
-			fp = NULL;
+			fp = nullptr;
 	}
 	if (!fp)
 	{
@@ -1299,7 +1299,7 @@ STexPic* CTexMan::LoadFromCache(STexPic* ti, int flags, int flags2, char* name, 
 		rf->mfFileSeek(ti->m_CacheID, 0, SEEK_SET);
 		rf->mfFileRead2(ti->m_CacheID, sizeof(STexCacheFileHeader), &fh);
 		if (fh.m_sExt[0] == 0 && !bSprite)
-			return NULL;
+			return nullptr;
 		memcpy(&ti->m_CacheFileHeader, &fh, sizeof(fh));
 		nSides = ti->m_CacheFileHeader.m_nSides;
 		nMips = ti->m_CacheFileHeader.m_nMips;
@@ -1351,13 +1351,13 @@ STexPic* CTexMan::LoadFromCache(STexPic* ti, int flags, int flags2, char* name, 
 		int nComp = 0;
 		for (i = 0; i < nFiles; i++)
 		{
-			HANDLE status2 = CreateFile(nameFile[i], GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL);
+			HANDLE status2 = CreateFile(nameFile[i], GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, nullptr);
 			if (status2 != INVALID_HANDLE_VALUE)
 			{
 				FILETIME writetime1, writetime2;
 				writetime1 = fh.m_WriteTime[i];
 
-				GetFileTime(status2, NULL, NULL, &writetime2);
+				GetFileTime(status2, nullptr, nullptr, &writetime2);
 				if (CompareFileTime(&writetime1, &writetime2) == 0)
 					nComp++;
 
@@ -1367,24 +1367,24 @@ STexPic* CTexMan::LoadFromCache(STexPic* ti, int flags, int flags2, char* name, 
 		if (nComp != nFiles)
 		{
 			ti->m_CacheID = -1;
-			return NULL;
+			return nullptr;
 		}
 	}
 	else
 		if (bSprite && !(flags2 & FT2_RELOAD))
 		{
-			HANDLE status2 = CreateFile(szModelName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL);
+			HANDLE status2 = CreateFile(szModelName, GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, nullptr);
 			if (status2 != INVALID_HANDLE_VALUE)
 			{
 				FILETIME writetime1, writetime2;
 				writetime1 = fh.m_WriteTime[0];
 
-				GetFileTime(status2, NULL, NULL, &writetime2);
+				GetFileTime(status2, nullptr, nullptr, &writetime2);
 				CloseHandle(status2);
 				if (CompareFileTime(&writetime1, &writetime2) != 0)
 				{
 					ti->m_CacheID = -1;
-					return NULL;
+					return nullptr;
 				}
 			}
 		}
@@ -1427,7 +1427,7 @@ STexPic* CTexMan::LoadFromCache(STexPic* ti, int flags, int flags2, char* name, 
 								CubeSide = 0;
 	}
 	if (CubeSide < 0 || CubeSide == 5)
-		m_LastCMStreamed = NULL;
+		m_LastCMStreamed = nullptr;
 	else
 		m_LastCMStreamed = ti;
 	ti->m_CubeSide = CubeSide;
@@ -1462,7 +1462,7 @@ STexPic* CTexMan::LoadFromCache(STexPic* ti, int flags, int flags2, char* name, 
 	ti->m_RefTex.bProjected = (ti->m_Flags & FT_PROJECTED) ? true : false;
 
 	// Always load lowest 4 mips synchronously
-	fp = NULL;
+	fp = nullptr;
 	if (ti->m_nMips > 1)
 	{
 		int i, j;
@@ -1614,7 +1614,7 @@ STexPic* CTexMan::LoadFromCache(STexPic* ti, int flags, int flags2, char* name, 
 			if (fp)
 			{
 				iSystem->GetIPak()->FClose(fp);
-				fp = NULL;
+				fp = nullptr;
 			}
 		}
 	}

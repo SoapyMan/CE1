@@ -140,7 +140,7 @@ public:
 		Vec3d* pvAmbColor, Vec3d* pvDynAmbColor,
 		VolumeInfo* pFogVolume,
 		bool bNotAllInFrustum,
-		float fMaxViewDist, IEntityRenderInfo* pEntInfo = NULL);
+		float fMaxViewDist, IEntityRenderInfo* pEntInfo = nullptr);
 
 	float GetXYRadius(int nType);
 	bool GetStaticObjectBBox(int nType, Vec3d& vBoxMin, Vec3d& vBoxMax);
@@ -172,15 +172,15 @@ public:
 		const ParticleBlendType eBlendType,
 		const Vec3d& vAmbientColor,
 		Vec3d vPos,
-		const SColorVert* pTailVerts = NULL,
+		const SColorVert* pTailVerts = nullptr,
 		const int nTailVertsNum = 0,
-		const byte* pTailIndices = NULL,
+		const byte* pTailIndices = nullptr,
 		const int nTailIndicesNum = 0,
 		const float fSortId = 0,
 		const int dwCCObjFlags = 0,
-		IMatInfo* pCustomMaterial = NULL,
-		CStatObjInst* pStatObjInst = NULL,
-		list2<struct ShadowMapLightSourceInstance>* pShadowMapCasters = NULL);
+		IMatInfo* pCustomMaterial = nullptr,
+		CStatObjInst* pStatObjInst = nullptr,
+		list2<struct ShadowMapLightSourceInstance>* pShadowMapCasters = nullptr);
 
 	// tmp containers (replacement for local static vars)
 	list2<IEntityRender*> lstEntList_MLSMCIA;

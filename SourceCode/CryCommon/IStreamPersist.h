@@ -79,7 +79,7 @@ struct IStreamPersist
 		@return true if succeded,false failed
 		@see CStream
 	*/
-	virtual bool Load(CStream& stm, IScriptObject* pStream = NULL) = 0;
+	virtual bool Load(CStream& stm, IScriptObject* pStream = nullptr) = 0;
 };
 
 #endif // GAME_ISTREAMPERSIST_H

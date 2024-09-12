@@ -113,7 +113,7 @@ struct Allocator
 	}
 
 	// constructs the allocator object; by default, the stdlib functions are used
-	Allocator (FnAlloc fnAllocIn = DefaultAlloc, FnFree fnFreeIn = DefaultFree, void* pOpaqueIn = NULL):
+	Allocator (FnAlloc fnAllocIn = DefaultAlloc, FnFree fnFreeIn = DefaultFree, void* pOpaqueIn = nullptr):
 		fnAlloc(fnAllocIn),
 		fnFree (fnFreeIn),
 		pOpaque(pOpaqueIn)
@@ -127,7 +127,7 @@ struct TSmartHeapPtr
 {
 	TSmartHeapPtr(_Heap* pHeap):
 		m_pHeap(pHeap),
-		m_pAddress(NULL)
+		m_pAddress(nullptr)
 	{
 	}
 	~TSmartHeapPtr()
@@ -144,7 +144,7 @@ struct TSmartHeapPtr
 	void* Detach()
 	{
 		void* p = m_pAddress;
-		m_pAddress = NULL;
+		m_pAddress = nullptr;
 		return p;
 	}
 
@@ -153,7 +153,7 @@ struct TSmartHeapPtr
 		if (m_pAddress)
 		{
 			m_pHeap->Free(m_pAddress);
-			m_pAddress = NULL;
+			m_pAddress = nullptr;
 		}
 	}
 protected:

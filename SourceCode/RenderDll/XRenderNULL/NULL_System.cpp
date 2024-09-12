@@ -162,9 +162,9 @@ DLL_EXPORT IRenderer* PackageRenderConstructor(int argc, char* argv[], SCryRende
 
 void* gGet_D3DDevice()
 {
-	return NULL;
+	return nullptr;
 }
 void* gGet_glReadPixels()
 {
-	return NULL;
+	return nullptr;
 }

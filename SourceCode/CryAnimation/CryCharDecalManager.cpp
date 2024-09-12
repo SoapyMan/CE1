@@ -373,7 +373,7 @@ void CryCharDecalManager::RefreshVertexBufferVertices(const Vec3d* pInPositions)
 	if (!pVertexContainer)
 		return;
 
-	if (pVertexContainer->m_pVertexBuffer == NULL)
+	if (pVertexContainer->m_pVertexBuffer == nullptr)
 		m_RE.recreate();
 
 	m_RE.lock(true);
@@ -459,7 +459,7 @@ void CryCharDecalManager::RefreshVertexBufferIndices()
 	if (!m_RE.getLeafBuffer())
 		return; // nothing to update - no vertex buffer
 
-	if (m_RE.getLeafBuffer()->GetVertexContainer()->m_pVertexBuffer == NULL)
+	if (m_RE.getLeafBuffer()->GetVertexContainer()->m_pVertexBuffer == nullptr)
 		m_RE.recreate();
 
 	// calculate the number of required indices in the arrIndices array

@@ -321,7 +321,7 @@ void CObjManager::DrawAllShadowsOnTheGroundInSector(list2<IEntityRender*>* pEntL
 
 					int nRealLightsNum = ((C3DEngine*)Get3DEngine())->GetRealLightsNum();
 					CRYASSERT(nRealLightsNum == 1);
-					RenderObject(pEnt, 0, 1, true, GetViewCamera(), NULL, 0, 0, false, pEnt->GetMaxViewDist());
+					RenderObject(pEnt, 0, 1, true, GetViewCamera(), nullptr, 0, 0, false, pEnt->GetMaxViewDist());
 					RenderEntitiesShadowMapsOnTerrain(true, 0);
 
 					// increase frame id to help shadow map menager in renderer

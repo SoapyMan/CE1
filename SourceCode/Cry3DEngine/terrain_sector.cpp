@@ -316,7 +316,7 @@ void CSectorInfo::RenderEntities(CObjManager* pObjManager, bool bNotAllInFrustum
 	if (m_lstEntities[nStatics].Count())
 		DrawEntities(m_pFogVolume ? m_pFogVolume->nRendererVolumeID : 0,
 			GetRenderer()->EF_GetHeatVision() ? m_nDynLightMaskNoSun : m_nDynLightMask,
-			false, GetViewCamera(), NULL, NULL, m_pFogVolume, bNotAllInFrustum,
+			false, GetViewCamera(), nullptr, nullptr, m_pFogVolume, bNotAllInFrustum,
 			(m_nOriginX == 0 && m_nOriginY == 0) ? 0 : (m_fDistance - TERRAIN_SECTORS_MAX_OVERLAPPING),
 			pObjManager, m_fDistance < GetCVars()->e_area_merging_distance, "", nStatics);
 }

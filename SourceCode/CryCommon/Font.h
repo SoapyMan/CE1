@@ -33,11 +33,11 @@ public:
 		m_charsize = 0;
 		m_char_inc = 0;
 		m_font_id = -1;
-		m_image = NULL;
+		m_image = nullptr;
 	}
 	virtual ~CXFont()
 	{
-		m_image = NULL;
+		m_image = nullptr;
 	}
 	virtual void Release()
 	{

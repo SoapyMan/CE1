@@ -138,7 +138,7 @@ void CStatObj::StreamCCGF(bool bFinishNow)
 	StreamReadParams params;
 	params.dwUserData = 0;
 	params.nSize = 0;
-	params.pBuffer = NULL;
+	params.pBuffer = nullptr;
 	params.nLoadTime = 10000;
 	params.nMaxLoadTime = 10000;
 	params.nFlags |= SRP_FLAGS_ASYNC_PROGRESS;

@@ -21,7 +21,7 @@ int BindFrame[TX_LASTBIND];
 
 byte* STexPic::GetData32()
 {
-	return NULL;
+	return nullptr;
 }
 
 bool STexPic::SetFilter(int nFilter)
@@ -64,7 +64,7 @@ STexPic* CNULLTexMan::GetByID(int Id)
 	TTextureMapItor it = m_RefTexs.find(Id);
 	if (it != m_RefTexs.end())
 		return it->second;
-	return NULL;
+	return nullptr;
 }
 
 void CNULLTexMan::RemoveFromHash(int Id, STexPic* ti)
@@ -187,19 +187,19 @@ int TexCallback(const void* arg1, const void* arg2)
 
 STexPic* CNULLTexMan::CopyTexture(const char* name, STexPic* tiSrc, int CubeSide)
 {
-	return NULL;
+	return nullptr;
 }
 
 STexPic* CNULLTexMan::CreateTexture(const char* name, int wdt, int hgt, int Depth, uint flags, uint flags2, byte* dst, ETexType eTT, float fAmount1, float fAmount2, int DXTSize, STexPic* ti, int bind, ETEX_Format eTF, const char* szSourceName)
 {
-	return NULL;
+	return nullptr;
 }
 
 
 
 byte* CNULLTexMan::GenerateDXT_HW(STexPic* ti, EImFormat eF, byte* dst, int* numMips, int* DXTSize, bool bMips)
 {
-	return NULL;
+	return nullptr;
 }
 
 void CNULLTexMan::UpdateTextureData(STexPic* pic, byte* data, int USize, int VSize, bool bProc, int State, bool bPal)
@@ -291,7 +291,7 @@ bool CNULLRenderer::EF_SetLightHole(Vec3d vPos, Vec3d vNormal, int idTex, float 
 
 STexPic* CNULLRenderer::EF_MakePhongTexture(int Exp)
 {
-	return NULL;
+	return nullptr;
 }
 
 void STexPic::Preload(int Flags)

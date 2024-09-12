@@ -52,7 +52,7 @@ public:
 	static  void  GetPath(char* path);
 
 	//Tim code
-	static	void	SetLanguage(const char* command = NULL);
+	static	void	SetLanguage(const char* command = nullptr);
 	static	char* ConvertFilename(const char* filename);
 
 private:

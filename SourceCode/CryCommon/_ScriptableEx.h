@@ -16,17 +16,17 @@ public:
 	_ScriptableEx()
 	{
 		//m_nFuncNum=0;
-		m_pScriptThis = NULL;
-		m_pScriptSystem = NULL;
-		m_nBase = NULL;
+		m_pScriptThis = nullptr;
+		m_pScriptSystem = nullptr;
+		m_nBase = 0;
 
 	}
 	virtual ~_ScriptableEx()
 	{
 		if (m_pScriptThis)
 		{
-			m_pScriptThis->SetNativeData(NULL);
-			m_pScriptThis->AddSetGetHandlers(NULL, NULL);
+			m_pScriptThis->SetNativeData(nullptr);
+			m_pScriptThis->AddSetGetHandlers(nullptr, nullptr);
 			m_pScriptThis->Release();
 		}
 	}
@@ -79,7 +79,7 @@ public:
 		m_pScriptSystem = pScriptSystem;
 		_ScriptableEx<T>::m_pFunctionHandler = m_pScriptSystem->GetFunctionHandler();
 		if (!_ScriptableEx<T>::m_pFunctionHandler)
-			CryError("Scriptable EX:FUNCTION HANDLER NULL");
+			CryError("Scriptable EX:FUNCTION HANDLER nullptr");
 		m_pScriptThis = pScriptSystem->CreateObject();
 		m_pScriptThis->SetNativeData(pParent);
 		m_pScriptThis->Delegate(_ScriptableEx<T>::m_pTemplateTable);
@@ -91,7 +91,7 @@ public:
 		m_pScriptSystem = pScriptSystem;
 		_ScriptableEx<T>::m_pFunctionHandler = m_pScriptSystem->GetFunctionHandler();
 		if (!_ScriptableEx<T>::m_pFunctionHandler)
-			CryError("Scriptable EX:FUNCTION HANDLER NULL");
+			CryError("Scriptable EX:FUNCTION HANDLER nullptr");
 		m_pScriptThis = pScriptSystem->CreateGlobalObject(sName);
 		m_pScriptThis->SetNativeData(pParent);
 		if (_ScriptableEx<T>::m_pTemplateTable)
@@ -106,10 +106,10 @@ public:
 	}
 	static void ReleaseTemplate()
 	{
-		if (m_pTemplateTable != NULL)
+		if (m_pTemplateTable != nullptr)
 		{
 			m_pTemplateTable->Release();
-			m_pTemplateTable = NULL;
+			m_pTemplateTable = nullptr;
 		}
 		if (m_pvPropertiesVector)
 		{
@@ -122,13 +122,13 @@ public:
 			}
 			delete m_pvPropertiesVector;
 		}
-		m_pvPropertiesVector = NULL;
+		m_pvPropertiesVector = nullptr;
 		if (m_pPropertiesTable)
 			m_pPropertiesTable->Release();
-		m_pPropertiesTable = NULL;
+		m_pPropertiesTable = nullptr;
 	}
 	static void RegisterFunction(IScriptSystem* pSS, const char* sName, MemberFunc mfunc) {
-		if (m_pTemplateTable == NULL)
+		if (m_pTemplateTable == nullptr)
 		{
 
 			m_pTemplateTable = pSS->CreateObject();
@@ -152,7 +152,7 @@ public:
 	}
 	static void AllowPropertiesMapping(IScriptSystem* pSS)
 	{
-		if (m_pPropertiesTable == NULL)
+		if (m_pPropertiesTable == nullptr)
 		{
 			m_pPropertiesTable = pSS->CreateObject();
 			m_pvPropertiesVector = new PropertiesVec;
@@ -270,7 +270,7 @@ protected:
 					break;
 				case PROPERTY_TYPE_CHAR:
 				{
-					const char* sTemp = NULL;
+					const char* sTemp = nullptr;
 					m_pFunctionHandler->GetParam(2, sTemp);
 					if (!sTemp)
 						return -1;
@@ -280,7 +280,7 @@ protected:
 				break;
 				case PROPERTY_TYPE_STRING:
 				{
-					const char* sTemp = NULL;
+					const char* sTemp = nullptr;
 					m_pFunctionHandler->GetParam(2, sTemp);
 					if (!sTemp)
 						return -1;
@@ -373,19 +373,19 @@ protected:
 };
 /////////////////////////////////////////////////////////////////////////////
 #if defined(LINUX)
-#define _DECLARE_SCRIPTABLEEX(_class) template<> IFunctionHandler * _ScriptableEx<_class>::m_pFunctionHandler=NULL; \
+#define _DECLARE_SCRIPTABLEEX(_class) template<> IFunctionHandler * _ScriptableEx<_class>::m_pFunctionHandler=nullptr; \
 		template<> _ScriptableEx<_class>::FunctionsVec _ScriptableEx<_class>::m_vFuncs = _ScriptableEx<_class>::FunctionsVec(); \
-		template<> IScriptObject *_ScriptableEx<_class>::m_pTemplateTable=NULL; \
-		template<> IScriptObject *_ScriptableEx<_class>::m_pPropertiesTable=NULL; \
-		template<> IScriptSystem *_ScriptableEx<_class>::m_pSS=NULL; \
-		template<> _ScriptableEx<_class>::PropertiesVec *_ScriptableEx<_class>::m_pvPropertiesVector=NULL;
+		template<> IScriptObject *_ScriptableEx<_class>::m_pTemplateTable=nullptr; \
+		template<> IScriptObject *_ScriptableEx<_class>::m_pPropertiesTable=nullptr; \
+		template<> IScriptSystem *_ScriptableEx<_class>::m_pSS=nullptr; \
+		template<> _ScriptableEx<_class>::PropertiesVec *_ScriptableEx<_class>::m_pvPropertiesVector=nullptr;
 #else
-#define _DECLARE_SCRIPTABLEEX(_class) IFunctionHandler * _ScriptableEx<_class>::m_pFunctionHandler=NULL; \
+#define _DECLARE_SCRIPTABLEEX(_class) IFunctionHandler * _ScriptableEx<_class>::m_pFunctionHandler=nullptr; \
 		_ScriptableEx<_class>::FunctionsVec _ScriptableEx<_class>::m_vFuncs; \
-		IScriptObject *_ScriptableEx<_class>::m_pTemplateTable=NULL; \
-		IScriptObject *_ScriptableEx<_class>::m_pPropertiesTable=NULL; \
-		IScriptSystem *_ScriptableEx<_class>::m_pSS=NULL; \
-		_ScriptableEx<_class>::PropertiesVec *_ScriptableEx<_class>::m_pvPropertiesVector=NULL;
+		IScriptObject *_ScriptableEx<_class>::m_pTemplateTable=nullptr; \
+		IScriptObject *_ScriptableEx<_class>::m_pPropertiesTable=nullptr; \
+		IScriptSystem *_ScriptableEx<_class>::m_pSS=nullptr; \
+		_ScriptableEx<_class>::PropertiesVec *_ScriptableEx<_class>::m_pvPropertiesVector=nullptr;
 #endif	//LINUX
 
 #define CHECK_PARAMETERS_SS(_pSS,_n) \

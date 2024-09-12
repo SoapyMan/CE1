@@ -206,7 +206,7 @@ struct IIndoorBase
 		@param  nBuildId	specify which building to use, -1 will start from building 0
 		@return the requested object
 		REMARKS:
-		if nPartId is invalid,NULL will be returned
+		if nPartId is invalid,nullptr will be returned
 	*/
 	virtual	IStatObj* GetStatObj(int nPartId, int nBuildId = -1) = 0;
 
@@ -231,7 +231,7 @@ struct IIndoorBase
 	//@return true if loading succeed
 	//@return false if file not found, cannot load buildings or empty building list
 	//
-	virtual bool	LoadBuildings(const IndoorBaseInterface &IndInterface,const char *szFileName,const char *szMissionName=NULL)=0;
+	virtual bool	LoadBuildings(const IndoorBaseInterface &IndInterface,const char *szFileName,const char *szMissionName=nullptr)=0;
 	*/
 
 	/*! Add a dynamic light source to the building
@@ -309,9 +309,9 @@ struct IIndoorBase
 	@param	vPos					return helper's position
 	@param	pMat					return helper's position & orientation
 	@param	nHelperType		return helper's type
-	@return helper name, NULL if nHelperId is out of range
+	@return helper name, nullptr if nHelperId is out of range
 	*/
-	virtual const	char* GetHelper(int nHelperId, int nBuildId, Vec3d& vPos, Matrix44* pMat = NULL, int* pnHelperType = NULL) = 0;
+	virtual const	char* GetHelper(int nHelperId, int nBuildId, Vec3d& vPos, Matrix44* pMat = nullptr, int* pnHelperType = nullptr) = 0;
 
 	/*! Hide a building
 	@param bHide hide/unhide the building
@@ -352,7 +352,7 @@ struct IIndoorBase
 		@param	tInfo if provided will check for the specified sector and building
 		@return	false if sector is not visible from the current camera, true otherwise
 	*/
-	virtual	bool IsPointPotentiallyVisible(const Vec3d& vPos, tIndoorSector* tInfo = NULL) = 0;
+	virtual	bool IsPointPotentiallyVisible(const Vec3d& vPos, tIndoorSector* tInfo = nullptr) = 0;
 
 	/*! Check visibility between sector containing the bbox and camera sector
 		@param	vMins	bbox's mins
@@ -360,21 +360,21 @@ struct IIndoorBase
 		@param	tInfo if provided will check for the specified sector and building
 		@return	false if sector is not visible from the current camera, true otherwise
 	*/
-	virtual	bool IsBBoxPotentiallyVisible(const Vec3d& vMins, const Vec3d& vMaxs, tIndoorSector* tInfo = NULL) = 0;
+	virtual	bool IsBBoxPotentiallyVisible(const Vec3d& vMins, const Vec3d& vMaxs, tIndoorSector* tInfo = nullptr) = 0;
 
 	/*! Return dynamic light mask of sector containing vPos
 		@param	vPos	reference point
 		@param	tInfo if provided will check for the specified sector and building
 		@return	dynamic light mask
 	*/
-	virtual	int GetLightMaskForPoint(const Vec3d& vPos, tIndoorSector* tInfo = NULL) = 0;
+	virtual	int GetLightMaskForPoint(const Vec3d& vPos, tIndoorSector* tInfo = nullptr) = 0;
 
 	/*! Return the sorrounding ambient color for this point
 		@param	vPos	reference point
 		@param	tInfo if provided will check for the specified sector and building
 		@return	color
 	 */
-	virtual Vec3d GetAmbientColor(const Vec3d& vPos, tIndoorSector* tInfo = NULL) = 0;
+	virtual Vec3d GetAmbientColor(const Vec3d& vPos, tIndoorSector* tInfo = nullptr) = 0;
 
 	/*! closes/opens the portal (for example a door can totally block visibility)
 	 @param	vPos portal position (the closest portal will be detected)

@@ -76,10 +76,10 @@ unsigned size;
 	size = 0;
 	IEntityIt *eItr=m_pSystem->GetIEntitySystem()->GetEntityIterator();
 	IEntity* ent;
-	while((ent=eItr->Next())!=NULL)
+	while((ent=eItr->Next())!=nullptr)
 	{
 		IEntityContainer *pCnt=ent->GetContainer();
-		CPlayer *pPlayer = NULL;
+		CPlayer *pPlayer = nullptr;
 
 		if(pCnt)
 		{

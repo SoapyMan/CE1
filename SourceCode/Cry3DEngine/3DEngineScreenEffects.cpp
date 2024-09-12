@@ -380,7 +380,7 @@ void C3DEngine::ProcessScreenEffects()
 		{
 			CCObject* pScreenObj = GetRenderer()->EF_GetObject(true, -1);
 			pScreenObj->m_Matrix.SetIdentity();
-			GetRenderer()->EF_AddEf(0, m_pREDummy, m_pSHScreenTexMap, NULL, pScreenObj, 0, NULL, eS_Glare);
+			GetRenderer()->EF_AddEf(0, m_pREDummy, m_pSHScreenTexMap, nullptr, pScreenObj, 0, nullptr, eS_Glare);
 		}
 
 		// process screen glare/set glare parameters
@@ -419,5 +419,5 @@ void C3DEngine::ProcessScreenEffects()
 
 	CCObject* pScreenProcessObj = GetRenderer()->EF_GetObject(true, -1);
 	pScreenProcessObj->m_Matrix.SetIdentity();
-	GetRenderer()->EF_AddEf(0, m_pREScreenProcess, m_pSHScreenProcess, NULL, pScreenProcessObj, 0, NULL, eS_Glare);
+	GetRenderer()->EF_AddEf(0, m_pREScreenProcess, m_pSHScreenProcess, nullptr, pScreenProcessObj, 0, nullptr, eS_Glare);
 }

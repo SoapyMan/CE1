@@ -30,7 +30,7 @@ CGameMods::CGameMods( CXGame *pGame )
 	m_pGame = pGame;
 	m_pSystem = pGame->GetSystem();
 	m_pILog=m_pSystem->GetILog();
-	m_pMod=NULL;
+	m_pMod=nullptr;
 	m_sCurrentMod=string("FarCry");
 	ScanMods();
 }
@@ -63,7 +63,7 @@ SGameModDescription* CGameMods::Find( const char *sModName ) const
 			return m_mods[i];
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -122,7 +122,7 @@ bool CGameMods::SetCurrentMod(const char *sModName,bool bNeedsRestart)
 	// remove the previous mod (if any)
 	CloseMod(m_pMod);
 
-	m_pMod=NULL; 
+	m_pMod=nullptr; 
 	m_sCurrentMod.clear();
 
 	bool bNormalGame=false;
@@ -355,7 +355,7 @@ void CGameMods::ScanMods()
 const char *CGameMods::GetModPath(const char *szSource)
 {
 	if (m_sCurrentMod.empty() || (stricmp(m_sCurrentMod.c_str(),"FarCry")==0))
-		return (NULL); 
+		return (nullptr); 
 
 	m_sReturnPath=string("Mods/")+m_sCurrentMod+"/"+string(szSource);
 	return (m_sReturnPath.c_str());
@@ -509,5 +509,5 @@ const char *CXGame::IsMODLoaded()
 			return (szMod);
 	}
 
-	return (NULL);
+	return (nullptr);
 }

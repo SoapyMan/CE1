@@ -28,7 +28,7 @@ public:
 	bool Create(IScriptSystem *pScriptSystem, CSpectator *pSpectator);
 	void OnRelease()
 	{
-		m_pScriptThis=NULL;
+		m_pScriptThis=nullptr;
 		delete this;
 	}
 	static void InitializeTemplate(IScriptSystem *pSS);

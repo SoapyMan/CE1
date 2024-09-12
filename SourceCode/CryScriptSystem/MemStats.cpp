@@ -75,7 +75,7 @@ void CScriptSystem::GetMemoryStatistics(ICrySizer* pSizer)
 	/////BYTECODE////////////////////////////////////////////
 	{
 		SIZER_SUBCOMPONENT_NAME(pSizer, "Bytecode");
-		while (proto != NULL)
+		while (proto != nullptr)
 		{
 			LSS->nProto++;
 			LSS->nProtoMem += calcprotosize(proto);
@@ -95,7 +95,7 @@ void CScriptSystem::GetMemoryStatistics(ICrySizer* pSizer)
 	/////FUNCTIONS/////////////////////////////////////////
 	{
 		SIZER_SUBCOMPONENT_NAME(pSizer, "Functions");
-		while (closure != NULL)
+		while (closure != nullptr)
 		{
 			LSS->nClosure++;
 			LSS->nClosureMem += calcclosuresize(closure->nupvalues);
@@ -107,7 +107,7 @@ void CScriptSystem::GetMemoryStatistics(ICrySizer* pSizer)
 	{
 		int maxsize = 0;
 		int size = 0;
-		while (hash != NULL)
+		while (hash != nullptr)
 		{
 			LSS->nHash++;
 			size = calctablesize(hash);
@@ -122,7 +122,7 @@ void CScriptSystem::GetMemoryStatistics(ICrySizer* pSizer)
 	/////USERDATA///////////////////////////////////////
 	{
 		SIZER_SUBCOMPONENT_NAME(pSizer, "User Data");
-		while (udata != NULL)
+		while (udata != nullptr)
 		{
 			LSS->nUdata++;
 			LSS->nUdataMem += sizeudata(udata->uv.len);
@@ -136,7 +136,7 @@ void CScriptSystem::GetMemoryStatistics(ICrySizer* pSizer)
 		for (int i = 0; i < m_pLS->G->strt.size; i++) {  /* for each list */
 			TString** p = &m_pLS->G->strt.hash[i];
 			TString* curr;
-			while ((curr = *p) != NULL)
+			while ((curr = *p) != nullptr)
 			{
 				LSS->nString++;
 				if (string) // this can be NULL in Previewer

@@ -19,7 +19,7 @@ public:
 	// interface IRConSystem -------------------------------------------------
 
 	virtual void Release() { delete this; }
-	virtual void Update(unsigned int dwTime, IClient* pClient = NULL);
+	virtual void Update(unsigned int dwTime, IClient* pClient = nullptr);
 	virtual void ExecuteRConCommand(const char* inszCommand);
 	virtual void OnServerCreated(IServer* inpServer);
 

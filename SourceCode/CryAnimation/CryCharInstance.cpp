@@ -78,7 +78,7 @@ CryCharInstance::~CryCharInstance()
 {
 	// GetRenderer()->DeleteModelState(m_pModelState);
 	delete m_pModelState;
-	m_pModelState = NULL;
+	m_pModelState = nullptr;
 
 	m_pCryCharBody->UnregisterInstance(this);
 }
@@ -308,7 +308,7 @@ ICryCharInstance::ObjectBindingHandle CryCharInstance::AttachObjectToBone(IBinda
 	// detach all objects from this bone before creating a new one
 	DetachAllFromBone(nBone);
 
-	if (pWeaponModel == NULL)
+	if (pWeaponModel == nullptr)
 	{
 		// we didn't create a new binding, so return invalid handle
 		return nInvalidObjectBindingHandle;
@@ -447,7 +447,7 @@ CDLight* CryCharInstance::GetLight(LightHandle nHandle)
 	if (m_pModelState->IsDynLightBound((CDLight*)nHandle))
 		return (CDLight*)nHandle;
 	else
-		return NULL;
+		return nullptr;
 }
 
 ICryCharInstance::LightHandle CryCharInstance::GetLightHandle(CDLight* pLight)
@@ -501,7 +501,7 @@ const Matrix44* CryCharInstance::GetHelperMatrixByName(const char* szHelperName)
 
 	if (nBone < 0)
 #ifdef _DEBUG
-		return NULL;
+		return nullptr;
 #else
 	{
 		static Matrix44 mtxDefault;
@@ -1052,7 +1052,7 @@ void CryCharInstance::ForceReskin()
 // returns NULL if there's no light with such index
 const CDLight* CryCharInstance::GetBoundLight(int nIndex)
 {
-	CDLight* pDL = NULL;
+	CDLight* pDL = nullptr;
 	if (m_pModelState && nIndex >= 0)
 	{
 		unsigned numGlobalLights = m_pCryCharBody->GetModel()->numGlobalBoneLights();
@@ -1100,7 +1100,7 @@ void CryCharInstance::DrawBoundObjects(const SRendParams& rRendParams, Matrix44&
 		SRendParams rParams(rRendParams);
 		rParams.pMatrix = &matAttachedObjectMatrix;
 		// this is required to avoid the attachments using the parent character material (this is the material that overrides the default material in the attachment)
-		rParams.pMaterial = NULL;
+		rParams.pMaterial = nullptr;
 
 		if (m_nFlags & CS_FLAG_DRAW_NEAR)
 		{
@@ -1231,7 +1231,7 @@ void CryCharInstance::RemoveAnimationEventSink(const char* szAnimName, ICharInst
 	{
 		//g_GetLog()->LogToFile("\005CryCharInstance(0x%p)::RemoveAnimationEventSink(\"%s\",0x%p) - animation not found (model \"%s\")", this, szAnimName, pCharInstanceSink, m_pCryCharBody->GetFilePathCStr());
 		CRYASSERT(m_pModelState->getAnimationEventSink(nAnimId) == pCharInstanceSink);
-		m_pModelState->setAnimationEventSink(nAnimId, NULL);
+		m_pModelState->setAnimationEventSink(nAnimId, nullptr);
 	}
 }
 
@@ -1357,7 +1357,7 @@ bool CryCharInstance::ExecScriptCommand(int nCommand, void* pParams, void* pResu
 
 	case CASCMD_DEBUG_DRAW:
 		m_pModelState->debugDrawBones();
-		m_pModelState->debugDrawBoundingBox(NULL, 4);
+		m_pModelState->debugDrawBoundingBox(nullptr, 4);
 		break;
 	}
 	return true;

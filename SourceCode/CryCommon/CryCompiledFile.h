@@ -340,7 +340,7 @@ public:
 	}
 
 	CCFFileWriter() :
-		m_pFile(NULL), m_nLastChunk(-1)
+		m_pFile(nullptr), m_nLastChunk(-1)
 	{
 	}
 
@@ -518,10 +518,10 @@ public:
 		{
 			m_pHeader = (CCFChunkHeader*)m_pData;
 			if (((const char*)m_pHeader) + m_pHeader->nSize > m_pEnd || m_pHeader->nSize > g_nMaxChunkSize)
-				m_pHeader = NULL; // Error: data truncated
+				m_pHeader = nullptr; // Error: data truncated
 		}
 		else
-			m_pHeader = NULL; // Error: header truncated
+			m_pHeader = nullptr; // Error: header truncated
 	}
 
 	// indicates the end of data stream, or error
@@ -564,7 +564,7 @@ public:
 		if ((const char*)(m_pHeader + 1) > m_pEnd)
 		{
 			// there's no next chunk, or its header is truncated
-			m_pHeader = NULL;
+			m_pHeader = nullptr;
 			return false;
 		}
 
@@ -572,7 +572,7 @@ public:
 			|| (unsigned)m_pHeader->nSize > g_nMaxChunkSize)
 		{
 			// the header size is unsupported (most probably a noisy header)
-			m_pHeader = NULL;
+			m_pHeader = nullptr;
 			return false;
 		}
 
@@ -580,7 +580,7 @@ public:
 		{
 			// the chunk header is maybe ok, but the chunk data is truncated; or maybe
 			// the chunk header contains noise
-			m_pHeader = NULL;
+			m_pHeader = nullptr;
 			return false;
 		}
 

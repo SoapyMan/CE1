@@ -238,7 +238,7 @@ public:
 	//! Get Attached light.
 	CDLight* GetLight();
 	//! create light, load proj. texture and shader
-	bool	InitLight(const char* img = NULL, const char* shader = NULL, bool bUseAsCube = false, float fAnimSpeed = 0, int nLightStyle = 0, float fCoronaScale = 0);
+	bool	InitLight(const char* img = nullptr, const char* shader = nullptr, bool bUseAsCube = false, float fAnimSpeed = 0, int nLightStyle = 0, float fCoronaScale = 0);
 
 
 	//////////////////////////////////////////////////////////////////////////
@@ -266,7 +266,7 @@ public:
 	void AddImpulse(int ipart, Vec3d pos, Vec3d impulse, bool bPos = true, float fAuxScale = 1.0f);
 
 	//! Create general rigid body attached to entity.
-	bool CreateRigidBody(pe_type type, float density, float mass, int surface_id, Vec3d* pInitialVelocity = NULL, int slot = -1, bool bPermanent = false);
+	bool CreateRigidBody(pe_type type, float density, float mass, int surface_id, Vec3d* pInitialVelocity = nullptr, int slot = -1, bool bPermanent = false);
 	bool CreateLivingEntity(float mass, float height, float eye_height, float sphere_height, float radius, int nSurfaceID, float fGravity, float fAirControl, bool collide = false);
 
 	bool CreateStaticEntity(float mass, int surface_idx, int slotToUse = -1, bool bPermanent = false);
@@ -287,7 +287,7 @@ public:
 	//! Geometry related.
 	//////////////////////////////////////////////////////////////////////////
 	//! Add geometry object to entity.
-	bool	LoadObject(unsigned int pos, const char* fileName, float scale, const char* geomName = NULL);
+	bool	LoadObject(unsigned int pos, const char* fileName, float scale, const char* geomName = nullptr);
 	bool GetObjectPos(unsigned int slot, Vec3d& pos);
 	bool SetObjectPos(unsigned int slot, const Vec3d& pos);
 	bool GetObjectAngles(unsigned int slot, Vec3d& ang);
@@ -308,10 +308,10 @@ public:
 	void	DrawObject(int mode);
 
 
-	void SendScriptEvent(enum EScriptEventId Event, struct IScriptObject* pParamters, bool* pRet = NULL);
+	void SendScriptEvent(enum EScriptEventId Event, struct IScriptObject* pParamters, bool* pRet = nullptr);
 	//Timur[2/1/2002] ? Remove it.....(alberto)no
-	void SendScriptEvent(enum EScriptEventId Event, const char* str, bool* pRet = NULL);
-	void SendScriptEvent(enum EScriptEventId Event, int nParam, bool* pRet = NULL);
+	void SendScriptEvent(enum EScriptEventId Event, const char* str, bool* pRet = nullptr);
+	void SendScriptEvent(enum EScriptEventId Event, int nParam, bool* pRet = nullptr);
 
 	//! Set bounding box of entity.
 	void	SetBBox(const Vec3d& mins, const Vec3d& maxs);
@@ -394,21 +394,21 @@ public:
 	virtual void DrawCharacter(int pos, int mode);
 	virtual void NeedsUpdateCharacter(int pos, bool updt);
 	virtual void ResetAnimations(int pos);
-	virtual void SetDefaultIdleAnimation(int pos, const char* szAnimation = NULL);
+	virtual void SetDefaultIdleAnimation(int pos, const char* szAnimation = nullptr);
 	virtual void ForceCharacterUpdate(int pos);
 
 
 	//@}
 	//////////////////////////////////////////////////////////////////////////
 	//! 
-	bool Write(CStream&, EntityCloneState* cs = NULL);
+	bool Write(CStream&, EntityCloneState* cs = nullptr);
 	virtual bool Read(CStream& stream, bool bNoUpdate = false);
 	virtual bool PostLoad();
 
-	virtual bool Save(CStream& stream, IScriptObject* pStream = NULL);
-	virtual bool Load(CStream& stream, IScriptObject* pStream = NULL);
-	virtual bool LoadRELEASE(CStream& stream, IScriptObject* pStream = NULL);
-	virtual bool LoadPATCH1(CStream& stream, IScriptObject* pStream = NULL);
+	virtual bool Save(CStream& stream, IScriptObject* pStream = nullptr);
+	virtual bool Load(CStream& stream, IScriptObject* pStream = nullptr);
+	virtual bool LoadRELEASE(CStream& stream, IScriptObject* pStream = nullptr);
+	virtual bool LoadPATCH1(CStream& stream, IScriptObject* pStream = nullptr);
 
 	IEntityContainer* GetContainer() const { return m_pContainer; }
 	void SetContainer(IEntityContainer* pContainer);
@@ -550,18 +550,18 @@ public:
 	//! this entity itself doesn't have parent entity.
 	bool IsUpdateStatic() const
 	{
-		return ((!m_lstBindings.empty() || (m_flags & ETY_FLAG_RIGIDBODY)) && (!m_bIsBound)) || m_bEntityHasLights || m_pCryCharInstance[0] != NULL;
+		return ((!m_lstBindings.empty() || (m_flags & ETY_FLAG_RIGIDBODY)) && (!m_bIsBound)) || m_bEntityHasLights || m_pCryCharInstance[0] != nullptr;
 	};
 	void UpdateHierarchy(SEntityUpdateContext& ctx);
 	void ProcessEntityLightSources();
 	void CheckEntityLightSourcesInEntityObjects();
 
 	//! return pointer to object and it's transformation
-	virtual IStatObj* GetEntityStatObj(unsigned int nSlot, Matrix44* pMatrix = NULL, bool bReturnOnlyVisible = false);
+	virtual IStatObj* GetEntityStatObj(unsigned int nSlot, Matrix44* pMatrix = nullptr, bool bReturnOnlyVisible = false);
 	//! set entity object and it's transformation
-	void SetEntityStatObj(unsigned int nSlot, IStatObj* pStatObj, Matrix44* pMatrix = NULL);
+	void SetEntityStatObj(unsigned int nSlot, IStatObj* pStatObj, Matrix44* pMatrix = nullptr);
 	//! return pointer to object and it's transformation
-	virtual ICryCharInstance* GetEntityCharacter(unsigned int nSlot, Matrix44* pMatrix = NULL);
+	virtual ICryCharInstance* GetEntityCharacter(unsigned int nSlot, Matrix44* pMatrix = nullptr);
 
 	//! inits structure needed for rendering
 	void InitEntityRenderState();
@@ -591,7 +591,7 @@ public:
 	virtual IMatInfo* GetMaterial() const;
 	//////////////////////////////////////////////////////////////////////////
 
-	void SetHandsIKTarget(const Vec3d* target = NULL);
+	void SetHandsIKTarget(const Vec3d* target = nullptr);
 
 	void SetUpdateVisLevel(EEntityUpdateVisLevel nUpdateVisLevel);
 	EEntityUpdateVisLevel GetUpdateVisLevel() { return m_eUpdateVisLevel; }

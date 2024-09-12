@@ -709,7 +709,7 @@ bool CEntity::LoadCharacter(int pos, const char* filename)
 	//@FIXME put range check here.
 	m_pHeadBone = 0;
 	ReleaseLipSyncInterface();	// we release lipsync before we destroy the character...
-	m_pCryCharInstance[pos] = NULL;
+	m_pCryCharInstance[pos] = nullptr;
 
 	//  CLog::Log("Loading character: %s ...", filename);
 
@@ -939,10 +939,10 @@ ILipSync* CEntity::GetLipSyncInterface()
 		CRYASSERT(m_pISystem->GetIGame());
 
 		m_pLipSync = new CLipSync;
-		if (m_pLipSync != NULL && !m_pLipSync->Init(m_pISystem, this))
+		if (m_pLipSync != nullptr && !m_pLipSync->Init(m_pISystem, this))
 		{
 			ReleaseLipSyncInterface();
-			return NULL;
+			return nullptr;
 		}
 	}
 	return m_pLipSync;
@@ -952,9 +952,9 @@ void CEntity::ReleaseLipSyncInterface()
 {
 	if (m_pLipSync)
 	{
-		m_pLipSync->SetCallbackSink(NULL);
+		m_pLipSync->SetCallbackSink(nullptr);
 		m_pLipSync->Release();
-		m_pLipSync = NULL;
+		m_pLipSync = nullptr;
 	}
 }
 
@@ -1143,8 +1143,8 @@ bool CEntity::LoadBoat(const char* objfile, float mass, int surfaceID)
 	{
 		if (LoadObject(1, objfile, 0, "boat_hull"))
 		{
-			//			m_pEntity->CreateRigidBody(PE_RIGID,0,fMass,nSurfaceID,NULL,1);
-			CreateRigidBody(PE_RIGID, 0, 0, surfaceID, NULL, 1);
+			//			m_pEntity->CreateRigidBody(PE_RIGID,0,fMass,nSurfaceID,nullptr,1);
+			CreateRigidBody(PE_RIGID, 0, 0, surfaceID, nullptr, 1);
 			DrawObject(1, ETY_DRAW_NONE);
 
 			if (LoadObject(2, objfile, 0, "mass"))

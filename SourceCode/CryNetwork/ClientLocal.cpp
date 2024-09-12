@@ -33,7 +33,7 @@ CClientLocal::CClientLocal(CNetwork* pNetwork, IClientSink* pSink)
 	m_pSink = pSink;
 	m_pNetwork = pNetwork;
 	m_bReady = false;
-	m_pServerSlot = NULL;
+	m_pServerSlot = nullptr;
 
 }
 

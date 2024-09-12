@@ -78,7 +78,7 @@ CSound::CSound(CSoundSystem* pSSys, const char* szFile)
 
 	//	m_fMaxSoundDistance2=500*500;
 	m_refCount = 0;
-	m_pArea = NULL;
+	m_pArea = nullptr;
 	m_fFadingValue = 1.0f; ///5.0f; // by default 
 	//m_fCurrentFade=1.0f; 	
 	m_fCurrentFade = 1.0f;
@@ -389,7 +389,7 @@ void CSound::Play(float fRatio, bool bForceActiveState, bool bSetRatio)
 			{
 				if (bCanPlay)
 				{
-					m_nChannel = FSOUND_Stream_PlayEx(FSOUND_FREE, m_pSound->GetStream(), NULL, true);
+					m_nChannel = FSOUND_Stream_PlayEx(FSOUND_FREE, m_pSound->GetStream(), nullptr, true);
 					m_PlayingChannels++;
 					m_fChannelPlayTime = currTime;
 					m_fSoundLengthSec = GetLengthMs() / 1000.0f;
@@ -434,7 +434,7 @@ void CSound::Play(float fRatio, bool bForceActiveState, bool bSetRatio)
 				{
 					if (bCanPlay)
 					{
-						m_nChannel = FSOUND_PlaySoundEx(FSOUND_FREE, m_pSound->GetSample(), NULL, true);//,m_pSSys->GetDSPUnitFilter(),FALSE);
+						m_nChannel = FSOUND_PlaySoundEx(FSOUND_FREE, m_pSound->GetSample(), nullptr, true);//,m_pSSys->GetDSPUnitFilter(),FALSE);
 						m_PlayingChannels++;
 						m_fChannelPlayTime = currTime;
 						m_fSoundLengthSec = GetLengthMs() / 1000.0f;
@@ -454,7 +454,7 @@ void CSound::Play(float fRatio, bool bForceActiveState, bool bSetRatio)
 				{
 					if (bCanPlay)
 					{
-						m_nChannel = FSOUND_PlaySoundEx(FSOUND_FREE, m_pSound->GetSample(), NULL, true);//,m_pSSys->GetDSPUnitFilter(),FALSE);													
+						m_nChannel = FSOUND_PlaySoundEx(FSOUND_FREE, m_pSound->GetSample(), nullptr, true);//,m_pSSys->GetDSPUnitFilter(),FALSE);													
 						m_PlayingChannels++;
 						m_fChannelPlayTime = currTime;
 						m_fSoundLengthSec = GetLengthMs() / 1000.0f;
@@ -650,7 +650,7 @@ void CSound::SetLoopMode(bool bLoop)
 		{
 			m_pSound->AbortLoading();
 			m_pSound->DestroyData();
-			m_pSound->Load(bLoop, NULL);
+			m_pSound->Load(bLoop, nullptr);
 		}
 	}
 	m_bLoop = bLoop;
@@ -833,7 +833,7 @@ void CSound::SetPosition(const Vec3d& pos)
 	{
 		GUARD_HEAP;
 		//m_pSSys->m_pILog->LogToConsole("Setting sound pos for channel %d",m_nChannel);
-		FSOUND_3D_SetAttributes(m_nChannel, fPos, NULL);
+		FSOUND_3D_SetAttributes(m_nChannel, fPos, nullptr);
 	}
 
 	// check if the sound must be considered 
@@ -1018,7 +1018,7 @@ unsigned int CSound::GetCurrentSamplePos(bool bMilliSeconds)
 		if (bMilliSeconds)
 		{
 			int nFreq;
-			FSOUND_Sample_GetDefaults(m_pSound->GetSample(), &nFreq, NULL, NULL, NULL);
+			FSOUND_Sample_GetDefaults(m_pSound->GetSample(), &nFreq, nullptr, nullptr, nullptr);
 			return (unsigned int)((float)FSOUND_GetCurrentPosition(m_nChannel) / (float)nFreq * 1000.0f);
 		}
 		else

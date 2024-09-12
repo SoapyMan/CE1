@@ -24,7 +24,7 @@ void CResFile::mfDeactivate()
 	if (m_handle)
 	{
 		iSystem->GetIPak()->FClose(m_handle);
-		m_handle = NULL;
+		m_handle = nullptr;
 		m_nNumOpenResources--;
 	}
 }
@@ -62,13 +62,13 @@ bool CResFile::mfActivate(bool bFirstTime)
 CResFile::CResFile()
 {
 	m_name[0] = 0;
-	m_handle = NULL;
+	m_handle = nullptr;
 	m_ermes[0] = 0;
 	m_holesSize = 0;
 	m_eDT = eFSD_name;
 
-	m_Next = NULL;
-	m_Prev = NULL;
+	m_Next = nullptr;
+	m_Prev = nullptr;
 
 	if (!m_Root.m_Next)
 	{
@@ -80,13 +80,13 @@ CResFile::CResFile()
 CResFile::CResFile(const char* name, EFS_DirType eDT)
 {
 	strcpy(m_name, name);
-	m_handle = NULL;
+	m_handle = nullptr;
 	m_ermes[0] = 0;
 	m_holesSize = 0;
 	m_eDT = eDT;
 
-	m_Next = NULL;
-	m_Prev = NULL;
+	m_Next = nullptr;
+	m_Prev = nullptr;
 
 	if (!m_Root.m_Next)
 	{
@@ -110,7 +110,7 @@ char* CResFile::mfGetError(void)
 	if (m_ermes[0])
 		return m_ermes;
 	else
-		return NULL;
+		return nullptr;
 }
 
 int CResFile::mfGetResourceSize()
@@ -262,7 +262,7 @@ bool CResFile::mfOpen(int type)
 				de->eid = fde0.eid;
 				de->earc = fde0.earc;
 				de->flags = 0;
-				de->user.data = NULL;
+				de->user.data = nullptr;
 				if (CName(de->ID) == CName("$deleted$"))
 				{
 					de->flags |= RF_DELETED;
@@ -285,7 +285,7 @@ bool CResFile::mfOpen(int type)
 				de->eid = fde1.eid;
 				de->earc = fde1.earc;
 				de->flags = 0;
-				de->user.data = NULL;
+				de->user.data = nullptr;
 				if (de->ID == -1)
 				{
 					de->flags |= RF_DELETED;
@@ -354,7 +354,7 @@ SDirEntry* CResFile::mfGetEntry(int num)
 	ResFilesMapItor it = m_dir.find(num);
 	if (it != m_dir.end())
 		return it->second;
-	return NULL;
+	return nullptr;
 }
 
 int CResFile::mfFileGetNum(const char* name)
@@ -507,7 +507,7 @@ void* CResFile::mfFileRead2(SDirEntry* de, int size)
 	if (!buf)
 	{
 		sprintf(m_ermes, "CResFile::mfFileRead2 - Couldn't allocate %i memory for file <%s> in resource file <%s>", size, de->Name(), m_name);
-		return NULL;
+		return nullptr;
 	}
 	if (de->user.data)
 	{
@@ -521,7 +521,7 @@ void* CResFile::mfFileRead2(SDirEntry* de, int size)
 	if (iSystem->GetIPak()->FRead(buf, 1, size, m_handle) != size)
 	{
 		sprintf(m_ermes, "CResFile::mfFileRead2 - Error reading file <%s> in resource file <%s>", de->Name(), m_name);
-		return NULL;
+		return nullptr;
 	}
 	de->curseek += size;
 
@@ -534,7 +534,7 @@ void* CResFile::mfFileRead2(int num, int size)
 	if (!de)
 	{
 		sprintf(m_ermes, "CResFile::mfFileRead2 - invalid file id in resource file <%s>", m_name);
-		return NULL;
+		return nullptr;
 	}
 	return mfFileRead2(de, size);
 }
@@ -592,7 +592,7 @@ void* CResFile::mfFileGetBuf(int num)
 	if (!de)
 	{
 		sprintf(m_ermes, "CResFile::mfFileGetBuf - invalid file id in resource file <%s>", m_name);
-		return NULL;
+		return nullptr;
 	}
 	return mfFileGetBuf(de);
 }
@@ -914,7 +914,7 @@ bool CResFile::mfFlush(void)
 
 			if (de->flags & RF_TEMPDATA)
 				SAFE_DELETE_ARRAY(de->user.data);
-			de->user.data = NULL;
+			de->user.data = nullptr;
 		}
 		itor++;
 	}
@@ -1044,7 +1044,7 @@ const char* GetExtension(const char* in)
 			return &in[len];
 		len--;
 	}
-	return NULL;
+	return nullptr;
 }
 
 void AddExtension(char* path, char* extension)

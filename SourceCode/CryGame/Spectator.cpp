@@ -16,7 +16,7 @@
 //////////////////////////////////////////////////////////////////////////
 CSpectator::CSpectator(CXGame *pGame) :m_vAngles(0,0,0)
 {
-	m_pScriptObject=NULL;
+	m_pScriptObject=nullptr;
 	m_pGame=pGame;
 	m_eiHost=0;
 	m_fLastTargetSwitch=0.0f;

@@ -205,7 +205,7 @@ public:
 	virtual	CVertexBuffer* CreateBuffer(int  vertexcount, int vertexformat, const char* szSource, bool bDynamic = false) = 0;
 	virtual void  CreateBuffer(int size, int vertexformat, CVertexBuffer* buf, int Type, const char* szSource) = 0;
 	virtual void	ReleaseBuffer(CVertexBuffer* bufptr) = 0;
-	virtual void	DrawBuffer(CVertexBuffer* src, SVertexStream* indicies, int numindices, int offsindex, int prmode, int vert_start = 0, int vert_stop = 0, CMatInfo* mi = NULL) = 0;
+	virtual void	DrawBuffer(CVertexBuffer* src, SVertexStream* indicies, int numindices, int offsindex, int prmode, int vert_start = 0, int vert_stop = 0, CMatInfo* mi = nullptr) = 0;
 	virtual void	UpdateBuffer(CVertexBuffer* dest, const void* src, int vertexcount, bool bUnLock, int offs = 0, int Type = 0) = 0;
 
 	virtual void  CreateIndexBuffer(SVertexStream* dest, const void* src, int indexcount) = 0;
@@ -260,13 +260,13 @@ public:
 	virtual	bool	SaveTga(unsigned char* sourcedata, int sourceformat, int w, int h, const char* filename, bool flip);
 
 	//download an image to video memory. 0 in case of failure
-	virtual	unsigned int DownLoadToVideoMemory(unsigned char* data, int w, int h, ETEX_Format eTFSrc, ETEX_Format eTFDst, int nummipmap, bool repeat = true, int filter = FILTER_BILINEAR, int Id = 0, char* szCacheName = NULL, int flags = 0) = 0;
+	virtual	unsigned int DownLoadToVideoMemory(unsigned char* data, int w, int h, ETEX_Format eTFSrc, ETEX_Format eTFDst, int nummipmap, bool repeat = true, int filter = FILTER_BILINEAR, int Id = 0, char* szCacheName = nullptr, int flags = 0) = 0;
 	virtual	void UpdateTextureInVideoMemory(uint tnum, unsigned char* newdata, int posx, int posy, int w, int h, ETEX_Format eTF = eTF_0888) = 0;
 
-	virtual unsigned int LoadTexture(const char* filename, int* tex_type = NULL, unsigned int def_tid = 0, bool compresstodisk = true, bool bWarn = true) = 0;
+	virtual unsigned int LoadTexture(const char* filename, int* tex_type = nullptr, unsigned int def_tid = 0, bool compresstodisk = true, bool bWarn = true) = 0;
 	virtual bool DXTCompress(byte* raw_data, int nWidth, int nHeight, ETEX_Format eTF, bool bUseHW, bool bGenMips, int nSrcBytesPerPix, MIPDXTcallback callback = 0);
 	virtual bool DXTDecompress(byte* srcData, byte* dstData, int nWidth, int nHeight, ETEX_Format eSrcTF, bool bUseHW, int nDstBytesPerPix);
-	//virtual unsigned int MakeTexture(const char * filename,int *tex_type=NULL/*,unsigned int def_tid=0*/)=0;
+	//virtual unsigned int MakeTexture(const char * filename,int *tex_type=nullptr/*,unsigned int def_tid=0*/)=0;
 
 	virtual	bool	SetGammaDelta(const float fGamma) = 0;
 
@@ -404,7 +404,7 @@ public:
 	virtual void TransformTextureMatrix(float x, float y, float angle, float scale) = 0;
 	virtual void ResetTextureMatrix() = 0;
 
-	virtual void ScreenShot(const char* filename = NULL) = 0;
+	virtual void ScreenShot(const char* filename = nullptr) = 0;
 
 	virtual int	GetColorBpp() { return (m_cbpp); }
 	virtual int	GetDepthBpp() { return (m_zbpp); }
@@ -728,13 +728,13 @@ public:
 	//==========================================================
 
 	// Add 3D polygon to the list
-	virtual void EF_AddPolyToScene3D(int Ef, int numPts, SColorVert* verts, CCObject* obj = NULL, int nFogID = 0);
-	virtual CCObject* EF_AddSpriteToScene(int Ef, int numPts, SColorVert* verts, CCObject* obj, byte* inds = NULL, int ninds = 0, int nFogID = 0);
+	virtual void EF_AddPolyToScene3D(int Ef, int numPts, SColorVert* verts, CCObject* obj = nullptr, int nFogID = 0);
+	virtual CCObject* EF_AddSpriteToScene(int Ef, int numPts, SColorVert* verts, CCObject* obj, byte* inds = nullptr, int ninds = 0, int nFogID = 0);
 	void EF_AddSprite(SShader* pSH, Vec3 vOrigin, float fRadius);
 
 	// Shaders management
 	virtual IShader* EF_LoadShader(const char* name, EShClass Class, int flags = 0, uint64 nMaskGen = 0);
-	virtual SShaderItem EF_LoadShaderItem(const char* name, EShClass Class, bool bShare, const char* templName, int flags = 0, SInputShaderResources* Res = NULL, uint64 nMaskGen = 0);
+	virtual SShaderItem EF_LoadShaderItem(const char* name, EShClass Class, bool bShare, const char* templName, int flags = 0, SInputShaderResources* Res = nullptr, uint64 nMaskGen = 0);
 	// reload file
 	virtual bool EF_ReloadFile(const char* szFileName);
 	virtual void EF_ReloadShaderFiles(int nCategory);
@@ -835,8 +835,8 @@ public:
 		ushort* pIndices, int nIndices,
 		int nPrimetiveType, const char* szSource, EBufferType eBufType = eBT_Dynamic,
 		int nMatInfoCount = 1, int nClientTextureBindID = 0,
-		bool (*PrepareBufferCallback)(CLeafBuffer*, bool) = NULL,
-		void* CustomData = NULL,
+		bool (*PrepareBufferCallback)(CLeafBuffer*, bool) = nullptr,
+		void* CustomData = nullptr,
 		bool bOnlyVideoBuffer = false, bool bPrecache = true);
 
 	virtual void DeleteLeafBuffer(CLeafBuffer* pLBuffer);

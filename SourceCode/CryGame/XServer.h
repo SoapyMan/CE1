@@ -186,7 +186,7 @@ public:
 	ITagPoint* GetNextRespawnPoint();
 	ITagPoint* GetPrevRespawnPoint();
   ITagPoint* GetRespawnPoint(char *name);
-	ITagPoint* GetRandomRespawnPoint(const char *sFilter=NULL);
+	ITagPoint* GetRandomRespawnPoint(const char *sFilter=nullptr);
 
 	//!
 	void AddToTeam(const char *sTeam,int eid);

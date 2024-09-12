@@ -50,7 +50,7 @@ CPShader* CPShader::mfForName(const char* name, uint64 nMask)
 	int i;
 
 	if (!(gRenDev->GetFeatures() & (RFT_HW_RC | RFT_HW_TS | RFT_HW_PS20)))
-		return NULL;
+		return nullptr;
 
 	for (i = 0; i < m_PShaders.Num(); i++)
 	{
@@ -71,7 +71,7 @@ CPShader* CPShader::mfForName(const char* name, uint64 nMask)
 	{
 		iLog->Log("WARNING: Couldn't find pixel shader '%s'", name);
 		iLog->Log("WARNING: Full file name: '%s'", scrname);
-		return NULL;
+		return nullptr;
 	}
 	iSystem->GetIPak()->FSeek(fp, 0, SEEK_END);
 	int len = iSystem->GetIPak()->FTell(fp);
@@ -82,7 +82,7 @@ CPShader* CPShader::mfForName(const char* name, uint64 nMask)
 	buf[len] = 0;
 	buf = gRenDev->m_cEF.mfScriptPreprocessor(buf, dir, scrname);
 
-	CPShader* p = NULL;
+	CPShader* p = nullptr;
 	CPShader* pr;
 	pr = new CCGPShader_GL;
 	pr->m_Name = name;
@@ -124,7 +124,7 @@ void CCGPShader_GL::mfPrecache()
 {
 	bool bPrevFog = gRenDev->m_FS.m_bEnable;
 	gRenDev->m_FS.m_bEnable = true;
-	mfSet(true, NULL);
+	mfSet(true, nullptr);
 	gRenDev->m_FS.m_bEnable = bPrevFog;
 }
 
@@ -174,7 +174,7 @@ void CCGPShader_GL::mfFree()
 CCGPShader_GL::~CCGPShader_GL()
 {
 	mfFree();
-	CPShader::m_PShaders[m_Id] = NULL;
+	CPShader::m_PShaders[m_Id] = nullptr;
 }
 
 void CCGPShader_GL::Release()
@@ -323,7 +323,7 @@ char* CCGPShader_GL::mfCreateAdditionalPS()
 {
 	char* pScr = mfGenerateScriptPS();
 	if (!pScr)
-		return NULL;
+		return nullptr;
 
 	char* sNewStr, * newScr;
 	int Mask = m_Insts[m_CurInst].m_Mask;
@@ -413,7 +413,7 @@ bool CCGPShader_GL::mfCompile(char* scr)
 
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else
@@ -594,7 +594,7 @@ static char* sGetText(char** buf)
 		++*buf;
 		SkipCharacters(buf, " ");
 		if (**buf == ':')
-			return NULL;
+			return nullptr;
 	}
 	char* result = *buf;
 
@@ -665,21 +665,21 @@ bool CCGPShader_GL::mfActivate()
 		char namedst1[256];
 		FILETIME writetimesrc, writetimedst;
 		FILE* statussrc, * statusdst;
-		statussrc = NULL;
-		statusdst = NULL;
+		statussrc = nullptr;
+		statusdst = nullptr;
 		mfGetSrcFileName(namesrc, 256);
 		mfGetDstFileName(namedst, 256);
 		StripExtension(namedst, namedst1);
 		AddExtension(namedst1, ".cgasm");
 		statusdst = iSystem->GetIPak()->FOpen(namedst1, "r");
-		if (statusdst == NULL)
+		if (statusdst == nullptr)
 		{
 			if (CRenderer::CV_r_shadersprecache == 2)
 				bCreate = true;
 			else
 			{
 				statusdst = iSystem->GetIPak()->FOpen(namedst, "r");
-				if (statusdst == NULL)
+				if (statusdst == nullptr)
 					bCreate = true;
 				else
 				{
@@ -787,10 +787,10 @@ bool CCGPShader_GL::mfActivate()
 					fputs(code, fp);
 					fclose(fp);
 				}
-				HANDLE hdst = CreateFile(namedst, GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL);
+				HANDLE hdst = CreateFile(namedst, GENERIC_WRITE, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, nullptr);
 				FILE* hsrc = iSystem->GetIPak()->FOpen(namesrc, "r");
 				writetimesrc = iSystem->GetIPak()->GetModificationTime(hsrc);
-				SetFileTime(hdst, NULL, NULL, &writetimesrc);
+				SetFileTime(hdst, nullptr, nullptr, &writetimesrc);
 				iSystem->GetIPak()->FClose(hsrc);
 				CloseHandle(hdst);
 
@@ -812,7 +812,7 @@ bool CCGPShader_GL::mfActivate()
 			len = iSystem->GetIPak()->FRead(pbuf, 1, len, statusdst);
 			pbuf[len] = 0;
 			iSystem->GetIPak()->FClose(statusdst);
-			statusdst = NULL;
+			statusdst = nullptr;
 
 			if (!bCreate && (m_Flags & PSFI_AUTOENUMTC))
 			{
@@ -892,9 +892,9 @@ bool CCGPShader_GL::mfActivate()
 					}
 				}
 				if (m_CGProfileType == CG_PROFILE_FP20)
-					token = strtok(NULL, "//");
+					token = strtok(nullptr, "//");
 				else
-					token = strtok(NULL, "#");
+					token = strtok(nullptr, "#");
 			}
 			SAFE_DELETE_ARRAY(pbuf);
 			if (m_Insts[m_CurInst].m_BindVars)
@@ -975,7 +975,7 @@ bool CCGPShader_GL::mfSet(bool bEnable, SShaderPassHW* slw, int nFlags)
 				m_Insts[Type].m_dwHandle = -1;
 				return false;
 			}
-			m_LastVP = NULL;
+			m_LastVP = nullptr;
 		}
 
 		if (m_Frame != rd->m_nFrameUpdateID)
@@ -998,7 +998,7 @@ bool CCGPShader_GL::mfSet(bool bEnable, SShaderPassHW* slw, int nFlags)
 		if (slw && slw->m_CGFSParamsNoObj)
 			mfSetVariables(false, slw->m_CGFSParamsNoObj);
 		else
-			mfSetVariables(false, NULL);
+			mfSetVariables(false, nullptr);
 	}
 	m_CurRC = this;
 	return true;

@@ -33,7 +33,7 @@ uint CD3D9Renderer::MakeSprite(float _fSpriteDistance, int tex_size, float angle
 		pStatObj->GetFileName(), (int)angle, (int)_fSpriteDistance, tex_size,
 		vSunColor.x, vSunColor.y, vSunColor.z,
 		vSunPos.x, vSunPos.y, vSunPos.z);
-	STexPic* ti = m_TexMan->LoadFromCache(NULL, flags, flags2, name, pStatObj->GetFileName(), eTT_Base);
+	STexPic* ti = m_TexMan->LoadFromCache(nullptr, flags, flags2, name, pStatObj->GetFileName(), eTT_Base);
 	if (ti)
 		return ti->m_Bind;
 
@@ -79,7 +79,7 @@ uint CD3D9Renderer::MakeSprite(float _fSpriteDistance, int tex_size, float angle
 	EF_SetCameraInfo();
 
 	LPDIRECT3DSURFACE9 pTargetSurf;
-	h = m_pd3dDevice->CreateRenderTarget(tex_size, tex_size, D3DFMT_A8R8G8B8, D3DMULTISAMPLE_NONE, 0, TRUE, &pTargetSurf, NULL);
+	h = m_pd3dDevice->CreateRenderTarget(tex_size, tex_size, D3DFMT_A8R8G8B8, D3DMULTISAMPLE_NONE, 0, TRUE, &pTargetSurf, nullptr);
 	if (FAILED(h))
 		return 0;
 
@@ -102,10 +102,10 @@ uint CD3D9Renderer::MakeSprite(float _fSpriteDistance, int tex_size, float angle
 	CRenderer::CV_r_texturesstreamingsync = nPrevStr;
 	h = EF_RestoreRenderTarget();
 
-	STexPic* tp = NULL;
+	STexPic* tp = nullptr;
 	// Copy data
 	D3DLOCKED_RECT d3dlrTarg;
-	h = pTargetSurf->LockRect(&d3dlrTarg, NULL, 0);
+	h = pTargetSurf->LockRect(&d3dlrTarg, nullptr, 0);
 	if (!FAILED(h))
 	{
 		// set alpha
@@ -120,7 +120,7 @@ uint CD3D9Renderer::MakeSprite(float _fSpriteDistance, int tex_size, float angle
 		h = pTargetSurf->UnlockRect();
 		SetTextureAlphaChannelFromRGB(dst, tex_size);
 		//WriteTGA(dst, tex_size, tex_size, "bug.tga", 32);
-		tp = m_TexMan->CreateTexture(name, tex_size, tex_size, 1, flags, flags2, dst, eTT_Base, -1.0f, -1.0f, 0, NULL, 0, eTF_8888);
+		tp = m_TexMan->CreateTexture(name, tex_size, tex_size, 1, flags, flags2, dst, eTT_Base, -1.0f, -1.0f, 0, nullptr, 0, eTF_8888);
 		SAFE_DELETE_ARRAY(dst);
 	}
 
@@ -196,7 +196,7 @@ void CD3D9Renderer::DrawObjSprites_NoBend(list2<CStatObjInst*>* pList, float fMa
 	Vec3d vWorldColor = iSystem->GetI3DEngine()->GetWorldColor() * 255.0f;
 	int prev_tid = -1;
 
-	IDirect3DVertexBuffer9* pCurVB = NULL;
+	IDirect3DVertexBuffer9* pCurVB = nullptr;
 
 	struct_VERTEX_FORMAT_P3F_COL4UB_TEX2F vQuad[4];
 	vQuad[0].st[0] = 0;
@@ -365,7 +365,7 @@ void CD3D9Renderer::DrawObjSprites_NoBend(list2<CStatObjInst*>* pList, float fMa
 				float param[4];
 				if (m_RP.m_RCSprites_FV)
 				{
-					m_RP.m_RCSprites_FV->mfSet(true, NULL);
+					m_RP.m_RCSprites_FV->mfSet(true, nullptr);
 					param[0] = FogColor[0]; param[1] = FogColor[1]; param[2] = FogColor[2]; param[3] = FogColor[3];
 					CCGPShader_D3D* pRC = (CCGPShader_D3D*)m_RP.m_RCSprites_FV;
 					pRC->mfParameter4f("FogColor", param);
@@ -694,9 +694,9 @@ void CD3D9Renderer::DrawObjSprites_NoBend_Merge(list2<CStatObjInst*>* pList, flo
 		return;
 
 
-	CCGPShader_D3D* fpHDRSpr = NULL;
-	CCGPShader_D3D* fpHDRSpr_FV = NULL;
-	CCGVProgram_D3D* vpHDRSpr = NULL;
+	CCGPShader_D3D* fpHDRSpr = nullptr;
+	CCGPShader_D3D* fpHDRSpr_FV = nullptr;
+	CCGVProgram_D3D* vpHDRSpr = nullptr;
 	int bFogCorrect = false;
 	if (m_RP.m_PersFlags & RBPF_HDR)
 	{
@@ -712,7 +712,7 @@ void CD3D9Renderer::DrawObjSprites_NoBend_Merge(list2<CStatObjInst*>* pList, flo
 	else
 		EF_SetColorOp(eCO_MODULATE2X, eCO_MODULATE, DEF_TEXARG0, DEF_TEXARG0);
 
-	IDirect3DVertexBuffer9* pCurVB = NULL;
+	IDirect3DVertexBuffer9* pCurVB = nullptr;
 
 	bool bVolFog = false;
 	bool bVolFogInit = false;
@@ -959,8 +959,8 @@ void CD3D9Renderer::DrawObjSprites(list2<CStatObjInst*>* pList, float fMaxViewDi
 	EF_SetColorOp(eCO_MODULATE, eCO_MODULATE, DEF_TEXARG0, DEF_TEXARG0);
 	D3DSetCull(eCULL_None);
 
-	hr = m_pd3dDevice->SetStreamSource(1, NULL, 0, 0);
-	hr = m_pd3dDevice->SetStreamSource(2, NULL, 0, 0);
+	hr = m_pd3dDevice->SetStreamSource(1, nullptr, 0, 0);
+	hr = m_pd3dDevice->SetStreamSource(2, nullptr, 0, 0);
 	m_pd3dDevice->SetTextureStageState(1, D3DTSS_TEXCOORDINDEX, 1);
 	m_pd3dDevice->SetTextureStageState(0, D3DTSS_TEXCOORDINDEX, 0);
 	m_RP.m_PersFlags &= ~(RBPF_USESTREAM1 | RBPF_USESTREAM2);
@@ -1003,8 +1003,8 @@ void CD3D9Renderer::DrawObjSprites(list2<CStatObjInst*>* pList, float fMaxViewDi
 
 	float v[4];
 	v[3] = 1.0f;
-	CCGVProgram_D3D* pVP = NULL;
-	CCGVProgram_D3D* pVP_FV = NULL;
+	CCGVProgram_D3D* pVP = nullptr;
+	CCGVProgram_D3D* pVP_FV = nullptr;
 	// If device supports vertex shaders use advanced bending for sprites
 	if (!m_RP.m_VPPlantBendingSpr && (GetFeatures() & RFT_HW_VS))
 	{
@@ -1020,25 +1020,25 @@ void CD3D9Renderer::DrawObjSprites(list2<CStatObjInst*>* pList, float fMaxViewDi
 		pVP_FV = (CCGVProgram_D3D*)m_RP.m_VPPlantBendingSpr_FV;
 	}
 
-	SCGBind* pBindBend = NULL;
-	SCGBind* pBindPos = NULL;
+	SCGBind* pBindBend = nullptr;
+	SCGBind* pBindPos = nullptr;
 	int nf = VERTEX_FORMAT_P3F_COL4UB_TEX2F;
 	m_RP.m_CurVFormat = nf;
 	m_RP.m_FlagsModificators &= ~7;
 
-	SMFog* fb = NULL;
+	SMFog* fb = nullptr;
 
 	SCGBind* pBindTG00, * pBindTG01, * pBindTG10, * pBindTG11;
 
-	SCGBind* pBindBend_FV = NULL;
-	SCGBind* pBindPos_FV = NULL;
+	SCGBind* pBindBend_FV = nullptr;
+	SCGBind* pBindPos_FV = nullptr;
 	CFColor FogColor;
 	Plane plane00, plane01, plane10, plane11;
 
-	SCGBind* pCurBindBend = NULL;
-	SCGBind* pCurBindPos = NULL;
+	SCGBind* pCurBindBend = nullptr;
+	SCGBind* pCurBindPos = nullptr;
 
-	CCGVProgram_D3D* lastvpD3D = NULL;
+	CCGVProgram_D3D* lastvpD3D = nullptr;
 
 	SWaveForm2 wfMain;
 	if (!m_RP.m_RCSprites)
@@ -1048,8 +1048,8 @@ void CD3D9Renderer::DrawObjSprites(list2<CStatObjInst*>* pList, float fMaxViewDi
 		wfMain.m_eWFType = eWF_Sin;
 		wfMain.m_Amp = 0.002f;
 		wfMain.m_Level = 0;
-		pVP->mfSet(true, NULL, 0);
-		pVP->mfSetVariables(false, NULL);
+		pVP->mfSet(true, nullptr, 0);
+		pVP->mfSetVariables(false, nullptr);
 
 		lastvpD3D = pVP;
 		pBindBend = pVP->mfGetParameterBind("Bend");
@@ -1084,7 +1084,7 @@ void CD3D9Renderer::DrawObjSprites(list2<CStatObjInst*>* pList, float fMaxViewDi
 	vQuad[5].st[0] = -1.0f;
 	vQuad[5].st[1] = 1.0f;
 
-	CCGPShader_D3D* curRC = NULL;
+	CCGPShader_D3D* curRC = nullptr;
 	if (m_bHeatVision)
 	{
 		float param[4];
@@ -1107,7 +1107,7 @@ void CD3D9Renderer::DrawObjSprites(list2<CStatObjInst*>* pList, float fMaxViewDi
 			m_RP.m_RCSprites->mfSet(true);
 	}
 
-	IDirect3DVertexBuffer9* pCurVB = NULL;
+	IDirect3DVertexBuffer9* pCurVB = nullptr;
 	float fLastBend = 999999.0f;
 
 	for (int i = pList->Count() - 1; i >= 0; i--)
@@ -1196,8 +1196,8 @@ void CD3D9Renderer::DrawObjSprites(list2<CStatObjInst*>* pList, float fMaxViewDi
 			// setup Volume Fog Texgen planes
 			if (!pBindBend_FV)
 			{
-				pVP_FV->mfSet(true, NULL);
-				pVP_FV->mfSetVariables(false, NULL);
+				pVP_FV->mfSet(true, nullptr);
+				pVP_FV->mfSetVariables(false, nullptr);
 				pBindBend_FV = pVP_FV->mfGetParameterBind("Bend");
 				pBindPos_FV = pVP_FV->mfGetParameterBind("ObjPos");
 
@@ -1256,8 +1256,8 @@ void CD3D9Renderer::DrawObjSprites(list2<CStatObjInst*>* pList, float fMaxViewDi
 				curRC = (CCGPShader_D3D*)m_RP.m_RCSprites_FV;
 				if (pVP_FV)
 				{
-					pVP_FV->mfSet(true, NULL);
-					pVP_FV->mfSetVariables(false, NULL);
+					pVP_FV->mfSet(true, nullptr);
+					pVP_FV->mfSetVariables(false, nullptr);
 
 					if (pBindTG00)
 						pVP_FV->mfParameter4f(pBindTG00, &plane00.n.x);
@@ -1278,7 +1278,7 @@ void CD3D9Renderer::DrawObjSprites(list2<CStatObjInst*>* pList, float fMaxViewDi
 				float param[4];
 				if (curRC)
 				{
-					curRC->mfSet(true, NULL);
+					curRC->mfSet(true, nullptr);
 					param[0] = FogColor[0]; param[1] = FogColor[1]; param[2] = FogColor[2]; param[3] = FogColor[3];
 					curRC->mfParameter4f("FogColor", param);
 				}
@@ -1303,12 +1303,12 @@ void CD3D9Renderer::DrawObjSprites(list2<CStatObjInst*>* pList, float fMaxViewDi
 				lastvpD3D = pVP;
 				if (pVP)
 				{
-					pVP->mfSet(true, NULL);
-					pVP->mfSetVariables(false, NULL);
+					pVP->mfSet(true, nullptr);
+					pVP->mfSetVariables(false, nullptr);
 				}
 
 				if (curRC)
-					curRC->mfSet(true, NULL);
+					curRC->mfSet(true, nullptr);
 
 				EF_SelectTMU(1);
 				EnableTMU(false);
@@ -1418,9 +1418,9 @@ void CD3D9Renderer::DrawObjSprites(list2<CStatObjInst*>* pList, float fMaxViewDi
 	//  EF_PopFog();
 
 	if (lastvpD3D)
-		lastvpD3D->mfSet(false, NULL);
+		lastvpD3D->mfSet(false, nullptr);
 	if (curRC)
-		curRC->mfSet(false, NULL);
+		curRC->mfSet(false, nullptr);
 
 	//pVB->Unlock();
 

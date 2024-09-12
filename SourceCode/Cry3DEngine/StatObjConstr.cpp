@@ -40,12 +40,12 @@ const char* CStatObj::GetScriptMaterialName(int Id)
 			if (matInfos[i].sScriptMaterial[0])
 				return matInfos[i].sScriptMaterial;
 		}
-		return NULL;
+		return nullptr;
 	}
 	else if (Id < matInfos.Count() && matInfos[Id].sScriptMaterial[0])
 		return matInfos[Id].sScriptMaterial;
 
-	return NULL;
+	return nullptr;
 }
 
 void CStatObj::CalcRadiuses()
@@ -96,7 +96,7 @@ void CStatObj::Init()
 	m_fObjectRadius = 0;
 	m_fRadiusHors = 0;
 	m_fRadiusVert = 0;
-	m_pSvObj = NULL;
+	m_pSvObj = nullptr;
 	m_dwFlags = m_dwFlags2 = 0;
 
 	ZeroStruct(m_arrSpriteTexID);
@@ -168,7 +168,7 @@ void CStatObj::ShutDown()
 
 		GetRenderer()->DeleteLeafBuffer(lb);
 	}
-	m_pLeafBuffer = NULL;
+	m_pLeafBuffer = nullptr;
 
 	for (int i = 0; i < FAR_TEX_COUNT; i++)
 	{
@@ -189,8 +189,8 @@ void CStatObj::ShutDown()
 	// free light source smart pointers
 	for (int i = 0; i < m_lstLSources.Count(); i++)
 	{
-		m_lstLSources[i].m_pLightImage = NULL;
-		m_lstLSources[i].m_pShader = NULL;
+		m_lstLSources[i].m_pLightImage = nullptr;
+		m_lstLSources[i].m_pShader = nullptr;
 	}
 }
 
@@ -317,7 +317,7 @@ const Matrix44* CStatObj::GetHelperMatrixByName(const char* szHelperName)
 const char* CStatObj::GetHelperById(int nId, Vec3d& vPos, Matrix44* pMat, int* pnType)
 {
 	if (nId >= m_lstHelpers.Count() || nId < 0)
-		return (NULL);
+		return (nullptr);
 
 	vPos = m_lstHelpers[nId].tMat.GetTranslationOLD();
 

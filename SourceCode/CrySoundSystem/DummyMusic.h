@@ -11,7 +11,7 @@ public:
 	void Release() { delete this; }
 	ISystem* GetSystem() { return m_pSystem; }
 	int GetBytesPerSample() { return 4; }
-	IMusicSystemSink* SetSink(IMusicSystemSink* pSink) { return NULL; }
+	IMusicSystemSink* SetSink(IMusicSystemSink* pSink) { return nullptr; }
 	bool SetData(struct SMusicData* pMusicData, bool bNoRelease = false) { return true; };
 	void Unload() {}
 	void Pause(bool bPause) {}
@@ -22,11 +22,11 @@ public:
 	bool SetMood(const char* pszMood) { return true; }
 	bool SetDefaultMood(const char* pszMood) { return true; }
 	const char* GetMood() { return ""; }
-	IStringItVec* GetThemes() { return NULL; }
-	IStringItVec* GetMoods(const char* pszTheme) { return NULL; }
+	IStringItVec* GetThemes() { return nullptr; }
+	IStringItVec* GetMoods(const char* pszTheme) { return nullptr; }
 	bool AddMusicMoodEvent(const char* pszMood, float fTimeout) { return true; }
 	void Update() {}
-	SMusicSystemStatus* GetStatus() { return NULL; }
+	SMusicSystemStatus* GetStatus() { return nullptr; }
 	void GetMemoryUsage(class ICrySizer* pSizer) {}
 	bool LoadMusicDataFromLUA(IScriptSystem* pScriptSystem, const char* pszFilename) { return true; }
 	bool StreamOGG() { return true; }

@@ -8,11 +8,11 @@ template <class _I> class _smart_ptr
 private:
 	_I* p;
 public:
-	_smart_ptr() : p(NULL) {}
+	_smart_ptr() : p(nullptr) {}
 #if defined(LINUX64)
-	_smart_ptr(typeof(__null)) : p(NULL) {}
+	_smart_ptr(typeof(__null)) : p(nullptr) {}
 #endif
-	_smart_ptr(int Null) : p(NULL) {}
+	_smart_ptr(int Null) : p(nullptr) {}
 	_smart_ptr(_I* p_)
 	{
 		p = p_;
@@ -57,11 +57,11 @@ public:
 	}
 	operator bool() const
 	{
-		return p != NULL;
+		return p != nullptr;
 	};
 	bool operator !() const
 	{
-		return p == NULL;
+		return p == nullptr;
 	};
 	bool  operator ==(const _I* p2) const
 	{

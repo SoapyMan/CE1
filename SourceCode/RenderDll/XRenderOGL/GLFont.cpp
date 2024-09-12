@@ -26,7 +26,7 @@ int CGLRenderer::FontCreateTexture(int Width, int Height, byte* pData, ETEX_Form
 	sprintf(szName, "$AutoFont_%d", m_TexGenID++);
 
 	int iFlags = FT_HASALPHA | FT_NOREMOVE | FT_FONT | FT_NOSTREAM | FT_NOMIPS;
-	STexPic* tp = m_TexMan->CreateTexture(szName, Width, Height, 1, iFlags, 0, pData, eTT_Base, -1.0f, -1.0f, 0, NULL, 0, eTF);
+	STexPic* tp = m_TexMan->CreateTexture(szName, Width, Height, 1, iFlags, 0, pData, eTT_Base, -1.0f, -1.0f, 0, nullptr, 0, eTF);
 
 	return tp->GetTextureID();
 }
@@ -63,7 +63,7 @@ bool CGLRenderer::FontUploadTexture(class CFBitmap* pBmp, ETEX_Format eTF)
 	sprintf(szName, "$Auto_%d", m_TexGenID++);
 
 	int iFlags = FT_HASALPHA | FT_NOREMOVE | FT_FONT | FT_NOMIPS;
-	STexPic* tp = m_TexMan->CreateTexture(szName, pBmp->GetWidth(), pBmp->GetHeight(), 1, iFlags, 0, (unsigned char*)pData, eTT_Base, -1.0f, -1.0f, 0, NULL, 0, eTF);
+	STexPic* tp = m_TexMan->CreateTexture(szName, pBmp->GetWidth(), pBmp->GetHeight(), 1, iFlags, 0, (unsigned char*)pData, eTT_Base, -1.0f, -1.0f, 0, nullptr, 0, eTF);
 	//int size = pBmp->GetWidth() * pBmp->GetHeight() * 4;
 	//tp->m_pData32 = new byte[size];
 	//memcpy(tp->m_pData32, pBmp->GetData(), size);

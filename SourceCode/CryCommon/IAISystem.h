@@ -112,7 +112,7 @@ typedef struct IAISystem
 
 	virtual IAIObject* GetAIObjectByName(unsigned short type, const char* pName) = 0;
 
-	virtual IAIObject* GetNearestObjectOfType(const Vec3& pos, unsigned int type, float fRadius, IAIObject* pSkip = NULL) = 0;
+	virtual IAIObject* GetNearestObjectOfType(const Vec3& pos, unsigned int type, float fRadius, IAIObject* pSkip = nullptr) = 0;
 
 	virtual IAIObject* GetNearestObjectOfType(IAIObject* pObject, unsigned int type, float fRadius, int nOption = 0) = 0;
 

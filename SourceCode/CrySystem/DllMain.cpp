@@ -24,7 +24,7 @@
 #include <windows.h>
 
 // For lua debugger
-HMODULE gDLLHandle = NULL;
+HMODULE gDLLHandle = nullptr;
 
 #ifdef USING_CRY_MEMORY_MANAGER
 //#if !defined(LINUX)
@@ -59,7 +59,7 @@ extern "C"
 {
 	CRYSYSTEM_API ISystem* CreateSystemInterface(SSystemInitParams& initParams)
 	{
-		CSystem* pSystem = NULL;
+		CSystem* pSystem = nullptr;
 		if (!initParams.pSystem)
 		{
 			pSystem = new CSystem;

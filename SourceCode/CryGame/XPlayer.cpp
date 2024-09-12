@@ -78,7 +78,7 @@ CPlayer::CPlayer(CXGame *pGame) :
 	m_ssoHitNormVec(pGame->GetScriptSystem()),
 	m_vColor(1,0,1),
 	m_vShake(0,0,0),
-	m_pDynLight( NULL ),
+	m_pDynLight( nullptr ),
 	m_vCharacterAngles( 0,0,0 ),
 	m_JumpStage(0),
 	m_JumpAniLenght(0),
@@ -96,18 +96,18 @@ CPlayer::CPlayer(CXGame *pGame) :
 	m_vCurEntAngle(0,0,0),
 	m_bGrenadeAnimation(false)
 {
-	m_pLastUsedCharacter = NULL;
+	m_pLastUsedCharacter = nullptr;
 	m_weaponPositionState = WEAPON_POS_UNDEFINED;
 	m_vEyePos.Set(0,0,0);
 	m_bWeaponJustFired = false;
 	m_pLightTarget = 0;
 	float tm=.3f;	
 
-	m_pBoneHead = NULL;
-	m_pBoneNeck = NULL;
-	m_pBoneSpine = NULL;
-	m_pBoneSpine1 = NULL;
-	m_pBoneSpine2 = NULL;
+	m_pBoneHead = nullptr;
+	m_pBoneNeck = nullptr;
+	m_pBoneSpine = nullptr;
+	m_pBoneSpine1 = nullptr;
+	m_pBoneSpine2 = nullptr;
 
 	m_pGame = pGame;
 	m_pTimer = pGame->GetSystem()->GetITimer();
@@ -147,7 +147,7 @@ CPlayer::CPlayer(CXGame *pGame) :
 	m_walkParams.fLeanTarget=0;
 	m_walkParams.fCurrLean=0;
 
-	m_pVehicle = NULL;
+	m_pVehicle = nullptr;
 
 	//@FIXME Give player some life
 	m_stats.health = 100;
@@ -208,8 +208,8 @@ CPlayer::CPlayer(CXGame *pGame) :
 
 	m_fGravityOverride=1E10;
 
-	m_pScriptObject=NULL;
-	m_pRedirected = NULL;
+	m_pScriptObject=nullptr;
+	m_pRedirected = nullptr;
 
 	m_nStanding = -1;
 	m_nMode = -1;
@@ -313,7 +313,7 @@ CPlayer::CPlayer(CXGame *pGame) :
 	m_stats.bIsBlinded = false;
 	m_stats.curBlindingValue = 0.0f;
 
-	m_pMountedWeapon = NULL;
+	m_pMountedWeapon = nullptr;
 
 	m_stats.bIsLimping = false;
 
@@ -374,7 +374,7 @@ CPlayer::CPlayer(CXGame *pGame) :
 
 	m_fLastProneTime = 0;
 
-	m_pLastAiming=NULL;
+	m_pLastAiming=nullptr;
 }
 
 
@@ -397,7 +397,7 @@ CPlayer::~CPlayer()
 
 	if(m_pScriptObject)
 		m_pScriptObject->Release();
-	m_pScriptObject=NULL;
+	m_pScriptObject=nullptr;
 	
 	
 	m_mapPlayerWeapons.clear();
@@ -405,7 +405,7 @@ CPlayer::~CPlayer()
 	if (m_pDynLight)
 	{
 		delete m_pDynLight;
-		m_pDynLight=NULL;
+		m_pDynLight=nullptr;
 	}
 }
 
@@ -748,12 +748,12 @@ void CPlayer::UpdateDead( SPlayerUpdateContext &ctx )
 void CPlayer::AutoAiming()
 {
 	const char *pszBoneName="Bip01 Spine1\0";
-	//const char *pszBoneName=NULL;
+	//const char *pszBoneName=nullptr;
 
 	Vec3	Center;
 	Vec3	bestPoint3D;
 	float fBestDist=99999;
-	IEntity *pBest=NULL;
+	IEntity *pBest=nullptr;
 
 	IEntityItPtr It=m_pGame->GetSystem()->GetIEntitySystem()->GetEntityInFrustrumIterator( true );
 	CCamera Cam=m_pGame->GetSystem()->GetViewCamera();
@@ -829,7 +829,7 @@ void CPlayer::AutoAiming()
 
 	if (!pBest)
 	{
-		m_pLastAiming=NULL;		
+		m_pLastAiming=nullptr;		
 		return;
 	}
 
@@ -839,7 +839,7 @@ void CPlayer::AutoAiming()
 		if(m_pLastAiming->GetContainer() && 
 			m_pLastAiming->GetContainer()->QueryContainerInterface(CIT_IPLAYER,(void**)&pPlayer) &&
 			!pPlayer->IsAlive() )
-			m_pLastAiming=NULL;		
+			m_pLastAiming=nullptr;		
 	}
 	
 	if (m_pLastAiming && m_pLastAiming!=pBest)
@@ -896,7 +896,7 @@ void CPlayer::Update()
 	if(m_pGame->pa_forcerelax->GetIVal())
 	{
 		GoRelaxed();
-		m_pEntity->StartAnimation(0, NULL, 1, .15f);	// to stop all the fire animations
+		m_pEntity->StartAnimation(0, nullptr, 1, .15f);	// to stop all the fire animations
 	}
 	// fixme end
 
@@ -1287,7 +1287,7 @@ void CPlayer::SetPlayerModel( const string &model )
 ///////////////////////////////////////////////
 /*! Retrieves a weapon-info-structure for a certain weapon
 		@param nWeaponIndex weapon-id to retrieve from (negative value will return info of current weapon)
-		@return WeaponInfo if the function succeeds, NULL otherwise
+		@return WeaponInfo if the function succeeds, nullptr otherwise
 */
 WeaponInfo & CPlayer::GetWeaponInfo(int nWeaponIndex /* = -1 */) 
 {
@@ -2667,7 +2667,7 @@ void CPlayer::DrawThirdPersonWeapon(bool bDraw)
 		else
 		{
 			wi.DetachBindingHandles(character);
-			character->AttachObjectToBone(NULL,NULL);
+			character->AttachObjectToBone(nullptr,nullptr);
 		}
 	}
 }
@@ -3115,7 +3115,7 @@ void CPlayer::UpdateWeapon()
 					}
 				}
 				if(m_stats.crosshairOnScreen)
-					if(bullets = pSelectedWeapon->Fire( firePos,fireAngles, this, wi, GetRedirected() ? GetRedirected()->GetPhysics() : NULL))
+					if(bullets = pSelectedWeapon->Fire( firePos,fireAngles, this, wi, GetRedirected() ? GetRedirected()->GetPhysics() : nullptr))
 				{
 					FRAME_PROFILER( "UpdateWeapon::ScriptEvent_Fire",GetISystem(),PROFILE_GAME );
 
@@ -3497,7 +3497,7 @@ void CPlayer::UpdateFireAnimations()
 	{
 	//	m_pEntity->GetCurrentAnimation(0, 1)
 		m_sPrevAniNameLayer1.clear();
-		m_pEntity->StartAnimation(0, NULL, 1, .15f);
+		m_pEntity->StartAnimation(0, nullptr, 1, .15f);
 		return;
 	}
 
@@ -3522,7 +3522,7 @@ void CPlayer::UpdateFireAnimations()
 
 	if(m_JumpStage==1)
 	{
-		m_pEntity->StartAnimation(0, NULL, 1, .15f);
+		m_pEntity->StartAnimation(0, nullptr, 1, .15f);
 //m_pEntity->StartAnimation(0, "aidle", 1, .15f);
 		m_sPrevAniNameLayer1 = "";
 		return;
@@ -3660,7 +3660,7 @@ void CPlayer::UpdateFireAnimations()
 		}
 		if(m_sPrevAniNameLayer1.empty())
 			return;
-		m_pEntity->StartAnimation(0, NULL, 1, .15f);
+		m_pEntity->StartAnimation(0, nullptr, 1, .15f);
 		m_sPrevAniNameLayer1 = "";
 		m_fShootAniLength = 0.0f;
 	}
@@ -3687,7 +3687,7 @@ void CPlayer::UpdateJumpAnimations()
 	{
 		if( m_sPrevAniNameLayer2 == "jump_air" )
 		{
-			m_pEntity->StartAnimation(0, NULL, 2, .1f);
+			m_pEntity->StartAnimation(0, nullptr, 2, .1f);
 			m_sPrevAniNameLayer2.clear();
 		}
 		return;
@@ -4328,7 +4328,7 @@ void CPlayer::Die()
 		// Hide weapon.
 		character->EnableLastIdleAnimationRestart(0,false);
 		character->EnableLastIdleAnimationRestart(1,false);
-		character->AttachObjectToBone(NULL,NULL);
+		character->AttachObjectToBone(nullptr,nullptr);
 
 		if (m_bIsAI)
 			character->ResetAnimations();
@@ -4719,7 +4719,7 @@ bool CPlayer::Read( CStream &stream )
 	{
 		//invoke script event (client)
 		m_bGrenadeAnimation = true;
-		m_pEntity->SendScriptEvent(ScriptEvent_FireGrenade,0,NULL);
+		m_pEntity->SendScriptEvent(ScriptEvent_FireGrenade,0,nullptr);
 	}
 
 	bool bRedirected;
@@ -4856,7 +4856,7 @@ bool CPlayer::LoadGame(CStream &stm)
 void CPlayer::SetScriptObject(IScriptObject *pObject)
 {
 	m_pScriptObject=pObject;
-	m_pUpdateAnimation=NULL;
+	m_pUpdateAnimation= HSCRIPT_NULL;
 }
 /*! Retrieves the ScriptObject of this container
 		@return pointer to the ScriptObject
@@ -4945,7 +4945,7 @@ void CPlayer::RedirectInputToEntity(EntityId id, int angleDelta)
 	if (!id)
 	{
 		if (m_pRedirected)
-			m_pRedirected = NULL;
+			m_pRedirected = nullptr;
 		if(IsMyPlayer())
 			m_pGame->m_pClient->m_PlayerProcessingCmd.SetDeltaAngles(Vec3d(0.0f, 0.0f, 0.0f));
 	}
@@ -5655,7 +5655,7 @@ void CPlayer::StartDie( const Vec3d& hitImpuls, const Vec3d hitPoint, int hitpar
 		// Hide weapon.
 		character->EnableLastIdleAnimationRestart(0,false);
 		character->EnableLastIdleAnimationRestart(1,false);
-		character->AttachObjectToBone(NULL,NULL);
+		character->AttachObjectToBone(nullptr,nullptr);
 
 		if (m_bIsAI)
 			character->ResetAnimations();
@@ -5771,11 +5771,7 @@ bool	CPlayer::GoStand(bool ignoreSpam)
 			// when calculating BBox
 			GetEntity()->SetFlags( ETY_FLAG_CALCBBOX_ZROTATE );
 
-#if defined(LINUX64)
 			m_pEntity->SendScriptEvent(ScriptEvent_StanceChange, 0);
-#else
-			m_pEntity->SendScriptEvent(ScriptEvent_StanceChange, NULL);
-#endif
 			m_bStayCrouch = false;
 
 			m_fLastProneTime = m_pTimer->GetCurrTime() + 0.5f;
@@ -5830,11 +5826,7 @@ bool	CPlayer::GoStealth( )
 			GetEntity()->SetFlags( ETY_FLAG_CALCBBOX_ZROTATE );
 
 			m_Running = false;
-#if defined(LINUX64)
 			m_pEntity->SendScriptEvent(ScriptEvent_StanceChange, 0);
-#else
-			m_pEntity->SendScriptEvent(ScriptEvent_StanceChange, NULL);
-#endif
 			return true;
 		}
 
@@ -5885,11 +5877,7 @@ bool	CPlayer::GoCrouch( )
 			GetEntity()->SetFlags( ETY_FLAG_CALCBBOX_ZROTATE );
 
 			m_Running = false;
-#if defined(LINUX64)
 			m_pEntity->SendScriptEvent(ScriptEvent_StanceChange, 0);
-#else
-			m_pEntity->SendScriptEvent(ScriptEvent_StanceChange, NULL);
-#endif
 			return true;
 		}
 		// could not change - restore angle if proning
@@ -5952,11 +5940,7 @@ bool	CPlayer::GoProne( )
 		GetEntity()->ClearFlags( ETY_FLAG_CALCBBOX_ZROTATE );
 
 		m_Running = false;
-#if defined(LINUX64)
 		m_pEntity->SendScriptEvent(ScriptEvent_StanceChange, 0);
-#else
-		m_pEntity->SendScriptEvent(ScriptEvent_StanceChange, NULL);
-#endif
 	}
 
 	m_bStayCrouch = false;
@@ -6007,11 +5991,7 @@ bool	CPlayer::GoSwim( )
 			GetEntity()->SetFlags( ETY_FLAG_CALCBBOX_ZROTATE );
 
 			m_Running = false;
-#if defined(LINUX64)
 			m_pEntity->SendScriptEvent(ScriptEvent_StanceChange, 0);
-#else
-			m_pEntity->SendScriptEvent(ScriptEvent_StanceChange, NULL);
-#endif
 			m_bStayCrouch = false;
 
 			return true;
@@ -7037,7 +7017,7 @@ void CPlayer::DampInputVector(vectorf &vec ,float speed ,float stopspeed ,bool o
 void CPlayer::SaveAIState(CStream & stm, CScriptObjectStream & scriptStream)
 {
 	IScriptSystem *pScriptSystem = m_pGame->GetSystem()->GetIScriptSystem();
-	HSCRIPTFUNCTION	saveOverallFunction=NULL;
+	HSCRIPTFUNCTION	saveOverallFunction= HSCRIPT_NULL;
 	if( m_pEntity->GetScriptObject() && m_pEntity->GetScriptObject()->GetValue("OnSaveOverall", saveOverallFunction) )
 	{
 		pScriptSystem->BeginCall(saveOverallFunction);
@@ -7116,7 +7096,7 @@ void CPlayer::SaveAIState(CStream & stm, CScriptObjectStream & scriptStream)
 void CPlayer::LoadAIState(CStream & stm, CScriptObjectStream & scriptStream)
 {
 	IScriptSystem *pScriptSystem = m_pGame->GetSystem()->GetIScriptSystem();
-	HSCRIPTFUNCTION	loadOverallFunction=NULL;
+	HSCRIPTFUNCTION	loadOverallFunction = HSCRIPT_NULL;
 	if( m_pEntity->GetScriptObject() && m_pEntity->GetScriptObject()->GetValue("OnLoadOverall", loadOverallFunction) )
 	{
 		pScriptSystem->BeginCall(loadOverallFunction);
@@ -7601,7 +7581,7 @@ bool CPlayer::Read_PATCH_1( CStream &stream )
 	{
 		//invoke script event (client)
 		m_bGrenadeAnimation = true;
-		m_pEntity->SendScriptEvent(ScriptEvent_FireGrenade,0,NULL);
+		m_pEntity->SendScriptEvent(ScriptEvent_FireGrenade,0,nullptr);
 	}
 
 	bool bRedirected;

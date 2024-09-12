@@ -366,7 +366,7 @@ public:
 
 	// flashlight
 	void	SwitchFlashLight( bool on );
-	bool	InitLight( const char* img=NULL, const char* shader=NULL );
+	bool	InitLight( const char* img=nullptr, const char* shader=nullptr );
 	bool	HasFlashLight() const	{	return m_stats.has_flashlight;	}
 	void	GiveFlashLight( bool on );
 
@@ -375,7 +375,7 @@ public:
 	virtual bool Init();
 	virtual	void Update();
 	virtual	void OnSetAngles( const Vec3 &ang );
-	virtual	bool Write( CStream &stream,EntityCloneState *cs=NULL);
+	virtual	bool Write( CStream &stream,EntityCloneState *cs=nullptr);
 	virtual	bool Read( CStream &stream );
 	virtual	bool Read_PATCH_1( CStream &stream );
 	virtual bool QueryContainerInterface( ContainerInterfaceType desired_interface, void **ppInterface);
@@ -482,10 +482,10 @@ public:
 
 //	void Die();
 
-	void SetDimNormal(const pe_player_dimensions* const pDim=NULL );
-	void SetDimStealth(const pe_player_dimensions* const pDim=NULL );
-	void SetDimCrouch(const pe_player_dimensions* const pDim=NULL );
-	void SetDimProne(const pe_player_dimensions* const pDim=NULL );
+	void SetDimNormal(const pe_player_dimensions* const pDim=nullptr );
+	void SetDimStealth(const pe_player_dimensions* const pDim=nullptr );
+	void SetDimCrouch(const pe_player_dimensions* const pDim=nullptr );
+	void SetDimProne(const pe_player_dimensions* const pDim=nullptr );
 
 //	void SetAnimationRefSpeed(const float run=-1.0f, const float walk=-1.0f, const float crouch=-1.0f, const float prone=-1.0f );
 	void SetAnimationRefSpeedRun(const float fwd=-1.0f, const float side=-1.0f, const float back=-1.0f );

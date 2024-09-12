@@ -142,7 +142,7 @@ int CScriptObjectInput::BindAction(IFunctionHandler *pH)
 	}
 	const char *sAction;
 	const char *sKeys;
-	const char *sActionMap=NULL;
+	const char *sActionMap=nullptr;
 	int	iKeyPos = -1;
 	int nCheckPressed=0;
 	pH->GetParam(1,sAction);
@@ -211,7 +211,7 @@ int CScriptObjectInput::SetActionMap(IFunctionHandler *pH)
 {
 	if(!m_pInput)return pH->EndFunctionNull();
 	CHECK_PARAMETERS(1);
-	const char *sMapName=NULL;
+	const char *sMapName=nullptr;
 	if(pH->GetParam(1,sMapName))
 	{
 		m_pGame->m_pIActionMapManager->SetActionMap(sMapName);

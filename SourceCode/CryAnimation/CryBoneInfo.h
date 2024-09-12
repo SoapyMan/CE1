@@ -26,8 +26,8 @@ public:
 
 	CryBoneInfo* getChild(unsigned i) { CRYASSERT(i < numChildren()); return this + m_nOffsetChildren + i; }
 	const CryBoneInfo* getChild(unsigned i) const { CRYASSERT(i < numChildren()); return this + m_nOffsetChildren + i; }
-	CryBoneInfo* getParent() { return m_nOffsetParent ? this + m_nOffsetParent : NULL; }
-	const CryBoneInfo* getParent() const { return m_nOffsetParent ? this + m_nOffsetParent : NULL; }
+	CryBoneInfo* getParent() { return m_nOffsetParent ? this + m_nOffsetParent : nullptr; }
+	const CryBoneInfo* getParent() const { return m_nOffsetParent ? this + m_nOffsetParent : nullptr; }
 
 	// binds this bone to a controller from the specified animation, using the controller manager
 	class IController* BindController(GlobalAnimation& GlobalAnim, unsigned nAnimID);

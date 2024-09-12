@@ -315,7 +315,7 @@ void CPlayer::UpdateCamera()
 
 				camera->SetThirdPersonMode(offset,
 						angles,CAMERA_3DPERSON1,frameTime,camRange,!m_bFirstPerson,physEnt, 
-//						NULL,
+//						nullptr,
 						physEntCar,
 						m_pGame->GetSystem()->GetI3DEngine());
 			}
@@ -657,7 +657,7 @@ bool CPlayer::UpdateBonesPtrs( )
 
 /*! Updates the third person view (eg. drawing the character)
 		@param nWeaponIndex weapon-id to retrieve from
-		@return WeaponInfo if the function succeeds, NULL otherwise
+		@return WeaponInfo if the function succeeds, nullptr otherwise
 */
 //////////////////////////////////////////////////////////////////////////
 void CPlayer::UpdateThirdPersonView( )

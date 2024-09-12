@@ -39,7 +39,7 @@ struct CryChunkedFile :public _reference_target_t
 	CryChunkedFile(CChunkFileReader* pFile);
 
 	// ChunkType_Timing
-	// NULL if no timing chunk was found
+	// nullptr if no timing chunk was found
 	const TIMING_CHUNK_DESC* pTiming;
 	// the range entities following the timing chunk. There are (pTiming->nSubRanges) of them
 	const RANGE_ENTITY* pRangeEntities;
@@ -53,7 +53,7 @@ struct CryChunkedFile :public _reference_target_t
 	// the array of nodes
 	struct NodeDesc
 	{
-		NodeDesc() :pDesc(NULL), pChildren(NULL) {}
+		NodeDesc() :pDesc(nullptr), pChildren(nullptr) {}
 		NodeDesc(const NODE_CHUNK_DESC*);
 
 		const NODE_CHUNK_DESC* pDesc;
@@ -112,7 +112,7 @@ struct CryChunkedFile :public _reference_target_t
 	// from within adjust() function)
 	struct MeshDesc
 	{
-		MeshDesc() : pDesc(NULL), pNode(NULL) {}
+		MeshDesc() : pDesc(nullptr), pNode(nullptr) {}
 
 		MeshDesc(const MESH_CHUNK_DESC* pChunk, unsigned nSize);
 
@@ -180,11 +180,11 @@ struct CryChunkedFile :public _reference_target_t
 	MeshIdxMap mapMeshIdx, mapBoneMeshIdx;
 
 	// returns mesh pointer by the mesh chunk id
-	// returns NULL if error
+	// returns nullptr if error
 	virtual MeshDesc* GetMeshDesc(unsigned nChunkId);
 
 	// returns mesh pointer by the mesh chunk id
-	// returns NULL if error
+	// returns nullptr if error
 	virtual MeshDesc* GetBoneMeshDesc(unsigned nChunkId);
 
 	std::vector<MAT_ENTITY> arrMtls;

@@ -102,7 +102,7 @@ void CLog::LogWarning(const char* szFormat, ...)
 	vsprintf(szBuffer, szFormat, ArgList);
 	va_end(ArgList);
 
-	m_pSystem->Warning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, 0, NULL, "%s", szBuffer);
+	m_pSystem->Warning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, 0, nullptr, "%s", szBuffer);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -114,7 +114,7 @@ void CLog::LogError(const char* szFormat, ...)
 	vsprintf(szBuffer, szFormat, ArgList);
 	va_end(ArgList);
 
-	m_pSystem->Warning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_ERROR, 0, NULL, "%s", szBuffer);
+	m_pSystem->Warning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_ERROR, 0, nullptr, "%s", szBuffer);
 }
 
 //////////////////////////////////////////////////////////////////////////

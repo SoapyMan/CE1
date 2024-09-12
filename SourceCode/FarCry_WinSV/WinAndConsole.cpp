@@ -44,7 +44,7 @@ int _tmain(unsigned long, TCHAR**, TCHAR**)
 	// Get command line
 	LPTSTR lpszCommandLine = ::GetCommandLine();
 
-	if (lpszCommandLine == NULL)
+	if (lpszCommandLine == nullptr)
 		return -1;
 
 	// Skip past program name (first token in command line).
@@ -78,7 +78,7 @@ int _tmain(unsigned long, TCHAR**, TCHAR**)
 	::GetStartupInfo(&StartupInfo);
 
 	// Your original windows application will be started
-	return _tWinMain(::GetModuleHandle(NULL), NULL, lpszCommandLine,
+	return _tWinMain(::GetModuleHandle(nullptr), nullptr, lpszCommandLine,
 		(StartupInfo.dwFlags & STARTF_USESHOWWINDOW) ?
 		StartupInfo.wShowWindow : SW_SHOWDEFAULT);
 }

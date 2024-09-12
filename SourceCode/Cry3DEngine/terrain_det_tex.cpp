@@ -80,7 +80,7 @@ void CTerrain::RenderDetailTextures(float _fFogNearDistance, float _fFogFarDista
 							pObj->m_nScissorX2 = GetViewCamera().m_ScissorInfo.x2;
 							pObj->m_nScissorY2 = GetViewCamera().m_ScissorInfo.y2;
 						}
-						//            GetRenderer()->EF_AddEf(0, m_pRETerrainDetailTextureLayers, m_pTerrainDetailTextureLayersEff, NULL, pObj, 0, NULL, EFSLIST_STENCIL | eS_TerrainDetailTextures/*, eS_Opaque*/);
+						//            GetRenderer()->EF_AddEf(0, m_pRETerrainDetailTextureLayers, m_pTerrainDetailTextureLayersEff, nullptr, pObj, 0, nullptr, EFSLIST_STENCIL | eS_TerrainDetailTextures/*, eS_Opaque*/);
 
 						DrawDetailTextures(_fFogNearDistance, _fFogFarDistance, true);
 					}

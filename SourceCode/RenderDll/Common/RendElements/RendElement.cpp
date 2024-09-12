@@ -232,8 +232,8 @@ void CRendElement::mfPrepare()
 {
 }
 
-CMatInfo* CRendElement::mfGetMatInfo() { return NULL; }
-list2<CMatInfo>* CRendElement::mfGetMatInfoList() { return NULL; }
+CMatInfo* CRendElement::mfGetMatInfo() { return nullptr; }
+list2<CMatInfo>* CRendElement::mfGetMatInfoList() { return nullptr; }
 int CRendElement::mfGetMatId() { return -1; }
 bool CRendElement::mfCull(CCObject* obj) { return false; }
 bool CRendElement::mfCull(CCObject* obj, SShader* ef) { return false; }
@@ -376,9 +376,9 @@ int  CRendElement::mfTransform(Matrix44& ViewMatr, Matrix44& ProjMatr, vec4_t* v
 bool CRendElement::mfIsValidTime(SShader* ef, CCObject* obj, float curtime) { return true; }
 void CRendElement::mfBuildGeometry(SShader* ef) {}
 bool CRendElement::mfCompile(SShader* ef, char* scr) { return true; };
-CRendElement* CRendElement::mfCreateWorldRE(SShader* ef, SInpData* ds) { return NULL; }
+CRendElement* CRendElement::mfCreateWorldRE(SShader* ef, SInpData* ds) { return nullptr; }
 bool CRendElement::mfDraw(SShader* ef, SShaderPass* sfm) { return false; }
-void* CRendElement::mfGetPointer(ESrcPointer ePT, int* Stride, int Type, ESrcPointer Dst, int Flags) { return NULL; }
+void* CRendElement::mfGetPointer(ESrcPointer ePT, int* Stride, int Type, ESrcPointer Dst, int Flags) { return nullptr; }
 float CRendElement::mfDistanceToCameraSquared(const CCObject& thisObject) { return 0.1f; }
 
 //=============================================================================
@@ -1287,7 +1287,7 @@ void* SRendItem::mfGetPointerCommon(ESrcPointer ePT, int* Stride, int Type, ESrc
 
 	case eSrcPointer_LAttenuationSpec0:
 	{
-		byte* dst = NULL;
+		byte* dst = nullptr;
 		switch (Dst)
 		{
 		case eSrcPointer_Color:
@@ -1342,7 +1342,7 @@ void* SRendItem::mfGetPointerCommon(ESrcPointer ePT, int* Stride, int Type, ESrc
 
 	case eSrcPointer_LAttenuationSpec1:
 	{
-		byte* dst = NULL;
+		byte* dst = nullptr;
 		switch (Dst)
 		{
 		case eSrcPointer_Tex:
@@ -1393,7 +1393,7 @@ void* SRendItem::mfGetPointerCommon(ESrcPointer ePT, int* Stride, int Type, ESrc
 
 	case eSrcPointer_Detail:
 	{
-		byte* dst = NULL;
+		byte* dst = nullptr;
 		switch (Dst)
 		{
 		case eSrcPointer_Tex:
@@ -1425,7 +1425,7 @@ void* SRendItem::mfGetPointerCommon(ESrcPointer ePT, int* Stride, int Type, ESrc
 
 	case eSrcPointer_ProjectAttenFromCamera:
 	{
-		byte* dst = NULL;
+		byte* dst = nullptr;
 		switch (Dst)
 		{
 		case eSrcPointer_Tex:
@@ -1519,5 +1519,5 @@ void* SRendItem::mfGetPointerCommon(ESrcPointer ePT, int* Stride, int Type, ESrc
 		j = ePT - eSrcPointer_Tex;
 		return gRenDev->m_RP.m_Ptr.PtrB + gRenDev->m_RP.m_OffsT + j * 16;
 	}
-	return NULL;
+	return nullptr;
 }

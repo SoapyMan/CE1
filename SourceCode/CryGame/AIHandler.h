@@ -53,9 +53,9 @@ protected:
 	void	Release( IScriptObject **obj );
 	bool	CheckCharacter( const char* signalText );
 	void	DoChangeBehavior(  );
-//	void	CallScript( IScriptObject *scriptSelf, HSCRIPTFUNCTION	functionToCall, float *value=NULL, IEntity *pSender=NULL );
-	bool	CallScript( IScriptObject *scriptTable, const char* funcName, float *value=NULL, IEntity *pSender=NULL );
-	void	CallBehaviorOrDefault( const char* signalText, float *value=NULL,bool bJob = true );
+//	void	CallScript( IScriptObject *scriptSelf, HSCRIPTFUNCTION	functionToCall, float *value=nullptr, IEntity *pSender=nullptr );
+	bool	CallScript( IScriptObject *scriptTable, const char* funcName, float *value=nullptr, IEntity *pSender=nullptr );
+	void	CallBehaviorOrDefault( const char* signalText, float *value=nullptr,bool bJob = true );
 	IScriptObject *GetMostLikelyTable( IScriptObject* table);
 	IScriptObject *FindOrLoadTable( IScriptObject * table, const char* nameToGet );
 

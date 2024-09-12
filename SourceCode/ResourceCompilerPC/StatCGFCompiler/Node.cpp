@@ -25,15 +25,15 @@
 
 CNodeCGF::CNodeCGF() : CBaseObj()
 {
-	m_pObj = NULL;
-	//	m_sPropStr		= NULL;
-	//	m_ppChildren	= NULL;
-	//	m_pnChildrenIds= NULL;
-	m_pParent = NULL;
-	//	m_pMtl			= NULL;
-	//	m_pConRot		= NULL;
-	//	m_pConPos		= NULL;
-	//	m_pConScl		= NULL;
+	m_pObj = nullptr;
+	//	m_sPropStr		= nullptr;
+	//	m_ppChildren	= nullptr;
+	//	m_pnChildrenIds= nullptr;
+	m_pParent = nullptr;
+	//	m_pMtl			= nullptr;
+	//	m_pConRot		= nullptr;
+	//	m_pConPos		= nullptr;
+	//	m_pConScl		= nullptr;
 	memset(&m_Chunk, 0, sizeof(m_Chunk));
 }
 

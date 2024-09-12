@@ -13,7 +13,7 @@ CHTTPDownloader::CHTTPDownloader()
 #if defined(LINUX)
 	: m_hThread(INVALID_HANDLE_VALUE),
 #else
-	: m_hThread(NULL),
+	: m_hThread(nullptr),
 #endif
 	m_hINET(0),
 	m_hUrl(0),

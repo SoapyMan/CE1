@@ -15,7 +15,7 @@ CRefReadStream::CRefReadStream(const string& strFileName, CRefStreamEngine* pEng
 	m_nSectorSize(0),
 	m_hFile(INVALID_HANDLE_VALUE),
 	m_bOverlapped(false),
-	m_pZipEntry(NULL)
+	m_pZipEntry(nullptr)
 {
 	pEngine->Register(this);
 }
@@ -29,19 +29,12 @@ bool CRefReadStream::Activate()
 	AUTO_LOCK(g_csActivate);
 
 	m_bOverlapped = m_pEngine->isOverlappedIoEnabled();
-#if !defined(LINUX64)
-	if (m_pZipEntry == NULL && m_hFile == INVALID_HANDLE_VALUE)
-#else
-	if (m_pZipEntry == 0 && m_hFile == INVALID_HANDLE_VALUE)
-#endif
-		m_hFile = CreateFile(m_strFileName.c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING,
+	if (!m_pZipEntry && m_hFile == INVALID_HANDLE_VALUE)
+		m_hFile = CreateFile(m_strFileName.c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING,
 			m_bOverlapped ? FILE_FLAG_OVERLAPPED : 0,
-			NULL);
-#if !defined(LINUX64)
-	if (m_pZipEntry == NULL && m_hFile == INVALID_HANDLE_VALUE)
-#else
-	if (m_pZipEntry == 0 && m_hFile == INVALID_HANDLE_VALUE)
-#endif
+			nullptr);
+
+	if (!m_pZipEntry && m_hFile == INVALID_HANDLE_VALUE)
 	{
 		// perhaps this is in a zip file
 		m_pZipEntry = m_pEngine->GetPak()->GetFileData(m_strFileName.c_str());
@@ -61,9 +54,9 @@ bool CRefReadStream::Activate()
 				// try to open the file - this should really be not often the case
 				const char* szPakFile = m_pZipEntry->GetZip()->GetFilePath();
 				// even if we can't open it, it doesn't matter: we automatically resort to using the cache
-				m_hFile = CreateFile(szPakFile, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING,
+				m_hFile = CreateFile(szPakFile, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING,
 					m_bOverlapped ? FILE_FLAG_OVERLAPPED : 0,
-					NULL);
+					nullptr);
 			}
 
 			if (m_hFile == INVALID_HANDLE_VALUE)
@@ -85,7 +78,7 @@ bool CRefReadStream::Activate()
 			if (m_pZipEntry)
 				m_nFileSize = m_pZipEntry->GetFileEntry()->desc.lSizeUncompressed;
 			else
-				m_nFileSize = ::GetFileSize(m_hFile, NULL);
+				m_nFileSize = ::GetFileSize(m_hFile, nullptr);
 
 			if (m_nFileSize == INVALID_FILE_SIZE)
 			{

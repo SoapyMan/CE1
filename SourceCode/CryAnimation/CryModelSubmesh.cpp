@@ -27,7 +27,7 @@ CryModelSubmesh::CryModelSubmesh(CryModelState* pParent, CryModel* pMesh) :
 	m_arrMorphEffectors("CryModelState.MorphTargets"),
 #endif
 	m_pParent(pParent),
-	m_pDecalManager(NULL),
+	m_pDecalManager(nullptr),
 	m_nLastSkinBBoxUpdateFrameId(0),
 	m_nLastTangentsUpdatedFrameId(0),
 	m_nLastTangentsUpdatedLOD(-1),
@@ -39,11 +39,11 @@ CryModelSubmesh::CryModelSubmesh(CryModelState* pParent, CryModel* pMesh) :
 	// be circular dependency. Owner ship is as follows: States->CryModel->Default State
 
 	// It's for sure that the default model state is being created if there's none in the mesh yet.
-	if (pParent != pMesh->m_pDefaultModelState && NULL != pMesh->m_pDefaultModelState)
+	if (pParent != pMesh->m_pDefaultModelState && nullptr != pMesh->m_pDefaultModelState)
 		pMesh->m_pBody->AddRef();
 
 	for (unsigned i = 0; i < SIZEOF_ARRAY(m_pLeafBuffers); ++i)
-		m_pLeafBuffers[i] = NULL;
+		m_pLeafBuffers[i] = nullptr;
 	if (pMesh->m_pDefaultModelState != pParent && pMesh->m_pDefaultModelState)
 		CopyLeafBuffers(pMesh->m_pDefaultModelState->GetCryModelSubmesh(0)->m_pLeafBuffers);
 
@@ -69,7 +69,7 @@ list2<CMatInfo>* CryModelSubmesh::getLeafBufferMaterials()
 	if (m_pLeafBuffers[0])
 		return m_pLeafBuffers[0]->m_pMats;
 	else
-		return NULL;
+		return nullptr;
 }
 
 
@@ -82,7 +82,7 @@ CryModelSubmesh::~CryModelSubmesh()
 	if (m_pDecalManager)
 	{
 		delete m_pDecalManager;
-		m_pDecalManager = NULL;
+		m_pDecalManager = nullptr;
 	}
 
 	// the submeshes that are not the default model submeshes lock their corresponding
@@ -140,7 +140,7 @@ void CryModelSubmesh::DeleteLeafBuffers()
 			{
 				CRYASSERT(m_pParent->GetCryModelSubmesh(0) == this);
 				delete pMats;
-				pMats = NULL;
+				pMats = nullptr;
 			}
 		}
 
@@ -209,7 +209,7 @@ void CryModelSubmesh::GenerateRenderArrays(const char* szFileName)
 					{
 						rMaterial.m_Id = nMaterial;
 
-						CIndexedMesh__LoadMaterial(NULL, CryStringUtils::GetParentDirectory(string(szFileName)).c_str(), rMaterial, g_GetIRenderer(), &m_pMesh->getMaterial(nMaterial));
+						CIndexedMesh__LoadMaterial(nullptr, CryStringUtils::GetParentDirectory(string(szFileName)).c_str(), rMaterial, g_GetIRenderer(), &m_pMesh->getMaterial(nMaterial));
 
 						if (rMaterial.pRE)
 							rMaterial.pRE->m_Flags |= FCEF_DYNAMIC;
@@ -307,7 +307,7 @@ void CryModelSubmesh::GenerateRenderArraysCCG(const char* szTextureDir)
 				*(unsigned int*)&rMaterial = *(unsigned int*)&defaultMaterial;
 				rMaterial.m_Id = nMaterial;
 
-				CIndexedMesh__LoadMaterial(NULL, szTextureDir, rMaterial, g_GetIRenderer(), &m_pMesh->getMaterial(nMaterial));
+				CIndexedMesh__LoadMaterial(nullptr, szTextureDir, rMaterial, g_GetIRenderer(), &m_pMesh->getMaterial(nMaterial));
 
 				if (rMaterial.pRE)
 					rMaterial.pRE->m_Flags |= FCEF_DYNAMIC;
@@ -322,7 +322,7 @@ void CryModelSubmesh::GenerateRenderArraysCCG(const char* szTextureDir)
 		VertexBufferSource vbs;
 		vbs.numMaterials = (unsigned)m_pMesh->m_arrMaterials.size();
 		vbs.pMaterials = &m_pMesh->m_arrMaterials[0];
-		vbs.pShaders = NULL;
+		vbs.pShaders = nullptr;
 		vbs.pMats = pMats;
 		vbs.numPrimGroups = (unsigned)pGeomInfo->m_arrPrimGroups.size();
 		vbs.pPrimGroups = &pGeomInfo->m_arrPrimGroups[0];
@@ -332,8 +332,8 @@ void CryModelSubmesh::GenerateRenderArraysCCG(const char* szTextureDir)
 		vbs.pUVs = pGeomInfo->getExtUVs();
 		vbs.pVertices = pExtVertices;
 		vbs.nREFlags = FCEF_DYNAMIC;
-		vbs.pAndFlags = NULL;
-		vbs.pOrFlags = NULL;
+		vbs.pAndFlags = nullptr;
+		vbs.pOrFlags = nullptr;
 
 		m_pLeafBuffers[nLod]->CreateBuffer(&vbs);
 	}
@@ -391,7 +391,7 @@ void CryModelSubmesh::AddCurrentRenderData(CCObject* obj, CCObject* obj1, const 
 					if (rParams.nShaderTemplate > 0)
 					{
 						int nTempl = rParams.nShaderTemplate;
-						si.m_pShader->AddTemplate(si.m_pShaderResources, nTempl, NULL);
+						si.m_pShader->AddTemplate(si.m_pShaderResources, nTempl, nullptr);
 					}
 				if (nTempl > 0)
 					obj->m_nTemplId = nTempl;
@@ -438,7 +438,7 @@ void CryModelSubmesh::AddCurrentRenderData(CCObject* obj, CCObject* obj1, const 
 					if (rParams.nShaderTemplate > 0)
 					{
 						int nTempl = rParams.nShaderTemplate;
-						si.m_pShader->AddTemplate(si.m_pShaderResources, nTempl, NULL);
+						si.m_pShader->AddTemplate(si.m_pShaderResources, nTempl, nullptr);
 					}
 				if (nTempl > 0)
 					obj->m_nTemplId = nTempl;
@@ -571,12 +571,12 @@ void CryModelSubmesh::Deform(int nLodToDeform, unsigned nDeformFlags)
 	unsigned numExtTangents = pGeomInfo->numExtTangents();
 
 	Vec3d vNorm, vTang, vBinorm;
-	CrySkinRigidBasis* pTangSkin = NULL;
+	CrySkinRigidBasis* pTangSkin = nullptr;
 
 	bool bSpawnParticles = !m_pParent->m_ParticleManager.empty() && m_nLastSkinnedFrameID[nLodToDeform] < nFrameId;
 
 	// the tangents will be skinned here; if it remains NULL, they won't be skinned at all
-	SPipTangentsA* pTangentBases = NULL;
+	SPipTangentsA* pTangentBases = nullptr;
 
 	// these are the sizes of buffers needed in the temporary buffer, in bytes
 	unsigned
@@ -611,13 +611,13 @@ void CryModelSubmesh::Deform(int nLodToDeform, unsigned nDeformFlags)
 	//----------------------------------------------------------------
 	//----------------------------------------------------------------
 
-	Vec3dA16* pNormals = NULL;
+	Vec3dA16* pNormals = nullptr;
 	if ((nDeformFlags & FLAG_DEFORM_UPDATE_NORMALS))
 		pNormals = SelfNormalSkin(nLodToDeform, (((Vec3dA16*)g_Temp.data()) + pGeomInfo->numUsedVertices()));
 
 	// most probably we'll skin here; sometimes we don't skin and just change the pointer tothe original geometry data
 	// so, get the pointer to the skin. SelfSkin can also modify normals according to morph targets
-	const Vec3d* pVertices = NULL;
+	const Vec3d* pVertices = nullptr;
 
 	if ((nDeformFlags & FLAG_DEFORM_UPDATE_VERTICES) || bRealizeDecals || bSpawnParticles)
 		pVertices = SelfSkin(nLodToDeform, (Vec3d*)g_Temp.data(), pNormals);
@@ -868,7 +868,7 @@ Vec3dA16* CryModelSubmesh::SelfNormalSkin(int nLOD, Vec3dA16* pNormals)
 			return pNormals;
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -1401,7 +1401,7 @@ void CryModelSubmesh::Render(const struct SRendParams& RendParams, Matrix44& mtx
 		}
 	}
 
-	CCObject* pObj1 = NULL;
+	CCObject* pObj1 = nullptr;
 	if (getShaderTemplates(1)[0] > 0)
 	{
 		pObj1 = g_GetIRenderer()->EF_GetObject(true);
@@ -1503,7 +1503,7 @@ void CryModelSubmesh::Render(const struct SRendParams& RendParams, Matrix44& mtx
 			}
 		}
 
-		CCObject * pObj1 = NULL;
+		CCObject * pObj1 = nullptr;
 		if (getShaderTemplates(1)[0] > 0)
 		{
 			pObj1 = g_GetIRenderer()->EF_GetObject(true);
@@ -1634,7 +1634,7 @@ CryModEffMorph* CryModelSubmesh::getMorphTarget(int nMorphTargetId)
 	for (nMorphEffector = 0; nMorphEffector < m_arrMorphEffectors.size(); ++nMorphEffector)
 		if (m_arrMorphEffectors[nMorphEffector].getMorphTargetId() == nMorphTargetId)
 			return &m_arrMorphEffectors[nMorphEffector];
-	return NULL;
+	return nullptr;
 }
 
 void CryModelSubmesh::AddDecal(CryEngineDecalInfo& Decal)

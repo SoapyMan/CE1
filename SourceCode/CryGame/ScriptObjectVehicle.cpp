@@ -164,12 +164,12 @@ int CScriptObjectVehicle::SetUser(IFunctionHandler *pH)
 	//get the helper
 	const char *szHelperName;
 		if (!pH->GetParam(2,szHelperName))	
-		szHelperName=NULL;	
+		szHelperName=nullptr;	
 
 	//check if an animation name is specified
 	const char * szAnimName;
 	if (!pH->GetParam(3,szAnimName))
-		szAnimName=NULL;
+		szAnimName=nullptr;
 
 	// check if we're setting this player as driver (can be a passenger also)
 	CPlayer::eInVehiclestate vehicleState = CPlayer::PVS_PASSENGER;
@@ -212,7 +212,7 @@ int CScriptObjectVehicle::SetUser(IFunctionHandler *pH)
 //	if (szAnimName)
 //		pEntity->StartAnimation(0, szAnimName, 0, .15f);
 
-	CPlayer *pPlayer=NULL;
+	CPlayer *pPlayer=nullptr;
 	if (pEntity->GetContainer()) 
 		pEntity->GetContainer()->QueryContainerInterface(CIT_IPLAYER,(void**) &pPlayer);
 
@@ -259,11 +259,11 @@ int CScriptObjectVehicle::ReleaseUser(IFunctionHandler *pH)
 
 	const char *szHelperName;
 	if (!pH->GetParam(2,szHelperName))
-		szHelperName=NULL;
+		szHelperName=nullptr;
 
 	const char *szAnimName;
 	if (!pH->GetParam(3,szAnimName))
-		szAnimName=NULL;
+		szAnimName=nullptr;
 
 	float	angle;
 	if (!pH->GetParam(4,angle))
@@ -313,7 +313,7 @@ int CScriptObjectVehicle::ReleaseUser(IFunctionHandler *pH)
 
 	//play leaving animation, if any
 	
-	CPlayer *pPlayer=NULL;
+	CPlayer *pPlayer=nullptr;
 	if(pEntity->GetContainer()) pEntity->GetContainer()->QueryContainerInterface(CIT_IPLAYER,(void**) &pPlayer);
 
 	if(!pPlayer)
@@ -418,12 +418,12 @@ int CScriptObjectVehicle::GetVehicleVelocity(IFunctionHandler *pH)
 int CScriptObjectVehicle::GetVehicleStatus(IFunctionHandler *pH)
 {
 #if defined(LINUX)
-	IEntity *pEntity = NULL;
+	IEntity *pEntity = nullptr;
 	if(m_pVehicle)
 		pEntity=m_pVehicle->GetEntity();
 	else
 		return pH->EndFunction();
-	IPhysicalEntity *pPEnt = NULL;
+	IPhysicalEntity *pPEnt = nullptr;
 	if(pEntity)
 		pPEnt=pEntity->GetPhysics();
 	else
@@ -685,35 +685,35 @@ int CScriptObjectVehicle::InitLights(IFunctionHandler *pH)
 	const char *szName;
 
 	if (!pH->GetParam(1,szName))	
-		szName=NULL;	
+		szName=nullptr;	
 	m_pVehicle->m_HeadLightHelper = szName;
 
 	if (!pH->GetParam(2,szName))	
-		szName=NULL;	
-	m_pVehicle->InitHeadLight(szName, NULL);//"LightBeam/0");
+		szName=nullptr;	
+	m_pVehicle->InitHeadLight(szName, nullptr);//"LightBeam/0");
 
 	if (!pH->GetParam(3,szName))	
-		szName=NULL;	
+		szName=nullptr;	
 	m_pVehicle->m_HeadLightHelperLeft = szName;
 	if (!pH->GetParam(4,szName))	
-		szName=NULL;	
+		szName=nullptr;	
 	m_pVehicle->m_HeadLightHelperRight	 = szName;
 
 
 	if (!pH->GetParam(5,szName))	
-		szName=NULL;	
+		szName=nullptr;	
 	m_pVehicle->InitFakeLight(&m_pVehicle->m_pHeadLightLeft, szName);
 	m_pVehicle->InitFakeLight(&m_pVehicle->m_pHeadLightRight, szName);
 
 	if (!pH->GetParam(6,szName))	
-		szName=NULL;	
+		szName=nullptr;	
 	m_pVehicle->m_BackLightHelperLeft = szName;
 	if (!pH->GetParam(7,szName))	
-		szName=NULL;	
+		szName=nullptr;	
 	m_pVehicle->m_BackLightHelperRight = szName;
 
 	if (!pH->GetParam(8,szName))	
-		szName=NULL;	
+		szName=nullptr;	
 	m_pVehicle->InitFakeLight(&m_pVehicle->m_pBreakLightLeft, szName);
 	m_pVehicle->InitFakeLight(&m_pVehicle->m_pBreakLightRight, szName);
 
@@ -790,7 +790,7 @@ int CScriptObjectVehicle::AnimateMountedWeapon(IFunctionHandler *pH)
 {
 	CHECK_PARAMETERS(1);
 
-	const char *sanim_name=NULL;
+	const char *sanim_name=nullptr;
 
 	pH->GetParam(1, sanim_name);	
 	

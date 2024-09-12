@@ -41,16 +41,16 @@ struct SMusicPatternPlayInfo
 	SMusicPatternPlayInfo()
 	{
 		nLayer = MUSICLAYER_MAIN;
-		pPatternInstance = NULL;
+		pPatternInstance = nullptr;
 		eBlendType = EBlend_ToEnd;
-		pRefCount = NULL;
+		pRefCount = nullptr;
 		fPhase = 1.0;
 		fFadeTime = 0.0;	// use default fade time...
 		bRefCountAdjusted = false;
 	}
 	~SMusicPatternPlayInfo()
 	{
-		pPatternInstance = NULL;
+		pPatternInstance = nullptr;
 	}
 	TPatternInstancePtr pPatternInstance;
 	int nLayer;
@@ -148,7 +148,7 @@ protected:
 	// current theme/mood
 	SMusicTheme* m_pThemeOverride;				// overriding theme (eg. for vehicle)
 	SMusicTheme* m_pCurrTheme;
-	SMusicTheme* m_pNextTheme;						// in case a theme change occured, this is the new theme... NULL otherwise
+	SMusicTheme* m_pNextTheme;						// in case a theme change occured, this is the new theme... nullptr otherwise
 	SMusicMood* m_pCurrMood;
 	SMusicMood* m_pNextMood;
 	// mood event arrays

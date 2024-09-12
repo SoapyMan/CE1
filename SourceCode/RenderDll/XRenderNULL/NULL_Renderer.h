@@ -82,7 +82,7 @@ public:
   virtual CVertexBuffer	*CreateBuffer(int  buffersize,int vertexformat, const char *szSource, bool bDynamic=false);
   virtual void  CreateBuffer(int size, int vertexformat, CVertexBuffer *buf, int Type, const char *szSource);
   virtual void	ReleaseBuffer(CVertexBuffer *bufptr);
-  virtual void	DrawBuffer(CVertexBuffer *src,SVertexStream *indicies,int numindices, int offsindex, int prmode,int vert_start=0,int vert_stop=0, CMatInfo *mi=NULL);
+  virtual void	DrawBuffer(CVertexBuffer *src,SVertexStream *indicies,int numindices, int offsindex, int prmode,int vert_start=0,int vert_stop=0, CMatInfo *mi=nullptr);
   virtual void	UpdateBuffer(CVertexBuffer *dest,const void *src,int size, bool bUnlock, int offs=0, int Type=0);
   virtual void  DrawTriStrip(CVertexBuffer *src, int vert_num);
 
@@ -154,11 +154,11 @@ public:
   virtual char*	GetPixelProfile(bool bSupported) {return "NONE";}
 
   // basic textures operations
-  virtual unsigned int DownLoadToVideoMemory(unsigned char *data,int w, int h, ETEX_Format eTFSrc, ETEX_Format eTFDst, int nummipmap, bool repeat=true, int filter=FILTER_BILINEAR, int Id=0, char *szCacheName=NULL, int flags=0);
+  virtual unsigned int DownLoadToVideoMemory(unsigned char *data,int w, int h, ETEX_Format eTFSrc, ETEX_Format eTFDst, int nummipmap, bool repeat=true, int filter=FILTER_BILINEAR, int Id=0, char *szCacheName=nullptr, int flags=0);
   virtual void  UpdateTextureInVideoMemory(uint tid, unsigned char *data,int posx,int posy,int w,int h,ETEX_Format eTF=eTF_0888);
   virtual void  RemoveTexture(unsigned int TextureId);
   virtual void  RemoveTexture(ITexPic * pTexPic);
-  virtual uint  LoadTexture(const char * filename,int *tex_type=NULL,unsigned int def_tid=0,bool compresstodisk=true,bool bWarn=true);
+  virtual uint  LoadTexture(const char * filename,int *tex_type=nullptr,unsigned int def_tid=0,bool compresstodisk=true,bool bWarn=true);
   virtual void  SetTexture(int tnum, ETexType eTT=eTT_Base);  
   virtual void  SetTexture3D(int tid3d);
   virtual int   LoadAnimatedTexture(const char * format,const int nCount);
@@ -180,7 +180,7 @@ public:
 
   // misc functions
   virtual void  ResetToDefault();
-  virtual void  ScreenShot(const char *filename=NULL);
+  virtual void  ScreenShot(const char *filename=nullptr);
   virtual void  ClearDepthBuffer();
   virtual void  ClearColorBuffer(const Vec3d vColor);
   virtual void  ReadFrameBuffer(unsigned char * pRGB, int nSizeX, int nSizeY, bool bBackBuffer, bool bRGBA, int nScaledX=-1, int nScaledY=-1);  
@@ -220,7 +220,7 @@ private:
   void EF_InitWaveTables();
   void EF_InitRandTables();
   void EF_InitEvalFuncs(int nums);
-  void EF_ClearBuffers(bool bForce=false, float *Colors=NULL);
+  void EF_ClearBuffers(bool bForce=false, float *Colors=nullptr);
   void EF_SetCameraInfo();
   void EF_SetObjectTransform(CCObject *obj);
   bool EF_ObjectChange(SShader *Shader, int nObject, CRendElement *re);
@@ -307,7 +307,7 @@ class CNULLTexMan : public CTexMan
 {
 
 protected:
-  virtual STexPic *CreateTexture(const char *name, int wdt, int hgt, int Depth, uint flags, uint flags2, byte *dst, ETexType eTT, float fAmount1=-1.0f, float fAmount2=-1.0f, int DXTSize=0, STexPic *ti=NULL, int bind=0, ETEX_Format eTF=eTF_8888, const char *szSourceName=NULL);
+  virtual STexPic *CreateTexture(const char *name, int wdt, int hgt, int Depth, uint flags, uint flags2, byte *dst, ETexType eTT, float fAmount1=-1.0f, float fAmount2=-1.0f, int DXTSize=0, STexPic *ti=nullptr, int bind=0, ETEX_Format eTF=eTF_8888, const char *szSourceName=nullptr);
   virtual STexPic *CopyTexture(const char *name, STexPic *ti, int CubeSide=-1);
 
 public:  

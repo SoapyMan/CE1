@@ -31,6 +31,6 @@ void* CRETempMesh::mfGetPointer(ESrcPointer ePT, int* Stride, int Type, ESrcPoin
 		gRenDev->m_RP.m_nCurBufferOffset = pOffs->OffsColor;
 		return &pVertices->color.dcolor;
 	}
-	return NULL;
+	return nullptr;
 }
 

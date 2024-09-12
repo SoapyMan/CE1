@@ -4,7 +4,7 @@
 #include <IConsole.h>										// ICVar
 #include <ITimer.h>											// CTimeValue
 
-static HMODULE g_hSystemHandle = NULL;
+static HMODULE g_hSystemHandle = nullptr;
 #if !defined(LINUX)
 #define DLL_SYSTEM "CrySystem.dll"
 #define DLL_GAME	 "CryGame.dll"
@@ -15,8 +15,8 @@ static HMODULE g_hSystemHandle = NULL;
 
 
 SSystemInitParams			g_SystemInitParams;											//!< inital statup parameters system
-static ISystem* g_pISystem = NULL;												//!<
-ICVar* g_psvDedicatedMaxRate = NULL;							//!<
+static ISystem* g_pISystem = nullptr;												//!<
+ICVar* g_psvDedicatedMaxRate = nullptr;							//!<
 
 //
 ISystem* GetISystem()
@@ -118,7 +118,7 @@ bool InitDedicatedServer_System(const char* sInCmdLine)
 #if defined(LINUX)
 		printf("CrySystem.so Loading Failed: %s\n", dlerror());
 #else
-		MessageBox(NULL, "CrySystem.dll Loading Failed (wrong working directory?):\n", "FarCry Error", MB_OK | MB_ICONERROR);
+		MessageBox(nullptr, "CrySystem.dll Loading Failed (wrong working directory?):\n", "FarCry Error", MB_OK | MB_ICONERROR);
 #endif
 		return false;
 	}
@@ -128,8 +128,8 @@ bool InitDedicatedServer_System(const char* sInCmdLine)
 		(PFNCREATESYSTEMINTERFACE)CryGetProcAddress(g_hSystemHandle, "CreateSystemInterface");
 
 	// Initialize with instance and window handles.
-	g_SystemInitParams.hInstance = NULL;
-	g_SystemInitParams.hWnd = NULL;
+	g_SystemInitParams.hInstance = nullptr;
+	g_SystemInitParams.hWnd = nullptr;
 	g_SystemInitParams.bDedicatedServer = true;
 	strcpy(g_SystemInitParams.szSystemCmdLine, sInCmdLine);
 	g_SystemInitParams.pCheckFunc = AuthCheckFunction;
@@ -139,7 +139,7 @@ bool InitDedicatedServer_System(const char* sInCmdLine)
 
 	if (!g_pISystem)
 	{
-		MessageBox(NULL, "CreateSystemInterface Failed", "FarCry Error", MB_OK | MB_ICONERROR);
+		MessageBox(nullptr, "CreateSystemInterface Failed", "FarCry Error", MB_OK | MB_ICONERROR);
 		return false;
 	}
 	IConsole* pConsole = g_pISystem->GetIConsole();
@@ -187,7 +187,7 @@ bool InitDedicatedServer_Game(const char* sInCmdLine)
 	strncpy(ip.szGameCmdLine, sInCmdLine, sizeof(ip.szGameCmdLine));
 	if (!g_pISystem->CreateGame(ip))
 	{
-		MessageBox(NULL, "CreateGame Failed: CryGame.dll", "FarCry Error", MB_OK | MB_ICONERROR);
+		MessageBox(nullptr, "CreateGame Failed: CryGame.dll", "FarCry Error", MB_OK | MB_ICONERROR);
 		return false;
 	}
 #else
@@ -222,7 +222,7 @@ void DeInitDedicatedServer()
 
 	SAFE_RELEASE(g_pISystem);
 
-	g_pISystem = NULL;
+	g_pISystem = nullptr;
 
 #ifdef WIN32
 	::FreeLibrary(g_hSystemHandle);

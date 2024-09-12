@@ -98,7 +98,7 @@ void CScriptSink::OnScriptError(const char* sSourceFile, const char* sFuncName, 
 
 	if (m_pSystem->GetLuaDebugger())
 	{
-		if (sSourceFile != NULL &&
+		if (sSourceFile != nullptr &&
 			_stricmp(sSourceFile, "__script_buffer__") != 0 &&
 			_stricmp(sSourceFile, "=C") != 0 &&
 			_stricmp(sSourceFile, "undefined") != 0 &&
@@ -108,7 +108,7 @@ void CScriptSink::OnScriptError(const char* sSourceFile, const char* sFuncName, 
 			// char szMessage[2048];
 			// sprintf(szMessage, "Lua runtime error found in '%s' line %03d function '%s' - open debugger ?", 
 			// 	sSourceFile, nLineNum, sFuncName);
-			// if (MessageBox(NULL, szMessage, "Lua Runtime Error", MB_YESNO | MB_ICONERROR) == IDYES)
+			// if (MessageBox(nullptr, szMessage, "Lua Runtime Error", MB_YESNO | MB_ICONERROR) == IDYES)
 
 			m_pSystem->ShowDebugger(sSourceFile, nLineNum, sErrorDesc);
 		}
@@ -241,7 +241,7 @@ class ___Temp : public IScriptObjectDumpSink
 		switch (type)
 		{
 		case svtNull:
-			//GetILog()->LogToConsole("<<NULL>> %s",sName);
+			//GetILog()->LogToConsole("<<nullptr>> %s",sName);
 			break;
 		case svtString:
 			//GetILog()->LogToConsole("<<STRING>> %s",sName);

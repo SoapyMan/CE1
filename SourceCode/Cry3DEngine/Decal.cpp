@@ -145,7 +145,7 @@ void CDecal::Process(bool& active, IRenderer* pIRenderer, const float fCurTime, 
 			Vec3d vRight = objMat.TransformVectorOLD(m_vRight * m_fSize / m_pDecalOwner->GetScale());
 			Vec3d vUp = objMat.TransformVectorOLD(m_vUp * m_fSize / m_pDecalOwner->GetScale());
 
-			CDLight* pStrongestLightForTranspGeom = NULL;
+			CDLight* pStrongestLightForTranspGeom = nullptr;
 			p3DEngine->CheckDistancesToLightSources(nDynLightMask, vPos, m_fSize, 0, 1, &pStrongestLightForTranspGeom, 1);
 
 			UCol uCol;
@@ -164,12 +164,12 @@ void CDecal::Process(bool& active, IRenderer* pIRenderer, const float fCurTime, 
 			p3DEngine->GetObjManager()->AddPolygonToRenderer(m_nTexId, pShader, nDynLightMask,
 				vRight * fSizeK, vUp * fSizeK, uCol, ParticleBlendType_AlphaBased, m_vAmbient, vPos,
 				0, 0, 0, 0, fSortOffset, 0, 0,
-				m_pDecalOwner->GetEntityRenderType() == eERType_Vegetation ? (CStatObjInst*)m_pDecalOwner : NULL);
+				m_pDecalOwner->GetEntityRenderType() == eERType_Vegetation ? (CStatObjInst*)m_pDecalOwner : nullptr);
 		}
 	}
 	else if (!m_bOnTheGround)
 	{	// draw small world space decal untransformed
-		CDLight* pStrongestLightForTranspGeom = NULL;
+		CDLight* pStrongestLightForTranspGeom = nullptr;
 		p3DEngine->CheckDistancesToLightSources(nDynLightMask, m_vPos, m_fSize, 0, 1, &pStrongestLightForTranspGeom, 1);
 		UCol uCol;
 		if (pStrongestLightForTranspGeom && pStrongestLightForTranspGeom->m_fRadius)

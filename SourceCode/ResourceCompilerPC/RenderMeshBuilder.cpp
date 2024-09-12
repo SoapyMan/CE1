@@ -47,7 +47,7 @@ void CRenderMeshBuilder::clear()
 	m_arrExtFaces.clear();
 	m_mapVUVP.clear();
 	m_arrExtToTBBMap.clear();
-	m_pMeshDesc = NULL;
+	m_pMeshDesc = nullptr;
 }
 
 
@@ -236,7 +236,7 @@ void CRenderMeshBuilder::buildIndexBuffer()
 		if (arrFaces.empty())
 			continue;
 
-		PrimitiveGroup* pGroup = NULL;
+		PrimitiveGroup* pGroup = nullptr;
 		unsigned short numGroups = 0;
 		GenerateStrips((unsigned short*)&arrFaces[0], arrFaces.size() * 3, &pGroup, &numGroups);
 

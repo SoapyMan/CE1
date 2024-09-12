@@ -999,7 +999,7 @@ void CCpuFeatures::Detect(void)
 		if ((process_affinity_mask & thread_processor_mask))
 		{
 			/* create a thread that is suspended */
-			thread = CreateThread(NULL, 0, DetectProcessor, &m_Cpu[current_processor_element], CREATE_SUSPENDED, &thread_id);
+			thread = CreateThread(nullptr, 0, DetectProcessor, &m_Cpu[current_processor_element], CREATE_SUSPENDED, &thread_id);
 
 			if (thread)
 			{

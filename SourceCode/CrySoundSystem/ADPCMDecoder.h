@@ -134,7 +134,7 @@ protected:
 	const bool FillPCMBuffer22KHz(signed long* pBuffer, int nSamples);
 
 	const bool InitStreamWAV();					// for now has every instance its own file handle
-	unsigned short AdpcmReadBlock(short* pDest = NULL);		// decoded one block, if dest not specified, default static buffer is chosen
+	unsigned short AdpcmReadBlock(short* pDest = nullptr);		// decoded one block, if dest not specified, default static buffer is chosen
 
 	virtual ~CADPCMDecoderInstance();			// to hit right destructor
 };

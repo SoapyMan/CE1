@@ -13,7 +13,7 @@ RecyclePool::RecyclePool()
 {
 	blocks = 0;
 	allocnext(POOLSIZE);
-	for (int i = 0; i < MAXBUCKETS; i++) reuse[i] = NULL;
+	for (int i = 0; i < MAXBUCKETS; i++) reuse[i] = nullptr;
 };
 
 void* RecyclePool::alloc(int size)

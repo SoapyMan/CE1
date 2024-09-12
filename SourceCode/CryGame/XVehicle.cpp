@@ -12,11 +12,11 @@ CVehicle::CVehicle(CXGame *pGame):
 m_fPedalSpeed(0.0f),
 m_DriverID(0),
 m_fPrevFwvSpeedLen(0.0f),
-m_pHeadLight(NULL),
-m_pHeadLightLeft(NULL),
-m_pHeadLightRight(NULL),
-m_pBreakLightLeft(NULL),
-m_pBreakLightRight(NULL),
+m_pHeadLight(nullptr),
+m_pHeadLightLeft(nullptr),
+m_pHeadLightRight(nullptr),
+m_pBreakLightLeft(nullptr),
+m_pBreakLightRight(nullptr),
 m_bHeadLightsOn(false),
 m_bBreakLightsOn(false),
 m_bAutoLights(false),
@@ -32,7 +32,7 @@ m_WeaponUser(0),
 m_bForceHandBreak(false)
 {
 	m_pGame = pGame;
-	m_pScriptObject=NULL;
+	m_pScriptObject=nullptr;
 	m_fPedalSpeed = 10.0f;
 	m_fSteerSpeed = 25.0f; m_fv0MaxSteer = 40.0f; m_fkvMaxSteer = 0.0f;
 	m_fv0SteerRelaxation = 0.0f; m_fkvSteerRelaxation = 5.0f;
@@ -1251,7 +1251,7 @@ void CVehicle::SetDrivingParams(float pedalspeed,float steerspeed,float v0maxste
 	m_fsteerspeed_scale = fsteerspeedscale;
 	m_fsteerspeed_scale_min = fsteerspeedscalemin;
 
-	IPhysicalEntity *icar = NULL;
+	IPhysicalEntity *icar = nullptr;
 
 	if (GetEntity())
 		icar = GetEntity()->GetPhysics();
@@ -1576,7 +1576,7 @@ void	CVehicle::UpdateLights( )
 			m_pHeadLight->m_Color = CFColor(1.f,1.f,1.f, 1.0f);
 			m_pHeadLight->m_SpecColor = CFColor(1.f,1.f,1.f);
 
-	//m_pHeadLight->m_pShader = NULL;
+	//m_pHeadLight->m_pShader = nullptr;
 
 			m_pHeadLight->m_Flags = DLF_PROJECT | DLF_LIGHTSOURCE | DLF_IGNORE_OWNER;
 			m_pGame->GetSystem()->GetI3DEngine()->AddDynamicLightSource(*m_pHeadLight, GetEntity());
@@ -1603,7 +1603,7 @@ void	CVehicle::UpdateLights( )
 void	CVehicle::UpdateFakeLight( CDLight* light, const char* sHelper )
 {
 
-	if( light == NULL ) return;
+	if( light == nullptr ) return;
 	light->m_fLightFrustumAngle = 30;
 	light->m_fRadius = 5;
 
@@ -1812,7 +1812,7 @@ CPlayer* theShooter = GetUserInState( CPlayer::PVS_PASSENGER);
 //[filippo]
 void CVehicle::AdditionalPhysics(IPhysicalEntity *pcar,float fdelta,bool bforcebreaking)
 {
-	if (pcar==NULL || m_fEngineHealth<=0)
+	if (pcar==nullptr || m_fEngineHealth<=0)
 		return;
 
 	pe_status_vehicle vstatus;
@@ -1919,7 +1919,7 @@ void CVehicle::SaveAIState(CStream & stm, CScriptObjectStream & scriptStream)
 		pObject->Save(stm);
 
 	IScriptSystem *pScriptSystem = m_pGame->GetSystem()->GetIScriptSystem();
-	HSCRIPTFUNCTION	saveOverallFunction=NULL;
+	HSCRIPTFUNCTION	saveOverallFunction= HSCRIPT_NULL;
 	if( m_pEntity->GetScriptObject() && m_pEntity->GetScriptObject()->GetValue("OnSaveOverall", saveOverallFunction) )
 	{
 		pScriptSystem->BeginCall(saveOverallFunction);
@@ -1938,7 +1938,7 @@ void CVehicle::LoadAIState(CStream & stm, CScriptObjectStream & scriptStream)
 		pObject->Load(stm);
 
 	IScriptSystem *pScriptSystem = m_pGame->GetSystem()->GetIScriptSystem();
-	HSCRIPTFUNCTION	saveOverallFunction=NULL;
+	HSCRIPTFUNCTION	saveOverallFunction= HSCRIPT_NULL;
 	if( m_pEntity->GetScriptObject() && m_pEntity->GetScriptObject()->GetValue("OnLoadOverall", saveOverallFunction) )
 	{
 		pScriptSystem->BeginCall(saveOverallFunction);

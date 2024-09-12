@@ -39,7 +39,7 @@ public:
 
 	virtual bool Init();
 	virtual void Update();
-	virtual bool Write( CStream &stm, EntityCloneState *cs=NULL );
+	virtual bool Write( CStream &stm, EntityCloneState *cs=nullptr );
 	virtual bool Read( CStream &stm );
 	virtual IScriptObject *GetScriptObject( void );	
 	virtual void SetScriptObject(IScriptObject *object);

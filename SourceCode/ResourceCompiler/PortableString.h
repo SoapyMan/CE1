@@ -76,7 +76,7 @@ public:
 		const char* psz = strstr(GetString() + iStart, pszSub);
 
 		// return -1 for not found, distance from beginning otherwise
-		return((psz == NULL) ? -1 : int(psz - GetString()));
+		return((psz == nullptr) ? -1 : int(psz - GetString()));
 	}
 	// Find the first occurrence of character 'ch', starting at index 'iStart'
 	int Find(char ch, int iStart = 0) const throw()
@@ -92,7 +92,7 @@ public:
 		const char* psz = strchr(GetString() + iStart, ch);
 
 		// return -1 if not found and index otherwise
-		return((psz == NULL) ? -1 : int(psz - GetString()));
+		return((psz == nullptr) ? -1 : int(psz - GetString()));
 	}
 
 	CPortableString Left(int nCount) const

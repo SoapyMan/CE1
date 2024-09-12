@@ -364,7 +364,7 @@ public:
 	//  int RenderStaticObjects(CObjManager * pObjManager);
 	bool RenderAreaLeafBuffers(Vec3d vPos, float fRadius, int nDynLMask,
 		CLeafBuffer** arrLightLeafBuffers, int nMaxLeafBuffersNum, CCObject* pObj, IShader* pShder,
-		bool bRecalcLeafBuffers, const char* szComment, IShader* pEffStencilTest = NULL, int nShaderSortOrder = 0, ShadowMapFrustum* pFrustum = NULL, Vec3d* pvFrustPos = NULL, float fFrustScale = 1.f);
+		bool bRecalcLeafBuffers, const char* szComment, IShader* pEffStencilTest = nullptr, int nShaderSortOrder = 0, ShadowMapFrustum* pFrustum = nullptr, Vec3d* pvFrustPos = nullptr, float fFrustScale = 1.f);
 	bool LoadTerrainSettingsFromXML();
 
 	//  void RegisterStatObjInstanceShadow(CObjManager * pObjManager, CStatObjInst objInst, bool bUnregister = false);

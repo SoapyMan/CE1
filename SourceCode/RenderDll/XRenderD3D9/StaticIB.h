@@ -30,7 +30,7 @@ public:
 
 		mIndexCount = theIndexCount;
 
-		HRESULT hr = pD3D->CreateIndexBuffer(mIndexCount * sizeof(IndexType), D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC, D3DFMT_INDEX16, D3DPOOL_DEFAULT, &mpIB, NULL);
+		HRESULT hr = pD3D->CreateIndexBuffer(mIndexCount * sizeof(IndexType), D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC, D3DFMT_INDEX16, D3DPOOL_DEFAULT, &mpIB, nullptr);
 
 		CRYASSERT((hr == D3D_OK) && (mpIB));
 	}

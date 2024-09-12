@@ -70,14 +70,14 @@ XDOM::IXMLDOMNode* CXMLDOMNodeImpl::getAttribute(const XMLCHAR* sName)
 {
 	XDOM::IXMLDOMNode* pNode;
 	if (m_ntNodeType != XDOM::NODE_ELEMENT)
-		return NULL;
+		return nullptr;
 	pNode = m_pChildNodes->getNamedItem(sName);
 	if (pNode)
 	{
 		if (pNode->getNodeType() == XDOM::NODE_ATTRIBUTE)
 			return pNode;
 	}
-	return NULL;
+	return nullptr;
 }
 
 XDOM::IXMLDOMNodeList* CXMLDOMNodeImpl::getElementsByTagName(const XMLCHAR* sName)
@@ -98,7 +98,7 @@ XDOM::IXMLDOMNodeList* CXMLDOMNodeImpl::getElementsByTagName(const XMLCHAR* sNam
 	if (pNodeList->length() == 0)
 	{
 		pNodeList->Release();
-		return NULL;
+		return nullptr;
 	}
 
 	return pNodeList;

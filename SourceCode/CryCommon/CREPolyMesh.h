@@ -49,9 +49,9 @@ public:
 		mfSetType(eDATA_Poly);
 		mfSetFlags(FCEF_TRANSFORM | FCEF_NEEDFILLBUF);
 		NumLightRE = 0;
-		bNoDeform = NULL;
-		TriVerts = NULL;
-		Indices = NULL;
+		bNoDeform = nullptr;
+		TriVerts = nullptr;
+		Indices = nullptr;
 	}
 	virtual ~CREPolyMesh();
 

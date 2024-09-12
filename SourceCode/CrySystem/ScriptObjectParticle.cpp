@@ -116,12 +116,12 @@ int CScriptObjectParticle::CreateParticle(IFunctionHandler* pH)
 			sParam.fChildSpawnPeriod = 0;
 	}
 	else
-		sParam.pChild = NULL;
+		sParam.pChild = nullptr;
 
 
 	//STATIC OBJECT BASED PARTICLES////////////////////////////////////////////////////
 
-	sParam.pStatObj = NULL;
+	sParam.pStatObj = nullptr;
 	INT_PTR nValue = 0;
 	int nCookie = 0;
 	if (pObj->GetUDValueChain("geometry", nValue, nCookie) && (nCookie == USER_DATA_OBJECT))
@@ -157,7 +157,7 @@ int CScriptObjectParticle::CreateDecal(IFunctionHandler* pH)
 	CryEngineDecalInfo Decal;
 	int nCookie = 0;
 	USER_DATA nUD = 0;
-	IStatObj* obj = NULL;
+	IStatObj* obj = nullptr;
 	pH->GetParam(1, *oVec);
 	Decal.vPos = oVec.Get();
 	pH->GetParam(2, *oVec);
@@ -333,7 +333,7 @@ int CScriptObjectParticle::CreateParticleLine(IFunctionHandler* pH)
 		Params.eBlendType = color_based_blending > 0 ? ParticleBlendType_ColorBased : ParticleBlendType_AlphaBased;
 		Params.nParticleFlags = iParticleType;
 		Params.bRealPhysics = 0;
-		Params.pChild = NULL;
+		Params.pChild = nullptr;
 		Params.fChildSpawnPeriod = 0;
 		Params.fTailLenght = fTailLength;
 		Params.bRealPhysics = bRealPhys != 0;
@@ -498,7 +498,7 @@ bool CScriptObjectParticle::ReadParticleTable(IScriptObject* pITable, ParticlePa
 		sParamOut.nParticleFlags |= PART_FLAG_SIZE_LINEAR;
 
 	sParamOut.bRealPhysics = bRealPhys != 0;
-	sParamOut.pChild = NULL;
+	sParamOut.pChild = nullptr;
 	sParamOut.fChildSpawnPeriod = fChildSpawnPeriod;
 	sParamOut.fTailLenght = fTailLength;
 
@@ -585,7 +585,7 @@ int CScriptObjectParticle::Attach(IFunctionHandler* pH)
 				sParam.fChildSpawnPeriod=0;
 		}
 		else
-			sParam.pChild = NULL;
+			sParam.pChild = nullptr;
 			*/
 	return pH->EndFunction(pInstance->AddParticleEmitter(sParam, cpsi));
 }

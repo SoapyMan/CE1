@@ -46,7 +46,7 @@ public:
 	//! Serializes this object to the given memory block; if it's NULL, only returns
 	//! the number of bytes required. If it's not NULL, returns the number of bytes written
 	//! (0 means error, insufficient space)
-	virtual unsigned Serialize(bool bSave, void* pStream, unsigned nSize, IMiniLog* pWarningLog = NULL) = 0;
+	virtual unsigned Serialize(bool bSave, void* pStream, unsigned nSize, IMiniLog* pWarningLog = nullptr) = 0;
 
 	//! Calculates the size of this object
 	virtual void GetMemoryUsage(ICrySizer* pSizer) = 0;

@@ -613,8 +613,8 @@ void C3DEngine::RenderScene(unsigned int dwDrawFlags)
 		/*
 	  list2<struct_VERTEX_FORMAT_P3F_COL4UB> lstVert;
 	  list2<unsigned short> lstIdx;
-	  static CLeafBuffer * pLeafBuffer = NULL;
-	  static IShader* pTempShader = NULL;
+	  static CLeafBuffer * pLeafBuffer = nullptr;
+	  static IShader* pTempShader = nullptr;
 
 	  int offset = 2;
 	  struct_VERTEX_FORMAT_P3F_COL4UB center;
@@ -747,7 +747,7 @@ void C3DEngine::RenderSkyBox(IShader* pSH)
 		m_pRESky->m_fTerrainWaterLevel = crymax(0, m_pTerrain->GetWaterLevel());
 		m_pRESky->m_fSkyBoxStretching = m_fSkyBoxStretching;
 
-		GetRenderer()->EF_AddEf(0, m_pRESky, pSH, NULL, pObj, 0, NULL, EFSLIST_PREPROCESS);
+		GetRenderer()->EF_AddEf(0, m_pRESky, pSH, nullptr, pObj, 0, nullptr, EFSLIST_PREPROCESS);
 	}
 
 	// sun lensflares
@@ -784,7 +784,7 @@ void C3DEngine::RenderSkyBox(IShader* pSH)
 				m_SunObject[m_pTerrain->m_nRenderStackLevel]->m_SortId = -1000000;
 			else
 				m_SunObject[m_pTerrain->m_nRenderStackLevel]->m_SortId = 1000000;
-			GetRenderer()->EF_AddEf(0, m_pSHLensFlares->GetREs()->Get(0), m_pSHLensFlares, NULL, m_SunObject[m_pTerrain->m_nRenderStackLevel], -1, NULL, EFSLIST_DISTSORT);
+			GetRenderer()->EF_AddEf(0, m_pSHLensFlares->GetREs()->Get(0), m_pSHLensFlares, nullptr, m_SunObject[m_pTerrain->m_nRenderStackLevel], -1, nullptr, EFSLIST_DISTSORT);
 		}
 	}
 }
@@ -1161,7 +1161,7 @@ void C3DEngine::RenderTerrainParticles()
 	{
 		CCObject* pObj = GetRenderer()->EF_GetObject(true, -1);
 		pObj->m_Matrix.SetIdentity();
-		GetRenderer()->EF_AddEf(0, m_pRETerrainParticles, m_pSHTerrainParticles, NULL, pObj, 0, NULL, EFSLIST_STENCIL | eS_TerrainDetailTextures);
+		GetRenderer()->EF_AddEf(0, m_pRETerrainParticles, m_pSHTerrainParticles, nullptr, pObj, 0, nullptr, EFSLIST_STENCIL | eS_TerrainDetailTextures);
 	}
 }
 
@@ -1172,7 +1172,7 @@ void C3DEngine::SetupDistanceFog()
 	if (!m_pTerrain)
 		return;
 
-	VolumeInfo* pFogVolume = NULL;
+	VolumeInfo* pFogVolume = nullptr;
 	if (GetCVars()->e_use_global_fog_in_fog_volumes && !m_nRenderStackLevel)
 	{ // find camera fog volume
 		CVisArea* pCurVisArea = m_pVisAreaManager->m_pCurArea ? m_pVisAreaManager->m_pCurArea : m_pVisAreaManager->m_pCurPortal;
@@ -1214,7 +1214,7 @@ void C3DEngine::RenderOutSpace()
 	  {
 		CCObject * pObj = GetRenderer()->EF_GetObject(true, -1);
 		pObj->m_Matrix.SetTranslationMat(GetViewCamera().GetPos());
-		GetRenderer()->EF_AddEf(0, m_pREOutSpace, m_pSHOutSpace, NULL, pObj, 0, NULL);
+		GetRenderer()->EF_AddEf(0, m_pREOutSpace, m_pSHOutSpace, nullptr, pObj, 0, nullptr);
 	  }*/
 }
 
@@ -1227,7 +1227,7 @@ void C3DEngine::DrawFullScreenQuad(IShader* pShader, bool bRectangle, EF_Sort eS
 		pObj->m_Color = m_vFogColor;
 		pObj->m_Color.a = 1.f;
 		pObj->m_nTemplId = bRectangle;
-		GetRenderer()->EF_AddEf(0, m_pRE2DQuad, pShader, NULL, pObj, 0, NULL, eSort);
+		GetRenderer()->EF_AddEf(0, m_pRE2DQuad, pShader, nullptr, pObj, 0, nullptr, eSort);
 	}
 }
 /*
@@ -1241,7 +1241,7 @@ void C3DEngine::RenderTerrainShadowMaps()
   pRendObject->m_Angs.Clear();
 ///  m_pRETerrainShadowMap->m_pShadowFrustum = 0;
 //  m_pRETerrainShadowMap->m_fAlpha = -1;
-//  GetRenderer()->EF_AddEf(0, m_pRETerrainShadowMap, "TerrainShadowMaps", pRendObject, 0, NULL, eS_TerrainDetailTextures);
+//  GetRenderer()->EF_AddEf(0, m_pRETerrainShadowMap, "TerrainShadowMaps", pRendObject, 0, nullptr, eS_TerrainDetailTextures);
 }	*/
 
 // render fog plane circle if camera is inside volume
@@ -1406,10 +1406,10 @@ void C3DEngine::MakeHiResScreenShot()
 		int nFinSize = lstSubImages.Count() *
 			GetRenderer()->GetWidth() * GetRenderer()->GetHeight() * 4;
 
-		unsigned char* pFinalImage = NULL;
+		unsigned char* pFinalImage = nullptr;
 
 #ifdef WIN32
-		pFinalImage = (unsigned char*)VirtualAlloc(NULL, nFinSize, MEM_COMMIT, PAGE_READWRITE);
+		pFinalImage = (unsigned char*)VirtualAlloc(nullptr, nFinSize, MEM_COMMIT, PAGE_READWRITE);
 #endif // WIN32
 
 		if (pFinalImage)

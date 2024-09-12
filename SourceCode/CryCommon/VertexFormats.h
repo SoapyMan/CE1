@@ -248,7 +248,7 @@ _inline void* CreateVertexBuffer(int nFormat, int nVerts)
 	default:
 		CRYASSERT(0);
 	}
-	return NULL;
+	return nullptr;
 }
 
 #ifdef WIN64

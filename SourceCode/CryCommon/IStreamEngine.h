@@ -93,7 +93,7 @@ struct StreamReadParams
 		unsigned _nMaxLoadTime = 0,
 		unsigned _nOffset = 0,
 		unsigned _nSize = 0,
-		void* _pBuffer = NULL,
+		void* _pBuffer = nullptr,
 		unsigned _nFlags = 0
 	) :
 		//szFile (_szFile),
@@ -172,7 +172,7 @@ public:
 	// virtual file system, in pak or zip file or wherever).
 	// Reads the file contents into the given buffer, up to the given size.
 	// Upon success, calls success callback. If the file is truncated or for other 
-	// reason can not be read, calls error callback. THe callback can be NULL (in this case, the client should poll
+	// reason can not be read, calls error callback. THe callback can be nullptr (in this case, the client should poll
 	// the returned IReadStream object; the returned object must be locked for that)
 	// NOTE: the error/success/ progress callbacks can also be called from INSIDE this function.
 	// pParams - PLACEHOLDER for the future additional parameters (like priority), or really
@@ -187,7 +187,7 @@ public:
 	// (in the main thread) outside StartRead() (it happens in the entity update),
 	// so you're guaranteed that it won't trash inside the calling function. However, this may change in the future
 	// and you'll be required to assign it to IReadStream immediately (StartRead will return IReadStream_AutoPtr then)
-	virtual IReadStreamPtr StartRead(const char* szSource, const char* szFile, IStreamCallback* pCallback = NULL, StreamReadParams* pParams = NULL) = 0;
+	virtual IReadStreamPtr StartRead(const char* szSource, const char* szFile, IStreamCallback* pCallback = nullptr, StreamReadParams* pParams = nullptr) = 0;
 
 	// returns the size of the file; returns 0 if there's no such file.
 	// nCryPakFlags is the flag set as in ICryPak

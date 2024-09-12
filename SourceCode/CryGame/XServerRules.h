@@ -35,7 +35,7 @@ public:
 	virtual ~CXServerRules();
 	
 	//!	Load the rules set by the console variables
-	bool	Init(CXGame *pGame, IConsole *pConsole,IScriptSystem *pScriptSystem, ILog *pLog = NULL);
+	bool	Init(CXGame *pGame, IConsole *pConsole,IScriptSystem *pScriptSystem, ILog *pLog = nullptr);
   void	Update();
 	//! Unload the rules
 	void	ShutDown();

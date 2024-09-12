@@ -18,7 +18,7 @@
 
 //////////////////////////////////////////////////////////////////////////
 struct ScriptTimer{
-	ScriptTimer(IScriptObject *_pTable,int64 _nStartTimer,int64 _nTimer,IScriptObject *_pUserData=NULL,bool _bUpdateDuringPause=true)
+	ScriptTimer(IScriptObject *_pTable,int64 _nStartTimer,int64 _nTimer,IScriptObject *_pUserData=nullptr,bool _bUpdateDuringPause=true)
 	{
 		nTimer=_nTimer;
 		nStartTime=_nStartTimer;
@@ -28,9 +28,9 @@ struct ScriptTimer{
 	}
 	~ScriptTimer()
 	{
-		if(pTable!=NULL)
+		if(pTable!=nullptr)
 			pTable->Release();
-		if(pUserData!=NULL)
+		if(pUserData!=nullptr)
 			pUserData->Release();
 	}
 	int64 nTimer;

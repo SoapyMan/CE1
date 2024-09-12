@@ -172,8 +172,8 @@ inline double DLength(Vec3& v) {
 enum { g_nMaxGeomLodLevels = 3 };
 
 #define DECLARE_VECTOR_GETTER_METHODS(Type, Singular, Plural, member) \
-	Type* get##Plural() {return member.empty()?NULL:&member[0];}												\
-	const Type* get##Plural()const {return member.empty()?NULL:&member[0];}							\
+	Type* get##Plural() {return member.empty()?nullptr:&member[0];}												\
+	const Type* get##Plural()const {return member.empty()?nullptr:&member[0];}							\
 	Type& get##Singular(unsigned i) {CRYASSERT (i < num##Plural()); return member[i];}             \
 	const Type& get##Singular(unsigned i)const {CRYASSERT (i < num##Plural()); return member[i];}	\
 	void set##Singular (unsigned i, const Type& newValue) {CRYASSERT (i < num##Plural()); member[i] = newValue;} \

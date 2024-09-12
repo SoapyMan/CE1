@@ -24,7 +24,7 @@ public:
 	// constructs the whole thing
 	void init()
 	{
-		m_pTemp = NULL;
+		m_pTemp = nullptr;
 		m_nSize = 0;
 	}
 

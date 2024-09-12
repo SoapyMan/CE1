@@ -103,7 +103,7 @@ void CObjManager::RegisterEntity(IEntityRender* pEntityRS)
 		if (pList->Find(pEntityRS) < 0)
 			pList->Add(pEntityRS);
 		pEntityRS->m_pSector = m_pTerrain->m_arrSecInfoTable[0][0];
-		pEntityRS->m_pVisArea = NULL;
+		pEntityRS->m_pVisArea = nullptr;
 		return;
 	}
 
@@ -277,7 +277,7 @@ bool CObjManager::LoadStaticObjectsFromXML()
 						if (pRecvShadow)
 							siGroup.bRecvShadow = atof(pRecvShadow->getText()) != 0;
 						if (pFileName)
-							siGroup.pStatObj = MakeObject(pFileName->getText(), NULL,
+							siGroup.pStatObj = MakeObject(pFileName->getText(), nullptr,
 								evs_ShareAndSortForCache, true, false, false);
 
 						if (siGroup.pStatObj)
@@ -494,7 +494,7 @@ CStatObj* CObjManager::MakeObject(const char* __szFileName,
 		// object not found
 		// if geom name is specified - just return 0
 		if (_szGeomName && _szGeomName[0])
-			return NULL;
+			return nullptr;
 
 		if (!m_pDefaultCGF)
 			GetConsole()->Exit("Error: CObjManager::MakeObject: Default object not found");
@@ -577,7 +577,7 @@ bool CObjManager::GetSectorBBox(list2<CStatObjInst>* stat_objects, Vec3d& sec_bb
 }
 
 CObjManager::CObjManager(C3DEngine* p3DEngine) :
-	m_pDefaultCGF(NULL)
+	m_pDefaultCGF(nullptr)
 {
 	m_p3DEngine = p3DEngine;
 	m_pTerrain = 0;

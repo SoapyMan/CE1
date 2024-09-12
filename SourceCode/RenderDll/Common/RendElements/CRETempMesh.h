@@ -14,7 +14,7 @@ public:
 public:
 	CRETempMesh()
 	{
-		m_VBuffer = NULL;
+		m_VBuffer = nullptr;
 		m_Inds.Reset();
 		mfSetType(eDATA_TempMesh);
 		mfUpdateFlags(FCEF_TRANSFORM);
@@ -25,7 +25,7 @@ public:
 		if (m_VBuffer)
 		{
 			gRenDev->ReleaseBuffer(m_VBuffer);
-			m_VBuffer = NULL;
+			m_VBuffer = nullptr;
 		}
 		gRenDev->ReleaseIndexBuffer(&m_Inds);
 		m_Inds.Reset();

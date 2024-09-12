@@ -40,7 +40,7 @@ struct SDefaultValidator : public IValidator
 #ifdef WIN32
 				string strMessage = record.text;
 				strMessage += "\n---------------------------------------------\nAbort - terminate application\nRetry - continue running the application\nIgnore - don't show this message box any more";
-				switch (::MessageBox(NULL, strMessage.c_str(), "CryEngine Warning", MB_ABORTRETRYIGNORE | MB_DEFBUTTON2 | MB_ICONWARNING | MB_SYSTEMMODAL))
+				switch (::MessageBox(nullptr, strMessage.c_str(), "CryEngine Warning", MB_ABORTRETRYIGNORE | MB_DEFBUTTON2 | MB_ICONWARNING | MB_SYSTEMMODAL))
 				{
 				case IDABORT:
 					m_pSystem->GetIConsole()->Exit("User abort requested during showing the warning box with the following message: %s", record.text);

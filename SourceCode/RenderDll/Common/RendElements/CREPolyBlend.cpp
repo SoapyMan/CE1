@@ -568,7 +568,7 @@ bool CREPolyBlend_Base::mfCompile(SShader* ef, char* scr)
 
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else

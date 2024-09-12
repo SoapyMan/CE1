@@ -49,7 +49,7 @@ class CCGVProgram_D3D : public CVProgram
 		SCacheInstance()
 		{
 			m_Mask = 0;
-			m_pCache = NULL;
+			m_pCache = nullptr;
 		}
 		int Size()
 		{
@@ -79,13 +79,13 @@ class CCGVProgram_D3D : public CVProgram
 		{
 			m_Mask = 0;
 			m_LightMask = 0;
-			m_ParamsNoObj = NULL;
-			m_ParamsObj = NULL;
-			m_MatrixNoObj = NULL;
-			m_MatrixObj = NULL;
-			m_BindConstants = NULL;
-			m_BindVars = NULL;
-			m_pHandle = NULL;
+			m_ParamsNoObj = nullptr;
+			m_ParamsObj = nullptr;
+			m_MatrixNoObj = nullptr;
+			m_MatrixObj = nullptr;
+			m_BindConstants = nullptr;
+			m_BindVars = nullptr;
+			m_pHandle = nullptr;
 			m_nCacheID = -1;
 		}
 		int Size()
@@ -185,12 +185,12 @@ public:
 #endif
 		m_dwFrame = 1;
 		m_CurInst = -1;
-		m_Script = NULL;
-		m_SubroutinesScript = NULL;
-		m_CoreScript = NULL;
-		m_InputParmsScript = NULL;
-		m_PosScript = NULL;
-		m_DeclarationsScript = NULL;
+		m_Script = nullptr;
+		m_SubroutinesScript = nullptr;
+		m_CoreScript = nullptr;
+		m_InputParmsScript = nullptr;
+		m_PosScript = nullptr;
+		m_DeclarationsScript = nullptr;
 		m_bCGType = true;
 	}
 	void mfFree();
@@ -210,7 +210,7 @@ public:
 
 	void mfUnbind();
 
-	int mfGetCacheInstanceID(int Mask, const char* name = NULL)
+	int mfGetCacheInstanceID(int Mask, const char* name = nullptr)
 	{
 		int i;
 
@@ -262,14 +262,14 @@ public:
 		SCGInstance cg;
 		cg.m_Mask = Type;
 		cg.m_LightMask = LightMask;
-		cg.m_BindConstants = NULL;
-		cg.m_BindVars = NULL;
+		cg.m_BindConstants = nullptr;
+		cg.m_BindVars = nullptr;
 		cg.m_pHandle = 0;
-		cg.m_CGProgram = NULL;
-		cg.m_ParamsNoObj = NULL;
-		cg.m_MatrixNoObj = NULL;
-		cg.m_ParamsObj = NULL;
-		cg.m_MatrixObj = NULL;
+		cg.m_CGProgram = nullptr;
+		cg.m_ParamsNoObj = nullptr;
+		cg.m_MatrixNoObj = nullptr;
+		cg.m_ParamsObj = nullptr;
+		cg.m_MatrixObj = nullptr;
 		if (Type & VPVST_CLIPPLANES3)
 		{
 			if (!cg.m_ParamsNoObj)
@@ -437,12 +437,12 @@ public:
 		// Load and create vertex shader
 		HRESULT hr;
 		LPD3DXBUFFER pCode;
-		LPD3DXBUFFER pBuffer = NULL;
-		hr = D3DXAssembleShader(prog_text, strlen(prog_text), NULL, NULL, 0, &pCode, &pBuffer);
+		LPD3DXBUFFER pBuffer = nullptr;
+		hr = D3DXAssembleShader(prog_text, strlen(prog_text), nullptr, nullptr, 0, &pCode, &pBuffer);
 		if (FAILED(hr))
 		{
 			Warning(0, 0, "WARNING: CCGVProgram_D3D::mfLoad: Could not assemble vertex shader '%s' (%s)\n", m_Name.c_str(), gcpRendD3D->D3DError(hr));
-			if (pBuffer != NULL)
+			if (pBuffer != nullptr)
 			{
 				TCHAR* pstr;
 				TCHAR strOut[4096];
@@ -477,7 +477,7 @@ public:
 		if (FAILED(hr))
 		{
 			Warning(0, 0, "CCGVProgram_D3D::mfLoad: Could not create vertex shader '%s' (%s)\n", m_Name.c_str(), gcpRendD3D->D3DError(hr));
-			return NULL;
+			return nullptr;
 		}
 		return pCode;
 	}
@@ -494,7 +494,7 @@ public:
 			if (nm == m_Insts[m_CurInst].m_BindVars->Get(i).m_Name)
 				return &m_Insts[m_CurInst].m_BindVars->Get(i);
 		}
-		return NULL;
+		return nullptr;
 	}
 
 	void mfParameteri(SCGBind* ParamBind, const float* v)
@@ -685,7 +685,7 @@ public:
 		{
 			D3DXMatrixMultiply((D3DXMATRIXA16*)&r->m_ViewMatrix(0, 0), (D3DXMATRIXA16*)&r->m_RP.m_pCurObject->m_Matrix(0, 0), (D3DXMATRIXA16*)&r->m_CameraMatrix(0, 0));
 			D3DXMATRIXA16* matView = (D3DXMATRIXA16*)r->m_ViewMatrix.GetData();
-			D3DXMatrixInverse(&matWorldViewProj, NULL, matView);
+			D3DXMatrixInverse(&matWorldViewProj, nullptr, matView);
 			mfParameter(ParamBind, &matWorldViewProj(0, 0), 4);
 		}
 		break;
@@ -701,7 +701,7 @@ public:
 		{
 			D3DXMatrixMultiply((D3DXMATRIXA16*)&r->m_ViewMatrix(0, 0), (D3DXMATRIXA16*)&r->m_RP.m_pCurObject->m_Matrix(0, 0), (D3DXMATRIXA16*)&r->m_CameraMatrix(0, 0));
 			D3DXMATRIXA16* matView = (D3DXMATRIXA16*)r->m_ViewMatrix.GetData();
-			D3DXMatrixInverse(&matWorldViewProj, NULL, matView);
+			D3DXMatrixInverse(&matWorldViewProj, nullptr, matView);
 			D3DXMatrixTranspose(&matWorldViewProj, &matWorldViewProj);
 			mfParameter(ParamBind, &matWorldViewProj(0, 0), 4);
 		}
@@ -752,13 +752,13 @@ public:
 			if (pVS)
 			{
 				pVS->Release();
-				m_Insts[m_CurInst].m_pHandle = NULL;
+				m_Insts[m_CurInst].m_pHandle = nullptr;
 			}
 		}
-		m_Insts[m_CurInst].m_CGProgram = NULL;
+		m_Insts[m_CurInst].m_CGProgram = nullptr;
 	}
 
-	bool mfIsValid(int Num) const { return (m_Insts[Num].m_CGProgram != NULL); }
+	bool mfIsValid(int Num) const { return (m_Insts[Num].m_CGProgram != nullptr); }
 	SCGScript* mfGenerateScriptVP(CVProgram* pPosVP);
 	char* mfGenerateTCScript(char* Script, int nt);
 	void mfCompileVertAttributes(char* scr, SShader* ef);
@@ -779,7 +779,7 @@ public:
 	virtual ~CCGVProgram_D3D();
 	virtual void Release();
 	virtual bool mfCompile(char* scr);
-	virtual bool mfSet(bool bStat, SShaderPassHW* slw = NULL, int nSetPointers = 1);
+	virtual bool mfSet(bool bStat, SShaderPassHW* slw = nullptr, int nSetPointers = 1);
 	virtual void mfSetVariables(bool bObj, TArray<SCGParam4f>* Vars);
 	virtual void mfReset();
 	virtual void mfPrecache();
@@ -835,7 +835,7 @@ public:
 		{
 			if (Name)
 				Warning(0, 0, "Error: CCGVProgram_GL::mfAddNewScript: Couldn't find CG script for name '%s'", Name);
-			return NULL;
+			return nullptr;
 		}
 
 		SCGScript* scr = new SCGScript;
@@ -862,7 +862,7 @@ public:
 				continue;
 			SAFE_DELETE_ARRAY(scr->m_Script);
 			delete scr;
-			m_CGScripts[i] = NULL;
+			m_CGScripts[i] = nullptr;
 		}
 	}
 

@@ -63,7 +63,7 @@ template <class FunctionOfDirection> void MakeCubeMap(FunctionOfDirection& f, LP
 		// positive x image 
 		{
 			pCubeTexture->GetLevelDesc(dwLevel, &ddsdDesc);
-			pCubeTexture->LockRect((D3DCUBEMAP_FACES)0, dwLevel, &Locked, NULL, 0);
+			pCubeTexture->LockRect((D3DCUBEMAP_FACES)0, dwLevel, &Locked, nullptr, 0);
 			Type* pBits = (Type*)(Locked.pBits);
 			ip = pBits;
 			for (int j = 0; j < size; j++)
@@ -83,7 +83,7 @@ template <class FunctionOfDirection> void MakeCubeMap(FunctionOfDirection& f, LP
 		// negative x image 
 		{
 			pCubeTexture->GetLevelDesc(dwLevel, &ddsdDesc);
-			pCubeTexture->LockRect((D3DCUBEMAP_FACES)1, dwLevel, &Locked, NULL, 0);
+			pCubeTexture->LockRect((D3DCUBEMAP_FACES)1, dwLevel, &Locked, nullptr, 0);
 			Type* pBits = (Type*)(Locked.pBits);
 			ip = pBits;
 			for (int j = 0; j < size; j++)
@@ -104,7 +104,7 @@ template <class FunctionOfDirection> void MakeCubeMap(FunctionOfDirection& f, LP
 		// positive y image 
 		{
 			pCubeTexture->GetLevelDesc(dwLevel, &ddsdDesc);
-			pCubeTexture->LockRect((D3DCUBEMAP_FACES)2, dwLevel, &Locked, NULL, 0);
+			pCubeTexture->LockRect((D3DCUBEMAP_FACES)2, dwLevel, &Locked, nullptr, 0);
 			Type* pBits = (Type*)(Locked.pBits);
 			ip = pBits;
 			for (int j = 0; j < size; j++)
@@ -124,7 +124,7 @@ template <class FunctionOfDirection> void MakeCubeMap(FunctionOfDirection& f, LP
 		// negative y image 
 		{
 			pCubeTexture->GetLevelDesc(dwLevel, &ddsdDesc);
-			pCubeTexture->LockRect((D3DCUBEMAP_FACES)3, dwLevel, &Locked, NULL, 0);
+			pCubeTexture->LockRect((D3DCUBEMAP_FACES)3, dwLevel, &Locked, nullptr, 0);
 			Type* pBits = (Type*)(Locked.pBits);
 			ip = pBits;
 			for (int j = 0; j < size; j++)
@@ -145,7 +145,7 @@ template <class FunctionOfDirection> void MakeCubeMap(FunctionOfDirection& f, LP
 		// positive z image 
 		{
 			pCubeTexture->GetLevelDesc(dwLevel, &ddsdDesc);
-			pCubeTexture->LockRect((D3DCUBEMAP_FACES)4, dwLevel, &Locked, NULL, 0);
+			pCubeTexture->LockRect((D3DCUBEMAP_FACES)4, dwLevel, &Locked, nullptr, 0);
 			Type* pBits = (Type*)(Locked.pBits);
 			ip = pBits;
 			for (int j = 0; j < size; j++)
@@ -165,7 +165,7 @@ template <class FunctionOfDirection> void MakeCubeMap(FunctionOfDirection& f, LP
 		// negative z image 
 		{
 			pCubeTexture->GetLevelDesc(dwLevel, &ddsdDesc);
-			pCubeTexture->LockRect((D3DCUBEMAP_FACES)5, dwLevel, &Locked, NULL, 0);
+			pCubeTexture->LockRect((D3DCUBEMAP_FACES)5, dwLevel, &Locked, nullptr, 0);
 			Type* pBits = (Type*)(Locked.pBits);
 			ip = pBits;
 			for (int j = 0; j < size; j++)

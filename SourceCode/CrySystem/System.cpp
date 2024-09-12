@@ -62,13 +62,13 @@ WATERMARKDATA(_m);
 //#endif
 
 // profilers api.
-VTuneFunction VTResume = NULL;
-VTuneFunction VTPause = NULL;
+VTuneFunction VTResume = nullptr;
+VTuneFunction VTPause = nullptr;
 
 //////////////////////////////////////////////////////////////////////////
 // Single current instance of ISystem
 //////////////////////////////////////////////////////////////////////////
-ISystem* g_System = NULL;
+ISystem* g_System = nullptr;
 // these heaps are used by underlying System structures
 // to allocate, accordingly, small (like elements of std::set<..*>) and big (like memory for reading files) objects
 // hopefully someday we'll have standard MT-safe heap
@@ -135,8 +135,8 @@ CSystem::CSystem() :
 
 	//#ifndef _XBOX
 #ifdef WIN32	
-	m_hInst = NULL;
-	m_hWnd = NULL;
+	m_hInst = nullptr;
+	m_hWnd = nullptr;
 
 #endif
 
@@ -145,63 +145,63 @@ CSystem::CSystem() :
 	memset(&m_dll, 0, sizeof(m_dll));
 	//////////////////////////////////////////////////////////////////////////
 
-	m_pLuaDebugger = NULL;
-	m_pLog = NULL;
-	m_pStreamEngine = NULL;
-	m_pIPak = NULL;
-	m_pIInput = NULL;
-	m_pRenderer = NULL;
-	m_pISound = NULL;
-	m_pIMusic = NULL;
-	m_pICryFont = NULL;
-	m_pIFont = NULL;
-	m_pScriptSystem = NULL;
-	m_pIMovieSystem = NULL;
-	m_pI3DEngine = NULL;
-	m_pICryCharManager = NULL;
-	m_pAISystem = NULL;
-	m_pEntitySystem = NULL;
-	m_pConsole = NULL;
-	m_pNetwork = NULL;
-	m_rWidth = NULL;
-	m_rHeight = NULL;
-	m_rColorBits = NULL;
-	m_rDepthBits = NULL;
-	m_cvSSInfo = NULL;
-	m_rStencilBits = NULL;
-	m_rFullscreen = NULL;
-	m_rDriver = NULL;
-	m_sysNoUpdate = NULL;
-	m_pMemoryManager = NULL;
-	m_pProcess = NULL;
-	m_pGame = NULL;
-	m_pIPhysicalWorld = NULL;
-	m_pValidator = NULL;
-	m_pDefaultValidator = NULL;
+	m_pLuaDebugger = nullptr;
+	m_pLog = nullptr;
+	m_pStreamEngine = nullptr;
+	m_pIPak = nullptr;
+	m_pIInput = nullptr;
+	m_pRenderer = nullptr;
+	m_pISound = nullptr;
+	m_pIMusic = nullptr;
+	m_pICryFont = nullptr;
+	m_pIFont = nullptr;
+	m_pScriptSystem = nullptr;
+	m_pIMovieSystem = nullptr;
+	m_pI3DEngine = nullptr;
+	m_pICryCharManager = nullptr;
+	m_pAISystem = nullptr;
+	m_pEntitySystem = nullptr;
+	m_pConsole = nullptr;
+	m_pNetwork = nullptr;
+	m_rWidth = nullptr;
+	m_rHeight = nullptr;
+	m_rColorBits = nullptr;
+	m_rDepthBits = nullptr;
+	m_cvSSInfo = nullptr;
+	m_rStencilBits = nullptr;
+	m_rFullscreen = nullptr;
+	m_rDriver = nullptr;
+	m_sysNoUpdate = nullptr;
+	m_pMemoryManager = nullptr;
+	m_pProcess = nullptr;
+	m_pGame = nullptr;
+	m_pIPhysicalWorld = nullptr;
+	m_pValidator = nullptr;
+	m_pDefaultValidator = nullptr;
 	m_sys_StreamCallbackTimeBudget = 0;
 	m_sys_StreamCompressionMask = 0;
 
-	m_pScriptBindings = NULL;
-	//[Timur] m_CreateDOMDocument = NULL;
+	m_pScriptBindings = nullptr;
+	//[Timur] m_CreateDOMDocument = nullptr;
 
-	m_cvAIUpdate = NULL;
-	i_direct_input = NULL;
+	m_cvAIUpdate = nullptr;
+	i_direct_input = nullptr;
 
-	m_pScriptSink = NULL;
-	m_pUserCallback = NULL;
-	sys_script_debugger = NULL;
-	m_sysWarnings = NULL;
-	m_sys_profile = NULL;
-	m_sys_profile_graphScale = NULL;
-	m_sys_profile_pagefaultsgraph = NULL;
-	m_sys_profile_graph = NULL;
-	m_sys_profile_filter = NULL;
-	m_sys_profile_network = NULL;
-	m_sys_profile_peak = NULL;
-	m_sys_profile_memory = NULL;
-	m_sys_spec = NULL;
-	m_sys_firstlaunch = NULL;
-	m_pCpu = NULL;
+	m_pScriptSink = nullptr;
+	m_pUserCallback = nullptr;
+	sys_script_debugger = nullptr;
+	m_sysWarnings = nullptr;
+	m_sys_profile = nullptr;
+	m_sys_profile_graphScale = nullptr;
+	m_sys_profile_pagefaultsgraph = nullptr;
+	m_sys_profile_graph = nullptr;
+	m_sys_profile_filter = nullptr;
+	m_sys_profile_network = nullptr;
+	m_sys_profile_peak = nullptr;
+	m_sys_profile_memory = nullptr;
+	m_sys_spec = nullptr;
+	m_sys_firstlaunch = nullptr;
+	m_pCpu = nullptr;
 
 	m_profile_old = 0;
 
@@ -214,10 +214,10 @@ CSystem::CSystem() :
 
 	m_nStrangeRatio = 1000;
 	// no mem stats at the moment
-	m_pMemStats = NULL;
-	m_pSizer = NULL;
+	m_pMemStats = nullptr;
+	m_pSizer = nullptr;
 
-	m_pCVarQuit = NULL;
+	m_pCVarQuit = nullptr;
 #ifndef __linux
 	m_pDownloadManager = 0;
 #endif
@@ -253,9 +253,9 @@ CSystem::~CSystem()
 	FreeLib(m_dll.hAnimation);
 	FreeLib(m_dll.hGame);
 	SAFE_DELETE(m_pDataProbe);
-	g_System = NULL;
-	g_pBigHeap = NULL;
-	g_pSmallHeap = NULL;
+	g_System = nullptr;
+	g_pBigHeap = nullptr;
+	g_pSmallHeap = nullptr;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -270,7 +270,7 @@ void CSystem::FreeLib(IN OUT HMODULE hLibModule)
 	if (hLibModule)
 	{
 		CryFreeLibrary(hLibModule);
-		(hLibModule) = NULL;
+		(hLibModule) = nullptr;
 	}
 }
 
@@ -322,7 +322,7 @@ void CSystem::ShowDebugger(const char* pszSourceFile, int iLine, const char* psz
 #ifdef WIN32
 	if (m_bInDevMode)
 	{
-		if (GetLuaDebugger() != NULL)
+		if (GetLuaDebugger() != nullptr)
 			::InvokeDebugger(GetLuaDebugger(), pszSourceFile, iLine, pszReason);
 	}
 #endif
@@ -495,14 +495,14 @@ void CSystem::ShutDown(bool bRelaunch)
 	if (m_pLuaDebugger)
 	{
 		delete m_pLuaDebugger;
-		m_pLuaDebugger = NULL;
+		m_pLuaDebugger = nullptr;
 	}
 #endif
 
 	if (m_pIInput)
 	{
 		m_pIInput->ShutDown();
-		m_pIInput = NULL;
+		m_pIInput = nullptr;
 	}
 
 	SAFE_RELEASE(m_pIMovieSystem);
@@ -653,7 +653,7 @@ bool CSystem::CreateGame(const SGameInitParams& params)
 
 	PFNCREATEGAMEINSTANCE pfCreateGameInstance;
 	pfCreateGameInstance = (PFNCREATEGAMEINSTANCE)CryGetProcAddress(m_dll.hGame, DLL_GAME_ENTRANCE_FUNCTION);
-	if (pfCreateGameInstance == NULL)
+	if (pfCreateGameInstance == nullptr)
 		return false;
 
 	m_pGame = pfCreateGameInstance();
@@ -782,7 +782,7 @@ bool CSystem::Update(int updateFlags, int nPauseMode)
 #ifdef PROFILE_WITH_VTUNE
 	if (m_bInDevMode)
 	{
-		if (VTPause != NULL && VTResume != NULL)
+		if (VTPause != nullptr && VTResume != nullptr)
 		{
 			static bool bVtunePaused = true;
 
@@ -1246,7 +1246,7 @@ void CSystem::Deltree(const char* szFolder, bool bRecurse)
 void CSystem::OpenBasicPaks()
 {
 
-	const char* szLanguage = NULL;
+	const char* szLanguage = nullptr;
 	m_pScriptSystem->GetGlobalValue("g_language", szLanguage);
 	//////////////////////////////////////////////////////////////////////////
 	// load language pak

@@ -87,7 +87,7 @@ public:
 	//! Refresh object ( reload shaders or/and object geometry )
 	virtual void Refresh(int nFlags);
 
-	virtual bool SetShaderTemplate(int nTemplate, const char* TemplName, const char* ShaderName, bool bOnlyRegister = false, int* pnNewTemplateId = NULL);
+	virtual bool SetShaderTemplate(int nTemplate, const char* TemplName, const char* ShaderName, bool bOnlyRegister = false, int* pnNewTemplateId = nullptr);
 	virtual void SetShaderFloat(const char* Name, float Val);
 	//virtual void SetRefractFactor(float fRefr) { m_fRefractFactor = fRefr; }
 	//! Sets color parameter

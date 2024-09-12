@@ -370,7 +370,7 @@ protected:
 public:
 	void SendAnonimousSignal(int nSignalID, const char* szText, const Vec3& vPos, float fRadius, IAIObject* pObject);
 	void ReleaseFormationPoint(CAIObject* pReserved);
-	IAIObject* GetNearestObjectOfType(const Vec3& pos, unsigned int nTypeID, float fRadius = 0, IAIObject* pSkip = NULL);
+	IAIObject* GetNearestObjectOfType(const Vec3& pos, unsigned int nTypeID, float fRadius = 0, IAIObject* pSkip = nullptr);
 	void UpdateBeacon(unsigned short nGroupID, const Vec3& vPos, CAIObject* pOwner = 0);
 	CAIObject* GetBeacon(unsigned short nGroupID);
 	void CancelAnyPathsFor(CPuppet* pRequester);

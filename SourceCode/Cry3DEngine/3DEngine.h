@@ -52,7 +52,7 @@ public:
 	CMatMan();
 	~CMatMan();
 
-	IMatInfo* CreateMatInfo(const char* sMtlName = NULL);
+	IMatInfo* CreateMatInfo(const char* sMtlName = nullptr);
 	void DeleteMatInfo(IMatInfo* pMatInfo);
 	void RenameMatInfo(IMatInfo* pMtl, const char* sNewName);
 	IMatInfo* FindMatInfo(const char* sMtlName) const;
@@ -209,8 +209,8 @@ public:
 	virtual bool ReleaseObject(IStatObj* pObject);
 	virtual void RegisterEntity(IEntityRender* pEntityRS);
 	virtual bool UnRegisterEntity(IEntityRender* pEntityRS);
-	virtual float GetWaterLevel(const Vec3d* pvPos = NULL, Vec3d* pvFlowDir = NULL);
-	virtual float GetWaterLevel(IEntityRender* pEntityRender, Vec3d* pvFlowDir = NULL);
+	virtual float GetWaterLevel(const Vec3d* pvPos = nullptr, Vec3d* pvFlowDir = nullptr);
+	virtual float GetWaterLevel(IEntityRender* pEntityRender, Vec3d* pvFlowDir = nullptr);
 	virtual void SpawnParticles(const ParticleParams& SpawnParticleParams);
 	virtual void CreateDecal(const CryEngineDecalInfo& Decal);
 	virtual void DrawTerrainDetailTextureLayers();
@@ -249,7 +249,7 @@ public:
 	virtual void SetPhysMaterialEnumerator(IPhysMaterialEnumerator* pPhysMaterialEnumerator);
 	virtual IPhysMaterialEnumerator* GetPhysMaterialEnumerator();
 	virtual void LoadEnvironmentSettingsFromXML(const char* szMissionName, bool bEditorMode, const char* szMissionXMLString, bool bUpdateLightingOnVegetations);
-	virtual void AddDynamicLightSource(const class CDLight& LSource, IEntityRender* pEnt, int nEntityLightId = -1, const Matrix44* pMatrix = NULL);
+	virtual void AddDynamicLightSource(const class CDLight& LSource, IEntityRender* pEnt, int nEntityLightId = -1, const Matrix44* pMatrix = nullptr);
 	virtual void ApplyForceToEnvironment(Vec3d vPos, float fRadius, float fAmountOfForce);
 	virtual bool UnRegisterInAllSectors(IEntityRender* pEntityRS);
 	virtual bool MakeSectorLightMap(int nSectorOriginX, int nSectorOriginY, unsigned char* pImage, int nImageSize);
@@ -382,7 +382,7 @@ public:
 	~C3DEngine();
 
 	void	RenderScene(unsigned int dwDrawFlags);
-	CDLight* CheckDistancesToLightSources(uint& nDLightMask, const Vec3d vObjPos, const float fObjRadius, IEntityRender* pEntityRender = 0, int nMaxLightBitsNum = 8, CDLight** pSelectedLights = NULL, int nMaxSelectedLights = 0, Vec3d* pvSummLightAmmount = NULL);
+	CDLight* CheckDistancesToLightSources(uint& nDLightMask, const Vec3d vObjPos, const float fObjRadius, IEntityRender* pEntityRender = 0, int nMaxLightBitsNum = 8, CDLight** pSelectedLights = nullptr, int nMaxSelectedLights = 0, Vec3d* pvSummLightAmmount = nullptr);
 	uint GetFullLightMask();
 	bool IsOutdoorVisible();
 	void RenderSkyBox(IShader* pSH);

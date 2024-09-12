@@ -101,11 +101,11 @@ bool DebugCallStack::initSymbols()
 	process = GetCurrentProcess();
 
 	// Get module file name.
-	GetModuleFileName(NULL, fullpath, MAX_PATH_LENGTH);
+	GetModuleFileName(nullptr, fullpath, MAX_PATH_LENGTH);
 
 	// Convert it into search path for symbols.
 	strcpy(pathname, fullpath);
-	_splitpath(pathname, drive, directory, fname, NULL);
+	_splitpath(pathname, drive, directory, fname, nullptr);
 	sprintf(pathname, "%s%s", drive, directory);
 
 	// Append the current directory to build a search path forSymInit
@@ -129,10 +129,10 @@ bool DebugCallStack::initSymbols()
 		}
 
 		/*
-		if (SymLoadModule( process,NULL,fullpath,NULL,0,0 ))
+		if (SymLoadModule( process,nullptr,fullpath,nullptr,0,0 ))
 		{
 			//You could load dll/lib information ifyou wish here...
-			// if(::SymLoadModule(process, 	NULL, GLibDLLName, NULL, 0, 0))
+			// if(::SymLoadModule(process, 	nullptr, GLibDLLName, nullptr, 0, 0))
 			{
 				m_symbols = true;
 			}
@@ -236,7 +236,7 @@ int DebugCallStack::updateCallStack(void* exception_pointer)
 				char file[_MAX_PATH];
 				char fext[_MAX_PATH];
 				_splitpath(m_excModule, fdrive, fdir, file, fext);
-				_makepath(fdir, NULL, NULL, file, fext);
+				_makepath(fdir, nullptr, nullptr, file, fext);
 
 				strcpy(m_excModule, fdir);
 			}
@@ -271,7 +271,7 @@ void DebugCallStack::FillStackTrace(DWORD64 eip, DWORD64 esp, DWORD64 ebp, PCONT
 
 	m_functions.clear();
 
-	PCONTEXT pContextRecord = NULL;
+	PCONTEXT pContextRecord = nullptr;
 	CONTEXT CpuContext;
 	if (pContext)
 	{
@@ -283,7 +283,7 @@ void DebugCallStack::FillStackTrace(DWORD64 eip, DWORD64 esp, DWORD64 ebp, PCONT
 	for (count = 0; count < MAX_DEBUG_STACK_ENTRIES && b_ret == TRUE; count++)
 	{
 		b_ret = StackWalk64(IMAGE_FILE_MACHINE_I386, hProcess, hThread, &stack_frame, pContextRecord,
-			NULL, SymFunctionTableAccess64, SymGetModuleBase64, NULL);
+			nullptr, SymFunctionTableAccess64, SymGetModuleBase64, nullptr);
 
 		if (m_symbols)
 		{
@@ -337,8 +337,8 @@ string DebugCallStack::LookupFunctionName(void* pointer, bool fileInfo)
 				char file[1024];
 				char fname[1024];
 				char fext[1024];
-				_splitpath(lineImg.FileName, NULL, NULL, fname, fext);
-				_makepath(file, NULL, NULL, fname, fext);
+				_splitpath(lineImg.FileName, nullptr, nullptr, fname, fext);
+				_makepath(file, nullptr, nullptr, fname, fext);
 				string fileName = file;
 				/*
 				string finfo = string("[" ) + fileName + ", line:" + lineNum + "]";
@@ -394,7 +394,7 @@ int	DebugCallStack::handleException(void* exception_pointer)
 	}
 
 	firstTime = false;
-	hwndException = CreateDialog(gDLLHandle, MAKEINTRESOURCE(IDD_EXCEPTION), NULL, NULL);
+	hwndException = CreateDialog(gDLLHandle, MAKEINTRESOURCE(IDD_EXCEPTION), nullptr, nullptr);
 
 	if (initSymbols())
 	{
@@ -680,25 +680,25 @@ BOOL CALLBACK ExceptionDialogProc(HWND hwndDlg, unsigned int message, WPARAM wPa
 
 			if (CMailer::SendMessage("Critical Exception", errorString, emails, files, true))
 			{
-				MessageBox(NULL, "Mail Successfully Sent", "Send Mail", MB_OK);
+				MessageBox(nullptr, "Mail Successfully Sent", "Send Mail", MB_OK);
 			}
 			else
 			{
-				MessageBox(NULL, "Mail has not been sent", "Send Mail", MB_OK | MB_ICONWARNING);
+				MessageBox(nullptr, "Mail has not been sent", "Send Mail", MB_OK | MB_ICONWARNING);
 			}
 		}
 		break;
 
 		case IDB_SAVE:
 		{
-			int res = MessageBox(NULL, "Warning!\r\nEditor has crashed and is now in unstable state,\r\nand may crash again during saving of document.\r\nProceed with Save?", "Save Level", MB_YESNO | MB_ICONEXCLAMATION);
+			int res = MessageBox(nullptr, "Warning!\r\nEditor has crashed and is now in unstable state,\r\nand may crash again during saving of document.\r\nProceed with Save?", "Save Level", MB_YESNO | MB_ICONEXCLAMATION);
 			if (res == IDYES)
 			{
 				// Make one additional backup.
 				CSystem* pSystem = (CSystem*)DebugCallStack::instance()->GetSystem();
 				if (pSystem && pSystem->GetUserCallback())
 					pSystem->GetUserCallback()->OnSaveDocument();
-				MessageBox(NULL, "Level has been sucessfully saved!\r\nPress Ok to terminate Editor.", "Save", MB_OK);
+				MessageBox(nullptr, "Level has been sucessfully saved!\r\nPress Ok to terminate Editor.", "Save", MB_OK);
 			}
 		}
 		break;
@@ -722,7 +722,7 @@ static int	PrintException(EXCEPTION_POINTERS* pex)
 	// NOTE: AMD64: implement
 	return 0;
 #else
-	return  DialogBoxParam(gDLLHandle, MAKEINTRESOURCE(IDD_CRITICAL_ERROR), NULL, ExceptionDialogProc, (LPARAM)pex);
+	return  DialogBoxParam(gDLLHandle, MAKEINTRESOURCE(IDD_CRITICAL_ERROR), nullptr, ExceptionDialogProc, (LPARAM)pex);
 #endif
 }
 
@@ -733,7 +733,7 @@ static void PutVersion(char* str)
 	unsigned int len;
 
 	char ver[1024 * 8];
-	GetModuleFileName(NULL, exe, _MAX_PATH);
+	GetModuleFileName(nullptr, exe, _MAX_PATH);
 	int fv[4], pv[4];
 
 	int verSize = GetFileVersionInfoSize(exe, &dwHandle);

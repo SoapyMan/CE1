@@ -168,7 +168,7 @@ private:
 			return;
 		m_Next->m_Prev = m_Prev;
 		m_Prev->m_Next = m_Next;
-		m_Next = m_Prev = NULL;
+		m_Next = m_Prev = nullptr;
 	}
 	_inline void Link(CResFile* Before)
 	{

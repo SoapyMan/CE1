@@ -66,7 +66,7 @@ public:
 	TSparseArrayDriver<T>& operator += (int nShift) { m_pData += nShift * m_nStride; return *this; }
 	TSparseArrayDriver<T>& operator ++ () { m_pData += m_nStride; return *this; }
 
-	operator bool()const { return m_pData != NULL; }
+	operator bool()const { return m_pData != nullptr; }
 protected:
 	// pointer to the 0th element of the array
 	byte* m_pData;

@@ -101,7 +101,7 @@ void PrintTrace(int signum)
 		//try to log as well
 		if (p)fprintf(p, "%s\n", strings[i]);
 	}
-	if (p)fclose(p); p = NULL;
+	if (p)fclose(p); p = nullptr;
 	free(strings);
 	printf("\n");
 
@@ -176,7 +176,7 @@ static void SetMasterCDFolder(const char* pExecutableName)
 	string s("./");
 	s += gpBinDir;
 	DIR* pTest = opendir(s.c_str());
-	if (pTest == NULL)
+	if (pTest == nullptr)
 	{
 		//resolve symlink
 		string execFilename(pExecutableName);
@@ -278,22 +278,22 @@ const int CopyFile(const string& crSource, const string& crDest)
 {
 	FILE* fs = ::fopen(crSource.c_str(), "rb");
 	int success = 0;
-	if (fs != NULL)
+	if (fs != nullptr)
 	{
 		FILE* ft = ::fopen(crDest.c_str(), "wb");
-		if (ft != NULL)
+		if (ft != nullptr)
 		{
 			fseek(fs, 0, SEEK_END);
 			const int siz = ftell(fs);
 			if (siz > 0)
 			{
 				char* buf = new char[siz];
-				if (buf != NULL)
+				if (buf != nullptr)
 				{
 					fseek(fs, 0, SEEK_SET);
 					int rb = fread(buf, 1, siz, fs);
 					int wb = fwrite(buf, 1, rb, ft);
-					delete buf;	buf = NULL;
+					delete buf;	buf = nullptr;
 					if (wb == siz)
 						success = 1;
 				}
@@ -315,7 +315,7 @@ void CopyPunkBusterFiles()
 	string linuxDestDir(destDir);	linuxDestDir += "pb";
 	DIR* dirp = ::opendir(linuxDestDir.c_str());
 	//create symlink ./pb/ to ./PB/
-	if (dirp == NULL)
+	if (dirp == nullptr)
 	{
 		string dirTest(destDir);
 		dirTest += "PB";
@@ -385,7 +385,7 @@ void CopyPunkBusterFiles()
 			}
 		}
 		dirp = ::opendir(linuxDestDir.c_str());
-		if (dirp == NULL)
+		if (dirp == nullptr)
 		{
 			printf("Cannot read symlink to Punkbuster directory: %s , Punkbuster won't work\n. Please create a symlink 'pb' pointing to 'PB' in the mastercd folder manually to make it work. Check access rights too.\n", linuxDestDir.c_str());
 			return;
@@ -407,7 +407,7 @@ void CopyPunkBusterFiles()
 	string d(destDir);
 	d += "pbag.so";
 	FILE* p = ::fopen(d.c_str(), "r");
-	if (p == NULL)
+	if (p == nullptr)
 	{
 		if (!CopyFile(s.c_str(), d.c_str()))
 			printf("Failed to copy Punkbuster files to working folder: from %s to %s\n", s.c_str(), d.c_str());
@@ -419,7 +419,7 @@ void CopyPunkBusterFiles()
 	d = destDir;
 	d += "pbcl.so";
 	p = ::fopen(d.c_str(), "r");
-	if (p == NULL)
+	if (p == nullptr)
 	{
 		if (!CopyFile(s.c_str(), d.c_str()))
 			printf("Failed to copy Punkbuster files to working folder: from %s to %s\n", s.c_str(), d.c_str());
@@ -431,7 +431,7 @@ void CopyPunkBusterFiles()
 	d = destDir;
 	d += "pbsv.so";
 	p = ::fopen(d.c_str(), "r");
-	if (p == NULL)
+	if (p == nullptr)
 	{
 		if (!CopyFile(s.c_str(), d.c_str()))
 			printf("Failed to copy Punkbuster files to working folder: from %s to %s\n", s.c_str(), d.c_str());
@@ -649,7 +649,7 @@ static void SetMasterCDFolder()
 {
 	char szExeFileName[_MAX_PATH];
 	// Get the path of the executable
-	GetModuleFileName(GetModuleHandle(NULL), szExeFileName, sizeof(szExeFileName));
+	GetModuleFileName(GetModuleHandle(nullptr), szExeFileName, sizeof(szExeFileName));
 
 	char path_buffer[_MAX_PATH];
 	char drive[_MAX_DRIVE];
@@ -658,7 +658,7 @@ static void SetMasterCDFolder()
 	char ext[_MAX_EXT];
 
 	_splitpath(szExeFileName, drive, dir, fname, ext);
-	_makepath(path_buffer, drive, dir, NULL, NULL);
+	_makepath(path_buffer, drive, dir, nullptr, nullptr);
 	strcat(path_buffer, "..");
 	SetCurrentDirectory(path_buffer);
 }
@@ -681,9 +681,9 @@ void ShowOnTaskBar();
 //-------------------------------------------------------------------------------------------------
 
 TCHAR								g_szWindowClass[] = _T("FarCry_WinSV");		//!< the main window class name
-HWND								g_WndMain = NULL;													//!<
-HWND								g_WndIn = NULL;														//!<
-HWND								g_WndOut = NULL;													//!<
+HWND								g_WndMain = nullptr;													//!<
+HWND								g_WndIn = nullptr;														//!<
+HWND								g_WndOut = nullptr;													//!<
 
 WNDPROC								g_pfOldWindowProcOfWndIn(0);
 
@@ -1014,7 +1014,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 	wcex.cbWndExtra = 0;
 	wcex.hInstance = hInstance;
 	wcex.hIcon = LoadIcon(hInstance, (LPCTSTR)IDI_ICON);
-	wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
+	wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
 	wcex.hbrBackground = CreateSolidBrush(0);	// black (HBRUSH)(COLOR_WINDOW+1);
 	wcex.lpszMenuName = 0;
 	wcex.lpszClassName = g_szWindowClass;
@@ -1031,18 +1031,18 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 		CW_USEDEFAULT, 0,
 		g_dwInnerWidth + 2 * GetSystemMetrics(SM_CXFIXEDFRAME),
 		g_dwInnerHeight + 2 * GetSystemMetrics(SM_CYFIXEDFRAME) + GetSystemMetrics(SM_CYCAPTION),
-		NULL, NULL, hInstance, NULL);
+		nullptr, nullptr, hInstance, nullptr);
 
 	if (!g_WndMain)
 		return FALSE;
 
 	//	g_WndOut = CreateWindow("EDIT", "",WS_CHILD|WS_VISIBLE|WS_DISABLED,
-	//		0,0, g_dwInnerWidth, g_dwInnerHeight-g_dwEditLineHeight, g_WndMain, NULL, hInstance, NULL);
+	//		0,0, g_dwInnerWidth, g_dwInnerHeight-g_dwEditLineHeight, g_WndMain, nullptr, hInstance, nullptr);
 	g_WndOut = CreateWindow(g_szWindowClass, "", WS_CHILD | WS_VISIBLE | WS_DISABLED,
-		0, 0, g_dwInnerWidth, g_dwInnerHeight - g_dwEditLineHeight, g_WndMain, HMENU(), hInstance, NULL);
+		0, 0, g_dwInnerWidth, g_dwInnerHeight - g_dwEditLineHeight, g_WndMain, HMENU(), hInstance, nullptr);
 
 	g_WndIn = CreateWindow("EDIT", "", WS_CHILD | WS_VISIBLE,
-		0, g_dwInnerHeight - g_dwEditLineHeight, g_dwInnerWidth, g_dwEditLineHeight, g_WndMain, HMENU(), hInstance, NULL);
+		0, g_dwInnerHeight - g_dwEditLineHeight, g_dwInnerWidth, g_dwEditLineHeight, g_WndMain, HMENU(), hInstance, nullptr);
 
 	// subclass input window of console
 	g_pfOldWindowProcOfWndIn = reinterpret_cast<WNDPROC>(SetWindowLongPtr(g_WndIn, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(WndInWindowProc)));
@@ -1110,7 +1110,7 @@ int MainWin32(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, in
 #ifdef WIN32
 			// Main message loop:
 			MSG msg;
-			while (0 != PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+			while (0 != PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 			{
 				TranslateMessage(&msg);
 				DispatchMessage(&msg);

@@ -12,7 +12,7 @@ CryBoneInfo::CryBoneInfo()
 CryBoneInfo::~CryBoneInfo()
 {
 	IPhysicalWorld* pIPhysicalWorld = GetPhysicalWorld();
-	IGeomManager* pPhysGeomManager = pIPhysicalWorld ? pIPhysicalWorld->GetGeomManager() : NULL;
+	IGeomManager* pPhysGeomManager = pIPhysicalWorld ? pIPhysicalWorld->GetGeomManager() : nullptr;
 
 	for (int nLod = 0; nLod < 2; nLod++)
 		if (m_PhysInfo[nLod].pPhysGeom && (INT_PTR)m_PhysInfo[nLod].pPhysGeom != -1)
@@ -48,7 +48,7 @@ IController* CryBoneInfo::BindController(CControllerManager::Animation& GlobalAn
 {
 	if (m_arrControllers.size() <= nAnimID)
 		// this is an autopointer array, so there's no need to re-initialize the autopointers after construction
-		m_arrControllers.resize(nAnimID + 1/*, NULL*/);
+		m_arrControllers.resize(nAnimID + 1/*, nullptr*/);
 
 	IController* pController = m_arrControllers[nAnimID] = GlobalAnim.GetController(m_nControllerID);
 
@@ -59,7 +59,7 @@ IController* CryBoneInfo::BindController(CControllerManager::Animation& GlobalAn
 void CryBoneInfo::UnbindController(unsigned nAnimID)
 {
 	if (m_arrControllers.size() > nAnimID)
-		m_arrControllers[nAnimID] = NULL;
+		m_arrControllers[nAnimID] = nullptr;
 }
 
 unsigned CryBoneInfo::sizeofThis()const
@@ -97,7 +97,7 @@ void CryBoneInfo::UpdateHierarchyPhysics(const BONEANIM_CHUNK_DESC* pChunk, unsi
 	// update physics for each bone entity
 	for (; pBoneEntity < pBoneEntityEnd; ++pBoneEntity)
 	{
-		CryBoneInfo* pBone = find_in_map(mapCtrlId, pBoneEntity->ControllerID, (CryBoneInfo*)NULL);
+		CryBoneInfo* pBone = find_in_map(mapCtrlId, pBoneEntity->ControllerID, (CryBoneInfo*)nullptr);
 		if (pBone)
 			pBone->UpdatePhysics(*pBoneEntity, nLodLevel);
 	}
@@ -136,7 +136,7 @@ bool CryBoneInfo::PostInitPhysGeom(ChunkIdToPhysGeomMap& mapChunkIdToPhysGeom, i
 	}
 	else
 	{
-		pPhysGeom = NULL;
+		pPhysGeom = nullptr;
 		return false;
 	}
 }

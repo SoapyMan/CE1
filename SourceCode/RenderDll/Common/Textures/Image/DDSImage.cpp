@@ -303,7 +303,7 @@ void WriteDDS(byte* dat, int wdt, int hgt, int Size, const char* name, EImFormat
 	}
 	fwrite(&ddsh, 1, sizeof(ddsh), fp);
 
-	byte* data = NULL;
+	byte* data = nullptr;
 
 	if (eF == eIF_DDS_RGB8 || eF == eIF_DDS_SIGNED_RGB8 || eF == eIF_DDS_DSDT)
 	{

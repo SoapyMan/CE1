@@ -161,17 +161,17 @@ void CGLRenderer::FreeLibrary()
 	if (m_hLibHandle)
 	{
 		::FreeLibrary((HINSTANCE)m_hLibHandle);
-		m_hLibHandle = NULL;
+		m_hLibHandle = nullptr;
 	}
 	if (m_hLibHandleGDI)
 	{
 		::FreeLibrary((HINSTANCE)m_hLibHandleGDI);
-		m_hLibHandleGDI = NULL;
+		m_hLibHandleGDI = nullptr;
 	}
 
 	// Free OpenGL function.
 #define GL_EXT(name) SUPPORTS##name=0;
-#define GL_PROC(ext,ret,func,parms) func = NULL;
+#define GL_PROC(ext,ret,func,parms) func = nullptr;
 #include "GLFuncs.h"
 #undef GL_EXT
 #undef GL_PROC
@@ -216,7 +216,7 @@ bool CGLRenderer::FindExt(const char* Name)
 	{
 		const char* wglExt = wglGetExtensionsStringARB(m_RContexts[0]->m_hDC);
 		if (wglExt)
-			return (strstr(wglExt, Name) != NULL);
+			return (strstr(wglExt, Name) != nullptr);
 	}
 
 	return false;
@@ -285,7 +285,7 @@ bool CGLRenderer::CheckOGLExtensions(void)
 		else
 		{
 			SUPPORTS_WGL_EXT_swap_control = 0;
-			wglSwapIntervalEXT = NULL;
+			wglSwapIntervalEXT = nullptr;
 			iLog->Log("  ...ignoring WGL_EXT_swap_control\n");
 		}
 
@@ -312,8 +312,8 @@ bool CGLRenderer::CheckOGLExtensions(void)
 		else
 		{
 			SUPPORTS_WGL_3DFX_gamma_control = 0;
-			wglGetDeviceGammaRamp3DFX = NULL;
-			wglSetDeviceGammaRamp3DFX = NULL;
+			wglGetDeviceGammaRamp3DFX = nullptr;
+			wglSetDeviceGammaRamp3DFX = nullptr;
 			iLog->Log("  ...ignoring WGL_3DFX_gamma_control\n");
 		}
 
@@ -461,10 +461,10 @@ bool CGLRenderer::CheckOGLExtensions(void)
 
 	if (!(GetFeatures() & RFT_MULTITEXTURE))
 	{
-		glActiveTextureARB = NULL;
-		glClientActiveTextureARB = NULL;
-		glMultiTexCoord2fARB = NULL;
-		glMultiTexCoord2fvARB = NULL;
+		glActiveTextureARB = nullptr;
+		glClientActiveTextureARB = nullptr;
+		glMultiTexCoord2fARB = nullptr;
+		glMultiTexCoord2fvARB = nullptr;
 
 		m_MaxActiveTexturesARBFixed = 0;
 	}
@@ -648,9 +648,9 @@ bool CGLRenderer::CheckOGLExtensions(void)
 		{
 			SUPPORTS_GL_NV_vertex_array_range = 0;
 			iLog->Log("  ...ignoring GL_NV_vertex_array_range\n");
-			wglAllocateMemoryNV = NULL;
-			glVertexArrayRangeNV = NULL;
-			wglFreeMemoryNV = NULL;
+			wglAllocateMemoryNV = nullptr;
+			glVertexArrayRangeNV = nullptr;
+			wglFreeMemoryNV = nullptr;
 		}
 
 	/////////////////////////////////////////////////////////////////////////////////////
@@ -676,8 +676,8 @@ bool CGLRenderer::CheckOGLExtensions(void)
 		else
 		{
 			SUPPORTS_GL_EXT_compiled_vertex_array = 0;
-			glLockArraysEXT = NULL;
-			glUnlockArraysEXT = NULL;
+			glLockArraysEXT = nullptr;
+			glUnlockArraysEXT = nullptr;
 			iLog->Log("  ...ignoring GL_EXT_compiled_vertex_array.\n");
 		}
 
@@ -1143,7 +1143,7 @@ void CGLRenderer::MakeCurrent()
 		CCGVProgram_GL::m_CurParams[i][3] = -999999;
 	}
 	CVProgram::m_LastVP = 0;
-	CPShader::m_CurRC = NULL;
+	CPShader::m_CurRC = nullptr;
 }
 
 void CGLRenderer::ShareResources(IRenderer* renderer)
@@ -1313,10 +1313,10 @@ HWND CGLRenderer::SetMode(int x, int y, int width, int height, unsigned int cbpp
 	m_deskwidth = trect.right - trect.left;
 	m_deskheight = trect.bottom - trect.top;
 
-	HDC hDC = GetDC(NULL);
+	HDC hDC = GetDC(nullptr);
 	m_deskbpp = GetDeviceCaps(hDC, BITSPIXEL);
 	//  m_deskfreq= GetDeviceCaps( hDC, VREFRESH );
-	ReleaseDC(NULL, hDC);
+	ReleaseDC(nullptr, hDC);
 
 
 	iLog->Log("Desktop settings: %d x %d x %d", m_deskwidth, m_deskheight, m_deskbpp/*,m_deskfreq*/);
@@ -1331,7 +1331,7 @@ HWND CGLRenderer::SetMode(int x, int y, int width, int height, unsigned int cbpp
 		DEVMODE Tmp;
 		ZeroMemory(&Tmp, sizeof(Tmp));
 		Tmp.dmSize = sizeof(Tmp);
-		if (!EnumDisplaySettings(NULL, nummode, &Tmp))
+		if (!EnumDisplaySettings(nullptr, nummode, &Tmp))
 			break;
 	} //nummode
 
@@ -1348,7 +1348,7 @@ HWND CGLRenderer::SetMode(int x, int y, int width, int height, unsigned int cbpp
 		ZeroMemory(&Tmp, sizeof(Tmp));
 		Tmp.dmSize = sizeof(Tmp);
 
-		if (!EnumDisplaySettings(NULL, nummode, &Tmp))
+		if (!EnumDisplaySettings(nullptr, nummode, &Tmp))
 			break;
 
 		m_vidmodes[nummode] = Tmp;
@@ -1357,7 +1357,7 @@ HWND CGLRenderer::SetMode(int x, int y, int width, int height, unsigned int cbpp
 	if (m_numvidmodes == 0)
 	{
 		iLog->Log("Warning: Cannot find at least one video mode available\n");
-		return (NULL);
+		return (nullptr);
 	}
 
 	///////////////////////////////////Find the best video mode
@@ -1397,12 +1397,12 @@ HWND CGLRenderer::SetMode(int x, int y, int width, int height, unsigned int cbpp
 			"CryENGINE", szWinTitle,
 			WS_POPUP | WS_CLIPSIBLINGS,
 			0, 0, width, height,
-			NULL, NULL, hinst, NULL);
+			nullptr, nullptr, hinst, nullptr);
 
 		m_width = m_vidmodes[best_mode].dmPelsWidth;
 		m_height = m_vidmodes[best_mode].dmPelsHeight;
 
-		SetCursor(NULL);
+		SetCursor(nullptr);
 		ShowCursor(FALSE);
 	}
 	else
@@ -1419,10 +1419,10 @@ HWND CGLRenderer::SetMode(int x, int y, int width, int height, unsigned int cbpp
 				wc.cbClsExtra = 4;
 				wc.cbWndExtra = 4;
 				wc.hInstance = hinst;
-				wc.hIcon = NULL;
-				wc.hCursor = NULL;
+				wc.hIcon = nullptr;
+				wc.hCursor = nullptr;
 				wc.hbrBackground = (HBRUSH)(BLACK_BRUSH);
-				wc.lpszMenuName = NULL;
+				wc.lpszMenuName = nullptr;
 				wc.lpszClassName = "CryENGINE";
 
 				RegisterClass(&wc);
@@ -1435,7 +1435,7 @@ HWND CGLRenderer::SetMode(int x, int y, int width, int height, unsigned int cbpp
 				(GetSystemMetrics(SM_CYFULLSCREEN) - height) / 2,
 				GetSystemMetrics(SM_CXDLGFRAME) * 2 + width,
 				GetSystemMetrics(SM_CYCAPTION) + GetSystemMetrics(SM_CXDLGFRAME) * 2 + height,
-				NULL, NULL, hinst, NULL);
+				nullptr, nullptr, hinst, nullptr);
 		}
 
 		DWORD err = GetLastError();
@@ -1471,7 +1471,7 @@ HWND CGLRenderer::SetMode(int x, int y, int width, int height, unsigned int cbpp
 #else
 	if (!win)
 	{
-		return NULL;
+		return nullptr;
 	}
 	SDL_SysWMinfo wmInfo;
 	SDL_VERSION(&wmInfo.version);
@@ -1513,7 +1513,7 @@ int CGLRenderer::_wglExtensionSupported(const char* extension)
 
 	if (wglGetExtensionsStringARB || wglGetExtensionsStringEXT)
 	{
-		static const GLubyte* extensions = NULL;
+		static const GLubyte* extensions = nullptr;
 		const GLubyte* start;
 		GLubyte* where, * terminator;
 
@@ -1734,7 +1734,7 @@ WIN_HWND CGLRenderer::Init(int x, int y, int width, int height, unsigned int cbp
 
 	m_hInst = (HINSTANCE)hinst;
 #ifdef USE_SDL
-	SDL_Window* win = NULL;
+	SDL_Window* win = nullptr;
 #endif
 	if (bReInit)
 	{
@@ -1770,7 +1770,7 @@ WIN_HWND CGLRenderer::Init(int x, int y, int width, int height, unsigned int cbp
 	exr:
 		FreeLibrary();
 		ShutDown();
-		return NULL;
+		return nullptr;
 	}
 	if (!m_RContexts.Num())
 	{
@@ -1840,7 +1840,7 @@ WIN_HWND CGLRenderer::Init(int x, int y, int width, int height, unsigned int cbp
 	while (token)
 	{
 		iLog->LogToFile("  %s\n", token);
-		token = strtok(NULL, " ");
+		token = strtok(nullptr, " ");
 	}
 	iLog->LogToFile("\n");
 #ifndef USE_SDL
@@ -1857,7 +1857,7 @@ WIN_HWND CGLRenderer::Init(int x, int y, int width, int height, unsigned int cbp
 			while (token)
 			{
 				iLog->LogToFile("  %s\n", token);
-				token = strtok(NULL, " ");
+				token = strtok(nullptr, " ");
 			}
 			iLog->LogToFile("\n");
 		}
@@ -2141,9 +2141,9 @@ bool CGLRenderer::CreateRContext(SRendContext* rc, WIN_HDC Glhdc, WIN_HGLRC hGLr
 		wc.cbWndExtra = 4;
 		wc.hInstance = m_hInst;
 		wc.hIcon = 0;
-		wc.hCursor = NULL;
+		wc.hCursor = nullptr;
 		wc.hbrBackground = (HBRUSH)(BLACK_BRUSH);
-		wc.lpszMenuName = NULL;
+		wc.lpszMenuName = nullptr;
 		wc.lpszClassName = "FAKE_WINDOW";
 
 		RegisterClass(&wc);
@@ -2155,10 +2155,10 @@ bool CGLRenderer::CreateRContext(SRendContext* rc, WIN_HDC Glhdc, WIN_HGLRC hGLr
 			CW_USEDEFAULT,		// initial y pos
 			CW_USEDEFAULT,		// initial x size
 			CW_USEDEFAULT,		// initial x size
-			NULL,			// parent window handle
-			NULL,			// window menu handle
+			nullptr,			// parent window handle
+			nullptr,			// window menu handle
 			m_hInst,			// program instance handle
-			NULL);			// creation params
+			nullptr);			// creation params
 
 		if (hWnd)
 		{
@@ -2202,7 +2202,7 @@ bool CGLRenderer::CreateRContext(SRendContext* rc, WIN_HDC Glhdc, WIN_HGLRC hGLr
 						m_Features |= RFT_SUPPORTFSAA;
 				}
 				// make no rendering context current
-				wglMakeCurrent(NULL, NULL);
+				wglMakeCurrent(nullptr, nullptr);
 
 				// Destroy the rendering context...
 				wglDeleteContext(hGLRC);
@@ -2349,8 +2349,8 @@ bool CGLRenderer::SetCurrentContext(WIN_HWND hWnd)
 			CCGVProgram_GL::m_CurParams[i][2] = -999999;
 			CCGVProgram_GL::m_CurParams[i][3] = -999999;
 		}
-		CVProgram::m_LastVP = NULL;
-		CPShader::m_CurRC = NULL;
+		CVProgram::m_LastVP = nullptr;
+		CPShader::m_CurRC = nullptr;
 	}
 
 	return true;
@@ -2373,11 +2373,11 @@ bool CGLRenderer::CreateContext(WIN_HWND hWnd, bool bAllowFSAA)
 #ifdef WIN32 // FIX_LINUX
 	rc->m_hDC = GetDC((HWND)hWnd);
 #endif
-	rc->m_hRC = NULL;
+	rc->m_hRC = nullptr;
 	int cbpp = m_cbpp;
 	int zbpp = m_zbpp;
 	int sbpp = m_sbpp;
-	bool bRes = CreateRContext(rc, NULL, NULL, cbpp, zbpp, sbpp, bAllowFSAA);
+	bool bRes = CreateRContext(rc, nullptr, nullptr, cbpp, zbpp, sbpp, bAllowFSAA);
 	if (bRes)
 	{
 		for (i = 0; i < 96; i++)
@@ -2387,8 +2387,8 @@ bool CGLRenderer::CreateContext(WIN_HWND hWnd, bool bAllowFSAA)
 			CCGVProgram_GL::m_CurParams[i][2] = -999999;
 			CCGVProgram_GL::m_CurParams[i][3] = -999999;
 		}
-		CVProgram::m_LastVP = NULL;
-		CPShader::m_CurRC = NULL;
+		CVProgram::m_LastVP = nullptr;
+		CPShader::m_CurRC = nullptr;
 	}
 	return bRes;
 }
@@ -2405,12 +2405,12 @@ bool CGLRenderer::DeleteContext(WIN_HWND hWnd)
 	if (i == m_RContexts.Num())
 		return false;
 	SRendContext* rc = m_RContexts[i];
-	pwglMakeCurrent(NULL, NULL);
+	pwglMakeCurrent(nullptr, nullptr);
 
 	if (rc->m_hRC)
 	{
 		pwglDeleteContext(rc->m_hRC);
-		rc->m_hRC = NULL;
+		rc->m_hRC = nullptr;
 	}
 
 	if (rc->m_hDC)
@@ -2418,7 +2418,7 @@ bool CGLRenderer::DeleteContext(WIN_HWND hWnd)
 #ifdef WIN32 // FIX_LINUX
 		ReleaseDC(rc->m_Glhwnd, rc->m_hDC);
 #endif
-		rc->m_hDC = NULL;
+		rc->m_hDC = nullptr;
 	}
 	delete rc;
 	m_RContexts.Remove(i, 1);
@@ -2498,7 +2498,7 @@ void CGLRenderer::ShutDown(bool bReInit)
 		// TODO: AMD64 port: find 64-bit CG
 		cgDestroyContext(m_CGContext);
 #endif
-		m_CGContext = NULL;
+		m_CGContext = nullptr;
 	}
 
 
@@ -2534,7 +2534,7 @@ void CGLRenderer::ShutDown(bool bReInit)
 	if (m_vidmodes)
 	{
 		delete[] m_vidmodes;
-		m_vidmodes = NULL;
+		m_vidmodes = nullptr;
 	}
 }
 
@@ -2587,7 +2587,7 @@ DLL_EXPORT IRenderer* PackageRenderConstructor(int argc, char* argv[], SCryRende
 
 void* gGet_D3DDevice()
 {
-	return NULL;
+	return nullptr;
 }
 void* gGet_glReadPixels()
 {

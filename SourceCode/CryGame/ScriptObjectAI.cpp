@@ -810,7 +810,7 @@ int CScriptObjectAI::RegisterWithAI(IFunctionHandler *pH)
 
 	pH->GetParam(1,nID);
 	pEntity=m_pEntitySystem->GetEntity(nID);
-	if(pEntity==NULL)
+	if(pEntity==nullptr)
 	{
 		TRACE("CScriptObjectAI::RegisterWithAI() entity in nil");
 		return pH->EndFunctionNull();
@@ -1039,7 +1039,7 @@ int CScriptObjectAI::RegisterWithAI(IFunctionHandler *pH)
 						IEntity *pOwnerEntity;
 						pH->GetParam(3,ownerID);
 						pOwnerEntity=m_pEntitySystem->GetEntity(ownerID);
-						if(pOwnerEntity==NULL)
+						if(pOwnerEntity==nullptr)
 						{
 							m_pLog->Log("\002 CScriptObjectAI::RegisterWithAI() Owner entity of attribute AI %s cannot be found",pEntity->GetName());
 							return pH->EndFunction();
@@ -1087,14 +1087,14 @@ int CScriptObjectAI::AIBind(IFunctionHandler *pH)
 
 	pH->GetParam(1,nID);
 	pParent=m_pEntitySystem->GetEntity(nID);
-	if(pParent==NULL)
+	if(pParent==nullptr)
 	{
 		TRACE("CScriptObjectAI::AIBind() parent in nil");
 		return pH->EndFunctionNull();
 	}
 	pH->GetParam(2,nID);
 	pChild=m_pEntitySystem->GetEntity(nID);
-	if(pChild==NULL)
+	if(pChild==nullptr)
 	{
 		TRACE("CScriptObjectAI::AIBind() chilt in nil");
 		return pH->EndFunctionNull();
@@ -1125,7 +1125,7 @@ CHECK_PARAMETERS(4);
 	Vec3d angl = oVec.Get();
 
 	pParent=m_pEntitySystem->GetEntity(nID);
-	if(pParent==NULL)
+	if(pParent==nullptr)
 	{
 		TRACE("CScriptObjectAI::CreateBoundObject() entity in nil");
 		return pH->EndFunctionNull();
@@ -1265,7 +1265,7 @@ int CScriptObjectAI::SetTheSkip(IFunctionHandler * pH)
 	IEntity *pEntity = m_pEntitySystem->GetEntity(nID);
 	if (!pEntity)
 	{
-		m_pAISystem->SetTheSkip( NULL );
+		m_pAISystem->SetTheSkip( nullptr );
 		return pH->EndFunction();
 	}
 

@@ -18,7 +18,7 @@
 CSDLKeyboard::CSDLKeyboard()
 {
 	m_bExclusiveMode = false;
-	m_pSystem = NULL;
+	m_pSystem = nullptr;
 	m_modifiers = 0;
 }
 
@@ -525,7 +525,7 @@ void CSDLKeyboard::ClearKey(int p_key)
 	if (p_key < 256 && p_key >= 0)
 	{
 		m_cOldKeysState[p_key] = m_cKeysState[p_key];
-		m_cKeysState[p_key] = NULL;
+		m_cKeysState[p_key] = 0;
 	}
 }
 
@@ -548,7 +548,7 @@ const char* CSDLKeyboard::GetKeyPressedName()
 {
 	int key = GetKeyPressedCode();
 	if (key == -1)
-		return (NULL);
+		return (nullptr);
 
 	return m_pInput->GetKeyName(key);
 }
@@ -565,7 +565,7 @@ const char* CSDLKeyboard::GetKeyDownName()
 {
 	int key = GetKeyDownCode();
 	if (key == -1)
-		return (NULL);
+		return (nullptr);
 
 	return m_pInput->GetKeyName(key);
 }

@@ -38,7 +38,7 @@ public:
 	void Init(_IEndpointUser* pParent, bool bSecondary) { m_pParent = pParent; m_bSecondary = bSecondary; }
 	bool SendUnreliable(CStream& stmData);
 	bool SendReliable(CStream& stmData);
-	void Update(unsigned int nTime, unsigned char cFrameType = 0, CStream* pStm = NULL);
+	void Update(unsigned int nTime, unsigned char cFrameType = 0, CStream* pStm = nullptr);
 	void SetRate(unsigned int nBytePerSec);
 	void Dump();
 	unsigned int GetRemoteTimestamp(unsigned int nTime) {
@@ -67,7 +67,7 @@ private:
 	void HandleAckTimeout();
 	void HandleDataFrame(CTPData& f);
 	void HandleTimeout(LONG nOldestFrame);
-	void SendFrame(LONG nType, LONG nFrameNum, LONG nFrameExpected, CStream* pUnreliable = NULL, bool bUnreliable = false);
+	void SendFrame(LONG nType, LONG nFrameNum, LONG nFrameExpected, CStream* pUnreliable = nullptr, bool bUnreliable = false);
 	void StopTimer(LONG nIndex);
 	void SetTimer(LONG nIndex);
 	void StopAckTimer();

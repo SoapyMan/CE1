@@ -49,7 +49,7 @@ bool COGGDecoder::Open(const char* pszFilename)
 	Callbacks.seek_func = COGGDecoderInstance::SeekFile;
 	Callbacks.close_func = COGGDecoderInstance::CloseFile;
 	Callbacks.tell_func = COGGDecoderInstance::TellFile;
-	if (ov_open_callbacks(&m_FileAccess, &TestOVFile, NULL, 0, Callbacks) != 0)
+	if (ov_open_callbacks(&m_FileAccess, &TestOVFile, nullptr, 0, Callbacks) != 0)
 		return false;
 	int nSeekable = ov_seekable(&TestOVFile);
 	m_FileInfo.sFilename = pszFilename;
@@ -89,7 +89,7 @@ bool COGGDecoder::Close()
 	if (!m_FileAccess.pFile)
 		return false;
 	m_FileAccess.pPak->FClose(m_FileAccess.pFile);
-	m_FileAccess.pFile = NULL;
+	m_FileAccess.pFile = nullptr;
 	return true;
 }
 
@@ -151,7 +151,7 @@ COGGDecoderInstance::COGGDecoderInstance(COGGDecoder* pDecoder)
 	Callbacks.seek_func = SeekFile;
 	Callbacks.close_func = CloseFile;
 	Callbacks.tell_func = TellFile;
-	if (ov_open_callbacks(&(m_pDecoder->m_FileAccess), &m_OVFile, NULL, 0, Callbacks) != 0)
+	if (ov_open_callbacks(&(m_pDecoder->m_FileAccess), &m_OVFile, nullptr, 0, Callbacks) != 0)
 		MTRACE("Warning: [COGGDecoderInstance::c_tor()] ov_open() failed !");
 	// Seek0 is quite expensive for OGGs so we do a simpler version here instead...
 	m_nPos = 0;

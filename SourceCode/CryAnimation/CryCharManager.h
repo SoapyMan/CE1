@@ -62,7 +62,7 @@ public:
 	//! All the possible values for nCommand are in the CryAnimationScriptCommands.h
 	//! file in the CryAnimationScriptCommandEnum enumeration. All the parameter/result
 	//! structures are also there.
-	bool ExecScriptCommand(int nCommand, void* pParams = NULL, void* pResult = NULL);
+	bool ExecScriptCommand(int nCommand, void* pParams = nullptr, void* pResult = nullptr);
 
 	// should be called every frame
 	void Update();
@@ -101,7 +101,7 @@ protected:
 	void CleanupBodyCache();
 
 	// Finds a cached or creates a new CryCharBody instance and returns it
-	// returns NULL if the construction failed
+	// returns nullptr if the construction failed
 	CryCharBody* FetchBody(const string& strFileName);
 
 	// locks or unlocks the given body if needed, depending on the hint and console variables

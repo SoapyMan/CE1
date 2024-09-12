@@ -48,11 +48,11 @@ struct SFileVersion
 
 		if (!(p = strtok(t, "."))) return;
 		v[3] = atoi(p);
-		if (!(p = strtok(NULL, "."))) return;
+		if (!(p = strtok(nullptr, "."))) return;
 		v[2] = atoi(p);
-		if (!(p = strtok(NULL, "."))) return;
+		if (!(p = strtok(nullptr, "."))) return;
 		v[1] = atoi(p);
-		if (!(p = strtok(NULL, "."))) return;
+		if (!(p = strtok(nullptr, "."))) return;
 		v[0] = atoi(p);
 	}
 

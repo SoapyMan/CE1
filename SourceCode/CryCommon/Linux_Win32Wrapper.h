@@ -204,7 +204,7 @@ public:
 		, time_write(0)
 		, size(0)
 		, m_LastIndex(-1)
-		, m_Dir(NULL)
+		, m_Dir(nullptr)
 	{
 		memset(name, '0', 256);
 	}

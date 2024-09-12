@@ -56,7 +56,7 @@ CXDebugKeyboard::CXDebugKeyboard()
   memset(m_cKeysState, 0, sizeof(m_cKeysState));
 	memset(m_cOldKeysState, 0, sizeof(m_cOldKeysState));
   memset(m_bKeys, 0, sizeof(m_bKeys));
-  m_hDebugKeyboard = NULL;
+  m_hDebugKeyboard = nullptr;
   m_pInput = 0;
 }
 
@@ -115,7 +115,7 @@ bool CXDebugKeyboard::Init(CInput * pInput, ILog *pLog)
 
           m_hDebugKeyboard  = XInputOpen( XDEVICE_TYPE_DEBUG_KEYBOARD, i, 
                                             XDEVICE_NO_SLOT, &pollValues );
-	        if (m_hDebugKeyboard != NULL)
+	        if (m_hDebugKeyboard != nullptr)
 	        {
 		        sprintf(szBuffer, "INPUT: Keyboard successfully opened\n");
 		        OutputDebugString(szBuffer);
@@ -681,7 +681,7 @@ void CXDebugKeyboard::Update()
 
 			m_hDebugKeyboard = XInputOpen(XDEVICE_TYPE_DEBUG_KEYBOARD, NumToPort(i), XDEVICE_NO_SLOT, &pollValues);
 
-			if (m_hDebugKeyboard != NULL)
+			if (m_hDebugKeyboard != nullptr)
 			{
 				sprintf(szBuffer, "INPUT: Keyboard %i successfully opened\n", i);
 				OutputDebugString(szBuffer);
@@ -705,7 +705,7 @@ void CXDebugKeyboard::Update()
 
 			// Close the controller
 			XInputClose(m_hDebugKeyboard);
-			m_hDebugKeyboard = NULL;
+			m_hDebugKeyboard = nullptr;
 		}
 	}
 
@@ -875,7 +875,7 @@ void CXDebugKeyboard::ShutDown()
 	if (m_hDebugKeyboard)
 	{
 		XInputClose(m_hDebugKeyboard);
-		m_hDebugKeyboard = NULL;
+		m_hDebugKeyboard = nullptr;
 	}
 }
 
@@ -971,7 +971,7 @@ void CXDebugKeyboard::ClearKey(int p_key)
 	unsigned char cDik=XKEY2DIK(p_key);
 #ifndef PS2
 	m_cOldKeysState[cDik]=m_cKeysState[cDik];
-	m_cKeysState[cDik]=NULL;
+	m_cKeysState[cDik]=nullptr;
 #else
 	
 	//PS2 SPECIFIC CODE
@@ -1008,7 +1008,7 @@ const char *CXDebugKeyboard::GetKeyPressedName()
 {
 	int key=GetKeyPressedCode();
 	if (key==-1) 
-    return (NULL);
+    return (nullptr);
 
 	return m_pInput->GetKeyName(key);
 }
@@ -1027,7 +1027,7 @@ const char *CXDebugKeyboard::GetKeyDownName()
 {
 	int key=GetKeyDownCode();
 	if (key==-1) 
-    return (NULL);
+    return (nullptr);
 
 	return m_pInput->GetKeyName(key);
 

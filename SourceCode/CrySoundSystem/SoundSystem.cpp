@@ -227,7 +227,7 @@ CSoundSystem::CSoundSystem(ISystem* pSystem, HWND hWnd) : CSoundSystemCommon(pSy
 
 	m_fSFXVolume = 1.0f;
 	m_fMusicVolume = 1.0f;
-	m_pVisArea = NULL;
+	m_pVisArea = nullptr;
 
 	m_nSpeakerConfig = -1; //force to set
 	m_bPause = false;
@@ -243,7 +243,7 @@ CSoundSystem::CSoundSystem(ISystem* pSystem, HWND hWnd) : CSoundSystemCommon(pSy
 
 	m_nMinSoundPriority = 0;
 
-	m_pDSPUnitSFXFilter = NULL;
+	m_pDSPUnitSFXFilter = nullptr;
 
 	m_fDirAttCone = 0.0f;
 
@@ -267,7 +267,7 @@ CSoundSystem::CSoundSystem(ISystem* pSystem, HWND hWnd) : CSoundSystemCommon(pSy
 	}
 
 #if !defined(_DEBUG)// || defined(WIN64)
-	FSOUND_SetMemorySystem(NULL, NULL, CrySound_Alloc, CrySound_Realloc, CrySound_Free);
+	FSOUND_SetMemorySystem(nullptr, 0, CrySound_Alloc, CrySound_Realloc, CrySound_Free);
 #endif
 
 	m_pILog->Log("------------------------------------------CRYSOUND VERSION=%f\n", FSOUND_GetVersion());
@@ -483,7 +483,7 @@ CSoundSystem::~CSoundSystem()
 
 	if (m_pDSPUnitSFXFilter)
 		FSOUND_DSP_Free(m_pDSPUnitSFXFilter);
-	m_pDSPUnitSFXFilter = NULL;
+	m_pDSPUnitSFXFilter = nullptr;
 
 	if (m_bOK)
 		FSOUND_Close();
@@ -705,15 +705,15 @@ void CSoundSystem::Update()
 	bool bWasInside = m_bInside;
 	m_bInside = false;
 	RecomputeSoundOcclusion(true, false);
-	m_bInside = (m_pVisArea != NULL);
+	m_bInside = (m_pVisArea != nullptr);
 
 	/*
 	if (bWasInside!=m_bInside)
 	{
 		if (m_bInside)
-			SetEaxListenerEnvironment(m_EAXIndoor.nPreset, (m_EAXIndoor.nPreset==-1) ? &m_EAXIndoor.EAX : NULL, FLAG_SOUND_INDOOR);
+			SetEaxListenerEnvironment(m_EAXIndoor.nPreset, (m_EAXIndoor.nPreset==-1) ? &m_EAXIndoor.EAX : nullptr, FLAG_SOUND_INDOOR);
 		else
-			SetEaxListenerEnvironment(m_EAXOutdoor.nPreset, (m_EAXOutdoor.nPreset==-1) ? &m_EAXOutdoor.EAX : NULL, FLAG_SOUND_OUTDOOR);
+			SetEaxListenerEnvironment(m_EAXOutdoor.nPreset, (m_EAXOutdoor.nPreset==-1) ? &m_EAXOutdoor.EAX : nullptr, FLAG_SOUND_OUTDOOR);
 	}
 	*/
 
@@ -1193,13 +1193,13 @@ ISound* CSoundSystem::LoadSound(const char* szFile, int flags)
 	GUARD_HEAP;
 	FUNCTION_PROFILER(GetSystem(), PROFILE_SOUND);
 
-	CSound* pSound = NULL;
+	CSound* pSound = nullptr;
 
 	if (!szFile || (!szFile[0]))
-		return (NULL);
+		return (nullptr);
 
 	//if (!strlen(szFile)) 
-	//	return (NULL);
+	//	return (nullptr);
 
 	if (flags & FLAG_SOUND_3D)	// make all 3d sounds use the sw-attenuation
 		flags |= FLAG_SOUND_RADIUS;
@@ -1218,7 +1218,7 @@ ISound* CSoundSystem::LoadSound(const char* szFile, int flags)
 			if (pSB->GetProps().nFlags & FLAG_SOUND_2D)
 			{
 				m_pILog->Log("\001 [ERROR] trying to load the same sound buffer file as 2d and 3d sound (%s)", szFile);
-				return (NULL);
+				return (nullptr);
 			}
 		}
 		else
@@ -1227,7 +1227,7 @@ ISound* CSoundSystem::LoadSound(const char* szFile, int flags)
 				if (pSB->GetProps().nFlags & FLAG_SOUND_3D)
 				{
 					m_pILog->Log("\001 [ERROR] trying to load the same sound buffer file as 2d and 3d sound (%s)", szFile);
-					return (NULL);
+					return (nullptr);
 				}
 			}
 
@@ -1247,7 +1247,7 @@ ISound* CSoundSystem::LoadSound(const char* szFile, int flags)
 	if (!(flags & FLAG_SOUND_LOAD_SYNCHRONOUSLY))
 	{
 		size_t len = strlen(szFile) - 1;
-		const char* szExt = NULL;
+		const char* szExt = nullptr;
 		while (len)
 		{
 			if (szFile[len] == '.')
@@ -1261,7 +1261,7 @@ ISound* CSoundSystem::LoadSound(const char* szFile, int flags)
 		if (szExt && (stricmp(szExt, ".ogg") == 0) && (!(flags & FLAG_SOUND_STREAM)))
 		{
 			m_pILog->Log("\001 WARNING - THE FILE %s is a streaming sound but there is an attempt to decompress it into memory-it will not be loaded", szFile);
-			return (NULL);
+			return (nullptr);
 		}
 	}
 
@@ -1293,7 +1293,7 @@ void	CSoundSystem::RecomputeSoundOcclusion(bool bRecomputeListener, bool bForceR
 	GUARD_HEAP;
 	if (bReset)
 	{
-		m_pVisArea = NULL;
+		m_pVisArea = nullptr;
 		return;
 	}
 	if (m_nMuteRefCnt > 0)
@@ -1305,7 +1305,7 @@ void	CSoundSystem::RecomputeSoundOcclusion(bool bRecomputeListener, bool bForceR
 	if (p3dEngine)
 	{
 		//check where the listener is 	
-		IVisArea* pCurrArea = NULL;
+		IVisArea* pCurrArea = nullptr;
 		if (bRecomputeListener)
 		{
 			Vec3_tpl<float> vPos = m_cCam.GetPos();
@@ -1386,7 +1386,7 @@ void CSoundSystem::RemoveReference(CSound* cs)
 //////////////////////////////////////////////////////////////////////
 ISound* CSoundSystem::GetSound(int soundId)
 {
-	return (NULL);
+	return (nullptr);
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -1446,12 +1446,12 @@ void CSoundSystem::SetListener(const CCamera& cCam, const Vec3d& vVel)
 		fVel[1] = vTempVel.z;
 		fVel[2] = vTempVel.y;
 
-		//FSOUND_3D_Listener_SetAttributes(pos, NULL, 0, 0, 1.0f, 0, 1.0f, 0);
+		//FSOUND_3D_Listener_SetAttributes(pos, nullptr, 0, 0, 1.0f, 0, 1.0f, 0);
 		FSOUND_3D_Listener_SetAttributes(pos, fVel, FVec1.x, FVec1.z, FVec1.y, TVec1.x, TVec1.z, TVec1.y);
 	}
 	else
 	{
-		FSOUND_3D_Listener_SetAttributes(pos, NULL, FVec1.x, FVec1.z, FVec1.y, TVec1.x, TVec1.z, TVec1.y);
+		FSOUND_3D_Listener_SetAttributes(pos, nullptr, FVec1.x, FVec1.z, FVec1.y, TVec1.x, TVec1.z, TVec1.y);
 	};
 
 	m_vPos = vPos;
@@ -1601,11 +1601,11 @@ bool CSoundSystem::SetEaxListenerEnvironment(int nPreset, const SoundReverbPrope
 	//	nFlags=FLAG_SOUND_INDOOR | FLAG_SOUND_OUTDOOR;
 
 	/*
-	bool bIndoor=(m_pVisArea!=NULL);
+	bool bIndoor=(m_pVisArea!=nullptr);
 	bool bIndoor=false;
 	I3DEngine	*p3dEngine=m_pISystem->GetI3DEngine();
 	if (p3dEngine)
-		bIndoor=p3dEngine->GetVisAreaFromPos(m_cCam.GetPos())!=NULL;
+		bIndoor=p3dEngine->GetVisAreaFromPos(m_cCam.GetPos())!=nullptr;
 	*/
 
 	bool bSet = false;

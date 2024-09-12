@@ -7,7 +7,7 @@
 #include "StatCGFCompiler\StatCGFCompiler.h"
 #include "ResourceCompilerPC.h"
 
-IRCLog* g_pLog = NULL;
+IRCLog* g_pLog = nullptr;
 
 void LogWarning(const char* szFormat, ...)
 {

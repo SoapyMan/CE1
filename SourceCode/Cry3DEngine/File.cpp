@@ -40,10 +40,10 @@ ICryPak* CXFile::m_pCryPak = 0;
 CXFile::CXFile(struct ICryPak* pCryPak)
 {
 	m_pCryPak = pCryPak;
-	m_szFileStart = NULL;
+	m_szFileStart = nullptr;
 	m_nFileSize = 0;
 	m_pCurrPos = 0;
-	m_pEndOfFile = NULL;
+	m_pEndOfFile = nullptr;
 	m_sLoadedFileName[0] = 0;
 }
 
@@ -79,12 +79,12 @@ void CXFile::FClose()
 	if (m_szFileStart)
 	{
 		delete[] m_szFileStart;
-		m_szFileStart = NULL;
+		m_szFileStart = nullptr;
 	}
 
-	m_pCurrPos = NULL;
+	m_pCurrPos = nullptr;
 	m_nFileSize = 0;
-	m_pEndOfFile = NULL;
+	m_pEndOfFile = nullptr;
 	m_sLoadedFileName[0] = 0;
 }
 
@@ -117,7 +117,7 @@ char* CXFile::GetExtension(const char* filename)
 		src--;
 	}
 
-	return (NULL);
+	return (nullptr);
 }
 
 //remove extension from filename
@@ -204,15 +204,15 @@ int CXFile::GetLength(const char* filename)
 #ifdef WIN32
 
 	HANDLE status1 = CreateFile(pFileName1,GENERIC_READ,FILE_SHARE_READ,
-		NULL,OPEN_EXISTING,FILE_FLAG_SEQUENTIAL_SCAN,NULL);
+		nullptr,OPEN_EXISTING,FILE_FLAG_SEQUENTIAL_SCAN,nullptr);
 
 	HANDLE status2 = CreateFile(pMasterFile,GENERIC_READ,FILE_SHARE_READ,
-		NULL,OPEN_EXISTING,FILE_FLAG_SEQUENTIAL_SCAN,NULL);
+		nullptr,OPEN_EXISTING,FILE_FLAG_SEQUENTIAL_SCAN,nullptr);
 
 	FILETIME writetime1,writetime2;
 
-	GetFileTime(status1,NULL,NULL,&writetime1);
-	GetFileTime(status2,NULL,NULL,&writetime2);
+	GetFileTime(status1,nullptr,nullptr,&writetime1);
+	GetFileTime(status2,nullptr,nullptr,&writetime2);
 
   CloseHandle(status1);
   CloseHandle(status2);
@@ -241,12 +241,12 @@ int CXFile::GetLength(const char* filename)
 #ifdef WIN32
 
 	HANDLE status1 = CreateFile(pFileName1,GENERIC_READ,FILE_SHARE_READ,
-		NULL,OPEN_EXISTING,FILE_FLAG_SEQUENTIAL_SCAN,NULL);
+		nullptr,OPEN_EXISTING,FILE_FLAG_SEQUENTIAL_SCAN,nullptr);
 
 	FILETIME writetime1;
   memset(&writetime1,0,sizeof(writetime1));
 
-	GetFileTime(status1,NULL,NULL,&writetime1);
+	GetFileTime(status1,nullptr,nullptr,&writetime1);
 
   CloseHandle(status1);
 

@@ -16,8 +16,13 @@ struct IWeakScriptObject;
 struct IScriptObject;
 struct ISystem;
 
-#define HSCRIPT void*
-#define HSCRIPTFUNCTION unsigned int
+using HSCRIPT = void*;
+using HSCRIPTFUNCTION = unsigned int;
+using HTAG = int;
+using USER_DATA = ULONG_PTR;
+
+static const int HSCRIPT_NULL = 0;
+
 enum {
 	//## [Sergiy] this is the same as LUA_NOREF; I think this is better to use since 
 	//## in LUA documentation only LUA_NOREF(-2) and LUA_REFNIL (-1) are described as
@@ -25,9 +30,8 @@ enum {
 	//## that 0 is invalid reference value for LUA
 	INVALID_SCRIPT_FUNCTION = -2
 };
-#define THIS_PTR void*
-#define HTAG int
-#define USER_DATA ULONG_PTR			//## AMD Port
+
+
 
 typedef int(*SCRIPT_FUNCTION)(HSCRIPT hScript);
 typedef int HBREAKPOINT;
@@ -157,7 +161,7 @@ struct IScriptSystem
 	/*!	create a global IScriptObject
 		@param sName the name of the object into the script scope
 		@param pThis pointer to the C++ class that will receive a call from the script
-			[this parameter can be NULL]
+			[this parameter can be nullptr]
 		@return a pointer to the created object
 	*/
 	virtual IScriptObject* CreateGlobalObject(const char* sName) = 0;
@@ -247,7 +251,7 @@ struct IScriptSystem
 		script variable but his value is stored into a c++ defined memory block
 		@param sKey name of the value
 		@param pVal pointer to the C++ variable tha will store the value
-		@return if succeded an handle to the tagged value else NULL
+		@return if succeded an handle to the tagged value else nullptr
 	*/
 	//##@{
 	virtual HTAG CreateTaggedValue(const char* sKey, int* pVal) = 0;
@@ -572,6 +576,8 @@ struct IWeakScriptObject
 //   to return an optiona result value to the script.
 struct IFunctionHandler
 {
+	using THIS_PTR = void*;
+
 	//DOC-IGNORE-BEGIN
 	/*! internal use */
 	virtual void __Attach(HSCRIPT hScript) = 0;
@@ -667,7 +673,7 @@ class _SmartScriptObject
 public:
 	_SmartScriptObject()
 	{
-		m_pSO = NULL;
+		m_pSO = nullptr;
 	}
 	explicit _SmartScriptObject(IScriptSystem* pSS, IScriptObject* p)
 	{
@@ -715,7 +721,7 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	bool operator !() const
 	{
-		return m_pSO == NULL;
+		return m_pSO == nullptr;
 	};
 	bool  operator ==(const IScriptObject* p2) const
 	{

@@ -151,7 +151,7 @@ void CrySizerImpl::clear()
 	m_arrNames.push_back("TOTAL"); // the default name, with index 0
 	m_stackNames.clear();
 	m_stackNames.push_back(0);
-	m_LastObject.pId = NULL;
+	m_LastObject.pId = nullptr;
 }
 
 // hash function for an address; returns value 0..1<<g_nHashSize

@@ -314,7 +314,7 @@ void CSimpleLeafBuffer::CreateLeafBuffer(CIndexedMesh* pTriData, int Stripify, b
 			if (!mi->nNumIndices)
 			{
 				mi->pRE->Release();
-				mi->pRE = NULL;
+				mi->pRE = nullptr;
 			}
 		}
 		GetIndices().Free();
@@ -406,7 +406,7 @@ void CSimpleLeafBuffer::CompactBuffer(struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F* _
 	int vert_num_before = *_vcount;
 
 	CBasis* tmp_basis = new CBasis[*_vcount];
-	SMRendTexVert* tmp_lmtc = NULL;
+	SMRendTexVert* tmp_lmtc = nullptr;
 	struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F* tmp_buff = new struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F[*_vcount];
 	unsigned int tmp_count = 0;
 	pindices->Clear();
@@ -753,7 +753,7 @@ bool CSimpleLeafBuffer::CreateTangBuffer(CBasis* pBasises)
 
 	  // Temporary basis vectors 
 	//  delete [] m_pBasises;
-	//  m_pBasises = NULL;
+	//  m_pBasises = nullptr;
 	return true;
 }
 

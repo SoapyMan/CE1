@@ -12,7 +12,7 @@ CPCMDecoder::CPCMDecoder(IMusicSystem* pMusicSystem) : m_b44KHz(true)
 	CRYASSERT(pSystem);
 	m_pPak = pSystem->GetIPak();
 	CRYASSERT(m_pPak);
-	m_pFile = NULL;
+	m_pFile = nullptr;
 }
 
 CPCMDecoder::~CPCMDecoder()
@@ -100,7 +100,7 @@ bool CPCMDecoder::Close()
 	if (!m_pFile)
 		return false;
 	m_pPak->FClose(m_pFile);
-	m_pFile = NULL;
+	m_pFile = nullptr;
 	return true;
 }
 

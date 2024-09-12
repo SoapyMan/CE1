@@ -308,7 +308,7 @@ protected:
 
 template <bool isOpen, typename FixedPointType>
 TBSplineVec3dPacked<isOpen, FixedPointType>::TBSplineVec3dPacked(void) :
-	m_pData(NULL)
+	m_pData(nullptr)
 {
 }
 
@@ -330,7 +330,7 @@ TBSplineVec3dPacked<isOpen, FixedPointType>::TBSplineVec3dPacked(const TBSplineV
 		memcpy(m_pData, that.m_pData, that.getRawDataSize());
 	}
 	else
-		m_pData = NULL;
+		m_pData = nullptr;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -365,7 +365,7 @@ void TBSplineVec3dPacked<isOpen, FixedPointType>::clear()
 	if (m_pData)
 	{
 		delete[]m_pData;
-		m_pData = NULL;
+		m_pData = nullptr;
 	}
 
 	this->m_nDegree = 1;

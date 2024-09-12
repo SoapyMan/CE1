@@ -123,7 +123,7 @@ protected:
 	 * Before failing, a ImageFile subclass should call set_error to
 	 * set the code and detail.
 	 */
-	static void mfSet_error(EImFileError error, char* detail = NULL);
+	static void mfSet_error(EImFileError error, char* detail = nullptr);
 
 	/**
 	 * Set the width and height. This will also allocate the 'image'

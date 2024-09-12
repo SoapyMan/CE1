@@ -65,7 +65,7 @@ bool gbRgb;
 
 int SShader::GetTexId()
 {
-	STexPic* tp = (STexPic*)GetBaseTexture(NULL, NULL);
+	STexPic* tp = (STexPic*)GetBaseTexture(nullptr, nullptr);
 	if (!tp)
 		return -1;
 	return tp->GetTextureID();
@@ -168,7 +168,7 @@ void SShader::mfFree()
 	if (m_Deforms)
 	{
 		delete m_Deforms;
-		m_Deforms = NULL;
+		m_Deforms = nullptr;
 	}
 	for (i = 0; i < m_HWTechniques.Num(); i++)
 	{
@@ -187,7 +187,7 @@ void SShader::mfFree()
 	if (m_Templates)
 	{
 		m_Templates->mfFree(this);
-		m_Templates = NULL;
+		m_Templates = nullptr;
 	}
 	if (m_ShaderGenParams)
 	{
@@ -202,7 +202,7 @@ void SShader::mfFree()
 	m_Flags &= ~(EF_POLYGONOFFSET | EF_HASVSHADER);
 	m_Flags3 &= ~(EF3_CLIPPLANE | EF3_NODRAW);
 	m_DLDFlags = 0;
-	m_DefaultVProgram = NULL;
+	m_DefaultVProgram = nullptr;
 }
 
 SShader::~SShader()
@@ -211,7 +211,7 @@ SShader::~SShader()
 
 	mfFree();
 
-	SShader::m_Shaders_known[m_Id] = NULL;
+	SShader::m_Shaders_known[m_Id] = nullptr;
 }
 
 #ifdef WIN64
@@ -291,7 +291,7 @@ SShader& SShader::operator = (const SShader& src)
 		}
 	}
 
-	m_Templates = NULL;
+	m_Templates = nullptr;
 
 	return *this;
 }
@@ -303,12 +303,12 @@ SShader& SShader::operator = (const SShader& src)
 SShaderPassHW::SShaderPassHW()
 {
 	m_ePassType = eSHP_General;
-	m_VProgram = NULL;
-	m_FShader = NULL;
-	m_Deforms = NULL;
-	m_CGFSParamsNoObj = NULL;
-	m_CGFSParamsObj = NULL;
-	m_MatrixOps = NULL;
+	m_VProgram = nullptr;
+	m_FShader = nullptr;
+	m_Deforms = nullptr;
+	m_CGFSParamsNoObj = nullptr;
+	m_CGFSParamsObj = nullptr;
+	m_MatrixOps = nullptr;
 	m_LightFlags = 0;
 	m_LMFlags = 0;
 	m_nAmbMaxLights = gRenDev->m_bDeviceSupports_PS2X ? NUM_PPLIGHTS_PERPASS_PS2X : NUM_PPLIGHTS_PERPASS_PS30;
@@ -352,7 +352,7 @@ STexPic* SShader::mfFindBaseTexture(TArray<SShaderPass>& Passes, int* nPass, int
 	if (np == Passes.Num() || nt == Passes[np].m_TUnits.Num() || (!Passes[np].m_TUnits[nt].m_TexPic && !Passes[np].m_TUnits[nt].m_AnimInfo))
 	{
 		np = nt = -1;
-		tx = NULL;
+		tx = nullptr;
 	}
 	else
 	{
@@ -407,7 +407,7 @@ STexPic* SShader::mfFindBaseTexture(TArray<SShaderPassHW>& Passes, int* nPass, i
 	if (np == Passes.Num() || nt == Passes[np].m_TUnits.Num() || (!Passes[np].m_TUnits[nt].m_TexPic && !Passes[np].m_TUnits[nt].m_AnimInfo))
 	{
 		np = nt = -1;
-		tx = NULL;
+		tx = nullptr;
 	}
 	else
 	{
@@ -443,7 +443,7 @@ ITexPic* SShader::GetBaseTexture(int* nPass, int* nTU)
 		*nPass = -1;
 	if (nTU)
 		*nTU = -1;
-	return NULL;
+	return nullptr;
 }
 
 unsigned int SShader::GetUsedTextureTypes(void)
@@ -505,7 +505,7 @@ SSunFlare::~SSunFlare()
 	if (m_Tex)
 	{
 		m_Tex->Release(false);
-		m_Tex = NULL;
+		m_Tex = nullptr;
 	}
 }
 
@@ -533,7 +533,7 @@ void CShader::mfClearAll(void)
 	}
 	SShader::m_ShaderResources_known.Free();
 
-	CSunFlares::m_CurFlares = NULL;
+	CSunFlares::m_CurFlares = nullptr;
 	for (i = 0; i < CSunFlares::m_SunFlares.Num(); i++)
 	{
 		delete CSunFlares::m_SunFlares[i];
@@ -614,13 +614,13 @@ void CShader::mfShutdown(void)
 	if (m_DefaultShader)
 	{
 		m_DefaultShader->Release(true);
-		m_DefaultShader = NULL;
+		m_DefaultShader = nullptr;
 	}
 #ifndef NULL_RENDERER
 	if (m_ShaderVFog)
 	{
 		m_ShaderVFog->Release(true);
-		m_ShaderVFog = NULL;
+		m_ShaderVFog = nullptr;
 	}
 	SAFE_RELEASE_FORCE(m_ShaderVFogCaust);
 	if (m_ShaderFog_FP != m_ShaderFog)
@@ -631,7 +631,7 @@ void CShader::mfShutdown(void)
 	else
 	{
 		SAFE_RELEASE_FORCE(m_ShaderFog);
-		m_ShaderFog_FP = NULL;
+		m_ShaderFog_FP = nullptr;
 	}
 
 	if (m_ShaderFogCaust_FP != m_ShaderFogCaust)
@@ -642,7 +642,7 @@ void CShader::mfShutdown(void)
 	else
 	{
 		SAFE_RELEASE_FORCE(m_ShaderFogCaust);
-		m_ShaderFogCaust_FP = NULL;
+		m_ShaderFogCaust_FP = nullptr;
 	}
 
 	SAFE_RELEASE_FORCE(m_ShaderStateNoCull);
@@ -707,7 +707,7 @@ SShader* CShader::mfCopyShader(SShader* ef)
 
 	efc = mfNewShader(eSH_Temp, -1);
 	if (!efc)
-		return NULL;
+		return nullptr;
 
 	int id = efc->m_Id;
 	*efc = *ef;
@@ -945,7 +945,7 @@ void CShader::mfSetDefaults(void)
 	mfAddToHash("ZBuffPass", ef);
 	ef->m_Passes.ReserveNew(1);
 	ef->m_Passes[0].mfAddNewTexUnits(1);
-	ef->m_Passes[0].m_TUnits[0].m_TexPic = NULL;
+	ef->m_Passes[0].m_TUnits[0].m_TexPic = nullptr;
 	ef->m_Passes[0].m_RenderState = GS_DEPTHWRITE | GS_NOCOLMASK;
 	ef->m_eSort = eS_ZBuff;
 	ef->m_Passes[0].m_eEvalRGB = eERGB_Fixed;
@@ -962,7 +962,7 @@ void CShader::mfSetDefaults(void)
 	mfAddToHash("ShadowMap", ef); // maps shadows from shadow casters to the object
 	ef->m_Passes.ReserveNew(1);
 	ef->m_Passes[0].mfAddNewTexUnits(1);
-	ef->m_Passes[0].m_TUnits[0].m_TexPic = NULL;
+	ef->m_Passes[0].m_TUnits[0].m_TexPic = nullptr;
 	ef->m_Passes[0].m_RenderState = GS_DEPTHWRITE | GS_NOCOLMASK;
 	ef->m_eSort = eS_ShadowMap;
 	ef->m_Flags |= EF_SYSTEM;
@@ -1142,9 +1142,9 @@ void CShader::mfSetDefaults(void)
 
 	b = 1;
 
-	//ef = mfForName("Illumination", eSH_Misc, EF_SYSTEM, NULL, 0x9f43);
-	//ef = mfForName("TemplIllum", eSH_Misc, EF_SYSTEM, NULL, 0x9703);
-	//ef = mfForName("TemplIllum", eSH_Misc, EF_SYSTEM, NULL, 0x9743);
+	//ef = mfForName("Illumination", eSH_Misc, EF_SYSTEM, nullptr, 0x9f43);
+	//ef = mfForName("TemplIllum", eSH_Misc, EF_SYSTEM, nullptr, 0x9703);
+	//ef = mfForName("TemplIllum", eSH_Misc, EF_SYSTEM, nullptr, 0x9743);
 
 	m_bInitialized = true;
 }
@@ -1700,7 +1700,7 @@ SShader* CShader::mfNewShader(EShClass Class, int num)
 				goto create;
 		}
 		iConsole->Exit("MAX_TEMP_SHADERS hit\n");
-		return NULL;
+		return nullptr;
 	}
 	for (n = 0; n < CShader::m_Nums; n++)
 	{
@@ -1710,7 +1710,7 @@ SShader* CShader::mfNewShader(EShClass Class, int num)
 	if ((n = CShader::m_Nums) >= CShader::m_MaxNums)
 	{
 		iConsole->Exit("MAX_SHADERS hit\n");
-		return NULL;
+		return nullptr;
 	}
 
 	if (num < 0)
@@ -1837,7 +1837,7 @@ void SShaderTexUnit::mfUpdateAnim(CCObject* obj, int o)
 		if (m_AnimInfo->m_bLoop)
 			m = m % m_AnimInfo->m_NumAnimTexs;
 		int n = 0;
-		STexPic* tx = NULL;
+		STexPic* tx = nullptr;
 		while (m)
 		{
 			tx = m_AnimInfo->m_TexPics[n];
@@ -1858,7 +1858,7 @@ SEnvTexture* CShader::mfFindSuitableEnvLCMap(Vec3d& Pos, bool bMustExist, int Re
 	double time0 = 0;
 	ticks(time0);
 
-	SEnvTexture* cm = NULL;
+	SEnvTexture* cm = nullptr;
 	int i;
 
 	float dist = 999999;
@@ -1888,7 +1888,7 @@ SEnvTexture* CShader::mfFindSuitableEnvLCMap(Vec3d& Pos, bool bMustExist, int Re
 			return &gRenDev->m_TexMan->m_EnvLCMaps[firstForUse];
 		}
 		else
-			return NULL;
+			return nullptr;
 	}
 
 	float curTime = iTimer->GetCurrTime();
@@ -1974,7 +1974,7 @@ SEnvTexture* CShader::mfFindSuitableEnvLCMap(Vec3d& Pos, bool bMustExist, int Re
 	{
 		unticks(time0);
 		gRenDev->m_RP.m_PS.m_fEnvCMapUpdateTime += (float)(time0 * 1000.0 * g_SecondsPerCycle);
-		return NULL;
+		return nullptr;
 	}
 	int n = nOldest;
 	gRenDev->m_TexMan->m_EnvLCMaps[n].m_TimeLastUsed = curTime;
@@ -2001,7 +2001,7 @@ SEnvTexture* CShader::mfFindSuitableEnvCMap(Vec3d& Pos, bool bMustExist, int Ren
 	double time0 = 0;
 	ticks(time0);
 
-	SEnvTexture* cm = NULL;
+	SEnvTexture* cm = nullptr;
 	int i;
 
 	float dist = 999999;
@@ -2076,7 +2076,7 @@ SEnvTexture* CShader::mfFindSuitableEnvCMap(Vec3d& Pos, bool bMustExist, int Ren
 	{
 		unticks(time0);
 		gRenDev->m_RP.m_PS.m_fEnvCMapUpdateTime += (float)(time0 * 1000.0 * g_SecondsPerCycle);
-		return NULL;
+		return nullptr;
 	}
 	int n = firstForUse;
 	gRenDev->m_TexMan->m_EnvCMaps[n].m_TimeLastUsed = curTime;
@@ -2104,7 +2104,7 @@ Vec3d sDeltAngles(Vec3d Ang0, Vec3d Ang1)
 
 SEnvTexture* CShader::mfFindSuitableEnvTex(Vec3d& Pos, Vec3d& Angs, bool bMustExist, int RendFlags, bool bUseExistingREs, SShader* pSH, SRenderShaderResources* pRes, CCObject* pObj, bool bReflect, CRendElement* pRE)
 {
-	SEnvTexture* cm = NULL;
+	SEnvTexture* cm = nullptr;
 
 	int i;
 	float distO = 999999;
@@ -2146,7 +2146,7 @@ SEnvTexture* CShader::mfFindSuitableEnvTex(Vec3d& Pos, Vec3d& Angs, bool bMustEx
 		return &gRenDev->m_TexMan->m_EnvTexts[firstForUse];
 	if (bReflect)
 		dist = distO;
-	//return NULL;
+	//return nullptr;
 	float curTime = iTimer->GetCurrTime();
 	if (firstForUse >= 0 && dist <= MAX_ENVTEXSCANDIST)
 	{
@@ -2163,7 +2163,7 @@ SEnvTexture* CShader::mfFindSuitableEnvTex(Vec3d& Pos, Vec3d& Angs, bool bMustEx
 		return &gRenDev->m_TexMan->m_EnvTexts[firstForUse];
 	}
 	if (bMustExist)
-		return NULL;
+		return nullptr;
 
 	dist = 0;
 	firstForUse = -1;
@@ -2177,7 +2177,7 @@ SEnvTexture* CShader::mfFindSuitableEnvTex(Vec3d& Pos, Vec3d& Angs, bool bMustEx
 		}
 	}
 	if (firstForUse < 0)
-		return NULL;
+		return nullptr;
 	i = firstForUse;
 	gRenDev->m_TexMan->m_EnvTexts[i].m_TimeLastUsed = curTime;
 	gRenDev->m_TexMan->m_EnvTexts[i].m_CamPos = Pos;
@@ -2534,7 +2534,7 @@ void CShader::mfBeginFrame()
 
 	gRenDev->m_RP.m_WasPortals = 0;
 	gRenDev->m_RP.m_CurPortal = 0;
-	gRenDev->m_RP.m_CurWarp = NULL;
+	gRenDev->m_RP.m_CurWarp = nullptr;
 	gRenDev->m_RP.m_fMinDepthRange = 0;
 	gRenDev->m_RP.m_fMaxDepthRange = 1.0f;
 
@@ -2664,15 +2664,15 @@ SShaderCacheHeaderItem* CShader::GetCacheItem(SShaderCache* pCache, int nMask)
 {
 	CRYASSERT(pCache && pCache->m_pRes);
 	if (!pCache || !pCache->m_pRes)
-		return NULL;
+		return nullptr;
 	CResFile* rf = pCache->m_pRes;
 	SDirEntry* de = rf->mfGetEntry(nMask);
 	if (!de)
-		return NULL;
+		return nullptr;
 	rf->mfFileRead(de);
 	void* pData = rf->mfFileGetBuf(de);
 	if (!pData)
-		return NULL;
+		return nullptr;
 	return (SShaderCacheHeaderItem*)pData;
 }
 

@@ -58,7 +58,7 @@ struct ILog : public IMiniLog
 //	virtual void	Log(int dwFlags,const char *szCommand,...)=0;
 
 	//set the file used to log to disk
-	virtual void	SetFileName(const char* command = NULL) = 0;
+	virtual void	SetFileName(const char* command = nullptr) = 0;
 
 	//
 	virtual const char* GetFileName() = 0;

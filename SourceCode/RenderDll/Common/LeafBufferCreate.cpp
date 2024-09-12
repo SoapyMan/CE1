@@ -34,7 +34,7 @@ void CLeafBuffer::CopyTo(CLeafBuffer* pDst, bool bUseSysBuf)
 			Sh.m_pShader->AddRef();
 		if (Sh.m_pShaderResources)
 			Sh.m_pShaderResources->AddRef();
-		rNewMat.m_pPrimitiveGroups = NULL;
+		rNewMat.m_pPrimitiveGroups = nullptr;
 		CREOcLeaf* re = rSrcMat.pRE;
 		if (re)
 		{
@@ -44,8 +44,8 @@ void CLeafBuffer::CopyTo(CLeafBuffer* pDst, bool bUseSysBuf)
 			*rNewMat.pRE = *re;
 			rNewMat.pRE->m_NextGlobal = pNext;
 			rNewMat.pRE->m_PrevGlobal = pPrev;
-			rNewMat.pRE->m_LIndicies = NULL;
-			rNewMat.pRE->m_Faces = NULL;
+			rNewMat.pRE->m_LIndicies = nullptr;
+			rNewMat.pRE->m_Faces = nullptr;
 			rNewMat.pRE->m_pBuffer = pDst;
 		}
 	}
@@ -300,8 +300,8 @@ void CLeafBuffer::CreateBuffer(CIndexedMesh* pTriData, bool bStripifyAndShareVer
 	list2<CObjFace*>   _vhash_table[512];
 	list2<SBasisFace> _thash_table[512];
 	bool bShareVertsArr[512];
-	SPipTangents* pBasises = NULL;
-	ushort* pBasisIndices = NULL;
+	SPipTangents* pBasises = nullptr;
+	ushort* pBasisIndices = nullptr;
 
 	{
 		// Generate tangent basis vectors before indexing per-material
@@ -590,7 +590,7 @@ void CLeafBuffer::CreateBuffer(CIndexedMesh* pTriData, bool bStripifyAndShareVer
 			if (!mi->nNumIndices)
 			{
 				mi->pRE->Release();
-				mi->pRE = NULL;
+				mi->pRE = nullptr;
 			}
 		}
 		m_SecIndices.Free();
@@ -603,7 +603,7 @@ void CLeafBuffer::CreateBuffer(CIndexedMesh* pTriData, bool bStripifyAndShareVer
 	InvalidateVideoBuffer(-1);
 
 	// Lock the index buffer and get the pointer
-	ushort* pInds = GetIndices(NULL);
+	ushort* pInds = GetIndices(nullptr);
 
 	int nVertFormat = -1;
 	int nFlags = 0;
@@ -1002,7 +1002,7 @@ bool CLeafBuffer::CreateBuffer(struct VertexBufferSource* pSource)
 		if (pSource->pMats)
 		{
 			m_pMats = pSource->pMats;
-			pSource->pMats = NULL;
+			pSource->pMats = nullptr;
 		}
 		else
 		{
@@ -1170,7 +1170,7 @@ void CLeafBuffer::StripifyMesh(int StripType)
 		if (!mi->pRE)
 			continue;
 		PrimitiveGroup* pOldPG;
-		GenerateStrips(&GetIndices(NULL)[mi->nFirstIndexId], mi->nNumIndices, &pOldPG, (unsigned short*)&mi->m_dwNumSections);
+		GenerateStrips(&GetIndices(nullptr)[mi->nFirstIndexId], mi->nNumIndices, &pOldPG, (unsigned short*)&mi->m_dwNumSections);
 
 		//remap!
 		PrimitiveGroup* pg;
@@ -1275,7 +1275,7 @@ void CLeafBuffer::CalcFaceNormals()
 	int i, j;
 
 	struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F* pV = (struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F*)m_pSecVertBuffer->m_VS[VSF_GENERAL].m_VData;
-	ushort* pInds = GetIndices(NULL);
+	ushort* pInds = GetIndices(nullptr);
 
 	if (m_nPrimetiveType != R_PRIMV_MULTI_GROUPS)
 	{
@@ -1446,7 +1446,7 @@ bool CLeafBuffer::ReCreateSystemBuffer(int VertFormat)
 	int nFormatOld = m_pSecVertBuffer->m_vertexformat;
 	pOffsOld = &gBufInfoTable[nFormatOld];
 	int SizeOld = m_VertexSize[nFormatOld];
-	byte* pNew = NULL;
+	byte* pNew = nullptr;
 	m_pSecVertBuffer->m_vertexformat = VertFormat;
 	pOffsNew = &gBufInfoTable[VertFormat];
 	int SizeNew = m_VertexSize[VertFormat];
@@ -1609,7 +1609,7 @@ void CLeafBuffer::Unload()
 			gRenDev->ReleaseBuffer(m_pVertexBuffer);
 		gRenDev->ReleaseIndexBuffer(&m_Indices);
 	}
-	m_pVertexBuffer = NULL;
+	m_pVertexBuffer = nullptr;
 }
 
 void CLeafBuffer::UpdateDynBufPtr(int VertFormat)
@@ -1617,7 +1617,7 @@ void CLeafBuffer::UpdateDynBufPtr(int VertFormat)
 	if (m_pVertexBuffer && !m_pVertexBuffer->m_bFenceSet)
 	{
 		gRenDev->ReleaseBuffer(m_pVertexBuffer);
-		m_pVertexBuffer = NULL;
+		m_pVertexBuffer = nullptr;
 	}
 	if (!m_pVertexBuffer)
 		m_pVertexBuffer = new CVertexBuffer;
@@ -1672,10 +1672,10 @@ void CLeafBuffer::SortTris()
 	if (m_SortFrame == rd->m_RP.m_TransformFrame)
 		return;
 	m_SortFrame = rd->m_RP.m_TransformFrame;
-	ushort* pInds = GetIndices(NULL);
+	ushort* pInds = GetIndices(nullptr);
 	CCObject* pObj = rd->m_RP.m_pCurObject;
 	Vec3d vCam = pObj->GetInvMatrix().TransformPointOLD(rd->m_RP.m_ViewOrg);
-	ushort* pDst = NULL;
+	ushort* pDst = nullptr;
 	int nPosPtr;
 	byte* pPosPtr = GetPosPtr(nPosPtr);
 	bool bGlobalTransp = false;
@@ -1700,7 +1700,7 @@ void CLeafBuffer::SortTris()
 		}
 		if (!m_Indices.m_bLocked)
 		{
-			rd->UpdateIndexBuffer(&m_Indices, NULL, 0, false);
+			rd->UpdateIndexBuffer(&m_Indices, nullptr, 0, false);
 			pDst = (ushort*)m_Indices.m_VData;
 		}
 		if (m_nPrimetiveType != R_PRIMV_MULTI_GROUPS)
@@ -1739,7 +1739,7 @@ void CLeafBuffer::SortTris()
 		}
 	}
 	if (m_Indices.m_bLocked)
-		rd->UpdateIndexBuffer(&m_Indices, NULL, 0, true);
+		rd->UpdateIndexBuffer(&m_Indices, nullptr, 0, true);
 }
 
 bool CLeafBuffer::CheckUpdate(int VertFormat, int Flags, bool bNeedAddNormals)
@@ -1844,7 +1844,7 @@ bool CLeafBuffer::CheckUpdate(int VertFormat, int Flags, bool bNeedAddNormals)
 	}
 
 	// If we need Tangent Vectors for shader and Tangents stream doesn't exist create and fill it
-	if ((Flags & SHPF_TANGENTS) && (!lb->m_pVertexBuffer->GetStream(VSF_TANGENTS, NULL) || (lb->m_UpdateVBufferMask & 2)))
+	if ((Flags & SHPF_TANGENTS) && (!lb->m_pVertexBuffer->GetStream(VSF_TANGENTS, nullptr) || (lb->m_UpdateVBufferMask & 2)))
 	{
 		lb->m_UpdateFrame = gRenDev->GetFrameID();
 		lb->m_UpdateVBufferMask |= 2;
@@ -1858,7 +1858,7 @@ bool CLeafBuffer::CheckUpdate(int VertFormat, int Flags, bool bNeedAddNormals)
 			CRYASSERT(lb->m_pSecVertBuffer->m_VS[VSF_TANGENTS].m_VData);
 			if (lb->m_pSecVertBuffer->m_VS[VSF_TANGENTS].m_VData)
 			{
-				if (!lb->m_pVertexBuffer->GetStream(VSF_TANGENTS, NULL))
+				if (!lb->m_pVertexBuffer->GetStream(VSF_TANGENTS, nullptr))
 				{
 					PROFILE_FRAME(Mesh_CheckUpdateCreateTBuf);
 					gRenDev->CreateBuffer(lb->m_SecVertCount * sizeof(SPipTangents), 0, lb->m_pVertexBuffer, VSF_TANGENTS, "LeafBuffer tangents");
@@ -1866,12 +1866,12 @@ bool CLeafBuffer::CheckUpdate(int VertFormat, int Flags, bool bNeedAddNormals)
 			}
 		}
 		else
-			if (!lb->m_pVertexBuffer->GetStream(VSF_TANGENTS, NULL))
+			if (!lb->m_pVertexBuffer->GetStream(VSF_TANGENTS, nullptr))
 			{
 				PROFILE_FRAME(Mesh_CheckUpdateCreateTBuf);
 				gRenDev->CreateBuffer(lb->m_SecVertCount * sizeof(SPipTangents), 0, lb->m_pVertexBuffer, VSF_TANGENTS, "LeafBuffer tangents");
 			}
-		if (!lb->m_pVertexBuffer->GetStream(VSF_TANGENTS, NULL))
+		if (!lb->m_pVertexBuffer->GetStream(VSF_TANGENTS, nullptr))
 			return false;
 		if ((lb->m_UpdateVBufferMask & 2) && lb->m_pSecVertBuffer && lb->m_pVertexBuffer)
 		{
@@ -1926,7 +1926,7 @@ void CLeafBuffer::ReleaseShaders()
 		if (m_pMats->Get(i)->shaderItem.m_pShader)
 		{
 			m_pMats->Get(i)->shaderItem.m_pShader->Release();
-			m_pMats->Get(i)->shaderItem.m_pShader = NULL;
+			m_pMats->Get(i)->shaderItem.m_pShader = nullptr;
 		}
 	}
 }
@@ -2026,7 +2026,7 @@ void CLeafBuffer::UpdateSysVertices(void* pNewVertices, int nNewVerticesCount)
 		if (m_pVertexBuffer->m_NumVerts != m_pSecVertBuffer->m_NumVerts)
 		{
 			gRenDev->ReleaseBuffer(m_pVertexBuffer);
-			m_pVertexBuffer = NULL;
+			m_pVertexBuffer = nullptr;
 		}
 	}
 	InvalidateVideoBuffer(1);
@@ -2039,7 +2039,7 @@ void CLeafBuffer::UpdateVidVertices(void* pNewVertices, int nNewVerticesCount)
 		if (m_pVertexBuffer->m_NumVerts != nNewVerticesCount)
 		{
 			gRenDev->ReleaseBuffer(m_pVertexBuffer);
-			m_pVertexBuffer = NULL;
+			m_pVertexBuffer = nullptr;
 			m_SecVertCount = nNewVerticesCount;
 			CreateVidVertices(nNewVerticesCount, m_nVertexFormat);
 		}
@@ -2255,31 +2255,31 @@ int CLeafBuffer::Size(int Flags)
 CLeafBuffer::CLeafBuffer(const char* szSource)
 {
 	m_Indices.Reset();
-	m_pIndicesPreStrip = NULL;
+	m_pIndicesPreStrip = nullptr;
 
 	m_sSource = (char*)szSource;
 
 	m_SecVertCount = 0;
-	m_pSecVertBuffer = NULL;
-	m_pVertexBuffer = NULL;
+	m_pSecVertBuffer = nullptr;
+	m_pVertexBuffer = nullptr;
 
-	m_pMats = NULL;
+	m_pMats = nullptr;
 	m_nPrimetiveType = R_PRIMV_TRIANGLES;
 
-	m_TempTexCoords = NULL;
-	m_TempColors = NULL;
-	m_TempSecColors = NULL;
-	m_TempNormals = NULL;
+	m_TempTexCoords = nullptr;
+	m_TempColors = nullptr;
+	m_TempSecColors = nullptr;
+	m_TempNormals = nullptr;
 
 	m_nClientTextureBindID = 0;
 	m_bMaterialsWasCreatedInRenderer = 0;
 	m_bOnlyVideoBuffer = 0;
 	m_bDynamic = 0;
-	m_Next = NULL;
-	m_Prev = NULL;
-	m_NextGlobal = NULL;
-	m_PrevGlobal = NULL;
-	m_pVertexContainer = NULL;
+	m_Next = nullptr;
+	m_Prev = nullptr;
+	m_NextGlobal = nullptr;
+	m_PrevGlobal = nullptr;
+	m_pVertexContainer = nullptr;
 	m_UpdateVBufferMask = -1;
 	m_UpdateFrame = 0;
 	if (!m_Root.m_Next)
@@ -2295,7 +2295,7 @@ CLeafBuffer::CLeafBuffer(const char* szSource)
 	m_vBoxMin = m_vBoxMax = Vec3d(0, 0, 0);//used for hw occlusion test
 	m_pLoadedColors = 0;
 	m_arrVertStripMap = 0;
-	PrepareBufferCallback = NULL;
+	PrepareBufferCallback = nullptr;
 	if (this != &m_RootGlobal && this != &m_Root)
 		LinkGlobal(&m_RootGlobal);
 	m_arrVtxMap = 0;

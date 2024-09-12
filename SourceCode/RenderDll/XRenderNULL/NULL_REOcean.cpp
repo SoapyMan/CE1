@@ -74,7 +74,7 @@ static _inline float sCalcSplash(SSplash* spl, float fX, float fY)
 
 float* CREOcean::mfFillAdditionalBuffer(SOceanSector* os, int nSplashes, SSplash* pSplashes[], int& nCurSize, int nLod, float fSize)
 {
-	return NULL;
+	return nullptr;
 }
 
 void CREOcean::mfDrawOceanSectors()

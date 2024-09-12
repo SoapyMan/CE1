@@ -132,7 +132,7 @@ private:
 
 	bool mfReloadShaderScript(const char* szShaderName, int nFlags, SShader* pSH);
 	void mfRefreshResources(SShader* eft, SRenderShaderResources* Res);
-	bool mfAddTemplate(SRenderShaderResources* Res, SShader* ef, int IdTempl, const char* Name = NULL, uint64 nMaskGen = 0);
+	bool mfAddTemplate(SRenderShaderResources* Res, SShader* ef, int IdTempl, const char* Name = nullptr, uint64 nMaskGen = 0);
 	void mfRegisterDefaultTemplates();
 	void mfUnregisterDefaultTemplates();
 	bool mfSetOpacity(SShaderPass* Layer, float Opa, SShader* ef, int Mode);
@@ -177,7 +177,7 @@ public:
 
 	void mfCompileMatrixOp(TArray<SMatrixTransform>* MatrixOps, char* scr, char* name, SShader* ef);
 
-	SEnvTexture* mfFindSuitableEnvLCMap(Vec3d& Pos, bool bMustExist, int RendFlags, float fDistToCam, CCObject* pObj = NULL);
+	SEnvTexture* mfFindSuitableEnvLCMap(Vec3d& Pos, bool bMustExist, int RendFlags, float fDistToCam, CCObject* pObj = nullptr);
 	SEnvTexture* mfFindSuitableEnvCMap(Vec3d& Pos, bool bMustExist, int RendFlags, float fDistToCam);
 	SEnvTexture* mfFindSuitableEnvTex(Vec3d& Pos, Vec3d& Angs, bool bMustExist, int RendFlags, bool bUseExistingREs, SShader* pSH, SRenderShaderResources* pRes, CCObject* pObj, bool bReflect, CRendElement* pRE);
 
@@ -265,7 +265,7 @@ public:
 		m_bInitialized = false;
 		m_CurEfsNum = 0;
 		m_NumFiles[0] = m_NumFiles[1] = 0;
-		m_DefaultShader = NULL;
+		m_DefaultShader = nullptr;
 	}
 
 	void mfShutdown(void);
@@ -287,8 +287,8 @@ public:
 	void mfInit(void);
 	void mfShaderNameForAlias(const char* nameAlias, char* nameEf, int nSize);
 	SRenderShaderResources* mfCreateShaderResources(const SInputShaderResources* Res, bool bShare);
-	SShaderItem mfShaderItemForName(const char* name, EShClass Class, bool bShare, const char* templName, int flags, const SInputShaderResources* Res = NULL, uint64 nMaskGen = 0);
-	SShader* mfForName(const char* name, EShClass Class, int flags, const SInputShaderResources* Res = NULL, uint64 nMaskGen = 0);
+	SShaderItem mfShaderItemForName(const char* name, EShClass Class, bool bShare, const char* templName, int flags, const SInputShaderResources* Res = nullptr, uint64 nMaskGen = 0);
+	SShader* mfForName(const char* name, EShClass Class, int flags, const SInputShaderResources* Res = nullptr, uint64 nMaskGen = 0);
 	SShader* mfSpawn(char* name, SShader* ef, SShader* efGen, uint64 nMaskGen);
 
 	bool    mfParseFXTechnique_MergeParameters(std::vector<SFXStruct>& Structs, std::vector<SFXParam>& Params, int nNum, SShader* ef, bool bPixelShader, const char* szShaderName);
@@ -356,7 +356,7 @@ struct SSunFlare
 	}
 	SSunFlare()
 	{
-		m_Tex = NULL;
+		m_Tex = nullptr;
 		m_Scale = 1.0f;
 		m_Loc = 0;
 		m_Color = Col_White;
@@ -393,7 +393,7 @@ public:
 	CSunFlares()
 	{
 		m_NumFlares = 0;
-		m_Flares = NULL;
+		m_Flares = nullptr;
 	}
 	~CSunFlares()
 	{

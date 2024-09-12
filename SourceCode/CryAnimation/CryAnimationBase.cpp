@@ -28,16 +28,16 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 // cached interfaces - valid during the whole session, when the character manager is alive; then get erased
-ISystem* g_pISystem = NULL;
-ITimer* g_pITimer = NULL;
-ILog* g_pILog = NULL;
-IConsole* g_pIConsole = NULL;
-ICryPak* g_pIPak = NULL;
-IStreamEngine* g_pIStreamEngine = NULL;;
+ISystem* g_pISystem = nullptr;
+ITimer* g_pITimer = nullptr;
+ILog* g_pILog = nullptr;
+IConsole* g_pIConsole = nullptr;
+ICryPak* g_pIPak = nullptr;
+IStreamEngine* g_pIStreamEngine = nullptr;;
 
-IRenderer* g_pIRenderer = NULL;
-IPhysicalWorld* g_pIPhysicalWorld = NULL;
-I3DEngine* g_pI3DEngine = NULL;
+IRenderer* g_pIRenderer = nullptr;
+IPhysicalWorld* g_pIPhysicalWorld = nullptr;
+I3DEngine* g_pI3DEngine = nullptr;
 
 
 
@@ -51,7 +51,7 @@ bool g_bUpdateBonesAlways = false;
 bool g_bProfilerOn = false;
 
 // the cached console variable interfaces that are valid when the CryCharManager singleton is alive
-CryAnimVars* g_pCVariables = NULL;
+CryAnimVars* g_pCVariables = nullptr;
 
 
 double g_dTimeAnimLoadBind;

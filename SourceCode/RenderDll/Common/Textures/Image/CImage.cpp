@@ -28,8 +28,8 @@ char CImageFile::m_CurFileName[128];
 
 CImageFile::CImageFile()
 {
-	m_pByteImage = NULL;
-	m_pPal = NULL;
+	m_pByteImage = nullptr;
+	m_pPal = nullptr;
 	m_eError = eIFE_OK;
 	m_Error_detail[0] = 0;
 	m_eFormat = eIF_Unknown;
@@ -109,7 +109,7 @@ CImageFile* CImageFile::mfLoad_file(char* szFileName)
 	if (!pRawFile)
 	{
 		nRejectFOpen++;
-		return NULL;
+		return nullptr;
 	}
 	nAcceptFOpen++;
 
@@ -145,7 +145,7 @@ CImageFile* CImageFile::mfLoad_file(FILE* fp)
 
 CImageFile* CImageFile::mfLoad_file(byte* buf, long size)
 {
-	CImageFile* file = NULL;
+	CImageFile* file = nullptr;
 	CImageFile::m_eError = eIFE_OK;
 
 	// Catch NULL pointers (for example, when ZIP file is corrupt)
@@ -182,7 +182,7 @@ CImageFile* CImageFile::mfLoad_file(byte* buf, long size)
 	if (file && (CImageFile::mfGet_error() != eIFE_OK))
 	{
 		CHK(delete file);
-		file = NULL;
+		file = nullptr;
 	} /* endif */
 
 	return file;

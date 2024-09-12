@@ -14,7 +14,7 @@ class CXObjectProxy :	public IUnknownProxy
 
 	IEntity *m_pEntity;
 	IScriptSystem *m_pScriptSystem;
-	IPhysicalEntity* GetPhysics() { return NULL; }
+	IPhysicalEntity* GetPhysics() { return nullptr; }
 	CPlayer *m_pPlayer;
 
 

@@ -180,7 +180,7 @@ void SEvalFuncs_RE::FlareDeform(SDeform* df)
 		return;
 	if (!CRenderer::CV_r_procflares)
 	{
-		rd->m_RP.m_pRE = NULL;
+		rd->m_RP.m_pRE = nullptr;
 		rd->m_RP.m_RendNumIndices = 0;
 		rd->m_RP.m_RendNumVerts = 0;
 		return;
@@ -190,7 +190,7 @@ void SEvalFuncs_RE::FlareDeform(SDeform* df)
 	if ((nv != 4 && nv != 6) || re->m_pChunk->nNumIndices != 6)
 		return;
 	Vec3d vbSrcData[4];
-	ushort* indsS = &re->m_pBuffer->GetIndices(NULL)[re->m_pChunk->nFirstIndexId];
+	ushort* indsS = &re->m_pBuffer->GetIndices(nullptr)[re->m_pChunk->nFirstIndexId];
 	if (nv == 6)
 	{
 		for (i = 0; i < 3; i++)
@@ -459,7 +459,7 @@ void SEvalFuncs_RE::BeamDeform(SDeform* df)
 	//          this is NULL for C:\MASTERCD\Objects\glm\ww2_indust_set1\lights\light_indust3\light_indust3.cgf 
 	if (!vbV || !vbN || !vbT || !CRenderer::CV_r_beams || !rd->m_RP.m_pRE || rd->m_RP.m_pRE->mfGetType() != eDATA_OcLeaf)
 	{
-		rd->m_RP.m_pRE = NULL;
+		rd->m_RP.m_pRE = nullptr;
 		rd->m_RP.m_RendNumIndices = 0;
 		rd->m_RP.m_RendNumVerts = 0;
 		return;
@@ -843,7 +843,7 @@ void SEvalFuncs_RE::ETC_ShadowMap(int ns)
 	if (nsFrust > 0 && (*lsources)[nsFrust].m_pLS == (*lsources)[nsFrust - 1].m_pLS && pShadowMapFrustum->pPenumbra)
 		pShadowMapFrustum = pShadowMapFrustum->pPenumbra;
 
-	Matrix44* m = NULL;
+	Matrix44* m = nullptr;
 	Vec3d vObjTrans;
 	if (rd->m_RP.m_ObjFlags & FOB_TRANS_MASK)
 	{

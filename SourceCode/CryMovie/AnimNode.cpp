@@ -165,7 +165,7 @@ bool CAnimBlock::RemoveTrack(IAnimTrack* pTrack)
 //////////////////////////////////////////////////////////////////////////
 IAnimTrack* CAnimBlock::CreateTrack(int paramId, EAnimValue valueType)
 {
-	IAnimTrack* pTrack = NULL;
+	IAnimTrack* pTrack = nullptr;
 	switch (valueType)
 	{
 	case AVALUE_FLOAT:   pTrack = new CTcbFloatTrack; break;

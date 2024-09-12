@@ -354,7 +354,7 @@ struct SCGScript
 	}
 	SCGScript()
 	{
-		m_Script = NULL;
+		m_Script = nullptr;
 	}
 
 	void Release()
@@ -558,7 +558,7 @@ public:
 	virtual void mfReset() {}
 	virtual void mfPrecache() {}
 	virtual bool mfHasPointer(ESrcPointer ePtr) { return false; }
-	virtual const char* mfGetCurScript() { return NULL; }
+	virtual const char* mfGetCurScript() { return nullptr; }
 	virtual void mfGatherFXParameters(const char* buf, SShaderPassHW* pSHPass, std::vector<SFXParam>& Params, std::vector<SFXSampler>& Samplers, std::vector<SFXTexture>& Textures, SShader* ef) = 0;
 	virtual void mfPostLoad() = 0;
 	virtual int  mfVertexFormat(bool& bUseTangents, bool& bUseLM) = 0;
@@ -656,9 +656,9 @@ public:
 	virtual void mfReset() {}
 	virtual void mfPrecache() {}
 	virtual bool mfIsCombiner() = 0;
-	virtual bool mfSet(bool bStat, SShaderPassHW* slw = NULL, int nFlags = 0) { return 0; }
+	virtual bool mfSet(bool bStat, SShaderPassHW* slw = nullptr, int nFlags = 0) { return 0; }
 	virtual void mfSetVariables(bool bObj, TArray<SCGParam4f>* Vars) {}
-	virtual const char* mfGetCurScript() { return NULL; }
+	virtual const char* mfGetCurScript() { return nullptr; }
 	virtual void mfGatherFXParameters(const char* buf, SShaderPassHW* pSHPass, std::vector<SFXParam>& Params, std::vector<SFXSampler>& Samplers, std::vector<SFXTexture>& Textures, SShader* ef) = 0;
 	virtual void mfPostLoad() = 0;
 };
@@ -720,7 +720,7 @@ struct SShaderCache
 	class CResFile* m_pRes;
 	SShaderCache()
 	{
-		m_pRes = NULL;
+		m_pRes = nullptr;
 	}
 	~SShaderCache();
 };
@@ -3046,7 +3046,7 @@ struct SParam
 	{
 		m_Flags = 0;
 		m_Reg = 0;
-		m_Comps[0] = m_Comps[1] = m_Comps[2] = m_Comps[3] = NULL;
+		m_Comps[0] = m_Comps[1] = m_Comps[2] = m_Comps[3] = nullptr;
 	}
 	float* mfGet()
 	{
@@ -3260,7 +3260,7 @@ struct SCGBind
 	{
 		m_nComponents = 1;
 		m_nBindComponents = 1;
-		m_pNext = NULL;
+		m_pNext = nullptr;
 		m_dwBind = 0;
 		m_dwFrameCreated = 0;
 	}
@@ -3440,7 +3440,7 @@ public:
 	static _inline CLightStyle* mfGetStyle(int nStyle, float fTime)
 	{
 		if (nStyle >= m_LStyles.Num() || !m_LStyles[nStyle])
-			return NULL;
+			return nullptr;
 		m_LStyles[nStyle]->mfUpdate(fTime);
 		return m_LStyles[nStyle];
 	}
@@ -3531,7 +3531,7 @@ struct SArrayPointer
 
 	virtual void mfSet(int Id) {}
 	virtual bool mfCompile(char* scr, SShader* ef) { return false; }
-	virtual const char* mfGetName() { return NULL; }
+	virtual const char* mfGetName() { return nullptr; }
 
 	static TArray<SArrayPointer*> m_Arrays;
 	static SArrayPointer* AddNew(SArrayPointer& New);
@@ -3671,13 +3671,13 @@ struct SShaderPass
 		m_RenderState = GS_DEPTHWRITE;
 		m_SecondRenderState = GS_BLSRC_ONE | GS_BLDST_ONE;
 
-		m_WaveEvalRGB = NULL;
-		m_RGBNoise = NULL;
-		m_RGBComps = NULL;
+		m_WaveEvalRGB = nullptr;
+		m_RGBNoise = nullptr;
+		m_RGBComps = nullptr;
 		m_eEvalRGB = eERGB_NoFill;
 
-		m_WaveEvalAlpha = NULL;
-		m_ANoise = NULL;
+		m_WaveEvalAlpha = nullptr;
+		m_ANoise = nullptr;
 		m_eEvalAlpha = eEALPHA_NoFill;
 		m_FixedColor.dcolor = -1;
 		m_Flags = 0;
@@ -3750,12 +3750,12 @@ struct SShaderPass
 		if (m_WaveEvalAlpha)
 		{
 			delete m_WaveEvalAlpha;
-			m_WaveEvalAlpha = NULL;
+			m_WaveEvalAlpha = nullptr;
 		}
 		if (m_WaveEvalRGB)
 		{
 			delete m_WaveEvalRGB;
-			m_WaveEvalRGB = NULL;
+			m_WaveEvalRGB = nullptr;
 		}
 		for (int j = 0; j < m_TUnits.Num(); j++)
 		{
@@ -3947,7 +3947,7 @@ struct SHWConditions
 	{
 		m_Flags = 0;
 		m_NumVars = 0;
-		m_Vars = NULL;
+		m_Vars = nullptr;
 	}
 };
 
@@ -3989,7 +3989,7 @@ struct SShaderTechnique
 	}
 	SShaderTechnique()
 	{
-		m_MatrixOps = NULL;
+		m_MatrixOps = nullptr;
 		m_Flags = 0;
 		m_eCull = (ECull)-1;
 	}
@@ -4176,7 +4176,7 @@ struct SShader : public IShader
 	virtual void SetRenderFlags(int nFlags) { m_DLDFlags = nFlags; }
 	virtual bool Reload(int nFlags);
 	virtual TArray<CRendElement*>* GetREs() { return &m_REs; }
-	virtual bool AddTemplate(SRenderShaderResources* Res, int& TemplId, const char* Name = NULL, bool bSetPreferred = true, uint64 nMaskGen = 0);
+	virtual bool AddTemplate(SRenderShaderResources* Res, int& TemplId, const char* Name = nullptr, bool bSetPreferred = true, uint64 nMaskGen = 0);
 	virtual void RemoveTemplate(int TemplId);
 	virtual IShader* GetTemplate(int num) { return (IShader*)mfGetTemplate(num); }
 	virtual SEfTemplates* GetTemplates() { return m_Templates; }
@@ -4191,7 +4191,7 @@ struct SShader : public IShader
 			return m_ShaderGenParams;
 		if (m_pGenShader)
 			return m_pGenShader->m_ShaderGenParams;
-		return NULL;
+		return nullptr;
 	}
 
 	virtual TArray<SShaderParam>& GetPublicParams()
@@ -4222,7 +4222,7 @@ struct SShader : public IShader
 	virtual void mfDeleteTemplates()
 	{
 		delete m_Templates;
-		m_Templates = NULL;
+		m_Templates = nullptr;
 	}
 
 	SShader* mfGetTemplate(int num)
@@ -4254,7 +4254,7 @@ struct SShader : public IShader
 		{
 			m_Deforms->Free();
 			delete[] m_Deforms;
-			m_Deforms = NULL;
+			m_Deforms = nullptr;
 		}
 	}
 	virtual ITexPic* GetBaseTexture(int* nPass, int* nTU);

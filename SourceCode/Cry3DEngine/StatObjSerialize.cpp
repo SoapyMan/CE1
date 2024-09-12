@@ -57,7 +57,7 @@ bool CStatObj::Serialize(int& nPos, uchar* pSerBuf, bool bSave, char* szFolderNa
 
 void CStatObj::InitCompiledLightSource(CDLight* pDLight)
 {
-	char* shName = NULL;
+	char* shName = nullptr;
 	char* str;
 	char name[128];
 	char nameTgt[128];
@@ -101,7 +101,7 @@ void CStatObj::InitCompiledLightSource(CDLight* pDLight)
 		if (pDLight->m_pShader != 0 && (pDLight->m_pShader->GetFlags() & EF_NOTFOUND))
 		{
 			pDLight->m_pShader->Release();
-			pDLight->m_pShader = NULL;
+			pDLight->m_pShader = nullptr;
 			pDLight->m_Flags |= DLF_FAKE;
 #if !defined(LINUX)
 			Warning(0, m_szFileName,

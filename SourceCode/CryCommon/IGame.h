@@ -112,13 +112,13 @@ struct IEntityClassRegistry
 
 	/*Retrieves an entity class by name
 	@param str entity name
-	@return EntityClass ptr if succeded, NULL if failed
+	@return EntityClass ptr if succeded, nullptr if failed
 	*/
 	virtual EntityClass* GetByClass(const char* sClassName, bool bAutoLoadScript = true) = 0;
 	//virtual EntityClass *GetByClass(const string &str)= 0;
 	/*Retrieves an entity class by ClassId
 	@param ClassId class id
-	@return EntityClass ptr if succeded, NULL if failed
+	@return EntityClass ptr if succeded, nullptr if failed
 	*/
 	virtual EntityClass* GetByClassId(const EntityClassId ClassId, bool bAutoLoadScript = true) = 0;
 	/*Adds a class type into the registry
@@ -135,7 +135,7 @@ struct IEntityClassRegistry
 	*/
 	virtual void MoveFirst() = 0;
 	/*get the next entity class into the registry
-	@return a pointer to the next entityclass, or NULL if is the end
+	@return a pointer to the next entityclass, or nullptr if is the end
 	*/
 	virtual EntityClass* Next() = 0;
 	/*return the count of the entity classes

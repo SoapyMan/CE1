@@ -17,9 +17,9 @@ public:
 	mfUpdateFlags(FCEF_TRANSFORM | FCEF_NODEL);
 		m_vOrigin(0,0,0);
 		m_nNumEdges=m_nNumFaces=0;
-		m_pShadowVolEdgesList=NULL;
-		m_pFacesList=NULL;
-		m_pTexture=NULL;
+		m_pShadowVolEdgesList=nullptr;
+		m_pFacesList=nullptr;
+		m_pTexture=nullptr;
   }
 
   virtual ~CRETriMeshAdditionalShadow()

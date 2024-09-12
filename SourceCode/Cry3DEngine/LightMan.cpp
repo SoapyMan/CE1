@@ -324,5 +324,5 @@ CLightEntity::~CLightEntity()
 	((C3DEngine*)Get3DEngine())->FreeLightSourceComponents(m_pLight);
 	Get3DEngine()->UnRegisterEntity(this);
 	((C3DEngine*)Get3DEngine())->RemoveEntityLightSources(this);
-	delete m_pLight; m_pLight = NULL;
+	delete m_pLight; m_pLight = nullptr;
 }

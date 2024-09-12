@@ -85,7 +85,7 @@ bool CXMLDOMDocumentImpl::loadXML(const char* szString)
 
 XDOM::IXMLDOMNode* CXMLDOMDocumentImpl::getRootNode()
 {
-	return NULL;
+	return nullptr;
 }
 
 XDOM::IXMLDOMNode* CXMLDOMDocumentImpl::createNode(XDOM::_DOMNodeType Type, const XMLCHAR* name)
@@ -121,7 +121,7 @@ void CXMLDOMDocumentImpl::PrintNode(XDOM::IXMLDOMNode* pNode, string& rString, i
 
 		XDOM::IXMLDOMNodeList* pChilds = pNode->getChildNodes();
 		//checks if there are childs attributes or elements or both
-		XDOM::IXMLDOMNode* pChild = NULL;
+		XDOM::IXMLDOMNode* pChild = nullptr;
 		pChilds->reset();
 
 		while (pChild = pChilds->nextNode())
@@ -234,14 +234,14 @@ XDOM::IXMLDOMNode* CXMLDOMDocumentImpl::getAttribute(const XMLCHAR* sName)
 {
 	XDOM::IXMLDOMNode* pNode;
 	if (m_ntNodeType != XDOM::NODE_ELEMENT)
-		return NULL;
+		return nullptr;
 	pNode = m_pChildNodes->getNamedItem(sName);
 	if (pNode)
 	{
 		if (pNode->getNodeType() == XDOM::NODE_ATTRIBUTE)
 			return pNode;
 	}
-	return NULL;
+	return nullptr;
 }
 
 XDOM::IXMLDOMNodeList* CXMLDOMDocumentImpl::getElementsByTagName(const XMLCHAR* sName)
@@ -250,7 +250,7 @@ XDOM::IXMLDOMNodeList* CXMLDOMDocumentImpl::getElementsByTagName(const XMLCHAR* 
 	CXMLDOMNodeListImpl* pNodeList;
 	pNodeList = new CXMLDOMNodeListImpl;
 	m_pChildNodes->reset();
-	while ((pNode = m_pChildNodes->nextNode()) != NULL)
+	while ((pNode = m_pChildNodes->nextNode()) != nullptr)
 	{
 #if defined(LINUX)
 		if (compareTextFileStrings(pNode->getName(), sName) == 0)
@@ -260,7 +260,7 @@ XDOM::IXMLDOMNodeList* CXMLDOMDocumentImpl::getElementsByTagName(const XMLCHAR* 
 			pNodeList->AddNode(pNode);
 	}
 	//	if(pNodeList->length()==0)
-	//		return NULL;
+	//		return nullptr;
 	return pNodeList;
 }
 

@@ -153,7 +153,7 @@ int CUIVideoPanel::LoadVideo(const string& szFileName, bool bSound)
 	else
 	{
 		// check for a MOD first
-		const char* szPrefix = NULL;
+		const char* szPrefix = nullptr;
 		IGameMods* pMods = m_pUISystem->GetISystem()->GetIGame()->GetModsInterface();
 		if (pMods)
 			szPrefix = pMods->GetModPath(szFileName.c_str());
@@ -201,7 +201,7 @@ int CUIVideoPanel::LoadVideo(const string& szFileName, bool bSound)
 	if (m_hBink->Width == 640 && m_hBink->Height == 480)
 		m_iTextureID = m_pUISystem->GetIRenderer()->DownLoadToVideoMemory((unsigned char*)m_pSwapBuffer, m_hBink->Width, m_hBink->Height, eTF_0888, eTF_0888, 0, 0, FILTER_LINEAR, 0, "$VideoPanel", FT_DYNAMIC);
 	else
-		m_iTextureID = m_pUISystem->GetIRenderer()->DownLoadToVideoMemory((unsigned char*)m_pSwapBuffer, m_hBink->Width, m_hBink->Height, eTF_0888, eTF_0888, 0, 0, FILTER_LINEAR, 0, NULL, FT_DYNAMIC);
+		m_iTextureID = m_pUISystem->GetIRenderer()->DownLoadToVideoMemory((unsigned char*)m_pSwapBuffer, m_hBink->Width, m_hBink->Height, eTF_0888, eTF_0888, 0, 0, FILTER_LINEAR, 0, nullptr, FT_DYNAMIC);
 
 	if (m_iTextureID == -1)
 	{

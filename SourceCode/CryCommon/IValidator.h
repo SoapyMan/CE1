@@ -74,9 +74,9 @@ struct SValidatorRecord
 	SValidatorRecord()
 	{
 		module = VALIDATOR_MODULE_UNKNOWN;
-		text = NULL;
-		file = NULL;
-		description = NULL;
+		text = nullptr;
+		file = nullptr;
+		description = nullptr;
 		severity = VALIDATOR_WARNING;
 		flags = 0;
 	}

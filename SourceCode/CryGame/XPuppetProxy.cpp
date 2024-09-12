@@ -74,7 +74,7 @@ CXPuppetProxy::CXPuppetProxy(IEntity *pEntity,IScriptSystem *pScriptSystem, CXGa
 		}
 	}
 
-	m_pAISystem = NULL;
+	m_pAISystem = nullptr;
 }
 
 CXPuppetProxy::~CXPuppetProxy()

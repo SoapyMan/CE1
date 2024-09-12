@@ -53,9 +53,9 @@ public:
 
 CryModelLoader::CryModelLoader(CControllerManager* pControllerManager) :
 	m_pControllerManager(pControllerManager),
-	m_fCalFile(NULL),
+	m_fCalFile(nullptr),
 	m_nCafFindFileHandle(-1),
-	m_pModel(NULL),
+	m_pModel(nullptr),
 	m_bLoadFromCCG(false),
 	m_bExtCCG(false)
 {
@@ -77,7 +77,7 @@ void CryModelLoader::clear()
 	if (m_fCalFile)
 	{
 		g_GetPak()->FClose(m_fCalFile);
-		m_fCalFile = NULL;
+		m_fCalFile = nullptr;
 	}
 
 	if (m_nCafFindFileHandle != -1)
@@ -89,7 +89,7 @@ void CryModelLoader::clear()
 	if (m_pModel)
 	{
 		delete m_pModel;
-		m_pModel = NULL;
+		m_pModel = nullptr;
 	}
 
 	m_arrLodFiles.clear();
@@ -128,29 +128,29 @@ CryModel* CryModelLoader::loadNew(CryCharBody* pBody, const string& strGeomFileN
 	g_GetLog()->UpdateLoadingScreen("\003Loading %s", cutString(m_bLoadFromCCG ? getCCGFilePath() : strGeomFileName, 40).c_str());
 	// find how many LODs we have
 	if (!(m_bLoadFromCCG ? preloadCCG() : preloadCGFs()))
-		return NULL;
+		return nullptr;
 
 	m_pModel = new CryModel(pBody, m_pControllerManager);
 
 	if (m_bLoadFromCCG)
 	{
 		if (!loadCCG())
-			return NULL;
+			return nullptr;
 	}
 	else
 	{
 		if (!loadCGFs())
-			return NULL;
+			return nullptr;
 
 		//m_pModel->buildMorphSkins();
 
 		if (!loadTextures())
-			return NULL;
+			return nullptr;
 
 		m_pModel->m_pDefaultModelState->GetCryModelSubmesh(0)->GenerateRenderArrays(strGeomFileName.c_str());
 
 		if (!loadAnimations())
-			return NULL;
+			return nullptr;
 	}
 
 
@@ -433,7 +433,7 @@ unsigned CryModelLoader::loadAnimationsWithCAL()
 			szAnimName = strtok(sBuffer, " \t\n\r=");
 			if (!szAnimName)
 				continue;
-			szFileName = strtok(NULL, " \t\n\r=");
+			szFileName = strtok(nullptr, " \t\n\r=");
 			if (!szFileName || szFileName[0] == '?')
 			{
 				m_pModel->RegisterDummyAnimation(szAnimName);
@@ -638,7 +638,7 @@ bool CryModelLoader::loadTextures()
 CryModel* CryModelLoader::detachModel()
 {
 	CryModel* pModel = m_pModel; // this model will be returned
-	m_pModel = NULL; // forget about the model
+	m_pModel = nullptr; // forget about the model
 	return pModel;
 }
 

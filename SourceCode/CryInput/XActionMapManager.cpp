@@ -25,8 +25,8 @@ CXActionMapManager::CXActionMapManager(CInput* pInput)
 {
 	m_bEnabled = 1;
 	m_pInput = pInput;
-	m_pCurrentActionMap = NULL;
-	m_pSink = NULL;
+	m_pCurrentActionMap = nullptr;
+	m_pSink = nullptr;
 	m_bInvertedMouse = false;
 	pInput->AddEventListener(this);
 }
@@ -117,7 +117,7 @@ IActionMap* CXActionMapManager::GetActionMap(const char* s)
 	if (itor != m_mapActionMaps.end())
 		return itor->second;
 
-	return NULL;
+	return nullptr;
 }
 
 void CXActionMapManager::Update(unsigned int nTimeMSec)
@@ -170,7 +170,7 @@ void CXActionMapManager::SetActionMap(const char* s)
 		m_pCurrentActionMap = pNewActionMap;
 	}
 	else
-		m_pCurrentActionMap = NULL;
+		m_pCurrentActionMap = nullptr;
 }
 
 bool CXActionMapManager::CheckActionMap(XACTIONID nActionID)

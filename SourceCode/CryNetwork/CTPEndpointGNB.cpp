@@ -151,7 +151,7 @@ bool CCTPEndpointGNB::SendReliable(CStream& stmData)
 void CCTPEndpointGNB::Update(unsigned int nTime, unsigned char cFrameType, CStream* pStm)
 {
 	m_nCurrentTime = nTime;
-	CTP* pFrame = NULL;
+	CTP* pFrame = nullptr;
 	CTPAck ack;
 	CTPData data;
 	CTPPong pong;
@@ -390,7 +390,7 @@ CStream CCTPEndpointGNB::CompressStream(CStream &stmUncompressed)
 #ifdef USE_PACKET_COMPRESSION
 	if(m_bCompress)
 	{
-		BYTE *pUncompressed=NULL;
+		BYTE *pUncompressed=nullptr;
 		pUncompressed=stmUncompressed.GetPtr();
 		unsigned short nUncompressedSizeInBits=(unsigned short)stmUncompressed.GetSize();
 		unsigned short nUncompressedSize=BITS2BYTES(nUncompressedSizeInBits);

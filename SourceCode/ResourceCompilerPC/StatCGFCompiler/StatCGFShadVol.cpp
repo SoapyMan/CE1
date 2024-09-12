@@ -90,7 +90,7 @@ CShadowVolObject::~CShadowVolObject()
 
 void CStatCGFShadVol::Serialize(int& nPos, void* pStream, bool bSave)
 {
-	byte* pTarget = pStream ? (byte*)pStream + nPos : NULL;
+	byte* pTarget = pStream ? (byte*)pStream + nPos : nullptr;
 	IStencilShadowConnectivity* pConnectivity = m_pShadowVolObject->GetEdgeConnectivity();
 	// NOTE: passing a big number is not a good practice here, because in debug mode
 	// it validates the buffers size and can detect buffer overruns early and painlessly.

@@ -115,7 +115,7 @@ void CName::mfInitTables(void)
 
 	for (i = 0; i < 8192; i++)
 	{
-		mNameHash[i] = NULL;
+		mNameHash[i] = nullptr;
 	}
 
 	i = 0;
@@ -140,10 +140,10 @@ void CName::mfRegister(SNameEntry& sFNE)
 	{
 		i = mNames.Num();
 		mNames.AddIndex(1);
-		mNames[i] = NULL;
+		mNames[i] = nullptr;
 		l++;
 	}
-	if (mNames[sFNE.mNumName] != NULL)
+	if (mNames[sFNE.mNumName] != nullptr)
 		mDuplicate = sFNE.mNumName;
 
 	mNames[sFNE.mNumName] = &sFNE;
@@ -241,7 +241,7 @@ void CName::mfDeleteEntry(int num)
 	}
 
 	*sFNE1 = (*sFNE1)->mNext;
-	mNames[num] = NULL;
+	mNames[num] = nullptr;
 	i = mAvailable.Num();
 	mAvailable.AddIndex(1);
 	mAvailable[i] = num;

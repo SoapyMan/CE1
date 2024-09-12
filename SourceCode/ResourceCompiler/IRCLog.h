@@ -101,7 +101,7 @@ struct IRCLog : public ILog
 	*/
 
 	//set the file used to log to disk
-	virtual void SetFileName(const char* command = NULL) {}
+	virtual void SetFileName(const char* command = nullptr) {}
 	virtual const char* GetFileName() { return "stdout"; }
 	virtual void	LogToFile(const char* szCommand, ...)
 	{

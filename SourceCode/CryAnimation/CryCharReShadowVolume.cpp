@@ -5,8 +5,8 @@
 
 
 CryCharReShadowVolume::CryCharReShadowVolume() :
-	m_pLeafBuffer(NULL),
-	m_pMesh(NULL),
+	m_pLeafBuffer(nullptr),
+	m_pMesh(nullptr),
 	m_nUsedMeshVertices(0),
 	m_arrIndices("CryCharReShadowVolume.Indices"),
 	m_arrVertices("CryCharReShadowVolume.Vertices"),
@@ -24,14 +24,14 @@ void CryCharReShadowVolume::clear()
 	if (m_pLeafBuffer)
 	{
 		g_GetIRenderer()->DeleteLeafBuffer(m_pLeafBuffer);
-		m_pLeafBuffer = NULL;
+		m_pLeafBuffer = nullptr;
 	}
 
 	if (m_pMesh)
 	{
-		m_pMesh->m_arrLBuffers[0].pVB = NULL;
+		m_pMesh->m_arrLBuffers[0].pVB = nullptr;
 		m_pMesh->Release();
-		m_pMesh = NULL;
+		m_pMesh = nullptr;
 	}
 }
 
@@ -60,7 +60,7 @@ void CryCharReShadowVolume::prepare(unsigned numIndices, unsigned numVertices)
 	if (m_pLeafBuffer && m_pLeafBuffer->m_SecVertCount < (int)numVertices)
 	{
 		g_GetIRenderer()->DeleteLeafBuffer(m_pLeafBuffer);
-		m_pLeafBuffer = NULL;
+		m_pLeafBuffer = nullptr;
 	}
 
 	if (!m_pMesh)
@@ -79,7 +79,7 @@ void CryCharReShadowVolume::prepare(unsigned numIndices, unsigned numVertices)
 	if (!m_pLeafBuffer)
 	{
 		CRYASSERT(!m_arrVertices.empty());
-		m_pLeafBuffer = g_GetIRenderer()->CreateLeafBufferInitialized(&m_arrVertices[0], numVertices, VERTEX_FORMAT_P3F, NULL, 0, R_PRIMV_TRIANGLES, "Character ShadowVolume");
+		m_pLeafBuffer = g_GetIRenderer()->CreateLeafBufferInitialized(&m_arrVertices[0], numVertices, VERTEX_FORMAT_P3F, nullptr, 0, R_PRIMV_TRIANGLES, "Character ShadowVolume");
 		m_pLeafBuffer->SetChunk(0, 0, numVertices, 0, -1); // setup fake shunk to allow mfCheckUpdate
 		m_pMesh->m_arrLBuffers[0].pVB = m_pLeafBuffer; // use always slot 0
 	}
@@ -123,7 +123,7 @@ void CryCharReShadowVolume::submit(const SRendParams* rParams, IShader* pShadowC
 	m_pLeafBuffer->UpdateSysIndices(&m_arrIndices[0], m_pMesh->m_nRendIndices);
 
 	IShader* pSHStencil = g_GetIRenderer()->EF_LoadShader("<Stencil>", eSH_World, EF_SYSTEM);
-	g_GetIRenderer()->EF_AddEf(0, (CRendElement*)m_pMesh, pSHStencil, NULL, pObj, -1, pShadowCull, rParams->nSortValue);
+	g_GetIRenderer()->EF_AddEf(0, (CRendElement*)m_pMesh, pSHStencil, nullptr, pObj, -1, pShadowCull, rParams->nSortValue);
 
 	m_nLastFrameSubmitted = g_GetIRenderer()->GetFrameID();
 	m_fLastTimeSubmitted = g_GetTimer()->GetCurrTime();

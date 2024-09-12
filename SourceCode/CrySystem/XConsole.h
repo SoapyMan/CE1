@@ -125,7 +125,7 @@ public:
 	virtual int GetLineCount() const;
 	virtual ICVar* GetCVar(const char* name, const bool bCaseSensitive = true);
 	virtual CXFont* GetFont() { return m_pXFont; }
-	virtual void Help(const char* command = NULL);
+	virtual void Help(const char* command = nullptr);
 	virtual char* GetVariable(const char* szVarName, const char* szFileName, const char* def_val);
 	virtual float GetVariable(const char* szVarName, const char* szFileName, float def_val);
 	virtual void PrintLine(const char* s);

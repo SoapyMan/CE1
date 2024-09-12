@@ -10,7 +10,7 @@ CMusicPatternInstance::CMusicPatternInstance(CMusicPattern* pPattern)
 	if (m_pPattern)
 		m_pDecoderInstance = m_pPattern->CreateDecoderInstance();
 	else
-		m_pDecoderInstance = NULL;
+		m_pDecoderInstance = nullptr;
 }
 
 CMusicPatternInstance::~CMusicPatternInstance()
@@ -70,7 +70,7 @@ int CMusicPatternInstance::GetSamplesToLastFadePoint()
 
 int CMusicPatternInstance::GetSamplesToEnd()
 {
-	if (m_pDecoderInstance != NULL && m_pPattern != NULL)
+	if (m_pDecoderInstance != nullptr && m_pPattern != nullptr)
 		return m_pPattern->m_nSamples - m_pDecoderInstance->GetPos();
 	return -1;
 }

@@ -45,9 +45,9 @@ public:
 	unsigned numChildren()const { return getBoneInfo()->numChildren(); }
 	CryBone* getChild(unsigned i) { CRYASSERT(i < numChildren()); return this + getBoneInfo()->m_nOffsetChildren + i; }
 	const CryBone* getChild(unsigned i) const { CRYASSERT(i < numChildren()); return this + getBoneInfo()->m_nOffsetChildren + i; }
-	CryBone* getParent() { return getBoneInfo()->m_nOffsetParent ? this + getBoneInfo()->m_nOffsetParent : NULL; }
+	CryBone* getParent() { return getBoneInfo()->m_nOffsetParent ? this + getBoneInfo()->m_nOffsetParent : nullptr; }
 	int getParentIndexOffset()const { return getBoneInfo()->m_nOffsetParent; }
-	const CryBone* getParent() const { return getBoneInfo()->m_nOffsetParent ? this + getBoneInfo()->m_nOffsetParent : NULL; }
+	const CryBone* getParent() const { return getBoneInfo()->m_nOffsetParent ? this + getBoneInfo()->m_nOffsetParent : nullptr; }
 
 	ICryBone* GetParent() { return getParent(); }
 	// returns the matrix relative to parent

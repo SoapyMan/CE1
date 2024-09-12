@@ -42,7 +42,7 @@ bool CStatObj::SetShaderTemplate(int nTemplate, const char* TemplName, const cha
 			if (e && (*lb->m_pMats)[i].pRE && (*lb->m_pMats)[i].nNumIndices)
 			{
 				if (nTemplate < EFT_USER_FIRST && nTemplate >= 0)
-					e->AddTemplate(sr, nTemplate, NULL, false);
+					e->AddTemplate(sr, nTemplate, nullptr, false);
 				else
 					if (TemplName && TemplName[0])
 					{
@@ -341,7 +341,7 @@ void CStatObj::Render(const SRendParams& rParams, const Vec3& t, int nLodLevel)
 		// Add render elements
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	IMatInfo* pMaterial = NULL;
+	IMatInfo* pMaterial = nullptr;
 	if (GetCVars()->e_materials && !m_bDefaultObject)
 		pMaterial = rParams.pMaterial;
 
@@ -425,7 +425,7 @@ void CStatObj::RenderLeafBuffer(const SRendParams & rParams, CCObject * pObj)
 			}
 
 			if (rParams.nShaderTemplate>0)
-				e->AddTemplate(sr, (int)rParams.nShaderTemplate,NULL);
+				e->AddTemplate(sr, (int)rParams.nShaderTemplate,nullptr);
 
 			if(rParams.dwFObjFlags & FOB_FOGPASS)
 				if(e->GetTemplate(-1)->GetFlags() & EF_OVERLAY)

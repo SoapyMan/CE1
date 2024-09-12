@@ -17,7 +17,7 @@ public:
 	{
 		mfSetType(eDATA_SkyZone);
 		mfUpdateFlags(FCEF_TRANSFORM | FCEF_NODEL);
-		mPVS = NULL;
+		mPVS = nullptr;
 	}
 
 	virtual ~CRESkyZone()

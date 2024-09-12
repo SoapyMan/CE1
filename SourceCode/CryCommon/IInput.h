@@ -536,7 +536,7 @@ struct IActionMap
 	virtual void RemoveBind(XACTIONID nActionID, XBind& NewBind, XActionActivationMode aam) = 0;
 	virtual void BindAction(XACTIONID nActionID, XBind& NewBind, int iKeyPos = -1) = 0;//int nKey,int nModifier=XKEY_NULL) = 0;
 	virtual void BindAction(XACTIONID nActionID, int nKey, int nModifier = XKEY_NULL, int iKeyPos = -1) = 0;//, bool bConfigurable=false, bool bReplicate=false) = 0;
-	virtual void BindAction(XACTIONID nActionID, const char* sKey, const char* sModifier = NULL, int iKeyPos = -1) = 0;
+	virtual void BindAction(XACTIONID nActionID, const char* sKey, const char* sModifier = nullptr, int iKeyPos = -1) = 0;
 	virtual void GetBinding(XACTIONID nActionID, int nKeyPos, XBind& Bind) = 0;
 	virtual void GetBinding(XACTIONID nActionID, int nKeyPos, int& nKey, int& nModifier) = 0;
 	virtual void GetBinding(XACTIONID nActionID, int nKeyPos, char* pszKey, char* pszModifier) = 0;
@@ -619,7 +619,7 @@ struct IInputActionMap
 		@param szMods key modifier [eg. "SHIFT"]
 		@return true=succeded,false=failed*/
 
-	virtual bool SetAction(const INPUTACTIONID nActionID, bool bCheckPressed, const char* szCodes, const char* szMods = NULL) = 0;
+	virtual bool SetAction(const INPUTACTIONID nActionID, bool bCheckPressed, const char* szCodes, const char* szMods = nullptr) = 0;
 
 	virtual void ClearAction(const INPUTACTIONID nActionID) = 0;
 };

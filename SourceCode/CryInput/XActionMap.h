@@ -50,7 +50,7 @@ public:
 	void RemoveBind(XACTIONID nActionID, XBind& NewBind, XActionActivationMode aam);
 	void BindAction(XACTIONID nActionID, XBind& NewBind, int iKeyPos = -1);//XACTIONID nActionID,int nKey,int nModifier=XKEY_NULL);
 	void BindAction(XACTIONID nActionID, int nKey, int nModifier = XKEY_NULL, int iKeyPos = -1);//, bool bConfigurable=true, bool bReplicate=false);
-	void BindAction(XACTIONID nActionID, const char* sKey, const char* sModifier = NULL, int iKeyPos = -1);
+	void BindAction(XACTIONID nActionID, const char* sKey, const char* sModifier = nullptr, int iKeyPos = -1);
 	void GetBinding(XACTIONID nActionID, int nKeyPos, XBind& Bind);
 	void GetBinding(XACTIONID nActionID, int nKeyPos, int& nKey, int& nModifier);	// nKey==XKEY_NULL if no more keys are bound to this action or action doesnt exist
 	void GetBinding(XACTIONID nActionID, int nKeyPos, char* pszKey, char* pszModifier); // pszKey=="" if no more keys are bound to this action or action doesnt exist

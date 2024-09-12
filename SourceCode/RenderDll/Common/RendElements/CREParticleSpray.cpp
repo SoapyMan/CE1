@@ -43,7 +43,7 @@ CREParticleSpray& CREParticleSpray::operator = (const CREParticleSpray& Orig)
 		mParticlePool[0][loop].next = &mParticlePool[0][loop + 1];
 	}
 	// SET THE LAST PARTICLE TO POINT TO NULL
-	mParticlePool[0][Orig.mEmitter.totalParticles[0] - 1].next = NULL;
+	mParticlePool[0][Orig.mEmitter.totalParticles[0] - 1].next = nullptr;
 
 	if (Orig.mEmitter.totalParticles[1])
 	{
@@ -55,14 +55,14 @@ CREParticleSpray& CREParticleSpray::operator = (const CREParticleSpray& Orig)
 			mParticlePool[1][loop].next = &mParticlePool[1][loop + 1];
 		}
 		// SET THE LAST PARTICLE TO POINT TO NULL
-		mParticlePool[1][Orig.mEmitter.totalParticles[1] - 1].next = NULL;
+		mParticlePool[1][Orig.mEmitter.totalParticles[1] - 1].next = nullptr;
 	}
 	else
 	{
-		mParticlePntr[1] = mParticlePool[1] = NULL;
+		mParticlePntr[1] = mParticlePool[1] = nullptr;
 	}
 	memcpy(&mEmitter, &Orig.mEmitter, sizeof(SEmitter));
-	mEmitter.particle = NULL;
+	mEmitter.particle = nullptr;
 
 	return *this;
 }
@@ -82,7 +82,7 @@ bool CREParticleSpray::mfInitParticleSystem(void)
 		mParticlePool[0][loop].next = &mParticlePool[0][loop + 1];
 	}
 	// SET THE LAST PARTICLE TO POINT TO NULL
-	mParticlePool[0][mEmitter.totalParticles[0] - 1].next = NULL;
+	mParticlePool[0][mEmitter.totalParticles[0] - 1].next = nullptr;
 
 
 	if (mEmitter.totalParticles[1])
@@ -95,11 +95,11 @@ bool CREParticleSpray::mfInitParticleSystem(void)
 			mParticlePool[1][loop].next = &mParticlePool[1][loop + 1];
 		}
 		// SET THE LAST PARTICLE TO POINT TO NULL
-		mParticlePool[1][mEmitter.totalParticles[1] - 1].next = NULL;
+		mParticlePool[1][mEmitter.totalParticles[1] - 1].next = nullptr;
 	}
 	else
 	{
-		mParticlePool[1] = mParticlePntr[1] = NULL;
+		mParticlePool[1] = mParticlePntr[1] = nullptr;
 	}
 
 	return TRUE;
@@ -113,7 +113,7 @@ bool CREParticleSpray::mfInitParticleSystem(void)
 bool CREParticleSpray::mfInitEmitter(SEmitter* emitter)
 {
 	mfSetDefaultEmitter(emitter);
-	emitter->particle = NULL;         // NULL TERMINATED LINKED LIST
+	emitter->particle = NULL;         // nullptr TERMINATED LINKED LIST
 	return TRUE;
 }
 
@@ -314,7 +314,7 @@ _inline void LerpVector(Vec3d& a, Vec3d& b, float f, Vec3d& res)
 bool CREParticleSpray::mfUpdateParticle(SParticle* particle, SEmitter* emitter)
 {
 	// IF THIS IS AN VALID PARTICLE
-	if (particle != NULL && particle->life > 0)
+	if (particle != nullptr && particle->life > 0)
 	{
 		if (!particle->bSpark)
 			sUpdatePart(particle, &emitter->pi, false);
@@ -367,15 +367,15 @@ bool CREParticleSpray::mfUpdateParticle(SParticle* particle, SEmitter* emitter)
 		return TRUE;
 	}
 	else
-		if (particle != NULL && particle->life == 0)
+		if (particle != nullptr && particle->life == 0)
 		{
 			// FREE THIS SUCKER UP BACK TO THE MAIN POOL
-			if (particle->prev != NULL)
+			if (particle->prev != nullptr)
 				particle->prev->next = particle->next;
 			else
 				emitter->particle = particle->next;
 			// FIX UP THE NEXT'S PREV POINTER IF THERE IS A NEXT
-			if (particle->next != NULL)
+			if (particle->next != nullptr)
 				particle->next->prev = particle->prev;
 			particle->next = mParticlePool[particle->bSpark];
 			mParticlePool[particle->bSpark] = particle; // NEW POOL POINTER
@@ -458,16 +458,16 @@ bool CREParticleSpray::mfAddParticle(SEmitter* emitter, SParticleInfo* pi)
 	// IF THERE IS AN EMITTER AND A PARTICLE IN THE POOL
 	// AND I HAVEN'T EMITTED MY MAX
 	bool bSpark = (pi == &emitter->Spark);
-	if (emitter != NULL && mParticlePool[bSpark] != NULL && emitter->particleCount[bSpark] < emitter->totalParticles[bSpark])
+	if (emitter != nullptr && mParticlePool[bSpark] != nullptr && emitter->particleCount[bSpark] < emitter->totalParticles[bSpark])
 	{
 		particle = mParticlePool[bSpark];   // THE CURRENT PARTICLE 
 		mParticlePool[bSpark] = mParticlePool[bSpark]->next;  // FIX THE POOL POINTERS
 
-		if (emitter->particle != NULL)
+		if (emitter->particle != nullptr)
 			emitter->particle->prev = particle; // SET BACK LINK
 		particle->bSpark = bSpark;
 		particle->next = emitter->particle; // SET ITS NEXT POINTER
-		particle->prev = NULL;        // IT HAS NO BACK POINTER
+		particle->prev = nullptr;        // IT HAS NO BACK POINTER
 		emitter->particle = particle;   // SET IT IN THE EMITTER
 
 		if (pi->ePT != ePTBeam)
@@ -499,7 +499,7 @@ bool CREParticleSpray::mfAddParticle(SEmitter* emitter, SParticleInfo* pi)
 			v[PITCH] = -pitch;
 			v[YAW] = yaw;
 			v[ROLL] = 0;
-			AxisFromAngles(v, &particle->dir, NULL, NULL);
+			AxisFromAngles(v, &particle->dir, nullptr, nullptr);
 		}
 		else
 		{
@@ -560,9 +560,9 @@ bool CREParticleSpray::mfUpdateEmitter(SEmitter* emitter)
 	mFrame = gRenDev->m_RP.m_RenderFrame;
 
 	// IF THERE IS AN EMITTER
-	if (emitter != NULL)
+	if (emitter != nullptr)
 	{
-		if (emitter->particle != NULL)
+		if (emitter->particle != nullptr)
 		{
 			// GO THROUGH THE PARTICLES AND UPDATE THEM
 			particle = emitter->particle;
@@ -624,9 +624,9 @@ void CREParticleSpray::mfPrepare()
 	int savei = gRenDev->m_RP.m_RendNumIndices;
 
 	Vec3d vecVel;
-	if (em != NULL)
+	if (em != nullptr)
 	{
-		if (em->particle != NULL)
+		if (em->particle != nullptr)
 		{
 			pt = em->particle;
 			np = 0;
@@ -735,7 +735,7 @@ void CREParticleSpray::mfPrepare()
 					{
 						gRenDev->m_RP.m_RendNumVerts = n;
 						gRenDev->m_RP.m_pRenderFunc();
-						gRenDev->EF_Start(gRenDev->m_RP.m_pShader, gRenDev->m_RP.m_pStateShader, NULL, gRenDev->m_RP.m_pFogVolume ? (gRenDev->m_RP.m_pFogVolume - &gRenDev->m_RP.m_FogVolumes[0]) : 0, this);
+						gRenDev->EF_Start(gRenDev->m_RP.m_pShader, gRenDev->m_RP.m_pStateShader, nullptr, gRenDev->m_RP.m_pFogVolume ? (gRenDev->m_RP.m_pFogVolume - &gRenDev->m_RP.m_FogVolumes[0]) : 0, this);
 						n = 0;
 						ptr = gRenDev->m_RP.m_NextPtr;
 					}
@@ -990,7 +990,7 @@ bool CREParticleSpray::mfCompileMove(SShader* ef, SPartMoveStage* pm, SParticleI
 
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else
@@ -1082,7 +1082,7 @@ void CREParticleSpray::mfCompileCollision(SShader* ef, SEmitter* em, char* scr, 
 	em->PlaneOffs.Set(0.0f, 0.0f, 0.0f);
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else
@@ -1177,7 +1177,7 @@ void CREParticleSpray::mfCompileParticleInfo(SShader* ef, SParticleInfo* pi, cha
 
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else
@@ -1347,7 +1347,7 @@ bool CREParticleSpray::mfCompile(SShader* ef, char* scr)
 
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else

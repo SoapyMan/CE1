@@ -40,10 +40,10 @@ CVProgram* CVProgram::mfForName(const char* name, uint64 nMask)
 	int i;
 
 	if (!name || !name[0])
-		return NULL;
+		return nullptr;
 
 	if (!(gRenDev->GetFeatures() & (RFT_HW_VS)))
-		return NULL;
+		return nullptr;
 
 	for (i = 0; i < m_VPrograms.Num(); i++)
 	{
@@ -64,7 +64,7 @@ CVProgram* CVProgram::mfForName(const char* name, uint64 nMask)
 	if (!fp)
 	{
 		iLog->Log("WARNING: Couldn't find vertex shader '%s'", name);
-		return NULL;
+		return nullptr;
 	}
 	iSystem->GetIPak()->FSeek(fp, 0, SEEK_END);
 	int len = iSystem->GetIPak()->FTell(fp);
@@ -75,7 +75,7 @@ CVProgram* CVProgram::mfForName(const char* name, uint64 nMask)
 	buf[len] = 0;
 	buf = gRenDev->m_cEF.mfScriptPreprocessor(buf, dir, scrname);
 
-	CVProgram* p = NULL;
+	CVProgram* p = nullptr;
 	{
 		CVProgram* pr;
 		pr = new CCGVProgram_GL;
@@ -114,7 +114,7 @@ void SCGScript::mfRemoveFromList()
 	{
 		SCGScript* scr = CCGVProgram_GL::m_CGScripts[i];
 		if (scr == this)
-			CCGVProgram_GL::m_CGScripts[i] = NULL;
+			CCGVProgram_GL::m_CGScripts[i] = nullptr;
 	}
 }
 
@@ -179,7 +179,7 @@ void CCGVProgram_GL::mfFree()
 CCGVProgram_GL::~CCGVProgram_GL()
 {
 	mfFree();
-	CVProgram::m_VPrograms[m_Id] = NULL;
+	CVProgram::m_VPrograms[m_Id] = nullptr;
 }
 
 void CCGVProgram_GL::Release()
@@ -291,7 +291,7 @@ SCGScript* CCGVProgram_GL::mfGenerateScriptVP(CVProgram* pPosVP)
 		SCGScript* pScr = pVP->m_PosScript;
 		if (CName(pPosVP->m_Name.c_str(), eFN_Find) != m_Insts[m_CurInst].m_PosScriptName)
 		{
-			SCGScript* pS = mfAddNewScript(m_Insts[m_CurInst].m_PosScriptName.c_str(), NULL);
+			SCGScript* pS = mfAddNewScript(m_Insts[m_CurInst].m_PosScriptName.c_str(), nullptr);
 			if (pS)
 				pScr = pS;
 		}
@@ -347,7 +347,7 @@ SCGScript* CCGVProgram_GL::mfGenerateScriptVP(CVProgram* pPosVP)
 		}
 	}
 
-	SCGScript* cgs = mfAddNewScript(NULL, &newScr[0]);
+	SCGScript* cgs = mfAddNewScript(nullptr, &newScr[0]);
 
 	return cgs;
 }
@@ -379,7 +379,7 @@ static char* sSphereMapGenScriptVP[] =
 	"float4 tcSM = {0,0,0,1};\n"
 	"tcSM.xy = tcRef.xy/tcEm.x + 0.5;\n"
 ,
-  NULL
+  nullptr
 };
 static char* sReflectionMapGenScriptVP[] =
 {
@@ -391,7 +391,7 @@ static char* sReflectionMapGenScriptVP[] =
 	"tcRM.xyz = tcRef.xyz;\n"
 	"tcRM.w = vPos.w;\n"
   ,
-  NULL
+  nullptr
 };
 static char* sNormalMapGenScriptVP[] =
 {
@@ -401,7 +401,7 @@ static char* sNormalMapGenScriptVP[] =
 	"tcNM.xyz = tcNormal.xyz;\n"
 	"tcNM.w = vPos.w;\n"
   ,
-  NULL
+  nullptr
 };
 
 char* CCGVProgram_GL::mfGenerateTCScript(char* Script, int nt)
@@ -514,7 +514,7 @@ char* CCGVProgram_GL::mfGenerateTCScript(char* Script, int nt)
 			while (sNewStr[n] != 0xa && sNewStr[n] != 0) { sNewStr[n] = 0x20; n++; }
 
 			// Add texgen code to the final VP
-			char** pNewScripts = NULL;
+			char** pNewScripts = nullptr;
 			sStr1[0] = 0;
 			if (m_Insts[m_CurInst].m_Mask & tcGOLMask)
 				sprintf(sStr1, "float4 tcOL = mul(%s, vPos);\n", sMTCG);
@@ -692,7 +692,7 @@ char* CCGVProgram_GL::mfCreateAdditionalVP(CVProgram* pPosVP)
 	if (!pScript)
 		pScript = mfGenerateScriptVP(pPosVP);
 	if (!pScript)
-		return NULL;
+		return nullptr;
 	const char* scr = pScript->m_Script;
 	int len, n;
 
@@ -920,7 +920,7 @@ void CCGVProgram_GL::mfCompileParamStateMatrix(char* scr, SShader* ef, TArray<SC
 	pr.m_dwBind = 0;
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else
@@ -973,7 +973,7 @@ void CCGVProgram_GL::mfCompileVertAttributes(char* scr, SShader* ef)
 
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else
@@ -1038,7 +1038,7 @@ bool CCGVProgram_GL::mfCompile(char* scr)
 
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else
@@ -1064,9 +1064,9 @@ bool CCGVProgram_GL::mfCompile(char* scr)
 				m_PosScript = mfAddNewScript(name, params);
 			else
 			{
-				m_PosScript = mfAddNewScript(params, NULL);
+				m_PosScript = mfAddNewScript(params, nullptr);
 				if (!m_PosScript)
-					m_PosScript = mfAddNewScript("PosCommon", NULL);
+					m_PosScript = mfAddNewScript("PosCommon", nullptr);
 			}
 			break;
 
@@ -1147,7 +1147,7 @@ bool CCGVProgram_GL::mfCompile(char* scr)
 		case eScript:
 		{
 			SAFE_RELEASE(m_Script);
-			m_Script = mfAddNewScript(NULL, data);
+			m_Script = mfAddNewScript(nullptr, data);
 		}
 		break;
 		}
@@ -1360,7 +1360,7 @@ static char* sGetText(char** buf)
 		++*buf;
 		SkipCharacters(buf, " ");
 		if (**buf == ':')
-			return NULL;
+			return nullptr;
 	}
 	char* result = *buf;
 
@@ -1436,22 +1436,22 @@ bool CCGVProgram_GL::mfActivate(CVProgram* pPosVP)
 		char namedst1[256];
 		FILETIME writetimesrc, writetimedst;
 		FILE* statussrc, * statusdst;
-		statussrc = NULL;
-		statusdst = NULL;
+		statussrc = nullptr;
+		statusdst = nullptr;
 		mfGetSrcFileName(namesrc, 256);
 		CCGVProgram_GL* pVP = (CCGVProgram_GL*)pPosVP;
 		mfGetDstFileName(namedst, 256);
 		StripExtension(namedst, namedst1);
 		AddExtension(namedst1, ".cgasm");
 		statusdst = iSystem->GetIPak()->FOpen(namedst1, "r");
-		if (statusdst == NULL)
+		if (statusdst == nullptr)
 		{
 			if (CRenderer::CV_r_shadersprecache == 2)
 				bCreate = true;
 			else
 			{
 				statusdst = iSystem->GetIPak()->FOpen(namedst, "r");
-				if (statusdst == NULL)
+				if (statusdst == nullptr)
 					bCreate = true;
 				else
 				{
@@ -1500,10 +1500,10 @@ bool CCGVProgram_GL::mfActivate(CVProgram* pPosVP)
 					fputs(code, fp);
 					fclose(fp);
 				}
-				HANDLE hdst = CreateFile(namedst, GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL);
+				HANDLE hdst = CreateFile(namedst, GENERIC_WRITE, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, nullptr);
 				FILE* hsrc = iSystem->GetIPak()->FOpen(namesrc, "r");
 				writetimesrc = iSystem->GetIPak()->GetModificationTime(hsrc);
-				SetFileTime(hdst, NULL, NULL, &writetimesrc);
+				SetFileTime(hdst, nullptr, nullptr, &writetimesrc);
 				iSystem->GetIPak()->FClose(hsrc);
 				CloseHandle(hdst);
 				delete[] code;
@@ -1526,7 +1526,7 @@ bool CCGVProgram_GL::mfActivate(CVProgram* pPosVP)
 			len = iSystem->GetIPak()->FRead(pbuf, 1, len, statusdst);
 			pbuf[len] = 0;
 			iSystem->GetIPak()->FClose(statusdst);
-			statusdst = NULL;
+			statusdst = nullptr;
 
 			if (!bCreate && (m_Flags & PSFI_AUTOENUMTC))
 			{
@@ -1659,7 +1659,7 @@ bool CCGVProgram_GL::mfActivate(CVProgram* pPosVP)
 						}
 						char* szvAttr = sGetText(&token);
 						char* szhReg = sGetText(&token);
-						int len = szhReg != NULL ? strlen(szhReg) : 0;
+						int len = szhReg != nullptr ? strlen(szhReg) : 0;
 						if (szhReg && szhReg[len - 1] == ',')
 						{
 							char* sznComps = sGetText(&token);
@@ -1682,7 +1682,7 @@ bool CCGVProgram_GL::mfActivate(CVProgram* pPosVP)
 							m_Insts[m_CurInst].m_BindVars->AddElem(cgp);
 						}
 					}
-				token = strtok(NULL, "#");
+				token = strtok(nullptr, "#");
 			}
 			SAFE_DELETE_ARRAY(pbuf);
 			for (i = 0; i < FoundNames.Num(); i++)
@@ -1822,7 +1822,7 @@ bool CCGVProgram_GL::mfSet(bool bEnable, SShaderPassHW* slw, int nFlags)
 		CVProgram* pPosVP = this;
 		if (m_Flags & VPFI_UNIFIEDPOS)
 		{
-			CVProgram* pVP = NULL;
+			CVProgram* pVP = nullptr;
 			if (rd->m_RP.m_pRE && rd->m_RP.m_pRE->m_LastVP)
 				pVP = rd->m_RP.m_pRE->m_LastVP;
 			else
@@ -1860,7 +1860,7 @@ bool CCGVProgram_GL::mfSet(bool bEnable, SShaderPassHW* slw, int nFlags)
 				m_Insts[Type].m_dwHandle = -1;
 				return false;
 			}
-			m_LastVP = NULL;
+			m_LastVP = nullptr;
 		}
 
 		if (m_Frame != rd->m_nFrameUpdateID)

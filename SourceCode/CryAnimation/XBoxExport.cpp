@@ -67,7 +67,7 @@ void exportTestModel(CryGeometryInfo* pGeometry, CLeafBuffer* pLeafBuffer)
 	//---	 write indices for Leafbuffers
 	//---------------------------------------------------------------------------
 	//unsigned int numIndices				= pLeafBuffer->GetIndices().Count();
-	unsigned short* pIndices = pLeafBuffer->GetIndices(NULL);
+	unsigned short* pIndices = pLeafBuffer->GetIndices(nullptr);
 
 	int mcount = pLeafBuffer->m_pMats->Count();
 

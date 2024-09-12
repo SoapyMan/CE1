@@ -45,7 +45,7 @@ void CBoneLightDynamicBind::init(ICryCharInstance* pParent, CDLight* pDLight, un
 // deletes the light object, if needed
 void CBoneLightDynamicBind::done()
 {
-	m_pDLight->m_pCharInstance = NULL;
+	m_pDLight->m_pCharInstance = nullptr;
 	if (m_bDeleteLight)
 		delete m_pDLight;
 }

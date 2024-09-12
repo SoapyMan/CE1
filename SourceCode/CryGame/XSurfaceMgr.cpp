@@ -21,9 +21,9 @@ CXSurfaceMgr::CXSurfaceMgr()
 {
 	m_mat_default_id = -1;
 	
-	m_pScriptSystem=NULL;
-	m_pObjectMaterials=NULL;
-	m_pMaterialScriptObject=NULL;
+	m_pScriptSystem=nullptr;
+	m_pObjectMaterials=nullptr;
+	m_pMaterialScriptObject=nullptr;
 	Reset();
 }
 
@@ -385,10 +385,10 @@ void CXSurfaceMgr::Reset()
 IScriptObject * CXSurfaceMgr::GetMaterialByName( const char *sMaterialName )
 {
 	if(!m_pObjectMaterials)
-		return NULL;
+		return nullptr;
 	if(!m_pObjectMaterials->GetValue(sMaterialName,m_pMaterialScriptObject))
 	{
-		return NULL;
+		return nullptr;
 	}
 	else
 	{ 

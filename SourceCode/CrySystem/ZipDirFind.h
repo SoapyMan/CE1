@@ -18,7 +18,7 @@ public:
 
 	FindData (DirHeader* pRoot):
 		m_pRoot (pRoot),
-		m_pDirHeader (NULL)
+		m_pDirHeader (nullptr)
 		{
 		}
 

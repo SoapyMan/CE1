@@ -16,7 +16,7 @@
 
 CAdvCamSystem::CAdvCamSystem(CXGame *pGame)
 {
-	m_pScriptObject=NULL;
+	m_pScriptObject=nullptr;
 	m_pGame=pGame;
 	m_eiPlayerA=INVALID_WID;
 	m_eiPlayerB=INVALID_WID;
@@ -163,9 +163,9 @@ void CAdvCamSystem::ProcessKeys( CXEntityProcessingCmd &epc )
 		IEntity *pEntityB = pEntitySystem->GetEntity(m_eiPlayerB);						CRYASSERT(pEntityB);if(!pEntityB)return;
 		
 		// get player containers of the entities
-		CPlayer *pPlayerA = NULL;
+		CPlayer *pPlayerA = nullptr;
 		pEntityA->GetContainer()->QueryContainerInterface(CIT_IPLAYER,(void **) &pPlayerA);		CRYASSERT(pPlayerA);
-		CPlayer *pPlayerB = NULL;
+		CPlayer *pPlayerB = nullptr;
 		pEntityB->GetContainer()->QueryContainerInterface(CIT_IPLAYER,(void **) &pPlayerB);		CRYASSERT(pPlayerB);
 
 		// determine which direction we are moving in

@@ -244,7 +244,7 @@ char* CShader::mfRescanScript(int type, int nInd, SShader* pSHOrg, uint64 nMaskG
 {
 	char* pFinalScript = mfScriptForFileName(m_FileNames[type][nInd].c_str(), pSHOrg, nMaskGen);
 	if (!pFinalScript)
-		return NULL;
+		return nullptr;
 	ShaderFilesMapItor itor = m_RefEfs[type]->begin();
 	TArray<SRefEfs*> REs;
 	TArray<const char*> REnames;
@@ -280,7 +280,7 @@ bool CShader::mfReloadShaderScript(const char* szShaderName, int nFlags, SShader
 	strlwr(name);
 	LoadedShadersMapItor it = m_RefEfsLoaded.find(name);
 	if (it == m_RefEfsLoaded.end())
-		fe = NULL;
+		fe = nullptr;
 	else
 		fe = &it->second;
 	if (!fe)
@@ -318,7 +318,7 @@ bool CShader::mfReloadShaderScript(const char* szShaderName, int nFlags, SShader
 			ShaderFilesMapItor it;
 			it = m_RefEfs[type]->find(szShaderName);
 			if (it == m_RefEfs[type]->end())
-				fe = NULL;
+				fe = nullptr;
 			else
 				fe = it->second;
 			if (!fe)
@@ -353,7 +353,7 @@ bool CShader::mfReloadShaderScript(const char* szShaderName, int nFlags, SShader
 				iLog->Log("Reload shader '%s(%I64x)'", szShaderName, pSH->m_nMaskGen);
 			else
 				iLog->Log("Reload shader '%s'", szShaderName);
-			SShader* ef = gRenDev->m_cEF.mfForName(szShaderName, eSH_Misc, SF_RELOAD, NULL, pSH ? pSH->m_nMaskGen : 0);
+			SShader* ef = gRenDev->m_cEF.mfForName(szShaderName, eSH_Misc, SF_RELOAD, nullptr, pSH ? pSH->m_nMaskGen : 0);
 			m_bReload = false;
 
 			if (nD < 0)
@@ -458,7 +458,7 @@ bool CShader::mfReloadShader(const char* szName, int nFlags)
 	strlwr(name);
 	LoadedShadersMapItor it = m_RefEfsLoaded.find(name);
 	if (it == m_RefEfsLoaded.end())
-		fe = NULL;
+		fe = nullptr;
 	else
 		fe = &it->second;
 	if (!fe)
@@ -477,7 +477,7 @@ bool CShader::mfReloadShaderFile(const char* szName, int nFlags)
 		while (EfNames[j])
 		{
 			ShNames.AddElem(EfNames[j]);
-			EfNames[j] = NULL;
+			EfNames[j] = nullptr;
 			j++;
 		}
 		for (j = 0; j < ShNames.Num(); j++)
@@ -642,7 +642,7 @@ void CShader::mfCheckAffectedFiles(const char* ShadersPath, int nCheckFile, TArr
 		strlwr(buf);
 		char fname[256];
 		char fext[16];
-		_splitpath(CheckNames[nCheckFile], NULL, NULL, fname, fext);
+		_splitpath(CheckNames[nCheckFile], nullptr, nullptr, fname, fext);
 		strcat(fname, fext);
 		if (strstr(buf, fname))
 		{
@@ -708,7 +708,7 @@ char** CShader::mfListInScript(char* scr)
 			if (ver != SHADER_VERSION)
 			{
 				Warning(0, 0, "Warning: Shader Script version (%f) must be %f\n", ver, SHADER_VERSION);
-				return NULL;
+				return nullptr;
 			}
 			break;
 
@@ -722,7 +722,7 @@ char** CShader::mfListInScript(char* scr)
 		}
 	}
 
-	sEfNames[num] = NULL;
+	sEfNames[num] = nullptr;
 
 	return &sEfNames[0];
 }
@@ -770,7 +770,7 @@ void CShader::mfScanScript(char* scr, int n)
 			strlwr(nameEf);
 			ShaderFilesMapItor it = m_RefEfs[m_CurEfsNum]->find(nameEf);
 			if (it == m_RefEfs[m_CurEfsNum]->end())
-				fe = NULL;
+				fe = nullptr;
 			else
 				fe = it->second;
 			if (fe)
@@ -857,7 +857,7 @@ char* CShader::mfPreprCheckIncludes(char* buf, const char* drn, const char* name
 			continue;
 		}
 		char drv[16], dirn[512], drnn[512];
-		_splitpath(ni, drv, dirn, NULL, NULL);
+		_splitpath(ni, drv, dirn, nullptr, nullptr);
 		strcpy(drnn, drv);
 		strcat(drnn, dirn);
 		bFind = true;
@@ -1451,7 +1451,7 @@ char* CShader::mfPreprCheckMacros(char* buf, const char* nameFile)
 								if (bLogic[i] == 2)
 									bResultCond = bResultCond & bCond[i];
 					}
-					char* posStart = NULL;
+					char* posStart = nullptr;
 					int nNewPos = nPos;
 					int nLevel = 0;
 					if (bResultCond)
@@ -1816,13 +1816,13 @@ char* CShader::mfScriptForFileName(const char* name, SShader* shGen, uint64 nMas
 {
 	FILE* fp = iSystem->GetIPak()->FOpen(name, "rb");
 	if (!fp)
-		return NULL;
+		return nullptr;
 	iSystem->GetIPak()->FSeek(fp, 0, SEEK_END);
 	int len = iSystem->GetIPak()->FTell(fp);
 	if (!len)
 	{
 		iSystem->GetIPak()->FClose(fp);
-		return NULL;
+		return nullptr;
 	}
 	TArray<char> custMacros;
 	if (shGen && shGen->m_ShaderGenParams)
@@ -1850,7 +1850,7 @@ char* CShader::mfScriptForFileName(const char* name, SShader* shGen, uint64 nMas
 	{
 		iSystem->GetIPak()->FClose(fp);
 		Warning(0, 0, "Error: Can't allocate %d bytes for shader file '%s'\n", len + 1, name);
-		return NULL;
+		return nullptr;
 	}
 	memcpy(buf, custMacros.Data(), custMacros.Num());
 	iSystem->GetIPak()->FSeek(fp, 0, SEEK_SET);
@@ -2341,14 +2341,14 @@ int CShader::mfLoadSubdir(char* drn, int n)
 				continue;
 		}
 
-		char* pFinalScript = mfScriptForFileName(nmf, NULL, 0);
+		char* pFinalScript = mfScriptForFileName(nmf, nullptr, 0);
 		if (!pFinalScript)
 			continue;
 		char Er[1024];
 		sprintf(Er, "File '%s' script error!\n", nmf);
 		gShObjectNotFound = Er;
 		mfScanScript(pFinalScript, n);
-		gShObjectNotFound = NULL;
+		gShObjectNotFound = nullptr;
 		delete[] pFinalScript;
 
 		FILE* status = iSystem->GetIPak()->FOpen(nmf, "rb");
@@ -2430,19 +2430,19 @@ void CShader::mfLoadFromFiles(int num)
 
 char* CShader::mfFindInAllText(char* name, char*& pBuf, SShader* shGen, uint64 nMaskGen)
 {
-	char* saved = NULL;
+	char* saved = nullptr;
 
 	if (!m_RefEfs[m_CurEfsNum])
-		return NULL;
+		return nullptr;
 
 	SRefEfs* fe;
 	ShaderFilesMapItor it = m_RefEfs[m_CurEfsNum]->find(name);
 	if (it == m_RefEfs[m_CurEfsNum]->end())
-		fe = NULL;
+		fe = nullptr;
 	else
 		fe = it->second;
 	if (!fe)
-		return NULL;
+		return nullptr;
 
 	if (fe)
 	{
@@ -2454,15 +2454,15 @@ char* CShader::mfFindInAllText(char* name, char*& pBuf, SShader* shGen, uint64 n
 			delete[] pFinalScript;
 			ShaderFilesMapItor it = m_RefEfs[m_CurEfsNum]->find(name);
 			if (it == m_RefEfs[m_CurEfsNum]->end())
-				fe = NULL;
+				fe = nullptr;
 			else
 				fe = it->second;
 			if (!fe)
-				return NULL;
+				return nullptr;
 		}
 		pFinalScript = mfScriptForFileName(m_FileNames[m_CurEfsNum][fe->m_Ind].c_str(), shGen, nMaskGen);
 		if (!pFinalScript)
-			return NULL;
+			return nullptr;
 		sFE = fe;
 		pBuf = pFinalScript;
 		if (!shGen)
@@ -2472,7 +2472,7 @@ char* CShader::mfFindInAllText(char* name, char*& pBuf, SShader* shGen, uint64 n
 		}
 		return pFinalScript;
 	}
-	return NULL;
+	return nullptr;
 }
 
 void CShader::mfRemoveFromHash(SShader* ef)
@@ -2520,7 +2520,7 @@ SShader* CShader::mfSpawn(char* name, SShader* ef, SShader* efGen, uint64 nMaskG
 	int BackCurEfsNum;
 	char* pScriptBuf;
 
-	gShObjectNotFound = NULL;
+	gShObjectNotFound = nullptr;
 	BackCurEfsNum = m_CurEfsNum;
 
 	// First search in HW specific directory
@@ -2564,7 +2564,7 @@ SShader* CShader::mfSpawn(char* name, SShader* ef, SShader* efGen, uint64 nMaskG
 	if (CRenderer::CV_r_logloadshaders)
 		Warning(0, 0, "WARNING: Shader '%s' couldn't be found!", name);
 
-	return NULL;
+	return nullptr;
 }
 
 SShader* CShader::mfForName(const char* nameSh, EShClass Class, int flags, const SInputShaderResources* Res, uint64 nMaskGen)
@@ -2575,15 +2575,15 @@ SShader* CShader::mfForName(const char* nameSh, EShClass Class, int flags, const
 
 	if (!nameSh || !nameSh[0])
 	{
-		Warning(0, 0, "Warning: CShader::mfForName: NULL name\n");
+		Warning(0, 0, "Warning: CShader::mfForName: nullptr name\n");
 		gRenDev->m_cEF.m_DefaultShader->AddRef();
 		return gRenDev->m_cEF.m_DefaultShader;
 	}
 	char nameEf[256];
 	mfShaderNameForAlias(nameSh, nameEf, 256);
 
-	ef = NULL;
-	efGen = NULL;
+	ef = nullptr;
+	efGen = nullptr;
 	//StripExtension(nameEf, name);
 	strcpy(name, nameEf);
 	ConvertDOSToUnixName(name, name);
@@ -2593,7 +2593,7 @@ SShader* CShader::mfForName(const char* nameSh, EShClass Class, int flags, const
 	SRefEfsLoaded* fe, * feGen;
 	LoadedShadersMapItor it = m_RefEfsLoaded.find(name);
 	if (it == m_RefEfsLoaded.end())
-		fe = NULL;
+		fe = nullptr;
 	else
 		fe = &it->second;
 	char nameNew[256];
@@ -2605,7 +2605,7 @@ SShader* CShader::mfForName(const char* nameSh, EShClass Class, int flags, const
 		sprintf(nameNew, "%s(%I64x)", name, nMaskGen);
 		it = m_RefEfsLoaded.find(nameNew);
 		if (it == m_RefEfsLoaded.end())
-			fe = NULL;
+			fe = nullptr;
 		else
 			fe = &it->second;
 		if (fe)
@@ -2658,7 +2658,7 @@ SShader* CShader::mfForName(const char* nameSh, EShClass Class, int flags, const
 			}
 			else
 			{
-				efGen = NULL;
+				efGen = nullptr;
 				iSystem->GetIPak()->FClose(fp);
 			}
 		}
@@ -2721,7 +2721,7 @@ SShader* CShader::mfForName(const char* nameSh, EShClass Class, int flags, const
 		{
 			iSystem->GetIPak()->FClose(fp);
 			Warning(0, 0, "Error: Can't allocate %d bytes for shader file '%s'\n", len + 1, nameNew);
-			return NULL;
+			return nullptr;
 		}
 		memcpy(buf, &custMacros[0], custMacros.Num());
 		iSystem->GetIPak()->FSeek(fp, 0, SEEK_SET);

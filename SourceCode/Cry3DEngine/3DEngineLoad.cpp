@@ -671,7 +671,7 @@ void C3DEngine::LoadMissionSettingsFromXML(XDOM::IXMLDOMNode* pInputNode, bool b
 	char szSkyBoxShaderName[128];
 	strncpy(szSkyBoxShaderName, GetXMLAttribText(pInputNode, "Environment", "Shaders", "SkyBox", "InfRedGal"), sizeof(szSkyBoxShaderName));
 	SAFE_RELEASE(m_pSHSky);
-	m_pSHSky = szSkyBoxShaderName[0] ? GetRenderer()->EF_LoadShader(szSkyBoxShaderName, eSH_World) : NULL;
+	m_pSHSky = szSkyBoxShaderName[0] ? GetRenderer()->EF_LoadShader(szSkyBoxShaderName, eSH_World) : nullptr;
 
 	// set terrain water, sun road and bottom shaders
 	char szTerrainWaterShaderName[256] = "";
@@ -722,7 +722,7 @@ void C3DEngine::LoadMissionSettingsFromXML(XDOM::IXMLDOMNode* pInputNode, bool b
 	if (szLensFlaresShaderName[0])
 		m_pSHLensFlares = GetRenderer()->EF_LoadShader(szLensFlaresShaderName, eSH_World, EF_SYSTEM);
 	else
-		m_pSHLensFlares = NULL;
+		m_pSHLensFlares = nullptr;
 
 	char szShoreShaderName[128];
 	strncpy(szShoreShaderName, GetXMLAttribText(pInputNode, "Environment", "Shaders", "Shore", "terrainwaterbeach"), sizeof(szShoreShaderName));

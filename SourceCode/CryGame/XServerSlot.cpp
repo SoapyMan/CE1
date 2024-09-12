@@ -72,7 +72,7 @@ CXServerSlot::~CXServerSlot()
 	//m_pParent->m_pISystem->RemoveEntity(m_wPlayerID);
 	m_wPlayerId = INVALID_WID;
 	SAFE_RELEASE(m_pISSlot);
-	m_pParent = NULL;
+	m_pParent = nullptr;
 }
 
 
@@ -360,7 +360,7 @@ void CXServerSlot::FinishOnContextReady()
 	//
 	// first pass ensures all entities are created (only the ones that are not in the map after loading)
 	// second pass updates the properties of all entities
-	IEntity *pEnt=NULL;
+	IEntity *pEnt=nullptr;
 
 	pEntities->MoveFirst();
 	while(pEnt=pEntities->Next())
@@ -379,7 +379,7 @@ void CXServerSlot::FinishOnContextReady()
 	}
 
 	//send all other entities
-	pEnt=NULL;
+	pEnt=nullptr;
 	pEntities->MoveFirst();
 	while(pEnt=pEntities->Next())
 	{
@@ -1252,7 +1252,7 @@ void CXServerSlot::OnClientMsgPlayerProcessingCmd(CStream &stm)
 	//if the client entity is a CPlayer
 	if (m_pParent->m_pGame->GetPlayerSystem()->IsPlayerClass(pSlotPlayerEntity->GetClassId()))
 	{
-		CPlayer *pPlayer=NULL;
+		CPlayer *pPlayer=nullptr;
 
 		if (pSlotPlayerEntity->GetContainer() && pSlotPlayerEntity->GetContainer()->QueryContainerInterface(CIT_IPLAYER,(void**) &pPlayer))
 		{
@@ -1307,14 +1307,14 @@ void CXServerSlot::OnClientMsgPlayerProcessingCmd(CStream &stm)
 		if (pPhysEnt)
 			pPhysEnt->SetParams(&pd);
 
-		CSpectator *pSpectator=NULL;
+		CSpectator *pSpectator=nullptr;
 		pSlotPlayerEntity->GetContainer()->QueryContainerInterface(CIT_ISPECTATOR,(void**) &pSpectator);
 		if(pSpectator)
 			pSpectator->ProcessKeys(m_PlayerProcessingCmd);
 	}
 	else if (pSlotPlayerEntity->GetClassId()==ADVCAMSYSTEM_CLASS_ID)
 	{
-		CAdvCamSystem *pAdvCamSystem=NULL;
+		CAdvCamSystem *pAdvCamSystem=nullptr;
 		pSlotPlayerEntity->GetContainer()->QueryContainerInterface(CIT_IADVCAMSYSTEM,(void**) &pAdvCamSystem);
 		if(pAdvCamSystem)
 			pAdvCamSystem->ProcessKeys(m_PlayerProcessingCmd);

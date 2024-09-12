@@ -24,7 +24,7 @@ CRefReadStreamProxy::CRefReadStreamProxy(const char* szSource, CRefReadStream* p
 	m_bFinished(false),
 	m_bFreeBuffer(false),
 	m_bPending(false),
-	m_pBuffer(NULL),
+	m_pBuffer(nullptr),
 	m_numBytesRead(0),
 	m_numRetries(0)
 {
@@ -104,13 +104,13 @@ void CRefReadStreamProxy::Abort()
 	}
 	else
 	{
-		m_pCallback = NULL;
+		m_pCallback = nullptr;
 		m_bError = true;
 		m_nIOError = ERROR_USER_ABORT;
 	}
-	//CRYASSERT (m_pCallback == NULL);
+	//CRYASSERT (m_pCallback == nullptr);
 	// perhaps the callback was already called, or perhaps not. In any case we forget about the callback
-	m_pCallback = NULL;
+	m_pCallback = nullptr;
 }
 
 // tries to raise the priority of the read; this is advisory and may have no effect
@@ -386,14 +386,14 @@ DWORD CRefReadStreamProxy::CallReadFileEx()
 		// the actual number of bytes read
 		DWORD dwRead = 0;
 		unsigned newOffset = m_Params.nOffset + m_nPieceOffset + m_pStream->GetArchiveOffset();
-		if (SetFilePointer(hFile, newOffset, NULL, FILE_BEGIN) != newOffset)
+		if (SetFilePointer(hFile, newOffset, nullptr, FILE_BEGIN) != newOffset)
 		{
 			// the positioning error is strange, we should examine it and perhaps retry (in case the file write wasn't finished.)
 			DWORD dwError = GetLastError();
 			return dwError;
 		}
 		// just read the file
-		if (!ReadFile(hFile, ((char*)m_pBuffer) + m_nPieceOffset, m_nPieceLength, &dwRead, NULL))
+		if (!ReadFile(hFile, ((char*)m_pBuffer) + m_nPieceOffset, m_nPieceLength, &dwRead, nullptr))
 		{
 			// we failed to read; we don't call the callback, but we could as well call OnIOComplete()
 			// with this error code and return 0 as success flag emulating error during load
@@ -438,7 +438,7 @@ void CRefReadStreamProxy::FinalizeIO()
 	{
 		// be carefull! this object can be deallocated inside the callback!
 		IStreamCallback* pCallback = m_pCallback;
-		m_pCallback = NULL;	// don't call this callback any more as it may have been deallocated
+		m_pCallback = nullptr;	// don't call this callback any more as it may have been deallocated
 #if LOG_IO
 		g_System->GetILog()->LogToFile("\006io(%s) err %d%s%s%s%s piece(%d:%d) read %d %s userdata %d, pri %d, flags %x, offs %d, size %d", m_strClient.c_str(), m_nIOError,
 			m_bError ? " Error" : "", m_bFinished ? " Finished" : "", m_bFreeBuffer ? " FreeBuffer" : "", m_bPending ? " Pending" : "",

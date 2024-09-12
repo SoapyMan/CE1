@@ -37,7 +37,7 @@ CryCharReShadowVolume* CryCharReShadowManager::newShadow()
 
 	// we didn't find any in the pool, so create a new one, if we didn't yet exceed the limit
 	if (m_arrPool.size() > (unsigned)g_GetCVars()->ca_ShadowBufferLimit())
-		return NULL; // we exceeded the limit
+		return nullptr; // we exceeded the limit
 
 	CryCharReShadowVolume* pNewShadow = new CryCharReShadowVolume();
 	m_arrPool.push_back(pNewShadow);

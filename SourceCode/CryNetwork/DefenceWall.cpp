@@ -169,7 +169,7 @@ bool CDefenceWall::ServerCreateModuleProbe(const char* sFilename, SClientCheckCo
 	_makepath(sModule, 0, 0, fname, ext);
 	strlwr(sModule);
 
-	// Skip comparing render dll code. (Can be OGL,D3D or NULL)
+	// Skip comparing render dll code. (Can be OGL,D3D or nullptr)
 	if (strstr(sModule, "render"))
 		return false;
 
@@ -211,7 +211,7 @@ bool CDefenceWall::ServerCreateFileProbe(const char* sFilename, SClientCheckCont
 	{
 		// Skip validation of language specific paks.
 		char fname[_MAX_FNAME];
-		_splitpath(sFilename, NULL, NULL, fname, NULL);
+		_splitpath(sFilename, nullptr, nullptr, fname, nullptr);
 		if (strnicmp(fname, pLanguage->GetString(), strlen(pLanguage->GetString())) == 0)
 		{
 			// This is language pak... skip checking it.

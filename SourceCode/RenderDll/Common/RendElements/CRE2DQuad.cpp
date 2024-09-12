@@ -14,5 +14,5 @@ void* CRE2DQuad::mfGetPointer(ESrcPointer ePT, int* Stride, int Type, ESrcPointe
 	case eSrcPointer_Tex:
 		return &m_arrVerts[0].st[0];
 	}
-	return NULL;
+	return nullptr;
 }

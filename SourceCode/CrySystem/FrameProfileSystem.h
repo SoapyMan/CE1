@@ -294,7 +294,7 @@ struct CFrameProfileSystem : public IFrameProfileSystem
 	//! Here the new methods needed to enable profiling to go off.
 	virtual int GetProfilerCount() const { return 0; }
 
-	virtual CFrameProfiler* GetProfiler(int index) const { return NULL; }
+	virtual CFrameProfiler* GetProfiler(int index) const { return nullptr; }
 
 	virtual void Enable(bool bCollect, bool bDisplay) {}
 

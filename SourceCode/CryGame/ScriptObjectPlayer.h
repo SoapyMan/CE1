@@ -46,7 +46,7 @@ public:
 //IScriptObjectSink
 	void OnRelease()
 	{
-		m_pScriptThis=NULL;
+		m_pScriptThis=nullptr;
 		delete this;
 	}
 	static void InitializeTemplate(IScriptSystem *pSS);

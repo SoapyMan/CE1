@@ -65,7 +65,9 @@ void CCryFont::Release()
 IFFont* CCryFont::NewFont(const char* pszName)
 {
 	string sName = pszName;
-	for (int i = 0; i < (int)sName.size(); i++) sName[i] = tolower(sName[i]);
+	for (int i = 0; i < (int)sName.size(); i++)
+		sName[i] = tolower(sName[i]);
+
 	// check if font already created, if so return it
 	FontMapItor itor;
 	itor = m_mapFonts.find(sName.c_str());
@@ -82,7 +84,6 @@ IFFont* CCryFont::GetFont(const char* pszName)
 	if (r_DumpFontTexture)
 	{
 		const char* pValue = r_DumpFontTexture->GetString();
-
 		if ((pValue) && (*pValue != 0) && (*pValue != '0'))
 		{
 			string szFontName(pValue);
@@ -93,42 +94,37 @@ IFFont* CCryFont::GetFont(const char* pszName)
 			CFFont* pFont = (CFFont*)GetFont(szFontName.c_str());
 
 			if (pFont)
-			{
 				pFont->m_pFontTexture.WriteToFile(szFontFile.c_str());
-			}
 
 			m_pISystem->GetILog()->LogToConsole("\1Dumped '%s' texture to '%s'!", pValue, szFontFile.c_str());
 		}
 	}
 
-	if (r_DumpFontNames)
+	if (r_DumpFontNames && r_DumpFontNames->GetIVal())
 	{
-		if (r_DumpFontNames->GetIVal())
+		FontMapItor pItor;
+		CFFont* pFont;
+
+		m_pISystem->GetILog()->LogToConsole("\1Currently Loaded Fonts:");
+		for (pItor = m_mapFonts.begin(); pItor != m_mapFonts.end(); ++pItor)
 		{
-			FontMapItor pItor;
-			CFFont* pFont;
-
-			m_pISystem->GetILog()->LogToConsole("\1Currently Loaded Fonts:");
-
-			for (pItor = m_mapFonts.begin(); pItor != m_mapFonts.end(); ++pItor)
-			{
-				pFont = (CFFont*)pItor->second;
-
-				m_pISystem->GetILog()->LogToConsole("\1  - %s", pFont->m_szName.c_str());
-			}
-
-			r_DumpFontNames->Set(0);
+			pFont = (CFFont*)pItor->second;
+			m_pISystem->GetILog()->LogToConsole("\1  - %s", pFont->m_szName.c_str());
 		}
+
+		r_DumpFontNames->Set(0);
 	}
 
 	string sName = pszName;
-	for (int i = 0; i < (int)sName.size(); i++) sName[i] = tolower(sName[i]);
+	for (int i = 0; i < (int)sName.size(); i++)
+		sName[i] = tolower(sName[i]);
+
 	FontMapItor itor;
 	itor = m_mapFonts.find(sName.c_str());
 	if (itor != m_mapFonts.end())
 		return itor->second;
 	else
-		return NULL;
+		return nullptr;
 }
 
 void CCryFont::GetMemoryUsage(class ICrySizer* pSizer)

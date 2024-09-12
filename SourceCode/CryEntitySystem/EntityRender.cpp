@@ -464,7 +464,7 @@ void CEntity::SetEntityStatObj(unsigned int nSlot, IStatObj* pStatObj, Matrix44*
 			m_objects[nSlot].flags &= ~ETY_OBJ_USE_MATRIX;
 
 		// Release previous object.
-		if (m_objects[nSlot].object != pStatObj && m_objects[nSlot].object != NULL)
+		if (m_objects[nSlot].object != pStatObj && m_objects[nSlot].object != nullptr)
 			m_pISystem->GetI3DEngine()->ReleaseObject(m_objects[nSlot].object);
 
 		m_objects[nSlot].object = pStatObj;
@@ -671,7 +671,7 @@ void CEntity::UpdateParticleEmitters(SEntityUpdateContext& ctx)
 				if (m_pMaterial)
 					emitter.pEmitter->SetMaterial(m_pMaterial);
 				else
-					emitter.pEmitter->SetMaterial(NULL);
+					emitter.pEmitter->SetMaterial(nullptr);
 			}
 		}
 	}

@@ -37,7 +37,7 @@ CTexMan::CTexMan()
 	m_bRGBA = true;
 	m_MinFilter = 0;
 	m_MagFilter = 0;
-	m_LastTex = NULL;
+	m_LastTex = nullptr;
 	m_CurStage = 0;
 	m_Streamed = CRenderer::CV_r_texturesstreaming;
 	m_CurTexMaxSize = CRenderer::CV_r_texmaxsize;
@@ -57,9 +57,9 @@ CTexMan::CTexMan()
 	}
 	m_nTexSizeHistory = 0;
 	m_nProcessedTextureID1 = 0;
-	m_pProcessedTexture1 = NULL;
+	m_pProcessedTexture1 = nullptr;
 	m_nProcessedTextureID2 = 0;
-	m_pProcessedTexture2 = NULL;
+	m_pProcessedTexture2 = nullptr;
 	m_nPhaseProcessingTextures = 0;
 	m_nCustomMip = 0;
 }
@@ -175,10 +175,10 @@ bool CTexMan::IsTextureLoaded(const char* pName)
 
 STexPic* CTexMan::GetByName(const char* pName)
 {
-	STexLoaded* tl = NULL;
+	STexLoaded* tl = nullptr;
 	CName nmf(pName, eFN_Find);
 	if (!nmf.GetIndex())
-		return NULL;
+		return nullptr;
 	LoadedTexsMapItor it = m_TexsMap.find(nmf.GetIndex());
 	if (it != m_TexsMap.end())
 	{
@@ -186,7 +186,7 @@ STexPic* CTexMan::GetByName(const char* pName)
 		if (tl->m_NumTextures)
 			return tl->m_Textures[0];
 	}
-	return NULL;
+	return nullptr;
 }
 
 int STexPic::GetFileNames(char* name0, char* name1, int nLen)
@@ -228,7 +228,7 @@ void STexPic::Release(int bForce)
 		if (bForce == 2)
 		{
 			RemoveFromSearchHash();
-			gRenDev->m_TexMan->m_Textures[m_Id] = NULL;
+			gRenDev->m_TexMan->m_Textures[m_Id] = nullptr;
 			if (m_Id != gRenDev->m_TexMan->m_Textures.Num() - 1)
 				gRenDev->m_TexMan->m_FreeSlots.AddElem(m_Id);
 
@@ -254,7 +254,7 @@ void STexPic::Release(int bForce)
 	{
 		if (m_pPalette != &gRenDev->m_TexMan->m_NMPalette[0][0])
 			delete[] m_pPalette;
-		m_pPalette = NULL;
+		m_pPalette = nullptr;
 	}
 	SAFE_DELETE_ARRAY(m_p8to24table);
 	SAFE_DELETE_ARRAY(m_p15to8table);
@@ -274,7 +274,7 @@ void STexPic::Release(int bForce)
 
 	ReleaseDriverTexture();
 
-	gRenDev->m_TexMan->m_Textures[m_Id] = NULL;
+	gRenDev->m_TexMan->m_Textures[m_Id] = nullptr;
 	gRenDev->m_TexMan->m_FreeSlots.AddElem(m_Id);
 
 	Unlink();
@@ -328,7 +328,7 @@ void STexPic::RemoveFromSearchHash()
 			  }
 		#endif*/
 	}
-	m_TL = NULL;
+	m_TL = nullptr;
 }
 
 void STexPic::AddToSearchHash()
@@ -417,9 +417,9 @@ void sLogTexture(const char* name, int Size)
 	{
 		char Name[256];
 	};
-	static STexLogs* sTexLogs = NULL;
+	static STexLogs* sTexLogs = nullptr;
 	static int sNumTexLogs = 0;
-	static FILE* fp = NULL;
+	static FILE* fp = nullptr;
 	if (!sTexLogs)
 	{
 		sTexLogs = new STexLogs[2048];
@@ -449,14 +449,14 @@ STexPic* CTexMan::TextureInfoForName(const char* nameTex, int numT, byte eTT, ui
 	char fullnm[256];
 	int i;
 
-	STexPic* ti = NULL;
-	STexPic* tiFound = NULL;
-	STexLoaded* tl = NULL;
+	STexPic* ti = nullptr;
+	STexPic* tiFound = nullptr;
+	STexLoaded* tl = nullptr;
 
 	if (!nameTex)
 	{
-		Warning(VALIDATOR_FLAG_TEXTURE, 0, "CTexMan::TextureInfoForName: NULL name\n");
-		return NULL;
+		Warning(VALIDATOR_FLAG_TEXTURE, 0, "CTexMan::TextureInfoForName: nullptr name\n");
+		return nullptr;
 	}
 	//iLog->Log("TexInfo: %s", nameTex);
 
@@ -615,7 +615,7 @@ static inline void sAddTexToArray(TArray<STexPic*>& arrTex, STexPic* tx)
 	{
 		CRYASSERT(tx->m_NextCMSide != tx);
 		sAddTexToArray(arrTex, tx->m_NextCMSide);
-		tx->m_NextCMSide = NULL;
+		tx->m_NextCMSide = nullptr;
 	}
 	if (tx)
 		arrTex.AddElem(tx);
@@ -626,7 +626,7 @@ static inline void sRemoveGarbage(STexPic* tx)
 	int i;
 	TArray<STexPic*> arrTexs;
 	sAddTexToArray(arrTexs, tx->m_NextCMSide);
-	tx->m_NextCMSide = NULL;
+	tx->m_NextCMSide = nullptr;
 	for (i = 0; i < arrTexs.Num(); i++)
 	{
 		arrTexs[i]->Release(false);
@@ -660,7 +660,7 @@ STexPic* CTexMan::LoadCubeTex(const char* mapname, uint flags, uint flags2, int 
 	for (int i = 0; i < 6; i++)
 	{
 		sprintf(cube, "%s_%s", name, cubefaces[i]);
-		STexPic* ti = NULL;
+		STexPic* ti = nullptr;
 		if (!(flags2 & FT2_RELOAD) || !(flags2 & FT2_CUBEASSINGLETEXTURE))
 			ti = LoadTexture(cube, flags, flags2, eTT, fAmount, fAmount, tbId, tId);
 		// if we can't load all 6 sides of cube texture
@@ -684,8 +684,8 @@ STexPic* CTexMan::LoadCubeTex(const char* mapname, uint flags, uint flags2, int 
 						break;
 					}
 				}
-				STexPic* pPrevTex = NULL;
-				STexPic* pTX = NULL;
+				STexPic* pPrevTex = nullptr;
+				STexPic* pTX = nullptr;
 				int n;
 				while (true)
 				{
@@ -702,7 +702,7 @@ STexPic* CTexMan::LoadCubeTex(const char* mapname, uint flags, uint flags2, int 
 						{
 							if (!(flags2 & FT2_CHECKFORALLSEQUENCES))
 							{
-								ti->m_NextTxt = NULL;
+								ti->m_NextTxt = nullptr;
 								return ti;
 							}
 							else
@@ -839,8 +839,8 @@ STexPic* CTexMan::LoadTexture(const char* nameTex, uint flags, uint flags2, byte
 	byte* src, * dst, * src1;
 	char nametex[256];
 
-	src1 = NULL;
-	src = dst = NULL;
+	src1 = nullptr;
+	src = dst = nullptr;
 
 	STexPic* ti = TextureInfoForName(nameTex, numT, eTT, flags, flags2, bind);
 	/*if (gRenDev->m_TexMan->m_Text_NoTexture)
@@ -869,8 +869,8 @@ STexPic* CTexMan::LoadTexture(const char* nameTex, uint flags, uint flags2, byte
 	  ti->m_Flags &= ~FT_NOSTREAM;
 	  ti->m_Flags2 |= FT2_WASLOADED;
 	  ti->m_Id = i;
-	  ti->m_Next = NULL;
-	  ti->m_Prev = NULL;
+	  ti->m_Next = nullptr;
+	  ti->m_Prev = nullptr;
 	  AddToHash(ti->m_Bind, ti);
 	  m_LastTex = ti;
 	  return ti;
@@ -905,7 +905,7 @@ STexPic* CTexMan::LoadTexture(const char* nameTex, uint flags, uint flags2, byte
 
 	if (m_Streamed & 1)
 	{
-		if (LoadFromCache(ti, flags, flags2, NULL, NULL, (ETexType)eTT))
+		if (LoadFromCache(ti, flags, flags2, nullptr, nullptr, (ETexType)eTT))
 			return ti;
 	}
 
@@ -926,7 +926,7 @@ STexPic* CTexMan::LoadTexture(const char* nameTex, uint flags, uint flags2, byte
 	{
 		tmp = ti;
 		AddToHash(ti->m_Bind, ti);
-		ti->m_RefTex.m_VidTex = NULL;
+		ti->m_RefTex.m_VidTex = nullptr;
 		ti->m_ETF = eTF_8888;
 	}
 	if (tmp)
@@ -966,14 +966,14 @@ STexPic* CTexMan::LoadTexture(const char* nameTex, uint flags, uint flags2, byte
 	ti->m_Flags2 &= ~FT2_WASLOADED;
 	ti->m_Size = 0;
 	ti->m_Id = i;
-	ti->m_Next = NULL;
-	ti->m_Prev = NULL;
+	ti->m_Next = nullptr;
+	ti->m_Prev = nullptr;
 	if (bind)
 	{
 		ti->m_eTT = (ETexType)eTT;
 		ti->m_Bind = bind;
 		AddToHash(ti->m_Bind, ti);
-		ti->m_RefTex.m_VidTex = NULL;
+		ti->m_RefTex.m_VidTex = nullptr;
 	}
 	m_LastTex = ti;
 
@@ -985,7 +985,7 @@ STexPic* CTexMan::UploadImage(CImageFile* im, const char* name, uint flags, uint
 	byte* dst;
 	int i, m;
 	byte pal[256][4];
-	dst = NULL;
+	dst = nullptr;
 	int DXTSize = 0;
 	byte* pix;
 
@@ -1102,7 +1102,7 @@ STexPic* CTexMan::UploadImage(CImageFile* im, const char* name, uint flags, uint
 	}
 
 	if (txf == -1)
-		return NULL;
+		return nullptr;
 
 	ti->m_ETF = txf;
 	pix = im->mfGet_image();
@@ -1248,7 +1248,7 @@ STexPic* CTexMan::UploadImage(CImageFile* im, const char* name, uint flags, uint
 		break;
 
 	default:
-		return NULL;
+		return nullptr;
 		break;
 	}
 	TArray<byte> Dst;
@@ -1298,7 +1298,7 @@ STexPic* CTexMan::UploadImage(CImageFile* im, const char* name, uint flags, uint
 								d[i * 4 + 0] = 255;
 							}
 						}
-						void* outData = NULL;
+						void* outData = nullptr;
 						DWORD outSize = 0;
 						COMPRESSOR_ERROR err = CompressTextureATI(wdt, hgt, FORMAT_ARGB_8888, FORMAT_COMP_ATI2N, d, &outData, &outSize);
 						if (err == COMPRESSOR_ERROR_NONE)
@@ -1353,7 +1353,7 @@ STexPic* CTexMan::UploadImage(CImageFile* im, const char* name, uint flags, uint
 	}
 #endif
 
-	CreateTexture(NULL, ti->m_Width, ti->m_Height, ti->m_Depth, ti->m_Flags, ti->m_Flags2, dst, ti->m_eTT, fAmount1, fAmount2, DXTSize, ti, ti->m_Bind, eTF);
+	CreateTexture(nullptr, ti->m_Width, ti->m_Height, ti->m_Depth, ti->m_Flags, ti->m_Flags2, dst, ti->m_eTT, fAmount1, fAmount2, DXTSize, ti, ti->m_Bind, eTF);
 	//ti->Release(false);
 
 	if (dst && ti->m_pData32 != dst && dst != pix && dst != Dst.Data())
@@ -1393,24 +1393,24 @@ char* gImgExt[][16] =
 	".dds",
 	".tga",
 	".jpg",
-	NULL
+	nullptr
   },
   {
 	".dds",
 	".tga",
 	".jpg",
-	NULL
+	nullptr
   },
   {
 	".dds",
-	NULL
+	nullptr
   }
   ,
   {
 	".pcx",
 	".tga",
 	".jpg",
-	NULL
+	nullptr
   },
 };
 
@@ -1420,13 +1420,13 @@ STexPic* CTexMan::LoadFromImage(const char* name, uint flags, uint flags2, byte 
 	char nm[2][256];
 	char nam[2][256];
 	CImageFile* im[2];
-	STexPic* tx = NULL;
+	STexPic* tx = nullptr;
 	char wasloaded[2][256];
 	int i = 0;
 
 	wasloaded[0][0] = 0;
 	wasloaded[1][0] = 0;
-	im[0] = im[1] = NULL;
+	im[0] = im[1] = nullptr;
 	nam[0][0] = nam[1][0] = 0;
 
 	strcpy(nm[0], name);
@@ -1475,7 +1475,7 @@ STexPic* CTexMan::LoadFromImage(const char* name, uint flags, uint flags2, byte 
 			strcpy(nam[i], nm[i]);
 			strcat(nam[i], gImgExt[nI][n]);
 
-			im[i] = NULL;
+			im[i] = nullptr;
 			im[i] = CImageFile::mfLoad_file(nam[i]);
 			if (!im[i])
 				continue;
@@ -1535,7 +1535,7 @@ STexPic* CTexMan::LoadFromImage(const char* name, uint flags, uint flags2, byte 
 			STexPic tp;
 			im[i] = CImageFile::mfLoad_file(wasloaded[i]);
 			if (!im[i])
-				return NULL;
+				return nullptr;
 			strcpy(nam[i], wasloaded[i]);
 			tp.m_Width = im[i]->mfGet_width();
 			tp.m_Height = im[i]->mfGet_height();
@@ -1598,7 +1598,7 @@ STexPic* CTexMan::LoadFromImage(const char* name, uint flags, uint flags2, byte 
 			{
 				ti->m_SourceName = nam[1];
 				im[0] = im[1];
-				im[1] = NULL;
+				im[1] = nullptr;
 			}
 
 	if (im[0] && (eTT == eTT_Bumpmap || eTT == eTT_DSDTBump))
@@ -1623,7 +1623,7 @@ STexPic* CTexMan::LoadFromImage(const char* name, uint flags, uint flags2, byte 
 	delete im[0];
 	delete im[1];
 	if (!tx)
-		return NULL;
+		return nullptr;
 
 	return tx;
 }
@@ -1949,7 +1949,7 @@ void CTexMan::ImagePreprocessing(CImageFile* im, uint flags, uint flags2, byte e
 				{
 					byte* dst = new byte[nWidth * nHeight * 4];
 					byte* src = im->m_pByteImage;
-					byte* src1 = NULL;
+					byte* src1 = nullptr;
 					if (nComps == 3)
 					{
 						src1 = new byte[width * height * 4];
@@ -2481,7 +2481,7 @@ void CTexMan::GenerateNormalMap(CImageFile** im, uint flags, uint flags2, byte e
 	byte* dst[2];
 	int nMips[2];
 	int nSizeWithMips[2];
-	dst[0] = dst[1] = NULL;
+	dst[0] = dst[1] = nullptr;
 	nMips[0] = nMips[1] = 0;
 	nSizeWithMips[0] = nSizeWithMips[1] = 0;
 
@@ -2521,7 +2521,7 @@ void CTexMan::GenerateNormalMap(CImageFile** im, uint flags, uint flags2, byte e
 		if (!(im[1]->mfGet_Flags() & FIM_NORMALMAP) && !(im[1]->mfGet_Flags() & FIM_DSDT))
 			delete[] dst[1];
 		delete im[1];
-		im[1] = NULL;
+		im[1] = nullptr;
 		if (nMips[0])
 			im[0]->mfSet_numMips(nMips[0]);
 		if (im[0]->m_pByteImage != dst[0])
@@ -2837,7 +2837,7 @@ byte* CTexMan::ImgConvertRGBA_DXT(byte* dst, STexPic* ti, int& DXTSize, int& nMi
 				}
 			}
 			opt.MipMapType = dNoMipMaps;
-			nvDXTcompress(dst, w, h, w, &opt, bits / 8, NULL);
+			nvDXTcompress(dst, w, h, w, &opt, bits / 8, nullptr);
 			if (bits == 24)
 				dst += w * h * 3;
 			else
@@ -2861,7 +2861,7 @@ byte* CTexMan::ImgConvertRGBA_DXT(byte* dst, STexPic* ti, int& DXTSize, int& nMi
 	{
 		sAData.Free();
 		opt.MipMapType = dGenerateMipMaps;
-		nvDXTcompress(dst, width, height, width, &opt, bits / 8, NULL);
+		nvDXTcompress(dst, width, height, width, &opt, bits / 8, nullptr);
 
 		int Offs = sizeof(DWORD) + sizeof(DDS_HEADER);
 		d = new byte[sAData.Num() - Offs];
@@ -2889,7 +2889,7 @@ byte* CTexMan::ImgConvertRGBA_DXT(byte* dst, STexPic* ti, int& DXTSize, int& nMi
 	return d;
 
 #else
-	return NULL;
+	return nullptr;
 #endif
 }
 

@@ -205,7 +205,7 @@ ZipDir::FileEntryTree* ZipDir::FileEntryTree::FindDir(const char* szDirName)
 {
 	SubdirMap::iterator it = m_mapDirs.find(szDirName);
 	if (it == m_mapDirs.end())
-		return NULL;
+		return nullptr;
 	else
 		return it->second;
 }
@@ -217,12 +217,12 @@ ZipDir::FileEntryTree::FileMap::iterator ZipDir::FileEntryTree::FindFile(const c
 
 ZipDir::FileEntry* ZipDir::FileEntryTree::GetFileEntry(FileMap::iterator it)
 {
-	return it == GetFileEnd() ? NULL : &it->second;
+	return it == GetFileEnd() ? nullptr : &it->second;
 }
 
 ZipDir::FileEntryTree* ZipDir::FileEntryTree::GetDirEntry(SubdirMap::iterator it)
 {
-	return it == GetDirEnd() ? NULL : it->second;
+	return it == GetDirEnd() ? nullptr : it->second;
 }
 
 ZipDir::ErrorEnum ZipDir::FileEntryTree::RemoveDir(const char* szDirName)

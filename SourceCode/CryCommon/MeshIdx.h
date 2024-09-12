@@ -80,7 +80,7 @@ struct StatHelperInfo
 		strncpy(sName, new_name, 64);
 		nType = new_type;
 		m_pShader = pShader;
-		//  m_pObject = NULL;
+		//  m_pObject = nullptr;
 		tMat = newMat;
 	}
 
@@ -140,7 +140,7 @@ public:
 		unsigned nVertices, const Vec3d* pVertices, const Vec3d* pNormals,
 		unsigned nUVs, const CryUV* pUVs
 	) :
-		m_pColor(NULL), m_pColorSec(NULL) // not initialized
+		m_pColor(nullptr), m_pColorSec(nullptr) // not initialized
 	{
 		m_pTangBasis = 0;
 		m_nFaceCount = nFaces;
@@ -157,7 +157,7 @@ public:
 			m_pFaces[i].n[1] = face.v1;
 			m_pFaces[i].n[2] = face.v2;
 			m_pFaces[i].shader_id = face.MatID;
-			//			m_pFaces[i].m_lInfo = NULL;
+			//			m_pFaces[i].m_lInfo = nullptr;
 
 			if (pTexFaces)
 			{
@@ -225,8 +225,8 @@ public:
 
 	size_t GetMemoryUsage();
 	bool CalcTangentSpace();
-	void DoBoxTexGen(float fScale, Vec3d* pvNormal = NULL);
-	void SmoothMesh(bool bSmoothVerts, bool bSmoothNorms, Vec3d* pvBoxMin = NULL, Vec3d* pvBoxMax = NULL, bool bMarkInvalidFaces = false);
+	void DoBoxTexGen(float fScale, Vec3d* pvNormal = nullptr);
+	void SmoothMesh(bool bSmoothVerts, bool bSmoothNorms, Vec3d* pvBoxMin = nullptr, Vec3d* pvBoxMax = nullptr, bool bMarkInvalidFaces = false);
 	void SimplifyMesh(float fMaxEdgeLen, Vec3d vBoundaryMin, Vec3d vBoundaryMax);
 	void FixMesh();
 	float GetEdgeError(struct TriEdge& tEdge, Vec3d* pVertsShared, struct VertInfo* pVertsInfo, list2<int>& lstIndices, UColor* pColorShared);

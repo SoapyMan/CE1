@@ -320,7 +320,7 @@ int CSystem::DumpMMStats(bool log)
 	}
 	else
 	{
-		return CryStats(NULL);
+		return CryStats(nullptr);
 	};
 #endif
 };
@@ -342,28 +342,28 @@ void CSystem::DebugStats(bool checkpoint, bool leaks)
 
 	/*
 		{
-			{ NULL, (WIN_HMODULE)GetModuleHandle("CrySystem.dll"), "SYSTEM"},
+			{ nullptr, (WIN_HMODULE)GetModuleHandle("CrySystem.dll"), "SYSTEM"},
 	#ifdef _WIN32
-			{ NULL, (WIN_HMODULE)GetModuleHandle("Editor.exe"), "EDITOR"},
-			{ NULL, (WIN_HMODULE)GetModuleHandle("FarCry.exe"), "FARCRY"},
+			{ nullptr, (WIN_HMODULE)GetModuleHandle("Editor.exe"), "EDITOR"},
+			{ nullptr, (WIN_HMODULE)GetModuleHandle("FarCry.exe"), "FARCRY"},
 	#endif
-			{ NULL, m_dll.hNetwork,      "NETWORK" },
-			{ NULL, m_dll.hGame,         "GAME" },
-			{ NULL, m_dll.hAI,           "AI" },
-			{ NULL, m_dll.hEntitySystem, "ENTITY" },
-			{ NULL, m_dll.hRenderer,     "RENDERER" },
-			{ NULL, m_dll.hInput,        "INPUT" },
-			{ NULL, m_dll.hSound,        "SOUND" },
-			{ NULL, m_dll.hPhysics,      "PHYSICS" },
-			{ NULL, m_dll.hFont,         "FONT" },
-			{ NULL, m_dll.hScript,       "SCRIPT" },
-			{ NULL, m_dll.h3DEngine,     "3DENGINE" },
-			//{ NULL, (WIN_HMODULE)GetModuleHandle("CrySystem.dll"), "SYSTEM"},
-			{ NULL, m_dll.hAnimation,    "ANIMATION" },
+			{ nullptr, m_dll.hNetwork,      "NETWORK" },
+			{ nullptr, m_dll.hGame,         "GAME" },
+			{ nullptr, m_dll.hAI,           "AI" },
+			{ nullptr, m_dll.hEntitySystem, "ENTITY" },
+			{ nullptr, m_dll.hRenderer,     "RENDERER" },
+			{ nullptr, m_dll.hInput,        "INPUT" },
+			{ nullptr, m_dll.hSound,        "SOUND" },
+			{ nullptr, m_dll.hPhysics,      "PHYSICS" },
+			{ nullptr, m_dll.hFont,         "FONT" },
+			{ nullptr, m_dll.hScript,       "SCRIPT" },
+			{ nullptr, m_dll.h3DEngine,     "3DENGINE" },
+			//{ nullptr, (WIN_HMODULE)GetModuleHandle("CrySystem.dll"), "SYSTEM"},
+			{ nullptr, m_dll.hAnimation,    "ANIMATION" },
 	#ifdef WIN64
-			{ NULL, LoadDLL("crysound64.dll"),        "FMOD" }     // temp!
+			{ nullptr, LoadDLL("crysound64.dll"),        "FMOD" }     // temp!
 	#else
-			{ NULL, LoadDLL("crysound.dll"),        "FMOD" }     // temp!
+			{ nullptr, LoadDLL("crysound.dll"),        "FMOD" }     // temp!
 	#endif
 			// missing: OPENGL
 		};
@@ -410,7 +410,7 @@ void CSystem::DebugStats(bool checkpoint, bool leaks)
 	{
 		if (!dbgmodules[i].handle)
 		{
-			CryLogAlways("WARNING: <CrySystem> CSystem::DebugStats: NULL handle for %s", dbgmodules[i].name.c_str());
+			CryLogAlways("WARNING: <CrySystem> CSystem::DebugStats: nullptr handle for %s", dbgmodules[i].name.c_str());
 			nolib++;
 			continue;
 		};
@@ -468,7 +468,7 @@ void CSystem::DebugStats(bool checkpoint, bool leaks)
 	// Get HeapQueryInformation pointer if on windows XP.
 	//////////////////////////////////////////////////////////////////////////
 	typedef BOOL(WINAPI* FUNC_HeapQueryInformation)(HANDLE, HEAP_INFORMATION_CLASS, PVOID, SIZE_T, PSIZE_T);
-	FUNC_HeapQueryInformation pFnHeapQueryInformation = NULL;
+	FUNC_HeapQueryInformation pFnHeapQueryInformation = nullptr;
 	HMODULE hKernelInstance = CryLoadLibrary(_T("Kernel32.dll"));
 	if (hKernelInstance)
 	{
@@ -490,7 +490,7 @@ void CSystem::DebugStats(bool checkpoint, bool leaks)
 		hinfo[0] = 0;
 		if (pFnHeapQueryInformation)
 		{
-			pFnHeapQueryInformation(hHeap, HeapCompatibilityInformation, hinfo, 1024, NULL);
+			pFnHeapQueryInformation(hHeap, HeapCompatibilityInformation, hinfo, 1024, nullptr);
 		}
 		else
 		{
@@ -499,7 +499,7 @@ void CSystem::DebugStats(bool checkpoint, bool leaks)
 				if (dbgmodules[m].heap == handles[i]) strcpy(hinfo, dbgmodules[m].name.c_str());
 			}
 		}
-		phe.lpData = NULL;
+		phe.lpData = nullptr;
 		int nCommitted = 0, nUncommitted = 0, nOverhead = 0;
 		int nCommittedPieces = 0, nUncommittedPieces = 0;
 		int nPrevRegionIndex = -1;
@@ -756,12 +756,12 @@ static const char* GetLastSystemErrorMessage()
 			FORMAT_MESSAGE_ALLOCATE_BUFFER |
 			FORMAT_MESSAGE_FROM_SYSTEM |
 			FORMAT_MESSAGE_IGNORE_INSERTS,
-			NULL,
+			nullptr,
 			GetLastError(),
 			MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), // Default language
 			(LPTSTR)&lpMsgBuf,
 			0,
-			NULL))
+			nullptr))
 		{
 			strncpy(szBuffer, (char*)lpMsgBuf, sizeof(szBuffer));
 			LocalFree(lpMsgBuf);
@@ -884,7 +884,7 @@ void CSystem::Error(const char* format, ...)
 
 #ifdef WIN32
 	if (!bHandled)
-		::MessageBox(NULL, szBuffer, "CryEngine Error", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
+		::MessageBox(nullptr, szBuffer, "CryEngine Error", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
 	// Dump callstack.
 	DebugCallStack::instance()->LogCallstack();
 #endif

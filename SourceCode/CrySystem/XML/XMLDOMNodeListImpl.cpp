@@ -10,7 +10,7 @@
 
 XDOM::IXMLDOMNode* CXMLDOMNodeListImpl::getNamedItem(const XMLCHAR* sName)
 {
-	XDOM::IXMLDOMNode* pNode = NULL;
+	XDOM::IXMLDOMNode* pNode = nullptr;
 	DOMNodeListItor itor = m_lstNodes.begin();
 	while (itor != m_lstNodes.end())
 	{
@@ -26,6 +26,6 @@ XDOM::IXMLDOMNode* CXMLDOMNodeListImpl::getNamedItem(const XMLCHAR* sName)
 
 		++itor;
 	}
-	return NULL;
+	return nullptr;
 }
 

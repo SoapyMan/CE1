@@ -333,7 +333,7 @@ void CTerrain::LoadStatObjInstances()
 		if (pStatObj && lstUsedCGFs.Find(pStatObj) < 0)
 		{
 			Get3DEngine()->ReleaseObject(pStatObj);
-			m_pObjManager->m_lstStaticTypes[i].pStatObj = NULL;
+			m_pObjManager->m_lstStaticTypes[i].pStatObj = nullptr;
 			nGroupsReleased++;
 		}
 	}

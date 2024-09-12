@@ -35,9 +35,9 @@ void ZipDir::CacheRW::Close()
 		}
 
 		fclose(m_pFile);
-		m_pFile = NULL;
+		m_pFile = nullptr;
 	}
-	m_pHeap = NULL;
+	m_pHeap = nullptr;
 	m_treeDir.Clear();
 }
 
@@ -286,12 +286,12 @@ ZipDir::ErrorEnum ZipDir::CacheRW::ReadFile(FileEntry* pFileEntry, void* pCompre
 ZipDir::FileEntry* ZipDir::CacheRW::FindFile(const char* szPath, bool bFullInfo)
 {
 	if (!this)
-		return NULL;
+		return nullptr;
 	ZipDir::FindFileRW fd(GetRoot());
 	if (!fd.FindExact(szPath))
 	{
 		CRYASSERT(!fd.GetFileEntry());
-		return NULL;
+		return nullptr;
 	}
 	CRYASSERT(fd.GetFileEntry());
 	return fd.GetFileEntry();
@@ -386,14 +386,14 @@ bool ZipDir::CacheRW::RelinkZip()
 
 			// we successfully relinked, now copy the temporary file to the original file
 			fclose(m_pFile);
-			m_pFile = NULL;
+			m_pFile = nullptr;
 
 			remove(m_strFilePath.c_str());
 			if (rename(strNewFilePath.c_str(), m_strFilePath.c_str()) == 0)
 			{
 				// successfully renamed - reopen
 				m_pFile = fopen(m_strFilePath.c_str(), "r+b");
-				return m_pFile == NULL;
+				return m_pFile == nullptr;
 			}
 			else
 			{

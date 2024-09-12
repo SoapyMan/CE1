@@ -473,7 +473,7 @@ float	selfButtom;
 	vectorf vMax = pos + (bbox[1]-m_pEntity->GetPos())*scale;
 
 
-	IPhysicalEntity **ppList = NULL;
+	IPhysicalEntity **ppList = nullptr;
 	int iNumEntites;
 	// object types - bitmask 0-terrain 1-static, 2-sleeping, 3-physical, 4-living
 	iNumEntites = m_pGame->GetSystem()->GetIPhysicalWorld()->GetEntitiesInBox(vMin, vMax, ppList,  1);
@@ -881,7 +881,7 @@ float	crossLimit = 0.0f;
 	{
 
 	IUnknownProxy*	pProxy = obstVehicle->GetProxy();
-	CXVehicleProxy*	pVProxy=NULL;	
+	CXVehicleProxy*	pVProxy=nullptr;	
 
 		if(!pProxy->QueryProxy(AIPROXY_VEHICLE, (void**)&pVProxy))
 			return correction;

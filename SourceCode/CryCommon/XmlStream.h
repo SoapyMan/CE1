@@ -47,7 +47,7 @@ class XmlStream :
 
 public:
 
-	XmlStream(IXmlNotify* pNotify = NULL) :
+	XmlStream(IXmlNotify* pNotify = nullptr) :
 		string()
 	{
 		_subscriber = pNotify;

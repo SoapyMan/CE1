@@ -726,7 +726,7 @@ void SEvalFuncs_C::ETC_ShadowMap(int ns)
 	if (nsFrust > 0 && (*lsources)[nsFrust].m_pLS == (*lsources)[nsFrust - 1].m_pLS && pShadowMapFrustum->pPenumbra)
 		pShadowMapFrustum = pShadowMapFrustum->pPenumbra;
 
-	Matrix44* m = NULL;
+	Matrix44* m = nullptr;
 	Vec3d vObjTrans;
 	if (rd->m_RP.m_ObjFlags & FOB_TRANS_MASK)
 	{

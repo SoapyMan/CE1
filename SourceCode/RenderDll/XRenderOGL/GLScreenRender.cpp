@@ -289,8 +289,8 @@ bool ResizeTextureHw(CScreenVars* pVars, CGLRenderer* pRenderer, STexPic*& pSrc,
 	SetTexture(pRenderer, pSrc, 3, GL_LINEAR, GL_LINEAR, 1);
 
 	// set current vertex/fragment program
-	vpBlur->mfSet(true, NULL);
-	fpBlur->mfSet(true, NULL);
+	vpBlur->mfSet(true, nullptr);
+	fpBlur->mfSet(true, nullptr);
 
 	gRenDev->SetState(GS_NODEPTHTEST);
 
@@ -1480,8 +1480,8 @@ bool CREScreenProcess::mfDraw(SShader* ef, SShaderPass* sfm)
 		gRenDev->SetViewport(0, 0, iWidth, iHeight);
 
 		// set current vertex/fragment program
-		vpBluryMap->mfSet(true, NULL);
-		fpBluryMap->mfSet(true, NULL);
+		vpBluryMap->mfSet(true, nullptr);
+		fpBluryMap->mfSet(true, nullptr);
 		pRenderer->EF_CommitPS();
 		pRenderer->EF_CommitVS();
 
@@ -1506,8 +1506,8 @@ bool CREScreenProcess::mfDraw(SShader* ef, SShaderPass* sfm)
 		}
 
 		// restore states
-		vpBluryMap->mfSet(false, NULL);
-		fpBluryMap->mfSet(false, NULL);
+		vpBluryMap->mfSet(false, nullptr);
+		fpBluryMap->mfSet(false, nullptr);
 
 		// set flags      
 		LOG_EFFECT("*** End blury screen process... ***\n")
@@ -1528,8 +1528,8 @@ bool CREScreenProcess::mfDraw(SShader* ef, SShaderPass* sfm)
 		gRenDev->SetViewport(0, 0, iWidth, iHeight);
 
 		// set current vertex/fragment program
-		vpCartoon->mfSet(true, NULL);
-		fpCartoon->mfSet(true, NULL);
+		vpCartoon->mfSet(true, nullptr);
+		fpCartoon->mfSet(true, nullptr);
 		pRenderer->EF_CommitPS();
 		pRenderer->EF_CommitVS();
 
@@ -1553,14 +1553,14 @@ bool CREScreenProcess::mfDraw(SShader* ef, SShaderPass* sfm)
 		// just render
 		gRenDev->DrawTriStrip(&(CVertexBuffer(pScreenQuad, VERTEX_FORMAT_P3F_TEX2F)), 4);
 
-		vpCartoon->mfSet(false, NULL);
-		fpCartoon->mfSet(false, NULL);
+		vpCartoon->mfSet(false, nullptr);
+		fpCartoon->mfSet(false, nullptr);
 
 		CopyScreenToTexture(pRenderer, pScreenTex);
 
 		// set current vertex/fragment program 
-		vpCartoon->mfSet(true, NULL);
-		fpCartoonSilhouete->mfSet(true, NULL);
+		vpCartoon->mfSet(true, nullptr);
+		fpCartoonSilhouete->mfSet(true, nullptr);
 		pRenderer->EF_CommitPS();
 		pRenderer->EF_CommitVS();
 
@@ -1589,8 +1589,8 @@ bool CREScreenProcess::mfDraw(SShader* ef, SShaderPass* sfm)
 		gRenDev->SetState(GS_BLSRC_ZERO | GS_BLDST_SRCCOL | GS_NODEPTHTEST);
 		gRenDev->DrawTriStrip(&(CVertexBuffer(pScreenQuad, VERTEX_FORMAT_P3F_TEX2F)), 4);
 
-		vpCartoon->mfSet(false, NULL);
-		fpCartoonSilhouete->mfSet(false, NULL);
+		vpCartoon->mfSet(false, nullptr);
+		fpCartoonSilhouete->mfSet(false, nullptr);
 
 		LOG_EFFECT("*** End cartoon mode process... ***\n")
 	}
@@ -1644,8 +1644,8 @@ bool CREScreenProcess::mfDraw(SShader* ef, SShaderPass* sfm)
 			float fAmount = CLAMP(m_pVars->m_fMotionBlurAmount, 0.0f, 1.0f);
 
 			// set current vertex/fragment program
-			vpMotion->mfSet(true, NULL);
-			fpMotion->mfSet(true, NULL);
+			vpMotion->mfSet(true, nullptr);
+			fpMotion->mfSet(true, nullptr);
 			pRenderer->EF_CommitPS();
 			pRenderer->EF_CommitVS();
 
@@ -1682,8 +1682,8 @@ bool CREScreenProcess::mfDraw(SShader* ef, SShaderPass* sfm)
 			gRenDev->DrawTriStrip(&(CVertexBuffer(pScreenQuad, VERTEX_FORMAT_P3F_TEX2F)), 4);
 
 			// disable current vertex/fragment program
-			vpMotion->mfSet(false, NULL);
-			fpMotion->mfSet(false, NULL);
+			vpMotion->mfSet(false, nullptr);
+			fpMotion->mfSet(false, nullptr);
 			break;
 		}
 

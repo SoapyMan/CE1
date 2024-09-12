@@ -78,8 +78,8 @@ class XmlNodeRef {
 private:
 	IXmlNode* p;
 public:
-	XmlNodeRef() : p(NULL) {}
-	XmlNodeRef(int Null) : p(NULL) {}
+	XmlNodeRef() : p(nullptr) {}
+	XmlNodeRef(int Null) : p(nullptr) {}
 	XmlNodeRef(IXmlNode* p_);
 	XmlNodeRef(const XmlNodeRef& p_);
 	//explicit XmlNodeRef( const char *tag,IXmlNode *node );
@@ -93,8 +93,8 @@ public:
 	XmlNodeRef& operator=(IXmlNode* newp);
 	XmlNodeRef& operator=(const XmlNodeRef& newp);
 
-	operator bool() const { return p != NULL; };
-	bool operator !() const { return p == NULL; };
+	operator bool() const { return p != nullptr; };
+	bool operator !() const { return p == nullptr; };
 
 	// Misc compare functions.
 	bool  operator == (const IXmlNode* p2) const { return p == p2; };

@@ -318,7 +318,7 @@ public:
 
 	void OnSetVar(ICVar *pVar);
 	// Servers management
-	bool	StartupServer(bool listen, const char *szName = NULL);
+	bool	StartupServer(bool listen, const char *szName = nullptr);
 	void	ShutdownServer();
 
 	// Client management
@@ -391,7 +391,7 @@ public:
 	// Ingame Dialogs
 	CIngameDialogMgr *GetIngameDialogManager() { return m_pIngameDialogMgr; }
 
-	void BindAction(const char *sAction,const char *sKeys,const char *sActionMap=NULL, int iKeyPos = -1);
+	void BindAction(const char *sAction,const char *sKeys,const char *sActionMap=nullptr, int iKeyPos = -1);
 	void BindActionMultipleMaps(const char *sAction,const char *sKeys, int iKeyPos = -1);
 	bool CheckForAction(const char *sAction);
 	void ClearAction(const char *sAction);
@@ -404,7 +404,7 @@ public:
 
 	//! functions to know if the current terminal is a server and/or a client
 	//@{
-	bool	IsServer()	{	return m_pServer!=NULL;	}
+	bool	IsServer()	{	return m_pServer!=nullptr;	}
 	bool	IsClient();
 	bool  IsMultiplayer();   // can be used for disabling cheats, or disabling features which cannot be synchronised over a network game
 	bool	IsDevModeEnable();
@@ -444,7 +444,7 @@ public:
 
 	bool GetPreviewMapPosition(float &x, float &y, float mapx, float mapy, float sizex, float sizey, float zoom, float center_x, float center_y, bool bRound);
 	int GetSector(int nSectorsX, int nSectorsY, float x, float y);
-	void DrawMapPreview(float mapx, float mapy, float sizex, float sizey, float zoom, float center_x, float center_y, float alpha, struct PreviewMapParams *pParams=NULL);
+	void DrawMapPreview(float mapx, float mapy, float sizex, float sizey, float zoom, float center_x, float center_y, float alpha, struct PreviewMapParams *pParams=nullptr);
   void DrawRadar(float x, float y, float w, float h, float fRange, INT_PTR *pRadarTextures, _SmartScriptObject *pEntities, char *pRadarObjective);
 
 	// Demo recording stuff ------------------------------------------------
@@ -888,8 +888,8 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	void DevModeInit();
 	void DevModeUpdate();
-	void DevMode_SavePlayerPos( int index,const char *sTagName=NULL,const char *sDescription=NULL );
-	void DevMode_LoadPlayerPos( int index,const char *sTagName=NULL );
+	void DevMode_SavePlayerPos( int index,const char *sTagName=nullptr,const char *sDescription=nullptr );
+	void DevMode_LoadPlayerPos( int index,const char *sTagName=nullptr );
 	//////////////////////////////////////////////////////////////////////////
 
 	// interface IGame ---------------------------------------------------------

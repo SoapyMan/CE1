@@ -86,12 +86,12 @@ void CBrush::SetLightmap(RenderLMData* pLMData, float* pTexCoords, UINT iNumTexC
 	if (m_arrLMData[nLod].m_pLMTCBuffer)
 	{
 		pIRenderer->DeleteLeafBuffer(m_arrLMData[nLod].m_pLMTCBuffer);
-		m_arrLMData[nLod].m_pLMTCBuffer = NULL;
+		m_arrLMData[nLod].m_pLMTCBuffer = nullptr;
 	}
 
-	IStatObj* pIStatObj = GetEntityStatObj(0, NULL);
+	IStatObj* pIStatObj = GetEntityStatObj(0, nullptr);
 
-	if (pIStatObj == NULL)
+	if (pIStatObj == nullptr)
 		return;
 
 	if (!pIStatObj->EnableLightamapSupport())
@@ -99,7 +99,7 @@ void CBrush::SetLightmap(RenderLMData* pLMData, float* pTexCoords, UINT iNumTexC
 
 	CLeafBuffer* pLeafBuffer = pIStatObj->GetLeafBuffer();
 
-	if (pLeafBuffer == NULL)
+	if (pLeafBuffer == nullptr)
 		return;
 
 	// Renderer expect 2 floats
@@ -128,7 +128,7 @@ void CBrush::SetLightmap(RenderLMData* pLMData, float* pTexCoords, UINT iNumTexC
 	m_arrLMData[nLod].m_pLMTCBuffer = GetRenderer()->CreateLeafBufferInitialized(
 		&vTexCoord2[0], pLeafBuffer->m_SecVertCount, VERTEX_FORMAT_TEX2F,
 		0/*pLeafBuffer->GetIndices(0)*/, 0/*pLeafBuffer->m_Indices.m_nItems*/,
-		R_PRIMV_TRIANGLES, "LMapTexCoords", eBT_Static, 1, 0, NULL, NULL, false, false);
+		R_PRIMV_TRIANGLES, "LMapTexCoords", eBT_Static, 1, 0, nullptr, nullptr, false, false);
 
 	C3DEngine* pEng = (C3DEngine*)Get3DEngine();
 	m_arrLMData[nLod].m_pLMTCBuffer->SetChunk(pEng->m_pSHDefault,

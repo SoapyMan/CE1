@@ -71,7 +71,7 @@ public:
 	// for internal use only
 	//DECLARE_ARRAY_GETTER_METHODS (AnimData, AnimationInfo, Animations, m_arrAnimations);
 	size_t numAnimations() const { return m_arrAnimations.size(); }
-	// tries to load the animation info if isn't present in memory; returns NULL if can't load
+	// tries to load the animation info if isn't present in memory; returns nullptr if can't load
 	const AnimData* getAnimationInfo(unsigned i);
 
 	//! Unloads animation from memory

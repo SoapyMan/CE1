@@ -119,7 +119,7 @@ STexPic* CD3D9TexMan::CreateTexture(int nWidth, int nHeight, D3DFORMAT d3dFMT, i
 	LPDIRECT3DTEXTURE9 pTexture;
 	STexPic* tp;
 	if (FAILED(D3DXCreateTexture(gcpRendD3D->mfGetD3DDevice(), nWidth, nHeight, bMips ? D3DX_DEFAULT : 1, d3dUsage, d3dFMT, D3DPOOL_DEFAULT, &pTexture)))
-		return NULL;
+		return nullptr;
 	int nFlags = FT_NOREMOVE | FT_NOSTREAM;
 	if (!bMips)
 		nFlags |= FT_NOMIPS;
@@ -141,10 +141,10 @@ STexPic* CD3D9TexMan::CreateTexture(int nWidth, int nHeight, D3DFORMAT d3dFMT, i
 	gRenDev->m_TexMan->m_StatsCurTexMem += ti->m_Size;
 
 	HRESULT hr = S_OK;
-	PDIRECT3DSURFACE9 pSurface = NULL;
+	PDIRECT3DSURFACE9 pSurface = nullptr;
 	hr = pTexture->GetSurfaceLevel(0, &pSurface);
 	if (SUCCEEDED(hr))
-		gcpRendD3D->m_pd3dDevice->ColorFill(pSurface, NULL, D3DCOLOR_ARGB(0, 0, 0, 0));
+		gcpRendD3D->m_pd3dDevice->ColorFill(pSurface, nullptr, D3DCOLOR_ARGB(0, 0, 0, 0));
 	SAFE_RELEASE(pSurface);
 
 	return ti;
@@ -160,67 +160,67 @@ void CD3D9TexMan::DestroyHDRMaps()
 
 	if (m_Text_HDRTarget)
 		m_Text_HDRTarget->Release(true);
-	m_Text_HDRTarget = NULL;
+	m_Text_HDRTarget = nullptr;
 	if (m_Text_HDRTarget_Temp)
 		m_Text_HDRTarget_Temp->Release(true);
-	m_Text_HDRTarget_Temp = NULL;
+	m_Text_HDRTarget_Temp = nullptr;
 	//if (m_Text_HDRTarget_K)
 	//  m_Text_HDRTarget_K->Release(true);
-	//m_Text_HDRTarget_K = NULL;
+	//m_Text_HDRTarget_K = nullptr;
 
 	if (m_Text_ScreenMap_HDR)
 		m_Text_ScreenMap_HDR->Release(true);
-	m_Text_ScreenMap_HDR = NULL;
+	m_Text_ScreenMap_HDR = nullptr;
 
 	if (r->m_TexMan->m_Text_HDRTargetScaled[0])
 		r->m_TexMan->m_Text_HDRTargetScaled[0]->Release(true);
-	r->m_TexMan->m_Text_HDRTargetScaled[0] = NULL;
+	r->m_TexMan->m_Text_HDRTargetScaled[0] = nullptr;
 	if (r->m_TexMan->m_Text_HDRTargetScaled[1])
 		r->m_TexMan->m_Text_HDRTargetScaled[1]->Release(true);
-	r->m_TexMan->m_Text_HDRTargetScaled[1] = NULL;
+	r->m_TexMan->m_Text_HDRTargetScaled[1] = nullptr;
 
 	if (r->m_TexMan->m_Text_HDRBrightPass)
 		r->m_TexMan->m_Text_HDRBrightPass->Release(true);
-	r->m_TexMan->m_Text_HDRBrightPass = NULL;
+	r->m_TexMan->m_Text_HDRBrightPass = nullptr;
 
 	if (r->m_TexMan->m_Text_HDRStarSource)
 		r->m_TexMan->m_Text_HDRStarSource->Release(true);
-	r->m_TexMan->m_Text_HDRStarSource = NULL;
+	r->m_TexMan->m_Text_HDRStarSource = nullptr;
 
 	if (r->m_TexMan->m_Text_HDRBloomSource)
 		r->m_TexMan->m_Text_HDRBloomSource->Release(true);
-	r->m_TexMan->m_Text_HDRBloomSource = NULL;
+	r->m_TexMan->m_Text_HDRBloomSource = nullptr;
 
 	if (r->m_TexMan->m_Text_HDRAdaptedLuminanceCur)
 		r->m_TexMan->m_Text_HDRAdaptedLuminanceCur->Release(true);
-	r->m_TexMan->m_Text_HDRAdaptedLuminanceCur = NULL;
+	r->m_TexMan->m_Text_HDRAdaptedLuminanceCur = nullptr;
 
 	if (r->m_TexMan->m_Text_HDRAdaptedLuminanceLast)
 		r->m_TexMan->m_Text_HDRAdaptedLuminanceLast->Release(true);
-	r->m_TexMan->m_Text_HDRAdaptedLuminanceLast = NULL;
+	r->m_TexMan->m_Text_HDRAdaptedLuminanceLast = nullptr;
 
 	for (i = 0; i < NUM_HDR_TONEMAP_TEXTURES; i++)
 	{
 		if (m_Text_HDRToneMaps[i])
 			m_Text_HDRToneMaps[i]->Release(true);
-		m_Text_HDRToneMaps[i] = NULL;
+		m_Text_HDRToneMaps[i] = nullptr;
 	}
 
 	for (i = 0; i < NUM_HDR_BLOOM_TEXTURES; i++)
 	{
 		if (m_Text_HDRBloomMaps[i])
 			m_Text_HDRBloomMaps[i]->Release(true);
-		m_Text_HDRBloomMaps[i] = NULL;
+		m_Text_HDRBloomMaps[i] = nullptr;
 	}
 
 	for (i = 0; i < NUM_HDR_STAR_TEXTURES; i++)
 	{
 		if (m_Text_HDRStarMaps[i][0])
 			m_Text_HDRStarMaps[i][0]->Release(true);
-		m_Text_HDRStarMaps[i][0] = NULL;
+		m_Text_HDRStarMaps[i][0] = nullptr;
 		if (m_Text_HDRStarMaps[i][1])
 			m_Text_HDRStarMaps[i][1]->Release(true);
-		m_Text_HDRStarMaps[i][1] = NULL;
+		m_Text_HDRStarMaps[i][1] = nullptr;
 	}
 }
 
@@ -267,7 +267,7 @@ void CD3D9TexMan::GenerateHDRMaps()
 	else
 	{
 		AllocateDeferredRenderTarget(r->m_dwHDRCropWidth / 4, r->m_dwHDRCropHeight / 4, D3DFMT_A16B16G16R16F, 1.f, "$HDRTargetScaled", &m_Text_HDRTargetScaled[0]);
-		m_Text_HDRTargetScaled[1] = NULL;
+		m_Text_HDRTargetScaled[1] = nullptr;
 	}
 
 	AllocateDeferredRenderTarget(r->m_dwHDRCropWidth / 4 + 2, r->m_dwHDRCropHeight / 4 + 2, D3DFMT_A8R8G8B8, 0.5f, "$HDRBrightPass", &m_Text_HDRBrightPass);
@@ -309,7 +309,7 @@ void CD3D9TexMan::GenerateHDRMaps()
 		{
 			sprintf(szName, "$HDRStarMap_%d", i);
 			AllocateDeferredRenderTarget(r->m_dwHDRCropWidth / 4, r->m_dwHDRCropHeight / 4, D3DFMT_A16B16G16R16F, 0.8f, szName, &m_Text_HDRStarMaps[i][0]);
-			m_Text_HDRStarMaps[i][1] = NULL;
+			m_Text_HDRStarMaps[i][1] = nullptr;
 		}
 	}
 
@@ -672,7 +672,7 @@ static int s_nLibGlareDefs = sizeof(s_aLibGlareDef) / sizeof(GLAREDEF);
 //----------------------------------------------------------
 // Information object for star generation 
 
-CStarDef* CStarDef::ms_pStarLib = NULL;
+CStarDef* CStarDef::ms_pStarLib = nullptr;
 D3DXCOLOR	CStarDef::ms_avChromaticAberrationColor[];
 
 
@@ -698,7 +698,7 @@ HRESULT CStarDef::Construct()
 	ZeroMemory(m_strStarName, sizeof(m_strStarName));
 
 	m_nStarLines = 0;
-	m_pStarLine = NULL;
+	m_pStarLine = nullptr;
 	m_fInclination = 0.0f;
 
 	m_bRotation = false;
@@ -889,7 +889,7 @@ HRESULT CStarDef::DeleteStaticStarLibs()
 //----------------------------------------------------------
 // Glare definition
 
-CGlareDef* CGlareDef::ms_pGlareLib = NULL;
+CGlareDef* CGlareDef::ms_pGlareLib = nullptr;
 
 CGlareDef::CGlareDef()
 {
@@ -1077,7 +1077,7 @@ inline void SetTexture(CD3D9Renderer* pRenderer, STexPic* pTex, int iStage, int 
 
 PDIRECT3DSURFACE9 GetSurfaceTP(STexPic* tp)
 {
-	PDIRECT3DSURFACE9 pSurf = NULL;
+	PDIRECT3DSURFACE9 pSurf = nullptr;
 	if (tp)
 	{
 		LPDIRECT3DTEXTURE9 pTexture = (LPDIRECT3DTEXTURE9)tp->m_RefTex.m_VidTex;
@@ -1179,7 +1179,7 @@ HRESULT GetTextureCoords(STexPic* pTexSrc, RECT* pRectSrc, STexPic* pTexDest, RE
 	float tU, tV;
 
 	// Validate arguments
-	if (pTexSrc == NULL || pTexDest == NULL || pCoords == NULL)
+	if (pTexSrc == nullptr || pTexDest == nullptr || pCoords == nullptr)
 		return E_INVALIDARG;
 
 	// Start with a default mapping of the complete source surface to complete 
@@ -1190,7 +1190,7 @@ HRESULT GetTextureCoords(STexPic* pTexSrc, RECT* pRectSrc, STexPic* pTexDest, RE
 	pCoords->fBottomV = 1.0f;
 
 	// If not using the complete source surface, adjust the coordinates
-	if (pRectSrc != NULL)
+	if (pRectSrc != nullptr)
 	{
 		// These delta values are the distance between source texel centers in 
 		// texture address space
@@ -1204,7 +1204,7 @@ HRESULT GetTextureCoords(STexPic* pTexSrc, RECT* pRectSrc, STexPic* pTexDest, RE
 	}
 
 	// If not drawing to the complete destination surface, adjust the coordinates
-	if (pRectDest != NULL)
+	if (pRectDest != nullptr)
 	{
 		// These delta values are the distance between source texel centers in 
 		// texture address space
@@ -1420,7 +1420,7 @@ HRESULT GetSampleOffsets_BloomBilinear(DWORD dwD3DTexSize, float afTexCoordOffse
 //-----------------------------------------------------------------------------
 HRESULT GetSampleOffsets_DownScale4x4(DWORD dwWidth, DWORD dwHeight, D3DXVECTOR4 avSampleOffsets[])
 {
-	if (NULL == avSampleOffsets)
+	if (nullptr == avSampleOffsets)
 		return E_INVALIDARG;
 
 	float tU = 1.0f / dwWidth;
@@ -1453,7 +1453,7 @@ HRESULT GetSampleOffsets_DownScale4x4(DWORD dwWidth, DWORD dwHeight, D3DXVECTOR4
 //-----------------------------------------------------------------------------
 HRESULT GetSampleOffsets_DownScale4x4Bilinear(DWORD dwWidth, DWORD dwHeight, D3DXVECTOR4 avSampleOffsets[])
 {
-	if (NULL == avSampleOffsets)
+	if (nullptr == avSampleOffsets)
 		return E_INVALIDARG;
 
 	float tU = 1.0f / dwWidth;
@@ -1484,7 +1484,7 @@ HRESULT GetSampleOffsets_DownScale4x4Bilinear(DWORD dwWidth, DWORD dwHeight, D3D
 //-----------------------------------------------------------------------------
 HRESULT GetSampleOffsets_DownScale2x2(DWORD dwWidth, DWORD dwHeight, D3DXVECTOR4 avSampleOffsets[])
 {
-	if (NULL == avSampleOffsets)
+	if (nullptr == avSampleOffsets)
 		return E_INVALIDARG;
 
 	float tU = 1.0f / dwWidth;
@@ -1517,7 +1517,7 @@ HRESULT GetSampleOffsets_DownScale2x2(DWORD dwWidth, DWORD dwHeight, D3DXVECTOR4
 //-----------------------------------------------------------------------------
 HRESULT GetSampleOffsets_DownScale2x2Bilinear(DWORD dwWidth, DWORD dwHeight, D3DXVECTOR4 avSampleOffsets[])
 {
-	if (NULL == avSampleOffsets)
+	if (nullptr == avSampleOffsets)
 		return E_INVALIDARG;
 
 	float tU = 1.0f / dwWidth;
@@ -1585,13 +1585,13 @@ bool HDR_SceneToSceneScaled()
 			DrawFullScreenQuad(0, 0, 1, 1);
 			fpTemp->mfSet(false);
 		}
-		SetTexture(rd, NULL, 1, D3DTEXF_POINT, D3DTEXF_POINT, true);
+		SetTexture(rd, nullptr, 1, D3DTEXF_POINT, D3DTEXF_POINT, true);
 		rd->EF_SelectTMU(0);
 	}
 
 	// Get the texture coordinates for the render target
 	CoordRect coords;
-	GetTextureCoords(rd->m_TexMan->m_Text_HDRTarget, &rectSrc, rd->m_TexMan->m_Text_HDRTargetScaled[0], NULL, &coords);
+	GetTextureCoords(rd->m_TexMan->m_Text_HDRTarget, &rectSrc, rd->m_TexMan->m_Text_HDRTargetScaled[0], nullptr, &coords);
 
 	int nBitPlanes = rd->m_bDeviceSupportsMRT ? 2 : 1;
 	for (int i = 0; i < nBitPlanes; i++)
@@ -1658,7 +1658,7 @@ bool HDR_SceneToSceneScaled()
 	SAFE_RELEASE(pSurfScaledScene[1]);
 	SAFE_RELEASE(pSurfTempScene);
 	if (rd->m_bDeviceSupportsMRT)
-		dv->SetRenderTarget(1, NULL);
+		dv->SetRenderTarget(1, nullptr);
 
 	return true;
 }
@@ -1670,9 +1670,9 @@ bool HDR_MeasureLuminance()
 	D3DXVECTOR4 avSampleOffsets[16];
 	CD3D9Renderer* rd = gcpRendD3D;
 	LPDIRECT3DDEVICE9 dv = rd->m_pd3dDevice;
-	CCGPShader_D3D* fpSampleAvgLum = NULL;
-	CCGPShader_D3D* fpResampleAvgLum = NULL;
-	CCGPShader_D3D* fpResampleAvgLumExp = NULL;
+	CCGPShader_D3D* fpSampleAvgLum = nullptr;
+	CCGPShader_D3D* fpResampleAvgLum = nullptr;
+	CCGPShader_D3D* fpResampleAvgLumExp = nullptr;
 	SCGBind* bind;
 	bool bResult = false;
 
@@ -1736,7 +1736,7 @@ bool HDR_MeasureLuminance()
 	DrawFullScreenQuad(0.0f, 0.0f, 1.0f, 1.0f);
 
 	if (rd->m_bDeviceSupportsMRT)
-		dv->SetTexture(1, NULL);
+		dv->SetTexture(1, nullptr);
 
 	dwCurTexture--;
 
@@ -1847,7 +1847,7 @@ bool HDR_CalculateAdaptation()
 	CD3D9Renderer* rd = gcpRendD3D;
 	LPDIRECT3DDEVICE9 dv = rd->m_pd3dDevice;
 	CD3D9TexMan* tm = (CD3D9TexMan*)rd->m_TexMan;
-	CCGPShader_D3D* fpCalcAdaptedLum = NULL;
+	CCGPShader_D3D* fpCalcAdaptedLum = nullptr;
 	bool bResult = false;
 
 	// Swap current & last luminance
@@ -1901,7 +1901,7 @@ bool HDR_SceneScaledToBrightPass()
 	CD3D9Renderer* rd = gcpRendD3D;
 	LPDIRECT3DDEVICE9 dv = rd->m_pd3dDevice;
 	CD3D9TexMan* tm = (CD3D9TexMan*)rd->m_TexMan;
-	CCGPShader_D3D* fpBrightPassFilter = NULL;
+	CCGPShader_D3D* fpBrightPassFilter = nullptr;
 	bool bResult = false;
 
 	// Get the new render target surface
@@ -1910,7 +1910,7 @@ bool HDR_SceneScaledToBrightPass()
 		return false;
 
 	// clear destination surface
-	dv->ColorFill(pSurfBrightPass, NULL, D3DCOLOR_ARGB(0, 0, 0, 0));
+	dv->ColorFill(pSurfBrightPass, nullptr, D3DCOLOR_ARGB(0, 0, 0, 0));
 
 	// Get the rectangle describing the sampled portion of the source texture.
 	// Decrease the rectangle to adjust for the single pixel black border.
@@ -1990,9 +1990,9 @@ bool HDR_BrightPassToStarSource()
 	CD3D9Renderer* rd = gcpRendD3D;
 	LPDIRECT3DDEVICE9 dv = rd->m_pd3dDevice;
 	CD3D9TexMan* tm = (CD3D9TexMan*)rd->m_TexMan;
-	CCGPShader_D3D* fpGaussBlur5x5 = NULL;
+	CCGPShader_D3D* fpGaussBlur5x5 = nullptr;
 	bool bResult = false;
-	SCGBind* bind = NULL;
+	SCGBind* bind = nullptr;
 
 	D3DXVECTOR4 avSampleOffsets[16];
 	D3DXVECTOR4 avSampleWeights[16];
@@ -2003,7 +2003,7 @@ bool HDR_BrightPassToStarSource()
 		return false;
 
 	// clear destination surface
-	dv->ColorFill(pSurfStarSource, NULL, D3DCOLOR_ARGB(0, 0, 0, 0));
+	dv->ColorFill(pSurfStarSource, nullptr, D3DCOLOR_ARGB(0, 0, 0, 0));
 
 	// Get the destination rectangle.
 	// Decrease the rectangle to adjust for the single pixel black border.
@@ -2014,7 +2014,7 @@ bool HDR_BrightPassToStarSource()
 	// Get the correct texture coordinates to apply to the rendered quad in order 
 	// to sample from the source rectangle and render into the destination rectangle
 	CoordRect coords;
-	GetTextureCoords(tm->m_Text_HDRBrightPass, NULL, tm->m_Text_HDRStarSource, &rectDest, &coords);
+	GetTextureCoords(tm->m_Text_HDRBrightPass, nullptr, tm->m_Text_HDRStarSource, &rectDest, &coords);
 
 	// The gaussian blur smooths out rough edges to avoid aliasing effects
 	// when the star effect is run
@@ -2081,9 +2081,9 @@ bool HDR_StarSourceToBloomSource()
 	CD3D9Renderer* rd = gcpRendD3D;
 	LPDIRECT3DDEVICE9 dv = rd->m_pd3dDevice;
 	CD3D9TexMan* tm = (CD3D9TexMan*)rd->m_TexMan;
-	CCGPShader_D3D* fpDownScale2x2 = NULL;
+	CCGPShader_D3D* fpDownScale2x2 = nullptr;
 	bool bResult = false;
-	SCGBind* bind = NULL;
+	SCGBind* bind = nullptr;
 	D3DXVECTOR4 avSampleOffsets[4];
 
 	// Get the new render target surface
@@ -2092,7 +2092,7 @@ bool HDR_StarSourceToBloomSource()
 		return false;
 
 	// clear destination surface
-	dv->ColorFill(pSurfBloomSource, NULL, D3DCOLOR_ARGB(0, 0, 0, 0));
+	dv->ColorFill(pSurfBloomSource, nullptr, D3DCOLOR_ARGB(0, 0, 0, 0));
 
 	// Get the rectangle describing the sampled portion of the source texture.
 	// Decrease the rectangle to adjust for the single pixel black border.
@@ -2166,10 +2166,10 @@ bool HDR_RenderBloom()
 	CD3D9Renderer* rd = gcpRendD3D;
 	LPDIRECT3DDEVICE9 dv = rd->m_pd3dDevice;
 	CD3D9TexMan* tm = (CD3D9TexMan*)rd->m_TexMan;
-	CCGPShader_D3D* fpGaussBlur5x5 = NULL;
-	CCGPShader_D3D* fpBloom = NULL;
+	CCGPShader_D3D* fpGaussBlur5x5 = nullptr;
+	CCGPShader_D3D* fpBloom = nullptr;
 	bool bResult = false;
-	SCGBind* bind = NULL;
+	SCGBind* bind = nullptr;
 	int i;
 
 	D3DXVECTOR4 avSampleOffsets[16];
@@ -2183,7 +2183,7 @@ bool HDR_RenderBloom()
 	PDIRECT3DSURFACE9 pSurfBloomSource = GetSurfaceTP(tm->m_Text_HDRBloomMaps[2]);
 
 	// Clear the bloom texture
-	dv->ColorFill(pSurfBloom, NULL, D3DCOLOR_ARGB(0, 0, 0, 0));
+	dv->ColorFill(pSurfBloom, nullptr, D3DCOLOR_ARGB(0, 0, 0, 0));
 
 	if (g_GlareDef.m_fGlareLuminance <= 0.0f || g_GlareDef.m_fBloomLuminance <= 0.0f)
 	{
@@ -2305,7 +2305,7 @@ bool HDR_RenderBloom()
 	GetTextureRect(tm->m_Text_HDRBloomMaps[1], &rectSrc);
 	InflateRect(&rectSrc, -1, -1);
 
-	GetTextureCoords(tm->m_Text_HDRBloomMaps[1], &rectSrc, tm->m_Text_HDRBloomMaps[0], NULL, &coords);
+	GetTextureCoords(tm->m_Text_HDRBloomMaps[1], &rectSrc, tm->m_Text_HDRBloomMaps[0], nullptr, &coords);
 
 	bind = fpBloom->mfGetParameterBind("vSampleOffsets");
 	CRYASSERT(bind);
@@ -2346,10 +2346,10 @@ bool HDR_RenderStar()
 	CD3D9Renderer* rd = gcpRendD3D;
 	LPDIRECT3DDEVICE9 dv = rd->m_pd3dDevice;
 	CD3D9TexMan* tm = (CD3D9TexMan*)rd->m_TexMan;
-	CCGPShader_D3D* fpStar = NULL;
-	CCGPShader_D3D* fpMergeTextures = NULL;
+	CCGPShader_D3D* fpStar = nullptr;
+	CCGPShader_D3D* fpMergeTextures = nullptr;
 	bool bResult = false;
-	SCGBind* bind = NULL;
+	SCGBind* bind = nullptr;
 
 	D3DXVECTOR4 avSampleOffsets[16];
 	D3DXVECTOR4 avSampleWeights[16];
@@ -2362,11 +2362,11 @@ bool HDR_RenderStar()
 	LPDIRECT3DSURFACE9 pSurfStar1 = GetSurfaceTP(tm->m_Text_HDRStarMaps[0][1]);
 
 	// Clear the star texture
-	dv->ColorFill(pSurfStar0, NULL, D3DCOLOR_ARGB(0, 0, 0, 0));
+	dv->ColorFill(pSurfStar0, nullptr, D3DCOLOR_ARGB(0, 0, 0, 0));
 	SAFE_RELEASE(pSurfStar0);
 	if (pSurfStar1)
 	{
-		dv->ColorFill(pSurfStar1, NULL, D3DCOLOR_ARGB(0, 0, 0, 0));
+		dv->ColorFill(pSurfStar1, nullptr, D3DCOLOR_ARGB(0, 0, 0, 0));
 		SAFE_RELEASE(pSurfStar1);
 	}
 
@@ -2385,7 +2385,7 @@ bool HDR_RenderStar()
 
 	rd->EF_SetState(GS_NODEPTHTEST);
 
-	PDIRECT3DSURFACE9 pSurfDest[2] = { NULL, NULL };
+	PDIRECT3DSURFACE9 pSurfDest[2] = { nullptr, nullptr };
 
 	// Set aside all the star texture surfaces as a convenience
 	PDIRECT3DSURFACE9 apSurfStar[NUM_HDR_STAR_TEXTURES][2] = { 0 };
@@ -2431,7 +2431,7 @@ bool HDR_RenderStar()
 		CONST STARLINE& starLine = starDef.m_pStarLine[d];
 
 		pTexSource[0] = tm->m_Text_HDRStarSource;
-		pTexSource[1] = NULL;
+		pTexSource[1] = nullptr;
 
 		float rad;
 		rad = radOffset + starLine.fInclination;
@@ -2545,7 +2545,7 @@ bool HDR_RenderStar()
 			}
 
 			if (bSplitOutput)
-				dv->SetRenderTarget(1, NULL);
+				dv->SetRenderTarget(1, nullptr);
 
 			// Setup next expansion
 			vtStepUV *= nSamples;
@@ -2616,7 +2616,7 @@ bool HDR_RenderFinalScene()
 	CD3D9Renderer* rd = gcpRendD3D;
 	LPDIRECT3DDEVICE9 dv = rd->m_pd3dDevice;
 	CD3D9TexMan* tm = (CD3D9TexMan*)rd->m_TexMan;
-	CCGPShader_D3D* fpFinalScene = NULL;
+	CCGPShader_D3D* fpFinalScene = nullptr;
 	bool bResult = false;
 
 	// Draw the high dynamic range scene texture to the low dynamic range
@@ -2688,8 +2688,8 @@ void HDR_DrawDebug()
 	rd->Set2DMode(true, 1, 1);
 	rd->m_pd3dDevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
 	rd->m_pd3dDevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_POINT);
-	CCGPShader_D3D* fpShowR = NULL;
-	CCGPShader_D3D* fpShowMRT = NULL;
+	CCGPShader_D3D* fpShowR = nullptr;
+	CCGPShader_D3D* fpShowMRT = nullptr;
 	fpShowR = (CCGPShader_D3D*)PShaderForName(rd->m_RP.m_PS_HDR_ShowR, "CGRC_HDR_ShowR_PS20");
 	fpShowMRT = (CCGPShader_D3D*)PShaderForName(rd->m_RP.m_PS_HDR_ShowRG_MRT, "CGRC_HDR_ShowRG_MRT_PS20");
 
@@ -2827,10 +2827,10 @@ void CD3D9Renderer::EF_HDRPostProcessing()
 		m_pd3dDevice->SetTextureStageState(0, D3DTSS_TEXCOORDINDEX, D3DTSS_TCI_PASSTHRU | 0);
 	}
 	EF_Scissor(false, 0, 0, 0, 0);
-	m_RP.m_pShader = NULL;
+	m_RP.m_pShader = nullptr;
 
 	if (m_nHDRType == 2)
-		m_pd3dDevice->SetRenderTarget(1, NULL);
+		m_pd3dDevice->SetRenderTarget(1, nullptr);
 
 	m_pCurBackBuffer = m_pBackBuffer;
 

@@ -81,9 +81,9 @@ static HMODULE CryLoadLibrary(const char* libName, const bool cAppend = true, co
 #else
 #define CrySharedLibraySupported false
 #define CrySharedLibrayExtension ""
-#define CryLoadLibrary(libName) NULL
+#define CryLoadLibrary(libName) nullptr
 #define CryLoadLibraryDefExt(libName) CryLoadLibrary(libName CrySharedLibrayExtension)
-#define CryGetProcAddress(libHandle, procName) NULL
+#define CryGetProcAddress(libHandle, procName) nullptr
 #define CryFreeLibrary(libHandle)
 #endif 
 

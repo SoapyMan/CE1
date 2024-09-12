@@ -61,13 +61,13 @@ int CSystem::AutoDetectRenderer(char* Vendor, char* Device)
 	DD_CREATE_FUNC ddCreateFunc;
 	DD_ENUM_FUNC ddEnumFunc;
 	hDDInstance = CryLoadLibrary(_T("ddraw.dll"));
-	if (hDDInstance == NULL)
+	if (hDDInstance == nullptr)
 		return nRenderer;
 	ddCreateFunc = (DD_CREATE_FUNC)GetProcAddress(hDDInstance, "DirectDrawCreateEx");
 	ddEnumFunc = (DD_ENUM_FUNC)GetProcAddress(hDDInstance, "DirectDrawEnumerateExA");
 	if (!ddCreateFunc || !ddEnumFunc)
 		return nRenderer;
-	if (FAILED(hr = ddCreateFunc(NULL, &pDD, IID_IDirectDraw7, NULL)))
+	if (FAILED(hr = ddCreateFunc(nullptr, &pDD, IID_IDirectDraw7, nullptr)))
 	{
 		FreeLibrary(hDDInstance);
 		return nRenderer;
@@ -1095,7 +1095,7 @@ void CSystem::RenderStats()
 		{
 			size_t nSoundCurrMem, nSoundMaxMem;
 			m_pRenderer->TextToScreen(nTextPosX - 15, nTextPosY += nTextStepY, "SysMem %.1f mb",
-				float(DumpMMStats(NULL)) / 1024.f);
+				float(DumpMMStats(nullptr)) / 1024.f);
 
 			if (m_pISound)
 			{

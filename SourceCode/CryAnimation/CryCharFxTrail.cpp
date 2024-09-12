@@ -88,7 +88,7 @@ void CryCharFxTrail::UpdateEntries(const Matrix44* pBones)
 	if (m_numEntries > 1)
 		UpdateIndices();
 	else
-		m_RE.updateIndices(NULL, 0);
+		m_RE.updateIndices(nullptr, 0);
 }
 
 void CryCharFxTrail::UpdateIndices()
@@ -134,7 +134,7 @@ void CryCharFxTrail::UpdateIndices()
 void CryCharFxTrail::Render(const struct SRendParams& RendParams, Matrix44& mtxObjMatrix, CryCharInstanceRenderParams& rCharParams)
 {
 	return;
-	CCObject* pObj = rCharParams.NewCryCharCCObject(RendParams, mtxObjMatrix, NULL);
+	CCObject* pObj = rCharParams.NewCryCharCCObject(RendParams, mtxObjMatrix, nullptr);
 
 	AddRenderData(pObj, RendParams);
 }

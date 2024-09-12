@@ -171,7 +171,7 @@ void CWaterOcean::DrawWaterQuad(const int nRecursionLevel)
 	pObj->SetShaderFloat("BumpAmountX",m_fWaterBumpAmountX);
 	pObj->SetShaderFloat("BumpAmountY",m_fWaterBumpAmountY);
 
-	GetRenderer()->EF_AddEf(0, pREs->Get(0), m_pTerrainWaterShader, NULL, pObj, -1, NULL, (GetViewCamera().GetPos().z>fWaterLevel) ? eS_SeeThrough : eS_Water);
+	GetRenderer()->EF_AddEf(0, pREs->Get(0), m_pTerrainWaterShader, nullptr, pObj, -1, nullptr, (GetViewCamera().GetPos().z>fWaterLevel) ? eS_SeeThrough : eS_Water);
 	return;
   }
   Verts_DWQ.Clear();
@@ -434,7 +434,7 @@ void CWaterOcean::Render(const int nRecursionLevel)
 		float fWaterPlaneSize = GetViewCamera().GetZMax() * 2;
 		m_pREOcclusionQueries[nRecursionLevel][nBufID]->m_vBoxMin(vCamPos.x - fWaterPlaneSize, vCamPos.y - fWaterPlaneSize, fWaterLevel + 0.1f);
 		m_pREOcclusionQueries[nRecursionLevel][nBufID]->m_vBoxMax(vCamPos.x + fWaterPlaneSize, vCamPos.y + fWaterPlaneSize, fWaterLevel + 0.1f);
-		GetRenderer()->EF_AddEf(0, m_pREOcclusionQueries[nRecursionLevel][nBufID], m_pShaderOcclusionQuery, NULL, NULL, 0, 0, eS_FogShader);
+		GetRenderer()->EF_AddEf(0, m_pREOcclusionQueries[nRecursionLevel][nBufID], m_pShaderOcclusionQuery, nullptr, nullptr, 0, 0, eS_FogShader);
 	}
 	else
 	{

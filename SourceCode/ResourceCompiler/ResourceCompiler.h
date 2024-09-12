@@ -45,7 +45,7 @@ public:
 
 	virtual void RegisterConvertor(IConvertor* conv);
 	virtual FILE* OpenFile(const char* filename, const char* mode);
-	bool GetFileTime(const char* filename, FILETIME* ftimeModify, FILETIME* ftimeCreate = NULL);
+	bool GetFileTime(const char* filename, FILETIME* ftimeModify, FILETIME* ftimeCreate = nullptr);
 
 	// returns the file unix time - the latest of modification and creation times
 	DWORD GetFileUnixTimeMax(const char* filename);

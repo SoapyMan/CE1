@@ -58,7 +58,7 @@ bool CStatObj::CompileInNeeded()
 	HANDLE _dbg_h = CreateFile(m_szFileName, GENERIC_READ, FILE_SHARE_READ, 0, OPEN_EXISTING, 0, 0);
 	FILETIME _dbg_ft = { 0,0 };
 	if (_dbg_h != INVALID_HANDLE_VALUE)
-		GetFileTime(_dbg_h, &_dbg_ft, NULL, &_dbg_ft);
+		GetFileTime(_dbg_h, &_dbg_ft, nullptr, &_dbg_ft);
 
 	SYSTEMTIME _dbg_st1, _dbg_st2;
 	FileTimeToSystemTime(&fileHeader.SourceFileTime, &_dbg_st1);
@@ -101,14 +101,14 @@ bool CStatObj::CompileInNeeded()
 	GetLog()->UpdateLoadingScreen("Executing " RC_EXECUTABLE " for %s", m_szFileName);
 	GetLog()->Log("\004Command line: %s", szRemoteCmdLine);
 
-	if (!CreateProcess(NULL, // No module name (use command line). 
+	if (!CreateProcess(nullptr, // No module name (use command line). 
 		szRemoteCmdLine,				// Command line. 
-		NULL,             // Process handle not inheritable. 
-		NULL,             // Thread handle not inheritable. 
+		nullptr,             // Process handle not inheritable. 
+		nullptr,             // Thread handle not inheritable. 
 		FALSE,            // Set handle inheritance to FALSE. 
 		GetCVars()->e_ccgf_make_if_not_found == 2 ? 0 : CREATE_NO_WINDOW, // No creation flags. 
-		NULL,             // Use parent's environment block. 
-		NULL/*szFolderName*/,     // Set starting directory. 
+		nullptr,             // Use parent's environment block. 
+		nullptr/*szFolderName*/,     // Set starting directory. 
 		&si,              // Pointer to STARTUPINFO structure.
 		&pi)             // Pointer to PROCESS_INFORMATION structure.
 		)

@@ -22,11 +22,11 @@ CryBoneHierarchyLoader::CryBoneHierarchyLoader() :
 	m_arrIdToIndex("CryBoneHierarchyLoader.indexidmaps"),
 	m_arrIndexToId("CryBoneHierarchyLoader.indexidmaps"),
 #endif
-	m_pChunkBoneAnim(NULL),
+	m_pChunkBoneAnim(nullptr),
 	m_pChunkBoneAnimSize(0),
 
-	m_pBoneAnimRawData(NULL),
-	m_pBoneAnimRawDataEnd(NULL),
+	m_pBoneAnimRawData(nullptr),
+	m_pBoneAnimRawDataEnd(nullptr),
 	m_szLastError("")
 {
 }

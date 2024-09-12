@@ -271,7 +271,7 @@ IClient* CNetwork::CreateClient(IClientSink* pSink, bool bLocal)
 		if (!pClient->Init(pSink))
 		{
 			delete pClient;
-			return NULL;
+			return nullptr;
 		}
 		if (GetCheatProtectionLevel() > 0)
 		{
@@ -284,7 +284,7 @@ IClient* CNetwork::CreateClient(IClientSink* pSink, bool bLocal)
 		return pClient;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 IServer* CNetwork::CreateServer(IServerSlotFactory* pFactory, WORD nPort, bool listen)
@@ -294,7 +294,7 @@ IServer* CNetwork::CreateServer(IServerSlotFactory* pFactory, WORD nPort, bool l
 	if (!pServer->Init(pFactory, nPort, listen))
 	{
 		delete pServer;
-		return NULL;
+		return nullptr;
 	}
 	m_mapServers.insert(MapServersItor::value_type(nPort, pServer));
 
@@ -364,7 +364,7 @@ IServerSnooper* CNetwork::CreateServerSnooper(IServerSnooperSink* pSink)
 	if (!pSnooper->Init(pSink))
 	{
 		delete pSnooper;
-		return NULL;
+		return nullptr;
 	}
 	return pSnooper;
 }
@@ -374,7 +374,7 @@ CServerSlotLocal* CNetwork::ConnectToLocalServerSlot(CClientLocal* pClient, WORD
 	MapServersItor itor;
 
 	if (m_mapServers.empty())
-		return NULL;
+		return nullptr;
 	//check if the local server exists
 	itor = m_mapServers.find(wPort);
 

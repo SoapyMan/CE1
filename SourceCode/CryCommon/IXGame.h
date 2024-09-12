@@ -23,7 +23,7 @@ struct IXGame : public IGame
 	virtual bool Run(bool& bRelaunch) = 0;
 
 	/* Returns current MOD
-	NULL if FarCry, name of MOD otherwise
+	nullptr if FarCry, name of MOD otherwise
 	*/
 	virtual const char* IsMODLoaded() = 0;
 
@@ -190,7 +190,7 @@ struct IXGame : public IGame
 
 #define CheckFarCryIGame_Begin( pGame ) \
 { \
-	if ( pGame != NULL && pGame->GetInterfaceVersion() == 1 ) \
+	if ( pGame != nullptr && pGame->GetInterfaceVersion() == 1 ) \
 	{
 
 #define CheckFarCryIGame_End() \

@@ -29,7 +29,7 @@ CXConsoleVariable::CXConsoleVariable(CXConsole* pConsole, IScriptSystem* pSS, co
 	};
 #endif
 
-	const char* sTempValue = NULL;
+	const char* sTempValue = nullptr;
 	m_pConsole = pConsole;
 	m_pScriptSystem = pSS;
 	strcpy(m_sName, sName);
@@ -73,7 +73,7 @@ CXConsoleVariable::CXConsoleVariable(CXConsole* pConsole, IScriptSystem* pSS, co
 	m_fValue = &m_localFloat;
 	m_sValue = localString;
 
-	const char* sTempValue = NULL;
+	const char* sTempValue = nullptr;
 	m_bLoadedFromScript = false;
 	m_bAutoDelete = false;
 	switch (nType)

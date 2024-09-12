@@ -130,7 +130,7 @@ void CProfilerTimer::init() // called once
 	HKEY hKey;
 	DWORD dwSize = sizeof(g_nCPUHerz);
 	if (ERROR_SUCCESS == RegOpenKeyEx(HKEY_LOCAL_MACHINE, "HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\0", 0, KEY_QUERY_VALUE, &hKey)
-		&& ERROR_SUCCESS == RegQueryValueEx(hKey, "~MHz", NULL, NULL, (LPBYTE)&g_nCPUHerz, &dwSize))
+		&& ERROR_SUCCESS == RegQueryValueEx(hKey, "~MHz", nullptr, nullptr, (LPBYTE)&g_nCPUHerz, &dwSize))
 	{
 		g_nCPUHerz *= 1000000;
 		g_fSecondsPerTick = 1.0 / (double)g_nCPUHerz;

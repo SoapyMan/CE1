@@ -31,12 +31,12 @@ public:
 		m_pVB = 0;
 
 		m_bLocked = false;
-		m_pLockedData = NULL;
+		m_pLockedData = nullptr;
 		m_nBytesOffs = 0;
 
 		m_BytesCount = theVertsCount * sizeof(VertexType);
 
-		HRESULT hr = pD3D->CreateVertexBuffer(m_BytesCount, D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC, theFVF, D3DPOOL_DEFAULT, &m_pVB, NULL);
+		HRESULT hr = pD3D->CreateVertexBuffer(m_BytesCount, D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC, theFVF, D3DPOOL_DEFAULT, &m_pVB, nullptr);
 		CRYASSERT((hr == D3D_OK) && (m_pVB));
 	}
 
@@ -47,7 +47,7 @@ public:
 		if (theLockBytesCount > m_BytesCount)
 		{
 			CRYASSERT(false);
-			return NULL;
+			return nullptr;
 		}
 
 		if (m_bLocked)
@@ -68,7 +68,7 @@ public:
 				nOffs = m_nBytesOffs;
 				m_nBytesOffs += theLockBytesCount;
 			}
-			CRYASSERT(m_pLockedData != NULL);
+			CRYASSERT(m_pLockedData != nullptr);
 			m_bLocked = true;
 		}
 

@@ -28,7 +28,7 @@ uint CGLRenderer::Make3DSprite(int nTexSize, float fAngleStep, IStatObj* pStatOb
 	int flags = FT_HASALPHA;
 	int flags2 = FT2_NODXT | FT2_DISCARDINCACHE;
 	sprintf(name, "$Spr_%s", pStatObj->GetFileName());
-	//STexPic *ti = m_TexMan->LoadFromCache(NULL, flags, flags2, name, pStatObj->GetFileName());
+	//STexPic *ti = m_TexMan->LoadFromCache(nullptr, flags, flags2, name, pStatObj->GetFileName());
 	//if (ti)
 	//  return ti->m_Bind;
 
@@ -121,7 +121,7 @@ uint CGLRenderer::Make3DSprite(int nTexSize, float fAngleStep, IStatObj* pStatOb
 	glTexParameteri(GL_TEXTURE_3D_EXT, GL_TEXTURE_WRAP_R_EXT, GL_REPEAT);
 	glTexImage3DEXT(GL_TEXTURE_3D_EXT, 0, GL_RGBA8, nTexSize, nTexSize, nTexCount, 0, GL_RGBA, GL_UNSIGNED_BYTE, pMemBuffer);*/
 
-	STexPic* tp = m_TexMan->CreateTexture(name, nTexSize, nTexSize, nTexCount, flags, flags2, pMemBuffer, eTT_3D, -1.0f, -1.0f, 0, NULL, 0, eTF_8888, pStatObj->GetFileName());
+	STexPic* tp = m_TexMan->CreateTexture(name, nTexSize, nTexSize, nTexCount, flags, flags2, pMemBuffer, eTT_3D, -1.0f, -1.0f, 0, nullptr, 0, eTF_8888, pStatObj->GetFileName());
 
 	delete[] pMemBuffer;
 

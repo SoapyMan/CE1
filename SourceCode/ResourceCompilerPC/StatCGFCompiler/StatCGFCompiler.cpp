@@ -258,7 +258,7 @@ void CStatCFGCompiler::ProcessCGF(ConvertContext& cc, CString& sourceFile, CStri
 			break;
 
 		CString strSubDirName = srtDirName.Left(nFind);
-		CreateDirectory(strSubDirName.GetString(), NULL);
+		CreateDirectory(strSubDirName.GetString(), nullptr);
 	}
 
 	cc.pLog->Log("Writing CCGF: %s", outputFile.GetString());

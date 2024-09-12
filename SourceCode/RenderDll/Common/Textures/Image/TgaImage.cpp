@@ -423,7 +423,7 @@ void WriteTGA(byte* data, int width, int height, char* filename, int dest_bits_p
 
 	src_bits_per_pixel = 32;
 
-	if ((sFileData = fopen(filename, "wb")) == NULL)
+	if ((sFileData = fopen(filename, "wb")) == nullptr)
 		return;
 
 	//mdesc |= LR;   // left right

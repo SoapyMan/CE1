@@ -45,7 +45,7 @@ void CREOcean::GenerateIndices(int nLodCode)
 		pg.type = PT_STRIP;
 		oi->m_Groups.AddElem(pg);
 		size = pg.numIndices * sizeof(ushort);
-		h = dv->CreateIndexBuffer(size, flags, D3DFMT_INDEX16, Pool, (IDirect3DIndexBuffer9**)&oi->m_pIndicies, NULL);
+		h = dv->CreateIndexBuffer(size, flags, D3DFMT_INDEX16, Pool, (IDirect3DIndexBuffer9**)&oi->m_pIndicies, nullptr);
 		ibuf = (IDirect3DIndexBuffer9*)oi->m_pIndicies;
 		oi->m_nInds = pg.numIndices;
 		h = ibuf->Lock(0, 0, (void**)&dst, 0);
@@ -212,7 +212,7 @@ void CREOcean::GenerateIndices(int nLodCode)
 	oi->m_Groups.AddElem(pg);
 
 	size = Indicies.Num() * sizeof(ushort);
-	h = dv->CreateIndexBuffer(size, flags, D3DFMT_INDEX16, Pool, (IDirect3DIndexBuffer9**)&oi->m_pIndicies, NULL);
+	h = dv->CreateIndexBuffer(size, flags, D3DFMT_INDEX16, Pool, (IDirect3DIndexBuffer9**)&oi->m_pIndicies, nullptr);
 	ibuf = (IDirect3DIndexBuffer9*)oi->m_pIndicies;
 	oi->m_nInds = Indicies.Num();
 	h = ibuf->Lock(0, 0, (void**)&dst, 0);
@@ -246,7 +246,7 @@ void CREOcean::UpdateTexture()
 	{
 		char name[128];
 		sprintf(name, "$AutoOcean_%d", r->m_TexGenID++);
-		STexPic* tp = r->m_TexMan->CreateTexture(name, OCEANGRID, OCEANGRID, 1, FT_NOMIPS | FT_NOSTREAM, FT2_NODXT, &data[0][0][0], eTT_DSDTBump, -1.0f, -1.0f, 0, NULL, 0, eTF_0888);
+		STexPic* tp = r->m_TexMan->CreateTexture(name, OCEANGRID, OCEANGRID, 1, FT_NOMIPS | FT_NOSTREAM, FT2_NODXT, &data[0][0][0], eTT_DSDTBump, -1.0f, -1.0f, 0, nullptr, 0, eTF_0888);
 		m_CustomTexBind[0] = tp->m_Bind;
 	}
 	else
@@ -254,7 +254,7 @@ void CREOcean::UpdateTexture()
 		STexPicD3D* tp = (STexPicD3D*)gRenDev->m_TexMan->m_Textures[m_CustomTexBind[0] - TX_FIRSTBIND];
 		IDirect3DTexture9* pID3DTexture = (IDirect3DTexture9*)tp->m_RefTex.m_VidTex;
 		D3DLOCKED_RECT d3dlr;
-		h = pID3DTexture->LockRect(0, &d3dlr, NULL, 0);
+		h = pID3DTexture->LockRect(0, &d3dlr, nullptr, 0);
 		D3DSURFACE_DESC ddsdDescDest;
 		pID3DTexture->GetLevelDesc(0, &ddsdDescDest);
 		if (d3dlr.Pitch == tp->m_Width * 4)
@@ -461,12 +461,12 @@ void CREOcean::mfReset()
 	{
 		IDirect3DVertexBuffer9* vb = (IDirect3DVertexBuffer9*)m_pVertsPool[i];
 		SAFE_RELEASE(vb);
-		m_pVertsPool[i] = NULL;
+		m_pVertsPool[i] = nullptr;
 	}
 	if (m_pBuffer)
 	{
 		gRenDev->ReleaseBuffer(m_pBuffer);
-		m_pBuffer = NULL;
+		m_pBuffer = nullptr;
 	}
 }
 
@@ -479,7 +479,7 @@ void CREOcean::InitVB()
 	int size = m_nNumVertsInPool * sizeof(struct_VERTEX_FORMAT_TEX2F);
 	for (int i = 0; i < NUM_OCEANVBS; i++)
 	{
-		h = dv->CreateVertexBuffer(size, D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC, D3DFVF_TEX1, D3DPOOL_DEFAULT, (IDirect3DVertexBuffer9**)&m_pVertsPool[i], NULL);
+		h = dv->CreateVertexBuffer(size, D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC, D3DFVF_TEX1, D3DPOOL_DEFAULT, (IDirect3DVertexBuffer9**)&m_pVertsPool[i], nullptr);
 	}
 	m_nCurVB = 0;
 	m_bLockedVB = false;
@@ -509,11 +509,11 @@ struct_VERTEX_FORMAT_TEX2F* CREOcean::GetVBPtr(int nVerts)
 {
 	HRESULT h;
 
-	struct_VERTEX_FORMAT_TEX2F* pVertices = NULL;
+	struct_VERTEX_FORMAT_TEX2F* pVertices = nullptr;
 	if (nVerts > m_nNumVertsInPool)
 	{
 		CRYASSERT(0);
-		return NULL;
+		return nullptr;
 	}
 	if (m_bLockedVB)
 		UnlockVBPtr();
@@ -570,7 +570,7 @@ void CREOcean::mfDrawOceanSectors()
 		}
 	}
 	float fWaterLevel = eng->GetWaterLevel();
-	CVProgram* vp = NULL;
+	CVProgram* vp = nullptr;
 	int nMaxSplashes = CLAMP(CRenderer::CV_r_oceanmaxsplashes, 0, 16);
 
 	//x = y = 0;
@@ -703,7 +703,7 @@ void CREOcean::mfDrawOceanSectors()
 		if (vp != curVP)
 		{
 			vp = curVP;
-			vp->mfSet(true, NULL, 0);
+			vp->mfSet(true, nullptr, 0);
 		}
 		int nFloats = (os->m_Flags & OSF_NEEDHEIGHTS) ? 1 : 0;
 		if (nSplashes)
@@ -722,7 +722,7 @@ void CREOcean::mfDrawOceanSectors()
 		else
 			if (bCurNeedBuffer)
 			{
-				h = dv->SetStreamSource(1, NULL, 0, 0);
+				h = dv->SetStreamSource(1, nullptr, 0, 0);
 				h = dv->SetVertexDeclaration((LPDIRECT3DVERTEXDECLARATION9)m_VertDecl);
 				bCurNeedBuffer = false;
 			}

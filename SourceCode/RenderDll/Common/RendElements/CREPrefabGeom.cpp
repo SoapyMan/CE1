@@ -39,7 +39,7 @@ bool CREPrefabGeom::mfCompile(SShader* ef, char* scr)
 
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else
@@ -49,7 +49,7 @@ bool CREPrefabGeom::mfCompile(SShader* ef, char* scr)
 		switch (cmd)
 		{
 		case eModel:
-			mModel = NULL;//(CModelCgf *)CComModel::mfForName(data);
+			mModel = nullptr;//(CModelCgf *)CComModel::mfForName(data);
 			break;
 		}
 	}

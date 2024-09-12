@@ -1248,7 +1248,7 @@ GL_EXT(_GL_ARB_fragment_program)
 #define GL_MAX_TEXTURE_IMAGE_UNITS_ARB              0x8872 
 
 
-#define BUFFER_OFFSET(i) ((char *) NULL + (i))
+#define BUFFER_OFFSET(i) ((char *) nullptr + (i))
 
 GL_EXT(_GL_ARB_vertex_buffer_object)
 GL_PROC(_GL_ARB_vertex_buffer_object, void, glBindBufferARB, (GLenum target, GLuint buffer))

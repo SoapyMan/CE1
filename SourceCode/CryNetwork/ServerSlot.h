@@ -37,7 +37,7 @@ class CServerSlot :public IServerSlot, public _IServerSlotServices
 {
 public:
 	//! constructor
-	CServerSlot(CNetwork* pNetwork) :m_pbAuthorizationID(NULL), m_pSink(0), m_pNetwork(pNetwork)
+	CServerSlot(CNetwork* pNetwork) :m_pbAuthorizationID(nullptr), m_pSink(0), m_pNetwork(pNetwork)
 	{
 		m_BandwidthStats.Reset();
 		m_pbGlobalID = 0;
@@ -113,7 +113,7 @@ public: // --------------------------------------------------------------
 	//!
 	void Update(unsigned int nTime, CNP* pCNP, CStream* pStream);
 	//! unlink from the local server
-	void Unlink() { m_pParent = NULL; }
+	void Unlink() { m_pParent = nullptr; }
 
 	// interface IServerSlot -------------------------------------------------------
 
@@ -220,8 +220,8 @@ public:
 	void Update(unsigned int nTime, CNP* pCNP, CStream* pStream) {};
 	void PushData(CStream& stm);
 	void UpdateSlot();
-	void Unlink() { m_pServer = NULL; }
-	void ResetSink() { m_pClient = NULL; if (m_pSink)m_pSink->OnXServerSlotDisconnect(""); }
+	void Unlink() { m_pServer = nullptr; }
+	void ResetSink() { m_pClient = nullptr; if (m_pSink)m_pSink->OnXServerSlotDisconnect(""); }
 
 	// interface IServerSlot ---------------------------------------------------
 

@@ -103,7 +103,7 @@ inline bool CCryFile::Open(const char* filename, const char* mode)
 		Close();
 	m_filename = filename;
 	m_file = m_pIPak->FOpen(filename, mode);
-	return m_file != NULL;
+	return m_file != nullptr;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -196,7 +196,7 @@ inline bool CCryFile::IsInPak() const
 {
 	if (m_file)
 	{
-		if (m_pIPak->GetFileArchivePath(m_file) != NULL)
+		if (m_pIPak->GetFileArchivePath(m_file) != nullptr)
 			return true;
 	}
 	return false;
@@ -208,7 +208,7 @@ inline const char* CCryFile::GetPakPath() const
 	if (m_file)
 	{
 		const char* sPath = m_pIPak->GetFileArchivePath(m_file);
-		if (sPath != NULL)
+		if (sPath != nullptr)
 			return sPath;
 	}
 	return "";

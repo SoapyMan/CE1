@@ -25,8 +25,8 @@ public:
 	};
 
 	CacheRW():
-		m_pFile (NULL),
-		m_pHeap (NULL),
+		m_pFile (nullptr),
+		m_pHeap (nullptr),
 		m_nFlags (0),
 		m_lCDROffset (0)
 	{
@@ -39,7 +39,7 @@ public:
 
 	bool IsValid ()const
 	{
-		return m_pFile != NULL;
+		return m_pFile != nullptr;
 	}
 
 	// opens the given zip file and connects to it. Creates a new file if no such file exists
@@ -147,7 +147,7 @@ class FileEntryTransactionAdd
 	bool m_bComitted;
 public:
 	operator FileEntry* () {return m_pFileEntry;}
-	operator bool()const{return m_pFileEntry != NULL;}
+	operator bool()const{return m_pFileEntry != nullptr;}
 	FileEntry* operator -> () {return m_pFileEntry;}
 	FileEntryTransactionAdd(class CacheRW* pCache, const char* szRelativePath):
 		m_pCache(pCache),

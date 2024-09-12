@@ -188,7 +188,7 @@ void CSectorInfo::UpdateVarBuffer()
 			pArrayInfo->idx_array.GetElements(), pArrayInfo->idx_array.Count(),
 			R_PRIMV_MULTI_STRIPS, "TerrainSector", eBT_Static,
 			CTerrain::GetSectorSize() + 16,
-			m_nTextureID ? m_nTextureID : 0x1000, NULL, NULL, false, false);
+			m_nTextureID ? m_nTextureID : 0x1000, nullptr, nullptr, false, false);
 
 		CRYASSERT(m_pLeafBuffer);
 
@@ -678,7 +678,7 @@ CLeafBuffer* CSectorInfo::MakeSubAreaLeafBuffer(const Vec3d& vPos, float fRadius
 		pPrevLeafBuffer = GetRenderer()->CreateLeafBufferInitialized(
 			EmptyVertBuffer.GetElements(), EmptyVertBuffer.Count(), VERTEX_FORMAT_P3F_N_COL4UB_COL4UB,
 			m_ArrayInfo_MSALB.idx_array.GetElements(), m_ArrayInfo_MSALB.idx_array.Count(),
-			R_PRIMV_TRIANGLES, szLSourceName, eBT_Static, 1, m_nTextureID, NULL, NULL, false, false);
+			R_PRIMV_TRIANGLES, szLSourceName, eBT_Static, 1, m_nTextureID, nullptr, nullptr, false, false);
 	}
 
 	pPrevLeafBuffer->SetVertexContainer(m_pLeafBuffer);

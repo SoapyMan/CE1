@@ -27,7 +27,7 @@ public:
 	{
 		mfSetType(eDATA_Beam);
 		m_fFogScale = 0;
-		m_pBuffer = NULL;
+		m_pBuffer = nullptr;
 		m_LightStyle = 0;
 		m_fLength = 1.0f;
 		mfUpdateFlags(FCEF_TRANSFORM);

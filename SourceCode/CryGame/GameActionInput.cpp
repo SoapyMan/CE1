@@ -1292,7 +1292,7 @@ void CXGame::BindAction(const char *sAction,const char *sKeys,const char *sActio
 	itor=m_mapActionsEnum.find(sAction);
 	if(itor==m_mapActionsEnum.end())
 		return;
-	IActionMap *pMap=NULL;
+	IActionMap *pMap=nullptr;
 	// if no actionmap specified we use the default one
 	if(!sActionMap)
 		pMap=m_pIActionMapManager->GetActionMap("default");

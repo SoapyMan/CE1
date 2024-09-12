@@ -44,7 +44,7 @@ public:
 	void OnRelease()
 	{
 		m_pScriptThis->Clear();
-		m_pScriptThis=NULL;
+		m_pScriptThis=nullptr;
 		delete this;
 	}
 

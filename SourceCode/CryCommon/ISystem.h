@@ -110,23 +110,23 @@ struct ISystemUserCallback
 // Structure passed to Init method of ISystem interface.
 struct SSystemInitParams
 {
-	void* hInstance;											//
-	void* hWnd;														//
-	char szSystemCmdLine[512];						// command line, used to execute the early commands e.g. -DEVMODE "g_gametype ASSAULT"
+	void* hInstance;						//
+	void* hWnd;								//
+	char szSystemCmdLine[512];				// command line, used to execute the early commands e.g. -DEVMODE "g_gametype ASSAULT"
 	ISystemUserCallback* pUserCallback;		//
-	ILog* pLog;														// You can specify your own ILog to be used by System.
-	IValidator* pValidator;								// You can specify different validator object to use by System.
-	const char* sLogFileName;							// File name to use for log.
-	bool bEditor;													// When runing in Editor mode.
-	bool bPreview;												// When runing in Preview mode (Minimal initialization).
-	bool bTestMode;												// When runing in Automated testing mode.
-	bool bDedicatedServer;								// When runing a dedicated server.
-	ISystem* pSystem;											// Pointer to existing ISystem interface, it will be reused if not NULL.
-	//	char szLocalIP[256];									// local IP address (needed if we have several servers on one machine)
+	ILog* pLog;								// You can specify your own ILog to be used by System.
+	IValidator* pValidator;					// You can specify different validator object to use by System.
+	const char* sLogFileName;				// File name to use for log.
+	bool bEditor;							// When runing in Editor mode.
+	bool bPreview;							// When runing in Preview mode (Minimal initialization).
+	bool bTestMode;							// When runing in Automated testing mode.
+	bool bDedicatedServer;					// When runing a dedicated server.
+	ISystem* pSystem;						// Pointer to existing ISystem interface, it will be reused if not NULL.
+	//	char szLocalIP[256];				// local IP address (needed if we have several servers on one machine)
 #if defined(LINUX)
-	void (*pCheckFunc)(void*);							// authentication function (must be set).
+	void (*pCheckFunc)(void*);				// authentication function (must be set).
 #else
-	void* pCheckFunc;											// authentication function (must be set).
+	void* pCheckFunc;						// authentication function (must be set).
 #endif
 
 	// Initialization defaults.
@@ -160,8 +160,8 @@ struct SGameInitParams
 
 	SGameInitParams()
 	{
-		sGameDLL = NULL;
-		pGame = NULL;
+		sGameDLL = nullptr;
+		pGame = nullptr;
 		bDedicatedServer = false;
 		memset(szGameCmdLine, 0, 256);
 	}

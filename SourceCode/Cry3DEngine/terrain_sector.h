@@ -174,7 +174,7 @@ struct CTerrainNode : public CSectorInfo
 	{
 		m_pParent = pParent;
 
-		InitSectorBoundsAndErrorLevels(x1, y1, NULL, NULL);
+		InitSectorBoundsAndErrorLevels(x1, y1, nullptr, nullptr);
 
 		if (nNodeSize == CTerrain::GetSectorSize())
 			memset(m_arrChilds, 0, sizeof(m_arrChilds));

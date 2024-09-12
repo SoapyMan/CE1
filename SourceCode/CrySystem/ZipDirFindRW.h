@@ -17,7 +17,7 @@ class FindDataRW
 public:
 	FindDataRW (FileEntryTree* pRoot):
 		m_pRoot (pRoot),
-		m_pDirHeader (NULL)
+		m_pDirHeader (nullptr)
 		{
 		}
 

@@ -25,7 +25,7 @@
 
 #include "limits.h"
 
-CNULLRenderer* gcpNULL = NULL;
+CNULLRenderer* gcpNULL = nullptr;
 
 //////////////////////////////////////////////////////////////////////
 CNULLRenderer::CNULLRenderer()
@@ -88,7 +88,7 @@ void CNULLRenderer::GetMemoryUsage(ICrySizer* Sizer)
 
 WIN_HWND CNULLRenderer::GetHWND()
 {
-	return NULL;
+	return nullptr;
 }
 
 
@@ -348,7 +348,7 @@ void CNULLRenderer::SetMaterialColor(float r, float g, float b, float a)
 
 char* CNULLRenderer::GetStatusText(ERendStats type)
 {
-	return NULL;
+	return nullptr;
 }
 
 void CNULLRenderer::DrawBall(float x, float y, float z, float radius)

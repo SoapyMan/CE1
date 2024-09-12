@@ -58,8 +58,8 @@ void ValidateHeap()
 }
 
 CGFConvertor::CGFConvertor() :
-	m_fTarget(NULL),
-	m_pStatCGFCompiler(NULL)
+	m_fTarget(nullptr),
+	m_pStatCGFCompiler(nullptr)
 {
 	extern IConvertor* NewStatCGFCompiler();
 	m_pStatCGFCompiler = NewStatCGFCompiler();
@@ -155,7 +155,7 @@ bool CGFConvertor::Process(ConvertContext& cc)
 				}
 				WriteSceneProps();
 
-				m_Writer.SetFile(NULL);
+				m_Writer.SetFile(nullptr);
 				fclose(m_fTarget);
 			}
 			else
@@ -453,14 +453,14 @@ void CGFConvertor::clear()
 {
 	m_arrLODs.clear();
 
-	m_Writer.SetFile(NULL);
+	m_Writer.SetFile(nullptr);
 	if (m_fTarget)
 	{
 		fclose(m_fTarget);
-		m_fTarget = NULL;
+		m_fTarget = nullptr;
 	}
 
-	m_pContext = NULL;
+	m_pContext = nullptr;
 }
 
 
@@ -625,7 +625,7 @@ void CGFConvertor::writeMorphTargets(unsigned nLOD)
 
 		// write the skin - make the buffer(4-byte-aligned)
 		std::vector<char>arrBuffer;
-		arrBuffer.resize((Skin.Serialize_PC(true, NULL, 0) + 3) & ~3);
+		arrBuffer.resize((Skin.Serialize_PC(true, nullptr, 0) + 3) & ~3);
 		if (arrBuffer.empty())
 			throw Error("Can't (pre-)serialize morph target %s", pMorphTarget->strName.c_str());
 		unsigned nBytesWritten = Skin.Serialize_PC(true, &arrBuffer[0], arrBuffer.size());
@@ -791,7 +791,7 @@ void CGFConvertor::WriteBoneInfo()
 	for (unsigned nBone = 0; nBone < arrBones.size(); ++nBone)
 	{
 		CryBoneDesc& rBone = arrBones[nBone];
-		unsigned nSizeBuf = rBone.Serialize(true, NULL, 0);
+		unsigned nSizeBuf = rBone.Serialize(true, nullptr, 0);
 		arrBuf.resize(nSizeBuf);
 
 		if (nSizeBuf != rBone.Serialize(true, &arrBuf[0], nSizeBuf))
@@ -924,7 +924,7 @@ void CGFConvertor::writeShadowConnectivity(unsigned nLOD)
 	if (!pConnectivity)
 		throw Error("Could not construct connectivity");
 
-	unsigned nRequiredSize = pConnectivity->Serialize(true, NULL, 0);
+	unsigned nRequiredSize = pConnectivity->Serialize(true, nullptr, 0);
 
 	DWORD dwVertCount, dwTriCount;
 	pConnectivity->GetStats(dwVertCount, dwTriCount);
@@ -948,7 +948,7 @@ void CGFConvertor::writeVertexSkin(unsigned nLOD)
 	CrySkinFull VertexSkin;
 	builder.initSkinFull(&VertexSkin);
 
-	unsigned nSizeRequired = VertexSkin.Serialize_PC(true, NULL, 0);
+	unsigned nSizeRequired = VertexSkin.Serialize_PC(true, nullptr, 0);
 	std::vector<byte> arrBuffer;
 	arrBuffer.resize(nSizeRequired);
 	unsigned nSizeWritten = VertexSkin.Serialize_PC(true, &arrBuffer[0], arrBuffer.size());
@@ -965,7 +965,7 @@ void CGFConvertor::writeNormalSkin(unsigned nLOD)
 	CrySkinFull NormalSkin;
 	builder.initSkinFull(&NormalSkin);
 
-	unsigned nSizeRequired = NormalSkin.Serialize_PC(true, NULL, 0);
+	unsigned nSizeRequired = NormalSkin.Serialize_PC(true, nullptr, 0);
 	std::vector<byte> arrBuffer;
 	arrBuffer.resize(nSizeRequired);
 	unsigned nSizeWritten = NormalSkin.Serialize_PC(true, &arrBuffer[0], arrBuffer.size());
@@ -1029,7 +1029,7 @@ void CGFConvertor::writeTangSkin(unsigned nLOD)
 	//
 	//////////////////////////////////////////////////////////////////////////
 
-	unsigned nSizeRequired = TangSkin.Serialize(true, NULL, 0);
+	unsigned nSizeRequired = TangSkin.Serialize(true, nullptr, 0);
 	std::vector<byte> arrBuffer;
 	arrBuffer.resize(nSizeRequired);
 	unsigned nSizeWritten = TangSkin.Serialize(true, &arrBuffer[0], arrBuffer.size());
@@ -1164,7 +1164,7 @@ void CGFConvertor::WriteLights()
 	for (i = 0; i < arrLights.size(); ++i)
 	{
 		CBoneLightBindInfo& rLight = arrLights[i];
-		unsigned nRequiredBytes = (rLight.Serialize(true, NULL, 0) + 3) & ~3;
+		unsigned nRequiredBytes = (rLight.Serialize(true, nullptr, 0) + 3) & ~3;
 		if (arrData.size() < nRequiredBytes)
 		{
 			arrData.clear();
@@ -1268,7 +1268,7 @@ void CGFConvertor::WriteAnimListWithCAL(FILE* fCal)
 		szAnimName = strtok(sBuffer, " \t\n\r=");
 		if (!szAnimName)
 			continue;
-		szFileName = strtok(NULL, " \t\n\r=");
+		szFileName = strtok(nullptr, " \t\n\r=");
 		if (!szFileName || szFileName[0] == '?')
 		{
 			//RegisterDummyAnimation(szAnimName);

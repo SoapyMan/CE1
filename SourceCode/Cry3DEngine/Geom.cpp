@@ -24,17 +24,17 @@
 CGeom::CGeom() : CBaseObj()
 {
 	memset(&m_Chunk, 0, sizeof(m_Chunk));
-	m_pVertices = NULL;
-	m_pFaces = NULL;
-	//	m_pLinks		=NULL;
-	m_pUVs = NULL;
-	m_sPropstr = NULL;
-	//	bones		=NULL;
-	m_pTexFaces = NULL;
-	//	m_pNumLinks		=NULL;
-	//	links		=NULL;
-	m_pVcols = NULL;
-	//	BoneNames	=NULL;
+	m_pVertices = nullptr;
+	m_pFaces = nullptr;
+	//	m_pLinks		=nullptr;
+	m_pUVs = nullptr;
+	m_sPropstr = nullptr;
+	//	bones		=nullptr;
+	m_pTexFaces = nullptr;
+	//	m_pNumLinks		=nullptr;
+	//	links		=nullptr;
+	m_pVcols = nullptr;
+	//	BoneNames	=nullptr;
 }
 
 CGeom::~CGeom()

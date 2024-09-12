@@ -79,10 +79,10 @@ public:
 	CInput()
 	{
 		m_console = 0;
-		m_pSystem = NULL;
-		m_pLog = NULL;
+		m_pSystem = nullptr;
+		m_pLog = nullptr;
 #if !defined(_XBOX) && !defined(PS2) && !defined(USE_SDL_INPUT)
-		m_g_pdi = NULL;
+		m_g_pdi = nullptr;
 #endif
 	}
 #ifndef USE_SDL_INPUT

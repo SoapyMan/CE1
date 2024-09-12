@@ -98,7 +98,7 @@ void CryModelAnimationContainer::RegisterAnimation(const char* szFileName, int n
 	LocalAnim.fStart = fStart;
 	LocalAnim.fStop = fStop;
 
-	LocalAnim.bLoop = stristr(szFileName, "loop") != NULL;
+	LocalAnim.bLoop = stristr(szFileName, "loop") != nullptr;
 	LocalAnim.nGlobalAnimId = nGlobalAnimId;
 	LocalAnim.strName = szAnimName;
 
@@ -464,7 +464,7 @@ bool CryModelAnimationContainer::loadCCGBones(const CCFBoneDescArrayHeader* pHea
 		CryBoneInfo& rBone = m_arrBones[nBone];
 		unsigned nReadBytes = rBone.Serialize(false, (void*)pBoneData, pDataEnd - pBoneData);
 		// we don't use the information from these pointers right now, because we bind physical geometry using bone id
-		rBone.m_PhysInfo[0].pPhysGeom = rBone.m_PhysInfo[1].pPhysGeom = NULL;
+		rBone.m_PhysInfo[0].pPhysGeom = rBone.m_PhysInfo[1].pPhysGeom = nullptr;
 		// we need the bone name to be in the lookup map
 		m_mapBoneNameIndex[rBone.getNameCStr()] = nBone;
 
@@ -544,7 +544,7 @@ const AnimData* CryModelAnimationContainer::getAnimationInfo(unsigned i)
 	if (m_pControllerManager->LoadAnimationInfo(m_arrAnimations[i].nGlobalAnimId))
 		return &m_arrAnimations[i];
 	else
-		return NULL;
+		return nullptr;
 }
 
 //! Unloads animation from memory

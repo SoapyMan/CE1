@@ -22,8 +22,8 @@ CryModelGeometryLoader::CryModelGeometryLoader() :
 	m_mapLimbPhysGeoms("CryModelGeometryLoader.mapLimbPhysGeoms"),
 #endif
 	m_numBoneLightBinds(0),
-	m_pBoneLightBind(NULL),
-	m_pModel(NULL),
+	m_pBoneLightBind(nullptr),
+	m_pModel(nullptr),
 	m_nLOD(-1),
 	m_numMorphTargets(0)
 {
@@ -36,12 +36,12 @@ CryModelGeometryLoader::~CryModelGeometryLoader()
 
 void CryModelGeometryLoader::clear()
 {
-	m_pReader = NULL;
+	m_pReader = nullptr;
 	m_arrGeomBoneNameTable.clear();
 	m_numBoneLightBinds = 0;
-	m_pBoneLightBind = NULL;
+	m_pBoneLightBind = nullptr;
 	m_mapLimbPhysGeoms.clear();
-	m_pModel = NULL;
+	m_pModel = nullptr;
 	m_nLOD = -1;
 	m_mapLights.clear();
 	m_mapObjectNodes.clear();
@@ -54,7 +54,7 @@ void CryModelGeometryLoader::clear()
 	m_bBonesFound = false;
 	m_nGeometryChunkID = 0;
 
-	m_pPhysicalGeometryManager = GetPhysicalWorld() ? GetPhysicalWorld()->GetGeomManager() : NULL;
+	m_pPhysicalGeometryManager = GetPhysicalWorld() ? GetPhysicalWorld()->GetGeomManager() : nullptr;
 }
 
 bool CryModelGeometryLoader::load(CryModel* pModel, CChunkFileReader* pReader, unsigned nLOD, float fScale)
@@ -218,7 +218,7 @@ bool CryModelGeometryLoader::loadBoneLightBinding(const CHUNK_HEADER& chunkHeade
 	{
 		g_GetLog()->LogError("\003BoneLightBinding chunk in %s is truncated", m_pModel->m_pBody->GetNameCStr());
 		m_numBoneLightBinds = 0;
-		m_pBoneLightBind = NULL;
+		m_pBoneLightBind = nullptr;
 	}
 	return true;
 }
@@ -396,7 +396,7 @@ bool CryModelGeometryLoader::loadMorphTargets()
 					if (rMorphTarget.load(m_nLOD, pMeshMorphTarget, nChunkSize) == nChunkSize)
 					{
 						// rotate the object in the world coordinates for the rest
-						const NODE_CHUNK_DESC* pNodeChunk = find_in_map(m_mapObjectNodes, m_nGeometryChunkID, (const NODE_CHUNK_DESC*)NULL);
+						const NODE_CHUNK_DESC* pNodeChunk = find_in_map(m_mapObjectNodes, m_nGeometryChunkID, (const NODE_CHUNK_DESC*)nullptr);
 						if (pNodeChunk)
 						{
 							Matrix44 tm = pNodeChunk->tm;
@@ -505,10 +505,10 @@ bool CryModelGeometryLoader::finalize()
 		binding.nBoneId = m_arrTempBoneIdToIndex[binding.nBoneId];
 
 		// find the light chunk and the chunk of the node of that light
-		const LIGHT_CHUNK_DESC* pLightChunk = find_in_map(m_mapLights, binding.nLightChunkId, (const LIGHT_CHUNK_DESC*)NULL);
+		const LIGHT_CHUNK_DESC* pLightChunk = find_in_map(m_mapLights, binding.nLightChunkId, (const LIGHT_CHUNK_DESC*)nullptr);
 		// the node chunk is required to determine the light's transformation
 		// (it's stored in the light's node)
-		const NODE_CHUNK_DESC* pNodeChunk = find_in_map(m_mapObjectNodes, binding.nLightChunkId, (const NODE_CHUNK_DESC*)NULL);
+		const NODE_CHUNK_DESC* pNodeChunk = find_in_map(m_mapObjectNodes, binding.nLightChunkId, (const NODE_CHUNK_DESC*)nullptr);
 
 		if (!pLightChunk)
 		{
@@ -550,7 +550,7 @@ bool CryModelGeometryLoader::loadMesh(const CHUNK_HEADER& chunkHeader, const voi
 		if (!pGeomInfo->numLinks() || m_arrGeomBoneNameTable.empty())
 		{
 			// rotate the object in the world coordinates for the rest
-			const NODE_CHUNK_DESC* pNodeChunk = find_in_map(m_mapObjectNodes, m_nGeometryChunkID, (const NODE_CHUNK_DESC*)NULL);
+			const NODE_CHUNK_DESC* pNodeChunk = find_in_map(m_mapObjectNodes, m_nGeometryChunkID, (const NODE_CHUNK_DESC*)nullptr);
 			if (pNodeChunk)
 			{
 				Matrix44 tm = pNodeChunk->tm;

@@ -125,14 +125,14 @@ void CServerSlotImpl::Update(unsigned int nTime, CNP* pCNP, CStream* pStream)
 	}
 	else
 	{
-		m_ccpEndpoint.Update(m_nCurrentTime, NULL, NULL);
+		m_ccpEndpoint.Update(m_nCurrentTime, 0, nullptr);
 		m_smCCPMachine.Update();
 
 		if (/*m_smCCPMachine.GetCurrentStatus() == STATUS_CONNECTED ||*/ m_smCCPMachine.GetCurrentStatus() == STATUS_SRV_READY)
 		{
 			static char szCause[] = "@ClientTimeout";
-			m_ctpEndpoint.Update(m_nCurrentTime, NULL, NULL);
-			m_ctpEndpoint2.Update(m_nCurrentTime, NULL, NULL);
+			m_ctpEndpoint.Update(m_nCurrentTime, 0, nullptr);
+			m_ctpEndpoint2.Update(m_nCurrentTime, 0, nullptr);
 			// after n seconds without any incoming packets the connection will be considered lost
 			if (m_ServerVariables.nDataStreamTimeout && GetISystem()->GetIGame()->GetModuleState(EGameMultiplayer))
 				if (m_nCurrentTime - m_dwKeepAliveTimer > m_ServerVariables.nDataStreamTimeout)
@@ -236,7 +236,7 @@ void CServerSlotImpl::OnConnect()
 		else
 #endif // NOT_USE_UBICOM_SDK
 		{
-			m_pSink->OnXPlayerAuthorization(true, "", NULL, 0);
+			m_pSink->OnXPlayerAuthorization(true, "", nullptr, 0);
 		}
 
 		m_pSink->OnXServerSlotConnect(m_pbAuthorizationID, m_uiAuthorizationSize);
@@ -268,7 +268,7 @@ void CServerSlotImpl::OnDisconnect(const char* szCause)
 
 	if (m_pSink)
 	{
-		if (szCause == NULL)
+		if (szCause == nullptr)
 			szCause = "Undefined";
 
 #ifndef NOT_USE_UBICOM_SDK
@@ -434,7 +434,7 @@ CServerSlotLocal::CServerSlotLocal(CServer* pServer, CClientLocal* pClient, CIPA
 
 CServerSlotLocal::~CServerSlotLocal()
 {
-	if (m_pServer == NULL)
+	if (m_pServer == nullptr)
 	{
 		//call alberto
 		NET_ASSERT(0);
@@ -567,7 +567,7 @@ void CServerSlotLocal::OnCCPConnectResp(CStream& stm)
 		else
 #endif // NOT_USE_UBICOM_SDK
 		{
-			m_pSink->OnXPlayerAuthorization(true, "", NULL, 0);
+			m_pSink->OnXPlayerAuthorization(true, "", nullptr, 0);
 		}
 
 		m_pSink->OnXServerSlotConnect(m_pbAuthorizationID, m_uiAuthorizationSize);

@@ -81,7 +81,7 @@ public:
 	CParticleEmitter(CPartManager* pPartManager) : m_pos(0, 0, 0), m_dir(0, 0, 0)
 	{
 		m_pPartManager = pPartManager;
-		m_pSpawnerEntity = NULL;
+		m_pSpawnerEntity = nullptr;
 		m_startTime = m_endTime = m_lastActiveTime = m_spawnPeriod = m_lastSpawnTime = 0;
 		m_pParams = 0;
 		m_pChildParams = 0;

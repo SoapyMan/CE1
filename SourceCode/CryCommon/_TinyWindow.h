@@ -86,7 +86,7 @@ inline BOOL _Tiny_InitApp(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR l
 inline int _Tiny_MainLoop()
 {
 	MSG msg;
-	while (GetMessage(&msg, NULL, 0, 0))
+	while (GetMessage(&msg, nullptr, 0, 0))
 	{
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
@@ -195,16 +195,16 @@ class _TinyWindow {
 
 public:
 	_TinyWindow() {
-		m_hWnd = NULL;
+		m_hWnd = nullptr;
 	}
 	virtual ~_TinyWindow() {
 		Close();
 	}
 	virtual void Close() {
 		if (m_hWnd) {
-			SetWindowLong(m_hWnd, GWLP_USERDATA, NULL);
+			SetWindowLong(m_hWnd, GWLP_USERDATA, nullptr);
 			DestroyWindow(m_hWnd);
-			m_hWnd = NULL;
+			m_hWnd = nullptr;
 		}
 	}
 	virtual void Quit() {
@@ -213,8 +213,8 @@ public:
 	}
 
 	virtual LRESULT __Tiny_WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) { return ::DefWindowProc(hWnd, message, wParam, lParam); }
-	virtual BOOL Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle = WS_VISIBLE, DWORD dwExStyle = 0, const RECT* pRect = NULL, _TinyWindow* pParentWnd = NULL, ULONG nID = 0) {
-		HWND hParent = NULL;
+	virtual BOOL Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle = WS_VISIBLE, DWORD dwExStyle = 0, const RECT* pRect = nullptr, _TinyWindow* pParentWnd = nullptr, ULONG nID = 0) {
+		HWND hParent = nullptr;
 		BOOL bSmart = FALSE;
 		int x = CW_USEDEFAULT, y = CW_USEDEFAULT, width = CW_USEDEFAULT, height = CW_USEDEFAULT;
 		//class name
@@ -223,7 +223,7 @@ public:
 			bSmart = TRUE;
 		}
 		//parent
-		if (pParentWnd != NULL)hParent = pParentWnd->m_hWnd;
+		if (pParentWnd != nullptr)hParent = pParentWnd->m_hWnd;
 		//rect
 		if (pRect) {
 			x = pRect->left;
@@ -242,7 +242,7 @@ public:
 			hParent,
 			(HMENU)nID,
 			_Tiny_GetInstance(),
-			NULL);
+			nullptr);
 		if (!m_hWnd)
 		{
 			DWORD n = ::GetLastError();
@@ -259,7 +259,7 @@ public:
 public:
 	//wrappers
 	virtual BOOL SetTimer(UINT nIDEvent, UINT uElapse) {
-		return (BOOL)::SetTimer(m_hWnd, nIDEvent, uElapse, NULL);
+		return (BOOL)::SetTimer(m_hWnd, nIDEvent, uElapse, nullptr);
 	}
 	virtual BOOL KillTimer(UINT nIDEvent) {
 		return (BOOL)::KillTimer(m_hWnd, nIDEvent);
@@ -292,9 +292,9 @@ public:
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 class _TinyDialog : public _TinyWindow {
 public:
-	BOOL Create(LPCTSTR lpTemplate, _TinyWindow* pParent = NULL) {
+	BOOL Create(LPCTSTR lpTemplate, _TinyWindow* pParent = nullptr) {
 		m_nModalRet = 0;
-		HWND hParent = NULL;
+		HWND hParent = nullptr;
 		if (pParent)hParent = pParent->m_hWnd;
 		m_hWnd = CreateDialog(_Tiny_GetInstance(), lpTemplate, hParent, (DLGPROC)_TinyDlgProc);
 		if (!m_hWnd)return FALSE;
@@ -304,7 +304,7 @@ public:
 	}
 	int DoModal() {
 		MSG msg;
-		while (GetMessage(&msg, NULL, 0, 0))
+		while (GetMessage(&msg, nullptr, 0, 0))
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
@@ -321,7 +321,7 @@ class _TinyFrameWindow : public _TinyWindow {
 public:
 	_TinyFrameWindow()
 	{
-		m_hMenu = NULL;
+		m_hMenu = nullptr;
 	}
 #ifdef WIN_CE
 	BOOL AddBarMenu(WORD idMenu) {
@@ -345,7 +345,7 @@ public:
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 class _TinyEdit : public _TinyWindow {
 public:
-	virtual BOOL Create(ULONG nID = 0, DWORD dwStyle = WS_VISIBLE | WS_CHILD, DWORD dwExStyle = 0, const RECT* pRect = NULL, _TinyWindow* pParentWnd = NULL) {
+	virtual BOOL Create(ULONG nID = 0, DWORD dwStyle = WS_VISIBLE | WS_CHILD, DWORD dwExStyle = 0, const RECT* pRect = nullptr, _TinyWindow* pParentWnd = nullptr) {
 		BOOL bRes = _TinyWindow::Create(_T("EDIT"), _T(""), dwStyle, dwExStyle, pRect, pParentWnd, nID);
 		if (!bRes)return FALSE;
 		return TRUE;
@@ -362,7 +362,7 @@ public:
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 class _TinyStatic : public _TinyWindow {
 public:
-	virtual BOOL Create(ULONG nID = 0, DWORD dwStyle = WS_VISIBLE, DWORD dwStyleEx = 0, const RECT* pRect = NULL, _TinyWindow* pParentWnd = NULL) {
+	virtual BOOL Create(ULONG nID = 0, DWORD dwStyle = WS_VISIBLE, DWORD dwStyleEx = 0, const RECT* pRect = nullptr, _TinyWindow* pParentWnd = nullptr) {
 		BOOL bRes = _TinyWindow::Create(_T("STATIC"), _T(""), dwStyle, dwStyleEx, pRect, pParentWnd, nID);
 		if (!bRes)return FALSE;
 		return TRUE;
@@ -373,7 +373,7 @@ public:
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 class _TinyToolbar : public _TinyWindow {
 public:
-	virtual BOOL Create(ULONG nMenuID = 0, DWORD dwStyle = WS_CHILD | WS_VISIBLE | TBSTYLE_TOOLTIPS, DWORD dwStyleEx = 0, const RECT* pRect = NULL, _TinyWindow* pParentWnd = NULL)
+	virtual BOOL Create(ULONG nMenuID = 0, DWORD dwStyle = WS_CHILD | WS_VISIBLE | TBSTYLE_TOOLTIPS, DWORD dwStyleEx = 0, const RECT* pRect = nullptr, _TinyWindow* pParentWnd = nullptr)
 	{
 		BOOL bRes = _TinyWindow::Create(TOOLBARCLASSNAME, _T(""), dwStyle, dwStyleEx, pRect, pParentWnd, nMenuID);
 		if (!bRes)
@@ -398,7 +398,7 @@ public:
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 class _TinyListBox : public _TinyWindow {
 public:
-	virtual BOOL Create(ULONG nID = 0, DWORD dwStyle = WS_CHILD, DWORD dwStyleEx = 0, const RECT* pRect = NULL, _TinyWindow* pParentWnd = NULL)
+	virtual BOOL Create(ULONG nID = 0, DWORD dwStyle = WS_CHILD, DWORD dwStyleEx = 0, const RECT* pRect = nullptr, _TinyWindow* pParentWnd = nullptr)
 	{
 		BOOL bRes = _TinyWindow::Create(_T("LISTBOX"), _T(""), dwStyle, dwStyleEx, pRect, pParentWnd, nID);
 		if (!bRes)return FALSE;
@@ -414,7 +414,7 @@ public:
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 class _TinyButton : public _TinyWindow {
 public:
-	virtual BOOL Create(ULONG nID = 0, DWORD dwStyle = WS_CHILD, DWORD dwStyleEx = 0, const RECT* pRect = NULL, _TinyWindow* pParentWnd = NULL)
+	virtual BOOL Create(ULONG nID = 0, DWORD dwStyle = WS_CHILD, DWORD dwStyleEx = 0, const RECT* pRect = nullptr, _TinyWindow* pParentWnd = nullptr)
 	{
 		BOOL bRes = _TinyWindow::Create(_T("BUTTON"), _T(""), dwStyle, dwStyleEx, pRect, pParentWnd, nID);
 		if (!bRes)return FALSE;
@@ -431,7 +431,7 @@ public:
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 class _TinyListView : public _TinyWindow {
 public:
-	virtual BOOL Create(ULONG nID = 0, DWORD dwStyle = WS_CHILD, DWORD dwStyleEx = 0, const RECT* pRect = NULL, _TinyWindow* pParentWnd = NULL)
+	virtual BOOL Create(ULONG nID = 0, DWORD dwStyle = WS_CHILD, DWORD dwStyleEx = 0, const RECT* pRect = nullptr, _TinyWindow* pParentWnd = nullptr)
 	{
 		BOOL bRes = _TinyWindow::Create(WC_LISTVIEW, _T(""), dwStyle, dwStyleEx, pRect, pParentWnd, nID);
 		if (!bRes)return FALSE;
@@ -462,7 +462,7 @@ public:
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 class _TinyTreeView : public _TinyWindow {
 public:
-	virtual BOOL Create(ULONG nID = 0, DWORD dwStyle = WS_CHILD | TVS_HASLINES | TVS_HASBUTTONS, DWORD dwStyleEx = 0, const RECT* pRect = NULL, _TinyWindow* pParentWnd = NULL)
+	virtual BOOL Create(ULONG nID = 0, DWORD dwStyle = WS_CHILD | TVS_HASLINES | TVS_HASBUTTONS, DWORD dwStyleEx = 0, const RECT* pRect = nullptr, _TinyWindow* pParentWnd = nullptr)
 	{
 		BOOL bRes = _TinyWindow::Create(WC_TREEVIEW, _T(""), dwStyle, dwStyleEx, pRect, pParentWnd, nID);
 		if (!bRes)
@@ -470,7 +470,7 @@ public:
 		return TRUE;
 
 	}
-	virtual HTREEITEM AddItemToTree(LPTSTR lpszItem, LPARAM ud = NULL, HTREEITEM hParent = NULL)
+	virtual HTREEITEM AddItemToTree(LPTSTR lpszItem, LPARAM ud = nullptr, HTREEITEM hParent = nullptr)
 	{
 		TVITEM tv;
 		TVINSERTSTRUCT tvins;
@@ -481,7 +481,7 @@ public:
 		tv.lParam = ud;
 		tvins.item = tv;
 		tvins.hInsertAfter = hPrev;
-		if (hParent == NULL)
+		if (hParent == nullptr)
 			tvins.hParent = TVI_ROOT;
 		else
 			tvins.hParent = hParent;
@@ -497,7 +497,7 @@ public:
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 class _TinyScrollBar : public _TinyWindow {
 public:
-	virtual BOOL Create(ULONG nID = 0, DWORD dwStyle = WS_VISIBLE, DWORD dwStyleEx = 0, const RECT* pRect = NULL, _TinyWindow* pParentWnd = NULL) {
+	virtual BOOL Create(ULONG nID = 0, DWORD dwStyle = WS_VISIBLE, DWORD dwStyleEx = 0, const RECT* pRect = nullptr, _TinyWindow* pParentWnd = nullptr) {
 		BOOL bRes = _TinyWindow::Create(_T("SCROLLBAR"), _T(""), dwStyle, dwStyleEx, pRect, pParentWnd, nID);
 		int n = GetLastError();
 		if (SBS_VERT & dwStyle)m_nBar = SB_VERT;

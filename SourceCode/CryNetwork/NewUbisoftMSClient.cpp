@@ -189,7 +189,7 @@ bool NewUbisoftClient::Client_JoinGameServer(int iLobbyID, int iRoomID)
 	case GameServerDisconnected:
 	{
 		if (clMSClientClass::JoinGameServer(iLobbyID, iRoomID
-			, "", GSGAMEVERSION, GAME_NAME, NULL, 0))
+			, "", GSGAMEVERSION, GAME_NAME, nullptr, 0))
 		{
 			m_iJoinedLobbyID = iLobbyID;
 			m_iJoinedRoomID = iRoomID;
@@ -205,7 +205,7 @@ bool NewUbisoftClient::Client_JoinGameServer(int iLobbyID, int iRoomID)
 		else
 		{
 			if (clMSClientClass::JoinGameServer(iLobbyID, iRoomID
-				, "", GSGAMEVERSION, GAME_NAME, NULL, 0))
+				, "", GSGAMEVERSION, GAME_NAME, nullptr, 0))
 			{
 				m_iJoinedLobbyID = iLobbyID;
 				m_iJoinedRoomID = iRoomID;

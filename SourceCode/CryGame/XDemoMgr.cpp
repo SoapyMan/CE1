@@ -19,7 +19,7 @@
 //////////////////////////////////////////////////////////////////////////
 CXDemoMgr::CXDemoMgr()
 {
-	m_pFile=NULL;
+	m_pFile=nullptr;
 	Stop();
 }
 
@@ -36,7 +36,7 @@ void CXDemoMgr::Stop()
 	m_fCurrTime = 0;
 	m_fGameTime = 0;
 	if(m_pFile) fclose(m_pFile);
-	m_pFile = NULL;
+	m_pFile = nullptr;
 	bStreamStarted = false;
 };
 
@@ -51,7 +51,7 @@ bool CXDemoMgr::StartRecord(const char *sFileName, CStream &stm)
 	Stop();
 	
 	m_pFile=fopen(sFileName,"wb+");
-	if(m_pFile==NULL)
+	if(m_pFile==nullptr)
 		return false;
 		
 	// header: string + version	+ savegamesize
@@ -82,7 +82,7 @@ bool CXDemoMgr::AddChunk(float fTimestamp, CStream &stm, IEntity *player)
 	
 	if(nStreamSizeInBits==0)
 		return false;
-	if(m_pFile==NULL)
+	if(m_pFile==nullptr)
 		return false;
 	if(fwrite(&fTimestamp,sizeof(fTimestamp),1,m_pFile)!=1)
 		return false;
@@ -104,7 +104,7 @@ bool CXDemoMgr::StartDemoPlay(const char *sFileName, CXGame *pGame)
 	m_pGame = pGame;
 
 	m_pFile=fopen(sFileName,"rb");
-	if(m_pFile==NULL)
+	if(m_pFile==nullptr)
 		return false;
 		
 	//measure the file size
@@ -189,7 +189,7 @@ bool CXDemoMgr::ReadChunk(CStream &stm, float &fTimestamp, Vec3d &angles)
 	unsigned int nStreamSizeInBytes;
 	unsigned int nStreamSizeInBits;
 	
-	if(m_pFile==NULL)
+	if(m_pFile==nullptr)
 		return false;
 	stm.Reset();
 	if(fread(&fTimestamp, sizeof(fTimestamp),1,m_pFile)!=1)
@@ -217,7 +217,7 @@ bool CXDemoMgr::ReadChunk(CStream &stm, float &fTimestamp, Vec3d &angles)
 // Check if the end of the demo is reached.
 bool CXDemoMgr::EOD()
 {
-	if(m_pFile==NULL)
+	if(m_pFile==nullptr)
 		return true;
 	if(ftell(m_pFile)<int(m_nFileSize))
 		return false;

@@ -35,7 +35,7 @@ CScriptObjectStream::~CScriptObjectStream()
 
 bool CScriptObjectStream::Create(IScriptSystem *pScriptSystem)
 {
-	m_pStm=NULL;
+	m_pStm=nullptr;
 
 	Init(pScriptSystem,this);
 	return true;

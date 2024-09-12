@@ -22,11 +22,11 @@ public:
 		mpVB = 0;
 
 		mbLocked = false;
-		m_pLockedData = NULL;
+		m_pLockedData = nullptr;
 
 		mVertexCount = theVertexCount;
 
-		HRESULT hr = pD3D->CreateVertexBuffer(mVertexCount * sizeof(VertexType), D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC, theFVF, D3DPOOL_DEFAULT, &mpVB, NULL);
+		HRESULT hr = pD3D->CreateVertexBuffer(mVertexCount * sizeof(VertexType), D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC, theFVF, D3DPOOL_DEFAULT, &mpVB, nullptr);
 		CRYASSERT((hr == D3D_OK) && (mpVB));
 	}
 

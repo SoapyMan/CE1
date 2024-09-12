@@ -29,7 +29,7 @@
 #include "CryCompiledFile.h"
 
 CryGeometryInfo::CryGeometryInfo() :
-	m_pStencilShadowConnectivity(NULL),
+	m_pStencilShadowConnectivity(nullptr),
 	m_numUsedVertices(0),
 	m_arrVertBuf("CryGeometryInfo.VertBuf"),
 	m_nVertBufFormat(-1),
@@ -197,7 +197,7 @@ void CryGeometryInfo::buildStencilShadowConnectivity(const std::vector<MAT_ENTIT
 	if (m_pStencilShadowConnectivity && g_GetCVars()->ca_DebugRebuildShadowVolumes())
 	{
 		m_pStencilShadowConnectivity->Release();
-		m_pStencilShadowConnectivity = NULL;
+		m_pStencilShadowConnectivity = nullptr;
 	}
 #endif
 
@@ -1031,7 +1031,7 @@ char* CryGeometryInfo::getVertBuf(int nVertFormat)
 	if (nVertFormat <= 0 || nVertFormat >= VERTEX_FORMAT_NUMS)
 	{
 		m_arrVertBuf.clear();
-		return NULL;
+		return nullptr;
 	}
 
 	m_nVertBufFormat = nVertFormat;

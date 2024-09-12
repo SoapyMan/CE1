@@ -193,7 +193,7 @@ bool CIndexedMesh::LoadCGF(const char* szFileName, const char* szGeomName, bool 
 		{
 			char* szName = pStaticCGF->m_lstHelpers[h].szName;
 			char* str;
-			char* szShadName = NULL;
+			char* szShadName = nullptr;
 			if (str = strchr(szName, '('))
 			{
 				szName[str - szName] = 0;
@@ -201,7 +201,7 @@ bool CIndexedMesh::LoadCGF(const char* szFileName, const char* szGeomName, bool 
 				if (str = strchr(szShadName, ')'))
 					szShadName[str - szShadName] = 0;
 			}
-			IShader* pShader = NULL;
+			IShader* pShader = nullptr;
 			if (szShadName)
 				pShader;//= m_pSystem->GetIRenderer()->EF_LoadShader(szShadName, eSH_World, 0);
 
@@ -334,7 +334,7 @@ bool CIndexedMesh::LoadCGF(const char* szFileName, const char* szGeomName, bool 
 		{ // realloc faces
 			m_pFaces = (CObjFace*)ReAllocElements(m_pFaces, m_nFaceCount, m_nFaceCount + chunk->nFaces, sizeof(CObjFace));
 
-			//			CXFile * fp = NULL;
+			//			CXFile * fp = nullptr;
 			//			std::vector<int> lstLMapsId;
 			//		std::vector<int> lstLMapsId_LD;
 
@@ -361,7 +361,7 @@ bool CIndexedMesh::LoadCGF(const char* szFileName, const char* szGeomName, bool 
 			if (!fp->FLoad(szTempFilename))
 			{
 			delete fp;
-			fp = NULL;
+			fp = nullptr;
 			}
 
 			if (fp)
@@ -374,7 +374,7 @@ bool CIndexedMesh::LoadCGF(const char* szFileName, const char* szGeomName, bool 
 			m_pSystem->Log("Error: face count stored in %s is %d, real size=%d",szTempFilename,nNumFaces,m_nFaceCount);
 			fp->FClose();
 			delete fp;
-			fp=NULL;
+			fp=nullptr;
 			}
 			else
 			{
@@ -390,7 +390,7 @@ bool CIndexedMesh::LoadCGF(const char* szFileName, const char* szGeomName, bool 
 			//if the texture information doesn't exist, close the previous file
 			fp->FClose();
 			delete fp;
-			fp=NULL;
+			fp=nullptr;
 			}
 			else
 			{
@@ -418,7 +418,7 @@ bool CIndexedMesh::LoadCGF(const char* szFileName, const char* szGeomName, bool 
 			//if the texture file information doesn't exist, close the previous file
 			fp->FClose();
 			delete fp;
-			fp=NULL;
+			fp=nullptr;
 			}
 			}	//numfaces
 			} //fp
@@ -456,11 +456,11 @@ bool CIndexedMesh::LoadCGF(const char* szFileName, const char* szGeomName, bool 
 				if (pFace->m_lInfo->nTextureIdLM==65535) //no lightmap
 				{
 				delete pFace->m_lInfo;
-				pFace->m_lInfo=NULL;
+				pFace->m_lInfo=nullptr;
 				}
 				}
 				else*/
-				//        pFace->m_lInfo=NULL;
+				//        pFace->m_lInfo=nullptr;
 
 				m_pFaces[c + m_nFaceCount].v[0] = m_pFaces[c + m_nFaceCount].n[0] = geom->m_pFaces[c].v0 + m_nVertCount;
 				m_pFaces[c + m_nFaceCount].v[1] = m_pFaces[c + m_nFaceCount].n[1] = geom->m_pFaces[c].v1 + m_nVertCount;
@@ -583,7 +583,7 @@ bool CIndexedMesh::LoadCGF(const char* szFileName, const char* szGeomName, bool 
 			{
 			fp->FClose();
 			delete fp;
-			fp=NULL; //for the sake of clarity
+			fp=nullptr; //for the sake of clarity
 			}*/
 		}
 
@@ -612,7 +612,7 @@ bool CIndexedMesh::LoadCGF(const char* szFileName, const char* szGeomName, bool 
 
 		if (arrMats[nMat & 127] && pStaticCGF->m_lstMaterials[nMat].IsStdMat)
 		{
-			LoadMaterial(szFileName, szFolderName, MatInfo, NULL, &pStaticCGF->m_lstMaterials[nMat]);
+			LoadMaterial(szFileName, szFolderName, MatInfo, nullptr, &pStaticCGF->m_lstMaterials[nMat]);
 
 			// this object contains all info about material
 			// The Martin
@@ -679,10 +679,10 @@ void CIndexedMesh::MakeLightSources(CryStaticModel* pStaticCGF)
 		{
 		lsource->m_pLightImage = GetRenderer()->EF_LoadTexture(pStaticCGF->m_lstLights[l].Chunk.szLightImage, FT_CLAMP, FT2_NODXT | FT2_FORCECUBEMAP, eTT_Cubemap);
 		if (!lsource->m_pLightImage->IsTextureLoaded())
-		lsource->m_pLightImage = NULL;
+		lsource->m_pLightImage = nullptr;
 		}
 		else
-		lsource->m_pLightImage = NULL;*/
+		lsource->m_pLightImage = nullptr;*/
 
 		//calc the light orientation
 		Vec3d Angs = pStaticCGF->m_lstLights[l].Chunk.vDirection / gf_PI * 180.0f;
@@ -734,7 +734,7 @@ void CIndexedMesh::MakeLightSources(CryStaticModel* pStaticCGF)
 		strcpy(lsource->m_Name, pStaticCGF->m_lstLights[l].szName);
 
 		/*
-			char *shName = NULL;
+			char *shName = nullptr;
 			char *str;
 			char name[128];
 			char nameTgt[128];
@@ -776,7 +776,7 @@ void CIndexedMesh::MakeLightSources(CryStaticModel* pStaticCGF)
 			  if (lsource->m_pShader && (lsource->m_pShader->GetFlags() & EF_NOTFOUND))
 			  {
 				lsource->m_pShader->Release();
-				lsource->m_pShader = NULL;
+				lsource->m_pShader = nullptr;
 				lsource->m_Flags |= DLF_FAKE;
 				m_pSystem->Log("Error: CIndexedMesh::MakeLightSources: Shader %s not found for lsource %s", shName, pStaticCGF->m_lstLights[l].szName);
 				continue;

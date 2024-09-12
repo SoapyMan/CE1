@@ -71,7 +71,7 @@ public:
 
 	string	LookupFunctionName(void* adderss, bool fileInfo);
 	int			updateCallStack(void* exception_pointer);
-	void		FillStackTrace(DWORD64 eip, DWORD64 esp, DWORD64 ebp, PCONTEXT pContext = NULL);
+	void		FillStackTrace(DWORD64 eip, DWORD64 esp, DWORD64 ebp, PCONTEXT pContext = nullptr);
 
 	static	int unhandledExceptionHandler(void* exception_pointer);
 

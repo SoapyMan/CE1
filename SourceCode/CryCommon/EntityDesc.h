@@ -112,8 +112,8 @@ inline CEntityDesc::CEntityDesc()
 	ClassId = 0;
 	sModel = "";
 	pUserData = 0;
-	pProperties = NULL;
-	pPropertiesInstance = NULL;
+	pProperties = nullptr;
+	pPropertiesInstance = nullptr;
 	angles(0, 0, 0);
 	pos(0, 0, 0);
 	scale = 1;
@@ -129,8 +129,8 @@ inline CEntityDesc::CEntityDesc(int _id, const EntityClassId _ClassId)
 	ClassId = _ClassId;
 	sModel = "";
 	pUserData = 0;
-	pProperties = NULL;
-	pPropertiesInstance = NULL;
+	pProperties = nullptr;
+	pPropertiesInstance = nullptr;
 	angles(0, 0, 0);
 	pos(0, 0, 0);
 	scale = 1;

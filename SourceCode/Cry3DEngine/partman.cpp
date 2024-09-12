@@ -554,7 +554,7 @@ void CPartManager::RemoveEffect(IParticleEffect* pEffect)
 //////////////////////////////////////////////////////////////////////////
 IParticleEffect* CPartManager::FindEffect(const char* sEffectName)
 {
-	IParticleEffect* pEffect = stl::find_in_map(m_effectsMap, sEffectName, (IParticleEffect*)NULL);
+	IParticleEffect* pEffect = stl::find_in_map(m_effectsMap, sEffectName, (IParticleEffect*)nullptr);
 	return pEffect;
 }
 
@@ -862,7 +862,7 @@ void CPartManager::DeleteEmitter(IParticleEmitter* pEmitter)
 //////////////////////////////////////////////////////////////////////////
 void CPartManager::ActivateEmitter(CParticleEmitter* pEmitter)
 {
-	if (pEmitter != NULL && !pEmitter->m_bActive)
+	if (pEmitter != nullptr && !pEmitter->m_bActive)
 	{
 		pEmitter->OnActivate(true);
 		m_activeEmitters.push_back(pEmitter);

@@ -53,11 +53,11 @@ protected:
 
 CWeaponSystemEx::CWeaponSystemEx()
 {
-	m_pScriptSystem					= NULL;
+	m_pScriptSystem					= nullptr;
 	m_bRaiseScriptError			= true;
-	m_soWeaponClassesTable	= NULL;
-	m_soProjectileTable			= NULL;
-	m_pGame									= NULL;
+	m_soWeaponClassesTable	= nullptr;
+	m_soProjectileTable			= nullptr;
+	m_pGame									= nullptr;
 }
 
 CWeaponSystemEx::~CWeaponSystemEx()
@@ -213,7 +213,7 @@ void CWeaponSystemEx::Reset()
 	if(m_pGame && m_pGame->GetMyPlayer())
 	{
 		IEntityContainer *pCnt;
-		CPlayer *pPlayer = NULL;
+		CPlayer *pPlayer = nullptr;
 
 		pCnt=m_pGame->GetMyPlayer()->GetContainer();
 
@@ -257,7 +257,7 @@ void CWeaponSystemEx::Reset()
 
 bool CWeaponSystemEx::ExecuteScript(const string& sScriptName)
 {
-	if (m_pScriptSystem == NULL)
+	if (m_pScriptSystem == nullptr)
 		return false;
 
 	string sFilename = "Scripts\\" + m_sGameType + "\\Entities\\" + sScriptName;
@@ -277,7 +277,7 @@ bool CWeaponSystemEx::ExecuteScript(const string& sScriptName)
 
 void CWeaponSystemEx::UnloadScript(const string& sScriptName)
 {
-	if (m_pScriptSystem == NULL)
+	if (m_pScriptSystem == nullptr)
 		return;
 
 	string sFilename = "Scripts\\" + m_sGameType + "\\Entities\\" + sScriptName;
@@ -299,7 +299,7 @@ CWeaponClass* CWeaponSystemEx::GetWeaponClassByID(int ID) const
 			return (*i);
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 int CWeaponSystemEx::GetWeaponClassIDByName(const string& name) const
@@ -320,7 +320,7 @@ CWeaponClass* CWeaponSystemEx::GetWeaponClassByName(const string& name) const
 			return (*i);
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 unsigned CWeaponSystemEx::MemStats() const
@@ -431,7 +431,7 @@ CWeaponClass* CWeaponSystemEx::GetWeaponClass(unsigned int index) const
 	if (index < m_vWeaponClasses.size())
 		return m_vWeaponClasses[index];
 	else
-		return NULL;
+		return nullptr;
 }
 
 void CWeaponSystemEx::RegisterScriptConstants() const

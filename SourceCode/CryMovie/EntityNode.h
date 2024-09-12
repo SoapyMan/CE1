@@ -39,7 +39,7 @@ public:
 
 	virtual EAnimNodeType GetType() const { return ANODE_ENTITY; }
 
-	void SetEntity(int Id) { m_EntityId = Id; m_entity = NULL; }
+	void SetEntity(int Id) { m_EntityId = Id; m_entity = nullptr; }
 	void SetEntity(IEntity* entity);
 	IEntity* GetEntity();
 

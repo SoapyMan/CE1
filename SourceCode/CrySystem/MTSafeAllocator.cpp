@@ -26,7 +26,7 @@ CMTSafeHeap::~CMTSafeHeap()
 	CRYASSERT(m_numAllocations == 0);
 #endif
 #if !USE_CRT
-	CRYASSERT(HeapValidate(m_hHeap, 0, NULL));
+	CRYASSERT(HeapValidate(m_hHeap, 0, nullptr));
 	HeapDestroy(m_hHeap);
 #endif
 }
@@ -43,7 +43,7 @@ void CMTSafeHeap::Compact()
 #endif
 }
 
-void* CMTSafeHeap::TryAlloc(size_t nSize, const char* szDbgSource = NULL)
+void* CMTSafeHeap::TryAlloc(size_t nSize, const char* szDbgSource = nullptr)
 {
 #if !USE_CRT
 	return HeapAlloc(m_hHeap, 0, nSize);
@@ -56,7 +56,7 @@ void* CMTSafeHeap::TryAlloc(size_t nSize, const char* szDbgSource = NULL)
 #endif
 }
 
-void* CMTSafeHeap::Alloc(size_t nSize, const char* szDbgSource = NULL)
+void* CMTSafeHeap::Alloc(size_t nSize, const char* szDbgSource = nullptr)
 {
 	InterlockedIncrement(&m_numAllocations);
 	void* pResult = TryAlloc(nSize, szDbgSource);

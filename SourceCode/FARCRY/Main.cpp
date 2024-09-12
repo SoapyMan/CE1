@@ -93,12 +93,12 @@ void AuthCheckFunction(void* data)
 //#endif
 //
 
-static ISystem* g_pISystem = NULL;
+static ISystem* g_pISystem = nullptr;
 static bool g_bSystemRelaunch = false;
 static char szMasterCDFolder[_MAX_PATH];
 
 #ifdef WIN32
-static void* g_hSystemHandle = NULL;
+static void* g_hSystemHandle = nullptr;
 #define DLL_SYSTEM "CrySystem.dll"
 #define DLL_GAME	 "CryGame.dll"
 #endif
@@ -114,7 +114,7 @@ bool RunGame(HINSTANCE hInstance);
 #ifdef _XBOX
 void main()
 {
-	RunGame(NULL, "");
+	RunGame(nullptr, "");
 }
 
 
@@ -145,7 +145,7 @@ char* getenv(const char* varname)
 
 
 
-//FNC_CryFree _CryFree = NULL;
+//FNC_CryFree _CryFree = nullptr;
 
 #ifndef _XBOX
 
@@ -156,7 +156,7 @@ void SetMasterCDFolder()
 
 	char szExeFileName[_MAX_PATH];
 	// Get the path of the executable
-	GetModuleFileName(GetModuleHandle(NULL), szExeFileName, sizeof(szExeFileName));
+	GetModuleFileName(GetModuleHandle(nullptr), szExeFileName, sizeof(szExeFileName));
 
 	char path_buffer[_MAX_PATH];
 	char drive[_MAX_DRIVE];
@@ -165,7 +165,7 @@ void SetMasterCDFolder()
 	char ext[_MAX_EXT];
 
 	_splitpath(szExeFileName, drive, dir, fname, ext);
-	_makepath(path_buffer, drive, dir, NULL, NULL);
+	_makepath(path_buffer, drive, dir, nullptr, nullptr);
 	strcat(path_buffer, "..");
 	SetCurrentDirectory(path_buffer);
 	GetCurrentDirectory(sizeof(szMasterCDFolder), szMasterCDFolder);
@@ -229,7 +229,7 @@ void CheckFarCryCD(HINSTANCE hInstance)
 	// Not CD/DVD with FARCRY_1 label found. Give to user warning message and bail out.
 	char str[1024];
 	LoadString(hInstance, IDS_NOCD, str, sizeof(str));
-	MessageBox(NULL, str, _T("CD Check Error"), MB_OK | MB_ICONERROR);
+	MessageBox(nullptr, str, _T("CD Check Error"), MB_OK | MB_ICONERROR);
 	exit(1);
 }
 #else
@@ -271,7 +271,7 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 	// for mp debugging
 	if (!bDevMode)
 	{
-		hwndPrev = FindWindow(szWndClass, NULL);
+		hwndPrev = FindWindow(szWndClass, nullptr);
 		// not in devmode and we found another window - see if the
 		// system is relaunching, in this case is fine 'cos the application
 		// will be closed immediately after
@@ -451,7 +451,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_QUIT:
 	{
 		/*m_pGame->Release();
-		m_pGame = NULL;
+		m_pGame = nullptr;
 		*/
 		/*
 		if (g_pISystem)
@@ -486,9 +486,9 @@ bool RegisterWindow(HINSTANCE hInst)
 	wc.cbWndExtra = 4;
 	wc.hInstance = hInst;
 	wc.hIcon = LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICON));
-	wc.hCursor = NULL;
+	wc.hCursor = nullptr;
 	wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
-	wc.lpszMenuName = NULL;
+	wc.lpszMenuName = nullptr;
 	wc.lpszClassName = "CryENGINE";
 
 	if (!RegisterClass(&wc))
@@ -536,7 +536,7 @@ bool RunGamePS2(IGame* hInstance)
 
 	// Release System and Game.
 	g_pISystem->Release();
-	g_pISystem = NULL;
+	g_pISystem = nullptr;
 
 	return true;
 }
@@ -566,7 +566,7 @@ string TryFormatWinError(DWORD dwError)
 #ifdef WIN32
 	LPVOID lpMsgBuf;   // pointer to the buffer that will accept the formatted message
 	//DWORD dwLastError = OsGetLastError(); // the last user error for which the description should be formatted
-	DWORD dwFormattedMsgLen = FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, dwError, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&lpMsgBuf, 0, NULL);
+	DWORD dwFormattedMsgLen = FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, nullptr, dwError, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&lpMsgBuf, 0, nullptr);
 
 	if (!dwFormattedMsgLen)
 		// error. return both the user error and the error received during formatting the user error
@@ -654,7 +654,7 @@ bool RunGame(HINSTANCE hInstance, const char* sCmdLine)
 
 	//	InvokeExternalConfigTool();
 
-	HWND hWnd = NULL;
+	HWND hWnd = nullptr;
 	// initialize the system
 	bool bRelaunch = false;
 
@@ -820,12 +820,12 @@ bool RunGame(HINSTANCE hInstance, const char* sCmdLine)
 
 		if (g_pISystem)
 		{
-			const char* szMod = NULL;
+			const char* szMod = nullptr;
 			IGameMods* pMods = pGame->GetModsInterface();
 			if (pMods)
 				szMod = pMods->GetCurrentMod();
 
-			if (szMod != NULL && (strlen(szMod) > 0))
+			if (szMod != nullptr && (strlen(szMod) > 0))
 			{
 				// the game is relaunching because the MOD changed -
 				// add it as system paramter for the next relaunch
@@ -858,12 +858,12 @@ bool RunGame(HINSTANCE hInstance, const char* sCmdLine)
 		if (!bRelaunch)
 			SDL_UnloadObject(g_hSystemHandle);
 
-		g_hSystemHandle = NULL;
+		g_hSystemHandle = nullptr;
 
 		if (hWnd)
 		{
 			::DestroyWindow((HWND)hWnd);
-			hWnd = NULL;
+			hWnd = nullptr;
 		}
 #endif;
 
@@ -883,11 +883,11 @@ bool RunGame(HINSTANCE hInstance, const char* sCmdLine)
 		memset(&si, 0, sizeof(si));
 		si.cb = sizeof(si);
 		char szExe[_MAX_PATH];
-		GetModuleFileName(NULL, szExe, sizeof(szExe));
+		GetModuleFileName(nullptr, szExe, sizeof(szExe));
 
 		// [marco] must alloc a new one 'cos could be modified
 		// by CreateProcess
-		char* szBuf = NULL;
+		char* szBuf = nullptr;
 		if (szLocalCmdLine[0])
 		{
 			szBuf = new char[strlen(szLocalCmdLine) + strlen(szExe) + strlen("-RELAUNCHING") + 4];
@@ -899,7 +899,7 @@ bool RunGame(HINSTANCE hInstance, const char* sCmdLine)
 			sprintf(szBuf, "%s -RELAUNCHING", szExe);
 		}
 
-		CreateProcess(0, szBuf, NULL, NULL, FALSE, NULL, NULL, szMasterCDFolder, &si, &pi);
+		CreateProcess(0, szBuf, nullptr, nullptr, FALSE, 0, nullptr, szMasterCDFolder, &si, &pi);
 
 		// Now terminate this process as fast as possible.
 		ExitProcess(0);

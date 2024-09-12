@@ -10,7 +10,7 @@ static char THIS_FILE[] = __FILE__;
 const char* CChunkFileReader::gLastError = "";
 
 CChunkFileReader::CChunkFileReader() :
-	m_pChunks(NULL)
+	m_pChunks(nullptr)
 	//,m_arrChunkSize ("CChunkFileReader.ChunkSize")
 {
 }
@@ -36,7 +36,7 @@ bool CChunkFileReader::open(CFileMapping* pFile)
 
 	bool bSuccess = false;
 
-	if ((m_pFile != (CFileMapping*)NULL) && (m_pFile->getData() != NULL))
+	if ((m_pFile != (CFileMapping*)nullptr) && (m_pFile->getData() != nullptr))
 	{
 		if (m_pFile->getSize() >= sizeof(FileHeader))
 		{// the file must contain the header
@@ -129,17 +129,17 @@ bool CChunkFileReader::open(const char* szFileName, unsigned nFlags)
 void CChunkFileReader::close()
 {
 	m_arrChunkSize.clear();
-	m_pFile = NULL;
-	m_pChunks = NULL;
+	m_pFile = nullptr;
+	m_pChunks = nullptr;
 }
 
 // returns the raw data of the file from the given offset
 const void* CChunkFileReader::getRawData(unsigned nOffset)const
 {
-	if ((m_pFile != (CFileMapping*)NULL) && m_pFile->getData())
+	if ((m_pFile != (CFileMapping*)nullptr) && m_pFile->getData())
 		return ((char*)m_pFile->getData()) + nOffset;
 	else
-		return NULL;
+		return nullptr;
 }
 
 // retrieves the raw chunk header, as it appears in the file
@@ -186,12 +186,12 @@ int CChunkFileReader::numChunksOfType(ChunkTypes nChunkType)const
 // returns the file headers
 const CChunkFileReader::FileHeader& CChunkFileReader::getFileHeader() const
 {
-	return m_pFile ? *((const FileHeader*)(m_pFile->getData())) : *(const FileHeader*)NULL;
+	return m_pFile ? *((const FileHeader*)(m_pFile->getData())) : *(const FileHeader*)nullptr;
 }
 
 bool CChunkFileReader::isValid() const
 {
-	return m_pFile != (CFileMapping*)NULL;
+	return m_pFile != (CFileMapping*)nullptr;
 }
 
 //////////////////////////////////////////////////////////////////////////

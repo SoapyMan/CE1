@@ -102,7 +102,7 @@ void CD3D9Renderer::DrawDynVB(struct_VERTEX_FORMAT_P3F_COL4UB_TEX2F* pBuf, ushor
 	if (!pDst)
 		return;
 
-	ushort* pDstInds = NULL;
+	ushort* pDstInds = nullptr;
 	if (pInds)
 		pDstInds = GetIBPtr(nInds, nIOffs);
 	cryMemcpy(pDst, pBuf, nVerts * sizeof(struct_VERTEX_FORMAT_P3F_COL4UB_TEX2F));
@@ -146,7 +146,7 @@ void CD3D9Renderer::CreateIndexBuffer(SVertexStream* dest, const void* src, int 
 	dest->m_nItems = 0;
 	if (indexcount)
 	{
-		IDirect3DIndexBuffer9* ibuf = NULL;
+		IDirect3DIndexBuffer9* ibuf = nullptr;
 		int size = indexcount * sizeof(ushort);
 		int flags = D3DUSAGE_WRITEONLY;
 		D3DPOOL Pool = D3DPOOL_MANAGED;
@@ -155,10 +155,10 @@ void CD3D9Renderer::CreateIndexBuffer(SVertexStream* dest, const void* src, int 
 			flags |= D3DUSAGE_DYNAMIC;
 			Pool = D3DPOOL_DEFAULT;
 		}
-		HRESULT hReturn = m_pd3dDevice->CreateIndexBuffer(size, flags, D3DFMT_INDEX16, Pool, &ibuf, NULL);
+		HRESULT hReturn = m_pd3dDevice->CreateIndexBuffer(size, flags, D3DFMT_INDEX16, Pool, &ibuf, nullptr);
 
 #ifdef _DEBUG
-		sAddVB(ibuf, dest, NULL, "Index buf");
+		sAddVB(ibuf, dest, nullptr, "Index buf");
 #endif
 
 		if (FAILED(hReturn))
@@ -187,7 +187,7 @@ void CD3D9Renderer::UpdateIndexBuffer(SVertexStream* dest, const void* src, int 
 		{
 			if (dest->m_nItems)
 				ReleaseIndexBuffer(dest);
-			CreateIndexBuffer(dest, NULL, indexcount);
+			CreateIndexBuffer(dest, nullptr, indexcount);
 		}
 		ushort* dst;
 		ibuf = (IDirect3DIndexBuffer9*)dest->m_VertBuf.m_pPtr;
@@ -243,7 +243,7 @@ void CD3D9Renderer::ReleaseIndexBuffer(SVertexStream* dest)
 
 void* CD3D9Renderer::GetDynVBPtr(int nVerts, int& nOffs, int Pool)
 {
-	void* vBuf = NULL;
+	void* vBuf = nullptr;
 	nOffs = 0;
 	switch (Pool)
 	{
@@ -398,7 +398,7 @@ void CD3D9Renderer::AllocVBInPool(int size, int nVFormat, SVertexStream* pVB)
 	TVertPool* Ptr;
 	for (Ptr = sVertPools; Ptr; Ptr = Ptr->Next)
 	{
-		if (AllocateVBChunk(size, Ptr, pVB, NULL))
+		if (AllocateVBChunk(size, Ptr, pVB, nullptr))
 			break;
 	}
 
@@ -406,7 +406,7 @@ void CD3D9Renderer::AllocVBInPool(int size, int nVFormat, SVertexStream* pVB)
 	{
 		Ptr = new TVertPool;
 		Ptr->m_nBufSize = VBsize;
-		Ptr->m_pVB = NULL;
+		Ptr->m_pVB = nullptr;
 		Ptr->Next = sVertPools;
 		Ptr->PrevLink = &sVertPools;
 		if (sVertPools)
@@ -415,10 +415,10 @@ void CD3D9Renderer::AllocVBInPool(int size, int nVFormat, SVertexStream* pVB)
 			sVertPools->PrevLink = &Ptr->Next;
 		}
 		sVertPools = Ptr;
-		AllocateVBChunk(size, Ptr, pVB, NULL);
+		AllocateVBChunk(size, Ptr, pVB, nullptr);
 	}
 	if (!Ptr->m_pVB)
-		gcpRendD3D->m_pd3dDevice->CreateVertexBuffer(Ptr->m_nBufSize, Flags, fvf, Pool, &Ptr->m_pVB, NULL);
+		gcpRendD3D->m_pd3dDevice->CreateVertexBuffer(Ptr->m_nBufSize, Flags, fvf, Pool, &Ptr->m_pVB, nullptr);
 }
 
 void CD3D9Renderer::CreateBuffer(int size, int vertexformat, CVertexBuffer* buf, int Type, const char* szSource)
@@ -433,7 +433,7 @@ void CD3D9Renderer::CreateBuffer(int size, int vertexformat, CVertexBuffer* buf,
 		return;
 	}
 
-	IDirect3DVertexBuffer9* vptr = NULL;
+	IDirect3DVertexBuffer9* vptr = nullptr;
 	int fvf = m_RP.m_D3DFixedPipeline[Type][vertexformat].m_Handle;
 
 	int Flags = D3DUSAGE_WRITEONLY;
@@ -444,7 +444,7 @@ void CD3D9Renderer::CreateBuffer(int size, int vertexformat, CVertexBuffer* buf,
 		Pool = D3DPOOL_DEFAULT;
 	}
 
-	HRESULT hReturn = m_pd3dDevice->CreateVertexBuffer(size, Flags, fvf, Pool, &vptr, NULL);
+	HRESULT hReturn = m_pd3dDevice->CreateVertexBuffer(size, Flags, fvf, Pool, &vptr, nullptr);
 
 	if (FAILED(hReturn))
 		return;
@@ -470,7 +470,7 @@ CVertexBuffer* CD3D9Renderer::CreateBuffer(int vertexcount, int vertexformat, co
 
 	WaitForDevice();
 
-	IDirect3DVertexBuffer9* vptr = NULL;
+	IDirect3DVertexBuffer9* vptr = nullptr;
 	int fvf = m_RP.m_D3DFixedPipeline[0][vertexformat].m_Handle;
 
 	int Flags = D3DUSAGE_WRITEONLY;
@@ -511,9 +511,9 @@ CVertexBuffer* CD3D9Renderer::CreateBuffer(int vertexcount, int vertexformat, co
 		return newbuf;
 	}
 
-	HRESULT hReturn = m_pd3dDevice->CreateVertexBuffer(m_VertexSize[vertexformat] * vertexcount, Flags, fvf, Pool, &vptr, NULL);
+	HRESULT hReturn = m_pd3dDevice->CreateVertexBuffer(m_VertexSize[vertexformat] * vertexcount, Flags, fvf, Pool, &vptr, nullptr);
 	if (FAILED(hReturn))
-		return (NULL);
+		return (nullptr);
 	newbuf->m_VS[VSF_GENERAL].m_VertBuf.m_pPtr = vptr;
 
 #ifdef _DEBUG
@@ -683,7 +683,7 @@ void CD3D9Renderer::UnlockBuffer(CVertexBuffer* buf, int Type)
 	}
 
 	IDirect3DVertexBuffer9* tvert;
-	tvert = (IDirect3DVertexBuffer9*)buf->GetStream(Type, NULL);
+	tvert = (IDirect3DVertexBuffer9*)buf->GetStream(Type, nullptr);
 
 	HRESULT hr = tvert->Unlock();
 	buf->m_VS[Type].m_bLocked = false;
@@ -719,7 +719,7 @@ void CD3D9Renderer::ReleaseBuffer(CVertexBuffer* bufptr)
 				sRemoveVB(vtemp, &bufptr->m_VS[VSF_GENERAL]);
 #endif
 			SAFE_RELEASE(vtemp);
-			bufptr->m_VS[VSF_GENERAL].m_VertBuf.m_pPtr = NULL;
+			bufptr->m_VS[VSF_GENERAL].m_VertBuf.m_pPtr = nullptr;
 		}
 
 		if (bufptr->m_VS[VSF_TANGENTS].m_pPool)
@@ -741,7 +741,7 @@ void CD3D9Renderer::ReleaseBuffer(CVertexBuffer* bufptr)
 				sRemoveVB(vtemp, &bufptr->m_VS[VSF_TANGENTS]);
 #endif
 			SAFE_RELEASE(vtemp);
-			bufptr->m_VS[VSF_TANGENTS].m_VertBuf.m_pPtr = NULL;
+			bufptr->m_VS[VSF_TANGENTS].m_VertBuf.m_pPtr = nullptr;
 		}
 
 		delete bufptr;

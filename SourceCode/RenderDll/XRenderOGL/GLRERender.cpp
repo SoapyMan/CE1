@@ -182,7 +182,7 @@ bool CREOcLeaf::mfPreDraw(SShaderPass* sl)
 	{
 		glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, m_pBuffer->m_Indices.m_VertBuf.m_nID);
 		gRenDev->m_RP.m_FlagsPerFlush |= RBSI_INDEXSTREAM;
-		gRenDev->m_RP.m_RendIndices = NULL;
+		gRenDev->m_RP.m_RendIndices = nullptr;
 	}
 
 	return true;
@@ -419,7 +419,7 @@ bool CREOcLeaf::mfDraw(SShader* ef, SShaderPass* sl)
 	lb = lb->GetVertexContainer();
 	if (!lb->m_pVertexBuffer)
 	{
-		iLog->Log("Warning: CREOcLeaf::mfDraw m_pBuffer->m_pVertexBuffer==0 '%s'", lb->m_sSource != 0 ? lb->m_sSource : "<NULL>"); return(true);
+		iLog->Log("Warning: CREOcLeaf::mfDraw m_pBuffer->m_pVertexBuffer==0 '%s'", lb->m_sSource != 0 ? lb->m_sSource : "<nullptr>"); return(true);
 	}
 
 	CRYASSERT(lb->m_pVertexBuffer);
@@ -448,7 +448,7 @@ bool CRETempMesh::mfPreDraw(SShaderPass* sl)
 	{
 		glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, m_Inds.m_VertBuf.m_nID);
 		gRenDev->m_RP.m_FlagsPerFlush |= RBSI_INDEXSTREAM;
-		gRenDev->m_RP.m_RendIndices = NULL;
+		gRenDev->m_RP.m_RendIndices = nullptr;
 	}
 
 	return true;
@@ -1228,7 +1228,7 @@ void CREFlare::mfDrawCorona(SShader* ef, CFColor& col)
 			// Render the 8 triangles from the data stream
 			if (m_Pass && m_Pass->m_TUnits.Num())
 			{
-				CVProgram* curVP = NULL;
+				CVProgram* curVP = nullptr;
 				CVProgram* newVP;
 				SShaderPassHW* slw = m_Pass;
 				if (slw->mfSetTextures())
@@ -1244,7 +1244,7 @@ void CREFlare::mfDrawCorona(SShader* ef, CFColor& col)
 							curVP->mfSet(true, slw, VPF_DONTSETMATRICES);
 						}
 						else
-							curVP = NULL;
+							curVP = nullptr;
 					}
 
 					rd->EF_ApplyMatrixOps(slw->m_MatrixOps, true);
@@ -1407,7 +1407,7 @@ void CREFlare::mfDrawCorona(SShader* ef, CFColor& col)
 		rd->EnableTMU(true);
 		rd->m_TexMan->SetTexture(obj->m_TexId1, eTT_Base);
 
-		CPShader* pRC = NULL;
+		CPShader* pRC = nullptr;
 		// If device supports register combiners use advanced sun rays
 		if (rd->GetFeatures() & RFT_HW_RC && !rd->m_RP.m_RCSun)
 		{

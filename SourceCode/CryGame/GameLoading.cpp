@@ -223,7 +223,7 @@ bool CXGame::SaveToStream(CStream& stm, Vec3d* pos, Vec3d* angles, string sFilen
 
 	IEntitySystem* pEntitySystem = m_pSystem->GetIEntitySystem();
 
-	IEntity* pPlayerEnt = NULL;
+	IEntity* pPlayerEnt = nullptr;
 	if (m_pClient)
 		pPlayerEnt = pEntitySystem->GetEntity(m_pClient->GetPlayerId());
 	//CRYASSERT(pPlayerEnt);
@@ -231,7 +231,7 @@ bool CXGame::SaveToStream(CStream& stm, Vec3d* pos, Vec3d* angles, string sFilen
 		//CryError("Saving to checkpoint - Current player not set or invalid - data error - possible reasons: \n - the first respawn point might be inside a checkpoint \n - something else other than shapes is used to trigger game events \n the trigger used to trigger checkpoint is not trigger once \n solution: check out the map and fix");
 		CryError("A checkpoint has been triggered to save data when the player is not existing yet, generally right after respawning. \n This is a data error, and must be fixed by the designer working on this map. \n Possible data errors are: \n - the first respawn point might be inside a checkpoint \n - something else other than shapes is used to trigger game events; \n - the area trigger used to trigger checkpoint is not trigger once; \n how to proceed: get the designer working on this map to fix this");
 
-	CPlayer* pPlayer = NULL;
+	CPlayer* pPlayer = nullptr;
 	if (pPlayerEnt->GetContainer()) pPlayerEnt->GetContainer()->QueryContainerInterface(CIT_IPLAYER, (void**)&pPlayer);
 	//CRYASSERT(pPlayer);
 	if (!pPlayer)
@@ -336,14 +336,14 @@ bool CXGame::SaveToStream(CStream& stm, Vec3d* pos, Vec3d* angles, string sFilen
 	IEntityItPtr pEntities = pEntitySystem->GetEntityIterator();
 	pEntities->MoveFirst();
 
-	IEntity* pEnt = NULL;
+	IEntity* pEnt = nullptr;
 
 	WRITE_COOKIE_NO(stm, 0x3c);
 
 	// [kirill] savig IDs of all dynamicaly spawn BUT saved entities
 	// so would be able to preserve IDs from being taken by other dynamic entities on loadind
 	std::vector<int>	dynSaveableEntities;
-	while ((pEnt = pEntities->Next()) != NULL)
+	while ((pEnt = pEntities->Next()) != nullptr)
 	{
 		if (!pEnt->IsSaveEnabled())
 			continue;
@@ -358,13 +358,13 @@ bool CXGame::SaveToStream(CStream& stm, Vec3d* pos, Vec3d* angles, string sFilen
 	WRITE_COOKIE_NO(stm, 61);
 
 	pEntities = pEntitySystem->GetEntityIterator();
-	while ((pEnt = pEntities->Next()) != NULL)
+	while ((pEnt = pEntities->Next()) != nullptr)
 	{
 		if (!pEnt->IsSaveEnabled())
 			continue;
 
 		EntityClass* pClass = pECR->GetByClass(pEnt->GetEntityClassName());
-		CPlayer* pPlayer = NULL;
+		CPlayer* pPlayer = nullptr;
 
 		if (pEnt->GetContainer()) pEnt->GetContainer()->QueryContainerInterface(CIT_IPLAYER, (void**)&pPlayer);
 		if (pPlayer && pPlayer->m_stats.health <= 0) continue;
@@ -503,10 +503,10 @@ bool CXGame::SaveToStream(CStream& stm, Vec3d* pos, Vec3d* angles, string sFilen
 	// now loop through entities again to save their AI state
 	// it has to be done here because all entities need to be spawned when AI state is recreated
 	pEntities->MoveFirst();
-	while ((pEnt = pEntities->Next()) != NULL)
+	while ((pEnt = pEntities->Next()) != nullptr)
 	{
-		CPlayer* pPlayer = NULL;
-		CVehicle* pVehicle = NULL;
+		CPlayer* pPlayer = nullptr;
+		CVehicle* pVehicle = nullptr;
 		IAIObject* pAIObject = pEnt->GetAI();
 		if (pEnt->GetContainer())
 		{
@@ -553,7 +553,7 @@ bool CXGame::SaveToStream(CStream& stm, Vec3d* pos, Vec3d* angles, string sFilen
 			pAIObject->Save(stm);
 
 			IScriptSystem* pScriptSystem = GetSystem()->GetIScriptSystem();
-			HSCRIPTFUNCTION	saveOverallFunction = NULL;
+			HSCRIPTFUNCTION	saveOverallFunction = HSCRIPT_NULL;
 			if (pEnt->GetScriptObject() && pEnt->GetScriptObject()->GetValue("OnSaveOverall", saveOverallFunction))
 			{
 				pScriptSystem->BeginCall(saveOverallFunction);
@@ -751,7 +751,7 @@ bool CXGame::LoadFromStream(CStream& stm, bool isdemo)
 
 	IEntitySystem* pEntitySystem = m_pSystem->GetIEntitySystem();
 	IEntityClassRegistry* pECR = GetClassRegistry();
-	IEntity* pEnt = NULL;
+	IEntity* pEnt = nullptr;
 	CEntityDesc ed;
 	int			localPlayerId = 0;
 
@@ -873,7 +873,7 @@ bool CXGame::LoadFromStream(CStream& stm, bool isdemo)
 			IEntityContainer* pIContainer = pIMyPlayer->GetContainer();
 			if (pIContainer)
 			{
-				CPlayer* pPlayer = NULL;
+				CPlayer* pPlayer = nullptr;
 				if (pIContainer->QueryContainerInterface(CIT_IPLAYER, (void**)&pPlayer))
 					m_XAreaMgr.ExitAllAreas(pPlayer->m_AreaUser);
 			}
@@ -885,8 +885,8 @@ bool CXGame::LoadFromStream(CStream& stm, bool isdemo)
 		IEntityItPtr pEntities = pEntitySystem->GetEntityIterator();
 
 		pEntities->MoveFirst();
-		IEntity* pEnt = NULL;
-		while ((pEnt = pEntities->Next()) != NULL)
+		IEntity* pEnt = nullptr;
+		while ((pEnt = pEntities->Next()) != nullptr)
 		{
 			EntityClass* pClass = pECR->GetByClass(pEnt->GetEntityClassName());
 			if (m_pWeaponSystemEx->IsProjectileClass(pClass->ClassId)) continue;
@@ -1106,7 +1106,7 @@ bool CXGame::LoadFromStream(CStream& stm, bool isdemo)
 			//so->SetValue("PropertiesInstance", propsi);
 			so->SetValue("Events", events);
 
-			CPlayer* pPlayer = NULL;
+			CPlayer* pPlayer = nullptr;
 			if (pEnt->GetContainer()) pEnt->GetContainer()->QueryContainerInterface(CIT_IPLAYER, (void**)&pPlayer);
 
 
@@ -1208,7 +1208,7 @@ bool CXGame::LoadFromStream(CStream& stm, bool isdemo)
 				CryError("player id=%3id NOT FOUND", wPlayerID);
 			//CRYASSERT(pEnt);
 
-			CPlayer* pPlayer = NULL;
+			CPlayer* pPlayer = nullptr;
 			if (pEnt->GetContainer()) pEnt->GetContainer()->QueryContainerInterface(CIT_IPLAYER, (void**)&pPlayer);
 			CRYASSERT(pPlayer);
 			stm.Read(pPlayer->m_bFirstPerson);
@@ -1294,7 +1294,7 @@ bool CXGame::LoadFromStream(CStream& stm, bool isdemo)
 				{
 					pEntity->GetAI()->Load(stm);
 					IScriptSystem* pScriptSystem = GetSystem()->GetIScriptSystem();
-					HSCRIPTFUNCTION	loadOverallFunction = NULL;
+					HSCRIPTFUNCTION	loadOverallFunction = HSCRIPT_NULL;
 					if (pEntity->GetScriptObject() && pEntity->GetScriptObject()->GetValue("OnLoadOverall", loadOverallFunction))
 					{
 						pScriptSystem->BeginCall(loadOverallFunction);
@@ -1360,8 +1360,8 @@ bool CXGame::LoadFromStream(CStream& stm, bool isdemo)
 		IEntityItPtr pEntities = pEntitySystem->GetEntityIterator();
 
 		pEntities->MoveFirst();
-		IEntity* pEnt = NULL;
-		while ((pEnt = pEntities->Next()) != NULL)
+		IEntity* pEnt = nullptr;
+		while ((pEnt = pEntities->Next()) != nullptr)
 			pEnt->PostLoad();
 	}
 
@@ -1383,7 +1383,7 @@ bool CXGame::LoadFromStream(CStream& stm, bool isdemo)
 	m_pSystem->GetIConsole()->SetScrollMax(600 / 2);
 
 	if (nPreset != -1)
-		m_pSystem->GetISoundSystem()->SetEaxListenerEnvironment(nPreset, NULL);
+		m_pSystem->GetISoundSystem()->SetEaxListenerEnvironment(nPreset, nullptr);
 	else
 		m_pSystem->GetISoundSystem()->SetEaxListenerEnvironment(nPreset, &tProps);
 
@@ -1785,7 +1785,7 @@ bool CXGame::LoadFromStream_RELEASEVERSION(CStream& stm, bool isdemo, CScriptObj
 	IBitStream* pBitStream = GetIBitStream();
 	IEntitySystem* pEntitySystem = m_pSystem->GetIEntitySystem();
 	IEntityClassRegistry* pECR = GetClassRegistry();
-	IEntity* pEnt = NULL;
+	IEntity* pEnt = nullptr;
 	CEntityDesc ed;
 	int			localPlayerId = 0;
 
@@ -1910,7 +1910,7 @@ bool CXGame::LoadFromStream_RELEASEVERSION(CStream& stm, bool isdemo, CScriptObj
 			IEntityContainer* pIContainer = pIMyPlayer->GetContainer();
 			if (pIContainer)
 			{
-				CPlayer* pPlayer = NULL;
+				CPlayer* pPlayer = nullptr;
 				if (pIContainer->QueryContainerInterface(CIT_IPLAYER, (void**)&pPlayer))
 					m_XAreaMgr.ExitAllAreas(pPlayer->m_AreaUser);
 			}
@@ -1922,8 +1922,8 @@ bool CXGame::LoadFromStream_RELEASEVERSION(CStream& stm, bool isdemo, CScriptObj
 		IEntityItPtr pEntities = pEntitySystem->GetEntityIterator();
 
 		pEntities->MoveFirst();
-		IEntity* pEnt = NULL;
-		while ((pEnt = pEntities->Next()) != NULL)
+		IEntity* pEnt = nullptr;
+		while ((pEnt = pEntities->Next()) != nullptr)
 		{
 			EntityClass* pClass = pECR->GetByClass(pEnt->GetEntityClassName());
 			if (m_pWeaponSystemEx->IsProjectileClass(pClass->ClassId)) continue;
@@ -2139,7 +2139,7 @@ bool CXGame::LoadFromStream_RELEASEVERSION(CStream& stm, bool isdemo, CScriptObj
 			//so->SetValue("PropertiesInstance", propsi);
 			so->SetValue("Events", events);
 
-			CPlayer* pPlayer = NULL;
+			CPlayer* pPlayer = nullptr;
 			if (pEnt->GetContainer()) pEnt->GetContainer()->QueryContainerInterface(CIT_IPLAYER, (void**)&pPlayer);
 
 
@@ -2212,7 +2212,7 @@ bool CXGame::LoadFromStream_RELEASEVERSION(CStream& stm, bool isdemo, CScriptObj
 				CryError("player id=%3id NOT FOUND", wPlayerID);
 			//CRYASSERT(pEnt);
 
-			CPlayer* pPlayer = NULL;
+			CPlayer* pPlayer = nullptr;
 			if (pEnt->GetContainer()) pEnt->GetContainer()->QueryContainerInterface(CIT_IPLAYER, (void**)&pPlayer);
 			CRYASSERT(pPlayer);
 			stm.Read(pPlayer->m_bFirstPerson);
@@ -2303,8 +2303,8 @@ bool CXGame::LoadFromStream_RELEASEVERSION(CStream& stm, bool isdemo, CScriptObj
 		IEntityItPtr pEntities = pEntitySystem->GetEntityIterator();
 
 		pEntities->MoveFirst();
-		IEntity* pEnt = NULL;
-		while ((pEnt = pEntities->Next()) != NULL)
+		IEntity* pEnt = nullptr;
+		while ((pEnt = pEntities->Next()) != nullptr)
 			pEnt->PostLoad();
 	}
 
@@ -2327,7 +2327,7 @@ bool CXGame::LoadFromStream_RELEASEVERSION(CStream& stm, bool isdemo, CScriptObj
 	m_pSystem->GetIConsole()->SetScrollMax(600 / 2);
 
 	if (nPreset != -1)
-		m_pSystem->GetISoundSystem()->SetEaxListenerEnvironment(nPreset, NULL);
+		m_pSystem->GetISoundSystem()->SetEaxListenerEnvironment(nPreset, nullptr);
 	else
 		m_pSystem->GetISoundSystem()->SetEaxListenerEnvironment(nPreset, &tProps);
 
@@ -2347,7 +2347,7 @@ bool CXGame::LoadFromStream_PATCH_1(CStream& stm, bool isdemo, CScriptObjectStre
 
 	IEntitySystem* pEntitySystem = m_pSystem->GetIEntitySystem();
 	IEntityClassRegistry* pECR = GetClassRegistry();
-	IEntity* pEnt = NULL;
+	IEntity* pEnt = nullptr;
 	CEntityDesc ed;
 	int			localPlayerId = 0;
 
@@ -2472,7 +2472,7 @@ bool CXGame::LoadFromStream_PATCH_1(CStream& stm, bool isdemo, CScriptObjectStre
 			IEntityContainer* pIContainer = pIMyPlayer->GetContainer();
 			if (pIContainer)
 			{
-				CPlayer* pPlayer = NULL;
+				CPlayer* pPlayer = nullptr;
 				if (pIContainer->QueryContainerInterface(CIT_IPLAYER, (void**)&pPlayer))
 					m_XAreaMgr.ExitAllAreas(pPlayer->m_AreaUser);
 			}
@@ -2484,8 +2484,8 @@ bool CXGame::LoadFromStream_PATCH_1(CStream& stm, bool isdemo, CScriptObjectStre
 		IEntityItPtr pEntities = pEntitySystem->GetEntityIterator();
 
 		pEntities->MoveFirst();
-		IEntity* pEnt = NULL;
-		while ((pEnt = pEntities->Next()) != NULL)
+		IEntity* pEnt = nullptr;
+		while ((pEnt = pEntities->Next()) != nullptr)
 		{
 			EntityClass* pClass = pECR->GetByClass(pEnt->GetEntityClassName());
 			if (m_pWeaponSystemEx->IsProjectileClass(pClass->ClassId)) continue;
@@ -2701,7 +2701,7 @@ bool CXGame::LoadFromStream_PATCH_1(CStream& stm, bool isdemo, CScriptObjectStre
 			//so->SetValue("PropertiesInstance", propsi);
 			so->SetValue("Events", events);
 
-			CPlayer* pPlayer = NULL;
+			CPlayer* pPlayer = nullptr;
 			if (pEnt->GetContainer()) pEnt->GetContainer()->QueryContainerInterface(CIT_IPLAYER, (void**)&pPlayer);
 
 
@@ -2803,7 +2803,7 @@ bool CXGame::LoadFromStream_PATCH_1(CStream& stm, bool isdemo, CScriptObjectStre
 				CryError("player id=%3id NOT FOUND", wPlayerID);
 			//CRYASSERT(pEnt);
 
-			CPlayer* pPlayer = NULL;
+			CPlayer* pPlayer = nullptr;
 			if (pEnt->GetContainer()) pEnt->GetContainer()->QueryContainerInterface(CIT_IPLAYER, (void**)&pPlayer);
 			CRYASSERT(pPlayer);
 			stm.Read(pPlayer->m_bFirstPerson);
@@ -2889,14 +2889,14 @@ bool CXGame::LoadFromStream_PATCH_1(CStream& stm, bool isdemo, CScriptObjectStre
 				{
 					pEntity->GetAI()->Load(stm);
 					IScriptSystem* pScriptSystem = GetSystem()->GetIScriptSystem();
-					HSCRIPTFUNCTION	loadOverallFunction = NULL;
-					//						if( pEntity->GetScriptObject() && pEntity->GetScriptObject()->GetValue("OnLoadOverall", loadOverallFunction) )
-					//						{
-					//							pScriptSystem->BeginCall(loadOverallFunction);
-					//							pScriptSystem->PushFuncParam(pEntity->GetScriptObject());
-					//							pScriptSystem->PushFuncParam(scriptStream.GetScriptObject());
-					//							pScriptSystem->EndCall();
-					//						}
+					HSCRIPTFUNCTION	loadOverallFunction = HSCRIPT_NULL;
+					//if( pEntity->GetScriptObject() && pEntity->GetScriptObject()->GetValue("OnLoadOverall", loadOverallFunction) )
+					//{
+					//	pScriptSystem->BeginCall(loadOverallFunction);
+					//	pScriptSystem->PushFuncParam(pEntity->GetScriptObject());
+					//	pScriptSystem->PushFuncParam(scriptStream.GetScriptObject());
+					//	pScriptSystem->EndCall();
+					//}
 				}
 			}
 
@@ -2952,8 +2952,8 @@ bool CXGame::LoadFromStream_PATCH_1(CStream& stm, bool isdemo, CScriptObjectStre
 		IEntityItPtr pEntities = pEntitySystem->GetEntityIterator();
 
 		pEntities->MoveFirst();
-		IEntity* pEnt = NULL;
-		while ((pEnt = pEntities->Next()) != NULL)
+		IEntity* pEnt = nullptr;
+		while ((pEnt = pEntities->Next()) != nullptr)
 			pEnt->PostLoad();
 	}
 
@@ -2976,7 +2976,7 @@ bool CXGame::LoadFromStream_PATCH_1(CStream& stm, bool isdemo, CScriptObjectStre
 	m_pSystem->GetIConsole()->SetScrollMax(600 / 2);
 
 	if (nPreset != -1)
-		m_pSystem->GetISoundSystem()->SetEaxListenerEnvironment(nPreset, NULL);
+		m_pSystem->GetISoundSystem()->SetEaxListenerEnvironment(nPreset, nullptr);
 	else
 		m_pSystem->GetISoundSystem()->SetEaxListenerEnvironment(nPreset, &tProps);
 

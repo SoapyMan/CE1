@@ -109,7 +109,7 @@ bool CreateRenderTarget(STexPic* pTex, int iWidth, int iHeight, bool bUseAlpha, 
 		// must pass empty buffer into create texture..
 		byte* pData = new byte[pTex->m_Width * pTex->m_Height * ((nHasAlpha) ? 4 : 3)];
 
-		if (!gcpRendD3D->m_TexMan->CreateTexture(NULL, pTex->m_Width, pTex->m_Height, 1, pTex->m_Flags, pTex->m_Flags2, pData, eTT_Base, -1.0f, -1.0f, 0, pTex))
+		if (!gcpRendD3D->m_TexMan->CreateTexture(nullptr, pTex->m_Width, pTex->m_Height, 1, pTex->m_Flags, pTex->m_Flags2, pData, eTT_Base, -1.0f, -1.0f, 0, pTex))
 		{
 			// error creating texure
 			delete[] pData;
@@ -222,8 +222,8 @@ bool BlurTextureHw(CScreenVars* pVars, STexPic*& pTex, int iBlurType, int iBlurA
 	SetTexture(pTex, 3, D3DTEXF_LINEAR, D3DTEXF_LINEAR, 1);
 
 	// set current vertex/fragment program
-	vpBlur->mfSet(true, NULL);
-	fpBlur->mfSet(true, NULL);
+	vpBlur->mfSet(true, nullptr);
+	fpBlur->mfSet(true, nullptr);
 
 	// set vertex program consts 
 	vpBlur->mfParameter4f("Offset0", pfOffset0);
@@ -335,8 +335,8 @@ bool ResizeTextureHw(CScreenVars* pVars, STexPic*& pSrc, STexPic*& pDst)
 	SetTexture(pSrc, 3, D3DTEXF_LINEAR, D3DTEXF_LINEAR, 1);
 
 	// set current vertex/fragment program
-	vpBlur->mfSet(true, NULL);
-	fpBlur->mfSet(true, NULL);
+	vpBlur->mfSet(true, nullptr);
+	fpBlur->mfSet(true, nullptr);
 
 	gRenDev->SetState(GS_NODEPTHTEST);
 
@@ -1535,8 +1535,8 @@ bool CREScreenProcess::mfDraw(SShader* ef, SShaderPass* sfm)
 		}
 
 		// set current vertex/fragment program
-		vpBluryMap->mfSet(true, NULL);
-		fpBluryMap->mfSet(true, NULL);
+		vpBluryMap->mfSet(true, nullptr);
+		fpBluryMap->mfSet(true, nullptr);
 
 		// set constants
 		float pBluryParams[] = { m_pVars->m_pBlurColor.r, m_pVars->m_pBlurColor.g, m_pVars->m_pBlurColor.b, m_pVars->m_fBlurAmount };
@@ -1561,8 +1561,8 @@ bool CREScreenProcess::mfDraw(SShader* ef, SShaderPass* sfm)
 		gRenDev->SetViewport(iTempX, iTempY, iWidth, iHeight);
 
 		// restore states
-		vpBluryMap->mfSet(false, NULL);
-		fpBluryMap->mfSet(false, NULL);
+		vpBluryMap->mfSet(false, nullptr);
+		fpBluryMap->mfSet(false, nullptr);
 
 		// set flags      
 		LOG_EFFECT("*** End blury screen process... ***\n")
@@ -1582,8 +1582,8 @@ bool CREScreenProcess::mfDraw(SShader* ef, SShaderPass* sfm)
 		gRenDev->SetViewport(iTempX, iTempY, iWidth, iHeight);
 
 		// set current vertex/fragment program
-		vpCartoon->mfSet(true, NULL);
-		fpCartoon->mfSet(true, NULL);
+		vpCartoon->mfSet(true, nullptr);
+		fpCartoon->mfSet(true, nullptr);
 
 		// set vertex program consts      
 		// setup texture offsets, for texture neighboors sampling
@@ -1604,15 +1604,15 @@ bool CREScreenProcess::mfDraw(SShader* ef, SShaderPass* sfm)
 		// just render
 		gRenDev->DrawTriStrip(&(CVertexBuffer(pDefaultScreenVB, VERTEX_FORMAT_P3F_TEX2F)), 4);
 
-		vpCartoon->mfSet(false, NULL);
-		fpCartoon->mfSet(false, NULL);
+		vpCartoon->mfSet(false, nullptr);
+		fpCartoon->mfSet(false, nullptr);
 
 		// update screen texture
 		CopyScreenToTexture(pScreenRect, pScreenTex);
 
 		// set current vertex/fragment program 
-		vpCartoon->mfSet(true, NULL);
-		fpCartoonSilhouete->mfSet(true, NULL);
+		vpCartoon->mfSet(true, nullptr);
+		fpCartoonSilhouete->mfSet(true, nullptr);
 
 		s1 = 1.0f / (float)pScreenTex->m_Width;
 		t1 = 1.0f / (float)pScreenTex->m_Height;
@@ -1640,8 +1640,8 @@ bool CREScreenProcess::mfDraw(SShader* ef, SShaderPass* sfm)
 		gRenDev->SetState(GS_BLSRC_ZERO | GS_BLDST_SRCCOL | GS_NODEPTHTEST);
 		gRenDev->DrawTriStrip(&(CVertexBuffer(pDefaultScreenVB, VERTEX_FORMAT_P3F_TEX2F)), 4);
 
-		vpCartoon->mfSet(false, NULL);
-		fpCartoonSilhouete->mfSet(false, NULL);
+		vpCartoon->mfSet(false, nullptr);
+		fpCartoonSilhouete->mfSet(false, nullptr);
 
 		LOG_EFFECT("*** End cartoon mode process... ***\n")
 	}
@@ -1686,8 +1686,8 @@ bool CREScreenProcess::mfDraw(SShader* ef, SShaderPass* sfm)
 			float fAmount = CLAMP(m_pVars->m_fMotionBlurAmount, 0.0f, 1.0f);
 
 			// set current vertex/fragment program
-			vpMotion->mfSet(true, NULL);
-			fpMotion->mfSet(true, NULL);
+			vpMotion->mfSet(true, nullptr);
+			fpMotion->mfSet(true, nullptr);
 
 			// setup texture stages/states
 			SetTexture(pTex, 0, D3DTEXF_POINT, D3DTEXF_POINT, 1);
@@ -1719,8 +1719,8 @@ bool CREScreenProcess::mfDraw(SShader* ef, SShaderPass* sfm)
 			gRenDev->DrawTriStrip(&(CVertexBuffer(pScreenQuad, VERTEX_FORMAT_P3F_TEX2F)), 4);
 
 			// disable current vertex/fragment program
-			vpMotion->mfSet(false, NULL);
-			fpMotion->mfSet(false, NULL);
+			vpMotion->mfSet(false, nullptr);
+			fpMotion->mfSet(false, nullptr);
 			break;
 		}
 

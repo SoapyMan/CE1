@@ -53,7 +53,7 @@ struct CBasicArea : public Cry3DEngineBase
 	void Unload(bool bUnloadOnlyVegetations = false, const Vec3d& vPos = Vec3d(0, 0, 0));
 	void PreloadResources(Vec3d vPrevPortalPos, float fPrevPortalDistance);
 	void UnregisterDynamicEntities();
-	void SortStaticInstancesBySize(VolumeInfo* pFogVolume = NULL);
+	void SortStaticInstancesBySize(VolumeInfo* pFogVolume = nullptr);
 	void MakeAreaBrush();
 	void UnmakeAreaBrush();
 	void FreeAreaBrush(class CBrush* pAreaBrush);

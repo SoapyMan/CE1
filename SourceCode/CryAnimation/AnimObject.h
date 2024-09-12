@@ -116,22 +116,9 @@ public:
 		// deletes the controllers belonging ot this node
 		void clearControllers()
 		{
-			if (m_posTrack)
-			{
-				delete m_posTrack;
-				m_posTrack = NULL;
-			}
-			if (m_rotTrack)
-			{
-				delete m_rotTrack;
-				m_rotTrack = NULL;
-			}
-
-			if (m_scaleTrack)
-			{
-				delete m_scaleTrack;
-				m_scaleTrack = NULL;
-			}
+			SAFE_DELETE(m_posTrack);
+			SAFE_DELETE(m_rotTrack);
+			SAFE_DELETE(m_scaleTrack);
 		}
 	};
 	// Single animation description.
@@ -221,7 +208,7 @@ public:
 	//! Set shader template to be used with character
 	virtual bool SetShaderTemplateName(const char* TemplName, int Id, const char* ShaderName = 0, IMatInfo* pCustomMaterial = 0, unsigned nFlags = 0) { return true; };
 	//! Sets shader template for rendering
-	virtual bool SetShaderTemplate(int nTemplate, const char* TemplName, const char* ShaderName, bool bOnlyRegister, int* pnNewTemplateId = NULL)
+	virtual bool SetShaderTemplate(int nTemplate, const char* TemplName, const char* ShaderName, bool bOnlyRegister, int* pnNewTemplateId = nullptr)
 	{
 		// This gets called when character are attached recursively to each other's bones
 		// What to do?
@@ -230,7 +217,7 @@ public:
 	//! Get shader template 
 	virtual const char* GetShaderTemplateName() { return ""; };
 	//! Set refract coef. for refractive shader
-	virtual void SetShaderFloat(const char* Name, float fVal, const char* ShaderName = NULL) {};
+	virtual void SetShaderFloat(const char* Name, float fVal, const char* ShaderName = nullptr) {};
 	//! Sets color parameter
 	virtual void SetColor(float fR, float fG, float fB, float fA) {};
 

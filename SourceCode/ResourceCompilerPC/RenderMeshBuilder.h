@@ -157,7 +157,7 @@ protected:
 	public:
 		MeshProxy()
 		{
-			m_pMeshDesc = NULL;
+			m_pMeshDesc = nullptr;
 		}
 
 		// creates temporary mapping for splitting the vertices

@@ -402,7 +402,7 @@ struct IAnimBlock : public IRefCountBase
 	virtual IAnimTrack* GetTrack(int paramId) const = 0;
 
 	/** Assign animation track to parameter.
-			if track parameter is NULL track with parameter id param will be removed.
+			if track parameter is nullptr track with parameter id param will be removed.
 	*/
 	virtual void SetTrack(int paramId, IAnimTrack* track) = 0;
 
@@ -850,14 +850,14 @@ struct IMovieSystem
 
 	/** Finds node by id.
 			@param nodeId Id of requested animation node.
-			@return Pointer to the animation node, or NULL if the node with specified id is not found.
+			@return Pointer to the animation node, or nullptr if the node with specified id is not found.
 	*/
 	virtual IAnimNode* GetNode(int nodeId) const = 0;
 
 	/** Finds node by Name. Much slower then getting node by id.
 			Name is case insesentive.
 			@param nodeName Name of requested animation node.
-			@return Pointer to the animation node, or NULL if the node with specified name is not found.
+			@return Pointer to the animation node, or nullptr if the node with specified name is not found.
 	*/
 	virtual IAnimNode* FindNode(const char* nodeName) const = 0;
 

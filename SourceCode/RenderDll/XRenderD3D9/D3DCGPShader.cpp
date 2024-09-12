@@ -39,10 +39,10 @@ CPShader* CPShader::mfForName(const char* name, std::vector<SFXStruct>& Structs,
 	int i;
 
 	if (!name || !name[0])
-		return NULL;
+		return nullptr;
 
 	if (!(gRenDev->GetFeatures() & (RFT_HW_TS)))
-		return NULL;
+		return nullptr;
 
 	for (i = 0; i < m_PShaders.Num(); i++)
 	{
@@ -55,7 +55,7 @@ CPShader* CPShader::mfForName(const char* name, std::vector<SFXStruct>& Structs,
 		}
 	}
 
-	CPShader* p = NULL;
+	CPShader* p = nullptr;
 	{
 		CPShader* pr = new CCGPShader_D3D;
 		pr->m_Name = name;
@@ -230,7 +230,7 @@ struct SAliasSampler
 	std::string NameINT;
 	SAliasSampler()
 	{
-		fxSampler = NULL;
+		fxSampler = nullptr;
 	}
 };
 
@@ -384,10 +384,10 @@ CPShader* CPShader::mfForName(const char* name, uint64 nMaskGen)
 	int i;
 
 	if (!name || !name[0])
-		return NULL;
+		return nullptr;
 
 	if (!(gRenDev->GetFeatures() & (RFT_HW_RC | RFT_HW_TS | RFT_HW_PS20)))
-		return NULL;
+		return nullptr;
 
 	for (i = 0; i < m_PShaders.Num(); i++)
 	{
@@ -409,7 +409,7 @@ CPShader* CPShader::mfForName(const char* name, uint64 nMaskGen)
 		Warning(0, scrname, "Couldn't find pixel shader '%s'", name);
 		iLog->Log("WARNING: Couldn't find pixel shader '%s'", name);
 		iLog->Log("WARNING: Full file name: '%s'", scrname);
-		return NULL;
+		return nullptr;
 	}
 	iSystem->GetIPak()->FSeek(fp, 0, SEEK_END);
 	int len = iSystem->GetIPak()->FTell(fp);
@@ -420,7 +420,7 @@ CPShader* CPShader::mfForName(const char* name, uint64 nMaskGen)
 	buf[len] = 0;
 	buf = gRenDev->m_cEF.mfScriptPreprocessor(buf, dir, scrname);
 
-	CPShader* p = NULL;
+	CPShader* p = nullptr;
 	CPShader* pr;
 	pr = new CCGPShader_D3D;
 	pr->m_Name = name;
@@ -665,7 +665,7 @@ void CCGPShader_D3D::mfReset()
 		if (m_InstCache[i].m_pCache)
 		{
 			gRenDev->m_cEF.CloseCacheFile(m_InstCache[i].m_pCache);
-			m_InstCache[i].m_pCache = NULL;
+			m_InstCache[i].m_pCache = nullptr;
 		}
 	}
 	m_InstCache.Free();
@@ -695,7 +695,7 @@ void CCGPShader_D3D::mfFree()
 CCGPShader_D3D::~CCGPShader_D3D()
 {
 	mfFree();
-	CPShader::m_PShaders[m_Id] = NULL;
+	CPShader::m_PShaders[m_Id] = nullptr;
 }
 
 void CCGPShader_D3D::Release()
@@ -920,7 +920,7 @@ char* CCGPShader_D3D::mfCreateAdditionalPS()
 {
 	char* pScr = mfGenerateScriptPS();
 	if (!pScr)
-		return NULL;
+		return nullptr;
 
 	char* sNewStr, * newScr;
 	int Mask = m_Insts[m_CurInst].m_Mask;
@@ -1011,7 +1011,7 @@ bool CCGPShader_D3D::mfCompile(char* scr)
 
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else
@@ -1120,7 +1120,7 @@ void CCGPShader_D3D::mfSetVariables(bool bObj, TArray<SCGParam4f>* Parms)
 {
 	SCGInstance& inst = m_Insts[m_CurInst];
 
-	if (inst.m_pHandle == NULL || (INT_PTR)inst.m_pHandle == -1)
+	if (inst.m_pHandle == nullptr || (INT_PTR)inst.m_pHandle == -1)
 		return;
 
 	//PROFILE_FRAME(Shader_PShadersParms);
@@ -1291,7 +1291,7 @@ static char* sGetText(char** buf)
 		++*buf;
 		SkipCharacters(buf, " ");
 		if (**buf == ':')
-			return NULL;
+			return nullptr;
 	}
 	char* result = *buf;
 
@@ -1435,8 +1435,8 @@ bool CCGPShader_D3D::mfActivate()
 		char namedst1[256];
 		FILETIME writetimesrc, writetimedst;
 		FILE* statussrc, * statusdst;
-		statussrc = NULL;
-		statusdst = NULL;
+		statussrc = nullptr;
+		statusdst = nullptr;
 		mfGetSrcFileName(namesrc, 256);
 
 		bool bUseACIICache = true;
@@ -1464,7 +1464,7 @@ bool CCGPShader_D3D::mfActivate()
 				gRenDev->m_cEF.FreeCacheItem(m_InstCache[inst.m_nCacheID].m_pCache, inst.m_LightMask);
 				if (bRes)
 					return true;
-				pCacheItem = NULL;
+				pCacheItem = nullptr;
 			}
 			bCreate = true;
 		}
@@ -1473,14 +1473,14 @@ bool CCGPShader_D3D::mfActivate()
 			AddExtension(namedst1, ".cgasm");
 			statusdst = iSystem->GetIPak()->FOpen(namedst1, "r");
 		}
-		if (statusdst == NULL && bUseACIICache)
+		if (statusdst == nullptr && bUseACIICache)
 		{
 			if (CRenderer::CV_r_shadersprecache == 3)
 				bCreate = true;
 			else
 			{
 				statusdst = iSystem->GetIPak()->FOpen(namedst, "r");
-				if (statusdst == NULL)
+				if (statusdst == nullptr)
 					bCreate = true;
 				else if (!m_Functions.size())
 				{
@@ -1499,13 +1499,13 @@ bool CCGPShader_D3D::mfActivate()
 		else
 			strcpy(namedst, namedst1);
 	create:
-		char* pbuf = NULL;
+		char* pbuf = nullptr;
 		if (bCreate)
 		{
 			if (statusdst)
 			{
 				iSystem->GetIPak()->FClose(statusdst);
-				statusdst = NULL;
+				statusdst = nullptr;
 			}
 
 			m_Flags |= PSFI_WASGENERATED;
@@ -1529,15 +1529,15 @@ bool CCGPShader_D3D::mfActivate()
 					}
 					if (!m_Functions.size())
 					{
-						HANDLE hdst = CreateFile(namedst, GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL);
+						HANDLE hdst = CreateFile(namedst, GENERIC_WRITE, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, nullptr);
 						FILE* hsrc = iSystem->GetIPak()->FOpen(namesrc, "r");
 						writetimesrc = iSystem->GetIPak()->GetModificationTime(hsrc);
-						SetFileTime(hdst, NULL, NULL, &writetimesrc);
+						SetFileTime(hdst, nullptr, nullptr, &writetimesrc);
 						iSystem->GetIPak()->FClose(hsrc);
 						CloseHandle(hdst);
 					}
 				}
-				inst.m_pHandle = NULL;
+				inst.m_pHandle = nullptr;
 				statusdst = iSystem->GetIPak()->FOpen(namedst, "r");
 			}
 		}
@@ -1551,7 +1551,7 @@ bool CCGPShader_D3D::mfActivate()
 			len = iSystem->GetIPak()->FRead(pbuf, 1, len, statusdst);
 			pbuf[len] = 0;
 			iSystem->GetIPak()->FClose(statusdst);
-			statusdst = NULL;
+			statusdst = nullptr;
 
 			// Regenerate shader if hardware was changed
 			if (!bCreate && (m_Flags & PSFI_AUTOENUMTC) && !(m_Flags & PSFI_SUPPORTS_MULTILIGHTS))
@@ -1727,7 +1727,7 @@ bool CCGPShader_D3D::mfActivate()
 						}
 					}
 				}
-				token = strtok(NULL, "//");
+				token = strtok(nullptr, "//");
 			}
 			if (inst.m_BindVars)
 			{
@@ -1851,7 +1851,7 @@ bool CCGPShader_D3D::mfSet(bool bEnable, SShaderPassHW* slw, int nFlags)
 			m_Insts[Type].m_pHandle = (CGprogram)-1;
 			return false;
 		}
-		m_LastVP = NULL;
+		m_LastVP = nullptr;
 	}
 
 #ifdef DO_RENDERSTATS
@@ -1874,7 +1874,7 @@ bool CCGPShader_D3D::mfSet(bool bEnable, SShaderPassHW* slw, int nFlags)
 	if (slw && slw->m_CGFSParamsNoObj)
 		mfSetVariables(false, slw->m_CGFSParamsNoObj);
 	else
-		mfSetVariables(false, NULL);
+		mfSetVariables(false, nullptr);
 
 	m_CurRC = this;
 	return true;
@@ -1899,7 +1899,7 @@ void CCGPShader_D3D::mfBind()
 
 void CCGPShader_D3D::mfUnbind()
 {
-	gcpRendD3D->mfGetD3DDevice()->SetPixelShader(NULL);
+	gcpRendD3D->mfGetD3DDevice()->SetPixelShader(nullptr);
 }
 
 char* CCGPShader_D3D::mfLoadCG_Int(char* prog_text)
@@ -1938,7 +1938,7 @@ char* CCGPShader_D3D::mfLoadCG_Int(char* prog_text)
 		{
 			szParams,
 			cgD3D9GetOptimalOptions(pr),
-			NULL,
+			nullptr,
 		};
 
 		CGprogram cgPr;
@@ -1948,11 +1948,11 @@ char* CCGPShader_D3D::mfLoadCG_Int(char* prog_text)
 			cgPr = cgCreateProgram(gcpRendD3D->m_CGContext, CG_SOURCE, prog_text, pr, "main", profileOpts);
 		CGerror err = cgGetError();
 		if (err != CG_NO_ERROR)
-			return NULL;
+			return nullptr;
 		if (!cgPr)
 		{
 			Warning(0, 0, "Couldn't find function '%s' in CG pixel program '%s'", "main", m_Name.c_str());
-			return NULL;
+			return nullptr;
 		}
 		if (CRenderer::CV_r_shaderssave == 2)
 		{
@@ -1967,7 +1967,7 @@ char* CCGPShader_D3D::mfLoadCG_Int(char* prog_text)
 		// make command for execution
 		FILE* fp = fopen("$$in.cg", "w");
 		if (!fp)
-			return NULL;
+			return nullptr;
 		CRYASSERT(*prog_text);
 		fputs(prog_text, fp);
 		fclose(fp);
@@ -1984,20 +1984,20 @@ char* CCGPShader_D3D::mfLoadCG_Int(char* prog_text)
 
 		PROCESS_INFORMATION pi;
 		ZeroMemory(&pi, sizeof(pi));
-		if (!CreateProcess(NULL, // No module name (use command line). 
+		if (!CreateProcess(nullptr, // No module name (use command line). 
 			szCmdLine,				// Command line. 
-			NULL,             // Process handle not inheritable. 
-			NULL,             // Thread handle not inheritable. 
+			nullptr,             // Process handle not inheritable. 
+			nullptr,             // Thread handle not inheritable. 
 			FALSE,            // Set handle inheritance to FALSE. 
 			CREATE_NO_WINDOW, // No creation flags. 
-			NULL,             // Use parent's environment block. 
-			NULL/*szFolderName*/,     // Set starting directory. 
+			nullptr,             // Use parent's environment block. 
+			nullptr/*szFolderName*/,     // Set starting directory. 
 			&si,              // Pointer to STARTUPINFO structure.
 			&pi)             // Pointer to PROCESS_INFORMATION structure.
 			)
 		{
 			iLog->LogError("CreateProcess failed: %s", szCmdLine);
-			return NULL;
+			return nullptr;
 		}
 
 		while (WAIT_OBJECT_0 != WaitForSingleObject(pi.hProcess, 10000))
@@ -2011,7 +2011,7 @@ char* CCGPShader_D3D::mfLoadCG_Int(char* prog_text)
 		{
 			remove("$$in.cg");
 			remove("$$out.cg");
-			return NULL;
+			return nullptr;
 		}
 		fseek(fp, 0, SEEK_END);
 		int size = ftell(fp);
@@ -2020,7 +2020,7 @@ char* CCGPShader_D3D::mfLoadCG_Int(char* prog_text)
 		{
 			remove("$$in.cg");
 			remove("$$out.cg");
-			return NULL;
+			return nullptr;
 		}
 		char* pBuf = new char[size + 1];
 		fread(pBuf, sizeof(char), size, fp);

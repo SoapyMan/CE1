@@ -217,7 +217,7 @@ public:
 	//! Check for EAX support.
 	bool IsEAX(int version);
 	//! Set EAX listener environment.
-	bool SetEaxListenerEnvironment(int nPreset, const SoundReverbProperties* pProps = NULL, int nFlags = 0);
+	bool SetEaxListenerEnvironment(int nPreset, const SoundReverbProperties* pProps = nullptr, int nFlags = 0);
 	//! Gets current EAX listener environment.
 	bool GetCurrentEaxEnvironment(int& nPreset, SoundReverbProperties& Props);
 

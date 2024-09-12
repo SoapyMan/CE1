@@ -18,7 +18,7 @@ CNetEntityInfo::CNetEntityInfo()
 {
 	m_pEntity=0;
 	m_fLastUpdate=0;
-	m_pTimer=NULL;
+	m_pTimer=nullptr;
 	m_nScore=0;
 	m_cState=0;
 	m_dwBitSizeEstimate=40;		// inital guessed value

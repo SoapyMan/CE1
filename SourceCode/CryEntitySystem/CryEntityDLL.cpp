@@ -55,7 +55,7 @@ struct IEntitySystem* CreateEntitySystem(ISystem* pISystem)
 	if (!pEntitySystem->Init(pISystem))
 	{
 		pEntitySystem->Release();
-		return NULL;
+		return nullptr;
 	}
 	return pEntitySystem;
 }

@@ -28,13 +28,13 @@
 // outputs warnings if some of the chunks are incomplete or otherwise broken
 CryChunkedFile::CryChunkedFile(CChunkFileReader* pFile) :
 	m_pFile(pFile),
-	pTiming(NULL),
-	pRangeEntities(NULL),
-	pFileHeader(NULL),
+	pTiming(nullptr),
+	pRangeEntities(nullptr),
+	pFileHeader(nullptr),
 	m_numBoneLightBinds(0),
-	m_pBoneLightBind(NULL),
+	m_pBoneLightBind(nullptr),
 	numSceneProps(0),
-	pSceneProps(NULL)
+	pSceneProps(nullptr)
 {
 
 	unsigned numChunks = pFile->numChunks();
@@ -161,7 +161,7 @@ void CryChunkedFile::adjust()
 	for (i = 0; i < arrMeshes.size(); ++i)
 	{
 		MeshDesc& Mesh = arrMeshes[i];
-		Mesh.pNode = NULL;
+		Mesh.pNode = nullptr;
 		if (numBones > 0)
 			Mesh.remapBoneIds(this->Bones.getIdToIndexMap(), numBones);
 	}
@@ -246,7 +246,7 @@ CryChunkedFile::NodeDesc::NodeDesc(const NODE_CHUNK_DESC* pDesc)
 	if (pDesc->nChildren)
 		this->pChildren = (const int*)((const char*)(pDesc + 1) + pDesc->PropStrLen);
 	else
-		this->pChildren = NULL;
+		this->pChildren = nullptr;
 
 	//if ((pDesc->PropStrLen&3)!=0 && pDesc->nChildren)
 	//	throw (Error("Node chunk contains unaligned data"));
@@ -259,9 +259,9 @@ CryChunkedFile::NodeDesc::NodeDesc(const NODE_CHUNK_DESC* pDesc)
 
 
 CryChunkedFile::MeshDesc::MeshDesc(const MESH_CHUNK_DESC* pChunk, unsigned nSize) :
-	pVColors(NULL)
+	pVColors(nullptr)
 {
-	this->pNode = NULL;
+	this->pNode = nullptr;
 	this->pDesc = pChunk; // from now on, we can use num****s() functions
 
 	const char* pChunkEnd = ((const char*)pChunk) + nSize;
@@ -394,7 +394,7 @@ CryChunkedFile::MeshDesc::MeshDesc(const MESH_CHUNK_DESC* pChunk, unsigned nSize
 			throw Error("Vertex Color chunk is truncated: %d bytes expected, %d bytes available", pChunk->nVerts * sizeof(CryIRGB), nSize);
 	}
 	else
-		this->pVColors = NULL;
+		this->pVColors = nullptr;
 
 	validateIndices();
 	buildReconstructedNormals();
@@ -406,7 +406,7 @@ CryChunkedFile::NodeDesc* CryChunkedFile::GetNodeDesc(unsigned nChunkId)
 {
 	NodeIdxMap::const_iterator it = this->mapNodeIdx.find(nChunkId);
 	if (it == this->mapNodeIdx.end())
-		return NULL;
+		return nullptr;
 	return &this->arrNodes[it->second];
 }
 
@@ -416,7 +416,7 @@ CryChunkedFile::NodeDesc* CryChunkedFile::GetObjectNodeDesc(unsigned nObjectId)
 {
 	NodeIdxMap::const_iterator it = this->mapObjectNodeIdx.find(nObjectId);
 	if (it == this->mapObjectNodeIdx.end())
-		return NULL;
+		return nullptr;
 	return &this->arrNodes[it->second];
 }
 
@@ -426,7 +426,7 @@ const LIGHT_CHUNK_DESC* CryChunkedFile::GetLightDesc(unsigned nChunkId)
 {
 	LightMap::iterator it = this->mapLights.find(nChunkId);
 	if (it == this->mapLights.end())
-		return NULL;
+		return nullptr;
 	return it->second;
 }
 
@@ -436,7 +436,7 @@ CryChunkedFile::MeshDesc* CryChunkedFile::GetMeshDesc(unsigned nChunkId)
 {
 	MeshIdxMap::const_iterator it = this->mapMeshIdx.find(nChunkId);
 	if (it == this->mapMeshIdx.end())
-		return NULL;
+		return nullptr;
 	return &this->arrMeshes[it->second];
 }
 
@@ -445,7 +445,7 @@ CryChunkedFile::MeshDesc* CryChunkedFile::GetBoneMeshDesc(unsigned nChunkId)
 {
 	MeshIdxMap::const_iterator it = this->mapBoneMeshIdx.find(nChunkId);
 	if (it == this->mapBoneMeshIdx.end())
-		return NULL;
+		return nullptr;
 	return &this->arrBoneMeshes[it->second];
 }
 

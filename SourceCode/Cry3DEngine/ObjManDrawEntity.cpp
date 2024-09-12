@@ -106,7 +106,7 @@ void CObjManager::RequestEntityShadowMapGeneration(IEntityRender* pEntityRnd)
 	pObj->m_pShadowCasters = pEntityRnd->GetShadowMapCasters();
 
 	GetRenderer()->EF_AddEf(0, m_p3DEngine->m_pREShadowMapGenerator,
-		m_p3DEngine->m_pSHShadowMapGen, NULL, pObj, 0);
+		m_p3DEngine->m_pSHShadowMapGen, nullptr, pObj, 0);
 
 	if (GetCVars()->e_shadow_maps_frustums && pEntityRnd->GetShadowMapFrustumContainer())
 		pEntityRnd->GetShadowMapFrustumContainer()->m_LightFrustums.Get(0)->DrawFrustum(GetRenderer(),
@@ -213,7 +213,7 @@ void CObjManager::RenderObjectVegetationNonCastersNoFogVolume(IEntityRender* pEn
 	IRenderer* pRend = GetRenderer();
 	CVars* pCVars = GetCVars();
 
-	CDLight* pStrongestLightForTranspGeom = NULL;
+	CDLight* pStrongestLightForTranspGeom = nullptr;
 	// check only original bbox
 	if (bNotAllInFrustum && !EntViewCamera.IsAABBVisibleFast(AABB(vBoxMin, vBoxMax)))
 		return;
@@ -244,7 +244,7 @@ void CObjManager::RenderObjectVegetationNonCastersNoFogVolume(IEntityRender* pEn
 				return;
 
 		// test occl by antiportals
-		if (GetVisAreaManager()->IsOccludedByOcclVolumes(vBoxMin, vBoxMax, pEntityRS->m_pVisArea != NULL))
+		if (GetVisAreaManager()->IsOccludedByOcclVolumes(vBoxMin, vBoxMax, pEntityRS->m_pVisArea != nullptr))
 			return;
 	}
 
@@ -425,7 +425,7 @@ void CObjManager::RenderObject(IEntityRender* pEntityRS,
 	IRenderer* pRend = GetRenderer();
 	CVars* pCVars = GetCVars();
 
-	CDLight* pStrongestLightForTranspGeom = NULL;
+	CDLight* pStrongestLightForTranspGeom = nullptr;
 	if (pCVars->e_stencil_shadows && (nRenderFlags & ERF_CASTSHADOWVOLUME || nRenderFlags & ERF_CASTSHADOWMAPS) && fEntRadius)
 	{ // adjust bbox by shadow before frustum check
 		list2<CDLight>* pSources = m_p3DEngine->GetDynamicLightSources();
@@ -525,7 +525,7 @@ void CObjManager::RenderObject(IEntityRender* pEntityRS,
 				return;
 
 		// test occl by antiportals
-		if (GetVisAreaManager()->IsOccludedByOcclVolumes(vBoxMin, vBoxMax, pEntityRS->m_pVisArea != NULL))
+		if (GetVisAreaManager()->IsOccludedByOcclVolumes(vBoxMin, vBoxMax, pEntityRS->m_pVisArea != nullptr))
 			return;
 	}
 
@@ -615,7 +615,7 @@ void CObjManager::RenderObject(IEntityRender* pEntityRS,
 		DrawParams.nShaderTemplate = EFT_HEATVISION;
 
 	// process shadow maps
-	CStatObj* pEntStatObj = NULL;
+	CStatObj* pEntStatObj = nullptr;
 	if (pCVars->e_shadow_maps && m_nRenderStackLevel == 0 &&
 		(nRenderFlags & ERF_RECVSHADOWMAPS || nRenderFlags & ERF_CASTSHADOWMAPS) &&
 		pStrongestShadowLight &&
@@ -623,7 +623,7 @@ void CObjManager::RenderObject(IEntityRender* pEntityRS,
 		fEntDistance < (pEntityRS->GetRenderRadius() * GetCVars()->e_shadow_maps_view_dist_ratio) &&
 		(!pEntityRS->GetLight() || pEntityRS->GetContainer()) && (pEntityRS->GetLight() != pStrongestShadowLight) &&
 		(pStrongestShadowLight->m_pOwner != pEntityRS) && // do not cast from it own light
-		(!(pEntStatObj = (CStatObj*)pEntityRS->GetEntityStatObj(0, NULL, true)) || pEntStatObj->GetRenderTrisCount()) &&
+		(!(pEntStatObj = (CStatObj*)pEntityRS->GetEntityStatObj(0, nullptr, true)) || pEntStatObj->GetRenderTrisCount()) &&
 		pEntityRS->IsEntityHasSomethingToRender())
 	{
 		SetupEntityShadowMapping(pEntityRS, &DrawParams, bLMapGeneration, fEntDistance, pStrongestShadowLight);
@@ -790,7 +790,7 @@ void CObjManager::DrawEntitiesLightPass()
 
 		bool bUseStencilStateTest = false;
 		// clear stencil
-		GetRenderer()->EF_AddEf(0, m_pREClearStencil, m_p3DEngine->m_pSHClearStencil, NULL, GetIdentityCCObject(), 0, NULL, EFSLIST_STENCIL);
+		GetRenderer()->EF_AddEf(0, m_pREClearStencil, m_p3DEngine->m_pSHClearStencil, nullptr, GetIdentityCCObject(), 0, nullptr, EFSLIST_STENCIL);
 
 		// sort entities by distance to light source
 		const Vec3d& vLightPos = pDLight->m_Origin;
@@ -1086,7 +1086,7 @@ void CObjManager::SetupEntityShadowMapping(IEntityRender* pEnt, SRendParams* pDr
 			pLsList->Get(0)->m_pLS->GetShadowMapFrustum()->pOwner == pLsList->Get(0)->m_pReceiver &&
 			!(pLsList->Get(0)->m_pLS->GetShadowMapFrustum()->dwFlags & SMFF_ACTIVE_SHADOW_MAP))
 		{
-			CRYASSERT(pDrawParams->pShadowMapCasters == NULL); // skip single self shadowing pass
+			CRYASSERT(pDrawParams->pShadowMapCasters == nullptr); // skip single self shadowing pass
 		}
 		else
 			pDrawParams->pShadowMapCasters = pLsList;
@@ -1275,7 +1275,7 @@ void CObjManager::RenderEntityShadowOnTerrain(IEntityRender* pEntityRnd, bool bL
 
 		if (pREShadowMapGenerator && !bREAdded)
 		{ // just generate shadow map to use in indoors
-			GetRenderer()->EF_AddEf(0, pREShadowMapGenerator, m_p3DEngine->m_pSHShadowMapGen, NULL, pObj, 0);
+			GetRenderer()->EF_AddEf(0, pREShadowMapGenerator, m_p3DEngine->m_pSHShadowMapGen, nullptr, pObj, 0);
 		}
 
 		if (GetCVars()->e_shadow_maps_frustums)

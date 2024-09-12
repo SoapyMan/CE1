@@ -47,7 +47,7 @@ public:
 
 	//! to keep the interface small and the access fast
 	//! /return pointer to the internal memory representation (only used within module 3DEngine)
-	const virtual CStencilShadowConnectivity* GetInternalRepresentation(void) const { return NULL; }
+	const virtual CStencilShadowConnectivity* GetInternalRepresentation(void) const { return nullptr; }
 
 	//! for debugging and profiling
 	//! /param outVertexCount
@@ -60,7 +60,7 @@ public:
 	//! Serializes this object to the given memory block; if it's NULL, only returns
 	//! the number of bytes required. If it's not NULL, returns the number of bytes written
 	//! (0 means error, insufficient space)
-	virtual unsigned Serialize(bool bSave, void* pStream, unsigned nSize, IMiniLog* pWarningLog = NULL)
+	virtual unsigned Serialize(bool bSave, void* pStream, unsigned nSize, IMiniLog* pWarningLog = nullptr)
 	{
 		return 0;
 	}
@@ -408,11 +408,11 @@ public:
 	CStencilShadowConnectivity()
 	{
 		m_numEdges = m_numOrphanEdges = m_numVertices = m_numFaces = 0;
-		m_pOrphanEdges = NULL;
-		m_pFaces = NULL;
-		m_pEdges = NULL;
-		m_pPlanes = NULL;
-		m_pVertices = NULL;
+		m_pOrphanEdges = nullptr;
+		m_pFaces = nullptr;
+		m_pEdges = nullptr;
+		m_pPlanes = nullptr;
+		m_pVertices = nullptr;
 	}
 
 	struct Plane
@@ -435,7 +435,7 @@ public:
 	//! Calculates the size of this object
 	void GetMemoryUsage(ICrySizer* pSizer)
 	{
-		pSizer->AddObject(this, Serialize(true, NULL, 0));
+		pSizer->AddObject(this, Serialize(true, nullptr, 0));
 	}
 
 protected:
@@ -445,8 +445,8 @@ protected:
 	//! /param nNumEdges
 	CStencilShadowConnectivity(const std::vector<Edge>& arrEdges)
 	{
-		m_pOrphanEdges = NULL;
-		m_pFaces = NULL;
+		m_pOrphanEdges = nullptr;
+		m_pFaces = nullptr;
 		m_numOrphanEdges = 0;
 
 		// find the max vertex index to put it into m_nVertices
@@ -469,8 +469,8 @@ protected:
 		else
 			m_pEdges = 0;
 
-		m_pPlanes = NULL;
-		m_pVertices = NULL;
+		m_pPlanes = nullptr;
+		m_pVertices = nullptr;
 	}
 
 	void SetPlanes(const Plane* pPlanes, unsigned numPlanes)
@@ -484,7 +484,7 @@ protected:
 			memcpy(m_pPlanes, pPlanes, sizeof(Plane) * m_numFaces);
 		}
 		else
-			m_pPlanes = NULL;
+			m_pPlanes = nullptr;
 	}
 
 	void SetVertices(const Vec3d* pVertices, unsigned numVertices)
@@ -498,7 +498,7 @@ protected:
 			memcpy(m_pVertices, pVertices, sizeof(Vec3d) * m_numVertices);
 		}
 		else
-			m_pVertices = NULL;
+			m_pVertices = nullptr;
 	}
 
 	// remaps all vertex indices and memorizes the passed "new" vertex array (in new indexation)
@@ -608,7 +608,7 @@ public:
 
 	//! Deserializes this object. Returns the number of bytes read. 0 means error
 	//! pWarningLog is used to put warnings about deserialized connectivity
-	unsigned Deserialize(void* pStream, unsigned nSize, IMiniLog* pWarningLog = NULL)
+	unsigned Deserialize(void* pStream, unsigned nSize, IMiniLog* pWarningLog = nullptr)
 	{
 		unsigned* pHeader = (unsigned*)pStream;
 
@@ -644,9 +644,9 @@ public:
 
 		if (nSize < nRequiredSize)
 		{
-			m_pEdges = NULL;
-			m_pOrphanEdges = NULL;
-			m_pFaces = NULL;
+			m_pEdges = nullptr;
+			m_pOrphanEdges = nullptr;
+			m_pFaces = nullptr;
 
 			m_numEdges = 0;
 			m_numOrphanEdges = 0;
@@ -660,8 +660,8 @@ public:
 		m_pEdges = new Edge[m_numEdges];
 		m_pOrphanEdges = new OrphanEdge[m_numOrphanEdges];
 		m_pFaces = new Face[m_numFaces];
-		m_pPlanes = numPlanes ? new Plane[numPlanes] : NULL;
-		m_pVertices = numVertices ? new Vec3d[numVertices] : NULL;
+		m_pPlanes = numPlanes ? new Plane[numPlanes] : nullptr;
+		m_pVertices = numVertices ? new Vec3d[numVertices] : nullptr;
 
 		Edge* pEdgeData = (Edge*)pHeader;
 		memcpy(m_pEdges, pEdgeData, m_numEdges * sizeof(Edge));
@@ -689,7 +689,7 @@ public:
 	//! Serializes this object to the given memory block; if it's NULL, only returns
 	//! the number of bytes required. If it's not NULL, returns the number of bytes written
 	//! (0 means error, insufficient space)
-	unsigned Serialize(bool bSave, void* pStream, unsigned nSize, IMiniLog* pWarningLog = NULL)
+	unsigned Serialize(bool bSave, void* pStream, unsigned nSize, IMiniLog* pWarningLog = nullptr)
 	{
 		if (!bSave)
 			return Deserialize(pStream, nSize, pWarningLog);
@@ -739,12 +739,12 @@ public:
 	}
 
 	// the plane equation, x*n+d == 0
-	bool hasPlanes() const { return m_pPlanes != NULL; }
+	bool hasPlanes() const { return m_pPlanes != nullptr; }
 	const Plane& getPlane(unsigned i)const { CRYASSERT(i < m_numFaces && m_pPlanes); return m_pPlanes[i]; }
 
 	const Vec3d* getVertices() const { return m_pVertices; }
 
-	bool IsStandalone() const { return m_pPlanes != NULL && m_pVertices != NULL; }
+	bool IsStandalone() const { return m_pPlanes != nullptr && m_pVertices != nullptr; }
 
 	void remapVertexIndices(const vindex* pMap, unsigned nMapSize)
 	{

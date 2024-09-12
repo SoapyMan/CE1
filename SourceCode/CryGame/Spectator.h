@@ -51,7 +51,7 @@ public:
 	virtual bool Init();
 	virtual void Update();
 	virtual bool Read(CStream &stm);
-	virtual bool Write(CStream &stm,EntityCloneState *cs=NULL);
+	virtual bool Write(CStream &stm,EntityCloneState *cs=nullptr);
 	virtual void OnDraw(const SRendParams & RendParams){};
 	virtual bool QueryContainerInterface( ContainerInterfaceType desired_interface, void **pInterface);
 	virtual void OnEntityNetworkUpdate( const EntityId &idViewerEntity, const Vec3d &v3dViewer, uint32 &inoutPriority, 

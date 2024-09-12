@@ -33,7 +33,7 @@ _ACCESS_POOL
 //////////////////////////////////////////////////////////////////////////
 // Globals.
 //////////////////////////////////////////////////////////////////////////
-CRenderer* gRenDev = NULL;
+CRenderer* gRenDev = nullptr;
 bool g_bProfilerEnabled = false;
 int g_CpuFlags;
 double g_SecondsPerCycle;
@@ -416,7 +416,7 @@ CRenderer::CRenderer()
 		"Default is 0 (off). Set to 1 to cull geometry behind\n"
 		"light sources. Set to 2 to cull geometry behind static\n"
 		"lights only.");
-	CV_r_showlight = iConsole->CreateVariable("r_ShowLight", "0", NULL,
+	CV_r_showlight = iConsole->CreateVariable("r_ShowLight", "0", 0,
 		"Display a light source by name.\n"
 		"Usage: r_ShowLight lightname\n"
 		"Default is 0. Set to 'lightname' to show only the light\n"
@@ -426,56 +426,56 @@ CRenderer::CRenderer()
 	// tiago: added
 
 	// tiago: added  
-	iConsole->Register("r_DebugScreenEffects", &CV_r_debugscreenfx, 0, NULL,
+	iConsole->Register("r_DebugScreenEffects", &CV_r_debugscreenfx, 0, 0,
 		"Debugs screen effects textures.\n"
 		"Usage: r_DebugScreenEffects #\n"
 		"Where # represents:\n"
 		" 0: disabled (default)\n"
 		" 1: enabled\n");
 
-	iConsole->Register("r_FlipScreen", &CV_r_flipscreen, 0, NULL,
+	iConsole->Register("r_FlipScreen", &CV_r_flipscreen, 0, 0,
 		"Flips screen texture. Only works on hi/med-spec\n"
 		"Usage: r_FlipScreen #\n"
 		"Where # represents:\n"
 		" 0: disabled (default)\n"
 		" 1: enabled\n");
 
-	iConsole->Register("r_Dof", &CV_r_dof, 0, NULL,
+	iConsole->Register("r_Dof", &CV_r_dof, 0, 0,
 		"Activates Depth of field\n"
 		"Usage: r_Dof #\n"
 		"Where # represents:\n"
 		" 0: disabled (default)\n"
 		" 1: enabled\n");
 
-	iConsole->Register("r_DofFocalDist", &CV_r_doffocaldist, 20.0f, NULL,
+	iConsole->Register("r_DofFocalDist", &CV_r_doffocaldist, 20.0f, 0,
 		"Sets Depth of field focal distance\n"
 		"Usage: r_DofFocalDist #\n"
 		"Where # represents:\n"
 		" Number: focal plane distance (default 20)\n");
 
-	iConsole->Register("r_DofFocalDist_tag", &CV_r_doffocaldist_tag, 20.0f, NULL,
+	iConsole->Register("r_DofFocalDist_tag", &CV_r_doffocaldist_tag, 20.0f, 0,
 		"Internal. Do not use.\n");
 
-	iConsole->Register("r_DofFocalDist_entity", &CV_r_doffocaldist_entity, 20.0f, NULL,
+	iConsole->Register("r_DofFocalDist_entity", &CV_r_doffocaldist_entity, 20.0f, 0,
 		"Internal. Do not use.\n");
 
-	iConsole->Register("r_DofFocalArea", &CV_r_doffocalarea, 5.0f, NULL,
+	iConsole->Register("r_DofFocalArea", &CV_r_doffocalarea, 5.0f, 0,
 		"Sets Depth of field focal area\n"
 		"Usage: r_DofFocalArea #\n"
 		"Where # represents:\n"
 		" Number: focal plane area (default 5.0)\n");
 
-	iConsole->Register("r_DofFocalAreaCurr", &CV_r_doffocalareacurr, 5.0f, NULL,
+	iConsole->Register("r_DofFocalAreaCurr", &CV_r_doffocalareacurr, 5.0f, 0,
 		"Sets Depth of field focal area (internal)\n");
 
-	iConsole->Register("r_DofBlurAmount", &CV_r_dofbluramount, 1.0f, NULL,
+	iConsole->Register("r_DofBlurAmount", &CV_r_dofbluramount, 1.0f, 0,
 		"Sets Depth of field bluring amount\n"
 		"Usage: r_DofBlurAmount #\n"
 		"Where # represents:\n"
 		" 0.0: disabled \n"
 		" 1.0: maximum amount (default)\n");
 
-	iConsole->Register("r_DofFocalSource", &CV_r_doffocalsource, 0, NULL,
+	iConsole->Register("r_DofFocalSource", &CV_r_doffocalsource, 0, 0,
 		"Sets Depth of field focal source\n"
 		"Usage: r_DofFocalSource #\n"
 		"Where # represents:\n"
@@ -483,7 +483,7 @@ CRenderer::CRenderer()
 		" 1: Camera Focus Tag Point\n"
 		" 2: Camera Focus Entity\n");
 
-	iConsole->Register("r_ResetScreenFx", &CV_r_resetscreenfx, 0, NULL,
+	iConsole->Register("r_ResetScreenFx", &CV_r_resetscreenfx, 0, 0,
 		"Resets screen effects state.\n"
 		"Usage: r_ResetScreenFx #\n"
 		"Where # represents:\n"
@@ -941,21 +941,21 @@ CRenderer::CRenderer()
 		"Usage: r_AccurateParticles [0/1]\n"
 		"Default is 1 (on).");
 
-	CV_r_shaderdefault = iConsole->CreateVariable("r_ShaderDefault", "0", NULL,
+	CV_r_shaderdefault = iConsole->CreateVariable("r_ShaderDefault", "0", 0,
 		"Name of default shader.\n"
 		"Usage: r_ShaderDefault shadername\n");
 
-	CV_r_glossdefault = iConsole->CreateVariable("r_GlossDefault", "Defaults/gloss", NULL,
+	CV_r_glossdefault = iConsole->CreateVariable("r_GlossDefault", "Defaults/gloss", 0,
 		"Name of default gloss map.\n"
 		"Usage: r_GlossDefault filename\n"
 		"The texture 'defaults/gloss' is used by default. If you don't specify a gloss map\n"
 		"this is the texture that will be used.");
-	CV_r_detaildefault = iConsole->CreateVariable("r_DetailDefault", "Textures/Detail/rock", NULL,
+	CV_r_detaildefault = iConsole->CreateVariable("r_DetailDefault", "Textures/Detail/rock", 0,
 		"Name of default detail texture.\n"
 		"Usage: r_DetailDefault filename\n"
 		"The texture 'Textures/Detail/rock' is used by default. If you don't\n"
 		"specify a detail texture, this is the texture that will be used.");
-	CV_r_opacitydefault = iConsole->CreateVariable("r_OpacityDefault", "Textures/white", NULL,
+	CV_r_opacitydefault = iConsole->CreateVariable("r_OpacityDefault", "Textures/white", 0,
 		"Name of default opacity mask.\n"
 		"Usage: r_OpacityDefault filename\n"
 		"The texture 'Textures/white' is used by default. If you don't\n"
@@ -1138,7 +1138,7 @@ CRenderer::CRenderer()
 
 	m_WorldColor = CFColor(0.5f, 0.5f, 0.5f, 1.0f);
 	m_vClearColor = Vec3d(0, 0, 0);
-	m_LogFile = NULL;
+	m_LogFile = nullptr;
 	m_nShadowVolumePolys = 0;
 	m_TexGenID = 1;
 	m_VSync = -1;
@@ -1189,9 +1189,9 @@ CRenderer::~CRenderer()
 	if (m_TexMan)
 	{
 		delete m_TexMan;
-		m_TexMan = NULL;
+		m_TexMan = nullptr;
 	}
-	gRenDev = NULL;
+	gRenDev = nullptr;
 }
 
 void CRenderer::Release()
@@ -1228,7 +1228,7 @@ void CRenderer::Release()
 	  return (ci);
   } //i
 
-  return (NULL);
+  return (nullptr);
 } */
 
 //////////////////////////////////////////////////////////////////////
@@ -1238,7 +1238,7 @@ void CRenderer::Release()
 } */
 
 //////////////////////////////////////////////////////////////////////
-//void CRenderer::ShowFps(const char *command/* =NULL */)
+//void CRenderer::ShowFps(const char *command/* =nullptr */)
 /*{
   if (!command)
 	return;
@@ -1878,7 +1878,7 @@ void CRenderer::FreeResources(int nFlags)
 			if (i >= m_RP.m_nNumObjectsInPool)
 				SAFE_DELETE(m_RP.m_TempObjects[i]);
 
-			m_RP.m_TempObjects[i] = NULL;
+			m_RP.m_TempObjects[i] = nullptr;
 		}
 		m_RP.m_TempObjects.Free();
 		EF_PipelineShutdown();
@@ -1935,7 +1935,7 @@ unsigned int sourceLine;
 
 void CRenderer::WriteDDS(byte* dat, int wdt, int hgt, int Size, const char* nam, EImFormat eF, int NumMips)
 {
-	byte* data = NULL;
+	byte* data = nullptr;
 	if (Size == 3)
 	{
 		data = new byte[wdt * hgt * 4];
@@ -1975,7 +1975,7 @@ IShader* CRenderer::EF_LoadShader(const char* name, EShClass Class, int flags, u
 #ifdef NULL_RENDERER
 	return m_cEF.m_DefaultShader;
 #else
-	return gRenDev->m_cEF.mfForName(name, Class, flags, NULL, nMaskGen);
+	return gRenDev->m_cEF.mfForName(name, Class, flags, nullptr, nMaskGen);
 #endif
 }
 
@@ -2049,7 +2049,7 @@ ITexPic* CRenderer::EF_LoadTexture(const char* nameTex, uint flags, uint flags2,
 		return m_TexMan->m_Text_NoTexture;
 	else
 	{
-		STexPic* tx = NULL;
+		STexPic* tx = nullptr;
 		bool bValid = true;
 
 		if (!nameTex || !nameTex[0])
@@ -2123,7 +2123,7 @@ char** CRenderer::EF_GetShadersForFile(const char* File, int num)
 		{
 			if (!gRenDev->m_cEF.m_FileNames[num][i].empty() && !stricmp(file, gRenDev->m_cEF.m_FileNames[num][i].c_str()))
 			{
-				char* pFinalScript = gRenDev->m_cEF.mfScriptForFileName(gRenDev->m_cEF.m_FileNames[num][i].c_str(), NULL, 0);
+				char* pFinalScript = gRenDev->m_cEF.mfScriptForFileName(gRenDev->m_cEF.m_FileNames[num][i].c_str(), nullptr, 0);
 				char** Efs = gRenDev->m_cEF.mfListInScript(pFinalScript);
 				delete[] pFinalScript;
 				return Efs;
@@ -2139,7 +2139,7 @@ char** CRenderer::EF_GetShadersForFile(const char* File, int num)
 			{
 				if (!gRenDev->m_cEF.m_FileNames[num][i].empty() && !stricmp(file, gRenDev->m_cEF.m_FileNames[num][i].c_str()))
 				{
-					char* pFinalScript = gRenDev->m_cEF.mfScriptForFileName(gRenDev->m_cEF.m_FileNames[num][i].c_str(), NULL, 0);
+					char* pFinalScript = gRenDev->m_cEF.mfScriptForFileName(gRenDev->m_cEF.m_FileNames[num][i].c_str(), nullptr, 0);
 					char** Efs = gRenDev->m_cEF.mfListInScript(pFinalScript);
 					delete[] pFinalScript;
 					return Efs;
@@ -2147,7 +2147,7 @@ char** CRenderer::EF_GetShadersForFile(const char* File, int num)
 			}
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 SLightMaterial* CRenderer::EF_GetLightMaterial(char* Str)
@@ -2168,7 +2168,7 @@ void CRenderer::EF_StartEf()
 		if (CRenderer::CV_r_shaderdefault->GetString()[0] != '0')
 			m_pDefaultShader = (SShader*)EF_LoadShader(CRenderer::CV_r_shaderdefault->GetString(), eSH_World, 0);
 		else
-			m_pDefaultShader = NULL;
+			m_pDefaultShader = nullptr;
 
 		for (i = 0; i < NUMRI_LISTS; i++)
 		{
@@ -2304,7 +2304,7 @@ void CRenderer::EF_AddEf_NotVirtual(int NumFog, CRendElement* re, IShader* ef, S
 		if (eft->m_nPreprocess)
 		{
 			if (!(eft->m_nPreprocess & FSPR_SCANLCM) || (obj && (obj->m_ObjFlags & FOB_ENVLIGHTING)))
-				SRendItem::mfAdd(re, obj, eft, sr ? sr->m_Id : 0, NULL, NumFog, nTempl, eS_PreProcess | EFSLIST_PREPROCESS);
+				SRendItem::mfAdd(re, obj, eft, sr ? sr->m_Id : 0, nullptr, NumFog, nTempl, eS_PreProcess | EFSLIST_PREPROCESS);
 		}
 
 		if (obj)
@@ -2491,7 +2491,7 @@ int CRenderer::EF_SelectHWTechnique(SShader* ef)
 
 CRendElement* CRenderer::EF_CreateRE(EDataType edt)
 {
-	CRendElement* re = NULL;
+	CRendElement* re = nullptr;
 
 	switch (edt)
 	{
@@ -2600,13 +2600,13 @@ void CCObject::Init()
 		m_bShaderParamCreatedInRenderer = false;
 		delete m_ShaderParams;
 	}
-	m_ShaderParams = NULL;
+	m_ShaderParams = nullptr;
 	m_nLMId = m_nLMDirId = 0;
 	m_InvMatrixId = -1;
 	m_VPMatrixId = -1;
-	m_RE = NULL;
-	m_EF = NULL;
-	m_CustomData = NULL;
+	m_RE = nullptr;
+	m_EF = nullptr;
+	m_CustomData = nullptr;
 	m_DynLMMask = 0;
 	m_fDistanceToCam = -1.0f;
 	m_RenderState = 0;
@@ -2616,14 +2616,14 @@ void CCObject::Init()
 	m_NumWFX = 0;
 	m_NumWFY = 0;
 	m_fLightFadeTime = 0;
-	m_pShadowCasters = NULL;
-	//m_pShadowFrustum = NULL;
+	m_pShadowCasters = nullptr;
+	//m_pShadowFrustum = nullptr;
 	m_bVisible = false;
 	m_AmbColor = Vec3d(1.0f, 1.0f, 1.0f);
 	m_Color = CFColor(1.0f);
-	m_pCharInstance = NULL;
-	m_pLightImage = NULL;
-	m_pLMTCBufferO = NULL;
+	m_pCharInstance = nullptr;
+	m_pLightImage = nullptr;
+	m_pLMTCBufferO = nullptr;
 
 	m_nScissorX1 = m_nScissorX2 = m_nScissorY1 = m_nScissorY2 = 0;
 }
@@ -2676,7 +2676,7 @@ void CCObject::RemovePermanent()
 			if (m_RE && m_RE->mfGetType() == eDATA_OcclusionQuery)
 			{
 				m_RE->Release();
-				m_RE = NULL;
+				m_RE = nullptr;
 			}
 			break;
 		}
@@ -2826,7 +2826,7 @@ void CRenderer::EF_AddSplash(Vec3d Pos, eSplashType eST, float fForce, int Id)
 	int i;
 
 	fForce *= CRenderer::CV_r_oceansplashscale;
-	SSplash* spl = NULL;
+	SSplash* spl = nullptr;
 	//Id = 0;
 	if (Id >= 0)
 	{
@@ -2837,7 +2837,7 @@ void CRenderer::EF_AddSplash(Vec3d Pos, eSplashType eST, float fForce, int Id)
 				break;
 		}
 		if (i == m_RP.m_Splashes.Num())
-			spl = NULL;
+			spl = nullptr;
 	}
 	if (!spl)
 	{
@@ -2971,7 +2971,7 @@ CCObject* CRenderer::EF_AddSpriteToScene(int Ef, int numPts, SColorVert* verts, 
 
 	if (obj)
 	{
-		SRefSprite* rs = NULL;
+		SRefSprite* rs = nullptr;
 		for (i = 0; i < m_RP.m_Sprites.Num(); i++)
 		{
 			rs = &m_RP.m_Sprites[i];
@@ -3084,7 +3084,7 @@ void CRenderer::EF_AddSprite(SShader* pSH, Vec3d vOrigin, float fRadius)
 	vert[3].dTC[1] = 1;
 	vert[3].color.dcolor = -1;
 
-	EF_AddSpriteToScene(pSH->m_Id, 4, vert, NULL);
+	EF_AddSpriteToScene(pSH->m_Id, 4, vert, nullptr);
 }
 
 void CRenderer::EF_AddPolyToScene3D(int Ef, int numPts, SColorVert* verts, CCObject* obj, int nFogID)
@@ -3138,8 +3138,8 @@ void CRenderer::EF_AddClientPolys3D(void)
 		if (pl->m_pObject)
 		{
 			if (pl->mEf->m_nPreprocess)
-				SRendItem::mfAdd(pl, pl->m_pObject, pl->mEf, 0, NULL, pl->m_nFogID, 0, eS_PreProcess | EFSLIST_PREPROCESS);
-			SRendItem::mfAdd(pl, pl->m_pObject, pl->mEf, 0, NULL, pl->m_nFogID, 0, EFSLIST_DISTSORT);
+				SRendItem::mfAdd(pl, pl->m_pObject, pl->mEf, 0, nullptr, pl->m_nFogID, 0, eS_PreProcess | EFSLIST_PREPROCESS);
+			SRendItem::mfAdd(pl, pl->m_pObject, pl->mEf, 0, nullptr, pl->m_nFogID, 0, EFSLIST_DISTSORT);
 		}
 	}
 }
@@ -3160,14 +3160,14 @@ void CRenderer::EF_AddClientPolys2D(void)
 		if (pl->m_pShaderResources)
 		{
 			if (eft->m_nPreprocess)
-				SRendItem::mfAdd(pl, 0, eft, pl->m_pShaderResources->m_Id, NULL, 0, 0, eS_PreProcess);
-			SRendItem::mfAdd(pl, 0, eft, pl->m_pShaderResources->m_Id, NULL, 0, 0);
+				SRendItem::mfAdd(pl, 0, eft, pl->m_pShaderResources->m_Id, nullptr, 0, 0, eS_PreProcess);
+			SRendItem::mfAdd(pl, 0, eft, pl->m_pShaderResources->m_Id, nullptr, 0, 0);
 		}
 		else
 		{
 			if (eft->m_nPreprocess)
-				SRendItem::mfAdd(pl, 0, eft, 0, NULL, 0, 0, eS_PreProcess);
-			SRendItem::mfAdd(pl, 0, eft, 0, NULL, 0, 0);
+				SRendItem::mfAdd(pl, 0, eft, 0, nullptr, 0, 0, eS_PreProcess);
+			SRendItem::mfAdd(pl, 0, eft, 0, nullptr, 0, 0);
 		}
 	}
 }
@@ -3177,7 +3177,7 @@ bool CRenderer::EF_DrawEf(IShader* e, float x, float y, float width, float heigh
 	SShader* ef = (SShader*)e;
 	if (!ef)
 	{
-		iLog->Log("Warning: CRenderer::EF_DrawEf: NULL shader\n");
+		iLog->Log("Warning: CRenderer::EF_DrawEf: nullptr shader\n");
 		return false;
 	}
 
@@ -3234,7 +3234,7 @@ bool CRenderer::EF_DrawEf(SShaderItem si, float x, float y, float width, float h
 	SShader* ef = (SShader*)si.m_pShader;
 	if (!ef)
 	{
-		iLog->Log("Warning: CRenderer::EF_DrawEf: NULL shader\n");
+		iLog->Log("Warning: CRenderer::EF_DrawEf: nullptr shader\n");
 		return false;
 	}
 
@@ -3308,7 +3308,7 @@ bool CRenderer::EF_DrawPartialEf(IShader* e, SVrect* vr, SVrect* pr, CFColor& co
 	SShader* ef = (SShader*)e;
 	if (!ef)
 	{
-		iLog->Log("Warning: CRenderer::EF_DrawPartialEf: NULL shader\n");
+		iLog->Log("Warning: CRenderer::EF_DrawPartialEf: nullptr shader\n");
 		return false;
 	}
 
@@ -3436,7 +3436,7 @@ bool CRenderer::EF_IsFakeDLight(CDLight* Source)
 {
 	if (!Source)
 	{
-		iLog->Log("Warning: EF_IsFakeDLight: NULL light source\n");
+		iLog->Log("Warning: EF_IsFakeDLight: nullptr light source\n");
 		return true;
 	}
 
@@ -3462,7 +3462,7 @@ void CRenderer::EF_ADDDlight(CDLight* Source)
 {
 	if (!Source)
 	{
-		iLog->Log("Warning: EF_ADDDlight: NULL light source\n");
+		iLog->Log("Warning: EF_ADDDlight: nullptr light source\n");
 		return;
 	}
 
@@ -3536,7 +3536,7 @@ void CRenderer::EF_ADDDlight(CDLight* Source)
 				Source->m_pObject[rl][nr]->m_SortId = -1000000 - fCustomSort;
 			else
 				Source->m_pObject[rl][nr]->m_SortId = 1000000 - fCustomSort;
-			EF_AddEf(0, pRE, Source->m_pShader, NULL, Source->m_pObject[rl][nr], -1, NULL, EFSLIST_DISTSORT);
+			EF_AddEf(0, pRE, Source->m_pShader, nullptr, Source->m_pObject[rl][nr], -1, nullptr, EFSLIST_DISTSORT);
 		}
 	}
 	//Source->m_Flags &= ~DLF_LIGHTTYPE_MASK;
@@ -3752,7 +3752,7 @@ void* CRenderer::EF_Query(int Query, int Param)
 	{
 		if (m_RP.m_DLights[SRendItem::m_RecurseLevel].Num() > Param)
 			return m_RP.m_DLights[SRendItem::m_RecurseLevel][Param];
-		return NULL;
+		return nullptr;
 	}
 	break;
 	case EFQ_NumRenderItems:
@@ -3768,7 +3768,7 @@ void* CRenderer::EF_Query(int Query, int Param)
 	default:
 		CRYASSERT(0);
 	}
-	return NULL;
+	return nullptr;
 }
 
 #ifdef WIN64
@@ -3813,7 +3813,7 @@ void CRenderer::DeleteLeafBuffer(CLeafBuffer* pLBuffer)
 
 // Creates the leaf buffer with the materials, secondary buffer (system buffer)
 // indices and perhaps some other stuff initialized.
-// NOTE: if the pVertBuffer is NULL, the system buffer doesn't get initialized with any values
+// NOTE: if the pVertBuffer is nullptr, the system buffer doesn't get initialized with any values
 // (trash may be in it)
 CLeafBuffer* CRenderer::CreateLeafBufferInitialized(
 	void* pVertBuffer, int nVertCount, int nVertFormat,
@@ -4356,7 +4356,7 @@ bool CRenderer::DXTCompress(byte* raw_data, int nWidth, int nHeight, ETEX_Format
 					hgt = 1;
 				int nSize = ((wdt + 3) / 4) * ((hgt + 3) / 4) * blockSize;
 				CRYASSERT(nSize + nOffs <= DXTSize);
-				(*callback)(&data[nOffs], i, nSize, wdt, hgt, NULL);
+				(*callback)(&data[nOffs], i, nSize, wdt, hgt, nullptr);
 				nOffs += nSize;
 				wdt >>= 1;
 				hgt >>= 1;

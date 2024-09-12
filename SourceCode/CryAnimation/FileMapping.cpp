@@ -61,7 +61,7 @@ CFileMapping::PData CFileMapping::getData(unsigned nOffset) const
 	if (m_pData)
 		return ((char*)m_pData) + nOffset;
 	else
-		return NULL;
+		return nullptr;
 }
 
 #ifndef USE_FILE_MAPPING
@@ -85,13 +85,13 @@ bool CFileMapping::open(const char* szFileName, unsigned nFlags)
 {
 	close();
 #ifdef USE_FILE_MAPPING
-	m_hFile = CreateFile(szFileName, GENERIC_READ, FILE_SHARE_READ, 0, OPEN_EXISTING, FILE_FLAG_RANDOM_ACCESS, NULL);
+	m_hFile = CreateFile(szFileName, GENERIC_READ, FILE_SHARE_READ, 0, OPEN_EXISTING, FILE_FLAG_RANDOM_ACCESS, nullptr);
 	DWORD dwError = 0;
 	if (m_hFile != INVALID_HANDLE_VALUE)
 	{
-		m_nSize = GetFileSize(m_hFile, NULL);
-		m_hMapping = CreateFileMapping(m_hFile, NULL, PAGE_READONLY, 0, 0, NULL);
-		if (m_hMapping != NULL)
+		m_nSize = GetFileSize(m_hFile, nullptr);
+		m_hMapping = CreateFileMapping(m_hFile, nullptr, PAGE_READONLY, 0, 0, nullptr);
+		if (m_hMapping != nullptr)
 		{
 			m_pData = MapViewOfFile(m_hMapping, FILE_MAP_READ, 0, 0, 0);
 		}
@@ -103,7 +103,7 @@ bool CFileMapping::open(const char* szFileName, unsigned nFlags)
 #elif defined(_CRY_ANIMATION_BASE_HEADER_)
 	ICryPak* pPak = g_GetPak();
 	FILE* f = pPak->FOpen(szFileName, "rb", nFlags);
-	if (f != NULL)
+	if (f != nullptr)
 	{
 		if (0 == pPak->FSeek(f, 0, SEEK_END))
 		{
@@ -113,7 +113,7 @@ bool CFileMapping::open(const char* szFileName, unsigned nFlags)
 				if (0 == pPak->FSeek(f, 0, SEEK_SET))
 				{
 					void* pData = malloc(m_nSize);
-					if (pData != NULL && 1 != pPak->FRead(pData, m_nSize, 1, f))
+					if (pData != nullptr && 1 != pPak->FRead(pData, m_nSize, 1, f))
 						free(pData);
 					else
 						m_pData = pData;
@@ -124,7 +124,7 @@ bool CFileMapping::open(const char* szFileName, unsigned nFlags)
 	}
 #else
 	FILE* f = fxopen(szFileName, "rb");
-	if (f != NULL)
+	if (f != nullptr)
 	{
 		if (0 == fseek(f, 0, SEEK_END))
 		{
@@ -134,7 +134,7 @@ bool CFileMapping::open(const char* szFileName, unsigned nFlags)
 				if (0 == fseek(f, 0, SEEK_SET))
 				{
 					void* pData = malloc(m_nSize);
-					if (pData != NULL && 1 != fread(pData, m_nSize, 1, f))
+					if (pData != nullptr && 1 != fread(pData, m_nSize, 1, f))
 						free(pData);
 					else
 						m_pData = pData;
@@ -166,13 +166,13 @@ void CFileMapping::close()
 	if (m_pData)
 	{
 		UnmapViewOfFile(m_pData);
-		m_pData = NULL;
+		m_pData = nullptr;
 	}
 
-	if (m_hMapping != NULL)
+	if (m_hMapping != nullptr)
 	{
 		CloseHandle(m_hMapping);
-		m_hMapping = NULL;
+		m_hMapping = nullptr;
 	}
 
 	if (m_hFile != INVALID_HANDLE_VALUE)
@@ -185,7 +185,7 @@ void CFileMapping::close()
 	{
 		if (m_pData)
 			free(m_pData);
-		m_pData = NULL;
+		m_pData = nullptr;
 	}
 #endif
 	m_nSize = 0;

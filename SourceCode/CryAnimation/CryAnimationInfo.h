@@ -118,7 +118,7 @@ struct GlobalAnimation
 #endif
 			return c;
 		}
-		return NULL;
+		return nullptr;
 	}
 
 	bool IsLoaded()const { return !arrCtrls.empty(); }

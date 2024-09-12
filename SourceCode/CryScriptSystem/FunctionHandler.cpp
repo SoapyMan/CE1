@@ -41,9 +41,9 @@ void CFunctionHandler::__Attach(HSCRIPT hScript)
 	return lua_touserdata(m_pLS,-1);
 }*/
 
-THIS_PTR CFunctionHandler::GetThis()
+CFunctionHandler::THIS_PTR CFunctionHandler::GetThis()
 {
-	if (!lua_istable(m_pLS, 1))return NULL;
+	if (!lua_istable(m_pLS, 1))return nullptr;
 	return lua_getnativedata(m_pLS, 1);
 }
 

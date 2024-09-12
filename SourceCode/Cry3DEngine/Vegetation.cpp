@@ -515,7 +515,7 @@ void CStatObjInst::Physicalize(bool bInstant)
 	pe_params_pos par_pos;
 	if (!m_pPhysEnt)
 	{
-		m_pPhysEnt = GetSystem()->GetIPhysicalWorld()->CreatePhysicalEntity(PE_STATIC, NULL, this, 1);
+		m_pPhysEnt = GetSystem()->GetIPhysicalWorld()->CreatePhysicalEntity(PE_STATIC, nullptr, this, 1);
 		if (!m_pPhysEnt)
 			return;
 	}

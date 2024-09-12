@@ -105,7 +105,7 @@ struct CZipPseudoFile
 
 	// this object must be constructed before usage
 	// nFlags is a combination of _O_... flags
-	void Construct(CCachedFileData* pFileData = NULL, unsigned nFlags = 0)
+	void Construct(CCachedFileData* pFileData = nullptr, unsigned nFlags = 0)
 	{
 		m_pFileData = pFileData;
 		m_nFlags = nFlags;
@@ -117,7 +117,7 @@ struct CZipPseudoFile
 			FSeek(0, SEEK_SET); // the user assumes offset 0 right after opening the file
 		}
 		else
-			m_fDirect = NULL;
+			m_fDirect = nullptr;
 	}
 
 	// this object needs to be freed manually when the CryPak shuts down..
@@ -125,7 +125,7 @@ struct CZipPseudoFile
 	{
 		CRYASSERT((bool)m_pFileData);
 		// mark it free, and deallocate the pseudofile memory
-		m_pFileData = NULL;
+		m_pFileData = nullptr;
 		if (m_fDirect)
 			fclose(m_fDirect);
 	}
@@ -290,7 +290,7 @@ class CCryPak : public ICryPak
 
 public:
 	// given the source relative path, constructs the full path to the file according to the flags
-	const char* AdjustFileName(const char* src, char dst[g_nMaxPath], unsigned nFlags, bool* bFoundInPak = NULL);
+	const char* AdjustFileName(const char* src, char dst[g_nMaxPath], unsigned nFlags, bool* bFoundInPak = nullptr);
 
 	// this is the start of indexation of pseudofiles: 
 	// to the actual index , this offset is added to get the valid handle
@@ -305,7 +305,7 @@ public:
 	// returns: the pointer to the ending terminator \0
 	static char* BeautifyPath(char* dst);
 
-	CCryPak(IMiniLog* pLog, PakVars* pPakVars = NULL);
+	CCryPak(IMiniLog* pLog, PakVars* pPakVars = nullptr);
 	~CCryPak();
 
 	const PakVars* GetPakVars()const { return m_pPakVars; }
@@ -324,7 +324,7 @@ public:
 	void GetMemoryStatistics(ICrySizer* pSizer);
 
 	// open the physical archive file - creates if it doesn't exist
-	// returns NULL if it's invalid or can't open the file
+	// returns nullptr if it's invalid or can't open the file
 	virtual ICryArchive* OpenArchive(const char* szPath, unsigned nFlags = 0);
 
 	// returns the path to the archive in which the file was opened
@@ -478,7 +478,7 @@ public:
 		char szFullPath[CCryPak::g_nMaxPath];
 		const char* pPath = AdjustPath(szRelativePath, szFullPath);
 		if (!pPath)
-			return NULL;
+			return nullptr;
 		return m_pCache->FindFile(pPath);
 	}
 
@@ -493,7 +493,7 @@ public:
 	int ReadFile(Handle h, void* pBuffer)
 	{
 		CRYASSERT(m_pCache->IsOwnerOf((ZipDir::FileEntry*)h));
-		return m_pCache->ReadFile((ZipDir::FileEntry*)h, NULL, pBuffer);
+		return m_pCache->ReadFile((ZipDir::FileEntry*)h, nullptr, pBuffer);
 	}
 
 	// returns the full path to the archive file
@@ -538,7 +538,7 @@ protected:
 	const char* AdjustPath(const char* szRelativePath, char szFullPathBuf[CCryPak::g_nMaxPath])
 	{
 		if (!szRelativePath[0])
-			return NULL;
+			return nullptr;
 
 		if (m_nFlags & FLAGS_RELATIVE_PATHS_ONLY)
 			return szRelativePath;
@@ -549,17 +549,17 @@ protected:
 			const char* szFullPath = m_pPak->AdjustFileName(szRelativePath, szFullPathBuf, m_nFlags & FLAGS_IGNORE_MODS ? ICryPak::FLAGS_PATH_REAL : 0);
 			size_t nPathLen = strlen(szFullPath);
 			if (nPathLen <= m_strBindRoot.length())
-				return NULL;
+				return nullptr;
 
 			// you should access exactly the file under the directly in which the zip is situated
 			if (szFullPath[m_strBindRoot.length()] != '/' && szFullPath[m_strBindRoot.length()] != '\\')
-				return NULL;
+				return nullptr;
 #if defined(LINUX)
 			if (comparePathNames(szFullPath, m_strBindRoot.c_str(), m_strBindRoot.length()))
 #else
 			if (memicmp(szFullPath, m_strBindRoot.c_str(), m_strBindRoot.length()))
 #endif
-				return NULL; // the roots don't match
+				return nullptr; // the roots don't match
 
 			return szFullPath + m_strBindRoot.length() + 1;
 		}

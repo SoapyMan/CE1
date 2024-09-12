@@ -68,20 +68,20 @@ CD3D9Renderer::CD3D9Renderer()
 	m_TexMan = new CD3D9TexMan;
 	m_TexMan->m_bRGBA = false;
 
-	m_LogFile = NULL;
+	m_LogFile = nullptr;
 
 	RegisterVariables();
 
-	m_pD3D = NULL;
-	m_pd3dDevice = NULL;
-	m_hWnd = NULL;
+	m_pD3D = nullptr;
+	m_pd3dDevice = nullptr;
+	m_hWnd = nullptr;
 	m_bActive = FALSE;
 	m_bReady = FALSE;
 	m_dwCreateFlags = 0L;
-	m_pVB2D = NULL;
-	m_pVB3D[0] = NULL;
-	m_pVB3D[1] = NULL;
-	m_pVB3D[2] = NULL;
+	m_pVB2D = nullptr;
+	m_pVB3D[0] = nullptr;
+	m_pVB3D[1] = nullptr;
+	m_pVB3D[2] = nullptr;
 	m_fLineWidth = 1.0f;
 
 	m_strDeviceStats[0] = 0;
@@ -154,8 +154,8 @@ void	CD3D9Renderer::MakeCurrent()
 
 	m_CurrContext = m_RContexts[0];
 
-	CVProgram::m_LastVP = NULL;
-	CPShader::m_CurRC = NULL;
+	CVProgram::m_LastVP = nullptr;
+	CPShader::m_CurRC = nullptr;
 }
 
 bool CD3D9Renderer::SetCurrentContext(WIN_HWND hWnd)
@@ -175,8 +175,8 @@ bool CD3D9Renderer::SetCurrentContext(WIN_HWND hWnd)
 
 	m_CurrContext = m_RContexts[i];
 
-	CVProgram::m_LastVP = NULL;
-	CPShader::m_CurRC = NULL;
+	CVProgram::m_LastVP = nullptr;
+	CPShader::m_CurRC = nullptr;
 
 	return true;
 }
@@ -226,7 +226,7 @@ bool CD3D9Renderer::DeleteContext(WIN_HWND hWnd)
 			}
 		}
 		if (j == m_RContexts.Num())
-			m_CurrContext = NULL;
+			m_CurrContext = nullptr;
 	}
 	delete m_RContexts[i];
 	m_RContexts.Remove(i, 1);
@@ -558,7 +558,7 @@ void CD3D9Renderer::ChangeLog()
 			fprintf(m_LogFile, "==========================================\n");
 
 			fclose(m_LogFile);
-			m_LogFile = NULL;
+			m_LogFile = nullptr;
 			iLog->Log("Direct3D log file '%s' closed\n", "Direct3DLog.txt");
 		}
 
@@ -592,7 +592,7 @@ void CD3D9Renderer::ChangeLog()
 			fprintf(m_LogFileStr, "==========================================\n");
 
 			fclose(m_LogFileStr);
-			m_LogFileStr = NULL;
+			m_LogFileStr = nullptr;
 			iLog->Log("Direct3D texture streaming log file '%s' closed\n", "Direct3DLogStreaming.txt");
 		}
 }
@@ -817,7 +817,7 @@ void CD3D9Renderer::BeginFrame()
 		SetPolygonMode(CV_r_PolygonMode);
 
 	m_bWasCleared = false;
-	//  EF_ClearBuffer(false, NULL);
+	//  EF_ClearBuffer(false, nullptr);
 
 	  //////////////////////////////////////////////////////////////////////
 	  // Begin the scene
@@ -862,7 +862,7 @@ void CD3D9Renderer::BeginFrame()
 		if (re->m_VBuffer)
 		{
 			ReleaseBuffer(re->m_VBuffer);
-			re->m_VBuffer = NULL;
+			re->m_VBuffer = nullptr;
 		}
 		ReleaseIndexBuffer(&re->m_Inds);
 	}
@@ -980,7 +980,7 @@ void CD3D9Renderer::Update()
 	{
 		//IDirect3DSurface9 * pTar = gcpRendD3D->mfGetBackSurface();
 		//D3DLOCKED_RECT rc;
-		//HRESULT ddrval = pTar->LockRect( &rc, NULL, D3DLOCK_READONLY );
+		//HRESULT ddrval = pTar->LockRect( &rc, nullptr, D3DLOCK_READONLY );
 		//ddrval = pTar->UnlockRect();
 	}
 
@@ -1007,7 +1007,7 @@ void CD3D9Renderer::Update()
 			if (fg)
 			{
 				delete[] fg;
-				fg = NULL;
+				fg = nullptr;
 			}
 			sPrevWidth = wdt;
 			sPrevHeight = hgt;
@@ -1139,7 +1139,7 @@ void CD3D9Renderer::Update()
 				f = (gRenDev->m_TexMan->m_UpLoadBytes / 1024.0f / 1024.0f) / fScaleUpl;
 				f = 255.0f - CLAMP(f * 255.0f, 0, 255.0f);
 				fgUpl[nC] = (byte)f;
-				Graph(fgUpl, 0, hgt - 280, wdt, 256, nC, type, NULL, ColUpl, fScaleUpl);
+				Graph(fgUpl, 0, hgt - 280, wdt, 256, nC, type, nullptr, ColUpl, fScaleUpl);
 				col = ColUpl;
 				WriteXY(cf, 4, hgt - 280, 0.5f, 1, col.r, col.g, col.b, 1, "UploadMB (%d-%d)", (int)(gRenDev->m_TexMan->m_UpLoadBytes / 1024.0f / 1024.0f), (int)fScaleUpl);
 			}
@@ -1149,7 +1149,7 @@ void CD3D9Renderer::Update()
 				f = m_RP.m_PS.m_fTexUploadTime / fScaleTimeUpl;
 				f = 255.0f - CLAMP(f * 255.0f, 0, 255.0f);
 				fgTimeUpl[nC] = (byte)f;
-				Graph(fgTimeUpl, 0, hgt - 280, wdt, 256, nC, type, NULL, ColTimeUpl, fScaleTimeUpl);
+				Graph(fgTimeUpl, 0, hgt - 280, wdt, 256, nC, type, nullptr, ColTimeUpl, fScaleTimeUpl);
 				col = ColTimeUpl;
 				WriteXY(cf, 4, hgt - 280 + 16, 0.5f, 1, col.r, col.g, col.b, 1, "Upload Time (%.3fMs - %.3fMs)", m_RP.m_PS.m_fTexUploadTime, fScaleTimeUpl);
 			}
@@ -1159,7 +1159,7 @@ void CD3D9Renderer::Update()
 				f = (gRenDev->m_TexMan->m_LoadBytes / 1024.0f / 1024.0f) / fScaleStreamSync;
 				f = 255.0f - CLAMP(f * 255.0f, 0, 255.0f);
 				fgStreamSync[nC] = (byte)f;
-				Graph(fgStreamSync, 0, hgt - 280, wdt, 256, nC, type, NULL, ColStreamSync, fScaleStreamSync);
+				Graph(fgStreamSync, 0, hgt - 280, wdt, 256, nC, type, nullptr, ColStreamSync, fScaleStreamSync);
 				col = ColStreamSync;
 				WriteXY(cf, 4, hgt - 280 + 16 * 2, 0.5f, 1, col.r, col.g, col.b, 1, "StreamMB (%d-%d)", (int)(gRenDev->m_TexMan->m_LoadBytes / 1024.0f / 1024.0f), (int)fScaleStreamSync);
 			}
@@ -1169,7 +1169,7 @@ void CD3D9Renderer::Update()
 				f = gRenDev->m_TexMan->m_fStreamDistFactor / fScaleDistFact;
 				f = 255.0f - CLAMP(f * 255.0f, 0, 255.0f);
 				fgDistFact[nC] = (byte)f;
-				Graph(fgDistFact, 0, hgt - 280, wdt, 256, nC, type, NULL, ColDistFact, fScaleDistFact);
+				Graph(fgDistFact, 0, hgt - 280, wdt, 256, nC, type, nullptr, ColDistFact, fScaleDistFact);
 				col = ColDistFact;
 				WriteXY(cf, 4, hgt - 280 + 16 * 3, 0.5f, 1, col.r, col.g, col.b, 1, "Dist Factor (Upload) (%.3f-%d)", gRenDev->m_TexMan->m_fStreamDistFactor, (int)fScaleDistFact);
 			}
@@ -1179,7 +1179,7 @@ void CD3D9Renderer::Update()
 				f = m_TexMan->m_nCustomMip / fScaleCustMip;
 				f = 255.0f - CLAMP(f * 255.0f, 0, 255.0f);
 				fgCustMip[nC] = (byte)f;
-				Graph(fgCustMip, 0, hgt - 280, wdt, 256, nC, type, NULL, ColCustMip, fScaleCustMip);
+				Graph(fgCustMip, 0, hgt - 280, wdt, 256, nC, type, nullptr, ColCustMip, fScaleCustMip);
 				col = ColCustMip;
 				WriteXY(cf, 4, hgt - 280 + 16 * 4, 0.5f, 1, col.r, col.g, col.b, 1, "Custom Mip (Thrash) (%d-%d)", m_TexMan->m_nCustomMip, (int)fScaleCustMip);
 			}
@@ -1189,7 +1189,7 @@ void CD3D9Renderer::Update()
 				f = (gRenDev->m_TexMan->m_StatsCurTexMem / 1024.0f / 1024.0f) / fScaleTotalMem;
 				f = 255.0f - CLAMP(f * 255.0f, 0, 255.0f);
 				fgTotalMem[nC] = (byte)f;
-				Graph(fgTotalMem, 0, hgt - 280, wdt, 256, nC, type, NULL, ColTotalMem, fScaleTotalMem);
+				Graph(fgTotalMem, 0, hgt - 280, wdt, 256, nC, type, nullptr, ColTotalMem, fScaleTotalMem);
 				col = ColTotalMem;
 				WriteXY(cf, 4, hgt - 280 + 16 * 5, 0.5f, 1, col.r, col.g, col.b, 1, "Cur Pool Size (Mb) (%d-%d)", (int)(gRenDev->m_TexMan->m_StatsCurTexMem / 1024.0f / 1024.0f), (int)fScaleTotalMem);
 			}
@@ -1198,7 +1198,7 @@ void CD3D9Renderer::Update()
 				f = (m_RP.m_PS.m_TexturesSize / 1024.0f / 1024.0f) / fScaleCurMem;
 				f = 255.0f - CLAMP(f * 255.0f, 0, 255.0f);
 				fgCurMem[nC] = (byte)f;
-				Graph(fgCurMem, 0, hgt - 280, wdt, 256, nC, type, NULL, ColCurMem, fScaleCurMem);
+				Graph(fgCurMem, 0, hgt - 280, wdt, 256, nC, type, nullptr, ColCurMem, fScaleCurMem);
 				col = ColCurMem;
 				WriteXY(cf, 4, hgt - 280 + 16 * 6, 0.5f, 1, col.r, col.g, col.b, 1, "Cur Scene Size (Mb) (%d-%d)", (int)(m_RP.m_PS.m_TexturesSize / 1024.0f / 1024.0f), (int)fScaleCurMem);
 			}
@@ -1209,7 +1209,7 @@ void CD3D9Renderer::Update()
 		}
 	if (CV_r_envlightcmdebug)
 	{
-		SEnvTexture* cm = NULL;
+		SEnvTexture* cm = nullptr;
 		Vec3d Pos = m_cam.GetPos();
 		cm = m_cEF.mfFindSuitableEnvLCMap(Pos, true, 0, 0);
 		if (cm)
@@ -1708,7 +1708,7 @@ void CD3D9Renderer::Update()
 	if (m_bSwapBuffers)
 	{
 		if (!m_bEditor)
-			hReturn = m_pd3dDevice->Present(NULL, NULL, NULL, NULL);
+			hReturn = m_pd3dDevice->Present(nullptr, nullptr, nullptr, nullptr);
 		else
 		{
 			RECT ClientRect;
@@ -1716,7 +1716,7 @@ void CD3D9Renderer::Update()
 			ClientRect.left = 0;
 			ClientRect.right = m_CurrContext->m_Width;
 			ClientRect.bottom = m_CurrContext->m_Height;
-			hReturn = m_pd3dDevice->Present(&ClientRect, &ClientRect, m_CurrContext->m_hWnd, NULL);
+			hReturn = m_pd3dDevice->Present(&ClientRect, &ClientRect, m_CurrContext->m_hWnd, nullptr);
 		}
 	}
 
@@ -1780,7 +1780,7 @@ void CD3D9Renderer::ScreenShot(const char* filename)
 		wdt = m_width;
 		hgt = m_height;
 	}
-	HRESULT h = m_pd3dDevice->CreateOffscreenPlainSurface(wdt, hgt, D3DFMT_A8R8G8B8, D3DPOOL_SYSTEMMEM, &pSysDeskSurf, NULL);
+	HRESULT h = m_pd3dDevice->CreateOffscreenPlainSurface(wdt, hgt, D3DFMT_A8R8G8B8, D3DPOOL_SYSTEMMEM, &pSysDeskSurf, nullptr);
 	if (FAILED(h))
 		return;
 	h = m_pd3dDevice->GetFrontBufferData(0, pSysDeskSurf);
@@ -1790,7 +1790,7 @@ void CD3D9Renderer::ScreenShot(const char* filename)
 	WndP.x = 0;
 	WndP.y = 0;
 	// ClientToScreen(m_hWnd, &WndP);  
-	h = pSysDeskSurf->LockRect(&d3dlrSys, NULL, D3DLOCK_READONLY);
+	h = pSysDeskSurf->LockRect(&d3dlrSys, nullptr, D3DLOCK_READONLY);
 	if (FAILED(h))
 		return;
 	byte* src = (byte*)d3dlrSys.pBits;
@@ -1886,10 +1886,10 @@ int CD3D9Renderer::CreateRenderTarget(int nWidth, int nHeight, ETEX_Format eTF)
 		fmt = D3DFMT_R5G6B5;
 		break;
 	}
-	HRESULT hr = m_pd3dDevice->CreateRenderTarget(nWidth, nHeight, fmt, D3DMULTISAMPLE_NONE, 0, TRUE, &rt.m_pRT, NULL);
+	HRESULT hr = m_pd3dDevice->CreateRenderTarget(nWidth, nHeight, fmt, D3DMULTISAMPLE_NONE, 0, TRUE, &rt.m_pRT, nullptr);
 	if (FAILED(hr))
 		return -1;
-	hr = m_pd3dDevice->CreateDepthStencilSurface(nWidth, nHeight, m_d3dsdZBuffer.Format, D3DMULTISAMPLE_NONE, 0, FALSE, &rt.m_pZB, NULL);
+	hr = m_pd3dDevice->CreateDepthStencilSurface(nWidth, nHeight, m_d3dsdZBuffer.Format, D3DMULTISAMPLE_NONE, 0, FALSE, &rt.m_pZB, nullptr);
 	if (FAILED(hr))
 	{
 		SAFE_RELEASE(rt.m_pRT);
@@ -1945,8 +1945,8 @@ void CD3D9Renderer::ReadFrameBuffer(unsigned char* pRGB, int nSizeX, int nSizeY,
 {
 	int i;
 
-	LPDIRECT3DSURFACE9 pSysSurf = NULL;
-	LPDIRECT3DSURFACE9 pTmpSurface = NULL;
+	LPDIRECT3DSURFACE9 pSysSurf = nullptr;
+	LPDIRECT3DSURFACE9 pTmpSurface = nullptr;
 	D3DLOCKED_RECT d3dlrSys;
 	D3DSURFACE_DESC desc;
 	HRESULT hr;
@@ -1976,7 +1976,7 @@ void CD3D9Renderer::ReadFrameBuffer(unsigned char* pRGB, int nSizeX, int nSizeY,
 		dstRect.right = nScaledX;
 		dstRect.top = 0;
 		dstRect.bottom = nScaledY;
-		hr = m_pd3dDevice->CreateRenderTarget(nScaledX, nScaledY, desc.Format, D3DMULTISAMPLE_NONE, 0, TRUE, &pTmpSurface, NULL);
+		hr = m_pd3dDevice->CreateRenderTarget(nScaledX, nScaledY, desc.Format, D3DMULTISAMPLE_NONE, 0, TRUE, &pTmpSurface, nullptr);
 		if (FAILED(hr))
 			return;
 
@@ -1986,12 +1986,12 @@ void CD3D9Renderer::ReadFrameBuffer(unsigned char* pRGB, int nSizeX, int nSizeY,
 		if (desc.Format != D3DFMT_X8R8G8B8 && desc.Format != D3DFMT_A8R8G8B8)
 		{
 			// Create a buffer the same size and format
-			hr = m_pd3dDevice->CreateOffscreenPlainSurface(nScaledX, nScaledY, desc.Format, D3DPOOL_SYSTEMMEM, &pSysSurf, NULL);
-			D3DXLoadSurfaceFromSurface(pSysSurf, NULL, NULL, pTmpSurface, NULL, NULL, D3DX_FILTER_NONE, 0);
-			hr = pSysSurf->LockRect(&d3dlrSys, NULL, 0);
+			hr = m_pd3dDevice->CreateOffscreenPlainSurface(nScaledX, nScaledY, desc.Format, D3DPOOL_SYSTEMMEM, &pSysSurf, nullptr);
+			D3DXLoadSurfaceFromSurface(pSysSurf, nullptr, nullptr, pTmpSurface, nullptr, nullptr, D3DX_FILTER_NONE, 0);
+			hr = pSysSurf->LockRect(&d3dlrSys, nullptr, 0);
 		}
 		else
-			hr = pTmpSurface->LockRect(&d3dlrSys, NULL, 0);
+			hr = pTmpSurface->LockRect(&d3dlrSys, nullptr, 0);
 		byte* src = (byte*)d3dlrSys.pBits;
 		byte* dst = pRGB;
 		if (bRGBA)
@@ -2031,13 +2031,13 @@ void CD3D9Renderer::ReadFrameBuffer(unsigned char* pRGB, int nSizeX, int nSizeY,
 	}
 	else
 	{
-		hr = m_pd3dDevice->CreateOffscreenPlainSurface(m_deskwidth, m_deskheight, D3DFMT_A8R8G8B8, D3DPOOL_SYSTEMMEM, &pSysSurf, NULL);
+		hr = m_pd3dDevice->CreateOffscreenPlainSurface(m_deskwidth, m_deskheight, D3DFMT_A8R8G8B8, D3DPOOL_SYSTEMMEM, &pSysSurf, nullptr);
 		hr = m_pd3dDevice->GetFrontBufferData(0, pSysSurf);
 		POINT WndP;
 		WndP.x = 0;
 		WndP.y = 0;
 		// ClientToScreen(m_hWnd, &WndP);  
-		hr = pSysSurf->LockRect(&d3dlrSys, NULL, 0);
+		hr = pSysSurf->LockRect(&d3dlrSys, nullptr, 0);
 		byte* src = (byte*)d3dlrSys.pBits;
 		byte* dst = pRGB;
 		for (i = 0; i < nSizeY; i++)
@@ -2720,7 +2720,7 @@ void CD3D9Renderer::SetCamera(const CCamera& cam)
 	if (m_RP.m_PersFlags & RBPF_DRAWMIRROR)
 		m_matView->Scale(1, -1, 1);
 	m_pd3dDevice->SetTransform(D3DTS_VIEW, m);
-	D3DXMatrixInverse(&m_matViewInv, NULL, m);
+	D3DXMatrixInverse(&m_matViewInv, nullptr, m);
 	m = m_matProj->GetTop();
 	m_eCull = (ECull)-1;
 
@@ -3155,8 +3155,8 @@ void CD3D9Renderer::EnableTMU(bool enable)
 	EF_SetColorOp(eCO, eCO, 255, 255);
 	if (!enable)
 	{
-		m_pd3dDevice->SetTexture(m_TexMan->m_CurStage, NULL);
-		m_RP.m_TexStages[m_TexMan->m_CurStage].Texture = NULL;
+		m_pd3dDevice->SetTexture(m_TexMan->m_CurStage, nullptr);
+		m_RP.m_TexStages[m_TexMan->m_CurStage].Texture = nullptr;
 	}
 }
 
@@ -3542,9 +3542,9 @@ void CD3D9Renderer::ResetToDefault()
 	if (m_LogFile && CV_r_log == 3)
 		Logv(SRendItem::m_RecurseLevel, ".... End ResetToDefault ....\n");
 
-	CPShader::m_CurRC = NULL;
-	CVProgram::m_LastVP = NULL;
-	CPShader::m_LastVP = NULL;
+	CPShader::m_CurRC = nullptr;
+	CVProgram::m_LastVP = nullptr;
+	CPShader::m_LastVP = nullptr;
 }
 
 
@@ -3705,7 +3705,7 @@ void CD3D9Renderer::DrawBall(float x, float y, float z, float radius)
 	ScaleMatrix(radius, radius, radius);
 
 	m_pSphere->DrawSubset(0);
-	m_pLastVDeclaration = NULL;
+	m_pLastVDeclaration = nullptr;
 
 	EF_PopMatrix();
 }
@@ -3724,7 +3724,7 @@ void CD3D9Renderer::DrawBall(const Vec3d& pos, float radius)
 	ScaleMatrix(radius, radius, radius);
 
 	m_pSphere->DrawSubset(0);
-	m_pLastVDeclaration = NULL;
+	m_pLastVDeclaration = nullptr;
 
 	EF_PopMatrix();
 }
@@ -3810,13 +3810,13 @@ int CD3D9Renderer::UnProjectFromScreen(float sx, float sy, float sz, float* px, 
 void CD3D9Renderer::ClearDepthBuffer()
 {
 	m_bWasCleared = true;
-	m_pd3dDevice->Clear(0, NULL, D3DCLEAR_ZBUFFER, D3DCOLOR_RGBA(0, 0, 0, 0), 1.0f, 0);
+	m_pd3dDevice->Clear(0, nullptr, D3DCLEAR_ZBUFFER, D3DCOLOR_RGBA(0, 0, 0, 0), 1.0f, 0);
 }
 
 void CD3D9Renderer::ClearColorBuffer(const Vec3d vColor)
 {
 	m_bWasCleared = true;
-	m_pd3dDevice->Clear(0, NULL, D3DCLEAR_TARGET, D3DRGBA(vColor[0], vColor[1], vColor[2], 1.0f), 1.0f, 0);
+	m_pd3dDevice->Clear(0, nullptr, D3DCLEAR_TARGET, D3DRGBA(vColor[0], vColor[1], vColor[2], 1.0f), 1.0f, 0);
 }
 
 void CD3D9Renderer::EnableAALines(bool bEnable)
@@ -3916,7 +3916,7 @@ void CD3D9Renderer::RemoveTexture(unsigned int TextureId)
 	if (t)
 		t->Release(false);
 	else
-		m_TexMan->RemoveFromHash(TextureId, NULL);
+		m_TexMan->RemoveFromHash(TextureId, nullptr);
 
 	// free shadow maps slot
 	for (int i = 0; i < MAX_DYNAMIC_SHADOW_MAPS_COUNT; i++)
@@ -4023,7 +4023,7 @@ void CD3D9Renderer::UpdateTextureInVideoMemory(uint tnum, unsigned char* newdata
 				}
 				else
 				{
-					HRESULT hr = D3DXLoadSurfaceFromMemory(pSurf, NULL, &rc, newdata, srcformat, nPitch, NULL, &rc, D3DX_FILTER_NONE, 0);
+					HRESULT hr = D3DXLoadSurfaceFromMemory(pSurf, nullptr, &rc, newdata, srcformat, nPitch, nullptr, &rc, D3DX_FILTER_NONE, 0);
 				}
 				SAFE_RELEASE(pSurf);
 			}
@@ -4132,7 +4132,7 @@ unsigned int CD3D9Renderer::DownLoadToVideoMemory(unsigned char* data, int w, in
 	}
 	else
 	{
-		tp = m_TexMan->CreateTexture(name, w, h, 1, flags, flags2, pData, eTT_Base, -1.0f, -1.0f, DXTSize, NULL, 0, eTFDst);
+		tp = m_TexMan->CreateTexture(name, w, h, 1, flags, flags2, pData, eTT_Base, -1.0f, -1.0f, DXTSize, nullptr, 0, eTFDst);
 	}
 
 	if (data && eTFSrc != eTFDst && !m_bDeviceLost)
@@ -4490,7 +4490,7 @@ void* gGet_D3DDevice()
 }
 void* gGet_glReadPixels()
 {
-	return NULL;
+	return nullptr;
 }
 
 namespace ATL

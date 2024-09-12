@@ -34,7 +34,7 @@ public:
 
 	TElementaryArray(const char* szParentObject, int nParentIndex = 0) :
 		m_Allocator(szParentObject, nParentIndex),
-		m_pData(NULL)
+		m_pData(nullptr)
 	{
 #if defined(_DEBUG) && defined(_INC_CRTDBG)
 		m_nSize = 0;
@@ -47,11 +47,11 @@ public:
 		m_nSize(numElements)
 #endif
 	{
-		m_pData = numElements ? m_Allocator.allocate_construct(numElements) : NULL;
+		m_pData = numElements ? m_Allocator.allocate_construct(numElements) : nullptr;
 	}
 
 	TElementaryArray() :
-		m_pData(NULL)
+		m_pData(nullptr)
 #if defined(_DEBUG) && defined(_INC_CRTDBG)
 		, m_Allocator("TElementaryArray()", 2)
 		, m_nSize(0)
@@ -62,7 +62,7 @@ public:
 private:
 	// copy constructor: impossible since the number of elements is unknown
 	TElementaryArray(const TElementaryArray<T, A>& that) :
-		m_pData(NULL)
+		m_pData(nullptr)
 	{
 		CRYASSERT(0);
 	}
@@ -123,7 +123,7 @@ public:
 		if (m_pData)
 		{
 			m_Allocator.deallocate_destroy(m_pData);
-			m_pData = NULL;
+			m_pData = nullptr;
 #if defined(_DEBUG) && defined(_INC_CRTDBG)
 			m_nSize = 0;
 #endif
@@ -210,7 +210,7 @@ public:
 
 	TFixedArray(const char* szParentObject, int nParentIndex = 0) :
 		m_nSize(0),
-		m_pData(NULL),
+		m_pData(nullptr),
 		m_Allocator(szParentObject, nParentIndex)
 	{
 	}
@@ -218,12 +218,12 @@ public:
 	TFixedArray(size_t numElements) :
 		m_nSize(numElements)
 	{
-		m_pData = numElements ? m_Allocator.allocate_construct(numElements) : NULL;
+		m_pData = numElements ? m_Allocator.allocate_construct(numElements) : nullptr;
 	}
 
 	TFixedArray() :
 		m_nSize(0),
-		m_pData(NULL)
+		m_pData(nullptr)
 	{
 	}
 
@@ -233,7 +233,7 @@ public:
 		m_nSize(that.size()),
 		m_Allocator(that.m_Allocator)
 	{
-		m_pData = that.empty() ? NULL : m_Allocator.allocate_construct(that.size());
+		m_pData = that.empty() ? nullptr : m_Allocator.allocate_construct(that.size());
 		for (size_t i = 0; i < m_nSize; ++i)
 			m_pData[i] = that[i];
 	}
@@ -243,7 +243,7 @@ public:
 		m_nSize(that.size()),
 		m_Allocator(that.m_Allocator)
 	{
-		m_pData = that.empty() ? NULL : m_Allocator.allocate_construct(that.size());
+		m_pData = that.empty() ? nullptr : m_Allocator.allocate_construct(that.size());
 		for (size_t i = 0; i < m_nSize; ++i)
 			m_pData[i] = that[i];
 	}
@@ -254,7 +254,7 @@ public:
 		m_nSize(that.size()),
 		m_Allocator(szParentObject, nParentIndex)
 	{
-		m_pData = that.empty() ? NULL : m_Allocator.allocate_construct(that.size());
+		m_pData = that.empty() ? nullptr : m_Allocator.allocate_construct(that.size());
 		for (size_t i = 0; i < m_nSize; ++i)
 			m_pData[i] = that[i];
 	}
@@ -264,7 +264,7 @@ public:
 		m_nSize(that.size()),
 		m_Allocator(szParentObject, nParentIndex)
 	{
-		m_pData = that.empty() ? NULL : m_Allocator.allocate_construct(that.size());
+		m_pData = that.empty() ? nullptr : m_Allocator.allocate_construct(that.size());
 		for (size_t i = 0; i < m_nSize; ++i)
 			m_pData[i] = that[i];
 	}
@@ -377,7 +377,7 @@ public:
 	void clear()
 	{
 		m_Allocator.deallocate_destroy(m_pData);
-		m_pData = NULL;
+		m_pData = nullptr;
 		m_nSize = 0;
 	}
 

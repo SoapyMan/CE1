@@ -442,10 +442,10 @@ bool CryStaticModel::OnLoadgeom(char* FileName, const char* szGeomName, bool bLo
 				CRYASSERT(0);
 				inst.pLightImage = 0;//GetRenderer()->EF_LoadTexture(inst.Chunk.szLightImage, FT_CLAMP, FT2_FORCECUBEMAP, eTT_Cubemap); 
 				if (!inst.pLightImage->IsTextureLoaded())
-					inst.pLightImage = NULL;
+					inst.pLightImage = nullptr;
 			}
 			else
-				inst.pLightImage = NULL;
+				inst.pLightImage = nullptr;
 
 			m_lstLights.Add(inst);
 		}

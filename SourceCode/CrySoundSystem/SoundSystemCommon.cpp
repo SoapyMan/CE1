@@ -6,7 +6,7 @@
 CSoundSystemCommon::CSoundSystemCommon(ISystem* pSystem)
 {
 	m_pCVARDummySound = pSystem->GetIConsole()->CreateVariable("s_DummySound", "0", VF_DUMPTODISK,
-		"Toggles dummy(NULL) sound system.\n");
+		"Toggles dummy(nullptr) sound system.\n");
 	m_pCVARSoundEnable = pSystem->GetIConsole()->CreateVariable("s_SoundEnable", "1", VF_DUMPTODISK,
 		"Toggles sound on and off.\n"
 		"Usage: s_SoundEnable [0/1]\n"
@@ -114,5 +114,5 @@ CSoundSystemCommon::~CSoundSystemCommon()
 
 bool CSoundSystemCommon::DebuggingSound()
 {
-	return (m_pCVarDebugSound != NULL) && (m_pCVarDebugSound->GetIVal() != 0);
+	return (m_pCVarDebugSound != nullptr) && (m_pCVarDebugSound->GetIVal() != 0);
 }

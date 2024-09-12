@@ -79,14 +79,14 @@ public:
 	//!
 	NRESULT Create(SocketType st = NonBlocking);
 	//!
-	NRESULT Listen(WORD wPort, CIPAddress* xaMulticastAddress = NULL, CIPAddress* ipLocalAddress = 0);
+	NRESULT Listen(WORD wPort, CIPAddress* xaMulticastAddress = nullptr, CIPAddress* ipLocalAddress = 0);
 	//!
 	void SetDefaultTarget(CIPAddress& saAddress)
 	{
 		m_saDefaultAddress.Set(saAddress);
 	}
 	//!
-	NRESULT Send(BYTE* pBuffer, int nLenBytes, CIPAddress* saAddress = NULL);
+	NRESULT Send(BYTE* pBuffer, int nLenBytes, CIPAddress* saAddress = nullptr);
 	//!
 	NRESULT Receive(unsigned char* pBuf/*[MAX_UDP_PACKET_SIZE]*/, int nBufLen, int& nRecvBytes, CIPAddress& pFrom);
 

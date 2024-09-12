@@ -733,7 +733,7 @@ HRESULT CMyDirect3DDevice9::SetRenderState(D3DRENDERSTATETYPE State, DWORD Value
 	char Str[1024];
 #define EDEFAULT(e) default: sprintf(Str, "0x%x", e); state = Str;
 	char* state;
-	char* val = NULL;
+	char* val = nullptr;
 	switch (State)
 	{
 		ECASE(D3DRS_ZENABLE);
@@ -1101,7 +1101,7 @@ HRESULT CMyDirect3DDevice9::SetTextureStageState(DWORD Stage, D3DTEXTURESTAGESTA
 	char Str[1024];
 #define EDEFAULT(e) default: sprintf(Str, "0x%x", e); type = Str;
 	char* type;
-	char* val = NULL;
+	char* val = nullptr;
 	switch (Type)
 	{
 		ECASE(D3DTSS_COLOROP);
@@ -1178,7 +1178,7 @@ HRESULT CMyDirect3DDevice9::SetSamplerState(DWORD Sampler, D3DSAMPLERSTATETYPE T
 	char Str[1024];
 #define EDEFAULT(e) default: sprintf(Str, "0x%x", e); type = Str;
 	char* type;
-	char* val = NULL;
+	char* val = nullptr;
 	switch (Type)
 	{
 		ECASE(D3DSAMP_ADDRESSU);

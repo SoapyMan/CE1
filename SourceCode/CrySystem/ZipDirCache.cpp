@@ -42,19 +42,19 @@ ZipDir::CachePtr ZipDir::NewCache(const char* szFileName, CMTSafeHeap* pHeap, In
 
 
 
-// looks for the given file record in the Central Directory. If there's none, returns NULL.
+// looks for the given file record in the Central Directory. If there's none, returns nullptr.
 // if there is some, returns the pointer to it.
 // the Path must be the relative path to the file inside the Zip
 // if the file handle is passed, it will be used to find the file data offset, if one hasn't been initialized yet
 ZipDir::FileEntry* ZipDir::Cache::FindFile(const char* szPath, bool bRefresh)
 {
 	if (!this)
-		return NULL;
+		return nullptr;
 	ZipDir::FindFile fd(this);
 	if (!fd.FindExact(szPath))
 	{
 		CRYASSERT(!fd.GetFileEntry());
-		return NULL;
+		return nullptr;
 	}
 	CRYASSERT(fd.GetFileEntry());
 	return fd.GetFileEntry();
@@ -130,19 +130,19 @@ ZipDir::ErrorEnum ZipDir::Cache::ReadFile(FileEntry* pFileEntry, void* pCompress
 }
 
 // loads and unpacks the file into a newly created buffer (that must be subsequently freed with
-// Free()) Returns NULL if failed
+// Free()) Returns nullptr if failed
 void* ZipDir::Cache::AllocAndReadFile(FileEntry* pFileEntry)
 {
 	if (!pFileEntry)
-		return NULL;
+		return nullptr;
 
 	void* pData = m_pHeap->Alloc(pFileEntry->desc.lSizeUncompressed, "ZipDir::Cache::AllocAndReadFile");
 	if (pData)
 	{
-		if (ZD_ERROR_SUCCESS != ReadFile(pFileEntry, NULL, pData))
+		if (ZD_ERROR_SUCCESS != ReadFile(pFileEntry, nullptr, pData))
 		{
 			m_pHeap->Free(pData);
-			pData = NULL;
+			pData = nullptr;
 		}
 	}
 	return pData;
@@ -176,7 +176,7 @@ size_t ZipDir::Cache::GetSize()const
 	if (this)
 		return m_nDataSize + sizeof(Cache) + strlen(GetFilePath());
 	else
-		return NULL;
+		return 0;
 }
 
 

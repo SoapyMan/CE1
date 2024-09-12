@@ -98,21 +98,14 @@ bool CXGame::AddEquipPack(XDOM::IXMLDOMNode *pPack)
 		{
 			XDOM::IXMLDOMNodePtr pCurItemList;
 			pItemList->reset();
-#if !defined(LINUX64)
-			while ((pCurItemList = pItemList->nextNode()) != NULL)
-#else
-			while ((pCurItemList = pItemList->nextNode()) != 0)
-#endif
+			while (pCurItemList = pItemList->nextNode())
 			{
 				XDOM::IXMLDOMNodeListPtr pItems = pCurItemList->getChildNodes();
 				XDOM::IXMLDOMNodePtr pCurItem;
 				pItems->reset();
 				UINT iCurItem = 1;
-#if !defined(LINUX64)
-				while ((pCurItem = pItems->nextNode()) != NULL)
-#else
-				while ((pCurItem = pItems->nextNode()) != 0)
-#endif
+
+				while (pCurItem = pItems->nextNode())
 				{
 					XDOM::IXMLDOMNodePtr pIType = pCurItem->getAttribute("type");
 					// if (strcmp(pIType->getText(), "Weapon") == 0)
@@ -120,11 +113,7 @@ bool CXGame::AddEquipPack(XDOM::IXMLDOMNode *pPack)
 						_SmartScriptObject cEntry(GetScriptSystem(), false);
 						cEntry->SetValue("Type", pIType->getText());
 						cEntry->SetValue("Name", pCurItem->getName());
-#if !defined(LINUX64)
-						if(pPrimaryWeapon!=NULL)
-#else
-						if(pPrimaryWeapon!=0)
-#endif
+						if(pPrimaryWeapon)
 						{
 							if(strcmp(pPrimaryWeapon->getText(),pCurItem->getName())==0)
 							{
@@ -170,27 +159,27 @@ void CXGame::SetPlayerEquipPackName(const char *pszPackName)
 { 
 	// Pass NULL or "" to remove all equipment from the player
 	IScriptSystem *pIScriptSystem = GetScriptSystem();
-	IEntity *pIMyPlayer = (m_pServer != NULL) ? m_pServer->m_pISystem->GetLocalPlayer() : 
+	IEntity *pIMyPlayer = (m_pServer != nullptr) ? m_pServer->m_pISystem->GetLocalPlayer() : 
 		m_pClient->m_pISystem->GetLocalPlayer();
-	void *pContainer = NULL;
-	IEntityContainer *pIContainer = NULL;
-	CPlayer *pPlayer = NULL;
+	void *pContainer = nullptr;
+	IEntityContainer *pIContainer = nullptr;
+	CPlayer *pPlayer = nullptr;
 
 	// Store the name of the equipment pack
 	IScriptObject *pGlobals=pIScriptSystem->GetGlobalObject();
 	
-	pGlobals->SetValue("MainPlayerEquipPack", (pszPackName != NULL) ? pszPackName : "");
+	pGlobals->SetValue("MainPlayerEquipPack", (pszPackName != nullptr) ? pszPackName : "");
 
 	pGlobals->Release();
 
-	if (pIMyPlayer == NULL)
+	if (pIMyPlayer == nullptr)
 		return;
 
-	if (pszPackName == NULL || strlen(pszPackName) == 0)
+	if (pszPackName == nullptr || strlen(pszPackName) == 0)
 	{
 		// No equipment pack specified, remove all weapons
 		pIContainer = pIMyPlayer->GetContainer();
-		if (pIContainer == NULL)
+		if (pIContainer == nullptr)
 			return;
 		if (pIContainer->QueryContainerInterface(CIT_IPLAYER, &pContainer))
 		{
@@ -210,10 +199,10 @@ void CXGame::SetPlayerEquipPackName(const char *pszPackName)
 //////////////////////////////////////////////////////////////////////////
 void CXGame::RestoreWeaponPacks()
 {
-	IEntityIt *pEtyIt = NULL;
-	IEntity *pICurEty = NULL;
-	void *pContainer = NULL;
-	IEntityContainer *pIContainer = NULL;
+	IEntityIt *pEtyIt = nullptr;
+	IEntity *pICurEty = nullptr;
+	void *pContainer = nullptr;
+	IEntityContainer *pIContainer = nullptr;
 
 	// start .. temporary checks to find a bug 
 	if(m_pServer)
@@ -236,7 +225,7 @@ void CXGame::RestoreWeaponPacks()
 	while (pICurEty = pEtyIt->Next())
 	{
 		pIContainer = pICurEty->GetContainer();
-		if (pIContainer == NULL)
+		if (pIContainer == nullptr)
 			continue;
 		if (pIContainer->QueryContainerInterface(CIT_IPLAYER, &pContainer))
 		{
@@ -256,14 +245,14 @@ void CXGame::ReloadWeaponScripts()
 	{
 		std::vector<CPlayer*> vPlayers;
 		
-		CPlayer *pPlayer = NULL;
-		IEntity *pICurEty = NULL;
+		CPlayer *pPlayer = nullptr;
+		IEntity *pICurEty = nullptr;
 
 		IEntityIt *pEtyIt = (m_pServer ? m_pServer->m_pISystem : m_pClient->m_pISystem)->GetEntities();	
 		while (pICurEty = pEtyIt->Next())
 		{
 			IEntityContainer *pIContainer = pICurEty->GetContainer();
-			if (pIContainer == NULL)
+			if (pIContainer == nullptr)
 				continue;
 			if (pIContainer->QueryContainerInterface(CIT_IPLAYER, (void**) &pPlayer))
 			{

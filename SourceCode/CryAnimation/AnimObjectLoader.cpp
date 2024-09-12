@@ -333,7 +333,7 @@ void CAnimObjectLoader::LoadAnimations(const char* cgaFile)
 
 	char fullpath[_MAX_PATH];
 	char filename[_MAX_PATH];
-	portable_makepath(fullpath, drive, dir, NULL, NULL);
+	portable_makepath(fullpath, drive, dir, nullptr, nullptr);
 
 	ICryPak* pack = g_GetISystem()->GetIPak();
 

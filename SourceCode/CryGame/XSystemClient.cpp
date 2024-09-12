@@ -100,7 +100,7 @@ void CXSystemClient::DeleteAllEntities()
 ///////////////////////////////////////////////
 void CXSystemClient::Disconnected(const char *szCause)
 {
-	if(!szCause) szCause = "NULL ERROR";
+	if(!szCause) szCause = "nullptr ERROR";
 	TRACE("Client Disconnected");
 	TRACE(szCause);
 //	m_pLog->LogToConsole("Client Disconnected %s",GetEnglish(szCause)->c_str());

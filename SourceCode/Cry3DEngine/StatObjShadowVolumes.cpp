@@ -48,7 +48,7 @@ ItShadowVolume* CStatObj::MakeConnectivityInfo(CIndexedMesh* pMesh, const Vec3d&
 	//set the same light area geometry
 	tContainer tCont;
 	tCont.pObj = pStatObj;
-	tCont.pSV = NULL;
+	tCont.pSV = nullptr;
 	//ptSvObj->pSvObj->AddGeometry(this);
 	ptSvObj->pSvObj->AddGeometry(tCont);
 	//mark the geometry as shared
@@ -59,7 +59,7 @@ ItShadowVolume* CStatObj::MakeConnectivityInfo(CIndexedMesh* pMesh, const Vec3d&
 	if (!ptSvObj->pSvObj->CreateConnectivityInfo())
 	{ // delete empty objects
 		ptSvObj->Release();
-		ptSvObj = NULL;
+		ptSvObj = nullptr;
 	}
 
 
@@ -75,7 +75,7 @@ ItShadowVolume* CStatObj::MakeConnectivityInfoFromCompiledData(void* pStream, in
 
 	tContainer tCont;
 	tCont.pObj = pStatObj;
-	tCont.pSV = NULL;
+	tCont.pSV = nullptr;
 	//ptSvObj->pSvObj->AddGeometry(this);
 	ptSvObj->pSvObj->AddGeometry(tCont);
 	//mark the geometry as shared
@@ -85,7 +85,7 @@ ItShadowVolume* CStatObj::MakeConnectivityInfoFromCompiledData(void* pStream, in
 
 	IEdgeConnectivityBuilder* iBuilder = Get3DEngine()->GetNewConnectivityBuilder();
 	ptSvObj->pSvObj->GetEdgeConnectivity() = iBuilder->ConstructConnectivity();
-	nPos += ptSvObj->pSvObj->GetEdgeConnectivity()->Serialize(false, &((byte*)pStream)[nPos], 1000000, NULL);//GetLog());
+	nPos += ptSvObj->pSvObj->GetEdgeConnectivity()->Serialize(false, &((byte*)pStream)[nPos], 1000000, nullptr);//GetLog());
 
 	return (ptSvObj);
 }
@@ -209,7 +209,7 @@ void CStatObj::RenderShadowVolumes(const SRendParams* pParams, int nLimitLod)
 		pObj->m_TempVars[0] = pParams->fShadowVolumeExtent;
 
 		IShader* pEff = ((C3DEngine*)Get3DEngine())->m_pSHStencil;
-		GetRenderer()->EF_AddEf(0, (CRendElement*)pSvObj->m_pReMeshShadow, pEff, NULL, pObj, -1, NULL, pParams->nSortValue);
+		GetRenderer()->EF_AddEf(0, (CRendElement*)pSvObj->m_pReMeshShadow, pEff, nullptr, pObj, -1, nullptr, pParams->nSortValue);
 	}
 }
 
@@ -217,7 +217,7 @@ CVolume::~CVolume()
 {
 	for (ContainerListIt i = m_lstObjects.begin(); i != m_lstObjects.end();)
 	{
-		RemoveGeometry(NULL, i);
+		RemoveGeometry(nullptr, i);
 		i = m_lstObjects.begin();
 	} //i
 
@@ -315,7 +315,7 @@ CShadowVolObject::~CShadowVolObject()
 	if (m_pFaceList)
 	{
 		delete [] m_pFaceList;
-		m_pFaceList=NULL;
+		m_pFaceList=nullptr;
 	}
 	*/
 
@@ -339,7 +339,7 @@ void CShadowVolObject::FreeVertexBuffers()
 	if (m_pReMeshShadow)
 	{
 		m_pReMeshShadow->Release();
-		m_pReMeshShadow = NULL;
+		m_pReMeshShadow = nullptr;
 	}
 
 	/*if (m_pReMeshAdditionalShadow)
@@ -349,11 +349,11 @@ void CShadowVolObject::FreeVertexBuffers()
 		{
 			//those edges are shared!
 			//delete [] m_pReMeshAdditionalShadow->m_pShadowVolEdgesList;
-			m_pReMeshAdditionalShadow->m_pShadowVolEdgesList=NULL;
+			m_pReMeshAdditionalShadow->m_pShadowVolEdgesList=nullptr;
 		}
 
 		m_pReMeshAdditionalShadow->Release();
-		m_pReMeshAdditionalShadow=NULL;
+		m_pReMeshAdditionalShadow=nullptr;
 	}*/
 
 	m_nNumVertices = 0;
@@ -398,7 +398,7 @@ void CShadowVolObject::RebuildShadowVolumeBuffer(const CDLight& lSource, float f
 
 	if (m_pEdgeConnectivity->IsStandalone())
 	{
-		iEdgeDetector->BuildSilhuetteFromPos(m_pEdgeConnectivity, vObjectSpaceLight, NULL);
+		iEdgeDetector->BuildSilhuetteFromPos(m_pEdgeConnectivity, vObjectSpaceLight, nullptr);
 	}
 	/*else
 	{
@@ -550,7 +550,7 @@ void CShadowVolObject::RebuildShadowVolumeBuffer(const CDLight& lSource, float f
 		  //renderer->UpdateBuffer (m_pRenShadowVolumeBuffer, m_pMemShadowVolumeBuffer, nNumVertices, true, 0);
 	  renderer->UpdateBuffer(m_pRenShadowVolumeLBuffer->m_pVertexBuffer,m_pMemShadowVolumeBuffer,nNumVertices,true);
 		renderer->UpdateIndices(m_pRenShadowVolumeLBuffer->m_pVertexBuffer,&m_arrIndices[0],nNumIndices);
-		  renderer->EF_AddEf(0, (CRendElement *)m_pReMeshShadow , rParams->pEff, pObj, -1, NULL, rParams->nSortValue);
+		  renderer->EF_AddEf(0, (CRendElement *)m_pReMeshShadow , rParams->pEff, pObj, -1, nullptr, rParams->nSortValue);
   */
 
   //		m_pReMeshShadow->m_nNumIndices = nNumIndices;	
@@ -569,7 +569,7 @@ void CShadowVolObject::RebuildShadowVolumeBuffer(const CDLight& lSource, float f
 	}
 }
 
-void CVolume::RemoveGeometry(IStatObj* pSource, ContainerListIt it/* =NULL */)
+void CVolume::RemoveGeometry(IStatObj* pSource, ContainerListIt it/* =nullptr */)
 {
 	ContainerListIt i = m_lstObjects.end();
 	if (it != m_lstObjects.end())
@@ -633,7 +633,7 @@ void CShadowVolObject::PrepareShadowVolumeVertexBuffer(unsigned nNumIndices, uns
 		if (m_pSystemVertexBuffer)
 		{
 			delete[] m_pSystemVertexBuffer;
-			m_pSystemVertexBuffer = NULL;
+			m_pSystemVertexBuffer = nullptr;
 		}
 	}
 

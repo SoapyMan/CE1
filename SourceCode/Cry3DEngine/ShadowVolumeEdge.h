@@ -81,10 +81,10 @@ class CShadowVolEdge
 public:
 	CShadowVolEdge()
 	{
-		m_pFace1 = NULL;
-		m_pFace2 = NULL;
+		m_pFace1 = nullptr;
+		m_pFace2 = nullptr;
 		m_nVNum0 = m_nVNum1 = 0;
-		m_pAddEdge = NULL;
+		m_pAddEdge = nullptr;
 	}
 
 	~CShadowVolEdge()
@@ -92,7 +92,7 @@ public:
 		if (m_pAddEdge)
 		{
 			delete[] m_pAddEdge;
-			m_pAddEdge = NULL;
+			m_pAddEdge = nullptr;
 		}
 	}
 

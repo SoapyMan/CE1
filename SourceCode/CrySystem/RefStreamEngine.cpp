@@ -24,7 +24,7 @@ CRefStreamEngine::CRefStreamEngine(CCryPak* pPak, IMiniLog* pLog, unsigned useWo
 #if defined(LINUX)
 	m_hIOWorker(INVALID_HANDLE_VALUE),//only diff is here, but what can i do?
 #else
-	m_hIOWorker(NULL),
+	m_hIOWorker(nullptr),
 #endif
 	m_dwWorkerThreadId(0),
 	m_queIOJobs(ProxyPtrAllocator(g_pSmallHeap)),
@@ -47,9 +47,9 @@ CRefStreamEngine::CRefStreamEngine(CCryPak* pPak, IMiniLog* pLog, unsigned useWo
 	SetCallbackTimeQuota(50000);
 	m_dwMask = 0;
 
-	m_hIOJob = CreateEvent(NULL, FALSE, FALSE, NULL);
-	m_hIOExecuted = CreateEvent(NULL, TRUE, FALSE, NULL);
-	m_hDummyEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
+	m_hIOJob = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+	m_hIOExecuted = CreateEvent(nullptr, TRUE, FALSE, nullptr);
+	m_hDummyEvent = CreateEvent(nullptr, FALSE, FALSE, nullptr);
 	memset(m_nSectorSizes, 0, sizeof(m_nSectorSizes));
 
 	if (useWorkerThreads)
@@ -198,13 +198,13 @@ unsigned CRefStreamEngine::GetFileSize(const char* szFilePathPC, unsigned nCryPa
 
 	// we didn't find the file size in the cache - open the file and query the size
 #if defined(LINUX)
-	HANDLE hFile = CreateFile(szFilePath, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
+	HANDLE hFile = CreateFile(szFilePath, GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, 0, nullptr);
 #else
-	HANDLE hFile = CreateFile(szFilePath, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
+	HANDLE hFile = CreateFile(szFilePath, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, 0, nullptr);
 #endif
 	if (hFile != INVALID_HANDLE_VALUE)
 	{
-		unsigned nFileSize = ::GetFileSize(hFile, NULL);
+		unsigned nFileSize = ::GetFileSize(hFile, nullptr);
 		CloseHandle(hFile);
 		return nFileSize;
 	}
@@ -427,7 +427,7 @@ unsigned CRefStreamEngine::StartIOJobs()
 	{
 		AUTO_LOCK(m_csIOPending);
 
-		CRefReadStreamProxy* pEndJob = NULL; // the job that will mark the end of loop
+		CRefReadStreamProxy* pEndJob = nullptr; // the job that will mark the end of loop
 		// TODO: implement limitation on the number of simultaneous read requests
 		while (!m_queIOJobs.empty()
 			&& m_setIOPending.size() < m_nMaxReadDepth
@@ -459,7 +459,7 @@ unsigned CRefStreamEngine::StartIOJobs()
 				// we didn't start reading and can't do so. It's already moved into Executed queue as errorneous
 				++numMovedJobs;
 
-				pEndJob = NULL; // start the whole loop all over again.
+				pEndJob = nullptr; // start the whole loop all over again.
 			}
 			else
 			{
@@ -545,12 +545,12 @@ unsigned CRefStreamEngine::GetSectorSize(const char* szPath)
 		{
 			// this is relative path
 			TElementaryArray<char> pDir;
-			DWORD dwLen = GetCurrentDirectory(0, NULL);
+			DWORD dwLen = GetCurrentDirectory(0, nullptr);
 			pDir.reinit(dwLen);
 			if (dwLen != GetCurrentDirectory(dwLen, &pDir[0]))
 			{
 				DWORD dwSectorsPerCluster, dwBytesPerSector, dwNumberOfFreeClusters, dwTotalNumberOfClusters;
-				if (!GetDiskFreeSpace(NULL, &dwSectorsPerCluster, &dwBytesPerSector, &dwNumberOfFreeClusters, &dwTotalNumberOfClusters))
+				if (!GetDiskFreeSpace(nullptr, &dwSectorsPerCluster, &dwBytesPerSector, &dwNumberOfFreeClusters, &dwTotalNumberOfClusters))
 					dwSectorsPerCluster = 2 * 1024;
 				return dwSectorsPerCluster;
 			}
@@ -566,7 +566,7 @@ unsigned CRefStreamEngine::GetDriveSectorSize(char cDrive)
 	char szBuf[4] = "X:\\";
 	szBuf[0] = cDrive;
 	// determine the pointer to the cached value of the sector size (NULL if there's no such)
-	unsigned* pCachedSectorSize = NULL;
+	unsigned* pCachedSectorSize = nullptr;
 	if (szBuf[0] >= 'c' && unsigned(szBuf[0] - 'c') < SIZEOF_ARRAY(m_nSectorSizes))
 		pCachedSectorSize = m_nSectorSizes + szBuf[0] - 'c';
 
@@ -593,7 +593,7 @@ void CRefStreamEngine::StopWorkerThread()
 		SetEvent(m_hIOJob);
 		WaitForSingleObject(m_hIOWorker, INFINITE);
 		CloseHandle(m_hIOWorker);
-		m_hIOWorker = NULL;
+		m_hIOWorker = nullptr;
 	}
 }
 
@@ -601,7 +601,7 @@ void CRefStreamEngine::StartWorkerThread()
 {
 	StopWorkerThread();
 	m_bStopIOWorker = false;
-	m_hIOWorker = CreateThread(NULL, 0x8000, IOWorkerThreadProc, this, 0, &m_dwWorkerThreadId);
+	m_hIOWorker = CreateThread(nullptr, 0x8000, IOWorkerThreadProc, this, 0, &m_dwWorkerThreadId);
 }
 
 //////////////////////////////////////////////////////////////////////////

@@ -63,7 +63,7 @@ void CParticleEmitter::SetParams(const ParticleParams& params)
 
 	*m_pParams = params;
 	m_pParams->pChild = 0;
-	if (params.pChild != NULL && params.pChild->nCount > 0)
+	if (params.pChild != nullptr && params.pChild->nCount > 0)
 	{
 		m_pChildParams = new ParticleParams;
 		m_pParams->pChild = m_pChildParams;
@@ -281,7 +281,7 @@ void CParticleEmitter::SetEntity(IEntityRender* pEntity)
 void CParticleEmitter::SetMaterial(IMatInfo* pMaterial)
 {
 	m_pMaterial = pMaterial;
-	m_pShader = NULL;
+	m_pShader = nullptr;
 	if (m_pMaterial)
 	{
 		IShader* pContainerShader = m_pMaterial->GetShaderItem().m_pShader;
@@ -313,11 +313,8 @@ void CParticleEmitter::OnActivate(bool bActive)
 		// Effect is activated.
 		// Play sound if have.
 		ISoundSystem* pISoundSystem = GetISystem()->GetISoundSystem();
-#if !defined(LINUX64)
-		if (pISoundSystem != NULL && m_pEffect != NULL)
-#else
-		if (pISoundSystem != 0 && m_pEffect != 0)
-#endif
+
+		if (pISoundSystem && m_pEffect)
 		{
 			// Check if effect needs to play sounds.
 			IParticleEffect::SoundParams soundParams;
@@ -334,11 +331,7 @@ void CParticleEmitter::OnActivate(bool bActive)
 					m_bLoopSound = false;
 
 				m_pSound = pISoundSystem->LoadSound(soundParams.szSound, nSndFlags);
-#if !defined(LINUX64)
-				if (m_pSound != NULL && !soundParams.bOnEverySpawn)
-#else
-				if (m_pSound != 0 && !soundParams.bOnEverySpawn)
-#endif
+				if (m_pSound && !soundParams.bOnEverySpawn)
 				{
 					PlaySound();
 				}
@@ -351,7 +344,7 @@ void CParticleEmitter::OnActivate(bool bActive)
 		if (m_pSound != 0 && m_bLoopSound)
 		{
 			m_pSound->Stop();
-			m_pSound = NULL;
+			m_pSound = nullptr;
 		}
 	}
 
@@ -387,11 +380,7 @@ void CParticleEmitter::PlaySound()
 //////////////////////////////////////////////////////////////////////////
 void CParticleEmitter::OnSpawnParticles(bool bChildProcess)
 {
-#if !defined(LINUX64)
-	if (!bChildProcess && m_pSound != NULL && m_pEffect != NULL)
-#else
-	if (!bChildProcess && m_pSound != 0 && m_pEffect != 0)
-#endif
+	if (!bChildProcess && m_pSound && m_pEffect)
 	{
 		IParticleEffect::SoundParams soundParams;
 		m_pEffect->GetSoundParams(soundParams);

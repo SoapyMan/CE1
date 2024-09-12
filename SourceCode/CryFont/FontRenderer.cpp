@@ -28,8 +28,8 @@ CFontRenderer::~CFontRenderer()
 {
 	FT_Done_Face(m_pFace);;
 	FT_Done_FreeType(m_pLibrary);
-	m_pFace = NULL;
-	m_pLibrary = NULL;
+	m_pFace = nullptr;
+	m_pLibrary = nullptr;
 }
 
 //------------------------------------------------------------------------------------------------- 
@@ -80,8 +80,8 @@ int CFontRenderer::Release()
 {
 	FT_Done_Face(m_pFace);;
 	FT_Done_FreeType(m_pLibrary);
-	m_pFace = NULL;
-	m_pLibrary = NULL;
+	m_pFace = nullptr;
+	m_pLibrary = nullptr;
 
 	return 1;
 }
@@ -200,6 +200,9 @@ int CFontRenderer::GetGlyph(CGlyphBitmap* pGlyphBitmap, int* iGlyphWidth, int* i
 		OutputDebugString(szBuf);
 	}
 #endif
+
+	//GetISystem()->GetILog()->LogWarning("GetGlyph(%p,%p->%d,%p->%d,x=%d,y=%d,char=%d (%c))\n", pGlyphBitmap, iGlyphWidth, *iGlyphWidth, iGlyphHeight, *iGlyphHeight, iX, iY, iCharCode, iCharCode);
+
 	FT_Error iError = FT_Load_Char(m_pFace, iCharCode, FT_LOAD_DEFAULT);
 	if (iError)
 		return 0;

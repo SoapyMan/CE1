@@ -38,7 +38,7 @@ public:
 	//!
 	void Reset();
 	//!
-	void Invalidate(){m_pEntity=NULL;};
+	void Invalidate(){m_pEntity=nullptr;};
 	//!
 	bool operator ==(EntityId id) const;
 	//!

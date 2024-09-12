@@ -15,7 +15,7 @@
 
 void* CVertexBuffer::GetStream(int nStream, int* nOffs)
 {
-	return NULL;
+	return nullptr;
 }
 
 void* CNULLRenderer::GetDynVBPtr(int nVerts, int& nOffs, int Pool)

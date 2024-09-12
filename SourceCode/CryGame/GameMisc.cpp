@@ -106,7 +106,7 @@ IEntity *CXGame::GetMyPlayer()
 {
 	if (m_pClient)
 		return m_pClient->m_pISystem->GetLocalPlayer();
-	return NULL;
+	return nullptr;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -251,10 +251,10 @@ void CXGame::CreateExplosion(const Vec3& pos,float fDamage,float rmin,float rmax
 		force = 2.0f;
 	m_pSystem->GetI3DEngine()->ApplyForceToEnvironment(pos,radius,force);
 
-	IPhysicalEntity **ppList = NULL;
+	IPhysicalEntity **ppList = nullptr;
 	int iNumEntites;
 	int i;
-	IEntity *pIEntity = NULL;
+	IEntity *pIEntity = nullptr;
 
 	vectorf vMin(pos.x - radius, pos.y - radius, pos.z - radius);
 	vectorf vMax(pos.x + radius, pos.y + radius, pos.z + radius);
@@ -265,7 +265,7 @@ void CXGame::CreateExplosion(const Vec3& pos,float fDamage,float rmin,float rmax
 	//////////////////////////////////////////////////////////////////////////
 	// Check independent entities.
 	//////////////////////////////////////////////////////////////////////////
-	ppList = NULL;
+	ppList = nullptr;
 	iNumEntites = pWorld->GetEntitiesInBox(vMin, vMax, ppList, ent_independent|ent_allocate_list);
 	for (i=0; i<iNumEntites; i++)
 	{
@@ -284,7 +284,7 @@ void CXGame::CreateExplosion(const Vec3& pos,float fDamage,float rmin,float rmax
 	pWorld->GetPhysUtils()->DeletePointer(ppList);
 	//////////////////////////////////////////////////////////////////////////
 
-	ppList = NULL;
+	ppList = nullptr;
 	iNumEntites = pWorld->GetEntitiesInBox(vMin, vMax, ppList, (ent_all&~(ent_terrain|ent_independent))|ent_allocate_list);
 
 	for (i=0; i<iNumEntites; i++)
@@ -347,7 +347,7 @@ void CXGame::CreateExplosion(const Vec3& pos,float fDamage,float rmin,float rmax
 
 		//_SmartScriptObject pMat(m_pScriptSystem, true);
 		//if (m_pScriptSystem->GetGlobalValue("mat_flesh", pMat))
-		IScriptObject *pMat  = NULL;
+		IScriptObject *pMat  = nullptr;
 		pMat = m_XSurfaceMgr.GetMaterialByName("mat_flesh");
 		if (pMat)
 			pTable->SetValue("target_material", pMat);
@@ -361,7 +361,7 @@ void CXGame::CreateExplosion(const Vec3& pos,float fDamage,float rmin,float rmax
 	pIEntity = GetMyPlayer();
 	if( pIEntity )
 	{
-		CPlayer* pPlayer=NULL;
+		CPlayer* pPlayer=nullptr;
 		CXClient *pClient=GetClient();
 		if (pIEntity->GetContainer()) 
 			pIEntity->GetContainer()->QueryContainerInterface(CIT_IPLAYER,(void**) &pPlayer);

@@ -360,7 +360,7 @@ bool CLeafBuffer::LoadMaterial(int m,
 		newMat.sScriptMaterial[0] = 0;
 	}
 
-	char* templName = NULL;;
+	char* templName = nullptr;;
 	if (strnicmp(mName, "$s_", 3) == 0)
 	{
 		templName = &mName[3];

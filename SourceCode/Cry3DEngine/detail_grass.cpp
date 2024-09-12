@@ -36,7 +36,7 @@ public:
 		strncpy(sObjectFileName, fname, sizeof(sObjectFileName));
 
 		m_pObject = new CStatObj();
-		if (!m_pObject->Load(fname, NULL, evs_ShareAndSortForCache, false, false))
+		if (!m_pObject->Load(fname, nullptr, evs_ShareAndSortForCache, false, false))
 		{
 			delete m_pObject;
 			m_pObject = 0;
@@ -68,7 +68,7 @@ public:
 		Vec3d vCenter = (m_pObject->GetBoxMax() + m_pObject->GetBoxMin()) / 2;
 
 		struct_VERTEX_FORMAT_P3F_COL4UB_TEX2F* pSecVerts = (struct_VERTEX_FORMAT_P3F_COL4UB_TEX2F*)pLeafBuffer->m_pSecVertBuffer->m_VS[VSF_GENERAL].m_VData;
-		ushort* pInds = pLeafBuffer->GetIndices(NULL);
+		ushort* pInds = pLeafBuffer->GetIndices(nullptr);
 		int nStrPos;
 		byte* pPos = pLeafBuffer->GetPosPtr(nStrPos, 0, true);
 		int nStrST;
@@ -294,7 +294,7 @@ bool CDetailGrass::PrepareBufferCallback(CLeafBuffer* pLeafBuffer, bool bNeedTan
 					(struct_VERTEX_FORMAT_P3F_COL4UB_TEX2F*)pLeafBuffer->m_pVertexBuffer->m_VS[VSF_GENERAL].m_VData);
 
 				// unlock
-				pThis->GetRenderer()->UpdateBuffer(pLeafBuffer->m_pVertexBuffer, NULL, 0, true, 0, 1);
+				pThis->GetRenderer()->UpdateBuffer(pLeafBuffer->m_pVertexBuffer, nullptr, 0, true, 0, 1);
 
 				//pLeafBuffer->UpdateSysIndices(pThis->m_GrassIndices.GetElements(), pThis->m_GrassIndices.Count());
 				pLeafBuffer->UpdateVidIndices(pThis->m_GrassIndices.GetElements(), pThis->m_GrassIndices.Count());

@@ -102,7 +102,7 @@ public: // ---------------------------------------------------------------------
 
 	virtual bool Init();
 	virtual void Update();
-	virtual bool Write(CStream&,EntityCloneState *cs=NULL);
+	virtual bool Write(CStream&,EntityCloneState *cs=nullptr);
 	virtual bool Read(CStream&);
 	virtual IScriptObject *GetScriptObject() { return m_pScriptObject; }
 	virtual void SetScriptObject(IScriptObject *pObject) { m_pScriptObject=pObject; }
@@ -128,8 +128,8 @@ public: // ---------------------------------------------------------------------
 	void GetWheelStatus(int nWheel, pe_status_wheel *pStatus);
 
 	bool IsDirty(void) {return false;}
-	bool Save( CStream &stream,IScriptObject *pStream=NULL ){return false;}
-	bool Load( CStream &stream,IScriptObject *pStream=NULL ){return false;}
+	bool Save( CStream &stream,IScriptObject *pStream=nullptr ){return false;}
+	bool Load( CStream &stream,IScriptObject *pStream=nullptr ){return false;}
 
 	bool HasAccelerated() { return m_bAcceleratedLastUpdate && m_bAcceleratedFlagSetLastFrame; };
 	bool IsBreaking() { return m_bIsBreaking; };

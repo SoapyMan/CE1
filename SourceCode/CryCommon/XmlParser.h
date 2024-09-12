@@ -205,7 +205,7 @@ public:
 		if (isValid())
 			return _buffer + _current;
 		else
-			return NULL;
+			return nullptr;
 	}
 
 	char* getParseState(long& parseLength)
@@ -579,7 +579,7 @@ public:
 		if (hasName())
 			return _buffer + _nameStart;
 		else
-			return NULL;
+			return nullptr;
 	}
 
 	bool hasName()
@@ -617,7 +617,7 @@ public:
 		if (hasAttributes())
 			return _buffer + _attrStart;
 		else
-			return NULL;
+			return nullptr;
 	}
 
 	bool hasAttributes()
@@ -653,7 +653,7 @@ public:
 		if (hasValue())
 			return _buffer + _valueStart;
 		else
-			return NULL;
+			return nullptr;
 	}
 
 	bool hasValue()
@@ -738,7 +738,7 @@ public:
 		if (hasTag())
 			return _buffer + _firstTagStart;
 		else
-			return NULL;
+			return nullptr;
 	}
 
 	char* getLastTagPos()
@@ -746,7 +746,7 @@ public:
 		if (hasTag())
 			return _buffer + _lastTagStart;
 		else
-			return NULL;
+			return nullptr;
 	}
 
 	string getTag()

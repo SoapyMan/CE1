@@ -5,7 +5,7 @@
 
 CXGUIControl::CXGUIControl()
 {
-	m_pGUIScriptSystem=NULL;
+	m_pGUIScriptSystem=nullptr;
 	m_hFunc=INVALID_SCRIPT_FUNCTION;
 	m_bUpdated=false;
 	m_bFocus=false;
@@ -29,7 +29,7 @@ CXGUIControl::~CXGUIControl()
 /*! Search for a control-effect.
 		@param nEvent EventID to find the effect for
 		@param nEffect EffectID to find the effect for
-		@return struct of SCtrlEffect describing the effect or NULL if no effect was found
+		@return struct of SCtrlEffect describing the effect or nullptr if no effect was found
 */
 SCtrlEffect* CXGUIControl::FindEffect(int nEvent, int nEffect)
 {
@@ -41,7 +41,7 @@ SCtrlEffect* CXGUIControl::FindEffect(int nEvent, int nEffect)
 			return &Effect;
 		++It;
 	}
-	return NULL;
+	return nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////

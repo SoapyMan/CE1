@@ -36,10 +36,10 @@
 _DECLARE_SCRIPTABLEEX(CScriptObjectEntity)
 
 #ifdef USE_MEMBER_POS
-IScriptObject* CScriptObjectEntity::m_pObjectPos = NULL;
-IScriptObject* CScriptObjectEntity::m_pObjectAngles = NULL;
-IScriptObject* CScriptObjectEntity::m_pCameraPosition = NULL;
-IScriptObject* CScriptObjectEntity::m_pGenVector = NULL;
+IScriptObject* CScriptObjectEntity::m_pObjectPos = nullptr;
+IScriptObject* CScriptObjectEntity::m_pObjectAngles = nullptr;
+IScriptObject* CScriptObjectEntity::m_pCameraPosition = nullptr;
+IScriptObject* CScriptObjectEntity::m_pGenVector = nullptr;
 #endif
 
 IScriptObject* CScriptObjectEntity::m_memberSO[SOE_MEMBER_LAST];
@@ -103,7 +103,7 @@ void CScriptObjectEntity::SetEntity(IEntity* pEntity)
 	CRYASSERT(m_pScriptThis);
 	m_pScriptThis->Clone(*pObj);
 	CRYASSERT(m_pScriptThis);
-	if (m_pEntity != NULL)
+	if (m_pEntity != nullptr)
 	{
 		CRYASSERT(m_pScriptThis);
 		m_pScriptThis->SetValue("id", ((int)m_pEntity->GetId()));
@@ -370,12 +370,12 @@ void CScriptObjectEntity::InitializeTemplate(IScriptSystem* pSS)
 
 void CScriptObjectEntity::SetContainer(IScriptObject* pContainer)
 {
-	/*if(pContainer!=NULL)
+	/*if(pContainer!=nullptr)
 	{
 		EnablePropertiesMapping();
 		RegisterProperty("cnt",pContainer);
 	}*/
-	if (pContainer != NULL)
+	if (pContainer != nullptr)
 		m_pScriptThis->SetValue("cnt", pContainer);
 	else
 		m_pScriptThis->SetToNull("cnt");
@@ -1406,7 +1406,7 @@ int CScriptObjectEntity::StartAnimation(IFunctionHandler* pH)
 		}
 	}
 
-	if (string(animname) == string("NULL"))
+	if (string(animname) == string("nullptr"))
 	{
 		ICryCharInstance* pCharacter = m_pEntity->GetCharInterface()->GetCharacter(pos);
 		bool result = pCharacter->StopAnimation(layer);
@@ -2014,7 +2014,7 @@ int CScriptObjectEntity::GetParticleCollisionStatus(IFunctionHandler* pH)
 
 		if (pe->GetStatus(&sc))
 		{
-			IEntity* collider = NULL;
+			IEntity* collider = nullptr;
 			//if (hit.pCollider)
 	  //{ collider = (IEntity*)hit.pCollider->GetForeignData();
 			IPhysicalEntity* pCollider = m_pISystem->GetIPhysicalWorld()->GetPhysicalEntityById(hit.idCollider);
@@ -2038,7 +2038,7 @@ int CScriptObjectEntity::GetParticleCollisionStatus(IFunctionHandler* pH)
 			pObj->SetValue("IsPlayer", 0);
 			if (collider)
 			{
-				void* pInterface = NULL;
+				void* pInterface = nullptr;
 				IEntityContainer* pICnt = collider->GetContainer();
 				if (pICnt)
 					if (pICnt->QueryContainerInterface(CIT_IPLAYER, &pInterface))
@@ -2166,7 +2166,7 @@ int CScriptObjectEntity::IsAnimationRunning(IFunctionHandler* pH)
 	CHECK_PARAMETERS(1);
 
 	int iAnimationPos;
-	ICryCharInstance* pCharacter = NULL;
+	ICryCharInstance* pCharacter = nullptr;
 
 	pH->GetParam(1, iAnimationPos);
 
@@ -2311,7 +2311,7 @@ int CScriptObjectEntity::PlaySound(IFunctionHandler* pH)
 {
 	int nCookie = 0;
 	float fVolumeScale = 1.0f;
-	ISound* pSound = NULL;
+	ISound* pSound = nullptr;
 
 	pH->GetParamUDVal(1, (INT_PTR&)pSound, nCookie);
 
@@ -2342,7 +2342,7 @@ int CScriptObjectEntity::PlaySound(IFunctionHandler* pH)
 	/*
 	else
 	{
-		m_pScriptSystem->RaiseError("PlaySound NULL SOUND!!");
+		m_pScriptSystem->RaiseError("PlaySound nullptr SOUND!!");
 	}
 	*/
 
@@ -2580,7 +2580,7 @@ int CScriptObjectEntity::GetShader(IFunctionHandler* pH)
 int CScriptObjectEntity::GetCameraPosition(IFunctionHandler* pH)
 {
 	Vec3 vPos;
-	IEntityCamera* pICam = NULL;
+	IEntityCamera* pICam = nullptr;
 
 	CHECK_PARAMETERS(0);
 
@@ -2602,7 +2602,7 @@ int CScriptObjectEntity::GetCameraPosition(IFunctionHandler* pH)
 int CScriptObjectEntity::GetCameraAngles(IFunctionHandler* pH)
 {
 	Vec3 vAng;
-	IEntityCamera* pICam = NULL;
+	IEntityCamera* pICam = nullptr;
 
 	CHECK_PARAMETERS(0);
 
@@ -3270,7 +3270,7 @@ int CScriptObjectEntity::GetState(IFunctionHandler* pH)
 int CScriptObjectEntity::GetCurAnimation(IFunctionHandler* pH)
 {
 	int iPos;
-	ICryCharInstance* pCharacter = NULL;
+	ICryCharInstance* pCharacter = nullptr;
 
 	CHECK_PARAMETERS(1);
 
@@ -3526,8 +3526,8 @@ int CScriptObjectEntity::GetTouchedPoint(IFunctionHandler* pH)
 // projTexName shaderName flags 
 int CScriptObjectEntity::InitDynamicLight(IFunctionHandler* pH)
 {
-	const char* sTexName = NULL;
-	const char* sShaderName = NULL;
+	const char* sTexName = nullptr;
+	const char* sShaderName = nullptr;
 
 	int nAsCubemap = 0;
 	float fAnimSpeed = 0;
@@ -3608,8 +3608,8 @@ int CScriptObjectEntity::AddDynamicLight2(IFunctionHandler* pH)
 		m_pScriptSystem->RaiseError("<AddDynamicLight2> use of model not specified");
 
 	//////////////////////////////////////////////////////////////////////////
-	const char* sTexName = NULL;
-	const char* sShaderName = NULL;
+	const char* sTexName = nullptr;
+	const char* sShaderName = nullptr;
 
 	if (!pITable->GetValueChain("ProjTexture", sTexName))
 		m_pScriptSystem->RaiseError("<AddDynamicLight2> ProjTexture not specified");
@@ -3725,11 +3725,11 @@ int CScriptObjectEntity::AddDynamicLight2(IFunctionHandler* pH)
 
 	DynLight.m_pOwner = m_pEntity;
 
-	if (DynLight.m_fLightFrustumAngle && DynLight.m_pLightImage != NULL && DynLight.m_pLightImage->IsTextureLoaded())
+	if (DynLight.m_fLightFrustumAngle && DynLight.m_pLightImage != nullptr && DynLight.m_pLightImage->IsTextureLoaded())
 		DynLight.m_Flags |= DLF_PROJECT;
 	else
 	{
-		DynLight.m_pLightImage = NULL;
+		DynLight.m_pLightImage = nullptr;
 		DynLight.m_Flags |= DLF_POINT;
 	}
 
@@ -3855,11 +3855,11 @@ int CScriptObjectEntity::AddDynamicLight(IFunctionHandler* pH)
 
 	pDynLight->m_pOwner = m_pEntity;
 
-	if (pDynLight->m_fLightFrustumAngle && pDynLight->m_pLightImage != NULL && pDynLight->m_pLightImage->IsTextureLoaded())
+	if (pDynLight->m_fLightFrustumAngle && pDynLight->m_pLightImage != nullptr && pDynLight->m_pLightImage->IsTextureLoaded())
 		pDynLight->m_Flags |= DLF_PROJECT;
 	else
 	{
-		pDynLight->m_pLightImage = NULL;
+		pDynLight->m_pLightImage = nullptr;
 		pDynLight->m_Flags |= DLF_POINT;
 	}
 
@@ -4042,7 +4042,7 @@ int CScriptObjectEntity::LoadBoat(IFunctionHandler* pH)
 	{
 		/*
 				m_pEntity->LoadObject(0,sFileName,0,"boat_hull");
-				m_pEntity->CreateRigidBody(PE_RIGID,0,fMass,nSurfaceID,NULL,0);
+				m_pEntity->CreateRigidBody(PE_RIGID,0,fMass,nSurfaceID,nullptr,0);
 				return pH->EndFunction(1);
 		/*/
 		//*
@@ -4056,7 +4056,7 @@ int CScriptObjectEntity::LoadBoat(IFunctionHandler* pH)
 				{
 					if(m_pEntity->LoadObject(1,sFileName,0,"boat_hull"))
 					{
-						m_pEntity->CreateRigidBody(PE_RIGID,0,fMass,nSurfaceID,NULL,1);
+						m_pEntity->CreateRigidBody(PE_RIGID,0,fMass,nSurfaceID,nullptr,1);
 						m_pEntity->DrawObject(1, ETY_DRAW_NONE);
 					}
 				}
@@ -4246,7 +4246,7 @@ int CScriptObjectEntity::ChangeAIParameter(IFunctionHandler* pH)
 			switch (nParameter)
 			{
 			case AIPARAM_FWDSPEED:
-				IVehicleProxy* proxy = NULL;
+				IVehicleProxy* proxy = nullptr;
 				if (pObject->GetProxy()->QueryProxy(AIPROXY_VEHICLE, (void**)&proxy))
 				{
 					proxy->SetSpeeds(fValue, -1);
@@ -4353,10 +4353,10 @@ int CScriptObjectEntity::CreateParticleEmitter(IFunctionHandler* pH)
 		sParam.pChild = &sChildParams;
 	}
 	else
-		sParam.pChild = NULL;
+		sParam.pChild = nullptr;
 
 	//STATIC OBJECT BASED PARTICLES
-	sParam.pStatObj = NULL;
+	sParam.pStatObj = nullptr;
 	INT_PTR nValue = 0;
 	int nCookie = 0;
 	if (pObj->GetUDValueChain("geometry", nValue, nCookie) && (nCookie == USER_DATA_OBJECT))
@@ -4594,7 +4594,7 @@ bool CScriptObjectEntity::ReadParticleTable(IScriptObject* pITable, ParticlePara
 		sParamOut.nParticleFlags |= PART_FLAG_SIZE_LINEAR;
 
 	sParamOut.bRealPhysics = bRealPhys != 0;
-	sParamOut.pChild = NULL;
+	sParamOut.pChild = nullptr;
 	sParamOut.fChildSpawnPeriod = fChildSpawnPeriod;
 	sParamOut.fTailLenght = fTailLength;
 
@@ -4675,7 +4675,7 @@ int CScriptObjectEntity::SetDefaultIdleAnimations(IFunctionHandler* pH)
 	//CHECK_PARAMETERS(1);
 	CRYASSERT(pH->GetParamCount() == 1 || pH->GetParamCount() == 2);
 
-	const char* animname = NULL;
+	const char* animname = nullptr;
 	int pos;
 	pH->GetParam(1, pos);
 	if (pH->GetParamCount() > 1)
@@ -4823,14 +4823,14 @@ int CScriptObjectEntity::SayDialog(IFunctionHandler* pH)
 	//if (pH->GetParamCount()>=6)
 	//	pH->GetParam(6, fClipDistance);
 
-	IScriptObject* pAITable = NULL;
+	IScriptObject* pAITable = nullptr;
 	if (pH->GetParamCount() >= 6)
 	{
 		pAITable = m_pScriptSystem->CreateEmptyObject();
 		if (!pH->GetParam(6, pAITable))
 		{
 			pAITable->Release();
-			pAITable = NULL;
+			pAITable = nullptr;
 		}
 	}
 

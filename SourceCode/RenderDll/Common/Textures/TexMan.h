@@ -112,11 +112,11 @@ public:
 	{
 		m_dwWidth = m_dwHeight = 1;
 		m_dwLevels = 0;
-		m_pTex = NULL;
+		m_pTex = nullptr;
 	}
 	virtual ~CBaseMap()
 	{
-		m_pTex = NULL;
+		m_pTex = nullptr;
 	}
 
 	virtual HRESULT Initialize() = 0;
@@ -192,13 +192,13 @@ struct STexPoolItem
 
 	STexPoolItem()
 	{
-		m_pTex = NULL;
-		m_pAPITexture = NULL;
-		m_pOwner = NULL;
-		m_Next = NULL;
-		m_Prev = NULL;
-		m_NextFree = NULL;
-		m_PrevFree = NULL;
+		m_pTex = nullptr;
+		m_pAPITexture = nullptr;
+		m_pOwner = nullptr;
+		m_Next = nullptr;
+		m_Prev = nullptr;
+		m_NextFree = nullptr;
+		m_PrevFree = nullptr;
 	}
 
 	_inline void Unlink()
@@ -207,7 +207,7 @@ struct STexPoolItem
 			return;
 		m_Next->m_Prev = m_Prev;
 		m_Prev->m_Next = m_Next;
-		m_Next = m_Prev = NULL;
+		m_Next = m_Prev = nullptr;
 	}
 
 	_inline void Link(STexPoolItem* Before)
@@ -226,7 +226,7 @@ struct STexPoolItem
 			return;
 		m_NextFree->m_PrevFree = m_PrevFree;
 		m_PrevFree->m_NextFree = m_NextFree;
-		m_NextFree = m_PrevFree = NULL;
+		m_NextFree = m_PrevFree = nullptr;
 	}
 	_inline void LinkFree(STexPoolItem* Before)
 	{
@@ -297,7 +297,7 @@ public:
 	int       DXTSize;
 	SMipmapBase(int InUSize, int InVSize) : DataPtr(0), USize(InUSize), VSize(InVSize) {}
 	SMipmapBase() {}
-	virtual ~SMipmapBase() { DataPtr = NULL; }
+	virtual ~SMipmapBase() { DataPtr = nullptr; }
 };
 
 //
@@ -328,7 +328,7 @@ public:
 		DataArray.Reserve(InSize);
 		USize = InUSize;
 		VSize = InVSize;
-		DataPtr = NULL;
+		DataPtr = nullptr;
 		m_bUploaded = false;
 		m_bLoading = false;
 	}
@@ -497,7 +497,7 @@ struct STexPic : ITexPic
 			return;
 		m_Next->m_Prev = m_Prev;
 		m_Prev->m_Next = m_Next;
-		m_Next = m_Prev = NULL;
+		m_Next = m_Prev = nullptr;
 	}
 	_inline void Link(STexPic* Before)
 	{
@@ -844,7 +844,7 @@ public:
 	virtual void UpdateTextureData(STexPic* pic, byte* data, int USize, int VSize, bool bProc, int State, bool bPal) = 0;
 	virtual void UpdateTextureRegion(STexPic* pic, byte* data, int X, int Y, int USize, int VSize) = 0;
 	virtual STexPic* CreateTexture() = 0;
-	virtual STexPic* CreateTexture(const char* name, int wdt, int hgt, int depth, uint flags, uint flags2, byte* dst, ETexType eTT, float fAmount1 = -1.0f, float fAmount2 = -1.0f, int DXTSize = 0, STexPic* ti = NULL, int bind = 0, ETEX_Format eTF = eTF_8888, const char* szSourceName = NULL) = 0;
+	virtual STexPic* CreateTexture(const char* name, int wdt, int hgt, int depth, uint flags, uint flags2, byte* dst, ETexType eTT, float fAmount1 = -1.0f, float fAmount2 = -1.0f, int DXTSize = 0, STexPic* ti = nullptr, int bind = 0, ETEX_Format eTF = eTF_8888, const char* szSourceName = nullptr) = 0;
 	virtual STexPic* CopyTexture(const char* name, STexPic* ti, int CubeSide = -1) = 0;
 	virtual byte* GenerateDXT_HW(STexPic* ti, EImFormat eF, byte* dst, int* numMips, int* DXTSize, bool bMips = true) = 0;
 	virtual bool IsTextureLoaded(const char* pName);
@@ -885,7 +885,7 @@ public:
 
 	virtual STexPic* GetByID(int Id) = 0;
 	virtual STexPic* GetByName(const char* szName);
-	virtual STexPic* AddToHash(int Id, STexPic* ti) { return NULL; }
+	virtual STexPic* AddToHash(int Id, STexPic* ti) { return nullptr; }
 	virtual void RemoveFromHash(int Id, STexPic* ti) {};
 	virtual void SetTexture(int Id, ETexType eTT) {};
 	virtual void GenerateFuncTextures() = 0;

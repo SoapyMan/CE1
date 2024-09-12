@@ -50,7 +50,7 @@ struct NanoXML
 			sink->EndDocument(pe.err);
 			return;
 		};
-		sink->EndDocument(NULL);	// meaning no error
+		sink->EndDocument(nullptr);	// meaning no error
 		return;
 	};
 

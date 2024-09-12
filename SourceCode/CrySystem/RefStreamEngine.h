@@ -28,7 +28,7 @@ public:
 
 	virtual DWORD GetStreamCompressionMask() const;
 
-	virtual IReadStream_AutoPtr StartRead(const char* szSource, const char* szFile, IStreamCallback* pCallback, StreamReadParams* pParams = NULL);
+	virtual IReadStream_AutoPtr StartRead(const char* szSource, const char* szFile, IStreamCallback* pCallback, StreamReadParams* pParams = nullptr);
 
 	virtual unsigned GetFileSize(const char* szFile, unsigned nCryPakFlags);
 
@@ -94,8 +94,8 @@ protected:
 	static void* WINAPI IOWorkerThreadProc(LPVOID pThis)
 	{
 		((CRefStreamEngine*)pThis)->IOWorkerThread();
-		pthread_exit(NULL);//finish thread
-		return NULL;
+		pthread_exit(nullptr);//finish thread
+		return nullptr;
 	}
 #else
 	static DWORD WINAPI IOWorkerThreadProc(LPVOID pThis)

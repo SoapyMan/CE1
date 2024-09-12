@@ -22,7 +22,7 @@ class CRCSkinVertexSource : public ICrySkinSource
 {
 public:
 	// constructs the vertex source recomputing the actual vertex coordinates with the bones given if any
-	CRCSkinVertexSource(const class CRenderMeshBuilder& rRendMesh, const CryChunkedFile::MeshDesc& rMeshDesc, Matrix44* pBones = NULL);
+	CRCSkinVertexSource(const class CRenderMeshBuilder& rRendMesh, const CryChunkedFile::MeshDesc& rMeshDesc, Matrix44* pBones = nullptr);
 	~CRCSkinVertexSource();
 
 protected:

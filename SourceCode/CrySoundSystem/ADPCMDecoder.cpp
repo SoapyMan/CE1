@@ -43,7 +43,7 @@ inline FILE* CADPCMDecoder::GetNewFileHandle()
 {
 	FILE* pNewFile = m_pPak->FOpen(m_szFilename.c_str(), "rb");
 	if (!pNewFile)
-		return NULL;
+		return nullptr;
 	return pNewFile;
 }
 
@@ -52,7 +52,7 @@ inline void CADPCMDecoder::CloseFileHandle(FILE*& pFile)
 	if (pFile)
 	{
 		m_pPak->FClose(pFile);
-		pFile = NULL;
+		pFile = nullptr;
 	}
 }
 
@@ -170,7 +170,7 @@ inline IMusicPatternDecoderInstance* CADPCMDecoder::CreateInstance()
 /*** INSTANCE ***/
 //////////////////////////////////////////////////////////////////////////
 inline CADPCMDecoderInstance::CADPCMDecoderInstance(CADPCMDecoder* pDecoder)
-	: m_iFilePos(0), m_pFile(NULL), m_nPos(0), m_uiDataStartPos(0), m_uiNumSamples(0), m_sCoefs(7), m_psSamplePtr(NULL),
+	: m_iFilePos(0), m_pFile(nullptr), m_nPos(0), m_uiDataStartPos(0), m_uiNumSamples(0), m_sCoefs(7), m_psSamplePtr(nullptr),
 	m_bInitialized(false), m_bCopyFromLastFrame(false), m_uiCurrentBlockSize(scuiBlockSize), m_uiCurrentSamplesPerBlock(scuiSamplesPerBlock)
 {
 	CRYASSERT(pDecoder);
@@ -398,7 +398,7 @@ inline unsigned short CADPCMDecoderInstance::AdpcmReadBlock(short* pDest)
 			return(0);
 	}
 	//now decode read stuff
-	if (pDest == NULL)
+	if (pDest == nullptr)
 		CADPCMDecoder::AdpcmBlockExpandI(m_sCoefs, m_aCoefs, m_aEncodedBlock, m_aDecodedBlock, samplesThisBlock);
 	else
 		CADPCMDecoder::AdpcmBlockExpandI(m_sCoefs, m_aCoefs, m_aEncodedBlock, pDest, samplesThisBlock);

@@ -366,7 +366,7 @@ void CDecalManager::Spawn(CryEngineDecalInfo DecalInfo, float fMaxViewDistance, 
 			}
 		}
 
-		DecalInfo.pDecalOwner = NULL;
+		DecalInfo.pDecalOwner = nullptr;
 	}
 
 	DecalInfo.vNormal.Normalize();

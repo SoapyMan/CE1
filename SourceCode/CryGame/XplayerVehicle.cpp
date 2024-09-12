@@ -212,7 +212,7 @@ void CPlayer::LeaveVehicle()
 	m_pVehicle->RemoveUser( GetEntity()->GetId() );
 
 	// don't have vehicle anymore
-	m_pVehicle = NULL;
+	m_pVehicle = nullptr;
 }
 
 
@@ -951,7 +951,7 @@ void CVehicle::OnDraw(const SRendParams & rParms)
     {
         SRendParams RenderParams = rParms;
 		// we want it to recalculate the matrix
-		RenderParams.pMatrix = NULL;
+		RenderParams.pMatrix = nullptr;
 		RenderParams.vAngles = m_vWpnAng;
 //RenderParams.vAngles.z = 90.0f;
 //		RenderParams.vAngles.x = -RenderParams.vAngles.x;
@@ -978,7 +978,7 @@ UsersList::iterator	curUser;
 			pCurUserPlayer->m_stats.inVehicleState == state)
 			return pCurUserPlayer;
 	}
-	return NULL;
+	return nullptr;
 }
 
 //
@@ -991,7 +991,7 @@ CPlayer*	CVehicle::GetWeaponUser( )
 		pCurUserEntity->GetContainer() && 
 		pCurUserEntity->GetContainer()->QueryContainerInterface(CIT_IPLAYER,(void**)&pCurUserPlayer) )
 		return pCurUserPlayer;
-	return NULL;
+	return nullptr;
 }
 
 

@@ -86,7 +86,7 @@ protected:
 	// returns the file path tot he file being currently loaded
 	const char* getFilePathCStr()const;
 
-	void indicateProgress(const char* szMsg = NULL);
+	void indicateProgress(const char* szMsg = nullptr);
 protected:
 	// this will contain the information about the loaded bones, if any
 	CryBoneHierarchyLoader m_BoneLoader;

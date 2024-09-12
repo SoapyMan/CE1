@@ -57,7 +57,7 @@ void CShader::mfCompileHWConditions(SShader* ef, char* scr, SShaderTechnique* hs
 
 SShaderTechnique* CShader::mfCompileHW(SShader* ef, char* scr, int Id)
 {
-	return NULL;
+	return nullptr;
 }
 
 //===================================================================
@@ -66,7 +66,7 @@ SShaderTechnique* CShader::mfCompileHW(SShader* ef, char* scr, int Id)
 
 SGenTC* SGenTC_NormalMap::mfCopy()
 {
-	return NULL;
+	return nullptr;
 }
 
 bool SGenTC_NormalMap::mfSet(bool bEnable)
@@ -81,7 +81,7 @@ void SGenTC_NormalMap::mfCompile(char* params, SShader* ef)
 
 SGenTC* SGenTC_ReflectionMap::mfCopy()
 {
-	return NULL;
+	return nullptr;
 }
 
 bool SGenTC_ReflectionMap::mfSet(bool bEnable)
@@ -95,7 +95,7 @@ void SGenTC_ReflectionMap::mfCompile(char* params, SShader* ef)
 
 SGenTC* SGenTC_ObjectLinear::mfCopy()
 {
-	return NULL;
+	return nullptr;
 }
 
 bool SGenTC_ObjectLinear::mfSet(bool bEnable)
@@ -109,7 +109,7 @@ void SGenTC_ObjectLinear::mfCompile(char* scr, SShader* ef)
 
 SGenTC* SGenTC_EyeLinear::mfCopy()
 {
-	return NULL;
+	return nullptr;
 }
 
 bool SGenTC_EyeLinear::mfSet(bool bEnable)
@@ -123,7 +123,7 @@ void SGenTC_EyeLinear::mfCompile(char* scr, SShader* ef)
 
 SGenTC* SGenTC_SphereMap::mfCopy()
 {
-	return NULL;
+	return nullptr;
 }
 
 bool SGenTC_SphereMap::mfSet(bool bEnable)
@@ -138,7 +138,7 @@ void SGenTC_SphereMap::mfCompile(char* params, SShader* ef)
 
 SGenTC* SGenTC_EmbossMap::mfCopy()
 {
-	return NULL;
+	return nullptr;
 }
 
 

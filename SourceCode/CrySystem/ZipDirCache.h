@@ -28,7 +28,7 @@ namespace ZipDir
 // it contains the FILE* : it owns it and closes upon destruction
 struct Cache: public RefCountedDataInstance<Cache>
 {
-	// looks for the given file record in the Central Directory. If there's none, returns NULL.
+	// looks for the given file record in the Central Directory. If there's none, returns nullptr.
 	// if there is some, returns the pointer to it.
 	// the Path must be the relative path to the file inside the Zip
 	// if the file handle is passed, it will be used to find the file data offset, if one hasn't been initialized yet
@@ -44,7 +44,7 @@ struct Cache: public RefCountedDataInstance<Cache>
 	ErrorEnum ReadFile (FileEntry* pFileEntry, void* pCompressed, void* pUncompressed);
 
 	// loads and unpacks the file into a newly created buffer (that must be subsequently freed with
-	// Free()) Returns NULL if failed
+	// Free()) Returns nullptr if failed
 	void* AllocAndReadFile (FileEntry* pFileEntry);
 
 	// frees the memory block that was previously allocated by AllocAndReadFile

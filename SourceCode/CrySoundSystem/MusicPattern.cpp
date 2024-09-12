@@ -12,7 +12,7 @@
 CMusicPattern::CMusicPattern(IMusicSystem* pMusicSystem, const char* pszName, const char* pszFilename)
 {
 	m_pMusicSystem = pMusicSystem;
-	m_pDecoder = NULL;
+	m_pDecoder = nullptr;
 	m_vecFadePoints.clear();
 	m_nLayeringVolume = 255;
 	m_sName = pszName;
@@ -138,7 +138,7 @@ bool CMusicPattern::Open(const char* pszFilename)
 		if (false == m_pDecoder->Open(strFilename.c_str()))
 		{
 			m_pDecoder->Release();
-			m_pDecoder = NULL;
+			m_pDecoder = nullptr;
 			return(false);
 		}
 	}
@@ -203,7 +203,7 @@ bool CMusicPattern::Close()
 		return false;
 	m_pDecoder->Close();
 	m_pDecoder->Release();
-	m_pDecoder = NULL;
+	m_pDecoder = nullptr;
 	return true;
 }
 
@@ -236,7 +236,7 @@ void CMusicPattern::ClearFadePoints()
 IMusicPatternDecoderInstance* CMusicPattern::CreateDecoderInstance()
 {
 	if (!m_pDecoder)
-		return NULL;
+		return nullptr;
 	return m_pDecoder->CreateInstance();
 }
 
@@ -252,7 +252,7 @@ CMusicPatternInstance* CMusicPattern::CreateInstance()
 		}
 	}
 	if (!m_pDecoder)
-		return NULL;
+		return nullptr;
 	m_numPatternInstances++;
 	return new CMusicPatternInstance(this);
 }

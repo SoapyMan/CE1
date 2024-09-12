@@ -87,7 +87,7 @@ public:
 
 	// morphs the LOD 0 into the given destination (already skinned) buffer
 	// pDstNormlas can be non-NULL, in which case the normals are (fakely) modified
-	void MorphWithSkin(Vec3d* pDst, Vec3dA16* pDstNormalsA16 = NULL);
+	void MorphWithSkin(Vec3d* pDst, Vec3dA16* pDstNormalsA16 = nullptr);
 
 	void AddCurrentRenderData(CCObject* obj, CCObject* obj1, const SRendParams& rParams);
 
@@ -115,7 +115,7 @@ public:
 	// can return the model pre-skinned data (i.e. the returned value is not guaranteed to 
 	// be the same as the buffer passed
 	// The normals, if not NULL, are modified according to the vertex movements
-	const Vec3d* SelfSkin(int nLOD, Vec3d* pVertices = NULL, Vec3dA16* pNormalsA16 = NULL);
+	const Vec3d* SelfSkin(int nLOD, Vec3d* pVertices = nullptr, Vec3dA16* pNormalsA16 = nullptr);
 
 	// do not calculate normals and do not copy into video buffers
 	// Returns: number of vertices
@@ -157,7 +157,7 @@ public:
 
 	CLeafBuffer* GetLeafBuffer();
 
-	void SetShaderFloat(const char* Name, float fVal, const char* ShaderName = NULL);
+	void SetShaderFloat(const char* Name, float fVal, const char* ShaderName = nullptr);
 
 	void UpdateMorphEffectors(float fDeltaTimeSec);
 

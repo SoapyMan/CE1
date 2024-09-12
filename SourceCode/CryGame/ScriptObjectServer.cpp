@@ -16,15 +16,15 @@ _DECLARE_SCRIPTABLEEX(CScriptObjectServer)
 
 CScriptObjectServer::CScriptObjectServer()
 {
-	m_pServer=NULL;
-	m_pSlotMap=NULL;
+	m_pServer=nullptr;
+	m_pSlotMap=nullptr;
 }
 
 CScriptObjectServer::~CScriptObjectServer()
 {
 	if(m_pSlotMap)
 		m_pSlotMap->Release();
-	m_pSlotMap=NULL;
+	m_pSlotMap=nullptr;
 }
 //! create the object into the LUA VM
 bool CScriptObjectServer::Create(IScriptSystem *pScriptSystem,IXSystem *pXSystem,CXGame *pGame)
@@ -266,7 +266,7 @@ int CScriptObjectServer::MultiCastObituary(IFunctionHandler *pH)
 */
 int CScriptObjectServer::BroadcastText(IFunctionHandler *pH)
 {
-	const char *sText=NULL;
+	const char *sText=nullptr;
 	if(pH->GetParam(1,sText) && m_pServer && sText)
 	{
 		float fLifeTime = DEFAULT_TEXT_LIFETIME;
@@ -311,7 +311,7 @@ int CScriptObjectServer::RemoveEntity(IFunctionHandler *pH)
 		@param The class id or class name of the entity that is to be created
 		@param Optional world position of where the entity will be created
 		@return If successful it returns a reference to the new entity that is created
-		Otherwise it returns NULL
+		Otherwise it returns nullptr
 		@see RemoveEntity
 */
 int CScriptObjectServer::SpawnEntity(IFunctionHandler *pH)
@@ -438,7 +438,7 @@ int CScriptObjectServer::SpawnEntity(IFunctionHandler *pH)
 	}
 
 	// Attempt to spawn the object using the class ID
-	if((pEntity = m_pXSystem->SpawnEntity(ed)) == NULL)
+	if((pEntity = m_pXSystem->SpawnEntity(ed)) == nullptr)
 		// Spawn failed
 		return pH->EndFunctionNull();
 
@@ -544,7 +544,7 @@ int CScriptObjectServer::RemoveFromTeam(IFunctionHandler *pH)
 int CScriptObjectServer::GetRespawnPoint(IFunctionHandler *pH)
 {
 	CHECK_PARAMETERS(1);
-	char *name=NULL;
+	char *name=nullptr;
 	pH->GetParam(1,name);
 
 	if(!name)
@@ -554,7 +554,7 @@ int CScriptObjectServer::GetRespawnPoint(IFunctionHandler *pH)
 
 	ITagPoint *tag = m_pServer->GetRespawnPoint(name);
 
-	if(tag != NULL)
+	if(tag != nullptr)
 	{
 		_SmartScriptObject pTagPoint(m_pScriptSystem);
 		MakeTagScriptObject(tag, pTagPoint);
@@ -577,7 +577,7 @@ int CScriptObjectServer::GetFirstRespawnPoint(IFunctionHandler *pH)
 
 	ITagPoint *tag = m_pServer->GetFirstRespawnPoint();
 
-	if(tag != NULL)
+	if(tag != nullptr)
 	{
 		_SmartScriptObject pTagPoint(m_pScriptSystem);
 		MakeTagScriptObject(tag, pTagPoint);
@@ -601,7 +601,7 @@ int CScriptObjectServer::GetNextRespawnPoint(IFunctionHandler *pH)
 
 	ITagPoint *tag = m_pServer->GetNextRespawnPoint();
 
-	if(tag != NULL)
+	if(tag != nullptr)
 	{
 		_SmartScriptObject pTagPoint(m_pScriptSystem);
 		MakeTagScriptObject(tag, pTagPoint);
@@ -625,7 +625,7 @@ int CScriptObjectServer::GetPrevRespawnPoint(IFunctionHandler *pH)
 
 	ITagPoint *tag = m_pServer->GetPrevRespawnPoint();
 
-	if(tag != NULL)
+	if(tag != nullptr)
 	{
 		_SmartScriptObject pTagPoint(m_pScriptSystem);
 		MakeTagScriptObject(tag, pTagPoint);
@@ -646,7 +646,7 @@ int CScriptObjectServer::GetPrevRespawnPoint(IFunctionHandler *pH)
 */
 int CScriptObjectServer::GetRandomRespawnPoint(IFunctionHandler *pH)
 {
-	const char *sFilter=NULL;
+	const char *sFilter=nullptr;
 	
 	if(pH->GetParamCount())
 		pH->GetParam(1, sFilter);
@@ -655,7 +655,7 @@ int CScriptObjectServer::GetRandomRespawnPoint(IFunctionHandler *pH)
 
 	ITagPoint *tag = m_pServer->GetRandomRespawnPoint(sFilter);
 
-	if(tag != NULL)
+	if(tag != nullptr)
 	{
 		_SmartScriptObject pTagPoint(m_pScriptSystem);
 		MakeTagScriptObject(tag, pTagPoint);

@@ -412,8 +412,8 @@ bool CGraph::CreateOutline(ListNodes& insideNodes, ListNodes& nodesList, Obstacl
 	//	CRYASSERT(curNode);	//
 	if (!curNode)
 	{
-		m_pAISystem->m_pSystem->GetILog()->Log("\001 CGraph::CreateOutline curNode is NULL  ");
-		AIWarning("CGraph::CreateOutline curNode is NULL  ");
+		m_pAISystem->m_pSystem->GetILog()->Log("\001 CGraph::CreateOutline curNode is nullptr  ");
+		AIWarning("CGraph::CreateOutline curNode is nullptr  ");
 		CRYASSERT(0);
 		return false;
 	}
@@ -422,7 +422,7 @@ bool CGraph::CreateOutline(ListNodes& insideNodes, ListNodes& nodesList, Obstacl
 
 	while (!insideNodesCurrent.empty())
 	{
-		GraphNode* nextCandidate = NULL;
+		GraphNode* nextCandidate = nullptr;
 		//	Vec3d	theOtherVertex;
 		//	Vec3d	nextOtherVertex;
 		int		theOtherVertexIdx;
@@ -484,8 +484,8 @@ bool CGraph::CreateOutline(ListNodes& insideNodes, ListNodes& nodesList, Obstacl
 		//		CRYASSERT(nextCandidate);	//
 		if (!nextCandidate)
 		{
-			m_pAISystem->m_pSystem->GetILog()->Log("\001 CGraph::CreateOutline nextCandidate is NULL  ");
-			AIWarning("CGraph::CreateOutline nextCandidate is NULL  ");
+			m_pAISystem->m_pSystem->GetILog()->Log("\001 CGraph::CreateOutline nextCandidate is nullptr  ");
+			AIWarning("CGraph::CreateOutline nextCandidate is nullptr  ");
 			CRYASSERT(0);
 			return false;
 		}
@@ -1153,7 +1153,7 @@ GraphLink* GraphNode::FindNewLink()
 	for (vi = link.begin(); vi != link.end(); vi++)
 		if ((*vi).IsNewLink()) // it's on the edge - it's a new node
 			return &(*vi);
-	return NULL;
+	return nullptr;
 }
 //
 //--------------------------------------------------------------------------------------------------

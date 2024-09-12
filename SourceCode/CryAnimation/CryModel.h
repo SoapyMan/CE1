@@ -211,7 +211,7 @@ public:
 #if ENABLE_BONE_BBOXES
 		return m_arrBoneBBoxes.begin();
 #else
-		return NULL;
+		return nullptr;
 #endif
 	}
 	void computeBoneBBoxes();

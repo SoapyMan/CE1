@@ -137,7 +137,7 @@ public:
 	CLUADbg* GetLuaDebugger() { return m_pLuaDebugger; }
 	IValidator* GetIValidator() { return m_pValidator; };
 	IFrameProfileSystem* GetIProfileSystem() { return &m_FrameProfileSystem; }
-	const char* GetGameMOD() { if (m_szGameMOD[0]) return (m_szGameMOD); return (NULL); }
+	const char* GetGameMOD() { if (m_szGameMOD[0]) return (m_szGameMOD); return (nullptr); }
 
 	XDOM::IXMLDOMDocument* CreateXMLDocument();
 

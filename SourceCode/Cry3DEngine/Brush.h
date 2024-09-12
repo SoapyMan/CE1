@@ -33,10 +33,10 @@ public:
 	virtual bool HasChanged();
 	virtual bool DrawEntity(const struct SRendParams& EntDrawParams);
 	virtual bool IsStatic() const;
-	virtual struct IStatObj* GetEntityStatObj(unsigned int nSlot, Matrix44* pMatrix = NULL, bool bReturnOnlyVisible = false);
-	virtual struct ICryCharInstance* GetEntityCharacter(unsigned int nSlot, Matrix44* pMatrix = NULL);
+	virtual struct IStatObj* GetEntityStatObj(unsigned int nSlot, Matrix44* pMatrix = nullptr, bool bReturnOnlyVisible = false);
+	virtual struct ICryCharInstance* GetEntityCharacter(unsigned int nSlot, Matrix44* pMatrix = nullptr);
 
-	virtual void SetEntityStatObj(unsigned int nSlot, IStatObj* pStatObj, Matrix44* pMatrix = NULL);
+	virtual void SetEntityStatObj(unsigned int nSlot, IStatObj* pStatObj, Matrix44* pMatrix = nullptr);
 
 	virtual void SetLightmap(RenderLMData* pLMData, float* pTexCoords, UINT iNumTexCoords, int nLod);
 	//special call from lightmap serializer/compiler to set occlusion map values
@@ -45,12 +45,8 @@ public:
 	virtual bool HasLightmap(int nLod)
 	{
 		// only 2 conditions are valid
-		//CRYASSERT((m_pLMData != NULL && m_pLMTCBuffer != NULL) || (m_pLMData == NULL && m_pLMTCBuffer == NULL));
-#if !defined(LINUX64)
-		if (m_arrLMData[nLod].m_pLMData == NULL || m_arrLMData[nLod].m_pLMTCBuffer == NULL)
-#else
-		if (m_arrLMData[nLod].m_pLMData == 0 || m_arrLMData[nLod].m_pLMTCBuffer == 0)
-#endif
+		//CRYASSERT((m_pLMData != nullptr && m_pLMTCBuffer != nullptr) || (m_pLMData == nullptr && m_pLMTCBuffer == nullptr));
+		if (!m_arrLMData[nLod].m_pLMData || !m_arrLMData[nLod].m_pLMTCBuffer)
 			return false; // return to avoid crash somewhere if in release mode
 		return true;
 	};

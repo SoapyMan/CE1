@@ -1432,7 +1432,7 @@ bool COPTrace::Execute(CPipeUser* pOperand)
 
 			// approach distance depends on current speed for vehicles - more speed - bigger distance
 			fApproachDist = 9.0f;
-			IVehicleProxy* proxy = NULL;
+			IVehicleProxy* proxy = nullptr;
 			if (pOperand->GetProxy()->QueryProxy(AIPROXY_VEHICLE, (void**)&proxy))
 			{
 				pe_status_dynamics  dSt;
@@ -2242,10 +2242,10 @@ bool COPHeliAdv::Execute(CPipeUser* pOperand)
 
 	if (pOperand->GetType() != AIOBJECT_VEHICLE)		// only for heli
 		return true;
-	if (pOperand->m_pAttentionTarget == NULL)		// no attention target - no attack
+	if (pOperand->m_pAttentionTarget == nullptr)		// no attention target - no attack
 		return true;
 
-	IVehicleProxy* proxy = NULL;
+	IVehicleProxy* proxy = nullptr;
 
 	if (pOperand->GetProxy()->QueryProxy(AIPROXY_VEHICLE, (void**)&proxy))
 	{

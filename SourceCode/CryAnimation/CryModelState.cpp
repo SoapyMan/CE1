@@ -42,8 +42,8 @@ CryModelState::CryModelState(CryModel* pMesh) :
 #endif
 	m_vRuntimeScale(1, 1, 1),
 	m_nLastSkinBBoxUpdateFrameId(0),
-	m_pShaderStateCull(NULL),
-	m_pShaderStateShadowCull(NULL)
+	m_pShaderStateCull(nullptr),
+	m_pShaderStateShadowCull(nullptr)
 #ifdef _DEBUG
 	, m_bOriginalPose(true)
 #endif
@@ -57,7 +57,7 @@ CryModelState::CryModelState(CryModel* pMesh) :
 	SelfValidate();
 	m_arrAnimationLayers.reserve(2);
 	//m_pqLast.reset();
-	//m_pBoneHead = m_pBoneSpine2 = m_pBoneLeftArm = NULL;
+	//m_pBoneHead = m_pBoneSpine2 = m_pBoneLeftArm = nullptr;
 	m_pCharPhysics = 0;
 	m_bHasPhysics = 0;
 	for (int i = 0; i < 4; ++i) {
@@ -327,12 +327,10 @@ bool CryModelState::IsAnimStopped()
 	}
 
 	for (SubmeshArray::iterator it = m_arrSubmeshes.begin(); it != m_arrSubmeshes.end(); ++it)
-#if !defined(LINUX64)
-		if (*it != NULL && (*it)->NeedMorph())
-#else
-		if (*it != 0 && (*it)->NeedMorph())
-#endif
+	{
+		if (*it && (*it)->NeedMorph())
 			return false;
+	}
 
 	return true;
 }
@@ -863,7 +861,7 @@ CryModelState* CryModelState::MakeCopy()
 	SelfValidate();
 	CRYASSERT(this && m_pMesh);
 	if (!getRootBone() && !m_pMesh->numMorphTargets())
-		return NULL;
+		return nullptr;
 
 	CryModelState* pCopy = new CryModelState(m_pMesh);
 	CRYASSERT(pCopy);
@@ -904,7 +902,7 @@ ICryBone* CryModelState::GetBoneByName(const char* szBoneName)
 	SelfValidate();
 	int nBone = m_pMesh->findBone(szBoneName);
 	if (nBone == -1)
-		return NULL;
+		return nullptr;
 
 	return &getBone(nBone);
 }
@@ -1052,7 +1050,7 @@ bool CryModelState::RunAnimation(int nAnimID, const CryCharAnimationParams& Para
 		rLayer.bKeepLayer0Phase = (Params.nFlags & Params.FLAGS_SYNCHRONIZE_WITH_LAYER_0) != 0;
 	}
 
-	CRYASSERT(rLayer.pEffector != (CCryModEffAnimation*)NULL);
+	CRYASSERT(rLayer.pEffector != (CCryModEffAnimation*)nullptr);
 
 	if (!bInternal && rLayer.pEffector->isActive() && 0 != ((Params.nFlags | rLayer.pEffector->getStartAnimFlags()) & CryCharAnimationParams::FLAGS_ALIGNED))
 	{
@@ -1214,7 +1212,7 @@ CDLight* CryModelState::AddDynBoundLight(ICryCharInstance* pParent, CDLight* pDL
 	// we don't support multiple instances of the same light bound
 	// because we use the light pointer as the handle
 	if (IsDynLightBound(pDLight) && !bCopyLight)
-		return NULL;
+		return nullptr;
 
 	m_arrDynBoundLights.resize(m_arrDynBoundLights.size() + 1);
 	m_arrDynBoundLights.back().init(pParent, pDLight, nBone, getBoneMatrixGlobal(nBone), bCopyLight);
@@ -1295,7 +1293,7 @@ void CryModelState::UpdateDynBoundLights(CCObject* pObj, const SRendParams& Rend
 
 
 // Interface for the renderer - returns the CDLight describing the light in this character;
-// returns NULL if there's no light with such index
+// returns nullptr if there's no light with such index
 const CDLight* CryModelState::getGlobalBoundLight(unsigned nIndex)
 {
 	SelfValidate();
@@ -1444,7 +1442,7 @@ ICharInstanceSink* CryModelState::getAnimationEventSink(int nAnimId)
 	if (nAnimId >= 0 && nAnimId < (int)m_arrSinks.size())
 		return m_arrSinks[nAnimId];
 	else
-		return NULL;
+		return nullptr;
 }
 
 void CryModelState::setAnimationEventSink(int nAnimId, ICharInstanceSink* pSink)
@@ -1453,7 +1451,7 @@ void CryModelState::setAnimationEventSink(int nAnimId, ICharInstanceSink* pSink)
 	if (nAnimId >= 0 && nAnimId < (int)m_pMesh->numAnimations())
 	{
 		if ((int)m_arrSinks.size() <= nAnimId)
-			m_arrSinks.resize(nAnimId + 1, NULL);
+			m_arrSinks.resize(nAnimId + 1, nullptr);
 		m_arrSinks[nAnimId] = pSink;
 	}
 }
@@ -1468,7 +1466,7 @@ void CryModelState::removeAnimationEventSink(ICharInstanceSink* pCharInstanceSin
 {
 	for (std::vector<ICharInstanceSink*>::iterator it = m_arrSinks.begin(); it != m_arrSinks.end(); ++it)
 		if (*it == pCharInstanceSink)
-			*it = NULL;
+			*it = nullptr;
 }
 
 // this is an empty array used to return the reference in teh getAnimEvents();
@@ -1719,8 +1717,8 @@ void CryModelState::setScale(const Vec3d& vScale)
 	}
 	else
 	{
-		m_pShaderStateCull = NULL;
-		m_pShaderStateShadowCull = NULL;
+		m_pShaderStateCull = nullptr;
+		m_pShaderStateShadowCull = nullptr;
 	}
 }
 
@@ -1841,18 +1839,18 @@ void CryModelState::ForceReskin()
 CryModel* CryModelState::GetModel()
 {
 	// TODO: maybe it's faster to cache this pointer
-	return m_arrSubmeshes.empty() ? NULL : m_arrSubmeshes[0]->GetCryModel();
+	return m_arrSubmeshes.empty() ? nullptr : m_arrSubmeshes[0]->GetCryModel();
 }
 const CryModel* CryModelState::GetModel()const
 {
 	// TODO: maybe it's faster to cache this pointer
-	return m_arrSubmeshes.empty() ? NULL : m_arrSubmeshes[0]->GetCryModel();
+	return m_arrSubmeshes.empty() ? nullptr : m_arrSubmeshes[0]->GetCryModel();
 }
 
 CryModelSubmesh* CryModelState::AddSubmesh(ICryCharModel* pModel, bool bVisible)
 {
 	if (pModel->GetClass() != ICryCharModel::CLASS_CRYCHARBODY)
-		return NULL; // not supported
+		return nullptr; // not supported
 
 	return AddSubmesh(static_cast<CryCharBody*>(pModel)->GetModel(), bVisible);
 }
@@ -1862,11 +1860,11 @@ CryModelSubmesh* CryModelState::SetSubmesh(unsigned nSlot, ICryCharModel* pModel
 	if (!pModel)
 	{
 		RemoveSubmesh(nSlot);
-		return NULL;
+		return nullptr;
 	}
 
 	if (pModel->GetClass() != ICryCharModel::CLASS_CRYCHARBODY)
-		return NULL; // not supported
+		return nullptr; // not supported
 
 	return SetSubmesh(nSlot, static_cast<CryCharBody*>(pModel)->GetModel(), bVisible);
 }
@@ -1875,7 +1873,7 @@ CryModelSubmesh* CryModelState::SetSubmesh(unsigned nSlot, ICryCharModel* pModel
 CryModelSubmesh* CryModelState::SetSubmesh(unsigned nSlot, CryModel* pCryModel, bool bVisible)
 {
 	if (nSlot & ~0xFF)
-		return NULL; // we don't support more than 256 submeshes
+		return nullptr; // we don't support more than 256 submeshes
 
 	if (m_arrSubmeshes.size() <= nSlot)
 		m_arrSubmeshes.resize(nSlot + 1);
@@ -1897,7 +1895,7 @@ CryModelSubmesh* CryModelState::AddSubmesh(CryModel* pCryModel, bool bVisible)
 	if (!IsEmpty() && pCryModel->numBoneInfos() != GetCryModelSubmesh(0)->GetCryModel()->numBoneInfos())
 	{
 		g_GetLog()->LogError("Trying to add submesh %s to an existing instance with main model %s: incompatible skeletons", pCryModel->getFilePathCStr(), GetCryModelSubmesh(0)->GetCryModel()->getFilePathCStr());
-		return NULL;
+		return nullptr;
 	}
 
 	CryModelSubmesh* pNewSubmesh = new CryModelSubmesh(this, pCryModel);
@@ -1921,14 +1919,14 @@ void CryModelState::RemoveSubmesh(ICryCharSubmesh* pSubmesh)
 	// we may not delete the 0th submesh
 	for (SubmeshArray::iterator it = m_arrSubmeshes.begin() + 1; it != m_arrSubmeshes.end(); ++it)
 		if (*it == pSubmesh)
-			*it = NULL;
+			*it = nullptr;
 }
 
 void CryModelState::RemoveSubmesh(unsigned nSlot)
 {
 	if (nSlot > 1 && nSlot < m_arrSubmeshes.size())
 	{
-		m_arrSubmeshes[nSlot] = NULL;
+		m_arrSubmeshes[nSlot] = nullptr;
 
 		// we may auto-shrink the array
 		while (!m_arrSubmeshes.empty() && !m_arrSubmeshes.back())
@@ -1938,12 +1936,12 @@ void CryModelState::RemoveSubmesh(unsigned nSlot)
 
 ICryCharSubmesh* CryModelState::GetSubmesh(unsigned i)
 {
-	return i < m_arrSubmeshes.size() ? m_arrSubmeshes[i].ptr() : NULL;
+	return i < m_arrSubmeshes.size() ? m_arrSubmeshes[i].ptr() : nullptr;
 }
 
 CryModelSubmesh* CryModelState::GetCryModelSubmesh(unsigned i)
 {
-	return i < m_arrSubmeshes.size() ? m_arrSubmeshes[i].ptr() : NULL;
+	return i < m_arrSubmeshes.size() ? m_arrSubmeshes[i].ptr() : nullptr;
 }
 
 bool CryModelState::SetShaderTemplateName(const char* TemplName, int Id, const char* ShaderName, IMatInfo* pCustomMaterial, unsigned nFlags)
@@ -2007,14 +2005,10 @@ void CryModelState::RemoveFxTrail(unsigned nSlot)
 {
 	if (nSlot < m_arrFxTrails.size())
 	{
-		m_arrFxTrails[nSlot] = NULL;
+		m_arrFxTrails[nSlot] = nullptr;
 
 		// remove unnecessary slots
-#if !defined(LINUX64)
-		while (!m_arrFxTrails.empty() && m_arrFxTrails.back() == NULL)
-#else
-		while (!m_arrFxTrails.empty() && m_arrFxTrails.back() == 0)
-#endif
+		while (!m_arrFxTrails.empty() && !m_arrFxTrails.back())
 			m_arrFxTrails.resize(m_arrFxTrails.size() - 1);
 	}
 }

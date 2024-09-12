@@ -127,7 +127,7 @@ public:
 	//// ISoundSystem ///////////////////////////////////////////////
 	void		Release() {}
 	void		Update() {}
-	IMusicSystem* CreateMusicSystem() { return new CDummyMusicSystem(NULL); }
+	IMusicSystem* CreateMusicSystem() { return new CDummyMusicSystem(nullptr); }
 	ISound* LoadSound(const char* szFile, int nFlags) { return &m_sndDummy; }
 	void		RemoveSound(int nSoundID) {}
 	ISound* GetSound(int nSoundID) { return &m_sndDummy; }
@@ -149,7 +149,7 @@ public:
 	//! Check for EAX support.
 	bool IsEAX(int version) { return(false); }
 	//! Set EAX listener environment.
-	bool SetEaxListenerEnvironment(int nPreset, const SoundReverbProperties* pProps = NULL, int nFlags = 0) { return(false); }
+	bool SetEaxListenerEnvironment(int nPreset, const SoundReverbProperties* pProps = nullptr, int nFlags = 0) { return(false); }
 	//! Gets current EAX listener environment.
 	bool GetCurrentEaxEnvironment(int& nPreset, SoundReverbProperties& Props) { nPreset = 0; return (true); }
 	bool SetGroupScale(int nGroup, float fScale) { return true; }
@@ -169,7 +169,7 @@ public:
 	bool UsingDirectionalAttenuation() { return false; }
 	void GetMemoryUsage(class ICrySizer* pSizer) {}
 	//! get the current area the listener is in
-	IVisArea* GetListenerArea() { return(NULL); }
+	IVisArea* GetListenerArea() { return(nullptr); }
 	int SetMinSoundPriority(int nPriority) { return 0; };
 
 	void LockResources() {};

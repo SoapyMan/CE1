@@ -120,10 +120,10 @@ m_pObjectCollide(pSS), m_vObjPosCollide(pSS), m_vObjVelCollide(pSS), m_pSplashLi
 	m_flags = 0;
 	m_nTimer = -1;
 	//m_nStartTimer=0;
-	m_pLipSync = NULL;
+	m_pLipSync = nullptr;
 	m_center(0, 0, 0);
 	m_angles(0, 0, 0);
-	m_physic = m_physPlaceholder = NULL;
+	m_physic = m_physPlaceholder = nullptr;
 	m_pPhysState = 0;
 	m_iPhysStateSize = 0;
 	m_iPhysType = PHYS_NONE;
@@ -133,11 +133,11 @@ m_pObjectCollide(pSS), m_vObjPosCollide(pSS), m_vObjVelCollide(pSS), m_pSplashLi
 	//m_static = false;
 	for (int k = 0; k < MAX_ANIMATED_MODELS; k++)
 	{
-		m_pCryCharInstance[k] = NULL;
+		m_pCryCharInstance[k] = nullptr;
 		m_pCharPhysPlaceholders[k] = 0;
 	}
 
-	// m_qsplat=NULL;
+	// m_qsplat=nullptr;
 	SetName("No entity loaded");
 
 	m_pSaveFunc = 0;
@@ -178,7 +178,7 @@ m_pObjectCollide(pSS), m_vObjPosCollide(pSS), m_vObjVelCollide(pSS), m_pSplashLi
 
 	//	m_dirtyFlags = 0;
 
-	m_pCamera = NULL;
+	m_pCamera = nullptr;
 
 	//How many times this entity was entity was serialized
 	//m_nWriteNumber=0;
@@ -186,7 +186,7 @@ m_pObjectCollide(pSS), m_vObjPosCollide(pSS), m_vObjVelCollide(pSS), m_pSplashLi
 
 	m_pEntitySystem = pEntitySystem;
 	m_pScriptSystem = pSS;
-	m_pContainer = NULL;
+	m_pContainer = nullptr;
 
 	m_pISystem = pISystem;
 
@@ -202,12 +202,12 @@ m_pObjectCollide(pSS), m_vObjPosCollide(pSS), m_vObjVelCollide(pSS), m_pSplashLi
 	m_vPrevDrawCenter(-1000, -1000, -1000);
 	m_vPrevDrawAngles(-1000, -1000, -1000);
 
-	m_pDynLight = NULL;
+	m_pDynLight = nullptr;
 	m_pEntityRenderState = 0;//m_pISystem->GetI3DEngine()->MakeEntityRenderState();
 	m_nSteeringWheelSlot = -1; // not found yet
-	m_pOnCollide = NULL;
-	m_pOnStopRollSlideContact = NULL;
-	m_pParticleEmitters = NULL;
+	m_pOnCollide = nullptr;
+	m_pOnStopRollSlideContact = nullptr;
+	m_pParticleEmitters = nullptr;
 	m_dwRndFlags = 0;
 
 	m_fWaterDensity = 1000.0f;
@@ -222,8 +222,8 @@ m_pObjectCollide(pSS), m_vObjPosCollide(pSS), m_vObjVelCollide(pSS), m_pSplashLi
 	m_PrevVertVel = 0.0f;
 	m_vPrevVel.Set(0, 0, 0);
 
-	m_pBBox = NULL;
-	m_pColliders = NULL;
+	m_pBBox = nullptr;
+	m_pColliders = nullptr;
 	m_bTrackColliders = false;
 	m_bUpdateSounds = false;
 	m_bUpdateAI = false;
@@ -313,24 +313,24 @@ void CEntity::ShutDown()
 			m_pISystem->GetIAnimationSystem()->RemoveCharacter(m_pCryCharInstance[k]);
 		if (m_pCharPhysPlaceholders[k])
 			m_pISystem->GetIPhysicalWorld()->DestroyPhysicalEntity(m_pCharPhysPlaceholders[k]);
-		m_pCryCharInstance[k] = NULL;
-		m_pCharPhysPlaceholders[k] = NULL;
+		m_pCryCharInstance[k] = nullptr;
+		m_pCharPhysPlaceholders[k] = nullptr;
 	}
 
 	if (m_physic)
 	{
 		m_pISystem->GetIPhysicalWorld()->DestroyPhysicalEntity(m_physic);
-		m_physic = NULL;
+		m_physic = nullptr;
 	}
 	if (m_physPlaceholder)
 	{
 		m_pISystem->GetIPhysicalWorld()->DestroyPhysicalEntity(m_physPlaceholder);
-		m_physPlaceholder = NULL;
+		m_physPlaceholder = nullptr;
 	}
 	if (m_pBBox)
 	{
 		m_pISystem->GetIPhysicalWorld()->DestroyPhysicalEntity(m_pBBox);
-		m_pBBox = NULL;
+		m_pBBox = nullptr;
 	}
 	SAFE_DELETE_ARRAY(m_pPhysState);
 
@@ -1288,7 +1288,7 @@ void CEntity::OnCollide(float fDeltaTime)
 	int nColls;
 	float velImpact = 0, velSlide2 = 0, velRoll2 = 0, velImpactCur, velSlide2Cur, velRoll2Cur;
 	bool bCallOnCollide = false;
-	IEntity* pColliderEntity = NULL;
+	IEntity* pColliderEntity = nullptr;
 
 	pe_status_collisions sc;
 	pe_status_dynamics sd;
@@ -1359,7 +1359,7 @@ void CEntity::OnCollide(float fDeltaTime)
 		//if (velSlide2>1.0f)
 		//	m_pISystem->GetILog()->LogToConsole("slide %.2f",cry_sqrtf(velSlide2));
 		//m_pISystem->GetILog()->LogToConsole(velRoll2>0 ? "rolling":m_fTimeRolling>0 ? "potentially rolling":"not rolling");
-		//		if (contacts[0].pCollider==NULL)
+		//		if (contacts[0].pCollider==nullptr)
 		//			return;
 
 		//*
@@ -1566,11 +1566,7 @@ void CEntity::UpdateSounds(SEntityUpdateContext& ctx)
 		while (itor != m_lstAttachedSounds.end())
 		{
 			SAttachedSound& Sound = (*itor);
-#if !defined(LINUX64)
-			if ((Sound.pSound != NULL) && (Sound.pSound->IsPlaying() || Sound.pSound->IsPlayingVirtual()))
-#else
-			if ((Sound.pSound != 0) && (Sound.pSound->IsPlaying() || Sound.pSound->IsPlayingVirtual()))
-#endif
+			if (Sound.pSound && (Sound.pSound->IsPlaying() || Sound.pSound->IsPlayingVirtual()))
 			{
 				Sound.pSound->SetPosition(vPos + Sound.Offset);
 				++itor;
@@ -2051,12 +2047,12 @@ void CEntity::DestroyPhysics()
 		m_physicEnabled = false;
 		ClearFlags(ETY_FLAG_CALC_PHYSICS);
 		m_pISystem->GetIPhysicalWorld()->DestroyPhysicalEntity(m_physic);
-		m_physic = NULL;
+		m_physic = nullptr;
 	}
 	if (m_physPlaceholder)
 	{
 		m_pISystem->GetIPhysicalWorld()->DestroyPhysicalEntity(m_physPlaceholder);
-		m_physPlaceholder = NULL;
+		m_physPlaceholder = nullptr;
 	}
 	if (m_pPhysState)
 	{
@@ -2505,7 +2501,7 @@ IStatObj* CEntity::GetIStatObj(unsigned int pos)
 		return object.object;
 	}
 
-	return (NULL);
+	return (nullptr);
 }
 
 
@@ -3228,7 +3224,7 @@ void CEntity::DetachObjectToBone(const char* boneName, BoneBindHandle objectBind
 		{
 			// Old way.
 			//		m_pSelectedInfo->pBindInfo = 
-			character->AttachObjectToBone(NULL, boneName, false);
+			character->AttachObjectToBone(nullptr, boneName, false);
 		}
 		else
 		{
@@ -3370,7 +3366,7 @@ void CEntity::GetHitParms(int& deathType, int& deathDir, int& deathZone) const
 //////////////////////////////////////////////////////////////////////////
 void CEntity::Hide(bool bHide)
 {
-	if (m_bHidden != bHide)// && m_physic != NULL)
+	if (m_bHidden != bHide)// && m_physic != nullptr)
 	{
 		SetRndFlags(ERF_HIDDEN, bHide);
 

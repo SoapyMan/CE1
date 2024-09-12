@@ -27,7 +27,7 @@ private:
 	typedef std::map<string, SPatternDef*, stl::less_stricmp<string> > TPatternsMap;
 	TPatternsMap m_patternsMap;
 public:
-	CMusicLoadSink(SMusicData* pMusicData, IScriptSystem* pScriptSystem, _SmartScriptObject* pObj, int nMode = MUSICLOAD_MODE_BASE, SPatternDef* pPattern = NULL, SMusicTheme* pTheme = NULL, SMusicMood* pMood = NULL, SMusicPatternSet* pPatternSet = NULL, int nLayer = MUSICLAYER_MAIN)
+	CMusicLoadSink(SMusicData* pMusicData, IScriptSystem* pScriptSystem, _SmartScriptObject* pObj, int nMode = MUSICLOAD_MODE_BASE, SPatternDef* pPattern = nullptr, SMusicTheme* pTheme = nullptr, SMusicMood* pMood = nullptr, SMusicPatternSet* pPatternSet = nullptr, int nLayer = MUSICLAYER_MAIN)
 	{
 		m_pMusicData = pMusicData;
 		m_pScriptSystem = pScriptSystem;
@@ -110,12 +110,12 @@ private:
 				}
 				if (pObj->GetValue("Moods", pSubObj))
 				{
-					CMusicLoadSink MoodsSink(m_pMusicData, m_pScriptSystem, &pSubObj, MUSICLOAD_MODE_MOODS, NULL, pTheme);
+					CMusicLoadSink MoodsSink(m_pMusicData, m_pScriptSystem, &pSubObj, MUSICLOAD_MODE_MOODS, nullptr, pTheme);
 					pSubObj->Dump(&MoodsSink);
 				}
 				if (pObj->GetValue("Bridges", pSubObj))
 				{
-					CMusicLoadSink BridgesSink(m_pMusicData, m_pScriptSystem, &pSubObj, MUSICLOAD_MODE_BRIDGES, NULL, pTheme);
+					CMusicLoadSink BridgesSink(m_pMusicData, m_pScriptSystem, &pSubObj, MUSICLOAD_MODE_BRIDGES, nullptr, pTheme);
 					pSubObj->Dump(&BridgesSink);
 				}
 				m_pMusicData->mapThemes.insert(TThemeMapIt::value_type(sName, pTheme));
@@ -136,7 +136,7 @@ private:
 				_SmartScriptObject pSubObj(m_pScriptSystem, true);
 				if (pObj->GetValue("PatternSet", pSubObj))
 				{
-					CMusicLoadSink Sink(m_pMusicData, m_pScriptSystem, &pSubObj, MUSICLOAD_MODE_PATTERNSET, NULL, m_pTheme, pMood);
+					CMusicLoadSink Sink(m_pMusicData, m_pScriptSystem, &pSubObj, MUSICLOAD_MODE_PATTERNSET, nullptr, m_pTheme, pMood);
 					pSubObj->Dump(&Sink);
 				}
 				m_pTheme->mapMoods.insert(TMoodMapIt::value_type(sName, pMood));
@@ -192,7 +192,7 @@ private:
 					_SmartScriptObject pPatternsSubObj(m_pScriptSystem, true);
 					if (pSubObj->GetValue("Patterns", pPatternsSubObj))
 					{
-						CMusicLoadSink Sink(m_pMusicData, m_pScriptSystem, &pPatternsSubObj, MUSICLOAD_MODE_MOODLAYERS, NULL, m_pTheme, m_pMood, pPatternSet, MUSICLAYER_MAIN);
+						CMusicLoadSink Sink(m_pMusicData, m_pScriptSystem, &pPatternsSubObj, MUSICLOAD_MODE_MOODLAYERS, nullptr, m_pTheme, m_pMood, pPatternSet, MUSICLAYER_MAIN);
 						pPatternsSubObj->Dump(&Sink);
 					}
 				}
@@ -206,7 +206,7 @@ private:
 					_SmartScriptObject pPatternsSubObj(m_pScriptSystem, true);
 					if (pSubObj->GetValue("Patterns", pPatternsSubObj))
 					{
-						CMusicLoadSink Sink(m_pMusicData, m_pScriptSystem, &pPatternsSubObj, MUSICLOAD_MODE_MOODLAYERS, NULL, m_pTheme, m_pMood, pPatternSet, MUSICLAYER_RHYTHMIC);
+						CMusicLoadSink Sink(m_pMusicData, m_pScriptSystem, &pPatternsSubObj, MUSICLOAD_MODE_MOODLAYERS, nullptr, m_pTheme, m_pMood, pPatternSet, MUSICLAYER_RHYTHMIC);
 						pPatternsSubObj->Dump(&Sink);
 					}
 				}
@@ -220,7 +220,7 @@ private:
 					_SmartScriptObject pPatternsSubObj(m_pScriptSystem, true);
 					if (pSubObj->GetValue("Patterns", pPatternsSubObj))
 					{
-						CMusicLoadSink Sink(m_pMusicData, m_pScriptSystem, &pPatternsSubObj, MUSICLOAD_MODE_MOODLAYERS, NULL, m_pTheme, m_pMood, pPatternSet, MUSICLAYER_INCIDENTAL);
+						CMusicLoadSink Sink(m_pMusicData, m_pScriptSystem, &pPatternsSubObj, MUSICLOAD_MODE_MOODLAYERS, nullptr, m_pTheme, m_pMood, pPatternSet, MUSICLAYER_INCIDENTAL);
 						pPatternsSubObj->Dump(&Sink);
 					}
 				}
@@ -243,7 +243,7 @@ private:
 				sPatternName = pszPatternName;
 				pSubObj->GetValue("Probability", fProbability);
 
-				SPatternDef* pPattern = stl::find_in_map(m_patternsMap, sPatternName, (SPatternDef*)NULL);
+				SPatternDef* pPattern = stl::find_in_map(m_patternsMap, sPatternName, (SPatternDef*)nullptr);
 				if (pPattern)
 				{
 					pPattern->fProbability = fProbability;

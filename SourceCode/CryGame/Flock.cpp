@@ -138,7 +138,7 @@ struct MathUtil
 CBoidObject::CBoidObject( SBoidContext &bc )
 {
 	m_flock = 0;
-	m_pPhysics = NULL;
+	m_pPhysics = nullptr;
 	m_heading(1,0,0);
 	m_accel(0,0,0);
 	m_speed = 0;
@@ -853,7 +853,7 @@ CBoidFish::CBoidFish( SBoidContext &bc )
 {
 	m_dead = 0;
 	m_dying = 0;
-	m_pOnSpawnBubbleFunc = NULL;
+	m_pOnSpawnBubbleFunc = HSCRIPT_NULL;
 }
 
 CBoidFish::~CBoidFish()
@@ -1138,7 +1138,7 @@ CFlock::CFlock( int id,CFlockManager *mgr )
 	m_flockMgr = mgr;
 	m_id = id;
 	m_bEnabled = true;
-	m_pEntity = NULL;
+	m_pEntity = nullptr;
 	m_updateFrameID = 0;
 	m_percentEnabled = 100;
 
@@ -1555,7 +1555,7 @@ CFlockManager::~CFlockManager()
 //////////////////////////////////////////////////////////////////////////
 CFlock* CFlockManager::CreateFlock( EFlockType type )
 {
-	CFlock *flock = NULL;
+	CFlock *flock = nullptr;
 
 	m_lastFlockId++;
 

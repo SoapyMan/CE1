@@ -44,7 +44,7 @@ public:
 
 	// -------------------------------------------------------------------------------------
 
-	void ResetSink() { m_pSink = NULL; };
+	void ResetSink() { m_pSink = nullptr; };
 	void PushData(CStream& stm) { m_qData.push(stm); }
 	void OnConnect(CNPServerVariables sv) { if (m_pSink)m_pSink->OnXConnect(); }
 	void OnContextSetup(CStream& stm) { if (m_pSink)m_pSink->OnXContextSetup(stm); }

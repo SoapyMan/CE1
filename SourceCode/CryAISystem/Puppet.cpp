@@ -151,7 +151,7 @@ void CPuppet::ParseParameters(const AIObjectParameters& params)
 	if (params.pProxy->QueryProxy(AIPROXY_PUPPET, (void**)&pProxy))
 		m_pProxy = pProxy;
 	else
-		m_pProxy = NULL;
+		m_pProxy = nullptr;
 
 	//m_Parameters.m_fSpeciesHostility = 2.f;
 	//m_Parameters.m_fGroupHostility = 0.f;
@@ -2626,7 +2626,7 @@ CAIObject* CPuppet::GetMemoryOwner(CAIObject* pMemoryRepresentation)
 				return mi->first;
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 

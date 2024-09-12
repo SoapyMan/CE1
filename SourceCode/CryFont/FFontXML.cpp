@@ -98,8 +98,8 @@ public:
 	{
 		m_pFont = pFont;
 		m_nElement = ELEMENT_UNKNOWN;
-		m_pEffect = NULL;
-		m_pPass = NULL;
+		m_pEffect = nullptr;
+		m_pPass = nullptr;
 		m_FontTexSize.set(0, 0);
 		m_bNoRescale = 0,
 			m_FontSmoothAmount = 0;
@@ -113,7 +113,7 @@ public:
 	// notify methods
 	void FoundElement(const string& name, const string& value)
 	{
-		//MessageBox(NULL, string("[" + name + "]").c_str(), "FoundElement", MB_OK);		
+		//MessageBox(nullptr, string("[" + name + "]").c_str(), "FoundElement", MB_OK);		
 		// process the previous element
 		switch (m_nElement)
 		{
@@ -145,7 +145,7 @@ public:
 		}
 		else if (name == "pass")
 		{
-			m_pPass = NULL;
+			m_pPass = nullptr;
 			m_nElement = ELEMENT_PASS;
 			if (m_pEffect)
 				m_pPass = m_pEffect->NewPass();
@@ -176,7 +176,7 @@ public:
 
 	void FoundAttribute(const  string& name, const  string& value)
 	{
-		//MessageBox(NULL, string(name + "\n" + value).c_str(), "FoundAttribute", MB_OK);
+		//MessageBox(nullptr, string(name + "\n" + value).c_str(), "FoundAttribute", MB_OK);
 		switch (m_nElement)
 		{
 		case ELEMENT_FONT:
@@ -225,7 +225,7 @@ public:
 			{
 				if (value == "default")
 				{
-					m_pFont->SetEffect(NULL);
+					m_pFont->SetEffect(nullptr);
 					m_pEffect = m_pFont->GetCurrentEffect();
 					m_pEffect->strName = "default";
 

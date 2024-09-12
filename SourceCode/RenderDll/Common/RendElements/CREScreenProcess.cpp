@@ -50,7 +50,7 @@ void CREScreenProcess::mfPrepare()
 	// make sure this is not processed, when rendering to refractive texture..
 	if (gRenDev->m_RP.m_bDrawToTexture)
 	{
-		gRenDev->m_RP.m_pRE = NULL;
+		gRenDev->m_RP.m_pRE = nullptr;
 	}
 	else
 	{
@@ -505,7 +505,7 @@ void CScreenVars::Create(void)
 #ifdef OPENGL
 	m_pRCBlurRECT = CPShader::mfForName("CGRCBlurRECT");
 #else
-	m_pRCBlurRECT = NULL;
+	m_pRCBlurRECT = nullptr;
 #endif
 	m_pVPBlur = CVProgram::mfForName("CGVProgBlur");
 	m_pRCMotion = CPShader::mfForName("CGRCMotion");

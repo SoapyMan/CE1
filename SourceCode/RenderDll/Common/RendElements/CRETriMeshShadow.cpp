@@ -29,7 +29,7 @@ void* CRETriMeshShadow::mfGetPointer(ESrcPointer ePT, int* Stride, int Type, ESr
 		if (m_nCurrInst < 0)
 		{
 			//          Warning( 0,0,"Error: CRETriMeshShadow::mfGetPointer: m_nCurrInst<0");
-			return NULL;
+			return nullptr;
 		}
 
 		*Stride = m_VertexSize[m_arrLBuffers[m_nCurrInst].pVB->m_pVertexBuffer->m_vertexformat];
@@ -41,7 +41,7 @@ void* CRETriMeshShadow::mfGetPointer(ESrcPointer ePT, int* Stride, int Type, ESr
 	break;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 int CRETriMeshShadow::GetAndResetRebuildsPerFrrameCounter()
@@ -80,7 +80,7 @@ bool CRETriMeshShadow::mfCheckUpdate(int nVertFormat, int Flags)
 	CRYASSERT(m_nCurrInst == -1);
 
 	// find light of this shadow
-	CDLight* pDLight = NULL;
+	CDLight* pDLight = nullptr;
 	if (gRenDev->m_RP.m_DynLMask)
 	{
 		for (int n = 0; n < gRenDev->m_RP.m_DLights[SRendItem::m_RecurseLevel].Num(); n++)

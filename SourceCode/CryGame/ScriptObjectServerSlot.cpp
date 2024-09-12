@@ -23,7 +23,7 @@ _DECLARE_SCRIPTABLEEX(CScriptObjectServerSlot);
 
 CScriptObjectServerSlot::CScriptObjectServerSlot(void)
 {
-	m_pSS=NULL;
+	m_pSS=nullptr;
 }
 
 CScriptObjectServerSlot::~CScriptObjectServerSlot(void)
@@ -32,7 +32,7 @@ CScriptObjectServerSlot::~CScriptObjectServerSlot(void)
 
 void CScriptObjectServerSlot::Create(IScriptSystem *pScriptSystem)
 {
-	m_pSS=NULL;
+	m_pSS=nullptr;
 	Init(pScriptSystem,this);
 }
 
@@ -247,7 +247,7 @@ int CScriptObjectServerSlot::GetColor(IFunctionHandler *pH)
 int CScriptObjectServerSlot::SendText(IFunctionHandler *pH)
 {
 	//CHECK_PARAMETERS(1);
-	const char *sText=NULL;
+	const char *sText=nullptr;
 	float lifetime=DEFAULT_TEXT_LIFETIME;
 	if(pH->GetParamCount()){
 		if(pH->GetParam(1,sText) && m_pSS && sText)

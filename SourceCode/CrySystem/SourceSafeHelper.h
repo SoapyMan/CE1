@@ -3,7 +3,7 @@
 
 // platform: windows ascii/unicode (is compiled to nil on other plattforms)
 //
-// * make sure ::CoInitialize(NULL); is called before this class is used and ( don't forget ::CoUninitialize(); )
+// * make sure ::CoInitialize(nullptr); is called before this class is used and ( don't forget ::CoUninitialize(); )
 // * SourceSafe has to be installed
 // * This is written as gloabal function to make it easy to include in MFC and non MFC projects
 //

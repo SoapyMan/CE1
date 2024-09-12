@@ -31,13 +31,13 @@
 CWeaponClass::CWeaponClass(CWeaponSystemEx& rWeaponSystem) :
 m_rWeaponSystem(rWeaponSystem)
 {
-	m_pObject = NULL;
-	m_pCharacter = NULL;
-	m_pMuzzleFlash = NULL;
+	m_pObject = nullptr;
+	m_pCharacter = nullptr;
+	m_pMuzzleFlash = nullptr;
 	m_ID = 0;
 	m_bIsLoaded = false;
-	m_pScriptSystem = NULL;
-	m_soWeaponClass = NULL;
+	m_pScriptSystem = nullptr;
+	m_soWeaponClass = nullptr;
 
 	m_vAngles.Set(0,0,0);
 	m_vPos.Set(0,0,0);
@@ -112,17 +112,17 @@ void CWeaponClass::Reset()
 	if (m_pObject)
 	{
 		m_rWeaponSystem.GetGame()->GetSystem()->GetI3DEngine()->ReleaseObject(m_pObject);
-		m_pObject = NULL;
+		m_pObject = nullptr;
 	}
 	if (m_pCharacter)
 	{
 		m_rWeaponSystem.GetGame()->GetSystem()->GetIAnimationSystem()->RemoveCharacter(m_pCharacter);
-		m_pCharacter = NULL;
+		m_pCharacter = nullptr;
 	}
 	if (m_pMuzzleFlash)
 	{
 		m_rWeaponSystem.GetGame()->GetSystem()->GetI3DEngine()->ReleaseObject(m_pMuzzleFlash);
-		m_pMuzzleFlash = NULL;
+		m_pMuzzleFlash = nullptr;
 	}
 	m_sBindBone.clear();
 
@@ -600,14 +600,14 @@ bool CWeaponClass::LoadMuzzleFlash(const string& sGeometryName)
 	ISystem*		pSystem = m_rWeaponSystem.GetGame()->GetSystem();
 	CRYASSERT(pSystem);
 
-	if (m_pMuzzleFlash && !m_pMuzzleFlash->IsSameObject(sGeometryName.c_str(), NULL))
+	if (m_pMuzzleFlash && !m_pMuzzleFlash->IsSameObject(sGeometryName.c_str(), nullptr))
 	{
 		pSystem->GetI3DEngine()->ReleaseObject(m_pMuzzleFlash);
 	}
 
 	m_pMuzzleFlash = pSystem->GetI3DEngine()->MakeObject(sGeometryName.c_str());
 
-	return (m_pMuzzleFlash != NULL);
+	return (m_pMuzzleFlash != nullptr);
 }
 
 //! Set parameters of this weapon.
@@ -672,15 +672,15 @@ void CWeaponClass::Update(CPlayer *pPlayer)
 {
 	FUNCTION_PROFILER( GetISystem(),PROFILE_GAME );
 
-	if (pPlayer == NULL)
+	if (pPlayer == nullptr)
 	{
-		m_rWeaponSystem.GetGame()->GetSystem()->GetILog()->Log("\001 CWeaponClass::Update - ERROR -> pPlayer == NULL");
+		m_rWeaponSystem.GetGame()->GetSystem()->GetILog()->Log("\001 CWeaponClass::Update - ERROR -> pPlayer == nullptr");
 		return;
 	}
 	CRYASSERT(pPlayer->m_stats.firemode>=0 && pPlayer->m_stats.firemode<int(m_vFireModes.size()));
-	if (m_vFireModes[pPlayer->m_stats.firemode] == NULL)
+	if (m_vFireModes[pPlayer->m_stats.firemode] == nullptr)
 	{
-		m_rWeaponSystem.GetGame()->GetSystem()->GetILog()->Log("\001 CWeaponClass::Update - ERROR -> m_vFireModes[pPlayer->m_stats.firemode] == NULL");
+		m_rWeaponSystem.GetGame()->GetSystem()->GetILog()->Log("\001 CWeaponClass::Update - ERROR -> m_vFireModes[pPlayer->m_stats.firemode] == nullptr");
 		return;
 	}
 	m_fireParams = *(m_vFireModes[pPlayer->m_stats.firemode]);
@@ -710,15 +710,15 @@ int CWeaponClass::Fire(const Vec3d &origin, const Vec3d &angles, CPlayer *pPlaye
 #ifdef FIRE_DEBUG
 	CryLog("CWeaponClass::Fire");
 #endif
-	if (pPlayer == NULL)
+	if (pPlayer == nullptr)
 	{
-		m_rWeaponSystem.GetGame()->GetSystem()->GetILog()->Log("\001 CWeaponClass::Fire - ERROR -> pPlayer == NULL");
+		m_rWeaponSystem.GetGame()->GetSystem()->GetILog()->Log("\001 CWeaponClass::Fire - ERROR -> pPlayer == nullptr");
 		return 0;
 	}
 	CRYASSERT(pPlayer->m_stats.firemode>=0 && pPlayer->m_stats.firemode<int(m_vFireModes.size()));
-	if (m_vFireModes[pPlayer->m_stats.firemode] == NULL)
+	if (m_vFireModes[pPlayer->m_stats.firemode] == nullptr)
 	{
-		m_rWeaponSystem.GetGame()->GetSystem()->GetILog()->Log("\001 CWeaponClass::Fire - ERROR -> m_vFireModes[pPlayer->m_stats.firemode] == NULL");
+		m_rWeaponSystem.GetGame()->GetSystem()->GetILog()->Log("\001 CWeaponClass::Fire - ERROR -> m_vFireModes[pPlayer->m_stats.firemode] == nullptr");
 		return 0;
 	}
 	m_fireParams = *(m_vFireModes[pPlayer->m_stats.firemode]);
@@ -887,7 +887,7 @@ int CWeaponClass::Fire(const Vec3d &origin, const Vec3d &angles, CPlayer *pPlaye
 			IEntity* pEntity;
 
 			// Attempt to spawn the object using the class ID
-			if((pEntity = m_rWeaponSystem.GetGame()->GetSystem()->GetIEntitySystem()->SpawnEntity(ed)) == NULL)
+			if((pEntity = m_rWeaponSystem.GetGame()->GetSystem()->GetIEntitySystem()->SpawnEntity(ed)) == nullptr)
 			{
 				// Spawn failed
 				CRYASSERT(false);
@@ -952,7 +952,7 @@ int CWeaponClass::Fire(const Vec3d &origin, const Vec3d &angles, CPlayer *pPlaye
 
 		IPhysicalEntity *skip = pIShooter->GetPhysics();
 
-		IPhysicalEntity *skipMore = NULL;
+		IPhysicalEntity *skipMore = nullptr;
 
 		//	[kirill] we want to skip players vehicle - so you can NOT shoot your own car/boat
 		if(pPlayer->GetVehicle())
@@ -1057,8 +1057,8 @@ int CWeaponClass::Fire(const Vec3d &origin, const Vec3d &angles, CPlayer *pPlaye
 
 			for(nCount=0;nCount<MAX_HITS;nCount++)
 			{
-			IEntity *centycontact=NULL;	
-			IEntityRender	*entrendercontact=NULL;
+			IEntity *centycontact=nullptr;	
+			IEntityRender	*entrendercontact=nullptr;
 
 				if(hits[nCount].dist<=0)
 					continue;
@@ -1187,10 +1187,10 @@ void CWeaponClass::ProcessHitTarget(const SWeaponHit &hit)
 {
 	FUNCTION_PROFILER( GetISystem(),PROFILE_GAME );
 
-	if (hit.target!=NULL)
+	if (hit.target!=nullptr)
 	{
 #ifdef FIRE_DEBUG
-		m_rWeaponSystem.GetGame()->GetSystem()->GetILog()->Log("hit.target!=NULL id=%d target=%s %x",hit.target->GetId(),(const char *)hit.target->GetName(),hit.target->GetScriptObject());
+		m_rWeaponSystem.GetGame()->GetSystem()->GetILog()->Log("hit.target!=nullptr id=%d target=%s %x",hit.target->GetId(),(const char *)hit.target->GetName(),hit.target->GetScriptObject());
 #endif
 		m_ssoProcessHit->SetValueChain("target_id",hit.target->GetId());
 		if (hit.target->GetScriptObject())
@@ -1199,7 +1199,7 @@ void CWeaponClass::ProcessHitTarget(const SWeaponHit &hit)
 			m_ssoProcessHit->SetToNullChain("target");
 		m_ssoProcessHit->SetToNullChain("targetStat");
 	}
-	else 	if (hit.targetStat!=NULL)
+	else 	if (hit.targetStat!=nullptr)
 	{
 		// Make user data for pointer.
 		USER_DATA ud = m_pScriptSystem->CreateUserData( (ULONG_PTR)hit.targetStat,USER_DATA_POINTER );
@@ -1211,7 +1211,7 @@ void CWeaponClass::ProcessHitTarget(const SWeaponHit &hit)
 	else
 	{
 #ifdef FIRE_DEBUG
-		m_rWeaponSystem.GetGame()->GetSystem()->GetILog()->Log("hit.target==NULL");
+		m_rWeaponSystem.GetGame()->GetSystem()->GetILog()->Log("hit.target==nullptr");
 #endif
 
 		m_ssoProcessHit->SetToNullChain("targetStat");

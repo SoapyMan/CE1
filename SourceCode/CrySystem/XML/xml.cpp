@@ -459,7 +459,7 @@ XmlNodeRef XmlParserImp::parse(const char* buffer, size_t bufLen, XmlString& err
 	memHandler.malloc_fcn = CryModuleMalloc;
 	memHandler.realloc_fcn = CryModuleRealloc;
 	memHandler.free_fcn = CryModuleFree;
-	m_parser = XML_ParserCreate_MM(NULL, &memHandler, NULL);
+	m_parser = XML_ParserCreate_MM(nullptr, &memHandler, nullptr);
 
 	XML_SetUserData(m_parser, this);
 	XML_SetElementHandler(m_parser, startElement, endElement);

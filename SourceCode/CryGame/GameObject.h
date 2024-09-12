@@ -18,7 +18,7 @@ public IEntityContainer
 {
 public:
 	//! constructor
-	CGameObject() {/* m_refCount = 0;*/m_pEntity = NULL; }
+	CGameObject() {/* m_refCount = 0;*/m_pEntity = nullptr; }
 	//! destructor
 	virtual ~CGameObject() {}
 

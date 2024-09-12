@@ -146,7 +146,7 @@ IStencilShadowConnectivity* CStencilShadowConnectivityBuilder::ConstructConnecti
 
 #if 0
 	// test for serialization function
-	unsigned nBufSize = pConnectivity->Serialize(true, NULL, 0);
+	unsigned nBufSize = pConnectivity->Serialize(true, nullptr, 0);
 	void* pBuf = malloc(nBufSize);
 	unsigned nSaved = pConnectivity->Serialize(true, pBuf, nBufSize);
 	CRYASSERT(nSaved == nBufSize);

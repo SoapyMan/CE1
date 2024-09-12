@@ -334,7 +334,7 @@ public:
 	~CrySkinNormalSource()
 	{
 		delete[] m_pLinks;
-		m_pLinks = NULL;
+		m_pLinks = nullptr;
 	}
 };
 

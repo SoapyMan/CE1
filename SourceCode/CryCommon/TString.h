@@ -34,7 +34,7 @@ public:
 			return pNewString;
 		}
 		else
-			return NULL;
+			return nullptr;
 	}
 
 	// for debug: to use the memory manager
@@ -47,7 +47,7 @@ public:
 			return pNewString;
 		}
 		else
-			return NULL;
+			return nullptr;
 	}
 
 	static char* strcat(const char* szLeft, const char* szRight)
@@ -62,7 +62,7 @@ public:
 			return pNewString;
 		}
 		else
-			return NULL;
+			return nullptr;
 	}
 
 	CryBasicString(const char* szRight)
@@ -91,7 +91,7 @@ public:
 	}
 
 	CryBasicString() :
-		m_pString(NULL)
+		m_pString(nullptr)
 	{
 	}
 

@@ -105,13 +105,13 @@ bool CEntityClassRegistry::AddClass(const EntityClassId _ClassId,const char* sCl
 	EntityClass ec;
 
 	//is the id already used?
-	if(GetByClassId(_ClassId,false)!=NULL && !bForceReload)
+	if(GetByClassId(_ClassId,false)!=nullptr && !bForceReload)
 	{
 		CryError( "<EntityClassRegistry> AddClass called with duplicate ClassID ID=%d Class=\"%s\"",(int)_ClassId,sClassName );	
 		return false;
 	}
 
-	if (GetByClass(sClassName,false)!=NULL)
+	if (GetByClass(sClassName,false)!=nullptr)
 	{
 		CryError( "<EntityClassRegistry> AddClass called with duplicate Class Name ID=%d Class=\"%s\"",(int)_ClassId,sClassName );	
 		return false;
@@ -163,13 +163,13 @@ EntityClass *CEntityClassRegistry::GetByClass(const char *sClassName,bool bAutoL
 			if(!itor->second.bLoaded && bAutoLoadScript)
 			{
 				if (!LoadRegistryEntry(&itor->second,true))
-					return NULL;
+					return nullptr;
 			}
 			return &(itor->second);
 		}
 		++itor;
 	}
-	return NULL;
+	return nullptr;
 }
 
 // Retrieve a class-description by the class-id
@@ -184,11 +184,11 @@ EntityClass *CEntityClassRegistry::GetByClassId(const EntityClassId _ClassId,boo
 		if(!itor->second.bLoaded && bAutoLoadScript)
 		{
 			if (!LoadRegistryEntry(&itor->second,true))
-				return NULL;
+				return nullptr;
 		}
 		return &itor->second;
 	}
-	return NULL;
+	return nullptr;
 }
 
 
@@ -203,9 +203,9 @@ void CEntityClassRegistry::MoveFirst()
 //////////////////////////////////////////////////////////////////////////
 EntityClass *CEntityClassRegistry::Next()
 {
-	EntityClass *pEntityClass=NULL;
+	EntityClass *pEntityClass=nullptr;
 	if(m_itor==m_vEntityClasses.end())
-		return NULL;
+		return nullptr;
 	pEntityClass=&(m_itor->second);
 	++m_itor;
 	return pEntityClass;

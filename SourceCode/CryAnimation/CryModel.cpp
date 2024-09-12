@@ -678,7 +678,7 @@ bool CryModel::loadCCGBoneGeomLOD(unsigned nLOD, float fScale, const CCFBoneGeom
 {
 	// reset the pointers
 	for (unsigned nBone = 0; nBone < numBoneInfos(); ++nBone)
-		getBoneInfo(nBone).getPhysInfo(nLOD).pPhysGeom = NULL;
+		getBoneInfo(nBone).getPhysInfo(nLOD).pPhysGeom = nullptr;
 
 	IPhysicalWorld* pPhysicalWorld = GetPhysicalWorld();
 	if (!pPhysicalWorld)
@@ -939,7 +939,7 @@ const char* CryModel::GetProperty(const char* szName)
 {
 	UserPropMap::iterator it = m_mapUserProps.find(szName);
 	if (it == m_mapUserProps.end())
-		return NULL;
+		return nullptr;
 	return it->second.c_str();
 }
 

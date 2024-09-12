@@ -46,7 +46,7 @@ The DXRenderer interface Class
 
 #define DECLARE_INITED(typ,var) typ var; memset(&var,0,sizeof(var)); var.dwSize=sizeof(var);
 #define SAFETRY(cmd) {try{cmd;}catch(...){ShError("Exception in '%s'\n", #cmd);}}
-#define DX_RELEASE(x) { if(x) { (x)->Release(); (x) = NULL; } }
+#define DX_RELEASE(x) { if(x) { (x)->Release(); (x) = nullptr; } }
 
 struct SPixFormat;
 class CRender3DD3D;
@@ -295,7 +295,7 @@ struct SPixFormat
 	int         UploadCycles; // Stat: Cycles spent Blting.
 	void Init()
 	{
-		Next = NULL;
+		Next = nullptr;
 		BitsPerPixel = Binned = BinnedRAM = 0;
 	}
 	void InitStats()
@@ -464,13 +464,13 @@ public:
 	struct_VERTEX_FORMAT_TRP3F_COL4UB_TEX2F* GetVBPtr2D(int nVerts, int& nOffs)
 	{
 		if (!m_pVB2D)
-			return NULL;
+			return nullptr;
 		HRESULT hr;
-		struct_VERTEX_FORMAT_TRP3F_COL4UB_TEX2F* pVertices = NULL;
+		struct_VERTEX_FORMAT_TRP3F_COL4UB_TEX2F* pVertices = nullptr;
 		if (nVerts > m_nVertsDMesh2D)
 		{
 			CRYASSERT(false);
-			return NULL;
+			return nullptr;
 		}
 		if (nVerts + m_nOffsDMesh2D > m_nVertsDMesh2D)
 		{
@@ -494,13 +494,13 @@ public:
 	ushort* GetIBPtr(int nInds, int& nOffs)
 	{
 		if (!m_pIB)
-			return NULL;
+			return nullptr;
 		HRESULT hr;
-		ushort* pInds = NULL;
+		ushort* pInds = nullptr;
 		if (nInds > m_nIndsDMesh)
 		{
 			CRYASSERT(0);
-			return NULL;
+			return nullptr;
 		}
 		if (nInds + m_nIOffsDMesh > m_nIndsDMesh)
 		{
@@ -524,14 +524,14 @@ public:
 	void* GetVBPtr3D(int nVerts, int& nOffs, int Pool = 0)
 	{
 		HRESULT hr;
-		void* pVertices = NULL;
+		void* pVertices = nullptr;
 		if (nVerts > m_nVertsDMesh3D[Pool])
 		{
 			CRYASSERT(0);
-			return NULL;
+			return nullptr;
 		}
 		if (!m_pVB3DAr[Pool][0])
-			return NULL;
+			return nullptr;
 
 		int nVertSize;
 		switch (Pool)
@@ -815,24 +815,24 @@ public:
 	virtual bool EnableFog(bool enable);
 	virtual void SetFog(float density, float fogstart, float fogend, const float* color, int fogmode);
 
-	//virtual CImage *TryLoadImage(const char *szFilename) { return (NULL); }
+	//virtual CImage *TryLoadImage(const char *szFilename) { return (nullptr); }
 
 	virtual void SetLodBias(float value);
 	virtual void SelectTMU(int tnum);
 	virtual void EnableTMU(bool enable);
 	virtual void SetTexture(int tnum, ETexType Type = eTT_Base);
-	virtual unsigned int DownLoadToVideoMemory(unsigned char* data, int w, int h, ETEX_Format eTFSrc, ETEX_Format eTFDst, int nummipmap, bool repeat = true, int filter = FILTER_BILINEAR, int Id = 0, char* szCacheName = NULL, int flags = 0);
+	virtual unsigned int DownLoadToVideoMemory(unsigned char* data, int w, int h, ETEX_Format eTFSrc, ETEX_Format eTFDst, int nummipmap, bool repeat = true, int filter = FILTER_BILINEAR, int Id = 0, char* szCacheName = nullptr, int flags = 0);
 	virtual	void UpdateTextureInVideoMemory(uint tnum, unsigned char* newdata, int posx, int posy, int w, int h, ETEX_Format eTF = eTF_0888);
 	virtual void RemoveTexture(unsigned int TextureId);
 	virtual void RemoveTexture(ITexPic* pTexPic);
-	virtual unsigned int MakeTexture(const char* filename, int* tex_type = NULL/*,unsigned int def_tid=0*/);
-	virtual unsigned int LoadTexture(const char* filename, int* tex_type = NULL, unsigned int def_tid = 0, bool compresstodisk = true, bool bWarn = true);
+	virtual unsigned int MakeTexture(const char* filename, int* tex_type = nullptr/*,unsigned int def_tid=0*/);
+	virtual unsigned int LoadTexture(const char* filename, int* tex_type = nullptr, unsigned int def_tid = 0, bool compresstodisk = true, bool bWarn = true);
 
 	virtual void SetCamera(const CCamera& cam);
 	virtual	void SetViewport(int x = 0, int y = 0, int width = 0, int height = 0);
 	virtual	void SetScissor(int x = 0, int y = 0, int width = 0, int height = 0);
 	virtual void Draw3dBBox(const Vec3& mins, const Vec3& maxs, int nPrimType);
-	virtual void Draw3dPrim(const Vec3& mins, const Vec3& maxs, int nPrimType, const float* pColor = NULL);
+	virtual void Draw3dPrim(const Vec3& mins, const Vec3& maxs, int nPrimType, const float* pColor = nullptr);
 	virtual void Flush3dBBox(const Vec3& mins, const Vec3& maxs, const bool bSolid);
 	virtual void EnableTexGen(bool enable);
 	virtual void SetTexgen(float scaleX, float scaleY, float translateX, float translateY);
@@ -843,7 +843,7 @@ public:
 	virtual void DrawDynVB(struct_VERTEX_FORMAT_P3F_COL4UB_TEX2F* pBuf, ushort* pInds, int nVerts, int nInds, int nPrimType);
 	virtual CVertexBuffer* CreateBuffer(int  buffersize, int vertexformat, const char* szSource, bool bDynamic = false);
 	virtual void CreateBuffer(int size, int vertexformat, CVertexBuffer* buf, int Type, const char* szSource);
-	virtual void	DrawBuffer(CVertexBuffer* src, SVertexStream* indicies, int numindices, int offsindex, int prmode, int vert_start = 0, int vert_stop = 0, CMatInfo* mi = NULL);
+	virtual void	DrawBuffer(CVertexBuffer* src, SVertexStream* indicies, int numindices, int offsindex, int prmode, int vert_start = 0, int vert_stop = 0, CMatInfo* mi = nullptr);
 	void UnlockBuffer(CVertexBuffer* dest, int Type);
 	virtual void UpdateBuffer(CVertexBuffer* dest, const void* src, int vertexcount, bool bUnLock, int offs = 0, int Type = 0);
 	virtual void  CreateIndexBuffer(SVertexStream* dest, const void* src, int indexcount);
@@ -911,7 +911,7 @@ public:
 	virtual void ReadFrameBuffer(unsigned char* pRGB, int nSizeX, int nSizeY, bool bBackBuffer, bool bRGBA, int nScaledX = -1, int nScaledY = -1);
 
 	//misc	
-	virtual void ScreenShot(const char* filename = NULL);
+	virtual void ScreenShot(const char* filename = nullptr);
 
 	virtual uint MakeSprite(float object_scale, int tex_size, float angle, IStatObj* pStatObj, uchar* _pTmpBuffer, uint def_tid);
 	virtual uint Make3DSprite(int nTexSize, float fAngleStep, IStatObj* pStatObj);
@@ -988,7 +988,7 @@ public:
 		if (m_MatDepth)
 		{
 			D3DXMATRIX* m = m_matView->GetTop();
-			D3DXMatrixInverse(&m_InvertedMatrix, NULL, m);
+			D3DXMatrixInverse(&m_InvertedMatrix, nullptr, m);
 			mi = &m_InvertedMatrix;
 		}
 		else
@@ -1175,7 +1175,7 @@ public:
 				m_pd3dDevice->SetClipPlane(0, &m_RP.m_CurClipPlane.m_Normal[0]);
 				m_RP.m_ClipPlaneWasOverrided = 0;
 			}
-			m_pd3dDevice->SetVertexShader(NULL);
+			m_pd3dDevice->SetVertexShader(nullptr);
 			CVProgram::m_LastVP = 0;
 			if (m_FS.m_bEnable && ((m_Features & RFT_HW_MASK) != RFT_HW_RADEON))
 			{
@@ -1200,7 +1200,7 @@ public:
 			}
 		if (!(m_RP.m_PersFlags & RBPF_PS1NEEDSET) && CPShader::m_LastVP)
 		{
-			m_pd3dDevice->SetPixelShader(NULL);
+			m_pd3dDevice->SetPixelShader(nullptr);
 			CPShader::m_LastVP = 0;
 		}
 		if (!CVProgram::m_LastVP)
@@ -1260,7 +1260,7 @@ public:
 		}
 		return hr;
 	}
-	_inline HRESULT EF_RestoreRenderTarget(LPDIRECT3DSURFACE9 pTargSurf = NULL)
+	_inline HRESULT EF_RestoreRenderTarget(LPDIRECT3DSURFACE9 pTargSurf = nullptr)
 	{
 		if (!pTargSurf)
 		{
@@ -1687,9 +1687,9 @@ struct SDynFurInstance
 	Vec3 m_PrevOmega;
 	SDynFurInstance()
 	{
-		m_pTexOffset0 = NULL;
-		m_pTexOffset1 = NULL;
-		m_pTexNormal = NULL;
+		m_pTexOffset0 = nullptr;
+		m_pTexOffset1 = nullptr;
+		m_pTexNormal = nullptr;
 
 		m_bPrepared = false;
 		m_Accel = Vec3(0, 0, 0);
@@ -1711,8 +1711,8 @@ public:
 public:
 	CFurNormalMap(STexPic* pTP, int Width, int Height)
 	{
-		m_pTexClamp = NULL;
-		m_pTexNormalize = NULL;
+		m_pTexClamp = nullptr;
+		m_pTexNormalize = nullptr;
 
 		m_nCurInst = -1;
 		m_dwWidth = Width;
@@ -1749,7 +1749,7 @@ enum ATTENUATION_FUNCTION
 class CD3D9TexMan : public CTexMan
 {
 protected:
-	virtual STexPic* CreateTexture(const char* name, int wdt, int hgt, int depth, uint flags, uint flags2, byte* dst, ETexType eTT, float fAmount1 = -1.0f, float fAmount2 = -1.0f, int DXTSize = 0, STexPic* ti = NULL, int bind = 0, ETEX_Format eTF = eTF_8888, const char* szSourceName = NULL);
+	virtual STexPic* CreateTexture(const char* name, int wdt, int hgt, int depth, uint flags, uint flags2, byte* dst, ETexType eTT, float fAmount1 = -1.0f, float fAmount2 = -1.0f, int DXTSize = 0, STexPic* ti = nullptr, int bind = 0, ETEX_Format eTF = eTF_8888, const char* szSourceName = nullptr);
 	virtual STexPic* CopyTexture(const char* name, STexPic* ti, int CubeSide = -1);
 
 public:
@@ -1758,7 +1758,7 @@ public:
 #ifndef _XBOX  
 		m_CurPal = 1;
 #endif
-		m_pCurCubeTexture = NULL;
+		m_pCurCubeTexture = nullptr;
 	}
 	STexPic* CD3D9TexMan::CreateTexture(int nWidth, int nHeight, D3DFORMAT d3dFMT, int d3dUsage, bool bMips, const char* szName);
 
@@ -1790,10 +1790,10 @@ public:
 		CTexMan::m_nCurStages = From;
 		for (; From < n; From++)
 		{
-			HRESULT hr = gcpRendD3D->mfGetD3DDevice()->SetTexture(From, NULL);
+			HRESULT hr = gcpRendD3D->mfGetD3DDevice()->SetTexture(From, nullptr);
 			gcpRendD3D->EF_SelectTMU(From);
 			gcpRendD3D->EF_SetColorOp(eCO_DISABLE, eCO_DISABLE, 255, 255);
-			gcpRendD3D->m_RP.m_TexStages[From].Texture = NULL;
+			gcpRendD3D->m_RP.m_TexStages[From].Texture = nullptr;
 		}
 	}
 
@@ -1936,9 +1936,9 @@ _inline void sRemoveVB(IDirect3DResource9* pRes, SVertexStream* pStr)
 }
 _inline void sRemoveTX(STexPic *tp)
 {
-  IDirect3DTexture9 *pID3DTexture = NULL;
-  IDirect3DCubeTexture9 *pID3DCubeTexture = NULL;
-  LPDIRECT3DSURFACE9 pSurf = NULL;
+  IDirect3DTexture9 *pID3DTexture = nullptr;
+  IDirect3DCubeTexture9 *pID3DCubeTexture = nullptr;
+  LPDIRECT3DSURFACE9 pSurf = nullptr;
   D3DSURFACE_DESC Desc;
   HRESULT hr;
   if (tp->m_eTT == eTT_Cubemap)

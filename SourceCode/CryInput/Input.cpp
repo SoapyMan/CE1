@@ -236,10 +236,10 @@ bool CInput::Init(ISystem* pSystem
 		HRESULT hr = DirectInput8Create(m_hinst,
 			DIRECTINPUT_VERSION,
 			IID_IDirectInput8,
-			(void**)&m_g_pdi, NULL);
+			(void**)&m_g_pdi, nullptr);
 
 
-		//HRESULT hr = DirectInputCreate(m_hinst, DIRECTINPUT_VERSION, &m_g_pdi, NULL);	
+		//HRESULT hr = DirectInputCreate(m_hinst, DIRECTINPUT_VERSION, &m_g_pdi, nullptr);	
 		if (FAILED(hr) && dinput)
 		{
 			m_pLog->Log("Cannot initialize Direct Input\n");
@@ -392,7 +392,7 @@ void CInput::ShutDown()
 	if (m_g_pdi)
 	{
 		m_g_pdi->Release();
-		m_g_pdi = NULL;
+		m_g_pdi = nullptr;
 	}
 #endif //_XBOX
 
@@ -432,7 +432,7 @@ IActionMapManager* CInput::CreateActionMapManager()
 {
 	CXActionMapManager* pAMM = new CXActionMapManager(this);
 	if (!pAMM)
-		return NULL;
+		return nullptr;
 
 	return pAMM;
 }

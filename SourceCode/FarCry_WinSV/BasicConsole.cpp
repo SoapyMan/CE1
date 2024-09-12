@@ -208,7 +208,7 @@ int MainCON(const char* szCmdLine)
 #if defined(LINUX)
 	//store server start time into linux system variable to make sure it exists just once
 	struct timeval t;
-	gettimeofday(&t, NULL);
+	gettimeofday(&t, nullptr);
 
 	float frameRate = 0.f;
 	ICVar* psvDisplayInfo = pConsole->GetCVar("r_DisplayInfo");
@@ -461,7 +461,7 @@ int MainCON(const char* szCmdLine)
 #if defined(LINUX)
 		if (!cIsDaemon)
 		{
-			gettimeofday(&t, NULL);
+			gettimeofday(&t, nullptr);
 			if (t.tv_sec > lastSecond)
 			{
 				//get new framerate

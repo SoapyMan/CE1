@@ -227,7 +227,7 @@ struct ISoundSystem
 	virtual bool IsEAX(int version) = 0;
 	//! Set EAX listener environment; one of the predefined presets
 	//! listened above or a custom environmental reverb set
-	virtual bool SetEaxListenerEnvironment(int nPreset, const SoundReverbProperties* pProps = NULL, int nFlags = 0) = 0;
+	virtual bool SetEaxListenerEnvironment(int nPreset, const SoundReverbProperties* pProps = nullptr, int nFlags = 0) = 0;
 
 	//! Gets current EAX listener environment or one of the predefined presets
 	//! used to save into the savegame
@@ -517,7 +517,7 @@ struct SMusicMood
 		nPriority = 0;
 		fFadeOutTime = 0;
 		bPlaySingle = false;
-		pCurrPatternSet = NULL;
+		pCurrPatternSet = nullptr;
 		fCurrPatternSetTime = 0;
 		fCurrPatternSetTimeout = 0;
 	}

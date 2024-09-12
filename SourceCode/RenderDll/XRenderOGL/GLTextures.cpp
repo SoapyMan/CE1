@@ -118,7 +118,7 @@ void CGLTexMan::MakeNormalizeVectorCubeMap(int size, STexPic* tp)
 	tp->Unlink();
 	tp->Link(&STexPic::m_Root);
 	gRenDev->m_TexMan->m_StatsCurTexMem += tp->m_Size;
-	CheckTexLimits(NULL);
+	CheckTexLimits(nullptr);
 
 	delete[] pixels;
 }
@@ -382,7 +382,7 @@ byte* STexPic::GetData32()
 	  GL_TEXTURE_CUBE_MAP_NEGATIVE_Z_EXT,
 	};
 
-	byte* pDst = NULL;
+	byte* pDst = nullptr;
 	if (m_eTT == eTT_Cubemap)
 	{
 		glBindTexture(GL_TEXTURE_CUBE_MAP_EXT, m_Bind);
@@ -577,7 +577,7 @@ STexPic* CGLTexMan::GetByID(int Id)
 	TTextureMapItor it = m_RefTexs.find(Id);
 	if (it != m_RefTexs.end())
 		return it->second;
-	return NULL;
+	return nullptr;
 }
 
 void CGLTexMan::RemoveFromHash(int Id, STexPic* ti)
@@ -910,7 +910,7 @@ int SShaderTexUnit::mfSetTexture(int nt)
 
 				case TO_ENVIRONMENT_CUBE_MAP:
 				{
-					SEnvTexture* cm = NULL;
+					SEnvTexture* cm = nullptr;
 					Vec3d Pos = rd->m_RP.m_pCurObject->GetTranslation();
 					cm = gRenDev->m_cEF.mfFindSuitableEnvCMap(Pos, true, 0, 0);
 					if (cm)
@@ -922,7 +922,7 @@ int SShaderTexUnit::mfSetTexture(int nt)
 
 				case TO_ENVIRONMENT_LIGHTCUBE_MAP:
 				{
-					SEnvTexture* cm = NULL;
+					SEnvTexture* cm = nullptr;
 					Vec3d Pos = rd->m_RP.m_pCurObject->GetTranslation();
 					cm = gRenDev->m_cEF.mfFindSuitableEnvLCMap(Pos, true, 0, 0);
 					if (cm)
@@ -934,7 +934,7 @@ int SShaderTexUnit::mfSetTexture(int nt)
 
 				case TO_ENVIRONMENT_TEX:
 				{
-					SEnvTexture* cm = NULL;
+					SEnvTexture* cm = nullptr;
 					CCamera cam = rd->GetCamera();
 					Vec3d Angs = cam.GetAngles();
 					Vec3d Pos = cam.GetPos();
@@ -1005,10 +1005,10 @@ int SShaderTexUnit::mfSetTexture(int nt)
 			rd->m_RP.m_FrameGTC = rd->m_RP.m_Frame;
 		}
 		else
-			rd->m_RP.m_pGTC[nt] = NULL;
+			rd->m_RP.m_pGTC[nt] = nullptr;
 	}
 	else
-		rd->m_RP.m_pGTC[nt] = NULL;
+		rd->m_RP.m_pGTC[nt] = nullptr;
 
 	if (m_eColorOp != eCO_NOSET)
 	{
@@ -1052,12 +1052,12 @@ CGLTexMan::~CGLTexMan()
 	if (m_PBuffer_256)
 	{
 		delete m_PBuffer_256;
-		m_PBuffer_256 = NULL;
+		m_PBuffer_256 = nullptr;
 	}
 	if (m_EnvPBuffer)
 	{
 		delete m_EnvPBuffer;
-		m_EnvPBuffer = NULL;
+		m_EnvPBuffer = nullptr;
 	}
 	for (int i = 0; i < m_BufRegions.Num(); i++)
 	{
@@ -1804,7 +1804,7 @@ byte* CGLTexMan::GenerateDXT_HW(STexPic* ti, EImFormat eF, byte* dst, int* numMi
 	if (SUPPORTS_GL_SGIS_generate_mipmap)
 		glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP_SGIS, GL_TRUE);
 	else
-		return NULL;
+		return nullptr;
 
 	glTexImage2D(GL_TEXTURE_2D, 0, mode, wdt, hgt, 0, GL_BGRA_EXT, GL_UNSIGNED_BYTE, dst);
 	int nMips = 1;
@@ -1839,7 +1839,7 @@ byte* CGLTexMan::GenerateDXT_HW(STexPic* ti, EImFormat eF, byte* dst, int* numMi
 			glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP_SGIS, GL_FALSE);
 			glDeleteTextures(1, &tnum);
 			delete[] data;
-			return NULL;
+			return nullptr;
 		}
 
 		mip_size = 0;
@@ -1900,7 +1900,7 @@ STexPic* CGLTexMan::CopyTexture(const char* name, STexPic* tiSrc, int CubeSide)
 			if (!w || !h)
 			{
 				ti->Release(false);
-				return NULL;
+				return nullptr;
 			}
 			if (tiSrc->m_ETF == eTF_DXT1 || tiSrc->m_ETF == eTF_DXT3 || tiSrc->m_ETF == eTF_DXT5)
 			{
@@ -1927,7 +1927,7 @@ STexPic* CGLTexMan::CopyTexture(const char* name, STexPic* tiSrc, int CubeSide)
 
 STexPic* CGLTexMan::CreateTexture(const char* name, int wdt, int hgt, int depth, uint flags, uint flags2, byte* dst, ETexType eTT, float fAmount1, float fAmount2, int DXTSize, STexPic* ti, int bind, ETEX_Format eTF, const char* szSourceName)
 {
-	byte* dst1 = NULL;
+	byte* dst1 = nullptr;
 	int m;
 	int i;
 
@@ -2234,7 +2234,7 @@ STexPic* CGLTexMan::CreateTexture(const char* name, int wdt, int hgt, int depth,
 				tgt = GL_TEXTURE_CUBE_MAP_POSITIVE_X_EXT;
 				bFirstCube = true;
 				ti->m_CubeSide = 0;
-				m_LastCMSide = NULL;
+				m_LastCMSide = nullptr;
 			}
 			else
 				if (!strcmp(&ti->m_SearchName.c_str()[n], "negx"))
@@ -2273,7 +2273,7 @@ STexPic* CGLTexMan::CreateTexture(const char* name, int wdt, int hgt, int depth,
 									tgt = GL_TEXTURE_CUBE_MAP_POSITIVE_X_EXT;
 									bFirstCube = true;
 									ti->m_CubeSide = 0;
-									m_LastCMSide = NULL;
+									m_LastCMSide = nullptr;
 								}
 			if (!bFirstCube && m_CurCubemapFormat != ti->m_ETF)
 			{
@@ -2453,7 +2453,7 @@ STexPic* CGLTexMan::CreateTexture(const char* name, int wdt, int hgt, int depth,
 		if (m_LastCMSide)
 			m_LastCMSide->m_NextCMSide = ti;
 		if (tgt == GL_TEXTURE_CUBE_MAP_NEGATIVE_Z_EXT)
-			m_LastCMSide = NULL;
+			m_LastCMSide = nullptr;
 		else
 			m_LastCMSide = ti;
 	}
@@ -2464,7 +2464,7 @@ STexPic* CGLTexMan::CreateTexture(const char* name, int wdt, int hgt, int depth,
 		ti->Link(&STexPic::m_Root);
 		//sTestStr.AddElem(ti);
 	}
-	CheckTexLimits(NULL);
+	CheckTexLimits(nullptr);
 	if (m_Streamed == 2)
 		ti->Unload();
 
@@ -2909,7 +2909,7 @@ STextureTarget* CGLTexMan::CreateTextureTarget(int Bind, int Width, int Height)
 	int i;
 
 	if (!SUPPORTS_WGL_ARB_render_texture)
-		return NULL;
+		return nullptr;
 
 	for (i = 0; i < m_TexTargets.Num(); i++)
 	{
@@ -2943,7 +2943,7 @@ static _inline int sLimitSizeByScreenRes(int size)
 
 void CGLTexMan::ClearBuffer(int Width, int Height, bool bEnd, STexPic* pImage, int Side)
 {
-	SBufRegion* br = NULL;
+	SBufRegion* br = nullptr;
 	if (SUPPORTS_WGL_ARB_buffer_region)
 	{
 		int i;
@@ -2965,7 +2965,7 @@ void CGLTexMan::ClearBuffer(int Width, int Height, bool bEnd, STexPic* pImage, i
 	else
 	{
 		if (bEnd)
-			ClearBufferWithQuad(Width, Height, 0, 0, 0, 0, 0, NULL, 0);
+			ClearBufferWithQuad(Width, Height, 0, 0, 0, 0, 0, nullptr, 0);
 		else
 			ClearBufferWithQuad(Width, Height, 0, 0, 1, 1, 1, pImage, Side);
 	}
@@ -3038,7 +3038,7 @@ bool CGLTexMan::ScanEnvironmentCM(const char* name, int size, Vec3d& Pos)
 {
 	char szName[256];
 
-	ClearBuffer(size, size, true, NULL, 0);
+	ClearBuffer(size, size, true, nullptr, 0);
 	int RendFlags = -1;
 	RendFlags &= ~DLD_ENTITIES;
 	int vX, vY, vWidth, vHeight;
@@ -3063,7 +3063,7 @@ bool CGLTexMan::ScanEnvironmentCM(const char* name, int size, Vec3d& Pos)
 	}
 
 	gRenDev->SetViewport(vX, vY, vWidth, vHeight);
-	ClearBuffer(size, size, true, NULL, 0);
+	ClearBuffer(size, size, true, nullptr, 0);
 
 	return true;
 }
@@ -3123,7 +3123,7 @@ void CGLTexMan::ScanEnvironmentCube(SEnvTexture* cm, int RendFlags, int Size, bo
 	}
 
 	CreateBufRegion(tex_size, tex_size);
-	ClearBuffer(tex_size, tex_size, true, NULL, 0);
+	ClearBuffer(tex_size, tex_size, true, nullptr, 0);
 	//gRenDev->EF_SaveDLights();
 
 	int Start, End;
@@ -3179,7 +3179,7 @@ void CGLTexMan::ScanEnvironmentCube(SEnvTexture* cm, int RendFlags, int Size, bo
 	}
 
 	gRenDev->SetViewport(vX, vY, vWidth, vHeight);
-	ClearBuffer(tex_size, tex_size, true, NULL, 0);
+	ClearBuffer(tex_size, tex_size, true, nullptr, 0);
 	cm->m_bInprogress = false;
 	cm->m_MaskReady = End;
 	if (cm->m_MaskReady == 6)
@@ -3359,7 +3359,7 @@ void CGLTexMan::ScanEnvironmentTexture(SEnvTexture* cm, SShader* pSH, SRenderSha
 
 	cm->m_bInprogress = true;
 	CreateBufRegion(tex_size, tex_size);
-	ClearBuffer(tex_size, tex_size, true, NULL, 0);
+	ClearBuffer(tex_size, tex_size, true, nullptr, 0);
 	//rn->EF_SaveDLights();
 
 	int vX, vY, vWidth, vHeight;
@@ -3461,7 +3461,7 @@ void CGLTexMan::ScanEnvironmentTexture(SEnvTexture* cm, SShader* pSH, SRenderSha
 	}
 
 	if (bUseClipPlanes)
-		gcpOGL->EF_SetClipPlane(false, NULL, false);
+		gcpOGL->EF_SetClipPlane(false, nullptr, false);
 
 	rn->m_RP.m_PersFlags &= ~(RBPF_DRAWMIRROR | RBPF_DRAWPORTAL);
 	rn->m_RP.m_PersFlags |= prevFlags & (RBPF_DRAWMIRROR | RBPF_DRAWPORTAL);
@@ -3485,7 +3485,7 @@ void CGLTexMan::ScanEnvironmentTexture(SEnvTexture* cm, SShader* pSH, SRenderSha
 	}*/
 
 	rn->SetViewport(vX, vY, vWidth, vHeight);
-	ClearBuffer(tex_size, tex_size, true, NULL, 0);
+	ClearBuffer(tex_size, tex_size, true, nullptr, 0);
 	cm->m_bInprogress = false;
 	cm->m_bReady = true;
 	cm->m_MaskReady = 1;
@@ -3684,7 +3684,7 @@ void CGLTexMan::EndCubeSide(CCObject* obj, bool bNeedClear)
 	delete [] pic;*/
 
 	if (bNeedClear)
-		ClearBuffer(tex_size, tex_size, true, NULL, 0);
+		ClearBuffer(tex_size, tex_size, true, nullptr, 0);
 	gRenDev->SetViewport(m_TempX, m_TempY, m_TempWidth, m_TempHeight);
 	gRenDev->SetCamera(sPrevCamera);
 }
@@ -3776,7 +3776,7 @@ void CGLTexMan::DrawToTexture(Plane& Pl, STexPic* Tex, int RendFlags)
 	if (!tt)
 	{
 		CreateBufRegion(Tex->m_Width, Tex->m_Height);
-		ClearBuffer(Tex->m_Width, Tex->m_Height, true, NULL, 0);
+		ClearBuffer(Tex->m_Width, Tex->m_Height, true, nullptr, 0);
 	}
 	else
 	{
@@ -3880,7 +3880,7 @@ void CGLTexMan::DrawToTexture(Plane& Pl, STexPic* Tex, int RendFlags)
 		//glTexImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, Tex->m_Width, Tex->m_Height);
 		//glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, 0, 0, Tex->m_Width, Tex->m_Height, 0);
 
-		ClearBuffer(Tex->m_Width, Tex->m_Height, true, NULL, 0);
+		ClearBuffer(Tex->m_Width, Tex->m_Height, true, nullptr, 0);
 	}
 	SetTexture(0, eTT_Base);
 
@@ -4044,8 +4044,8 @@ void CGLTexMan::DrawFlashBangMap(int iId, int iRenderFlags, CREFlashBang* pRE)
 	  // setup vertex/fragment program
 
 	  // set current vertex/fragment program
-	  vpBlur->mfSet(true, NULL);
-	  fpBlur->mfSet(true, NULL);
+	  vpBlur->mfSet(true, nullptr);
+	  fpBlur->mfSet(true, nullptr);
 
 	  // enable vertex/fragment programs
 	  pRenderer->EF_CommitVS();
@@ -4132,7 +4132,7 @@ void CGLTexMan::DrawFlashBangMap(int iId, int iRenderFlags, CREFlashBang* pRE)
 
 	  gRenDev->SetViewport(m_TempX, m_TempY, m_TempWidth, m_TempHeight);
 	  gRenDev->ResetToDefault();
-	  //ClearBuffer(pTex->m_Width, pTex->m_Height, true, NULL,0);
+	  //ClearBuffer(pTex->m_Width, pTex->m_Height, true, nullptr,0);
 	*/
 	// set flags  
 	gRenDev->m_RP.m_bDrawToTexture = false;
@@ -4298,7 +4298,7 @@ void CGLTexMan::DrawToTextureForGlare(int Id)
 	  // create texture ?
 	  //CreateBufRegion(pTex->m_Width, pTex->m_Height);
 	  // clear texture ?
-	  //ClearBuffer(pTex->m_Width, pTex->m_Height, true, NULL, 0);
+	  //ClearBuffer(pTex->m_Width, pTex->m_Height, true, nullptr, 0);
 
 	  // get renderer
 	  CGLRenderer *pRenderer = gcpOGL;
@@ -4467,7 +4467,7 @@ void CGLTexMan::DrawToTextureForGlare(int Id)
 	  // restore previous states
 	  gRenDev->EnableDepthWrites(true);
 	  gRenDev->EnableDepthTest(true);
-	//  ClearBuffer(pTex->m_Width, pTex->m_Height, true, NULL,0);
+	//  ClearBuffer(pTex->m_Width, pTex->m_Height, true, nullptr,0);
 	  gRenDev->Set2DMode(false, 800, 600);
 
 	  // restore screen...
@@ -4656,7 +4656,7 @@ void CGLTexMan::EndHeatMap()
 
 	SetTexture(0, eTT_Base);
 
-	//ClearBuffer(Tex->m_Width, Tex->m_Height, true, NULL,0);
+	//ClearBuffer(Tex->m_Width, Tex->m_Height, true, nullptr,0);
 
 	Tex->m_Flags &= ~FT_BUILD;
 	gRenDev->m_RP.m_bDrawToTexture = false;
@@ -4713,7 +4713,7 @@ void CGLTexMan::StartHeatMap(int Id)
 	}
 
 	CreateBufRegion(Tex->m_Width, Tex->m_Height);
-	ClearBuffer(Tex->m_Width, Tex->m_Height, true, NULL, 0);
+	ClearBuffer(Tex->m_Width, Tex->m_Height, true, nullptr, 0);
 
 	CCamera tmp_cam = gRenDev->GetCamera();
 	m_PrevCamera = tmp_cam;
@@ -4847,7 +4847,7 @@ void CGLTexMan::EndNightMap()
 
 	SetTexture(0, eTT_Base);
 
-	//ClearBuffer(Tex->m_Width, Tex->m_Height, true, NULL,0);
+	//ClearBuffer(Tex->m_Width, Tex->m_Height, true, nullptr,0);
 
 	Tex->m_Flags &= ~FT_BUILD;
 	gRenDev->m_RP.m_bDrawToTexture = false;
@@ -4904,7 +4904,7 @@ void CGLTexMan::StartNightMap(int Id)
 	}
 
 	CreateBufRegion(Tex->m_Width, Tex->m_Height);
-	ClearBuffer(Tex->m_Width, Tex->m_Height, true, NULL, 0);
+	ClearBuffer(Tex->m_Width, Tex->m_Height, true, nullptr, 0);
 
 	CCamera tmp_cam = gRenDev->GetCamera();
 	m_PrevCamera = tmp_cam;
@@ -5103,7 +5103,7 @@ void CGLTexMan::DrawToTextureForRainMap(int Id)
 	}
 
 	CreateBufRegion(Tex->m_Width, Tex->m_Height);
-	ClearBuffer(Tex->m_Width, Tex->m_Height, true, NULL, 0);
+	ClearBuffer(Tex->m_Width, Tex->m_Height, true, nullptr, 0);
 
 	//gRenDev->EF_SaveDLights();
 
@@ -5149,7 +5149,7 @@ void CGLTexMan::DrawToTextureForRainMap(int Id)
 
 	SetTexture(0, eTT_Base);
 
-	//ClearBuffer(Tex->m_Width, Tex->m_Height, true, NULL,0);
+	//ClearBuffer(Tex->m_Width, Tex->m_Height, true, nullptr,0);
 
 	Tex->m_Flags &= ~FT_BUILD;
 	gRenDev->m_RP.m_bDrawToTexture = false;
@@ -5183,7 +5183,7 @@ void CGLTexMan::Update()
 	int i;
 	char buf[256] = "";
 
-	CheckTexLimits(NULL);
+	CheckTexLimits(nullptr);
 
 	if (CRenderer::CV_r_texresolution != m_CurTexResolution || CRenderer::CV_r_texbumpresolution != m_CurTexBumpResolution || CRenderer::CV_r_texquality != m_CurTexQuality || CRenderer::CV_r_texbumpquality != m_CurTexBumpQuality || CRenderer::CV_r_texskyquality != m_CurTexSkyQuality || CRenderer::CV_r_texskyresolution != m_CurTexSkyResolution || CRenderer::CV_r_texmaxsize != m_CurTexMaxSize || CRenderer::CV_r_texminsize != m_CurTexMinSize)
 	{
@@ -5243,7 +5243,7 @@ void CGLTexMan::Update()
 
 	if (CRenderer::CV_r_logusedtextures == 1 || CRenderer::CV_r_logusedtextures == 3 || CRenderer::CV_r_logusedtextures == 4 || CRenderer::CV_r_logusedtextures == 5)
 	{
-		FILE* fp = NULL;
+		FILE* fp = nullptr;
 		TArray<STexPic*> Texs;
 		int Size = 0;
 		int PartSize = 0;
@@ -5819,7 +5819,7 @@ void CGLTexMan::GenerateFogMaps()
 				Data1[j][i][3] = (byte)iFog;
 			}
 		}
-		gRenDev->m_TexMan->m_Text_Fog = CreateTexture("$Fog", 128, 128, 1, FT_CLAMP | FT_NOMIPS | FT_NOREMOVE | FT_HASALPHA, FT2_NODXT, &Data1[0][0][0], eTT_Base, -1.0f, -1.0f, 0, NULL, 0, eTF_8888);
+		gRenDev->m_TexMan->m_Text_Fog = CreateTexture("$Fog", 128, 128, 1, FT_CLAMP | FT_NOMIPS | FT_NOREMOVE | FT_HASALPHA, FT2_NODXT, &Data1[0][0][0], eTT_Base, -1.0f, -1.0f, 0, nullptr, 0, eTF_8888);
 
 		/*byte Data2[64][64][4];
 		gcpOGL->EF_InitFogTables();
@@ -5842,7 +5842,7 @@ void CGLTexMan::GenerateFogMaps()
 		  }
 		}*/
 
-		//gRenDev->m_TexMan->m_Text_Fog_Enter = DownloadTexture("(FogEnter)", 64, 64, FT_CLAMP | FT_NOMIPS | FT_NOREMOVE | FT_HASALPHA, FT2_NODXT, &Data2[0][0][0], eTT_Base, 0, NULL, 0, eTF_8888);
+		//gRenDev->m_TexMan->m_Text_Fog_Enter = DownloadTexture("(FogEnter)", 64, 64, FT_CLAMP | FT_NOMIPS | FT_NOREMOVE | FT_HASALPHA, FT2_NODXT, &Data2[0][0][0], eTT_Base, 0, nullptr, 0, eTF_8888);
 		//gRenDev->m_TexMan->m_Text_Fog_Enter->SaveTGA("FogEnter.tga", false);
 		gRenDev->m_TexMan->m_Text_Fog_Enter = LoadTexture("Textures/FogEnter", FT_CLAMP | FT_NOMIPS | FT_NOREMOVE | FT_HASALPHA, FT2_NODXT);
 	}
@@ -5871,7 +5871,7 @@ void CGLTexMan::GenerateFlareMap()
 			data[j][i][3] = 255;
 		}
 	}
-	gRenDev->m_TexMan->m_Text_Flare = CreateTexture("$Flare", 32, 4, 1, FT_CLAMP | FT_NOREMOVE, FT2_NODXT, &data[0][0][0], eTT_Base, -1.0f, -1.0f, 0, NULL, 0, eTF_8888);
+	gRenDev->m_TexMan->m_Text_Flare = CreateTexture("$Flare", 32, 4, 1, FT_CLAMP | FT_NOREMOVE, FT2_NODXT, &data[0][0][0], eTT_Base, -1.0f, -1.0f, 0, nullptr, 0, eTF_8888);
 }
 
 void CGLTexMan::GenerateGhostMap()
@@ -5892,7 +5892,7 @@ void CGLTexMan::GenerateDepthLookup()
 	{
 		*pMap++ = D3DCOLOR_RGBA(i & 0xFF, (i & 0xFF00) >> 3, 0, 0);
 	}
-	gRenDev->m_TexMan->m_Text_DepthLookup = CreateTexture("$DepthMap", 2048, 1, 1, FT_CLAMP | FT_NOREMOVE | FT_NOMIPS | FT_PROJECTED, FT2_NODXT, (byte*)&data[0], eTT_Base, -1.0f, -1.0f, 0, NULL, 0, eTF_8888);
+	gRenDev->m_TexMan->m_Text_DepthLookup = CreateTexture("$DepthMap", 2048, 1, 1, FT_CLAMP | FT_NOREMOVE | FT_NOMIPS | FT_PROJECTED, FT2_NODXT, (byte*)&data[0], eTT_Base, -1.0f, -1.0f, 0, nullptr, 0, eTF_8888);
 
 	DWORD data2[4][4];
 	pMap = &data2[0][0];
@@ -5900,14 +5900,14 @@ void CGLTexMan::GenerateDepthLookup()
 	{
 		*pMap++ = D3DCOLOR_RGBA(0xff, 0xe0, 0, 0);
 	}
-	gRenDev->m_TexMan->m_Text_Depth = CreateTexture("$Depth", 4, 4, 1, FT_CLAMP | FT_NOREMOVE | FT_HASALPHA | FT_NOMIPS, FT2_NODXT, (byte*)&data2[0], eTT_Base, -1.0f, -1.0f, 0, NULL, 0, eTF_8888);
+	gRenDev->m_TexMan->m_Text_Depth = CreateTexture("$Depth", 4, 4, 1, FT_CLAMP | FT_NOREMOVE | FT_HASALPHA | FT_NOMIPS, FT2_NODXT, (byte*)&data2[0], eTT_Base, -1.0f, -1.0f, 0, nullptr, 0, eTF_8888);
 
 	pMap = &data2[0][0];
 	for (i = 0; i < 4 * 4; i++)
 	{
 		*pMap++ = D3DCOLOR_RGBA(0xff, 0xff, 0xff, 0);
 	}
-	gRenDev->m_TexMan->m_Text_WhiteShadow = CreateTexture("$WhiteShadow", 4, 4, 1, FT_CLAMP | FT_NOREMOVE | FT_HASALPHA | FT_NOMIPS, FT2_NODXT, (byte*)&data2[0], eTT_Base, -1.0f, -1.0f, 0, NULL, 0, eTF_8888);
+	gRenDev->m_TexMan->m_Text_WhiteShadow = CreateTexture("$WhiteShadow", 4, 4, 1, FT_CLAMP | FT_NOREMOVE | FT_HASALPHA | FT_NOMIPS, FT2_NODXT, (byte*)&data2[0], eTT_Base, -1.0f, -1.0f, 0, nullptr, 0, eTF_8888);
 
 	byte data3[256];
 	byte* pbMap = &data3[0];
@@ -5915,7 +5915,7 @@ void CGLTexMan::GenerateDepthLookup()
 	{
 		*pbMap++ = i;
 	}
-	gRenDev->m_TexMan->m_Text_Gradient = CreateTexture("$AlphaGradient", 256, 1, 1, FT_CLAMP | FT_NOREMOVE | FT_HASALPHA | FT_NOMIPS, FT2_NODXT, (byte*)&data3[0], eTT_Base, -1.0f, -1.0f, 0, NULL, 0, eTF_8000);
+	gRenDev->m_TexMan->m_Text_Gradient = CreateTexture("$AlphaGradient", 256, 1, 1, FT_CLAMP | FT_NOREMOVE | FT_HASALPHA | FT_NOMIPS, FT2_NODXT, (byte*)&data3[0], eTT_Base, -1.0f, -1.0f, 0, nullptr, 0, eTF_8000);
 }
 
 void CGLTexMan::GenerateFuncTextures()

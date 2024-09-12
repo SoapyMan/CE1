@@ -16,7 +16,7 @@ bool CRESky::mfDraw(SShader* ef, SShaderPass* sfm)
 {
 	int bPrevClipPl = gRenDev->m_RP.m_ClipPlaneEnabled;
 	if (bPrevClipPl)
-		gRenDev->EF_SetClipPlane(false, NULL, false);
+		gRenDev->EF_SetClipPlane(false, nullptr, false);
 
 	if (sfm >= ef->m_Passes.end() && ef->m_Sky)
 	{ // draw sky sphere vertices at pass 1
@@ -52,7 +52,7 @@ bool CRESky::mfDraw(SShader* ef, SShaderPass* sfm)
 	gRenDev->SetCullMode(R_CULL_BACK);
 
 #if !defined(PS2) && !defined (GC) && !defined (NULL_RENDERER)
-	CPShader* fpSky = NULL;
+	CPShader* fpSky = nullptr;
 	if (gRenDev->m_RP.m_PersFlags & RBPF_HDR)
 	{
 		if (!(ef->m_Flags & EF_SKY_HDR))
@@ -231,7 +231,7 @@ bool CRESky::DrawFogLayer()
 	}
 
 #if !defined(PS2) && !defined (GC) && !defined (NULL_RENDERER)
-	CPShader* fpSky = NULL;
+	CPShader* fpSky = nullptr;
 	if (gRenDev->m_RP.m_PersFlags & RBPF_HDR)
 	{
 		fpSky = PShaderForName(gRenDev->m_RP.m_PS_HDR_BaseCol, "CGRC_HDR_BaseCol_PS20");

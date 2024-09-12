@@ -121,7 +121,7 @@ int CScriptObjectSound::IsPlaying(IFunctionHandler* pH)
 	CHECK_PARAMETERS(1);
 	int nCookie = 0;
 	bool bRes = false;
-	ISound* pSound = NULL;
+	ISound* pSound = nullptr;
 
 	pH->GetParamUDVal(1, (USER_DATA&)pSound, nCookie);		//AMD Port
 	if (pSound && (nCookie == USER_DATA_SOUND))
@@ -471,7 +471,7 @@ int CScriptObjectSound::SetEaxEnvironment(IFunctionHandler* pH)
 		if (pH->GetParam(1, nEaxEnvironment))
 		{
 			if (m_pSoundSystem)
-				m_pSoundSystem->SetEaxListenerEnvironment(nEaxEnvironment, NULL, nFlags);
+				m_pSoundSystem->SetEaxListenerEnvironment(nEaxEnvironment, nullptr, nFlags);
 		}
 	}
 
@@ -586,7 +586,7 @@ int CScriptObjectSound::PlaySound(IFunctionHandler* pH)
 {
 	int nCookie = 0;
 	float fVolumeScale = 1.0f;
-	ISound* pSound = NULL;
+	ISound* pSound = nullptr;
 
 	if (pH->GetParamUDVal(1, (USER_DATA&)pSound, nCookie) && pSound && (nCookie == USER_DATA_SOUND))	//AMD Port
 	{
@@ -603,7 +603,7 @@ int CScriptObjectSound::PlaySound(IFunctionHandler* pH)
 	else
 	{
 		if (m_pSoundSystem)
-			m_pScriptSystem->RaiseError("PlaySound NULL SOUND!!");
+			m_pScriptSystem->RaiseError("PlaySound nullptr SOUND!!");
 	}
 	return pH->EndFunction();
 }
@@ -613,7 +613,7 @@ int CScriptObjectSound::PlaySoundFadeUnderwater(IFunctionHandler* pH)
 {
 	int nCookie = 0;
 	float fVolumeScale = 1.0f;
-	ISound* pSound = NULL;
+	ISound* pSound = nullptr;
 
 	if (pH->GetParamUDVal(1, (USER_DATA&)pSound, nCookie) && pSound && (nCookie == USER_DATA_SOUND))	//AMD Port
 	{
@@ -628,7 +628,7 @@ int CScriptObjectSound::PlaySoundFadeUnderwater(IFunctionHandler* pH)
 	else
 	{
 		if (m_pSoundSystem)
-			m_pScriptSystem->RaiseError("PlaySound NULL SOUND!!");
+			m_pScriptSystem->RaiseError("PlaySound nullptr SOUND!!");
 	}
 	return pH->EndFunction();
 }
@@ -643,7 +643,7 @@ int CScriptObjectSound::PlaySoundFadeUnderwater(IFunctionHandler* pH)
 	CHECK_PARAMETERS(2);
 	int		nCookie=0;
 	float fDistance=500;
-	ISound *pSound=NULL;
+	ISound *pSound=nullptr;
 	pH->GetParamUDVal(1,(int &)pSound,nCookie);
 
 	pH->GetParam(2,fDistance);
@@ -665,7 +665,7 @@ int CScriptObjectSound::SetSoundVolume(IFunctionHandler* pH)
 	CHECK_PARAMETERS(2);
 	int nCookie = 0;
 	int iVolume = 0;
-	ISound* pSound = NULL;
+	ISound* pSound = nullptr;
 	pH->GetParamUDVal(1, (INT_PTR&)pSound, nCookie);
 
 	pH->GetParam(2, iVolume);
@@ -691,7 +691,7 @@ int CScriptObjectSound::SetSoundLoop(IFunctionHandler* pH)
 	CHECK_PARAMETERS(2);
 	int nCookie = 0;
 	int nFlag = 0;
-	ISound* pSound = NULL;
+	ISound* pSound = nullptr;
 	pH->GetParamUDVal(1, (INT_PTR&)pSound, nCookie);		//AMD Port
 
 	pH->GetParam(2, nFlag);
@@ -715,7 +715,7 @@ int CScriptObjectSound::SetSoundFrequency(IFunctionHandler* pH)
 	CHECK_PARAMETERS(2);
 	int nCookie = 0;
 	int nFrequency = 0;
-	ISound* pSound = NULL;
+	ISound* pSound = nullptr;
 
 
 	pH->GetParamUDVal(1, (INT_PTR&)pSound, nCookie);		//AMD Port
@@ -736,7 +736,7 @@ int CScriptObjectSound::SetSoundPitching(IFunctionHandler* pH)
 	CHECK_PARAMETERS(2);
 	int nCookie = 0;
 	float fPitching = 0;
-	ISound* pSound = NULL;
+	ISound* pSound = nullptr;
 
 
 	pH->GetParamUDVal(1, (INT_PTR&)pSound, nCookie);		//AMD Port
@@ -776,7 +776,7 @@ int CScriptObjectSound::StopSound(IFunctionHandler* pH)
 {
 	CHECK_PARAMETERS(1);
 	int nCookie = 0;
-	ISound* pSound = NULL;
+	ISound* pSound = nullptr;
 	pH->GetParamUDVal(1, (INT_PTR&)pSound, nCookie);		//AMD Port
 
 	if (pSound && (nCookie == USER_DATA_SOUND))
@@ -797,7 +797,7 @@ int CScriptObjectSound::SetSoundPosition(IFunctionHandler* pH)
 {
 	CHECK_PARAMETERS(2);
 	int nCookie = 0;
-	ISound* pSound = NULL;
+	ISound* pSound = nullptr;
 	CScriptObjectVector oVec(m_pScriptSystem, true);
 	Vec3 v3d;
 
@@ -853,7 +853,7 @@ int CScriptObjectSound::SetMinMaxDistance(IFunctionHandler* pH)
 	int nCookie = 0;
 	float fMinDist;
 	float fMaxDist;
-	ISound* pISound = NULL;
+	ISound* pISound = nullptr;
 
 	CHECK_PARAMETERS(3);
 
@@ -879,7 +879,7 @@ int CScriptObjectSound::SetLoopPoints(IFunctionHandler* pH)
 	CHECK_PARAMETERS(3);
 
 	int nID = 0, iLoopPt1, iLoopPt2;
-	ISound* pISound = NULL;
+	ISound* pISound = nullptr;
 	int nCookie = 0;
 	pH->GetParamUDVal(1, (INT_PTR&)pISound, nCookie);	//AMD Port
 	pH->GetParam(2, iLoopPt1);
@@ -898,7 +898,7 @@ int CScriptObjectSound::AddSoundFlags(IFunctionHandler *pH)
 {
 	int iFlags;
 	int nCookie=0;
-	ISound *pISound = NULL;
+	ISound *pISound = nullptr;
 	CHECK_PARAMETERS(2);
 
 	pH->GetParamUDVal(1,(int &)pISound,nCookie);
@@ -926,7 +926,7 @@ int CScriptObjectSound::AddToScaleGroup(IFunctionHandler* pH)
 {
 	CHECK_PARAMETERS(2);
 	int nGroup;
-	ISound* pSound = NULL;
+	ISound* pSound = nullptr;
 	int nCookie = 0;
 	pH->GetParamUDVal(1, (INT_PTR&)pSound, nCookie);	//AMD Port
 	pH->GetParam(2, nGroup);
@@ -940,7 +940,7 @@ int CScriptObjectSound::RemoveFromScaleGroup(IFunctionHandler* pH)
 {
 	CHECK_PARAMETERS(2);
 	int nGroup;
-	ISound* pSound = NULL;
+	ISound* pSound = nullptr;
 	int nCookie = 0;
 	pH->GetParamUDVal(1, (INT_PTR&)pSound, nCookie);	//AMD Port
 	pH->GetParam(2, nGroup);
@@ -969,7 +969,7 @@ int CScriptObjectSound::SetSoundProperties(IFunctionHandler* pH)
 {
 	CHECK_PARAMETERS(2);
 	float fFadingValue = 1;
-	ISound* pSound = NULL;
+	ISound* pSound = nullptr;
 	int nCookie = 0;
 
 	pH->GetParamUDVal(1, (INT_PTR&)pSound, nCookie);		//AMD Port
@@ -987,7 +987,7 @@ int CScriptObjectSound::FXEnable(IFunctionHandler* pH)
 	CHECK_PARAMETERS(2);
 
 	int nCookie = 0;
-	ISound* pSound = NULL;
+	ISound* pSound = nullptr;
 	int nEffectNumber;
 
 	pH->GetParamUDVal(1, (INT_PTR&)pSound, nCookie);	//AMD Port
@@ -1003,7 +1003,7 @@ int CScriptObjectSound::SetFXSetParamEQ(IFunctionHandler* pH)
 	CHECK_PARAMETERS(4);
 
 	int nCookie = 0;
-	ISound* pSound = NULL;
+	ISound* pSound = nullptr;
 	float fCenter;
 	float fBandwidth;
 	float fGain;
@@ -1238,7 +1238,7 @@ int CScriptObjectSound::GetSoundLength(IFunctionHandler* pH)
 	CHECK_PARAMETERS(1);
 
 	int nCookie = 0;
-	ISound* pSound = NULL;
+	ISound* pSound = nullptr;
 
 	pH->GetParamUDVal(1, (INT_PTR&)pSound, nCookie);	//AMD Port
 
@@ -1276,7 +1276,7 @@ int CScriptObjectSound::SetSoundRatio(IFunctionHandler* pH)
 {
 	CHECK_PARAMETERS(2);
 	int nCookie = 0;
-	ISound* pSound = NULL;
+	ISound* pSound = nullptr;
 	float fRatio;
 	pH->GetParamUDVal(1, (INT_PTR&)pSound, nCookie);	//AMD Port
 	pH->GetParam(2, fRatio);

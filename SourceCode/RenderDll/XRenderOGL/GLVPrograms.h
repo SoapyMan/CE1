@@ -195,7 +195,7 @@ public:
 	{
 		m_bCGType = false;
 		m_Flags = 0;
-		m_Script = NULL;
+		m_Script = nullptr;
 	}
 	virtual int Size()
 	{

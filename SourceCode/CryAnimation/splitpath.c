@@ -46,7 +46,7 @@ void portable_splitpath (
         )
 {
         char *p;
-        char *last_slash = NULL, *dot = NULL;
+        char *last_slash = nullptr, *dot = nullptr;
         unsigned len;
 
         /* we assume that the path argument has the following form, where any
@@ -99,7 +99,7 @@ void portable_splitpath (
          * handling the extension.
          */
 
-        for (last_slash = NULL, p = (char *)path; *p; p++) {
+        for (last_slash = nullptr, p = (char *)path; *p; p++) {
             if (*p == ('/') || *p == ('\\'))
                 /* point to one beyond for later copy */
                 last_slash = p + 1;

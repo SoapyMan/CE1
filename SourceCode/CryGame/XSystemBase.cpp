@@ -65,8 +65,8 @@ CXSystemBase::CXSystemBase(CXGame *pGame,ILog *pLog)
 ///////////////////////////////////////////////
 CXSystemBase::~CXSystemBase()
 {
-	m_pGame = NULL;
-	m_pEntitySystem = NULL;
+	m_pGame = nullptr;
+	m_pEntitySystem = nullptr;
 }
 
 ///////////////////////////////////////////////
@@ -101,7 +101,7 @@ IEntity *CXSystemBase::GetLocalPlayer()
 		EntityId nID = m_pGame->m_pClient->GetPlayerId();
 		return m_pEntitySystem->GetEntity(nID);
 	}
-	return NULL;
+	return nullptr;
 }
 
 void CXSystemBase::InitRegistry(const char *szLevelDir)
@@ -113,7 +113,7 @@ void CXSystemBase::InitRegistry(const char *szLevelDir)
 	IEntityClassRegistry *pEntityClassRegistry = m_pGame->GetClassRegistry();
 
 	// Enumerate entity classes.
-	EntityClass *entCls = NULL;
+	EntityClass *entCls = nullptr;
 	pEntityClassRegistry->MoveFirst();
 	do {
 		entCls = pEntityClassRegistry->Next();
@@ -190,8 +190,8 @@ bool CXSystemBase::LoadLevelEntities( SMissionInfo &missionInfo  )
 		// [Anton] allow entities to restore links between them
 		IEntityItPtr pEntities = m_pSystem->GetIEntitySystem()->GetEntityIterator();
 		pEntities->MoveFirst();
-		IEntity *pEnt=NULL;
-		while((pEnt=pEntities->Next())!=NULL)
+		IEntity *pEnt=nullptr;
+		while((pEnt=pEntities->Next())!=nullptr)
 			pEnt->PostLoad();		
 	}
 
@@ -209,11 +209,7 @@ bool CXSystemBase::LoadMaterials(XDOM::IXMLDOMDocument *doc)
 	XDOM::IXMLDOMNodeListPtr pNodes;
 	pDoc=doc;//m_pSystem->CreateXMLDocument();
 	
-#if !defined(LINUX64)
-	if(pDoc!=NULL)
-#else
-	if(pDoc!=0)
-#endif
+	if(pDoc)
 	{
 		///////////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////////
@@ -223,11 +219,8 @@ bool CXSystemBase::LoadMaterials(XDOM::IXMLDOMDocument *doc)
 		pNodes=pDoc->getElementsByTagName("SurfaceTypes");
 		XDOM::IXMLDOMNodePtr pNode;
 		int nSurfaceID=0;
-#if !defined(LINUX64)
-		if((pNodes!=NULL) && pNodes->length())
-#else
-		if((pNodes!=0) && pNodes->length())
-#endif
+
+		if(pNodes && pNodes->length())
 		{
 			pNodes->reset();
 			while(pNode=pNodes->nextNode())
@@ -242,12 +235,8 @@ bool CXSystemBase::LoadMaterials(XDOM::IXMLDOMDocument *doc)
 					if(string(pSurface->getName())==string("SurfaceType"))
 					{
 						XDOM::IXMLDOMNodePtr pMaterial;
-						pMaterial=pSurface->getAttribute("Material");
-#if !defined(LINUX64)
-						if(pMaterial!=NULL)
-#else
-						if(pMaterial!=0)
-#endif
+
+						if(pMaterial)
 						{
 							string sMaterial=pMaterial->getText();
 							if(!sMaterial.length()){
@@ -278,22 +267,16 @@ void CXSystemBase::LoadXMLNode(XDOM::IXMLDOMNode *pInputNode, bool bSpawn)
 	if (pEquipPackList)
 	{
 		pEquipPackList->reset();
-#if !defined(LINUX64)
-		while ((pPackListNode = pEquipPackList->nextNode()) != NULL)
-#else
-		while ((pPackListNode = pEquipPackList->nextNode()) != 0)
-#endif
+
+		while (pPackListNode = pEquipPackList->nextNode())
 		{
 			XDOM::IXMLDOMNodeListPtr pPackList = pPackListNode->getElementsByTagName("EquipPack");
 			XDOM::IXMLDOMNodePtr pPack;
 			if (pPackList)
 			{
 				pPackList->reset();
-#if !defined(LINUX64)
-				while ((pPack = pPackList->nextNode()) != NULL)
-#else
-				while ((pPack = pPackList->nextNode()) != 0)
-#endif
+
+				while (pPack = pPackList->nextNode())
 					m_pGame->AddEquipPack(pPack);
 			}
 		}
@@ -318,11 +301,8 @@ void CXSystemBase::LoadXMLNode(XDOM::IXMLDOMNode *pInputNode, bool bSpawn)
 					if (pWeaponList)
 					{
 						pWeaponList->reset();
-#if !defined(LINUX64)
-						while((pUsedWeapon = pWeaponList->nextNode())!=NULL)
-#else
-						while((pUsedWeapon = pWeaponList->nextNode())!=0)
-#endif
+
+						while(pUsedWeapon = pWeaponList->nextNode())
 						{
 							XDOM::IXMLDOMNodePtr pWeaponName;
 							XDOM::IXMLDOMNodePtr pID;
@@ -337,11 +317,10 @@ void CXSystemBase::LoadXMLNode(XDOM::IXMLDOMNode *pInputNode, bool bSpawn)
 							if(pWeaponName)
 							{
 								TRACE("Weapon Available: %s", pWeaponName->getText());
-								if (bSpawn)
-									if (!m_pGame->GetWeaponSystemEx()->AddWeapon(pWeaponName->getText()))
-									{
-										TRACE("Can't spawn / register weapon '%s'", pWeaponName->getText());
-									}
+								if (bSpawn && !m_pGame->GetWeaponSystemEx()->AddWeapon(pWeaponName->getText()))
+								{
+									TRACE("Can't spawn / register weapon '%s'", pWeaponName->getText());
+								}
 							}
 						}
 					}
@@ -357,7 +336,7 @@ void CXSystemBase::LoadXMLNode(XDOM::IXMLDOMNode *pInputNode, bool bSpawn)
 	
 	if (pInputNode->getAttribute("MusicScript"))
 	{
-		const char *pszFilename = NULL;
+		const char *pszFilename = nullptr;
 		pszFilename = pInputNode->getAttribute("MusicScript")->getText();
 		if (!m_pSystem->LoadMusicDataFromLUA(pszFilename))
 			m_pLog->Log("WARNING: Cannot load music-script %s !", pszFilename);
@@ -370,7 +349,7 @@ void CXSystemBase::LoadXMLNode(XDOM::IXMLDOMNode *pInputNode, bool bSpawn)
   
 	if (pInputNode->getAttribute("PlayerEquipPack"))
 	{
-		const char *pszEP = NULL;
+		const char *pszEP = nullptr;
 		pszEP = pInputNode->getAttribute("PlayerEquipPack")->getText();
 		m_pGame->SetPlayerEquipPackName(pszEP);
 	}
@@ -413,11 +392,8 @@ void CXSystemBase::LoadXMLNode(XDOM::IXMLDOMNode *pInputNode, bool bSpawn)
 				angles = StringToVector(pAngles->getText());
 			else 
 				angles(0,0,0);
-#if !defined(LINUX64)
-			if((pType!=NULL) && (pName!=NULL) && (pPos!=NULL))
-#else
-			if((pType!=0) && (pName!=0) && (pPos!=0))
-#endif
+
+			if(pType && pName && pPos)
 			{
 				// <<FIXME>> fixed height... maybe should be sent in ??
 				Vec3 pos = StringToVector(pPos->getText());
@@ -487,22 +463,16 @@ void CXSystemBase::LoadXMLNode(XDOM::IXMLDOMNode *pInputNode, bool bSpawn)
 					if (pGroupID)
 						groupID = atoi(pGroupID->getText());
 					pAreaWidth=pNode->getAttribute("Width");
-#if !defined(LINUX64)
-					if(pAreaWidth!=NULL)
-#else
-					if(pAreaWidth!=0)
-#endif
+
+					if(pAreaWidth)
 					{
 						areaWidth = (float)atof(pAreaWidth->getText());
 						if(areaWidth<0)
 							areaWidth = 0.0f;
 					}
 					pAreaHeight=pNode->getAttribute("Height");
-#if !defined(LINUX64)
-					if(pAreaHeight!=NULL)
-#else
-					if(pAreaHeight!=0)
-#endif
+
+					if(pAreaHeight)
 					{
 						areaHeight = (float)atof(pAreaHeight->getText());
 						if(areaHeight<0)
@@ -599,11 +569,8 @@ void CXSystemBase::LoadXMLNode(XDOM::IXMLDOMNode *pInputNode, bool bSpawn)
 					if (pAngles)
 						Angles=StringToVector(pAngles->getText());
 					pEdgeWidth=pNode->getAttribute("FadeInZone");
-#if !defined(LINUX64)
-					if(pEdgeWidth!=NULL)
-#else
-					if(pEdgeWidth!=0)
-#endif
+
+					if(pEdgeWidth)
 					{
 						edgeWidth = (float)atof(pEdgeWidth->getText());
 						if(edgeWidth<0)
@@ -686,11 +653,8 @@ void CXSystemBase::LoadXMLNode(XDOM::IXMLDOMNode *pInputNode, bool bSpawn)
 					if (pPos)
 						Pos=StringToVector(pPos->getText());
 					pEdgeWidth=pNode->getAttribute("FadeInZone");
-#if !defined(LINUX64)
-					if(pEdgeWidth!=NULL)
-#else
-					if(pEdgeWidth!=0)
-#endif
+
+					if(pEdgeWidth)
 					{
 						edgeWidth = (float)atof(pEdgeWidth->getText());
 						if(edgeWidth<0)
@@ -735,14 +699,11 @@ void CXSystemBase::LoadXMLNode(XDOM::IXMLDOMNode *pInputNode, bool bSpawn)
 								{
 									XDOM::IXMLDOMNodePtr pAreaRadius;
 									pAreaRadius = pNode->getAttribute("Area");
-									IAIObject *pObject = m_pSystem->GetAISystem()->CreateAIObject(anchorID, NULL);
+									IAIObject *pObject = m_pSystem->GetAISystem()->CreateAIObject(anchorID, nullptr);
 									pObject->SetPos(StringToVector(pPos->getText()));
 									//alberto
-#if !defined(LINUX64)
-									if(pAngles!=NULL)
-#else
-									if(pAngles!=0)
-#endif
+
+									if(pAngles)
 										pObject->SetAngles(StringToVector(pAngles->getText()));
 									else
 										pObject->SetAngles(Vec3(0,0,0));
@@ -929,7 +890,7 @@ void CXSystemBase::LoadXMLNode(XDOM::IXMLDOMNode *pInputNode, bool bSpawn)
 			while(pNode=pNodes->nextNode())
 			{				
 				CEntityStreamData eData;
-				// if pNode is NULL, it should spawn from CEntityStreamData 
+				// if pNode is nullptr, it should spawn from CEntityStreamData 
 				// otherwise it fills CEntityStreamData with info for spawning the entity
 				SpawnEntityFromXMLNode(pNode,&eData);
 			}
@@ -954,9 +915,9 @@ bool CXSystemBase::SpawnEntityFromXMLNode(XDOM::IXMLDOMNodePtr pNode,CEntityStre
 	XDOM::IXMLDOMNodePtr pMaterial;
 	XDOM::IXMLDOMNodePtr pPreCalcShadows;
 	XDOM::IXMLDOMNodePtr pScale;
-  XDOM::IXMLDOMNodePtr pViewDistRatio;
-  XDOM::IXMLDOMNodePtr pLodRatio;
-  XDOM::IXMLDOMNodePtr pUpdateVisLevel;
+	XDOM::IXMLDOMNodePtr pViewDistRatio;
+	XDOM::IXMLDOMNodePtr pLodRatio;
+	XDOM::IXMLDOMNodePtr pUpdateVisLevel;
 	XDOM::IXMLDOMNodePtr pPhysicalState;
 	XDOM::IXMLDOMNodePtr pHiddenInGame;
 	XDOM::IXMLDOMNodePtr pSkipOnLowSpec;
@@ -974,9 +935,9 @@ bool CXSystemBase::SpawnEntityFromXMLNode(XDOM::IXMLDOMNodePtr pNode,CEntityStre
 	pMaterial = pNode->getAttribute("Material");				
 	pPreCalcShadows = pNode->getAttribute("PreCalcShadows");
 	pScale = pNode->getAttribute("Scale");
-  pViewDistRatio = pNode->getAttribute("ViewDistRatio");
-  pLodRatio = pNode->getAttribute("LodRatio");
-  pUpdateVisLevel = pNode->getAttribute("UpdateVisLevel");
+	pViewDistRatio = pNode->getAttribute("ViewDistRatio");
+	pLodRatio = pNode->getAttribute("LodRatio");
+	pUpdateVisLevel = pNode->getAttribute("UpdateVisLevel");
 	pPhysicalState = pNode->getAttribute("PhysicsState");
 	pHiddenInGame = pNode->getAttribute("HiddenInGame");
 	pSkipOnLowSpec = pNode->getAttribute("SkipOnLowSpec"); 
@@ -985,21 +946,14 @@ bool CXSystemBase::SpawnEntityFromXMLNode(XDOM::IXMLDOMNodePtr pNode,CEntityStre
 	// [marco] check if this entity should be skipped on low spec config
 	if (!m_pGame->IsMultiplayer()) // [marco] not in multiplayer or it will screw up on different machines config!
 	{	
-#if !defined(LINUX64)
-		if (pSkipOnLowSpec!=NULL && (atoi(pSkipOnLowSpec->getText()) > 0))
-#else
-		if (pSkipOnLowSpec!=0 && (atoi(pSkipOnLowSpec->getText()) > 0))
-#endif
+		if (pSkipOnLowSpec && (atoi(pSkipOnLowSpec->getText()) > 0))
 		{
 			ICVar *pCvar=m_pConsole->GetCVar("sys_skiponlowspec");
 			if (pCvar && pCvar->GetIVal()) return true;
 		}
 	}
-#if !defined(LINUX64)
-	if((pEntityClass!=NULL) && (pName!=NULL) && (pPos!=NULL))
-#else
-	if((pEntityClass!=0) && (pName!=0) && (pPos!=0))
-#endif
+
+	if(pEntityClass && pName && pPos)
 	{
 //		TRACE("entity instance desc %s %s %s",pEntityClass->getText(),pName->getText(),pPos->getText());
 		EntityClass *pClass=m_pGame->GetClassRegistry()->GetByClass(pEntityClass->getText());
@@ -1019,39 +973,27 @@ bool CXSystemBase::SpawnEntityFromXMLNode(XDOM::IXMLDOMNodePtr pNode,CEntityStre
 			if(!m_pGame->IsLoadingLevelFromFile())
 			{							
 				ed.name = pName->getText();
-#if !defined(LINUX64)
-				if (pPos != NULL)
-#else
-				if (pPos != 0)
-#endif
+
+				if (pPos)
 				{
 					ed.pos = StringToVector(pPos->getText());
 				}
 				ed.netPresence = false;
-#if !defined(LINUX64)
-				if(pId!=NULL)
-#else
-				if(pId!=0)
-#endif
+
+				if(pId)
 				{
 					ed.id=atoi(pId->getText());
 				}
-#if !defined(LINUX64)
-				if(pAngles!=NULL)
-#else
-				if(pAngles!=0)
-#endif
+
+				if(pAngles)
 				{
 					Vec3 vAngles=StringToVector(pAngles->getText());
 					ed.angles = vAngles;
 				}
 				else
 					ed.angles = Vec3(0,0,0);
-#if !defined(LINUX64)
-				if (pScale != NULL)
-#else
-				if (pScale != 0)
-#endif
+
+				if (pScale)
 				{
 					Vec3 scale(1,1,1);
 					scale = StringToVector(pScale->getText());
@@ -1070,58 +1012,40 @@ bool CXSystemBase::SpawnEntityFromXMLNode(XDOM::IXMLDOMNodePtr pNode,CEntityStre
 				m_setLevelEntities.insert(entity->GetId());
 
 				// shadow volumes
-#if !defined(LINUX64)
-				if (pCastShadowVolume != NULL)
-#else
-				if (pCastShadowVolume != 0)
-#endif
+
+				if (pCastShadowVolume)
 				{
 					if ( atoi(pCastShadowVolume->getText()) != 0) 
 						entity->SetRndFlags(ERF_CASTSHADOWVOLUME,true);
 				}
-#if !defined(LINUX64)
-				if (pSelfShadowing != NULL)
-#else
-				if (pSelfShadowing != 0)
-#endif
+
+				if (pSelfShadowing)
 				{
 					if ( atoi(pSelfShadowing->getText()) != 0) 
 						entity->SetRndFlags(ERF_SELFSHADOW,true);
 				}
 
 				// shadow maps
-#if !defined(LINUX64)
-				if (pCastShadowMaps != NULL)
-#else
-				if (pCastShadowMaps != 0)
-#endif
+
+				if (pCastShadowMaps)
 				{
 					if ( atoi(pCastShadowMaps->getText()) != 0) 
 						entity->SetRndFlags(ERF_CASTSHADOWMAPS,true);
 				}
-#if !defined(LINUX64)
-				if (pRecvShadowMaps != NULL)
-#else
-				if (pRecvShadowMaps != 0)
-#endif
+
+				if (pRecvShadowMaps)
 				{
 					if ( atoi(pRecvShadowMaps->getText()) != 0) 
 						entity->SetRndFlags(ERF_RECVSHADOWMAPS,true);
 				}
-#if !defined(LINUX64)
-				if (pPreCalcShadows != NULL)
-#else
-				if (pPreCalcShadows != 0)
-#endif
+
+				if (pPreCalcShadows)
 				{
 					if ( atoi(pPreCalcShadows->getText()) != 0) 
 						entity->SetRndFlags(ERF_CASTSHADOWINTOLIGHTMAP,true);
 				}
-#if !defined(LINUX64)
-				if (pMaterial != NULL)
-#else
-				if (pMaterial != 0)
-#endif
+
+				if (pMaterial)
 				{
 					IMatInfo *pMtl = m_pSystem->GetI3DEngine()->FindMaterial( pMaterial->getText() );
 					if (pMtl)
@@ -1129,11 +1053,8 @@ bool CXSystemBase::SpawnEntityFromXMLNode(XDOM::IXMLDOMNodePtr pNode,CEntityStre
 						entity->SetMaterial( pMtl );
 					}
 				}
-#if !defined(LINUX64)
-				if(pParentId!=NULL)
-#else
-				if(pParentId!=0)
-#endif
+
+				if(pParentId)
 				{
 					int parentId = atoi(pParentId->getText());
 					m_ChildParentMap[ed.id] = parentId;
@@ -1150,11 +1071,11 @@ bool CXSystemBase::SpawnEntityFromXMLNode(XDOM::IXMLDOMNodePtr pNode,CEntityStre
 					}
 				}
 
-        if(pViewDistRatio)
-          entity->SetViewDistRatio((int)atof(pViewDistRatio->getText()));
+				if(pViewDistRatio)
+				  entity->SetViewDistRatio((int)atof(pViewDistRatio->getText()));
 
-        if(pLodRatio)
-          entity->SetLodRatio((int)atof(pLodRatio->getText()));
+				if(pLodRatio)
+				  entity->SetLodRatio((int)atof(pLodRatio->getText()));
 
 				if (pPhysicalState)
 				{
@@ -1162,8 +1083,8 @@ bool CXSystemBase::SpawnEntityFromXMLNode(XDOM::IXMLDOMNodePtr pNode,CEntityStre
 					entity->SetPhysicsState( str );
 				}
 
-        if(pUpdateVisLevel)
-          entity->SetUpdateVisLevel((EEntityUpdateVisLevel)atoi(pUpdateVisLevel->getText()));
+				if(pUpdateVisLevel)
+				  entity->SetUpdateVisLevel((EEntityUpdateVisLevel)atoi(pUpdateVisLevel->getText()));
 
 				// Entity initially hidden in the game.
 				if (pHiddenInGame)
@@ -1425,7 +1346,7 @@ void CXSystemBase::EndLoading(bool bEditor)
 
 	//will be removed from script
 	//pRenderer->RemoveTexture(m_pLoadingImg);
-	m_pLoadingImg=NULL;
+	m_pLoadingImg=nullptr;
 }
 
 void CXSystemBase::BindChildren()
@@ -1458,11 +1379,8 @@ void CXSystemBase::GetMission( XDOM::IXMLDOMDocument *doc,const char *sRequested
 	int missionsfound = 0;
 
 	char lastmission[256];
-#if !defined(LINUX64)
-	if(pDoc!=NULL)
-#else
-	if(pDoc!=0)
-#endif
+
+	if(pDoc)
 	{
 		XDOM::IXMLDOMNodeListPtr pMissionTagList;
 		XDOM::IXMLDOMNodePtr pMissionTag;
@@ -1490,7 +1408,7 @@ void CXSystemBase::GetMission( XDOM::IXMLDOMDocument *doc,const char *sRequested
 						missionInfo.sMissionFilename = sMissionFile;
 						if (!missionInfo.pMissionXML->load(sMissionFile.c_str()))
 						{
-							missionInfo.pMissionXML = NULL;
+							missionInfo.pMissionXML = nullptr;
 						}
 					}
 

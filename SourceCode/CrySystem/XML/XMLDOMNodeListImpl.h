@@ -56,7 +56,7 @@ public:
 	{
 		XDOM::IXMLDOMNode *pTemp;
 		if(m_itor==m_lstNodes.end())
-			return NULL;
+			return nullptr;
 		pTemp=(*m_itor);
 		++m_itor;
 		return pTemp;

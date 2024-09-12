@@ -88,7 +88,7 @@ public:
 
 	void SetEntity(int Id) {}
 	void SetEntity(IEntity* entity) {}
-	IEntity* GetEntity() { return NULL; }
+	IEntity* GetEntity() { return nullptr; }
 
 	void SetFlags(int flags);
 	int GetFlags() const;
@@ -163,7 +163,7 @@ public:
 	virtual void Serialize(XmlNodeRef& xmlNode, bool bLoading);
 
 	void RegisterCallback(IAnimNodeCallback* callback) { m_callback = callback; m_pMovieSystem->Callback(CBR_REGISTERNODECB); };
-	void UnregisterCallback(IAnimNodeCallback* callback) { m_callback = NULL; m_pMovieSystem->Callback(CBR_UNREGISTERNODECB); };
+	void UnregisterCallback(IAnimNodeCallback* callback) { m_callback = nullptr; m_pMovieSystem->Callback(CBR_UNREGISTERNODECB); };
 
 	bool IsParamValid(int paramId) const;
 

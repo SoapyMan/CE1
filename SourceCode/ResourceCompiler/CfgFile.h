@@ -106,7 +106,7 @@ public:
 	const char* GetSectionName(unsigned int n)
 	{
 		if (n >= m_sections.size())
-			return(NULL);
+			return(nullptr);
 
 		return(m_sections[n].name.GetString());
 	};

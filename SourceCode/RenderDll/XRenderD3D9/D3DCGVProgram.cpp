@@ -33,10 +33,10 @@ CVProgram* CVProgram::mfForName(const char* name, std::vector<SFXStruct>& Struct
 	int i;
 
 	if (!name || !name[0])
-		return NULL;
+		return nullptr;
 
 	if (!(gRenDev->GetFeatures() & (RFT_HW_VS)))
-		return NULL;
+		return nullptr;
 
 	for (i = 0; i < m_VPrograms.Num(); i++)
 	{
@@ -49,7 +49,7 @@ CVProgram* CVProgram::mfForName(const char* name, std::vector<SFXStruct>& Struct
 		}
 	}
 
-	CVProgram* p = NULL;
+	CVProgram* p = nullptr;
 	{
 		CVProgram* pr = new CCGVProgram_D3D;
 		pr->m_Name = name;
@@ -259,7 +259,7 @@ struct SVSAliasSampler
 	std::string NameINT;
 	SVSAliasSampler()
 	{
-		fxSampler = NULL;
+		fxSampler = nullptr;
 	}
 };
 
@@ -499,10 +499,10 @@ CVProgram* CVProgram::mfForName(const char* name, uint64 nMaskGen)
 	int i;
 
 	if (!name || !name[0])
-		return NULL;
+		return nullptr;
 
 	if (!(gRenDev->GetFeatures() & (RFT_HW_VS)))
-		return NULL;
+		return nullptr;
 
 	for (i = 0; i < m_VPrograms.Num(); i++)
 	{
@@ -523,7 +523,7 @@ CVProgram* CVProgram::mfForName(const char* name, uint64 nMaskGen)
 	if (!fp)
 	{
 		Warning(0, 0, "Couldn't find vertex shader '%s'", name);
-		return NULL;
+		return nullptr;
 	}
 	iSystem->GetIPak()->FSeek(fp, 0, SEEK_END);
 	int len = iSystem->GetIPak()->FTell(fp);
@@ -534,7 +534,7 @@ CVProgram* CVProgram::mfForName(const char* name, uint64 nMaskGen)
 	buf[len] = 0;
 	buf = gRenDev->m_cEF.mfScriptPreprocessor(buf, dir, scrname);
 
-	CVProgram* p = NULL;
+	CVProgram* p = nullptr;
 	{
 		CVProgram* pr = new CCGVProgram_D3D;
 		pr->m_Name = name;
@@ -571,7 +571,7 @@ void SCGScript::mfRemoveFromList()
 	{
 		SCGScript* scr = CCGVProgram_D3D::m_CGScripts[i];
 		if (scr == this)
-			CCGVProgram_D3D::m_CGScripts[i] = NULL;
+			CCGVProgram_D3D::m_CGScripts[i] = nullptr;
 	}
 }
 
@@ -590,7 +590,7 @@ void CCGVProgram_D3D::mfReset()
 		if (m_InstCache[i].m_pCache)
 		{
 			gRenDev->m_cEF.CloseCacheFile(m_InstCache[i].m_pCache);
-			m_InstCache[i].m_pCache = NULL;
+			m_InstCache[i].m_pCache = nullptr;
 		}
 	}
 	m_InstCache.Free();
@@ -626,7 +626,7 @@ void CCGVProgram_D3D::mfFree()
 CCGVProgram_D3D::~CCGVProgram_D3D()
 {
 	mfFree();
-	CVProgram::m_VPrograms[m_Id] = NULL;
+	CVProgram::m_VPrograms[m_Id] = nullptr;
 }
 
 void CCGVProgram_D3D::Release()
@@ -957,7 +957,7 @@ SCGScript* CCGVProgram_D3D::mfGenerateScriptVP(CVProgram* pPosVP)
 		SCGScript* pScr = pVP->m_PosScript;
 		if (CName(pPosVP->m_Name.c_str(), eFN_Find) != m_Insts[m_CurInst].m_PosScriptName)
 		{
-			SCGScript* pS = mfAddNewScript(m_Insts[m_CurInst].m_PosScriptName.c_str(), NULL);
+			SCGScript* pS = mfAddNewScript(m_Insts[m_CurInst].m_PosScriptName.c_str(), nullptr);
 			if (pS)
 				pScr = pS;
 		}
@@ -1035,7 +1035,7 @@ SCGScript* CCGVProgram_D3D::mfGenerateScriptVP(CVProgram* pPosVP)
 		}
 	}
 
-	SCGScript* cgs = mfAddNewScript(NULL, &newScr[0]);
+	SCGScript* cgs = mfAddNewScript(nullptr, &newScr[0]);
 
 	return cgs;
 }
@@ -1067,7 +1067,7 @@ static char* sSphereMapGenScriptVP[] =
 	"float4 tcSM = {0,0,0,1};\n"
 	"tcSM.xy = tcRef.xy/tcEm.x + 0.5;\n"
   },
-  NULL
+  nullptr
 };
 static char* sReflectionMapGenScriptVP[] =
 {
@@ -1079,7 +1079,7 @@ static char* sReflectionMapGenScriptVP[] =
 	"tcRM.xyz = tcRef.xyz;\n"
 	"tcRM.w = vPos.w;\n"
   },
-  NULL
+  nullptr
 };
 static char* sNormalMapGenScriptVP[] =
 {
@@ -1089,7 +1089,7 @@ static char* sNormalMapGenScriptVP[] =
 	"tcNM.xyz = tcNormal.xyz;\n"
 	"tcNM.w = vPos.w;\n"
   },
-  NULL
+  nullptr
 };
 
 char* CCGVProgram_D3D::mfGenerateTCScript(char* Script, int nt)
@@ -1202,7 +1202,7 @@ char* CCGVProgram_D3D::mfGenerateTCScript(char* Script, int nt)
 			while (sNewStr[n] != 0xa && sNewStr[n] != 0) { sNewStr[n] = 0x20; n++; }
 
 			// Add texgen code to the final VP
-			char** pNewScripts = NULL;
+			char** pNewScripts = nullptr;
 			sStr1[0] = 0;
 			if (m_Insts[m_CurInst].m_Mask & tcGOLMask)
 				sprintf(sStr1, "float4 tcOL%d = mul(%s, vPos);\n", nt, sMTCG);
@@ -1381,7 +1381,7 @@ char* CCGVProgram_D3D::mfCreateAdditionalVP(CVProgram* pPosVP)
 	if (!pScript)
 		pScript = mfGenerateScriptVP(pPosVP);
 	if (!pScript)
-		return NULL;
+		return nullptr;
 	const char* scr = pScript->m_Script;
 	if (m_Flags & VPFI_FX)
 		return (char*)scr;
@@ -1687,7 +1687,7 @@ void CCGVProgram_D3D::mfCompileParamStateMatrix(char* scr, SShader* ef, TArray<S
 	SCGMatrix pr;
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else
@@ -1742,7 +1742,7 @@ void CCGVProgram_D3D::mfCompileVertAttributes(char* scr, SShader* ef)
 
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else
@@ -1806,7 +1806,7 @@ bool CCGVProgram_D3D::mfCompile(char* scr)
 	SShader* ef = gRenDev->m_cEF.m_CurShader;
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else
@@ -1832,9 +1832,9 @@ bool CCGVProgram_D3D::mfCompile(char* scr)
 				m_PosScript = mfAddNewScript(name, params);
 			else
 			{
-				m_PosScript = mfAddNewScript(params, NULL);
+				m_PosScript = mfAddNewScript(params, nullptr);
 				if (!m_PosScript)
-					m_PosScript = mfAddNewScript("PosCommon", NULL);
+					m_PosScript = mfAddNewScript("PosCommon", nullptr);
 			}
 			break;
 
@@ -1906,7 +1906,7 @@ bool CCGVProgram_D3D::mfCompile(char* scr)
 		case eScript:
 		{
 			SAFE_RELEASE(m_Script);
-			m_Script = mfAddNewScript(NULL, data);
+			m_Script = mfAddNewScript(nullptr, data);
 		}
 		break;
 		}
@@ -2069,7 +2069,7 @@ static char* sGetText(char** buf)
 		++*buf;
 		SkipCharacters(buf, " ");
 		if (**buf == ':')
-			return NULL;
+			return nullptr;
 	}
 	char* result = *buf;
 
@@ -2384,8 +2384,8 @@ bool CCGVProgram_D3D::mfActivate(CVProgram* pPosVP)
 		sprintf(strVer, "//CGVER%.1f\n", CG_VP_CACHE_VER);
 		FILETIME writetimesrc, writetimedst;
 		FILE* statussrc, * statusdst;
-		statussrc = NULL;
-		statusdst = NULL;
+		statussrc = nullptr;
+		statusdst = nullptr;
 		mfGetSrcFileName(namesrc, 256);
 		CCGVProgram_D3D* pVP = (CCGVProgram_D3D*)pPosVP;
 
@@ -2415,7 +2415,7 @@ bool CCGVProgram_D3D::mfActivate(CVProgram* pPosVP)
 				gRenDev->m_cEF.FreeCacheItem(m_InstCache[m_Insts[m_CurInst].m_nCacheID].m_pCache, m_Insts[m_CurInst].m_LightMask);
 				if (bRes)
 					return true;
-				pCacheItem = NULL;
+				pCacheItem = nullptr;
 			}
 			bCreate = true;
 		}
@@ -2424,14 +2424,14 @@ bool CCGVProgram_D3D::mfActivate(CVProgram* pPosVP)
 			AddExtension(namedst1, ".cgasm");
 			statusdst = iSystem->GetIPak()->FOpen(namedst1, "r");
 		}
-		if (statusdst == NULL && bUseACIICache)
+		if (statusdst == nullptr && bUseACIICache)
 		{
 			if (CRenderer::CV_r_shadersprecache == 3)
 				bCreate = true;
 			else
 			{
 				statusdst = iSystem->GetIPak()->FOpen(namedst, "r");
-				if (statusdst == NULL)
+				if (statusdst == nullptr)
 					bCreate = true;
 				else if (!m_Functions.size())
 				{
@@ -2450,13 +2450,13 @@ bool CCGVProgram_D3D::mfActivate(CVProgram* pPosVP)
 		else
 			strcpy(namedst, namedst1);
 	create:
-		char* pbuf = NULL;
+		char* pbuf = nullptr;
 		if (bCreate)
 		{
 			if (statusdst)
 			{
 				iSystem->GetIPak()->FClose(statusdst);
-				statusdst = NULL;
+				statusdst = nullptr;
 			}
 
 			m_Flags |= VPFI_WASGENERATED;
@@ -2485,10 +2485,10 @@ bool CCGVProgram_D3D::mfActivate(CVProgram* pPosVP)
 					}
 					if (!m_Functions.size())
 					{
-						HANDLE hdst = CreateFile(namedst, GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL);
+						HANDLE hdst = CreateFile(namedst, GENERIC_WRITE, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, nullptr);
 						FILE* hsrc = iSystem->GetIPak()->FOpen(namesrc, "r");
 						writetimesrc = iSystem->GetIPak()->GetModificationTime(hsrc);
-						SetFileTime(hdst, NULL, NULL, &writetimesrc);
+						SetFileTime(hdst, nullptr, nullptr, &writetimesrc);
 						iSystem->GetIPak()->FClose(hsrc);
 						CloseHandle(hdst);
 					}
@@ -2498,7 +2498,7 @@ bool CCGVProgram_D3D::mfActivate(CVProgram* pPosVP)
 				if (m_Insts[m_CurInst].m_CGProgram)
 					cgDestroyProgram(m_Insts[m_CurInst].m_CGProgram);
 #endif
-				m_Insts[m_CurInst].m_CGProgram = NULL;
+				m_Insts[m_CurInst].m_CGProgram = nullptr;
 				statusdst = iSystem->GetIPak()->FOpen(namedst, "r");
 			}
 		}
@@ -2512,7 +2512,7 @@ bool CCGVProgram_D3D::mfActivate(CVProgram* pPosVP)
 			len = iSystem->GetIPak()->FRead(pbuf, 1, len, statusdst);
 			pbuf[len] = 0;
 			iSystem->GetIPak()->FClose(statusdst);
-			statusdst = NULL;
+			statusdst = nullptr;
 
 			// Regenerate shader if hardware was changed
 			if (!bCreate && (m_Flags & VPFI_AUTOENUMTC))
@@ -2602,7 +2602,7 @@ bool CCGVProgram_D3D::mfActivate(CVProgram* pPosVP)
 					cgp.m_dwBind = atoi(&szReg[1]);
 					m_Insts[m_CurInst].m_BindVars->AddElem(cgp);
 				}
-				token = strtok(NULL, "//");
+				token = strtok(nullptr, "//");
 			}
 			for (i = 0; i < FoundNames.Num(); i++)
 			{
@@ -2826,7 +2826,7 @@ bool CCGVProgram_D3D::mfSet(bool bStat, SShaderPassHW* slw, int nFlags)
 	CVProgram* pPosVP = this;
 	if (m_Flags & VPFI_UNIFIEDPOS)
 	{
-		CVProgram* pVP = NULL;
+		CVProgram* pVP = nullptr;
 		if (rd->m_RP.m_pRE && rd->m_RP.m_pRE->m_LastVP)
 			pVP = rd->m_RP.m_pRE->m_LastVP;
 		else if (rd->m_RP.m_RendPass)
@@ -2858,7 +2858,7 @@ bool CCGVProgram_D3D::mfSet(bool bStat, SShaderPassHW* slw, int nFlags)
 			m_Insts[Id].m_pHandle = (void*)-1;
 			return false;
 		}
-		m_LastVP = NULL;
+		m_LastVP = nullptr;
 	}
 
 #ifdef DO_RENDERSTATS
@@ -2918,7 +2918,7 @@ void CCGVProgram_D3D::mfBind()
 
 void CCGVProgram_D3D::mfUnbind()
 {
-	gcpRendD3D->mfGetD3DDevice()->SetVertexShader(NULL);
+	gcpRendD3D->mfGetD3DDevice()->SetVertexShader(nullptr);
 }
 
 char* CCGVProgram_D3D::mfLoadCG(const char* prog_text)

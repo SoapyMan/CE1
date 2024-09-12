@@ -111,7 +111,7 @@ IScriptObject* CScriptSystem::GetLocalVariables(int nLevel)
 		//create a table and fill it with the local variables (name,value)
 
 		int i = 1;
-		while ((name = lua_getlocal(m_pLS, &ar, i)) != NULL)
+		while ((name = lua_getlocal(m_pLS, &ar, i)) != nullptr)
 		{
 			lua_getref(m_pLS, nTable);
 			lua_pushstring(m_pLS, name);
@@ -208,7 +208,7 @@ int listvars(lua_State* L, int level)
 	const char* name;
 	if (lua_getstack(L, level, &ar) == 0)
 		return 0; /* failure: no such level in the stack */
-	while ((name = lua_getlocal(L, &ar, i)) != NULL)
+	while ((name = lua_getlocal(L, &ar, i)) != nullptr)
 	{
 		sprintf(sTemp, "%s =", name);
 		OutputDebugString(sTemp);
@@ -239,7 +239,7 @@ int listvars(lua_State* L, int level)
 	}
 	/*lua_getglobals(L);
 	i = 1;
-	while ((name = lua_getlocal(L, &ar, i)) != NULL)
+	while ((name = lua_getlocal(L, &ar, i)) != nullptr)
 	{
 		sprintf(sTemp, "%s =", name);
 		OutputDebugString(sTemp);
@@ -357,10 +357,10 @@ string& FormatPath(const string& sPath)
 CScriptSystem::CScriptSystem()
 {
 	m_nObjCreationNumber = 1;
-	m_pLS = NULL;
+	m_pLS = nullptr;
 	m_bDebug = false;
-	m_pSink = NULL;
-	m_pDebugSink = NULL;
+	m_pSink = nullptr;
+	m_pDebugSink = nullptr;
 	m_nGCTag = 0;
 	m_bsBreakState = bsNoBreak;
 	m_BreakPoint.nLine = 0;
@@ -386,7 +386,7 @@ CScriptSystem::~CScriptSystem()
 	{
 		lua_close(m_pLS);
 
-		m_pLS = NULL;
+		m_pLS = nullptr;
 	}
 
 #ifdef _DEBUG
@@ -417,7 +417,7 @@ bool CScriptSystem::Init(IScriptSystemSink* pSink, IScriptDebugSink* pDebugSink,
 	}
 	else
 	{
-		m_pDebugSink = NULL;
+		m_pDebugSink = nullptr;
 		m_bDebug = false;
 	}
 	if (m_pLS && m_bDebug)
@@ -471,8 +471,8 @@ void CScriptSystem::EnableDebugger(IScriptDebugSink* pDebugSink)
 	else
 	{
 		m_bDebug = false;
-		lua_setlinehook(m_pLS, NULL);
-		lua_setcallhook(m_pLS, NULL);
+		lua_setlinehook(m_pLS, nullptr);
+		lua_setcallhook(m_pLS, nullptr);
 		RegisterErrorHandler(false);
 	}
 }
@@ -502,8 +502,8 @@ extern "C" void DumpCallStack(lua_State* L)
 //////////////////////////////////////////////////////////////////////
 int CScriptSystem::ErrorHandler(lua_State* L)
 {
-	const char* sFuncName = NULL;
-	const char* sSourceFile = NULL;
+	const char* sFuncName = nullptr;
+	const char* sSourceFile = nullptr;
 	lua_Debug ar;
 	int nRes;
 	int iCurrentLine = -1;									// no line number info
@@ -747,7 +747,7 @@ void CScriptSystem::RemoveTaggedValue(HTAG htag)
 //////////////////////////////////////////////////////////////////////
 void CScriptSystem::FormatAndRaiseError(int nErr)
 {
-	const char* sFuncName = NULL;
+	const char* sFuncName = nullptr;
 	switch (nErr)
 	{
 	case 0:				/*GetLog()->Log("ScriptSystem:Success!!!\n"); */
@@ -790,7 +790,7 @@ IScriptObject* CScriptSystem::CreateEmptyObject()
 	{
 		pObj->Release();
 		END_CHECK_STACK
-			return NULL;
+			return nullptr;
 	};
 	END_CHECK_STACK
 		return pObj;
@@ -806,7 +806,7 @@ IScriptObject* CScriptSystem::CreateObject()
 	{
 		pObj->Release();
 		END_CHECK_STACK
-			return NULL;
+			return nullptr;
 	};
 	//pObj->SetThis(pThis);
 	END_CHECK_STACK
@@ -824,7 +824,7 @@ IScriptObject* CScriptSystem::CreateGlobalObject(const char* sName)
 	{
 		pObj->Release();
 		END_CHECK_STACK
-			return NULL;
+			return nullptr;
 	};
 	//	pObj->SetThis(pThis);
 	END_CHECK_STACK
@@ -835,7 +835,7 @@ IScriptObject* CScriptSystem::CreateGlobalObject(const char* sName)
 //////////////////////////////////////////////////////////////////////
 bool CScriptSystem::_ExecuteFile(const char* sFileName, bool bRaiseError)
 {
-	FILE* pFile = NULL;
+	FILE* pFile = nullptr;
 
 	m_strCurrentFile = sFileName;
 
@@ -1173,7 +1173,7 @@ int CScriptSystem::BeginCall(HSCRIPTFUNCTION hFunc)
 	m_nTempTop = lua_gettop(m_pLS);
 	if (hFunc == 0)
 	{
-		RaiseError("(BeginCall) failed NULL parameter");
+		RaiseError("(BeginCall) failed nullptr parameter");
 		m_nTempArg = -1;
 		return 0;
 	}
@@ -1252,7 +1252,7 @@ HSCRIPTFUNCTION CScriptSystem::GetFunctionPtr(const char* sFuncName)
 	if (lua_isnil(m_pLS, -1) || (!lua_isfunction(m_pLS, -1)))
 	{
 		lua_pop(m_pLS, 1);
-		return NULL;
+		return HSCRIPT_NULL;
 	}
 	func = (HSCRIPTFUNCTION)lua_ref(m_pLS, 0);
 
@@ -1614,7 +1614,7 @@ bool CScriptSystem::GetGlobalValue(const char* sKey, const char*& sVal)
 	if (lua_isstring(m_pLS, -1))
 	{
 		sVal = (lua_tostring(m_pLS, -1));
-		if (sVal == NULL)
+		if (sVal == nullptr)
 		{
 			//this cannot happen if it does call alberto
 			lua_pop(m_pLS, 1);
@@ -1696,8 +1696,8 @@ void CScriptSystem::RaiseError(const char* sErr, ...)
 	lua_Debug ar;
 	int nRes;
 	int iCurrentLine = -1;									// no line number info
-	const char* sFuncName = NULL;
-	const char* sSourceFile = NULL;
+	const char* sFuncName = nullptr;
+	const char* sSourceFile = nullptr;
 
 	va_start(arglist, sErr);
 	vsprintf(sBuf, sErr, arglist);

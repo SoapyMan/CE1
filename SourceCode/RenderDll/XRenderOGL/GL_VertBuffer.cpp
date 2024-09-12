@@ -44,7 +44,7 @@ void* CGLRenderer::GetDynVBPtr(int nVerts, int& nOffs, int Pool)
 		CRYASSERT(0);
 		break;
 	}
-	return NULL;
+	return nullptr;
 }
 
 void CGLRenderer::DrawDynVB(int nOffs, int Pool, int nVerts)
@@ -56,7 +56,7 @@ void CGLRenderer::DrawDynVB(int nOffs, int Pool, int nVerts)
 		{
 		  glGenBuffersARB(1, &m_DynVBId);
 		  glBindBufferARB(GL_ARRAY_BUFFER_ARB, m_DynVBId);
-		  glBufferDataARB(GL_ARRAY_BUFFER_ARB, size, NULL, GL_DYNAMIC_DRAW_ARB);
+		  glBufferDataARB(GL_ARRAY_BUFFER_ARB, size, nullptr, GL_DYNAMIC_DRAW_ARB);
 		}
 		else
 		if(IsVarPresent())
@@ -165,7 +165,7 @@ void CGLRenderer::DrawDynVB(struct_VERTEX_FORMAT_P3F_COL4UB_TEX2F* pBuf, ushort*
 		{
 		  glGenBuffersARB(1, &m_DynVBId);
 		  glBindBufferARB(GL_ARRAY_BUFFER_ARB, m_DynVBId);
-		  glBufferDataARB(GL_ARRAY_BUFFER_ARB, size, NULL, GL_DYNAMIC_DRAW_ARB);
+		  glBufferDataARB(GL_ARRAY_BUFFER_ARB, size, nullptr, GL_DYNAMIC_DRAW_ARB);
 		}
 		else
 		if(IsVarPresent())
@@ -280,7 +280,7 @@ void CGLRenderer::CreateBuffer(int size, int vertexformat, CVertexBuffer* buf, i
 		{
 			glGenBuffersARB(1, &buf->m_VS[Type].m_VertBuf.m_nID);
 			glBindBufferARB(GL_ARRAY_BUFFER_ARB, buf->m_VS[Type].m_VertBuf.m_nID);
-			glBufferDataARB(GL_ARRAY_BUFFER_ARB, size, NULL, buf->m_VS[Type].m_bDynamic ? GL_DYNAMIC_DRAW_ARB : GL_STATIC_DRAW_ARB);
+			glBufferDataARB(GL_ARRAY_BUFFER_ARB, size, nullptr, buf->m_VS[Type].m_bDynamic ? GL_DYNAMIC_DRAW_ARB : GL_STATIC_DRAW_ARB);
 			buf->m_VS[Type].m_VData = (void*)1;
 			//buf->m_VS[Type].m_VData = glMapBufferARB(GL_ARRAY_BUFFER_ARB, GL_WRITE_ONLY_ARB);
 			//buf->m_VS[Type].m_bLocked = true;
@@ -303,7 +303,7 @@ void CGLRenderer::CreateIndexBuffer(SVertexStream* dest, const void* src, int in
 		{
 			glGenBuffersARB(1, &dest->m_VertBuf.m_nID);
 			glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, dest->m_VertBuf.m_nID);
-			glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB, indexcount * sizeof(ushort), NULL, dest->m_bDynamic ? GL_DYNAMIC_DRAW_ARB : GL_STATIC_DRAW_ARB);
+			glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB, indexcount * sizeof(ushort), nullptr, dest->m_bDynamic ? GL_DYNAMIC_DRAW_ARB : GL_STATIC_DRAW_ARB);
 		}
 		else
 			dest->m_VData = new ushort[indexcount];
@@ -318,12 +318,12 @@ void CGLRenderer::UpdateIndexBuffer(SVertexStream* dest, const void* src, int in
 	PROFILE_FRAME(Mesh_UpdateIBuffers);
 	if (src && indexcount)
 	{
-		void* dst = NULL;
+		void* dst = nullptr;
 		if (dest->m_nItems < indexcount)
 		{
 			if (dest->m_nItems)
 				ReleaseIndexBuffer(dest);
-			CreateIndexBuffer(dest, NULL, indexcount);
+			CreateIndexBuffer(dest, nullptr, indexcount);
 		}
 		int size = indexcount * sizeof(ushort);
 		if (SUPPORTS_GL_ARB_vertex_buffer_object)
@@ -414,7 +414,7 @@ CVertexBuffer* CGLRenderer::CreateBuffer(int vertexcount, int vertexformat, cons
 			// create the vertex object
 			glGenBuffersARB(1, &vtemp->m_VS[VSF_GENERAL].m_VertBuf.m_nID);
 			glBindBufferARB(GL_ARRAY_BUFFER_ARB, vtemp->m_VS[VSF_GENERAL].m_VertBuf.m_nID);
-			glBufferDataARB(GL_ARRAY_BUFFER_ARB, size, NULL, bDynamic ? GL_DYNAMIC_DRAW_ARB : GL_STATIC_DRAW_ARB);
+			glBufferDataARB(GL_ARRAY_BUFFER_ARB, size, nullptr, bDynamic ? GL_DYNAMIC_DRAW_ARB : GL_STATIC_DRAW_ARB);
 			vtemp->m_VS[VSF_GENERAL].m_VData = (void*)1;
 			//vtemp->m_VS[VSF_GENERAL].m_VData = glMapBufferARB(GL_ARRAY_BUFFER_ARB, GL_WRITE_ONLY_ARB);
 			//vtemp->m_VS[VSF_GENERAL].m_bLocked = true;
@@ -435,7 +435,7 @@ CVertexBuffer* CGLRenderer::CreateBuffer(int vertexcount, int vertexformat, cons
 
 ///////////////////////////////////////////
 // Updates the vertex buffer dest with the data from src
-// NOTE: src may be NULL, in which case the data will not be copied
+// NOTE: src may be nullptr, in which case the data will not be copied
 void CGLRenderer::UpdateBuffer(CVertexBuffer* dest, const void* src, int vertexcount, bool bUnlock, int offs, int Type)
 {
 	void* pVertices;
@@ -514,7 +514,7 @@ void CGLRenderer::UpdateBuffer(CVertexBuffer* dest, const void* src, int vertexc
 		PROFILE_FRAME(Mesh_UpdateVBuffers);
 
 		// NOTE: some subsystems need to initialize the system buffer without actually intializing its values;
-		// for that purpose, src may sometimes be NULL
+		// for that purpose, src may sometimes be nullptr
 		if (src && vertexcount)
 		{
 			CRYASSERT(vertexcount <= dest->m_NumVerts);
@@ -578,7 +578,7 @@ void CGLRenderer::DrawBuffer(CVertexBuffer* src, SVertexStream* indicies, int nu
 	CRYASSERT(indicies || mi);
 	ushort* pInds;
 	if (SUPPORTS_GL_ARB_vertex_buffer_object)
-		pInds = NULL;
+		pInds = nullptr;
 	else
 		pInds = (ushort*)indicies->m_VData;
 	pInds += offsindex;
@@ -600,7 +600,7 @@ void CGLRenderer::DrawBuffer(CVertexBuffer* src, SVertexStream* indicies, int nu
 
 	if (!src || src->m_vertexformat < 0 || src->m_vertexformat >= VERTEX_FORMAT_NUMS)
 	{
-		iLog->Log("Error: CGLRenderer::DrawBuffer: VertexBuffer is NULL (!src || src->m_vertexformat<0 || src->m_vertexformat>5)");
+		iLog->Log("Error: CGLRenderer::DrawBuffer: VertexBuffer is nullptr (!src || src->m_vertexformat<0 || src->m_vertexformat>5)");
 		return;
 	}
 
@@ -906,8 +906,8 @@ void CGLRenderer::ReleaseBuffer(CVertexBuffer* bufptr)
 					ReleaseVarShunk(bufptr->m_VS[VSF_TANGENTS].m_VData);
 				if (bufptr->m_fence)
 					glDeleteFencesNV(1, &bufptr->m_fence);
-				bufptr->m_VS[VSF_GENERAL].m_VData = NULL;
-				bufptr->m_VS[VSF_TANGENTS].m_VData = NULL;
+				bufptr->m_VS[VSF_GENERAL].m_VData = nullptr;
+				bufptr->m_VS[VSF_TANGENTS].m_VData = nullptr;
 				bufptr->m_fence = 0;
 			}
 		}
@@ -1056,7 +1056,7 @@ void* CGLRenderer::AllocateVarShunk(int bytes_count, const char* szSource)
 	int piplevel = GetPipWaterLevel();
 	if (GetPipWaterLevel() + bytes_count + 100 >= m_pip_buffer_size)
 	{
-		return NULL;
+		return nullptr;
 		iConsole->Exit("Error: Pipline buffer overflow.");// Please increase pip_buffer_size value in engine.ini file and restart");
 		/*    ptr = (void *)new unsigned char [bytes_count];
 			iLog->Log("Error: pip buffer overflow");
@@ -1302,7 +1302,7 @@ void CGLRenderer::GenerateVBLog(const char* szName)
 	int Size = 0;
 	int SizeLB = 0;
 	int SizeGR = 0;
-	const char* szLast = NULL;
+	const char* szLast = nullptr;
 	int i;
 	for (i = 0; i < LVs.Num(); i++)
 	{

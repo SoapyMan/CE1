@@ -54,8 +54,8 @@ bool CMailer::SendMessage(const char* subject,
 		attachments[i].flFlags = 0;
 		attachments[i].nPosition = (ULONG)-1;
 		attachments[i].lpszPathName = (char*)(const char*)_attachments[k];
-		attachments[i].lpszFileName = NULL;
-		attachments[i].lpFileType = NULL;
+		attachments[i].lpszFileName = nullptr;
+		attachments[i].lpFileType = nullptr;
 		i++;
 	}
 	int numAttachments = i;
@@ -77,7 +77,7 @@ bool CMailer::SendMessage(const char* subject,
 		recipients[i].lpszName = (char*)(const char*)_recipients[i];
 		recipients[i].lpszAddress = (char*)addresses[i].c_str();
 		recipients[i].ulEIDSize = 0;
-		recipients[i].lpEntryID = NULL;
+		recipients[i].lpEntryID = nullptr;
 	}
 
 	/*
@@ -87,7 +87,7 @@ bool CMailer::SendMessage(const char* subject,
 	recipients[i].lpszName     = "Timur Davidenko";
 	recipients[i].lpszAddress  = "timur@crytek.com"
 	recipients[i].ulEIDSize    = 0;
-	recipients[i].lpEntryID    = NULL;
+	recipients[i].lpEntryID    = nullptr;
 	*/
 
 	// Create a message. Most members are set to NULL or 0 (the user may set them)
@@ -95,11 +95,11 @@ bool CMailer::SendMessage(const char* subject,
 	MapiMessage message =  {0,						        // reserved, must be 0
 												(const char*)_subject,      // subject
 													(const char*)_messageBody,  // message body
-													NULL,           // NULL = interpersonal message
-													NULL,           // no date; MAPISendMail ignores it
-													NULL,           // no conversation ID
+													nullptr,           // NULL = interpersonal message
+													nullptr,           // no date; MAPISendMail ignores it
+													nullptr,           // no conversation ID
 													0L,             // no flags, MAPISendMail ignores it
-													NULL,           // no originator, this is ignored too (automatically filled in)
+													nullptr,           // no originator, this is ignored too (automatically filled in)
 													numRecipients,  // number of recipients
 													recipients,     // recipients array
 													numAttachments, // number of attachments
@@ -110,7 +110,7 @@ bool CMailer::SendMessage(const char* subject,
 	memset(&message, 0, sizeof(message));
 	message.lpszSubject = (char*)(const char*)subject;
 	message.lpszNoteText = (char*)(const char*)messageBody;
-	message.lpszMessageType = NULL;
+	message.lpszMessageType = nullptr;
 
 	message.nRecipCount = numRecipients;
 	message.lpRecips = recipients;

@@ -34,8 +34,8 @@
 // Miscellaneous helper functions
 //-----------------------------------------------------------------------------
 #define NUM_PLAY_NOTIFICATIONS  4
-#define SAFE_DELETE(p)       { if(p) { delete (p);     (p)=NULL; } }
-#define SAFE_RELEASE(p)      { if(p) { (p)->Release(); (p)=NULL; } }
+#define SAFE_DELETE(p)       { if(p) { delete (p);     (p)=nullptr; } }
+#define SAFE_RELEASE(p)      { if(p) { (p)->Release(); (p)=nullptr; } }
 
 
 
@@ -278,7 +278,7 @@ public:
     LPDIRECTSOUND8 m_pDS;
 		CWaveFile						m_WaveFile;
 
-		CSoundManager() { m_pDS = NULL; }
+		CSoundManager() { m_pDS = nullptr; }
 		~CSoundManager() { SAFE_RELEASE( m_pDS ); }
 
     HRESULT Initialize( HWND hWnd, DWORD dwCoopLevel );
@@ -342,7 +342,7 @@ public:
 		void Init( LPDIRECTSOUNDBUFFER pDSBuffer, DWORD dwDSBufferSize,CWaveFile* pWaveFile, DWORD dwNotifySize ) 
 		{
 			m_apDSBuffer = new LPDIRECTSOUNDBUFFER[1];
-			if( NULL != m_apDSBuffer )
+			if( nullptr != m_apDSBuffer )
 			{
         for( DWORD i=0; i<1; i++ ) m_apDSBuffer[i] = &pDSBuffer[i];
         m_dwDSBufferSize	= dwDSBufferSize;
@@ -406,16 +406,16 @@ class CDivXPlayer {
 	//------------------------------------------
 
 		CDivXPlayer(){
-			m_hNotificationEvent    = NULL;
+			m_hNotificationEvent    = nullptr;
 			m_dwNotifyThreadID      = 0;
-			m_hNotifyThread         = NULL;
-			m_hInst                 = NULL;
+			m_hNotifyThread         = nullptr;
+			m_hInst                 = nullptr;
 
 			m_VideoTime				=	0.0f;
 			m_FrameCounter		=	0;
 			m_AudioCounter		=	0;
-			m_pFrameBuffer		= NULL;
-			m_pAudioBuffer		= NULL;
+			m_pFrameBuffer		= nullptr;
+			m_pAudioBuffer		= nullptr;
 
 			m_LastFramer			=	0xffffffff;
 		};

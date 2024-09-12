@@ -39,7 +39,7 @@ class CCGPShader_GL : public CPShader
 		SCacheInstance()
 		{
 			m_Mask = 0;
-			m_pCache = NULL;
+			m_pCache = nullptr;
 		}
 		int Size()
 		{
@@ -65,11 +65,11 @@ class CCGPShader_GL : public CPShader
 			m_Mask = 0;
 			m_LightMask = 0;
 			m_dwHandle = m_dwHandleExt = 0;
-			m_ParamsNoObj = NULL;
-			m_ParamsObj = NULL;
-			m_MatrixObj = NULL;
-			m_BindConstants = NULL;
-			m_BindVars = NULL;
+			m_ParamsNoObj = nullptr;
+			m_ParamsObj = nullptr;
+			m_MatrixObj = nullptr;
+			m_BindConstants = nullptr;
+			m_BindVars = nullptr;
 			m_nCacheID = -1;
 		}
 
@@ -122,7 +122,7 @@ public:
 		}
 		return nSize;
 	}
-	int mfGetCacheInstanceID(int Mask, const char* name = NULL)
+	int mfGetCacheInstanceID(int Mask, const char* name = nullptr)
 	{
 		int i;
 
@@ -166,10 +166,10 @@ public:
 		cg.m_LightMask = LightMask;
 		cg.m_dwHandle = NULL;
 		cg.m_dwHandleExt = NULL;
-		cg.m_ParamsNoObj = NULL;
-		cg.m_ParamsObj = NULL;
-		cg.m_BindConstants = NULL;
-		cg.m_BindVars = NULL;
+		cg.m_ParamsNoObj = nullptr;
+		cg.m_ParamsObj = nullptr;
+		cg.m_BindConstants = nullptr;
+		cg.m_BindVars = nullptr;
 		cg.m_nCacheID = -1;
 
 		m_CurInst = m_Insts.Num();
@@ -210,15 +210,15 @@ public:
 		if (!gcpOGL->m_CGContext)
 		{
 			gcpOGL->m_CGContext = cgCreateContext();
-			CRYASSERT(gcpOGL->m_CGContext != NULL);
+			CRYASSERT(gcpOGL->m_CGContext != nullptr);
 		}
 #endif
 		m_dwFrame = 1;
 		m_CurInst = -1;
-		m_CoreScript = NULL;
-		m_InputParmsScript = NULL;
-		m_SubroutinesScript = NULL;
-		m_DeclarationsScript = NULL;
+		m_CoreScript = nullptr;
+		m_InputParmsScript = nullptr;
+		m_SubroutinesScript = nullptr;
+		m_DeclarationsScript = nullptr;
 	}
 
 	void mfBind()
@@ -333,7 +333,7 @@ public:
 			// make command for execution
 			FILE* fp = fopen("$$in.cg", "w");
 			if (!fp)
-				return NULL;
+				return nullptr;
 			fputs(Buf, fp);
 			fclose(fp);
 
@@ -349,20 +349,20 @@ public:
 
 			PROCESS_INFORMATION pi;
 			ZeroMemory(&pi, sizeof(pi));
-			if (!CreateProcess(NULL, // No module name (use command line). 
+			if (!CreateProcess(nullptr, // No module name (use command line). 
 				szCmdLine,				// Command line. 
-				NULL,             // Process handle not inheritable. 
-				NULL,             // Thread handle not inheritable. 
+				nullptr,             // Process handle not inheritable. 
+				nullptr,             // Thread handle not inheritable. 
 				FALSE,            // Set handle inheritance to FALSE. 
 				CREATE_NO_WINDOW, // No creation flags. 
-				NULL,             // Use parent's environment block. 
-				NULL/*szFolderName*/,     // Set starting directory. 
+				nullptr,             // Use parent's environment block. 
+				nullptr/*szFolderName*/,     // Set starting directory. 
 				&si,              // Pointer to STARTUPINFO structure.
 				&pi)             // Pointer to PROCESS_INFORMATION structure.
 				)
 			{
 				iLog->LogError("CreateProcess failed: %s", szCmdLine);
-				return NULL;
+				return nullptr;
 			}
 
 			while (WAIT_OBJECT_0 != WaitForSingleObject(pi.hProcess, 10000))
@@ -390,7 +390,7 @@ public:
 			const char* profileOpts[] =
 			{
 			  "-DCGC=1",
-			  NULL,
+			  nullptr,
 			};
 			cgGLSetOptimalOptions((CGprofile)m_CGProfileType);
 			CGprogram cgPr = cgCreateProgram(gcpOGL->m_CGContext, CG_SOURCE, prog_text, (CGprofile)m_CGProfileType, "main", profileOpts);
@@ -409,7 +409,7 @@ public:
 				}
 				Warning(0, 0, "Couldn't create CG program '%s' (%s)", m_Name.c_str(), cgGetErrorString(err));
 				mfSaveCGFile(prog_text);
-				return NULL;
+				return nullptr;
 			}
 			if (cgPr)
 			{
@@ -418,12 +418,12 @@ public:
 				return code;
 			}
 		}
-		return NULL;
+		return nullptr;
 #else
 		// make command for execution
 		FILE* fp = fopen("$$in.cg", "w");
 		if (!fp)
-			return NULL;
+			return nullptr;
 		CRYASSERT(*prog_text);
 		fputs(prog_text, fp);
 		fclose(fp);
@@ -442,20 +442,20 @@ public:
 
 		PROCESS_INFORMATION pi;
 		ZeroMemory(&pi, sizeof(pi));
-		if (!CreateProcess(NULL, // No module name (use command line). 
+		if (!CreateProcess(nullptr, // No module name (use command line). 
 			szCmdLine,				// Command line. 
-			NULL,             // Process handle not inheritable. 
-			NULL,             // Thread handle not inheritable. 
+			nullptr,             // Process handle not inheritable. 
+			nullptr,             // Thread handle not inheritable. 
 			FALSE,            // Set handle inheritance to FALSE. 
 			CREATE_NO_WINDOW, // No creation flags. 
-			NULL,             // Use parent's environment block. 
-			NULL/*szFolderName*/,     // Set starting directory. 
+			nullptr,             // Use parent's environment block. 
+			nullptr/*szFolderName*/,     // Set starting directory. 
 			&si,              // Pointer to STARTUPINFO structure.
 			&pi)             // Pointer to PROCESS_INFORMATION structure.
 			)
 		{
 			iLog->LogError("CreateProcess failed: %s", szCmdLine);
-			return NULL;
+			return nullptr;
 		}
 
 		while (WAIT_OBJECT_0 != WaitForSingleObject(pi.hProcess, 10000))
@@ -469,7 +469,7 @@ public:
 		{
 			Warning(0, 0, "CG compiler (cgc.exe) wasn't able to compile pixel shader '%s'", m_Name.c_str());
 			mfSaveCGFile(prog_text);
-			return NULL;
+			return nullptr;
 		}
 		fseek(fp, 0, SEEK_END);
 		int size = ftell(fp);
@@ -480,7 +480,7 @@ public:
 			mfSaveCGFile(prog_text);
 			remove("$$in.cg");
 			remove("$$out.cg");
-			return NULL;
+			return nullptr;
 		}
 		char* pBuf = new char[size + 1];
 		fread(pBuf, sizeof(char), size, fp);
@@ -777,7 +777,7 @@ public:
 			if (nm == m_Insts[m_CurInst].m_BindVars->Get(i).m_Name)
 				return &m_Insts[m_CurInst].m_BindVars->Get(i);
 		}
-		return NULL;
+		return nullptr;
 	}
 	void mfParameter4f(const char* Name, const float* v)
 	{
@@ -874,7 +874,7 @@ public:
 	virtual ~CCGPShader_GL();
 	virtual void Release();
 	virtual bool mfCompile(char* scr);
-	virtual bool mfSet(bool bStat, SShaderPassHW* slw = NULL, int nFLags = 0);
+	virtual bool mfSet(bool bStat, SShaderPassHW* slw = nullptr, int nFLags = 0);
 	virtual void mfSetVariables(bool bObj, TArray<SCGParam4f>* Vars);
 	virtual void mfReset();
 	virtual void mfPrecache();

@@ -111,7 +111,7 @@ static unsigned int sGetBlendState(int nMode)
 	return nBlend;
 }
 
-IScriptObject* CScriptObjectSystem::m_pScriptTimeTable = NULL;
+IScriptObject* CScriptObjectSystem::m_pScriptTimeTable = nullptr;
 
 CScriptObjectSystem::CScriptObjectSystem()
 {
@@ -293,7 +293,7 @@ void CScriptObjectSystem::ReleaseTemplate()
 int CScriptObjectSystem::ShowDebugger(IFunctionHandler* pH)
 {
 	CHECK_PARAMETERS(0);
-	m_pSystem->ShowDebugger(NULL, 0, "Invoked From User");
+	m_pSystem->ShowDebugger(nullptr, 0, "Invoked From User");
 	return pH->EndFunction();
 }
 
@@ -428,7 +428,7 @@ int CScriptObjectSystem::LogAlways(IFunctionHandler* pH)
 {
 	CHECK_PARAMETERS(1);
 
-	const char* sParam = NULL;
+	const char* sParam = nullptr;
 
 	pH->GetParam(1, sParam);
 
@@ -456,7 +456,7 @@ int CScriptObjectSystem::Warning(IFunctionHandler* pH)
 	const char* sParam = "";
 	if (pH->GetParam(1, sParam))
 	{
-		m_pSystem->Warning(VALIDATOR_MODULE_SCRIPTSYSTEM, VALIDATOR_WARNING, 0, NULL, "%s", sParam);
+		m_pSystem->Warning(VALIDATOR_MODULE_SCRIPTSYSTEM, VALIDATOR_WARNING, 0, nullptr, "%s", sParam);
 	}
 
 	return (pH->EndFunction());
@@ -470,7 +470,7 @@ int CScriptObjectSystem::Error(IFunctionHandler* pH)
 	const char* sParam = "";
 	if (pH->GetParam(1, sParam))
 	{
-		m_pSystem->Warning(VALIDATOR_MODULE_SCRIPTSYSTEM, VALIDATOR_ERROR, 0, NULL, "%s", sParam);
+		m_pSystem->Warning(VALIDATOR_MODULE_SCRIPTSYSTEM, VALIDATOR_ERROR, 0, nullptr, "%s", sParam);
 	}
 
 	return (pH->EndFunction());
@@ -507,7 +507,7 @@ int CScriptObjectSystem::Log(IFunctionHandler* pH)
 //languages
 void CScriptObjectSystem::LogString(IFunctionHandler* pH, bool bToConsoleOnly)
 {
-	const char* sParam = NULL;
+	const char* sParam = nullptr;
 	string szText;
 
 	//get the text
@@ -573,7 +573,7 @@ int CScriptObjectSystem::SetConsoleImage(IFunctionHandler* pH)
 	//remove the previous image
 	//ITexPic *pPic=m_pConsole->GetImage();
 	//pPic->Release(false); //afaik true removes the ref counter
-	//m_pConsole->SetImage(NULL); //remove the image
+	//m_pConsole->SetImage(nullptr); //remove the image
 
 	//load the new image
 	ITexPic* pPic = m_pRenderer->EF_LoadTexture(pszName, FT_NOREMOVE, 0, eTT_Base);
@@ -624,7 +624,7 @@ int CScriptObjectSystem::GetLocalOSTime(IFunctionHandler* pH)
 	CHECK_PARAMETERS(0);
 	//! Get time.
 #if defined(LINUX)
-	time_t long_time = time(NULL);
+	time_t long_time = time(nullptr);
 	struct tm* newtime = localtime(&long_time); /* Convert to local time. */
 #else
 	__time64_t long_time;
@@ -707,7 +707,7 @@ int CScriptObjectSystem::GetEntities(IFunctionHandler* pH)
 	int k = 0;
 
 	IEntityItPtr pIIt = m_pEntitySystem->GetEntityIterator();
-	IEntity* pEntity = NULL;
+	IEntity* pEntity = nullptr;
 
 	while (pEntity = pIIt->Next())
 	{
@@ -925,15 +925,15 @@ int CScriptObjectSystem::GetTeamMembers(IFunctionHandler* pH)
 		pH->GetParam(1, nTeamId);
 		_SmartScriptObject pObj(m_pScriptSystem);
 	//	CTeamMgr *pTeamMgr=m_pGame->GetTeamManager();
-		IXSystem *pSys=NULL;
+		IXSystem *pSys=nullptr;
 		if(m_pGame->m_pServer){
 			pSys=m_pGame->m_pServer->m_pISystem;
 		}else if(m_pGame->m_pClient){
 			pSys=m_pGame->m_pClient->m_pISystem;
 		}
 		IEntityIt *pIt=m_pEntitySystem->GetEntityIterator();
-		IEntity *pEntity=NULL;
-		while ((pEntity=pIt->Next())!=NULL)
+		IEntity *pEntity=nullptr;
+		while ((pEntity=pIt->Next())!=nullptr)
 		{
 			//CTeam *pTeam=pTeamMgr->GetEntityTeam(pEntity->GetId());
 			if (pSys->GetEntityTeam(pEntity->GetId())==nTeamId)
@@ -1052,7 +1052,7 @@ int CScriptObjectSystem::LoadTexture(IFunctionHandler* pH)
 int CScriptObjectSystem::LoadObject(IFunctionHandler* pH)
 {
 	CHECK_PARAMETERS(1);
-	const char* szFileName = NULL;
+	const char* szFileName = nullptr;
 	int nTid = 0;
 	pH->GetParam(1, szFileName);
 
@@ -2110,7 +2110,7 @@ int CScriptObjectSystem::SetGrasshopperCGF(IFunctionHandler* pH)
 			m_p3DEngine->SetGrasshopperCGF(slot++, obj.object);
 		}
 		for (; slot < 4; )
-			m_p3DEngine->SetGrasshopperCGF(slot++, NULL);
+			m_p3DEngine->SetGrasshopperCGF(slot++, nullptr);
 	}
 	return pH->EndFunction();
 }
@@ -2220,7 +2220,7 @@ int CScriptObjectSystem::DumpMMStats(IFunctionHandler* pH)
 {
 	CHECK_PARAMETERS(0);
 	m_pSystem->DumpMMStats(true);
-	//m_pScriptSystem->GetMemoryStatistics(NULL);
+	//m_pScriptSystem->GetMemoryStatistics(nullptr);
 	m_pLog->Log("***SCRIPT GC COUNT [%d kb]", m_pScriptSystem->GetCGCount());
 	return pH->EndFunction();
 }
@@ -2549,8 +2549,8 @@ int CScriptObjectSystem::RayWorldIntersection(IFunctionHandler* pH)
 	int skipId1 = -1;
 	int skipId2 = -1;
 
-	IPhysicalEntity* skipPhys1 = NULL;
-	IPhysicalEntity* skipPhys2 = NULL;
+	IPhysicalEntity* skipPhys1 = nullptr;
+	IPhysicalEntity* skipPhys2 = nullptr;
 
 	pH->GetParam(5, skipId1);
 	pH->GetParam(6, skipId2);
@@ -2614,8 +2614,8 @@ int CScriptObjectSystem::RayTraceCheck(IFunctionHandler* pH)
 
 	IEntity* skipEnt1 = m_pEntitySystem->GetEntity(skipId1);
 	IEntity* skipEnt2 = m_pEntitySystem->GetEntity(skipId2);
-	IPhysicalEntity* skipPhys1 = NULL;
-	IPhysicalEntity* skipPhys2 = NULL;
+	IPhysicalEntity* skipPhys1 = nullptr;
+	IPhysicalEntity* skipPhys2 = nullptr;
 
 	if (skipEnt1) skipPhys1 = skipEnt1->GetPhysics();
 	if (skipEnt2) skipPhys2 = skipEnt2->GetPhysics();
@@ -3002,8 +3002,8 @@ int CScriptObjectSystem::SaveConfiguration(IFunctionHandler* pH)
 int CScriptObjectSystem::SetSystemShaderRenderFlags(IFunctionHandler* pH)
 {
 	CHECK_PARAMETERS(3);
-	const char* pszShaderName = NULL;
-	const char* pszFlagName = NULL;
+	const char* pszShaderName = nullptr;
+	const char* pszFlagName = nullptr;
 	bool bEnable = false;
 	pH->GetParam(1, pszShaderName);
 	pH->GetParam(2, pszFlagName);

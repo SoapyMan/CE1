@@ -25,12 +25,12 @@
 
 CXConsole::CXConsole()
 {
-	m_pFont = NULL;
-	m_pRenderer = NULL;
-	m_pInput = NULL;
-	m_pImage = NULL;
-	m_pXFont = NULL;
-	m_pScriptSystem = NULL;
+	m_pFont = nullptr;
+	m_pRenderer = nullptr;
+	m_pInput = nullptr;
+	m_pImage = nullptr;
+	m_pXFont = nullptr;
+	m_pScriptSystem = nullptr;
 	m_nCursorPos = 0;
 	m_nScrollPos = 0;
 	m_nScrollMax = 600;
@@ -40,9 +40,9 @@ CXConsole::CXConsole()
 	m_nTabCount = 0;
 	m_bConsoleActive = false;
 	m_sdScrollDir = sdNONE;
-	m_pSystem = NULL;
-	m_pKeyboard = NULL;
-	con_line_buffer_size = NULL;
+	m_pSystem = nullptr;
+	m_pKeyboard = nullptr;
+	con_line_buffer_size = nullptr;
 	m_bStaticBackground = false;
 	m_nProgress = 0;
 	m_nProgressRange = 0;
@@ -64,7 +64,7 @@ CXConsole::~CXConsole()
 	if (m_pXFont)
 	{
 		SAFE_RELEASE(m_pXFont);
-		m_pXFont = NULL;
+		m_pXFont = nullptr;
 	}
 }
 
@@ -296,7 +296,7 @@ int CXConsole::Register(const char* sName, void* src, float value, int flags, in
 		return 0;
 	}
 
-	char* sValue = NULL;
+	char* sValue = nullptr;
 
 	switch (type)
 	{
@@ -477,7 +477,7 @@ ICVar* CXConsole::GetCVar(const char* sName, const bool bCaseSensitive)
 		}
 	}
 
-	return NULL;		// haven't found this name
+	return nullptr;		// haven't found this name
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1868,7 +1868,7 @@ void CXConsole::Copy()
 	if (m_sInputBuffer.empty())
 		return;
 
-	if (!OpenClipboard(NULL))
+	if (!OpenClipboard(nullptr))
 		return;
 
 	size_t cbLength = m_sInputBuffer.length();
@@ -1903,7 +1903,7 @@ void CXConsole::Paste()
 
 	if (!IsClipboardFormatAvailable(CF_TEXT))
 		return;
-	if (!OpenClipboard(NULL))
+	if (!OpenClipboard(nullptr))
 		return;
 
 	hGlobal = GetClipboardData(CF_TEXT);

@@ -113,7 +113,7 @@ CAnimEntityNode::CAnimEntityNode(IMovieSystem* sys)
 
 	m_entity = 0;
 	m_EntityId = 0;
-	m_target = NULL;
+	m_target = nullptr;
 	m_pMovie = sys;
 	m_bMatrixValid = 0;
 	m_bMatrixInWorldSpace = 0;
@@ -130,7 +130,7 @@ CAnimEntityNode::CAnimEntityNode(IMovieSystem* sys)
 	for (int i = 0; i < ENTITY_SOUNDTRACKS; i++)
 	{
 		m_SoundInfo[i].nLastKey = -1;
-		m_SoundInfo[i].pSound = NULL;
+		m_SoundInfo[i].pSound = nullptr;
 		m_SoundInfo[i].sLastFilename = "";
 	}
 
@@ -239,7 +239,7 @@ bool CAnimEntityNode::ResolveEntity()
 	if (!pEntitySystem)
 		return false;
 	m_entity = pEntitySystem->GetEntity(m_EntityId);
-	return (m_entity != NULL);
+	return (m_entity != nullptr);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -260,9 +260,9 @@ void CAnimEntityNode::Animate(SAnimContext& ec)
 	Quat rotate = m_rotate;
 	Vec3 scale = m_scale;
 
-	IAnimTrack* posTrack = NULL;
-	IAnimTrack* rotTrack = NULL;
-	IAnimTrack* sclTrack = NULL;
+	IAnimTrack* posTrack = nullptr;
+	IAnimTrack* rotTrack = nullptr;
+	IAnimTrack* sclTrack = nullptr;
 
 	if (!ec.bResetting)
 	{
@@ -394,7 +394,7 @@ void CAnimEntityNode::Animate(SAnimContext& ec)
 	bool bPosModified = (m_pos != pos);
 	bool bAnglesModified = (m_rotate.v != rotate.v) || (m_rotate.w != rotate.w);
 
-	if (bPosModified || bAnglesModified || (m_scale != scale) || (m_target != NULL))
+	if (bPosModified || bAnglesModified || m_scale != scale || m_target)
 	{
 		InvalidateTM();
 		bMatrixModified = true;
@@ -467,7 +467,7 @@ void CAnimEntityNode::ReleaseSounds()
 	{
 		if (m_SoundInfo[i].pSound)
 			m_SoundInfo[i].pSound->Stop();
-		m_SoundInfo[i].pSound = NULL;
+		m_SoundInfo[i].pSound = nullptr;
 		m_SoundInfo[i].nLastKey = -1;
 		if (!m_SoundInfo[i].sLastFilename.empty())
 			m_SoundInfo[i].sLastFilename = "";
@@ -483,7 +483,7 @@ void CAnimEntityNode::Reset()
 	m_lastCharacterKey[2] = -1;
 	ReleaseSounds();
 	ReleaseAllAnims();
-	m_entity = NULL;
+	m_entity = nullptr;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -727,7 +727,7 @@ void CAnimEntityNode::ApplySoundKey(IAnimTrack* pTrack, int nCurrKey, int nLayer
 	{
 		if (m_SoundInfo[nLayer].pSound)
 			m_SoundInfo[nLayer].pSound->Stop();
-		m_SoundInfo[nLayer].pSound = NULL;
+		m_SoundInfo[nLayer].pSound = nullptr;
 		return;
 	}
 	if (((strcmp(m_SoundInfo[nLayer].sLastFilename.c_str(), key.pszFilename)) || (!m_SoundInfo[nLayer].pSound)))

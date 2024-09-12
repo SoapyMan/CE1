@@ -107,7 +107,7 @@ protected:
 	StreamReadParams m_Params;
 	// the source for debugging
 	string m_strClient;
-	// the callback; may be NULL
+	// the callback; may be nullptr
 	IStreamCallback* m_pCallback;
 	// the actual buffer to read to
 	void* m_pBuffer;

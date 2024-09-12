@@ -62,7 +62,7 @@ IInput* CreateInput(ISystem* pSystem, void* hinst, void* hwnd, bool usedinput)
 #endif
 	{
 		delete pInput;
-		return NULL;
+		return nullptr;
 	}
 	return pInput;
 }

@@ -92,7 +92,7 @@ void CWaterVolumeManager::LoadWaterVolumesFromXML(XDOM::IXMLDOMDocumentPtr pDoc)
 						// set shader
 						XDOM::IXMLDOMNodePtr pAttr5 = pNode->getAttribute("WaterShader");
 						if (pAttr5)
-							pNewVolume->m_pShader = pAttr5->getText()[0] ? GetRenderer()->EF_LoadShader(pAttr5->getText(), eSH_World, EF_SYSTEM) : NULL;
+							pNewVolume->m_pShader = pAttr5->getText()[0] ? GetRenderer()->EF_LoadShader(pAttr5->getText(), eSH_World, EF_SYSTEM) : nullptr;
 
 						// set tesselation
 						XDOM::IXMLDOMNodePtr pAttrTriMinSize = pNode->getAttribute("TriMinSize");
@@ -649,7 +649,7 @@ void CWaterVolume::SetShader(const char* szShaderName)
 	if (szShaderName[0])
 		m_pShader = m_pRenderer->EF_LoadShader(szShaderName, eSH_World, EF_SYSTEM);
 	else
-		m_pShader = NULL;//m_pRenderer->EF_LoadShader("default",eSH_World, EF_SYSTEM);
+		m_pShader = nullptr;//m_pRenderer->EF_LoadShader("default",eSH_World, EF_SYSTEM);
 
 	// remake leaf buffer
 	m_pRenderer->DeleteLeafBuffer(m_pLeafBuffer);

@@ -60,7 +60,7 @@ _inline static int IsComment(char** buf)
 	return 0;
 }
 
-char* gShObjectNotFound = NULL;
+char* gShObjectNotFound = nullptr;
 
 
 void SkipComments(char** buf, bool bSkipWhiteSpace)
@@ -317,71 +317,71 @@ static void fxAddMacro(char* Name, char* Macro)
 void fxParserInit(void)
 {
 #if defined (DIRECT3D8) || defined (DIRECT3D9)
-	fxAddMacro("D3D", NULL);
-	fxAddMacro("DIRECT3D", NULL);
+	fxAddMacro("D3D", nullptr);
+	fxAddMacro("DIRECT3D", nullptr);
 #if defined (DIRECT3D8)
-	fxAddMacro("DIRECT3D8", NULL);
-	fxAddMacro("D3D8", NULL);
+	fxAddMacro("DIRECT3D8", nullptr);
+	fxAddMacro("D3D8", nullptr);
 #elif defined (DIRECT3D9)
-	fxAddMacro("DIRECT3D9", NULL);
-	fxAddMacro("D3D9", NULL);
+	fxAddMacro("DIRECT3D9", nullptr);
+	fxAddMacro("D3D9", nullptr);
 #endif
 #elif OPENGL
-	fxAddMacro("OGL", NULL);
-	fxAddMacro("OPENGL", NULL);
+	fxAddMacro("OGL", nullptr);
+	fxAddMacro("OPENGL", nullptr);
 #elif defined (XBOX)
-	fxAddMacro("XBOX", NULL);
+	fxAddMacro("XBOX", nullptr);
 #elif defined (XBOX2)
-	fxAddMacro("XBOX2", NULL);
+	fxAddMacro("XBOX2", nullptr);
 #elif defined (GC)
-	fxAddMacro("GC", NULL);
-	fxAddMacro("GAMECUBE", NULL);
+	fxAddMacro("GC", nullptr);
+	fxAddMacro("GAMECUBE", nullptr);
 #elif defined (PS2)
-	fxAddMacro("PS2", NULL);
+	fxAddMacro("PS2", nullptr);
 #elif defined (PS3)
-	fxAddMacro("PS3", NULL);
+	fxAddMacro("PS3", nullptr);
 #endif
 #if !defined(LINUX)
 	if (gRenDev->GetFeatures() & RFT_DEPTHMAPS)
-		fxAddMacro("DEPTHMAP", NULL);
+		fxAddMacro("DEPTHMAP", nullptr);
 	if (gRenDev->GetFeatures() & RFT_SHADOWMAP_SELFSHADOW)
-		fxAddMacro("SELFSHADOW", NULL);
+		fxAddMacro("SELFSHADOW", nullptr);
 	if (gRenDev->GetFeatures() & RFT_HW_ENVBUMPPROJECTED)
-		fxAddMacro("PROJECTEDENVBUMP", NULL);
+		fxAddMacro("PROJECTEDENVBUMP", nullptr);
 	int nGPU = gRenDev->GetFeatures() & RFT_HW_MASK;
 	switch (nGPU)
 	{
 	case RFT_HW_GF2:
-		fxAddMacro("NV1X", NULL);
+		fxAddMacro("NV1X", nullptr);
 		break;
 	case RFT_HW_GF3:
-		fxAddMacro("NV2X", NULL);
+		fxAddMacro("NV2X", nullptr);
 		break;
 	case RFT_HW_GFFX:
-		fxAddMacro("NV3X", NULL);
+		fxAddMacro("NV3X", nullptr);
 		break;
 	case RFT_HW_NV4X:
-		fxAddMacro("NV4X", NULL);
+		fxAddMacro("NV4X", nullptr);
 		break;
 	case RFT_HW_RADEON:
-		fxAddMacro("R3XX", NULL);
-		fxAddMacro("ATI", NULL);
-		fxAddMacro("RADEON", NULL);
+		fxAddMacro("R3XX", nullptr);
+		fxAddMacro("ATI", nullptr);
+		fxAddMacro("RADEON", nullptr);
 		break;
 	default:
 		CRYASSERT(0);
 	}
 	if (gRenDev->GetFeatures() & RFT_HW_HDR)
-		fxAddMacro("HDR", NULL);
+		fxAddMacro("HDR", nullptr);
 	if (gRenDev->GetFeatures() & RFT_HW_PS30)
-		fxAddMacro("PS30", NULL);
+		fxAddMacro("PS30", nullptr);
 	if (gRenDev->GetFeatures() & RFT_HW_PS30)
-		fxAddMacro("PS30", NULL);
+		fxAddMacro("PS30", nullptr);
 #endif//LINUX
 	char* VPSup = gRenDev->GetVertexProfile(true);
 	char* PPSup = gRenDev->GetPixelProfile(true);
-	fxAddMacro(VPSup, NULL);
-	fxAddMacro(PPSup, NULL);
+	fxAddMacro(VPSup, nullptr);
+	fxAddMacro(PPSup, nullptr);
 }
 
 void fxStart()
@@ -910,7 +910,7 @@ long fxGetObject(char** buf, SFXTokenDesc* tokens, char** name, char** value, ch
 		*value = fxGetAssignmentText2(buf);
 	}
 	else
-		*value = NULL;
+		*value = nullptr;
 	SkipCharacters(buf, kWhiteSpace);
 	char* d = GetSubText(buf, '{', '}');
 	//if (d)
@@ -1353,7 +1353,7 @@ static struct SColAsc
   SColAsc("Yellow", Col_Yellow),
   SColAsc("YellowGreen", Col_YellowGreen),
 
-  SColAsc(NULL, CFColor(1.0f,1.0f,1.0f))
+  SColAsc(nullptr, CFColor(1.0f,1.0f,1.0f))
 };
 
 #include <ctype.h>
@@ -1515,7 +1515,7 @@ char* fxReplaceInText(char* pText, const char* pSubStr, const char* pReplace)
 	char* pTextIn = pText;
 	int nLenSubStr = strlen(pSubStr);
 	int nLenReplace = strlen(pReplace);
-	char* pOut = NULL;
+	char* pOut = nullptr;
 	int nCurSearch = 0;
 	while (true)
 	{
@@ -1549,7 +1549,7 @@ char* fxReplaceInText2(char* pText, const char* pSubStr, const char* pReplace)
 	char* pTextIn = pText;
 	int nLenSubStr = strlen(pSubStr);
 	int nLenReplace = strlen(pReplace);
-	char* pOut = NULL;
+	char* pOut = nullptr;
 	int nCurSearch = 0;
 	while (true)
 	{

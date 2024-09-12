@@ -58,7 +58,7 @@ _DECLARE_SCRIPTABLEEX(CScriptObjectGame)
 
 CScriptObjectGame::CScriptObjectGame()
 {
-	m_pGame=NULL;
+	m_pGame=nullptr;
 
 }
 
@@ -340,8 +340,8 @@ int CScriptObjectGame::ForceEntitiesToSleep(IFunctionHandler *pH)
 	IEntity *pLocal=m_pGame->GetMyPlayer();
 	IEntityItPtr pEntities=m_pSystem->GetIEntitySystem()->GetEntityIterator();
 	pEntities->MoveFirst();
-	IEntity *pEnt=NULL;
-	while((pEnt=pEntities->Next())!=NULL)
+	IEntity *pEnt=nullptr;
+	while((pEnt=pEntities->Next())!=nullptr)
 	{
 		//EntityClass *pClass=pECR->GetByClass(pEnt->GetEntityClassName());
 		if (pEnt==pLocal)
@@ -482,7 +482,7 @@ int CScriptObjectGame::SetTimer(IFunctionHandler *pH)
 	if(!pH->GetParam(3,pParam))
 	{
 		pParam->Release();
-		pParam=NULL;
+		pParam=nullptr;
 	}
 	ITimer *pTimer=m_pGame->GetSystem()->GetITimer();
 	return pH->EndFunction(m_pGame->m_pScriptTimerMgr->AddTimer(pTable,(unsigned int)(pTimer->GetCurrTime()*1000),(unsigned int)(fMilliseconds),pParam,true));
@@ -956,7 +956,7 @@ int CScriptObjectGame::Connect(IFunctionHandler *pH)
 	//if a local server exist shutdown it
 	//m_pGame->ShutdownServer();
 	
-	const char *sServer=NULL;
+	const char *sServer=nullptr;
 
 	if(pH->GetParamCount()!=0)
 		pH->GetParam(1,sServer);
@@ -970,7 +970,7 @@ int CScriptObjectGame::Connect(IFunctionHandler *pH)
 	m_pGame->ShutdownClient();
 	m_pGame->ShutdownServer();
 
-	if(sServer==NULL)
+	if(sServer==nullptr)
 	{
 		if(!m_pGame->m_pServer)
 			return pH->EndFunction();
@@ -1081,7 +1081,7 @@ int CScriptObjectGame::GetLevelList (IFunctionHandler* pH)
 {
 	// the first and only parameter is the name of the mission
 	// empty name means all levels will be returned
-	const char* pszMissionFilter = NULL; 
+	const char* pszMissionFilter = nullptr; 
 
 	if (pH->GetParamCount()>=1 && !pH->GetParam(1,pszMissionFilter))
 	{
@@ -1320,7 +1320,7 @@ int CScriptObjectGame::GetVersionString(IFunctionHandler *pH)
 			char							szQueryInfoString[256] = {0};
 			char							*szFileVersionInfo = 0;
 			unsigned int			dwSize;
-			PUINT pVersionBuffer = NULL;
+			PUINT pVersionBuffer = nullptr;
 
 			if (GetFileVersionInfo((char *)szFileName.c_str(), 0, dwVersionSize, pData))
 			{
@@ -1453,7 +1453,7 @@ int CScriptObjectGame::AddCommand(IFunctionHandler *pH)
 	int nPCount=pH->GetParamCount();
 	const char *sName;
 	const char *sCommand;
-	const char *sHelp=NULL;
+	const char *sHelp=nullptr;
 	int iflags=0;
 	pH->GetParam(1,sName);
 	if (nPCount>1)
@@ -1462,7 +1462,7 @@ int CScriptObjectGame::AddCommand(IFunctionHandler *pH)
 		if (nPCount>2)
 		{
 			if (!pH->GetParam(3,sHelp))
-				sHelp=NULL;			
+				sHelp=nullptr;			
 		}
 		if (sHelp)
 			m_pConsole->AddCommand(sName,sCommand,0,sHelp);
@@ -1586,7 +1586,7 @@ int CScriptObjectGame::Save(IFunctionHandler *pH)
 {
 	const char *sFileName="";
 	if(pH->GetParamCount()) pH->GetParam(1,sFileName);
-	m_pGame->Save(sFileName, NULL, NULL);
+	m_pGame->Save(sFileName, nullptr, nullptr);
 	return pH->EndFunction();
 }
 
@@ -1641,7 +1641,7 @@ int CScriptObjectGame::TouchCheckPoint(IFunctionHandler *pH)
 		//this change needen for quickload to use restore health 
 		int playerCurHealth;
 		IEntity *pLocalEnt=m_pGame->GetMyPlayer();
-		CPlayer *pPlayer=NULL;
+		CPlayer *pPlayer=nullptr;
 		IEntityContainer *pLocalCnt=pLocalEnt->GetContainer();
 		if (pLocalCnt && pLocalCnt->QueryContainerInterface(CIT_IPLAYER, (void **)&pPlayer))
 		{
@@ -1690,7 +1690,7 @@ int CScriptObjectGame::Quit(IFunctionHandler *pH)
 {
 	CHECK_PARAMETERS(0);
 
-	//m_pConsole->Exit(NULL);
+	//m_pConsole->Exit(nullptr);
 	m_pSystem->Quit();
 	return pH->EndFunction();
 }
@@ -1827,7 +1827,7 @@ int CScriptObjectGame::IsMultiplayer(IFunctionHandler *pH)
 
 int CScriptObjectGame::GetEntitiesScreenSpace(IFunctionHandler *pH)
 {
-	const char *pszBoneName=NULL;
+	const char *pszBoneName=nullptr;
 	if (pH->GetParamCount()>=1)
 		pH->GetParam(1, pszBoneName);
 	_SmartScriptObject pTable(m_pScriptSystem);
@@ -1983,7 +1983,7 @@ int CScriptObjectGame::GetPlayerEntitiesInRadius(IFunctionHandler *pH)
     pH->GetParam(4, iEntityMask);
   }
 
-  EntitiesSet *psetPlayers=NULL;
+  EntitiesSet *psetPlayers=nullptr;
   if (m_pGame->IsServer())
   {
     CXServer *pServer=m_pGame->GetServer();
@@ -2016,7 +2016,7 @@ int CScriptObjectGame::GetPlayerEntitiesInRadius(IFunctionHandler *pH)
     IEntity *pEntity=m_pEntitySystem->GetEntity(Id);
 
     // remove entity from list if not valid
-    if((!pEntity) || ((pCnt=pEntity->GetContainer())==NULL) || (!pCnt->QueryContainerInterface(CIT_IPLAYER, (void **)&pPlayer)))
+    if((!pEntity) || ((pCnt=pEntity->GetContainer())==nullptr) || (!pCnt->QueryContainerInterface(CIT_IPLAYER, (void **)&pPlayer)))
     {       
       EntitiesSetItor next = It;
       next++;
@@ -2239,7 +2239,7 @@ int CScriptObjectGame::ShowIngameDialog(IFunctionHandler *pH)
 	int nSize;	
 	const char *pszFontName;
 	const char *pszEffectName;
-	//const char *pszText=NULL;
+	//const char *pszText=nullptr;
 	// read params
 	pH->GetParam(1,nFillId);
 	pH->GetParam(2,pszFontName);
@@ -2397,7 +2397,7 @@ int CScriptObjectGame::GetMaterialBySurfaceID(IFunctionHandler *pH)
 		}
 		else
 		{
-			TRACE("[GetMaterialBySurfaceID] Warning MATERIAL IS NULL");
+			TRACE("[GetMaterialBySurfaceID] Warning MATERIAL IS nullptr");
 			return pH->EndFunctionNull();
 		}
 	}
@@ -2542,7 +2542,7 @@ int CScriptObjectGame::GetTagPoint(IFunctionHandler *pH)
 	CHECK_PARAMETERS(1);
 
 	const char *sTPName;
-	ITagPoint *pTP=NULL;
+	ITagPoint *pTP=nullptr;
 	Vec3 vec(0,0,0);
 
 	if(pH->GetParam(1,sTPName))
@@ -2588,8 +2588,8 @@ int CScriptObjectGame::DumpEntities(IFunctionHandler *pH)
 	IEntityClassRegistry *pECR=m_pGame->GetClassRegistry();
 	IEntityItPtr pEntities=m_pSystem->GetIEntitySystem()->GetEntityIterator();
 	pEntities->MoveFirst();
-	IEntity *pEnt=NULL;
-	while((pEnt=pEntities->Next())!=NULL)
+	IEntity *pEnt=nullptr;
+	while((pEnt=pEntities->Next())!=nullptr)
 	{
 		EntityClass *pClass=pECR->GetByClass(pEnt->GetEntityClassName());
 		//if(m_pGame->GetWeaponSystem()->IsWeaponClass(pClass->cTypeID)) continue;
@@ -3050,7 +3050,7 @@ int CScriptObjectGame::ApplyStormToEnvironment(IFunctionHandler * pH)
 	pH->GetParam(2,fRainAmount);
 
 	// all these effects are client-side only
-	IEntity *pEntity=NULL;
+	IEntity *pEntity=nullptr;
 	CXClient *pClient=m_pGame->GetClient();
 
 	if (pClient)
@@ -3062,7 +3062,7 @@ int CScriptObjectGame::ApplyStormToEnvironment(IFunctionHandler * pH)
 		{
 			IEntityCamera *pCamera=pEntity->GetCamera();
 			Vec3 vPos=pEntity->GetCamera()->GetPos();
-			if (m_p3DEngine->GetVisAreaFromPos(vPos)==NULL)
+			if (m_p3DEngine->GetVisAreaFromPos(vPos)==nullptr)
 			{
 				// enable rain only when the client is outdoor
 				m_p3DEngine->SetRainAmount(fRainAmount);
@@ -3145,7 +3145,7 @@ int CScriptObjectGame::DrawLabel(IFunctionHandler *pH)
 {
 	CHECK_PARAMETERS(3);
 	CScriptObjectVector oVec(m_pScriptSystem,true);
-	const char *szParam=NULL;
+	const char *szParam=nullptr;
 	float size;
 	
 	pH->GetParam(1,*oVec);
@@ -3191,7 +3191,7 @@ int CScriptObjectGame::GetInstantHit(IFunctionHandler *pH)
 	pObj->GetValue( "shooter",*pShooter );
 	pShooter->GetValue("id",nID);
 	shooter=m_pEntitySystem->GetEntity(nID);
-	if(shooter==NULL)
+	if(shooter==nullptr)
 	{
 		TRACE("CScriptObjectSystem::GetInstantHit() shooter in nil");
 		return pH->EndFunctionNull();
@@ -3258,7 +3258,7 @@ int CScriptObjectGame::GetMeleeHit(IFunctionHandler *pH)
 	CScriptObjectVector oVec(m_pScriptSystem,true);
 
 	IEntity *shooter;
-	IEntity *target = NULL;
+	IEntity *target = nullptr;
 	int nID;
 	Vec3 pos, angles, dir;
 	float fDistance;
@@ -3267,7 +3267,7 @@ int CScriptObjectGame::GetMeleeHit(IFunctionHandler *pH)
 	pObj->GetValue( "shooter",*pShooter);
 	pShooter->GetValue("id",nID);
 	shooter=m_pEntitySystem->GetEntity(nID);
-	if(shooter==NULL)
+	if(shooter==nullptr)
 	{
 		TRACE("CScriptObjectSystem::GetMeleeHit() shooter in nil");
 		return pH->EndFunctionNull();
@@ -3315,7 +3315,7 @@ int CScriptObjectGame::GetMeleeHit(IFunctionHandler *pH)
 				continue;
 		}
 
-		if (target == NULL || target == pEntity || pEntity==NULL )
+		if (target == nullptr || target == pEntity || pEntity==nullptr )
 		{
 			ray_hit hit;
 			// cast a 'fat' line segment
@@ -3350,7 +3350,7 @@ int CScriptObjectGame::GetMeleeHit(IFunctionHandler *pH)
 				if(pObj)
 					pOut->SetValue("target", pObj);
 
-				if (target != NULL && target != centycontact)
+				if (target != nullptr && target != centycontact)
 					pOut->SetToNull("target");
 			}
 			else
@@ -3496,7 +3496,7 @@ int CScriptObjectGame::SaveConfiguration(IFunctionHandler *pH)
 	}
 	
 	// profile is already specified in the string
-	m_pGame->SaveConfiguration(sSystemCfg.c_str(),sGameCfg.c_str(),NULL);
+	m_pGame->SaveConfiguration(sSystemCfg.c_str(),sGameCfg.c_str(),nullptr);
 
 	if (szProfileName)
 	{
@@ -3639,11 +3639,8 @@ int CScriptObjectGame::CheckMap(IFunctionHandler *pH)
 	}
 
 	XDOM::IXMLDOMNodeListPtr pNodes;
-#if !defined(LINUX64)
-	if(pLevelDataXML != NULL) 
-#else
-	if(pLevelDataXML != 0) 
-#endif
+
+	if(pLevelDataXML) 
 	{
 		XDOM::IXMLDOMNodeListPtr	pMissionTagList;
 		XDOM::IXMLDOMNodePtr			pMissionTag;
@@ -3733,11 +3730,8 @@ int CScriptObjectGame::GetMapDefaultMission(IFunctionHandler *pH)
 	}
 
 	XDOM::IXMLDOMNodeListPtr pNodes;
-#if !defined(LINUX64)
-	if(pLevelDataXML != NULL)
-#else
-	if(pLevelDataXML != 0)
-#endif
+
+	if(pLevelDataXML)
 	{
 		XDOM::IXMLDOMNodeListPtr	pMissionTagList;
 		XDOM::IXMLDOMNodePtr			pMissionTag;
@@ -3794,8 +3788,8 @@ int CScriptObjectGame::CleanUpLevel(IFunctionHandler *pH)
 //////////////////////////////////////////////////////////////////////////
 int CScriptObjectGame::SavePlayerPos(IFunctionHandler *pH)
 {
-	const char *sName = NULL;
-	const char *sDesc = NULL;
+	const char *sName = nullptr;
+	const char *sDesc = nullptr;
 	pH->GetParam(1,sName);
 	pH->GetParam(2,sDesc);
 
@@ -3822,7 +3816,7 @@ int CScriptObjectGame::PlaySubtitle(IFunctionHandler * pH)
 {
 	CHECK_PARAMETERS(1);
 	int nCookie=0;
-	ISound *pSound=NULL;
+	ISound *pSound=nullptr;
 	
 	if(pH->GetParamUDVal(1,(USER_DATA &)pSound,nCookie) && pSound && (nCookie==USER_DATA_SOUND))	//AMD Port
 	{
@@ -3886,7 +3880,7 @@ int CScriptObjectGame::GetModsList(IFunctionHandler * pH)
 //////////////////////////////////////////////////////////////////////////
 int CScriptObjectGame::LoadMOD(IFunctionHandler * pH)
 {
-	const char *sName = NULL;
+	const char *sName = nullptr;
 	bool bNeedsRestart;
 	if (!pH->GetParam(1,sName))
 		return (pH->EndFunctionNull());

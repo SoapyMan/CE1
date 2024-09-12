@@ -143,7 +143,7 @@ bool CGLRenderer::EF_AllocateBuffersVid()
 	int i;
 	int n = 0;
 	int nv = 0;
-	byte* buf = NULL;
+	byte* buf = nullptr;
 
 	for (i = 0; i < m_RP.m_NumFences; i++)
 	{
@@ -368,7 +368,7 @@ void CGLRenderer::EF_PipelineInit()
 {
 	bool nv = 0;
 
-	m_RP.m_pCurFuncs = NULL;
+	m_RP.m_pCurFuncs = nullptr;
 	m_RP.m_MaxVerts = CV_gl_rb_verts;
 	m_RP.m_MaxTris = CV_gl_rb_tris;
 	m_RP.m_CurFence = 0;
@@ -394,7 +394,7 @@ void CGLRenderer::EF_PipelineInit()
 			int size = m_VertexSize[VERTEX_FORMAT_P3F_N_COL4UB_TEX2F] * nVerts * 4;
 			glGenBuffersARB(1, &pBuf->m_VS[VSF_GENERAL].m_VertBuf.m_nID);
 			glBindBufferARB(GL_ARRAY_BUFFER_ARB, pBuf->m_VS[VSF_GENERAL].m_VertBuf.m_nID);
-			glBufferDataARB(GL_ARRAY_BUFFER_ARB, size, NULL, GL_STREAM_DRAW_ARB);
+			glBufferDataARB(GL_ARRAY_BUFFER_ARB, size, nullptr, GL_STREAM_DRAW_ARB);
 			m_CurVertBufferSize += size;
 			pBuf->m_vertexformat = VERTEX_FORMAT_P3F_N_COL4UB_TEX2F;
 			pBuf->m_NumVerts = nVerts;
@@ -406,7 +406,7 @@ void CGLRenderer::EF_PipelineInit()
 		ReleaseIndexBuffer(&m_RP.m_IBDyn);
 		glGenBuffersARB(1, &m_RP.m_IBDyn.m_VertBuf.m_nID);
 		glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, m_RP.m_IBDyn.m_VertBuf.m_nID);
-		glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB, nInds * sizeof(ushort), NULL, GL_STREAM_DRAW_ARB);
+		glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB, nInds * sizeof(ushort), nullptr, GL_STREAM_DRAW_ARB);
 		m_RP.m_IBDyn.m_nItems = nInds;
 	}
 
@@ -691,7 +691,7 @@ void CGLRenderer::EF_PipelineShutdown()
 	if (m_BigArray)
 	{
 		ReleaseVarShunk(m_BigArray);
-		m_BigArray = NULL;
+		m_BigArray = nullptr;
 	}
 
 	//m_RP.m_DLights.Free();
@@ -753,7 +753,7 @@ void CGLRenderer::EF_PreRender(int Stage)
 	{ // Before preprocess
 		m_RP.m_RenderFrame++;
 		m_RP.m_Flags = 0;
-		m_RP.m_pPrevObject = NULL;
+		m_RP.m_pPrevObject = nullptr;
 		m_RP.m_FrameObject++;
 
 		EF_SetCameraInfo();
@@ -3008,13 +3008,13 @@ void CGLRenderer::EF_Start(SShader* ef, SShader* efState, SRenderShaderResources
 #ifdef PIPE_USE_INSTANCING
 	m_RP.m_MergedObjects.SetUse(0);
 #endif
-	m_RP.m_pCurLightMaterial = NULL;
+	m_RP.m_pCurLightMaterial = nullptr;
 	m_RP.m_pStateShader = efState;
 	m_RP.m_pShaderResources = Res;
 	m_RP.m_FlagsPerFlush = 0;
 	m_RP.m_FlagsModificators = 0;
-	m_RP.m_pFogVolume = NULL;
-	m_RP.m_pRE = NULL;
+	m_RP.m_pFogVolume = nullptr;
+	m_RP.m_pRE = nullptr;
 	m_RP.m_fCurOpacity = 1.0f;
 	SArrayPointer::m_CurEnabled = 0;
 
@@ -3025,10 +3025,10 @@ void CGLRenderer::EF_Start(SShader* ef, SShader* efState, SRenderShaderResources
 		if (nHW >= 0)
 			m_RP.m_pCurTechnique = ef->m_HWTechniques[nHW];
 		else
-			m_RP.m_pCurTechnique = NULL;
+			m_RP.m_pCurTechnique = nullptr;
 	}
 	else
-		m_RP.m_pCurTechnique = NULL;
+		m_RP.m_pCurTechnique = nullptr;
 
 	m_RP.m_CurVFormat = ef->m_VertexFormatId;
 
@@ -3061,11 +3061,11 @@ void CGLRenderer::EF_Start(SShader* ef, SShader* efState, SRenderShaderResources
 	SArrayPointer::m_CurEnabled = 0;
 	m_RP.m_FlagsPerFlush = 0;
 	m_RP.m_FlagsModificators = 0;
-	m_RP.m_pCurLightMaterial = NULL;
+	m_RP.m_pCurLightMaterial = nullptr;
 	if (numFog && numFog < m_RP.m_FogVolumes.Num() && CV_r_VolumetricFog)
 		m_RP.m_pFogVolume = &m_RP.m_FogVolumes[numFog];
 	else
-		m_RP.m_pFogVolume = NULL;
+		m_RP.m_pFogVolume = nullptr;
 	m_RP.m_ObjFlags = m_RP.m_pCurObject->m_ObjFlags;
 
 	m_RP.m_CurVFormat = ef->m_VertexFormatId;
@@ -3093,12 +3093,12 @@ void CGLRenderer::EF_Start(SShader* ef, SShader* efState, SRenderShaderResources
 		if (nHW >= 0)
 			m_RP.m_pCurTechnique = ef->m_HWTechniques[nHW];
 		else
-			m_RP.m_pCurTechnique = NULL;
+			m_RP.m_pCurTechnique = nullptr;
 	}
 	else
-		m_RP.m_pCurTechnique = NULL;
+		m_RP.m_pCurTechnique = nullptr;
 
-	m_RP.m_pRE = NULL;
+	m_RP.m_pRE = nullptr;
 
 	m_RP.m_Frame++;
 }
@@ -3968,10 +3968,10 @@ void CGLRenderer::EF_DrawDetailOverlayPasses()
 				m_RP.m_RCDetail->mfSet(true);
 
 			// Draw primitives
-			EF_Draw(sh, NULL);
+			EF_Draw(sh, nullptr);
 #else
 			int bFogOverrided = 0;
-			EF_PreDraw(NULL);
+			EF_PreDraw(nullptr);
 			if (m_FS.m_bEnable)
 				bFogOverrided = EF_FogCorrection(false, false);
 			if (m_Features & (RFT_HW_RC | RFT_HW_PS20))
@@ -4024,7 +4024,7 @@ void CGLRenderer::EF_DrawDetailOverlayPasses()
 					{
 						//PROFILE_FRAME(Draw_EFIndexMesh);
 						if (m_RP.m_pRE)
-							m_RP.m_pRE->mfDraw(sh, NULL);
+							m_RP.m_pRE->mfDraw(sh, nullptr);
 						else
 							EF_DrawIndexedMesh(R_PRIMV_TRIANGLES);
 					}
@@ -4071,8 +4071,8 @@ void CGLRenderer::EF_DrawDetailOverlayPasses()
 			m_RP.m_RCDetail->mfSet(true);
 
 		CCGVProgram_GL* vpGL = (CCGVProgram_GL*)m_RP.m_VPDetail;
-		vpGL->mfSet(true, NULL, VPF_DONTSETMATRICES | VPF_SETPOINTERSFORSHADER);
-		vpGL->mfSetVariables(false, NULL);
+		vpGL->mfSet(true, nullptr, VPF_DONTSETMATRICES | VPF_SETPOINTERSFORSHADER);
+		vpGL->mfSetVariables(false, nullptr);
 		SCGBind* pBindScale = vpGL->mfGetParameterBind("DetailScaling");
 		SCGBind* pBindTG0 = vpGL->mfGetParameterBind("TexGen00");
 		SCGBind* pBindTG1 = vpGL->mfGetParameterBind("TexGen01");
@@ -4106,10 +4106,10 @@ void CGLRenderer::EF_DrawDetailOverlayPasses()
 				vpGL->mfParameter4f(pBindTG1, param);
 
 			// Draw primitives
-			EF_Draw(sh, NULL);
+			EF_Draw(sh, nullptr);
 #else
 			int bFogOverrided = 0;
-			EF_PreDraw(NULL);
+			EF_PreDraw(nullptr);
 			if (m_FS.m_bEnable)
 				bFogOverrided = EF_FogCorrection(false, false);
 
@@ -4137,13 +4137,13 @@ void CGLRenderer::EF_DrawDetailOverlayPasses()
 					if (pBindTG1)
 						vpGL->mfParameter4f(pBindTG1, Vals);
 
-					vpGL->mfSetVariables(true, NULL);
+					vpGL->mfSetVariables(true, nullptr);
 					vpGL->mfSetStateMatrices();
 
 					{
 						//PROFILE_FRAME(Draw_EFIndexMesh);
 						if (m_RP.m_pRE)
-							m_RP.m_pRE->mfDraw(sh, NULL);
+							m_RP.m_pRE->mfDraw(sh, nullptr);
 						else
 							EF_DrawIndexedMesh(R_PRIMV_TRIANGLES);
 					}
@@ -4189,7 +4189,7 @@ void CGLRenderer::EF_DrawFogOverlayPasses()
 
 	float fWatLevel = iSystem->GetI3DEngine()->GetWaterLevel();
 	SMFog* fb = m_RP.m_pFogVolume;
-	SShader* sh = NULL;
+	SShader* sh = nullptr;
 	bool bVFFP = false;
 	if (!(m_Features & RFT_HW_VS) || CV_r_Quality_BumpMapping == 0)
 		bVFFP = true;
@@ -4246,7 +4246,7 @@ void CGLRenderer::EF_DrawLightPasses_PS30(SShaderTechnique* hs, SShader* ef, int
 	int i;
 
 	m_RP.m_nCurLight = 0;
-	CVProgram* curVP = NULL;
+	CVProgram* curVP = nullptr;
 
 	PROFILE_FRAME(DrawShader_LightPasses_PS30);
 
@@ -4380,7 +4380,7 @@ void CGLRenderer::EF_DrawLightPasses_PS30(SShaderTechnique* hs, SShader* ef, int
 		m_RP.m_nCurLightPass = nPass;
 		SLightPass* lp = &m_RP.m_LPasses[nPass];
 		m_RP.m_ShaderLightMask = lp->nLights;
-		m_RP.m_pCurLight = NULL;
+		m_RP.m_pCurLight = nullptr;
 		int Types[4];
 		bool bUseOccl = false;
 		for (i = 0; i < lp->nLights; i++)
@@ -4664,7 +4664,7 @@ void CGLRenderer::EF_DrawLightPasses(SShaderTechnique* hs, SShader* ef, int nSta
 	int nl = 0;
 	int n;
 
-	CVProgram* curVP = NULL;
+	CVProgram* curVP = nullptr;
 	CVProgram* newVP;
 
 	// Just single pass for transparent objects
@@ -4747,7 +4747,7 @@ void CGLRenderer::EF_DrawLightPasses(SShaderTechnique* hs, SShader* ef, int nSta
 			if (CV_r_bumpselfshadow && bOnlyLightPass && m_RP.m_pShaderResources && m_RP.m_pShaderResources->m_Textures[EFTT_BUMP] && m_RP.m_pShaderResources->m_Textures[EFTT_BUMP]->m_TU.m_TexPic && m_RP.m_pShaderResources->m_Textures[EFTT_BUMP]->m_TU.m_TexPic->m_pSH)
 			{
 				EF_DrawLightShadowMask(l);
-				curVP = NULL;
+				curVP = nullptr;
 				bShadowMask = true;
 			}
 
@@ -4797,7 +4797,7 @@ void CGLRenderer::EF_DrawLightPasses(SShaderTechnique* hs, SShader* ef, int nSta
 						curVP->mfSet(true, slw, VPF_SETPOINTERSFORPASS | VPF_DONTSETMATRICES);
 					}
 					else
-						curVP = NULL;
+						curVP = nullptr;
 				}
 
 				EF_ApplyMatrixOps(slw->m_MatrixOps, true);
@@ -4995,7 +4995,7 @@ void CGLRenderer::EF_DrawLightPasses(SShaderTechnique* hs, SShader* ef, int nSta
 		}
 	}
 	m_RP.m_nCurLight = -1;
-	m_RP.m_pCurLight = NULL;
+	m_RP.m_pCurLight = nullptr;
 }
 
 void CGLRenderer::EF_DrawLightShadowMask(int nLight)
@@ -5018,9 +5018,9 @@ void CGLRenderer::EF_DrawLightShadowMask(int nLight)
 
 	m_RP.m_FlagsModificators = (m_RP.m_FlagsModificators & ~0xf) | RBMF_TANGENTSUSED;
 
-	m_RP.m_VPTexShadow->mfSet(true, NULL, VPF_DONTSETMATRICES);
-	m_RP.m_VPTexShadow->mfSetVariables(false, NULL);
-	m_RP.m_RCTexShadow->mfSet(true, NULL);
+	m_RP.m_VPTexShadow->mfSet(true, nullptr, VPF_DONTSETMATRICES);
+	m_RP.m_VPTexShadow->mfSetVariables(false, nullptr);
+	m_RP.m_RCTexShadow->mfSet(true, nullptr);
 #ifndef PIPE_USE_INSTANCING
 
 #ifdef DO_RENDERLOG
@@ -5029,11 +5029,11 @@ void CGLRenderer::EF_DrawLightShadowMask(int nLight)
 #endif
 
 	m_RP.m_VPTexShadow->mfSetStateMatrices();
-	m_RP.m_VPTexShadow->mfSetVariables(true, NULL);
-	m_RP.m_RCTexShadow->mfSetVariables(true, NULL);
-	EF_Draw(m_RP.m_pShader, NULL);
+	m_RP.m_VPTexShadow->mfSetVariables(true, nullptr);
+	m_RP.m_RCTexShadow->mfSetVariables(true, nullptr);
+	EF_Draw(m_RP.m_pShader, nullptr);
 #else
-	EF_PreDraw(NULL);
+	EF_PreDraw(nullptr);
 
 	int nObj = 0;
 	CCObject* pSaveObj = m_RP.m_pCurObject;
@@ -5058,15 +5058,15 @@ void CGLRenderer::EF_DrawLightShadowMask(int nLight)
 		if (m_RP.m_VPTexShadow)
 		{
 			m_RP.m_VPTexShadow->mfSetStateMatrices();
-			m_RP.m_VPTexShadow->mfSetVariables(true, NULL);
+			m_RP.m_VPTexShadow->mfSetVariables(true, nullptr);
 		}
 		if (m_RP.m_RCTexShadow)
-			m_RP.m_RCTexShadow->mfSetVariables(true, NULL);
+			m_RP.m_RCTexShadow->mfSetVariables(true, nullptr);
 
 		{
 			//PROFILE_FRAME(Draw_EFIndexMesh);
 			if (m_RP.m_pRE)
-				m_RP.m_pRE->mfDraw(m_RP.m_pShader, NULL);
+				m_RP.m_pRE->mfDraw(m_RP.m_pShader, nullptr);
 			else
 				EF_DrawIndexedMesh(R_PRIMV_TRIANGLES);
 		}
@@ -5110,10 +5110,10 @@ void CGLRenderer::EF_DrawSubsurfacePasses(SShaderTechnique* hs, SShader* ef)
 		if (!m_RP.m_RCSubSurfaceScatering)
 			m_RP.m_RCSubSurfaceScatering = CPShader::mfForName("CGRCSubSurface");
 
-		m_RP.m_VPSubSurfaceScatering->mfSet(true, NULL);
-		m_RP.m_VPSubSurfaceScatering->mfSetVariables(false, NULL);
-		m_RP.m_RCSubSurfaceScatering->mfSet(true, NULL);
-		m_RP.m_RCSubSurfaceScatering->mfSetVariables(false, NULL);
+		m_RP.m_VPSubSurfaceScatering->mfSet(true, nullptr);
+		m_RP.m_VPSubSurfaceScatering->mfSetVariables(false, nullptr);
+		m_RP.m_RCSubSurfaceScatering->mfSet(true, nullptr);
+		m_RP.m_RCSubSurfaceScatering->mfSetVariables(false, nullptr);
 
 #ifndef PIPE_USE_INSTANCING
 
@@ -5122,11 +5122,11 @@ void CGLRenderer::EF_DrawSubsurfacePasses(SShaderTechnique* hs, SShader* ef)
 			Logv(SRendItem::m_RecurseLevel, "+++ Subsurface scattering pass %d [light %d]\n", m_RP.m_RendPass, l);
 #endif
 
-		m_RP.m_VPSubSurfaceScatering->mfSetVariables(true, NULL);
-		m_RP.m_RCSubSurfaceScatering->mfSetVariables(true, NULL);
-		EF_Draw(m_RP.m_pShader, NULL);
+		m_RP.m_VPSubSurfaceScatering->mfSetVariables(true, nullptr);
+		m_RP.m_RCSubSurfaceScatering->mfSetVariables(true, nullptr);
+		EF_Draw(m_RP.m_pShader, nullptr);
 #else
-		EF_PreDraw(NULL);
+		EF_PreDraw(nullptr);
 
 		int nObj = 0;
 		CCObject* pSaveObj = m_RP.m_pCurObject;
@@ -5151,17 +5151,17 @@ void CGLRenderer::EF_DrawSubsurfacePasses(SShaderTechnique* hs, SShader* ef)
 			if (m_RP.m_VPSubSurfaceScatering)
 			{
 				m_RP.m_VPSubSurfaceScatering->mfSetStateMatrices();
-				m_RP.m_VPSubSurfaceScatering->mfSetVariables(true, NULL);
+				m_RP.m_VPSubSurfaceScatering->mfSetVariables(true, nullptr);
 			}
 			if (m_RP.m_RCSubSurfaceScatering)
 			{
-				m_RP.m_RCSubSurfaceScatering->mfSetVariables(true, NULL);
+				m_RP.m_RCSubSurfaceScatering->mfSetVariables(true, nullptr);
 			}
 
 			{
 				//PROFILE_FRAME(Draw_EFIndexMesh);
 				if (m_RP.m_pRE)
-					m_RP.m_pRE->mfDraw(m_RP.m_pShader, NULL);
+					m_RP.m_pRE->mfDraw(m_RP.m_pShader, nullptr);
 				else
 					EF_DrawIndexedMesh(R_PRIMV_TRIANGLES);
 			}
@@ -5186,7 +5186,7 @@ void CGLRenderer::EF_DrawFurPasses(SShaderTechnique* hs, SShader* ef, int nStart
 
 	PROFILE_FRAME(DrawShader_FurPasses);
 
-	m_RP.m_pCurLight = NULL;
+	m_RP.m_pCurLight = nullptr;
 }
 
 struct SShadowLight
@@ -5338,7 +5338,7 @@ void CGLRenderer::EF_DrawShadowPasses(SShaderTechnique* hs, SShader* ef, int nSt
 		return;
 
 	m_RP.m_nCurLight = 0;
-	CVProgram* curVP = NULL;
+	CVProgram* curVP = nullptr;
 	CVProgram* newVP;
 
 	SArrayPointer::m_LastEnabledPass = 0;
@@ -5445,7 +5445,7 @@ void CGLRenderer::EF_DrawShadowPasses(SShaderTechnique* hs, SShader* ef, int nSt
 						curVP->mfSet(true, slw, VPF_SETPOINTERSFORPASS | VPF_DONTSETMATRICES);
 					}
 					else
-						curVP = NULL;
+						curVP = nullptr;
 				}
 				EF_ApplyMatrixOps(slw->m_MatrixOps, true);
 				if (curVP)
@@ -5603,7 +5603,7 @@ void CGLRenderer::EF_DrawGeneralPasses(SShaderTechnique* hs, SShader* ef, bool b
 		return;
 
 	m_RP.m_nCurLight = 0;
-	CVProgram* curVP = NULL;
+	CVProgram* curVP = nullptr;
 	CVProgram* newVP;
 
 	PROFILE_FRAME(DrawShader_GeneralPasses);
@@ -5659,7 +5659,7 @@ void CGLRenderer::EF_DrawGeneralPasses(SShaderTechnique* hs, SShader* ef, bool b
 					curVP->mfSet(true, slw, VPF_SETPOINTERSFORPASS | VPF_DONTSETMATRICES);
 				}
 				else
-					curVP = NULL;
+					curVP = nullptr;
 			}
 			EF_ApplyMatrixOps(slw->m_MatrixOps, true);
 			if (curVP)
@@ -5901,7 +5901,7 @@ void CGLRenderer::EF_FlushHW()
 			if (ef->m_Flags2 & EF2_USELIGHTMATERIAL)
 				m_RP.m_pCurLightMaterial = &m_RP.m_DefLightMaterial;
 			else
-				m_RP.m_pCurLightMaterial = NULL;
+				m_RP.m_pCurLightMaterial = nullptr;
 
 		EF_SetVertexStreams(hs->m_Pointers, 0);
 		EF_ApplyMatrixOps(hs->m_MatrixOps, true);
@@ -6159,7 +6159,7 @@ void CGLRenderer::EF_FlushShader()
 
 				// Set per-object alpha blending state
 				if (pObj->m_ObjFlags & FOB_HASALPHA)
-					pObj->SetAlphaState(NULL, nState);
+					pObj->SetAlphaState(nullptr, nState);
 
 				// Commit per-texture states / color ops
 				EF_CommitTexStageState();
@@ -6217,11 +6217,11 @@ void CGLRenderer::EF_FlushShader()
 	if (bDraw2D)
 		EF_Set2DMode(false, 800, 600);
 
-	SArrayPointer_Texture::m_pLastPointer[0] = NULL;
+	SArrayPointer_Texture::m_pLastPointer[0] = nullptr;
 	SArrayPointer::m_LastEnabled = 0;
-	SArrayPointer_Vertex::m_pLastPointer = NULL;
-	SArrayPointer_Normal::m_pLastPointer = NULL;
-	SArrayPointer_Color::m_pLastPointer = NULL;
+	SArrayPointer_Vertex::m_pLastPointer = nullptr;
+	SArrayPointer_Normal::m_pLastPointer = nullptr;
+	SArrayPointer_Color::m_pLastPointer = nullptr;
 }
 
 // Flush current render item
@@ -6350,7 +6350,7 @@ void CGLRenderer::EF_Flush()
 	else
 		if (!(ef->m_Flags3 & EF3_CLIPPLANE) && (rd->m_RP.m_PersFlags & RBPF_SETCLIPPLANE))
 		{
-			rd->EF_SetClipPlane(false, NULL, false);
+			rd->EF_SetClipPlane(false, nullptr, false);
 			rd->m_RP.m_PersFlags &= ~RBPF_SETCLIPPLANE;
 		}
 
@@ -6425,7 +6425,7 @@ void CGLRenderer::EF_Flush()
 			str = "FlushHW";
 		else
 			str = "Flush";
-		rd->Logv(SRendItem::m_RecurseLevel, "%s: '%s', (St: %s) Id:%d, ResId:%d, Obj:%d, Tech: %d, Cp: %d, Fog:%d, VF:%d, NL:%d, LPas:%d, Pas:%d (time: %f, %d polys)\n", str, ef->m_Name.c_str(), rd->m_RP.m_pStateShader ? rd->m_RP.m_pStateShader->m_Name.c_str() : "NULL", ef->m_Id, rd->m_RP.m_pShaderResources ? rd->m_RP.m_pShaderResources->m_Id : -1, rd->m_RP.m_pCurObject->m_VisId, rd->m_RP.m_pCurTechnique ? rd->m_RP.m_pCurTechnique->m_Id : -1, rd->m_RP.m_ClipPlaneEnabled, rd->m_RP.m_pFogVolume ? (rd->m_RP.m_pFogVolume - &rd->m_RP.m_FogVolumes[0]) : 0, rd->m_RP.m_pShader->m_VertexFormatId, rd->m_RP.m_StatNumLights, rd->m_RP.m_StatNumLightPasses, rd->m_RP.m_StatNumPasses, time0, nNumPolys);
+		rd->Logv(SRendItem::m_RecurseLevel, "%s: '%s', (St: %s) Id:%d, ResId:%d, Obj:%d, Tech: %d, Cp: %d, Fog:%d, VF:%d, NL:%d, LPas:%d, Pas:%d (time: %f, %d polys)\n", str, ef->m_Name.c_str(), rd->m_RP.m_pStateShader ? rd->m_RP.m_pStateShader->m_Name.c_str() : "nullptr", ef->m_Id, rd->m_RP.m_pShaderResources ? rd->m_RP.m_pShaderResources->m_Id : -1, rd->m_RP.m_pCurObject->m_VisId, rd->m_RP.m_pCurTechnique ? rd->m_RP.m_pCurTechnique->m_Id : -1, rd->m_RP.m_ClipPlaneEnabled, rd->m_RP.m_pFogVolume ? (rd->m_RP.m_pFogVolume - &rd->m_RP.m_FogVolumes[0]) : 0, rd->m_RP.m_pShader->m_VertexFormatId, rd->m_RP.m_StatNumLights, rd->m_RP.m_StatNumLightPasses, rd->m_RP.m_StatNumPasses, time0, nNumPolys);
 		if (rd->m_RP.m_ObjFlags & FOB_SELECTED)
 		{
 			if (rd->m_RP.m_FlagsPerFlush & RBSI_ALPHATEST)
@@ -6483,12 +6483,12 @@ void CGLRenderer::EF_EndEf3D(int nFlags)
 	if (CV_r_excludeshader->GetString()[0] != '0')
 		m_RP.m_ExcludeShader = CV_r_excludeshader->GetString();
 	else
-		m_RP.m_ExcludeShader = NULL;
+		m_RP.m_ExcludeShader = nullptr;
 
 	if (CV_r_showonlyshader->GetString()[0] != '0')
 		m_RP.m_ShowOnlyShader = CV_r_showonlyshader->GetString();
 	else
-		m_RP.m_ShowOnlyShader = NULL;
+		m_RP.m_ShowOnlyShader = nullptr;
 
 	EF_UpdateSplashes(m_RP.m_RealTime);
 	EF_AddClientPolys3D();
@@ -6633,9 +6633,9 @@ void CGLRenderer::EF_PipeLine(int nums, int nume, int nList, void (*RenderFunc)(
 	m_RP.m_pCurObject = m_RP.m_VisObjects[0];
 	m_RP.m_pPrevObject = m_RP.m_pCurObject;
 	nCurFog = 0;
-	pCurShader = NULL;
-	pCurShaderState = NULL;
-	pCurRes = NULL;
+	pCurShader = nullptr;
+	pCurShaderState = nullptr;
+	pCurRes = nullptr;
 	bool bIgnore = false;
 	bool bChanged;
 	bool bUseBatching = (RenderFunc == EF_Flush);
@@ -6683,7 +6683,7 @@ void CGLRenderer::EF_PipeLine(int nums, int nume, int nList, void (*RenderFunc)(
 			if (pCurShader)
 			{
 				m_RP.m_pRenderFunc();
-				pCurShader = NULL;
+				pCurShader = nullptr;
 				bChanged = true;
 			}
 			if (!EF_ObjectChange(pShader, pRes, nObject, pRE))
@@ -6714,17 +6714,17 @@ void CGLRenderer::EF_PipeLine(int nums, int nume, int nList, void (*RenderFunc)(
 	if (pCurShader)
 		m_RP.m_pRenderFunc();
 
-	m_RP.m_pRE = NULL;
+	m_RP.m_pRE = nullptr;
 
 	if (m_RP.m_PersFlags & RBPF_SETCLIPPLANE)
 	{
-		EF_SetClipPlane(false, NULL, false);
+		EF_SetClipPlane(false, nullptr, false);
 		m_RP.m_PersFlags &= ~RBPF_SETCLIPPLANE;
 	}
 
 	glDepthRange(m_RP.m_fMinDepthRange, m_RP.m_fMaxDepthRange);
 
-	EF_ObjectChange(NULL, NULL, 0, NULL);
+	EF_ObjectChange(nullptr, nullptr, 0, nullptr);
 
 	m_RP.m_PersFlags &= ~RBPF_MATRIXNOTLOADED;
 	glPopMatrix();
@@ -6744,7 +6744,7 @@ void CGLRenderer::EF_PipeLine(int nums, int nume, int nList, void (*RenderFunc)(
 	CGLTexMan::BindNULL(1);
 	EF_SelectTMU(0);
 	EF_Scissor(false, 0, 0, 0, 0);
-	m_RP.m_pShader = NULL;
+	m_RP.m_pShader = nullptr;
 
 #ifdef DO_RENDERLOG
 	if (m_LogFile)
@@ -6766,18 +6766,18 @@ void CGLRenderer::EF_DrawWire()
 	gcpOGL->EF_SetColorOp(eCO_MODULATE, eCO_MODULATE, DEF_TEXARG0, DEF_TEXARG0);
 	if (gcpOGL->m_RP.m_pRE)
 		gcpOGL->m_RP.m_pRE->mfCheckUpdate(gcpOGL->m_RP.m_pShader->m_VertexFormatId, 0);
-	gcpOGL->EF_SetObjectTransform(gcpOGL->m_RP.m_pCurObject, NULL, gcpOGL->m_RP.m_pCurObject->m_ObjFlags);
+	gcpOGL->EF_SetObjectTransform(gcpOGL->m_RP.m_pCurObject, nullptr, gcpOGL->m_RP.m_pCurObject->m_ObjFlags);
 	int StrVrt;
 	void* verts = (void*)gcpOGL->EF_GetPointer(eSrcPointer_Vert, &StrVrt, GL_FLOAT, eSrcPointer_Vert, 0);
 	glVertexPointer(3, GL_FLOAT, StrVrt, verts);
 	SArrayPointer_Vertex::m_pLastPointer = verts;
 	glEnableClientState(GL_VERTEX_ARRAY);
-	gcpOGL->EF_Draw(gcpOGL->m_RP.m_pShader, NULL);
+	gcpOGL->EF_Draw(gcpOGL->m_RP.m_pShader, nullptr);
 }
 
 void CGLRenderer::EF_DrawNormals()
 {
-	gcpOGL->EF_SetObjectTransform(gcpOGL->m_RP.m_pCurObject, NULL, gcpOGL->m_RP.m_pCurObject->m_ObjFlags);
+	gcpOGL->EF_SetObjectTransform(gcpOGL->m_RP.m_pCurObject, nullptr, gcpOGL->m_RP.m_pCurObject->m_ObjFlags);
 	float len = CRenderer::CV_r_normalslength;
 	if (gcpOGL->m_bEditor)
 		len *= 100.0f;
@@ -6819,7 +6819,7 @@ void CGLRenderer::EF_DrawNormals()
 
 void CGLRenderer::EF_DrawTangents()
 {
-	gcpOGL->EF_SetObjectTransform(gcpOGL->m_RP.m_pCurObject, NULL, gcpOGL->m_RP.m_pCurObject->m_ObjFlags);
+	gcpOGL->EF_SetObjectTransform(gcpOGL->m_RP.m_pCurObject, nullptr, gcpOGL->m_RP.m_pCurObject->m_ObjFlags);
 	//tangent, binormal, normal
 	float len = CRenderer::CV_r_normalslength;
 	if (gcpOGL->m_bEditor)
@@ -6827,10 +6827,10 @@ void CGLRenderer::EF_DrawTangents()
 	if (gcpOGL->m_RP.m_pRE)
 		gcpOGL->m_RP.m_pRE->mfCheckUpdate(gcpOGL->m_RP.m_pShader->m_VertexFormatId, SHPF_TANGENTS);
 	int StrVrt, StrTang, StrBinorm, StrTNorm;
-	byte* verts = NULL;
-	byte* tangs = NULL;
-	byte* binorm = NULL;
-	byte* tnorm = NULL;
+	byte* verts = nullptr;
+	byte* tangs = nullptr;
+	byte* binorm = nullptr;
+	byte* tnorm = nullptr;
 	int flags = 0;
 	if (CRenderer::CV_r_showtangents == 1)
 		flags = FGP_SRC | FGP_REAL;
@@ -7262,9 +7262,9 @@ void CGLRenderer::EF_DrawREPreprocess(SRendItemPreprocess* ris, int Nums)
 	m_RP.m_pCurObject = m_RP.m_VisObjects[0];
 	m_RP.m_pPrevObject = m_RP.m_pCurObject;
 	nCurFog = 0;
-	CurShader = NULL;
-	CurShaderState = NULL;
-	CurRes = NULL;
+	CurShader = nullptr;
+	CurShaderState = nullptr;
+	CurRes = nullptr;
 
 	for (i = 0; i < Nums; i++)
 	{
@@ -7509,7 +7509,7 @@ void CGLRenderer::EF_FlushRefractedObjects(SShader* pSHRefr[], CRendElement* pRE
 		Vec3d Pos = GetCamera().GetPos();
 		m_RP.m_PersFlags |= RBPF_IGNOREREFRACTED;
 		if (nRefrObjects > 1)
-			pSHRefr[0] = NULL;
+			pSHRefr[0] = nullptr;
 		float fMinDist = 99999.0f;
 		int nSelectObj = -1;
 		for (int i = 0; i < nRefrObjects; i++)
@@ -7525,7 +7525,7 @@ void CGLRenderer::EF_FlushRefractedObjects(SShader* pSHRefr[], CRendElement* pRE
 		{
 			m_RP.m_pRE = pRERefr[nSelectObj];
 			m_RP.m_pCurObject = pObjRefr[nSelectObj];
-			SEnvTexture* cm = gRenDev->m_cEF.mfFindSuitableEnvTex(Pos, Angs, false, DLDFlags, true, pSHRefr[0], NULL, NULL, false, NULL);
+			SEnvTexture* cm = gRenDev->m_cEF.mfFindSuitableEnvTex(Pos, Angs, false, DLDFlags, true, pSHRefr[0], nullptr, nullptr, false, nullptr);
 		}
 		m_RP.m_PersFlags &= ~RBPF_IGNOREREFRACTED;
 	}
@@ -7708,7 +7708,7 @@ int CGLRenderer::EF_Preprocess(SRendItemPre* ri, int nums, int nume)
 						}
 						CCObject* savedObj = m_RP.m_pCurObject;
 						CCObject* objIgn = m_RP.m_pIgnoreObject;
-						CCObject* obj = NULL;
+						CCObject* obj = nullptr;
 						if (pr->m_nObject > 0)
 						{
 							obj = m_RP.m_VisObjects[pr->m_nObject];
@@ -7766,7 +7766,7 @@ int CGLRenderer::EF_Preprocess(SRendItemPre* ri, int nums, int nume)
 							m_RP.m_pIgnoreObject = obj;
 							m_RP.m_pCurObject = obj;
 							SEnvTexture* cm = gRenDev->m_cEF.mfFindSuitableEnvTex(Pos, Angs, false, pr->m_Shader->m_DLDFlags, false, pr->m_Shader, pr->m_pRes, obj, bReflect, pr->m_RE);
-							m_RP.m_pIgnoreObject = NULL;
+							m_RP.m_pIgnoreObject = nullptr;
 						}
 						else
 						{
@@ -7934,8 +7934,8 @@ int CGLRenderer::EF_Preprocess(SRendItemPre* ri, int nums, int nume)
 			// Render translucent mirror surface(s)
 			int nObj = -1;
 			m_RP.m_pPrevObject = m_RP.m_VisObjects[0];
-			SShader* sh = NULL;
-			SRenderShaderResources* Res = NULL;
+			SShader* sh = nullptr;
+			SRenderShaderResources* Res = nullptr;
 			for (int j = 0; j < wp->numSrf; j++)
 			{
 				SWarpSurf* ws = &wp->Surfs[j];
@@ -7954,7 +7954,7 @@ int CGLRenderer::EF_Preprocess(SRendItemPre* ri, int nums, int nume)
 					if (sh)
 						EF_Flush();
 
-					EF_Start(ws->Shader, NULL, ws->ShaderRes, 0, ws->srf);
+					EF_Start(ws->Shader, nullptr, ws->ShaderRes, 0, ws->srf);
 
 					sh = ws->Shader;
 					Res = ws->ShaderRes;
@@ -8011,9 +8011,9 @@ void CGLRenderer::EF_EndEf2D(bool bSort)
 
 	EF_PreRender(3);
 
-	CurShader = NULL;
-	CurRes = NULL;
-	CurShaderState = NULL;
+	CurShader = nullptr;
+	CurRes = nullptr;
+	CurShaderState = nullptr;
 	UnINT64 oldVal;
 	oldVal.SortVal = -1;
 	m_RP.m_Flags = RBF_2D;

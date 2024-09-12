@@ -476,7 +476,7 @@ public:
 
 	CCObject()
 	{
-		m_ShaderParams = NULL;
+		m_ShaderParams = nullptr;
 		m_bShaderParamCreatedInRenderer = false;
 		m_VPMatrixId = -1;
 		m_VPMatrixFrame = -1;
@@ -754,7 +754,7 @@ struct SLightMaterial
 	void mfApply(int Flags);
 	void Release();
 
-	static SLightMaterial* mfAdd(char* name, SLightMaterial* Compare = NULL);
+	static SLightMaterial* mfAdd(char* name, SLightMaterial* Compare = nullptr);
 	static SLightMaterial* mfGet(char* name);
 
 	static SLightMaterial* current_material;
@@ -1406,7 +1406,7 @@ struct SBaseShaderResources
 		m_ResFlags = 0;
 		m_Opacity = 1.0f;
 		m_AlphaRef = 0;
-		m_LMaterial = NULL;
+		m_LMaterial = nullptr;
 	}
 
 	~SBaseShaderResources()
@@ -1485,7 +1485,7 @@ struct SRenderShaderResources : SBaseShaderResources
 	{
 		for (int i = 0; i < EFTT_MAX; i++)
 		{
-			m_Textures[i] = NULL;
+			m_Textures[i] = nullptr;
 		}
 	}
 	SRenderShaderResources()
@@ -1916,7 +1916,7 @@ public:
 	virtual void SetFlags3(int Flags) = 0;
 	virtual bool Reload(int nFlags) = 0;
 	virtual TArray<CRendElement*>* GetREs() = 0;
-	virtual bool AddTemplate(SRenderShaderResources* Res, int& TemplId, const char* Name = NULL, bool bSetPreferred = false, uint64 nMaskGen = 0) = 0;
+	virtual bool AddTemplate(SRenderShaderResources* Res, int& TemplId, const char* Name = nullptr, bool bSetPreferred = false, uint64 nMaskGen = 0) = 0;
 	virtual void RemoveTemplate(int TemplId) = 0;
 	virtual IShader* GetTemplate(int num) = 0;
 	virtual SEfTemplates* GetTemplates() = 0;

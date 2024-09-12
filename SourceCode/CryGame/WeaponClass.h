@@ -187,7 +187,7 @@ public:
 	void ScriptOnUpdate(float fDeltaTime, IEntity *pShooter);
 	bool ScriptOnFire(IScriptObject *params);
 	void ScriptOnHit(IScriptObject *params);
-	void ScriptOnEvent(int eventID, IScriptObject *params, bool *pRet=NULL);
+	void ScriptOnEvent(int eventID, IScriptObject *params, bool *pRet=nullptr);
 
 	// positioning
 	void SetFirstPersonWeaponPos(const Vec3 &pos, const Vec3 &angles);

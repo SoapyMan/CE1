@@ -97,7 +97,7 @@ void CFormation::Update(CAIObject* pOwner)
 // returns an available formation point, if that exists right now by proximity
 CAIObject* CFormation::GetFormationPoint(CAIObject* pRequester)
 {
-	CAIObject* pPoint = NULL;
+	CAIObject* pPoint = nullptr;
 	float mindist = 2000;
 	int size = m_vPoints.size();
 	int index = -1;

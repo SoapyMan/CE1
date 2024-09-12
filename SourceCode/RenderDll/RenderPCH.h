@@ -722,13 +722,13 @@ _inline char* Cry_strdup(const char* str)
 	char* memory;
 
 	if (!str)
-		return(NULL);
+		return(nullptr);
 
 	memory = (char*)malloc(strlen(str) + 1);
 	if (memory)
 		return(strcpy(memory, str));
 
-	return(NULL);
+	return(nullptr);
 }
 
 _inline void HeapCheck()

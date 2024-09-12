@@ -93,7 +93,7 @@ void CD3D9Renderer::DestroyWindow(void)
 	if (m_hWnd)
 	{
 		SDL_DestroyWindow(m_hWnd);
-		m_hWnd = NULL;
+		m_hWnd = nullptr;
 	}
 }
 
@@ -216,7 +216,7 @@ HRESULT CD3D9Renderer::InvalidateDeviceObjects()
 		{
 			SAFE_RELEASE(m_pVB3DAr[j][i]);
 		}
-		m_pVB3D[j] = NULL;
+		m_pVB3D[j] = nullptr;
 	}
 	SAFE_RELEASE(m_pSphere);
 
@@ -266,9 +266,9 @@ HRESULT CD3D9Renderer::InvalidateDeviceObjects()
 			STexPicD3D* tp = (STexPicD3D*)gRenDev->m_TexMan->m_Textures[i];
 			if (!tp || !tp->m_RefTex.m_VidTex || tp->m_Bind == TX_FIRSTBIND)
 				continue;
-			IDirect3DTexture9* pID3DTexture = NULL;
-			IDirect3DCubeTexture9* pID3DCubeTexture = NULL;
-			LPDIRECT3DSURFACE9 pSurf = NULL;
+			IDirect3DTexture9* pID3DTexture = nullptr;
+			IDirect3DCubeTexture9* pID3DCubeTexture = nullptr;
+			LPDIRECT3DSURFACE9 pSurf = nullptr;
 			D3DSURFACE_DESC Desc;
 			if (tp->m_eTT == eTT_Cubemap || tp->m_eTT == eTT_AutoCubemap)
 			{
@@ -290,7 +290,7 @@ HRESULT CD3D9Renderer::InvalidateDeviceObjects()
 			tp->m_Flags2 |= FT2_NEEDRESTORED;
 			SAFE_RELEASE(pID3DTexture);
 			SAFE_RELEASE(pID3DCubeTexture);
-			tp->m_RefTex.m_VidTex = NULL;
+			tp->m_RefTex.m_VidTex = nullptr;
 		}
 		for (i = 0; i < MAX_ENVLIGHTCUBEMAPS; i++)
 		{
@@ -300,7 +300,7 @@ HRESULT CD3D9Renderer::InvalidateDeviceObjects()
 				if (cur->m_RenderTargets[j])
 				{
 					IDirect3DSurface9* pSurface = (IDirect3DSurface9*)cur->m_RenderTargets[j];
-					cur->m_RenderTargets[j] = NULL;
+					cur->m_RenderTargets[j] = nullptr;
 					pSurface->Release();
 				}
 			}
@@ -310,8 +310,8 @@ HRESULT CD3D9Renderer::InvalidateDeviceObjects()
 	SAFE_RELEASE(m_pTempZBuffer);
 	SAFE_RELEASE(m_pZBuffer);
 	SAFE_RELEASE(m_pBackBuffer);
-	m_pCurBackBuffer = NULL;
-	m_pCurZBuffer = NULL;
+	m_pCurBackBuffer = nullptr;
+	m_pCurZBuffer = nullptr;
 
 	return S_OK;
 }
@@ -353,7 +353,7 @@ HRESULT CD3D9Renderer::RestoreDeviceObjects()
 	//	m_pd3dDevice->GetDepthStencilSurface( &m_pZBuffer );
 
  // m_pZBuffer->GetDesc( &m_d3dsdZBuffer );
- // m_pd3dDevice->CreateDepthStencilSurface(m_d3dsdZBuffer.Width, m_d3dsdZBuffer.Height, m_d3dsdZBuffer.Format, D3DMULTISAMPLE_NONE, 0, FALSE, &m_pTempZBuffer, NULL);
+ // m_pd3dDevice->CreateDepthStencilSurface(m_d3dsdZBuffer.Width, m_d3dsdZBuffer.Height, m_d3dsdZBuffer.Format, D3DMULTISAMPLE_NONE, 0, FALSE, &m_pTempZBuffer, nullptr);
  // m_pd3dDevice->GetBackBuffer(0, 0, D3DBACKBUFFER_TYPE_MONO, &m_pBackBuffer );
  // m_pBackBuffer->GetDesc(&m_d3dsdBackBuffer);
  // m_pCurBackBuffer = m_pBackBuffer;
@@ -385,7 +385,7 @@ HRESULT CD3D9Renderer::RestoreDeviceObjects()
 	{
 		m_pd3dDevice->GetDepthStencilSurface(&m_pZBuffer);
 		m_pZBuffer->GetDesc(&m_d3dsdZBuffer);
-		m_pd3dDevice->CreateDepthStencilSurface(m_d3dsdZBuffer.Width, m_d3dsdZBuffer.Height, m_d3dsdZBuffer.Format, D3DMULTISAMPLE_NONE, 0, FALSE, &m_pTempZBuffer, NULL);
+		m_pd3dDevice->CreateDepthStencilSurface(m_d3dsdZBuffer.Width, m_d3dsdZBuffer.Height, m_d3dsdZBuffer.Format, D3DMULTISAMPLE_NONE, 0, FALSE, &m_pTempZBuffer, nullptr);
 	}
 
 	m_pd3dDevice->GetBackBuffer(0, 0, D3DBACKBUFFER_TYPE_MONO, &m_pBackBuffer);
@@ -405,7 +405,7 @@ HRESULT CD3D9Renderer::RestoreDeviceObjects()
 		{
 			SAFE_RELEASE(m_pVB3DAr[j][i]);
 		}
-		m_pVB3D[j] = NULL;
+		m_pVB3D[j] = nullptr;
 	}
 	SAFE_RELEASE(m_pSphere);
 
@@ -413,10 +413,10 @@ HRESULT CD3D9Renderer::RestoreDeviceObjects()
 	m_nIndsDMesh = CV_d3d9_rb_tris * 3;
 	m_nIOffsDMesh = m_nIndsDMesh;
 	m_nOffsDMesh2D = m_nVertsDMesh2D;
-	hr = m_pd3dDevice->CreateVertexBuffer(m_nVertsDMesh2D * sizeof(struct_VERTEX_FORMAT_TRP3F_COL4UB_TEX2F), D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC, D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_TEX1, D3DPOOL_DEFAULT, &m_pVB2D, NULL);
+	hr = m_pd3dDevice->CreateVertexBuffer(m_nVertsDMesh2D * sizeof(struct_VERTEX_FORMAT_TRP3F_COL4UB_TEX2F), D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC, D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_TEX1, D3DPOOL_DEFAULT, &m_pVB2D, nullptr);
 	if (FAILED(hr))
 		return hr;
-	hr = m_pd3dDevice->CreateIndexBuffer(m_nIndsDMesh * sizeof(short), D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC, D3DFMT_INDEX16, D3DPOOL_DEFAULT, &m_pIB, NULL);
+	hr = m_pd3dDevice->CreateIndexBuffer(m_nIndsDMesh * sizeof(short), D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC, D3DFMT_INDEX16, D3DPOOL_DEFAULT, &m_pIB, nullptr);
 	if (FAILED(hr))
 		return hr;
 
@@ -453,13 +453,13 @@ HRESULT CD3D9Renderer::RestoreDeviceObjects()
 		m_nOffsDMesh3D[j] = m_nVertsDMesh3D[j];
 		for (i = 0; i < 4; i++)
 		{
-			hr = m_pd3dDevice->CreateVertexBuffer(m_nVertsDMesh3D[j] * nVertSize, D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC, fvf, D3DPOOL_DEFAULT, &m_pVB3DAr[j][i], NULL);
+			hr = m_pd3dDevice->CreateVertexBuffer(m_nVertsDMesh3D[j] * nVertSize, D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC, fvf, D3DPOOL_DEFAULT, &m_pVB3DAr[j][i], nullptr);
 			if (FAILED(hr))
 				return hr;
 		}
 		m_pVB3D[j] = m_pVB3DAr[j][0];
 	}
-	hr = D3DXCreateSphere(m_pd3dDevice, 1, 16, 16, &m_pSphere, NULL);
+	hr = D3DXCreateSphere(m_pd3dDevice, 1, 16, 16, &m_pSphere, nullptr);
 	if (FAILED(hr))
 		return hr;
 
@@ -483,8 +483,8 @@ HRESULT CD3D9Renderer::RestoreDeviceObjects()
 		STexPicD3D* tp = (STexPicD3D*)gRenDev->m_TexMan->m_Textures[i];
 		if (!tp || tp->m_Bind == TX_FIRSTBIND)
 			continue;
-		IDirect3DTexture9* pID3DTexture = NULL;
-		IDirect3DCubeTexture9* pID3DCubeTexture = NULL;
+		IDirect3DTexture9* pID3DTexture = nullptr;
+		IDirect3DCubeTexture9* pID3DCubeTexture = nullptr;
 		if (!(tp->m_Flags2 & FT2_NEEDRESTORED))
 			continue;
 
@@ -500,31 +500,31 @@ HRESULT CD3D9Renderer::RestoreDeviceObjects()
 			D3DUsage |= D3DUSAGE_DYNAMIC;
 		if (tp->m_eTT == eTT_Cubemap)
 		{
-			hr = m_pd3dDevice->CreateCubeTexture(tp->m_Width, 1, D3DUsage, (D3DFORMAT)tp->m_DstFormat, D3DPOOL_DEFAULT, &pID3DCubeTexture, NULL);
+			hr = m_pd3dDevice->CreateCubeTexture(tp->m_Width, 1, D3DUsage, (D3DFORMAT)tp->m_DstFormat, D3DPOOL_DEFAULT, &pID3DCubeTexture, nullptr);
 			tp->m_RefTex.m_VidTex = pID3DCubeTexture;
 
 			for (int i = 0; i < 6; i++)
 			{
 				HRESULT hr = S_OK;
-				PDIRECT3DSURFACE9 pSurface = NULL;
+				PDIRECT3DSURFACE9 pSurface = nullptr;
 				hr = pID3DCubeTexture->GetCubeMapSurface((D3DCUBEMAP_FACES)i, 0, &pSurface);
 				if (SUCCEEDED(hr))
-					m_pd3dDevice->ColorFill(pSurface, NULL, D3DCOLOR_ARGB(0, 0, 0, 0));
+					m_pd3dDevice->ColorFill(pSurface, nullptr, D3DCOLOR_ARGB(0, 0, 0, 0));
 				SAFE_RELEASE(pSurface);
 			}
 		}
 		else
 		{
-			hr = m_pd3dDevice->CreateTexture(tp->m_Width, tp->m_Height, 1, D3DUsage, (D3DFORMAT)tp->m_DstFormat, D3DPOOL_DEFAULT, &pID3DTexture, NULL);
+			hr = m_pd3dDevice->CreateTexture(tp->m_Width, tp->m_Height, 1, D3DUsage, (D3DFORMAT)tp->m_DstFormat, D3DPOOL_DEFAULT, &pID3DTexture, nullptr);
 			tp->m_RefTex.m_VidTex = pID3DTexture;
 
 			if (D3DUsage & D3DUSAGE_RENDERTARGET)
 			{
 				HRESULT hr = S_OK;
-				PDIRECT3DSURFACE9 pSurface = NULL;
+				PDIRECT3DSURFACE9 pSurface = nullptr;
 				hr = pID3DTexture->GetSurfaceLevel(0, &pSurface);
 				if (SUCCEEDED(hr))
-					m_pd3dDevice->ColorFill(pSurface, NULL, D3DCOLOR_ARGB(0, 0, 0, 0));
+					m_pd3dDevice->ColorFill(pSurface, nullptr, D3DCOLOR_ARGB(0, 0, 0, 0));
 				SAFE_RELEASE(pSurface);
 			}
 		}
@@ -554,7 +554,7 @@ HRESULT CD3D9Renderer::RestoreDeviceObjects()
 		D3DFORMAT instanceSupport = (D3DFORMAT)MAKEFOURCC('I', 'N', 'S', 'T');
 		m_pd3dDevice->SetRenderState(D3DRS_POINTSIZE, instanceSupport);
 	}
-	m_pLastVDeclaration = NULL;
+	m_pLastVDeclaration = nullptr;
 
 	return S_OK;
 }
@@ -610,8 +610,8 @@ void CD3D9Renderer::ShutDown(bool bReInit)
 	if (m_CGContext)
 	{
 		cgDestroyContext(m_CGContext);
-		cgD3D9SetDevice(NULL);
-		m_CGContext = NULL;
+		cgD3D9SetDevice(nullptr);
+		m_CGContext = nullptr;
 	}
 #endif
 	FinalCleanup();
@@ -620,7 +620,7 @@ void CD3D9Renderer::ShutDown(bool bReInit)
 	if (m_hLibHandle3DC)
 	{
 		::FreeLibrary((HINSTANCE)m_hLibHandle3DC);
-		m_hLibHandle3DC = NULL;
+		m_hLibHandle3DC = nullptr;
 	}
 
 	//////////////////////////////////////////////////////////////////////////
@@ -628,11 +628,11 @@ void CD3D9Renderer::ShutDown(bool bReInit)
 	//////////////////////////////////////////////////////////////////////////
 	if (!bReInit)
 	{
-		iLog = NULL;
-		iConsole = NULL;
-		iTimer = NULL;
-		iSystem = NULL;
-		pIPhysicalWorld = NULL;
+		iLog = nullptr;
+		iConsole = nullptr;
+		iTimer = nullptr;
+		iSystem = nullptr;
+		pIPhysicalWorld = nullptr;
 	}
 
 	STexPic::m_Root.m_Next = &STexPic::m_Root;
@@ -694,10 +694,10 @@ bool CD3D9Renderer::SetWindow(int width, int height, bool fullscreen, WIN_HWND h
 	//                          y,
 	//                          wdt,
 	//                          hgt,
-	//                          NULL,
-	//                          NULL,
+	//                          nullptr,
+	//                          nullptr,
 	//                          m_hInst,
-	//                          NULL);
+	//                          nullptr);
 	//  }
 	//  else
 	//    m_hWnd = (HWND)hWnd;
@@ -710,7 +710,7 @@ bool CD3D9Renderer::SetWindow(int width, int height, bool fullscreen, WIN_HWND h
 	//    if (fullscreen)
 	//    {
 	//      // Hide the cursor
-	//      SetCursor(NULL);
+	//      SetCursor(nullptr);
 	//      ShowCursor(FALSE);
 	//    }
 	//
@@ -1098,9 +1098,9 @@ bool CD3D9Renderer::FindBestWindowedMode(bool bRequireHAL, bool bRequireREF)
 	D3DDISPLAYMODE primaryDesktopDisplayMode;
 	m_pD3D->GetAdapterDisplayMode(0, &primaryDesktopDisplayMode);
 
-	D3DAdapterInfo* pBestAdapterInfo = NULL;
-	D3DDeviceInfo* pBestDeviceInfo = NULL;
-	D3DDeviceCombo* pBestDeviceCombo = NULL;
+	D3DAdapterInfo* pBestAdapterInfo = nullptr;
+	D3DDeviceInfo* pBestDeviceInfo = nullptr;
+	D3DDeviceCombo* pBestDeviceCombo = nullptr;
 
 	for (int iai = 0; iai < m_D3DEnum.m_pAdapterInfoList->Num(); iai++)
 	{
@@ -1123,7 +1123,7 @@ bool CD3D9Renderer::FindBestWindowedMode(bool bRequireHAL, bool bRequireREF)
 				// If we haven't found a compatible DeviceCombo yet, or if this set
 				// is better (because it's a HAL, and/or because formats match better),
 				// save it
-				if (pBestDeviceCombo == NULL || pBestDeviceCombo->DevType != D3DDEVTYPE_HAL && pDeviceCombo->DevType == D3DDEVTYPE_HAL || pDeviceCombo->DevType == D3DDEVTYPE_HAL && bAdapterMatchesBB)
+				if (pBestDeviceCombo == nullptr || pBestDeviceCombo->DevType != D3DDEVTYPE_HAL && pDeviceCombo->DevType == D3DDEVTYPE_HAL || pDeviceCombo->DevType == D3DDEVTYPE_HAL && bAdapterMatchesBB)
 				{
 					pBestAdapterInfo = pAdapterInfo;
 					pBestDeviceInfo = pDeviceInfo;
@@ -1139,7 +1139,7 @@ bool CD3D9Renderer::FindBestWindowedMode(bool bRequireHAL, bool bRequireREF)
 		}
 	}
 EndWindowedDeviceComboSearch:
-	if (pBestDeviceCombo == NULL)
+	if (pBestDeviceCombo == nullptr)
 		return false;
 
 	m_D3DSettings.pWindowed_AdapterInfo = pBestAdapterInfo;
@@ -1180,9 +1180,9 @@ bool CD3D9Renderer::FindBestFullscreenMode(bool bRequireHAL, bool bRequireREF)
 	bestAdapterDesktopDisplayMode.Format = D3DFMT_UNKNOWN;
 	bestAdapterDesktopDisplayMode.RefreshRate = 0;
 
-	D3DAdapterInfo* pBestAdapterInfo = NULL;
-	D3DDeviceInfo* pBestDeviceInfo = NULL;
-	D3DDeviceCombo* pBestDeviceCombo = NULL;
+	D3DAdapterInfo* pBestAdapterInfo = nullptr;
+	D3DDeviceInfo* pBestDeviceInfo = nullptr;
+	D3DDeviceCombo* pBestDeviceCombo = nullptr;
 
 	for (int iai = 0; iai < m_D3DEnum.m_pAdapterInfoList->Num(); iai++)
 	{
@@ -1205,7 +1205,7 @@ bool CD3D9Renderer::FindBestFullscreenMode(bool bRequireHAL, bool bRequireREF)
 				// If we haven't found a compatible set yet, or if this set
 				// is better (because it's a HAL, and/or because formats match better),
 				// save it
-				if (pBestDeviceCombo == NULL ||
+				if (pBestDeviceCombo == nullptr ||
 					(pBestDeviceCombo->DevType != D3DDEVTYPE_HAL && pDeviceInfo->DevType == D3DDEVTYPE_HAL) ||
 					(pDeviceCombo->DevType == D3DDEVTYPE_HAL && pBestDeviceCombo->AdapterFormat != adapterDesktopDisplayMode.Format && bAdapterMatchesDesktop) ||
 					pDeviceCombo->DevType == D3DDEVTYPE_HAL && bAdapterMatchesDesktop && bAdapterMatchesBB)
@@ -1225,7 +1225,7 @@ bool CD3D9Renderer::FindBestFullscreenMode(bool bRequireHAL, bool bRequireREF)
 		}
 	}
 EndFullscreenDeviceComboSearch:
-	if (pBestDeviceCombo == NULL)
+	if (pBestDeviceCombo == nullptr)
 		return false;
 
 	// Need to find a display mode on the best adapter that uses pBestDeviceCombo->AdapterFormat
@@ -1413,7 +1413,7 @@ HRESULT CD3D9Renderer::Initialize3DEnvironment()
 	if (pDeviceInfo->Caps.PrimitiveMiscCaps & D3DPMISCCAPS_NULLREFERENCE)
 	{
 		// Warn user about null ref device that can't render anything
-		iLog->Log("ERROR: Chosed NULL Ref Device that can't render anything");
+		iLog->Log("ERROR: Chosed nullptr Ref Device that can't render anything");
 		return E_FAIL;
 	}
 
@@ -1446,9 +1446,9 @@ HRESULT CD3D9Renderer::Initialize3DEnvironment()
 		// If we cannot use Queries Back Buffer should be lockable
 		if (!(m_d3dpp.Flags & D3DPRESENTFLAG_LOCKABLE_BACKBUFFER))
 		{
-			hr = m_pd3dDevice->CreateQuery(D3DQUERYTYPE_EVENT, NULL);
+			hr = m_pd3dDevice->CreateQuery(D3DQUERYTYPE_EVENT, nullptr);
 			if (hr != D3DERR_NOTAVAILABLE)
-				hr = m_pd3dDevice->CreateQuery(D3DQUERYTYPE_OCCLUSION, NULL);
+				hr = m_pd3dDevice->CreateQuery(D3DQUERYTYPE_OCCLUSION, nullptr);
 			if (hr == D3DERR_NOTAVAILABLE)
 			{
 				SAFE_RELEASE(m_pd3dDevice);
@@ -1830,7 +1830,7 @@ void CD3D9Renderer::BuildPresentParamsFromSettings()
 //-----------------------------------------------------------------------------
 void CD3D9Renderer::Cleanup3DEnvironment()
 {
-	if (m_pd3dDevice != NULL)
+	if (m_pd3dDevice != nullptr)
 	{
 		if (m_bDeviceObjectsRestored)
 		{
@@ -1849,7 +1849,7 @@ void CD3D9Renderer::Cleanup3DEnvironment()
 			iLog->Log("ERROR: CD3D9Renderer::Cleanup3DEnvironment: Non zero reference counter after release of D3D Device");
 			while (m_pd3dDevice->Release()) {}
 		}
-		m_pd3dDevice = NULL;
+		m_pd3dDevice = nullptr;
 	}
 }
 
@@ -1991,7 +1991,7 @@ bool CD3D9Renderer::ChooseDevice(void)
 	}
 	// The focus window can be a specified to be a different window than the
 	// device window.  If not, use the device window as the focus window.
-	if (m_CurrContext == NULL)
+	if (m_CurrContext == nullptr)
 		CreateContext(m_hWnd);
 	return true;
 }
@@ -2004,7 +2004,7 @@ bool CD3D9Renderer::SetRes(void)
 
 	// Create the Direct3D object
 	m_pD3D = Direct3DCreate9(D3D_SDK_VERSION);
-	if (m_pD3D == NULL)
+	if (m_pD3D == nullptr)
 		return Error("DirectX9 not installed", 0);
 
 	m_D3DEnum.SetD3D(m_pD3D);
@@ -2484,7 +2484,7 @@ HRESULT CD3D9Renderer::InitDeviceObjects()
 
 		// Find the needed texture formats.
 		{
-			mFirstPixelFormat = NULL;
+			mFirstPixelFormat = nullptr;
 			if (m_TextureBits >= 24)
 			{
 				if (SUCCEEDED(m_pD3D->CheckDeviceFormat(pAI->AdapterOrdinal, m_d3dCaps.DeviceType, m_D3DSettings.AdapterFormat(), 0, D3DRTYPE_TEXTURE, D3DFMT_A8R8G8B8)))
@@ -2728,7 +2728,7 @@ HRESULT CD3D9Renderer::InitDeviceObjects()
 		m_pd3dDevice->SetRenderState(D3DRS_CLIPPLANEENABLE, FALSE);
 		m_pd3dDevice->SetRenderState(D3DRS_INDEXEDVERTEXBLENDENABLE, FALSE);
 		//m_pd3dDevice->SetBackBufferScale(1.0f, 1.0f);
-		m_pd3dDevice->SetPixelShader(NULL);
+		m_pd3dDevice->SetPixelShader(nullptr);
 		m_pd3dDevice->SetRenderState(D3DRS_POINTSPRITEENABLE, FALSE);
 		m_pd3dDevice->SetRenderState(D3DRS_POINTSCALEENABLE, FALSE);
 		m_pd3dDevice->SetRenderState(D3DRS_VERTEXBLEND, FALSE);
@@ -2807,7 +2807,7 @@ HRESULT CD3D9Renderer::InitDeviceObjects()
 	}
 
 	// Check to see if device supports visibility query
-	if (!CV_d3d9_occlusion_query || D3DERR_NOTAVAILABLE == m_pd3dDevice->CreateQuery(D3DQUERYTYPE_OCCLUSION, NULL))
+	if (!CV_d3d9_occlusion_query || D3DERR_NOTAVAILABLE == m_pd3dDevice->CreateQuery(D3DQUERYTYPE_OCCLUSION, nullptr))
 		m_Features &= ~RFT_OCCLUSIONTEST;
 	else
 		m_Features |= RFT_OCCLUSIONTEST;

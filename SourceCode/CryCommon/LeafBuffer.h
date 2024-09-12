@@ -37,7 +37,7 @@ struct CLeafBuffer
 			return;
 		m_Next->m_Prev = m_Prev;
 		m_Prev->m_Next = m_Next;
-		m_Next = m_Prev = NULL;
+		m_Next = m_Prev = nullptr;
 	}
 	_inline void Link(CLeafBuffer* Before)
 	{
@@ -59,7 +59,7 @@ struct CLeafBuffer
 			return;
 		m_NextGlobal->m_PrevGlobal = m_PrevGlobal;
 		m_PrevGlobal->m_NextGlobal = m_NextGlobal;
-		m_NextGlobal = m_PrevGlobal = NULL;
+		m_NextGlobal = m_PrevGlobal = nullptr;
 	}
 	_inline void LinkGlobal(CLeafBuffer* Before)
 	{
@@ -227,7 +227,7 @@ struct CLeafBuffer
 		{
 			return &pData[Id * Stride + pOffs->OffsSecColor];
 		}
-		return NULL;
+		return nullptr;
 	}
 
 	_inline byte* GetUVPtr(int& Stride, int Id = 0, bool bSys = true)
@@ -318,7 +318,7 @@ struct CLeafBuffer
 	virtual void Unload();
 	virtual void UpdateCustomLighting(float fBackSideLevel, Vec3 vStatObjAmbientColor, const Vec3& vLight, bool bCalcLighting);
 
-	virtual void AddRenderElements(CCObject* pObj = 0, int DLightMask = 0, int nTemplate = -1, int nFogVolumeID = 0, int nSortId = 0, IMatInfo* pIMatInfo = NULL);
+	virtual void AddRenderElements(CCObject* pObj = 0, int DLightMask = 0, int nTemplate = -1, int nFogVolumeID = 0, int nSortId = 0, IMatInfo* pIMatInfo = nullptr);
 
 	virtual unsigned short* GetIndices(int* pIndicesCount);
 	virtual void DestroyIndices();

@@ -93,7 +93,7 @@ bool CSystem::OpenRenderLibrary(const char* t_rend)
 
 	int nRenderer = R_DX9_RENDERER;
 #if defined(LINUX)
-	if (stricmp(t_rend, "NULL") != 0)
+	if (stricmp(t_rend, "nullptr") != 0)
 	{
 		return OpenRenderLibrary(R_NULL_RENDERER);
 	}
@@ -126,7 +126,7 @@ bool CSystem::OpenRenderLibrary(const char* t_rend)
 			GetILog()->LogToFile("System: Using OpenGL renderer...");
 			break;
 		case R_NULL_RENDERER:
-			GetILog()->LogToFile("System: Using NULL renderer...");
+			GetILog()->LogToFile("System: Using nullptr renderer...");
 			break;
 		default:
 			GetILog()->LogToFile("System: Error: Unknown renderer type");
@@ -141,7 +141,7 @@ bool CSystem::OpenRenderLibrary(const char* t_rend)
 		return OpenRenderLibrary(R_DX8_RENDERER);
 	else if (stricmp(t_rend, "Direct3D9") == 0)
 		return OpenRenderLibrary(R_DX9_RENDERER);
-	else if (stricmp(t_rend, "NULL") == 0)
+	else if (stricmp(t_rend, "nullptr") == 0)
 		return OpenRenderLibrary(R_NULL_RENDERER);
 
 	Error("Unknown renderer type: %s", t_rend);
@@ -202,7 +202,7 @@ bool CSystem::OpenRenderLibrary(int type)
 		return false;
 	}
 
-	m_pRenderer = Proc(0, NULL, &sp);
+	m_pRenderer = Proc(0, nullptr, &sp);
 	if (!m_pRenderer)
 	{
 		Error("Error: Couldn't construct render driver '%s'", libname);
@@ -211,7 +211,7 @@ bool CSystem::OpenRenderLibrary(int type)
 	}
 	m_pRenderer->SetType(type);
 #else
-	m_pRenderer = (IRenderer*)PackageRenderConstructor(0, NULL, &sp);
+	m_pRenderer = (IRenderer*)PackageRenderConstructor(0, nullptr, &sp);
 	m_pRenderer->SetType(type);
 #endif
 
@@ -297,14 +297,14 @@ bool CSystem::InitNetwork()
 
 	pfnCreateNetwork = (PFNCREATENETWORK)CryGetProcAddress(m_dll.hNetwork, "CreateNetwork");
 	m_pNetwork = pfnCreateNetwork(this);
-	if (m_pNetwork == NULL)
+	if (m_pNetwork == nullptr)
 	{
 		Error("Error creating Network System (CreateNetwork) !");
 		return false;
 	}
 #else
 	m_pNetwork = CreateNetwork();
-	if (m_pNetwork == NULL)
+	if (m_pNetwork == nullptr)
 	{
 		Error("Error creating Network System (CreateNetwork) !");
 		return false;
@@ -451,7 +451,7 @@ bool CSystem::InitRenderer(WIN_HINSTANCE hinst, WIN_HWND hwnd, const char* szCmd
 	if (m_bDedicatedServer)
 	{
 		m_sSavedRDriver = m_rDriver->GetString();
-		m_rDriver->Set("NULL");
+		m_rDriver->Set("nullptr");
 	}
 
 	if (!OpenRenderLibrary(m_rDriver->GetString()))
@@ -474,14 +474,14 @@ bool CSystem::InitRenderer(WIN_HINSTANCE hinst, WIN_HWND hwnd, const char* szCmd
 		// for mp debugging
 		if (!m_bInDevMode)
 		{
-			hwndPrev = FindWindow(szWndClass, NULL);
+			hwndPrev = FindWindow(szWndClass, nullptr);
 			// not in devmode and we found another window - see if the
 			// system is relaunching, in this case is fine 'cos the application
 			// will be closed immediately after
 			if (hwndPrev && (hwndPrev != m_hWnd) && !m_bRelaunched)
 			{
 				SetForegroundWindow(hwndPrev);
-				//MessageBox( NULL,"You cannot start multiple instances of FarCry !\n If you are starting it from a desktop icon, do not double click on it more than once.\n The program will now quit.\n" ,"ERROR: STARTING MULTIPLE INSTANCES OF FARCRY ",MB_OK|MB_ICONERROR );
+				//MessageBox( nullptr,"You cannot start multiple instances of FarCry !\n If you are starting it from a desktop icon, do not double click on it more than once.\n The program will now quit.\n" ,"ERROR: STARTING MULTIPLE INSTANCES OF FARCRY ",MB_OK|MB_ICONERROR );
 				Quit();
 			}
 		}
@@ -787,34 +787,34 @@ bool CSystem::InitScriptSystem()
 #else
 	m_dll.hScript = LoadDLL("CryScriptSystem.dll");
 #endif
-	if (m_dll.hScript == NULL)
+	if (m_dll.hScript == nullptr)
 		return (false);
 
 	CREATESCRIPTSYSTEM_FNCPTR fncCreateScriptSystem;
 	fncCreateScriptSystem = (CREATESCRIPTSYSTEM_FNCPTR)CryGetProcAddress(m_dll.hScript, "CreateScriptSystem");
-	if (fncCreateScriptSystem == NULL)
+	if (fncCreateScriptSystem == nullptr)
 	{
 		Error("Error initializeing ScriptSystem");
 		return (false);
 	}
 
 	m_pScriptSink = new CScriptSink(this, m_pConsole);
-	m_pScriptSystem = fncCreateScriptSystem(this, m_pScriptSink, NULL, true);
-	if (m_pScriptSystem == NULL)
+	m_pScriptSystem = fncCreateScriptSystem(this, m_pScriptSink, nullptr, true);
+	if (m_pScriptSystem == nullptr)
 	{
 		Error("Error initializeing ScriptSystem");
 		delete m_pScriptSink;
-		m_pScriptSink = NULL;
+		m_pScriptSink = nullptr;
 		return (false);
 	}
 #else
 	m_pScriptSink = new CScriptSink(this, m_pConsole);
-	m_pScriptSystem = CreateScriptSystem(m_pScriptSink, NULL, true);
-	if (m_pScriptSystem == NULL)
+	m_pScriptSystem = CreateScriptSystem(m_pScriptSink, nullptr, true);
+	if (m_pScriptSystem == nullptr)
 	{
 		Error("Error initializeing ScriptSystem");
 		delete m_pScriptSink;
-		m_pScriptSink = NULL;
+		m_pScriptSink = nullptr;
 		return (false);
 	}
 #endif
@@ -984,7 +984,7 @@ bool CSystem::InitAnimationSystem()
 	else
 		GetILog()->LogPlus(" FAILED");
 
-	return m_pICryCharManager != NULL;
+	return m_pICryCharManager != nullptr;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1513,10 +1513,10 @@ void CSystem::InitScriptDebugger()
 		m_pLuaDebugger = new CLUADbg;
 		m_pScriptSystem->EnableDebugger(m_pScriptSink);
 
-		_Tiny_InitApp((HINSTANCE)::GetModuleHandle(NULL), (HINSTANCE)gDLLHandle, NULL, NULL, IDI_SMALL);
+		_Tiny_InitApp((HINSTANCE)::GetModuleHandle(nullptr), (HINSTANCE)gDLLHandle, nullptr, nullptr, IDI_SMALL);
 
-		_TinyVerify(m_pLuaDebugger->Create(NULL, _T("Lua Debugger"), WS_OVERLAPPEDWINDOW, 0, NULL,
-			NULL, (ULONG_PTR)LoadMenu(_Tiny_GetResourceInstance(), MAKEINTRESOURCE(IDC_LUADBG))));
+		_TinyVerify(m_pLuaDebugger->Create(nullptr, _T("Lua Debugger"), WS_OVERLAPPEDWINDOW, 0, nullptr,
+			nullptr, (ULONG_PTR)LoadMenu(_Tiny_GetResourceInstance(), MAKEINTRESOURCE(IDC_LUADBG))));
 
 		m_pLuaDebugger->SetSystem((ISystem*)this);
 	}

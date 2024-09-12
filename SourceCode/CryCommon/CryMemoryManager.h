@@ -118,7 +118,7 @@ struct _CryMemoryManagerPoolHelper
 	FNC_CryFree _CryFree;
 	FNC_CryFreeSize _CryFreeSize;
 
-	explicit _CryMemoryManagerPoolHelper(void* pHandle = NULL)
+	explicit _CryMemoryManagerPoolHelper(void* pHandle = nullptr)
 	{
 		allocatedMemory = 0;
 		freedMemory = 0;
@@ -190,7 +190,7 @@ struct _CryMemoryManagerPoolHelper
 #else
 		if (!hSystem || !_CryMalloc || !_CryRealloc || !_CryReallocSize || !_CryFree || !_CryFreeSize)
 		{
-			MessageBox(NULL, "Could not access CrySystem.dll (check working directory)", "Memory Manager", MB_OK);
+			MessageBox(nullptr, "Could not access CrySystem.dll (check working directory)", "Memory Manager", MB_OK);
 			if (hSystem)
 				::FreeLibrary(hSystem);
 			exit(1);
@@ -224,7 +224,7 @@ struct _CryMemoryManagerPoolHelper
 	//////////////////////////////////////////////////////////////////////////
 	__forceinline void* Realloc(void* memblock, size_t size)
 	{
-		if (memblock == NULL)
+		if (memblock == nullptr)
 		{
 			allocatedMemory += size;
 			numAllocations++;

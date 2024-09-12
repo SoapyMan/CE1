@@ -10,8 +10,8 @@ struct SFileAccess
 {
 	SFileAccess()
 	{
-		pPak = NULL;
-		pFile = NULL;
+		pPak = nullptr;
+		pFile = nullptr;
 	}
 	SFileAccess(ICryPak* _pPak, FILE* _pFile)
 	{

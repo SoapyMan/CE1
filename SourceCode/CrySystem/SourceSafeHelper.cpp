@@ -69,7 +69,7 @@ bool _GetSSFileInfo(const char* inszSourceSafePath, const char* inszSSProject, c
 		IVSSVersionsPtr pVersions = pIRootItem->GetVersions(0);
 		IEnumVARIANTPtr pEnum = pVersions->_NewEnum();
 		_variant_t var;
-		pEnum->Next(1, &var, NULL);
+		pEnum->Next(1, &var, nullptr);
 		IVSSVersionPtr pVer = var;
 
 		_bstr_t name = pVer->GetUsername();
@@ -87,7 +87,7 @@ bool _GetSSFileInfo(const char* inszSourceSafePath, const char* inszSSProject, c
 		char datestring[256];
 		strcpy(datestring, (TCHAR*)t);
 
-		//if(WideCharToMultiByte(CP_ACP,WC_NO_BEST_FIT_CHARS,(LPCWSTR)wdatestring,-1,datestring,256,NULL,NULL)==0)
+		//if(WideCharToMultiByte(CP_ACP,WC_NO_BEST_FIT_CHARS,(LPCWSTR)wdatestring,-1,datestring,256,nullptr,nullptr)==0)
 			//return false;
 
 		if (strncpy(outszName, (TCHAR*)name, innBufferSize) == 0)return false;

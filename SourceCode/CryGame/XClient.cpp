@@ -106,7 +106,7 @@ bool CXClient::Init(CXGame *pGame,bool bLocal)
 	m_bPlaybackDemo=false;
 //	m_iaLastSeaponSwitch = 0;
 	m_wPlayerID = INVALID_WID;
-	m_pISystem = NULL;
+	m_pISystem = nullptr;
 	m_bLocalHost = false;	
 	m_bLinkListenerToCamera =true;
 	m_pGame = pGame;
@@ -168,7 +168,7 @@ CXClient::~CXClient()
 	SAFE_DELETE(m_pScriptObjectClient);
 
 	if(m_pIActionMapManager)
-		m_pIActionMapManager->SetSink(NULL);
+		m_pIActionMapManager->SetSink(nullptr);
 
 	if (m_pEntitySystem)
 		m_pEntitySystem->RemoveSink(this);
@@ -188,7 +188,7 @@ CXClient::~CXClient()
 	if (cl_explShakeTime)
 		cl_explShakeTime->Release();
 */
-	m_pGame = NULL;
+	m_pGame = nullptr;
 
 	m_fFrontSound=0;
 	m_fBackSound=0;
@@ -798,9 +798,9 @@ void CXClient::UpdateSound( const float fFrameTime )
 ///////////////////////////////////////////////
 void CXClient::Update()
 {
-	CPlayer *pPlayer=NULL;
-	CSpectator *pSpectator=NULL;
-	CAdvCamSystem *pAdvCamSystem=NULL;
+	CPlayer *pPlayer=nullptr;
+	CSpectator *pSpectator=nullptr;
+	CAdvCamSystem *pAdvCamSystem=nullptr;
 
 	ITimer *pTimer=m_pGame->m_pSystem->GetITimer();
 	float time = pTimer->GetCurrTime();
@@ -811,8 +811,8 @@ void CXClient::Update()
 
 	UpdateSound(fFrameTime);	
 
-	IEntity *en=NULL;
-	IEntityContainer *pCnt=NULL;
+	IEntity *en=nullptr;
+	IEntityContainer *pCnt=nullptr;
 
 	if(m_wPlayerID != INVALID_WID)
 	{
@@ -853,12 +853,12 @@ void CXClient::Update()
 		if((!m_pGame->m_pSystem->GetIConsole()->IsOpened()) && (!m_pGame->m_bMenuOverlay) && m_pIActionMapManager)
 			m_pIActionMapManager->Update((unsigned int)(time*1000.f));
 
-		if(en==NULL)
+		if(en==nullptr)
 			return;
 	}
 
 	//ASSIGN THE CAMERA
-	IEntityCamera *pEntCam=NULL;
+	IEntityCamera *pEntCam=nullptr;
 	if (m_CameraParams->nCameraId)
 	{
 		IEntity *pEnt=m_pEntitySystem->GetEntity(m_CameraParams->nCameraId);
@@ -993,9 +993,9 @@ void CXClient::SendInputToServer( const bool bTimeToSend )
 	if(!pCnt)
 		return;
 
-	CPlayer *pPlayer=NULL;
-	CSpectator *pSpectator=NULL;
-	CAdvCamSystem *pAdvCamSystem=NULL;
+	CPlayer *pPlayer=nullptr;
+	CSpectator *pSpectator=nullptr;
+	CAdvCamSystem *pAdvCamSystem=nullptr;
 
 	CStream &stm = m_Snapshot.GetReliableStream();
 	CRYASSERT(!stm.GetSize());
@@ -1730,7 +1730,7 @@ void CXClient::TriggerTurnUD(float fValue,XActivationEvent ae)
 		//RESET RECOIL RETURN
 		IEntityContainer *pCnt=pPlayerEnt->GetContainer();
 		if(pCnt){
-			CPlayer *pP=NULL;
+			CPlayer *pP=nullptr;
 			pCnt->QueryContainerInterface(CIT_IPLAYER,(void **)&pP);
 			if(pP){
 				pP->m_fRecoilXDelta=0;
@@ -2175,7 +2175,7 @@ bool CXClient::OnServerMsgSetPlayer(CStream &stm)
 	if(pEntity)
 	{
 		IEntityContainer *pCnt;
-		CPlayer *pPlayer = NULL;
+		CPlayer *pPlayer = nullptr;
 
 		SetPlayerID(id);
 		pEntity->SetAngles(v3Angles);
@@ -2495,7 +2495,7 @@ bool CXClient::OnServerMsgSetPlayerScore(CStream &stm)
 		IEntityContainer *pC=pEntity->GetContainer();	
 		if(pC)
 		{
-			CPlayer *pPlayer=NULL;
+			CPlayer *pPlayer=nullptr;
 			pC->QueryContainerInterface(CIT_IPLAYER,(void **) &pPlayer);
 			if(pPlayer)
 			{

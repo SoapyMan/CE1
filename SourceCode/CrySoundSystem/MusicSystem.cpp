@@ -35,26 +35,26 @@ CMusicSystem::CMusicSystem(ISystem* pSystem)
 	m_nSampleRate = 44100;
 	//	m_fLatency=0.25f;
 	m_fLatency = 0.1f;//to let it peak less
-	m_pStream = NULL;
+	m_pStream = nullptr;
 	m_nChannel = -1;
 	m_bPlaying = false;
 	m_mapPatterns.clear();
 	m_mapThemes.clear();
-	m_pCurrPattern = NULL;
-	m_pNextPattern = NULL;
+	m_pCurrPattern = nullptr;
+	m_pNextPattern = nullptr;
 	m_nLayeredRhythmicPatterns = 0;
 	m_nLayeredIncidentalPatterns = 0;
-	m_pMixBuffer = NULL;
-	m_pThemeOverride = NULL;
-	m_pCurrTheme = NULL;
-	m_pNextTheme = NULL;
-	m_pCurrMood = NULL;
-	m_pNextMood = NULL;
+	m_pMixBuffer = nullptr;
+	m_pThemeOverride = nullptr;
+	m_pCurrTheme = nullptr;
+	m_pNextTheme = nullptr;
+	m_pCurrMood = nullptr;
+	m_pNextMood = nullptr;
 	m_bForcePatternChange = false;
 	m_fDefaultMoodTime = 0.0f;
 	m_sDefaultMood = "";
-	m_pSink = NULL;
-	m_pDataPtr = NULL;
+	m_pSink = nullptr;
+	m_pDataPtr = nullptr;
 	m_bDataLoaded = false;
 	m_bPause = false;
 	m_bBridging = false;
@@ -134,7 +134,7 @@ void CMusicSystem::Shutdown()
 		GUARD_HEAP;
 		FSOUND_Stream_Close(m_pStream);
 	}
-	m_pStream = NULL;
+	m_pStream = nullptr;
 	m_nChannel = -1;
 	m_bPlaying = false;
 	SAFE_DELETE(m_pMixBuffer)
@@ -193,7 +193,7 @@ CMusicPattern* CMusicSystem::AddPattern(const char* pszName, const char* pszFile
 		{
 			delete pPattern;
 			LogMsg("[MusicSystem] WARNING: Cannot load music-pattern %s (%s) !", pszName, pszFilename);
-			return NULL;
+			return nullptr;
 		}
 		*/
 	m_mapPatterns.insert(TPatternMapIt::value_type(pszName, pPattern));
@@ -207,17 +207,17 @@ bool CMusicSystem::FlushPatterns()
 	CSmartCriticalSection SmartCriticalSection(m_CS);
 	if (m_bOwnMusicData)
 		ReleaseData();
-	m_pDataPtr = NULL;
+	m_pDataPtr = nullptr;
 	m_mapThemes.clear();
-	m_pThemeOverride = NULL;
-	m_pCurrTheme = NULL;
-	m_pNextTheme = NULL;
-	m_pCurrMood = NULL;
-	m_pNextMood = NULL;
+	m_pThemeOverride = nullptr;
+	m_pCurrTheme = nullptr;
+	m_pNextTheme = nullptr;
+	m_pCurrMood = nullptr;
+	m_pNextMood = nullptr;
 	m_vecPlayingPatterns.clear();
 	m_mapPatterns.clear();
-	m_pCurrPattern = NULL;
-	m_pNextPattern = NULL;
+	m_pCurrPattern = nullptr;
+	m_pNextPattern = nullptr;
 	m_nLayeredRhythmicPatterns = 0;
 	m_nLayeredIncidentalPatterns = 0;
 	m_bForcePatternChange = false;
@@ -334,7 +334,7 @@ bool CMusicSystem::SetData(SMusicData* pMusicData, bool bNoRelease)
 		for (TMoodMapIt MoodIt=pTheme->mapMoods.begin();MoodIt!=pTheme->mapMoods.end();++MoodIt)
 		{
 			SMusicMood *pMood=MoodIt->second;
-			pMood->pCurrPatternSet=NULL;
+			pMood->pCurrPatternSet=nullptr;
 			strlwr((char*)MoodIt->first.c_str());	// convert mood key
 			strlwr((char*)pMood->sName.c_str());	// convert mood name
 			for (TPatternSetVecIt PatternSetIt=pMood->vecPatternSets.begin();PatternSetIt!=pMood->vecPatternSets.end();++PatternSetIt)
@@ -458,10 +458,10 @@ SMusicMood* CMusicSystem::GetMood(SMusicTheme* pTheme, const char* pszMood)
 {
 	CSmartCriticalSection SmartCriticalSection(m_CS);
 	if (!pTheme)
-		return NULL;
+		return nullptr;
 	TMoodMapIt It = pTheme->mapMoods.find(pszMood);
 	if (It == pTheme->mapMoods.end())
-		return NULL;
+		return nullptr;
 	return It->second;
 }
 
@@ -469,7 +469,7 @@ SMusicMood* CMusicSystem::GetMood(SMusicTheme* pTheme, const char* pszMood)
 */
 bool CMusicSystem::ResetThemeOverride()
 {
-	m_pThemeOverride = NULL;
+	m_pThemeOverride = nullptr;
 	return true;
 }
 
@@ -485,7 +485,7 @@ bool CMusicSystem::SetTheme(SMusicTheme* pNewTheme, bool bOverride)
 	if (pNewTheme)
 		LogMsg("[MusicSystem] Setting theme to %s", pNewTheme->sName.c_str());
 	else
-		LogMsg("[MusicSystem] Setting theme to NULL");
+		LogMsg("[MusicSystem] Setting theme to nullptr");
 	if (bOverride)
 	{
 		m_pThemeOverride = pNewTheme;
@@ -505,7 +505,7 @@ bool CMusicSystem::SetTheme(const char* pszTheme, bool bOverride)
 	CSmartCriticalSection SmartCriticalSection(m_CS);
 	string sTheme = pszTheme;
 	if (strlen(pszTheme) == 0)		// no theme
-		return SetTheme((SMusicTheme*)NULL, false);
+		return SetTheme((SMusicTheme*)nullptr, false);
 	TThemeMapIt It = m_mapThemes.find(sTheme);
 	if (It == m_mapThemes.end())
 		return false;	// theme not found
@@ -521,8 +521,8 @@ bool CMusicSystem::SetMood(SMusicMood* pNewMood)
 	if (!pNewMood)
 	{
 		m_pCurrMood = pNewMood;
-		m_pNextMood = NULL;
-		m_pNextPattern = NULL;
+		m_pNextMood = nullptr;
+		m_pNextPattern = nullptr;
 		LogMsg("[MusicSystem] Setting mood to <none>");
 		return true;
 	}
@@ -543,7 +543,7 @@ bool CMusicSystem::SetMood(SMusicMood* pNewMood)
 		LogMsg("[MusicSystem] WARNING: Unable to find pattern in mood %s ", pNewMood->sName.c_str());
 		return false;
 	}
-	m_bForcePatternChange = (m_pCurrMood != NULL) && (m_pCurrMood != pNewMood);	// try to get into the new mood asap if we're changing the mood
+	m_bForcePatternChange = (m_pCurrMood != nullptr) && (m_pCurrMood != pNewMood);	// try to get into the new mood asap if we're changing the mood
 	m_pCurrMood = pNewMood;
 	return true;
 }
@@ -563,7 +563,7 @@ bool CMusicSystem::SetMood(const char* pszMood)
 
 	if (strlen(pszMood) == 0)
 	{
-		SetMood((SMusicMood*)NULL);
+		SetMood((SMusicMood*)nullptr);
 		return true;
 	}
 	TMoodMapIt It = pTheme->mapMoods.find(sMood);
@@ -625,7 +625,7 @@ IStringItVec* CMusicSystem::GetMoods(const char* pszTheme)
 	TStringVec Vec;
 	TThemeMapIt It = m_mapThemes.find(pszTheme);
 	if (It == m_mapThemes.end())
-		return NULL;
+		return nullptr;
 	SMusicTheme* pTheme = It->second;
 	for (TMoodMapIt It = pTheme->mapMoods.begin(); It != pTheme->mapMoods.end(); ++It)
 	{
@@ -651,8 +651,8 @@ bool CMusicSystem::AddMusicMoodEvent(const char* pszMood, float fTimeout)
 void CMusicSystem::Silence()
 {
 	CSmartCriticalSection SmartCriticalSection(m_CS);
-	m_pCurrPattern = NULL;
-	m_pNextPattern = NULL;
+	m_pCurrPattern = nullptr;
+	m_pNextPattern = nullptr;
 	m_nLayeredRhythmicPatterns = 0;
 	m_nLayeredIncidentalPatterns = 0;
 	m_vecPlayingPatterns.clear();
@@ -709,7 +709,7 @@ void CMusicSystem::Update()
 			pNext = m_pThemeOverride;
 		else
 			pNext = m_pNextTheme;
-		m_bForcePatternChange = (m_pCurrTheme != NULL) && (m_pCurrTheme != pNext);	// try to get into the new theme asap if we're changing the theme
+		m_bForcePatternChange = (m_pCurrTheme != nullptr) && (m_pCurrTheme != pNext);	// try to get into the new theme asap if we're changing the theme
 		if (m_pCurrTheme && pNext && m_bForcePatternChange)	// if we are already playing a theme we need to use a bridge
 		{
 			m_pNextPattern = ChooseBridge(m_pCurrTheme, pNext);
@@ -727,7 +727,7 @@ void CMusicSystem::Update()
 				if (m_pNextMood)	// reenter next mood to get it from the correct theme
 					SetMood(m_pNextMood);
 				else
-					m_pCurrMood = NULL;
+					m_pCurrMood = nullptr;
 			}
 		}
 		else
@@ -737,7 +737,7 @@ void CMusicSystem::Update()
 		if (!m_pCurrMood)
 			EnterDefaultMood();	// if we are in no mood right now, use default mood
 	}
-	m_pNextMood = NULL;
+	m_pNextMood = nullptr;
 
 	// event-handling
 	if (m_setFrameMoodEvents.empty())
@@ -755,7 +755,7 @@ void CMusicSystem::Update()
 	}
 	// lets not choose any mood which has a lower priority than the currently playing one...
 	int nNewMoodPriority = -1;
-	SMusicMood* pNewMood = NULL;
+	SMusicMood* pNewMood = nullptr;
 	for (TMoodEventSetIt It = m_setMoodEvents.begin(); It != m_setMoodEvents.end();)
 	{
 		// lets remove all events which didnt occur this frame...
@@ -792,7 +792,7 @@ void CMusicSystem::Update()
 					if (m_pCurrTheme)
 						LogMsg("[MusicSystem] Invalid music mood '%s' (Theme: %s)", EventInfo.sMood.c_str(), m_pCurrTheme->sName.c_str());
 					else
-						LogMsg("[MusicSystem] Invalid music mood '%s' (Theme: NULL)", EventInfo.sMood.c_str());
+						LogMsg("[MusicSystem] Invalid music mood '%s' (Theme: nullptr)", EventInfo.sMood.c_str());
 				}
 			}
 			++It;
@@ -886,7 +886,7 @@ SMusicMood* CMusicSystem::GetDefaultMood(SMusicTheme* pTheme)
 {
 	CSmartCriticalSection SmartCriticalSection(m_CS);
 	if (!pTheme)
-		return NULL;
+		return nullptr;
 	if (m_sDefaultMood.empty())
 		return GetMood(pTheme, pTheme->sDefaultMood.c_str());
 	else
@@ -951,7 +951,7 @@ signed char CMusicSystem::StreamingCallback(FSOUND_STREAM* pStream, void* pBuffe
 			PlayInfo.pPatternInstance = m_pCurrPattern;
 			PlayInfo.eBlendType = EBlend_FadeOut;
 			PushPatternToMixList(PlayInfo);
-			m_pCurrPattern = NULL;
+			m_pCurrPattern = nullptr;
 		}
 		memset(&(pOutput[nOfs]), 0, nSamples * m_nBytesPerSample);
 		MixStreams(&(pOutput[nOfs]), nSamples);
@@ -1282,7 +1282,7 @@ CMusicPatternInstance* CMusicSystem::GetPatternInstance(const char* pszPattern)
 	if (PatternIt == m_mapPatterns.end())
 	{
 		LogMsg("[MusicSystem] WARNING: Pattern %s could not be found !", pszPattern);
-		return NULL;
+		return nullptr;
 	}
 	CMusicPattern* pPattern = PatternIt->second;
 	return pPattern->CreateInstance();
@@ -1295,7 +1295,7 @@ bool CMusicSystem::UpdateCurrentPatternSet(SMusicMood* pMood, int nSamples, bool
 	CSmartCriticalSection SmartCriticalSection(m_CS);
 	if (!pMood)
 		return false;
-	bool bChooseNewPatternSet = (pMood->pCurrPatternSet == NULL);
+	bool bChooseNewPatternSet = (pMood->pCurrPatternSet == nullptr);
 	pMood->fCurrPatternSetTime += (float)nSamples / (float)m_nSampleRate;	// update timing
 	if (bAllowChange)
 	{
@@ -1304,7 +1304,7 @@ bool CMusicSystem::UpdateCurrentPatternSet(SMusicMood* pMood, int nSamples, bool
 		if (bChooseNewPatternSet)
 		{
 			ChoosePatternSet(pMood);
-			return (pMood->pCurrPatternSet != NULL);
+			return (pMood->pCurrPatternSet != nullptr);
 		}
 	}
 	return true;
@@ -1319,12 +1319,12 @@ bool CMusicSystem::ChoosePatternSet(SMusicMood* pMood)
 		return false;
 	SMusicPatternSet* pPrevPatternSet = pMood->pCurrPatternSet;
 	int nPatternSets = (int)pMood->vecPatternSets.size();
-	SMusicPatternSet* pPatternSet = NULL;
+	SMusicPatternSet* pPatternSet = nullptr;
 	int nCount = 0;
 	switch (nPatternSets)
 	{
 	case 0:
-		LogMsg("[MusicSystem] WARNING: Choosing NULL pattern-set.");
+		LogMsg("[MusicSystem] WARNING: Choosing nullptr pattern-set.");
 		return false;
 	case 1:
 		pPatternSet = *(pMood->vecPatternSets.begin());
@@ -1363,16 +1363,16 @@ bool CMusicSystem::ChoosePatternSet(SMusicMood* pMood)
 	return true;
 }
 
-/* return bridge from pCurrTheme to pNewTheme; NULL if no such bridge exist
+/* return bridge from pCurrTheme to pNewTheme; nullptr if no such bridge exist
 */
 CMusicPatternInstance* CMusicSystem::ChooseBridge(SMusicTheme* pCurrTheme, SMusicTheme* pNewTheme)
 {
 	CSmartCriticalSection SmartCriticalSection(m_CS);
 	if ((!pCurrTheme) || (!pNewTheme))
-		return NULL;
+		return nullptr;
 	TThemeBridgeMapIt BridgeIt = pCurrTheme->mapBridges.find(pNewTheme->sName);
 	if (BridgeIt == pCurrTheme->mapBridges.end())
-		return NULL;	// no bridge defined
+		return nullptr;	// no bridge defined
 	CMusicPatternInstance* pBridgePattern = GetPatternInstance(BridgeIt->second.c_str());
 	if (pBridgePattern)
 		m_bBridging = true;	// set bridging flag
@@ -1387,10 +1387,10 @@ CMusicPatternInstance* CMusicSystem::ChoosePattern(SMusicMood* pMood, int nLayer
 {
 	CSmartCriticalSection SmartCriticalSection(m_CS);
 	if (!pMood)
-		return NULL;
+		return nullptr;
 	if (m_mapPatterns.empty())
-		return NULL;
-	TPatternDefVec* pPatternInfo = NULL;
+		return nullptr;
+	TPatternDefVec* pPatternInfo = nullptr;
 	float fTotalProbability;
 	switch (nLayer)
 	{
@@ -1414,7 +1414,7 @@ CMusicPatternInstance* CMusicSystem::ChoosePattern(SMusicMood* pMood, int nLayer
 		break;
 	}
 	if ((!pPatternInfo) || (pPatternInfo->empty()))
-		return NULL;	// no pattern could be found in the requested layer
+		return nullptr;	// no pattern could be found in the requested layer
 	// lets choose one accourding to their probability
 	float fProb = fTotalProbability;
 	float fRand = m_RandGen.Rand(0.0f, fTotalProbability);
@@ -1459,7 +1459,7 @@ CMusicPatternInstance* CMusicSystem::ChoosePattern(SMusicMood* pMood, int nLayer
 				sPattern = pPattern->sName.c_str();
 				nTries++;
 				if (nTries == (int)pPatternInfo->size())
-					return NULL;	// nothing found
+					return nullptr;	// nothing found
 			}
 		} while (!bPatternFound);
 	}
@@ -1487,7 +1487,7 @@ void CMusicSystem::GetMemoryUsage(class ICrySizer* pSizer)
 void CMusicSystem::RenamePattern(const char* sOldName, const char* sNewName)
 {
 	CSmartCriticalSection SmartCriticalSection(m_CS);
-	CMusicPattern* pPattern = stl::find_in_map(m_mapPatterns, sOldName, (CMusicPattern*)NULL);
+	CMusicPattern* pPattern = stl::find_in_map(m_mapPatterns, sOldName, (CMusicPattern*)nullptr);
 	if (pPattern)
 	{
 		m_mapPatterns.erase(sOldName);
@@ -1516,7 +1516,7 @@ void CMusicSystem::UpdatePattern(SPatternDef* pPatternDef)
 {
 	CSmartCriticalSection SmartCriticalSection(m_CS);
 	// Update pattern.
-	CMusicPattern* pPattern = stl::find_in_map(m_mapPatterns, pPatternDef->sName.c_str(), (CMusicPattern*)NULL);
+	CMusicPattern* pPattern = stl::find_in_map(m_mapPatterns, pPatternDef->sName.c_str(), (CMusicPattern*)nullptr);
 	if (pPattern)
 	{
 		bool bStopped = false;
@@ -1566,7 +1566,7 @@ void CMusicSystem::UpdatePattern(SPatternDef* pPatternDef)
 void CMusicSystem::PlayPattern(const char* sPattern, bool bStopPrevious)
 {
 	CSmartCriticalSection SmartCriticalSection(m_CS);
-	CMusicPattern* pPattern = stl::find_in_map(m_mapPatterns, sPattern, (CMusicPattern*)NULL);
+	CMusicPattern* pPattern = stl::find_in_map(m_mapPatterns, sPattern, (CMusicPattern*)nullptr);
 	if (pPattern)
 	{
 		m_bForcePatternChange = true;
@@ -1622,10 +1622,10 @@ void CMusicSystem::LoadPatternFromXML(XmlNodeRef node, SPatternDef* pPattern)
 		sPoints[sizeof(sPoints) - 1] = '\0';
 
 		char* token = strtok(sPoints, ",");
-		while (token != NULL)
+		while (token != nullptr)
 		{
 			pPattern->vecFadePoints.push_back(atoi(token));
-			token = strtok(NULL, ",");
+			token = strtok(nullptr, ",");
 		}
 	}
 	// Add this pattern to music data.

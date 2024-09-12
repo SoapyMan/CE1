@@ -31,7 +31,7 @@ bool CRETriMeshShadow::mfDraw(SShader* ef, SShaderPass* sfm)
 	//	CRYASSERT(m_arrLBuffers[m_nCurrInst].pVB);
 
 	CGLRenderer* rd = gcpOGL;
-	CDLight* pDL = NULL;
+	CDLight* pDL = nullptr;
 	if (rd->m_RP.m_DynLMask)
 	{
 		for (int n = 0; n < rd->m_RP.m_DLights[SRendItem::m_RecurseLevel].Num(); n++)

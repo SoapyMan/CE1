@@ -112,7 +112,7 @@ void CREFlareGeom::mfCheckVis(CFColor& col, CCObject* obj)
 
 
 	D3DLOCKED_RECT rc;
-	//HRESULT ddrval = ZSurf->LockRect( &rc, NULL, D3DLOCK_READONLY );
+	//HRESULT ddrval = ZSurf->LockRect( &rc, nullptr, D3DLOCK_READONLY );
 	//if( ddrval!=D3D_OK )
 	{
 		//iLog->Log("D3D Driver: Lock on Zbuffer failed (%s)\n", rd->D3DError(ddrval));
@@ -381,7 +381,7 @@ bool CREOcclusionQuery::mfDraw(SShader* ef, SShaderPass* sfm)
 		// Create the query if we can
 		{
 			// Create visibility queries
-			LPDIRECT3DQUERY9  pVizQuery = NULL;
+			LPDIRECT3DQUERY9  pVizQuery = nullptr;
 			hr = dv->CreateQuery(D3DQUERYTYPE_OCCLUSION, &pVizQuery);
 			if (pVizQuery)
 				m_nOcclusionID = (UINT_PTR)pVizQuery;
@@ -407,7 +407,7 @@ void CRETempMesh::mfReset()
 {
 	gRenDev->ReleaseBuffer(m_VBuffer);
 	gRenDev->ReleaseIndexBuffer(&m_Inds);
-	m_VBuffer = NULL;
+	m_VBuffer = nullptr;
 }
 
 bool CRETempMesh::mfPreDraw(SShaderPass* sl)
@@ -437,13 +437,13 @@ bool CRETempMesh::mfPreDraw(SShaderPass* sl)
 		if (gRenDev->m_RP.m_PersFlags & RBPF_USESTREAM1)
 		{
 			gRenDev->m_RP.m_PersFlags &= ~RBPF_USESTREAM1;
-			h = dv->SetStreamSource(1, NULL, 0, 0);
+			h = dv->SetStreamSource(1, nullptr, 0, 0);
 		}
 
 	if (gRenDev->m_RP.m_PersFlags & RBPF_USESTREAM2)
 	{
 		gRenDev->m_RP.m_PersFlags &= ~RBPF_USESTREAM2;
-		h = dv->SetStreamSource(2, NULL, 0, 0);
+		h = dv->SetStreamSource(2, nullptr, 0, 0);
 	}
 
 	h = dv->SetIndices((IDirect3DIndexBuffer9*)m_Inds.m_VertBuf.m_pPtr);
@@ -498,7 +498,7 @@ bool CREOcLeaf::mfPreDraw(SShaderPass* sl)
 		if (rd->m_RP.m_PersFlags & RBPF_USESTREAM1)
 		{
 			rd->m_RP.m_PersFlags &= ~RBPF_USESTREAM1;
-			h = dv->SetStreamSource(1, NULL, 0, 0);
+			h = dv->SetStreamSource(1, nullptr, 0, 0);
 		}
 
 	if (rd->m_RP.m_FlagsModificators & RBMF_LMTCUSED)
@@ -514,7 +514,7 @@ bool CREOcLeaf::mfPreDraw(SShaderPass* sl)
 		if (rd->m_RP.m_PersFlags & RBPF_USESTREAM2)
 		{
 			rd->m_RP.m_PersFlags &= ~RBPF_USESTREAM2;
-			h = dv->SetStreamSource(2, NULL, 0, 0);
+			h = dv->SetStreamSource(2, nullptr, 0, 0);
 		}
 
 	if (CRenderer::CV_r_cullgeometryforlights && rd->EF_IsOnlyLightPass((SShaderPassHW*)sl) && rd->m_RP.m_pCurLightIndices != &rd->m_RP.m_FakeLightIndices)
@@ -628,7 +628,7 @@ bool CRETriMeshShadow::mfDraw(SShader* ef, SShaderPass* sfm)
 
 	rd->CV_ind_VisualizeShadowVolumes = (rd->GetPolygonMode() == R_WIREFRAME_MODE);
 
-	CDLight* pDL = NULL;
+	CDLight* pDL = nullptr;
 	if (rd->m_RP.m_DynLMask)
 	{
 		for (int n = 0; n < rd->m_RP.m_DLights[SRendItem::m_RecurseLevel].Num(); n++)
@@ -683,7 +683,7 @@ bool CRETriMeshShadow::mfDraw(SShader* ef, SShaderPass* sfm)
 			CRYASSERT(nIndices);
 
 			if (Indices->m_bLocked)
-				rd->UpdateIndexBuffer(Indices, NULL, 0, true);
+				rd->UpdateIndexBuffer(Indices, nullptr, 0, true);
 
 			rd->DrawBuffer(pVB, Indices, nIndices, 0, R_PRIMV_TRIANGLES);
 
@@ -714,7 +714,7 @@ bool CRETriMeshShadow::mfDraw(SShader* ef, SShaderPass* sfm)
 			CRYASSERT(nIndices);
 
 			if (Indices->m_bLocked)
-				rd->UpdateIndexBuffer(Indices, NULL, 0, true);
+				rd->UpdateIndexBuffer(Indices, nullptr, 0, true);
 
 			rd->DrawBuffer(pVB, Indices, nIndices, 0, R_PRIMV_TRIANGLES);
 
@@ -924,7 +924,7 @@ bool CREFlare::mfCheckVis(CCObject* obj)
 					break;
 				};
 
-				hr = pTar->LockRect(&rc, NULL, D3DLOCK_READONLY);
+				hr = pTar->LockRect(&rc, nullptr, D3DLOCK_READONLY);
 				if (hr != D3D_OK)
 				{
 					//          iLog->Log("D3D Driver: Lock on BackBuffer failed (%s)\n", rd->D3DError(hr));
@@ -971,9 +971,9 @@ bool CREFlare::mfCheckVis(CCObject* obj)
 				if (!pRE || m_nFrameQuery != rd->m_nFrameReset || !pRE->m_nOcclusionID)
 				{
 					m_nFrameQuery = rd->m_nFrameReset;
-					obj->m_RE = NULL;
+					obj->m_RE = nullptr;
 					// Create visibility queries
-					LPDIRECT3DQUERY9  pVizQuery = NULL;
+					LPDIRECT3DQUERY9  pVizQuery = nullptr;
 					hr = dv->CreateQuery(D3DQUERYTYPE_OCCLUSION, &pVizQuery);
 					if (pVizQuery)
 					{
@@ -1021,7 +1021,7 @@ bool CREFlare::mfCheckVis(CCObject* obj)
 					}
 				}
 				pRE = (CREOcclusionQuery*)obj->m_RE;
-				LPDIRECT3DQUERY9  pVizQuery = NULL;
+				LPDIRECT3DQUERY9  pVizQuery = nullptr;
 				if (pRE)
 					pVizQuery = (LPDIRECT3DQUERY9)pRE->m_nOcclusionID;
 				if (pVizQuery)
@@ -1124,7 +1124,7 @@ bool CREFlare::mfCheckVis(CCObject* obj)
 				byte* data = new byte[sizeMask * sizeMask * 4];
 				char name[128];
 				sprintf(name, "$AutoCoronas_%d", gcpRendD3D->m_TexGenID++);
-				STexPic* tp = rd->m_TexMan->CreateTexture(name, sizeMask, sizeMask, 1, FT_NOMIPS | FT_ALLOCATED | FT_HASALPHA, FT2_NODXT | FT2_RENDERTARGET | FT_CLAMP, data, eTT_Base, -1.0f, -1.0f, 0, NULL, 0, eTF_8888);
+				STexPic* tp = rd->m_TexMan->CreateTexture(name, sizeMask, sizeMask, 1, FT_NOMIPS | FT_ALLOCATED | FT_HASALPHA, FT2_NODXT | FT2_RENDERTARGET | FT_CLAMP, data, eTT_Base, -1.0f, -1.0f, 0, nullptr, 0, eTF_8888);
 				delete[] data;
 				obj->m_TexId0 = tp->m_Id;
 			}
@@ -1133,7 +1133,7 @@ bool CREFlare::mfCheckVis(CCObject* obj)
 				byte* data = new byte[sizeTex * sizeTex * 4];
 				char name[128];
 				sprintf(name, "$AutoCoronas_%d", gcpRendD3D->m_TexGenID++);
-				STexPic* tp = rd->m_TexMan->CreateTexture(name, sizeTex, sizeTex, 1, FT_NOMIPS | FT_ALLOCATED | FT_HASALPHA, FT2_NODXT | FT2_RENDERTARGET, data, eTT_Base, -1.0f, -1.0f, 0, NULL, 0, eTF_8888);
+				STexPic* tp = rd->m_TexMan->CreateTexture(name, sizeTex, sizeTex, 1, FT_NOMIPS | FT_ALLOCATED | FT_HASALPHA, FT2_NODXT | FT2_RENDERTARGET, data, eTT_Base, -1.0f, -1.0f, 0, nullptr, 0, eTF_8888);
 				delete[] data;
 				obj->m_TexId1 = tp->m_Id;
 			}
@@ -1179,7 +1179,7 @@ bool CREFlare::mfCheckVis(CCObject* obj)
 					IDirect3DSurface9* pTexSurf;
 					pID3DTexture->GetSurfaceLevel(0, &pTexSurf);
 					IDirect3DSurface9* pTar = rd->mfGetBackSurface();
-					dv->StretchRect(pTar, &rc, pTexSurf, NULL, D3DTEXF_NONE);
+					dv->StretchRect(pTar, &rc, pTexSurf, nullptr, D3DTEXF_NONE);
 					pTexSurf->Release();
 				}
 			}
@@ -1236,7 +1236,7 @@ bool CREFlare::mfCheckVis(CCObject* obj)
 						IDirect3DSurface9* pTexSurf;
 						pID3DTexture->GetSurfaceLevel(0, &pTexSurf);
 						IDirect3DSurface9* pTar = rd->mfGetBackSurface();
-						HRESULT hr = dv->StretchRect(pTar, &rc, pTexSurf, NULL, D3DTEXF_NONE);
+						HRESULT hr = dv->StretchRect(pTar, &rc, pTexSurf, nullptr, D3DTEXF_NONE);
 						pTexSurf->Release();
 					}
 				}
@@ -1432,7 +1432,7 @@ void CREFlare::mfDrawCorona(SShader* ef, CFColor& col)
 	rd->EF_PushFog();
 	rd->EnableFog(false);
 
-	CCGPShader_D3D* fpDrawFlare = NULL;
+	CCGPShader_D3D* fpDrawFlare = nullptr;
 	if ((rd->m_RP.m_PersFlags & RBPF_HDR) && rd->m_nHDRType == 1)
 	{
 		if (!rd->m_RP.m_PS_HDR_DrawFlare)
@@ -1504,7 +1504,7 @@ void CREFlare::mfDrawCorona(SShader* ef, CFColor& col)
 			// Render the 8 triangles from the data stream
 			if (m_Pass && m_Pass->m_TUnits.Num())
 			{
-				CVProgram* curVP = NULL;
+				CVProgram* curVP = nullptr;
 				CVProgram* newVP;
 				SShaderPassHW* slw = m_Pass;
 				newVP = slw->m_VProgram;
@@ -1521,7 +1521,7 @@ void CREFlare::mfDrawCorona(SShader* ef, CFColor& col)
 							curVP->mfSet(true, slw, VPF_DONTSETMATRICES);
 						}
 						else
-							curVP = NULL;
+							curVP = nullptr;
 					}
 
 					rd->EF_ApplyMatrixOps(slw->m_MatrixOps, true);
@@ -1805,7 +1805,7 @@ void CLeafBuffer::DrawImmediately()
 
 bool CREClearStencil::mfDraw(SShader* ef, SShaderPass* sfm)
 {
-	gcpRendD3D->m_pd3dDevice->Clear(0, NULL, D3DCLEAR_STENCIL, 0, 1.0f, 0);
+	gcpRendD3D->m_pd3dDevice->Clear(0, nullptr, D3DCLEAR_STENCIL, 0, 1.0f, 0);
 	return true;
 }
 

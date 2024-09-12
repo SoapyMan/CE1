@@ -35,8 +35,8 @@ public:
 	{
 		mfSetType(eDATA_ClientPoly);
 		mNumVerts = 0;
-		mEf = NULL;
-		m_pObject = NULL;
+		mEf = nullptr;
+		m_pObject = nullptr;
 		mfSetFlags(FCEF_TRANSFORM | FCEF_NEEDFILLBUF);
 	}
 

@@ -16,14 +16,14 @@ struct SLightIndicies
 			nInds = m_pIndiciesAttenFrustr.Num();
 			if (nInds)
 				return &m_pIndiciesAttenFrustr[0];
-			return NULL;
+			return nullptr;
 		}
 		else
 		{
 			nInds = m_pIndicies.Num();
 			if (nInds)
 				return &m_pIndicies[0];
-			return NULL;
+			return nullptr;
 		}
 	}
 	SVertexStream* GetIndexBuffer()
@@ -75,10 +75,10 @@ public:
 	{
 		mfSetType(eDATA_OcLeaf);
 		mfUpdateFlags(FCEF_TRANSFORM);
-		m_Faces = NULL;
-		m_LIndicies = NULL;
-		m_pChunk = NULL;
-		m_pBuffer = NULL;
+		m_Faces = nullptr;
+		m_LIndicies = nullptr;
+		m_pChunk = nullptr;
+		m_pBuffer = nullptr;
 		mFrameCalcLight = -1;
 		mFrameCalcAtten = -1;
 		mFrameCalcRefract = -1;

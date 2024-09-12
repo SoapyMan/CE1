@@ -301,7 +301,7 @@ int CScriptObjectWeaponClass::StartAnimation(IFunctionHandler *pH)
 		}
 	}
 
-	if (string(animname) == "NULL")
+	if (string(animname) == "nullptr")
 		animname = 0;
 
 	m_pWeaponClass->GetCharacter()->SetAnimationSpeed( fAniSpeed );
@@ -424,7 +424,7 @@ int CScriptObjectWeaponClass::SetWeaponFireParams(IFunctionHandler *pH)
 	pObj->GetValueChain( "recoil_modifier_prone", s.fRecoilModifierProne );
 
 	// projectile
-	const char *sClass = NULL;
+	const char *sClass = nullptr;
 	pObj->GetValueChain( "projectile_class", sClass);
 	if (sClass)
 		s.sProjectileClass = sClass;
@@ -512,7 +512,7 @@ int CScriptObjectWeaponClass::GetInstantHit(IFunctionHandler *pH)
 	pTempObj->GetValue("id",nID);
 	
 	shooter= m_pSystem->GetIEntitySystem()->GetEntity(nID);
-	if(shooter==NULL)
+	if(shooter==nullptr)
 	{
 		TRACE("CScriptObjectWeapon::GetInstantHit() shooter in nil");
 		return pH->EndFunctionNull();
@@ -541,7 +541,7 @@ int CScriptObjectWeaponClass::GetInstantHit(IFunctionHandler *pH)
 			int objecttype;
 			if(hits[nCount].dist<=0)
 				continue;
-			IEntity *centycontact = NULL;
+			IEntity *centycontact = nullptr;
 			if (res && hits[nCount].dist>0 && hits[nCount].pCollider)
 			{
 				centycontact = (IEntity *)hits[nCount].pCollider->GetForeignData();
@@ -832,7 +832,7 @@ int CScriptObjectWeaponClass::DetachObjectToBone(IFunctionHandler *pH)
 	{
 		if (boneHandler == -1)
 		{
-			m_pWeaponClass->GetCharacter()->AttachObjectToBone( NULL, boneName, false );
+			m_pWeaponClass->GetCharacter()->AttachObjectToBone( nullptr, boneName, false );
 		}
 		else
 		{
@@ -868,7 +868,7 @@ int CScriptObjectWeaponClass::DrawScopeFlare(IFunctionHandler *pH)
 	CDLight DynLight;
 
 	//////////////////////////////////////////////////////////////////////////
-	const char *sShaderName=NULL;
+	const char *sShaderName=nullptr;
 
 	if (!pITable->GetValueChain( "lightShader",sShaderName))
 		m_pScriptSystem->RaiseError( "<DrawScopeFlare> sShaderName not specified" );
@@ -894,13 +894,13 @@ int CScriptObjectWeaponClass::DrawScopeFlare(IFunctionHandler *pH)
 
 	//////////////////////////////////////////////////////////////////////////
 	// more shaders stuff
-	DynLight.m_pLightImage = NULL;
+	DynLight.m_pLightImage = nullptr;
 	DynLight.m_Flags |= DLF_POINT;
 
 	//////////////////////////////////////////////////////////////////////////	
 	int shooterid;
 	float factor;
-	IEntity* pShooter = NULL;
+	IEntity* pShooter = nullptr;
 	if (pITable->GetValueChain("shooterid", shooterid))
 	{
 		pShooter = m_pGame->GetSystem()->GetIEntitySystem()->GetEntity(shooterid);
@@ -910,18 +910,18 @@ int CScriptObjectWeaponClass::DrawScopeFlare(IFunctionHandler *pH)
 
 		IEntity* pPlayer = m_pGame->GetMyPlayer();
 
-		if (pPlayer == NULL)
+		if (pPlayer == nullptr)
 			return pH->EndFunction();
 
 		if (pPlayer == pShooter)
 			return pH->EndFunction();	
 
-		CPlayer *pShooterPlayer=NULL;
+		CPlayer *pShooterPlayer=nullptr;
 		if (pShooter->GetContainer()) pShooter->GetContainer()->QueryContainerInterface(CIT_IPLAYER,(void**) &pShooterPlayer);
 		CRYASSERT(pShooterPlayer);
 		
 		// position flare relative to weapon_bone
-		if (pShooter->GetCharInterface()->GetCharacter(0) == NULL)
+		if (pShooter->GetCharInterface()->GetCharacter(0) == nullptr)
 			return pH->EndFunction();	
 
 		ICryBone *pBone = pShooter->GetCharInterface()->GetCharacter(0)->GetBoneByName("weapon_bone");

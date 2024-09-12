@@ -90,7 +90,7 @@ C3DEngine::C3DEngine(ISystem* pSystem)
 	m_pConnectivityBuilder = new CStencilShadowConnectivityBuilder();
 	m_pStaticConnectivityBuilder = new CStencilShadowStaticConnectivityBuilder();
 
-	m_pRenderCallbackFunc = NULL;
+	m_pRenderCallbackFunc = nullptr;
 
 	memset(m_SunObject, 0, sizeof(m_SunObject));
 	m_pBlurObj = 0;
@@ -101,8 +101,8 @@ C3DEngine::C3DEngine(ISystem* pSystem)
 
 	m_nFlags = 0;
 	m_pRE2DQuad = 0;
-	m_pSHFullScreenQuad = NULL;
-	m_pSHSky = NULL;//GetRenderer()->EF_LoadShader("InfRedGal", eSH_World, EF_SYSTEM);
+	m_pSHFullScreenQuad = nullptr;
+	m_pSHSky = nullptr;//GetRenderer()->EF_LoadShader("InfRedGal", eSH_World, EF_SYSTEM);
 	m_pTerrainWaterShader = m_pSunRoadShader = 0;
 	m_nWaterBottomTexId = 0;
 	m_pSHLensFlares = GetRenderer()->EF_LoadShader("CryLight", eSH_World, EF_SYSTEM);
@@ -671,7 +671,7 @@ void C3DEngine::CreateDecal(const CryEngineDecalInfo& DecalInfo)
 		//	return;
 
 	if (GetCVars()->e_decals == 2)
-		GetLog()->Log("Debug: C3DEngine::CreateDecal: Pos=(%.1f,%.1f,%.1f) Size=%.2f ObjName=%s nPartID=%d", DecalInfo.vPos.x, DecalInfo.vPos.y, DecalInfo.vPos.z, DecalInfo.fSize, DecalInfo.pDecalOwner ? DecalInfo.pDecalOwner->GetName() : "NULL", DecalInfo.nPartID);
+		GetLog()->Log("Debug: C3DEngine::CreateDecal: Pos=(%.1f,%.1f,%.1f) Size=%.2f ObjName=%s nPartID=%d", DecalInfo.vPos.x, DecalInfo.vPos.y, DecalInfo.vPos.z, DecalInfo.fSize, DecalInfo.pDecalOwner ? DecalInfo.pDecalOwner->GetName() : "nullptr", DecalInfo.nPartID);
 
 	if (DecalInfo.pDecalOwner)
 		if (DecalInfo.pDecalOwner->GetEntityCharacter(0) || DecalInfo.pDecalOwner->GetEntityCharacter(1))
@@ -978,7 +978,7 @@ void C3DEngine::OnExplosion(Vec3d vPos, Vec3 vHitDir, float fRadius, int nTexID,
 void C3DEngine::SetSkyBox(const char* szSkyBoxShaderName)
 {
 	SAFE_RELEASE(m_pSHSky);
-	m_pSHSky = szSkyBoxShaderName[0] ? GetRenderer()->EF_LoadShader(szSkyBoxShaderName, eSH_World) : NULL;
+	m_pSHSky = szSkyBoxShaderName[0] ? GetRenderer()->EF_LoadShader(szSkyBoxShaderName, eSH_World) : nullptr;
 }
 /*
 int C3DEngine::GetMapPreviewTexID()
@@ -991,7 +991,7 @@ void C3DEngine::SetScreenShader(const char* szShaderName)
 	if (szShaderName)
 		m_pSHFullScreenQuad = GetRenderer()->EF_LoadShader(szShaderName, eSH_World, EF_SYSTEM);
 	else
-		m_pSHFullScreenQuad = NULL;
+		m_pSHFullScreenQuad = nullptr;
 }
 
 void C3DEngine::SetMaxViewDistance(float fMaxViewDistance)
@@ -1335,7 +1335,7 @@ bool C3DEngine::MakeSectorLightMap(int nSectorOriginX, int nSectorOriginY, uchar
 
 float C3DEngine::GetDistanceToSectorWithWater()
 {
-	CSectorInfo* pSectorInfo = NULL;
+	CSectorInfo* pSectorInfo = nullptr;
 	if (m_pTerrain)
 		pSectorInfo = m_pTerrain->GetSecInfo(GetViewCamera().GetPos());
 
@@ -1567,7 +1567,7 @@ void C3DEngine::FreeEntityRenderState(IEntityRender* pEntityRnd)
 	if (pEntRendState->pShadowMapInfo)
 	{
 		pEntRendState->pShadowMapInfo->Release(pEntityRnd->GetEntityRenderType(), GetRenderer());
-		pEntRendState->pShadowMapInfo = NULL;
+		pEntRendState->pShadowMapInfo = nullptr;
 	}
 
 	// check that was really unregistered

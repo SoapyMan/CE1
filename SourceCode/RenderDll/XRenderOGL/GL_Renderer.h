@@ -189,7 +189,7 @@ public:
 	virtual CVertexBuffer* CreateBuffer(int  buffersize, int vertexformat, const char* szSource, bool bDynamic = false);
 	virtual void  CreateBuffer(int size, int vertexformat, CVertexBuffer* buf, int Type, const char* szSource);
 	virtual void	ReleaseBuffer(CVertexBuffer* bufptr);
-	virtual void	DrawBuffer(CVertexBuffer* src, SVertexStream* indicies, int numindices, int offsindex, int prmode, int vert_start = 0, int vert_stop = 0, CMatInfo* mi = NULL);
+	virtual void	DrawBuffer(CVertexBuffer* src, SVertexStream* indicies, int numindices, int offsindex, int prmode, int vert_start = 0, int vert_stop = 0, CMatInfo* mi = nullptr);
 	virtual void	UpdateBuffer(CVertexBuffer* dest, const void* src, int size, bool bUnlock, int offs = 0, int Type = 0);
 
 	virtual void  CreateIndexBuffer(SVertexStream* dest, const void* src, int indexcount);
@@ -227,7 +227,7 @@ public:
 	int	SetPolygonMode(int mode);
 
 	void	Draw3dBBox(const Vec3d& mins, const Vec3d& maxs, int nPrimType);
-	void	Draw3dPrim(const Vec3d& mins, const Vec3d& maxs, int nPrimType, const float pColor[4] = NULL);
+	void	Draw3dPrim(const Vec3d& mins, const Vec3d& maxs, int nPrimType, const float pColor[4] = nullptr);
 	void  Flush3dBBox(const Vec3d& mins, const Vec3d& maxs, const bool bSolid);
 
 	void	SetCamera(const CCamera& cam);
@@ -237,7 +237,7 @@ public:
 	virtual bool	ChangeDisplay(unsigned int width, unsigned int height, unsigned int cbpp);
 	virtual void  ChangeViewport(unsigned int x, unsigned int y, unsigned int width, unsigned int height);
 
-	virtual unsigned int DownLoadToVideoMemory(unsigned char* data, int w, int h, ETEX_Format eTFSrc, ETEX_Format eTFDst, int nummipmap, bool repeat = true, int filter = FILTER_BILINEAR, int Id = 0, char* szCacheName = NULL, int flags = 0);
+	virtual unsigned int DownLoadToVideoMemory(unsigned char* data, int w, int h, ETEX_Format eTFSrc, ETEX_Format eTFDst, int nummipmap, bool repeat = true, int filter = FILTER_BILINEAR, int Id = 0, char* szCacheName = nullptr, int flags = 0);
 	virtual void UpdateTextureInVideoMemory(uint tid, unsigned char* data, int posx, int posy, int w, int h, ETEX_Format eTF = eTF_0888);
 
 	//  CImage *TryLoadImage(const char *szFilename);
@@ -245,7 +245,7 @@ public:
 	void	RemoveTexture(unsigned int TextureId);
 	void  RemoveTexture(ITexPic* pTexPic);
 
-	unsigned int LoadTexture(const char* filename, int* tex_type = NULL, unsigned int def_tid = 0, bool compresstodisk = true, bool bWarn = true);
+	unsigned int LoadTexture(const char* filename, int* tex_type = nullptr, unsigned int def_tid = 0, bool compresstodisk = true, bool bWarn = true);
 
 	virtual void	SetTexture(int tnum, ETexType eTT = eTT_Base);
 
@@ -308,7 +308,7 @@ public:
 	void ResetTextureMatrix();
 
 	//misc
-	void ScreenShot(const char* filename = NULL);
+	void ScreenShot(const char* filename = nullptr);
 
 	virtual uint MakeSprite(float object_scale, int tex_size, float angle, IStatObj* pStatObj, uchar* pTmpBuffer, uint def_tid);
 	virtual uint Make3DSprite(int nTexSize, float fAngleStep, IStatObj* pStatObj);
@@ -483,7 +483,7 @@ public:
 	void EF_ApplyMatrixOps(TArray<SMatrixTransform>* MatrixOps, bool bEnable);
 
 	void GLSetCull(ECull eCull);
-	void EF_ClearBuffers(bool bForce, bool bOnlyDepth, float* Colors = NULL);
+	void EF_ClearBuffers(bool bForce, bool bOnlyDepth, float* Colors = nullptr);
 
 	void EF_SetObjectTransform(CCObject* obj, SShader* pSH, int nTransFlags);
 	bool EF_ObjectChange(SShader* Shader, SRenderShaderResources* Res, int nObject, CRendElement* pRE);
@@ -1415,7 +1415,7 @@ class CGLTexMan : public CTexMan
 	CCamera m_PrevCamera;
 
 protected:
-	virtual STexPic* CreateTexture(const char* name, int wdt, int hgt, int Depth, uint flags, uint flags2, byte* dst, ETexType eTT, float fAmount1 = -1.0f, float fAmount2 = -1.0f, int DXTSize = 0, STexPic* ti = NULL, int bind = 0, ETEX_Format eTF = eTF_8888, const char* szSourceName = NULL);
+	virtual STexPic* CreateTexture(const char* name, int wdt, int hgt, int Depth, uint flags, uint flags2, byte* dst, ETexType eTT, float fAmount1 = -1.0f, float fAmount2 = -1.0f, int DXTSize = 0, STexPic* ti = nullptr, int bind = 0, ETEX_Format eTF = eTF_8888, const char* szSourceName = nullptr);
 	virtual STexPic* CopyTexture(const char* name, STexPic* ti, int CubeSide = -1);
 
 public:
@@ -1502,8 +1502,8 @@ public:
 
 	CGLTexMan() : CTexMan()
 	{
-		m_EnvPBuffer = NULL;
-		m_PBuffer_256 = NULL;
+		m_EnvPBuffer = nullptr;
+		m_PBuffer_256 = nullptr;
 		m_CurCubemapBind = 0;
 	}
 	virtual ~CGLTexMan();

@@ -57,7 +57,7 @@ struct IBindable
 	virtual void RenderShadowVolumes(const struct SRendParams* pParams, int nLimitLod = -1) = 0;
 
 	//! Sets shader template for rendering
-	virtual bool SetShaderTemplate(int nTemplate, const char* TemplName, const char* ShaderName, bool bOnlyRegister = false, int* pnNewTemplateId = NULL) = 0;
+	virtual bool SetShaderTemplate(int nTemplate, const char* TemplName, const char* ShaderName, bool bOnlyRegister = false, int* pnNewTemplateId = nullptr) = 0;
 
 	// Description:
 	//     Values for the nFlags parameter of SetShaderTemplateName.
@@ -73,7 +73,7 @@ struct IBindable
 	{
 		// [Sergiy] please ask Tiago about details: this function maps to SetShaderTemplate because some of the derived classes (IStatObj)
 		// don't implement it, but do implement SetShaderTemplate. The mapping is exactly like in ScriptObjectEntity::SetShader function
-		return SetShaderTemplate(-1, TemplName, NULL);
+		return SetShaderTemplate(-1, TemplName, nullptr);
 	}
 
 	//there must be only one function
@@ -114,14 +114,14 @@ struct IBindable
 	// Return Value:
 	//     A pointer to an IStatObj object if the IBindable represent a static 
 	//     object, else the NULL value will be returned.
-	virtual struct IStatObj* GetIStatObj() { return NULL; }
+	virtual struct IStatObj* GetIStatObj() { return nullptr; }
 
 	// Summary:
 	//     Get the character instance, if valid
 	// Return Value:
 	//     A pointer to an ICryCharInstance object if the IBindable represent 
 	//     a character instance, else the NULL value will be returned.
-	virtual struct ICryCharInstance* GetICryCharInstance() { return NULL; }
+	virtual struct ICryCharInstance* GetICryCharInstance() { return nullptr; }
 };
 
 #endif

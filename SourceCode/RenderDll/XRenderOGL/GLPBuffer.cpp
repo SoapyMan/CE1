@@ -12,7 +12,7 @@
 #include "GLPBuffer.h"
 
 
-CPBuffer::CPBuffer(int w, int h, unsigned int mode) : m_Width(w), m_Height(h), m_Mode(mode), m_MyDC(NULL), m_MyGLctx(NULL), m_Buffer(NULL)
+CPBuffer::CPBuffer(int w, int h, unsigned int mode) : m_Width(w), m_Height(h), m_Mode(mode), m_MyDC(nullptr), m_MyGLctx(nullptr), m_Buffer(nullptr)
 {
 }
 

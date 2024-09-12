@@ -60,9 +60,9 @@ __forceinline void g_InitInterfaces(ISystem* pISystem)
 	g_pIStreamEngine = pISystem->GetStreamEngine();
 
 	//we initialize this pointers in CryCharManager::Update() 
-	g_pIRenderer = NULL;	//pISystem->GetIRenderer();
-	g_pIPhysicalWorld = NULL;	//pISystem->GetIPhysicalWorld();
-	g_pI3DEngine = NULL;	//pISystem->GetI3DEngine();
+	g_pIRenderer = nullptr;	//pISystem->GetIRenderer();
+	g_pIPhysicalWorld = nullptr;	//pISystem->GetIPhysicalWorld();
+	g_pI3DEngine = nullptr;	//pISystem->GetI3DEngine();
 
 	//---------------------------------------------------
 
@@ -83,18 +83,18 @@ __forceinline void g_InitInterfaces(ISystem* pISystem)
 __forceinline void g_DeleteInterfaces()
 {
 	delete g_pCVariables;
-	g_pCVariables = NULL;
+	g_pCVariables = nullptr;
 
-	g_pISystem = NULL;
-	g_pITimer = NULL;
-	g_pILog = NULL;
-	g_pIConsole = NULL;
-	g_pIPak = NULL;
-	g_pIStreamEngine = NULL;;
+	g_pISystem = nullptr;
+	g_pITimer = nullptr;
+	g_pILog = nullptr;
+	g_pIConsole = nullptr;
+	g_pIPak = nullptr;
+	g_pIStreamEngine = nullptr;;
 
-	g_pIRenderer = NULL;
-	g_pIPhysicalWorld = NULL;
-	g_pI3DEngine = NULL;
+	g_pIRenderer = nullptr;
+	g_pIPhysicalWorld = nullptr;
+	g_pI3DEngine = nullptr;
 }
 
 

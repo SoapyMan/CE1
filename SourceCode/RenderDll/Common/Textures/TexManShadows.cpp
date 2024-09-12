@@ -48,12 +48,12 @@ bool STexShadow::Init(byte* pHeightMap, int Width, int Height, bool bHeightmap)
 		if (!BuildInterleavedMap(pBasisTex, pBasisMap[0], pBasisMap[1], pBasisMap[2], pBasisMap[3], BASISMAPSIZE, BASISMAPSIZE))
 			return false;
 		sprintf(name, "$AutoBasis_%d", gRenDev->m_TexGenID++);
-		m_pBasisTex[0] = gRenDev->m_TexMan->CreateTexture(name, BASISMAPSIZE, BASISMAPSIZE, 1, flags, FT2_NODXT, (byte*)pBasisTex, eTT_Base, -1.0f, -1.0f, 0, NULL, 0, eTF_8888);
+		m_pBasisTex[0] = gRenDev->m_TexMan->CreateTexture(name, BASISMAPSIZE, BASISMAPSIZE, 1, flags, FT2_NODXT, (byte*)pBasisTex, eTT_Base, -1.0f, -1.0f, 0, nullptr, 0, eTF_8888);
 
 		if (!BuildInterleavedMap(pBasisTex, pBasisMap[4], pBasisMap[5], pBasisMap[6], pBasisMap[7], BASISMAPSIZE, BASISMAPSIZE))
 			return false;
 		sprintf(name, "$AutoBasis_%d", gRenDev->m_TexGenID++);
-		m_pBasisTex[1] = gRenDev->m_TexMan->CreateTexture(name, BASISMAPSIZE, BASISMAPSIZE, 1, flags, FT2_NODXT, (byte*)pBasisTex, eTT_Base, -1.0f, -1.0f, 0, NULL, 0, eTF_8888);
+		m_pBasisTex[1] = gRenDev->m_TexMan->CreateTexture(name, BASISMAPSIZE, BASISMAPSIZE, 1, flags, FT2_NODXT, (byte*)pBasisTex, eTT_Base, -1.0f, -1.0f, 0, nullptr, 0, eTF_8888);
 
 		delete[] pBasisTex;
 		for (i = 0; i < 8; i++)
@@ -64,7 +64,7 @@ bool STexShadow::Init(byte* pHeightMap, int Width, int Height, bool bHeightmap)
 
 	byte* pHorizonMap[8];
 
-	/*float *pHeight = NULL;
+	/*float *pHeight = nullptr;
 	float fRangeH;
 	if (!bHeightmap)
 	{
@@ -119,7 +119,7 @@ bool STexShadow::Init(byte* pHeightMap, int Width, int Height, bool bHeightmap)
 	{
 		pHorizonMap[i] = new BYTE[Width * Height];
 
-		if (pHorizonMap[i] == NULL)
+		if (pHorizonMap[i] == nullptr)
 			return false;
 
 		if (bHeightmap)
@@ -137,12 +137,12 @@ bool STexShadow::Init(byte* pHeightMap, int Width, int Height, bool bHeightmap)
 	if (!BuildInterleavedMap(pHorizonTex, pHorizonMap[0], pHorizonMap[1], pHorizonMap[2], pHorizonMap[3], Width, Height))
 		return false;
 	sprintf(name, "$AutoHorizon_%d", gRenDev->m_TexGenID++);
-	m_pHorizonTex[0] = gRenDev->m_TexMan->CreateTexture(name, Width, Height, 1, flags, FT2_NODXT, (byte*)pHorizonTex, eTT_Base, -1.0f, -1.0f, 0, NULL, 0, eTF_8888);
+	m_pHorizonTex[0] = gRenDev->m_TexMan->CreateTexture(name, Width, Height, 1, flags, FT2_NODXT, (byte*)pHorizonTex, eTT_Base, -1.0f, -1.0f, 0, nullptr, 0, eTF_8888);
 
 	if (!BuildInterleavedMap(pHorizonTex, pHorizonMap[4], pHorizonMap[5], pHorizonMap[6], pHorizonMap[7], Width, Height))
 		return false;
 	sprintf(name, "$AutoHorizon_%d", gRenDev->m_TexGenID++);
-	m_pHorizonTex[1] = gRenDev->m_TexMan->CreateTexture(name, Width, Height, 1, flags, FT2_NODXT, (byte*)pHorizonTex, eTT_Base, -1.0f, -1.0f, 0, NULL, 0, eTF_8888);
+	m_pHorizonTex[1] = gRenDev->m_TexMan->CreateTexture(name, Width, Height, 1, flags, FT2_NODXT, (byte*)pHorizonTex, eTT_Base, -1.0f, -1.0f, 0, nullptr, 0, eTF_8888);
 
 	delete[] pHorizonTex;
 

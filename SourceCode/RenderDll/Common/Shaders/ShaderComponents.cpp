@@ -29,16 +29,16 @@ int SArrayPointer_Vertex::m_nFrameCreateBuf;
 bool SArrayPointer_Vertex::mfCompile(char* scr, SShader* ef)
 {
 	eDst = eDstPointer_Vert;
-	char* type = strtok(NULL, " ,");
+	char* type = strtok(nullptr, " ,");
 	NumComponents = atol(type);
 
-	type = strtok(NULL, " ,");
+	type = strtok(nullptr, " ,");
 	if (!stricmp(type, "byte"))
 		Type = GL_UNSIGNED_BYTE;
 	else
 		Type = GL_FLOAT;
 
-	type = strtok(NULL, " ,");
+	type = strtok(nullptr, " ,");
 	ePT = gRenDev->m_cEF.mfParseSrcPointer(type, ef);
 
 	return true;
@@ -51,14 +51,14 @@ int SArrayPointer_Normal::m_nFrameCreateBuf;
 bool SArrayPointer_Normal::mfCompile(char* scr, SShader* ef)
 {
 	eDst = eDstPointer_Normal;
-	char* type = strtok(NULL, " ,");
+	char* type = strtok(nullptr, " ,");
 
 	if (!stricmp(type, "byte"))
 		Type = GL_BYTE;
 	else
 		Type = GL_FLOAT;
 
-	type = strtok(NULL, " ,");
+	type = strtok(nullptr, " ,");
 	ePT = gRenDev->m_cEF.mfParseSrcPointer(type, ef);
 
 	return true;
@@ -71,15 +71,15 @@ int SArrayPointer_Texture::m_nFrameCreateBuf[8];
 bool SArrayPointer_Texture::mfCompile(char* scr, SShader* ef)
 {
 	eDst = eDstPointer_Tex0;
-	char* type = strtok(NULL, " ,");
+	char* type = strtok(nullptr, " ,");
 	NumComponents = atol(type);
 
-	type = strtok(NULL, " ,");
+	type = strtok(nullptr, " ,");
 	Type = GL_FLOAT;
 
-	type = strtok(NULL, " ,");
+	type = strtok(nullptr, " ,");
 
-	char* ns = strtok(NULL, " ,");
+	char* ns = strtok(nullptr, " ,");
 	if (ns)
 		Stage = atoi(ns);
 	ePT = gRenDev->m_cEF.mfParseSrcPointer(type, ef);
@@ -93,16 +93,16 @@ int SArrayPointer_Color::m_nFrameCreateBuf;
 bool SArrayPointer_Color::mfCompile(char* scr, SShader* ef)
 {
 	eDst = eDstPointer_Color;
-	char* type = strtok(NULL, " ,");
+	char* type = strtok(nullptr, " ,");
 	NumComponents = atol(type);
 
-	type = strtok(NULL, " ,");
+	type = strtok(nullptr, " ,");
 	if (!stricmp(type, "byte"))
 		Type = GL_UNSIGNED_BYTE;
 	else
 		Type = GL_FLOAT;
 
-	type = strtok(NULL, " ,");
+	type = strtok(nullptr, " ,");
 	ePT = gRenDev->m_cEF.mfParseSrcPointer(type, ef);
 
 	return true;
@@ -114,16 +114,16 @@ int SArrayPointer_SecColor::m_nFrameCreateBuf;
 bool SArrayPointer_SecColor::mfCompile(char* scr, SShader* ef)
 {
 	eDst = eDstPointer_SecColor;
-	char* type = strtok(NULL, " ,");
+	char* type = strtok(nullptr, " ,");
 	NumComponents = atol(type);
 
-	type = strtok(NULL, " ,");
+	type = strtok(nullptr, " ,");
 	if (!stricmp(type, "byte"))
 		Type = GL_UNSIGNED_BYTE;
 	else
 		Type = GL_FLOAT;
 
-	type = strtok(NULL, " ,");
+	type = strtok(nullptr, " ,");
 	ePT = gRenDev->m_cEF.mfParseSrcPointer(type, ef);
 
 	return true;
@@ -199,7 +199,7 @@ SArrayPointer* SArrayPointer::AddNew(SArrayPointer& New)
 		if (New == *p)
 			return p;
 	}
-	p = NULL;
+	p = nullptr;
 	switch (New.eDst)
 	{
 	case eDstPointer_Vert:
@@ -967,7 +967,7 @@ bool CShader::mfCompilePlantsTMoving(char* scr, SShader* ef, TArray<SParam>* Par
 
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else
@@ -1035,7 +1035,7 @@ bool CShader::mfCompileCGParam(char* scr, SShader* ef, TArray<SCGParam4f>* Param
 	pr.m_eCGParamType = ECGP_Float4;
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else
@@ -1123,7 +1123,7 @@ void CShader::mfCompileParamMatrix(char* scr, SShader* ef, SParamComp_Matrix* pc
 	int Stage = 0;
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else
@@ -1366,7 +1366,7 @@ bool CShader::mfCompileParam(char* scr, SShader* ef, TArray<SParam>* Params)
 
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else
@@ -2131,7 +2131,7 @@ SParamComp* SParamComp::mfAdd(SParamComp* pPC)
 		if (p->m_eType == pPC->m_eType && p->mfIsEqual(pPC))
 			return p;
 	}
-	SParamComp* pc = NULL;
+	SParamComp* pc = nullptr;
 	switch (pPC->m_eType)
 	{
 	case EParamComp_BumpAmount:
@@ -3888,7 +3888,7 @@ void SParamComp_TexProjMatrix::mfGet4f(vec4_t v)
 			bool bReflect = false;
 			if ((gRenDev->m_RP.m_pShader->m_Flags3 & (EF3_CLIPPLANE_FRONT | EF3_REFLECTION)))
 				bReflect = true;
-			SEnvTexture* cm = NULL;
+			SEnvTexture* cm = nullptr;
 			Vec3d Angs = gRenDev->GetCamera().GetAngles();
 			Vec3d Pos = gRenDev->GetCamera().GetPos();
 			cm = gRenDev->m_cEF.mfFindSuitableEnvTex(Pos, Angs, true, 0, false, gRenDev->m_RP.m_pShader, gRenDev->m_RP.m_pShaderResources, gRenDev->m_RP.m_pCurObject, bReflect, gRenDev->m_RP.m_pRE);
@@ -4045,7 +4045,7 @@ void SParamComp_EnvColor::mfGet4f(vec4_t v)
 {
 	if (!gRenDev->m_RP.m_pCurEnvTexture)
 	{
-		SEnvTexture* cm = NULL;
+		SEnvTexture* cm = nullptr;
 		Vec3 vTrans(gRenDev->m_RP.m_pCurObject->GetTranslation());
 		cm = gRenDev->m_cEF.mfFindSuitableEnvLCMap(vTrans, true, 0, 0);
 		if (cm)

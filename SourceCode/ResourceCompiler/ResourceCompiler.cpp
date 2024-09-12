@@ -63,7 +63,7 @@ ResourceCompiler::~ResourceCompiler()
 	if (m_pIPhysicalWorld)
 	{
 		m_pIPhysicalWorld->Release();
-		m_pIPhysicalWorld = NULL;
+		m_pIPhysicalWorld = nullptr;
 	}
 
 	// close files if open
@@ -580,7 +580,7 @@ CryChunkedFile* ResourceCompiler::LoadCryChunkedFile(const char* szFileName)
 {
 	CChunkFileReader_AutoPtr pReader = new CChunkFileReader();
 	if (!pReader->open(szFileName))
-		return NULL;
+		return nullptr;
 
 	try
 	{
@@ -589,12 +589,12 @@ CryChunkedFile* ResourceCompiler::LoadCryChunkedFile(const char* szFileName)
 	catch (CryChunkedFile::Error& e)
 	{
 		LogError("%s", e.strDesc.c_str());
-		return NULL;
+		return nullptr;
 	}
 	catch (...)
 	{
 		LogError("UNEXPECTED ERROR while trying to load Cry Chunked File \"%s\"", szFileName);
-		return NULL;
+		return nullptr;
 	}
 }
 
@@ -616,7 +616,7 @@ void MessageBoxError(const char* format, ...)
 	str += szBuffer;
 
 	//	printf( "%s\n",str );
-	MessageBox(NULL, szBuffer, _T("Error"), MB_OK | MB_ICONERROR);
+	MessageBox(nullptr, szBuffer, _T("Error"), MB_OK | MB_ICONERROR);
 }
 
 /*
@@ -678,7 +678,7 @@ void RegisterConvertors(IResourceCompiler* rc)
 	string strDir;
 	{
 		char szRCPath[1000];
-		if (GetModuleFileName(NULL, szRCPath, sizeof(szRCPath)))
+		if (GetModuleFileName(nullptr, szRCPath, sizeof(szRCPath)))
 			strDir = CryStringUtils::GetParentDirectory<string>(szRCPath) + "\\";
 	}
 	__finddata64_t fd;
@@ -693,7 +693,7 @@ void RegisterConvertors(IResourceCompiler* rc)
 				continue;
 			}
 
-			FnRegisterConvertors fnRegister = hPlugin ? (FnRegisterConvertors)GetProcAddress(hPlugin, "RegisterConvertors") : NULL;
+			FnRegisterConvertors fnRegister = hPlugin ? (FnRegisterConvertors)GetProcAddress(hPlugin, "RegisterConvertors") : nullptr;
 			if (!fnRegister)
 			{
 				log->Log("Error: plug-in module %s doesn't have RegisterConvertors function", fd.name);
@@ -866,11 +866,11 @@ HWND ResourceCompiler::GetEmptyWindow()
 		wc.lpfnWndProc = DefWindowProc;
 		wc.cbClsExtra = 0;
 		wc.cbWndExtra = 0;
-		wc.hInstance = (HINSTANCE)GetModuleHandle(NULL);
+		wc.hInstance = (HINSTANCE)GetModuleHandle(nullptr);
 		wc.lpszClassName = szClassName;
 
 		ATOM atomWndClass = RegisterClass(&wc);
-		m_hEmptyWindow = CreateWindow(szClassName, "DirectXEmpty", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 256, 256, NULL, NULL, wc.hInstance, 0);
+		m_hEmptyWindow = CreateWindow(szClassName, "DirectXEmpty", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 256, 256, nullptr, nullptr, wc.hInstance, 0);
 	}
 	return m_hEmptyWindow;
 }

@@ -66,7 +66,7 @@ namespace CryStringUtils
 			case '/':
 			case '\\':
 				// we've reached a path separator - it means there's no extension in this name
-				return NULL;
+				return nullptr;
 			case '.':
 				// there's an extension in this file name
 				*p = '\0';
@@ -74,7 +74,7 @@ namespace CryStringUtils
 			}
 		}
 		// it seems the file name is a pure name, without path or extension
-		return NULL;
+		return nullptr;
 	}
 
 
@@ -146,7 +146,7 @@ namespace CryStringUtils
 			if (strnicmp(szString + nSubstringPos, szSubstring, nSubstringLength) == 0)
 				return szString + nSubstringPos;
 		}
-		return NULL;
+		return nullptr;
 	}
 
 	// replaces slashes
@@ -218,7 +218,7 @@ namespace CryStringUtils
 			if (strncmp(szString + nSubstringPos, szSubstring, nSubstringLength) == 0)
 				return szString + nSubstringPos;
 		}
-		return NULL;
+		return nullptr;
 	}
 
 
@@ -332,14 +332,14 @@ namespace CryStringUtils
 				((k += inc) < buflen))
 				;
 			if (k >= buflen)
-				return NULL; // we didn't find
+				return nullptr; // we didn't find
 
 			s = buffer + (k++ - (patlen - 1));
 			if (!strncmp(s, m_strPattern.c_str(), patlen))
 				return s;
 		}
 
-		return NULL;
+		return nullptr;
 	}
 	*/
 

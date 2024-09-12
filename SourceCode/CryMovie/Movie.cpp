@@ -38,8 +38,8 @@ CMovieSystem::CMovieSystem(ISystem* system)
 {
 	m_system = system;
 	m_bRecording = false;
-	m_pCallback = NULL;
-	m_pUser = NULL;
+	m_pCallback = nullptr;
+	m_pUser = nullptr;
 	m_bPaused = false;
 	m_bLastFrameAnimateOnStop = true;
 	m_lastGenId = 1;
@@ -59,7 +59,7 @@ bool CMovieSystem::Load(const char* pszFile, const char* pszMission)
 	XmlNodeRef rootNode = m_system->LoadXmlFile(pszFile);
 	if (!rootNode)
 		return false;
-	XmlNodeRef Node = NULL;
+	XmlNodeRef Node = nullptr;
 	for (int i = 0; i < rootNode->getChildCount(); i++)
 	{
 		XmlNodeRef missionNode = rootNode->getChild(i);
@@ -80,7 +80,7 @@ bool CMovieSystem::Load(const char* pszFile, const char* pszMission)
 //////////////////////////////////////////////////////////////////////////
 IAnimNode* CMovieSystem::CreateNode(int nodeType, int nodeId)
 {
-	CAnimNode* node = NULL;
+	CAnimNode* node = nullptr;
 	if (!nodeId)
 	{
 		// Make uniq id.
@@ -173,7 +173,7 @@ IAnimSequence* CMovieSystem::LoadSequence(const char* pszFilePath)
 	{
 		return LoadSequence(sequenceNode);
 	}
-	return NULL;
+	return nullptr;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -221,7 +221,7 @@ void CMovieSystem::RemoveSequence(IAnimSequence* seq)
 	if (seq)
 	{
 		IMovieCallback* pCallback = GetCallback();
-		SetCallback(NULL);
+		SetCallback(nullptr);
 		StopSequence(seq);
 
 		for (Sequences::iterator it = m_sequences.begin(); it != m_sequences.end(); ++it)
@@ -283,7 +283,7 @@ void CMovieSystem::RemoveAllSequences()
 {
 	m_bLastFrameAnimateOnStop = false;
 	IMovieCallback* pCallback = GetCallback();
-	SetCallback(NULL);
+	SetCallback(nullptr);
 	StopAllSequences();
 	m_sequences.clear();
 	SetCallback(pCallback);
@@ -295,7 +295,7 @@ void CMovieSystem::RemoveAllNodes()
 {
 	m_bLastFrameAnimateOnStop = false;
 	IMovieCallback* pCallback = GetCallback();
-	SetCallback(NULL);
+	SetCallback(nullptr);
 	StopAllSequences();
 	m_nodes.clear();
 	SetCallback(pCallback);
@@ -488,7 +488,7 @@ void CMovieSystem::Reset(bool bPlayOnReset)
 
 	// Reset camera.
 	SCameraParams CamParams = GetCameraParams();
-	CamParams.cameraNode = NULL;
+	CamParams.cameraNode = nullptr;
 	CamParams.nCameraId = 0;
 	SetCameraParams(CamParams);
 }
@@ -505,7 +505,7 @@ void CMovieSystem::PlayOnLoadSequences()
 
 	// Reset camera.
 	SCameraParams CamParams = GetCameraParams();
-	CamParams.cameraNode = NULL;
+	CamParams.cameraNode = nullptr;
 	CamParams.nCameraId = 0;
 	SetCameraParams(CamParams);
 }
@@ -619,7 +619,7 @@ void CMovieSystem::Serialize(XmlNodeRef& xmlNode, bool bLoading, bool bRemoveOld
 			for (int i = 0; i < nodeNode->getChildCount(); i++)
 			{
 				XmlNodeRef node = nodeNode->getChild(i);
-				IAnimNode* pAnimNode = NULL;
+				IAnimNode* pAnimNode = nullptr;
 				string sTarget;
 
 				int nodeId = atoi(node->getAttr("Id"));

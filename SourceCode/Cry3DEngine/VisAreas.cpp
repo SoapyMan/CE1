@@ -473,13 +473,13 @@ void CVisArea::DrawVolume(CObjManager* pObjManager, int nReqursionLevel,
 	// render area statics
 	DrawEntities(m_nFogVolumeId, nDLMask, 0, CurCamera,
 		m_lstShapePoints.Count() ? &m_vAmbColor : 0, m_lstShapePoints.Count() ? &m_vDynAmbColor : 0,
-		NULL, true, 0, pObjManager,
+		nullptr, true, 0, pObjManager,
 		IsPointInsideVisArea(GetViewCamera().GetPos()), "", STATIC_ENTITIES);
 
 	// render area entities
 	DrawEntities(m_nFogVolumeId, nDLMask, 0, CurCamera,
 		m_lstShapePoints.Count() ? &m_vAmbColor : 0, m_lstShapePoints.Count() ? &m_vDynAmbColor : 0,
-		NULL, true, 0, pObjManager,
+		nullptr, true, 0, pObjManager,
 		IsPointInsideVisArea(GetViewCamera().GetPos()), "", DYNAMIC_ENTITIES);
 
 	// limit recursion and portal activity

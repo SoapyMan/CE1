@@ -48,7 +48,7 @@ void CLeafBuffer::UpdateCustomLighting(float fBackSideLevel, Vec3d vStatObjAmbie
 	int nPosStride = m_VertexSize[m_pSecVertBuffer->m_vertexformat];
 	int nNormStride, nColorStride, nInfoStride;
 	bool* arrCullInfo = new bool[m_SecVertCount];
-	ushort* pInds = GetIndices(NULL);
+	ushort* pInds = GetIndices(nullptr);
 	bool bWasBark = false;
 	for (int i = 0; i < (*m_pMats).Count(); i++)
 	{
@@ -314,7 +314,7 @@ void CLeafBuffer::Render(const SRendParams& rParams, CCObject* pObj, TArray<int>
 {
 	int nSortValue = (rParams.dwFObjFlags & FOB_NEAREST) ? eS_Nearest : rParams.nSortValue;
 
-	CCObject* pObjTransp = NULL;
+	CCObject* pObjTransp = nullptr;
 	for (int i = 0; i < m_pMats->Count(); i++)
 	{
 		CMatInfo* pMat = m_pMats->Get(i);
@@ -346,7 +346,7 @@ void CLeafBuffer::Render(const SRendParams& rParams, CCObject* pObj, TArray<int>
 				nTempl = ShaderTemplates[i];
 
 			if (rParams.nShaderTemplate > 0)
-				pShader->AddTemplate((SRenderShaderResources*)sr, (int&)rParams.nShaderTemplate, (const char*)NULL);
+				pShader->AddTemplate((SRenderShaderResources*)sr, (int&)rParams.nShaderTemplate, (const char*)nullptr);
 
 			if (rParams.dwFObjFlags & FOB_FOGPASS)
 				if (pShader->mfGetTemplate(-1)->m_Flags & EF_OVERLAY)

@@ -29,11 +29,11 @@ SRenderShaderResources::~SRenderShaderResources()
 		if (m_Textures[i])
 		{
 			delete m_Textures[i];
-			m_Textures[i] = NULL;
+			m_Textures[i] = nullptr;
 		}
 	}
 	SAFE_RELEASE(m_LMaterial);
-	SShader::m_ShaderResources_known[m_Id] = NULL;
+	SShader::m_ShaderResources_known[m_Id] = nullptr;
 }
 
 SRenderShaderResources::SRenderShaderResources(SInputShaderResources* pSrc)
@@ -60,7 +60,7 @@ SRenderShaderResources::SRenderShaderResources(SInputShaderResources* pSrc)
 		{
 			if (m_Textures[i])
 				m_Textures[i]->Reset();
-			m_Textures[i] = NULL;
+			m_Textures[i] = nullptr;
 		}
 	}
 
@@ -75,32 +75,32 @@ SRenderShaderResources* CShader::mfCreateShaderResources(const SInputShaderResou
 
 	for (i = 0; i < EFTT_MAX; i++)
 	{
-		RS.m_Textures[i].m_TU.m_TexPic = NULL;
+		RS.m_Textures[i].m_TU.m_TexPic = nullptr;
 		if (RS.m_Textures[i].m_TexFlags & TEXMAP_NOMIPMAP)
 			RS.m_Textures[i].m_TU.m_nFlags |= FTU_NOMIPS;
 
 		if (i == EFTT_DETAIL_OVERLAY && !RS.m_Textures[i].m_Name.empty())
 		{
-			RS.m_Textures[i].m_TU.m_TexPic = mfLoadResourceTexture(RS.m_Textures[i].m_Name.c_str(), RS.m_TexturePath.c_str(), RS.m_Textures[i].m_TU.GetTexFlags(), RS.m_Textures[i].m_TU.GetTexFlags2(), eTT_Base, NULL, &RS.m_Textures[i], RS.m_Textures[i].m_Amount);
+			RS.m_Textures[i].m_TU.m_TexPic = mfLoadResourceTexture(RS.m_Textures[i].m_Name.c_str(), RS.m_TexturePath.c_str(), RS.m_Textures[i].m_TU.GetTexFlags(), RS.m_Textures[i].m_TU.GetTexFlags2(), eTT_Base, nullptr, &RS.m_Textures[i], RS.m_Textures[i].m_Amount);
 			if (!RS.m_Textures[i].m_TU.m_TexPic->IsTextureLoaded())
 			{
 				Warning(VALIDATOR_FLAG_TEXTURE, RS.m_Textures[i].m_Name.c_str(), "Error: CShader::mfCreateShaderResources: Couldn't find detail texture\n'%s' in path '%s'\n", RS.m_Textures[i].m_Name.c_str(), RS.m_TexturePath.c_str());
-				RS.m_Textures[i].m_TU.m_TexPic = mfLoadResourceTexture(CRenderer::CV_r_detaildefault->GetString(), RS.m_TexturePath.c_str(), RS.m_Textures[i].m_TU.GetTexFlags(), RS.m_Textures[i].m_TU.GetTexFlags2(), eTT_Base, NULL, &RS.m_Textures[i], RS.m_Textures[i].m_Amount);
+				RS.m_Textures[i].m_TU.m_TexPic = mfLoadResourceTexture(CRenderer::CV_r_detaildefault->GetString(), RS.m_TexturePath.c_str(), RS.m_Textures[i].m_TU.GetTexFlags(), RS.m_Textures[i].m_TU.GetTexFlags2(), eTT_Base, nullptr, &RS.m_Textures[i], RS.m_Textures[i].m_Amount);
 				if (!RS.m_Textures[i].m_TU.m_TexPic->IsTextureLoaded())
-					RS.m_Textures[i].m_TU.m_TexPic = mfLoadResourceTexture("Textures/detail/rock", RS.m_TexturePath.c_str(), RS.m_Textures[i].m_TU.GetTexFlags(), RS.m_Textures[i].m_TU.GetTexFlags2(), eTT_Base, NULL, &RS.m_Textures[i], RS.m_Textures[i].m_Amount);
+					RS.m_Textures[i].m_TU.m_TexPic = mfLoadResourceTexture("Textures/detail/rock", RS.m_TexturePath.c_str(), RS.m_Textures[i].m_TU.GetTexFlags(), RS.m_Textures[i].m_TU.GetTexFlags2(), eTT_Base, nullptr, &RS.m_Textures[i], RS.m_Textures[i].m_Amount);
 			}
 		}
 
 		if (i == EFTT_DECAL_OVERLAY && !RS.m_Textures[i].m_Name.empty())
 		{
-			RS.m_Textures[i].m_TU.m_TexPic = mfLoadResourceTexture(RS.m_Textures[i].m_Name.c_str(), RS.m_TexturePath.c_str(), RS.m_Textures[i].m_TU.GetTexFlags(), RS.m_Textures[i].m_TU.GetTexFlags2(), eTT_Base, NULL, &RS.m_Textures[i], RS.m_Textures[i].m_Amount);
+			RS.m_Textures[i].m_TU.m_TexPic = mfLoadResourceTexture(RS.m_Textures[i].m_Name.c_str(), RS.m_TexturePath.c_str(), RS.m_Textures[i].m_TU.GetTexFlags(), RS.m_Textures[i].m_TU.GetTexFlags2(), eTT_Base, nullptr, &RS.m_Textures[i], RS.m_Textures[i].m_Amount);
 			if (!RS.m_Textures[i].m_TU.m_TexPic->IsTextureLoaded())
 				Warning(VALIDATOR_FLAG_TEXTURE, RS.m_Textures[i].m_Name.c_str(), "Error: CShader::mfCreateShaderResources: Couldn't find decal texture\n'%s' in path '%s'\n", RS.m_Textures[i].m_Name.c_str(), RS.m_TexturePath.c_str());
 		}
 
 		if (i == EFTT_SUBSURFACE && !RS.m_Textures[i].m_Name.empty())
 		{
-			RS.m_Textures[i].m_TU.m_TexPic = mfLoadResourceTexture(RS.m_Textures[i].m_Name.c_str(), RS.m_TexturePath.c_str(), RS.m_Textures[i].m_TU.GetTexFlags(), RS.m_Textures[i].m_TU.GetTexFlags2(), eTT_Base, NULL, &RS.m_Textures[i], RS.m_Textures[i].m_Amount);
+			RS.m_Textures[i].m_TU.m_TexPic = mfLoadResourceTexture(RS.m_Textures[i].m_Name.c_str(), RS.m_TexturePath.c_str(), RS.m_Textures[i].m_TU.GetTexFlags(), RS.m_Textures[i].m_TU.GetTexFlags2(), eTT_Base, nullptr, &RS.m_Textures[i], RS.m_Textures[i].m_Amount);
 			if (!RS.m_Textures[i].m_TU.m_TexPic->IsTextureLoaded())
 				Warning(VALIDATOR_FLAG_TEXTURE, RS.m_Textures[i].m_Name.c_str(), "Error: CShader::mfCreateShaderResources: Couldn't find subsurface texture\n'%s' in path '%s'\n", RS.m_Textures[i].m_Name.c_str(), RS.m_TexturePath.c_str());
 		}
@@ -111,9 +111,9 @@ SRenderShaderResources* CShader::mfCreateShaderResources(const SInputShaderResou
 			if (!Tex->m_TU.m_TexPic)
 			{
 				if (!Tex->m_Name.empty())
-					Tex->m_TU.m_TexPic = mfLoadResourceTexture(Tex->m_Name.c_str(), RS.m_TexturePath.c_str(), Tex->m_TU.GetTexFlags(), Tex->m_TU.GetTexFlags2(), eTT_Base, NULL, Tex);
+					Tex->m_TU.m_TexPic = mfLoadResourceTexture(Tex->m_Name.c_str(), RS.m_TexturePath.c_str(), Tex->m_TU.GetTexFlags(), Tex->m_TU.GetTexFlags2(), eTT_Base, nullptr, Tex);
 				if (!Tex->m_TU.m_TexPic || !Tex->m_TU.m_TexPic->IsTextureLoaded())
-					Tex->m_TU.m_TexPic = mfLoadResourceTexture("Textures/Defaults/PointLight2D", RS.m_TexturePath.c_str(), Tex->m_TU.GetTexFlags(), Tex->m_TU.GetTexFlags2(), eTT_Base, NULL, Tex);
+					Tex->m_TU.m_TexPic = mfLoadResourceTexture("Textures/Defaults/PointLight2D", RS.m_TexturePath.c_str(), Tex->m_TU.GetTexFlags(), Tex->m_TU.GetTexFlags2(), eTT_Base, nullptr, Tex);
 			}
 		}
 		if (i == EFTT_ATTENUATION1D)
@@ -122,20 +122,20 @@ SRenderShaderResources* CShader::mfCreateShaderResources(const SInputShaderResou
 			if (!Tex->m_TU.m_TexPic)
 			{
 				if (!Tex->m_Name.empty())
-					Tex->m_TU.m_TexPic = mfLoadResourceTexture(Tex->m_Name.c_str(), RS.m_TexturePath.c_str(), Tex->m_TU.GetTexFlags(), Tex->m_TU.GetTexFlags2(), eTT_Base, NULL, Tex);
+					Tex->m_TU.m_TexPic = mfLoadResourceTexture(Tex->m_Name.c_str(), RS.m_TexturePath.c_str(), Tex->m_TU.GetTexFlags(), Tex->m_TU.GetTexFlags2(), eTT_Base, nullptr, Tex);
 				if (!Tex->m_TU.m_TexPic || !Tex->m_TU.m_TexPic->IsTextureLoaded())
 				{
 					if (gRenDev->m_TexMan->m_Text_Atten1D)
 						Tex->m_TU.m_TexPic = gRenDev->m_TexMan->m_Text_Atten1D;
 					else
-						Tex->m_TU.m_TexPic = mfLoadResourceTexture("Textures/Defaults/PointLight1D", RS.m_TexturePath.c_str(), Tex->m_TU.GetTexFlags(), Tex->m_TU.GetTexFlags2(), eTT_Base, NULL, Tex);
+						Tex->m_TU.m_TexPic = mfLoadResourceTexture("Textures/Defaults/PointLight1D", RS.m_TexturePath.c_str(), Tex->m_TU.GetTexFlags(), Tex->m_TU.GetTexFlags2(), eTT_Base, nullptr, Tex);
 				}
 			}
 		}
 	}
 
 	if (RS.m_LMaterial)
-		RS.m_LMaterial = SLightMaterial::mfAdd(NULL, RS.m_LMaterial);
+		RS.m_LMaterial = SLightMaterial::mfAdd(nullptr, RS.m_LMaterial);
 
 	int nFree = -1;
 	for (i = 1; i < SShader::m_ShaderResources_known.Num(); i++)
@@ -304,7 +304,7 @@ SShaderItem CShader::mfShaderItemForName(const char* nameEf, EShClass Class, boo
 
 	SI.m_pShaderResources = m_pCurResources;
 	SI.m_pShaderResources->PostLoad();
-	m_pCurResources = NULL;
+	m_pCurResources = nullptr;
 	return SI;
 }
 
@@ -313,9 +313,9 @@ SShaderItem CShader::mfShaderItemForName(const char* nameEf, EShClass Class, boo
 
 STexPic* CShader::mfCheckTemplateTexName(char* mapname, ETexType eTT, short& nFlags)
 {
-	STexPic* TexPic = NULL;
+	STexPic* TexPic = nullptr;
 	if (mapname[0] != '$')
-		return NULL;
+		return nullptr;
 
 	if (!stricmp(mapname, "$NormalizeCubemap") || !stricmp(mapname, "$NormalizationCubemap"))
 		TexPic = gRenDev->m_TexMan->m_Text_NormalizeCMap;
@@ -534,21 +534,21 @@ bool CShader::mfCheckAnimatedSequence(SShaderTexUnit* tl, STexPic* tx)
 
 STexPic* CShader::mfTryToLoadTexture(const char* nameTex, int Flags, int Flags2, byte eTT, SShader* sh, float fAmount1, float fAmount2)
 {
-	STexPic* tx = NULL;
+	STexPic* tx = nullptr;
 	if (nameTex && (strchr(nameTex, '#') && !strstr(nameTex, " #")) || (strchr(nameTex, '$') && !strstr(nameTex, " $"))) // test for " #" to skip max material names
 	{
 		TArray<STexPic*> Texs;
 		int n = mfReadTexSequence(sh, Texs, nameTex, eTT, Flags, Flags2, fAmount1, fAmount2);
 		if (n > 1)
 		{
-			STexPic* tp = NULL;
+			STexPic* tp = nullptr;
 			for (int j = 0; j < Texs.Num(); j++)
 			{
 				STexPic* t = Texs[j];
 				if (!j)
 				{
 					tx = t;
-					t->m_NextTxt = NULL;
+					t->m_NextTxt = nullptr;
 				}
 				else
 					tp->m_NextTxt = t;
@@ -559,7 +559,7 @@ STexPic* CShader::mfTryToLoadTexture(const char* nameTex, int Flags, int Flags2,
 	if (!tx)
 	{
 		tx = (STexPic*)gRenDev->EF_LoadTexture(nameTex, Flags, Flags2, eTT, fAmount1, fAmount2);
-		tx->m_NextTxt = NULL;
+		tx->m_NextTxt = nullptr;
 	}
 
 	return tx;
@@ -589,7 +589,7 @@ STexPic* CShader::mfLoadResourceTexture(const char* nameTex, const char* path, i
 			last_slash = strrchr(nameTex, '\\');
 			if (!last_slash)
 			{
-				return NULL;
+				return nullptr;
 			}
 			strcpy(name, last_slash + 1);
 			UsePath((char*)name, (char*)pPath, pname);
@@ -814,7 +814,7 @@ void CShader::mfCheckShaderResTextures(TArray<SShaderPass>& Dst, SShader* ef, SR
 															Tex->m_TU.m_TexPic = mfLoadResourceTexture(Tex->m_Name.c_str(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
 															if (!Tex->m_TU.m_TexPic->IsTextureLoaded())
 															{
-																Tex->m_TU.m_TexPic = NULL;
+																Tex->m_TU.m_TexPic = nullptr;
 															}
 														}
 													}
@@ -1139,7 +1139,7 @@ void CShader::mfCheckShaderResTexturesHW(TArray<SShaderPassHW>& Dst, SShader* ef
 																Tex->m_TU.m_TexPic = mfLoadResourceTexture(Tex->m_Name.c_str(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
 																if (!Tex->m_TU.m_TexPic->IsTextureLoaded())
 																{
-																	Tex->m_TU.m_TexPic = NULL;
+																	Tex->m_TU.m_TexPic = nullptr;
 																}
 															}
 														}
@@ -1298,7 +1298,7 @@ void SEfTemplates::mfClear(SShader* e)
 		if (m_nMaskAuto & (1 << i))
 		{
 			delete ef;
-			m_TemplShaders[i] = NULL;
+			m_TemplShaders[i] = nullptr;
 		}
 	}
 	mfSetPreferred(e);
@@ -1325,7 +1325,7 @@ bool CShader::mfRegisterTemplate(int nTemplId, char* Name, bool bReplace, bool b
 	}
 	strncpy(m_KnownTemplates[nTemplId].m_Name, Name, 63);
 	// Preload shader
-	m_KnownTemplates[nTemplId].m_pShader = mfForName(Name, eSH_World, 0, NULL);
+	m_KnownTemplates[nTemplId].m_pShader = mfForName(Name, eSH_World, 0, nullptr);
 	return true;
 }
 
@@ -1400,7 +1400,7 @@ bool CShader::mfAddTemplate(SRenderShaderResources* Res, SShader* ef, int IdTemp
 		Warning(0, 0, "Warning: CShader::mfAddTemplate: you cannot rename fixed template %d\n", IdTempl);
 		return false;
 	}
-	SRegTemplate* rt = NULL;
+	SRegTemplate* rt = nullptr;
 	if (IdTempl < EFT_USER_FIRST)
 		rt = &m_KnownTemplates[IdTempl];
 	const char* name = Name;
@@ -1417,7 +1417,7 @@ bool CShader::mfAddTemplate(SRenderShaderResources* Res, SShader* ef, int IdTemp
 	}
 
 	// Load template shader
-	SShader* eft = mfForName(name, eSH_Misc, 0, NULL, nMaskGen);
+	SShader* eft = mfForName(name, eSH_Misc, 0, nullptr, nMaskGen);
 	if (!eft || (eft->m_Flags & EF_NOTFOUND))
 	{
 		eft->Release();
@@ -1478,7 +1478,7 @@ void SShader::RemoveTemplate(int TemplId)
 		return;
 	if (m_Templates->m_TemplShaders[TemplId] != this)
 		m_Templates->m_TemplShaders[TemplId]->Release();
-	m_Templates->m_TemplShaders[TemplId] = NULL;
+	m_Templates->m_TemplShaders[TemplId] = nullptr;
 }
 
 bool SShader::AddTemplate(SRenderShaderResources* Res, int& TemplId, const char* Name, bool bSetPreferred, uint64 nMaskGen)
@@ -1590,7 +1590,7 @@ bool SShader::AddTemplate(SRenderShaderResources* Res, int& TemplId, const char*
 			return true;
 		}
 		m_Templates->m_TemplShaders[TemplId]->Release();
-		m_Templates->m_TemplShaders[TemplId] = NULL;
+		m_Templates->m_TemplShaders[TemplId] = nullptr;
 	}
 
 	m_Templates->mfReserve(TemplId);
@@ -1709,7 +1709,7 @@ void CShader::mfCompileTemplate(SShader* ef, char* scr)
 
 	while ((cmd = shGetObject(&scr, commands, &name, &params)) > 0)
 	{
-		data = NULL;
+		data = nullptr;
 		if (name)
 			data = name;
 		else
@@ -1719,56 +1719,56 @@ void CShader::mfCompileTemplate(SShader* ef, char* scr)
 		{
 		case eTexDecal:
 			Res.m_Textures[EFTT_DIFFUSE].m_Name = data;
-			Res.m_Textures[EFTT_DIFFUSE].m_TU.m_TexPic = NULL;
+			Res.m_Textures[EFTT_DIFFUSE].m_TU.m_TexPic = nullptr;
 			break;
 
 		case eTexAttenuation2D:
-			Res.m_Textures[EFTT_ATTENUATION2D].m_TU.m_TexPic = NULL;
+			Res.m_Textures[EFTT_ATTENUATION2D].m_TU.m_TexPic = nullptr;
 			Res.m_Textures[EFTT_ATTENUATION2D].m_Name = data;
 			Res.m_Textures[EFTT_ATTENUATION2D].m_TU.m_nFlags |= FTU_CLAMP;
 			break;
 
 		case eTexSubSurface:
-			Res.m_Textures[EFTT_SUBSURFACE].m_TU.m_TexPic = NULL;
+			Res.m_Textures[EFTT_SUBSURFACE].m_TU.m_TexPic = nullptr;
 			Res.m_Textures[EFTT_SUBSURFACE].m_Name = data;
 			break;
 
 		case eTexAttenuation1D:
-			Res.m_Textures[EFTT_ATTENUATION1D].m_TU.m_TexPic = NULL;
+			Res.m_Textures[EFTT_ATTENUATION1D].m_TU.m_TexPic = nullptr;
 			Res.m_Textures[EFTT_ATTENUATION1D].m_Name = data;
 			Res.m_Textures[EFTT_ATTENUATION1D].m_TU.m_nFlags |= FTU_CLAMP;
 			break;
 
 		case eTexDetail:
-			Res.m_Textures[EFTT_DETAIL_OVERLAY].m_TU.m_TexPic = NULL;
+			Res.m_Textures[EFTT_DETAIL_OVERLAY].m_TU.m_TexPic = nullptr;
 			Res.m_Textures[EFTT_DETAIL_OVERLAY].m_Name = data;
 			break;
 
 		case eTexBump:
-			Res.m_Textures[EFTT_BUMP].m_TU.m_TexPic = NULL;
+			Res.m_Textures[EFTT_BUMP].m_TU.m_TexPic = nullptr;
 			Res.m_Textures[EFTT_BUMP].m_Name = data;
 			Res.m_Textures[EFTT_BUMP].m_TU.m_eTexType = eTT_Bumpmap;
 			break;
 
 		case eTexSpecular:
-			Res.m_Textures[EFTT_SPECULAR].m_TU.m_TexPic = NULL;
+			Res.m_Textures[EFTT_SPECULAR].m_TU.m_TexPic = nullptr;
 			Res.m_Textures[EFTT_SPECULAR].m_Name = data;
 			break;
 
 		case eTexOcclusion:
-			Res.m_Textures[EFTT_OCCLUSION].m_TU.m_TexPic = NULL;
+			Res.m_Textures[EFTT_OCCLUSION].m_TU.m_TexPic = nullptr;
 			Res.m_Textures[EFTT_OCCLUSION].m_Name = data;
 			Res.m_Textures[EFTT_OCCLUSION].m_TU.m_eTexType = eTT_DSDTBump;
 			break;
 
 		case eTexCubemap:
-			Res.m_Textures[EFTT_CUBEMAP].m_TU.m_TexPic = NULL;
+			Res.m_Textures[EFTT_CUBEMAP].m_TU.m_TexPic = nullptr;
 			Res.m_Textures[EFTT_CUBEMAP].m_Name = data;
 			Res.m_Textures[EFTT_CUBEMAP].m_TU.m_eTexType = eTT_Cubemap;
 			break;
 
 		case eTexGloss:
-			Res.m_Textures[EFTT_GLOSS].m_TU.m_TexPic = NULL;
+			Res.m_Textures[EFTT_GLOSS].m_TU.m_TexPic = nullptr;
 			Res.m_Textures[EFTT_GLOSS].m_Name = data;
 			break;
 

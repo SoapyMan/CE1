@@ -31,12 +31,12 @@ public:
 		m_pIB = 0;
 
 		m_bLocked = false;
-		m_pLockedData = NULL;
+		m_pLockedData = nullptr;
 		m_nOffs = 0;
 
 		m_Count = theElementsCount;
 
-		HRESULT hr = pD3D->CreateIndexBuffer(theElementsCount * sizeof(Type), D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC, sizeof(Type) == 2 ? D3DFMT_INDEX16 : D3DFMT_INDEX32, D3DPOOL_DEFAULT, &m_pIB, NULL);
+		HRESULT hr = pD3D->CreateIndexBuffer(theElementsCount * sizeof(Type), D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC, sizeof(Type) == 2 ? D3DFMT_INDEX16 : D3DFMT_INDEX32, D3DPOOL_DEFAULT, &m_pIB, nullptr);
 		CRYASSERT((hr == D3D_OK) && (m_pIB));
 	}
 
@@ -47,7 +47,7 @@ public:
 		if (theLockCount > m_Count)
 		{
 			CRYASSERT(false);
-			return NULL;
+			return nullptr;
 		}
 
 		if (m_bLocked)
@@ -68,7 +68,7 @@ public:
 				nOffs = m_nOffs;
 				m_nOffs += theLockCount;
 			}
-			CRYASSERT(m_pLockedData != NULL);
+			CRYASSERT(m_pLockedData != nullptr);
 			m_bLocked = true;
 		}
 

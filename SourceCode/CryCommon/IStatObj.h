@@ -198,7 +198,7 @@ struct IStatObj : public IBindable
 	virtual Vec3 GetHelperPos(const char* szHelperName) = 0;
 
 	//! Returns name, position and rotation for specified helper id, returns false if id is out of range
-	virtual const char* GetHelperById(int nId, Vec3& vPos, Matrix44* pMat = NULL, int* pnType = NULL) = 0;
+	virtual const char* GetHelperById(int nId, Vec3& vPos, Matrix44* pMat = nullptr, int* pnType = nullptr) = 0;
 
 	// Description:
 	//     Will return the matrix of the helper named in the argument. The 

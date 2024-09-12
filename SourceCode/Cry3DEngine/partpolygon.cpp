@@ -358,7 +358,7 @@ void CSprite::Render(const PartProcessParams& PPP, IShader* pShader)
 		}
 		else
 		{
-			list2<struct ShadowMapLightSourceInstance>* pShadowsList = NULL;
+			list2<struct ShadowMapLightSourceInstance>* pShadowsList = nullptr;
 			if (PPP.pObjManager->GetCVars()->e_particles_receive_shadows &&
 				m_pSpawnerEntity && m_pSpawnerEntity->GetEntityRS() && m_pSpawnerEntity->GetEntityRS()->pShadowMapInfo)
 				pShadowsList = m_pSpawnerEntity->GetEntityRS()->pShadowMapInfo->pShadowMapCasters;
@@ -368,7 +368,7 @@ void CSprite::Render(const PartProcessParams& PPP, IShader* pShader)
 				ucResCol,
 				m_pParams->eBlendType,
 				vAmbientColor,
-				vParticlePos, 0, 0, 0, 0, (float)nSortId, dwCCObjFlags, m_pMaterial, NULL, pShadowsList);
+				vParticlePos, 0, 0, 0, 0, (float)nSortId, dwCCObjFlags, m_pMaterial, nullptr, pShadowsList);
 		}
 	}
 }

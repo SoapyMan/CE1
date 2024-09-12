@@ -307,7 +307,7 @@ struct SEntityUpdateContext
 	Vec3 vCameraPos;
 
 	//! Initialization ctor.
-	SEntityUpdateContext() : pScriptUpdateParams(NULL), nFrameID(0), pCamera(0), fCurrTime(0),
+	SEntityUpdateContext() : pScriptUpdateParams(nullptr), nFrameID(0), pCamera(0), fCurrTime(0),
 		bProfileToLog(false), numVisibleEntities(0), numUpdatedEntities(0), fMaxViewDist(1e+8) {};
 };
 
@@ -507,7 +507,7 @@ public:
 	//                    Light corona is the flare image displayed at the position of the light source, that simulate glow of light.
 	// Returns:
 	//     True if light was successfully initialized and attched.
-	virtual bool	InitLight(const char* img = NULL, const char* shader = NULL, bool bUseAsCube = false, float fAnimSpeed = 0, int nLightStyle = 0, float fCoronaScale = 0) = 0;
+	virtual bool	InitLight(const char* img = nullptr, const char* shader = nullptr, bool bUseAsCube = false, float fAnimSpeed = 0, int nLightStyle = 0, float fCoronaScale = 0) = 0;
 
 
 	// Description:
@@ -515,9 +515,9 @@ public:
 	//     This will call OnEvent(id,param) Lua function in entity script, so that script can handle this event.
 	// See Also:
 	//     EScriptEventId, IScriptObject
-	virtual void SendScriptEvent(enum EScriptEventId Event, IScriptObject* pParamters, bool* pRet = NULL) = 0;
-	virtual void SendScriptEvent(enum EScriptEventId Event, const char* str, bool* pRet = NULL) = 0;
-	virtual void SendScriptEvent(enum EScriptEventId Event, int nParam, bool* pRet = NULL) = 0;
+	virtual void SendScriptEvent(enum EScriptEventId Event, IScriptObject* pParamters, bool* pRet = nullptr) = 0;
+	virtual void SendScriptEvent(enum EScriptEventId Event, const char* str, bool* pRet = nullptr) = 0;
+	virtual void SendScriptEvent(enum EScriptEventId Event, int nParam, bool* pRet = nullptr) = 0;
 
 	// Description:
 	//     Calls script defined event handler.
@@ -538,7 +538,7 @@ public:
 	// See Also:
 	//     SetPhysics, DestroyPhysics, IPhysicalEntity.
 	// Returns:
-	//	An interface to a IPhysicalEntity if one exists, NULL if it doesn't exist.
+	//	An interface to a IPhysicalEntity if one exists, nullptr if it doesn't exist.
 	virtual class IPhysicalEntity* GetPhysics() const = 0;
 
 	// Description:
@@ -598,10 +598,10 @@ public:
 	//            if 0 it is considered as infinite mass rigid body, it will behave same was as static physical entity,
 	//            (will not be simulated as rigid body but will participate in collision detection).
 	//     surface_id - (Depricated) The identifier of the physical surface for this body.
-	//     pInitialVelocity	- Pointer to an initial velocity vector, if NULL no initial velocity.
+	//     pInitialVelocity	- Pointer to an initial velocity vector, if nullptr no initial velocity.
 	//     slot - Make a rigid body from the object in this slot, if -1 chooses first non empty slot.
 	//     bPermanent - For physics on demand (Leave on default).
-	virtual bool CreateRigidBody(pe_type type, float density, float mass, int surface_id, Vec3* pInitialVelocity = NULL, int slot = -1,
+	virtual bool CreateRigidBody(pe_type type, float density, float mass, int surface_id, Vec3* pInitialVelocity = nullptr, int slot = -1,
 		bool bPermanent = false) = 0;
 
 	// Description:
@@ -673,7 +673,7 @@ public:
 		@param  scale	The desired scale of the object
 		@return True upon successful loading of cgf file
 	*/
-	virtual bool	LoadObject(unsigned int slot, const char* fileName, float scale, const char* geomName = NULL) = 0;
+	virtual bool	LoadObject(unsigned int slot, const char* fileName, float scale, const char* geomName = nullptr) = 0;
 	virtual bool GetObjectPos(unsigned int slot, Vec3& pos) = 0;
 	virtual bool SetObjectPos(unsigned int slot, const Vec3& pos) = 0;
 	virtual bool GetObjectAngles(unsigned int slot, Vec3& ang) = 0;
@@ -885,7 +885,7 @@ public:
 	*/
 	virtual IScriptObject* GetScriptObject() = 0;
 
-	virtual bool Write(CStream&, EntityCloneState* cs = NULL) = 0;
+	virtual bool Write(CStream&, EntityCloneState* cs = nullptr) = 0;
 	/*!	read the object from a stream(network)
 		@param stm the stream class that store the bitstream
 		@param bNoUpdate if true, just fetch the data from the stream w/o applying it
@@ -907,21 +907,21 @@ public:
 		@return true if succeded,false failed
 		@see CStream
 	*/
-	virtual bool Save(CStream& stm, IScriptObject* pStream = NULL) = 0;
+	virtual bool Save(CStream& stm, IScriptObject* pStream = nullptr) = 0;
 	/*!	read the object from a stream(file persistence)
 		@param stm the stream class that store the bitstream
 		@param pStream script wrapper for the stream(optional)
 		@return true if succeded,false failed
 		@see CStream
 	*/
-	virtual bool Load(CStream& stm, IScriptObject* pStream = NULL) = 0;
+	virtual bool Load(CStream& stm, IScriptObject* pStream = nullptr) = 0;
 	/*!	read the object from a stream(file persistence) RELLEASE save version - for compatibility
 	@param stm the stream class that store the bitstream
 	@param pStream script wrapper for the stream(optional)
 	@return true if succeded,false failed
 	@see CStream
 	*/
-	virtual bool LoadRELEASE(CStream& stm, IScriptObject* pStream = NULL) = 0;
+	virtual bool LoadRELEASE(CStream& stm, IScriptObject* pStream = nullptr) = 0;
 
 	/*!	read the object from a stream(file persistence) PATCH1 save version - for compatibility
 	@param stm the stream class that store the bitstream
@@ -929,16 +929,16 @@ public:
 	@return true if succeded,false failed
 	@see CStream
 	*/
-	virtual bool LoadPATCH1(CStream& stm, IScriptObject* pStream = NULL) = 0;
+	virtual bool LoadPATCH1(CStream& stm, IScriptObject* pStream = nullptr) = 0;
 
 	/*! Get the entity container. The concept of the container is explained in IEntityContainer.
-		@return Pointer to the entity container if there is one, otherwise NULL
+		@return Pointer to the entity container if there is one, otherwise nullptr
 		@see IEntityContainer
 	*/
 	virtual IEntityContainer* GetContainer() const = 0;
 	virtual void SetContainer(IEntityContainer* pContainer) = 0;
 	/*! Get Character interface, if a character is loaded.
-		@return Pointer to the character interface if one exists, otherwise NULL
+		@return Pointer to the character interface if one exists, otherwise nullptr
 		@see IEntityCharacter
 	*/
 	virtual IEntityCharacter* GetCharInterface() const = 0;
@@ -977,7 +977,7 @@ public:
 	virtual void ResetAnimations(int pos) = 0;
 
 	// sets the given aniimation to the given layer as the default
-	virtual void SetDefaultIdleAnimation(int pos, const char* szAnimation = NULL) = 0;
+	virtual void SetDefaultIdleAnimation(int pos, const char* szAnimation = nullptr) = 0;
 
 	/*force update character in slot pos
 		This is required if you start some animations abruptly (i.e. without blendin time)
@@ -1166,9 +1166,9 @@ public:
 
 
 	/*! Sets position for IK target for hands
-		@param target	pointer to vec pos. If NULL - no hands IK
+		@param target	pointer to vec pos. If nullptr - no hands IK
 	*/
-	virtual void SetHandsIKTarget(const Vec3* target = NULL) = 0;
+	virtual void SetHandsIKTarget(const Vec3* target = nullptr) = 0;
 
 	virtual void Remove() = 0;
 
@@ -1238,7 +1238,7 @@ struct IEntityContainer
 		@see IScriptSystem
 		@see IScriptSystem::BeginCall(const char*, const char *)
 	*/
-	virtual bool Write(CStream& stm, EntityCloneState* cs = NULL) = 0;
+	virtual bool Write(CStream& stm, EntityCloneState* cs = nullptr) = 0;
 	virtual bool Read(CStream& stm) = 0;
 
 	/*! Position for sound-sources attached to this entity object.
@@ -1392,7 +1392,7 @@ struct IEntitySystem
 	/*! Spawns a new entity according to the data in the Entity Descriptor
 		@param ed	Entity descriptor structure that describes what kind of entity needs to be spawned
 		@param bAutoInit If true automatically initialize entity.
-		@return The spawned entity if successfull, NULL if not.
+		@return The spawned entity if successfull, nullptr if not.
 		@see CEntityDesc
 	*/
 	virtual IEntity* SpawnEntity(CEntityDesc& ed, bool bAutoInit = true) = 0;
@@ -1408,7 +1408,7 @@ struct IEntitySystem
 
 	/*! Retrieves entity from its unique id.
 		@param id The unique ID of the entity required
-		@return The entity if one with such an ID exists, and NULL if no entity could be matched with the id
+		@return The entity if one with such an ID exists, and nullptr if no entity could be matched with the id
 	*/
 	virtual IEntity* GetEntity(EntityId id) = 0;
 
@@ -1577,7 +1577,7 @@ struct IEntityCamera
 	virtual void SetCamOffset(Vec3 v) = 0;
 	virtual Vec3& GetCamOffset() = 0;
 	virtual void SetThirdPersonMode(const Vec3& pos, const Vec3& angles, int mode, float frameTime, float
-		range, int dangleAmmount, IPhysicalEntity* physic, IPhysicalEntity* physicMore = NULL, I3DEngine* p3DEngine = NULL, float safe_range = 0.0f) = 0;
+		range, int dangleAmmount, IPhysicalEntity* physic, IPhysicalEntity* physicMore = nullptr, I3DEngine* p3DEngine = nullptr, float safe_range = 0.0f) = 0;
 	virtual void SetCameraMode(const Vec3& lookat, const Vec3& lookat_angles, IPhysicalEntity* physic) = 0;
 	virtual void SetCameraOffset(const Vec3& offset) = 0;
 	virtual void GetCameraOffset(Vec3& offset) = 0;

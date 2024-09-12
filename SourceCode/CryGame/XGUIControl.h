@@ -13,7 +13,7 @@ struct SCtrlEffect
 {
 	SCtrlEffect()
 	{
-		pParams=NULL;
+		pParams=nullptr;
 		bCalled=false;
 	}
 	int nEvent;

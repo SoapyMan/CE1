@@ -24,7 +24,7 @@ CUIHud::CUIHud(CXGame *pGame,ISystem *pISystem)
 	m_pGame=pGame;
 	m_pISystem = pISystem;
 	m_init = false;
-	m_pHudScriptObj=NULL;
+	m_pHudScriptObj=nullptr;
 	m_pScriptSystem=m_pISystem->GetIScriptSystem();
 
 	ICryFont *pICryFont=m_pISystem->GetICryFont();

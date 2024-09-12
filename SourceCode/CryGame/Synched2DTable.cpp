@@ -8,7 +8,7 @@
 
 CSynched2DTable::CSynched2DTable(CXGame *pGame)
 {
-	m_pScriptObject=NULL;
+	m_pScriptObject=nullptr;
 	m_pGame=pGame;
 }
 

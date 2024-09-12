@@ -57,9 +57,9 @@ CEntitySystem::CEntitySystem(ISystem* pSystem)
 	m_eDefaultUpdateLevel = eUT_Always;
 	m_nGetEntityCounter = 0;
 	m_pISystem = pSystem;
-	//m_pSink=NULL;
+	//m_pSink=nullptr;
 	m_mapEntities.clear();
-	m_pScriptSystem = NULL;
+	m_pScriptSystem = nullptr;
 	m_pTimer = pSystem->GetITimer();
 	m_pCharacterIK = pSystem->GetIConsole()->CreateVariable("p_characterik", "1", VF_CHEAT,
 		"Toggles character IK.\n"
@@ -214,7 +214,7 @@ bool CEntitySystem::Init(ISystem* pSystem)
 {
 	if (!pSystem) return false;
 	m_pISystem = pSystem;
-	//m_pSink=NULL;
+	//m_pSink=nullptr;
 	m_lstSinks.clear();
 	m_mapEntities.clear();
 
@@ -388,7 +388,7 @@ IEntity* CEntitySystem::SpawnEntity(CEntityDesc& ed, bool bAutoInit)
 		}
 
 
-		IEntityContainer* pContainer = NULL;
+		IEntityContainer* pContainer = nullptr;
 
 		// new entity
 		pEntity = new CEntity(this, m_pISystem, m_pScriptSystem);
@@ -427,7 +427,7 @@ IEntity* CEntitySystem::SpawnEntity(CEntityDesc& ed, bool bAutoInit)
 		{
 			if (!InitEntity(pEntity, ed))
 			{
-				return NULL;
+				return nullptr;
 			}
 #ifdef _DEBUG 
 			m_pISystem->GetILog()->LogToFile("Entity spawned %d %s (%f %f %f)", pEntity->GetId(), pEntity->GetEntityClassName(), ed.pos.x, ed.pos.y, ed.pos.z);
@@ -493,7 +493,7 @@ void CEntitySystem::RemoveEntity(EntityId entity, bool bRemoveNow)
 	EntityMap::iterator it = m_mapEntities.find(entity);
 
 	//	TRACE("Entity %d marked as garbage",entity);
-	CEntity* pEntity = NULL;
+	CEntity* pEntity = nullptr;
 	if (it != m_mapEntities.end())
 	{
 		pEntity = it->second;
@@ -559,7 +559,7 @@ IEntity* CEntitySystem::GetEntity(EntityId id)
 	*/
 
 	//  CRYASSERT(id==0);   // if we have a valid id here, someone is using the id after deleting the ent
-	return NULL;
+	return nullptr;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -599,7 +599,7 @@ IEntity* CEntitySystem::GetEntity(const char* sEntityName)
 		}
 		++itor;
 	}
-	return NULL;
+	return nullptr;
 }
 //////////////////////////////////////////////////////////////////////
 int CEntitySystem::GetNumEntities() const
@@ -881,7 +881,7 @@ IEntityIt* CEntitySystem::GetEntityInFrustrumIterator(bool bFromPrevFrame)
 	//CEntityClonesMgr *pECM=new CEntityClonesMgr(this);
 	//<<FIXME>> implement add all entities
 	//m_setEntityClonesMgrs.insert(pECM);
-	return NULL;
+	return nullptr;
 }*/
 
 /*void CEntitySystem::RemoveEntityCloneMgr(CEntityClonesMgr *p)

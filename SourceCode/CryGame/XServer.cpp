@@ -269,7 +269,7 @@ CXServer::~CXServer()
 		//Never force Lua GC, m_pScriptSystem->ForceGarbageCollection();
 	}
 
-	m_pGame = NULL;	
+	m_pGame = nullptr;	
 }
 
 
@@ -855,7 +855,7 @@ void CXServer::RemoveRespawnPoint(ITagPoint *pPoint)
 ITagPoint* CXServer::GetFirstRespawnPoint()
 {
 	if(m_vRespawnPoints.empty())
-		return NULL;
+		return nullptr;
 
 	m_CurRespawnPoint=m_vRespawnPoints.begin();
 
@@ -868,7 +868,7 @@ ITagPoint* CXServer::GetFirstRespawnPoint()
 ITagPoint* CXServer::GetNextRespawnPoint()
 {
 	if(m_vRespawnPoints.empty())
-		return NULL;
+		return nullptr;
 
 	++m_CurRespawnPoint;
 
@@ -883,7 +883,7 @@ ITagPoint* CXServer::GetNextRespawnPoint()
 ITagPoint* CXServer::GetPrevRespawnPoint()
 {
 	if(m_vRespawnPoints.empty())
-		return NULL;
+		return nullptr;
 
 	RespawnPointMap::reverse_iterator	revCurRespawnPoint(m_CurRespawnPoint);
 
@@ -906,7 +906,7 @@ ITagPoint* CXServer::GetPrevRespawnPoint()
 //	if(m_CurRespawnPoint==m_vRespawnPoints.end())
 //	{
 //		m_CurRespawnPoint = m_vRespawnPoints.begin();
-//		return NULL;
+//		return nullptr;
 //	}
 
 	return m_CurRespawnPoint->second;
@@ -920,7 +920,7 @@ ITagPoint* CXServer::GetRespawnPoint(char *name)
 	RespawnPointMap::iterator itr=m_vRespawnPoints.find(name);
 
 	if(itr == m_vRespawnPoints.end())
-		return NULL;
+		return nullptr;
 
 	return itr->second;
 }
@@ -932,7 +932,7 @@ ITagPoint* CXServer::GetRandomRespawnPoint(const char *sFilter)
 	if(m_vRespawnPoints.empty())
 	{
 		m_pGame->m_pLog->Log("CXServer::GetRandomRespawnPoint NO RESPAWN POINT");
-		return NULL; // no respawn point
+		return nullptr; // no respawn point
 	}
 	
 	int RandomRespawn = 0;
@@ -941,7 +941,7 @@ ITagPoint* CXServer::GetRandomRespawnPoint(const char *sFilter)
 	int count;
 
 	RespawnPointMap::iterator itr;
-	if(sFilter==NULL)
+	if(sFilter==nullptr)
 	{
 		count=m_vRespawnPoints.size();
 
@@ -954,7 +954,7 @@ ITagPoint* CXServer::GetRandomRespawnPoint(const char *sFilter)
 		if(!count)
 		{
 			m_pGame->m_pLog->Log("CXServer::GetRandomRespawnPoint NO RESPAWN POINT[%s]",sFilter);
-			return NULL; // no respawn point
+			return nullptr; // no respawn point
 		}
 		itr=m_vRespawnPoints.find(sFilter);
 	}
@@ -1434,7 +1434,7 @@ bool CXServer::GetSlotInfo(  const unsigned int dwIP,SSlotInfo &info , int nameO
 		IEntity *pPlayerEntity = m_pISystem->GetEntity(pSlot->GetPlayerId());
 		if(pPlayerEntity && pPlayerEntity->GetContainer())
 		{
-			CPlayer *pPlayer = NULL;
+			CPlayer *pPlayer = nullptr;
 			pPlayerEntity->GetContainer()->QueryContainerInterface(CIT_IPLAYER,(void **)&pPlayer);
 			if (pPlayer)
 			{

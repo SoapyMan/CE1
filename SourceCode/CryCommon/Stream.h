@@ -101,7 +101,7 @@ public:
 	//! default constructor
 	CStream()
 	{
-		m_sa = NULL;
+		m_sa = nullptr;
 		m_bStackBuffer = true;
 		m_dwAllocatedBitSize = DEFAULT_STREAM_BYTESIZE * 8;
 		m_pBuffer = &m_vBuffer[0];
@@ -136,7 +136,7 @@ public:
 	{
 		CRYASSERT(indwByteSize);
 		CRYASSERT(inpBuffer);
-		m_sa = NULL;
+		m_sa = nullptr;
 		m_bStackBuffer = true;
 		m_dwAllocatedBitSize = m_dwBitSize = indwByteSize * 8;
 		m_pBuffer = inpBuffer;
@@ -151,7 +151,7 @@ public:
 		if (!m_bStackBuffer && m_pBuffer)
 			m_sa->Free(m_pBuffer);
 
-		m_pBuffer = NULL;
+		m_pBuffer = nullptr;
 	}
 
 	//! copy constructor

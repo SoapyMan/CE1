@@ -31,8 +31,8 @@ public:
 	{
 		mfSetType(eDATA_ClientPoly2D);
 		mNumVerts = 0;
-		mEf = NULL;
-		m_pShaderResources = NULL;
+		mEf = nullptr;
+		m_pShaderResources = nullptr;
 		mfUpdateFlags(FCEF_TRANSFORM | FCEF_NEEDFILLBUF);
 	}
 

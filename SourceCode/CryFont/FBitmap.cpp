@@ -31,7 +31,7 @@
 //	}
 //
 //	m_bOK = true;
-//	m_pIRenderData = NULL;
+//	m_pIRenderData = nullptr;
 //}
 //
 /////////////////////////////////////////////////
@@ -58,7 +58,7 @@
 //	memcpy(m_pData, pImg->GetData(), m_nWidth*m_nHeight*4);
 //
 //	m_bOK;
-//	m_pIRenderData = NULL;
+//	m_pIRenderData = nullptr;
 //}*/
 //
 /////////////////////////////////////////////////
@@ -67,12 +67,12 @@
 //	if(m_pData)
 //	{
 //		delete [] m_pData;
-//		m_pData = NULL;
+//		m_pData = nullptr;
 //	}
 //	m_nWidth = 0;
 //	m_nHeight = 0;
 //	m_bOK = false;
-//	m_pIRenderData = NULL;
+//	m_pIRenderData = nullptr;
 //}
 //
 /////////////////////////////////////////////////

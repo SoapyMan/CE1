@@ -11,7 +11,7 @@ void CTempStorage::done()
 		// the actual memory block start
 		void* pRealMem = (char*)m_pTemp + nOffset;
 		free(pRealMem); // free it
-		m_pTemp = NULL;
+		m_pTemp = nullptr;
 		m_nSize = 0;
 	}
 }

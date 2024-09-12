@@ -8,12 +8,12 @@
 CSoundBuffer::CSoundBuffer(CSoundSystem* pSoundSystem, SSoundBufferProps& Props) : m_Props(Props)
 {
 	m_pSoundSystem = pSoundSystem;
-	m_Data.m_pData = NULL;
+	m_Data.m_pData = nullptr;
 	m_Type = btNONE;
 	m_nRef = 0;
 	m_nBaseFreq = 44100;
 	m_fLength = 0.0f;
-	m_pReadStream = NULL;
+	m_pReadStream = nullptr;
 	m_bLoadFailure = false;
 	m_bLooping = false;
 	m_bCallbackIteration = false;
@@ -27,7 +27,7 @@ CSoundBuffer::~CSoundBuffer()
 	if (m_pReadStream)
 	{
 		m_pReadStream->Abort();
-		m_pReadStream = NULL;
+		m_pReadStream = nullptr;
 	}
 	DestroyData();
 }
@@ -69,7 +69,7 @@ void CSoundBuffer::SetSample(FSOUND_SAMPLE* pPtr)
 			m_pSoundSystem->BufferUnloaded(this);
 		}
 	m_Data.m_pSample = pPtr;
-	m_Type = (pPtr != NULL) ? btSAMPLE : btNONE;
+	m_Type = (pPtr != nullptr) ? btSAMPLE : btNONE;
 }
 
 void CSoundBuffer::SetStream(FSOUND_STREAM* pPtr)
@@ -82,7 +82,7 @@ void CSoundBuffer::SetStream(FSOUND_STREAM* pPtr)
 		if ((!pPtr) && m_Data.m_pStream)
 			m_pSoundSystem->BufferUnloaded(this);
 	m_Data.m_pStream = pPtr;
-	m_Type = (pPtr != NULL) ? btSTREAM : btNONE;
+	m_Type = (pPtr != nullptr) ? btSTREAM : btNONE;
 }
 
 void CSoundBuffer::UpdateCallbacks()
@@ -124,7 +124,7 @@ void CSoundBuffer::SoundLoaded()
 	{
 		GUARD_HEAP;
 		//get the base frequence
-		FSOUND_Sample_GetDefaults(m_Data.m_pSample, &m_nBaseFreq, NULL, NULL, NULL);
+		FSOUND_Sample_GetDefaults(m_Data.m_pSample, &m_nBaseFreq, nullptr, nullptr, nullptr);
 		// set default values: ignore volume and pan, but sets frequency and priority
 		FSOUND_Sample_SetDefaults(m_Data.m_pSample, m_nBaseFreq, -1, -1, 0);
 		m_fLength = (float)FSOUND_Sample_GetLength(m_Data.m_pSample) / (float)m_nBaseFreq;
@@ -137,7 +137,7 @@ void CSoundBuffer::SoundLoaded()
 		break;
 	}
 	}
-	m_pReadStream = NULL;
+	m_pReadStream = nullptr;
 	if (m_pSoundSystem->m_pCVarDebugSound->GetIVal() == 3)
 		m_pSoundSystem->m_pILog->Log("file %s, loaded \n", m_Props.sName.c_str());
 	// broadcast OnBufferLoaded
@@ -157,7 +157,7 @@ void CSoundBuffer::SoundLoaded()
 void CSoundBuffer::LoadFailed()
 {
 	m_pSoundSystem->GetSystem()->Warning(VALIDATOR_MODULE_SOUNDSYSTEM, VALIDATOR_WARNING, VALIDATOR_FLAG_SOUND, "Sound %s failed to load", m_Props.sName.c_str());
-	m_pReadStream = NULL;
+	m_pReadStream = nullptr;
 
 	// broadcast OnBufferLoadFailed
 	CALLBACK_FUNC(OnBufferLoadFailed);
@@ -209,10 +209,10 @@ bool CSoundBuffer::Load(bool bLooping, CSound* pSound)
 		// add the game path since this file is not opened via the pak
 		// file system
 		GUARD_HEAP;
-		FSOUND_STREAM* pSoundStream = NULL;
+		FSOUND_STREAM* pSoundStream = nullptr;
 
 		// check for a MOD first
-		const char* szPrefix = NULL;
+		const char* szPrefix = nullptr;
 #ifndef _ISNOTFARCRY
 		IGameMods* pMods = m_pSoundSystem->GetSystem()->GetIGame()->GetModsInterface();
 		if (pMods)
@@ -262,7 +262,7 @@ bool CSoundBuffer::Load(bool bLooping, CSound* pSound)
 		else
 		{
 			if (m_pReadStream->IsFinished())
-				m_pReadStream = NULL;
+				m_pReadStream = nullptr;
 		}
 
 		// Placeholder sound.
@@ -272,7 +272,7 @@ bool CSoundBuffer::Load(bool bLooping, CSound* pSound)
 				m_pReadStream->Wait();
 			if (m_bLoadFailure)
 			{
-				m_pReadStream = NULL;
+				m_pReadStream = nullptr;
 				m_bLoadFailure = false;
 				m_Props.sName = "Sounds/error.wav";
 				return Load(m_bLooping, pSound);
@@ -298,7 +298,7 @@ void CSoundBuffer::AbortLoading()
 	if (m_pReadStream)
 	{
 		m_pReadStream->Abort();
-		m_pReadStream = NULL;
+		m_pReadStream = nullptr;
 		LoadFailed();
 	}
 }
@@ -312,8 +312,8 @@ void CSoundBuffer::DestroyData()
 		FUNCTION_PROFILER(m_pSoundSystem->GetSystem(), PROFILE_SOUND);
 		switch (m_Type)
 		{
-		case btSAMPLE:	FSOUND_Sample_Free(m_Data.m_pSample);		SetSample(NULL);	break;
-		case btSTREAM:	FSOUND_Stream_Close(m_Data.m_pStream);	SetStream(NULL);	break;
+		case btSAMPLE:	FSOUND_Sample_Free(m_Data.m_pSample);		SetSample(nullptr);	break;
+		case btSTREAM:	FSOUND_Stream_Close(m_Data.m_pStream);	SetStream(nullptr);	break;
 		}
 	}
 }

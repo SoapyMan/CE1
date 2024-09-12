@@ -12,17 +12,17 @@ extern void shQuantizeBegin();
 extern void shQuantizeEnd();
 /// Count the colors in a image and update the color histogram
 extern void shQuantizeCount(SRGBPixel* image, int pixels,
-	SRGBPixel* transp = NULL);
+	SRGBPixel* transp = nullptr);
 /// Bias the color histogram towards given colors (weight = 0..100)
 extern void shQuantizeBias(SRGBPixel* colors, int count, int weight);
 /// Compute the optimal palette for all images passed to QuantizeCount()
 extern void shQuantizePalette(SRGBPixel*& outpalette, int& maxcolors,
-	SRGBPixel* transp = NULL);
+	SRGBPixel* transp = nullptr);
 /// Remap a image to the palette computed by shQuantizePalette()
 extern void shQuantizeRemap(SRGBPixel* image, int pixels,
-	byte*& outimage, SRGBPixel* transp = NULL);
+	byte*& outimage, SRGBPixel* transp = nullptr);
 /// Same but apply Floyd-Steinberg dithering for nicer (but slower) results
 extern void shQuantizeRemapDither(SRGBPixel* image, int pixels, int pixperline,
-	SRGBPixel* palette, int colors, byte*& outimage, SRGBPixel* transp = NULL);
+	SRGBPixel* palette, int colors, byte*& outimage, SRGBPixel* transp = nullptr);
 
 #endif // __QUANTIZE_H__

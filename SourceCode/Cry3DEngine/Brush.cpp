@@ -380,7 +380,7 @@ CBrush::CBrush()
 	m_pEntityRenderState = 0;
 	m_pPhysEnt = 0;
 	m_Matrix.SetIdentity();
-	//	m_pLMTCBuffer = NULL;
+	//	m_pLMTCBuffer = nullptr;
 	m_pMaterial = 0;
 	m_nEditorObjectId = 0;
 	//  m_arrPhysGeomId[0] = m_arrPhysGeomId[1] = -1;
@@ -396,7 +396,7 @@ void CBrush::DeleteLMTC()
 		if (m_arrLMData[nLod].m_pLMTCBuffer)
 		{
 			GetSystem()->GetIRenderer()->DeleteLeafBuffer(m_arrLMData[nLod].m_pLMTCBuffer);
-			m_arrLMData[nLod].m_pLMTCBuffer = NULL;
+			m_arrLMData[nLod].m_pLMTCBuffer = nullptr;
 		}
 	}
 }
@@ -407,14 +407,14 @@ CBrush::~CBrush()
 	//	Get3DEngine()->UnRegisterEntity(this);
 	Get3DEngine()->FreeEntityRenderState(this);
 
-	//m_pLMData = NULL;
+	//m_pLMData = nullptr;
 
 	if ((GetRndFlags() & ERF_MERGED_NEW) && m_nObjectTypeID >= 0)
 	{
 		CStatObj* pBody = (CStatObj*)m_lstBrushTypes[m_nObjectTypeID];
 		CRYASSERT(pBody->m_nUsers==1);
 		delete pBody;
-		m_lstBrushTypes[m_nObjectTypeID] = NULL;
+		m_lstBrushTypes[m_nObjectTypeID] = nullptr;
 		m_nObjectTypeID=-1;
 	}
 
@@ -470,7 +470,7 @@ void CBrush::Physicalize(bool bInstant)
 	//	pe_params_pos par_pos;
 	if (!m_pPhysEnt)
 	{
-		m_pPhysEnt = GetSystem()->GetIPhysicalWorld()->CreatePhysicalEntity(PE_STATIC, NULL, this, 1);
+		m_pPhysEnt = GetSystem()->GetIPhysicalWorld()->CreatePhysicalEntity(PE_STATIC, nullptr, this, 1);
 		if (!m_pPhysEnt)
 			return;
 	}
@@ -636,7 +636,7 @@ void CObjManager::MergeBrushes()
 
 	GetLog()->UpdateLoadingScreen("\003---Merge brushes ... ");
 
-	FILE* fp = NULL;
+	FILE* fp = nullptr;
 	if (GetCVars()->e_brushes_merging_debug)
 	{
 		fp = fopen("Brushes.txt", "w");
@@ -715,7 +715,7 @@ void CObjManager::MergeBrushes()
 				}
 			}
 
-			SMatGroup* mg = NULL;
+			SMatGroup* mg = nullptr;
 			for (j = 0; j < groupBrushes[nMergeId].Num(); j++)
 			{
 				mg = groupBrushes[nMergeId][j];
@@ -1233,7 +1233,7 @@ void CObjManager::LoadBrushes()
 
 		CBrush* pEnt = (CBrush*)Get3DEngine()->CreateEntityRender();
 		const char* szFileName = lstSExportedBrushGeom[lstSExportedBrush[i].geometry].filename;
-		IStatObj* pStatObj = MakeObject(szFileName, NULL,
+		IStatObj* pStatObj = MakeObject(szFileName, nullptr,
 			(lstSExportedBrush[i].flags & ERF_USELIGHTMAPS) ? evs_NoSharing : evs_ShareAndSortForCache,
 			true, false, GetCVars()->e_stream_cgf == 1);
 
@@ -1291,7 +1291,7 @@ void CObjManager::LoadBrushes()
 		ILMSerializationManager* pILMSerialization = Get3DEngine()->CreateLMSerializationManager();
 		pILMSerialization->ApplyLightmapfile(Get3DEngine()->GetLevelFilePath(LM_EXPORT_FILE_NAME), vGLMs);
 		pILMSerialization->Release();
-		pILMSerialization = NULL;
+		pILMSerialization = nullptr;
 	}
 }
 
@@ -1450,7 +1450,7 @@ void CBrush::Serialize(bool bSave, ICryPak* pPak, FILE* f)
 		else
 		{
 			m_pLMTCBuffer = 0;
-			m_pLMData = NULL;
+			m_pLMData = nullptr;
 		}
 	}
 
@@ -1504,11 +1504,7 @@ void CBrush::PreloadInstanceResources(Vec3d vPrevPortalPos, float fPrevPortalDis
 
 
 	for (int nLod = 0; nLod < MAX_BRUSH_LODS_NUM; nLod++)
-#if !defined(LINUX64)
-		if (m_arrLMData[nLod].m_pLMData != NULL && m_arrLMData[nLod].m_pLMData->GetColorLerpTex() && m_arrLMData[nLod].m_pLMData->GetDomDirectionTex())
-#else
-		if (m_arrLMData[nLod].m_pLMData != 0 && m_arrLMData[nLod].m_pLMData->GetColorLerpTex() && m_arrLMData[nLod].m_pLMData->GetDomDirectionTex())
-#endif
+		if (m_arrLMData[nLod].m_pLMData && m_arrLMData[nLod].m_pLMData->GetColorLerpTex() && m_arrLMData[nLod].m_pLMData->GetDomDirectionTex())
 		{
 			{
 				ITexPic* pTexPic = GetRenderer()->EF_GetTextureByID(m_arrLMData[nLod].m_pLMData->GetColorLerpTex());

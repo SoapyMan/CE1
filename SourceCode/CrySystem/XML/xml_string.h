@@ -10,23 +10,23 @@ class xml_string {
 public:
 	xml_string()
 	{
-		m_sBuf=NULL;
+		m_sBuf=nullptr;
 	}
 	xml_string(const char *s)
 	{
-		m_sBuf=NULL;
+		m_sBuf=nullptr;
 		set(s);
 	}
 	xml_string(const wchar_t *s)
 	{
-		m_sBuf=NULL;
+		m_sBuf=nullptr;
 		set(s);
 	}
 	~xml_string()
 	{
 		if(m_sBuf)
 			free(m_sBuf);
-		m_sBuf=NULL;
+		m_sBuf=nullptr;
 	}
 	void set(const char *s)
 	{
@@ -46,7 +46,7 @@ public:
 	}
 	const char *c_str_s()
 	{
-		if(!m_sBuf) return NULL;
+		if(!m_sBuf) return nullptr;
 		if(m_sBuf[0]!=0)
 		{
 			unsigned char *t=m_sBuf;
@@ -59,7 +59,7 @@ public:
 	}
 	const wchar_t *c_str_w()
 	{
-		if(!m_sBuf) return NULL;
+		if(!m_sBuf) return nullptr;
 		if(m_sBuf[0]==0)
 		{
 			unsigned char *t=m_sBuf;

@@ -69,7 +69,7 @@ public:
 	void Physicalize(bool bInstant = false);
 
 	virtual float GetMaxViewDist();
-	IStatObj* GetEntityStatObj(unsigned int nSlot, Matrix44* pMatrix = NULL, bool bReturnOnlyVisible = false);
+	IStatObj* GetEntityStatObj(unsigned int nSlot, Matrix44* pMatrix = nullptr, bool bReturnOnlyVisible = false);
 	CStatObj* GetStatObj() const;
 
 	virtual void Serialize(bool bSave, ICryPak* pPak, FILE* f);

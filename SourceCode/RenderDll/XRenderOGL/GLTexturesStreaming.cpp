@@ -102,13 +102,13 @@ bool STexPic::UploadMips(int nStartMip, int nEndMip)
 				if (m_ETF == eTF_DXT1 || m_ETF == eTF_DXT3 || m_ETF == eTF_DXT5)
 				{
 					if (nLod && (!m_Mips[0][0] || !m_Mips[0][0]->m_bUploaded))
-						glTexImage2D(m_TargetType, 0, tfd, m_Width, m_Height, 0, tfs, GL_UNSIGNED_BYTE, NULL);
+						glTexImage2D(m_TargetType, 0, tfd, m_Width, m_Height, 0, tfs, GL_UNSIGNED_BYTE, nullptr);
 					glCompressedTexImage2DARB(m_TargetType, nLod, tfd, mp->USize, mp->VSize, 0, mp->DataArray.Num(), &mp->DataArray[0]);
 				}
 				else
 				{
 					if (nLod && (!m_Mips[0][0] || !m_Mips[0][0]->m_bUploaded))
-						glTexImage2D(m_TargetType, 0, tfd, m_Width, m_Height, 0, tfs, GL_UNSIGNED_BYTE, NULL);
+						glTexImage2D(m_TargetType, 0, tfd, m_Width, m_Height, 0, tfs, GL_UNSIGNED_BYTE, nullptr);
 					glTexImage2D(m_TargetType, nLod, tfd, mp->USize, mp->VSize, 0, tfs, GL_UNSIGNED_BYTE, &mp->DataArray[0]);
 				}
 				mp->m_bUploaded = true;
@@ -141,13 +141,13 @@ bool STexPic::UploadMips(int nStartMip, int nEndMip)
 					if (m_ETF == eTF_DXT1 || m_ETF == eTF_DXT3 || m_ETF == eTF_DXT5)
 					{
 						if (nLod && (!m_Mips[0][0] || !m_Mips[0][0]->m_bUploaded))
-							glTexImage2D(tgt, 0, tfd, m_Width, m_Height, 0, tfs, GL_UNSIGNED_BYTE, NULL);
+							glTexImage2D(tgt, 0, tfd, m_Width, m_Height, 0, tfs, GL_UNSIGNED_BYTE, nullptr);
 						glCompressedTexImage2DARB(tgt, nLod, tfd, mp->USize, mp->VSize, 0, mp->DataArray.Num(), &mp->DataArray[0]);
 					}
 					else
 					{
 						if (nLod && (!m_Mips[0][0] || !m_Mips[0][0]->m_bUploaded))
-							glTexImage2D(tgt, 0, tfd, m_Width, m_Height, 0, tfs, GL_UNSIGNED_BYTE, NULL);
+							glTexImage2D(tgt, 0, tfd, m_Width, m_Height, 0, tfs, GL_UNSIGNED_BYTE, nullptr);
 						glTexImage2D(tgt, nLod, tfd, mp->USize, mp->VSize, 0, tfs, GL_UNSIGNED_BYTE, &mp->DataArray[0]);
 					}
 					mp->m_bUploaded = true;
@@ -216,8 +216,8 @@ void STexPic::RemoveFromPool()
 	if (!m_pPoolItem)
 		return;
 	STexPoolItem* pIT = m_pPoolItem;
-	m_pPoolItem = NULL;
-	pIT->m_pTex = NULL;
+	m_pPoolItem = nullptr;
+	pIT->m_pTex = nullptr;
 	m_LoadedSize = 0;
 }
 

@@ -108,7 +108,7 @@ void CMatMan::RenameMatInfo(IMatInfo* pMtl, const char* sNewName)
 //////////////////////////////////////////////////////////////////////////
 IMatInfo* CMatMan::FindMatInfo(const char* sMtlName) const
 {
-	IMatInfo* pMtl = stl::find_in_map(m_mtlNameMap, sMtlName, (IMatInfo*)NULL);
+	IMatInfo* pMtl = stl::find_in_map(m_mtlNameMap, sMtlName, (IMatInfo*)nullptr);
 	return pMtl;
 }
 

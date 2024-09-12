@@ -273,7 +273,7 @@ void CGLRenderer::PrepareDepthMap(ShadowMapFrustum* lof, bool make_new_tid)
 		}
 		EF_EndEf3D(true);
 
-		gRenDev->SetClipPlane(0, NULL);
+		gRenDev->SetClipPlane(0, nullptr);
 	}
 
 	// draw entities
@@ -357,7 +357,7 @@ void CGLRenderer::PrepareDepthMap(ShadowMapFrustum* lof, bool make_new_tid)
 		m_ShadowTexIDBuffer[nCurTexIdSlot].nLastFrameID = GetFrameID();
 		m_ShadowTexIDBuffer[nCurTexIdSlot].nTexSize = nShadowTexSize;
 	}
-	ShadowMapTexInfo* st = NULL;
+	ShadowMapTexInfo* st = nullptr;
 	if (CV_r_shadowblur && !(m_Features & RFT_DEPTHMAPS))
 	{
 		int i;

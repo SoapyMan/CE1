@@ -603,7 +603,7 @@ ICryBone* CAnimObject::GetBoneByName(const char* szName)
 {
 	for (unsigned int i = 0; i < m_nodes.size(); i++)
 	{
-		if (m_nodes[i] != NULL && stricmp(m_nodes[i]->m_name.c_str(), szName) == 0)
+		if (m_nodes[i] != nullptr && stricmp(m_nodes[i]->m_name.c_str(), szName) == 0)
 			return m_nodes[i];
 	}
 	return 0;
@@ -645,7 +645,7 @@ CAnimObject::ObjectBindingHandle CAnimObject::AttachObjectToBone(IBindable* pWea
 	// detach all objects from this bone before creating a new one
 	DetachAllFromBone(nBone);
 
-	if (pWeaponModel == NULL)
+	if (pWeaponModel == nullptr)
 	{
 		// we didn't create a new binding, so return invalid handle
 		return nInvalidObjectBindingHandle;
@@ -662,7 +662,7 @@ void CAnimObject::PreloadResources(float fDistance, float fTime, int nFlags)
 	CryCharInstanceBase::PreloadResources(fDistance, fTime, nFlags);
 
 	for (unsigned int i = 0; i < m_nodes.size(); i++)
-		if (m_nodes[i] != NULL && m_nodes[i]->m_object)
+		if (m_nodes[i] != nullptr && m_nodes[i]->m_object)
 			m_nodes[i]->m_object->PreloadResources(fDistance, fTime, nFlags);
 }
 
@@ -680,7 +680,7 @@ void CAnimObject::DrawBoundObjects(const SRendParams& rRendParams, Matrix44& inm
 	Matrix44 matAttachedObjectMatrix;
 	SRendParams rParams(rRendParams);
 	// this is required to avoid the attachments using the parent character material (this is the material that overrides the default material in the attachment)
-	rParams.pMaterial = NULL;
+	rParams.pMaterial = nullptr;
 
 	if (m_nFlags & CS_FLAG_DRAW_NEAR)
 	{

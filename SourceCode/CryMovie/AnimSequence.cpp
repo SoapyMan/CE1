@@ -22,7 +22,7 @@ CAnimSequence::CAnimSequence(IMovieSystem* pMovieSystem)
 {
 	m_pMovieSystem = pMovieSystem;
 	m_flags = 0;
-	m_pSceneNode = NULL;
+	m_pSceneNode = nullptr;
 	m_timeRange.Set(0, 10);
 	m_bPaused = false;
 }
@@ -108,7 +108,7 @@ void CAnimSequence::RemoveNode(IAnimNode* node)
 				node->SetAnimBlock(0);
 			m_nodes.erase(m_nodes.begin() + i);
 			if (node && (node == m_pSceneNode))
-				m_pSceneNode = NULL;
+				m_pSceneNode = nullptr;
 			break;
 		}
 	}
@@ -118,7 +118,7 @@ void CAnimSequence::RemoveNode(IAnimNode* node)
 IAnimNode* CAnimSequence::AddSceneNode()
 {
 	if (m_pSceneNode)
-		return NULL;
+		return nullptr;
 	m_pSceneNode = new CAnimSceneNode(GetMovieSystem());
 	m_pSceneNode->SetName("Scene");
 	AddNode(m_pSceneNode);
@@ -129,7 +129,7 @@ IAnimNode* CAnimSequence::AddSceneNode()
 void CAnimSequence::RemoveAll()
 {
 	m_nodes.clear();
-	m_pSceneNode = NULL;
+	m_pSceneNode = nullptr;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -251,7 +251,7 @@ void CAnimSequence::Serialize(XmlNodeRef& xmlNode, bool bLoading, bool bLoadEmpt
 			{
 				XmlNodeRef xn = nodes->getChild(i);
 				xn->getAttr("Id", id);
-				IAnimNode* node = NULL;
+				IAnimNode* node = nullptr;
 				if (!id)	// scene-node-id
 				{
 					if (m_pSceneNode)

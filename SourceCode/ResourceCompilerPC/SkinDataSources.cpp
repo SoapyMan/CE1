@@ -31,11 +31,11 @@ CRCSkinVertexSource::CRCSkinVertexSource(const CRenderMeshBuilder& rRendMesh, co
 	ICrySkinSource(
 		&rMeshDesc.arrVertBinds[0],
 		rMeshDesc.arrVertBinds.size(),
-		NULL, // m_pVertices
+		nullptr, // m_pVertices
 		0, // m_numVertices
 		&rRendMesh.m_arrExtTangents[0],
 		rRendMesh.m_arrExtTangents.size(),
-		NULL // m_pExtToIntMapping
+		nullptr // m_pExtToIntMapping
 	)
 {
 	// to get the vertices, we'll have to build the temp buffer holding unique vertices
@@ -81,13 +81,13 @@ CRCSkinVertexSource::~CRCSkinVertexSource()
 
 CRCSkinNormalSource::CRCSkinNormalSource(const CRenderMeshBuilder& rRendMesh, const CryChunkedFile::MeshDesc& rMeshDesc, const std::vector<CryBoneDesc>& arrBones) :
 	ICrySkinSource(
-		NULL, // m_pLinks {&rMeshDesc.arrVertBinds[0]}
+		nullptr, // m_pLinks {&rMeshDesc.arrVertBinds[0]}
 		0,// m_numLinks {rMeshDesc.arrVertBinds.size()}
-		NULL, // m_pVertices
+		nullptr, // m_pVertices
 		0, // m_numVertices
 		&rRendMesh.m_arrExtTangents[0],
 		rRendMesh.m_arrExtTangents.size(),
-		NULL // m_pExtToIntMapping
+		nullptr // m_pExtToIntMapping
 	)
 {
 	// to get the vertices, we'll have to build the temp buffer holding unique vertices

@@ -41,11 +41,11 @@ class CCGVProgram_GL : public CVProgram
 		SCGInstance()
 		{
 			m_dwHandle = 0;
-			m_ParamsNoObj = NULL;
-			m_ParamsObj = NULL;
-			m_MatrixObj = NULL;
-			m_BindConstants = NULL;
-			m_BindVars = NULL;
+			m_ParamsNoObj = nullptr;
+			m_ParamsObj = nullptr;
+			m_MatrixObj = nullptr;
+			m_BindConstants = nullptr;
+			m_BindVars = nullptr;
 		}
 
 		int Size()
@@ -146,11 +146,11 @@ public:
 		}
 		SCGInstance cg;
 		cg.m_Mask = Type;
-		cg.m_ParamsNoObj = NULL;
-		cg.m_ParamsObj = NULL;
-		cg.m_MatrixObj = NULL;
-		cg.m_BindConstants = NULL;
-		cg.m_BindVars = NULL;
+		cg.m_ParamsNoObj = nullptr;
+		cg.m_ParamsObj = nullptr;
+		cg.m_MatrixObj = nullptr;
+		cg.m_BindConstants = nullptr;
+		cg.m_BindVars = nullptr;
 		if (Type & VPVST_CLIPPLANES3)
 		{
 			if (!cg.m_ParamsNoObj)
@@ -337,7 +337,7 @@ public:
 		if (!gcpOGL->m_CGContext)
 		{
 			gcpOGL->m_CGContext = cgCreateContext();
-			CRYASSERT(gcpOGL->m_CGContext != NULL);
+			CRYASSERT(gcpOGL->m_CGContext != nullptr);
 			//CGSetCompilerExe("cgc.exe");
 
 			//cgSetErrorCallback(mfErrorCallback);
@@ -346,12 +346,12 @@ public:
 		m_dwFrame = 1;
 		m_CurInst = -1;
 		m_Flags = 0;
-		m_Script = NULL;
-		m_CoreScript = NULL;
-		m_InputParmsScript = NULL;
-		m_PosScript = NULL;
-		m_SubroutinesScript = NULL;
-		m_DeclarationsScript = NULL;
+		m_Script = nullptr;
+		m_CoreScript = nullptr;
+		m_InputParmsScript = nullptr;
+		m_PosScript = nullptr;
+		m_SubroutinesScript = nullptr;
+		m_DeclarationsScript = nullptr;
 	}
 
 	void mfBind()
@@ -403,7 +403,7 @@ public:
 
 	void mfUnbind()
 	{
-		//cgError Ret = cgGLBindProgram(NULL);
+		//cgError Ret = cgGLBindProgram(nullptr);
 	}
 
 	char* mfLoadCG(const char* prog_text)
@@ -413,7 +413,7 @@ public:
 		const char* profileOpts[] =
 		{
 		  "-DCGC=1",
-			NULL,
+			nullptr,
 		};
 		cgGLSetOptimalOptions((CGprofile)m_CGProfileType);
 		CGprogram cgPr = cgCreateProgram(gcpOGL->m_CGContext, CG_SOURCE, prog_text, (CGprofile)m_CGProfileType, "main", profileOpts);
@@ -432,12 +432,12 @@ public:
 			}
 			Warning(0, 0, "Couldn't create CG program '%s' (%s)", m_Name.c_str(), cgGetErrorString(err));
 			mfSaveCGFile(prog_text);
-			return NULL;
+			return nullptr;
 		}
 		if (!cgPr)
 		{
 			iLog->Log("Couldn't find function '%s' in CG pixel program '%s'", "main", m_Name.c_str());
-			return NULL;
+			return nullptr;
 		}
 		char* code = mfGetObjectCode(cgPr);
 		cgDestroyProgram(cgPr);
@@ -446,7 +446,7 @@ public:
 		// make command for execution
 		FILE* fp = fopen("$$in.cg", "w");
 		if (!fp)
-			return NULL;
+			return nullptr;
 		CRYASSERT(*prog_text);
 		fputs(prog_text, fp);
 		fclose(fp);
@@ -465,20 +465,20 @@ public:
 
 		PROCESS_INFORMATION pi;
 		ZeroMemory(&pi, sizeof(pi));
-		if (!CreateProcess(NULL, // No module name (use command line). 
+		if (!CreateProcess(nullptr, // No module name (use command line). 
 			szCmdLine,				// Command line. 
-			NULL,             // Process handle not inheritable. 
-			NULL,             // Thread handle not inheritable. 
+			nullptr,             // Process handle not inheritable. 
+			nullptr,             // Thread handle not inheritable. 
 			FALSE,            // Set handle inheritance to FALSE. 
 			CREATE_NO_WINDOW, // No creation flags. 
-			NULL,             // Use parent's environment block. 
-			NULL/*szFolderName*/,     // Set starting directory. 
+			nullptr,             // Use parent's environment block. 
+			nullptr/*szFolderName*/,     // Set starting directory. 
 			&si,              // Pointer to STARTUPINFO structure.
 			&pi)             // Pointer to PROCESS_INFORMATION structure.
 			)
 		{
 			iLog->LogError("CreateProcess failed: %s", szCmdLine);
-			return NULL;
+			return nullptr;
 		}
 
 		while (WAIT_OBJECT_0 != WaitForSingleObject(pi.hProcess, 10000))
@@ -492,7 +492,7 @@ public:
 		{
 			Warning(0, 0, "CG compiler (cgc.exe) wasn't able to compile vertex shader '%s'", m_Name.c_str());
 			mfSaveCGFile(prog_text);
-			return NULL;
+			return nullptr;
 		}
 		fseek(fp, 0, SEEK_END);
 		int size = ftell(fp);
@@ -503,7 +503,7 @@ public:
 			mfSaveCGFile(prog_text);
 			remove("$$in.cg");
 			remove("$$out.cg");
-			return NULL;
+			return nullptr;
 		}
 		char* pBuf = new char[size + 1];
 		fread(pBuf, sizeof(char), size, fp);
@@ -651,7 +651,7 @@ public:
 			if (nm == m_Insts[m_CurInst].m_BindVars->Get(i).m_Name)
 				return &m_Insts[m_CurInst].m_BindVars->Get(i);
 		}
-		return NULL;
+		return nullptr;
 	}
 	void mfParameter4f(const char* Name, const float* v)
 	{
@@ -690,7 +690,7 @@ public:
 		if (tm->m_dwBind == -1)
 			return;
 
-		float* v = NULL;
+		float* v = nullptr;
 		Matrix44 m;
 		CGLRenderer* r = gcpOGL;
 		switch (tm->m_eCGParamType)
@@ -875,7 +875,7 @@ public:
 		{
 			if (Name)
 				iLog->Log("Error: CCGVProgram_GL::mfAddNewScript: Couldn't find CG script for name '%s'", Name);
-			return NULL;
+			return nullptr;
 		}
 
 		SCGScript* scr = new SCGScript;
@@ -902,7 +902,7 @@ public:
 				continue;
 			SAFE_DELETE_ARRAY(scr->m_Script);
 			delete scr;
-			m_CGScripts[i] = NULL;
+			m_CGScripts[i] = nullptr;
 		}
 	}
 

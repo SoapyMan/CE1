@@ -33,8 +33,8 @@ void _XMLDOMParserImpl::StartDocument(bool unicode)
 
 void _XMLDOMParserImpl::StartElement(const char* name)
 {
-	XDOM::IXMLDOMNode* pParent = NULL;
-	XDOM::IXMLDOMNode* pNode = NULL;
+	XDOM::IXMLDOMNode* pParent = nullptr;
+	XDOM::IXMLDOMNode* pNode = nullptr;
 
 	if (!nodeStack.empty()) {
 
@@ -81,7 +81,7 @@ void _XMLDOMParserImpl::Data(const char* data)
 
 void _XMLDOMParserImpl::Attribute(const char* name, const char* value)
 {
-	XDOM::IXMLDOMNode* pNode = NULL;
+	XDOM::IXMLDOMNode* pNode = nullptr;
 	if (!nodeStack.empty())
 	{
 		pNode = nodeStack.back();
@@ -91,7 +91,7 @@ void _XMLDOMParserImpl::Attribute(const char* name, const char* value)
 		pNode = m_pDoc;
 	}
 
-	XDOM::IXMLDOMNode* pAttr = NULL;
+	XDOM::IXMLDOMNode* pAttr = nullptr;
 	pAttr = m_pDoc->createNode(XDOM::NODE_ATTRIBUTE, name);
 	pAttr->setText(value);
 	pNode->appendChild(pAttr);
@@ -200,7 +200,7 @@ bool _XMLDOMParserImpl::parse(std::vector<unsigned char>& buffer, string& errorS
 
 	NanoXML nx;
 	nx.Parse(this);
-	m_pBuffer=NULL;
+	m_pBuffer=nullptr;
 	m_sErrorString=errorString;
 	return !m_bErrorState;
 	*/
@@ -213,7 +213,7 @@ bool _XMLDOMParserImpl::parse(std::vector<unsigned char>& buffer, string& errorS
 	memHandler.realloc_fcn = CryModuleRealloc;
 	memHandler.free_fcn = CryModuleFree;
 
-	XML_Parser parser = XML_ParserCreate_MM(NULL, &memHandler, NULL);
+	XML_Parser parser = XML_ParserCreate_MM(nullptr, &memHandler, nullptr);
 
 	XML_SetUserData(parser, this);
 	XML_SetElementHandler(parser, EXPAT_XML_StartElement, EXPAT_XML_EndElement);

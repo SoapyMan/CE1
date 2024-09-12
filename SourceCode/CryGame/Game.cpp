@@ -140,21 +140,21 @@ private:
 //!constructor
 CXGame::CXGame()
 {
-	m_pTimeDemoRecorder = NULL;
-	m_pScriptObjectGame = NULL;
-	m_pScriptTimerMgr = NULL;
-	m_pScriptSystem = NULL;
-	m_pServer = NULL;
-	m_pClient = NULL;
-	m_pLog = NULL;
-	m_pServerSnooper = NULL;
+	m_pTimeDemoRecorder = nullptr;
+	m_pScriptObjectGame = nullptr;
+	m_pScriptTimerMgr = nullptr;
+	m_pScriptSystem = nullptr;
+	m_pServer = nullptr;
+	m_pClient = nullptr;
+	m_pLog = nullptr;
+	m_pServerSnooper = nullptr;
 	m_pNETServerSnooper = 0;
 	m_pRConSystem = 0;
-	m_pWeaponSystemEx = NULL;
+	m_pWeaponSystemEx = nullptr;
 	m_mapTagPoints.clear();
 	m_bMenuInitialized = false;
 	m_pCurrentUI = 0;	
-	m_pIActionMapManager=NULL;
+	m_pIActionMapManager=nullptr;
 	m_pIngameDialogMgr = new CIngameDialogMgr();
 	m_pUISystem = 0;
 	mp_model = 0;
@@ -168,7 +168,7 @@ CXGame::CXGame()
 	m_bUIOverlay = false;
 	m_bUIExclusiveInput = false;
 	m_bHideLocalPlayer = false;
-	m_pCVarCheatMode=NULL;
+	m_pCVarCheatMode=nullptr;
 
 	m_fTimeGran=m_fFixedStep=m_fTimeGran2FixedStep=m_frFixedStep = 0;
 	m_iFixedStep2TimeGran = 0;
@@ -178,12 +178,12 @@ CXGame::CXGame()
 
 	m_tPlayerPersistentData.m_bDataSaved=false;
 	m_fFadingStartTime=-1.0f;
-	cv_game_physics_quality=NULL;
+	cv_game_physics_quality=nullptr;
 	m_bMapLoadedFromCheckpoint=false;
 	m_bSynchronizing = false;
 
 	//m_fTimeToSaveThumbnail = 0;
-	m_pGameMods = NULL;
+	m_pGameMods = nullptr;
 	m_bLastDoLateSwitch = 0;
 	m_bLastCDAuthentication = 0;
 	m_bAllowQuicksave = true;
@@ -204,7 +204,7 @@ CXGame::~CXGame()
 
 	if (m_pIngameDialogMgr)
 		delete m_pIngameDialogMgr;
-	m_pIngameDialogMgr=NULL;
+	m_pIngameDialogMgr=nullptr;
 
 	if (m_pMovieUser)
 	{
@@ -214,13 +214,13 @@ CXGame::~CXGame()
 			if (pMovieSystem)
 			{
 				if (pMovieSystem->GetUser()==m_pMovieUser)
-					pMovieSystem->SetUser(NULL);
+					pMovieSystem->SetUser(nullptr);
 			}
 		}
 		delete m_pMovieUser;
 	}
 
-	m_pMovieUser=NULL;
+	m_pMovieUser=nullptr;
 
 	// shutdown the client if there is one
 	ShutdownClient();
@@ -387,7 +387,7 @@ bool CXGame::InitClassRegistry()
 	CRYASSERT( pWeaponSystemEx );
 
 	// Enumerate entity classes.
-	EntityClass *entCls = NULL;
+	EntityClass *entCls = nullptr;
 	m_EntityClassRegistry.MoveFirst();
 	do {
 		entCls = m_EntityClassRegistry.Next();
@@ -517,7 +517,7 @@ void CXGame::Reset()
 		GetMyPlayer()->SetNeedUpdate(true);
 }
 
-IXSystem *CXGame::GetXSystem(){return m_pServer?m_pServer->m_pISystem:m_pClient?m_pClient->m_pISystem:NULL;}
+IXSystem *CXGame::GetXSystem(){return m_pServer?m_pServer->m_pISystem:m_pClient?m_pClient->m_pISystem:nullptr;}
 //////////////////////////////////////////////////////////////////////
 //! Initialize the game. This must be called before calling other functions of this class.
 bool CXGame::Init(struct ISystem *pSystem,bool bDedicatedSrv,bool bInEditor,const char *szGameMod)
@@ -539,8 +539,8 @@ bool CXGame::Init(struct ISystem *pSystem,bool bDedicatedSrv,bool bInEditor,cons
 	
 	m_bOK = false;
 	m_bUpdateRet = true;
-	m_pClient	= NULL;
-	m_pServer	= NULL;
+	m_pClient	= nullptr;
+	m_pServer	= nullptr;
 
 	m_pSystem->GetILog()->Log("Game Initialization");
 
@@ -551,7 +551,7 @@ bool CXGame::Init(struct ISystem *pSystem,bool bDedicatedSrv,bool bInEditor,cons
 	if (!m_pTimeDemoRecorder)
 		m_pTimeDemoRecorder = new CTimeDemoRecorder(pSystem);
   
-	m_pUIHud = NULL;
+	m_pUIHud = nullptr;
 	m_pNetwork= m_pSystem->GetINetwork();
 	m_pLog= m_pSystem->GetILog();
 	m_p3DEngine	= m_pSystem->GetI3DEngine();
@@ -721,14 +721,14 @@ bool CXGame::Init(struct ISystem *pSystem,bool bDedicatedSrv,bool bInEditor,cons
 		m_pEntitySystem->SetDynamicEntityIdMode(true);	
 
 #if !defined(_XBOX) && !defined(PS2) && !defined(LINUX)
-	SetCursor(NULL);
+	SetCursor(nullptr);
 #endif
 
 	//////////////////////////////////////////////////////////////////////////
 	
 	DevModeInit();
 	m_bOK = true;	
-	e_deformable_terrain = NULL;
+	e_deformable_terrain = nullptr;
 
 	return (true);
 }
@@ -1372,7 +1372,7 @@ void CXGame::ProcessPMessages(const char *szMsg)
 			if(strlen(szMsg)>8) { 
 				sname=szMsg+9;
 			}
-			Save(sname, NULL, NULL);			
+			Save(sname, nullptr, nullptr);			
 		}
 	}
 	else
@@ -1396,7 +1396,7 @@ void CXGame::ProcessPMessages(const char *szMsg)
 				IEntityContainer *pIContainer = pIMyPlayer->GetContainer();
 				if (pIContainer)
 				{
-					CPlayer *pPlayer = NULL;
+					CPlayer *pPlayer = nullptr;
 					if (pIContainer->QueryContainerInterface(CIT_IPLAYER, (void**)&pPlayer))
 						m_XAreaMgr.ExitAllAreas( pPlayer->m_AreaUser );
 				}

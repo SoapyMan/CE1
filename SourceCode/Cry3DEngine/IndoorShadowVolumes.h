@@ -38,9 +38,9 @@ public:
 	// constructor
 	CShadowVolObject()
 	{
-		//		m_pFaceList=NULL;		
-		m_pReMeshShadow = NULL;
-		m_pSystemVertexBuffer = NULL;
+		//		m_pFaceList=nullptr;		
+		m_pReMeshShadow = nullptr;
+		m_pSystemVertexBuffer = nullptr;
 		m_pEdgeConnectivity = 0;
 		m_nNumVertices = 0;
 		//		m_nNumFaces=0;
@@ -105,7 +105,7 @@ struct tShadowVolume : public ItShadowVolume
 {
 	tShadowVolume()
 	{
-		pSvObj = NULL;
+		pSvObj = nullptr;
 	}
 
 	CShadowVolObject* GetShadowVolume()
@@ -123,7 +123,7 @@ struct tShadowVolume : public ItShadowVolume
 		if (pSvObj)
 		{
 			delete pSvObj;
-			pSvObj = NULL;
+			pSvObj = nullptr;
 		}
 
 		delete this;

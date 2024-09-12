@@ -105,7 +105,7 @@ inline void NET_ASSERT(void* x)
 			static char sAssertionMessage[500];																				\
 																														\
 			wsprintf(sAssertionMessage, "Assertion Failed!!\n\nFile: \"%s\"\n\nLine: %d\n", __FILE__, __LINE__);	\
-			::MessageBox(NULL, sAssertionMessage, "Assertion Failed", MB_OK | MB_ICONERROR);						\
+			::MessageBox(nullptr, sAssertionMessage, "Assertion Failed", MB_OK | MB_ICONERROR);						\
 			DEBUG_BREAK;																\
 			}																												\
 	}   

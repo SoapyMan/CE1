@@ -41,9 +41,9 @@ typedef struct s_Container
 {
 	s_Container()
 	{
-		pObj = NULL;
-		pEnt = NULL;
-		pSV = NULL;
+		pObj = nullptr;
+		pEnt = nullptr;
+		pSV = nullptr;
 	}
 
 	IStatObj* pObj;
@@ -97,7 +97,7 @@ public:
 	void		RemoveGeometry(IStatObj* pSource, ContainerListIt i);
 
 	//void			SetGeometry(IStatObj *pSource);
-	//void	AddGeometry(IStatObj *pSource,IPhysicalEntity *pEnt=NULL);
+	//void	AddGeometry(IStatObj *pSource,IPhysicalEntity *pEnt=nullptr);
 	void	AddGeometry(tContainer tCont);
 
 	Vec3d	GetBBoxMin(bool bWorldSpace = false)

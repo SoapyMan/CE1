@@ -109,7 +109,7 @@ bool GC_CGFConvertor::Process(ConvertContext& cc)
 
 				// write the LOD 0 and possibly 1 physical geometry for bones
 				for (unsigned nLOD = 0; nLOD < m_arrLODs.size(); ++nLOD)
-					m_Writer.SetFile(NULL);
+					m_Writer.SetFile(nullptr);
 
 
 				fclose(m_fTarget);
@@ -391,14 +391,14 @@ void GC_CGFConvertor::clear()
 {
 	m_arrLODs.clear();
 
-	m_Writer.SetFile(NULL);
+	m_Writer.SetFile(nullptr);
 	if (m_fTarget)
 	{
 		fclose(m_fTarget);
-		m_fTarget = NULL;
+		m_fTarget = nullptr;
 	}
 
-	m_pContext = NULL;
+	m_pContext = nullptr;
 }
 
 
@@ -550,7 +550,7 @@ void GC_CGFConvertor::writeMorphTargets(unsigned nLOD)
 
 		// write the skin - make the buffer(4-byte-aligned)
 		std::vector<char>arrBuffer;
-		arrBuffer.resize((Skin.Serialize_PC(true, NULL, 0) + 3) & ~3);
+		arrBuffer.resize((Skin.Serialize_PC(true, nullptr, 0) + 3) & ~3);
 		if (arrBuffer.empty())
 			throw Error("Can't (pre-)serialize morph target %s", pMorphTarget->strName.c_str());
 		unsigned nBytesWritten = Skin.Serialize_PC(true, &arrBuffer[0], arrBuffer.size());
@@ -796,7 +796,7 @@ void GC_CGFConvertor::WriteBoneInfo()
 
 		//		rBone.m_PhysInfo				=	SWAP32(rBone.m_PhysInfo);
 
-		unsigned nSizeBuf = rBone.Serialize(true, NULL, 0);
+		unsigned nSizeBuf = rBone.Serialize(true, nullptr, 0);
 		arrBuf.resize(nSizeBuf);
 
 		if (nSizeBuf != rBone.Serialize(true, &arrBuf[0], nSizeBuf))
@@ -878,7 +878,7 @@ void GC_CGFConvertor::writeShadowConnectivity(unsigned nLOD)
 	if (!pConnectivity)
 		throw Error("Could not construct connectivity");
 
-	unsigned nRequiredSize = pConnectivity->Serialize(true, NULL, 0);
+	unsigned nRequiredSize = pConnectivity->Serialize(true, nullptr, 0);
 
 	DWORD dwVertCount, dwTriCount;
 	pConnectivity->GetStats(dwVertCount, dwTriCount);
@@ -902,7 +902,7 @@ void GC_CGFConvertor::writeVertexSkin(unsigned nLOD)
 	CrySkinFull VertexSkin;
 	builder.initSkinFull(&VertexSkin);
 
-	unsigned nSizeRequired = VertexSkin.Serialize_GC(true, NULL, 0);
+	unsigned nSizeRequired = VertexSkin.Serialize_GC(true, nullptr, 0);
 	std::vector<byte> arrBuffer;
 	arrBuffer.resize(nSizeRequired);
 	unsigned nSizeWritten = VertexSkin.Serialize_GC(true, &arrBuffer[0], arrBuffer.size());
@@ -920,7 +920,7 @@ void GC_CGFConvertor::writeNormalSkin(unsigned nLOD)
 	CrySkinFull NormalSkin;
 	builder.initSkinFull(&NormalSkin);
 
-	unsigned nSizeRequired = NormalSkin.Serialize_PC(true, NULL, 0);
+	unsigned nSizeRequired = NormalSkin.Serialize_PC(true, nullptr, 0);
 	std::vector<byte> arrBuffer;
 	arrBuffer.resize(nSizeRequired);
 	unsigned nSizeWritten = NormalSkin.Serialize_PC(true, &arrBuffer[0], arrBuffer.size());
@@ -947,7 +947,7 @@ void GC_CGFConvertor::writeTangSkin(unsigned nLOD)
 	CrySkinRigidBasis TangSkin;
 	builder.initRigidBasisSkin(&TangSkin);
 
-	unsigned nSizeRequired = TangSkin.Serialize(true, NULL, 0);
+	unsigned nSizeRequired = TangSkin.Serialize(true, nullptr, 0);
 	std::vector<byte> arrBuffer;
 	arrBuffer.resize(nSizeRequired);
 	unsigned nSizeWritten = TangSkin.Serialize(true, &arrBuffer[0], arrBuffer.size());
@@ -1038,7 +1038,7 @@ void GC_CGFConvertor::WriteLights()
 	for (i = 0; i < arrLights.size(); ++i)
 	{
 		CBoneLightBindInfo& rLight = arrLights[i];
-		unsigned nRequiredBytes = (rLight.Serialize(true, NULL, 0) + 3) & ~3;
+		unsigned nRequiredBytes = (rLight.Serialize(true, nullptr, 0) + 3) & ~3;
 		if (arrData.size() < nRequiredBytes)
 		{
 			arrData.clear();

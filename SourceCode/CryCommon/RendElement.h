@@ -168,7 +168,7 @@ protected:
 			return;
 		m_NextGlobal->m_PrevGlobal = m_PrevGlobal;
 		m_PrevGlobal->m_NextGlobal = m_NextGlobal;
-		m_NextGlobal = m_PrevGlobal = NULL;
+		m_NextGlobal = m_PrevGlobal = nullptr;
 	}
 	_inline void LinkGlobal(CRendElement* Before)
 	{
@@ -184,15 +184,15 @@ public:
 	CRendElement()
 	{
 		m_Type = eDATA_Unknown;
-		m_NextGlobal = NULL;
-		m_PrevGlobal = NULL;
+		m_NextGlobal = nullptr;
+		m_PrevGlobal = nullptr;
 		m_Flags = 0;
-		m_CustomData = NULL;
+		m_CustomData = nullptr;
 		for (int i = 0; i < MAX_CUSTOM_TEX_BINDS_NUM; i++)
 			m_CustomTexBind[i] = -1;
 		m_fFogScale = 0;
 		m_SortId = 0;
-		m_LastVP = NULL;
+		m_LastVP = nullptr;
 		if (!m_RootGlobal.m_NextGlobal)
 		{
 			m_RootGlobal.m_NextGlobal = &m_RootGlobal;

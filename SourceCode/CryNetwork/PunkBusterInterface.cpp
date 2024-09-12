@@ -82,7 +82,7 @@ void CPunkBusterInterface::Init(bool bClient, bool isLocalServer)
 	else if (m_bSinglePlayer) return;
 
 	if (!sys_punkbuster_loaded) {
-		sys_punkbuster_loaded = m_pSystem->GetIConsole()->CreateVariable("sys_punkbuster_loaded", "1", NULL);
+		sys_punkbuster_loaded = m_pSystem->GetIConsole()->CreateVariable("sys_punkbuster_loaded", "1", 0);
 	}
 
 	if (bClient) {
@@ -301,7 +301,7 @@ void CPunkBusterInterface::ValidateClient(CServerSlot* pSlot)
 	addr[31] = 0;
 	PBcomputeHash(idhash, pSlot);
 	char* res = PbAuthClient(addr, nFlags & CLIENT_FLAGS_PUNK_BUSTER, idhash);
-	if (res != NULL) pSlot->Disconnect(res);
+	if (res != nullptr) pSlot->Disconnect(res);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -352,14 +352,14 @@ void CPunkBusterInterface::SendMsgToServer(CStream& stm)
 //
 void PBoutgame(char* text, int hudAlso)
 {
-	if (pbsdk == NULL) return;
+	if (pbsdk == nullptr) return;
 	CPunkBusterInterface* pip = (CPunkBusterInterface*)pbsdk->pbinterface;
-	if (pip == NULL) return;
+	if (pip == nullptr) return;
 
 	char* te = text, hold = 0;
 	for (;;) {								//loop in case of multiple lines (to simulate linefeeds)
 		char* cp = strstr(te, "\n");
-		if (cp != NULL) {					//linefeed found so hold end-char and terminate
+		if (cp != nullptr) {					//linefeed found so hold end-char and terminate
 			hold = *cp;
 			*cp = 0;
 		}
@@ -411,9 +411,9 @@ void PBoutgame(char* text, int hudAlso)
 //
 void PBsendPktToServer(int datalen, char* data)
 {
-	if (pbsdk == NULL) return;
+	if (pbsdk == nullptr) return;
 	CPunkBusterInterface* pip = (CPunkBusterInterface*)pbsdk->pbinterface;
-	if (pip == NULL) return;
+	if (pip == nullptr) return;
 
 	CStream stm;
 	stm.SetBits((BYTE*)data, 0, datalen * 8);
@@ -426,9 +426,9 @@ void PBsendPktToServer(int datalen, char* data)
 //
 void Sys_PBSendUdpPacket(char* addr, unsigned short port, int datalen, char* data, int isFromClient)
 {
-	if (pbsdk == NULL) return;
+	if (pbsdk == nullptr) return;
 	CPunkBusterInterface* pip = (CPunkBusterInterface*)pbsdk->pbinterface;
-	if (pip == NULL) return;
+	if (pip == nullptr) return;
 
 	CStream stm;
 	stm.SetBits((BYTE*)data, 0, datalen * 8);
@@ -436,10 +436,10 @@ void Sys_PBSendUdpPacket(char* addr, unsigned short port, int datalen, char* dat
 	CIPAddress cip(port, addr);
 
 	if (isFromClient) {	//from client
-		if (pip->m_pClient != NULL) pip->m_pClient->SendTo(cip, stm);//no need to check for local due to PB's internal handling
+		if (pip->m_pClient != nullptr) pip->m_pClient->SendTo(cip, stm);//no need to check for local due to PB's internal handling
 	}
 	else {							//from server
-		if (pip->m_pServer != NULL) pip->m_pServer->Send(stm, cip);
+		if (pip->m_pServer != nullptr) pip->m_pServer->Send(stm, cip);
 	}
 }
 
@@ -448,9 +448,9 @@ void Sys_PBSendUdpPacket(char* addr, unsigned short port, int datalen, char* dat
 //
 void PBsendPktToClient(int datalen, char* data, char* addr)
 {
-	if (pbsdk == NULL) return;
+	if (pbsdk == nullptr) return;
 	CPunkBusterInterface* pip = (CPunkBusterInterface*)pbsdk->pbinterface;
-	if (pip == NULL) return;
+	if (pip == nullptr) return;
 
 	CStream stm;
 	stm.SetBits((BYTE*)data, 0, datalen * 8);
@@ -460,7 +460,7 @@ void PBsendPktToClient(int datalen, char* data, char* addr)
 	strncpy(ip, addr, 31);
 	ip[31] = 0;
 	char* cp = strstr(ip, ":");
-	if (cp != NULL) {
+	if (cp != nullptr) {
 		*cp = 0;
 		port = atoi(cp + 1);
 	}
@@ -473,11 +473,11 @@ void PBsendPktToClient(int datalen, char* data, char* addr)
 //
 int PBisLocalServer(void)
 {
-	if (pbsdk == NULL) return 1;
+	if (pbsdk == nullptr) return 1;
 	CPunkBusterInterface* pip = (CPunkBusterInterface*)pbsdk->pbinterface;
-	if (pip == NULL) return 1;
+	if (pip == nullptr) return 1;
 
-	if (pip->m_pClient == NULL) return 1;
+	if (pip->m_pClient == nullptr) return 1;
 	CIPAddress ca = pip->m_pClient->GetServerIP();
 	return ca.IsLocalHost();
 }
@@ -488,9 +488,9 @@ int PBisLocalServer(void)
 void PBgetHomePath(char* path, int maxlen)
 {
 	*path = 0;
-	if (pbsdk == NULL) return;
+	if (pbsdk == nullptr) return;
 	CPunkBusterInterface* pip = (CPunkBusterInterface*)pbsdk->pbinterface;
-	if (pip == NULL) return;
+	if (pip == nullptr) return;
 
 	strncpy(path, pip->fs_homepath->GetString(), maxlen - 1);
 	path[maxlen - 1] = 0;
@@ -501,18 +501,18 @@ void PBgetHomePath(char* path, int maxlen)
 //
 int PBgetClientInfo(stPb_Sv_Client* c)
 {
-	if (pbsdk == NULL) return 0;
+	if (pbsdk == nullptr) return 0;
 	CPunkBusterInterface* pip = (CPunkBusterInterface*)pbsdk->pbinterface;
-	if (pip == NULL) return 0;
+	if (pip == nullptr) return 0;
 
-	if (pip->m_pServer == NULL) return 0;
+	if (pip->m_pServer == nullptr) return 0;
 
 	char ip[32];
 	unsigned short port = 0;
 	strncpy(ip, c->ip, 31);
 	ip[31] = 0;
 	char* cp = strstr(ip, ":");
-	if (cp != NULL) {
+	if (cp != nullptr) {
 		*cp = 0;
 		port = atoi(cp + 1);
 	}
@@ -543,18 +543,18 @@ int PBgetClientInfo(stPb_Sv_Client* c)
 //
 int PBgetStats(int index, char* Data)
 {
-	if (pbsdk == NULL) return 0;
+	if (pbsdk == nullptr) return 0;
 	CPunkBusterInterface* pip = (CPunkBusterInterface*)pbsdk->pbinterface;
-	if (pip == NULL) return 0;
+	if (pip == nullptr) return 0;
 
-	if (pip->m_pServer == NULL) return 0;
+	if (pip->m_pServer == nullptr) return 0;
 
 	char ip[32];
 	unsigned short port = 0;
 	strncpy(ip, pbsdk->pbsv.m_client[index].pbc.ip, 31);
 	ip[31] = 0;
 	char* cp = strstr(ip, ":");
-	if (cp != NULL) {
+	if (cp != nullptr) {
 		*cp = 0;
 		port = atoi(cp + 1);
 	}
@@ -597,14 +597,14 @@ void PBcomputeHash(char* guid, CServerSlot* pSlot)
 //
 char* PBcvar_VariableString(const char* var_name)
 {
-	if (pbsdk == NULL) return "ERROR: NULL POINTER";
+	if (pbsdk == nullptr) return "ERROR: nullptr POINTER";
 	CPunkBusterInterface* pip = (CPunkBusterInterface*)pbsdk->pbinterface;
-	if (pip == NULL) return "ERROR: NULL POINTER";
+	if (pip == nullptr) return "ERROR: nullptr POINTER";
 
-	if (pip->m_pSystem == NULL) return "ERROR: NULL POINTER";
+	if (pip->m_pSystem == nullptr) return "ERROR: nullptr POINTER";
 
 	ICVar* cv = pip->m_pSystem->GetIConsole()->GetCVar(var_name);
-	if (cv == NULL) return "";
+	if (cv == nullptr) return "";
 
 	return cv->GetString();
 }
@@ -614,14 +614,14 @@ char* PBcvar_VariableString(const char* var_name)
 //
 void PBcvar_Set(const char* cvar, const char* value)
 {
-	if (pbsdk == NULL) return;
+	if (pbsdk == nullptr) return;
 	CPunkBusterInterface* pip = (CPunkBusterInterface*)pbsdk->pbinterface;
-	if (pip == NULL) return;
+	if (pip == nullptr) return;
 
-	if (pip->m_pSystem == NULL) return;
+	if (pip->m_pSystem == nullptr) return;
 
 	ICVar* cv = pip->m_pSystem->GetIConsole()->GetCVar(cvar);
-	if (cv == NULL) return;
+	if (cv == nullptr) return;
 
 	cv->ForceSet(value);
 }
@@ -631,11 +631,11 @@ void PBcvar_Set(const char* cvar, const char* value)
 //
 void PBcmd_execString(const char* text)
 {
-	if (pbsdk == NULL) return;
+	if (pbsdk == nullptr) return;
 	CPunkBusterInterface* pip = (CPunkBusterInterface*)pbsdk->pbinterface;
-	if (pip == NULL) return;
+	if (pip == nullptr) return;
 
-	if (pip->m_pSystem == NULL) return;
+	if (pip->m_pSystem == nullptr) return;
 	pip->m_pSystem->GetIConsole()->ExecuteString(text, false, false);
 }
 
@@ -644,18 +644,18 @@ void PBcmd_execString(const char* text)
 //
 void PBdropClient(int clientIndex, char* reason)
 {
-	if (pbsdk == NULL) return;
+	if (pbsdk == nullptr) return;
 	CPunkBusterInterface* pip = (CPunkBusterInterface*)pbsdk->pbinterface;
-	if (pip == NULL) return;
+	if (pip == nullptr) return;
 
-	if (pip->m_pServer == NULL) return;
+	if (pip->m_pServer == nullptr) return;
 
 	char ip[32];
 	unsigned short port = 0;
 	strncpy(ip, pbsdk->pbsv.m_client[clientIndex].pbc.ip, 31);
 	ip[31] = 0;
 	char* cp = strstr(ip, ":");
-	if (cp != NULL) {
+	if (cp != nullptr) {
 		*cp = 0;
 		port = atoi(cp + 1);
 	}
@@ -670,9 +670,9 @@ void PBdropClient(int clientIndex, char* reason)
 //
 char* PBgameVer(void)
 {
-	if (pbsdk == NULL) return "";
+	if (pbsdk == nullptr) return "";
 	CPunkBusterInterface* pip = (CPunkBusterInterface*)pbsdk->pbinterface;
-	if (pip == NULL) return "";
+	if (pip == nullptr) return "";
 
 	//must return pointer to full game version info string
 	static char buf[64] = "";
@@ -685,12 +685,12 @@ char* PBgameVer(void)
 //
 int isPBmultiplayerMode(void)
 {
-	if (pbsdk == NULL) return 0;
+	if (pbsdk == nullptr) return 0;
 	CPunkBusterInterface* pip = (CPunkBusterInterface*)pbsdk->pbinterface;
-	if (pip == NULL) return 0;
+	if (pip == nullptr) return 0;
 
-	if (pip->m_pNetwork == NULL) return 0;
-	if (pip->m_pServer == NULL && pip->m_pClient == NULL && pip->m_pClientLocal == NULL) return 0;
+	if (pip->m_pNetwork == nullptr) return 0;
+	if (pip->m_pServer == nullptr && pip->m_pClient == nullptr && pip->m_pClientLocal == nullptr) return 0;
 	return 1;
 }
 
@@ -699,21 +699,21 @@ int isPBmultiplayerMode(void)
 //
 char* PBserverIp(int bServer)
 {
-	if (pbsdk == NULL) return "bot";
+	if (pbsdk == nullptr) return "bot";
 	CPunkBusterInterface* pip = (CPunkBusterInterface*)pbsdk->pbinterface;
-	if (pip == NULL) return "bot";
+	if (pip == nullptr) return "bot";
 
 	static CIPAddress cip;
 
 	if (!bServer) {
-		if (pip->m_pClient == NULL) {
-			if (pip->m_pClientLocal == NULL) return "bot";
+		if (pip->m_pClient == nullptr) {
+			if (pip->m_pClientLocal == nullptr) return "bot";
 			return "localhost";
 		}
 		cip = pip->m_pClient->GetServerIP();
 	}
 	else {
-		if (pip->m_pServer == NULL || pip->m_pNetwork == NULL) return "???";
+		if (pip->m_pServer == nullptr || pip->m_pNetwork == nullptr) return "???";
 		cip.m_Address.ADDR = pip->m_pNetwork->GetLocalIP();
 		cip.m_Address.sin_port = htons(pip->m_pServer->GetServerPort());
 	}
@@ -725,10 +725,10 @@ char* PBserverIp(int bServer)
 //
 char* PBserverHostname(void)
 {
-	if (pbsdk == NULL) return "";
+	if (pbsdk == nullptr) return "";
 	CPunkBusterInterface* pip = (CPunkBusterInterface*)pbsdk->pbinterface;
-	if (pip == NULL) return "";
-	if (pip->m_pServer == NULL) return "";
+	if (pip == nullptr) return "";
+	if (pip->m_pServer == nullptr) return "";
 	CIPAddress cip;
 	return (char*)pip->m_pServer->GetHostName();
 }
@@ -739,10 +739,10 @@ char* PBserverHostname(void)
 const char* PBkeyValue(char* notused, char* key)
 {
 	notused;
-	if (pbsdk == NULL) return "";
+	if (pbsdk == nullptr) return "";
 	CPunkBusterInterface* pip = (CPunkBusterInterface*)pbsdk->pbinterface;
-	if (pip == NULL) return "";
-	if (pip->m_pSystem == NULL) return "";
+	if (pip == nullptr) return "";
+	if (pip->m_pSystem == nullptr) return "";
 
 	const char* newkey = key;
 	ICVar* cv;
@@ -751,9 +751,9 @@ const char* PBkeyValue(char* notused, char* key)
 #ifdef GAME_IS_FARCRY
 		newkey = GetIXGame(pip->m_pSystem->GetIGame())->IsMODLoaded();
 #else
-		newkey = NULL;
+		newkey = nullptr;
 #endif
-		if (newkey == NULL) return "FarCry";
+		if (newkey == nullptr) return "FarCry";
 		else return newkey;
 	}
 	else if (!stricmp(key, "mapname")) {
@@ -762,7 +762,7 @@ const char* PBkeyValue(char* notused, char* key)
 	}*/
 
 	cv = pip->m_pSystem->GetIConsole()->GetCVar(newkey);
-	if (cv == NULL) return "";
+	if (cv == nullptr) return "";
 
 	return cv->GetString();
 }
@@ -772,9 +772,9 @@ const char* PBkeyValue(char* notused, char* key)
 //
 char* PBqueryGL(int type)
 {
-	if (pbsdk == NULL) return "";
+	if (pbsdk == nullptr) return "";
 	CPunkBusterInterface* pip = (CPunkBusterInterface*)pbsdk->pbinterface;
-	if (pip == NULL) return "";
+	if (pip == nullptr) return "";
 
 	//	pip->m_pSystem->GetIRenderer()->GetColorBpp() ;
 	switch (type) {
@@ -784,12 +784,12 @@ char* PBqueryGL(int type)
 		return (char*)pip->m_pSystem->GetIRenderer()->GetWidth();
 	case PB_GL_HEIGHT:
 		return (char*)pip->m_pSystem->GetIRenderer()->GetHeight();
-	case PB_GL_RGB: return NULL;//(char *) GL_RGB ;
-	case PB_GL_UB: return NULL;//(char *) GL_UNSIGNED_BYTE ;
+	case PB_GL_RGB: return nullptr;//(char *) GL_RGB ;
+	case PB_GL_UB: return nullptr;//(char *) GL_UNSIGNED_BYTE ;
 	case PB_GL_D3DDEV:
 		return (char*)pip->m_pSystem->GetIRenderer()->EF_Query(EFQ_D3DDevice);
 	}
-	return NULL;
+	return nullptr;
 }
 
 class CCVarsDump : public ICVarDumpSink
@@ -816,26 +816,26 @@ std::vector<ICVar*> CCVarsDump::m_vars;
 //this is a callback function called from the PB dlls
 int PBcvarWalk(char** name, char** string, int* flags, char** resetString)
 {
-	if (pbsdk == NULL) return 0;
+	if (pbsdk == nullptr) return 0;
 	CPunkBusterInterface* pip = (CPunkBusterInterface*)pbsdk->pbinterface;
-	if (pip == NULL) return 0;
+	if (pip == nullptr) return 0;
 
 	static int i = 0, n = 0;
-	static ICVar** pVars = NULL;
+	static ICVar** pVars = nullptr;
 
-	if (i == 0 || pVars == NULL) {
+	if (i == 0 || pVars == nullptr) {
 		CCVarsDump dump;
 		pip->m_pSystem->GetIConsole()->DumpCVars(&dump);
 		pVars = dump.GetVars();
-		if (pVars == NULL) return 0;
+		if (pVars == nullptr) return 0;
 		i = 0;
 		n = dump.NumVars();
 	}
 
-	if (i >= n || pVars == NULL) {//end of enumeration
+	if (i >= n || pVars == nullptr) {//end of enumeration
 		i = 0;
 		n = 0;
-		pVars = NULL;
+		pVars = nullptr;
 		return 0;
 	}
 
@@ -870,20 +870,20 @@ std::vector<const char*> CKeyBindsDump::m_keys;
 //
 int PBbindStuff(int type, const char** data)
 {
-	if (pbsdk == NULL) return 0;
+	if (pbsdk == nullptr) return 0;
 	CPunkBusterInterface* pip = (CPunkBusterInterface*)pbsdk->pbinterface;
-	if (pip == NULL) return 0;
+	if (pip == nullptr) return 0;
 
 	static int i = 0, n = 0;
-	static const char** pKeys = NULL;
+	static const char** pKeys = nullptr;
 
 	if (type == 1 || n == 0) {
 		n = 0;
-		if (i == 0 || pKeys == NULL) {
+		if (i == 0 || pKeys == nullptr) {
 			CKeyBindsDump dump;
 			pip->m_pSystem->GetIConsole()->DumpKeyBinds(&dump);
 			pKeys = dump.GetKeys();
-			if (pKeys == NULL) return 0;
+			if (pKeys == nullptr) return 0;
 			i = 0;
 			n = dump.NumKeys();
 		}
@@ -895,13 +895,13 @@ int PBbindStuff(int type, const char** data)
 	else if (type == 2) {//return keyname in *data
 		int key = atoi(*data);
 		*data = "";
-		if (pKeys == NULL) return 0;
+		if (pKeys == nullptr) return 0;
 		if (key < n) *data = pKeys[key];
 	}
 	else {//return data for key bind name
 		int key = atoi(*data);
 		*data = "";
-		if (pKeys == NULL) return 0;
+		if (pKeys == nullptr) return 0;
 		*data = pip->m_pSystem->GetIConsole()->FindKeyBind(pKeys[key]);
 	}
 	return 0;
@@ -913,10 +913,10 @@ int PBbindStuff(int type, const char** data)
 void PBpakNames(char* buf)//assumes buf is 1025+ in size (bytes)
 {
 	strcpy(buf, "*ERROR*");
-	if (pbsdk == NULL) return;
+	if (pbsdk == nullptr) return;
 	CPunkBusterInterface* pip = (CPunkBusterInterface*)pbsdk->pbinterface;
-	if (pip == NULL) return;
-	if (pip->m_pSystem == NULL) return;
+	if (pip == nullptr) return;
+	if (pip->m_pSystem == nullptr) return;
 
 	*buf = 0;
 	ICryPak::PakInfo* pPakInfo = pip->m_pSystem->GetIPak()->GetPakInfo();		//get loaded pak names

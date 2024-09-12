@@ -223,8 +223,8 @@ public:
 
 	unsigned getInstanceNumber()const { return m_nInstanceNumber; }
 	// returns the root bone
-	inline CryBone* getRootBone() { return m_arrBones.empty() ? NULL : &m_arrBones[0]; }
-	inline const CryBone* getRootBone()const { return m_arrBones.empty() ? NULL : &m_arrBones[0]; }
+	inline CryBone* getRootBone() { return m_arrBones.empty() ? nullptr : &m_arrBones[0]; }
+	inline const CryBone* getRootBone()const { return m_arrBones.empty() ? nullptr : &m_arrBones[0]; }
 
 	DECLARE_ARRAY_GETTER_METHODS(CryBone, Bone, Bones, m_arrBones)
 
@@ -319,7 +319,7 @@ public:
 	void UnconvertBoneGlobalFromRelativeForm(bool bNonphysicalOnly, int nLod = 0);
 
 	// draws the skeleton
-	void debugDrawBones(const Matrix44* pModelMatrix = NULL);
+	void debugDrawBones(const Matrix44* pModelMatrix = nullptr);
 	void debugDrawDynBoundLights(const Matrix44* pModelMatrix);
 
 	void debugDrawBoundingBox(const Matrix44* pModelMatrix, int nBBoxSegments = 1);
@@ -367,7 +367,7 @@ public:
 	bool SetShaderTemplateName(const char* TemplName, int Id, const char* ShaderName, IMatInfo* pCustomMaterial, unsigned nFlags);
 	CLeafBuffer* GetLeafBuffer();
 
-	void SetShaderFloat(const char* Name, float fVal, const char* ShaderName = NULL);
+	void SetShaderFloat(const char* Name, float fVal, const char* ShaderName = nullptr);
 
 
 private:
@@ -417,7 +417,7 @@ private:
 	// skins this model (into the given temporary storage, if needed)
 	// if no storage is provided, then allocates its own storage (g_Temp.data())
 	// the normals must already be valid, they'll be only slightly modified
-	const Vec3* SelfSkin(int nLOD, Vec3* pBuffer = NULL, Vec3dA16* pNormalsA16 = NULL);
+	const Vec3* SelfSkin(int nLOD, Vec3* pBuffer = nullptr, Vec3dA16* pNormalsA16 = nullptr);
 
 	Vec3dA16* SelfNormalSkin(int nLOD, Vec3dA16* pBuffer);
 

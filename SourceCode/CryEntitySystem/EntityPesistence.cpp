@@ -263,7 +263,7 @@ bool CEntity::Read(CStream& stm, bool bNoUpdate)
 {
 	bool bPhysics, bContainer, bBound, bSyncPosition;
 	//	pe_type pt;
-	IPhysicalEntity* pPE = NULL;
+	IPhysicalEntity* pPE = nullptr;
 	IEntity* pEntBound;
 	//////////////////////////////////////
 	//PHYSIC OR POS

@@ -379,18 +379,18 @@ int CScriptObjectPlayer::SetCurrWeapon(IFunctionHandler *pH)
 			m_pPlayer->m_vSafeAngAtMountedWeapon = m_pPlayer->GetEntity()->GetAngles();
 		}
 		else
-			m_pPlayer->m_pMountedWeapon = NULL;
+			m_pPlayer->m_pMountedWeapon = nullptr;
 	}
 	else if(pH->GetParamCount()==1)
 	{
 		pH->GetParam(1,nWeaponIndex);
 		m_pPlayer->SelectWeapon(nWeaponIndex);
-		m_pPlayer->m_pMountedWeapon = NULL;
+		m_pPlayer->m_pMountedWeapon = nullptr;
 	}
 	else
 	{
 		m_pPlayer->SelectWeapon( -1 );
-		m_pPlayer->m_pMountedWeapon = NULL;
+		m_pPlayer->m_pMountedWeapon = nullptr;
 	}
 
 	return pH->EndFunction();
@@ -1232,8 +1232,8 @@ int CScriptObjectPlayer::GetTouchedMaterial(IFunctionHandler *pH)
 //////////////////////////////////////////////////////////////////////////
 int	CScriptObjectPlayer::GetTPVHelper(IFunctionHandler *pH)
 {
-	const char *pszName = NULL;
-	ICryCharInstance *pInstance = NULL; 
+	const char *pszName = nullptr;
+	ICryCharInstance *pInstance = nullptr; 
 	int iPos;
 	Vec3 vHelperPos;
 
@@ -1370,7 +1370,7 @@ int	CScriptObjectPlayer::GetHelperPos(IFunctionHandler *pH)
 
 int	CScriptObjectPlayer::GetCharacterAngles(IFunctionHandler *pH)
 {
-	ICryCharInstance *pInstance = NULL; 
+	ICryCharInstance *pInstance = nullptr; 
 	Vec3 vec;
 	vec=m_pPlayer->m_vCharacterAngles;
 	vec=ConvertToRadAngles(vec);
@@ -1440,7 +1440,7 @@ int CScriptObjectPlayer::PlaySound(IFunctionHandler *pH)
 	}
 	else
 	{
-		m_pScriptSystem->RaiseError("PlaySound NULL SOUND!!");
+		m_pScriptSystem->RaiseError("PlaySound nullptr SOUND!!");
 	}
 	
 	return pH->EndFunction();
@@ -1784,8 +1784,8 @@ int CScriptObjectPlayer::SetAISpeedMult(IFunctionHandler *pH)
 // projTexName shaderName flags 
 int CScriptObjectPlayer::InitDynamicLight(IFunctionHandler *pH)
 {
-const char *sTexName=NULL;
-const char *sShaderName=NULL;
+const char *sTexName=nullptr;
+const char *sShaderName=nullptr;
 
 	if (pH->GetParamCount()>0)
 	{
@@ -2111,7 +2111,7 @@ int CScriptObjectPlayer::GetProjectedBloodPos(IFunctionHandler *pH)
 	if (m_pPlayer->GetGame()->GetSystem()->GetIPhysicalWorld()->RayWorldIntersection(vectorf(pos), vectorf(dir*fDist), ent_all,
 			0,&hit,1, m_pPlayer->GetEntity()->GetPhysics()))
 	{
-		IEntity *centycontact=NULL;	
+		IEntity *centycontact=nullptr;	
 
 		CScriptObjectVector oVecDir(m_pScriptSystem);
 		CScriptObjectVector oVecNorm(m_pScriptSystem);
@@ -2146,7 +2146,7 @@ int CScriptObjectPlayer::GetProjectedBloodPos(IFunctionHandler *pH)
 
 IEntityRender * CScriptObjectPlayer::GetIEntityRender(const pe_params_foreign_data & fd)
 {
-	IEntityRender * pEntityRender = NULL;
+	IEntityRender * pEntityRender = nullptr;
 	if(fd.iForeignData == 0)
 		pEntityRender = (IEntityRender*)(IEntity*)fd.pForeignData;
 	else if(fd.iForeignData == 1)

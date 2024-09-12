@@ -54,20 +54,20 @@ inline char* strdup(const char* str)
 	char* memory;
 
 	if (!str)
-		return(NULL);
+		return(nullptr);
 
 	memory = (char*)malloc(strlen(str) + 1);
 	if (memory)
 		return(strcpy(memory, str));
 
-	return(NULL);
+	return(nullptr);
 }
 #endif
 
 #ifndef strlwr
 inline char* strlwr(char* str)
 {
-	unsigned char* dst = NULL;  /* destination string */
+	unsigned char* dst = nullptr;  /* destination string */
 	char* cp;               /* traverses string for C locale conversion */
 
 	for (cp = str; *cp; ++cp)

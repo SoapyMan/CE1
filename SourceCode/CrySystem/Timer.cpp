@@ -39,7 +39,7 @@ static int64 g_lCurrentTime = 0;
 /////////////////////////////////////////////////////
 CTimer::CTimer()
 {
-	m_pfnUpdate = NULL;
+	m_pfnUpdate = nullptr;
 	m_lBaseTime = 0;
 	m_lLastTime = 0;
 	m_lTicksPerSec = 0;
