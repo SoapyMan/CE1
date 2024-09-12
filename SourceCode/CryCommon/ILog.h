@@ -100,7 +100,6 @@ struct ILog : public IMiniLog
 	virtual void	SetVerbosity(int verbosity) = 0;
 
 	virtual int		GetVerbosityLevel(bool forceIfOff = false) const = 0;
-	virtual int		GetFileVerbosityLevel(bool forceIfOff = false) const = 0;
 };
 
 

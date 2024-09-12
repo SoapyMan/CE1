@@ -143,7 +143,6 @@ struct IRCLog : public ILog
 	//
 	virtual void	SetVerbosity(int verbosity) {}
 	virtual int GetVerbosityLevel(bool) const { return 5; }
-	virtual int GetFileVerbosityLevel(bool) const { return 5; }
 };
 
 inline void IRCLog::Log(const char* szFormat, ...)
