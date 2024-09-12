@@ -2829,12 +2829,10 @@ bool CCGVProgram_D3D::mfSet(bool bStat, SShaderPassHW* slw, int nFlags)
 		CVProgram* pVP = NULL;
 		if (rd->m_RP.m_pRE && rd->m_RP.m_pRE->m_LastVP)
 			pVP = rd->m_RP.m_pRE->m_LastVP;
-		else
-			if (rd->m_RP.m_RendPass)
-				pVP = rd->m_RP.m_LastVP;
-			else
-				if (rd->m_RP.m_pShader->m_DefaultVProgram)
-					pVP = rd->m_RP.m_pShader->m_DefaultVProgram;
+		else if (rd->m_RP.m_RendPass)
+			pVP = rd->m_RP.m_LastVP;
+		else if (rd->m_RP.m_pShader->m_DefaultVProgram)
+			pVP = rd->m_RP.m_pShader->m_DefaultVProgram;
 		if (pVP && pVP->m_bCGType)
 		{
 			pPosVP = pVP;
@@ -2888,6 +2886,39 @@ bool CCGVProgram_D3D::mfSet(bool bStat, SShaderPassHW* slw, int nFlags)
 		rd->m_RP.m_LastVP = this;
 
 	return true;
+}
+
+void CCGVProgram_D3D::mfBind()
+{
+	SCGInstance& inst = m_Insts[m_CurInst];
+	if (!inst.m_pHandle)
+		return;
+
+	HRESULT hr = gcpRendD3D->mfGetD3DDevice()->SetVertexShader((IDirect3DVertexShader9*)inst.m_pHandle);
+	if (FAILED(hr))
+		return;
+
+	if (!inst.m_BindConstants)
+		return;
+
+	for (SCGBindConst& p : *inst.m_BindConstants)
+	{
+		const int dwBind = p.m_dwBind;
+		vec4_t& params = m_CurParams[dwBind];
+		if (params[0] == p.m_Val[0] && params[1] == p.m_Val[1] && params[2] == p.m_Val[2] && params[3] == p.m_Val[3])
+			continue;
+
+		params[0] = p.m_Val[0];
+		params[1] = p.m_Val[1];
+		params[2] = p.m_Val[2];
+		params[3] = p.m_Val[3];
+		gcpRendD3D->mfGetD3DDevice()->SetVertexShaderConstantF(dwBind, &p.m_Val[0], 1);
+	}
+}
+
+void CCGVProgram_D3D::mfUnbind()
+{
+	gcpRendD3D->mfGetD3DDevice()->SetVertexShader(NULL);
 }
 
 char* CCGVProgram_D3D::mfLoadCG(const char* prog_text)

@@ -710,12 +710,14 @@ char* CCGPShader_D3D::mfGenerateScriptPS()
 	TArray<char> newScr;
 	int i;
 
+	SCGInstance& inst = m_Insts[m_CurInst];
+
 	newScr.Copy("# define _PS\n", strlen("# define _PS\n"));
 
 	if (m_CGProfileType == CG_PROFILE_PS_1_1)
 		newScr.Copy("# define _PS_1_1\n", strlen("# define _PS_1_1\n"));
 
-	if (m_Insts[m_CurInst].m_Mask & VPVST_HDR)
+	if (inst.m_Mask & VPVST_HDR)
 	{
 		newScr.Copy("# define _HDR\n", strlen("# define _HDR\n"));
 		//if (gcpRendD3D->m_nHDRType == 2)
@@ -724,11 +726,11 @@ char* CCGPShader_D3D::mfGenerateScriptPS()
 			newScr.Copy("# define _HDR_ATI\n", strlen("# define _HDR_ATI\n"));
 		if (CRenderer::CV_r_hdrfake)
 			newScr.Copy("# define _HDR_FAKE\n", strlen("# define _HDR_FAKE\n"));
-		if (m_Insts[m_CurInst].m_Mask & VPVST_HDRLM)
+		if (inst.m_Mask & VPVST_HDRLM)
 			newScr.Copy("# define _HDRLM\n", strlen("# define _HDRLM\n"));
 	}
 
-	if (m_Insts[m_CurInst].m_Mask & VPVST_3DC)
+	if (inst.m_Mask & VPVST_3DC)
 	{
 		if (gcpRendD3D->m_bDeviceSupportsComprNormalmaps == 1)
 			newScr.Copy("# define _3DC\n", strlen("# define _3DC\n"));
@@ -737,25 +739,25 @@ char* CCGPShader_D3D::mfGenerateScriptPS()
 		else if (gcpRendD3D->m_bDeviceSupportsComprNormalmaps == 3)
 			newScr.Copy("# define _CxV8U8\n", strlen("# define _CxV8U8\n"));
 
-		if (m_Insts[m_CurInst].m_Mask & VPVST_3DC_A)
+		if (inst.m_Mask & VPVST_3DC_A)
 			newScr.Copy("# define _3DC_A\n", strlen("# define _3DC_A\n"));
 	}
-	if (m_Insts[m_CurInst].m_Mask & VPVST_SPECANTIALIAS)
+	if (inst.m_Mask & VPVST_SPECANTIALIAS)
 		newScr.Copy("# define _SPEC_ANTIALIAS\n", strlen("# define _SPEC_ANTIALIAS\n"));
 
-	if (m_Insts[m_CurInst].m_Mask & VPVST_INSTANCING_NOROT)
+	if (inst.m_Mask & VPVST_INSTANCING_NOROT)
 		newScr.Copy("# define _INST\n", strlen("# define _INST\n"));
 	if (m_Flags & PSFI_SUPPORTS_MULTILIGHTS)
 	{
 		char str[256];
-		int nLights = m_Insts[m_CurInst].m_LightMask & 0xf;
+		int nLights = inst.m_LightMask & 0xf;
 		sprintf(str, "# define _NUM_LIGHTS %d\n", nLights);
 		newScr.Copy(str, strlen(str));
 		for (int i = 0; i < nLights; i++)
 		{
-			int nLightType = (m_Insts[m_CurInst].m_LightMask >> (SLMF_LTYPE_SHIFT + i * 4)) & SLMF_TYPE_MASK;
-			int nOnlySpec = ((m_Insts[m_CurInst].m_LightMask >> (SLMF_LTYPE_SHIFT + i * 4)) & SLMF_ONLYSPEC) != 0;
-			int nSpecOccl = ((m_Insts[m_CurInst].m_LightMask >> (SLMF_LTYPE_SHIFT + i * 4)) & SLMF_SPECOCCLUSION) != 0;
+			int nLightType = (inst.m_LightMask >> (SLMF_LTYPE_SHIFT + i * 4)) & SLMF_TYPE_MASK;
+			int nOnlySpec = ((inst.m_LightMask >> (SLMF_LTYPE_SHIFT + i * 4)) & SLMF_ONLYSPEC) != 0;
+			int nSpecOccl = ((inst.m_LightMask >> (SLMF_LTYPE_SHIFT + i * 4)) & SLMF_SPECOCCLUSION) != 0;
 			sprintf(str, "# define _LIGHT%d_TYPE %d\n", i, nLightType);
 			newScr.Copy(str, strlen(str));
 			sprintf(str, "# define _LIGHT%d_ONLYSPEC %d\n", i, nOnlySpec);
@@ -864,14 +866,12 @@ char* CCGPShader_D3D::mfGenerateScriptPS()
 					{
 						ss += 7;
 						SkipCharacters(&ss, kWhiteSpace);
-						if (!strncmp(ss, "_3DC_A", 6) && !(m_Insts[m_CurInst].m_Mask & VPVST_3DC_A))
+						if (!strncmp(ss, "_3DC_A", 6) && !(inst.m_Mask & VPVST_3DC_A))
 							bIncr = false;
-						else
-							if (!strncmp(ss, "_SPEC_ANTIALIAS", 15) && !(m_Insts[m_CurInst].m_Mask & VPVST_SPECANTIALIAS))
-								bIncr = false;
-							else
-								if (!strncmp(ss, "_HDRLM", 6) && !(m_Insts[m_CurInst].m_Mask & VPVST_HDRLM))
-									bIncr = false;
+						else if (!strncmp(ss, "_SPEC_ANTIALIAS", 15) && !(inst.m_Mask & VPVST_SPECANTIALIAS))
+							bIncr = false;
+						else if (!strncmp(ss, "_HDRLM", 6) && !(inst.m_Mask & VPVST_HDRLM))
+							bIncr = false;
 					}
 				}
 			}
@@ -1118,7 +1118,9 @@ void CCGPShader_D3D::mfSetVariables(TArray<SCGParam4f>* Vars)
 
 void CCGPShader_D3D::mfSetVariables(bool bObj, TArray<SCGParam4f>* Parms)
 {
-	if (m_Insts[m_CurInst].m_pHandle == NULL || (INT_PTR)m_Insts[m_CurInst].m_pHandle == -1)
+	SCGInstance& inst = m_Insts[m_CurInst];
+
+	if (inst.m_pHandle == NULL || (INT_PTR)inst.m_pHandle == -1)
 		return;
 
 	//PROFILE_FRAME(Shader_PShadersParms);
@@ -1128,16 +1130,16 @@ void CCGPShader_D3D::mfSetVariables(bool bObj, TArray<SCGParam4f>* Parms)
 		if (m_ParamsNoObj.Num())
 			mfSetVariables(&m_ParamsNoObj);
 
-		if (m_Insts[m_CurInst].m_ParamsNoObj)
-			mfSetVariables(m_Insts[m_CurInst].m_ParamsNoObj);
+		if (inst.m_ParamsNoObj)
+			mfSetVariables(inst.m_ParamsNoObj);
 	}
 	else
 	{
 		if (m_ParamsObj.Num())
 			mfSetVariables(&m_ParamsObj);
 
-		if (m_Insts[m_CurInst].m_ParamsObj)
-			mfSetVariables(m_Insts[m_CurInst].m_ParamsObj);
+		if (inst.m_ParamsObj)
+			mfSetVariables(inst.m_ParamsObj);
 	}
 
 	if (Parms)
@@ -1175,44 +1177,39 @@ void CCGPShader_D3D::mfGetDstFileName(char* dstname, int nSize, bool bUseASCIICa
 		else
 			type = "D3D9_Auto";
 	}
-	else
-		if (m_CGProfileType == CG_PROFILE_PS_1_1)
-			type = "D3D9_PS11";
-		else
-			if (m_CGProfileType == CG_PROFILE_PS_1_2)
-				type = "D3D9_PS11";
+	else if (m_CGProfileType == CG_PROFILE_PS_1_1)
+		type = "D3D9_PS11";
+	else if (m_CGProfileType == CG_PROFILE_PS_1_2)
+		type = "D3D9_PS11";
+	else if (m_CGProfileType == CG_PROFILE_PS_1_3)
+		type = "D3D9_PS11";
+	else if (m_CGProfileType == CG_PROFILE_PS_2_0)
+		type = "D3D9_PS20";
+	else if (m_CGProfileType == CG_PROFILE_PS_3_0)
+		type = "D3D9_PS30";
+	else if (m_CGProfileType == CG_PROFILE_PS_2_X)
+	{
+		int nGPU = gRenDev->GetFeatures() & RFT_HW_MASK;
+		if (nGPU == RFT_HW_GFFX)
+		{
+			if (CRenderer::CV_r_sm2xpath == 2)
+				type = "D3D9_PS2A";
 			else
-				if (m_CGProfileType == CG_PROFILE_PS_1_3)
-					type = "D3D9_PS11";
-				else
-					if (m_CGProfileType == CG_PROFILE_PS_2_0)
-						type = "D3D9_PS20";
-					else
-						if (m_CGProfileType == CG_PROFILE_PS_3_0)
-							type = "D3D9_PS30";
-						else
-							if (m_CGProfileType == CG_PROFILE_PS_2_X)
-							{
-								int nGPU = gRenDev->GetFeatures() & RFT_HW_MASK;
-								if (nGPU == RFT_HW_GFFX)
-								{
-									if (CRenderer::CV_r_sm2xpath == 2)
-										type = "D3D9_PS2A";
-									else
-										type = "D3D9_PS2X";
-								}
-								else
-									type = "D3D9_PS2X";
-							}
-							else
-								type = "Unknown";
+				type = "D3D9_PS2X";
+		}
+		else
+			type = "D3D9_PS2X";
+	}
+	else
+	type = "Unknown";
+
+	SCGInstance& inst = m_Insts[m_CurInst];
 
 	char* fog;
-	if ((m_Insts[m_CurInst].m_Mask & VPVST_FOGGLOBAL) || bFog)
+	if ((inst.m_Mask & VPVST_FOGGLOBAL) || bFog)
 		fog = "Fog";
-	else
-		if (m_Insts[m_CurInst].m_Mask & VPVST_NOFOG)
-			fog = "NoFog";
+	else if (inst.m_Mask & VPVST_NOFOG)
+		fog = "NoFog";
 
 	strncpy(dstname, gRenDev->m_cEF.m_ShadersCache, nSize);
 	strncat(dstname, "CGPShaders/", nSize);
@@ -1236,40 +1233,45 @@ void CCGPShader_D3D::mfGetDstFileName(char* dstname, int nSize, bool bUseASCIICa
 	strncat(dstname, "$", nSize);
 	strncat(dstname, fog, nSize);
 
-	if (m_Insts[m_CurInst].m_Mask & VPVST_INSTANCING_NOROT)
+	if (inst.m_Mask & VPVST_INSTANCING_NOROT)
 		strncat(dstname, "$INST", nSize);
-	if (m_Insts[m_CurInst].m_Mask & VPVST_HDR)
+
+	if (inst.m_Mask & VPVST_HDR)
 	{
-		if (!(m_Insts[m_CurInst].m_Mask & VPVST_HDRREAL))
+		if (!(inst.m_Mask & VPVST_HDRREAL))
 			strncat(dstname, "$HDR", nSize);
 		else
 			strncat(dstname, "$HDR_REAL", nSize);
 		if (gcpRendD3D->m_nHDRType == 2)
 			strncat(dstname, "$MRT", nSize);
 	}
-	if (m_Insts[m_CurInst].m_Mask & VPVST_HDRLM)
+
+	if (inst.m_Mask & VPVST_HDRLM)
 		strncat(dstname, "$HDRLM", nSize);
-	if (m_Insts[m_CurInst].m_Mask & VPVST_3DC)
+
+	if (inst.m_Mask & VPVST_3DC)
 	{
 		if (gcpRendD3D->m_bDeviceSupportsComprNormalmaps == 1)
 			strncat(dstname, "$3DC", nSize);
-		else
-			if (gcpRendD3D->m_bDeviceSupportsComprNormalmaps == 2)
-				strncat(dstname, "$V8U8", nSize);
-			else
-				if (gcpRendD3D->m_bDeviceSupportsComprNormalmaps == 3)
-					strncat(dstname, "$CxV8U8", nSize);
+		else if (gcpRendD3D->m_bDeviceSupportsComprNormalmaps == 2)
+			strncat(dstname, "$V8U8", nSize);
+		else if (gcpRendD3D->m_bDeviceSupportsComprNormalmaps == 3)
+			strncat(dstname, "$CxV8U8", nSize);
 	}
-	if (m_Insts[m_CurInst].m_Mask & VPVST_3DC_A)
+
+	if (inst.m_Mask & VPVST_3DC_A)
 		strncat(dstname, "$3DCA", nSize);
-	if (m_Insts[m_CurInst].m_Mask & VPVST_SPECANTIALIAS)
+
+	if (inst.m_Mask & VPVST_SPECANTIALIAS)
 		strncat(dstname, "$SA", nSize);
-	if (bUseASCIICache && m_Insts[m_CurInst].m_LightMask)
+
+	if (bUseASCIICache && inst.m_LightMask)
 	{
 		char str[32];
-		sprintf(str, "$%x", m_Insts[m_CurInst].m_LightMask);
+		sprintf(str, "$%x", inst.m_LightMask);
 		strncat(dstname, str, nSize);
 	}
+
 	if (m_nMaskGen)
 	{
 		char str[32];
@@ -1310,19 +1312,21 @@ static char* sGetText(char** buf)
 
 bool CCGPShader_D3D::ActivateCacheItem(SShaderCacheHeaderItem* pItem)
 {
+	SCGInstance& inst = m_Insts[m_CurInst];
+
 	int i;
 	byte* pData = (byte*)pItem;
 	pData += sizeof(SShaderCacheHeaderItem);
 	SShaderCacheHeaderItemVar* pVars = (SShaderCacheHeaderItemVar*)pData;
 	for (i = 0; i < pItem->m_nVariables; i++)
 	{
-		if (!m_Insts[m_CurInst].m_BindVars)
-			m_Insts[m_CurInst].m_BindVars = new TArray<SCGBind>;
+		if (!inst.m_BindVars)
+			inst.m_BindVars = new TArray<SCGBind>;
 		SCGBind cgp;
 		cgp.m_nComponents = pVars[i].m_nCount;
 		cgp.m_Name = pVars[i].m_Name;
 		cgp.m_dwBind = pVars[i].m_Reg;
-		m_Insts[m_CurInst].m_BindVars->AddElem(cgp);
+		inst.m_BindVars->AddElem(cgp);
 	}
 	pData += pItem->m_nVariables * sizeof(SShaderCacheHeaderItemVar);
 	HRESULT hr = gcpRendD3D->mfGetD3DDevice()->CreatePixelShader((DWORD*)pData, (IDirect3DPixelShader9**)&m_Insts[m_CurInst].m_pHandle);
@@ -1332,27 +1336,31 @@ bool CCGPShader_D3D::ActivateCacheItem(SShaderCacheHeaderItem* pItem)
 }
 bool CCGPShader_D3D::CreateCacheItem(int nMask, byte* pData, int nLen)
 {
+	SCGInstance& inst = m_Insts[m_CurInst];
+
 	int i;
-	int nVars = m_Insts[m_CurInst].m_BindVars ? m_Insts[m_CurInst].m_BindVars->Num() : 0;
+	int nVars = inst.m_BindVars ? inst.m_BindVars->Num() : 0;
 	int nNewSize = nVars * sizeof(SShaderCacheHeaderItemVar) + nLen;
 	byte* pNewData = new byte[nNewSize];
 	SShaderCacheHeaderItemVar* pVars = (SShaderCacheHeaderItemVar*)pNewData;
 	for (i = 0; i < nVars; i++)
 	{
-		SCGBind* bnd = &m_Insts[m_CurInst].m_BindVars->Get(i);
+		SCGBind* bnd = &inst.m_BindVars->Get(i);
 		memset(pVars[i].m_Name, 0, sizeof(pVars[i].m_Name));
 		strcpy(pVars[i].m_Name, bnd->m_Name.c_str());
 		pVars[i].m_nCount = bnd->m_nComponents;
 		pVars[i].m_Reg = bnd->m_dwBind;
 	}
 	memcpy(&pNewData[nNewSize - nLen], pData, nLen);
+
 	SShaderCacheHeaderItem h;
 	h.m_nMask = nMask;
 	h.m_nVariables = nVars;
-	bool bRes = gRenDev->m_cEF.AddCacheItem(m_InstCache[m_Insts[m_CurInst].m_nCacheID].m_pCache, &h, pNewData, nNewSize, false);
+	bool bRes = gRenDev->m_cEF.AddCacheItem(m_InstCache[inst.m_nCacheID].m_pCache, &h, pNewData, nNewSize, false);
 	delete[] pNewData;
+
 	if (!(m_Flags & PSFI_PRECACHEPHASE))
-		gRenDev->m_cEF.FlushCacheFile(m_InstCache[m_Insts[m_CurInst].m_nCacheID].m_pCache);
+		gRenDev->m_cEF.FlushCacheFile(m_InstCache[inst.m_nCacheID].m_pCache);
 
 	return bRes;
 }
@@ -1362,7 +1370,8 @@ bool CCGPShader_D3D::mfActivate()
 {
 	PROFILE_FRAME(Shader_PShaderActivate);
 
-	if (!m_Insts[m_CurInst].m_pHandle)
+	SCGInstance& inst = m_Insts[m_CurInst];
+	if (!inst.m_pHandle)
 	{
 		if (m_Flags & PSFI_PS30ONLY)
 		{
@@ -1408,7 +1417,7 @@ bool CCGPShader_D3D::mfActivate()
 		else
 			m_CGProfileType = CG_PROFILE_PS_1_1;
 
-		if ((m_Insts[m_CurInst].m_Mask & VPVST_HDR) && m_CGProfileType == CG_PROFILE_PS_1_1)
+		if ((inst.m_Mask & VPVST_HDR) && m_CGProfileType == CG_PROFILE_PS_1_1)
 		{
 			// HDR requires at least PS2.0 shader profile
 			if ((gRenDev->GetFeatures() & RFT_HW_MASK) == RFT_HW_GFFX)
@@ -1438,21 +1447,21 @@ bool CCGPShader_D3D::mfActivate()
 		// Use binary cache files for PS30 and PS20b shaders
 		if (!bUseACIICache)
 		{
-			if (m_Insts[m_CurInst].m_nCacheID == -1)
+			if (inst.m_nCacheID == -1)
 			{
 				AddExtension(namedst1, ".cgbin");
-				m_Insts[m_CurInst].m_nCacheID = mfGetCacheInstanceID(m_Insts[m_CurInst].m_Mask, namedst1);
+				inst.m_nCacheID = mfGetCacheInstanceID(inst.m_Mask, namedst1);
 			}
-			SShaderCacheHeaderItem* pCacheItem = gRenDev->m_cEF.GetCacheItem(m_InstCache[m_Insts[m_CurInst].m_nCacheID].m_pCache, m_Insts[m_CurInst].m_LightMask);
+			SShaderCacheHeaderItem* pCacheItem = gRenDev->m_cEF.GetCacheItem(m_InstCache[inst.m_nCacheID].m_pCache, inst.m_LightMask);
 			if (pCacheItem)
 			{
 				if (m_Flags & PSFI_PRECACHEPHASE)
 				{
-					gRenDev->m_cEF.FreeCacheItem(m_InstCache[m_Insts[m_CurInst].m_nCacheID].m_pCache, m_Insts[m_CurInst].m_LightMask);
+					gRenDev->m_cEF.FreeCacheItem(m_InstCache[inst.m_nCacheID].m_pCache, inst.m_LightMask);
 					return true;
 				}
 				bool bRes = ActivateCacheItem(pCacheItem);
-				gRenDev->m_cEF.FreeCacheItem(m_InstCache[m_Insts[m_CurInst].m_nCacheID].m_pCache, m_Insts[m_CurInst].m_LightMask);
+				gRenDev->m_cEF.FreeCacheItem(m_InstCache[inst.m_nCacheID].m_pCache, inst.m_LightMask);
 				if (bRes)
 					return true;
 				pCacheItem = NULL;
@@ -1528,7 +1537,7 @@ bool CCGPShader_D3D::mfActivate()
 						CloseHandle(hdst);
 					}
 				}
-				m_Insts[m_CurInst].m_pHandle = NULL;
+				inst.m_pHandle = NULL;
 				statusdst = iSystem->GetIPak()->FOpen(namedst, "r");
 			}
 		}
@@ -1568,41 +1577,38 @@ bool CCGPShader_D3D::mfActivate()
 					}
 					m_CGProfileType = CG_PROFILE_PS_2_X;
 				}
-				else
-					if (strstr(pbuf, "ps_2_0"))
+				else if (strstr(pbuf, "ps_2_0"))
+				{
+					if (D3DSHADER_VERSION_MAJOR(gcpRendD3D->m_d3dCaps.PixelShaderVersion) < 2)
 					{
-						if (D3DSHADER_VERSION_MAJOR(gcpRendD3D->m_d3dCaps.PixelShaderVersion) < 2)
-						{
-							delete[] pbuf;
-							bCreate = true;
-							goto create;
-						}
-						else
-							if ((gRenDev->GetFeatures() & RFT_HW_MASK) == RFT_HW_GFFX)
-							{
-								delete[] pbuf;
-								m_CGProfileType = CG_PROFILE_PS_2_X;
-								bCreate = true;
-								goto create;
-							}
-						m_CGProfileType = CG_PROFILE_PS_2_0;
+						delete[] pbuf;
+						bCreate = true;
+						goto create;
 					}
-					else
-						if (strstr(pbuf, "ps_3_0"))
-						{
-							if (D3DSHADER_VERSION_MAJOR(gcpRendD3D->m_d3dCaps.PixelShaderVersion) < 3)
-							{
-								delete[] pbuf;
-								bCreate = true;
-								goto create;
-							}
-							m_CGProfileType = CG_PROFILE_PS_3_0;
-						}
-						else
-							m_CGProfileType = CG_PROFILE_PS_1_1;
+					else if ((gRenDev->GetFeatures() & RFT_HW_MASK) == RFT_HW_GFFX)
+					{
+						delete[] pbuf;
+						m_CGProfileType = CG_PROFILE_PS_2_X;
+						bCreate = true;
+						goto create;
+					}
+					m_CGProfileType = CG_PROFILE_PS_2_0;
+				}
+				else if (strstr(pbuf, "ps_3_0"))
+				{
+					if (D3DSHADER_VERSION_MAJOR(gcpRendD3D->m_d3dCaps.PixelShaderVersion) < 3)
+					{
+						delete[] pbuf;
+						bCreate = true;
+						goto create;
+					}
+					m_CGProfileType = CG_PROFILE_PS_3_0;
+				}
+				else
+					m_CGProfileType = CG_PROFILE_PS_1_1;
 			}
 		}
-		CRYASSERT(!m_Insts[m_CurInst].m_BindVars);
+		CRYASSERT(!inst.m_BindVars);
 		if (pbuf)
 		{
 			RemoveCR(pbuf);
@@ -1624,120 +1630,114 @@ bool CCGPShader_D3D::mfActivate()
 					if (szReg[0] == 'c' && isdigit(szReg[1]))
 					{
 						SCGBind cgp;
-						if (!m_Insts[m_CurInst].m_BindVars)
-							m_Insts[m_CurInst].m_BindVars = new TArray<SCGBind>;
+						if (!inst.m_BindVars)
+							inst.m_BindVars = new TArray<SCGBind>;
 						char* szSize = sGetText(&token);
 						cgp.m_nComponents = atoi(szSize);
 						cgp.m_Name = szName;
 						cgp.m_dwBind = atoi(&szReg[1]);
-						m_Insts[m_CurInst].m_BindVars->AddElem(cgp);
+						inst.m_BindVars->AddElem(cgp);
 					}
 					else
 						if (szReg[0] == 's' && isdigit(szReg[1]) && (m_Flags & PSFI_FX))
 						{
 							SCGBind cgp;
-							if (!m_Insts[m_CurInst].m_BindVars)
-								m_Insts[m_CurInst].m_BindVars = new TArray<SCGBind>;
+							if (!inst.m_BindVars)
+								inst.m_BindVars = new TArray<SCGBind>;
 							char* szSize = sGetText(&token);
 							cgp.m_nComponents = atoi(szSize);
 							cgp.m_Name = szName;
 							cgp.m_dwBind = atoi(&szReg[1]) | SHADER_BIND_SAMPLER;
-							m_Insts[m_CurInst].m_BindVars->AddElem(cgp);
+							inst.m_BindVars->AddElem(cgp);
 						}
 				}
-				else
+				else if (!strncmp(token, "const", 5))
 				{
-					if (!strncmp(token, "const", 5))
+					token += 5;
+					char* szhReg = sGetText(&token);
+					char* szEqual = sGetText(&token);
+
+					char* szF0 = sGetText(&token);
+					char* szF1 = sGetText(&token);
+					char* szF2 = sGetText(&token);
+					char* szF3 = sGetText(&token);
+
+					if (!inst.m_BindConstants)
+						inst.m_BindConstants = new TArray<SCGBindConst>;
+					SCGBindConst cgp;
+					cgp.m_nComponents = 1;
+					cgp.m_Val[0] = (float)atof(szF0);
+					cgp.m_Val[1] = (float)atof(szF1);
+					cgp.m_Val[2] = (float)atof(szF2);
+					cgp.m_Val[3] = (float)atof(szF3);
+					cgp.m_dwBind = atoi(&szhReg[2]);
+					inst.m_BindConstants->AddElem(cgp);
+				}
+				else if (!strncmp(token, "var", 3))
+				{
+					token += 3;
+					char* szType = sGetText(&token);
+					char* szName = sGetText(&token);
+					char* szvAttr = sGetText(&token);
+					char* szhReg = sGetText(&token);
+					if ((m_Flags & PSFI_FX) && !strncmp(szType, "sampler", 7))
 					{
-						token += 5;
-						char* szhReg = sGetText(&token);
-						char* szEqual = sGetText(&token);
-
-						char* szF0 = sGetText(&token);
-						char* szF1 = sGetText(&token);
-						char* szF2 = sGetText(&token);
-						char* szF3 = sGetText(&token);
-
-						if (!m_Insts[m_CurInst].m_BindConstants)
-							m_Insts[m_CurInst].m_BindConstants = new TArray<SCGBindConst>;
-						SCGBindConst cgp;
+						SCGBind cgp;
+						if (!inst.m_BindVars)
+							inst.m_BindVars = new TArray<SCGBind>;
 						cgp.m_nComponents = 1;
-						cgp.m_Val[0] = (float)atof(szF0);
-						cgp.m_Val[1] = (float)atof(szF1);
-						cgp.m_Val[2] = (float)atof(szF2);
-						cgp.m_Val[3] = (float)atof(szF3);
-						cgp.m_dwBind = atoi(&szhReg[2]);
-						m_Insts[m_CurInst].m_BindConstants->AddElem(cgp);
+						cgp.m_Name = szName;
+						CRYASSERT(!strncmp(szhReg, "texunit", 7));
+						char* szSize = sGetText(&token);
+						cgp.m_dwBind = atoi(szSize) | SHADER_BIND_SAMPLER;
+						inst.m_BindVars->AddElem(cgp);
 					}
-					else
-						if (!strncmp(token, "var", 3))
+					else if (szhReg)
+					{
+						if (szhReg[0] == 'c' && szhReg[1] == '[')
 						{
-							token += 3;
-							char* szType = sGetText(&token);
-							char* szName = sGetText(&token);
-							char* szvAttr = sGetText(&token);
-							char* szhReg = sGetText(&token);
-							if ((m_Flags & PSFI_FX) && !strncmp(szType, "sampler", 7))
+							int len = strlen(szhReg);
+							if (szhReg[len - 1] == ',')
 							{
-								SCGBind cgp;
-								if (!m_Insts[m_CurInst].m_BindVars)
-									m_Insts[m_CurInst].m_BindVars = new TArray<SCGBind>;
-								cgp.m_nComponents = 1;
-								cgp.m_Name = szName;
-								CRYASSERT(!strncmp(szhReg, "texunit", 7));
-								char* szSize = sGetText(&token);
-								cgp.m_dwBind = atoi(szSize) | SHADER_BIND_SAMPLER;
-								m_Insts[m_CurInst].m_BindVars->AddElem(cgp);
+								char* sznComps = sGetText(&token);
+								nComps = atoi(sznComps);
 							}
 							else
-								if (szhReg)
-								{
-									if (szhReg[0] == 'c' && szhReg[1] == '[')
-									{
-										int len = strlen(szhReg);
-										if (szhReg[len - 1] == ',')
-										{
-											char* sznComps = sGetText(&token);
-											nComps = atoi(sznComps);
-										}
-										else
-											nComps = 1;
-										char* szVarType = sGetText(&token);
-										char* sznVar = sGetText(&token);
-										if (!m_Insts[m_CurInst].m_BindVars)
-											m_Insts[m_CurInst].m_BindVars = new TArray<SCGBind>;
-										SCGBind cgp;
-										cgp.m_nComponents = nComps;
-										cgp.m_Name = szName;
-										cgp.m_dwBind = atoi(&szhReg[2]);
-										m_Insts[m_CurInst].m_BindVars->AddElem(cgp);
-									}
-									else
-										if (!strncmp(szhReg, "OFFSET_TEXTURE_MATRIX", 21))
-										{
-											if (!m_Insts[m_CurInst].m_BindVars)
-												m_Insts[m_CurInst].m_BindVars = new TArray<SCGBind>;
-											SCGBind cgp;
-											cgp.m_nComponents = nComps;
-											cgp.m_Name = szName;
-											cgp.m_dwBind = GL_OFFSET_TEXTURE_2D_MATRIX_NV;
-											cgp.m_dwBind |= (atoi(&szhReg[22]) + 1) << 28;
-											m_Insts[m_CurInst].m_BindVars->AddElem(cgp);
-										}
-								}
+								nComps = 1;
+							char* szVarType = sGetText(&token);
+							char* sznVar = sGetText(&token);
+							if (!inst.m_BindVars)
+								inst.m_BindVars = new TArray<SCGBind>;
+							SCGBind cgp;
+							cgp.m_nComponents = nComps;
+							cgp.m_Name = szName;
+							cgp.m_dwBind = atoi(&szhReg[2]);
+							inst.m_BindVars->AddElem(cgp);
 						}
+						else if (!strncmp(szhReg, "OFFSET_TEXTURE_MATRIX", 21))
+						{
+							if (!inst.m_BindVars)
+								inst.m_BindVars = new TArray<SCGBind>;
+							SCGBind cgp;
+							cgp.m_nComponents = nComps;
+							cgp.m_Name = szName;
+							cgp.m_dwBind = GL_OFFSET_TEXTURE_2D_MATRIX_NV;
+							cgp.m_dwBind |= (atoi(&szhReg[22]) + 1) << 28;
+							inst.m_BindVars->AddElem(cgp);
+						}
+					}
 				}
 				token = strtok(NULL, "//");
 			}
-			if (m_Insts[m_CurInst].m_BindVars)
+			if (inst.m_BindVars)
 			{
-				m_Insts[m_CurInst].m_BindVars->Shrink();
-				for (int i = 0; i < m_Insts[m_CurInst].m_BindVars->Num(); i++)
+				inst.m_BindVars->Shrink();
+				for (int i = 0; i < inst.m_BindVars->Num(); i++)
 				{
-					SCGBind* pBind = &m_Insts[m_CurInst].m_BindVars->Get(i);
-					for (int j = i + 1; j < m_Insts[m_CurInst].m_BindVars->Num(); j++)
+					SCGBind* pBind = &inst.m_BindVars->Get(i);
+					for (int j = i + 1; j < inst.m_BindVars->Num(); j++)
 					{
-						SCGBind* pBind0 = &m_Insts[m_CurInst].m_BindVars->Get(j);
+						SCGBind* pBind0 = &inst.m_BindVars->Get(j);
 						if (pBind0->m_Name == pBind->m_Name)
 						{
 							pBind->m_pNext = pBind0;
@@ -1746,17 +1746,17 @@ bool CCGPShader_D3D::mfActivate()
 					}
 				}
 			}
-			CRYASSERT(!m_Insts[m_CurInst].m_BindVars || m_Insts[m_CurInst].m_BindVars->Num() <= 30);
+			CRYASSERT(!inst.m_BindVars || inst.m_BindVars->Num() <= 30);
 			SAFE_DELETE_ARRAY(pbuf);
 			if (pCode && !bUseACIICache)
-				CreateCacheItem(m_Insts[m_CurInst].m_LightMask, (byte*)pCode->GetBufferPointer(), pCode->GetBufferSize());
+				CreateCacheItem(inst.m_LightMask, (byte*)pCode->GetBufferPointer(), pCode->GetBufferSize());
 			SAFE_RELEASE(pCode);
 		}
 		if (!(m_Flags & PSFI_PRECACHEPHASE))
 			mfUnbind();
 	}
 
-	if (!m_Insts[m_CurInst].m_pHandle)
+	if (!inst.m_pHandle)
 		return false;
 	return true;
 }
@@ -1778,101 +1778,128 @@ bool CCGPShader_D3D::mfSet(bool bEnable, SShaderPassHW* slw, int nFlags)
 		mfUnbind();
 		return true;
 	}
-	else
+
+	if (slw && (slw->m_Flags & SHPF_ALLOW_SPECANTIALIAS) && CRenderer::CV_r_specantialias)
 	{
-		if (slw && (slw->m_Flags & SHPF_ALLOW_SPECANTIALIAS) && CRenderer::CV_r_specantialias)
-		{
-			rd->m_RP.m_FlagsPerFlush |= RBSI_USE_SPECANTIALIAS;
-			if (rd->m_RP.m_pShaderResources)
+		rd->m_RP.m_FlagsPerFlush |= RBSI_USE_SPECANTIALIAS;
+		SRenderShaderResources* res = rd->m_RP.m_pShaderResources;
+		if (res)
+		{ 
+			if (!res->m_Textures[EFTT_PHONG])
+				res->AddTextureMap(EFTT_PHONG);
+			if (res->m_Textures[EFTT_PHONG]->m_Amount != rd->m_RP.m_fCurSpecShininess)
 			{
-				if (!rd->m_RP.m_pShaderResources->m_Textures[EFTT_PHONG])
-					rd->m_RP.m_pShaderResources->AddTextureMap(EFTT_PHONG);
-				if (rd->m_RP.m_pShaderResources->m_Textures[EFTT_PHONG]->m_Amount != rd->m_RP.m_fCurSpecShininess)
-				{
-					if (rd->m_RP.m_pShaderResources->m_Textures[EFTT_PHONG]->m_TU.m_TexPic)
-						rd->m_RP.m_pShaderResources->m_Textures[EFTT_PHONG]->m_TU.m_TexPic->Release(false);
-					rd->m_RP.m_pShaderResources->m_Textures[EFTT_PHONG]->m_Amount = (byte)rd->m_RP.m_fCurSpecShininess;
-					rd->m_RP.m_pShaderResources->m_Textures[EFTT_PHONG]->m_TU.m_TexPic = rd->EF_MakeSpecularTexture(rd->m_RP.m_fCurSpecShininess);
-				}
-				rd->EF_SelectTMU(CTexMan::m_nCurStages);
-				rd->m_RP.m_pShaderResources->m_Textures[EFTT_PHONG]->m_TU.m_TexPic->Set();
-				CTexMan::m_nCurStages++;
+				if (res->m_Textures[EFTT_PHONG]->m_TU.m_TexPic)
+					res->m_Textures[EFTT_PHONG]->m_TU.m_TexPic->Release(false);
+				res->m_Textures[EFTT_PHONG]->m_Amount = (byte)rd->m_RP.m_fCurSpecShininess;
+				res->m_Textures[EFTT_PHONG]->m_TU.m_TexPic = rd->EF_MakeSpecularTexture(rd->m_RP.m_fCurSpecShininess);
 			}
+			rd->EF_SelectTMU(CTexMan::m_nCurStages);
+			res->m_Textures[EFTT_PHONG]->m_TU.m_TexPic->Set();
+			CTexMan::m_nCurStages++;
 		}
+	}
 
-		if ((m_Flags & PSFI_NOFOG) || !CRenderer::CV_r_vpfog || !(rd->m_Features & RFT_FOGVP))
-			Mask = VPVST_NOFOG;
-		else
-			Mask = VPVST_FOGGLOBAL;
-		if (nFlags & PSF_INSTANCING)
-			Mask |= VPVST_INSTANCING_NOROT;
-		if (rd->m_RP.m_FlagsPerFlush & RBSI_USE_3DC)
-		{
-			Mask |= VPVST_3DC;
-			if (rd->m_RP.m_FlagsPerFlush & RBSI_USE_3DC_A)
-				Mask |= VPVST_3DC_A;
-		}
-		if (rd->m_RP.m_FlagsPerFlush & RBSI_USE_SPECANTIALIAS)
-			Mask |= VPVST_SPECANTIALIAS;
-		if (rd->m_RP.m_PersFlags & RBPF_HDR)
-		{
-			Mask |= VPVST_HDR;
-			if (rd->m_RP.m_FlagsPerFlush & RBSI_USE_HDRLM)
-				Mask |= VPVST_HDRLM;
-			if (!CRenderer::CV_r_hdrfake)
-				Mask |= VPVST_HDRREAL;
-		}
-		if (rd->m_RP.m_ClipPlaneEnabled == 1)
-			Mask |= VPVST_CLIPPLANES3;
+	if ((m_Flags & PSFI_NOFOG) || !CRenderer::CV_r_vpfog || !(rd->m_Features & RFT_FOGVP))
+		Mask = VPVST_NOFOG;
+	else
+		Mask = VPVST_FOGGLOBAL;
 
-		int Type = mfGetCGInstanceID(Mask, rd->m_RP.m_ShaderLightMask);
+	if (nFlags & PSF_INSTANCING)
+		Mask |= VPVST_INSTANCING_NOROT;
+
+	if (rd->m_RP.m_FlagsPerFlush & RBSI_USE_3DC)
+	{
+		Mask |= VPVST_3DC;
+		if (rd->m_RP.m_FlagsPerFlush & RBSI_USE_3DC_A)
+			Mask |= VPVST_3DC_A;
+	}
+
+	if (rd->m_RP.m_FlagsPerFlush & RBSI_USE_SPECANTIALIAS)
+		Mask |= VPVST_SPECANTIALIAS;
+
+	if (rd->m_RP.m_PersFlags & RBPF_HDR)
+	{
+		Mask |= VPVST_HDR;
+		if (rd->m_RP.m_FlagsPerFlush & RBSI_USE_HDRLM)
+			Mask |= VPVST_HDRLM;
+		if (!CRenderer::CV_r_hdrfake)
+			Mask |= VPVST_HDRREAL;
+	}
+
+	if (rd->m_RP.m_ClipPlaneEnabled == 1)
+		Mask |= VPVST_CLIPPLANES3;
+
+	int Type = mfGetCGInstanceID(Mask, rd->m_RP.m_ShaderLightMask);
 
 #ifdef DO_RENDERLOG
-		if (CRenderer::CV_r_log >= 3)
-			rd->Logv(SRendItem::m_RecurseLevel, "--- Set CGPShader \"%s\", LightMask: 0x%x, Mask: 0x%I64x (0x%x Type)\n", m_Name.c_str(), m_Insts[m_CurInst].m_LightMask, m_nMaskGen, Mask);
+	if (CRenderer::CV_r_log >= 3)
+		rd->Logv(SRendItem::m_RecurseLevel, "--- Set CGPShader \"%s\", LightMask: 0x%x, Mask: 0x%I64x (0x%x Type)\n", m_Name.c_str(), m_Insts[m_CurInst].m_LightMask, m_nMaskGen, Mask);
 #endif
 
-		if ((INT_PTR)m_Insts[Type].m_pHandle == -1)
+	if ((INT_PTR)m_Insts[Type].m_pHandle == -1)
+	{
+		m_LastTypeVP = Mask;
+		return false;
+	}
+
+	if (!m_Insts[Type].m_pHandle)
+	{
+		rd->m_RP.m_CurPS = this;
+		if (!mfActivate())
 		{
-			m_LastTypeVP = Mask;
+			m_Insts[Type].m_pHandle = (CGprogram)-1;
 			return false;
 		}
-
-		if (!m_Insts[Type].m_pHandle)
-		{
-			rd->m_RP.m_CurPS = this;
-			if (!mfActivate())
-			{
-				m_Insts[Type].m_pHandle = (CGprogram)-1;
-				return false;
-			}
-			m_LastVP = NULL;
-		}
+		m_LastVP = NULL;
+	}
 
 #ifdef DO_RENDERSTATS
-		if (m_Frame != rd->m_nFrameUpdateID)
-		{
-			m_Frame = rd->m_nFrameUpdateID;
-			rd->m_RP.m_PS.m_NumPShaders++;
-		}
+	if (m_Frame != rd->m_nFrameUpdateID)
+	{
+		m_Frame = rd->m_nFrameUpdateID;
+		rd->m_RP.m_PS.m_NumPShaders++;
+	}
 #endif
 
-		if (m_LastVP != this || m_LastTypeVP != Mask || m_LastLTypeVP != m_Insts[m_CurInst].m_LightMask)
-		{
-			rd->m_RP.m_PS.m_NumPShadChanges++;
-			m_LastVP = this;
-			m_LastTypeVP = Mask;
-			m_LastLTypeVP = m_Insts[m_CurInst].m_LightMask;
-			mfBind();
-		}
-		rd->m_RP.m_PersFlags |= RBPF_PS1NEEDSET;
-		if (slw && slw->m_CGFSParamsNoObj)
-			mfSetVariables(false, slw->m_CGFSParamsNoObj);
-		else
-			mfSetVariables(false, NULL);
+	if (m_LastVP != this || m_LastTypeVP != Mask || m_LastLTypeVP != m_Insts[m_CurInst].m_LightMask)
+	{
+		rd->m_RP.m_PS.m_NumPShadChanges++;
+		m_LastVP = this;
+		m_LastTypeVP = Mask;
+		m_LastLTypeVP = m_Insts[m_CurInst].m_LightMask;
+		mfBind();
 	}
+	rd->m_RP.m_PersFlags |= RBPF_PS1NEEDSET;
+	if (slw && slw->m_CGFSParamsNoObj)
+		mfSetVariables(false, slw->m_CGFSParamsNoObj);
+	else
+		mfSetVariables(false, NULL);
+
 	m_CurRC = this;
 	return true;
+}
+
+void CCGPShader_D3D::mfBind()
+{
+	SCGInstance& inst = m_Insts[m_CurInst];
+	if (!inst.m_pHandle)
+		return;
+
+	HRESULT hr = gcpRendD3D->mfGetD3DDevice()->SetPixelShader((IDirect3DPixelShader9*)inst.m_pHandle);
+	if (FAILED(hr))
+		return;
+
+	if (!inst.m_BindConstants)
+		return;
+
+	for (SCGBindConst& p : *inst.m_BindConstants)
+		gcpRendD3D->mfGetD3DDevice()->SetPixelShaderConstantF(p.m_dwBind, &p.m_Val[0], 1);
+}
+
+void CCGPShader_D3D::mfUnbind()
+{
+	gcpRendD3D->mfGetD3DDevice()->SetPixelShader(NULL);
 }
 
 char* CCGPShader_D3D::mfLoadCG_Int(char* prog_text)

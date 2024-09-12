@@ -233,57 +233,30 @@ public:
 		m_bCGType = true;
 	}
 
-	void mfBind()
-	{
-		HRESULT hr;
-		if (m_Insts[m_CurInst].m_pHandle)
-		{
-			hr = gcpRendD3D->mfGetD3DDevice()->SetPixelShader((IDirect3DPixelShader9*)m_Insts[m_CurInst].m_pHandle);
-			if (FAILED(hr))
-				return;
-		}
-		if (m_Insts[m_CurInst].m_BindConstants)
-		{
-			int i;
-			for (i = 0; i < m_Insts[m_CurInst].m_BindConstants->Num(); i++)
-			{
-				SCGBindConst* p = &m_Insts[m_CurInst].m_BindConstants->Get(i);
-				gcpRendD3D->mfGetD3DDevice()->SetPixelShaderConstantF(p->m_dwBind, &p->m_Val[0], 1);
-			}
-		}
-	}
-
-	void mfUnbind()
-	{
-		gcpRendD3D->mfGetD3DDevice()->SetPixelShader(NULL);
-	}
+	void mfBind();
+	void mfUnbind();
 
 	char* mfLoadCG_Int(char* prog_text);
 
 	char* mfLoadCG(char* prog_text)
 	{
+		const int renderFeatures = gRenDev->GetFeatures();
 		// Test adding source text to context
 		char* pOut = mfLoadCG_Int(prog_text);
-		if (!pOut)
+		if (!pOut
+			&& (m_Flags & PSFI_AUTOENUMTC) && m_CGProfileType != CG_PROFILE_PS_3_0 && m_CGProfileType != CG_PROFILE_PS_2_X
+			&& (renderFeatures & RFT_HW_PS20))
 		{
-			if ((m_Flags & PSFI_AUTOENUMTC) && m_CGProfileType != CG_PROFILE_PS_3_0 && m_CGProfileType != CG_PROFILE_PS_2_X)
+			if ((renderFeatures & RFT_HW_MASK) == RFT_HW_GFFX)
+				m_CGProfileType = CG_PROFILE_PS_2_X;
+			else
+				m_CGProfileType = CG_PROFILE_PS_2_0;
+
+			pOut = mfLoadCG_Int(prog_text);
+			if (!pOut && (renderFeatures & RFT_HW_PS30))
 			{
-				if (gRenDev->GetFeatures() & RFT_HW_PS20)
-				{
-					if ((gRenDev->GetFeatures() & RFT_HW_MASK) == RFT_HW_GFFX)
-						m_CGProfileType = CG_PROFILE_PS_2_X;
-					else
-						m_CGProfileType = CG_PROFILE_PS_2_0;
-					pOut = mfLoadCG_Int(prog_text);
-					if (!pOut)
-					{
-						if (gRenDev->GetFeatures() & RFT_HW_PS30)
-						{
-							m_CGProfileType = CG_PROFILE_PS_3_0;
-							pOut = mfLoadCG_Int(prog_text);
-						}
-					}
-				}
+				m_CGProfileType = CG_PROFILE_PS_3_0;
+				pOut = mfLoadCG_Int(prog_text);
 			}
 		}
 		if (!pOut)

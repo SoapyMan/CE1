@@ -206,38 +206,10 @@ public:
 			return &m_ParamsObj;
 	}
 
-	void mfUnbind()
-	{
-		gcpRendD3D->mfGetD3DDevice()->SetVertexShader(NULL);
-	}
+	void mfBind();
 
-	void mfBind()
-	{
-		HRESULT hr;
-		if (m_Insts[m_CurInst].m_pHandle)
-		{
-			hr = gcpRendD3D->mfGetD3DDevice()->SetVertexShader((IDirect3DVertexShader9*)m_Insts[m_CurInst].m_pHandle);
-			if (FAILED(hr))
-				return;
-		}
-		if (m_Insts[m_CurInst].m_BindConstants)
-		{
-			int i;
-			for (i = 0; i < m_Insts[m_CurInst].m_BindConstants->Num(); i++)
-			{
-				SCGBindConst* p = &m_Insts[m_CurInst].m_BindConstants->Get(i);
-				int n = p->m_dwBind;
-				if (m_CurParams[n][0] != p->m_Val[0] || m_CurParams[n][1] != p->m_Val[1] || m_CurParams[n][2] != p->m_Val[2] || m_CurParams[n][3] != p->m_Val[3])
-				{
-					m_CurParams[n][0] = p->m_Val[0];
-					m_CurParams[n][1] = p->m_Val[1];
-					m_CurParams[n][2] = p->m_Val[2];
-					m_CurParams[n][3] = p->m_Val[3];
-					gcpRendD3D->mfGetD3DDevice()->SetVertexShaderConstantF(n, &p->m_Val[0], 1);
-				}
-			}
-		}
-	}
+	void mfUnbind();
+
 	int mfGetCacheInstanceID(int Mask, const char* name = NULL)
 	{
 		int i;
