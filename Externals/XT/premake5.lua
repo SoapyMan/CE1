@@ -1,22 +1,32 @@
--- SDL2 as a usage
+project "XT"
+	kind "StaticLib"
+	files {
+		"./XTToolkit_Lib/StdAfx.cpp",
+		"./XTToolkit_Lib/StdAfx.h",
+		"./Src/**.cpp",
+		"./Include/**.h"
+	}
+	includedirs {
+		"./Src/",
+		"./Src/Common.Src",
+		"./XTToolkit_Lib/",
+		"./Include",
+		"./Include/Common.Include",
+	}
+	defines {
+		"_AFXDLL",
+		"_AFX_NO_OCC_SUPPORT",
+		"_XT_STATICLINK",
+		"_XTLIB_NOAUTOLINK"
+	}
+	
 usage "XT"
 	includedirs {
 		"./Include"
 	}
-	libdirs { 
-		"./lib",
-	}
 	defines {
-		"_XT_STATICLINK"
+		"_AFXDLL",
+		"_XT_STATICLINK",
+		"_XTLIB_NOAUTOLINK"
 	}
-
-	filter "platforms:x64"
-		links {
-			"XT3100LibDynStatic64",
-		}
-		
-	filter "platforms:x86"
-		links {
-			"XT3100LibDynStatic",
-		}
-	
+	links "XT"

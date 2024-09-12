@@ -13,7 +13,16 @@ include("FreeType2/premake5.lua")
 include("PunkBuster/premake5.lua")
 
 include("fmod/premake5.lua")
+
+if os.isdir("XT/Include") and os.isdir("XT/Src") then
 include("XT/premake5.lua")
+else
+print("-----------------------------------------------")
+print("WARNING! XT not found, Editor will not be built")
+print("-----------------------------------------------")
+ENABLE_EDITOR = false
+end
+
 include("cg/premake5.lua")
 include("lua41/premake5.lua")
 include("cv_sdk/premake5.lua")

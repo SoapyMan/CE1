@@ -9,6 +9,7 @@ local CAN_BUILD_GUI_TOOLS = (--[[os.target() == "linux" or]] os.target() == "win
 ENABLE_TOOLS = iif(ENABLE_TOOLS == nil, CAN_BUILD_TOOLS, ENABLE_TOOLS)
 ENABLE_GUI_TOOLS = iif(ENABLE_GUI_TOOLS == nil, CAN_BUILD_GUI_TOOLS, ENABLE_GUI_TOOLS)
 ENABLE_TESTS = iif(ENABLE_TESTS == nil, false, ENABLE_TESTS)
+ENABLE_EDITOR = os.target() == "windows" 
 WORKSPACE_NAME = (WORKSPACE_NAME or "CryEngine")
 
 -- you can redefine dependencies

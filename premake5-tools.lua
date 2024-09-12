@@ -54,7 +54,7 @@ project "ResourceCompilerPC"
 			"./SourceCode/CryAnimation/CrySkinAMD64.asm"
 		}
 		
-if false then -- os.target() == "windows" then
+if ENABLE_EDITOR then
 
 project "Editor"
 	kind "WindowedApp"

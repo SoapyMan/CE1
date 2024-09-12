@@ -229,6 +229,9 @@ CEditorImpl::~CEditorImpl()
 //////////////////////////////////////////////////////////////////////////
 void CEditorImpl::SetMasterCDFolder()
 {
+	if (IsDebuggerPresent())
+		return;
+
 	// Set`s root folder of the Editor.
 	char szExeFileName[_MAX_PATH];
 	// Get the path of the executable
