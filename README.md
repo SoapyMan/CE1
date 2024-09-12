@@ -5,6 +5,7 @@
 * Using Premake5 for project files generation
 * Converted code to build with Visual Studio 2022 and GCC
 * Enabled C++17, removed legacy stuff
+* Sandbox Editor compiles with VS2022
 * Multiple buffer overflows found and fixed with ASAN
 * SDL2 for handling window and input
 * Code file structure cleanup
@@ -16,7 +17,6 @@
 
 ### Future work TODO
 
-* Build editor and convert to Qt or ImGui
 * Fix original bugs
 * Optimize game loading times
 * Replace FMOD 3.74 with OpenAL or Steam Audio
