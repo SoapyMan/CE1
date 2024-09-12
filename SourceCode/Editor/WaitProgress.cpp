@@ -136,7 +136,7 @@ bool CWaitProgress::Step(int nPercentage)
 
 	if (nPercentage >= 0)
 	{
-		ASSERT(nPercentage <= 100);
+		CRYASSERT(nPercentage <= 100);
 		// create or update a progress control in the status bar
 		if (m_hwndProgress == NULL)
 			CreateProgressControl();
@@ -165,7 +165,7 @@ void CWaitProgress::SetText(LPCTSTR lpszText)
 
 void CWaitProgress::CreateProgressControl()
 {
-	ASSERT(m_hwndProgress == NULL);
+	CRYASSERT(m_hwndProgress == NULL);
 
 	// find status bar
 	CWnd* pMainWnd = ::AfxGetMainWnd();

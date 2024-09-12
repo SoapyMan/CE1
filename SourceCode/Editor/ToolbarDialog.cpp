@@ -46,7 +46,7 @@ BOOL CToolbarDialog::OnToolTipText(UINT, NMHDR* pNMHDR, LRESULT* pResult)
 	// Handle tooltip text requests from the toolbars
 	////////////////////////////////////////////////////////////////////////
 
-	ASSERT(pNMHDR->code == TTN_NEEDTEXTA || pNMHDR->code == TTN_NEEDTEXTW);
+	CRYASSERT(pNMHDR->code == TTN_NEEDTEXTA || pNMHDR->code == TTN_NEEDTEXTW);
 
 	// Allow top level routing frame to handle the message
 	// if (GetRoutingFrame() != NULL)
@@ -200,12 +200,12 @@ void CToolbarDialog::OnInitMenuPopup(CMenu* pPopupMenu, UINT nIndex, BOOL bSysMe
 {
 	if (!bSysMenu)
 	{
-		ASSERT(pPopupMenu != NULL);
+		CRYASSERT(pPopupMenu != NULL);
 		
 		// check the enabled state of various menu items
 		CCmdUI state;        
 		state.m_pMenu = pPopupMenu;
-		ASSERT(state.m_pOther == NULL);
+		CRYASSERT(state.m_pOther == NULL);
 		
 		state.m_nIndexMax = pPopupMenu->GetMenuItemCount();
 		for (state.m_nIndex = 0; state.m_nIndex < state.m_nIndexMax;
@@ -215,8 +215,8 @@ void CToolbarDialog::OnInitMenuPopup(CMenu* pPopupMenu, UINT nIndex, BOOL bSysMe
 			if (state.m_nID == 0)
 				continue; // menu separator or invalid cmd - ignore it
 				
-			ASSERT(state.m_pOther == NULL);
-			ASSERT(state.m_pMenu != NULL);
+			CRYASSERT(state.m_pOther == NULL);
+			CRYASSERT(state.m_pMenu != NULL);
 			if (state.m_nID == (UINT)-1)
 			{
 				// possibly a popup menu, route to first item of that popup
@@ -252,6 +252,6 @@ void CToolbarDialog::OnEnterIdle(UINT nWhy, CWnd* pWho)
 		return;
 		
 	OnSetMessageString(m_nIDTracking);
-	ASSERT(m_nIDTracking == m_nIDLastMessage);		
+	CRYASSERT(m_nIDTracking == m_nIDLastMessage);		
 	*/
 }

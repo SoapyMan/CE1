@@ -220,7 +220,7 @@ void CDataBaseDialog::AddTab( const char *szTitle,CBaseLibraryDialog *wnd )
 //////////////////////////////////////////////////////////////////////////
 CBaseLibraryDialog* CDataBaseDialog::GetCurrent()
 {
-	ASSERT( m_selectedCtrl < m_windows.size() );
+	CRYASSERT( m_selectedCtrl < m_windows.size() );
 	return m_windows[m_selectedCtrl];
 }
 

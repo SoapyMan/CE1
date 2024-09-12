@@ -82,7 +82,7 @@ void CSelectFileDlg::UpdatePreview(CString strFileToPreview)
 			size = m_previewModel.GetSize();
 		}
 
-		ASSERT(PathFileExists(strFileToPreview));
+		CRYASSERT(PathFileExists(strFileToPreview));
 
 		// Compact the path to fit into the text field
 		PathCompactPathEx(szCompactPath, strFileToPreview.GetBuffer(0), 33, NULL);
@@ -132,7 +132,7 @@ BOOL CSelectFileDlg::OnInitDialog()
 	{
 		// Get the first child
 		hItem = m_cFileTree.GetChildItem(hItem);
-		ASSERT(hItem);
+		CRYASSERT(hItem);
 
 		// Parse the entire folder string
 		while (true)

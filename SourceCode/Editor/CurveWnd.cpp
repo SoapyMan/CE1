@@ -97,8 +97,8 @@ void CCurveWnd::OnDestroy()
 
 BOOL CCurveWnd::Create(LPCTSTR lpszCurveName, const RECT &rect, CWnd* pWndParent, UINT nID, BOOL CreateCurveObj)
 {
-	ASSERT(nID != NULL);
-	ASSERT(pWndParent != NULL);
+	CRYASSERT(nID != NULL);
+	CRYASSERT(pWndParent != NULL);
 
 	//Create CurveWnd
 	DWORD dwExStyle			= WS_EX_CLIENTEDGE  ;

@@ -197,11 +197,11 @@ void CTerrainViewport::ResetContent()
 
 	// Load the water texture out of the ressource
 	bReturn = bmpLoad.LoadBitmap(MAKEINTRESOURCE(IDB_WATER));
-	ASSERT(bReturn);
+	CRYASSERT(bReturn);
 
 	// Allocate new memory to hold the bitmap data
 	pWaterTexData = new DWORD[128 * 128];
-	ASSERT(pWaterTexData);
+	CRYASSERT(pWaterTexData);
 
 	// Retrieve the bits from the bitmap
 	VERIFY(bmpLoad.GetBitmapBits(128 * 128 * sizeof(DWORD), pWaterTexData));
@@ -209,7 +209,7 @@ void CTerrainViewport::ResetContent()
 
 	// Allocate memory for the surface texture
 	pSurfaceTextureData = new DWORD[m_heightmapSize.cx*m_heightmapSize.cy];
-	ASSERT(pSurfaceTextureData);
+	CRYASSERT(pSurfaceTextureData);
 
 
 	// Fill the surface texture with the water texture, tile as needed
@@ -260,7 +260,7 @@ void CTerrainViewport::UpdateContent( int flags )
 
 	// Allocate memory
 	pSurfaceData = new DWORD[m_heightmapSize.cx*m_heightmapSize.cy];
-	ASSERT(pSurfaceData);
+	CRYASSERT(pSurfaceData);
 
 	bReturn = GetDocument()->GetHeightmap().GetPreviewBitmap( (DWORD*)pSurfaceData,m_heightmapSize.cx,false,false );
 	/*
@@ -310,7 +310,7 @@ void CTerrainViewport::UpdateContent( int flags )
 		m_textureSize.cy = SURFACE_TEXTURE_WIDTH;
 		
 		m_textureData = new uint[m_textureSize.cx * m_textureSize.cy];
-		ASSERT(m_textureData);
+		CRYASSERT(m_textureData);
 
 		// Fill in the surface data into the array. Apply lighting and water, use
 		// the settings from the document
@@ -321,7 +321,7 @@ void CTerrainViewport::UpdateContent( int flags )
 		m_textureSize.cx = 512;
 		m_textureSize.cy = 512;
 		m_textureData = new uint[m_textureSize.cx * m_textureSize.cy];
-		ASSERT(m_textureData);
+		CRYASSERT(m_textureData);
 
 		// Show heightmap data.
 		//GLOBAL_GET_DOC->m_cHeightmap.GetDataEx(pHeightmap, (m_rcView.right - m_rcView.left), false, false);
@@ -471,7 +471,7 @@ void CTerrainViewport::OnPaint()
 	DWORD *pBits = NULL;
 	// Create the DIB section to draw into
 	HBITMAP bmpView = ::CreateDIBSection(m_dcView.m_hDC, &BmpInfo, DIB_RGB_COLORS,(void**)&pBits, NULL, 0);
-	ASSERT(bmpView);
+	CRYASSERT(bmpView);
 	m_bmpView.Attach(bmpView);
 
 	// Select the DIB into the DC

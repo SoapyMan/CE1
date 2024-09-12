@@ -193,7 +193,7 @@ void CGameExporter::Export( bool bSurfaceTexture,bool bReloadTerrain )
 	if (!m_IEditor->GetPluginManager()->CallExport(pszGamePath))
 	{
 		CLogFile::WriteLine("Error while exporting plugin data !");
-		ASSERT(false);
+		CRYASSERT(false);
 		AfxMessageBox("Error while exporting plugin data !");
 	}
 
@@ -332,7 +332,7 @@ void CGameExporter::ExportMap(char *pszGamePath, bool bSurfaceTexture)
 	// Check dimensions
 	if (HeightMap.GetWidth() != HeightMap.GetHeight() || HeightMap.GetWidth() % 128)
 	{
-		ASSERT(HeightMap.GetWidth() % 128 == 0);
+		CRYASSERT(HeightMap.GetWidth() % 128 == 0);
 		AfxMessageBox("Can't export a heightmap with dimensions that can't be" \
 			" evenly divided by 128 or that are not square !");
 		CLogFile::WriteLine("Can't export a heightmap");
@@ -429,7 +429,7 @@ void CGameExporter::ExportHeightMap(char *pszGamePath)
 
 	// Allocate memory for the 16 bit version that will be saved
 	pSaveHeightmapData = new uint16 [HeightMap.GetWidth() * HeightMap.GetHeight()];
-	ASSERT(pSaveHeightmapData);
+	CRYASSERT(pSaveHeightmapData);
 	pSaveHeightmapDataStart = pSaveHeightmapData;
 	pSaveHeightmapDataEnd = &pSaveHeightmapData[HeightMap.GetWidth() *	HeightMap.GetHeight()];
 
@@ -858,7 +858,7 @@ void CGameExporter::ExportMapIni( const CString &path )
 
 	CHeightmap &HeightMap=m_IEditor->GetDocument()->GetHeightmap();
 	// Write the size of the heightmap
-	ASSERT(HeightMap.GetHeight() == HeightMap.GetWidth());
+	CRYASSERT(HeightMap.GetHeight() == HeightMap.GetWidth());
 	sprintf(szBuffer, "%i", HeightMap.GetWidth());
 	VERIFY(WritePrivateProfileString("Map", "HeightmapSize", szBuffer, szFileOutputPath));
 	

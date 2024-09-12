@@ -115,7 +115,7 @@ void CStartupDialog::OnOK()
 				break;
 
 			default:
-				ASSERT(FALSE);
+				CRYASSERT(FALSE);
 				break;
 			}
 		}
@@ -221,23 +221,23 @@ void CStartupDialog::OnOK()
 
 					// Open the bitmap and extract the size
 					hFile = fopen(strFilePath.GetBuffer(0), "r");
-					ASSERT(hFile);
+					CRYASSERT(hFile);
 			
 					// Read in the info header
 					fread(&bfh, sizeof(BITMAPFILEHEADER), 1, hFile);
 					fread(&bih, sizeof(BITMAPINFOHEADER), 1, hFile);
-					ASSERT(bih.biWidth && bih.biHeight);
+					CRYASSERT(bih.biWidth && bih.biHeight);
 
 					fclose(hFile);
 
 					// Load the bitmap
 					bReturn = bmpLoad.Attach(::LoadImage(AfxGetInstanceHandle(),strFilePath.GetBuffer(0), IMAGE_BITMAP, 0, 0, LR_DEFAULTSIZE | 
 						LR_LOADFROMFILE));
-					ASSERT(bReturn);
+					CRYASSERT(bReturn);
 
 					// Allocate memory for the image data
 					pImageData = new DWORD[bih.biWidth * bih.biHeight];
-					ASSERT(pImageData);
+					CRYASSERT(pImageData);
 
 					// Get the image data from the bitmap
 					bmpLoad.GetBitmapBits(bih.biWidth * bih.biHeight * sizeof(DWORD), pImageData);
@@ -360,7 +360,7 @@ void CStartupDialog::OnOK()
 		break;
 
 	default:
-		ASSERT(FALSE);
+		CRYASSERT(FALSE);
 		break;
 	}
 	
@@ -382,7 +382,7 @@ BOOL CStartupDialog::OnInitDialog()
 	
 	CLogFile::WriteLine("Loading startup dialog...");
 
-	ASSERT(pList);
+	CRYASSERT(pList);
 
 	if (!pList)
 		return TRUE;

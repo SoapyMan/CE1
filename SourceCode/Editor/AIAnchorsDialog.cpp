@@ -47,7 +47,7 @@ BOOL CAIAnchorsDialog::OnInitDialog()
 
 	m_wndAnchorsList.ResetContent();
 	CAIManager *pAIMgr=GetIEditor()->GetAI();
-	ASSERT(pAIMgr);
+	CRYASSERT(pAIMgr);
 	typedef std::vector<CString> TAnchorActionsVec;
 	TAnchorActionsVec vecAnchorActions;
 	pAIMgr->GetAnchorActions(vecAnchorActions);

@@ -63,7 +63,7 @@ bool CPluginManager::LoadAllPlugins(CString strPath)
 			if (!hPlugin)
 			{
 				CLogFile::FormatLine("Can't load plugin DLL '%s' !", szFilePath);
-				ASSERT(hPlugin);
+				CRYASSERT(hPlugin);
 				continue;
 			}
 
@@ -73,7 +73,7 @@ bool CPluginManager::LoadAllPlugins(CString strPath)
 			if (!pfnFactory)
 			{
 				CLogFile::WriteLine("Can't query plugin DLL factory pointer !");
-				ASSERT(pfnFactory);
+				CRYASSERT(pfnFactory);
 				continue;
 			}
 
@@ -83,7 +83,7 @@ bool CPluginManager::LoadAllPlugins(CString strPath)
 			if (!pIPlugin)
 			{
 				CLogFile::FormatLine("Can't create instance of plugin DLL '%s' !", szFilePath);
-				ASSERT(pfnFactory);
+				CRYASSERT(pfnFactory);
 				continue;
 			}
 
@@ -103,7 +103,7 @@ bool CPluginManager::LoadAllPlugins(CString strPath)
 			if (!bReturn)
 			{
 				CLogFile::WriteLine("Plugin failed to create UI elements !");
-				ASSERT(bReturn);
+				CRYASSERT(bReturn);
 				continue;
 			}
 
@@ -122,7 +122,7 @@ bool CPluginManager::LoadAllPlugins(CString strPath)
 			{
 				CLogFile::WriteLine("Too many plugins loaded, 256 maximum !");
 				AfxMessageBox("Too many plugins loaded, 256 maximum !");
-				ASSERT(false);
+				CRYASSERT(false);
 				return true;
 			}
 

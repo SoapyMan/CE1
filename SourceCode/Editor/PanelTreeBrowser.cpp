@@ -506,7 +506,7 @@ int CPanelTreeBrowser::RecurseDirectory( const CString &basePath,const CString &
 	char szFilePath[_MAX_PATH];
 	HTREEITEM hNewRoot, hNewItem;
 
-	ASSERT(pszFileSpec);
+	CRYASSERT(pszFileSpec);
 
 	CString fileSpec = pszFileSpec;
 	std::vector<CString> fileSpecs;

@@ -171,7 +171,7 @@ void CMainTools::ReleaseButtons()
 
 void CMainTools::OnButtonPressed( int i )
 {
-	ASSERT( i >= 0 && i < m_buttons.size() );
+	CRYASSERT( i >= 0 && i < m_buttons.size() );
 
 	if (i == m_lastPressed)
 	{

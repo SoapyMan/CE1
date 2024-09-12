@@ -36,7 +36,7 @@ CDrawWnd::CDrawWnd()
 
 	// Allocate new memory to hold the water bitmap data
 	m_pWaterTexData = new DWORD[128 * 128];
-	ASSERT(m_pWaterTexData);
+	CRYASSERT(m_pWaterTexData);
 
 	// Load the water texture out of the ressource
 	VERIFY(bmpLoad.Attach(::LoadBitmap(AfxGetApp()->m_hInstance, MAKEINTRESOURCE(IDB_WATER))));
@@ -114,7 +114,7 @@ void CDrawWnd::OnPaint()
  
 	// Allocate memory for the bitmap data
 	pImageData = new DWORD[rect.right * rect.bottom];
-	ASSERT(pImageData);
+	CRYASSERT(pImageData);
 
 	// Calculate the scaling
 	fScaleX = 1.0f / m_fZoomFactor;
@@ -579,7 +579,7 @@ void CDrawWnd::WndCoordToHMCoord(CPoint *pWndPt)
 
 	long lTemp;
 
-	ASSERT(pWndPt);
+	CRYASSERT(pWndPt);
 
 	// Add the offset
 	pWndPt->x += abs(GetScrollOffset().x);
@@ -681,7 +681,7 @@ void CDrawWnd::OnMouseMove(UINT nFlags, CPoint point)
 	{
 		// Load the imaging library
 		hLib = LoadLibrary("msimg32.dll");
-		assert(hLib);
+		CRYASSERT(hLib);
 
 		// Query the function pointer for AlphaBlend
 		pfnAlphaBlend = (ALPHABLEND) GetProcAddress(hLib, "AlphaBlend");
@@ -691,7 +691,7 @@ void CDrawWnd::OnMouseMove(UINT nFlags, CPoint point)
 			CLogFile::WriteLine("Drawing Error: Can't find entry point for AlphaBlend() or can't load msimg32.dll at all");
 			AfxMessageBox("Can't find entry point for AlphaBlend() or can't load msimg32.dll at all. " \
 				"Upgrade to Win98 / WinME / Win2K / WinXP or install the needed DLL manually");
-			assert(pfnAlphaBlend);
+			CRYASSERT(pfnAlphaBlend);
 			return;
 		}
 
@@ -705,7 +705,7 @@ void CDrawWnd::OnMouseMove(UINT nFlags, CPoint point)
 		bSuccess = (* pfnAlphaBlend) (GLOBAL_GET_DOC->m_dcHeightmap.m_hDC, TransformedPoint.x, 
 			TransformedPoint.y, iScaledBrushWidth, iScaledBrushHeight, m_dcBrushes.m_hDC, 
 			m_iCurBrush * 32, 0, 32, 32, bfBrushBlend);
-		assert(bSuccess);
+		CRYASSERT(bSuccess);
 
 		// Update the painted part of the window
 		SetRect(&rcInvalid, point.x - iScaledBrushWidth / 2, 

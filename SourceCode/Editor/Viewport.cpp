@@ -125,7 +125,7 @@ bool CViewport::Create(CWnd *hWndParent, int id,const char *szTitle )
 
 	ShowWindow( SW_HIDE );
 
-	ASSERT(bReturn);
+	CRYASSERT(bReturn);
  
 	return bReturn;
 }

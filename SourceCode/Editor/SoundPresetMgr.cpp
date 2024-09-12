@@ -254,7 +254,7 @@ private:
 				const char *pszValue;
 				m_pObj->GetValue(sName, pszValue);
 				XmlNodeRef pNode=m_pNode->findChild(sName);
-				//ASSERT(pNode!=NULL);
+				//CRYASSERT(pNode!=NULL);
 				if (pNode)
 					pNode->setAttr("value", pszValue);
 			}

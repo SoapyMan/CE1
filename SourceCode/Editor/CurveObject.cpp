@@ -121,7 +121,7 @@ void CCurveObject::GetCurveInfo(LPCURVEINFO tagInfo)
 
 UINT CCurveObject::GetCurveY(UINT ptX)
 {	
-	ASSERT(IsValid());	//Verify Curve Object 
+	CRYASSERT(IsValid());	//Verify Curve Object 
 	
 	std::vector<CPoint> ptArray;
 	
@@ -182,7 +182,7 @@ void CCurveObject::HitTest(CPoint point, LPHITINFO pHitInfo)
 
 BOOL CCurveObject::PtOnCurve(CPoint ptHit, UINT nInterval, POINT* pt)
 {
-	ASSERT(IsValid());	//Verify Curve Object 
+	CRYASSERT(IsValid());	//Verify Curve Object 
 
 	if(GetKnotCount() == -1)
 		return FALSE;	//Curve Has No Knots
@@ -219,7 +219,7 @@ BOOL CCurveObject::PtOnCurve(CPoint ptHit, UINT nInterval, POINT* pt)
 
 BOOL CCurveObject::PtOnKnot(CPoint ptHit, UINT nInterval, UINT* nIndex)
 {
-	ASSERT(IsValid());	//Verify Curve Object 
+	CRYASSERT(IsValid());	//Verify Curve Object 
 
 	if(GetKnotCount() == -1)
 		return FALSE;	//Curve Has No Knots
@@ -259,7 +259,7 @@ BOOL CCurveObject::PtOnKnot(CPoint ptHit, UINT nInterval, UINT* nIndex)
 
 UINT CCurveObject::InsertKnot(CPoint ptCntKnot)
 {
-	ASSERT(IsValid());	//Verify Curve Object 
+	CRYASSERT(IsValid());	//Verify Curve Object 
 	
 	//Create new Knot object
 	CKnot* pKnot = new CKnot;
@@ -327,7 +327,7 @@ BOOL CCurveObject::MoveKnot(CPoint ptMoveTo, UINT nIndex)
 
 BOOL CCurveObject::RemoveKnot(UINT nIndex)
 {
-	ASSERT(IsValid());	//Verify Curve Object 
+	CRYASSERT(IsValid());	//Verify Curve Object 
 
 	BOOL b = TRUE;
 	
@@ -346,7 +346,7 @@ BOOL CCurveObject::RemoveKnot(UINT nIndex)
 
 BOOL CCurveObject::RemoveAllKnots()
 {
-	ASSERT(IsValid());	//Verify Curve Object
+	CRYASSERT(IsValid());	//Verify Curve Object
 
 	BOOL b = TRUE;
 
@@ -366,7 +366,7 @@ BOOL CCurveObject::RemoveAllKnots()
 
 CKnot* CCurveObject::FindNearKnot(CPoint pt, UINT nDirection)
 {	
-	ASSERT(IsValid());	//Verify Curve Object 
+	CRYASSERT(IsValid());	//Verify Curve Object 
 
 	std::vector<double> arrValues;
 	double dValueToSeek = pt.x;
@@ -401,7 +401,7 @@ CKnot* CCurveObject::FindNearKnot(CPoint pt, UINT nDirection)
 
 CKnot* CCurveObject::GetHeadKnot()
 {
-	ASSERT(IsValid());	//Verify Curve Object 
+	CRYASSERT(IsValid());	//Verify Curve Object 
 
 	CKnot* pKnot; //Knot Object
 	
@@ -410,7 +410,7 @@ CKnot* CCurveObject::GetHeadKnot()
 	if(iIndex != -1)
 	{
 		pKnot = (CKnot*) m_arrKnots.GetAt(0);
-		ASSERT(pKnot != NULL);
+		CRYASSERT(pKnot != NULL);
 	}
 
 	else pKnot = NULL;
@@ -420,7 +420,7 @@ CKnot* CCurveObject::GetHeadKnot()
 
 CKnot* CCurveObject::GetTailKnot()
 {
-	ASSERT(IsValid());	//Verify Curve Object 
+	CRYASSERT(IsValid());	//Verify Curve Object 
 
 	CKnot* pKnot; //Knot Object
 	
@@ -429,7 +429,7 @@ CKnot* CCurveObject::GetTailKnot()
 	if(iIndex != -1) 
 	{
 		pKnot = (CKnot*) m_arrKnots.GetAt(iIndex);
-		ASSERT(pKnot != NULL);
+		CRYASSERT(pKnot != NULL);
 	}
 
 	else pKnot = NULL;
@@ -439,7 +439,7 @@ CKnot* CCurveObject::GetTailKnot()
 
 CKnot* CCurveObject::GetKnot(UINT nIndex)
 {
-	ASSERT(IsValid());	//Verify Curve Object 
+	CRYASSERT(IsValid());	//Verify Curve Object 
 
 	CKnot* pKnot; //Knot Object
 
@@ -448,7 +448,7 @@ CKnot* CCurveObject::GetKnot(UINT nIndex)
 	if(iIndex != -1)
 	{
 		pKnot = (CKnot*) m_arrKnots.GetAt(nIndex);
-		ASSERT(pKnot != NULL);
+		CRYASSERT(pKnot != NULL);
 	}
 
 	else pKnot = NULL;
@@ -458,7 +458,7 @@ CKnot* CCurveObject::GetKnot(UINT nIndex)
 
 CKnot* CCurveObject::GetNextKnot(UINT nIndex)
 {
-	ASSERT(IsValid());	//Verify Curve Object 
+	CRYASSERT(IsValid());	//Verify Curve Object 
 
 	CKnot* pKnot;	//Knot pointer
 	
@@ -473,7 +473,7 @@ CKnot* CCurveObject::GetNextKnot(UINT nIndex)
 
 CKnot* CCurveObject::GetPrevKnot(UINT nIndex)
 {
-	ASSERT(IsValid());	//Verify Curve Object 
+	CRYASSERT(IsValid());	//Verify Curve Object 
 
 	CKnot* pKnot;	//Knot pointer
 
@@ -491,7 +491,7 @@ CKnot* CCurveObject::GetPrevKnot(UINT nIndex)
 
 UINT CCurveObject::GetKnotCount()
 {	
-	ASSERT(IsValid());	//Verify Curve Object 
+	CRYASSERT(IsValid());	//Verify Curve Object 
 
 	int iKnots = m_arrKnots.GetUpperBound();
 	return iKnots;

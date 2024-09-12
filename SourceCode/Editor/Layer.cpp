@@ -105,8 +105,8 @@ void CLayer::DrawLayerTexturePreview(LPRECT rcPos, CDC *pDC)
 	// Draw the preview of the layer texture
 	////////////////////////////////////////////////////////////////////////
 
-	ASSERT(rcPos);
-	ASSERT(pDC);
+	CRYASSERT(rcPos);
+	CRYASSERT(pDC);
 	CBrush brshGray;
 
 	if (m_bmpLayerTexPrev.m_hObject)
@@ -381,16 +381,16 @@ bool CLayer::LoadTexture(LPCTSTR lpBitmapName, UINT iWidth, UINT iHeight)
 	CBitmap bmpLoad;
 	BOOL bReturn;
 	
-	ASSERT(lpBitmapName);
-	ASSERT(iWidth);
-	ASSERT(iHeight);
+	CRYASSERT(lpBitmapName);
+	CRYASSERT(iWidth);
+	CRYASSERT(iHeight);
 
 	// Load the bitmap
 	bReturn = bmpLoad.Attach(::LoadBitmap( AfxGetInstanceHandle(),lpBitmapName));
 
 	if (!bReturn)
 	{
-		ASSERT(bReturn);
+		CRYASSERT(bReturn);
 		return false;
 	}
 
@@ -500,7 +500,7 @@ bool CLayer::LoadTexture(DWORD *pBitmapData, UINT iWidth, UINT iHeight)
 
 	if (iWidth == 0 || iHeight == 0)
 	{
-		ASSERT(0);
+		CRYASSERT(0);
 		return false;
 	}
 
@@ -533,7 +533,7 @@ bool CLayer::LoadTexture(DWORD *pBitmapData, UINT iWidth, UINT iHeight)
 	// Create the matching bitmap
 	if (!bmpLoad.CreateBitmap(iWidth, iHeight, 1, 32, pBitmapData))
 	{
-		ASSERT(FALSE);
+		CRYASSERT(FALSE);
 		return false;
 	}
 
@@ -550,7 +550,7 @@ bool CLayer::LoadTexture(DWORD *pBitmapData, UINT iWidth, UINT iHeight)
 
 bool CLayer::LoadMask( const CString &strFileName )
 {
-	assert( m_layerMask.IsValid() );
+	CRYASSERT( m_layerMask.IsValid() );
 	if (!m_layerMask.IsValid())
 		return false;
 	////////////////////////////////////////////////////////////////////////
@@ -804,7 +804,7 @@ void CLayer::GenerateWaterLayer16(float *pHeightmapPixels, UINT iHeightmapWidth,
 
 	m_bAutoGen = false;
 
-	ASSERT(!IsBadWritePtr(pHeightmapPixels, iHeightmapWidth * 
+	CRYASSERT(!IsBadWritePtr(pHeightmapPixels, iHeightmapWidth *
 		iHeightmapHeight * sizeof(float)));
 
 	CLogFile::WriteLine("Generating the water layer...");
@@ -1239,9 +1239,9 @@ void CLayer::AutogenLayerMask( const CRect &rc,const CFloatImage &hmap,CByteImag
 {
 	CRect rect = rc;
 
-	assert( hmap.IsValid() );
-	assert( mask.IsValid() );
-	assert( hmap.GetWidth() == mask.GetWidth() );
+	CRYASSERT( hmap.IsValid() );
+	CRYASSERT( mask.IsValid() );
+	CRYASSERT( hmap.GetWidth() == mask.GetWidth() );
 
 	int resolution = hmap.GetWidth();
 
@@ -1368,7 +1368,7 @@ void CLayer::AllocateMaskGrid()
 uchar& CLayer::GetSector( CPoint sector )
 {
 	int p = sector.x + sector.y*m_numSectors;
-	assert( p >= 0 && p < m_maskGrid.size() );
+	CRYASSERT( p >= 0 && p < m_maskGrid.size() );
 	return m_maskGrid[p];
 }
 

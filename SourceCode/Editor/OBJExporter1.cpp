@@ -38,7 +38,7 @@ bool COBJExporter::WriteOBJ(const char * pszFileName)
 	CString szMTL;
 	char ppszBuffer[3][32];
 
-	ASSERT(pszFileName);
+	CRYASSERT(pszFileName);
 
 	CLogFile::FormatLine("Exporting OBJ file to '%s'", pszFileName);
 
@@ -48,7 +48,7 @@ bool COBJExporter::WriteOBJ(const char * pszFileName)
 	if (!hFile)
 	{
 		CLogFile::FormatLine("Error while opening file '%s' !", pszFileName);
-		ASSERT(hFile);
+		CRYASSERT(hFile);
 		return false;
 	}
 
@@ -107,7 +107,7 @@ bool COBJExporter::WriteOBJ(const char * pszFileName)
 	if (!hFile)
 	{
 		CLogFile::FormatLine("Error while opening file '%s' !", (const char*)szMTL);
-		ASSERT(hFile);
+		CRYASSERT(hFile);
 		return false;
 	}
 

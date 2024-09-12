@@ -241,7 +241,7 @@ void CTerrainTexture::ReloadLayerList()
 		// Add the name of the layer
 		iIndex = m_lstLayers.AddString(LPCTSTR(m_doc->GetLayer(i)->GetLayerName()));
 
-		ASSERT(iIndex != LB_ERR);
+		CRYASSERT(iIndex != LB_ERR);
 
 		CLayer *layer = m_doc->GetLayer(i);
 
@@ -661,8 +661,8 @@ void CTerrainTexture::DrawLayerPreview( LPRECT rcPos, CDC *pDC )
 		}
 	}
 
-	ASSERT(rcPos);
-	ASSERT(pDC);
+	CRYASSERT(rcPos);
+	CRYASSERT(pDC);
 	CBrush brshGray;
 
 	if (m_bmpLayerPreview.m_hObject && m_bMaskPreviewValid)
@@ -828,9 +828,9 @@ bool CTerrainTexture::GenerateSurface(DWORD *pSurface, UINT iWidth, UINT iHeight
 	int iFirstUsedLayer;
 	float *pHeightmapData = NULL;
 
-	ASSERT(iWidth);
-	ASSERT(iHeight);
-	ASSERT(!IsBadWritePtr(pSurface, iWidth * iHeight * sizeof(DWORD)));
+	CRYASSERT(iWidth);
+	CRYASSERT(iHeight);
+	CRYASSERT(!IsBadWritePtr(pSurface, iWidth * iHeight * sizeof(DWORD)));
 
 	if (iWidth == 0 || iHeight == 0)
 		return false;
@@ -872,7 +872,7 @@ bool CTerrainTexture::GenerateSurface(DWORD *pSurface, UINT iWidth, UINT iHeight
 		
 	// Allocate memory for the heightmap data
 	pHeightmapData = new float[iWidth * iHeight];
-	assert(pHeightmapData);
+	CRYASSERT(pHeightmapData);
 	
 	// Retrieve the heightmap data
 	m_doc->m_cHeightmap.GetDataEx(pHeightmapData, iWidth, true, true);
@@ -1403,7 +1403,7 @@ void CTerrainTexture::OnUseLayer()
 
 	CButton ctrlButton;
 
-	ASSERT(!IsBadReadPtr(m_pCurrentLayer, sizeof(CLayer)));
+	CRYASSERT(!IsBadReadPtr(m_pCurrentLayer, sizeof(CLayer)));
 
 	// Change the internal in use value of the selected layer
 	VERIFY(ctrlButton.Attach(GetDlgItem(IDC_USE_LAYER)->m_hWnd));

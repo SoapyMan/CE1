@@ -192,7 +192,7 @@ void CHeightmap::Resize( int iWidth, int iHeight,int unitSize,bool bCleanOld )
 	// Resize the heightmap
 	////////////////////////////////////////////////////////////////////////
 
-	ASSERT(iWidth && iHeight);
+	CRYASSERT(iWidth && iHeight);
 
 	int prevWidth,prevHeight,prevUnitSize;
 	prevWidth = m_iWidth;
@@ -1809,7 +1809,7 @@ void CHeightmap::Hold()
 
 	// Open the hold / fetch file
 	hFile = fopen(HEIGHTMAP_HOLD_FETCH_FILE, "wb");
-	ASSERT(hFile);
+	CRYASSERT(hFile);
 		
 	// Write the dimensions
 	VERIFY(fwrite(&m_iWidth, sizeof(m_iWidth), 1, hFile));
@@ -1898,7 +1898,7 @@ void CHeightmap::InitNoise()
 	float fValueRange;
 	unsigned int i, j;
 
-	assert(!m_pNoise);
+	CRYASSERT(!m_pNoise);
 
 	// Allocate a new array class to 
 	m_pNoise = new CDynamicArray2D(NOISE_ARRAY_SIZE, NOISE_ARRAY_SIZE);
@@ -2317,7 +2317,7 @@ void CHeightmap::GetSectorsInfo( SSectorInfo &si )
 //////////////////////////////////////////////////////////////////////////
 void CHeightmap::SetSurfaceTextureSize( int width,int height )
 {
-	assert( width == height );
+	CRYASSERT( width == height );
 
 	if (width != 0)
 	{

@@ -161,7 +161,7 @@ class CUndoBaseObjectSelect : public IUndoObject
 public:
 	CUndoBaseObjectSelect( CBaseObject *obj )
 	{
-		assert( obj != 0 );
+		CRYASSERT( obj != 0 );
 		m_object = obj;
 		m_bUndoSelect = obj->IsSelected();
 	}
@@ -284,13 +284,13 @@ void	CObjectManager::LoadRegistry()
 //////////////////////////////////////////////////////////////////////////
 CBaseObject* CObjectManager::NewObject( CObjectClassDesc *cls,CBaseObject *prev,const CString &file )
 {
-	ASSERT( cls != 0 );
+	CRYASSERT( cls != 0 );
 	CRuntimeClass *rtClass = cls->GetRuntimeClass();
-	ASSERT( rtClass->IsDerivedFrom(RUNTIME_CLASS(CBaseObject)) );
+	CRYASSERT( rtClass->IsDerivedFrom(RUNTIME_CLASS(CBaseObject)) );
 	if (prev)
 	{
 		// Both current and previous object must be of same type.
-		ASSERT( cls == prev->GetClassDesc() );
+		CRYASSERT( cls == prev->GetClassDesc() );
 	}
 
 	// Suspend undo operations when initialzing object.
@@ -389,7 +389,7 @@ CBaseObject* CObjectManager::NewObject( CObjectArchive &ar,CBaseObject *pUndoObj
 		}
 
 		CRuntimeClass *rtClass = cls->GetRuntimeClass();
-		assert( rtClass->IsDerivedFrom(RUNTIME_CLASS(CBaseObject)) );
+		CRYASSERT( rtClass->IsDerivedFrom(RUNTIME_CLASS(CBaseObject)) );
 
 		pObject = (CBaseObject*)rtClass->CreateObject();
 		pObject->SetIEditor( GetIEditor() );
@@ -435,7 +435,7 @@ CBaseObject* CObjectManager::NewObject( CObjectArchive &ar,CBaseObject *pUndoObj
 	if (!pObject->GetLayer())
 	{
 		// Cannot be.
-		assert(0);
+		CRYASSERT(0);
 	}
 
 	if (pObject != 0 && pUndoObject == 0)
@@ -547,7 +547,7 @@ void CObjectManager::DeleteAllObjects()
 
 CBaseObject* CObjectManager::CloneObject( CBaseObject *obj )
 {
-	ASSERT( obj );
+	CRYASSERT( obj );
 	//CRuntimeClass *cls = obj->GetRuntimeClass();
 	//CBaseObject *clone = (CBaseObject*)cls->CreateObject();
 	//clone->CloneCopy( obj );
@@ -596,7 +596,7 @@ bool CObjectManager::AddObject( CBaseObject *obj )
 //////////////////////////////////////////////////////////////////////////
 void CObjectManager::RemoveObject( CBaseObject *obj )
 {
-	assert( obj != 0 );
+	CRYASSERT( obj != 0 );
 	
 	InvalidateVisibleList();
 
@@ -627,7 +627,7 @@ void CObjectManager::GetAllObjects( std::vector<CBaseObjectPtr> &objects ) const
 void CObjectManager::ChangeObjectId( CBaseObject *obj,int newId )
 {
 	/*
-	assert( obj );
+	CRYASSERT( obj );
 	CBaseObjectPtr pObject = obj;
 	CBaseObjectPtr p;
 	if (m_objects.Find(obj->GetId(),p))
@@ -643,7 +643,7 @@ void CObjectManager::ChangeObjectId( CBaseObject *obj,int newId )
 //////////////////////////////////////////////////////////////////////////
 void CObjectManager::ChangeObjectName( CBaseObject *obj,const CString &newName )
 {
-	assert( obj );
+	CRYASSERT( obj );
 
 	if (newName != obj->GetName())
 	{
@@ -782,7 +782,7 @@ void CObjectManager::Update()
 //////////////////////////////////////////////////////////////////////////
 void CObjectManager::HideObject( CBaseObject *obj,bool hide )
 {
-	assert( obj != 0 );
+	CRYASSERT( obj != 0 );
 	// Remove object from main object set and put it to hidden set.
 	obj->SetHidden( hide );
 	InvalidateVisibleList();
@@ -802,7 +802,7 @@ void CObjectManager::UnhideAll()
 //////////////////////////////////////////////////////////////////////////
 void CObjectManager::FreezeObject( CBaseObject *obj,bool freeze )
 {
-	assert( obj != 0 );
+	CRYASSERT( obj != 0 );
 	// Remove object from main object set and put it to hidden set.
 	obj->SetFrozen( freeze );
 	InvalidateVisibleList();
@@ -822,7 +822,7 @@ void CObjectManager::UnfreezeAll()
 //////////////////////////////////////////////////////////////////////////
 bool CObjectManager::SelectObject( CBaseObject *obj )
 {
-	assert( obj );
+	CRYASSERT( obj );
 
 	// Check if can be selected.
 	if (!(obj->GetType() & gSettings.objectSelectMask))
@@ -875,7 +875,7 @@ void CObjectManager::NameSelection( const CString &name )
 	CSelectionGroup *selection = stl::find_in_map( m_selections,name,(CSelectionGroup*)0 );
 	if (selection)
 	{
-		ASSERT( selection != 0 );
+		CRYASSERT( selection != 0 );
 		// Check if trying to rename itself to the same name.
 		if (selection == m_currSelection)
 			return;
@@ -927,7 +927,7 @@ void CObjectManager::SetSelection( const CString &name )
 	if (selection)
 	{
 		UnselectCurrent();
-		ASSERT( selection != 0 );
+		CRYASSERT( selection != 0 );
 		m_currSelection = selection;
 		SelectCurrent();
 	}
@@ -1040,7 +1040,7 @@ void	CObjectManager::Display( DisplayContext &dc )
 
 void CObjectManager::BeginEditParams( CBaseObject *obj,int flags )
 {
-	ASSERT( obj != 0 );
+	CRYASSERT( obj != 0 );
 	if (obj == m_currEditObject)
 		return;
 

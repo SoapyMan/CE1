@@ -23,8 +23,8 @@ static char THIS_FILE[] = __FILE__;
 
 void FillSolidRect(CDC *pDC, LPCRECT lpRect, COLORREF clr)
 {
-        ASSERT_VALID(pDC);
-        ASSERT(pDC->m_hDC != NULL);
+        CRYASSERT_VALID(pDC);
+		CRYASSERT(pDC->m_hDC != NULL);
 
         pDC->SetBkColor(clr);
         pDC->ExtTextOut(0, 0, ETO_OPAQUE, lpRect, NULL, 0, NULL);

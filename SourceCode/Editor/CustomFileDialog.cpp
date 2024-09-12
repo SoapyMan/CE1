@@ -39,7 +39,7 @@ CCustomFileDialog::CCustomFileDialog( OpenParams &fp,CWnd* pParent /*=NULL*/)
 	m_fp(fp)
 {
 	m_pIPak = GetIEditor()->GetSystem()->GetIPak();
-	assert( m_pIPak );
+	CRYASSERT( m_pIPak );
 
 	m_currentFilter = 0;
 	m_rcPreview.SetRect(0,0,2,2);
@@ -1051,7 +1051,7 @@ LRESULT CCustomFileDialog::OnOutbarNotify( WPARAM lParam, LPARAM wParam)
 		{
 			// Get the menu item.
 			XT_CONTENT_ITEM* pContentItems = m_shortcutsCtrl.GetMenuItem((int)lParam);
-			ASSERT(pContentItems);
+			CRYASSERT(pContentItems);
 
 			int nIndex = pContentItems->m_nIndex;
 			Shortcuts *pShortcuts = &m_shortcuts[m_fp.filetype];

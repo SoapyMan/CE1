@@ -56,7 +56,7 @@ void CTrackViewSplitter::SetPane( int row,int col,CWnd *pWnd,SIZE sizeInit )
 	pWnd->MoveWindow( 0,0,sizeInit.cx,sizeInit.cy,FALSE );
 	pWnd->SetDlgCtrlID( IdFromRowCol(row,col) );
 
-	ASSERT((int)::GetDlgCtrlID(pWnd->m_hWnd) == IdFromRowCol(row, col));
+	CRYASSERT((int)::GetDlgCtrlID(pWnd->m_hWnd) == IdFromRowCol(row, col));
 }
 
 void CTrackViewSplitter::OnDrawSplitter(CDC* pDC, ESplitType nType, const CRect& rectArg)

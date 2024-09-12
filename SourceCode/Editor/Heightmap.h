@@ -218,8 +218,8 @@ protected:
 	// Verify internal class state
 	__inline void Verify() 
 	{ 
-		ASSERT(m_iWidth && m_iHeight); 
-		ASSERT(!IsBadWritePtr(m_pHeightmap, sizeof(t_hmap) * m_iWidth * m_iHeight));
+		CRYASSERT(m_iWidth && m_iHeight);
+		CRYASSERT(!IsBadWritePtr(m_pHeightmap, sizeof(t_hmap) * m_iWidth * m_iHeight));
 	};
 
 	// Initialization
@@ -258,7 +258,7 @@ private:
 // Inlined implementation of get slope.
 inline float CHeightmap::GetSlope( int x,int y )
 {
-	//assert( x >= 0 && x < m_iWidth && y >= 0 && y < m_iHeight );
+	//CRYASSERT( x >= 0 && x < m_iWidth && y >= 0 && y < m_iHeight );
 	if (x <= 0 || y <= 0 || x >= m_iWidth-1 || y >= m_iHeight-1)
 		return 0;
 

@@ -260,7 +260,7 @@ void CTopRendererWnd::ResetSurfaceTexture()
 
 	// Load the water texture out of the ressource
 	bReturn = bmpLoad.Attach(::LoadBitmap(AfxGetApp()->m_hInstance,	MAKEINTRESOURCE(IDB_WATER)));
-	ASSERT(bReturn);
+	CRYASSERT(bReturn);
 
 	// Allocate new memory to hold the bitmap data
 	CImage waterImage;

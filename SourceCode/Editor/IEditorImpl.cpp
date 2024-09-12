@@ -445,16 +445,16 @@ bool CEditorImpl::AddMenuItem(uint8 iId, bool bIsSeparator,
 	IPlugin *pIAssociatedPlugin = GetPluginManager()->GetAssociatedPlugin();
 	uint8 iAssociatedPluginUIID = GetPluginManager()->GetAssociatedPluginUIID();
 
-	ASSERT(!IsBadReadPtr(pIAssociatedPlugin, sizeof(IPlugin)));
+	CRYASSERT(!IsBadReadPtr(pIAssociatedPlugin, sizeof(IPlugin)));
 	if (!bIsSeparator)
-		ASSERT(!IsBadReadPtr(pIHandler, sizeof(IUIEvent)));
+		CRYASSERT(!IsBadReadPtr(pIHandler, sizeof(IUIEvent)));
 
 	if (pIAssociatedPlugin == NULL || pIHandler == NULL)
 		return false;
 
 	// Get the main menu
 	pMainMenu = AfxGetMainWnd()->GetMenu();
-	ASSERT(pMainMenu);
+	CRYASSERT(pMainMenu);
 
 	// Create the menu ID. The first 8 bits of the upper 16 bits contain the
 	// UI ID of the plugin which owns the UI element, the second 8 bits
@@ -498,7 +498,7 @@ bool CEditorImpl::AddMenuItem(uint8 iId, bool bIsSeparator,
 
 	// Add an menu item to the menu
 
-	ASSERT(pLastPluginMenu);
+	CRYASSERT(pLastPluginMenu);
 
 	if (pLastPluginMenu)
 	{
@@ -537,8 +537,8 @@ int CEditorImpl::FindMenuItem(CMenu *pMenu, LPCTSTR pszMenuString)
 	int iCount, i;
 	CString str;
 
-  ASSERT(pMenu);
-  ASSERT(::IsMenu(pMenu->GetSafeHmenu()));
+  CRYASSERT(pMenu);
+  CRYASSERT(::IsMenu(pMenu->GetSafeHmenu()));
 
   iCount = pMenu->GetMenuItemCount();
 
@@ -562,8 +562,8 @@ bool CEditorImpl::RegisterPluginToolTab(HWND hwndContainer, char *pszName)
 	// Register a new tab with an UI container
 	//////////////////////////////////////////////////////////////////////
 
-	ASSERT(::IsWindow(hwndContainer));
-	ASSERT(pszName);
+	CRYASSERT(::IsWindow(hwndContainer));
+	CRYASSERT(pszName);
 
 	(CCryEditView *) ((CFrameWnd *) (AfxGetMainWnd())->
 		GetActiveView())->RegisterPluginToolTab(hwndContainer, pszName);
@@ -592,7 +592,7 @@ bool CEditorImpl::CreateRootMenuItem(const char *pszName)
 	CMenu *pMainMenu;
 	
 	IPlugin *pIAssociatedPlugin = GetPluginManager()->GetAssociatedPlugin();
-	ASSERT(!IsBadReadPtr(pIAssociatedPlugin, sizeof(IPlugin)));
+	CRYASSERT(!IsBadReadPtr(pIAssociatedPlugin, sizeof(IPlugin)));
 
 	// Get the main menu
 	pMainMenu = AfxGetMainWnd()->GetMenu();
@@ -1046,7 +1046,7 @@ CHeightmap* CEditorImpl::GetHeightmap()
 
 CVegetationMap* CEditorImpl::GetVegetationMap()
 {
-	assert( GetHeightmap() != 0 );
+	CRYASSERT( GetHeightmap() != 0 );
 	return GetHeightmap()->GetVegetationMap();
 }
 

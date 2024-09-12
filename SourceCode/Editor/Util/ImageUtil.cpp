@@ -222,7 +222,7 @@ bool CImageUtil::LoadJPEG( const CString &strFileName,CImage &outImage )
 	////////////////////////////////////////////////////////////////////////
 
 	JPEG_CORE_PROPERTIES Image;
-	ASSERT(!strFileName.IsEmpty());
+	CRYASSERT(!strFileName.IsEmpty());
 	BYTE *pImageData = NULL;
 
 	CLogFile::FormatLine("Loading JPEG %s...", (const char*)strFileName );
@@ -255,7 +255,7 @@ bool CImageUtil::LoadJPEG( const CString &strFileName,CImage &outImage )
 
 	// Allocate memory for the image
 	pImageData = new BYTE[Image.JPGWidth * Image.JPGHeight * Image.JPGChannels];
-	ASSERT(pImageData);
+	CRYASSERT(pImageData);
 
 	// Fill in the DIB header
 	Image.DIBBytes    = pImageData;

@@ -407,13 +407,13 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	//////////////////////////////////////////////////////////////////////////
 	CWinApp * pApp = ::AfxGetApp();
-	ASSERT( pApp != NULL );
-	ASSERT( pApp->m_pszRegistryKey != NULL );
-	ASSERT( pApp->m_pszRegistryKey[0] != _T('\0') );
-	ASSERT( pApp->m_pszProfileName != NULL );
-	ASSERT( pApp->m_pszProfileName[0] != _T('\0') );
+	CRYASSERT( pApp != NULL );
+	CRYASSERT( pApp->m_pszRegistryKey != NULL );
+	CRYASSERT( pApp->m_pszRegistryKey[0] != _T('\0') );
+	CRYASSERT( pApp->m_pszProfileName != NULL );
+	CRYASSERT( pApp->m_pszProfileName[0] != _T('\0') );
 
-	ASSERT( pApp->m_pszProfileName != NULL );
+	CRYASSERT( pApp->m_pszProfileName != NULL );
 	VERIFY( g_CmdManager->ProfileSetup( pApp->m_pszProfileName, GetSafeHwnd() ) );
 	VERIFY( g_CmdManager->UpdateFromMenu( pApp->m_pszProfileName, IDR_MAINFRAME )	);
 
@@ -462,13 +462,13 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	VERIFY( m_wndTerrainToolBar.LoadToolBar(IDR_TERRAIN_BAR) );
 	CExtCmdManager::cmd_t * p_cmd;
 	p_cmd =	g_CmdManager->CmdGetPtr( pApp->m_pszProfileName,ID_TERRAIN	);
-	ASSERT( p_cmd != 0 );
+	CRYASSERT( p_cmd != 0 );
 	p_cmd->m_sToolbarText = "Terrain";
 	p_cmd =	g_CmdManager->CmdGetPtr( pApp->m_pszProfileName,ID_GENERATORS_TEXTURE	);
-	ASSERT( p_cmd != 0 );
+	CRYASSERT( p_cmd != 0 );
 	p_cmd->m_sToolbarText = "Texture";
 	p_cmd =	g_CmdManager->CmdGetPtr( pApp->m_pszProfileName,ID_GENERATORS_LIGHTING );
-	ASSERT( p_cmd != 0 );
+	CRYASSERT( p_cmd != 0 );
 	p_cmd->m_sToolbarText = "Lighting";
 	//////////////////////////////////////////////////////////////////////////
 
@@ -825,15 +825,15 @@ void CMainFrame::SaveConfig()
 void CMainFrame::DockControlBarNextTo(CControlBar* pBar,
                                       CControlBar* pTargetBar)
 {
-    ASSERT(pBar != NULL);
-    ASSERT(pTargetBar != NULL);
-    ASSERT(pBar != pTargetBar);
+	CRYASSERT(pBar != NULL);
+	CRYASSERT(pTargetBar != NULL);
+	CRYASSERT(pBar != pTargetBar);
 
     // the neighbour must be already docked
     CDockBar* pDockBar = pTargetBar->m_pDockBar;
-    ASSERT(pDockBar != NULL);
+	CRYASSERT(pDockBar != NULL);
     UINT nDockBarID = pTargetBar->m_pDockBar->GetDlgCtrlID();
-    ASSERT(nDockBarID != AFX_IDW_DOCKBAR_FLOAT);
+	CRYASSERT(nDockBarID != AFX_IDW_DOCKBAR_FLOAT);
 
     bool bHorz = (nDockBarID == AFX_IDW_DOCKBAR_TOP ||
         nDockBarID == AFX_IDW_DOCKBAR_BOTTOM);
@@ -866,7 +866,7 @@ BOOL CMainFrame::VerifyBarState( CDockState &state )
 	for (int i = 0; i < state.m_arrBarInfo.GetSize(); i++)
 	{
 		CControlBarInfo* pInfo = (CControlBarInfo*)state.m_arrBarInfo[i];
-		ASSERT(pInfo != NULL);
+		CRYASSERT(pInfo != NULL);
 		int nDockedCount = pInfo->m_arrBarID.GetSize();
 		if (nDockedCount > 0)
 		{
@@ -975,7 +975,7 @@ void CMainFrame::CreateMissionsBar()
 	CRect rect(0,0,100,200);
   // Get the index of the keyframe slider position in the toolbar
 	int iIndex = m_missionToolBar.CommandToIndex(IDC_MISSION);
-	assert( iIndex >= 0 );
+	CRYASSERT( iIndex >= 0 );
 
 	m_missions.Create( WS_CHILD|WS_VISIBLE|CBS_DROPDOWNLIST|CBS_SORT,rect,this,IDC_MISSION );
 	m_missions.SetParent( &m_missionToolBar );
@@ -1597,7 +1597,7 @@ void CMainFrame::EditAccelerator()
 //////////////////////////////////////////////////////////////////////////
 void CMainFrame::AddToolbarToAccel( const CString &name,CXTToolBar *toolbar )
 {
-	assert( toolbar );
+	CRYASSERT( toolbar );
 	CXTAccelManager &accelManager = CXTAccelManager::Get();
 	for (int i = 0; i < toolbar->GetButtonCount(); i++)
 	{

@@ -72,7 +72,7 @@ BOOL CSkyDialog::OnInitDialog()
 		WS_VISIBLE | CBRS_TOP | CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC) ||
 		!m_cDlgToolBar.LoadToolBar(IDR_SKY))
 	{
-		ASSERT(0);
+		CRYASSERT(0);
 		return -1;      // fail to create
 	}
 

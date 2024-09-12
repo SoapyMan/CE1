@@ -44,16 +44,16 @@ m_pAVIFile(NULL), m_pStream(NULL), m_pStreamCompressed(NULL)
 CAVIGenerator::~CAVIGenerator()
 {
 	// Just checking that all allocated ressources have been released
-	ASSERT(m_pStream==NULL);
-	ASSERT(m_pStreamCompressed==NULL);
-	ASSERT(m_pAVIFile==NULL);
+	CRYASSERT(m_pStream==NULL);
+	CRYASSERT(m_pStreamCompressed==NULL);
+	CRYASSERT(m_pAVIFile==NULL);
 }
 
 void CAVIGenerator::SetBitmapHeader(LPBITMAPINFOHEADER lpbih)
 {
 	// checking that bitmap size are multiple of 4
-	ASSERT(lpbih->biWidth%4==0);
-	ASSERT(lpbih->biHeight%4==0);
+	CRYASSERT(lpbih->biWidth%4==0);
+	CRYASSERT(lpbih->biHeight%4==0);
 
 	// copying bitmap info structure.
 	// corrected thanks to Lori Gardi

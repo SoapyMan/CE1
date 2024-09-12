@@ -122,7 +122,7 @@ BOOL CTerrainDialog::OnInitDialog()
 		| CBRS_TOOLTIPS | CBRS_FLYBY | CBRS_SIZE_DYNAMIC) ||
 		!m_cDlgToolBar.LoadToolBar24(IDR_TERRAIN,20))
 	{
-		ASSERT(0);
+		CRYASSERT(0);
 		return -1;      // fail to create
 	}
 
@@ -765,7 +765,7 @@ void CTerrainDialog::OnOptionsShowMapObjects()
 
 	// Get the current state of the menu item
 	iState = GetMenu()->GetSubMenu(4)->GetMenuState(ID_OPTIONS_SHOWMAPOBJECTS, MF_CHECKED);
-	ASSERT(iState != 0xFFFFFFFF);
+	CRYASSERT(iState != 0xFFFFFFFF);
 
 	// Update the draw window
 	m_cDrawHeightmap.SetShowMapObj((int) (iState & MF_CHECKED) == 0);
@@ -782,7 +782,7 @@ void CTerrainDialog::OnOptionsShowWater()
 
 	// Get the current state of the menu item
 	iState = GetMenu()->GetSubMenu(4)->GetMenuState(ID_OPTIONS_SHOWWATER, MF_CHECKED);
-	ASSERT(iState != 0xFFFFFFFF);
+	CRYASSERT(iState != 0xFFFFFFFF);
 
 	// Update the draw window
 	m_cDrawHeightmap.SetShowWater((int) (iState & MF_CHECKED) == 0);

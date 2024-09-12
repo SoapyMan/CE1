@@ -87,7 +87,7 @@ int CSelectionGroup::GetCount() const
 //////////////////////////////////////////////////////////////////////////
 CBaseObject* CSelectionGroup::GetObject( int index ) const
 {
-	ASSERT( index >= 0 && index < m_objects.size() );
+	CRYASSERT( index >= 0 && index < m_objects.size() );
 	return m_objects[index];
 }
 
@@ -296,7 +296,7 @@ void CSelectionGroup::Scale( const Vec3 &scale,bool inWorldSpace )
 void CSelectionGroup::Clone( CSelectionGroup &newGroup )
 {
 	IObjectManager *pObjMan = GetIEditor()->GetObjectManager();
-	assert( pObjMan );
+	CRYASSERT( pObjMan );
 
 	int i;
 	CObjectCloneContext cloneContext;
@@ -309,7 +309,7 @@ void CSelectionGroup::Clone( CSelectionGroup &newGroup )
 	{
 		CBaseObject *pFromObject = GetFilteredObject(i);
 		CBaseObject *newObj = pObjMan->CloneObject( pFromObject );
-		assert( newObj );
+		CRYASSERT( newObj );
 
 		cloneContext.AddClone( pFromObject,newObj );
 		newGroup.AddObject( newObj );
