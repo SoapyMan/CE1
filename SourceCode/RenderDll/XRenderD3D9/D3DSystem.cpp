@@ -18,13 +18,38 @@
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 
-HWND Cry_GetHWND(SDL_Window* window)
+static HWND Cry_GetHWND(WINDOW_HANDLE window)
 {
+	if (IsWindow((HWND)window))
+		return (HWND)window;
+
 	SDL_SysWMinfo wmInfo;
 	SDL_VERSION(&wmInfo.version);
-	SDL_GetWindowWMInfo(window, &wmInfo);
+	SDL_GetWindowWMInfo((SDL_Window*)window, &wmInfo);
 	HWND hwnd = wmInfo.info.win.window;
 	return hwnd;
+}
+
+void CD3D9Renderer::GetWindowRect(RECT* rect)
+{
+	if (IsWindow((HWND)m_hWnd))
+	{
+		::GetWindowRect((HWND)m_hWnd, rect);
+		return;
+	}
+
+	SDL_GetWindowSize((SDL_Window*)m_hWnd, (int*)&rect->right, (int*)&rect->bottom);
+}
+
+void CD3D9Renderer::GetClientRect(RECT* rect)
+{
+	if (IsWindow((HWND)m_hWnd))
+	{
+		::GetClientRect((HWND)m_hWnd, rect);
+		return;
+	}
+
+	SDL_GetWindowSize((SDL_Window*)m_hWnd, (int*)&rect->right, (int*)&rect->bottom);
 }
 
 void CD3D9Renderer::DisplaySplash()
@@ -45,7 +70,7 @@ void CD3D9Renderer::DisplaySplash()
 		HDC hDCBitmap = CreateCompatibleDC(hDC);
 		BITMAP bm;
 	
-		GetClientRect(hWnd, &rect);
+		::GetClientRect(hWnd, &rect);
 		GetObject(hImage, sizeof(bm), &bm);
 		SelectObject(hDCBitmap, hImage);
 	
@@ -90,9 +115,9 @@ HRESULT CD3D9Renderer::FinalCleanup()
 
 void CD3D9Renderer::DestroyWindow(void)
 {
-	if (m_hWnd)
+	if (m_hWnd && !IsWindow((HWND)m_hWnd))
 	{
-		SDL_DestroyWindow(m_hWnd);
+		SDL_DestroyWindow((SDL_Window*)m_hWnd);
 		m_hWnd = nullptr;
 	}
 }
@@ -646,13 +671,12 @@ void CD3D9Renderer::ShutDown(bool bReInit)
 
 bool CD3D9Renderer::SetWindow(int width, int height, bool fullscreen, WIN_HWND hWnd)
 {
-	//  HWND temp = GetDesktopWindow();
-	//  RECT trect;
-	//
-	//  GetWindowRect(temp, &trect);
-	//
-	//  m_deskwidth =trect.right-trect.left;
-	//  m_deskheight=trect.bottom-trect.top;
+	HWND temp = GetDesktopWindow();
+	RECT trect;
+	::GetWindowRect(temp, &trect);
+
+	m_deskwidth =trect.right - trect.left;
+	m_deskheight = trect.bottom - trect.top;
 	//
 	//  DWORD style, exstyle;
 	//  int x, y, wdt, hgt;
@@ -724,7 +748,7 @@ bool CD3D9Renderer::SetWindow(int width, int height, bool fullscreen, WIN_HWND h
 
 	if (!hWnd)
 	{
-		m_hWnd = SDL_CreateWindow(m_WinTitle,
+		m_hWnd = (WINDOW_HANDLE)SDL_CreateWindow(m_WinTitle,
 			SDL_WINDOWPOS_CENTERED,
 			SDL_WINDOWPOS_CENTERED,
 			width,
@@ -733,7 +757,7 @@ bool CD3D9Renderer::SetWindow(int width, int height, bool fullscreen, WIN_HWND h
 	}
 	else
 	{
-		m_hWnd = (SDL_Window*)hWnd;
+		m_hWnd = (WINDOW_HANDLE)hWnd;
 	}
 
 	return true;
@@ -1067,11 +1091,9 @@ const char* CD3D9Renderer::D3DError(HRESULT h)
 bool CD3D9Renderer::Error(char* Msg, HRESULT h)
 {
 	const char* str = D3DError(h);
-	iLog->Log("Error: %s (%s)", Msg, str);
+	iLog->LogError("\001Error: %s (%s)", Msg, str);
 
-#ifdef WIN32
-	__debugbreak();
-#endif // WIN32
+	CRYASSERT_FAIL("D3D9 Error: %s %s", Msg, str)
 
 	//UnSetRes();
 
@@ -1413,7 +1435,7 @@ HRESULT CD3D9Renderer::Initialize3DEnvironment()
 	if (pDeviceInfo->Caps.PrimitiveMiscCaps & D3DPMISCCAPS_NULLREFERENCE)
 	{
 		// Warn user about null ref device that can't render anything
-		iLog->Log("ERROR: Chosed nullptr Ref Device that can't render anything");
+		iLog->Log("\001ERROR: Chosed NULL Ref Device that can't render anything");
 		return E_FAIL;
 	}
 
@@ -1441,152 +1463,146 @@ HRESULT CD3D9Renderer::Initialize3DEnvironment()
 	else
 		hr = m_pD3D->CreateDevice(m_pD3D->GetAdapterCount() - 1, D3DDEVTYPE_REF, hWnd, behaviorFlags & ~(D3DCREATE_PUREDEVICE), &m_d3dpp, &m_pd3dDevice);
 
-	if (SUCCEEDED(hr))
+	if (!SUCCEEDED(hr))
 	{
-		// If we cannot use Queries Back Buffer should be lockable
-		if (!(m_d3dpp.Flags & D3DPRESENTFLAG_LOCKABLE_BACKBUFFER))
+		iLog->LogError("\001Failed to create DirectX 9 device. Error: %s", DXGetErrorStringA(hr));
+		return hr;
+	}
+	
+	// If we cannot use Queries Back Buffer should be lockable
+	if (!(m_d3dpp.Flags & D3DPRESENTFLAG_LOCKABLE_BACKBUFFER))
+	{
+		hr = m_pd3dDevice->CreateQuery(D3DQUERYTYPE_EVENT, nullptr);
+		if (hr != D3DERR_NOTAVAILABLE)
+			hr = m_pd3dDevice->CreateQuery(D3DQUERYTYPE_OCCLUSION, nullptr);
+		if (hr == D3DERR_NOTAVAILABLE)
 		{
-			hr = m_pd3dDevice->CreateQuery(D3DQUERYTYPE_EVENT, nullptr);
-			if (hr != D3DERR_NOTAVAILABLE)
-				hr = m_pd3dDevice->CreateQuery(D3DQUERYTYPE_OCCLUSION, nullptr);
-			if (hr == D3DERR_NOTAVAILABLE)
+			SAFE_RELEASE(m_pd3dDevice);
+			Sleep(1000);
+			m_d3dpp.Flags |= D3DPRESENTFLAG_LOCKABLE_BACKBUFFER;
+
+			// Create the device
+			hr = m_pD3D->CreateDevice(m_D3DSettings.AdapterOrdinal(), pDeviceInfo->DevType, hWnd, behaviorFlags, &m_d3dpp, &m_pd3dDevice);
+			if (FAILED(hr))
 			{
 				SAFE_RELEASE(m_pd3dDevice);
 				Sleep(1000);
-				m_d3dpp.Flags |= D3DPRESENTFLAG_LOCKABLE_BACKBUFFER;
-
-				// Create the device
+				m_d3dpp.Flags &= ~D3DPRESENTFLAG_LOCKABLE_BACKBUFFER;
 				hr = m_pD3D->CreateDevice(m_D3DSettings.AdapterOrdinal(), pDeviceInfo->DevType, hWnd, behaviorFlags, &m_d3dpp, &m_pd3dDevice);
-				if (FAILED(hr))
-				{
-					SAFE_RELEASE(m_pd3dDevice);
-					Sleep(1000);
-					m_d3dpp.Flags &= ~D3DPRESENTFLAG_LOCKABLE_BACKBUFFER;
-					hr = m_pD3D->CreateDevice(m_D3DSettings.AdapterOrdinal(), pDeviceInfo->DevType, hWnd, behaviorFlags, &m_d3dpp, &m_pd3dDevice);
-				}
 			}
 		}
-		if (SUCCEEDED(hr))
-		{
-			// When moving from fullscreen to windowed mode, it is important to
-			// adjust the window size after recreating the device rather than
-			// beforehand to ensure that you get the window size you want.  For
-			// example, when switching from 640x480 fullscreen to windowed with
-			// a 1000x600 window on a 1024x768 desktop, it is impossible to set
-			// the window size to 1000x600 until after the display mode has
-			// changed to 1024x768, because windows cannot be larger than the
-			// desktop.
-				  //ShowWindow(m_hWnd, SW_SHOW);
-				  //UpdateWindow(m_hWnd);
-				  //
-				  //SetForegroundWindow(m_hWnd);
-				  //SetFocus(m_hWnd);
+	}
 
-			if (!m_bFullScreen)
-			{
-				//SetWindowPos(m_hWnd, HWND_NOTOPMOST, m_rcWindowBounds.left, m_rcWindowBounds.top, (m_rcWindowBounds.right-m_rcWindowBounds.left), (m_rcWindowBounds.bottom - m_rcWindowBounds.top), SWP_SHOWWINDOW);
-			}
-			ChangeLog();
-			DisplaySplash();
+	if (!SUCCEEDED(hr))
+	{
+		iLog->LogError("\001Failed to create DirectX 9 device. Error: %s", DXGetErrorStringA(hr));
+		return hr;
+	}
+	
+	// When moving from fullscreen to windowed mode, it is important to
+	// adjust the window size after recreating the device rather than
+	// beforehand to ensure that you get the window size you want.  For
+	// example, when switching from 640x480 fullscreen to windowed with
+	// a 1000x600 window on a 1024x768 desktop, it is impossible to set
+	// the window size to 1000x600 until after the display mode has
+	// changed to 1024x768, because windows cannot be larger than the
+	// desktop.
+			//ShowWindow(m_hWnd, SW_SHOW);
+			//UpdateWindow(m_hWnd);
+			//
+			//SetForegroundWindow(m_hWnd);
+			//SetFocus(m_hWnd);
 
-			// Store device Caps
-			m_pd3dDevice->GetDeviceCaps(&m_d3dCaps);
-			m_dwCreateFlags = behaviorFlags;
+	if (!m_bFullScreen)
+	{
+		//SetWindowPos(m_hWnd, HWND_NOTOPMOST, m_rcWindowBounds.left, m_rcWindowBounds.top, (m_rcWindowBounds.right-m_rcWindowBounds.left), (m_rcWindowBounds.bottom - m_rcWindowBounds.top), SWP_SHOWWINDOW);
+	}
+	ChangeLog();
+	DisplaySplash();
 
-			// Store device description
-			if (pDeviceInfo->DevType == D3DDEVTYPE_REF)
-				lstrcpy(m_strDeviceStats, TEXT("REF"));
-			else
-				if (pDeviceInfo->DevType == D3DDEVTYPE_HAL)
-					lstrcpy(m_strDeviceStats, TEXT("HAL"));
-				else
-					if (pDeviceInfo->DevType == D3DDEVTYPE_SW)
-						lstrcpy(m_strDeviceStats, TEXT("SW"));
+	// Store device Caps
+	m_pd3dDevice->GetDeviceCaps(&m_d3dCaps);
+	m_dwCreateFlags = behaviorFlags;
 
-			if (behaviorFlags & D3DCREATE_HARDWARE_VERTEXPROCESSING && behaviorFlags & D3DCREATE_PUREDEVICE)
-			{
-				if (pDeviceInfo->DevType == D3DDEVTYPE_HAL)
-					lstrcat(m_strDeviceStats, TEXT(" (pure hw vp)"));
-				else
-					lstrcat(m_strDeviceStats, TEXT(" (simulated pure hw vp)"));
-			}
-			else
-				if (behaviorFlags & D3DCREATE_HARDWARE_VERTEXPROCESSING)
-				{
-					if (pDeviceInfo->DevType == D3DDEVTYPE_HAL)
-						lstrcat(m_strDeviceStats, TEXT(" (hw vp)"));
-					else
-						lstrcat(m_strDeviceStats, TEXT(" (simulated hw vp)"));
-				}
-				else
-					if (behaviorFlags & D3DCREATE_MIXED_VERTEXPROCESSING)
-					{
-						if (pDeviceInfo->DevType == D3DDEVTYPE_HAL)
-							lstrcat(m_strDeviceStats, TEXT(" (mixed vp)"));
-						else
-							lstrcat(m_strDeviceStats, TEXT(" (simulated mixed vp)"));
-					}
-					else
-						if (behaviorFlags & D3DCREATE_SOFTWARE_VERTEXPROCESSING)
-						{
-							lstrcat(m_strDeviceStats, TEXT(" (sw vp)"));
-						}
+	// Store device description
+	if (pDeviceInfo->DevType == D3DDEVTYPE_REF)
+		lstrcpy(m_strDeviceStats, TEXT("REF"));
+	else if (pDeviceInfo->DevType == D3DDEVTYPE_HAL)
+		lstrcpy(m_strDeviceStats, TEXT("HAL"));
+	else if (pDeviceInfo->DevType == D3DDEVTYPE_SW)
+		lstrcpy(m_strDeviceStats, TEXT("SW"));
 
-			if (pDeviceInfo->DevType == D3DDEVTYPE_HAL)
-			{
-				// Be sure not to overflow m_strDeviceStats when appending the adapter
-				// description, since it can be long.  Note that the adapter description
-				// is initially CHAR and must be converted to TCHAR.
-				lstrcat(m_strDeviceStats, TEXT(": "));
-				const int cchDesc = sizeof(pAdapterInfo->AdapterIdentifier.Description);
-				TCHAR szDescription[cchDesc];
-				strncpy(szDescription, pAdapterInfo->AdapterIdentifier.Description, cchDesc);
-				int maxAppend = sizeof(m_strDeviceStats) / sizeof(TCHAR) - lstrlen(m_strDeviceStats) - 1;
-				strncat(m_strDeviceStats, szDescription, maxAppend);
-			}
-
-			// Store render target surface desc
-			CD3D9TexMan* pTM = (CD3D9TexMan*)m_TexMan;
-			m_Features |= RFT_ZLOCKABLE;
-
-			m_pd3dDevice->GetDepthStencilSurface(&m_pZBuffer);
-			m_pZBuffer->GetDesc(&m_d3dsdZBuffer);
-			m_pd3dDevice->GetBackBuffer(0, 0, D3DBACKBUFFER_TYPE_MONO, &m_pBackBuffer);
-			m_pBackBuffer->GetDesc(&m_d3dsdBackBuffer);
-
-			// Initialize the app's device-dependent objects
-			hr = InitDeviceObjects();
-			if (FAILED(hr))
-			{
-				DeleteDeviceObjects();
-			}
-			else
-			{
-				m_bDeviceObjectsInited = true;
-				hr = RestoreDeviceObjects();
-				if (FAILED(hr))
-				{
-					InvalidateDeviceObjects();
-				}
-				else
-				{
-					m_bDeviceObjectsRestored = true;
-					return S_OK;
-				}
-			}
-
-			// Cleanup before we try again
-			Cleanup3DEnvironment();
-		}
+	if (behaviorFlags & D3DCREATE_HARDWARE_VERTEXPROCESSING && behaviorFlags & D3DCREATE_PUREDEVICE)
+	{
+		if (pDeviceInfo->DevType == D3DDEVTYPE_HAL)
+			lstrcat(m_strDeviceStats, TEXT(" (pure hw vp)"));
 		else
-		{
-			iLog->LogError("Failed to create DirectX 9 device. Error: %s", DXGetErrorStringA(hr));
-		}
+			lstrcat(m_strDeviceStats, TEXT(" (simulated pure hw vp)"));
+	}
+	else if (behaviorFlags & D3DCREATE_HARDWARE_VERTEXPROCESSING)
+	{
+		if (pDeviceInfo->DevType == D3DDEVTYPE_HAL)
+			lstrcat(m_strDeviceStats, TEXT(" (hw vp)"));
+		else
+			lstrcat(m_strDeviceStats, TEXT(" (simulated hw vp)"));
+	}
+	else if (behaviorFlags & D3DCREATE_MIXED_VERTEXPROCESSING)
+	{
+		if (pDeviceInfo->DevType == D3DDEVTYPE_HAL)
+			lstrcat(m_strDeviceStats, TEXT(" (mixed vp)"));
+		else
+			lstrcat(m_strDeviceStats, TEXT(" (simulated mixed vp)"));
+	}
+	else if (behaviorFlags & D3DCREATE_SOFTWARE_VERTEXPROCESSING)
+	{
+		lstrcat(m_strDeviceStats, TEXT(" (sw vp)"));
+	}
+
+	if (pDeviceInfo->DevType == D3DDEVTYPE_HAL)
+	{
+		// Be sure not to overflow m_strDeviceStats when appending the adapter
+		// description, since it can be long.  Note that the adapter description
+		// is initially CHAR and must be converted to TCHAR.
+		lstrcat(m_strDeviceStats, TEXT(": "));
+		const int cchDesc = sizeof(pAdapterInfo->AdapterIdentifier.Description);
+		TCHAR szDescription[cchDesc];
+		strncpy(szDescription, pAdapterInfo->AdapterIdentifier.Description, cchDesc);
+		int maxAppend = sizeof(m_strDeviceStats) / sizeof(TCHAR) - lstrlen(m_strDeviceStats) - 1;
+		strncat(m_strDeviceStats, szDescription, maxAppend);
+	}
+
+	// Store render target surface desc
+	CD3D9TexMan* pTM = (CD3D9TexMan*)m_TexMan;
+	m_Features |= RFT_ZLOCKABLE;
+
+	m_pd3dDevice->GetDepthStencilSurface(&m_pZBuffer);
+	m_pZBuffer->GetDesc(&m_d3dsdZBuffer);
+	m_pd3dDevice->GetBackBuffer(0, 0, D3DBACKBUFFER_TYPE_MONO, &m_pBackBuffer);
+	m_pBackBuffer->GetDesc(&m_d3dsdBackBuffer);
+
+	// Initialize the app's device-dependent objects
+	hr = InitDeviceObjects();
+	if (FAILED(hr))
+	{
+		DeleteDeviceObjects();
 	}
 	else
 	{
-		iLog->LogError("Failed to create DirectX 9 device. Error: %s", DXGetErrorStringA(hr));
+		m_bDeviceObjectsInited = true;
+		hr = RestoreDeviceObjects();
+		if (FAILED(hr))
+		{
+			InvalidateDeviceObjects();
+		}
+		else
+		{
+			m_bDeviceObjectsRestored = true;
+			return S_OK;
+		}
 	}
+
+	// Cleanup before we try again
+	Cleanup3DEnvironment();
 
 	return hr;
 }
@@ -1846,7 +1862,7 @@ void CD3D9Renderer::Cleanup3DEnvironment()
 
 		if (m_pd3dDevice->Release() > 0)
 		{
-			iLog->Log("ERROR: CD3D9Renderer::Cleanup3DEnvironment: Non zero reference counter after release of D3D Device");
+			iLog->Log("\001ERROR: CD3D9Renderer::Cleanup3DEnvironment: Non zero reference counter after release of D3D Device");
 			while (m_pd3dDevice->Release()) {}
 		}
 		m_pd3dDevice = nullptr;
@@ -1909,23 +1925,13 @@ HRESULT CD3D9Renderer::Reset3DEnvironment()
 	return S_OK;
 }
 
-void Cry_GetWindowRect(SDL_Window* window, RECT* rect)
-{
-	SDL_GetWindowSize(window, (int*)&rect->right, (int*)&rect->bottom);
-}
-
-void Cry_GetClientRect(SDL_Window* window, RECT* rect)
-{
-	SDL_GetWindowSize(window, (int*)&rect->right, (int*)&rect->bottom);
-}
-
 bool CD3D9Renderer::ChooseDevice(void)
 {
 	HRESULT hr;
 
 	// Save window properties
-	Cry_GetWindowRect(m_hWnd, &m_rcWindowBounds);
-	Cry_GetClientRect(m_hWnd, &m_rcWindowClient);
+	GetWindowRect(&m_rcWindowBounds);
+	GetClientRect(&m_rcWindowClient);
 
 	if (FAILED(hr = ChooseInitialD3DSettings()))
 		return Error("Couldn't find any suitable device", hr);
@@ -1948,8 +1954,8 @@ bool CD3D9Renderer::ChooseDevice(void)
 					numAdap = atol(drv);
 				else
 				{
-					iLog->Log("Unknown device name '%s' (use AutoDetect)\n", drv);
-					iLog->Log("Only 'Auto', 'Primary', '3dfx' or digital device ID are supported\n");
+					iLog->Log("\001Unknown device name '%s' (use AutoDetect)\n", drv);
+					iLog->Log("\001Only 'Auto', 'Primary', '3dfx' or digital device ID are supported\n");
 					bAuto = true;
 				}
 	if (numAdap < 0)
@@ -2055,17 +2061,22 @@ HRESULT CD3D9Renderer::AdjustWindowForChange()
 {
 	if (m_bEditor)
 		return S_OK;
+
 	if (!m_bFullScreen)
 	{
 		// Set windowed-mode style
-		//SetWindowLong( m_hWnd, GWL_STYLE, m_dwWindowStyle );
-		SDL_SetWindowFullscreen(m_hWnd, 0);
+		if(IsWindow((HWND)m_hWnd))
+			SetWindowLong((HWND)m_hWnd, GWL_STYLE, m_dwWindowStyle );
+		else
+			SDL_SetWindowFullscreen((SDL_Window*)m_hWnd, 0);
 	}
 	else
 	{
 		// Set fullscreen-mode style
-		//SetWindowLong( m_hWnd, GWL_STYLE, WS_POPUP|WS_SYSMENU|WS_VISIBLE );
-		SDL_SetWindowFullscreen(m_hWnd, SDL_WINDOW_FULLSCREEN_DESKTOP);
+		if(IsWindow((HWND)m_hWnd))
+			SetWindowLong((HWND)m_hWnd, GWL_STYLE, WS_POPUP|WS_SYSMENU|WS_VISIBLE );
+		else
+			SDL_SetWindowFullscreen((SDL_Window*)m_hWnd, SDL_WINDOW_FULLSCREEN_DESKTOP);
 	}
 
 	return S_OK;
@@ -2104,349 +2115,333 @@ HRESULT CD3D9Renderer::InitDeviceObjects()
 		{
 			iLog->Log("D3D Detected: -nodeviceid specified, 3D device identification skipped\n");
 		}
-		else
-			if (ai->VendorId == 4098)
+		else if (ai->VendorId == 4098)
+		{
+			m_Features &= ~RFT_HW_MASK;
+			m_Features |= RFT_HW_RADEON;
+			iLog->Log("D3D Detected: ATI video card\n");
+			if (ai->DeviceId == 18242)
 			{
-				m_Features &= ~RFT_HW_MASK;
-				m_Features |= RFT_HW_RADEON;
-				iLog->Log("D3D Detected: ATI video card\n");
-				if (ai->DeviceId == 18242)
-				{
-					iLog->Log("D3D Detected: ATI Rage Pro\n");
-				}
-				else
-					if (ai->DeviceId == 21062)
-					{
-						iLog->Log("D3D Detected: ATI Rage 128\n");
-					}
-					else
-						if (ai->DeviceId == 20812)
-						{
-							iLog->Log("D3D Detected: ATI Radeon 8500\n");
-						}
-						else
-							if (ai->DeviceId == 20036)
-							{
-								iLog->Log("D3D Detected: ATI Radeon 9700\n");
-							}
-							else
-								if (ai->DeviceId == 0x4a49)
-								{
-									iLog->Log("D3D Detected: ATI Radeon X800 Pro\n");
-								}
-				if (ai->DeviceId == 0x4a49 || ai->DeviceId == 0x4a4a || ai->DeviceId == 0x4a4b || ai->DeviceId == 0x4a4c || ai->DeviceId == 0x4a50 || ai->DeviceId == 0x4a69 || ai->DeviceId == 0x4a6a || ai->DeviceId == 0x4a6b || ai->DeviceId == 0x4a6c || ai->DeviceId == 0x4a70 ||
-					ai->DeviceId == 0x5b60 || ai->DeviceId == 0x5b70 || ai->DeviceId == 0x3e50 || ai->DeviceId == 0x3e70 || ai->DeviceId == 0x5549 || ai->DeviceId == 0x5569 || ai->DeviceId == 0x554b || ai->DeviceId == 0x556b)
-				{
-					// Workaround for R42x to avoid terrain flickering
-					_SetVar("d3d9_VBPools", 0);
-				}
+				iLog->Log("D3D Detected: ATI Rage Pro\n");
 			}
+			else if (ai->DeviceId == 21062)
+			{
+				iLog->Log("D3D Detected: ATI Rage 128\n");
+			} else if (ai->DeviceId == 20812)
+			{
+				iLog->Log("D3D Detected: ATI Radeon 8500\n");
+			}
+			else if (ai->DeviceId == 20036)
+			{
+				iLog->Log("D3D Detected: ATI Radeon 9700\n");
+			}
+			else if (ai->DeviceId == 0x4a49)
+			{
+				iLog->Log("D3D Detected: ATI Radeon X800 Pro\n");
+			}
+			if (ai->DeviceId == 0x4a49 || ai->DeviceId == 0x4a4a || ai->DeviceId == 0x4a4b || ai->DeviceId == 0x4a4c || ai->DeviceId == 0x4a50 || ai->DeviceId == 0x4a69 || ai->DeviceId == 0x4a6a || ai->DeviceId == 0x4a6b || ai->DeviceId == 0x4a6c || ai->DeviceId == 0x4a70 ||
+				ai->DeviceId == 0x5b60 || ai->DeviceId == 0x5b70 || ai->DeviceId == 0x3e50 || ai->DeviceId == 0x3e70 || ai->DeviceId == 0x5549 || ai->DeviceId == 0x5569 || ai->DeviceId == 0x554b || ai->DeviceId == 0x556b)
+			{
+				// Workaround for R42x to avoid terrain flickering
+				_SetVar("d3d9_VBPools", 0);
+			}
+		}
+		else if (ai->VendorId == 4634)
+		{
+			iLog->Log("D3D Detected: 3dfx video card\n");
+			if (ai->DeviceId == 1)
+			{
+				iLog->Log("D3D Detected: 3dfx Voodoo\n");
+			}
+			else if (ai->DeviceId == 2)
+			{
+				iLog->Log("D3D Detected: 3dfx Voodoo2\n");
+			}
+			else if (ai->DeviceId == 3)
+			{
+				iLog->Log("D3D Detected: 3dfx Voodoo Banshee\n");
+			}
+			else if (ai->DeviceId == 5)
+			{
+				iLog->Log("D3D Detected: 3dfx Voodoo3\n");
+			}
+		}
+		else if (ai->VendorId == 32902)
+		{
+			iLog->Log("D3D Detected: Intel video card\n");
+			if (ai->DeviceId == 30720)
+			{
+				iLog->Log("D3D Detected: Intel i740\n");
+			}
+			if (ai->DeviceId == 7121)
+			{
+				iLog->Log("D3D Detected: Intel 810L\n");
+			}
+			if (ai->DeviceId == 7123)
+			{
+				iLog->Log("D3D Detected: Intel 810 DC100\n");
+			}
+			if (ai->DeviceId == 7125)
+			{
+				iLog->Log("D3D Detected: Intel 810E\n");
+			}
+		}
+		else if (ai->VendorId == 4818)
+		{
+			iLog->Log("D3D Detected: NVidia Riva video card\n");
+			if (ai->DeviceId == 0x18 || ai->DeviceId == 0x19)
+				iLog->Log("D3D Detected: Riva 128\n");
 			else
-				if (ai->VendorId == 4634)
-				{
-					iLog->Log("D3D Detected: 3dfx video card\n");
-					if (ai->DeviceId == 1)
-					{
-						iLog->Log("D3D Detected: 3dfx Voodoo\n");
-					}
-					else
-						if (ai->DeviceId == 2)
-						{
-							iLog->Log("D3D Detected: 3dfx Voodoo2\n");
-						}
-						else
-							if (ai->DeviceId == 3)
-							{
-								iLog->Log("D3D Detected: 3dfx Voodoo Banshee\n");
-							}
-							else
-								if (ai->DeviceId == 5)
-								{
-									iLog->Log("D3D Detected: 3dfx Voodoo3\n");
-								}
-				}
-				else
-					if (ai->VendorId == 32902)
-					{
-						iLog->Log("D3D Detected: Intel video card\n");
-						if (ai->DeviceId == 30720)
-						{
-							iLog->Log("D3D Detected: Intel i740\n");
-						}
-						if (ai->DeviceId == 7121)
-						{
-							iLog->Log("D3D Detected: Intel 810L\n");
-						}
-						if (ai->DeviceId == 7123)
-						{
-							iLog->Log("D3D Detected: Intel 810 DC100\n");
-						}
-						if (ai->DeviceId == 7125)
-						{
-							iLog->Log("D3D Detected: Intel 810E\n");
-						}
-					}
-					else
-						if (ai->VendorId == 4818)
-						{
-							iLog->Log("D3D Detected: NVidia Riva video card\n");
-							if (ai->DeviceId == 0x18 || ai->DeviceId == 0x19)
-								iLog->Log("D3D Detected: Riva 128\n");
-							else
-								iLog->Log("D3D Detected: Riva unknown\n");
-						}
-						else
-							if (ai->VendorId == 4318)
-							{
-								m_Features |= RFT_FOGVP;
-								iLog->Log("D3D Detected: NVidia video card\n");
-								if (ai->DeviceId == 0x20)
-								{
-									iLog->Log("D3D Detected: Riva TNT\n");
-									ConstrainAspect = 0;
-								}
-								if (ai->DeviceId == 0x28)
-								{
-									iLog->Log("D3D Detected: Riva TNT2/TNT2 Pro\n");
-									ConstrainAspect = 0;
-								}
-								if (ai->DeviceId == 0x29)
-								{
-									iLog->Log("D3D Detected: Riva TNT2 Ultra\n");
-									ConstrainAspect = 0;
-								}
-								if (ai->DeviceId == 0x2c)
-								{
-									iLog->Log("D3D Detected: Vanta/Vanta LT\n");
-									ConstrainAspect = 0;
-								}
-								if (ai->DeviceId == 0x2d)
-								{
-									iLog->Log("D3D Detected: Riva TNT2 Model 64/Model 64 Pro\n");
-									ConstrainAspect = 0;
-								}
-								if (ai->DeviceId == 0x40)
-								{
-									iLog->Log("D3D Detected: Riva TNT2\n");
-									ConstrainAspect = 0;
-								}
-								if (ai->DeviceId == 0xa0)
-								{
-									iLog->Log("D3D Detected: Aladdin TNT2\n");
-									ConstrainAspect = 0;
-								}
-								if (ai->DeviceId == 0x100)
-									iLog->Log("D3D Detected: GeForce 256 SDR\n");
-								if (ai->DeviceId == 0x101)
-									iLog->Log("D3D Detected: GeForce 256 DDR\n");
-								if (ai->DeviceId == 0x103)
-									iLog->Log("D3D Detected: Quadro\n");
-								if (ai->DeviceId == 0x110)
-									iLog->Log("D3D Detected: GeForce2 MX/MX 400\n");
-								if (ai->DeviceId == 0x111)
-									iLog->Log("D3D Detected: GeForce2 MX 100/200\n");
-								if (ai->DeviceId == 0x112)
-									iLog->Log("D3D Detected: GeForce2 Go\n");
-								if (ai->DeviceId == 0x113)
-									iLog->Log("D3D Detected: Quadro2 MXR/EX/Go\n");
-								if (ai->DeviceId == 0x150)
-									iLog->Log("D3D Detected: GeForce2 GTS/GeForce2 Pro\n");
-								if (ai->DeviceId == 0x151)
-									iLog->Log("D3D Detected: GeForce2 Ti\n");
-								if (ai->DeviceId == 0x152)
-									iLog->Log("D3D Detected: GeForce2 Ultra\n");
-								if (ai->DeviceId == 0x153)
-									iLog->Log("D3D Detected: Quadro2 Pro\n");
-								if (ai->DeviceId == 0x170)
-									iLog->Log("D3D Detected: GeForce4 MX 460\n");
-								if (ai->DeviceId == 0x171)
-									iLog->Log("D3D Detected: GeForce4 MX 440\n");
-								if (ai->DeviceId == 0x172)
-									iLog->Log("D3D Detected: GeForce4 MX 420\n");
-								if (ai->DeviceId == 0x173)
-									iLog->Log("D3D Detected: GeForce4 MX 440-SE\n");
-								if (ai->DeviceId == 0x174)
-									iLog->Log("D3D Detected: GeForce4 440 Go\n");
-								if (ai->DeviceId == 0x175)
-									iLog->Log("D3D Detected: GeForce4 420 Go\n");
-								if (ai->DeviceId == 0x176)
-									iLog->Log("D3D Detected: GeForce4 420 Go 32M\n");
-								if (ai->DeviceId == 0x177)
-									iLog->Log("D3D Detected: GeForce4 460 Go\n");
-								if (ai->DeviceId == 0x178)
-									iLog->Log("D3D Detected: Quadro4 500 XGL\n");
-								if (ai->DeviceId == 0x179)
-									iLog->Log("D3D Detected: GeForce4 440 Go 64M\n");
-								if (ai->DeviceId == 0x17a)
-									iLog->Log("D3D Detected: Quadro4 200 NVS\n");
-								if (ai->DeviceId == 0x17c)
-									iLog->Log("D3D Detected: Quadro4 500 GoGL\n");
-								if (ai->DeviceId == 0x17d)
-									iLog->Log("D3D Detected: GeForce4 410 Go 16M\n");
-								if (ai->DeviceId == 0x181)
-									iLog->Log("D3D Detected: GeForce4 MX 440 with AGP8X\n");
-								if (ai->DeviceId == 0x182)
-									iLog->Log("D3D Detected: GeForce4 MX 440-SE with AGP8X\n");
-								if (ai->DeviceId == 0x183)
-									iLog->Log("D3D Detected: GeForce4 MX 420 with AGP8X\n");
-								if (ai->DeviceId == 0x186)
-									iLog->Log("D3D Detected: GeForce4 448 Go\n");
-								if (ai->DeviceId == 0x187)
-									iLog->Log("D3D Detected: GeForce4 488 Go\n");
-								if (ai->DeviceId == 0x188)
-									iLog->Log("D3D Detected: Quadro4 580 XGL\n");
-								if (ai->DeviceId == 0x18a)
-									iLog->Log("D3D Detected: Quadro NVS with AGP8X\n");
-								if (ai->DeviceId == 0x18b)
-									iLog->Log("D3D Detected: Quadro4 380 XGL\n");
-								if (ai->DeviceId == 0x1a0)
-									iLog->Log("D3D Detected: GeForce2 Integrated GPU\n");
-								if (ai->DeviceId == 0x1f0)
-									iLog->Log("D3D Detected: GeForce4 MX Integrated GPU\n");
+				iLog->Log("D3D Detected: Riva unknown\n");
+		}
+		else if (ai->VendorId == 4318)
+		{
+			m_Features |= RFT_FOGVP;
+			iLog->Log("D3D Detected: NVidia video card\n");
+			if (ai->DeviceId == 0x20)
+			{
+				iLog->Log("D3D Detected: Riva TNT\n");
+				ConstrainAspect = 0;
+			}
+			if (ai->DeviceId == 0x28)
+			{
+				iLog->Log("D3D Detected: Riva TNT2/TNT2 Pro\n");
+				ConstrainAspect = 0;
+			}
+			if (ai->DeviceId == 0x29)
+			{
+				iLog->Log("D3D Detected: Riva TNT2 Ultra\n");
+				ConstrainAspect = 0;
+			}
+			if (ai->DeviceId == 0x2c)
+			{
+				iLog->Log("D3D Detected: Vanta/Vanta LT\n");
+				ConstrainAspect = 0;
+			}
+			if (ai->DeviceId == 0x2d)
+			{
+				iLog->Log("D3D Detected: Riva TNT2 Model 64/Model 64 Pro\n");
+				ConstrainAspect = 0;
+			}
+			if (ai->DeviceId == 0x40)
+			{
+				iLog->Log("D3D Detected: Riva TNT2\n");
+				ConstrainAspect = 0;
+			}
+			if (ai->DeviceId == 0xa0)
+			{
+				iLog->Log("D3D Detected: Aladdin TNT2\n");
+				ConstrainAspect = 0;
+			}
+			if (ai->DeviceId == 0x100)
+				iLog->Log("D3D Detected: GeForce 256 SDR\n");
+			if (ai->DeviceId == 0x101)
+				iLog->Log("D3D Detected: GeForce 256 DDR\n");
+			if (ai->DeviceId == 0x103)
+				iLog->Log("D3D Detected: Quadro\n");
+			if (ai->DeviceId == 0x110)
+				iLog->Log("D3D Detected: GeForce2 MX/MX 400\n");
+			if (ai->DeviceId == 0x111)
+				iLog->Log("D3D Detected: GeForce2 MX 100/200\n");
+			if (ai->DeviceId == 0x112)
+				iLog->Log("D3D Detected: GeForce2 Go\n");
+			if (ai->DeviceId == 0x113)
+				iLog->Log("D3D Detected: Quadro2 MXR/EX/Go\n");
+			if (ai->DeviceId == 0x150)
+				iLog->Log("D3D Detected: GeForce2 GTS/GeForce2 Pro\n");
+			if (ai->DeviceId == 0x151)
+				iLog->Log("D3D Detected: GeForce2 Ti\n");
+			if (ai->DeviceId == 0x152)
+				iLog->Log("D3D Detected: GeForce2 Ultra\n");
+			if (ai->DeviceId == 0x153)
+				iLog->Log("D3D Detected: Quadro2 Pro\n");
+			if (ai->DeviceId == 0x170)
+				iLog->Log("D3D Detected: GeForce4 MX 460\n");
+			if (ai->DeviceId == 0x171)
+				iLog->Log("D3D Detected: GeForce4 MX 440\n");
+			if (ai->DeviceId == 0x172)
+				iLog->Log("D3D Detected: GeForce4 MX 420\n");
+			if (ai->DeviceId == 0x173)
+				iLog->Log("D3D Detected: GeForce4 MX 440-SE\n");
+			if (ai->DeviceId == 0x174)
+				iLog->Log("D3D Detected: GeForce4 440 Go\n");
+			if (ai->DeviceId == 0x175)
+				iLog->Log("D3D Detected: GeForce4 420 Go\n");
+			if (ai->DeviceId == 0x176)
+				iLog->Log("D3D Detected: GeForce4 420 Go 32M\n");
+			if (ai->DeviceId == 0x177)
+				iLog->Log("D3D Detected: GeForce4 460 Go\n");
+			if (ai->DeviceId == 0x178)
+				iLog->Log("D3D Detected: Quadro4 500 XGL\n");
+			if (ai->DeviceId == 0x179)
+				iLog->Log("D3D Detected: GeForce4 440 Go 64M\n");
+			if (ai->DeviceId == 0x17a)
+				iLog->Log("D3D Detected: Quadro4 200 NVS\n");
+			if (ai->DeviceId == 0x17c)
+				iLog->Log("D3D Detected: Quadro4 500 GoGL\n");
+			if (ai->DeviceId == 0x17d)
+				iLog->Log("D3D Detected: GeForce4 410 Go 16M\n");
+			if (ai->DeviceId == 0x181)
+				iLog->Log("D3D Detected: GeForce4 MX 440 with AGP8X\n");
+			if (ai->DeviceId == 0x182)
+				iLog->Log("D3D Detected: GeForce4 MX 440-SE with AGP8X\n");
+			if (ai->DeviceId == 0x183)
+				iLog->Log("D3D Detected: GeForce4 MX 420 with AGP8X\n");
+			if (ai->DeviceId == 0x186)
+				iLog->Log("D3D Detected: GeForce4 448 Go\n");
+			if (ai->DeviceId == 0x187)
+				iLog->Log("D3D Detected: GeForce4 488 Go\n");
+			if (ai->DeviceId == 0x188)
+				iLog->Log("D3D Detected: Quadro4 580 XGL\n");
+			if (ai->DeviceId == 0x18a)
+				iLog->Log("D3D Detected: Quadro NVS with AGP8X\n");
+			if (ai->DeviceId == 0x18b)
+				iLog->Log("D3D Detected: Quadro4 380 XGL\n");
+			if (ai->DeviceId == 0x1a0)
+				iLog->Log("D3D Detected: GeForce2 Integrated GPU\n");
+			if (ai->DeviceId == 0x1f0)
+				iLog->Log("D3D Detected: GeForce4 MX Integrated GPU\n");
 
-								if (ai->DeviceId == 0x200)
-									iLog->Log("D3D Detected: GeForce3\n");
-								if (ai->DeviceId == 0x201)
-									iLog->Log("D3D Detected: GeForce3 Ti 200\n");
-								if (ai->DeviceId == 0x202)
-									iLog->Log("D3D Detected: GeForce3 Ti 500\n");
-								if (ai->DeviceId == 0x203)
-									iLog->Log("D3D Detected: Quadro DCC\n");
-								if (ai->DeviceId == 0x250)
-									iLog->Log("D3D Detected: GeForce4 Ti 4600\n");
-								if (ai->DeviceId == 0x251)
-									iLog->Log("D3D Detected: GeForce4 Ti 4400\n");
-								if (ai->DeviceId == 0x251)
-									iLog->Log("D3D Detected: NV25\n");
-								if (ai->DeviceId == 0x253)
-									iLog->Log("D3D Detected: GeForce4 Ti 4200\n");
-								if (ai->DeviceId == 0x258)
-									iLog->Log("D3D Detected: Quadro4 900 XGL\n");
-								if (ai->DeviceId == 0x259)
-									iLog->Log("D3D Detected: Quadro4 750 XGL\n");
-								if (ai->DeviceId == 0x25b)
-									iLog->Log("D3D Detected: Quadro4 700 XGL\n");
-								if (ai->DeviceId == 0x280)
-									iLog->Log("D3D Detected: GeForce4 TI4800\n");
-								if (ai->DeviceId == 0x281)
-									iLog->Log("D3D Detected: GeForce4 TI4200 with AGP8X\n");
-								if (ai->DeviceId == 0x282)
-									iLog->Log("D3D Detected: GeForce4 TI4800 SE\n");
-								if (ai->DeviceId == 0x286)
-									iLog->Log("D3D Detected: GeForce4 4200 Go\n");
-								if (ai->DeviceId == 0x288)
-									iLog->Log("D3D Detected: Quadro4 980 XGL\n");
-								if (ai->DeviceId == 0x289)
-									iLog->Log("D3D Detected: Quadro4 780 XGL\n");
-								if (ai->DeviceId == 0x28c)
-									iLog->Log("D3D Detected: Quadro4 700 GoGL\n");
+			if (ai->DeviceId == 0x200)
+				iLog->Log("D3D Detected: GeForce3\n");
+			if (ai->DeviceId == 0x201)
+				iLog->Log("D3D Detected: GeForce3 Ti 200\n");
+			if (ai->DeviceId == 0x202)
+				iLog->Log("D3D Detected: GeForce3 Ti 500\n");
+			if (ai->DeviceId == 0x203)
+				iLog->Log("D3D Detected: Quadro DCC\n");
+			if (ai->DeviceId == 0x250)
+				iLog->Log("D3D Detected: GeForce4 Ti 4600\n");
+			if (ai->DeviceId == 0x251)
+				iLog->Log("D3D Detected: GeForce4 Ti 4400\n");
+			if (ai->DeviceId == 0x251)
+				iLog->Log("D3D Detected: NV25\n");
+			if (ai->DeviceId == 0x253)
+				iLog->Log("D3D Detected: GeForce4 Ti 4200\n");
+			if (ai->DeviceId == 0x258)
+				iLog->Log("D3D Detected: Quadro4 900 XGL\n");
+			if (ai->DeviceId == 0x259)
+				iLog->Log("D3D Detected: Quadro4 750 XGL\n");
+			if (ai->DeviceId == 0x25b)
+				iLog->Log("D3D Detected: Quadro4 700 XGL\n");
+			if (ai->DeviceId == 0x280)
+				iLog->Log("D3D Detected: GeForce4 TI4800\n");
+			if (ai->DeviceId == 0x281)
+				iLog->Log("D3D Detected: GeForce4 TI4200 with AGP8X\n");
+			if (ai->DeviceId == 0x282)
+				iLog->Log("D3D Detected: GeForce4 TI4800 SE\n");
+			if (ai->DeviceId == 0x286)
+				iLog->Log("D3D Detected: GeForce4 4200 Go\n");
+			if (ai->DeviceId == 0x288)
+				iLog->Log("D3D Detected: Quadro4 980 XGL\n");
+			if (ai->DeviceId == 0x289)
+				iLog->Log("D3D Detected: Quadro4 780 XGL\n");
+			if (ai->DeviceId == 0x28c)
+				iLog->Log("D3D Detected: Quadro4 700 GoGL\n");
 
-								if (ai->DeviceId == 0x300)
-									iLog->Log("D3D Detected: GeForce FX 5800\n");
-								if (ai->DeviceId == 0x301)
-									iLog->Log("D3D Detected: GeForce FX 5800 Ultra\n");
-								if (ai->DeviceId == 0x302)
-									iLog->Log("D3D Detected: GeForce FX 5800\n");
-								if (ai->DeviceId == 0x308)
-									iLog->Log("D3D Detected: QuadroFX 2000\n");
-								if (ai->DeviceId == 0x309)
-									iLog->Log("D3D Detected: QuadroFX 1000\n");
-								if (ai->DeviceId == 0x30a)
-									iLog->Log("D3D Detected: ICE FX 2000\n");
-								if (ai->DeviceId == 0x311)
-									iLog->Log("D3D Detected: GeForce FX 5600 Ultra\n");
-								if (ai->DeviceId == 0x312)
-									iLog->Log("D3D Detected: GeForce FX 5600\n");
-								if (ai->DeviceId == 0x313)
-									iLog->Log("D3D Detected: NV31\n");
-								if (ai->DeviceId == 0x314)
-									iLog->Log("D3D Detected: GeForce FX 5600SE\n");
-								if (ai->DeviceId == 0x316)
-									iLog->Log("D3D Detected: NV31M\n");
-								if (ai->DeviceId == 0x317)
-									iLog->Log("D3D Detected: NV31M Pro\n");
-								if (ai->DeviceId == 0x31a)
-									iLog->Log("D3D Detected: GeForce FX Go5600\n");
-								if (ai->DeviceId == 0x31b)
-									iLog->Log("D3D Detected: GeForce FX Go5650\n");
-								if (ai->DeviceId == 0x31c)
-									iLog->Log("D3D Detected: Quadro FX Go700\n");
-								if (ai->DeviceId == 0x31d)
-									iLog->Log("D3D Detected: NV31GLM\n");
-								if (ai->DeviceId == 0x31e)
-									iLog->Log("D3D Detected: NV31GLM Pro\n");
-								if (ai->DeviceId == 0x31f)
-									iLog->Log("D3D Detected: NV31GLM Pro\n");
-								if (ai->DeviceId == 0x321)
-									iLog->Log("D3D Detected: GeForce FX 5200 Ultra\n");
-								if (ai->DeviceId == 0x322)
-									iLog->Log("D3D Detected: GeForce FX 5200\n");
-								if (ai->DeviceId == 0x323)
-									iLog->Log("D3D Detected: GeForce FX 5200SE\n");
-								if (ai->DeviceId == 0x324)
-									iLog->Log("D3D Detected: GeForce FX Go5200\n");
-								if (ai->DeviceId == 0x325)
-									iLog->Log("D3D Detected: GeForce FX Go5250\n");
-								if (ai->DeviceId == 0x328)
-									iLog->Log("D3D Detected: GeForce FX Go5200 32M/64M\n");
-								if (ai->DeviceId == 0x32a)
-									iLog->Log("D3D Detected: NV34GL\n");
-								if (ai->DeviceId == 0x32b)
-									iLog->Log("D3D Detected: Quadro FX 500\n");
-								if (ai->DeviceId == 0x32d)
-									iLog->Log("D3D Detected: GeForce FX Go5100\n");
-								if (ai->DeviceId == 0x32f)
-									iLog->Log("D3D Detected: NV34GL\n");
-								if (ai->DeviceId == 0x330)
-									iLog->Log("D3D Detected: GeForce FX 5900 Ultra\n");
-								if (ai->DeviceId == 0x331)
-									iLog->Log("D3D Detected: GeForce FX 5900\n");
-								if (ai->DeviceId == 0x332)
-									iLog->Log("D3D Detected: NV35\n");
+			if (ai->DeviceId == 0x300)
+				iLog->Log("D3D Detected: GeForce FX 5800\n");
+			if (ai->DeviceId == 0x301)
+				iLog->Log("D3D Detected: GeForce FX 5800 Ultra\n");
+			if (ai->DeviceId == 0x302)
+				iLog->Log("D3D Detected: GeForce FX 5800\n");
+			if (ai->DeviceId == 0x308)
+				iLog->Log("D3D Detected: QuadroFX 2000\n");
+			if (ai->DeviceId == 0x309)
+				iLog->Log("D3D Detected: QuadroFX 1000\n");
+			if (ai->DeviceId == 0x30a)
+				iLog->Log("D3D Detected: ICE FX 2000\n");
+			if (ai->DeviceId == 0x311)
+				iLog->Log("D3D Detected: GeForce FX 5600 Ultra\n");
+			if (ai->DeviceId == 0x312)
+				iLog->Log("D3D Detected: GeForce FX 5600\n");
+			if (ai->DeviceId == 0x313)
+				iLog->Log("D3D Detected: NV31\n");
+			if (ai->DeviceId == 0x314)
+				iLog->Log("D3D Detected: GeForce FX 5600SE\n");
+			if (ai->DeviceId == 0x316)
+				iLog->Log("D3D Detected: NV31M\n");
+			if (ai->DeviceId == 0x317)
+				iLog->Log("D3D Detected: NV31M Pro\n");
+			if (ai->DeviceId == 0x31a)
+				iLog->Log("D3D Detected: GeForce FX Go5600\n");
+			if (ai->DeviceId == 0x31b)
+				iLog->Log("D3D Detected: GeForce FX Go5650\n");
+			if (ai->DeviceId == 0x31c)
+				iLog->Log("D3D Detected: Quadro FX Go700\n");
+			if (ai->DeviceId == 0x31d)
+				iLog->Log("D3D Detected: NV31GLM\n");
+			if (ai->DeviceId == 0x31e)
+				iLog->Log("D3D Detected: NV31GLM Pro\n");
+			if (ai->DeviceId == 0x31f)
+				iLog->Log("D3D Detected: NV31GLM Pro\n");
+			if (ai->DeviceId == 0x321)
+				iLog->Log("D3D Detected: GeForce FX 5200 Ultra\n");
+			if (ai->DeviceId == 0x322)
+				iLog->Log("D3D Detected: GeForce FX 5200\n");
+			if (ai->DeviceId == 0x323)
+				iLog->Log("D3D Detected: GeForce FX 5200SE\n");
+			if (ai->DeviceId == 0x324)
+				iLog->Log("D3D Detected: GeForce FX Go5200\n");
+			if (ai->DeviceId == 0x325)
+				iLog->Log("D3D Detected: GeForce FX Go5250\n");
+			if (ai->DeviceId == 0x328)
+				iLog->Log("D3D Detected: GeForce FX Go5200 32M/64M\n");
+			if (ai->DeviceId == 0x32a)
+				iLog->Log("D3D Detected: NV34GL\n");
+			if (ai->DeviceId == 0x32b)
+				iLog->Log("D3D Detected: Quadro FX 500\n");
+			if (ai->DeviceId == 0x32d)
+				iLog->Log("D3D Detected: GeForce FX Go5100\n");
+			if (ai->DeviceId == 0x32f)
+				iLog->Log("D3D Detected: NV34GL\n");
+			if (ai->DeviceId == 0x330)
+				iLog->Log("D3D Detected: GeForce FX 5900 Ultra\n");
+			if (ai->DeviceId == 0x331)
+				iLog->Log("D3D Detected: GeForce FX 5900\n");
+			if (ai->DeviceId == 0x332)
+				iLog->Log("D3D Detected: NV35\n");
 
-								if (ai->DeviceId <= 0x40 && ai->DeviceId <= 0x4f)
-									iLog->Log("D3D Detected: NV4X\n");
-							}
-							else
-								if (ai->VendorId == 4818)
-								{
-									iLog->Log("D3D Detected: NVidia video card\n");
-									if (ai->DeviceId == 0x18 || ai->DeviceId == 0x19)
-									{
-										iLog->Log("D3D Detected: Riva 128\n");
-										ConstrainAspect = 0;
-									}
-								}
-								else
-									if (ai->VendorId == 4139)
-									{
-										iLog->Log("D3D Detected: Matrox video card\n");
-										if (ai->DeviceId == 1313)
-											iLog->Log("D3D Detected: Matrox G200\n");
-										else
-											if (ai->DeviceId == 1317)
-												iLog->Log("D3D Detected: Matrox G400\n");
-										//G400 lies about texture stages, last one is for bump only
-									}
-									else
-										if (ai->VendorId == 0x18ca)
-										{
-											m_Features &= ~RFT_HW_MASK;
-											m_Features |= RFT_HW_RADEON;
-											iLog->Log("D3D Detected: XGI video card\n");
-											if (ai->DeviceId == 0x40)
-												iLog->Log("D3D Detected: XGI Volary V8 DUO Ultra\n");
-											else
-												iLog->Log("D3D Detected: XGI Unknown\n");
-											//G400 lies about texture stages, last one is for bump only
-										}
-										else
-										{
-											iLog->Log("D3D Detected: Generic 3D accelerator\n");
-											// Hack for NVidia DualView
-											if (!strnicmp(ai->Description, "NVIDIA", 6))
-												m_Features |= RFT_FOGVP;
-										}
+			if (ai->DeviceId <= 0x40 && ai->DeviceId <= 0x4f)
+				iLog->Log("D3D Detected: NV4X\n");
+		}
+		else if (ai->VendorId == 4818)
+		{
+			iLog->Log("D3D Detected: NVidia video card\n");
+			if (ai->DeviceId == 0x18 || ai->DeviceId == 0x19)
+			{
+				iLog->Log("D3D Detected: Riva 128\n");
+				ConstrainAspect = 0;
+			}
+		}
+		else if (ai->VendorId == 4139)
+		{
+			iLog->Log("D3D Detected: Matrox video card\n");
+			if (ai->DeviceId == 1313)
+				iLog->Log("D3D Detected: Matrox G200\n");
+			else
+				if (ai->DeviceId == 1317)
+					iLog->Log("D3D Detected: Matrox G400\n");
+			//G400 lies about texture stages, last one is for bump only
+		}
+		else if (ai->VendorId == 0x18ca)
+		{
+			m_Features &= ~RFT_HW_MASK;
+			m_Features |= RFT_HW_RADEON;
+			iLog->Log("D3D Detected: XGI video card\n");
+			if (ai->DeviceId == 0x40)
+				iLog->Log("D3D Detected: XGI Volary V8 DUO Ultra\n");
+			else
+				iLog->Log("D3D Detected: XGI Unknown\n");
+			//G400 lies about texture stages, last one is for bump only
+		}
+		else
+		{
+			iLog->Log("D3D Detected: Generic 3D accelerator\n");
+			// Hack for NVidia DualView
+			if (!strnicmp(ai->Description, "NVIDIA", 6))
+				m_Features |= RFT_FOGVP;
+		}
 	}
 
 	if (m_d3dCaps.PS20Caps.NumInstructionSlots >= 256 && (D3DSHADER_VERSION_MAJOR(m_d3dCaps.PixelShaderVersion) >= 2))

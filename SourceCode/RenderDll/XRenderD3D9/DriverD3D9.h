@@ -351,6 +351,8 @@ struct SD3DRenderTarget
 
 struct IEntityRender;
 
+using WINDOW_HANDLE = void*;
+
 class CD3D9Renderer : public CRenderer
 {
 	friend class CD3D9TexMan;
@@ -361,14 +363,17 @@ public:
 
 protected:
 
+	void			GetWindowRect(RECT* rect);
+	void			GetClientRect(RECT* rect);
+
 	// Windows context
-	char      m_WinTitle[80];
-	HINSTANCE m_hInst;
-	SDL_Window* m_hWnd;              // The main app window
-	HWND      m_hWndDesktop;       // The desktop window
+	char			m_WinTitle[80];
+	HINSTANCE		m_hInst;
+	WINDOW_HANDLE	m_hWnd;              // The main app window
+	HWND			m_hWndDesktop;       // The desktop window
 
 #ifdef USE_3DC
-	HANDLE    m_hLibHandle3DC;
+	HANDLE			m_hLibHandle3DC;
 #endif
 
 	LPDIRECT3D9       m_pD3D;              // The main D3D object

@@ -2720,7 +2720,7 @@ void CCObject::AddWaves(SWaveForm2** pWF)
 
 CCObject* CRenderer::EF_GetObject(bool bTemp, int num)
 {
-	CCObject* obj;
+	CCObject* obj = nullptr;
 	bool bOverflow = false;
 	static int sFrameWarn;
 	int i;
@@ -2733,12 +2733,9 @@ CCObject* CRenderer::EF_GetObject(bool bTemp, int num)
 	}
 	else
 	{
-		TArray <CCObject*>* Objs;
-		if (bTemp)
-			Objs = &m_RP.m_TempObjects;
-		else
-			Objs = &m_RP.m_Objects;
-		int n = Objs->Num();
+		TArray<CCObject*>& Objs = bTemp ? m_RP.m_TempObjects : m_RP.m_Objects;
+
+		int n = Objs.Num();
 		if (m_RP.m_NumVisObjects >= MAX_REND_OBJECTS)
 		{
 			if (sFrameWarn != m_nFrameID)
@@ -2746,7 +2743,7 @@ CCObject* CRenderer::EF_GetObject(bool bTemp, int num)
 				sFrameWarn = m_nFrameID;
 				iLog->Log("Error: CRenderer::EF_GetObject: Too many objects (> %d)\n", MAX_REND_OBJECTS);
 			}
-			obj = (*Objs)[1];
+			obj = Objs[1];
 			bOverflow = true;
 			n = 1;
 		}
@@ -2764,28 +2761,29 @@ CCObject* CRenderer::EF_GetObject(bool bTemp, int num)
 			{
 				if (!bTemp)
 				{
-					for (i = 1; i < Objs->Num(); i++)
+					for (i = 1; i < Objs.Num(); i++)
 					{
-						if (!Objs->Get(i) || (Objs->Get(i)->m_ObjFlags & FOB_REMOVED))
+						if (!Objs[i] || (Objs[i]->m_ObjFlags & FOB_REMOVED))
 							break;
 					}
-					if (i != Objs->Num())
+
+					if (i != Objs.Num())
 						n = i;
+					else if (Objs.Num() != MAX_REND_OBJECTS - 1)
+						Objs.AddIndex(1);
 					else
-					{
-						if (Objs->Num() != MAX_REND_OBJECTS - 1)
-							Objs->AddIndex(1);
-						else
-							CRYASSERT(false);
-					}
+						CRYASSERT(false);
 				}
 				else
-					Objs->AddIndex(1);
-				obj = (*Objs)[n];
+				{
+					Objs.AddIndex(1);
+				}
+
+				obj = Objs[n];
 				if (!obj)
 				{
 					obj = new CCObject;
-					(*Objs)[n] = obj;
+					Objs[n] = obj;
 				}
 				//cryPrecacheSSE(obj, sizeof(*obj));
 				{
@@ -2795,7 +2793,7 @@ CCObject* CRenderer::EF_GetObject(bool bTemp, int num)
 					cryPrefetchNTSSE(pB + 128);
 				}
 				CCObject* objNext;
-				if (Objs->Num() > n + 1 && (objNext = (*Objs)[n + 1]))
+				if (Objs.Num() > n + 1 && (objNext = Objs[n + 1]))
 				{
 					byte* pB = (byte*)objNext;
 					cryPrefetchT0SSE(pB);
