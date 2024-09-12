@@ -31,7 +31,7 @@ class CXTMenuCustomHandler;
 //////////////////////////////////////////////////////////////////////
 // Summary: XT_TRACK_STATE - Enumeration used by CXTMenuBar to determine the current
 //			state of the menu bar.
-typedef enum XT_TRACK_STATE
+enum XT_TRACK_STATE
 {
 	TRACK_NONE = 0, // Normal, not tracking anything.
 	TRACK_BUTTON,   // Tracking buttons (F10/Alt mode).

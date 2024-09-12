@@ -21,7 +21,7 @@
 //////////////////////////////////////////////////////////////////////
 // Summary: XT_DATA_TYPE - Enumeration used by CXTSortClass for specifying what
 //			type of sorting to perform.
-typedef enum XT_DATA_TYPE
+enum XT_DATA_TYPE
 {
 	DT_INT = 1,  // Sort type int.
 	DT_STRING,	 // Sort type string.

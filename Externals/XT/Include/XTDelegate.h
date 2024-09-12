@@ -23,7 +23,7 @@ template <class TCallback>
 class CXTDelegateBase
 {
 public:
-	typedef TCallback CB;
+	using CB = TCallback;
 
 protected:
 
@@ -71,6 +71,55 @@ public:
 
 };
 
+// General delegate template for any number of parameters and void return type.
+template <typename... TParams>
+class CXTDelegate : public CXTDelegateBase<void (CObject::*)(TParams...)>
+{
+public:
+	using CB = void (CObject::*)(TParams...);
+
+	CXTDelegate(CObject* target = nullptr, CB cb = nullptr)
+		: CXTDelegateBase<CB>(target, cb)
+	{}
+
+	void operator() (TParams... params) const
+	{
+		(m_target->*m_cb)(std::forward<TParams>(params)...);
+	}
+};
+
+// General delegate template for any number of parameters and typed return.
+template <typename TReturn, typename... TParams>
+class CXTDelegateRet : public CXTDelegateBase<TReturn(CObject::*)(TParams...)>
+{
+public:
+	using CB = TReturn(CObject::*)(TParams...);
+
+	CXTDelegateRet(CObject* target = nullptr, CB cb = nullptr)
+		: CXTDelegateBase<CB>(target, cb)
+	{}
+
+	TReturn operator() (TParams... params) const
+	{
+		return (m_target->*m_cb)(std::forward<TParams>(params)...);
+	}
+};
+
+using CXTDelegate0 = CXTDelegate<>;
+
+template <class TParam>
+using CXTDelegate1 = CXTDelegate<TParam>;
+
+template <class TReturn, class TParam>
+using CXTDelegate1Ret = CXTDelegateRet<TReturn, TParam>;
+
+template <class TParam1, class TParam2>
+using CXTDelegate2 = CXTDelegate<TParam1, TParam2>;
+
+template <class TReturn, class TParam1, class TParam2>
+using CXTDelegate2Ret = CXTDelegateRet<TReturn, TParam1, TParam2>;
+
+/*
 // Summary: No parameters, void return.
 class CXTDelegate0 : public CXTDelegateBase<void (CObject::*)()>
 {
@@ -90,7 +139,7 @@ template <class TParam>
 class CXTDelegate1 : public CXTDelegateBase<void (CObject::*)(TParam)>
 {
 public:
-	CXTDelegate1(CObject* target = 0, CB cb = 0)
+	CXTDelegate1(CObject* target = 0, typename CB cb = 0)
 	: CXTDelegateBase<CB>(target, cb)
 	{}
 
@@ -105,7 +154,7 @@ template <class TReturn, class TParam>
 class CXTDelegate1Ret : public CXTDelegateBase<TReturn (CObject::*)(TParam)>
 {
 public:
-	CXTDelegate1Ret(CObject* target = 0, CB cb = 0)
+	CXTDelegate1Ret(CObject* target = 0, typename CB cb = 0)
 	: CXTDelegateBase<CB>(target, cb)
 	{}
 
@@ -120,7 +169,7 @@ template <class TParam1, class TParam2>
 class CXTDelegate2 : public CXTDelegateBase<void (CObject::*)(TParam1, TParam2)>
 {
 public:
-	CXTDelegate2(CObject* target = 0, CB cb = 0)
+	CXTDelegate2(CObject* target = 0, typename CB cb = 0)
 	: CXTDelegateBase<CB>(target, cb)
 	{}
 
@@ -135,7 +184,7 @@ template <class TReturn, class TParam1, class TParam2>
 class CXTDelegate2Ret : public CXTDelegateBase<TReturn (CObject::*)(TParam1, TParam2)>
 {
 public:
-	CXTDelegate2Ret(CObject* target = 0, CB cb = 0)
+	CXTDelegate2Ret(CObject* target = 0, typename CB cb = 0)
 	: CXTDelegateBase<CB>(target, cb)
 	{}
 
@@ -144,6 +193,7 @@ public:
 		return (m_target->*m_cb)(param1, param2);
 	}
 };
+*/
 
 // Summary: A multicast delegate.
 template <class TDelegate>

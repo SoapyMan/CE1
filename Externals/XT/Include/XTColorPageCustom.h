@@ -21,7 +21,7 @@
 //////////////////////////////////////////////////////////////////////
 // Summary: XT_HAS_FOCUS is an enumeration used by CXTColorBase for determining 
 //			which color window has focus.
-typedef	enum XT_HAS_FOCUS
+enum XT_HAS_FOCUS
 {
 	none,	// Neither color window has focus.
     wnd,	// Color wheel window has focus.

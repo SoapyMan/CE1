@@ -13,6 +13,7 @@ include("FreeType2/premake5.lua")
 include("PunkBuster/premake5.lua")
 
 include("fmod/premake5.lua")
+include("XT/premake5.lua")
 include("cg/premake5.lua")
 include("lua41/premake5.lua")
 include("cv_sdk/premake5.lua")
