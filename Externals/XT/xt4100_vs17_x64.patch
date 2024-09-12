@@ -1,0 +1,1773 @@
+diff --git a/Include/Common.Include/XTButton.h b/Include/Common.Include/XTButton.h
+index e7aeedb..7c64dfc 100644
+--- a/Include/Common.Include/XTButton.h
++++ b/Include/Common.Include/XTButton.h
+@@ -281,7 +281,7 @@ protected:
+ 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
+ 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+ 	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
+-	afx_msg void OnTimer(UINT nIDEvent);
++	afx_msg void OnTimer(UINT_PTR nIDEvent);
+ 	afx_msg void OnSysColorChange();
+ 	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
+ 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
+diff --git a/Include/Common.Include/XTCaptionPopupWnd.h b/Include/Common.Include/XTCaptionPopupWnd.h
+index b2ce4d3..eab17a8 100644
+--- a/Include/Common.Include/XTCaptionPopupWnd.h
++++ b/Include/Common.Include/XTCaptionPopupWnd.h
+@@ -65,7 +65,7 @@ protected:
+ 	afx_msg void OnDestroy();
+ 	afx_msg void OnCaptButton();
+ 	afx_msg void OnPaint();
+-	afx_msg void OnTimer(UINT nIDEvent);
++	afx_msg void OnTimer(UINT_PTR nIDEvent);
+ 	//}}AFX_MSG
+ 
+ 	DECLARE_MESSAGE_MAP()
+diff --git a/Include/Common.Include/XTColorPageCustom.h b/Include/Common.Include/XTColorPageCustom.h
+index 266de7a..a39d261 100644
+--- a/Include/Common.Include/XTColorPageCustom.h
++++ b/Include/Common.Include/XTColorPageCustom.h
+@@ -21,7 +21,7 @@
+ //////////////////////////////////////////////////////////////////////
+ // Summary: XT_HAS_FOCUS is an enumeration used by CXTColorBase for determining 
+ //			which color window has focus.
+-typedef	enum XT_HAS_FOCUS
++enum XT_HAS_FOCUS
+ {
+ 	none,	// Neither color window has focus.
+     wnd,	// Color wheel window has focus.
+diff --git a/Include/Common.Include/XTColorSelectorCtrl.h b/Include/Common.Include/XTColorSelectorCtrl.h
+index c64c174..84fd89a 100644
+--- a/Include/Common.Include/XTColorSelectorCtrl.h
++++ b/Include/Common.Include/XTColorSelectorCtrl.h
+@@ -192,7 +192,7 @@ protected:
+     afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
+ 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
+ 	afx_msg void OnMouseLeave();
+-	afx_msg UINT OnNcHitTest(CPoint point);
++	afx_msg INT_PTR OnNcHitTest(CPoint point);
+ 	afx_msg void OnSetFocus(CWnd* pOldWnd);
+ 	//}}AFX_MSG
+ 
+diff --git a/Include/Common.Include/XTFlatComboBox.h b/Include/Common.Include/XTFlatComboBox.h
+index 07cb730..caecc79 100644
+--- a/Include/Common.Include/XTFlatComboBox.h
++++ b/Include/Common.Include/XTFlatComboBox.h
+@@ -94,7 +94,7 @@ protected:
+ 	//{{AFX_MSG(CXTFlatComboBox)
+ 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+     afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
+-    afx_msg void OnTimer(UINT nIDEvent);
++    afx_msg void OnTimer(UINT_PTR nIDEvent);
+     afx_msg void OnPaint();
+     afx_msg void OnSetFocus();
+     afx_msg void OnKillFocus();
+@@ -350,7 +350,7 @@ protected:
+ 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+ 	afx_msg void OnPaint();
+ 	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
+-	afx_msg void OnTimer(UINT nIDEvent);
++	afx_msg void OnTimer(UINT_PTR nIDEvent);
+ 	afx_msg BOOL OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message);
+ 	afx_msg void OnSetFocus(CWnd* pOldWnd);
+ 	afx_msg void OnKillFocus(CWnd* pNewWnd);
+diff --git a/Include/Common.Include/XTHyperLink.h b/Include/Common.Include/XTHyperLink.h
+index f3435b1..8d41f0e 100644
+--- a/Include/Common.Include/XTHyperLink.h
++++ b/Include/Common.Include/XTHyperLink.h
+@@ -174,11 +174,11 @@ public:
+     // Ignore:
+ 	//{{AFX_MSG(CXTHyperLink)
+     afx_msg BOOL OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message);
+-    afx_msg UINT OnNcHitTest(CPoint point);
++    afx_msg LRESULT OnNcHitTest(CPoint point);
+     afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
+     afx_msg HBRUSH CtlColor(CDC* pDC, UINT nCtlColor);
+     afx_msg void OnMouseMove(UINT nFlags, CPoint point);
+-    afx_msg void OnTimer(UINT nIDEvent);
++    afx_msg void OnTimer(UINT_PTR nIDEvent);
+ 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
+ 	afx_msg void OnPaint();
+ 	afx_msg void OnWindowPosChanged(WINDOWPOS FAR* lpwndpos);
+diff --git a/Include/Common.Include/XTOutBarCtrl.h b/Include/Common.Include/XTOutBarCtrl.h
+index 5189bd7..e961694 100644
+--- a/Include/Common.Include/XTOutBarCtrl.h
++++ b/Include/Common.Include/XTOutBarCtrl.h
+@@ -457,7 +457,7 @@ protected:
+ 
+     // Ignore:
+ 	//{{AFX_MSG(CXTOutBarCtrl)
+-	afx_msg void OnTimer(UINT nIDEvent);
++	afx_msg void OnTimer(UINT_PTR nIDEvent);
+ 	afx_msg void OnPaint();
+ 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
+ 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
+diff --git a/Include/Common.Include/XTOutlookBar.h b/Include/Common.Include/XTOutlookBar.h
+index 63790b5..84931e9 100644
+--- a/Include/Common.Include/XTOutlookBar.h
++++ b/Include/Common.Include/XTOutlookBar.h
+@@ -138,7 +138,7 @@ protected:
+ 	//{{AFX_MSG(CXTOutlookBar)
+     afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
+     afx_msg void OnMouseMove(UINT nFlags, CPoint point);
+-    afx_msg void OnTimer(UINT nIDEvent);
++    afx_msg void OnTimer(UINT_PTR nIDEvent);
+     afx_msg void OnWindowPosChanged(WINDOWPOS FAR* lpwndpos);
+ 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
+ 	afx_msg void OnPaint();
+diff --git a/Include/Common.Include/XTSortClass.h b/Include/Common.Include/XTSortClass.h
+index 52a6252..1ccc695 100644
+--- a/Include/Common.Include/XTSortClass.h
++++ b/Include/Common.Include/XTSortClass.h
+@@ -21,7 +21,7 @@
+ //////////////////////////////////////////////////////////////////////
+ // Summary: XT_DATA_TYPE - Enumeration used by CXTSortClass for specifying what
+ //			type of sorting to perform.
+-typedef enum XT_DATA_TYPE
++enum XT_DATA_TYPE
+ {
+ 	DT_INT = 1,  // Sort type int.
+ 	DT_STRING,	 // Sort type string.
+diff --git a/Include/Common.Include/XTSplitterWnd.h b/Include/Common.Include/XTSplitterWnd.h
+index 419e1af..76cec91 100644
+--- a/Include/Common.Include/XTSplitterWnd.h
++++ b/Include/Common.Include/XTSplitterWnd.h
+@@ -141,7 +141,7 @@ protected:
+ 	//{{AFX_MSG(CXTSplitterWnd)
+     afx_msg void OnSettingChange(UINT uFlags, LPCTSTR lpszSection);
+     afx_msg void OnMouseMove(UINT nFlags, CPoint point);
+-    afx_msg UINT OnNcHitTest(CPoint point);
++    afx_msg LRESULT OnNcHitTest(CPoint point);
+ 	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
+ 	//}}AFX_MSG
+     
+diff --git a/Include/Common.Include/XTTipWindow.h b/Include/Common.Include/XTTipWindow.h
+index a5c5762..16b6a9f 100644
+--- a/Include/Common.Include/XTTipWindow.h
++++ b/Include/Common.Include/XTTipWindow.h
+@@ -183,7 +183,7 @@ protected:
+ 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
+     afx_msg void OnKillFocus(CWnd* pNewWnd);
+     afx_msg void OnPaint();
+-    afx_msg void OnTimer(UINT nIDEvent);
++    afx_msg void OnTimer(UINT_PTR nIDEvent);
+ 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
+ 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+ 	afx_msg void OnRButtonDown(UINT nFlags, CPoint point);
+diff --git a/Include/Common.Include/XTTrayIcon.h b/Include/Common.Include/XTTrayIcon.h
+index 4558675..4f2190f 100644
+--- a/Include/Common.Include/XTTrayIcon.h
++++ b/Include/Common.Include/XTTrayIcon.h
+@@ -244,7 +244,7 @@ public:
+ 
+ 	// Ignore:
+ 	//{{AFX_MSG(CXTTrayIcon)
+-	afx_msg void OnTimer(UINT nIDEvent);
++	afx_msg void OnTimer(UINT_PTR nIDEvent);
+ 	afx_msg void OnSettingChange(UINT uFlags, LPCTSTR lpszSection);
+ 	//}}AFX_MSG
+     afx_msg LRESULT OnTaskbarCreated(WPARAM wParam, LPARAM lParam);
+diff --git a/Include/Common.Include/XTWndShadow.h b/Include/Common.Include/XTWndShadow.h
+index 45d7335..0a0e6cd 100644
+--- a/Include/Common.Include/XTWndShadow.h
++++ b/Include/Common.Include/XTWndShadow.h
+@@ -124,9 +124,9 @@ private:
+ 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
+ 	afx_msg void OnPaint();
+ 	afx_msg void OnSize(UINT nType, int cx, int cy);	
+-	afx_msg UINT OnNcHitTest(CPoint point);
++	afx_msg LRESULT OnNcHitTest(CPoint point);
+ 	afx_msg void OnParentPosChanged();
+-	afx_msg void OnTimer(UINT nID);
++	afx_msg void OnTimer(UINT_PTR nID);
+ 
+ 	DECLARE_MESSAGE_MAP();
+ 
+diff --git a/Include/XTControlBar.h b/Include/XTControlBar.h
+index de84f36..b319674 100644
+--- a/Include/XTControlBar.h
++++ b/Include/XTControlBar.h
+@@ -84,7 +84,7 @@ class _XT_EXT_CLASS CXTControlBar : public CControlBar
+ 
+ public:
+ 	// Summary: A delegate to notify when visibility of this control bar changes 
+-	typedef CXTMultiCastDelegate1<bool> NOTEBARVISIBLE;
++	typedef CXTMultiCastDelegate<bool> NOTEBARVISIBLE;
+ 	NOTEBARVISIBLE NoteBarVisible;
+ 		
+ protected:
+diff --git a/Include/XTCustomizeAPI.h b/Include/XTCustomizeAPI.h
+index 10bda4c..451e65a 100644
+--- a/Include/XTCustomizeAPI.h
++++ b/Include/XTCustomizeAPI.h
+@@ -34,15 +34,15 @@ public:
+     CControlBar* m_pBar;         // A control bar that supports customizations.
+ 
+ 	// Summary: Callback for renaming the control bar or NULL if operation is not supported.
+-	typedef CXTDelegate1<const CString&> RENAME;
++	typedef CXTDelegate<void, const CString&> RENAME;
+ 	RENAME Rename;
+ 
+ 	// Summary: Callback for deleting the control bar or NULL if operation is not supported.
+-	typedef CXTDelegate0 REMOVE;
++	typedef CXTDelegate<void> REMOVE;
+ 	REMOVE Remove;
+ 
+ 	// Summary: Callback for resetting the control bar or NULL if operation is not supported.
+-	typedef CXTDelegate0 RESET;
++	typedef CXTDelegate<void> RESET;
+ 	RESET Reset;
+ 
+ 	CXTCustomControlBarInfo()
+@@ -54,7 +54,7 @@ public:
+ };
+ 
+ // Summary: A delegate to store CXTCustomControlBarInfo's
+-typedef CXTDelegate1<CXTCustomControlBarInfo*> STORECUSTOMINFO;
++typedef CXTDelegate<void, CXTCustomControlBarInfo*> STORECUSTOMINFO;
+ 
+ // Summary: A request to create a new customizable control bar
+ class CXTNewCustomBarRequest
+@@ -220,70 +220,70 @@ public:
+ public:
+ 
+ 	// Summary: A delegate to check if the command shall be displayed in the customization dialog.
+-	typedef CXTDelegate1Ret<bool, UINT> ISCUSTCMD;
++	typedef CXTDelegate<bool, UINT> ISCUSTCMD;
+ 	ISCUSTCMD IsCustCmd;
+ 
+ 	// Summary: A delegate to create a new customizable control bar.
+-	typedef CXTDelegate1<CXTNewCustomBarRequest*> CREATEBAR;
++	typedef CXTDelegate<void, CXTNewCustomBarRequest*> CREATEBAR;
+ 	CREATEBAR CreateBar;
+ 
+ 	// Summary: A delegate to properly place newly created customizable control bar.
+-	typedef CXTDelegate2<CFrameWnd*, CControlBar*> PLACEBAR;
++	typedef CXTDelegate<void, CFrameWnd*, CControlBar*> PLACEBAR;
+ 	PLACEBAR PlaceBar;
+ 
+ 	// Summary: A delegate to get info about custom command groups.
+-	typedef CXTMultiCastDelegate1<CXTCustomGroups&> GETCUSTOMGROUPS;
++	typedef CXTMultiCastDelegate<CXTCustomGroups&> GETCUSTOMGROUPS;
+ 	GETCUSTOMGROUPS GetCustomGroups;
+ 
+ 	// Summary: A delegate for collecting all command-to-icon associations.
+-	typedef CXTMultiCastDelegate1<CXTIconMap*> GETICONS;
++	typedef CXTMultiCastDelegate<CXTIconMap*> GETICONS;
+ 	GETICONS GetIcons;
+ 
+ 	// Summary: A delegate for getting info about customizable control bars.
+-	typedef CXTMultiCastDelegate1<const STORECUSTOMINFO&> GETCUSTOMBARINFO;
++	typedef CXTMultiCastDelegate<const STORECUSTOMINFO&> GETCUSTOMBARINFO;
+ 	GETCUSTOMBARINFO GetCustomBarInfo;
+ 
+ 	// Summary: A delegate for resetting tracking state.
+-	typedef CXTMultiCastDelegate0 RESETTRACKING;
++	typedef CXTMultiCastDelegate<> RESETTRACKING;
+ 	RESETTRACKING ResetTracking;
+ 
+ 	// Summary: A delegate to receive notifications on customize mode on/off events.
+-	typedef CXTMultiCastDelegate1<bool> SETCUSTMODE;
++	typedef CXTMultiCastDelegate<bool> SETCUSTMODE;
+ 	SETCUSTMODE SetCustMode;
+ 
+ 	// Summary: A delegate to obtain current drop targets.
+-	typedef CXTMultiCastDelegate1<IXTCustDropSink*> GETTARGETS;
++	typedef CXTMultiCastDelegate<IXTCustDropSink*> GETTARGETS;
+ 	GETTARGETS GetTargets;
+ 
+ 	// Summary: Notifies that a control bar has been hidden/shown.
+-	typedef CXTMultiCastDelegate2<CControlBar*, bool> ONSHOWHIDE;
++	typedef CXTMultiCastDelegate<CControlBar*, bool> ONSHOWHIDE;
+ 	ONSHOWHIDE OnShowHide;
+ 
+ 	// Summary: Notifies that a new customizable bar has been created.
+-	typedef CXTMultiCastDelegate1<CXTCustomControlBarInfo*> ONNEWBAR;
++	typedef CXTMultiCastDelegate<CXTCustomControlBarInfo*> ONNEWBAR;
+ 	ONNEWBAR OnNewBar;
+ 
+ 	// Summary: Notifies that a customizable bar has been renamed.
+-	typedef CXTMultiCastDelegate2<CControlBar*, LPCTSTR> ONBARRENAMED;
++	typedef CXTMultiCastDelegate<CControlBar*, LPCTSTR> ONBARRENAMED;
+ 	ONBARRENAMED OnBarRenamed;
+ 
+ 	// Summary: Notifies that a customizable bar has been destroyed.
+-	typedef CXTMultiCastDelegate1<CControlBar*> ONBARDESTROYED;
++	typedef CXTMultiCastDelegate<CControlBar*> ONBARDESTROYED;
+ 	ONBARDESTROYED OnBarDestroyed;
+ 
+ 	// Summary: Returns a menu handle given its ID (a DWORD).
+-	typedef CXTDelegate1Ret<HMENU, DWORD> GETMENUPOPUP;
++	typedef CXTDelegate<HMENU, DWORD> GETMENUPOPUP;
+ 	GETMENUPOPUP GetMenuPopup;
+ 
+ 	// Summary: Application command removed event, gets ID of the command removed.
+-	typedef CXTMultiCastDelegate1<UINT> ONCMDCHANGE;
++	typedef CXTMultiCastDelegate<UINT> ONCMDCHANGE;
+ 	ONCMDCHANGE OnCmdRemoved;
+ 
+ 	// Returns: false if no data is in the profile.
+ 	// Summary:	A delegate to define operation for persisting toolbars to/from the registry.
+ 	//			Takes a parent frame pointer and a profile name to load from.
+ 	//			Default refers to LoadDynamicBarsImp().
+-	typedef CXTDelegate2Ret<bool, CFrameWnd*, LPCTSTR> PERSISTER;
++	typedef CXTDelegate<bool, CFrameWnd*, LPCTSTR> PERSISTER;
+ 	
+ 	
+ 	PERSISTER LoadDynamicBars; // A delegate to load dynamic custom toolbars from the registry (defaults to LoadDynamicBarsImp()).
+@@ -292,7 +292,7 @@ public:
+ 	// Summary: A delegate to find out if a command is defined in the app.
+ 	//			Takes a command ID, returns true if the command is defined in the app.
+ 	//			Default refers to IsAppCmdImp().
+-	typedef CXTDelegate1Ret<bool, UINT> ISAPPCMD;
++	typedef CXTDelegate<bool, UINT> ISAPPCMD;
+ 	ISAPPCMD IsAppCmd;
+ 
+ 	// Returns:	true if successful, otherwise returns false.
+diff --git a/Include/XTCustomizeSheet.h b/Include/XTCustomizeSheet.h
+index 70eb420..53b0836 100644
+--- a/Include/XTCustomizeSheet.h
++++ b/Include/XTCustomizeSheet.h
+@@ -67,7 +67,7 @@ public:
+ 	//{{AFX_VIRTUAL(CXTCustomizeSheet)
+ 	public:
+ 	virtual BOOL OnInitDialog();
+-	virtual int DoModal();
++	virtual INT_PTR DoModal();
+ 	//}}AFX_VIRTUAL
+ 
+ protected:
+diff --git a/Include/XTDefines.h b/Include/XTDefines.h
+index 07139a1..62a62a4 100644
+--- a/Include/XTDefines.h
++++ b/Include/XTDefines.h
+@@ -1478,19 +1478,25 @@ const UINT XTWM_IDEALSIZECHANGED = (WM_APP + 2534);
+ //////////////////////////////////////////////////////////////////////
+ // Summary: This macro will free the dynamically allocated memory specified by 
+ //			'p' and set its value to NULL. 
++#ifndef SAFE_DELETE
+ #define SAFE_DELETE(p)  if(p) { delete p; p = NULL; }
++#endif
+ #define _delete			SAFE_DELETE			 
+ 
+ //////////////////////////////////////////////////////////////////////
+ // Summary: This macro will free the dynamically allocated memory for an array 
+ //			specified by 'p' and set its value to NULL. 
++#ifndef SAFE_DELETE_AR
+ #define SAFE_DELETE_AR(p)	if(p) { delete [] p; p = NULL; }
+ #define _deleteArray		SAFE_DELETE_AR
++#endif
+ 
+ //////////////////////////////////////////////////////////////////////
+ // Summary: This macro will release the resources for the COM object specified 
+ //			by 'p' and set its value to NULL. 
++#ifndef SAFE_RELEASE
+ #define SAFE_RELEASE(p)		if(p) { (p)->Release(); (p)=NULL; }
++#endif
+  
+ /////////////////////////////////////////////////////////////////////////////
+ // UNICODE support definitions:
+diff --git a/Include/XTDelegate.h b/Include/XTDelegate.h
+index 4d69e6f..de9e583 100644
+--- a/Include/XTDelegate.h
++++ b/Include/XTDelegate.h
+@@ -23,7 +23,7 @@ template <class TCallback>
+ class CXTDelegateBase
+ {
+ public:
+-	typedef TCallback CB;
++	using CB = TCallback;
+ 
+ protected:
+ 
+@@ -41,10 +41,11 @@ public:
+ 		return m_target != 0 && m_cb != 0;
+ 	}
+ 
+-	void Set(CObject* target, CB cb)
++	template<typename F>
++	void Set(CObject* target, F cb)
+ 	{
+ 		m_target = target;
+-		m_cb = cb;
++		m_cb = (CB)cb;
+ 	}
+ 
+ 	bool Remove(CObject* target)
+@@ -71,106 +72,60 @@ public:
+ 
+ };
+ 
+-// Summary: No parameters, void return.
+-class CXTDelegate0 : public CXTDelegateBase<void (CObject::*)()>
++// General delegate template for any number of parameters and typed return.
++template <typename TReturn, typename... TParams>
++class CXTDelegate : public CXTDelegateBase<TReturn(CObject::*)(TParams...)>
+ {
+ public:
+-	CXTDelegate0(CObject* target = 0, CB cb = 0)
+-	: CXTDelegateBase<CB>(target, cb)
+-	{}
+-
+-	void operator () () const
+-	{
+-        if (m_target) {
+-           (m_target->*m_cb)();
+-        }
+-	}
+-};
+-
+-// Summary: One parameter, void return.
+-template <class TParam>
+-class CXTDelegate1 : public CXTDelegateBase<void (CObject::*)(TParam)>
+-{
+-public:
+-	CXTDelegate1(CObject* target = 0, CB cb = 0)
+-	: CXTDelegateBase<CB>(target, cb)
+-	{}
+-
+-	void operator () (TParam param) const
+-	{
+-        if (m_target) {
+-		   (m_target->*m_cb)(param);
+-        }
+-	}
+-};
+-
+-// Summary: One parameter, typed return.
+-template <class TReturn, class TParam>
+-class CXTDelegate1Ret : public CXTDelegateBase<TReturn (CObject::*)(TParam)>
+-{
+-public:
+-	CXTDelegate1Ret(CObject* target = 0, CB cb = 0)
+-	: CXTDelegateBase<CB>(target, cb)
+-	{}
++	using CB = TReturn(CObject::*)(TParams...);
+ 
+-	TReturn operator () (TParam param) const
++	CXTDelegate()
++		: CXTDelegateBase<CB>(nullptr, nullptr)
+ 	{
+-        if (m_target) {
+-            return (m_target->*m_cb)(param);
+-        }
+-        return 0;
+ 	}
+-};
+ 
+-// Summary: Two parameters, void return.
+-template <class TParam1, class TParam2>
+-class CXTDelegate2 : public CXTDelegateBase<void (CObject::*)(TParam1, TParam2)>
+-{
+-public:
+-	CXTDelegate2(CObject* target = 0, CB cb = 0)
+-	: CXTDelegateBase<CB>(target, cb)
++	template<typename F>
++	CXTDelegate(CObject* target = nullptr, F cb = nullptr)
++		: CXTDelegateBase<CB>(target,(CB)cb)
+ 	{}
+ 
+-	void operator () (TParam1 param1, TParam2 param2) const
++	TReturn operator() (TParams... params) const
+ 	{
+-        if (m_target) {
+-           (m_target->*m_cb)(param1, param2);
+-        }
+-	}
+-};
+-
+-// Summary: Two parameters, returns a type.
+-template <class TReturn, class TParam1, class TParam2>
+-class CXTDelegate2Ret : public CXTDelegateBase<TReturn (CObject::*)(TParam1, TParam2)>
+-{
+-public:
+-	CXTDelegate2Ret(CObject* target = 0, CB cb = 0)
+-	: CXTDelegateBase<CB>(target, cb)
+-	{}
+-
+-	TReturn operator () (TParam1 param1, TParam2 param2) const
+-	{
+-        if (m_target) {
+-		    return (m_target->*m_cb)(param1, param2);
+-        }
+-        return 0;
++		if constexpr (std::is_void<TReturn>())
++		{
++			(m_target->*m_cb)(std::forward<TParams>(params)...);
++		}
++		else
++		{
++			return (m_target->*m_cb)(std::forward<TParams>(params)...);
++		}
+ 	}
+ };
+ 
+ // Summary: A multicast delegate.
+-template <class TDelegate>
+-class CXTMultiCastDelegate : public CArray<TDelegate, const TDelegate&>
++template <typename... TParams>
++class CXTMultiCastDelegate
++	: public CArray<CXTDelegate<void, TParams...>, const CXTDelegate<void, TParams...>&>
+ {
+ public:
+-
+ #if _MSC_VER < 1200 // MFC 5.0
+ 	typedef TDelegate DELEGATE;
+ 	typedef DELEGATE::CB CB;
+ #else
+-	typedef typename TDelegate DELEGATE;
+-	typedef typename DELEGATE::CB CB;
++	using DELEGATE = CXTDelegate<void, TParams...>;
++	using ARRAY = CArray<DELEGATE, const DELEGATE&>;
++	using CB = typename DELEGATE::CB;
+ #endif
+ 
++	void operator() (TParams... params) const
++	{
++		for (int i = 0; i < GetSize(); i++)
++		{
++			const DELEGATE& delegate = ElementAt(i);
++			delegate(std::forward<TParams>(params)...);
++		}
++ 	}
++
+ 	// Input:	target - Points to a CObject object.
+ 	// Summary:	Removes all registrations for a target.
+ 	void Remove(CObject* target)
+@@ -198,11 +153,12 @@ public:
+ 	// Input:	target - Points to a CObject object.
+ 	//			cb - delegate
+ 	// Summary:	removes all registrations for a target.
+-	void Remove(CObject* target, CB cb)
++	template<typename F>
++	void Remove(CObject* target, F cb)
+ 	{
+-		for (int i = GetUpperBound(); i >= 0; i--)
++		for (INT_PTR i = GetUpperBound(); i >= 0; i--)
+ 		{
+-			if (ElementAt(i).Remove(target, cb))
++			if (ElementAt(i).Remove(target, (CB)cb))
+ 			{
+ 				RemoveAt(i);
+ 			}
+@@ -214,54 +170,10 @@ public:
+ 	//			cb - delegate.
+ 	// Returns:	Index into array where callback was added.
+ 	// Summary:	Adds new callback.
+-	int Add(CObject* target, CB cb)
++	template<typename F>
++	int Add(CObject* target, F cb)
+ 	{
+-		return CArray<TDelegate, const TDelegate&>::Add(DELEGATE(target, cb));
+-	}
+-};
+-
+-// Summary: No-parameter delegate.
+-class CXTMultiCastDelegate0 : public CXTMultiCastDelegate<CXTDelegate0>
+-{
+-public:
+-	void operator() ()
+-	{
+-		for (int i = 0; i < GetSize(); i++)
+-		{
+-			CXTDelegate0& delegate = ElementAt(i);
+-			delegate();
+-		}
+-	}
+-
+-};
+-
+-// Summary: One parameter delegate.
+-template <class TParam>
+-class CXTMultiCastDelegate1 : public CXTMultiCastDelegate< CXTDelegate1<TParam> >
+-{
+-public:
+-	void operator() (TParam param)
+-	{
+-		for (int i = 0; i < GetSize(); i++)
+-		{
+-			const CXTDelegate1<TParam>& delegate = ElementAt(i);
+-			delegate(param);
+-		}
+-	}
+-};
+-
+-// Summary: Two parameter delegate.
+-template <class TParam1, class TParam2>
+-class CXTMultiCastDelegate2 : public CXTMultiCastDelegate< CXTDelegate2<TParam1, TParam2> >
+-{
+-public:
+-	void operator() (TParam1 param1, TParam2 param2)
+-	{
+-		for (int i = 0; i < GetSize(); i++)
+-		{
+-			const CXTDelegate2<TParam1, TParam2>& delegate = ElementAt(i);
+-			delegate(param1, param2);
+-		}
++		return ARRAY::Add(DELEGATE(target, (CB)cb));
+ 	}
+ };
+ 
+diff --git a/Include/XTDialogBar.h b/Include/XTDialogBar.h
+index 22e721d..218a4a2 100644
+--- a/Include/XTDialogBar.h
++++ b/Include/XTDialogBar.h
+@@ -125,7 +125,6 @@ protected:
+     virtual void OnUpdateCmdUI(CFrameWnd* pTarget, BOOL bDisableIfNoHndler);
+     //}}AFX_VIRTUAL
+ 
+-#ifndef _AFX_NO_OCC_SUPPORT
+ 	//////////////////////////////////////////////////////////////////////    
+ 	// Data and functions necessary for OLE control containment
+     //////////////////////////////////////////////////////////////////////
+@@ -136,13 +135,9 @@ protected:
+ 	virtual BOOL SetOccDialogInfo(
+ 		_AFX_OCC_DIALOG_INFO* pOccDialogInfo);
+ 
+-#endif //!_AFX_NO_OCC_SUPPORT
+-
+     // Ignore:
+ 	//{{AFX_MSG(CXTDialogBar)
+-#ifndef _AFX_NO_OCC_SUPPORT
+     afx_msg LRESULT HandleInitDialog(WPARAM wParam, LPARAM lParam);
+-#endif 
+     afx_msg BOOL OnEraseBkgnd(CDC* pDC);
+     //}}AFX_MSG
+ 
+diff --git a/Include/XTDockBar.h b/Include/XTDockBar.h
+index f1c5994..01d3968 100644
+--- a/Include/XTDockBar.h
++++ b/Include/XTDockBar.h
+@@ -257,7 +257,7 @@ protected:
+ 
+     // Ignore:
+ 	//{{AFX_MSG(CXTDockBar)
+-	afx_msg UINT OnNcHitTest(CPoint point);
++	afx_msg LRESULT OnNcHitTest(CPoint point);
+ 	afx_msg BOOL OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message);
+ 	afx_msg void OnNcLButtonDown(UINT nHitTest, CPoint point);
+ 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
+diff --git a/Include/XTDockWindow.h b/Include/XTDockWindow.h
+index a21369e..5c50341 100644
+--- a/Include/XTDockWindow.h
++++ b/Include/XTDockWindow.h
+@@ -382,7 +382,7 @@ protected:
+ 
+     // Ignore:
+ 	//{{AFX_MSG(CXTDockWindow)
+-    afx_msg UINT OnNcHitTest(CPoint point);
++    afx_msg LRESULT OnNcHitTest(CPoint point);
+     afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
+     afx_msg void OnWindowPosChanged(WINDOWPOS FAR* lpwndpos);
+     afx_msg void OnButtonClose();
+diff --git a/Include/XTGlobal.h b/Include/XTGlobal.h
+index 79ad592..e308194 100644
+--- a/Include/XTGlobal.h
++++ b/Include/XTGlobal.h
+@@ -18,6 +18,16 @@
+ #pragma once
+ #endif // _MSC_VER >= 1000
+ 
++// make backwards compatible defines that are no longer valid for current MFC
++#define CX_BORDER   1
++#define CY_BORDER   1
++#define GWL_WNDPROC		(-4)
++#define GWL_HWNDPARENT	(-8)
++#define GCL_HICONSM		(-34)
++
++#define XTMAX(a,b)    (((a) > (b)) ? (a) : (b))
++#define XTMIN(a,b)    (((a) < (b)) ? (a) : (b))
++
+ //////////////////////////////////////////////////////////////////////
+ // Uncomment this definition if your application uses a resource dll,
+ // and add #include "XTResource.rc" to your resource dll's .rc2 file.
+diff --git a/Include/XTMenuBar.h b/Include/XTMenuBar.h
+index a77456d..1fbbe8f 100644
+--- a/Include/XTMenuBar.h
++++ b/Include/XTMenuBar.h
+@@ -31,7 +31,7 @@ class CXTMenuCustomHandler;
+ //////////////////////////////////////////////////////////////////////
+ // Summary: XT_TRACK_STATE - Enumeration used by CXTMenuBar to determine the current
+ //			state of the menu bar.
+-typedef enum XT_TRACK_STATE
++enum XT_TRACK_STATE
+ {
+ 	TRACK_NONE = 0, // Normal, not tracking anything.
+ 	TRACK_BUTTON,   // Tracking buttons (F10/Alt mode).
+@@ -565,7 +565,7 @@ protected:
+ 
+ 	virtual XT_TRACK_STATE GetTrackingState(int& iPopup);
+ 	virtual void OnInitMenuPopup();
+-	virtual int OnToolHitTest(CPoint point, TOOLINFO* pTI) const;
++	virtual LRESULT OnToolHitTest(CPoint point, TOOLINFO* pTI) const;
+ 	virtual void OnBarStyleChange(DWORD dwOldStyle,  DWORD dwNewStyle);
+ 	virtual bool HasCmdHandlers(CWnd* pWnd);
+ 
+@@ -584,7 +584,7 @@ protected:
+ 	afx_msg BOOL OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message);
+ 	afx_msg void OnSettingChange(UINT uFlags, LPCTSTR lpszSection);
+ 	afx_msg void OnNcCalcSize(BOOL bCalcValidRects, NCCALCSIZE_PARAMS FAR* lpncsp);
+-	afx_msg UINT OnNcHitTest(CPoint point);
++	afx_msg LRESULT OnNcHitTest(CPoint point);
+ 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
+ 	afx_msg void OnDestroy();
+ 	//}}AFX_MSG
+diff --git a/Include/XTReBar.h b/Include/XTReBar.h
+index f6f422b..ee74a4c 100644
+--- a/Include/XTReBar.h
++++ b/Include/XTReBar.h
+@@ -175,7 +175,7 @@ public:
+ 	//{{AFX_VIRTUAL(CXTReBar)
+ 	public:
+ 	virtual void OnUpdateCmdUI(CFrameWnd* pTarget,BOOL bDisableIfNoHndler);
+-	virtual int OnToolHitTest(CPoint point,TOOLINFO* pTI) const;
++	virtual LRESULT OnToolHitTest(CPoint point,TOOLINFO* pTI) const;
+ 	virtual CSize CalcFixedLayout(BOOL bStretch,BOOL bHorz);
+ 	virtual CSize CalcDynamicLayout(int nLength,DWORD nMode);
+ 	protected:
+diff --git a/Include/XTToolBar.h b/Include/XTToolBar.h
+index ca2dc1b..bd4249f 100644
+--- a/Include/XTToolBar.h
++++ b/Include/XTToolBar.h
+@@ -1272,7 +1272,7 @@ public:
+ 	//			OnToolHitTest to provide different information than the default provides.
+ 	//			See TOOLINFO in the Win32 SDK Programmer’s Reference for more information
+ 	//			about the structure. 
+-    virtual int OnToolHitTest(CPoint point,TOOLINFO* pTI) const;
++    virtual INT_PTR OnToolHitTest(CPoint point,TOOLINFO* pTI) const;
+ 
+ 	// Input:	pTarget - A pointer to the main frame window of the application. This pointer
+ 	//			is used for routing update messages.
+@@ -1435,7 +1435,7 @@ protected:
+ 
+     // Ignore:
+ 	//{{AFX_MSG(CXTToolBar)
+-	afx_msg UINT OnNcHitTest(CPoint point);
++	afx_msg LRESULT OnNcHitTest(CPoint point);
+ 	afx_msg void OnNcCalcSize(BOOL bCalcValidRects, NCCALCSIZE_PARAMS FAR* lpncsp);
+ 	afx_msg void OnWindowPosChanging(WINDOWPOS FAR* lpwndpos);
+ 	afx_msg void OnSysColorChange();
+diff --git a/Src/Common.Src/XTButton.cpp b/Src/Common.Src/XTButton.cpp
+index f7fcef8..00b586e 100644
+--- a/Src/Common.Src/XTButton.cpp
++++ b/Src/Common.Src/XTButton.cpp
+@@ -94,7 +94,7 @@ void CXTButton::OnLButtonUp(UINT nFlags, CPoint point)
+ 	CButton::OnLButtonUp(nFlags, point);
+ }
+ 
+-void CXTButton::OnTimer(UINT nIDEvent) 
++void CXTButton::OnTimer(UINT_PTR nIDEvent)
+ {
+ 	if (nIDEvent == 1)
+ 	{
+diff --git a/Src/Common.Src/XTCaptionPopupWnd.cpp b/Src/Common.Src/XTCaptionPopupWnd.cpp
+index dfed197..d4fc202 100644
+--- a/Src/Common.Src/XTCaptionPopupWnd.cpp
++++ b/Src/Common.Src/XTCaptionPopupWnd.cpp
+@@ -176,7 +176,7 @@ void CXTCaptionPopupWnd::OnPaint()
+ 	m_Caption.Invalidate();
+ }
+ 
+-void CXTCaptionPopupWnd::OnTimer(UINT nIDEvent) 
++void CXTCaptionPopupWnd::OnTimer(UINT_PTR nIDEvent)
+ {
+ 	UNUSED_ALWAYS( nIDEvent );
+ 
+diff --git a/Src/Common.Src/XTCheckListBox.cpp b/Src/Common.Src/XTCheckListBox.cpp
+index e188b9b..794c8bd 100644
+--- a/Src/Common.Src/XTCheckListBox.cpp
++++ b/Src/Common.Src/XTCheckListBox.cpp
+@@ -365,7 +365,7 @@ void CXTCheckListBox::PreMeasureItem(LPMEASUREITEMSTRUCT lpMeasureItemStruct)
+ 	
+ 	MeasureItem(&measureItem);
+ 	
+-	lpMeasureItemStruct->itemHeight = max(measureItem.itemHeight,(UINT) cyItem);
++	lpMeasureItemStruct->itemHeight = XTMAX(measureItem.itemHeight,(UINT) cyItem);
+ 	lpMeasureItemStruct->itemWidth = measureItem.itemWidth;
+ }
+ 
+@@ -459,7 +459,7 @@ int CXTCheckListBox::CalcMinimumItemHeight()
+ 		dc.SelectObject(pOldFont);
+ 		
+ 		m_cyText = tm.tmHeight;
+-		nResult = max(m_checkListState.m_sizeCheck.cy + 1, m_cyText);
++		nResult = XTMAX(m_checkListState.m_sizeCheck.cy + 1, m_cyText);
+ 	}
+ 	else
+ 	{
+@@ -870,6 +870,6 @@ LRESULT CXTCheckListBox::OnLBSetItemData(WPARAM wParam, LPARAM lParam)
+ 
+ LRESULT CXTCheckListBox::OnLBSetItemHeight(WPARAM wParam, LPARAM lParam)
+ {
+-	int nHeight = max(CalcMinimumItemHeight(),(int)LOWORD(lParam));
++	int nHeight = XTMAX(CalcMinimumItemHeight(),(int)LOWORD(lParam));
+ 	return DefWindowProc(LB_SETITEMHEIGHT, wParam, MAKELPARAM(nHeight,0));
+ }
+diff --git a/Src/Common.Src/XTColorSelectorCtrl.cpp b/Src/Common.Src/XTColorSelectorCtrl.cpp
+index 8f4e9b1..70a4782 100644
+--- a/Src/Common.Src/XTColorSelectorCtrl.cpp
++++ b/Src/Common.Src/XTColorSelectorCtrl.cpp
+@@ -964,7 +964,7 @@ void CXTColorSelectorCtrl::SelectColor(COLORREF clr)
+ }
+ 
+ 
+-UINT CXTColorSelectorCtrl::OnNcHitTest(CPoint point) 
++INT_PTR CXTColorSelectorCtrl::OnNcHitTest(CPoint point)
+ {
+ 	// If we have a valid tooltip pointer, bring the tooltip control
+ 	// to the top of the Z-order.
+diff --git a/Src/Common.Src/XTEditListBox.cpp b/Src/Common.Src/XTEditListBox.cpp
+index 1a67181..70cff82 100644
+--- a/Src/Common.Src/XTEditListBox.cpp
++++ b/Src/Common.Src/XTEditListBox.cpp
+@@ -499,7 +499,7 @@ void CXTFontListBox::InitControl()
+ 		XT_LOGFONT& lf = fontList.GetAt( pos );
+ 		int iIndex = AddString( lf.lfFaceName );
+ 
+-		SetItemData( iIndex, ( DWORD )&lf );
++		SetItemData( iIndex, ( DWORD_PTR )&lf );
+ 	}
+ }
+ 
+diff --git a/Src/Common.Src/XTFlatComboBox.cpp b/Src/Common.Src/XTFlatComboBox.cpp
+index 3c97bfc..bda4d9c 100644
+--- a/Src/Common.Src/XTFlatComboBox.cpp
++++ b/Src/Common.Src/XTFlatComboBox.cpp
+@@ -153,7 +153,7 @@ void CXTFlatComboBox::OnLButtonUp(UINT nFlags, CPoint point)
+     CComboBox::OnLButtonUp(nFlags, point);
+ }
+ 
+-void CXTFlatComboBox::OnTimer(UINT nIDEvent) 
++void CXTFlatComboBox::OnTimer(UINT_PTR nIDEvent)
+ {
+     if (EVENT_TIMER == nIDEvent)
+     {
+@@ -820,7 +820,7 @@ void CXTFlatEdit::OnLButtonUp(UINT nFlags, CPoint point)
+ 	CXTEdit::OnLButtonUp(nFlags, point);
+ }
+ 
+-void CXTFlatEdit::OnTimer(UINT nIDEvent) 
++void CXTFlatEdit::OnTimer(UINT_PTR nIDEvent)
+ {
+     if (EVENT_TIMER == nIDEvent)
+     {
+diff --git a/Src/Common.Src/XTFontCombo.cpp b/Src/Common.Src/XTFontCombo.cpp
+index 8173bee..b6468ad 100644
+--- a/Src/Common.Src/XTFontCombo.cpp
++++ b/Src/Common.Src/XTFontCombo.cpp
+@@ -205,7 +205,7 @@ void CXTFontCombo::InitControl(LPCTSTR lpszFaceName, UINT nWidth/*=0*/, BOOL bEn
+ 		XT_LOGFONT& lf = fontList.GetAt( pos );
+ 		int iIndex = AddString( lf.lfFaceName );
+ 
+-		SetItemData( iIndex, ( DWORD )&lf );
++		SetItemData( iIndex, ( DWORD_PTR )&lf );
+ 	}
+ 
+     if ( lpszFaceName && _tcslen( lpszFaceName ) )
+diff --git a/Src/Common.Src/XTHyperLink.cpp b/Src/Common.Src/XTHyperLink.cpp
+index cd8d186..bd1c49f 100644
+--- a/Src/Common.Src/XTHyperLink.cpp
++++ b/Src/Common.Src/XTHyperLink.cpp
+@@ -84,7 +84,7 @@ BOOL CXTHyperLink::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
+ 	return CStatic::OnSetCursor(pWnd, nHitTest, message);
+ }
+ 
+-UINT CXTHyperLink::OnNcHitTest(CPoint point) 
++LRESULT CXTHyperLink::OnNcHitTest(CPoint point)
+ {
+ 	UNUSED_ALWAYS(point);
+ 	return HTCLIENT;
+@@ -218,7 +218,7 @@ void CXTHyperLink::OnMouseMove(UINT nFlags, CPoint point)
+  	CStatic::OnMouseMove(nFlags, point);
+ }
+ 
+-void CXTHyperLink::OnTimer(UINT nIDEvent) 
++void CXTHyperLink::OnTimer(UINT_PTR nIDEvent) 
+ {
+ 	if (IsTextControl())
+ 	{
+@@ -285,7 +285,7 @@ BOOL CXTHyperLink::OnClicked()
+ 	{
+ 		if ( m_bShellExec )
+ 		{
+-			int iResult = ( int )GotoURL( m_strLink, SW_SHOW );
++			UINT_PTR iResult = (UINT_PTR)GotoURL( m_strLink, SW_SHOW );
+ 			m_bVisited = ( iResult > HINSTANCE_ERROR );
+ 
+ 			return TRUE; // handled message here
+diff --git a/Src/Common.Src/XTOutBarCtrl.cpp b/Src/Common.Src/XTOutBarCtrl.cpp
+index f5d8d7f..c973cba 100644
+--- a/Src/Common.Src/XTOutBarCtrl.cpp
++++ b/Src/Common.Src/XTOutBarCtrl.cpp
+@@ -28,7 +28,7 @@
+ static char THIS_FILE[] = __FILE__;
+ #endif
+ 
+-typedef enum XT_RCOB
++enum XT_RCOB
+ {
+     RC_OB_ICON = 1,
+     RC_OB_LABEL,
+@@ -575,7 +575,7 @@ void CXTOutBarCtrl::ModifyFlag(const DWORD& dwRemove, const DWORD& dwAdd, const
+     }
+ }
+ 
+-void CXTOutBarCtrl::OnTimer(UINT nIDEvent) 
++void CXTOutBarCtrl::OnTimer(UINT_PTR nIDEvent) 
+ {
+     if (nIDEvent == 1)
+     {
+diff --git a/Src/Common.Src/XTOutlookBar.cpp b/Src/Common.Src/XTOutlookBar.cpp
+index 75b2041..17f3273 100644
+--- a/Src/Common.Src/XTOutlookBar.cpp
++++ b/Src/Common.Src/XTOutlookBar.cpp
+@@ -80,7 +80,7 @@ void CXTOutlookBar::OnLButtonUp(UINT nFlags, CPoint point)
+ 
+ // Sets the highlight flag based on cursor position.
+ 
+-void CXTOutlookBar::OnTimer(UINT /*nIDEvent*/) 
++void CXTOutlookBar::OnTimer(UINT_PTR /*nIDEvent*/)
+ {
+     BOOL   bOutSide;
+     CRect  rItem;
+diff --git a/Src/Common.Src/XTShellPidl.cpp b/Src/Common.Src/XTShellPidl.cpp
+index 8307dd1..1e8183c 100644
+--- a/Src/Common.Src/XTShellPidl.cpp
++++ b/Src/Common.Src/XTShellPidl.cpp
+@@ -287,7 +287,7 @@ LPITEMIDLIST CXTShellPidl::GetFullyQualPidl(LPSHELLFOLDER lpsf, LPITEMIDLIST lpi
+ 
+ #if !defined( _UNICODE )
+ 	::MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, szBuff,
+-		-1, (USHORT *)szOleChar, sizeof(szOleChar));
++		-1, (LPWSTR)szOleChar, sizeof(szOleChar));
+ #else
+ 	::_tcscpy(szOleChar, szBuff);
+ #endif
+@@ -320,6 +320,8 @@ void CXTShellPidl::OnShowContextMenu(int idCmd, CMINVOKECOMMANDINFO& cmi)
+ 	UNREFERENCED_PARAMETER(cmi);
+ }
+ 
++#define GWL_WNDPROC         (-4)
++
+ BOOL CXTShellPidl::ShowContextMenu(HWND hwnd, LPSHELLFOLDER lpsfParent, LPCITEMIDLIST *lpi, int nCount, LPPOINT lppt)
+ {
+     LPCONTEXTMENU       lpcm;
+@@ -347,7 +349,7 @@ BOOL CXTShellPidl::ShowContextMenu(HWND hwnd, LPSHELLFOLDER lpsfParent, LPCITEMI
+ 				if(cmType > 1)
+                 {
+ 					  m_pOldWndProc = (WNDPROC)
+-						 SetWindowLong(hwnd, GWL_WNDPROC, (DWORD)HookWndProc);
++						  SetWindowLongPtr(hwnd, GWL_WNDPROC, (DWORD64)HookWndProc);
+ 					  m_pIContext2 = (LPCONTEXTMENU2)lpcm; // cast ok for ICMv3
+ 				}
+ 				else
+@@ -358,7 +360,7 @@ BOOL CXTShellPidl::ShowContextMenu(HWND hwnd, LPSHELLFOLDER lpsfParent, LPCITEMI
+ 					lppt->x, lppt->y, 0, hwnd, NULL);
+ 			    
+                 if(m_pOldWndProc) // restore old wndProc
+-				   SetWindowLong(hwnd, GWL_WNDPROC, (DWORD)m_pOldWndProc);
++					SetWindowLongPtr(hwnd, GWL_WNDPROC, (DWORD64)m_pOldWndProc);
+ 
+ 				if (idCmd != 0)
+ 				{
+diff --git a/Src/Common.Src/XTShellTreeCtrl.cpp b/Src/Common.Src/XTShellTreeCtrl.cpp
+index 8d84716..9296148 100644
+--- a/Src/Common.Src/XTShellTreeCtrl.cpp
++++ b/Src/Common.Src/XTShellTreeCtrl.cpp
+@@ -631,7 +631,7 @@ void CXTShellTreeCtrl::OnSelchanged(NMHDR* pNMHDR, LRESULT* pResult)
+ 					
+ 					pComboBoxEx->InsertItem(0, strFolderPath, 0, nImage, nImage);
+ 					pComboBoxEx->SetCurSel(0);
+-					pComboBoxEx->SetItemData(0, (DWORD)(HTREEITEM)hti);
++					pComboBoxEx->SetItemData(0, (DWORD_PTR)(HTREEITEM)hti);
+ 				}
+ 			}
+ 			else if (m_pComboBox->IsKindOf(RUNTIME_CLASS(CComboBox)))
+@@ -647,7 +647,7 @@ void CXTShellTreeCtrl::OnSelchanged(NMHDR* pNMHDR, LRESULT* pResult)
+ 					
+ 					pComboBox->InsertString(0, strFolderPath);
+ 					pComboBox->SetCurSel(0);
+-					pComboBox->SetItemData(0, (DWORD)(HTREEITEM)hti);
++					pComboBox->SetItemData(0, (DWORD_PTR)(HTREEITEM)hti);
+ 				}
+ 				else {
+ 					pComboBox->SetCurSel(nFound);
+diff --git a/Src/Common.Src/XTShellTreeView.cpp b/Src/Common.Src/XTShellTreeView.cpp
+index a627e73..c4eb691 100644
+--- a/Src/Common.Src/XTShellTreeView.cpp
++++ b/Src/Common.Src/XTShellTreeView.cpp
+@@ -629,7 +629,7 @@ void CXTShellTreeView::OnSelchanged(NMHDR* pNMHDR, LRESULT* pResult)
+ 					
+ 					pComboBoxEx->InsertItem(0, strFolderPath, 0, nImage, nImage);
+ 					pComboBoxEx->SetCurSel(0);
+-					pComboBoxEx->SetItemData(0, (DWORD)(HTREEITEM)hti);
++					pComboBoxEx->SetItemData(0, (DWORD_PTR)(HTREEITEM)hti);
+ 				}
+ 			}
+ 			else if (m_pComboBox->IsKindOf(RUNTIME_CLASS(CComboBox)))
+@@ -645,7 +645,7 @@ void CXTShellTreeView::OnSelchanged(NMHDR* pNMHDR, LRESULT* pResult)
+ 					
+ 					pComboBox->InsertString(0, strFolderPath);
+ 					pComboBox->SetCurSel(0);
+-					pComboBox->SetItemData(0, (DWORD)(HTREEITEM)hti);
++					pComboBox->SetItemData(0, (DWORD_PTR)(HTREEITEM)hti);
+ 				}
+ 				else {
+ 					pComboBox->SetCurSel(nFound);
+diff --git a/Src/Common.Src/XTSplitterWnd.cpp b/Src/Common.Src/XTSplitterWnd.cpp
+index fcc16cc..3c9f7ae 100644
+--- a/Src/Common.Src/XTSplitterWnd.cpp
++++ b/Src/Common.Src/XTSplitterWnd.cpp
+@@ -738,7 +738,7 @@ void CXTSplitterWnd::SetSplitterStyle(DWORD dwxStyle)
+ 	}
+ }
+ 
+-UINT CXTSplitterWnd::OnNcHitTest(CPoint point) 
++LRESULT CXTSplitterWnd::OnNcHitTest(CPoint point) 
+ {
+ 	// If XT_SPLIT_NOSIZE style is defined, just return a border
+ 	// hit so can at least activate the app if needed.
+diff --git a/Src/Common.Src/XTTabCtrlButtons.cpp b/Src/Common.Src/XTTabCtrlButtons.cpp
+index 7f760ac..c98767c 100644
+--- a/Src/Common.Src/XTTabCtrlButtons.cpp
++++ b/Src/Common.Src/XTTabCtrlButtons.cpp
+@@ -442,7 +442,7 @@ void CXTTabCtrlButtons::SubclassTabButtons(CWnd* pWnd)
+ void CXTTabCtrlButtons::OnWindowPosChanged(WINDOWPOS* lpwndpos)
+ {
+ 	CWnd::OnWindowPosChanged(lpwndpos);
+-	static bOnWindowPosChanged = FALSE;
++	static int bOnWindowPosChanged = FALSE;
+ 
+ 	if (m_bShow && !bOnWindowPosChanged)
+ 	{
+diff --git a/Src/Common.Src/XTTipWindow.cpp b/Src/Common.Src/XTTipWindow.cpp
+index 498f1a0..52d9e74 100644
+--- a/Src/Common.Src/XTTipWindow.cpp
++++ b/Src/Common.Src/XTTipWindow.cpp
+@@ -498,7 +498,7 @@ void CXTTipWindow::OnPaint()
+ /* OnTimer
+  * ----------------------------------------------------------------------------
+  */
+-void CXTTipWindow::OnTimer(UINT nIDEvent) 
++void CXTTipWindow::OnTimer(UINT_PTR nIDEvent) 
+ {
+ 	if (m_nElapseTimerEventID == nIDEvent)
+ 	{
+diff --git a/Src/Common.Src/XTTrayIcon.cpp b/Src/Common.Src/XTTrayIcon.cpp
+index 62964a6..311d114 100644
+--- a/Src/Common.Src/XTTrayIcon.cpp
++++ b/Src/Common.Src/XTTrayIcon.cpp
+@@ -399,7 +399,7 @@ void CXTTrayIcon::GetDefaultMenuItem(UINT& uItem, bool& bByPos)
+ /////////////////////////////////////////////////////////////////////////////
+ // CXTTrayIcon message handlers
+ 
+-void CXTTrayIcon::OnTimer(UINT nIDEvent) 
++void CXTTrayIcon::OnTimer(UINT_PTR nIDEvent)
+ {
+ 	// Update the tray icon and tooltip text.
+     if (nIDEvent == m_nIDEvent)
+diff --git a/Src/Common.Src/XTWindowList.cpp b/Src/Common.Src/XTWindowList.cpp
+index dd67eb3..ff39888 100644
+--- a/Src/Common.Src/XTWindowList.cpp
++++ b/Src/Common.Src/XTWindowList.cpp
+@@ -186,7 +186,7 @@ void CXTWindowList::InsertMDIChild(CMDIChildWnd* pMDIChildWnd)
+ 	CString strWindowText = GetChildWndText(pMDIChildWnd->GetSafeHwnd());
+ 	
+ 	int iIndex = m_lboxWindows.AddString(strWindowText);
+-	m_lboxWindows.SetItemData(iIndex, (DWORD)pMDIChildWnd->GetSafeHwnd());
++	m_lboxWindows.SetItemData(iIndex, (DWORD_PTR)pMDIChildWnd->GetSafeHwnd());
+ }
+ 
+ void CXTWindowList::FillMDIWindowList()
+diff --git a/Src/Common.Src/XTWndHook.cpp b/Src/Common.Src/XTWndHook.cpp
+index 17d0c53..6e0ba76 100644
+--- a/Src/Common.Src/XTWndHook.cpp
++++ b/Src/Common.Src/XTWndHook.cpp
+@@ -151,9 +151,9 @@ void CXTWindowMap::Add(HWND hWnd, CXTWndHook* pXTWndHook)
+ 	// If this is the first hook added, subclass the window
+ 	if (pXTWndHook->m_pNextHook==NULL)
+ 	{
+-		pXTWndHook->m_pOldWndProc = (WNDPROC)GetWindowLong(
++		pXTWndHook->m_pOldWndProc = (WNDPROC)GetWindowLongPtr(
+ 			hWnd, GWL_WNDPROC);
+-		SetWindowLong(hWnd, GWL_WNDPROC, (DWORD)HookWndProc);
++		SetWindowLongPtr(hWnd, GWL_WNDPROC, (DWORD64)HookWndProc);
+ 	}
+ 	
+ 	// just copy wndproc from next hook
+@@ -181,7 +181,7 @@ void CXTWindowMap::Remove(CXTWndHook* pUnHook)
+ 		// This is the last hook for this window: restore wnd proc
+ 		else {
+ 			RemoveKey(hWnd);
+-			SetWindowLong(hWnd, GWL_WNDPROC, (DWORD)pHook->m_pOldWndProc);
++			SetWindowLongPtr(hWnd, GWL_WNDPROC, (DWORD64)pHook->m_pOldWndProc);
+ 		}
+ 	}
+ 	else
+diff --git a/Src/Common.Src/XTWndShadow.cpp b/Src/Common.Src/XTWndShadow.cpp
+index d584030..5a1240f 100644
+--- a/Src/Common.Src/XTWndShadow.cpp
++++ b/Src/Common.Src/XTWndShadow.cpp
+@@ -236,7 +236,7 @@ void CXTShadowWnd::OnParentPosChanged()
+ 	}
+ }
+ 
+-void CXTShadowWnd::OnTimer(UINT nID)
++void CXTShadowWnd::OnTimer(UINT_PTR nID)
+ {
+ 	if (nID == TID_DRAWSHADOW)
+ 	{	
+@@ -288,9 +288,9 @@ BOOL CXTShadowWnd::Create(BOOL bHoriz, CRect rcWindow)
+ 	return TRUE;
+ }
+ 
+-UINT CXTShadowWnd::OnNcHitTest(CPoint)
++LRESULT CXTShadowWnd::OnNcHitTest(CPoint)
+ {
+-	return (UINT)HTTRANSPARENT;
++	return (LRESULT)HTTRANSPARENT;
+ }
+ 
+ void CXTShadowWnd::OnPaint()
+diff --git a/Src/XTAccelManager.cpp b/Src/XTAccelManager.cpp
+index fb33a4a..73a7708 100644
+--- a/Src/XTAccelManager.cpp
++++ b/Src/XTAccelManager.cpp
+@@ -772,7 +772,7 @@ void CXTAccelManager::GetCategoryList(CComboBox& comboCategory)
+     {
+         XT_CATEGORY category = m_comboCategoryList.GetAt( pos );
+         int iIndex = comboCategory.AddString( category.strCategory );
+-        comboCategory.SetItemData( iIndex, ( DWORD )( HMENU )category.hSubMenu );
++        comboCategory.SetItemData( iIndex, (DWORD_PTR)( HMENU )category.hSubMenu );
+     }
+ }
+ 
+diff --git a/Src/XTCoolMenu.cpp b/Src/XTCoolMenu.cpp
+index 427433c..6ccca4d 100644
+--- a/Src/XTCoolMenu.cpp
++++ b/Src/XTCoolMenu.cpp
+@@ -1992,7 +1992,7 @@ BOOL CXTCoolMenu::RestoreMenuItems(CMenu* pMenu)
+ 		info.fMask      = MIIM_SUBMENU | MIIM_DATA | MIIM_ID | MIIM_TYPE | MIIM_STATE;
+ 		info.dwTypeData = szItemName;
+ 		info.cch        = _countof(szItemName);
+-		info.dwItemData = (DWORD)pItemData;
++		info.dwItemData = (UINT_PTR)pItemData;
+ 		info.fState     = pItemData->m_dwState;
+ 		info.fType      = pItemData->m_dwType;
+ 		info.wID        = pItemData->m_commandID;
+@@ -2087,7 +2087,7 @@ void CXTCoolMenu::ConvertMenu(CMenu* pMenu, BOOL bHasButtons)
+ 					if (IsItemHidden(info.wID) && m_bIntelligent && IsIntelligentModeAllowed())
+ 						pItemData->m_dwHideType = MFT_HIDDEN;
+ 
+-					info.dwItemData	   = (DWORD)pItemData;
++					info.dwItemData	   = (UINT_PTR)pItemData;
+ 					info.fMask		  |= MIIM_DATA;
+ 
+ 					// This will ensure that memory is de-allocated.
+@@ -2212,7 +2212,7 @@ BOOL CXTCoolMenu::UpdateChevronItem(CMenu* pMenu, BOOL bRemove)
+ 		
+ 		m_itemList.AddTail(pItemData);
+ 
+-		info.dwItemData	= (DWORD)pItemData;
++		info.dwItemData	= (UINT_PTR)pItemData;
+ 		info.fType     |= MFT_OWNERDRAW;
+ 		info.fMask		= MIIM_DATA | MIIM_TYPE;
+ 
+@@ -2224,7 +2224,7 @@ BOOL CXTCoolMenu::UpdateChevronItem(CMenu* pMenu, BOOL bRemove)
+ 	return bChanged;
+ }
+ 
+-LRESULT CXTCoolMenu::OnMenuChar(UINT nChar, UINT nFlags, CMenu* pMenu)
++LONG CXTCoolMenu::OnMenuChar(UINT nChar, UINT nFlags, CMenu* pMenu)
+ {
+ 	UNUSED_ALWAYS(nFlags);
+ 
+diff --git a/Src/XTCustomToolBar.cpp b/Src/XTCustomToolBar.cpp
+index 33c763f..e8a65ac 100644
+--- a/Src/XTCustomToolBar.cpp
++++ b/Src/XTCustomToolBar.cpp
+@@ -57,8 +57,8 @@ void CXTCustomToolBar::GetCustomBarInfo(CXTCustomControlBarInfo* pInfo)
+ {
+ 	CXTToolBar::GetCustomBarInfo(pInfo);
+ 	pInfo->m_bDynamic = true;
+-	pInfo->Rename = RENAME(this, RENAME::CB(RenameCustomBar));	
+-	pInfo->Remove = REMOVE(this, REMOVE::CB(DeleteCustomBar));
++	pInfo->Rename = RENAME(this, &CXTCustomToolBar::RenameCustomBar);	
++	pInfo->Remove = REMOVE(this, &CXTCustomToolBar::DeleteCustomBar);
+ }
+ 
+ void CXTCustomToolBar::RenameCustomBar(const CString& strNewName)
+diff --git a/Src/XTCustomizeAPI.cpp b/Src/XTCustomizeAPI.cpp
+index 713fa19..f6f0129 100644
+--- a/Src/XTCustomizeAPI.cpp
++++ b/Src/XTCustomizeAPI.cpp
+@@ -163,12 +163,12 @@ CXTCustomizeConnection::CXTCustomizeConnection()
+ , m_bCustMode(false)
+ , m_bEnableCmdUI(false)
+ {
+-	IsCustCmd.Set(this, ISCUSTCMD::CB(IsCustCmdImp));
+-	CreateBar.Set(this, CREATEBAR::CB(CreateBarImp));
+-	PlaceBar.Set(this, PLACEBAR::CB(PlaceBarImp));
+-	LoadDynamicBars.Set(this, PERSISTER::CB(LoadDynamicBarsImp));
+-	SaveDynamicBars.Set(this, PERSISTER::CB(SaveDynamicBarsImp));
+-	SetCustMode.Add(this, SETCUSTMODE::CB(OnSetCustMode));
++	IsCustCmd.Set(this, &CXTCustomizeConnection::IsCustCmdImp);
++	CreateBar.Set(this, &CXTCustomizeConnection::CreateBarImp);
++	PlaceBar.Set(this, &CXTCustomizeConnection::PlaceBarImp);
++	LoadDynamicBars.Set(this, &CXTCustomizeConnection::LoadDynamicBarsImp);
++	SaveDynamicBars.Set(this, &CXTCustomizeConnection::SaveDynamicBarsImp);
++	SetCustMode.Add(this, &CXTCustomizeConnection::OnSetCustMode);
+ } 
+ 
+ // collects objects scheduled for deletion
+@@ -651,7 +651,7 @@ public:
+ 	void Process(LPCTSTR lpszProfileName)
+ 	{
+ 		// retrieve dynamic bars
+-		connection->GetCustomBarInfo(STORECUSTOMINFO(this, STORECUSTOMINFO::CB(StoreCustomInfo)));
++		connection->GetCustomBarInfo(STORECUSTOMINFO(this, &CXTCustomBarSaver::StoreCustomInfo));
+ 
+ 		if (bars.GetSize() == 0)
+ 		{
+diff --git a/Src/XTCustomizePage.cpp b/Src/XTCustomizePage.cpp
+index 2b648dc..ff7f69a 100644
+--- a/Src/XTCustomizePage.cpp
++++ b/Src/XTCustomizePage.cpp
+@@ -145,14 +145,14 @@ BOOL CXTCustToolBarPage::OnInitDialog()
+ 	// collect info about bars subject to customization, do initial update
+ 	m_infos.RemoveAll();
+ 	CXTCustomizeConnection* connection = CXTCustomizeConnection::GetInstance();
+-	connection->GetCustomBarInfo(STORECUSTOMINFO(this, STORECUSTOMINFO::CB(StoreInfo)));
++	connection->GetCustomBarInfo(STORECUSTOMINFO(this, &CXTCustToolBarPage::StoreInfo));
+ 	SetSelectItem();
+ 
+ 	// listen to specific events
+-	connection->OnNewBar.Add(this, ONNEWBAR::CB(StoreNewInfo));
+-	connection->OnShowHide.Add(this, ONSHOWHIDE::CB(OnShowHideBar));
+-	connection->OnBarRenamed.Add(this, ONBARRENAMED::CB(OnBarRenamed));
+-	connection->OnBarDestroyed.Add(this, ONBARDESTROYED::CB(OnBarDestroyed));
++	connection->OnNewBar.Add(this, &CXTCustToolBarPage::StoreNewInfo);
++	connection->OnShowHide.Add(this, &CXTCustToolBarPage::OnShowHideBar);
++	connection->OnBarRenamed.Add(this, &CXTCustToolBarPage::OnBarRenamed);
++	connection->OnBarDestroyed.Add(this, &CXTCustToolBarPage::OnBarDestroyed);
+ 
+ 	SetResize(XT_IDC_LBOX_CHECK, SZ_TOP_LEFT,   SZ_BOTTOM_RIGHT);
+ 	SetResize(XT_IDC_BTN_NEW,    SZ_TOP_RIGHT,  SZ_TOP_RIGHT);
+@@ -417,7 +417,7 @@ CXTCustCommandsPage::CXTCustCommandsPage(CXTCustomizeContext* context)
+ 	//}}AFX_DATA_INIT
+ 
+ 	CXTCustomizeConnection* connection = CXTCustomizeConnection::GetInstance();
+-	connection->OnCmdRemoved.Add(this, ONCMDCHANGE::CB(OnCmdRemoved));
++	connection->OnCmdRemoved.Add(this, &CXTCustCommandsPage::OnCmdRemoved);
+ 
+     RevertResourceContext();
+ }
+@@ -1351,7 +1351,7 @@ void CXTCustTools::OnNewItem()
+ 
+ 		pTool->uCmdID = 0;
+ 
+-		m_lboxToolsList.SetItemData( iItem, ( DWORD )pTool );
++		m_lboxToolsList.SetItemData( iItem, ( DWORD_PTR )pTool );
+ 		m_lboxToolsList.SetCurSel( iItem );
+ 
+ 	    m_strToolsDir = pTool->szDir;
+@@ -1463,7 +1463,7 @@ void CXTCustTools::UpdateToolsList()
+ 		pNewTool->uCmdID = pOldTool->uCmdID;
+         
+         m_arTools.AddTail( pNewTool );
+-        m_lboxToolsList.SetItemData( i, ( DWORD )pNewTool );
++        m_lboxToolsList.SetItemData( i, (DWORD_PTR)pNewTool );
+         
+         POSITION pos = m_arTools.Find( pOldTool );
+         if ( pos )
+diff --git a/Src/XTCustomizeSheet.cpp b/Src/XTCustomizeSheet.cpp
+index dfe7b17..c255181 100644
+--- a/Src/XTCustomizeSheet.cpp
++++ b/Src/XTCustomizeSheet.cpp
+@@ -186,9 +186,9 @@ BOOL CXTCustomizeSheet::OnInitDialog()
+ 	// collect info about known customizable bars
+ 	m_map.RemoveAll();
+ 	CXTCustomizeConnection* connection = CXTCustomizeConnection::GetInstance();
+-	connection->GetCustomBarInfo(STORECUSTOMINFO(this, STORECUSTOMINFO::CB(StoreInfo)));	
+-	connection->OnNewBar.Add(this, ONNEWBAR::CB(StoreInfo));
+-	connection->OnBarDestroyed.Add(this, ONBARDESTROYED::CB(OnBarDestroyed));
++	connection->GetCustomBarInfo(STORECUSTOMINFO(this, &CXTCustomizeSheet::StoreInfo));
++	connection->OnNewBar.Add(this, &CXTCustomizeSheet::StoreInfo);
++	connection->OnBarDestroyed.Add(this, &CXTCustomizeSheet::OnBarDestroyed);
+ 
+ 	BOOL bResult = CXTResizePropertySheet::OnInitDialog();
+ 
+@@ -256,7 +256,7 @@ void CXTCustomizeSheet::OnDestroy()
+ class CXTCustomizeHook
+ {
+ public:
+-	typedef CXTDelegate1Ret<bool, LPARAM> FILTER;
++	typedef CXTDelegate<bool, LPARAM> FILTER;
+ 
+ private:
+ 	HHOOK m_hHook;
+@@ -361,7 +361,7 @@ public:
+ };
+ CXTCustomizeHooks* CXTCustomizeHooks::m_pThis = 0;
+ 
+-int CXTCustomizeSheet::DoModal() 
++INT_PTR CXTCustomizeSheet::DoModal()
+ {
+ 	ASSERT_VALID(this);
+ 	ASSERT(m_hWnd == NULL);
+@@ -392,8 +392,8 @@ int CXTCustomizeSheet::DoModal()
+ #endif //_MSC_VER != 1200
+ 
+ 	psh->hwndParent = hWndParent;
+-	CXTCustomizeHooks hooks(FILTER(this, FILTER::CB(FilterMouse)),
+-						    FILTER(this, FILTER::CB(FilterKey)));
++	CXTCustomizeHooks hooks(FILTER(this, &CXTCustomizeSheet::FilterMouse),
++						    FILTER(this, &CXTCustomizeSheet::FilterKey));
+ 	if (hWndParent)
+ 	{
+ 		hooks.Hook();
+diff --git a/Src/XTDialogBar.cpp b/Src/XTDialogBar.cpp
+index e4c63ec..7e3a1b8 100644
+--- a/Src/XTDialogBar.cpp
++++ b/Src/XTDialogBar.cpp
+@@ -242,9 +242,9 @@ BOOL CXTDialogBar::OnEraseBkgnd(CDC* pDC)
+ 	return lResult;
+ }
+ 
+-#ifndef _AFX_NO_OCC_SUPPORT
+ LRESULT CXTDialogBar::HandleInitDialog(WPARAM, LPARAM)
+ {
++#ifndef _AFX_NO_OCC_SUPPORT
+ 	Default();  // allow default to initialize first (common dialogs/etc)
+ 	
+ 	// create OLE controls
+@@ -258,16 +258,18 @@ LRESULT CXTDialogBar::HandleInitDialog(WPARAM, LPARAM)
+ 			return FALSE;
+ 		}
+ 	}
+-	
++#endif //!_AFX_NO_OCC_SUPPORT
+ 	return TRUE;
+ }
+ 
+ BOOL CXTDialogBar::SetOccDialogInfo(_AFX_OCC_DIALOG_INFO* pOccDialogInfo)
+ {
++#ifndef _AFX_NO_OCC_SUPPORT
+ 	m_pOccDialogInfo = pOccDialogInfo;
++#endif //!_AFX_NO_OCC_SUPPORT
+ 	return TRUE;
+ }
+-#endif //!_AFX_NO_OCC_SUPPORT
++
+ 
+ #ifdef AFX_INIT_SEG
+ #pragma code_seg(AFX_INIT_SEG)
+diff --git a/Src/XTDockBar.cpp b/Src/XTDockBar.cpp
+index 1bddb39..b6d777d 100644
+--- a/Src/XTDockBar.cpp
++++ b/Src/XTDockBar.cpp
+@@ -682,7 +682,7 @@ int CXTDockBar::InsertEx(CControlBar* pBarIns, CRect rect, CPoint ptMid)
+ 			CRect rectBar;
+ 			pBar->GetWindowRect(&rectBar);
+ 			ScreenToClient(&rectBar);
+-			nWidth = max(nWidth,
++			nWidth = XTMAX(nWidth,
+ 				bHorz ? rectBar.Size().cy : rectBar.Size().cx - 1);
+ 			if (bHorz ? rect.left > rectBar.left : rect.top > rectBar.top)
+ 				nPosInsAfter = nPos;
+@@ -1374,7 +1374,7 @@ CXTDockWindow *CXTDockBar::FindUniqueBar(int nInitPos)
+ 	return NULL;
+ }
+ 
+-UINT CXTDockBar::OnNcHitTest(CPoint point) 
++LRESULT CXTDockBar::OnNcHitTest(CPoint point) 
+ {
+ 	HitTest(point);
+ 	return (m_nTrackSplitter != -1)?HTBORDER:CDockBar::OnNcHitTest(point);
+diff --git a/Src/XTDockState.cpp b/Src/XTDockState.cpp
+index 2f198bb..7a2c7a6 100644
+--- a/Src/XTDockState.cpp
++++ b/Src/XTDockState.cpp
+@@ -89,7 +89,7 @@ BOOL CXTControlBarInfo::LoadState(LPCTSTR lpszProfileName, int nIndex, CDockStat
+ 	{
+ 		TCHAR buf[16];
+ 		wsprintf(buf, _afxBar, i);
+-		m_arrBarID.Add((void*)regManager.GetProfileInt(szSection, buf, 0));
++		m_arrBarID.Add(regManager.GetProfileInt(szSection, buf, 0));
+ 	}
+ 
+ 	return m_nBarID != 0;
+diff --git a/Src/XTDockWindow.cpp b/Src/XTDockWindow.cpp
+index b374c9f..abf40d3 100644
+--- a/Src/XTDockWindow.cpp
++++ b/Src/XTDockWindow.cpp
+@@ -41,7 +41,7 @@ static char THIS_FILE[] = __FILE__;
+ #define IS_CONTROL_BAR(pWnd) \
+ 	((pWnd)->GetRuntimeClass()->IsDerivedFrom(RUNTIME_CLASS(CControlBar)))
+ 
+-typedef enum
++enum
+ {
+ 	HIDE_CONTRLBAR = 0,
+ 	MAXI_H_DISABLE,
+@@ -610,7 +610,7 @@ void CXTDockWindow::DoPaint(CDC* pDC)
+ 	}
+ }
+ 
+-UINT CXTDockWindow::OnNcHitTest(CPoint point)
++LRESULT CXTDockWindow::OnNcHitTest(CPoint point)
+ {
+ 	UNUSED_ALWAYS(point);
+ 	if (afxData.hcurArrow != ::GetCursor())  {
+diff --git a/Src/XTFrameImpl.cpp b/Src/XTFrameImpl.cpp
+index 770f707..eb9dbb7 100644
+--- a/Src/XTFrameImpl.cpp
++++ b/Src/XTFrameImpl.cpp
+@@ -60,7 +60,6 @@
+ #include "XTCustomizeSheet.h"
+ #include "XTCustomizeAPI.h"
+ 
+-#ifndef _XT_STATICLINK
+ const DWORD CFrameWnd::dwDockBarMap[4][2] =
+ {
+ 	{ AFX_IDW_DOCKBAR_TOP,    CBRS_TOP    },
+@@ -68,7 +67,6 @@ const DWORD CFrameWnd::dwDockBarMap[4][2] =
+ 	{ AFX_IDW_DOCKBAR_LEFT,   CBRS_LEFT   },
+ 	{ AFX_IDW_DOCKBAR_RIGHT,  CBRS_RIGHT  },
+ };
+-#endif
+ 
+ class _CAccessFrame : public CFrameWnd
+ {
+@@ -575,6 +573,7 @@ CXTCoolMenu* CXTFrameImpl::GetCoolMenuImpl(CFrameWnd* pFrameWnd)
+ 	return &m_coolMenu;
+ }
+ 
++#pragma optimize("", off)
+ CXTMenuBar* CXTFrameImpl::GetMenuBarImpl(CFrameWnd* pFrameWnd) const
+ {
+ 	ASSERT( ::IsWindow( GET_FRAME( pFrameWnd )->m_hWnd ) ); 
+@@ -615,7 +614,7 @@ CMenu* CXTFrameImpl::GetMenuImpl(CFrameWnd* pFrameWnd) const
+ 		pFrameWnd = pParentWnd;
+ 	}
+ 
+-	CMenu* pMenu = GET_FRAME( pFrameWnd )->GetMenu( ); 
++	CMenu* pMenu = NULL;// GET_FRAME(pFrameWnd)->GetMenu();
+ 	if ( pMenu == NULL )
+ 	{ 
+ 		if ( pMenuBar && pMenuBar->GetSafeHwnd( ) )
+diff --git a/Src/XTGlobal.cpp b/Src/XTGlobal.cpp
+index 4d91113..3145322 100644
+--- a/Src/XTGlobal.cpp
++++ b/Src/XTGlobal.cpp
+@@ -1075,7 +1075,7 @@ _XT_EXT_CLASS LPTSTR AFXAPI _xtAfxPathFindNextComponent(LPCTSTR pszPath)
+ 	}
+ 
+ 	// Find the path delimiter
+-	TCHAR *cp = _tcschr( pszPath, _T('\\') );
++	const TCHAR *cp = _tcschr( pszPath, _T('\\') );
+ 	if ( cp == NULL ) {
+ 		// If we didn't find it, return an empty string
+ 		tNextComponent[0] = 0;
+diff --git a/Src/XTMenuBar.cpp b/Src/XTMenuBar.cpp
+index 7970d21..080c3e3 100644
+--- a/Src/XTMenuBar.cpp
++++ b/Src/XTMenuBar.cpp
+@@ -643,8 +643,10 @@ HMENU CXTMenuBar::LoadMenu(HMENU hMenu, HMENU hMenuShared)
+ 	m_arrItems.SetSize(0, nMenuCount + 4);	
+ 	
+ 	// add an item for MDI icon	
+-	CXTSysMenuBarItem* pItem = new CXTSysMenuBarItem(this, OnDrawIcon, OnTrackWindowMenu,
+-										OnDblClickWindowMenu);
++	CXTSysMenuBarItem* pItem = new CXTSysMenuBarItem(this, 
++		&CXTMenuBar::OnDrawIcon, 
++		&CXTMenuBar::OnTrackWindowMenu,
++		&CXTMenuBar::OnDblClickWindowMenu);
+ 	m_arrItems.Add(pItem);
+ 
+ 	// add text items
+@@ -670,8 +672,8 @@ HMENU CXTMenuBar::LoadMenu(HMENU hMenu, HMENU hMenuShared)
+ 				CXTSubMenuBarItem* pItem = new CXTSubMenuBarItem(this,
+ 					iButton,
+ 					szMenuName,
+-					OnDrawMenuItem,
+-					OnTrackSubMenu,
++					&CXTMenuBar::OnDrawMenuItem,
++					&CXTMenuBar::OnTrackSubMenu,
+ 					sizeText,
+ 					chHotKey);
+ 
+@@ -701,7 +703,7 @@ HMENU CXTMenuBar::LoadMenu(HMENU hMenu, HMENU hMenuShared)
+ 		CXTControlMenuBarItem* pItem = new CXTControlMenuBarItem(this, 
+ 											mdiButtons[i].dfcs, 
+ 											mdiButtons[i].uSysCmd, 
+-											OnRenderControl,
++											&CXTMenuBar::OnRenderControl,
+ 											mdiButtons[i].nSpacer);
+ 		m_arrItems.Add(pItem);
+ 	}
+@@ -2912,7 +2914,7 @@ CWnd* CXTMenuBar::GetCmdSentOleWnd()
+ 	return NULL;
+ }
+ 
+-int CXTMenuBar::OnToolHitTest(CPoint, TOOLINFO*) const
++LRESULT CXTMenuBar::OnToolHitTest(CPoint, TOOLINFO*) const
+ {
+ 	ASSERT_VALID(this);
+ 	ASSERT(::IsWindow(m_hWnd));
+@@ -3207,7 +3209,7 @@ void CXTMenuBar::OnNcCalcSize(BOOL bCalcValidRects, NCCALCSIZE_PARAMS FAR* lpncs
+ 	lpncsp->rgrc[0].bottom += rect.bottom;
+ }
+ 
+-UINT CXTMenuBar::OnNcHitTest(CPoint point) 
++LRESULT CXTMenuBar::OnNcHitTest(CPoint point)
+ {
+ 	UNREFERENCED_PARAMETER(point);
+ 	return HTCLIENT;
+diff --git a/Src/XTMenuBar1.cpp b/Src/XTMenuBar1.cpp
+index f809a85..d8d787d 100644
+--- a/Src/XTMenuBar1.cpp
++++ b/Src/XTMenuBar1.cpp
+@@ -34,7 +34,7 @@ public:
+ 	: m_pThis(pThis)
+ 	{
+ 		CXTCustomizeConnection* connection = CXTCustomizeConnection::GetInstance();
+-		connection->GetCustomGroups.Add(this, GETCUSTOMGROUPS::CB(ReportCustomGroups));
++		connection->GetCustomGroups.Add(this, &CXTMenuCustomHandler::ReportCustomGroups);
+ 	}
+ 
+ 	~CXTMenuCustomHandler()
+@@ -203,8 +203,8 @@ int CXTMenuBar::OnCreate(LPCREATESTRUCT lpCreateStruct)
+ 		return -1;
+ 	
+ 	CXTCustomizeConnection* connection = CXTCustomizeConnection::GetInstance();
+-	connection->SetCustMode.Add(this, SETCUSTMODE::CB(SetCustMode));
+-	connection->GetMenuPopup = GETMENUPOPUP(this, GETMENUPOPUP::CB(GetMenuPopupByCrc));
++	connection->SetCustMode.Add(this, &CXTMenuBar::SetCustMode);
++	connection->GetMenuPopup = GETMENUPOPUP(this, &CXTMenuBar::GetMenuPopupByCrc);
+ 	
+ 	return 0;
+ }
+diff --git a/Src/XTReBar.cpp b/Src/XTReBar.cpp
+index 20ae567..db29dbf 100644
+--- a/Src/XTReBar.cpp
++++ b/Src/XTReBar.cpp
+@@ -433,7 +433,7 @@ void CXTReBar::OnPaint()
+ 	Default();
+ }
+ 
+-int CXTReBar::OnToolHitTest(CPoint point, TOOLINFO* pTI) const
++LRESULT CXTReBar::OnToolHitTest(CPoint point, TOOLINFO* pTI) const
+ {
+ 	ASSERT_VALID(this);
+ 	ASSERT(::IsWindow(m_hWnd));
+diff --git a/Src/XTReBar1.cpp b/Src/XTReBar1.cpp
+index d305874..c894f7f 100644
+--- a/Src/XTReBar1.cpp
++++ b/Src/XTReBar1.cpp
+@@ -47,9 +47,9 @@ int CXTReBar::OnCreate(LPCREATESTRUCT lpCreateStruct)
+ 		return -1;
+ 	
+ 	CXTCustomizeConnection* connection = CXTCustomizeConnection::GetInstance();
+-	connection->PlaceBar.Set(this, PLACEBAR::CB(PlaceNewBar));
+-	connection->OnBarDestroyed.Add(this, ONBARDESTROYED::CB(OnBarDestroyed));
+-	connection->CreateBar.Set(this, CREATEBAR::CB(CreateBar));
++	connection->PlaceBar.Set(this, &CXTReBar::PlaceNewBar);
++	connection->OnBarDestroyed.Add(this, &CXTReBar::OnBarDestroyed);
++	connection->CreateBar.Set(this, &CXTReBar::CreateBar);
+ 	
+ 	return 0;
+ }
+@@ -98,7 +98,7 @@ public:
+ 	, m_pThis(pThis)
+ 	{
+ 		OldCreateBar = m_connection->CreateBar;
+-		m_connection->CreateBar.Set(this, CREATEBAR::CB(CreateBar));
++		m_connection->CreateBar.Set(this, &CXTCreateBarFactory::CreateBar);
+ 	}
+ 
+ 	~CXTCreateBarFactory()
+diff --git a/Src/XTToolBar.cpp b/Src/XTToolBar.cpp
+index 9317036..19490e0 100644
+--- a/Src/XTToolBar.cpp
++++ b/Src/XTToolBar.cpp
+@@ -251,7 +251,7 @@ int CXTToolBar::OnCreate(LPCREATESTRUCT lpCreateStruct)
+ 	return 0;
+ }
+ 
+-UINT CXTToolBar::OnNcHitTest(CPoint point)
++LRESULT CXTToolBar::OnNcHitTest(CPoint point)
+ {
+ 	UNUSED_ALWAYS(point);
+ 	return HTCLIENT;
+@@ -1589,7 +1589,7 @@ void CXTToolBar::SetButtonInfo(int nIndex, UINT nID, UINT nStyle, int iImage)
+ 	}
+ }
+ 
+-int CXTToolBar::OnToolHitTest(CPoint point, TOOLINFO* pTI) const
++INT_PTR CXTToolBar::OnToolHitTest(CPoint point, TOOLINFO* pTI) const
+ {
+ 	ASSERT_VALID(this);
+ 	ASSERT(::IsWindow(m_hWnd));
+diff --git a/Src/XTToolBar1.cpp b/Src/XTToolBar1.cpp
+index b9d7263..8c1daa8 100644
+--- a/Src/XTToolBar1.cpp
++++ b/Src/XTToolBar1.cpp
+@@ -121,16 +121,16 @@ class CXTCustTbHandler : public CObject,
+ 	};
+ 	
+ 	// Mode-specific mouse handler
+-	typedef CXTDelegate1Ret<bool, MOUSEMSG*> ONMOUSE;
++	typedef CXTDelegate<bool, MOUSEMSG*> ONMOUSE;
+ 	ONMOUSE OnMouse;
+ 
+ 	// Mode-specific invalidation
+-	typedef CXTMultiCastDelegate0 INVALIDATE;
++	typedef CXTMultiCastDelegate<> INVALIDATE;
+ 	INVALIDATE Invalidate;
+ 
+ 	// Extra rendering delegate - hooks rendering on top of the default picture
+ 	// Takes CDC to draw upon as a parameter
+-	typedef CXTMultiCastDelegate1<CDC*> RENDEREXTRA;	
++	typedef CXTMultiCastDelegate<CDC*> RENDEREXTRA;	
+ 	RENDEREXTRA RenderExtra;
+ 
+ 	CList<CXTTBCtrlHook*,CXTTBCtrlHook*> m_hookTBCtrls;
+@@ -181,11 +181,11 @@ public:
+ 	{ 
+ 		ResetState();
+ 		CXTCustomizeConnection* connection = CXTCustomizeConnection::GetInstance();
+-		connection->ResetTracking.Add(this, RESETTRACKING::CB(ResetState));
+-		connection->GetTargets.Add(this, GETTARGETS::CB(ReportDropTarget));
+-		connection->GetCustomBarInfo.Add(this, GETCUSTOMBARINFO::CB(ReportCustomBar));
+-		connection->OnCmdRemoved.Add(this,ONCMDCHANGE::CB(OnCmdRemoved));
+-		m_pThis->NoteBarVisible.Add(this, NOTEBARVISIBLE::CB(OnShowHide));
++		connection->ResetTracking.Add(this, &CXTCustTbHandler::ResetState);
++		connection->GetTargets.Add(this, &CXTCustTbHandler::ReportDropTarget);
++		connection->GetCustomBarInfo.Add(this, &CXTCustTbHandler::ReportCustomBar);
++		connection->OnCmdRemoved.Add(this, &CXTCustTbHandler::OnCmdRemoved);
++		m_pThis->NoteBarVisible.Add(this, &CXTCustTbHandler::OnShowHide);
+ 		m_pThis->DeferFreshenAfter();
+ 
+ 		POSITION pos;
+@@ -235,7 +235,7 @@ public:
+ 
+ 	void ResetState()
+ 	{
+-		OnMouse = ONMOUSE(this, ONMOUSE::CB(OnMouseDefault));
++		OnMouse = ONMOUSE(this, &CXTCustTbHandler::OnMouseDefault);
+ 		RenderExtra.Remove(this);
+ 		InvalidateRect(NULL);
+ 		Invalidate.RemoveAll();
+@@ -247,7 +247,7 @@ public:
+ 		ResetState();
+ 		if (pCtx->IsTracking())
+ 		{
+-			OnMouse = ONMOUSE(this, ONMOUSE::CB(OnMouseToolbarDrag));
++			OnMouse = ONMOUSE(this, &CXTCustTbHandler::OnMouseToolbarDrag);
+ 		}
+ 	}
+ 
+@@ -725,8 +725,8 @@ public:
+ 		LocateDropArea(ptCursor, m_nDropAt, m_rectDrop);
+ 	
+ 		// install renderer
+-		RenderExtra.Add(this, RENDEREXTRA::CB(RenderDropArea));
+-		Invalidate.Add(this, INVALIDATE::CB(InvalidateDropArea));
++		RenderExtra.Add(this, &CXTCustTbHandler::RenderDropArea);
++		Invalidate.Add(this, &CXTCustTbHandler::InvalidateDropArea);
+ 
+ 		// invalidate initially for visual feedback
+ 		InvalidateDropArea();
+@@ -758,8 +758,8 @@ public:
+ 		InvalidateDropArea();
+ 		m_nDropAt = -1;
+ 		m_rectDrop.SetRectEmpty();
+-		RenderExtra.Remove(this, RENDEREXTRA::CB(RenderDropArea));
+-		Invalidate.Remove(this, INVALIDATE::CB(InvalidateDropArea));
++		RenderExtra.Remove(this, &CXTCustTbHandler::RenderDropArea);
++		Invalidate.Remove(this, &CXTCustTbHandler::InvalidateDropArea);
+ 	}
+ 
+ 	// mouse dropped, must accept the data
+@@ -1046,8 +1046,8 @@ public:
+ 		CXTCustomizeConnection::GetInstance()->ResetTracking();   // resets own state as well
+ 		m_nSelButton = buttonPos;
+ 		ASSERT(m_nSelButton >= 0);		
+-		RenderExtra.Add(this, RENDEREXTRA::CB(RenderActiveItem));
+-		Invalidate.Add(this, INVALIDATE::CB(InvalidateActiveItem));
++		RenderExtra.Add(this, &CXTCustTbHandler::RenderActiveItem);
++		Invalidate.Add(this, &CXTCustTbHandler::InvalidateActiveItem);
+ 		InvalidateRect(NULL);
+ 	}
+ 
+@@ -1137,7 +1137,7 @@ void CXTToolBar::EnableCustomization(bool bEnable)
+ 		if (m_bCustomize)
+ 		{
+ 			CXTCustomizeConnection::GetInstance()->
+-				SetCustMode.Add(this, SETCUSTMODE::CB(SetCustMode));
++				SetCustMode.Add(this, &CXTToolBar::SetCustMode);
+ 		}
+ 		else
+ 		{
+@@ -1163,7 +1163,7 @@ void CXTToolBar::SetCustMode(bool bMode)
+ 					CXTDockContext* pCtx = (CXTDockContext*)m_pDockContext;
+ 					pCtx->AddTrackStateListener(
+ 						m_pCustomHandler, 
+-						CXTDockContext::LISTENERCB(CXTCustTbHandler::OnTrackStateChange));
++						CXTDockContext::LISTENERCB(&CXTCustTbHandler::OnTrackStateChange));
+ 				}
+ 			}
+ 			else
+@@ -1252,7 +1252,7 @@ void CXTToolBar::GetCustomBarInfo(CXTCustomControlBarInfo* pInfo)
+ {
+ 	pInfo->m_bCanShowHide = true;
+ 	pInfo->m_bDynamic = false;
+-	pInfo->Reset.Set(this, RESET::CB(ResetCustomizations));
++	pInfo->Reset.Set(this, &CXTToolBar::ResetCustomizations);
+ }
+ 
+ void CXTToolBar::ResetCustomizations()
+@@ -2173,8 +2173,8 @@ void CXTToolBar::RegisterCustomizeAPI(bool bRegister)
+ 	CXTCustomizeConnection* connection = CXTCustomizeConnection::GetInstance();
+ 	if (bRegister)
+ 	{
+-		connection->GetIcons.Add(this, GETICONS::CB(GetIcons));
+-		connection->GetCustomGroups.Add(this, GETCUSTOMGROUPS::CB(ReportCustomGroups));
++		connection->GetIcons.Add(this, &CXTToolBar::GetIcons);
++		connection->GetCustomGroups.Add(this, &CXTToolBar::ReportCustomGroups);
+ 	}
+ 	else
+ 	{
+diff --git a/Src/XTToolsManager.cpp b/Src/XTToolsManager.cpp
+index a966987..08b8174 100644
+--- a/Src/XTToolsManager.cpp
++++ b/Src/XTToolsManager.cpp
+@@ -444,7 +444,7 @@ void CXTToolsManager::GetToolsList(CXTEditListBox& editListBox)
+ 	for ( i = m_nToolsCount-1; i >= 0; --i )
+ 	{
+ 		int iItem = editListBox.AddString( m_pToolsArray[ i ].szTitle );
+-		editListBox.SetItemData( iItem, ( DWORD )&m_pToolsArray[ i ] );
++		editListBox.SetItemData( iItem, (DWORD_PTR)&m_pToolsArray[ i ] );
+ 	}
+ }
+ 
+diff --git a/XTToolkit_Lib/StdAfx.h b/XTToolkit_Lib/StdAfx.h
+index c8cab20..f3195d2 100644
+--- a/XTToolkit_Lib/StdAfx.h
++++ b/XTToolkit_Lib/StdAfx.h
+@@ -32,11 +32,11 @@
+ // Modify the following defines if you have to target a platform prior to the ones specified below.
+ // Refer to MSDN for the latest info on corresponding values for different platforms.
+ #ifndef WINVER				// Allow use of features specific to Windows 95 and Windows NT 4 or later.
+-#define WINVER 0x0400		// Change this to the appropriate value to target Windows 98 and Windows 2000 or later.
++#define WINVER 0x0501		// Change this to the appropriate value to target Windows 98 and Windows 2000 or later.
+ #endif
+ 
+ #ifndef _WIN32_WINNT		// Allow use of features specific to Windows NT 4 or later.
+-#define _WIN32_WINNT 0x0400		// Change this to the appropriate value to target Windows 98 and Windows 2000 or later.
++#define _WIN32_WINNT 0x0501		// Change this to the appropriate value to target Windows 98 and Windows 2000 or later.
+ #endif						
+ 
+ #ifndef _WIN32_WINDOWS		// Allow use of features specific to Windows 98 or later.
