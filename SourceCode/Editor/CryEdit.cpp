@@ -216,6 +216,8 @@ BEGIN_MESSAGE_MAP(CCryEditApp, CWinApp)
 	ON_COMMAND(ID_FILE_OPEN, OnOpenLevel)
 	ON_COMMAND(ID_TERRAIN_COLLISION, OnTerrainCollision)
 	ON_UPDATE_COMMAND_UI(ID_TERRAIN_COLLISION, OnTerrainCollisionUpdate)
+	ON_COMMAND(ID_HIDE_HELPERS, OnHideHelpers)
+	ON_UPDATE_COMMAND_UI(ID_HIDE_HELPERS, OnHideHelpersUpdate)
 	ON_COMMAND(ID_RESOURCES_GENERATECGFTHUMBNAILS, OnGenerateCgfThumbnails)
 	ON_COMMAND(ID_AI_GENERATETRIANGULATION, OnAiGenerateTriangulation)
 	ON_COMMAND(ID_LAYER_SELECT, OnLayerSelect)
@@ -2485,6 +2487,30 @@ void CCryEditApp::OnTerrainCollisionUpdate( CCmdUI *pCmdUI )
 {
 	uint flags = GetIEditor()->GetDisplaySettings()->GetSettings();
 	if (flags&SETTINGS_NOCOLLISION)
+		pCmdUI->SetCheck(0);
+	else
+		pCmdUI->SetCheck(1);
+}
+
+//////////////////////////////////////////////////////////////////////////
+void CCryEditApp::OnHideHelpers()
+{
+	uint flags = GetIEditor()->GetDisplaySettings()->GetSettings();
+	if (flags & SETTINGS_HIDE_HELPERS)
+	{
+		flags &= ~SETTINGS_HIDE_HELPERS;
+	}
+	else
+	{
+		flags |= SETTINGS_HIDE_HELPERS;
+	}
+	GetIEditor()->GetDisplaySettings()->SetSettings(flags);
+}
+
+void CCryEditApp::OnHideHelpersUpdate(CCmdUI* pCmdUI)
+{
+	uint flags = GetIEditor()->GetDisplaySettings()->GetSettings();
+	if (flags & SETTINGS_HIDE_HELPERS)
 		pCmdUI->SetCheck(0);
 	else
 		pCmdUI->SetCheck(1);

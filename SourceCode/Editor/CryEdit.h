@@ -162,6 +162,8 @@ public:
 	afx_msg void OnLayerSelect();
 	afx_msg void OnTerrainCollision();
 	afx_msg void OnTerrainCollisionUpdate( CCmdUI *pCmdUI );
+	afx_msg void OnHideHelpers();
+	afx_msg void OnHideHelpersUpdate(CCmdUI* pCmdUI);
 	afx_msg void OnGenerateCgfThumbnails();
 	afx_msg void OnAiGenerateTriangulation();
 	afx_msg void OnSwitchPhysics();

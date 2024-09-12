@@ -22,6 +22,7 @@ public:
 	CColorCheckBox m_vectorLock;
 	CColorCheckBox m_lockSelection;
 	CColorCheckBox m_terrainCollision;
+	CColorCheckBox m_hideHelpers;
 	CColorCheckBox m_physicsBtn;
 	CColorCheckBox m_syncPlayerBtn;
 
@@ -61,6 +62,7 @@ protected:
 	afx_msg void OnUpdateLockSelection(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateMoveSpeed();
 	afx_msg void OnBnClickedTerrainCollision();
+	afx_msg void OnBnClickedHideHelpers();
 	afx_msg void OnBnClickedPhysics();
 
 	virtual BOOL OnInitDialog();

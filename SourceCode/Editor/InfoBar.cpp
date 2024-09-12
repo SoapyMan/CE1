@@ -29,6 +29,7 @@ BEGIN_MESSAGE_MAP(CInfoBar, CDialog)
 	ON_EN_UPDATE(IDC_POSZ,OnVectorUpdateZ)
 	//}}AFX_MSG_MAP
 	ON_BN_CLICKED(IDC_TERRAIN_COLLISION, OnBnClickedTerrainCollision)
+	ON_BN_CLICKED(IDC_HIDE_HELPERS, OnBnClickedHideHelpers)
 	ON_BN_CLICKED(IDC_PHYSICS, OnBnClickedPhysics)
 	ON_BN_CLICKED(IDC_SYNCPLAYER, OnBnClickedSyncplayer)
 END_MESSAGE_MAP()
@@ -56,6 +57,8 @@ void CInfoBar::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_VECTOR_LOCK, m_vectorLock);
 	DDX_Control(pDX, ID_LOCK_SELECTION, m_lockSelection);
 	DDX_Control(pDX, IDC_TERRAIN_COLLISION, m_terrainCollision);
+	DDX_Control(pDX, IDC_HIDE_HELPERS, m_hideHelpers);
+	
 	DDX_Control(pDX, IDC_VECTOR_LOCK, m_vectorLock);
 	//}}AFX_DATA_MAP
 	DDX_Control(pDX, IDC_PHYSICS, m_physicsBtn);
@@ -260,6 +263,13 @@ void CInfoBar::IdleUpdate()
 				(m_terrainCollision.GetCheck() == 0 && noCollision))
 		{
 			m_terrainCollision.SetCheck( (noCollision)?BST_CHECKED:BST_UNCHECKED );
+		}
+
+		bool hideHelpers = settings & SETTINGS_HIDE_HELPERS;
+		if ((m_hideHelpers.GetCheck() == 1 && !hideHelpers) ||
+			(m_hideHelpers.GetCheck() == 0 && hideHelpers))
+		{
+			m_hideHelpers.SetCheck((hideHelpers) ? BST_CHECKED : BST_UNCHECKED);
 		}
 
 		bool bPhysics = GetIEditor()->GetGameEngine()->GetSimulationMode();
@@ -508,6 +518,7 @@ BOOL CInfoBar::OnInitDialog()
 
 	m_vectorLock.SetIcon( MAKEINTRESOURCE(IDI_LOCK) );
 	m_terrainCollision.SetIcon( MAKEINTRESOURCE(IDI_TERRAIN_COLLISION) );
+	m_hideHelpers.SetIcon( MAKEINTRESOURCE(IDI_LAYERS) );
 	m_syncPlayerBtn.SetToolTip( "Synchronize Player with Camera" );
 
 	/*
@@ -569,6 +580,11 @@ void CInfoBar::OnEndVectorUpdate( CNumberCtrl *ctrl )
 void CInfoBar::OnBnClickedTerrainCollision()
 {
 	AfxGetMainWnd()->SendMessage( WM_COMMAND,MAKEWPARAM(ID_TERRAIN_COLLISION,0),0 );
+}
+
+void CInfoBar::OnBnClickedHideHelpers()
+{
+	AfxGetMainWnd()->SendMessage(WM_COMMAND, MAKEWPARAM(ID_HIDE_HELPERS, 0), 0);
 }
 
 void CInfoBar::OnBnClickedPhysics()

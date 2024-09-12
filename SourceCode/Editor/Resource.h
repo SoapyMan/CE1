@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
-// Microsoft Visual C++ generated include file.
-// Used by CryEdit.rc
+// Включаемый файл, созданный в Microsoft Visual C++.
+// Используется CryEdit.rc
 //
 #define IDC_SELECTOBJECTS               2
 #define IDC_REMOVE                      3
@@ -1546,6 +1546,7 @@
 #define ID_AVIRECORDER_SELECTFILENAME   33471
 #define ID_AVIRECORDER_OUTPUTFILENAME   33472
 #define ID_BUTTON33477                  33477
+#define ID_HIDE_HELPERS                 33481
 #define ID_VIEW_MENUBAR                 59398
 #define ID_VIEW_ROLLUPBAR               59412
 #define ID_VIEW_CONSOLEWINDOW           59413
@@ -1557,8 +1558,8 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        501
-#define _APS_NEXT_COMMAND_VALUE         33478
+#define _APS_NEXT_RESOURCE_VALUE        502
+#define _APS_NEXT_COMMAND_VALUE         33482
 #define _APS_NEXT_CONTROL_VALUE         1508
 #define _APS_NEXT_SYMED_VALUE           148
 #endif
