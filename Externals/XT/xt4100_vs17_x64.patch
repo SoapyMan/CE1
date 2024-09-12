@@ -1421,7 +1421,7 @@ index b374c9f..abf40d3 100644
  	UNUSED_ALWAYS(point);
  	if (afxData.hcurArrow != ::GetCursor())  {
 diff --git a/Src/XTFrameImpl.cpp b/Src/XTFrameImpl.cpp
-index 770f707..eb9dbb7 100644
+index 770f707..085e5e2 100644
 --- a/Src/XTFrameImpl.cpp
 +++ b/Src/XTFrameImpl.cpp
 @@ -60,7 +60,6 @@
@@ -1444,7 +1444,7 @@ index 770f707..eb9dbb7 100644
  	return &m_coolMenu;
  }
  
-+#pragma optimize("", off)
++
  CXTMenuBar* CXTFrameImpl::GetMenuBarImpl(CFrameWnd* pFrameWnd) const
  {
  	ASSERT( ::IsWindow( GET_FRAME( pFrameWnd )->m_hWnd ) ); 
@@ -1453,7 +1453,7 @@ index 770f707..eb9dbb7 100644
  	}
  
 -	CMenu* pMenu = GET_FRAME( pFrameWnd )->GetMenu( ); 
-+	CMenu* pMenu = NULL;// GET_FRAME(pFrameWnd)->GetMenu();
++	CMenu* pMenu = GET_FRAME(pFrameWnd)->CFrameWnd::GetMenu();
  	if ( pMenu == NULL )
  	{ 
  		if ( pMenuBar && pMenuBar->GetSafeHwnd( ) )
