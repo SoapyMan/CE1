@@ -102,7 +102,7 @@ public:
 
 		m_fFullAngleArea=infMaxAngle*infMaxAngle - m_fAngleAreaSubtract;
 
-		m_fFullAngleArea=max(m_fFullAngleArea,0.0001f);		// to avoid divide by zero
+		m_fFullAngleArea=crymax(m_fFullAngleArea,0.0001f);		// to avoid divide by zero
 
 		m_fScale*=(gf_PI_DIV_2*gf_PI_DIV_2) / m_fFullAngleArea;
 	}

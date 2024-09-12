@@ -437,7 +437,7 @@ void SBrushFace::BuildRE( const Matrix44 &worldTM )
         re->TriVerts[i].lmTC[1] = v->st[1];
       }
       ushort *vrtind = re->Indices;
-      for (i=0; i<numPts-2; i++, vrtind+=3)
+      for (int i=0; i<numPts-2; i++, vrtind+=3)
       {
         vrtind[0] = 0;
         vrtind[1] = i+1;

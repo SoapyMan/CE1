@@ -73,7 +73,7 @@ public:
 
 	virtual void	EnableVerbosity( bool bEnable );
 	virtual void	SetVerbosity( int verbosity );
-	virtual int GetVerbosityLevel();
+	virtual int		GetVerbosityLevel(bool forceIfOff = false) const;
 
 	// checks the verbosity of the message and returns NULL if the message must NOT be
 	// logged, or the pointer to the part of the message that should be logged

@@ -112,11 +112,11 @@ Quat CASEParser::GetQuat()
 	Quat q;
 
 	token = GetToken();
-	q.x = (float)atof(token);
+	q.v.x = (float)atof(token);
 	token = GetToken();
-	q.y = (float)atof(token);
+	q.v.y = (float)atof(token);
 	token = GetToken();
-	q.z = (float)atof(token);
+	q.v.z = (float)atof(token);
 	token = GetToken();
 	q.w = (float)atof(token);
 
@@ -236,16 +236,16 @@ void CASEParser::ParseGeomNode()
 	if (m_node)
 	{
 		Quat q;
-		q.SetFromAngleAxis( nodeRotAngle,nodeRotAxis );
+		q.SetRotationAA( nodeRotAngle,nodeRotAxis );
 		m_node->m_pos = nodePos;
 		m_node->m_scale = nodeScale;
 		m_node->m_rotate = q;
 		
-		Matrix tm;
-		q.GetMatrix(tm);
-		tm.ScaleMatrix( nodeScale.x,nodeScale.y,nodeScale.z );
-		tm.SetTranslation( nodePos );
-		tm.Invert();
+		Matrix44 tm = Matrix33(q);
+
+		tm.ScaleMatRow( nodeScale );
+		tm.SetTranslationOLD( nodePos );
+		tm.Invert44();
 		if (m_node->m_parent)
 			m_node->m_invOrigTM = tm * m_node->m_parent->m_invOrigTM;
 		else
@@ -266,7 +266,7 @@ void CASEParser::ParseTMAnimation()
 	scaleTableTcb.reserve( 10 );
 	// Parse node animation.
 	Quat prevQ;
-	prevQ.Identity();
+	prevQ.SetIdentity();
 	int level = 0;
 	char *token;
 	do 
@@ -362,7 +362,7 @@ void CASEParser::ParseTMAnimation()
 			key.easefrom = GetFloat();
 
 			Quat q;
-			q.SetFromAngleAxis( angle,axis );
+			q.SetRotationAA( angle,axis );
 			// Rotation in ASE file is relative, so we must convert it to absolute.
 			q = q * prevQ;
 			prevQ = q;

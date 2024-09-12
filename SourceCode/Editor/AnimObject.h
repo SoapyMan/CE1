@@ -21,9 +21,9 @@ public:
 		//! Original node scale (in object space).
 		Vec3 m_scale;
 		//! Node transformation matrix in world space.
-		Matrix m_tm;
+		Matrix44 m_tm;
 		//! Inverse tranform of Original node transformation.
-		Matrix m_invOrigTM;
+		Matrix44 m_invOrigTM;
 		//! True if current matrix is valid.
 		bool m_bMatrixValid;
 		//! parent node.
@@ -38,8 +38,8 @@ public:
 		
 		Node()
 		{
-			m_tm.Identity();
-			m_invOrigTM.Identity();
+			m_tm.SetIdentity();
+			m_invOrigTM.SetIdentity();
 			m_parent = 0;
 			m_object = 0;
 			m_posTrack = 0;
@@ -47,7 +47,7 @@ public:
 			m_scaleTrack = 0;
 			m_bMatrixValid = false;
 			m_pos.Set(0,0,0);
-			m_rotate.Identity();
+			m_rotate.SetIdentity();
 			m_scale.Set(1,1,1);
 		}
 	};
@@ -256,7 +256,7 @@ public:
 
 private:
 	void ReleaseNodes();
-	Matrix& GetNodeMatrix( Node *node );
+	Matrix44& GetNodeMatrix( Node *node );
 
 	//! Name of cgf.
 	std::string m_fileName;

@@ -462,12 +462,12 @@ void CTrackViewKeys::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 
 	case SB_PAGELEFT:    // Scroll one page left.
 		if (curpos > minpos)
-			curpos = max(minpos, curpos - (int)nPage);
+			curpos = crymax(minpos, curpos - (int)nPage);
 		break;
 
 	case SB_PAGERIGHT:      // Scroll one page right.
 		if (curpos < maxpos)
-			curpos = min(maxpos, curpos + (int)nPage);
+			curpos = crymin(maxpos, curpos + (int)nPage);
 		break;
 
 	case SB_THUMBPOSITION: // Scroll to absolute position. nPos is the position

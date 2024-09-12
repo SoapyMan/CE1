@@ -374,10 +374,10 @@ void C2DViewport::SetScrollOffset( float x,float y,bool bLimits )
 	{
 		float maxMapSize = 4096;
 		// Limit scroll offsets.
-		x = max(x,-maxMapSize);
-		y = max(y,-maxMapSize);
-		x = min(x,maxMapSize);
-		y = min(y,maxMapSize);
+		x = crymax(x,-maxMapSize);
+		y = crymax(y,-maxMapSize);
+		x = crymin(x,maxMapSize);
+		y = crymin(y,maxMapSize);
 	}
 
 	Vec3 org = GetOrigin2D();

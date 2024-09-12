@@ -514,9 +514,9 @@ void CTerrainBeachGenerator::MakeBeachStage2( CTerrainSectorBeachInfo *pSector )
 
 		for(int i=0; i<6; i++)
 		{
-			verts[i].color.bcolor[0]=(byte)min(255,vTerrainColor[0]*512.0f);
-			verts[i].color.bcolor[1]=(byte)min(255,vTerrainColor[1]*512.0f);
-			verts[i].color.bcolor[2]=(byte)min(255,vTerrainColor[2]*512.0f);
+			verts[i].color.bcolor[0]=(byte)crymin(255,vTerrainColor[0]*512.0f);
+			verts[i].color.bcolor[1]=(byte)crymin(255,vTerrainColor[1]*512.0f);
+			verts[i].color.bcolor[2]=(byte)crymin(255,vTerrainColor[2]*512.0f);
 			verts[i].color.bcolor[3]=0;                       
 		}
 

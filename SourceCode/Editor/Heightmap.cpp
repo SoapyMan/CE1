@@ -594,10 +594,10 @@ void CHeightmap::Smooth( CFloatImage &hmap,const CRect &rect )
 	int w = hmap.GetWidth();
 	int h = hmap.GetHeight();
 
-	int x1 = max(rect.left+2,1);
-	int y1 = max(rect.top+2,1);
-	int x2 = min(rect.right-2,w-1);
-	int y2 = min(rect.bottom-2,h-1);
+	int x1 = crymax(rect.left+2,1);
+	int y1 = crymax(rect.top+2,1);
+	int x2 = crymin(rect.right-2,w-1);
+	int y2 = crymin(rect.bottom-2,h-1);
 
 	t_hmap* pData = hmap.GetData();
 
@@ -921,10 +921,10 @@ bool CHeightmap::GetData( CRect &srcRect,CFloatImage &hmap, bool bSmooth,bool bN
 	t_hmap *pDataStart = hmap.GetData();
 	t_hmap *pData = pDataStart;
 
-	int x1 = max(srcRect.left,0);
-	int y1 = max(srcRect.top,0);
-	int x2 = min(srcRect.right,resolution);
-	int y2 = min(srcRect.bottom,resolution);
+	int x1 = crymax(srcRect.left,0);
+	int y1 = crymax(srcRect.top,0);
+	int x2 = crymin(srcRect.right,resolution);
+	int y2 = crymin(srcRect.bottom,resolution);
 
 	int trgW = x2 - x1;
 
@@ -2576,7 +2576,7 @@ CPoint CHeightmap::ImportBlock( CXmlArchive &xmlAr,CPoint newPos,bool bUseNewPos
 void CHeightmap::CopyFrom( t_hmap *pHmap,unsigned char *pInfo,int resolution )
 {
 	int x,y;
-	int res = min(resolution,m_iWidth);
+	int res = crymin(resolution,m_iWidth);
 	for (y = 0; y < res; y++)
 	{
 		for (x = 0; x < res; x++)

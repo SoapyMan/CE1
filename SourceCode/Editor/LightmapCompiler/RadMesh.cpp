@@ -750,9 +750,9 @@ const bool CRadPoly::SnapVertex(Vec3d &inPosition, float &outfAlpha, float &outf
 	const Vec3d& rV1 = m_lstOriginals[1].m_vPos;
 	const Vec3d& rV2 = m_lstOriginals[2].m_vPos;
 	//retrieve square distance to all edges
-	const float cfDistLV01	= max(DistToLine(rV0, rV1, inPosition), cfNormalizeThreshold);
-	const float cfDistLV02	= max(DistToLine(rV0, rV2, inPosition), cfNormalizeThreshold); 
-	const float cfDistLV12	= max(DistToLine(rV1, rV2, inPosition), cfNormalizeThreshold);
+	const float cfDistLV01	= crymax(DistToLine(rV0, rV1, inPosition), cfNormalizeThreshold);
+	const float cfDistLV02	= crymax(DistToLine(rV0, rV2, inPosition), cfNormalizeThreshold); 
+	const float cfDistLV12	= crymax(DistToLine(rV1, rV2, inPosition), cfNormalizeThreshold);
 	//now retrieve index of nearest edge	
 	const int ciNearestEdgeIndex = 
 		(cfDistLV01 < cfDistLV02)?(cfDistLV01 < cfDistLV12)?0:2:(cfDistLV12 < cfDistLV02)?2:1;

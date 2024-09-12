@@ -1248,10 +1248,10 @@ void CLayer::AutogenLayerMask( const CRect &rc,const CFloatImage &hmap,CByteImag
 	// Inflate rectangle.
 	rect.InflateRect(1,1,1,1);
 
-	rect.left = max(rect.left,1);
-	rect.top = max(rect.top,1);
-	rect.right = min(rect.right,resolution-1);
-	rect.bottom = min(rect.bottom,resolution-1);
+	rect.left = crymax(rect.left,1);
+	rect.top = crymax(rect.top,1);
+	rect.right = crymin(rect.right,resolution-1);
+	rect.bottom = crymin(rect.bottom,resolution-1);
 
 	// Set the loop pointers
 	uchar *pLayerMask = mask.GetData();

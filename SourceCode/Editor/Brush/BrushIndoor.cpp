@@ -19,6 +19,7 @@
 #include "Objects\BrushObject.h"
 
 #include <I3DEngine.h>
+#include <I3DIndoorEngine.h>
 
 //////////////////////////////////////////////////////////////////////////
 CBrushIndoor::CBrushIndoor()

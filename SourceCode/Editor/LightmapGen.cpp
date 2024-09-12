@@ -38,7 +38,7 @@
 LMGenParam CLightmapGen::m_sParam;
 
 //////////////////////////////////////////////////////////////////////////
-class CEntityRenderPred : public std::binary_function<std::pair<IEntityRender*, CBrushObject*>, std::pair<IEntityRender*, CBrushObject*>, bool>
+class CEntityRenderPred // : public std::binary_function<std::pair<IEntityRender*, CBrushObject*>, std::pair<IEntityRender*, CBrushObject*>, bool>
 {
 public:
 	bool operator () ( const std::pair<IEntityRender*, CBrushObject*>& rpIEtyRnd1,const std::pair<IEntityRender*, CBrushObject*>& rpIEtyRnd2 )

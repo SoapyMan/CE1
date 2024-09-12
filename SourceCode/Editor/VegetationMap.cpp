@@ -202,7 +202,7 @@ void CVegetationMap::Allocate( CHeightmap *heightmap )
 	m_I3DEngine = GetIEditor()->Get3DEngine();
 	m_heightmap = heightmap;
 
-	int terrainSize = m_heightmap->GetUnitSize() * max(m_heightmap->GetWidth(),m_heightmap->GetHeight());
+	int terrainSize = m_heightmap->GetUnitSize() * crymax(m_heightmap->GetWidth(),m_heightmap->GetHeight());
 
 	int sectorSize;
 	int numSectors;
@@ -447,10 +447,10 @@ CVegetationInstance* CVegetationMap::GetNearestInstance( const Vec3 &pos,float r
 	float r = radius*m_worldToSector;
 	float px = pos.x*m_worldToSector;
 	float py = pos.y*m_worldToSector;
-	int sx1 = ftoi(px-r); sx1 = max(sx1,0);
-	int sx2 = ftoi(px+r);	sx2 = min(sx2,m_numSectors-1);
-	int sy1 = ftoi(py-r);	sy1 = max(sy1,0);
-	int sy2 = ftoi(py+r);	sy2 = min(sy2,m_numSectors-1);
+	int sx1 = ftoi(px-r); sx1 = crymax(sx1,0);
+	int sx2 = ftoi(px+r);	sx2 = crymin(sx2,m_numSectors-1);
+	int sy1 = ftoi(py-r);	sy1 = crymax(sy1,0);
+	int sy2 = ftoi(py+r);	sy2 = crymin(sy2,m_numSectors-1);
 	
 	CVegetationInstance *nearest = 0;
 	float minDist = FLT_MAX;
@@ -486,10 +486,10 @@ void CVegetationMap::GetObjectInstances( float x1,float y1,float x2,float y2,std
 {
 	instances.reserve(100);
 	// check all sectors intersected by radius.
-	int sx1 = ftoi(x1*m_worldToSector); sx1 = max(sx1,0);
-	int sx2 = ftoi(x2*m_worldToSector);	sx2 = min(sx2,m_numSectors-1);
-	int sy1 = ftoi(y1*m_worldToSector);	sy1 = max(sy1,0);
-	int sy2 = ftoi(y2*m_worldToSector);	sy2 = min(sy2,m_numSectors-1);
+	int sx1 = ftoi(x1*m_worldToSector); sx1 = crymax(sx1,0);
+	int sx2 = ftoi(x2*m_worldToSector);	sx2 = crymin(sx2,m_numSectors-1);
+	int sy1 = ftoi(y1*m_worldToSector);	sy1 = crymax(sy1,0);
+	int sy2 = ftoi(y2*m_worldToSector);	sy2 = crymin(sy2,m_numSectors-1);
 	for (int y = sy1; y <= sy2; y++)
 	{
 		for (int x = sx1; x <= sx2; x++)
@@ -536,10 +536,10 @@ bool CVegetationMap::IsPlaceEmpty( const Vec3 &pos,float radius,CVegetationInsta
 	float r = radius*m_worldToSector;
 	float px = pos.x*m_worldToSector;
 	float py = pos.y*m_worldToSector;
-	int sx1 = ftoi(px-r); sx1 = max(sx1,0);
-	int sx2 = ftoi(px+r);	sx2 = min(sx2,m_numSectors-1);
-	int sy1 = ftoi(py-r);	sy1 = max(sy1,0);
-	int sy2 = ftoi(py+r);	sy2 = min(sy2,m_numSectors-1);
+	int sx1 = ftoi(px-r); sx1 = crymax(sx1,0);
+	int sx2 = ftoi(px+r);	sx2 = crymin(sx2,m_numSectors-1);
+	int sy1 = ftoi(py-r);	sy1 = crymax(sy1,0);
+	int sy2 = ftoi(py+r);	sy2 = crymin(sy2,m_numSectors-1);
 	for (int y = sy1; y <= sy2; y++)
 	{
 		for (int x = sx1; x <= sx2; x++)
@@ -599,10 +599,10 @@ bool CVegetationMap::CanPlace( CVegetationObject *object,const Vec3 &pos,float r
 	float r = radius*m_worldToSector;
 	float px = pos.x*m_worldToSector;
 	float py = pos.y*m_worldToSector;
-	int sx1 = ftoi(px-r); sx1 = max(sx1,0);
-	int sx2 = ftoi(px+r);	sx2 = min(sx2,m_numSectors-1);
-	int sy1 = ftoi(py-r);	sy1 = max(sy1,0);
-	int sy2 = ftoi(py+r);	sy2 = min(sy2,m_numSectors-1);
+	int sx1 = ftoi(px-r); sx1 = crymax(sx1,0);
+	int sx2 = ftoi(px+r);	sx2 = crymin(sx2,m_numSectors-1);
+	int sy1 = ftoi(py-r);	sy1 = crymax(sy1,0);
+	int sy2 = ftoi(py+r);	sy2 = crymin(sy2,m_numSectors-1);
 	for (int y = sy1; y <= sy2; y++)
 	{
 		for (int x = sx1; x <= sx2; x++)
@@ -848,10 +848,10 @@ void CVegetationMap::ClearBrush( CRect &rc,bool bCircle,CVegetationObject* objec
 	int sx2 = ftoi(x2*m_worldToSector);
 	int sy1 = ftoi(y1*m_worldToSector);
 	int sy2 = ftoi(y2*m_worldToSector);
-	sx1 = max(sx1,0);
-	sx2 = min(sx2,m_numSectors-1);
-	sy1 = max(sy1,0);
-	sy2 = min(sy2,m_numSectors-1);
+	sx1 = crymax(sx1,0);
+	sx2 = crymin(sx2,m_numSectors-1);
+	sy1 = crymax(sy1,0);
+	sy2 = crymin(sy2,m_numSectors-1);
 
 	CVegetationInstance *next = 0;
 	for (int y = sy1; y <= sy2; y++)

@@ -95,7 +95,7 @@ bool BBox::IsIntersectRay( const Vec3& vOrigin, const Vec3& vDir, Vec3& pntConta
 	// Check final candidate actually inside box
 	if(IR(MaxT[WhichPlane])&0x80000000) return false;
 
-	for(i=0;i<3;i++)
+	for(int i=0;i<3;i++)
 	{
 		if(i!=WhichPlane)
 		{

@@ -1539,7 +1539,7 @@ static inline const bool SumDot3Values(const LMCompLight& cLight, float& fIntens
 		if(!cLight.m_bFakeRadiosity)//apply better_lighting model
 		{
 			// Modulate intensity with Lambert factor
-			fLambert = max(0,fCos);
+			fLambert = crymax(0,fCos);
 			if(cLight.m_bDot3)
 				bApplyBetterLighting = true;
 		}
@@ -1606,8 +1606,8 @@ static void GetDot3Sample(float& fLM_DP3LerpFactor, Vec3d& rvLightDir, float fLu
 				// Calculate lightmap correction factor (lambert calculation)
 				// *fLumSum/max(0.01f,fLambLumSum)                     to correct the already applied lambert calculation
 				// (Vert.m_vNormal*rvLightDir) * fLM_DP3LerpFactor      to ???
-				const float fDot  = max(0.f,(rVert.m_vNormal * rvLightDir));
-				const float fInvLambCorr = fDot * fLM_DP3LerpFactor * (fLumSum/max(scfLumSumThreshold*0.1f,fLambLumSum));
+				const float fDot  = crymax(0.f,(rVert.m_vNormal * rvLightDir));
+				const float fInvLambCorr = fDot * fLM_DP3LerpFactor * (fLumSum/crymax(scfLumSumThreshold*0.1f,fLambLumSum));
 				{
 					// correction depends on the lerp factor (fInvLambCorr is for full directional case)
 					// fLM_DP3LerpFactor=1    apply corr 100%  *=fInvLambCorr
@@ -1703,7 +1703,7 @@ void CLightScene::WriteLogInfo()
 	fclose(pFile);	fclose(pErrorFile);
 }
 
-inline const float CLightScene::ComputeHalvedLightmapQuality(const float fOldValue)
+const float CLightScene::ComputeHalvedLightmapQuality(const float fOldValue)
 {
 	const float cfGridSize = m_sParam.m_fTexelSize;
 	if(cfGridSize >= scfMaxGridSize)
@@ -1768,7 +1768,7 @@ void CLightScene::DoLightCalculation(
 		else
 			SumDot3Values(cLight, fIntens, fLambLumSum, fLumSum, fColorRLamb, fColorGLamb, fColorBLamb, cLight, vLightDir, vDir, Vert);
 		if(cbFirstPass)
-			dot3Texel.uiLightMask |= (1 << (min(uiLightCounter,31)));//just make sure it can handle somehow more than 31 lights
+			dot3Texel.uiLightMask |= (1 << (crymin(uiLightCounter,31)));//just make sure it can handle somehow more than 31 lights
 	} // ligit
 	//get dot3 values and add texel
 	float fLM_DP3LerpFactor;
@@ -1823,7 +1823,7 @@ void CLightScene::DoLightCalculation(
 			}
 			occlTexel.SetValue(eChannel, 0xF);//mark as visible
 			if(cbFirstPass)
-				dot3Texel.uiLightMask |= (1 << (min(uiLightCounter,31)));//just make sure it can handle somehow more than 31 lights
+				dot3Texel.uiLightMask |= (1 << (crymin(uiLightCounter,31)));//just make sure it can handle somehow more than 31 lights
 		} // ligit
 	}
 	if(cbFirstPass)
@@ -1941,8 +1941,8 @@ bool CLightScene::Create( const IndoorBaseInterface &pInterface, const Vec3d& vM
 			const unsigned char cucProgress = static_cast<unsigned int>(static_cast<float>(iCurMesh) / static_cast<float>(cuiMeshesToProcessCount + 1) * 100.0f);
 			if(cucProgress != ucLastProgress)
 				::SendMessage( pSharedData->hwnd, pSharedData->uiProgressMessage, cucProgress, 0 );//update progress bar
-			::SendMessage( pSharedData->hwnd, pSharedData->uiMemUsageMessage, min(GetUsedMemory(),1000), 0 );//update progress bar
-			::SendMessage( pSharedData->hwnd, pSharedData->uiMemUsageStatic, min(GetUsedMemory(),1000), 0 );//update progress bar static element
+			::SendMessage( pSharedData->hwnd, pSharedData->uiMemUsageMessage, crymin(GetUsedMemory(),1000), 0 );//update progress bar
+			::SendMessage( pSharedData->hwnd, pSharedData->uiMemUsageStatic, crymin(GetUsedMemory(),1000), 0 );//update progress bar static element
 			::SendMessage( pSharedData->hwnd, pSharedData->uiGLMNameEdit, (UINT_PTR)pMesh, (UINT_PTR)pIGeom );//update progress bar static element			
 
 			ucLastProgress = cucProgress;
@@ -2119,8 +2119,8 @@ bool CLightScene::Create( const IndoorBaseInterface &pInterface, const Vec3d& vM
 	{
 		const unsigned char cuiProgress = (bSerialize == true)?static_cast<unsigned int>(static_cast<float>(cuiMeshesToProcessCount) / static_cast<float>(cuiMeshesToProcessCount + 1) * 100.0f):0;
 		::SendMessage( pSharedData->hwnd, pSharedData->uiProgressMessage, cuiProgress, 0 );
-		::SendMessage( pSharedData->hwnd, pSharedData->uiMemUsageMessage, min(GetUsedMemory(),1000), 0 );//update progress bar
-		::SendMessage( pSharedData->hwnd, pSharedData->uiMemUsageStatic, min(GetUsedMemory(),1000), 0 );//update progress bar static element
+		::SendMessage( pSharedData->hwnd, pSharedData->uiMemUsageMessage, crymin(GetUsedMemory(),1000), 0 );//update progress bar
+		::SendMessage( pSharedData->hwnd, pSharedData->uiMemUsageStatic, crymin(GetUsedMemory(),1000), 0 );//update progress bar static element
 		::SendMessage( pSharedData->hwnd, pSharedData->uiGLMNameEdit, 0, 0 );//update progress bar static element			
 		MSG msg;
 		while( FALSE != ::PeekMessage( &msg, 0, 0, 0, PM_REMOVE ) )
@@ -2224,8 +2224,8 @@ const bool CLightScene::FlushAndSave(volatile SSharedLMEditorData *pSharedData, 
 	if(pSharedData != NULL)
 	{
 		::SendMessage( pSharedData->hwnd, pSharedData->uiProgressMessage, 100, 0 );
-		::SendMessage( pSharedData->hwnd, pSharedData->uiMemUsageMessage, min(GetUsedMemory(),1000), 0 );//update progress bar
-		::SendMessage( pSharedData->hwnd, pSharedData->uiMemUsageStatic, min(GetUsedMemory(),1000), 0 );//update progress bar static element
+		::SendMessage( pSharedData->hwnd, pSharedData->uiMemUsageMessage, crymin(GetUsedMemory(),1000), 0 );//update progress bar
+		::SendMessage( pSharedData->hwnd, pSharedData->uiMemUsageStatic, crymin(GetUsedMemory(),1000), 0 );//update progress bar static element
 		MSG msg;
 		while( FALSE != ::PeekMessage( &msg, 0, 0, 0, PM_REMOVE ) )
 		{ 
@@ -2311,8 +2311,8 @@ void CLightScene::GatherSubSampleTexel(const CRadPoly *pSource, const int ciX, c
 	static const float scfNotHitMaxDot3Diff = 0.9f;	//finer value if a texel has not been hit the patch
 	bool bVertexInserted = false;
 	//check all neighbour texels
-	for(int u = max(ciX-1,0); u <= min(ciX+1,cuiPatchWidth-1); u++)
-	for(int v = max(ciY-1,0); v <= min(ciY+1,cuiPatchHeight-1); v++)
+	for(int u = crymax(ciX-1,0); u <= crymin(ciX+1,cuiPatchWidth-1); u++)
+	for(int v = crymax(ciY-1,0); v <= crymin(ciY+1,cuiPatchHeight-1); v++)
 	{
 		if(u == ciX && v == ciY)
 			continue;//do not check with itself
@@ -2445,7 +2445,7 @@ void CLightScene::PerformAdaptiveSubSampling(CRadMesh *pMesh, CRadPoly *pSource,
 #endif
 #ifdef APPLY_COLOUR_FIX
 	const float cfColourScale = (uiMaxComponent > 3)?255.f / (float)uiMaxComponent : 1.f;//prevent any zero calculation
-	const unsigned int cuiColourFixAlpha = (const unsigned char)min(255.0f, 128.f / cfColourScale);
+	const unsigned int cuiColourFixAlpha = (const unsigned char)crymin(255.0f, 128.f / cfColourScale);
 #endif
 	//now set the tangent space values
 	for(int y=0; y<pSource->m_nH; y++)

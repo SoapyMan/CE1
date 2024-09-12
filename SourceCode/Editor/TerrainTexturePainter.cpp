@@ -228,10 +228,10 @@ void CTerrainTexturePainter::PaintSector( CPoint sector,CPoint texp,CLayer *pLay
 	ofsp.x = texp.x - sector.x*m_sectorTexSize;
 	ofsp.y = texp.y - sector.y*m_sectorTexSize;
 
-	int x1 = max(ofsp.x-radius,0);
-	int y1 = max(ofsp.y-radius,0);
-	int x2 = min(ofsp.x+radius,m_sectorTexSize);
-	int y2 = min(ofsp.y+radius,m_sectorTexSize);
+	int x1 = crymax(ofsp.x-radius,0);
+	int y1 = crymax(ofsp.y-radius,0);
+	int x2 = crymin(ofsp.x+radius,m_sectorTexSize);
+	int y2 = crymin(ofsp.y+radius,m_sectorTexSize);
 
 	int sx = x2 - x1;
 	int sy = y2 - y1;
@@ -344,11 +344,11 @@ void CTerrainTexturePainter::Paint()
 	int hradius = (m_brush.radius+2) / unitSize;
 	CPoint hpos = m_heightmap->WorldToHmap(m_pointerPos);
 	CRect hmaprc;
-	hradius = max(hradius,1);
-	hmaprc.left = max(hpos.x-hradius,0);
-	hmaprc.top = max(hpos.y-hradius,0);
-	hmaprc.right = min(hpos.x+hradius,hmapWidth);
-	hmaprc.bottom = min(hpos.y+hradius,hmapHeight);
+	hradius = crymax(hradius,1);
+	hmaprc.left = crymax(hpos.x-hradius,0);
+	hmaprc.top = crymax(hpos.y-hradius,0);
+	hmaprc.right = crymin(hpos.x+hradius,hmapWidth);
+	hmaprc.bottom = crymin(hpos.y+hradius,hmapHeight);
 
 	// Calculate surface type for this block.
 	m_heightmap->CalcSurfaceTypes( &hmaprc );

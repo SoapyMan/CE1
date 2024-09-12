@@ -40,7 +40,7 @@ enum
 
 #define MAX_BRIGHTNESS 100
 //#define LIGHTBIT_INSHADOW_LEVEL 196
-#define LIGHTBIT_INSHADOW_LEVEL (min( MAX_BRIGHTNESS,ftoi( MAX_BRIGHTNESS*fAmbient*1.25f*pSettings->sunMultiplier) ))
+#define LIGHTBIT_INSHADOW_LEVEL (crymin( MAX_BRIGHTNESS,ftoi( MAX_BRIGHTNESS*fAmbient*1.25f*pSettings->sunMultiplier) ))
 
 //////////////////////////////////////////////////////////////////////////
 CTerrainTexGen::CTerrainTexGen( int resolution )
@@ -667,9 +667,9 @@ void CTerrainTexGen::BlendLightmap( CPoint sector,CImage &surfaceTexture,const C
 
 	uint maxBlendValue = 32768;
 	
-	blend_r = min(blend_r,maxBlendValue);
-	blend_g = min(blend_g,maxBlendValue);
-	blend_b = min(blend_b,maxBlendValue);
+	blend_r = crymin(blend_r,maxBlendValue);
+	blend_g = crymin(blend_g,maxBlendValue);
+	blend_b = crymin(blend_b,maxBlendValue);
 
 	uint r,g,b;
 	
@@ -1001,7 +1001,7 @@ bool CTerrainTexGen::GenerateLightmap( CPoint sector,LightingSettings *pSettings
 
 				// Calculate the intensity
 				float fLight = ((fDP3 + 1.0f)*0.5f + fAmbient) * 255.0f;
-				fBrightness = min(1,(fDP3+1.0f) + fAmbient );
+				fBrightness = crymin(1,(fDP3+1.0f) + fAmbient );
 
 				assert(fLight>=0.0f);
 
@@ -1048,8 +1048,8 @@ bool CTerrainTexGen::GenerateLightmap( CPoint sector,LightingSettings *pSettings
 
 				if (bPaintBrightness)
 				{
-					brightness = min( MAX_BRIGHTNESS,ftoi( MAX_BRIGHTNESS*fBrightness*pSettings->sunMultiplier ) );
-					brightness_shadowmap = min( MAX_BRIGHTNESS,ftoi( MAX_BRIGHTNESS*fBrightnessShadowmap*pSettings->sunMultiplier) );
+					brightness = crymin( MAX_BRIGHTNESS,ftoi( MAX_BRIGHTNESS*fBrightness*pSettings->sunMultiplier ) );
+					brightness_shadowmap = crymin( MAX_BRIGHTNESS,ftoi( MAX_BRIGHTNESS*fBrightnessShadowmap*pSettings->sunMultiplier) );
 					// swap X/Y
 					float worldPixelX = i*m_pixelSizeInMeters;
 					float worldPixelY = j*m_pixelSizeInMeters;
@@ -1090,7 +1090,7 @@ bool CTerrainTexGen::GenerateLightmap( CPoint sector,LightingSettings *pSettings
 				if (fDP3 <= -1.0f) fDP3 = -0.9999f;
 				if (fDP3 >= 1.0f) fDP3 = 0.9999f;
 
-				fBrightness = min(1,(fDP3+1.0f) + fAmbient );
+				fBrightness = crymin(1,(fDP3+1.0f) + fAmbient );
 
 				// Calculate the angle
 				float fW = acos(fDP3);
@@ -1181,8 +1181,8 @@ bool CTerrainTexGen::GenerateLightmap( CPoint sector,LightingSettings *pSettings
 				}
 				if (bPaintBrightness)
 				{
-					brightness = min( MAX_BRIGHTNESS,ftoi( MAX_BRIGHTNESS*fBrightness*pSettings->sunMultiplier ) );
-					brightness_shadowmap = min( MAX_BRIGHTNESS,ftoi( MAX_BRIGHTNESS*fBrightnessShadowmap*pSettings->sunMultiplier) );
+					brightness = crymin( MAX_BRIGHTNESS,ftoi( MAX_BRIGHTNESS*fBrightness*pSettings->sunMultiplier ) );
+					brightness_shadowmap = crymin( MAX_BRIGHTNESS,ftoi( MAX_BRIGHTNESS*fBrightnessShadowmap*pSettings->sunMultiplier) );
 					// swap X/Y
 					float worldPixelX = i*m_pixelSizeInMeters;
 					float worldPixelY = j*m_pixelSizeInMeters;
@@ -1246,9 +1246,9 @@ bool CTerrainTexGen::GenerateLightmap( CPoint sector,LightingSettings *pSettings
 			fDP3 = lightVector.Dot(vNormal);
 
 			// Calculate the intensity (basic lambert, this is incorrect for fuzzy materials like grass, more smooth around 0 would be better)
-			float fLight = max(fDP3,0);				// 0..1
+			float fLight = crymax(fDP3,0);				// 0..1
 
-			fBrightness = min(1,(fDP3+1.0f) + fAmbient );
+			fBrightness = crymin(1,(fDP3+1.0f) + fAmbient );
 
 			float fSunVisibility = 1;
 			// in shadow
@@ -1301,9 +1301,9 @@ bool CTerrainTexGen::GenerateLightmap( CPoint sector,LightingSettings *pSettings
 			uint *pLMPixel = &pLightmap[(i-rc.left) + (j-rc.top)*m_sectorResolution];			// uint RGB
 
 			// Clamp color to 255.
-			uint lr = min(ftoi(fr*GetRValue(*pLMPixel)),255);	// 0..255
-			uint lg = min(ftoi(fg*GetGValue(*pLMPixel)),255);	// 0..255
-			uint lb = min(ftoi(fb*GetBValue(*pLMPixel)),255);	// 0..255
+			uint lr = crymin(ftoi(fr*GetRValue(*pLMPixel)),255);	// 0..255
+			uint lg = crymin(ftoi(fg*GetGValue(*pLMPixel)),255);	// 0..255
+			uint lb = crymin(ftoi(fb*GetBValue(*pLMPixel)),255);	// 0..255
 
 			// store it
 			*pLMPixel = RGB(lr,lg,lb);
@@ -1311,8 +1311,8 @@ bool CTerrainTexGen::GenerateLightmap( CPoint sector,LightingSettings *pSettings
 			// brightness for vegetation
 			if (bPaintBrightness)
 			{
-				brightness = min( MAX_BRIGHTNESS,ftoi( MAX_BRIGHTNESS*fBrightness*pSettings->sunMultiplier ) );
-				brightness_shadowmap = min( MAX_BRIGHTNESS,ftoi( MAX_BRIGHTNESS*fBrightnessShadowmap*pSettings->sunMultiplier) );
+				brightness = crymin( MAX_BRIGHTNESS,ftoi( MAX_BRIGHTNESS*fBrightness*pSettings->sunMultiplier ) );
+				brightness_shadowmap = crymin( MAX_BRIGHTNESS,ftoi( MAX_BRIGHTNESS*fBrightnessShadowmap*pSettings->sunMultiplier) );
 
 				// swap X/Y
 				float worldPixelX = i*m_pixelSizeInMeters;
@@ -2066,7 +2066,7 @@ bool CTerrainTexGen::RefreshAccessibility( const LightingSettings *inpLSettings,
 		for(DWORD i=0;i<w*h;i++)
 		{
 			unsigned short in = *src++;
-			unsigned char out = (unsigned char) min( ((in+0x88)>>8), 255 );
+			unsigned char out = (unsigned char) crymin( ((in+0x88)>>8), 255 );
 
 			*dst++ = out;		// from 8.8 fixpoint to 8bit
 		}
@@ -2082,7 +2082,7 @@ bool CTerrainTexGen::RefreshAccessibility( const LightingSettings *inpLSettings,
 		float fHAngle=-(inpLSettings->iSunRotation-90.0f) * gf_DEGTORAD;
 		float fMinHAngle=fHAngle-fBlurAngle*0.5f, fMaxHAngle=fHAngle+fBlurAngle*0.5f;
 		float fVAngle=gf_PI_DIV_2-asin(inpLSettings->iSunHeight*0.01f);
-		float fMinVAngle=max(0,fVAngle-fBlurAngle*0.5f), fMaxVAngle=min(gf_PI_DIV_2,fVAngle+fBlurAngle*0.5f);
+		float fMinVAngle=crymax(0,fVAngle-fBlurAngle*0.5f), fMaxVAngle=crymin(gf_PI_DIV_2,fVAngle+fBlurAngle*0.5f);
 		CHeightmapAccessibility<CHemisphereSink_Slice> calc(w,h,dwSunAngleSteps,fMinHAngle,fMaxHAngle);
 
 		calc.m_Sink.SetMinAndMax(fMinVAngle,fMaxVAngle);
@@ -2104,7 +2104,7 @@ bool CTerrainTexGen::RefreshAccessibility( const LightingSettings *inpLSettings,
 		for(DWORD i=0;i<w*h;i++)
 		{
 			unsigned short in = *src++;
-			unsigned char out = (unsigned char) min( ((in+0x88)>>8), 255 );
+			unsigned char out = (unsigned char) crymin( ((in+0x88)>>8), 255 );
 
 			*dst++ = out;		// from 8.8 fixpoint to 8bit
 		}

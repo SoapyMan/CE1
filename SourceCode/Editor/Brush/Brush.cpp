@@ -557,7 +557,7 @@ bool SBrush::Intersect(SBrush *Vol, std::vector<SBrush*>& List)
 {
   SBrush  *front, *back;
   int n = 0;
-  int i;
+  int i, j, k;
 
   for (i=0 ; i<3 ; i++)
   {
@@ -572,7 +572,7 @@ bool SBrush::Intersect(SBrush *Vol, std::vector<SBrush*>& List)
   SBrush *Die = this;
   float vol;
 
-  for (int j=0; j<b->m_Faces.size(); j++)
+  for (j=0; j<b->m_Faces.size(); j++)
   {
     SBrushFace *f = b->m_Faces[j];
     SBrushFace *fc = new SBrushFace;
@@ -584,7 +584,7 @@ bool SBrush::Intersect(SBrush *Vol, std::vector<SBrush*>& List)
     fc->MakePlane();
     for (i=0; i<Die->m_Faces.size(); i++)
     {
-      for (int k=0; k<Die->m_Faces[i]->m_Poly->m_Pts.size(); k++)
+      for (k=0; k<Die->m_Faces[i]->m_Poly->m_Pts.size(); k++)
       {
         if ((fc->m_Plane.normal | Die->m_Faces[i]->m_Poly->m_Pts[k].xyz) > fc->m_Plane.dist)
           break;

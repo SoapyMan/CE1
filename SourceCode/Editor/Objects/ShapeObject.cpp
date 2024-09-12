@@ -630,7 +630,7 @@ void CShapeObject::CalcBBox()
 	box.Transform( GetWorldTM() );
 	m_lowestHeight = box.min.z;
 
-	m_bbox.max.z = max( m_bbox.max.z,mv_height );
+	m_bbox.max.z = crymax( m_bbox.max.z,mv_height );
 }
 
 //////////////////////////////////////////////////////////////////////////

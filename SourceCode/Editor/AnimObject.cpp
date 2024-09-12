@@ -11,8 +11,8 @@ CAnimObject::CAnimObject()
 {
 	m_3dEngine = GetIEditor()->Get3DEngine();
 
-	m_bbox[0].SetMax();
-	m_bbox[1].SetMin();
+	m_bbox[0] = gf_INFINITY;
+	m_bbox[1] = -gf_INFINITY;
 
 	m_angles.Set(0,0,0);
 
@@ -43,8 +43,10 @@ CAnimObject::Node* CAnimObject::CreateNode( const char *szNodeName )
 	if (!obj)
 		return 0;
 
-	obj->GetBoxMin().AddToBounds( m_bbox[0],m_bbox[1] );
-	obj->GetBoxMax().AddToBounds( m_bbox[0],m_bbox[1] );
+	obj->GetBoxMin().CheckMin( m_bbox[0] );
+	obj->GetBoxMax().CheckMax( m_bbox[1] );
+	obj->GetBoxMin().CheckMin( m_bbox[0] );
+	obj->GetBoxMax().CheckMax( m_bbox[1] );
 
 	Node *node = new Node;
 	node->m_name = szNodeName;
@@ -64,10 +66,10 @@ void CAnimObject::Draw( const SRendParams &rp )
 		Node *node = m_nodes[i];
 		if (node->m_object)
 		{
-			Matrix tm = GetNodeMatrix(node);
+			Matrix44 tm = GetNodeMatrix(node);
 			tm = node->m_invOrigTM * tm;
 			nodeRP.pMatrix = &tm;
-			m_nodes[i]->m_object->Render(nodeRP);
+			m_nodes[i]->m_object->Render(nodeRP, Vec3(zero), 0);
 		}
 	}
 }
@@ -106,7 +108,7 @@ void CAnimObject::Animate( float time )
 }
 
 //////////////////////////////////////////////////////////////////////////
-Matrix& CAnimObject::GetNodeMatrix( Node *node )
+Matrix44& CAnimObject::GetNodeMatrix( Node *node )
 {
 	// fixme.
 	node->m_bMatrixValid = false;
@@ -116,15 +118,15 @@ Matrix& CAnimObject::GetNodeMatrix( Node *node )
 	if (!node->m_bMatrixValid)
 	{
 		// Make local matrix.
-		node->m_rotate.GetMatrix(node->m_tm);
-		node->m_tm.ScaleMatrix( node->m_scale.x,node->m_scale.y,node->m_scale.z );
-		node->m_tm.SetTranslation( node->m_pos );
+		node->m_tm = Matrix33(node->m_rotate);
+		node->m_tm.ScaleMatRow( node->m_scale );
+		node->m_tm.SetTranslationOLD( node->m_pos );
 		node->m_bMatrixValid = true;
 
 		if (node->m_parent)
 		{
 			// Combine with parent matrix.
-			Matrix &parentTM = GetNodeMatrix(node->m_parent);
+			Matrix44 &parentTM = GetNodeMatrix(node->m_parent);
 			node->m_tm = node->m_tm * parentTM;
 		}
 	}

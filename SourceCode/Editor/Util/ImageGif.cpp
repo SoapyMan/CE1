@@ -193,9 +193,9 @@ bool CImageGif::Load( const CString &fileName,CImage &outImage )
   }
 
   int                numcols;
-  register unsigned  char ch, ch1;
-  register uchar     *ptr1;
-  register int   i;
+  unsigned  char ch, ch1;
+  uchar     *ptr1;
+  int   i;
   short transparency = -1;
 
   /* The hash table used by the decompressor */

@@ -82,7 +82,7 @@ public:
 
 			assert(infX-Current.x!=0);			// infX has to advance (check your input)
 
-			return min( (infY-Current.y)/(infX-Current.x) , 0 );
+			return crymin( (infY-Current.y)/(infX-Current.x) , 0 );
 		}
 	}
 

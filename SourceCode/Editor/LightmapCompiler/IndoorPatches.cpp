@@ -139,10 +139,11 @@ const bool CLightPatch::GetSpace(int w,int h, uint16 &x, uint16 &y)
 #endif
 	{
 		int nLevel2=0;
+		int j;
 #ifdef MAKE_BLOCK_ALIGN
-		for (int j=0;j<w;j+=4)		//only test every 4th texel
+		for (j=0;j<w;j+=4)		//only test every 4th texel
 #else
-		for (int j=0;j<w;j++) 
+		for (j=0;j<w;j++) 
 #endif
 		{
 			if (m_nPatchSpace[i+j]>=nLevel) 
@@ -169,7 +170,7 @@ const bool CLightPatch::GetSpace(int w,int h, uint16 &x, uint16 &y)
 		return (false);
 
 	//increase the "water" level
-	for (i=0;i<w;i++) 
+	for (int i=0;i<w;i++) 
 		m_nPatchSpace[iX+i]=nLevel+h;
 
 	return (true);
@@ -481,8 +482,8 @@ static void sEncodeRGBE8(const float r, const float g, const float b, unsigned c
 {
   CFColor vEncoded;
   // Determine the largest color component
-	float fMaxComponent = max(max(r, g), b);
-  fMaxComponent = max(0.0001f, fMaxComponent);
+	float fMaxComponent = crymax(crymax(r, g), b);
+  fMaxComponent = crymax(0.0001f, fMaxComponent);
 	// Round to the nearest integer exponent
 	float fExp = floor(HDR_LOG(HDR_EXP_BASE, fMaxComponent));
   float fExpHDR = (fExp + HDR_EXP_OFFSET) / 256.0f;
@@ -496,10 +497,10 @@ static void sEncodeRGBE8(const float r, const float g, const float b, unsigned c
   // Store the shared exponent in the alpha channel
 	vEncoded.a = fExpHDR * 255;
 
-	dataptr[0] = min(vEncoded.r, 255); 
-	dataptr[1] = min(vEncoded.g, 255); 
-	dataptr[2] = min(vEncoded.b, 255); 
-	dataptr[3] = min(vEncoded.a, 255); 
+	dataptr[0] = crymin(vEncoded.r, 255); 
+	dataptr[1] = crymin(vEncoded.g, 255); 
+	dataptr[2] = crymin(vEncoded.b, 255); 
+	dataptr[3] = crymin(vEncoded.a, 255); 
 }
 
 static Vec3 sDecodeRGBE8(unsigned char *dataptr)
@@ -636,7 +637,7 @@ void CRadPoly::GatherSubSamples(
 	const unsigned int uiR = __min(512, (unsigned int)r);
 	const unsigned int uiG = __min(512, (unsigned int)g);
 	const unsigned int uiB = __min(512, (unsigned int)b);
-	const unsigned int cuiMax = __max(uiR, max(uiG, uiB));
+	const unsigned int cuiMax = __max(uiR, __max(uiG, uiB));
 	ruiMaxComponent = __max(cuiMax, ruiMaxComponent);
 
 	*pCenterColour++	= (unsigned char) (__min(255, uiR));
@@ -932,7 +933,7 @@ const unsigned int CRadPoly::CalcExtent(CLightScene *pScene, const CString& rGLM
 		}
 		//now do the fGridSize dependent calls again
 		// x1,y1,x2,y2 can be negative 
-		const float cfNewGridFactor = max((float)m_nW/(float)iMaxBlockSize, (float)m_nH/(float)iMaxBlockSize);
+		const float cfNewGridFactor = crymax((float)m_nW/(float)iMaxBlockSize, (float)m_nH/(float)iMaxBlockSize);
 		const float fInvNewGridSize = 1.f/(fGridSize * cfNewGridFactor);
 		m_nX1=(short)floor(m_fX1 * fInvNewGridSize);
 		m_nY1=(short)floor(m_fY1 * fInvNewGridSize);
@@ -1103,7 +1104,7 @@ void CRadPoly::SetDot3LightmapTexel(const CRadVertex& rVertex,
 	const unsigned int uiR = __min(512, (unsigned int)(col.r * 255.0f));
 	const unsigned int uiG = __min(512, (unsigned int)(col.g * 255.0f));
 	const unsigned int uiB = __min(512, (unsigned int)(col.b * 255.0f));
-	const unsigned int cuiMax = __max(uiR, max(uiG, uiB));
+	const unsigned int cuiMax = __max(uiR, __max(uiG, uiB));
 
 	const unsigned char r = (unsigned char) (__min(255, uiR));
 	const unsigned char g = (unsigned char) (__min(255, uiG));

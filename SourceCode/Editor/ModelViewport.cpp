@@ -796,7 +796,7 @@ void CModelViewport::DrawModel()
 		if (mv_disableLod)
 			fDistance = 0;
 //		int nLod = (int)(fDistance/(4*m_object->GetRadius()));
-		int nLod = max(0,(int)(fDistance/(10.f*m_object->GetRadius())));
+		int nLod = crymax(0,(int)(fDistance/(10.f*m_object->GetRadius())));
 
 		// enable rendering of all attached lsources as local lsources
 		for(int i=0; m_object->GetLightSources(i); i++)

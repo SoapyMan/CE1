@@ -145,7 +145,7 @@ void CParticleItem::Serialize( SerializeContext &ctx )
 		XmlNodeRef childsNode = node->findChild( "Childs" );
 		if (childsNode)
 		{
-			for (i = 0; i < childsNode->getChildCount(); i++)
+			for (int i = 0; i < childsNode->getChildCount(); i++)
 			{
 				XmlNodeRef xchild = childsNode->getChild(i);
 				CParticleItem *pItem = new CParticleItem;

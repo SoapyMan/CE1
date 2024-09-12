@@ -1298,10 +1298,10 @@ bool CBaseObject::HitTestRect( HitContext &hc )
 	// find new min/max values
 	for(int i=0; i<8; i++)
 	{
-		objrc.left = min(objrc.left,p[i].x);
-		objrc.right = max(objrc.right,p[i].x);
-		objrc.top = min(objrc.top,p[i].y);
-		objrc.bottom = max(objrc.bottom,p[i].y);
+		objrc.left = crymin(objrc.left,p[i].x);
+		objrc.right = crymax(objrc.right,p[i].x);
+		objrc.top = crymin(objrc.top,p[i].y);
+		objrc.bottom = crymax(objrc.bottom,p[i].y);
 	}
 	if (objrc.IsRectEmpty())
 	{

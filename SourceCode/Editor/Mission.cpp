@@ -250,7 +250,7 @@ void CMission::Export( XmlNodeRef &root )
 	std::set<CEntityScript*> scripts;
 	std::vector<CBaseObject*> objects;
 	pObjMan->GetObjects( objects );
-	for (i = 0; i < objects.size(); i++)
+	for (int i = 0; i < objects.size(); i++)
 	{
 		CBaseObject *obj = objects[i];
 		if (obj->GetType() == OBJTYPE_ENTITY)

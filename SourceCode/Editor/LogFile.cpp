@@ -148,11 +148,11 @@ void CLogFile::SetVerbosity( int verbosity )
 }
 
 //////////////////////////////////////////////////////////////////////////
-int CLogFile::GetVerbosityLevel()
+int CLogFile::GetVerbosityLevel(bool forceIfOff) const
 {
 	if (m_pLogVerbosity)
 		return (m_pLogVerbosity->GetIVal());
-	return (0);
+	return forceIfOff ? 8 : 0;
 }
 
 //////////////////////////////////////////////////////////////////////////

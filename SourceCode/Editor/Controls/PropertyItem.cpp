@@ -262,7 +262,7 @@ void CPropertyItem::ParseXmlNode( bool bRecursive/* =true  */)
 
 		m_bExpandable = false;
 		// Create sub-nodes.
-		for (i=0; i < m_node->getChildCount(); i++)
+		for (int i=0; i < m_node->getChildCount(); i++)
 		{
 			m_bIgnoreChildsUpdate = true;
 
@@ -1120,9 +1120,9 @@ CString CPropertyItem::VarToValue( IVariable *var )
 		int r = v.x*255;
 		int g = v.y*255;
 		int b = v.z*255;
-		r = max(0,min(r,255));
-		g = max(0,min(g,255));
-		b = max(0,min(b,255));
+		r = crymax(0,crymin(r,255));
+		g = crymax(0,crymin(g,255));
+		b = crymax(0,crymin(b,255));
     value.Format( "%d,%d,%d",r,g,b );
 		return value;
 	}

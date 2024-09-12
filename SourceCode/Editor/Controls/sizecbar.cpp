@@ -275,11 +275,11 @@ CSize CSizingControlBar::CalcFixedLayout(BOOL bStretch, BOOL bHorz)
     m_bParentSizing = FALSE;
 
     if (bHorz)
-        return CSize(max(m_szMinHorz.cx, m_szHorz.cx),
-                     max(m_szMinHorz.cy, m_szHorz.cy));
+        return CSize(crymax(m_szMinHorz.cx, m_szHorz.cx),
+                     crymax(m_szMinHorz.cy, m_szHorz.cy));
 
-    return CSize(max(m_szMinVert.cx, m_szVert.cx),
-                 max(m_szMinVert.cy, m_szVert.cy));
+    return CSize(crymax(m_szMinVert.cx, m_szVert.cx),
+                 crymax(m_szMinVert.cy, m_szVert.cy));
 }
 
 CSize CSizingControlBar::CalcDynamicLayout(int nLength, DWORD dwMode)
@@ -313,14 +313,14 @@ CSize CSizingControlBar::CalcDynamicLayout(int nLength, DWORD dwMode)
         {
             m_szFloat.cx = rFrame.left + rBar.Width() - ptCursor.x;
             m_pDockContext->m_rectFrameDragHorz.left = 
-                min(ptCursor.x, rFrame.left + rBar.Width() - m_szMinFloat.cx);
+                crymin(ptCursor.x, rFrame.left + rBar.Width() - m_szMinFloat.cx);
         }
 
         if (nHitTest == HTTOPLEFT || nHitTest == HTTOPRIGHT)
         {
             m_szFloat.cy = rFrame.top + rBar.Height() - ptCursor.y;
             m_pDockContext->m_rectFrameDragHorz.top =
-                min(ptCursor.y, rFrame.top + rBar.Height() - m_szMinFloat.cy);
+                crymin(ptCursor.y, rFrame.top + rBar.Height() - m_szMinFloat.cy);
         }
 
         if (nHitTest == HTTOPRIGHT || nHitTest == HTBOTTOMRIGHT)
@@ -333,8 +333,8 @@ CSize CSizingControlBar::CalcDynamicLayout(int nLength, DWORD dwMode)
 #endif //_SCB_REPLACE_MINIFRAME
         ((dwMode & LM_LENGTHY) ? m_szFloat.cy : m_szFloat.cx) = nLength;
 
-    m_szFloat.cx = max(m_szFloat.cx, m_szMinFloat.cx);
-    m_szFloat.cy = max(m_szFloat.cy, m_szMinFloat.cy);
+    m_szFloat.cx = crymax(m_szFloat.cx, m_szMinFloat.cx);
+    m_szFloat.cy = crymax(m_szFloat.cy, m_szMinFloat.cy);
 
     return m_szFloat;
 }
@@ -569,7 +569,7 @@ void CSizingControlBar::OnPaint()
     CPaintDC dc(this);
 }
 
-UINT CSizingControlBar::OnNcHitTest(CPoint point)
+LRESULT CSizingControlBar::OnNcHitTest(CPoint point)
 {
     CRect rcBar, rcEdge;
     GetWindowRect(rcBar);
@@ -649,7 +649,7 @@ void CSizingControlBar::StartTracking(UINT nHitTest, CPoint point)
         // calc minwidth as the max minwidth of the sizing bars on row
         int nMinWidth = bHorz ? m_szMinHorz.cy : m_szMinVert.cx;
         for (int i = 0; i < arrSCBars.GetSize(); i++)
-            nMinWidth = max(nMinWidth, bHorz ? 
+            nMinWidth = crymax(nMinWidth, bHorz ? 
                 arrSCBars[i]->m_szMinHorz.cy :
                 arrSCBars[i]->m_szMinVert.cx);
         int nExcessWidth = (bHorz ? m_szHorz.cy : m_szVert.cx) - nMinWidth;
@@ -709,7 +709,7 @@ void CSizingControlBar::OnTrackUpdateSize(CPoint& point)
     BOOL bHorzTrack = m_htEdge == HTLEFT || m_htEdge == HTRIGHT;
 
     int nTrackPos = bHorzTrack ? point.x : point.y;
-    nTrackPos = max(m_nTrackPosMin, min(m_nTrackPosMax, nTrackPos));
+    nTrackPos = crymax(m_nTrackPosMin, crymin(m_nTrackPosMax, nTrackPos));
 
     int nDelta = nTrackPos - m_nTrackPosOld;
 
@@ -767,7 +767,7 @@ void CSizingControlBar::OnTrackUpdateSize(CPoint& point)
         {
             CSizingControlBar* pBar = arrSCBars[i];
                 
-            int nDeltaT = min(nDelta,
+            int nDeltaT = crymin(nDelta,
                 (bHorz ? pBar->m_szHorz.cx : pBar->m_szVert.cy) -
                 (bHorz ? pBar->m_szMinHorz.cx : pBar->m_szMinVert.cy));
 
@@ -977,7 +977,7 @@ BOOL CSizingControlBar::NegotiateSpace(int nLengthTotal, BOOL bHorz)
         {
             nLengthActual += bHorz ? pBar->m_szHorz.cx - 2 : 
                 pBar->m_szVert.cy - 2;
-            nWidthMax = max(nWidthMax, bHorz ? pBar->m_szHorz.cy :
+            nWidthMax = crymax(nWidthMax, bHorz ? pBar->m_szHorz.cy :
                 pBar->m_szVert.cx);
         }
         else
@@ -1004,7 +1004,7 @@ BOOL CSizingControlBar::NegotiateSpace(int nLengthTotal, BOOL bHorz)
     }
 
     // make all the bars the same width
-    for (i = 0; i < nNumBars; i++)
+    for (int i = 0; i < nNumBars; i++)
         if (bHorz)
             arrSCBars[i]->m_szHorz.cy = nWidthMax;
         else
@@ -1015,7 +1015,7 @@ BOOL CSizingControlBar::NegotiateSpace(int nLengthTotal, BOOL bHorz)
     while (nDelta != 0)
     {
         int nDeltaOld = nDelta;
-        for (i = 0; i < nNumBars; i++)
+        for (int i = 0; i < nNumBars; i++)
         {
             pBar = arrSCBars[i];
             int nLMin = bHorz ?
@@ -1035,7 +1035,7 @@ BOOL CSizingControlBar::NegotiateSpace(int nLengthTotal, BOOL bHorz)
         }
         // clear m_bKeepSize flags
         if ((nDeltaOld == nDelta) || (nDelta == 0))
-            for (i = 0; i < nNumBars; i++)
+            for (int i = 0; i < nNumBars; i++)
                 arrSCBars[i]->m_bKeepSize = FALSE;
     }
 
@@ -1130,19 +1130,19 @@ void CSizingControlBar::LoadState(LPCTSTR lpszProfileName)
     wsprintf(szSection, _T("%s-SCBar-%d"), lpszProfileName,
         GetDlgCtrlID());
 
-    m_szHorz.cx = max(m_szMinHorz.cx, (int) pApp->GetProfileInt(
+    m_szHorz.cx = crymax(m_szMinHorz.cx, (int) pApp->GetProfileInt(
         szSection, _T("sizeHorzCX"), m_szHorz.cx));
-    m_szHorz.cy = max(m_szMinHorz.cy, (int) pApp->GetProfileInt(
+    m_szHorz.cy = crymax(m_szMinHorz.cy, (int) pApp->GetProfileInt(
         szSection, _T("sizeHorzCY"), m_szHorz.cy));
 
-    m_szVert.cx = max(m_szMinVert.cx, (int) pApp->GetProfileInt(
+    m_szVert.cx = crymax(m_szMinVert.cx, (int) pApp->GetProfileInt(
         szSection, _T("sizeVertCX"), m_szVert.cx));
-    m_szVert.cy = max(m_szMinVert.cy, (int) pApp->GetProfileInt(
+    m_szVert.cy = crymax(m_szMinVert.cy, (int) pApp->GetProfileInt(
         szSection, _T("sizeVertCY"), m_szVert.cy));
 
-    m_szFloat.cx = max(m_szMinFloat.cx, (int) pApp->GetProfileInt(
+    m_szFloat.cx = crymax(m_szMinFloat.cx, (int) pApp->GetProfileInt(
         szSection, _T("sizeFloatCX"), m_szFloat.cx));
-    m_szFloat.cy = max(m_szMinFloat.cy, (int) pApp->GetProfileInt(
+    m_szFloat.cy = crymax(m_szMinFloat.cy, (int) pApp->GetProfileInt(
         szSection, _T("sizeFloatCY"), m_szFloat.cy));
 }
 

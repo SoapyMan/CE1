@@ -1728,7 +1728,7 @@ void CNewMenu::DrawMenuTitle(LPDRAWITEMSTRUCT lpDIS, BOOL bIsMenuBar)
       else
       {
         int maxSpace = ((rect.Width()-size.cx)/2);
-        TextPoint.x+=min(maxSpace,10);
+        TextPoint.x+=crymin(maxSpace,10);
       }
 
       CBrush brush(GetSysColor(COLOR_ACTIVECAPTION));
@@ -2789,7 +2789,7 @@ void CNewMenu::MeasureItem_OldStyle( LPMEASUREITEMSTRUCT lpMIS, BOOL bIsMenuBar 
             // Restore old values
             lpMIS->itemData = (ULONG_PTR)pMenuData;
             lpMIS->itemID = pMenuData->m_nID;
-            lpMIS->itemWidth = max(lpMIS->itemWidth,nOrgWidth);
+            lpMIS->itemWidth = crymax(lpMIS->itemWidth,nOrgWidth);
             break;
           }
         }
@@ -2919,7 +2919,7 @@ void CNewMenu::MeasureItem_WinXP( LPMEASUREITEMSTRUCT lpMIS, BOOL bIsMenuBar )
             // Restore old values
             lpMIS->itemData = (ULONG_PTR)pMenuData;
             lpMIS->itemID = pMenuData->m_nID;
-            lpMIS->itemWidth = max(lpMIS->itemWidth,nOrgWidth);
+            lpMIS->itemWidth = crymax(lpMIS->itemWidth,nOrgWidth);
             break;
           }
         }
@@ -2996,8 +2996,8 @@ BOOL CNewMenu::AppendODMenu(LPCTSTR lpstrText, UINT nFlags, UINT nID,
   {
     pItemData->m_nMenuIconOffset = nIndex; 
     CSize size = pIcons->GetIconSize();
-    m_iconX = max(m_iconX,size.cx);
-    m_iconY = max(m_iconY,size.cy);
+    m_iconX = crymax(m_iconX,size.cx);
+    m_iconY = crymax(m_iconY,size.cy);
   }
   else
   {
@@ -3101,8 +3101,8 @@ BOOL CNewMenu::InsertODMenu(UINT nPosition, LPCTSTR lpstrText, UINT nFlags, UINT
   {
     pItemData->m_nMenuIconOffset = nIndex; 
     CSize size = pIcons->GetIconSize();
-    m_iconX = max(m_iconX,size.cx);
-    m_iconY = max(m_iconY,size.cy);
+    m_iconX = crymax(m_iconX,size.cx);
+    m_iconY = crymax(m_iconY,size.cy);
   }
   else
   {
@@ -3164,8 +3164,8 @@ BOOL CNewMenu::ModifyODMenu(LPCTSTR lpstrText, UINT nID, int nIconNormal)
       if(pIcons)
       {
         CSize size = pIcons->GetIconSize();
-        pSubMenu->m_iconX = max(pSubMenu->m_iconX,size.cx);
-        pSubMenu->m_iconY = max(pSubMenu->m_iconY,size.cy);
+        pSubMenu->m_iconX = crymax(pSubMenu->m_iconX,size.cx);
+        pSubMenu->m_iconY = crymax(pSubMenu->m_iconY,size.cy);
       }
     }
     pItemData->m_nFlags &= ~(MF_BYPOSITION);
@@ -3239,8 +3239,8 @@ BOOL CNewMenu::ModifyODMenu(LPCTSTR lpstrText, UINT nID, CNewMenuIcons* pIcons, 
       if(pSubMenu && pIcons->GetIconSize(&x,&y))
       {
         // Correct the size of the menuitem
-        pSubMenu->m_iconX = max(pSubMenu->m_iconX,x);
-        pSubMenu->m_iconY = max(pSubMenu->m_iconY,y);
+        pSubMenu->m_iconX = crymax(pSubMenu->m_iconX,x);
+        pSubMenu->m_iconY = crymax(pSubMenu->m_iconY,y);
       }
     }
     else
@@ -3309,8 +3309,8 @@ BOOL CNewMenu::ModifyODMenu(LPCTSTR lpstrText, LPCTSTR OptionText, int nIconNorm
       if(pMenuIcon)
       {
         CSize size = pMenuIcon->GetIconSize();
-        pOptionMenu->m_iconX = max(pOptionMenu->m_iconX,size.cx);
-        pOptionMenu->m_iconY = max(pOptionMenu->m_iconY,size.cy);
+        pOptionMenu->m_iconX = crymax(pOptionMenu->m_iconX,size.cx);
+        pOptionMenu->m_iconY = crymax(pOptionMenu->m_iconY,size.cy);
       }
     }
     return TRUE;

@@ -36,7 +36,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 // definition for MESSAGE_MAP:
 
-#define DECLARE_TEMPLATE_MESSAGE_MAP() DECLARE_MESSAGE_MAP()
+#define DECLARE_TEMPLATE_MESSAGE_MAP()	DECLARE_MESSAGE_MAP()
+#define END_TEMPLATE_MESSAGE_MAP()		END_MESSAGE_MAP()
+
+#if 0
 
 #if defined(WIN64) && _MFC_VER < 0x700
 #ifdef _AFXDLL
@@ -100,6 +103,6 @@
 
 #endif //WIN64
 
-#define END_TEMPLATE_MESSAGE_MAP() END_MESSAGE_MAP()
+#endif // 0
 
 #endif // !defined(AFX_TEMPLDEF_H__742F3281_055B_11D4_B261_00104BB13A66__INCLUDED_)

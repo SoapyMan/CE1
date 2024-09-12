@@ -180,7 +180,7 @@ void CPreferencesDialog::OnSelchangedListOptions(NMHDR* pNMHDR, LRESULT* pResult
 		if (m_pSelected != NULL && hItemParent)
 		{
 
-			m_wndTree.SetItemData(hItemParent, (DWORD)m_pSelected);
+			m_wndTree.SetItemData(hItemParent, (DWORD_PTR)m_pSelected);
 		}		
 
 	}

@@ -1258,12 +1258,12 @@ void CPropertyCtrl::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 
 	case SB_PAGELEFT:    // Scroll one page left.
 		if (curpos > minpos)
-			curpos = max(minpos, curpos - (int)nPage);
+			curpos = crymax(minpos, curpos - (int)nPage);
 		break;
 
 	case SB_PAGERIGHT:      // Scroll one page right.
 		if (curpos < maxpos)
-			curpos = min(maxpos, curpos + (int)nPage);
+			curpos = crymin(maxpos, curpos + (int)nPage);
 		break;
 
 	case SB_THUMBPOSITION: // Scroll to absolute position. nPos is the position
@@ -1451,8 +1451,8 @@ void CPropertyCtrl::MultiSelectRange( CPropertyItem *pAnchorItem )
 		if (items[i] == pAnchorItem)
 			p2 = i;
 	}
-	int start = min(p1,p2);
-	int end = max(p1,p2);
+	int start = crymin(p1,p2);
+	int end = crymax(p1,p2);
 	for (i = start; i <= end; i++)
 	{
 		MultiSelectItem( items[i] );

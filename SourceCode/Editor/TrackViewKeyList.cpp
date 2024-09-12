@@ -60,8 +60,8 @@ void CTrackViewKeyList::DrawTrack( int item,CDC *dc,CRect &rcItem )
 
 	CRect rcInner = rcItem;
 	//rcInner.DeflateRect(m_leftOffset,0,m_leftOffset,0);
-	rcInner.left = max( rcItem.left,m_leftOffset - m_scrollOffset.x );
-	rcInner.right = min( rcItem.right,(m_scrollMax + m_scrollMin) - m_scrollOffset.x + m_leftOffset*3 );
+	rcInner.left = crymax( rcItem.left,m_leftOffset - m_scrollOffset.x );
+	rcInner.right = crymin( rcItem.right,(m_scrollMax + m_scrollMin) - m_scrollOffset.x + m_leftOffset*3 );
 
 	CRect rcInnerDraw( rcInner.left-6,rcInner.top,rcInner.right+6,rcInner.bottom );
 	if (m_selected == item)

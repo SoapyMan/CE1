@@ -695,8 +695,8 @@ protected:
 	{
 		if(pSharedData != NULL)
 		{
-			::SendMessage( pSharedData->hwnd, pSharedData->uiMemUsageMessage, min(GetUsedMemory(),1000), 0 );//update progress bar
-			::SendMessage( pSharedData->hwnd, pSharedData->uiMemUsageStatic, min(GetUsedMemory(),1000), 0 );//update progress bar static element
+			::SendMessage( pSharedData->hwnd, pSharedData->uiMemUsageMessage, crymin(GetUsedMemory(),1000), 0 );//update progress bar
+			::SendMessage( pSharedData->hwnd, pSharedData->uiMemUsageStatic, crymin(GetUsedMemory(),1000), 0 );//update progress bar static element
 			MSG msg;
 			while( FALSE != ::PeekMessage( &msg, 0, 0, 0, PM_REMOVE ) )
 			{ 

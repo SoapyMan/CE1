@@ -1,12 +1,13 @@
 -- SDL2 as a usage
 usage "XT"
-
-	
 	includedirs {
 		"./Include"
 	}
 	libdirs { 
 		"./lib",
+	}
+	defines {
+		"_XT_STATICLINK"
 	}
 
 	filter "platforms:x64"
