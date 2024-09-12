@@ -1867,23 +1867,17 @@ void CRenderer::FreeResources(int nFlags)
 	if (nFlags & FRR_SYSTEM)
 	{
 		SAFE_DELETE(m_TexMan);
-		for (i = 0; i < m_RP.m_Objects.GetSize(); i++)
+		for (i = 0; i < m_RP.m_Objects.Num(); i++)
 		{
-			CCObject* obj = m_RP.m_Objects[i];
-			if (!obj)
-				continue;
-			delete obj;
-			m_RP.m_Objects[i] = NULL;
+			SAFE_DELETE(m_RP.m_Objects[i]);
 		}
 		m_RP.m_Objects.Free();
 		SAFE_DELETE_ARRAY(m_RP.m_ObjectsPool);
-		for (i = 0; i < m_RP.m_TempObjects.GetSize(); i++)
+		for (i = 0; i < m_RP.m_TempObjects.Num(); i++)
 		{
-			CCObject* obj = m_RP.m_TempObjects[i];
-			if (!obj)
-				continue;
 			if (i >= m_RP.m_nNumObjectsInPool)
-				delete obj;
+				SAFE_DELETE(m_RP.m_TempObjects[i]);
+
 			m_RP.m_TempObjects[i] = NULL;
 		}
 		m_RP.m_TempObjects.Free();
@@ -2801,7 +2795,7 @@ CCObject* CRenderer::EF_GetObject(bool bTemp, int num)
 					cryPrefetchNTSSE(pB + 128);
 				}
 				CCObject* objNext;
-				if (Objs->GetSize() > n + 1 && (objNext = (*Objs)[n + 1]))
+				if (Objs->Num() > n + 1 && (objNext = (*Objs)[n + 1]))
 				{
 					byte* pB = (byte*)objNext;
 					cryPrefetchT0SSE(pB);

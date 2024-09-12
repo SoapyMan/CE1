@@ -93,7 +93,7 @@ CName::CName(const char* str, EFindName efn)
 		if (mAvailable.Num())
 		{
 			mNameIndex = mAvailable[mAvailable.Num() - 1];
-			mAvailable._Remove(mAvailable.Num() - 1, 1);
+			mAvailable.Remove(mAvailable.Num() - 1, 1);
 		}
 		else
 		{

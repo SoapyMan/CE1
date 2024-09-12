@@ -254,6 +254,10 @@ public:
 
 	void Remove(int Index, int Count = 1)
 	{
+		CRYASSERT_MSG(Index >= 0, "Invalid index %d (count %d)", Index, m_nCount);
+		CRYASSERT_MSG(Index <= m_nCount, "Invalid index %d (count %d)", Index, m_nCount);
+		CRYASSERT((Index + Count) <= m_nCount);
+
 		if (Count)
 		{
 			const int last = Index + Count;
@@ -275,15 +279,6 @@ public:
 			m_nAllocatedCount = m_nCount;
 			Realloc();
 		}
-	}
-
-	void _Remove(int Index, int Count)
-	{
-		CRYASSERT(Index >= 0);
-		CRYASSERT(Index <= m_nCount);
-		CRYASSERT((Index + Count) <= m_nCount);
-
-		Remove(Index, Count);
 	}
 
 	int Num(void) const { return m_nCount; }
@@ -322,7 +317,12 @@ public:
 	T** GetDataAddr(void) { return &m_pElements; }
 
 	T* Data(void) const { return m_pElements; }
-	T& Get(int id) const { return m_pElements[id]; }
+	T& Get(int id) const 
+	{
+		CRYASSERT_MSG(id >= 0, "Invalid index %d (count %d)", id, m_nCount);
+		CRYASSERT_MSG(id < m_nCount, "Invalid index %d (count %d)", id, m_nCount);
+		return m_pElements[id];
+	}
 
 	TArray& operator=(TArray& fa)
 	{
@@ -342,8 +342,18 @@ public:
 	  return t;
 	}*/
 
-	const T& operator[](int i) const { return m_pElements[i]; }
-	T& operator[](int i) { return m_pElements[i]; }
+	const T& operator[](int i) const
+	{ 
+		CRYASSERT_MSG(i >= 0, "Invalid index %d (count %d)", i, m_nCount);
+		CRYASSERT_MSG(i < m_nCount, "Invalid index %d (count %d)", i, m_nCount);
+		return m_pElements[i]; 
+	}
+	T& operator[](int i) 
+	{
+		CRYASSERT_MSG(i >= 0, "Invalid index %d (count %d)", i, m_nCount);
+		CRYASSERT_MSG(i < m_nCount, "Invalid index %d (count %d)", i, m_nCount);
+		return m_pElements[i];
+	}
 	T& operator * () { return *m_pElements; }
 
 	TArray(const TArray<T>& cTA)
@@ -417,11 +427,7 @@ public:
 	}
 
 	void Delete(int n) { DelElem(n); }
-	void DelElem(int n)
-	{
-		//    memset(&m_pElements[n],0,sizeof(T));
-		_Remove(n, 1);
-	}
+	void DelElem(int n) { Remove(n, 1); }
 
 	void Load(const char* file_name)
 	{
@@ -443,45 +449,7 @@ public:
 		fclose(f);
 	}
 
-
-	/* LINUX - port [MG], this is not needed and does not compile with gcc under linux
-	// Sorting
-	static int Cmp_Ptrs1(const void* v1, const void* v2)
-	{
-	  T* p1 = (T*)v1;
-	  T* p2 = (T*)v2;
-
-	  if(p1->distance > p2->distance)
-		return 1;
-	  else if(p1->distance < p2->distance)
-		return -1;
-
-	  return 0;
-	}
-
-	static int Cmp_Ptrs2(const void* v1, const void* v2)
-	{
-	  T* p1 = (T*)v1;
-	  T* p2 = (T*)v2;
-
-	  if(p1->distance > p2->distance)
-		return -1;
-	  else if(p1->distance < p2->distance)
-		return 1;
-
-	  return 0;
-	}
-
-	void SortByDistanceMember(bool front_to_back = true)
-	{
-	  if(front_to_back)
-		qsort(&m_pElements[0], m_nCount, sizeof(T), Cmp_Ptrs1);
-	  else
-		qsort(&m_pElements[0], m_nCount, sizeof(T), Cmp_Ptrs2);
-	}
-  */
-
-  // Save/Load
+	// Save/Load
 	void SaveToBuffer(const unsigned char* pBuffer, int& nPos)
 	{
 		// copy size of element

@@ -732,8 +732,8 @@ void CShader::mfInit(void)
 		CShader::m_Nums = 0;
 		CShader::m_MaxNums = (MAX_SHADERS - 256) - 1;
 		CShader::m_FirstCopyNum = MAX_SHADERS - 256;
-		SShader::m_Shaders_known.Alloc(MAX_SHADERS);
-		memset(&SShader::m_Shaders_known[0], 0, sizeof(SShader*) * MAX_SHADERS);
+		SShader::m_Shaders_known.Reserve(MAX_SHADERS);
+		memset(SShader::m_Shaders_known.Data(), 0, sizeof(SShader*) * MAX_SHADERS);
 
 		m_AliasNames.Free();
 		fxParserInit();

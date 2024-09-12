@@ -862,7 +862,7 @@ void CD3D9Renderer::EF_PipelineShutdown()
 	m_RP.m_FogVolumes.Free();
 	SAFE_RELEASE(m_RP.m_pREGlare);
 
-	for (i = 0; i < CREClientPoly2D::mPolysStorage.GetSize(); i++)
+	for (i = 0; i < CREClientPoly2D::mPolysStorage.Num(); i++)
 	{
 		SAFE_RELEASE(CREClientPoly2D::mPolysStorage[i]);
 	}
@@ -870,7 +870,7 @@ void CD3D9Renderer::EF_PipelineShutdown()
 
 	for (j = 0; j < 4; j++)
 	{
-		for (i = 0; i < CREClientPoly::mPolysStorage[j].GetSize(); i++)
+		for (i = 0; i < CREClientPoly::mPolysStorage[j].Num(); i++)
 		{
 			SAFE_RELEASE(CREClientPoly::mPolysStorage[j][i]);
 		}

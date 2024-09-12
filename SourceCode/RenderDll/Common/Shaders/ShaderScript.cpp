@@ -1852,7 +1852,7 @@ char* CShader::mfScriptForFileName(const char* name, SShader* shGen, uint64 nMas
 		Warning(0, 0, "Error: Can't allocate %d bytes for shader file '%s'\n", len + 1, name);
 		return NULL;
 	}
-	memcpy(buf, &custMacros[0], custMacros.Num());
+	memcpy(buf, custMacros.Data(), custMacros.Num());
 	iSystem->GetIPak()->FSeek(fp, 0, SEEK_SET);
 	len = iSystem->GetIPak()->FRead(&buf[size], 1, len, fp);
 	iSystem->GetIPak()->FClose(fp);

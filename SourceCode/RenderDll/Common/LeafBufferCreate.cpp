@@ -715,7 +715,7 @@ void CLeafBuffer::CreateBuffer(CIndexedMesh* pTriData, bool bStripifyAndShareVer
 
 	SAFE_DELETE(m_pIndicesPreStrip);
 	m_pIndicesPreStrip = new list2<ushort>;
-	m_pIndicesPreStrip->AddList((ushort*)&m_SecIndices[0], m_SecIndices.Num());
+	m_pIndicesPreStrip->AddList((ushort*)m_SecIndices.Data(), m_SecIndices.Num());
 
 	// . Stripify the indices
 #if !defined(LINUX)
@@ -1884,7 +1884,7 @@ bool CLeafBuffer::CheckUpdate(int VertFormat, int Flags, bool bNeedAddNormals)
 	if (!m_Indices.m_VData || (m_UpdateVBufferMask & 0x100))
 	{
 		PROFILE_FRAME(Mesh_CheckUpdateUpdateInds);
-		UpdateVidIndices(&m_SecIndices[0], m_NumIndices);
+		UpdateVidIndices(m_SecIndices.Data(), m_NumIndices);
 	}
 	if (rd->m_RP.m_ObjFlags & FOB_SORTPOLYS)
 		SortTris();
@@ -1990,7 +1990,7 @@ unsigned short* CLeafBuffer::GetIndices(int* pIndicesCount)
 {
 	if (pIndicesCount)
 		*pIndicesCount = m_NumIndices;
-	return &m_SecIndices[0];
+	return m_SecIndices.Data();
 }
 void CLeafBuffer::DestroyIndices()
 {
@@ -2012,7 +2012,7 @@ void CLeafBuffer::UpdateSysIndices(const ushort* pNewInds, int nInds)
 		m_SecIndices.Free();
 		m_SecIndices.Reserve(nInds);
 	}
-	cryMemcpy(&m_SecIndices[0], pNewInds, nInds * 2);
+	cryMemcpy(m_SecIndices.Data(), pNewInds, nInds * 2);
 	InvalidateVideoBuffer(0x100);
 }
 

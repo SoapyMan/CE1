@@ -18,7 +18,7 @@ bool CRESky::mfDraw(SShader* ef, SShaderPass* sfm)
 	if (bPrevClipPl)
 		gRenDev->EF_SetClipPlane(false, NULL, false);
 
-	if (sfm >= &ef->m_Passes[1] && ef->m_Sky)
+	if (sfm >= ef->m_Passes.end() && ef->m_Sky)
 	{ // draw sky sphere vertices at pass 1
 		bool bPrevFog = gRenDev->EnableFog(false);
 		DrawSkySphere(ef->m_Sky->m_fSkyLayerHeight);
