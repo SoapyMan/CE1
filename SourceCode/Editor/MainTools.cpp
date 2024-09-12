@@ -71,14 +71,15 @@ void CMainTools::UncheckAll()
 	}
 }
 
+
 BOOL CMainTools::OnCommand(WPARAM wParam, LPARAM lParam) 
 {
 	// TODO: Add your specialized code here and/or call the base class
 	if (HIWORD(wParam) == BN_CLICKED)
 	{
-		int ctrlId = LOWORD(wParam);
+		int ctrlId = LOWORD(wParam) - 1000;
 
-		OnButtonPressed( ctrlId );
+		OnButtonPressed( ctrlId);
 		return TRUE;
 	}
 	
@@ -140,7 +141,7 @@ void CMainTools::CreateButtons()
 
 		//button->Create( category,WS_CHILD|WS_VISIBLE|WS_TABSTOP|BS_AUTORADIOBUTTON|BS_PUSHLIKE,brc,this,i );
 		//button->Create( category,WS_CHILD|WS_VISIBLE|WS_TABSTOP|BS_AUTOCHECKBOX,brc,this,i );
-		button->Create( category,WS_CHILD|WS_VISIBLE|WS_TABSTOP|BS_PUSHBUTTON,brc,this,i );
+		button->Create( category,WS_CHILD|WS_VISIBLE|WS_TABSTOP|BS_PUSHBUTTON,brc,this, 1000 + i );
 		button->SetFont( CFont::FromHandle( (HFONT)::GetStockObject(DEFAULT_GUI_FONT)) );
 		//button->ModifyStyleEx( 0,WS_EX_STATICEDGE,SWP_FRAMECHANGED );
 		button->SetCheck(0);
@@ -171,7 +172,7 @@ void CMainTools::ReleaseButtons()
 
 void CMainTools::OnButtonPressed( int i )
 {
-	CRYASSERT( i >= 0 && i < m_buttons.size() );
+	CRYASSERT_MSG(i >= 0 && i < m_buttons.size(), "invalid idx %d (count %d)", i, m_buttons.size());
 
 	if (i == m_lastPressed)
 	{

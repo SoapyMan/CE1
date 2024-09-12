@@ -327,19 +327,26 @@ XmlNodeRef CTagPoint::Export( const CString &levelPath,XmlNodeRef &xmlNode )
 //////////////////////////////////////////////////////////////////////////
 void CRespawnPoint::CreateITagPoint()
 {
-	if (IsCreateGameObjects())
+	if (!IsCreateGameObjects())
+		return;
+
+	IGame* pGame = GetIEditor()->GetGame();
+	if (!pGame)
+		return;
+
+	ITagPointManager* pTagMng = pGame->GetTagPointManager();
+	if (!pTagMng)
+		return;
+
+	if (m_ITag)
 	{
-		IGame *pGame = GetIEditor()->GetGame();
-		if (m_ITag)
-		{
-			pGame->GetTagPointManager()->RemoveRespawnPoint( m_ITag );
-			pGame->GetTagPointManager()->RemoveTagPoint( m_ITag );
-		}
-		// Create Tag point in game.
-		m_ITag = pGame->GetTagPointManager()->CreateTagPoint( (const char*)GetName(),GetWorldPos(),GetAngles() );
-		if (m_ITag)
-			pGame->GetTagPointManager()->AddRespawnPoint( m_ITag );
+		pTagMng->RemoveRespawnPoint( m_ITag );
+		pTagMng->RemoveTagPoint( m_ITag );
 	}
+	// Create Tag point in game.
+	m_ITag = pTagMng->CreateTagPoint( (const char*)GetName(),GetWorldPos(),GetAngles() );
+	if (m_ITag)
+		pTagMng->AddRespawnPoint( m_ITag );
 }
 
 //////////////////////////////////////////////////////////////////////////

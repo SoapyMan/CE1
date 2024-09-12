@@ -828,7 +828,7 @@ bool CXServer::GetContext(SXGameContext &ctxOut)
 
 void CXServer::AddRespawnPoint(ITagPoint *pPoint)
 {
-	m_pGame->m_pLog->Log("CXServer::AddRespawnPoint '%s'",pPoint->GetName());
+	GetISystem()->GetILog()->Log("CXServer::AddRespawnPoint '%s'", pPoint->GetName());
 
 	m_vRespawnPoints.insert(RespawnPointMap::iterator::value_type(pPoint->GetName(),pPoint));
 	m_CurRespawnPoint=m_vRespawnPoints.begin();

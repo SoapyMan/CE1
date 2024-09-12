@@ -120,18 +120,21 @@ void CXGame::ClearTagPoints()
 
 		m_mapTagPoints.clear();
 	}
-	if(m_pServer)m_pServer->ClearRespawnPoints();
+	if(m_pServer)
+		m_pServer->ClearRespawnPoints();
 }
 
 //////////////////////////////////////////////////////////////////////////
 void CXGame::AddRespawnPoint(ITagPoint *pPoint)
 {
 //	m_pServer->m_vRespawnPoints.push_back(pPoint);
-	m_pServer->AddRespawnPoint(pPoint);
+	if (m_pServer)
+		m_pServer->AddRespawnPoint(pPoint);
 }
 
 //////////////////////////////////////////////////////////////////////////
 void CXGame::RemoveRespawnPoint(ITagPoint *pPoint)
 {
-	m_pServer->RemoveRespawnPoint(pPoint);
+	if (m_pServer)
+		m_pServer->RemoveRespawnPoint(pPoint);
 }
