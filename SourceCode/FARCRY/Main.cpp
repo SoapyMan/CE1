@@ -650,8 +650,6 @@ InvokeExternalConfigTool()
 //////////////////////////////////////////////////////////////////////////
 bool RunGame(HINSTANCE hInstance, const char* sCmdLine)
 {
-	SDL_Init(SDL_INIT_EVERYTHING);
-
 	//	InvokeExternalConfigTool();
 
 	HWND hWnd = nullptr;

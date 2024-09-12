@@ -35,6 +35,9 @@
 #include <ILog.h>
 #include <ISound.h>
 #include <IGame.h>
+#ifdef USE_SDL
+#include <SDL.h>
+#endif
 
 #include "CryPak.h"
 #include "XConsole.h"
@@ -1085,6 +1088,8 @@ public:
 /////////////////////////////////////////////////////////////////////////////////
 bool CSystem::Init(const SSystemInitParams& params)
 {
+	SDL_Init(SDL_INIT_EVENTS | SDL_INIT_GAMECONTROLLER);
+
 	// parse command line arguments minus e.g. "-IP:23.34.2.2" "-DEVMODE"
 	CCommandLineSink_EarlyCommands CmdlineSink(*this);
 
@@ -1095,8 +1100,11 @@ bool CSystem::Init(const SSystemInitParams& params)
 
 	m_FrameProfileSystem.Init(this);
 
-	m_hInst = (WIN_HINSTANCE)params.hInstance;
-	m_hWnd = (WIN_HWND)params.hWnd;
+	m_hInst = params.hInstance;
+	if (params.hWnd)
+		m_hWnd = SDL_CreateWindowFrom(params.hWnd);
+	else
+		m_hWnd = nullptr;
 
 	m_bEditor = params.bEditor;
 	m_bTestMode = params.bTestMode;
