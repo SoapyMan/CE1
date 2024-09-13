@@ -67,6 +67,11 @@ workspace(WORKSPACE_NAME)
 		"PROJECT_COMPILE_CONFIGURATION=%{cfg.buildcfg}",
 		"PROJECT_COMPILE_PLATFORM=%{cfg.platform}"
 	}
+	
+	-- for MSVC to be faster
+	flags {
+		"MultiProcessorCompile"
+	}
 
     filter "system:linux"
 		platforms { 
