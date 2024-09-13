@@ -7,3 +7,6 @@ Debug_XBox
 Release
 build
 cmake-build-*
+Externals/XT/Src/*
+Externals/XT/Include/*
+Externals/XT/XTToolkit_Lib/*
