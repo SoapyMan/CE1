@@ -25,6 +25,24 @@
 #define WM_UPDATE_LIGHTMAP_GENERATION_MEMUSAGE_STATIC ( WM_USER + 3 )
 #define WM_UPDATE_GLM_NAME_EDIT ( WM_USER + 4 )
 
+struct LMSize {
+	const char* text;
+	float value;
+};
+
+#define LMSIZE(x) { #x, (float)x }
+
+static LMSize s_lmLuxelSizeTable[7] = {
+	LMSIZE(0.05),
+	LMSIZE(0.10),
+	LMSIZE(0.25),
+	LMSIZE(0.30),
+	LMSIZE(0.50),
+	LMSIZE(0.75),
+	LMSIZE(1.00),
+};
+const int s_lmSizeCount = sizeof(s_lmLuxelSizeTable) / sizeof(s_lmLuxelSizeTable[0]);
+
 IMPLEMENT_DYNAMIC(CLMCompDialog, CDialog)
 CLMCompDialog::CLMCompDialog(CWnd* pParent /*=NULL*/)
 	: CDialog(CLMCompDialog::IDD, pParent)
@@ -175,40 +193,16 @@ BOOL CLMCompDialog::OnInitDialog()
 		pCtrl->SetRange( 0, 6 );
 		CStatic* pStatic( (CStatic*) GetDlgItem( IDC_TEXEL_SIZE ) );
 		assert( 0 != pStatic );
-		switch(static_cast<unsigned int>(sParam.m_fTexelSize * 100.0f))
+
+		int sizeId = 0;
+		for (LMSize size : s_lmLuxelSizeTable)
 		{
-		case 25:
-			pCtrl->SetPos(0);
-			pStatic->SetWindowText("0.25");
-			break;
-		case 30:
-			pCtrl->SetPos(1);
-			pStatic->SetWindowText("0.30");
-			break;
-		case 50:
-			pCtrl->SetPos(2);
-			pStatic->SetWindowText("0.50");
-			break;
-		case 75:
-			pCtrl->SetPos(3);
-			pStatic->SetWindowText("0.75");
-			break;
-		case 100:
-			pCtrl->SetPos(4);
-			pStatic->SetWindowText("1.00");
-			break;
-		case 150:
-			pCtrl->SetPos(5);
-			pStatic->SetWindowText("1.50");
-			break;
-		case 200:
-			pCtrl->SetPos(6);
-			pStatic->SetWindowText("2.00");
-			break;
-		default:
-			pCtrl->SetPos(0);
-			pStatic->SetWindowText("0.25");
-			break;
+			if (int(sParam.m_fTexelSize * 100) == int(size.value * 100))
+			{
+				pCtrl->SetPos(sizeId);
+				pStatic->SetWindowText(size.text);
+			}
+			++sizeId;
 		}
 	}
 	(sParam.m_iSubSampling == 9)?m_cSubSampling.SetCheck(BST_CHECKED):m_cSubSampling.SetCheck(0);
@@ -289,40 +283,17 @@ void CLMCompDialog::UpdateGenParams()
 	assert( 0 != pStatic );
 	CSliderCtrl* pCtrl( (CSliderCtrl*) GetDlgItem( IDC_TEXEL_SIZE_SLIDER ) );
 	assert( 0 != pCtrl );
-	switch(pCtrl->GetPos())
+
+	if (pCtrl->GetPos() < 0 || pCtrl->GetPos() > s_lmSizeCount)
 	{
-	case 0:
 		sParam.m_fTexelSize = 0.25f;
 		pStatic->SetWindowText("0.25");
-		break;
-	case 1:
-		sParam.m_fTexelSize = 0.30f;
-		pStatic->SetWindowText("0.3");
-		break;
-	case 2:
-		sParam.m_fTexelSize = 0.5f;
-		pStatic->SetWindowText("0.50");
-		break;
-	case 3:
-		sParam.m_fTexelSize = 0.75f;
-		pStatic->SetWindowText("0.75");
-		break;
-	case 4:
-		sParam.m_fTexelSize = 1.00f;
-		pStatic->SetWindowText("1.00");
-		break;
-	case 5:
-		sParam.m_fTexelSize = 1.50f;
-		pStatic->SetWindowText("1.50");
-		break;
-	case 6:
-		sParam.m_fTexelSize = 2.00f;
-		pStatic->SetWindowText("2.00");
-		break;
-	default:
-		sParam.m_fTexelSize = 0.25f;
-		pStatic->SetWindowText("0.25");
-		break;
+	}
+	else
+	{
+		const LMSize size = s_lmLuxelSizeTable[pCtrl->GetPos()];
+		sParam.m_fTexelSize = size.value;
+		pStatic->SetWindowText(size.text);
 	}
 
 	m_cTextureSize.GetLBText(m_cTextureSize.GetCurSel(), szBuffer);
@@ -451,33 +422,17 @@ CLMCompDialog::OnReleasedCaptureTexelSize( NMHDR* pNMHDR, LRESULT* pResult )
 	assert( 0 != pCtrl );
 	CStatic* pStatic( (CStatic*) GetDlgItem( IDC_TEXEL_SIZE ) );
 	assert( 0 != pStatic );
-	switch(pCtrl->GetPos())
+
+	if (pCtrl->GetPos() < 0 || pCtrl->GetPos() > s_lmSizeCount)
 	{
-	case 0:
 		pStatic->SetWindowText("0.25");
-		break;
-	case 1:
-		pStatic->SetWindowText("0.3");
-		break;
-	case 2:
-		pStatic->SetWindowText("0.50");
-		break;
-	case 3:
-		pStatic->SetWindowText("0.75");
-		break;
-	case 4:
-		pStatic->SetWindowText("1.00");
-		break;
-	case 5:
-		pStatic->SetWindowText("1.50");
-		break;
-	case 6:
-		pStatic->SetWindowText("2.00");
-		break;
-	default:
-		pStatic->SetWindowText("0.25");
-		break;
 	}
+	else
+	{
+		const LMSize size = s_lmLuxelSizeTable[pCtrl->GetPos()];
+		pStatic->SetWindowText(size.text);
+	}
+
 	*pResult = 0;
 }
 
