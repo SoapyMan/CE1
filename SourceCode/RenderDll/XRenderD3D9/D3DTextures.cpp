@@ -268,14 +268,13 @@ void STexPicD3D::Set(int nTexSlot)
 				sRecursion--;
 				return;
 			}
-			else
-				if (CRenderer::CV_r_texbindmode == 2 && (m_Flags2 & FT2_WASLOADED) && !(m_Flags & FT_NOREMOVE) && m_eTT == eTT_Base)
-				{
-					sRecursion++;
-					gRenDev->m_TexMan->SetGridTexture(this);
-					sRecursion--;
-					return;
-				}
+			else if (CRenderer::CV_r_texbindmode == 2 && (m_Flags2 & FT2_WASLOADED) && !(m_Flags & FT_NOREMOVE) && m_eTT == eTT_Base)
+			{
+				sRecursion++;
+				gRenDev->m_TexMan->SetGridTexture(this);
+				sRecursion--;
+				return;
+			}
 			if (CRenderer::CV_r_texbindmode == 3 && (m_Flags2 & FT2_WASLOADED) && !(m_Flags & FT_NOREMOVE))
 			{
 				sRecursion++;
@@ -350,6 +349,7 @@ void STexPicD3D::Set(int nTexSlot)
 	r->m_RP.m_TexStages[tmu].Texture = this;
 	r->m_RP.m_PS.m_NumTextChanges++;
 	LPDIRECT3DDEVICE9 dv = r->mfGetD3DDevice();
+
 	hr = dv->SetTexture(tmu, (IDirect3DBaseTexture9*)m_RefTex.m_VidTex);
 
 	if (m_RefTex.m_Pal > 0 && (m_Flags & FT_PALETTED) && r->m_RP.m_TexStages[tmu].Palette != m_RefTex.m_Pal)
@@ -381,18 +381,16 @@ void STexPicD3D::Set(int nTexSlot)
 			dv->SetSamplerState(tmu, D3DSAMP_ADDRESSU, D3DTADDRESS_MIRRORONCE);
 			dv->SetSamplerState(tmu, D3DSAMP_ADDRESSV, D3DTADDRESS_MIRRORONCE);
 		}
-		else
-			if (m_RefTex.bRepeats == 0)
-			{
-				dv->SetSamplerState(tmu, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
-				dv->SetSamplerState(tmu, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
-			}
-			else
-				if (m_RefTex.bRepeats == 1)
-				{
-					dv->SetSamplerState(tmu, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);
-					dv->SetSamplerState(tmu, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);
-				}
+		else if (m_RefTex.bRepeats == 0)
+		{
+			dv->SetSamplerState(tmu, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
+			dv->SetSamplerState(tmu, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
+		}
+		else if (m_RefTex.bRepeats == 1)
+		{
+			dv->SetSamplerState(tmu, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);
+			dv->SetSamplerState(tmu, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);
+		}
 		if (m_RefTex.m_Type == TEXTGT_CUBEMAP || m_RefTex.m_Type == TEXTGT_3D)
 		{
 			if (m_RefTex.bRepeats == 1)
@@ -437,25 +435,22 @@ int SShaderTexUnit::mfSetTexture(int nt)
 				rd->m_RP.m_FlagsPerFlush |= RBSI_USE_LM;
 				nSetID = rd->m_RP.m_pCurObject->m_nLMId;
 			}
-			else
-				if (m_TexPic->m_Bind == EFTT_LIGHTMAP_DIR && rd->m_RP.m_pCurObject->m_nLMDirId)
-					nSetID = rd->m_RP.m_pCurObject->m_nLMDirId;
-				else
-					if (m_TexPic->m_Bind == EFTT_OCCLUSION && rd->m_RP.m_pCurObject->m_nOcclId)
-						nSetID = rd->m_RP.m_pCurObject->m_nOcclId;
+			else if (m_TexPic->m_Bind == EFTT_LIGHTMAP_DIR && rd->m_RP.m_pCurObject->m_nLMDirId)
+				nSetID = rd->m_RP.m_pCurObject->m_nLMDirId;
+			else if (m_TexPic->m_Bind == EFTT_OCCLUSION && rd->m_RP.m_pCurObject->m_nOcclId)
+				nSetID = rd->m_RP.m_pCurObject->m_nOcclId;
 		}
-		else
-			if (nSetID < 0)
+		else if (nSetID < 0)
+		{
+			if (!rd->m_RP.m_pShaderResources || !rd->m_RP.m_pShaderResources->m_Textures[m_TexPic->m_Bind])
+				Warning(VALIDATOR_FLAG_TEXTURE, 0, "SShaderTexUnit::mfSetTexture: Missed template texture '%s' for shader '%s'\n", gRenDev->m_cEF.mfTemplateTexIdToName(m_TexPic->m_Bind), rd->m_RP.m_pShader->GetName());
+			else
 			{
-				if (!rd->m_RP.m_pShaderResources || !rd->m_RP.m_pShaderResources->m_Textures[m_TexPic->m_Bind])
-					Warning(VALIDATOR_FLAG_TEXTURE, 0, "SShaderTexUnit::mfSetTexture: Missed template texture '%s' for shader '%s'\n", gRenDev->m_cEF.mfTemplateTexIdToName(m_TexPic->m_Bind), rd->m_RP.m_pShader->GetName());
-				else
-				{
-					nTexSlot = m_TexPic->m_Bind;
-					pSTU = &rd->m_RP.m_pShaderResources->m_Textures[nTexSlot]->m_TU;
-					rd->m_RP.m_pShaderResources->m_Textures[nTexSlot]->Update(nt);
-				}
+				nTexSlot = m_TexPic->m_Bind;
+				pSTU = &rd->m_RP.m_pShaderResources->m_Textures[nTexSlot]->m_TU;
+				rd->m_RP.m_pShaderResources->m_Textures[nTexSlot]->Update(nt);
 			}
+		}
 	}
 
 	if (pSTU->m_AnimInfo)
@@ -478,6 +473,7 @@ int SShaderTexUnit::mfSetTexture(int nt)
 				//pSTU->m_TexPic->SaveTGA("Phong1.tga", false);
 			}
 			else
+			{
 				switch (bind)
 				{
 				case TO_FROMRE0:
@@ -521,25 +517,24 @@ int SShaderTexUnit::mfSetTexture(int nt)
 							STexPic* tp = (STexPic*)((ITexPic*)dl->m_pLightImage);
 							if (dl->m_NumCM >= 0)
 								tp = rd->m_TexMan->m_CustomCMaps[dl->m_NumCM].m_Tex;
-							else
-								if (dl->m_fAnimSpeed)
+							else if (dl->m_fAnimSpeed)
+							{
+								int n = 0;
+								STexPic* t = tp;
+								while (t)
 								{
-									int n = 0;
-									STexPic* t = tp;
-									while (t)
+									t = t->m_NextTxt;
+									n++;
+								}
+								if (n > 1)
+								{
+									int m = (int)(rd->m_RP.m_RealTime / dl->m_fAnimSpeed) % n;
+									for (int i = 0; i < m; i++)
 									{
-										t = t->m_NextTxt;
-										n++;
-									}
-									if (n > 1)
-									{
-										int m = (int)(rd->m_RP.m_RealTime / dl->m_fAnimSpeed) % n;
-										for (int i = 0; i < m; i++)
-										{
-											tp = tp->m_NextTxt;
-										}
+										tp = tp->m_NextTxt;
 									}
 								}
+							}
 							tp->Set();
 						}
 					}
@@ -606,25 +601,25 @@ int SShaderTexUnit::mfSetTexture(int nt)
 						}
 						cm->m_Tex->Set();
 					}
+					else if (bind >= TO_CUSTOM_TEXTURE_FIRST && bind <= TO_CUSTOM_TEXTURE_LAST)
+					{
+						SEnvTexture* cm = &gRenDev->m_TexMan->m_CustomTextures[bind - TO_CUSTOM_TEXTURE_FIRST];
+						if (!cm->m_bReady)
+						{
+							Warning(VALIDATOR_FLAG_TEXTURE, 0, "Custom Texture %d don't ready\n", bind - TO_CUSTOM_TEXTURE_FIRST);
+							return false;
+						}
+						cm->m_Tex->Set();
+					}
 					else
-						if (bind >= TO_CUSTOM_TEXTURE_FIRST && bind <= TO_CUSTOM_TEXTURE_LAST)
-						{
-							SEnvTexture* cm = &gRenDev->m_TexMan->m_CustomTextures[bind - TO_CUSTOM_TEXTURE_FIRST];
-							if (!cm->m_bReady)
-							{
-								Warning(VALIDATOR_FLAG_TEXTURE, 0, "Custom Texture %d don't ready\n", bind - TO_CUSTOM_TEXTURE_FIRST);
-								return false;
-							}
-							cm->m_Tex->Set();
-						}
-						else
-						{
-							pSTU->m_TexPic->Set();
-							//pSTU->m_TexPic->SaveJPG("NCMap.jpg", false);
-						}
+					{
+						pSTU->m_TexPic->Set();
+						//pSTU->m_TexPic->SaveJPG("NCMap.jpg", false);
+					}
 				}
 				break;
 				}
+			}
 		}
 	}
 	else
@@ -660,20 +655,17 @@ int SShaderTexUnit::mfSetTexture(int nt)
 			rd->m_RP.m_TexStages[nt].nMipFilter = 0;
 			dv->SetSamplerState(nt, D3DSAMP_MIPFILTER, D3DTEXF_NONE);
 		}
-		else
+		else if ((m_nFlags & FTU_FILTERBILINEAR) && rd->m_RP.m_TexStages[nt].nMipFilter != D3DTEXF_POINT)
 		{
-			if ((m_nFlags & FTU_FILTERBILINEAR) && rd->m_RP.m_TexStages[nt].nMipFilter != D3DTEXF_POINT)
-			{
-				rd->m_RP.m_TexStages[nt].nMipFilter = D3DTEXF_POINT;
-				dv->SetSamplerState(nt, D3DSAMP_MIPFILTER, D3DTEXF_POINT);
-			}
-			else
-				if ((m_nFlags & FTU_FILTERTRILINEAR) && rd->m_RP.m_TexStages[nt].nMipFilter != D3DTEXF_LINEAR)
-				{
-					rd->m_RP.m_TexStages[nt].nMipFilter = D3DTEXF_LINEAR;
-					dv->SetSamplerState(nt, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
-				}
+			rd->m_RP.m_TexStages[nt].nMipFilter = D3DTEXF_POINT;
+			dv->SetSamplerState(nt, D3DSAMP_MIPFILTER, D3DTEXF_POINT);
 		}
+		else if ((m_nFlags & FTU_FILTERTRILINEAR) && rd->m_RP.m_TexStages[nt].nMipFilter != D3DTEXF_LINEAR)
+		{
+			rd->m_RP.m_TexStages[nt].nMipFilter = D3DTEXF_LINEAR;
+			dv->SetSamplerState(nt, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR);
+		}
+
 		if ((m_nFlags & FTU_PROJECTED) && !rd->m_RP.m_TexStages[nt].Projected)
 		{
 			rd->m_RP.m_TexStages[nt].Projected = true;

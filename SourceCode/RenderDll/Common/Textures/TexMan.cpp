@@ -910,7 +910,6 @@ STexPic* CTexMan::LoadTexture(const char* nameTex, uint flags, uint flags2, byte
 	}
 
 	strcpy(nametex, ti->m_Name.c_str());
-
 	char name[256];
 
 	strcpy(name, *ti->m_SearchName);
@@ -1414,7 +1413,6 @@ char* gImgExt[][16] =
   },
 };
 
-
 STexPic* CTexMan::LoadFromImage(const char* name, uint flags, uint flags2, byte eTT, int bind, STexPic* ti, float fAmount1, float fAmount2)
 {
 	char nm[2][256];
@@ -1442,11 +1440,10 @@ STexPic* CTexMan::LoadFromImage(const char* name, uint flags, uint flags2, byte 
 	int nI;
 	if (flags & FT_DYNAMIC)
 		nI = 3;
+	else if ((eTT == eTT_Base || eTT == eTT_Cubemap) && (flags2 & FT2_NODXT))
+		nI = 1;
 	else
-		if ((eTT == eTT_Base || eTT == eTT_Cubemap) && (flags2 & FT2_NODXT))
-			nI = 1;
-		else
-			nI = 0;
+		nI = 0;
 	char* str;
 	int nT = 1;
 	char suffix[128];
