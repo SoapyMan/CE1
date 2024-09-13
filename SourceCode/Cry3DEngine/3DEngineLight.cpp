@@ -19,7 +19,7 @@
 #include "ObjMan.h"
 #include "VisAreas.h"
 #include "AABBSV.h"
-
+#include "DataMap.h"
 #include "partman.h"
 #include <LMCompStructures.h>
 #ifndef PI
@@ -1164,7 +1164,7 @@ bool ReadString(FILE* hFile, char* szBuff, int nMaxChars, ICryPak* pPak)
 #pragma pack(push,4)
 
 // dummy structure that's binary compatible with the 32-bit version of CDLight
-struct CDLightFile
+struct CDLight32
 {
 	typedef int ptr32;
 
@@ -1295,27 +1295,26 @@ struct CDLightFile
 
 bool C3DEngine::LoadStaticLightSources(const char* pszFileName)
 {
-	sizeof(CDLightFile) == sizeof(CDLight);
-
 	LightFileHeader sHeader, sHdrCmp;
+	ICryPak* pak = GetSystem()->GetIPak();
 
-	FILE* hFile = GetSystem()->GetIPak()->FOpen(pszFileName, "rb");
+	FILE* hFile = pak->FOpen(pszFileName, "rb");
 
 	if (hFile == nullptr)
 		return false;
 
-	if (GetSystem()->GetIPak()->FRead(&sHeader, sizeof(LightFileHeader), 1, hFile) != 1)
+	if (pak->FRead(&sHeader, sizeof(LightFileHeader), 1, hFile) != 1)
 	{
-		GetSystem()->GetIPak()->FClose(hFile);
+		pak->FClose(hFile);
 		return false;
 	}
 
 	if (sHeader.iNumDLights == 0 ||
 		sHeader.iVersion != 0 ||
-		sHeader.iSizeOfDLight != sizeof(CDLightFile) && sHeader.iSizeOfDLight != sizeof(CDLight))
+		sHeader.iSizeOfDLight != sizeof(CDLight32) && sHeader.iSizeOfDLight != sHeader.iSizeOfDLight)
 	{
 		GetConsole()->Exit("C3DEngine::LoadStaticLightSources: StatLights.dat version error (%d). Please reexport using latest version of editor.",
-			sHeader.iSizeOfDLight);
+			sHeader.iVersion);
 		return false;
 	}
 
@@ -1325,22 +1324,24 @@ bool C3DEngine::LoadStaticLightSources(const char* pszFileName)
 	for (UINT iCurLight = 0; iCurLight < sHeader.iNumDLights; iCurLight++)
 	{
 		CDLight newLight;
-		if (sHeader.iSizeOfDLight == sizeof(CDLightFile))
+		if (sHeader.iSizeOfDLight == sizeof(CDLight32))
 		{
-			CDLightFile fileLight;
-			if (GetSystem()->GetIPak()->FRead(&fileLight, sizeof(fileLight), 1, hFile) != 1)
+			// legacy game format
+			CDLight32 fileLight;
+			if (pak->FRead(&fileLight, sizeof(fileLight), 1, hFile) != 1)
 			{
-				GetSystem()->GetIPak()->FClose(hFile);
+				pak->FClose(hFile);
 				return false;
 			}
 			fileLight.copyTo(newLight);
 		}
-		else
+		else if(sHeader.iSizeOfDLight == DataMap<CDLight>::Size)
 		{
-			if (GetSystem()->GetIPak()->FRead(&newLight, sizeof(CDLight), 1, hFile) != 1)
+			// portable format
+			for (auto desc : DataMap<CDLight>::GetItemDescMap())
 			{
-				GetSystem()->GetIPak()->FClose(hFile);
-				return false;
+				if (pak->FRead((BYTE*)&newLight + desc.offset, 1, desc.size, hFile) != desc.size)
+					return false;
 			}
 		}
 
@@ -1350,17 +1351,17 @@ bool C3DEngine::LoadStaticLightSources(const char* pszFileName)
 		newLight.m_pShader = 0;
 
 		int nTextureFlags2 = 0;
-		if (GetSystem()->GetIPak()->FRead(&nTextureFlags2, sizeof(int), 1, hFile) != 1)
+		if (pak->FRead(&nTextureFlags2, sizeof(int), 1, hFile) != 1)
 		{
-			GetSystem()->GetIPak()->FClose(hFile);
+			pak->FClose(hFile);
 			return false;
 		}
 
 		char szTextureName[MAX_PATH_LENGTH] = "";
-		bool b0 = ReadString(hFile, szTextureName, MAX_PATH_LENGTH, GetSystem()->GetIPak());
+		bool b0 = ReadString(hFile, szTextureName, MAX_PATH_LENGTH, pak);
 
 		char szShaderName[MAX_PATH_LENGTH] = "";
-		bool b1 = ReadString(hFile, szShaderName, MAX_PATH_LENGTH, GetSystem()->GetIPak());
+		bool b1 = ReadString(hFile, szShaderName, MAX_PATH_LENGTH, pak);
 
 		//    bool b(nTextureFlags2&FT2_FORCECUBEMAP);
 
@@ -1373,7 +1374,7 @@ bool C3DEngine::LoadStaticLightSources(const char* pszFileName)
 		AddStaticLightSource(newLight, 0, 0, 0);
 	}
 
-	GetSystem()->GetIPak()->FClose(hFile);
+	pak->FClose(hFile);
 
 	return true;
 }

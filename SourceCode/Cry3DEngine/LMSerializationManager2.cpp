@@ -2,6 +2,7 @@
 #include "StdAfx.h"
 #undef NO_GDI
 #include "Cry3DEngineBase.h"
+#include "DataMap.h"
 //#include <d3d8types.h>
 #include "dds.h"
 #include "LMSerializationManager2.h"
@@ -16,6 +17,56 @@
 #include "Brush.h"
 
 #define LEVELLM_PAK_NAME "LevelLM.pak"
+
+BEGIN_DATAMAP(CDLight)
+	DATA_FIELD(m_Id)
+	DATA_FIELD(m_Origin)
+	DATA_FIELD(m_BaseOrigin)
+	DATA_FIELD(m_Color)
+	DATA_FIELD(m_BaseColor)
+	DATA_FIELD(m_SpecColor)
+	DATA_FIELD(m_BaseSpecColor)
+	DATA_FIELD(m_vObjectSpacePos)
+	DATA_FIELD(m_fRadius)
+	DATA_FIELD(m_fBaseRadius)
+	DATA_FIELD(m_fDirectFactor)
+	DATA_FIELD(m_fStartRadius)
+	DATA_FIELD(m_fEndRadius)
+	DATA_FIELD(m_fLastTime)
+	DATA_FIELD(m_NumCM)
+
+	DATA_FIELD(m_sX)
+	DATA_FIELD(m_sY)
+	DATA_FIELD(m_sWidth)
+	DATA_FIELD(m_sHeight)
+	DATA_FIELD(m_fNear)
+	DATA_FIELD(m_fFar)
+
+	DATA_FIELD(m_Orientation)
+	DATA_FIELD(m_CustomTextureId)
+	DATA_FIELD(m_TextureMatrix)
+
+	DATA_FIELD(m_fLightFrustumAngle)
+	DATA_FIELD(m_fBaseLightFrustumAngle)
+	DATA_FIELD(m_fAnimSpeed)
+
+	DATA_FIELD(m_ProjAngles)
+	DATA_FIELD(m_BaseProjAngles)
+
+	DATA_FIELD(m_Flags)
+
+	DATA_FIELD(m_Name)
+	DATA_FIELD(m_nLightStyle)
+	DATA_FIELD(m_fCoronaScale)
+
+	DATA_FIELD(m_fStartTime)
+	DATA_FIELD(m_fLifeTime)
+
+	DATA_FIELD(m_sDebugName)
+
+	DATA_FIELD(m_nEntityLightId)
+	DATA_FIELD(m_nFrameID)
+END_DATAMAP
 
 CLMSerializationManager2::CLMSerializationManager2() {}
 
@@ -824,7 +875,7 @@ bool CLMSerializationManager2::ExportDLights(const char* pszFilePath, const CDLi
 
 	LightFileHeader sHeader;
 	UINT iCurLight;
-	CTempFile fMem;
+
 
 	if (iNumLights == 0)
 	{
@@ -832,20 +883,25 @@ bool CLMSerializationManager2::ExportDLights(const char* pszFilePath, const CDLi
 		return true;
 	}
 
-	sHeader.iNumDLights = iNumLights;
+	sHeader.iNumDLights = iNumLights; 
+	sHeader.iSizeOfDLight = DataMap<CDLight>::Size;
+
+	CTempFile fMem;
 	fMem.Write(sHeader);
 
 	for (iCurLight = 0; iCurLight < iNumLights; iCurLight++)
 	{
-		fMem.Write(*(ppLights[iCurLight]));
+		const CDLight& curLight = *(ppLights[iCurLight]);
+		for (auto desc : DataMap<CDLight>::GetItemDescMap())
+			fMem.WriteData((BYTE*)&curLight + desc.offset, desc.size);
 
-		int nFlags2 = ppLights[iCurLight]->m_pLightImage ? ppLights[iCurLight]->m_pLightImage->GetFlags2() : 0;
+		const int nFlags2 = curLight.m_pLightImage ? curLight.m_pLightImage->GetFlags2() : 0;
 		fMem.Write(nFlags2);
 
-		ITexPic* pLightImg = ppLights[iCurLight]->m_pLightImage;
+		ITexPic* pLightImg = curLight.m_pLightImage;
 		WriteString(pLightImg ? pLightImg->GetName() : "", fMem);
 
-		IShader* pShader = ppLights[iCurLight]->m_pShader;
+		IShader* pShader = curLight.m_pShader;
 		WriteString(pShader ? pShader->GetName() : "", fMem);
 	}
 	return 0 == pPak->UpdateFile(pFileName, fMem.GetData(), fMem.GetSize());
