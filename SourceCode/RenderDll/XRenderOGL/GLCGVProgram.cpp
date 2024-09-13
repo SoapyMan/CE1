@@ -11,14 +11,6 @@
 #include "GL_Renderer.h"
 #include "GLCGVProgram.h"
 
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-
-#ifdef WIN64
-#pragma warning( push )									//AMD Port
-#pragma warning( disable : 4267 )
-#endif
-
 TArray<CVProgram*> CVProgram::m_VPrograms;
 
 vec4_t CCGVProgram_GL::m_CurParams[96];
@@ -1886,7 +1878,3 @@ bool CCGVProgram_GL::mfSet(bool bEnable, SShaderPassHW* slw, int nFlags)
 	}
 	return true;
 }
-
-#ifdef WIN64
-#pragma warning( pop )									//AMD Port
-#endif

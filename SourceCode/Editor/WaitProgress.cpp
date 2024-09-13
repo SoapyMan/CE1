@@ -17,7 +17,7 @@
 #include "waitprogress.h"
 
 #ifdef _DEBUG
-#undef THIS_FILE
+
 #define new DEBUG_NEW
 static char BASED_CODE THIS_FILE[] = __FILE__;
 #endif

@@ -51,7 +51,7 @@ static u_long128 pad_dma_buf[scePadDmaBufferMax] __attribute__((aligned(64)));
 
 
 #ifdef _DEBUG
-static char THIS_FILE[] = __FILE__;
+
 #define DEBUG_CLIENTBLOCK new( _NORMAL_BLOCK, THIS_FILE, __LINE__) 
 #define new DEBUG_CLIENTBLOCK
 #endif

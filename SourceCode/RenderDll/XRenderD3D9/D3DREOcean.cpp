@@ -14,9 +14,6 @@
 #include "I3dengine.h"
 #include <NVTriStrip.h>
 
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-
 //=======================================================================
 
 void CREOcean::GenerateIndices(int nLodCode)

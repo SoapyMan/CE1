@@ -11,8 +11,8 @@
 #include "Shadow_Renderer.h"
 #include <IEntityRenderState.h>
 
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
+
+
 
 #ifdef WIN64
 #pragma warning( push )							//AMD Port

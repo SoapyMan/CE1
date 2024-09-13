@@ -12,9 +12,6 @@
 #include "I3DEngine.h"
 #include "GLCGVProgram.h"
 
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-
 //=======================================================================
 
 void CREOcean::mfReset()

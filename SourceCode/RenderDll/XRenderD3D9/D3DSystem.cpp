@@ -15,9 +15,6 @@
 
 #include <SDL_syswm.h>
 
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-
 static HWND Cry_GetHWND(WINDOW_HANDLE window)
 {
 	if (IsWindow((HWND)window))

@@ -11,9 +11,6 @@
 #include "RenderPCH.h"
 #include "GL_Renderer.h"
 
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-
 //======================================================================
 
 // GL functions implement.

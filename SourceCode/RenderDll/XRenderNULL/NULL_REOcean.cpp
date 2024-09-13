@@ -11,9 +11,6 @@
 #include "NULL_Renderer.h"
 #include "I3DEngine.h"
 
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-
 //=======================================================================
 
 void CREOcean::mfReset()

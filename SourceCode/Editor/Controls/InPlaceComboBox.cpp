@@ -18,8 +18,8 @@
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
+
+
 #endif
 
 #define DEFAULT_IPLISTBOX_HEIGHT		16 * 8

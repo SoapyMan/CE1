@@ -18,8 +18,8 @@
 #include "File.h"
 #endif
 
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
+
+
 
 TArray<CVProgram*> CVProgram::m_VPrograms;
 vec4_t CCGVProgram_D3D::m_CurParams[256];

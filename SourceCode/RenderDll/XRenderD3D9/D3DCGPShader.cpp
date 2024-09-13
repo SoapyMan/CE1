@@ -19,8 +19,8 @@
 #include "File.h"
 #endif
 
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
+
+
 
 //=======================================================================
 

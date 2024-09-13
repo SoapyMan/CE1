@@ -15,10 +15,6 @@
 #include "GLCGVProgram.h"
 #include "GLCGPShader.h"
 
-
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-
 //============================================================================
 
 void CShader::mfCompileVarsPak(char* scr, TArray<CVarCond>& Vars, SShader* ef)

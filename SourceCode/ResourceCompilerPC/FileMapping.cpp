@@ -1,11 +1,6 @@
 #include "StdAfx.h"
 #include "FileMapping.h"
 
-#ifdef _DEBUG
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 //////////////////////////////////////////////////////////////////////////////
 // Initializes an empty file mapping object
 CFileMapping::CFileMapping() :

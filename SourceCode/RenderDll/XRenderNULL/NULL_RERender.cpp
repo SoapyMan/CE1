@@ -13,9 +13,6 @@
 
 //#include "../cry3dengine/StatObj.h"
 
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-
 //=======================================================================
 
 void CREFlareGeom::mfCheckVis(CFColor& col, CCObject* obj)

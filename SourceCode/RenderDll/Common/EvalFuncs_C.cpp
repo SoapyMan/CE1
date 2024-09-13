@@ -7,8 +7,8 @@
 
 =============================================================================*/
 
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
+
+
 
 #define EVALFUNCS_C_CPP
 

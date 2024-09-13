@@ -21,9 +21,6 @@ void WriteTGA8(byte* data8, int width, int height, char* filename);
 void BlurImage8(byte* pImage, int nSize, int nPassesNum);
 void MakePenumbraTextureFromDepthMap(byte* pDepthMapIn, int nSize, byte* pPenumbraMapOut);
 
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-
 // Texture coordinate rectangle
 struct CoordRect
 {

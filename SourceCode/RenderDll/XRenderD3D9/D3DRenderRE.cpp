@@ -13,8 +13,8 @@
 #include "D3DCGPShader.h"
 #include "D3DCGVProgram.h"
 
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
+
+
 
 //=======================================================================
 

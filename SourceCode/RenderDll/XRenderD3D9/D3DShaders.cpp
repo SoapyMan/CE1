@@ -13,9 +13,6 @@
 #include "D3DCGPShader.h"
 #include "D3DCGVProgram.h"
 
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-
 #include <d3dcompiler.h>
 
 static HMODULE s_hD3DCompiler = nullptr;
@@ -24,10 +21,10 @@ static pD3DCompile s_D3DCompileFunc = nullptr;
 
 void D3DCompilerInitialize()
 {
-	s_hD3DCompiler = LoadLibrary("D3DCompiler_43.dll");
+	s_hD3DCompiler = LoadLibrary(D3DCOMPILER_DLL_A);
 	if (!s_hD3DCompiler)
 	{
-		CryError("Cannot load D3DCompiler_43.dll - try installing DirectX9 redistributable");
+		CryError("Cannot load %s - try installing DirectX9 redistributable", D3DCOMPILER_DLL_A);
 		return;
 	}
 

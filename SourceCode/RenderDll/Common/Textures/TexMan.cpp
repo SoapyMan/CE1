@@ -22,8 +22,8 @@
 #include "ILog.h"
 #endif
 
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
+
+
 
 int CTexMan::m_CurStage;
 int CTexMan::m_nCurStages;

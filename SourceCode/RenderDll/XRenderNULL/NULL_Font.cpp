@@ -7,10 +7,6 @@
 
 =============================================================================*/
 
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-
-
 #include "RenderPCH.h"
 #include "NULL_Renderer.h"
 

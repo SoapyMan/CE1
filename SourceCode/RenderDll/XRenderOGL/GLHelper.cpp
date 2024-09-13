@@ -7,14 +7,9 @@
 
 =============================================================================*/
 
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-
 #include "RenderPCH.h"
 #include <Cry_Math.h>
 #include "GL_Renderer.h"
-
-
 
 static float sIdentity[4][4] =
 {

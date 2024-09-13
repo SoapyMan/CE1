@@ -12,18 +12,11 @@
 #include "GLCGPShader.h"
 #include "GLCGVProgram.h"
 
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
 
 TArray<CPShader*> CPShader::m_PShaders;
 CPShader* CPShader::m_CurRC;
 
 #include "NVParse/nvparse.h"
-
-#ifdef WIN64
-#pragma warning( push )							//AMD Port
-#pragma warning( disable : 4267 )				// conversion from 'size_t' to 'int', possible loss of data
-#endif
 
 // init memory pool usage
 #ifndef PS2
@@ -1003,7 +996,3 @@ bool CCGPShader_GL::mfSet(bool bEnable, SShaderPassHW* slw, int nFlags)
 	m_CurRC = this;
 	return true;
 }
-
-#ifdef WIN64
-#pragma warning( pop )							//AMD Port
-#endif

@@ -20,8 +20,8 @@
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
+
+
 #endif
 
 // Sort the item in reverse alphabetical order.
