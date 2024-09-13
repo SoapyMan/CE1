@@ -18,7 +18,7 @@
 #endif
 
 
-#include <Cry_Geo.h>
+#include "Cry_Geo.h"
 
 Plane GetPlane(const Vec3& normal, const Vec3& point);
 

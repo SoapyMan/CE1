@@ -571,11 +571,6 @@ __forceinline char CCamera::IsSphereVisible_hierarchical(const Sphere& s, bool* 
 }
 
 
-
-
-extern char BoxSides[0x40 * 8];
-
-
 /*!
 * Very fast approach to check if an AABB and the camera-frustum overlap, or if the AABB
 * is totally inside the camera-frustum. The bounding-box of the AABB is assumed to be
@@ -635,6 +630,8 @@ __forceinline bool CCamera::IsAABBVisibleFast(const AABB& aabb) const
 */
 inline bool CCamera::IsAABBVisible_exact(const AABB& aabb) const
 {
+	extern BYTE BoxSides[0x40 * 8];
+
 	float d;
 	const Vec3* pAABB = &aabb.min;
 
@@ -790,6 +787,7 @@ inline bool CCamera::IsAABBVisible_exact(const AABB& aabb) const
 */
 inline char CCamera::IsAABBVisible_hierarchical(const AABB& aabb, bool* bAllIn = 0) const
 {
+	extern BYTE BoxSides[0x40 * 8];
 
 	/*
 		float dot1,dot2;

@@ -167,7 +167,7 @@ public:
 	//! return a normalized vector
 	ILINE friend Vec3_tpl<F> GetNormalized(const Vec3_tpl<F>& v) {
 		F vlength = ::GetLength(v);
-		CRYASSERT(vlength > 0.0f);
+		CRYASSERT_MSG(vlength > 0.0f, "Normalizing zero vector");
 		F ivlength = 1.0f / vlength;
 		return (v * ivlength);
 	}

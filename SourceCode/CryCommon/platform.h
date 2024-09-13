@@ -19,6 +19,7 @@
 
 #include "ProjectDefines.h"							// to get some defines available in every CryEngine project
 #include "Assert.h"
+#include <stdio.h>
 
 #if _MSC_VER > 1000
 #pragma once
@@ -36,55 +37,43 @@ typedef void* EVENT_HANDLE;
 #include <map>
 #include <vector>
 #endif
-//linux supports more than just 15 bit of random number generator
-/*#define rand Rand
-#ifdef __cplusplus
-		inline int Rand(){return (rand()&0x7FFF);}
-#else
-		static int Rand(){return (rand()&0x7FFF);}
-#endif
-*/
 #endif
 
+#if defined(_WIN32)
+#define RC_EXECUTABLE "rc.exe"
+#elif defined(LINUX)
+#define RC_EXECUTABLE "rc"
+#endif
 
-#if defined(WIN32) && !defined(WIN64)
-#define _CPU_X86
-// Insert your headers here
+#ifdef WIN32
+
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-#include <Win32specific.h>
-
-#define RC_EXECUTABLE "rc.exe"
-#endif
 
 #if defined(WIN64)
-#define localtime_r(a, b) ((b, a) == 0 ? b : nullptr)
 #define _CPU_AMD64
-// Insert your headers here
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#include <Win64specific.h>
-
-#define RC_EXECUTABLE "rc64.exe"
-#endif
-
-#if defined(LINUX64)
-#include <Linux64Specific.h>
-#define _CPU_AMD64
-#endif
-
-#if defined(LINUX32)
+#include "Win64specific.h"
+#else
 #define _CPU_X86
-#include <Linux32Specific.h>
+#include "Win32specific.h"
 #endif
 
-#include "stdio.h"
+#if defined(LINUX)
+
+#elif defined(LINUX64)
+#include "Linux64Specific.h"
+#define _CPU_AMD64
+#elif defined(LINUX32)
+#define _CPU_X86
+#include "Linux32Specific.h"
+#endif
+
+#endif
 
 #define CPUF_SSE   1
 #define CPUF_SSE2  2
 #define CPUF_3DNOW 4
 #define CPUF_MMX   8
-
 
 #ifndef __linux
 #define IS_DIR(X) X.attrib &_A_SUBDIR
@@ -103,7 +92,7 @@ typedef void* EVENT_HANDLE;
 //////////////////////////////////////////////////////////////////////////
 #ifndef NOT_USE_CRY_MEMORY_MANAGER
 #define USE_NEWPOOL
-#include <CryMemoryManager.h>
+#include "CryMemoryManager.h"
 #endif // NOT_USE_CRY_MEMORY_MANAGER
 
 #ifdef __cplusplus
