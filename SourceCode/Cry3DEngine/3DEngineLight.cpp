@@ -1160,91 +1160,93 @@ bool ReadString(FILE* hFile, char* szBuff, int nMaxChars, ICryPak* pPak)
 	return true;
 }
 
-#ifdef WIN64
+
 #pragma pack(push,4)
+
 // dummy structure that's binary compatible with the 32-bit version of CDLight
-struct CDLightDummy32
+struct CDLightFile
 {
 	typedef int ptr32;
 
-	int															m_Id;
-	Vec3														m_Origin;					 //world space position
-	Vec3														m_BaseOrigin;					 //world space position
-	CFColor													m_Color;									//!< clampled diffuse light color
-	CFColor													m_BaseColor;									//!< clampled diffuse light color
-	CFColor 												m_SpecColor;
-	CFColor 												m_BaseSpecColor;
-	Vec3														m_vObjectSpacePos;		 //Object space position
-	float														m_fRadius;
-	float														m_fBaseRadius;
-	float   												m_fDirectFactor;
-	float														m_fStartRadius;
-	float														m_fEndRadius;
-	float														m_fLastTime;
-	int     												m_NumCM;
+	int					m_Id;
+	Vec3				m_Origin;				//world space position
+	Vec3				m_BaseOrigin;			//world space position
+	CFColor				m_Color;				//!< clampled diffuse light color
+	CFColor				m_BaseColor;			//!< clampled diffuse light color
+	CFColor 			m_SpecColor;
+	CFColor 			m_BaseSpecColor;
+	Vec3				m_vObjectSpacePos;		//Object space position
+	float				m_fRadius;
+	float				m_fBaseRadius;
+	float   			m_fDirectFactor;
+	float				m_fStartRadius;
+	float				m_fEndRadius;
+	float				m_fLastTime;
+	int     			m_NumCM;
 
 	// Scissor parameters (2d extent)
-	short   					m_sX;
-	short   					m_sY;
-	short   					m_sWidth;
-	short   					m_sHeight;
+	short   			m_sX;
+	short   			m_sY;
+	short   			m_sWidth;
+	short   			m_sHeight;
 	// Far/near planes
-	float							m_fNear;
-	float							m_fFar;
+	float				m_fNear;
+	float				m_fFar;
 
-	ptr32					m_pOwner;
+	ptr32				m_pOwner;
 
 	//for static spot light sources casting volumetric shadows	
-	int m_nReserved; // compensates for the vtbl
-	COrthoNormalBasis								m_Orientation;
-	int															m_CustomTextureId;
-	Matrix44												m_TextureMatrix;
+	int					m_nReserved;				// compensates for the vtbl
+	COrthoNormalBasis	m_Orientation;
+	int					m_CustomTextureId;
+	Matrix44			m_TextureMatrix;
 
-	ptr32											m_pObject[4][4];								//!< Object for light coronas and light flares
+	ptr32				m_pObject[4][4];			//!< Object for light coronas and light flares
 
 	//the light image
-	ptr32												m_pLightImage;
-	float														m_fLightFrustumAngle;
-	float														m_fBaseLightFrustumAngle;
-	float                           m_fAnimSpeed;
+	ptr32				m_pLightImage;
+	float				m_fLightFrustumAngle;
+	float				m_fBaseLightFrustumAngle	;
+	float               m_fAnimSpeed;
 
-	ptr32												m_pShader;
-	Vec3														m_ProjAngles;
-	Vec3														m_BaseProjAngles;
+	ptr32				m_pShader;
+	Vec3				m_ProjAngles;
+	Vec3				m_BaseProjAngles;
 
-	uint														m_Flags;									//!< flags from above (prefix DLF_)
+	uint				m_Flags;					//!< flags from above (prefix DLF_)
 
-	char														m_Name[64];
-	int                             m_nLightStyle;
-	float                           m_fCoronaScale;
+	char				m_Name[64];
+	int					m_nLightStyle;
+	float				m_fCoronaScale;
 
-	float														m_fStartTime;
-	float														m_fLifeTime;							//!< lsource will be removed after this number of seconds
+	float				m_fStartTime;
+	float				m_fLifeTime;				//!< lsource will be removed after this number of seconds
 
-	char														m_sDebugName[8];					//!< name of light creator (for debuging, pointer can't be used since entity may be deleted)
+	char				m_sDebugName[8];			//!< name of light creator (for debuging, pointer can't be used since entity may be deleted)
 
-	ptr32 m_pShadowMapLightSource;	//!<
+	ptr32				m_pShadowMapLightSource;	//!<
 
-	ptr32										m_arrLightLeafBuffers[8]; //!< array of leafbuffers used for heightmap lighting pass
+	ptr32				m_arrLightLeafBuffers[8];	//!< array of leafbuffers used for heightmap lighting pass
 
-	int															m_nEntityLightId;					//!<
-	int															m_nFrameID;								//!<
+	int					m_nEntityLightId;			//!<
+	int					m_nFrameID;					//!<
 
-	ptr32 m_pCharInstance; // pointer to character this source is attached to
+	ptr32				m_pCharInstance; // pointer to character this source is attached to
 
 	void copyTo(CDLight& dl)
 	{
 		memset(&dl, 0, sizeof(dl));
 #define COPY(x) dl.x=x
 #define MEMCOPY(x) memcpy (dl.x,x,sizeof(x))
+
 		COPY(m_Id);
-		COPY(m_Origin);					 //world space position
-		COPY(m_BaseOrigin);					 //world space position
-		COPY(m_Color);									//!< clampled diffuse light color
-		COPY(m_BaseColor);									//!< clampled diffuse light color
+		COPY(m_Origin);					//world space position
+		COPY(m_BaseOrigin);				//world space position
+		COPY(m_Color);					//!< clampled diffuse light color
+		COPY(m_BaseColor);				//!< clampled diffuse light color
 		COPY(m_SpecColor);
 		COPY(m_BaseSpecColor);
-		COPY(m_vObjectSpacePos);		 //Object space position
+		COPY(m_vObjectSpacePos);		//Object space position
 		COPY(m_fRadius);
 		COPY(m_fBaseRadius);
 		COPY(m_fDirectFactor);
@@ -1293,6 +1295,8 @@ struct CDLightDummy32
 
 bool C3DEngine::LoadStaticLightSources(const char* pszFileName)
 {
+	sizeof(CDLightFile) == sizeof(CDLight);
+
 	LightFileHeader sHeader, sHdrCmp;
 
 	FILE* hFile = GetSystem()->GetIPak()->FOpen(pszFileName, "rb");
@@ -1306,13 +1310,12 @@ bool C3DEngine::LoadStaticLightSources(const char* pszFileName)
 		return false;
 	}
 
-	CDLightDummy32 dummy;
 	if (sHeader.iNumDLights == 0 ||
 		sHeader.iVersion != 0 ||
-		sHeader.iSizeOfDLight != sizeof(CDLightDummy32))
+		sHeader.iSizeOfDLight != sizeof(CDLightFile) && sHeader.iSizeOfDLight != sizeof(CDLight))
 	{
-		GetConsole()->Exit("C3DEngine::LoadStaticLightSources: StatLights.dat version error (%d,%d). Please reexport using latest version of 32-bit editor.",
-			sHeader.iSizeOfDLight, sizeof(dummy));
+		GetConsole()->Exit("C3DEngine::LoadStaticLightSources: StatLights.dat version error (%d). Please reexport using latest version of editor.",
+			sHeader.iSizeOfDLight);
 		return false;
 	}
 
@@ -1322,85 +1325,23 @@ bool C3DEngine::LoadStaticLightSources(const char* pszFileName)
 	for (UINT iCurLight = 0; iCurLight < sHeader.iNumDLights; iCurLight++)
 	{
 		CDLight newLight;
-		CDLightDummy32 dummy32Light;
-		if (GetSystem()->GetIPak()->FRead(&dummy32Light, sizeof(dummy32Light), 1, hFile) != 1)
+		if (sHeader.iSizeOfDLight == sizeof(CDLightFile))
 		{
-			GetSystem()->GetIPak()->FClose(hFile);
-			return false;
+			CDLightFile fileLight;
+			if (GetSystem()->GetIPak()->FRead(&fileLight, sizeof(fileLight), 1, hFile) != 1)
+			{
+				GetSystem()->GetIPak()->FClose(hFile);
+				return false;
+			}
+			fileLight.copyTo(newLight);
 		}
-		dummy32Light.copyTo(newLight);
-
-		newLight.m_pLightImage = 0;
-		newLight.m_pCharInstance = 0;
-		newLight.m_pOwner = 0;
-		newLight.m_pShader = 0;
-
-		int nTextureFlags2 = 0;
-		if (GetSystem()->GetIPak()->FRead(&nTextureFlags2, sizeof(int), 1, hFile) != 1)
+		else
 		{
-			GetSystem()->GetIPak()->FClose(hFile);
-			return false;
-		}
-
-		char szTextureName[MAX_PATH_LENGTH] = "";
-		bool b0 = ReadString(hFile, szTextureName, MAX_PATH_LENGTH, GetSystem()->GetIPak());
-
-		char szShaderName[MAX_PATH_LENGTH] = "";
-		bool b1 = ReadString(hFile, szShaderName, MAX_PATH_LENGTH, GetSystem()->GetIPak());
-
-		//    bool b(nTextureFlags2&FT2_FORCECUBEMAP);
-
-		if (szTextureName[0])
-			newLight.m_pLightImage = GetRenderer()->EF_LoadTexture(szTextureName, 0, nTextureFlags2/*FT2_FORCECUBEMAP*/, eTT_Cubemap);
-
-		if (szShaderName[0])
-			newLight.m_pShader = GetRenderer()->EF_LoadShader(szShaderName, eSH_World, EF_SYSTEM);
-
-		AddStaticLightSource(newLight, 0, 0, 0);
-	}
-
-	GetSystem()->GetIPak()->FClose(hFile);
-
-	return true;
-}
-
-#else
-
-bool C3DEngine::LoadStaticLightSources(const char* pszFileName)
-{
-	LightFileHeader sHeader, sHdrCmp;
-
-	FILE* hFile = GetSystem()->GetIPak()->FOpen(pszFileName, "rb");
-
-	if (hFile == nullptr)
-		return false;
-
-	if (GetSystem()->GetIPak()->FRead(&sHeader, sizeof(LightFileHeader), 1, hFile) != 1)
-	{
-		GetSystem()->GetIPak()->FClose(hFile);
-		return false;
-	}
-
-	CDLight dummy;
-
-	if (sHeader.iNumDLights == 0 ||
-		sHeader.iVersion != sHdrCmp.iVersion ||
-		sHeader.iSizeOfDLight != sHdrCmp.iSizeOfDLight)
-	{
-		GetConsole()->Exit("C3DEngine::LoadStaticLightSources: StatLights.dat version error, please reexport using latest version of editor.");
-		return false;
-	}
-
-	m_lstStaticLights.Reset();
-	m_lstStaticLights.PreAllocate(sHeader.iNumDLights);
-
-	for (UINT iCurLight = 0; iCurLight < sHeader.iNumDLights; iCurLight++)
-	{
-		CDLight newLight;
-		if (GetSystem()->GetIPak()->FRead(&newLight, sizeof(CDLight), 1, hFile) != 1)
-		{
-			GetSystem()->GetIPak()->FClose(hFile);
-			return false;
+			if (GetSystem()->GetIPak()->FRead(&newLight, sizeof(CDLight), 1, hFile) != 1)
+			{
+				GetSystem()->GetIPak()->FClose(hFile);
+				return false;
+			}
 		}
 
 		newLight.m_pLightImage = 0;
@@ -1436,4 +1377,3 @@ bool C3DEngine::LoadStaticLightSources(const char* pszFileName)
 
 	return true;
 }
-#endif

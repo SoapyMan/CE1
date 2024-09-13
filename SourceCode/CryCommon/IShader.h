@@ -2292,6 +2292,7 @@ public:
 
 		return true;
 	}
+
 	void MakeBaseParams()
 	{
 		m_BaseOrigin = m_Origin;
@@ -2314,21 +2315,21 @@ public:
 		return *this;
 	}
 
-	int															m_Id;
-	Vec3														m_Origin;					 //world space position
-	Vec3														m_BaseOrigin;					 //world space position
-	CFColor													m_Color;									//!< clampled diffuse light color
-	CFColor													m_BaseColor;									//!< clampled diffuse light color
-	CFColor 												m_SpecColor;
-	CFColor 												m_BaseSpecColor;
-	Vec3														m_vObjectSpacePos;		 //Object space position
-	float														m_fRadius;
-	float														m_fBaseRadius;
-	float   												m_fDirectFactor;
-	float														m_fStartRadius;
-	float														m_fEndRadius;
-	float														m_fLastTime;
-	int     												m_NumCM;
+	int							m_Id;
+	Vec3						m_Origin;					//world space position
+	Vec3						m_BaseOrigin;				//world space position
+	CFColor						m_Color;					//!< clampled diffuse light color
+	CFColor						m_BaseColor;				//!< clampled diffuse light color
+	CFColor 					m_SpecColor;
+	CFColor 					m_BaseSpecColor;
+	Vec3						m_vObjectSpacePos;			//Object space position
+	float						m_fRadius;
+	float						m_fBaseRadius;
+	float   					m_fDirectFactor;
+	float						m_fStartRadius;
+	float						m_fEndRadius;
+	float						m_fLastTime;
+	int     					m_NumCM;
 
 	// Scissor parameters (2d extent)
 	short   					m_sX;
@@ -2336,47 +2337,47 @@ public:
 	short   					m_sWidth;
 	short   					m_sHeight;
 	// Far/near planes
-	float							m_fNear;
-	float							m_fFar;
+	float						m_fNear;
+	float						m_fFar;
 
-	struct IEntityRender* m_pOwner;
+	struct IEntityRender*		m_pOwner;
 	//	int m_nStaticLightId;
 
-		//for static spot light sources casting volumetric shadows	
-	int m_nReserved; // compensates for the vtbl
-	COrthoNormalBasis								m_Orientation;
-	int															m_CustomTextureId;
-	Matrix44												m_TextureMatrix;
+	//for static spot light sources casting volumetric shadows	
+	int							m_nReserved;				// compensates for the vtbl
+	COrthoNormalBasis			m_Orientation;
+	int							m_CustomTextureId;
+	Matrix44					m_TextureMatrix;
 
-	CCObject* m_pObject[4][4];								//!< Object for light coronas and light flares
+	CCObject*					m_pObject[4][4];			//!< Object for light coronas and light flares
 
 	//the light image
 	ITexPic* m_pLightImage;
-	float														m_fLightFrustumAngle;
-	float														m_fBaseLightFrustumAngle;
-	float                           m_fAnimSpeed;
+	float						m_fLightFrustumAngle;
+	float						m_fBaseLightFrustumAngle;
+	float						m_fAnimSpeed;
 
-	IShader* m_pShader;
-	Vec3														m_ProjAngles;
-	Vec3														m_BaseProjAngles;
+	IShader*					m_pShader;
+	Vec3						m_ProjAngles;
+	Vec3						m_BaseProjAngles;
 
-	uint														m_Flags;									//!< flags from above (prefix DLF_)
+	uint						m_Flags;					//!< flags from above (prefix DLF_)
 
-	char														m_Name[64];
-	int                             m_nLightStyle;
-	float                           m_fCoronaScale;
+	char						m_Name[64];
+	int                         m_nLightStyle;
+	float                       m_fCoronaScale;
 
-	float														m_fStartTime;
-	float														m_fLifeTime;							//!< lsource will be removed after this number of seconds
+	float						m_fStartTime;
+	float						m_fLifeTime;				//!< lsource will be removed after this number of seconds
 
-	char														m_sDebugName[8];					//!< name of light creator (for debuging, pointer can't be used since entity may be deleted)
+	char						m_sDebugName[8];			//!< name of light creator (for debuging, pointer can't be used since entity may be deleted)
 
 	ShadowMapLightSourceInstance* m_pShadowMapLightSource;	//!<
 
-	CLeafBuffer* m_arrLightLeafBuffers[8]; //!< array of leafbuffers used for heightmap lighting pass
+	CLeafBuffer*				m_arrLightLeafBuffers[8];	//!< array of leafbuffers used for heightmap lighting pass
 
-	int															m_nEntityLightId;					//!<
-	int															m_nFrameID;								//!<
+	int							m_nEntityLightId;			//!<
+	int							m_nFrameID;					//!<
 
 	/*
 
