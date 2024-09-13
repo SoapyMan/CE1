@@ -37,6 +37,19 @@ index 266de7a..a39d261 100644
  {
  	none,	// Neither color window has focus.
      wnd,	// Color wheel window has focus.
+diff --git a/Include/Common.Include/XTColorRef.h b/Include/Common.Include/XTColorRef.h
+index 6a44328..442d0b7 100644
+--- a/Include/Common.Include/XTColorRef.h
++++ b/Include/Common.Include/XTColorRef.h
+@@ -407,7 +407,7 @@ protected:
+ //////////////////////////////////////////////////////////////////////  
+ 
+ private:
+-	static COLORREF m_arrColor[52];
++	static COLORREF m_arrColor[53];
+ 
+ 	static void RefreshSysColors();
+ 	static void RefreshXPColors();
 diff --git a/Include/Common.Include/XTColorSelectorCtrl.h b/Include/Common.Include/XTColorSelectorCtrl.h
 index c64c174..84fd89a 100644
 --- a/Include/Common.Include/XTColorSelectorCtrl.h
@@ -804,6 +817,19 @@ index e188b9b..794c8bd 100644
 +	int nHeight = XTMAX(CalcMinimumItemHeight(),(int)LOWORD(lParam));
  	return DefWindowProc(LB_SETITEMHEIGHT, wParam, MAKELPARAM(nHeight,0));
  }
+diff --git a/Src/Common.Src/XTColorRef.cpp b/Src/Common.Src/XTColorRef.cpp
+index 50a185f..040a01a 100644
+--- a/Src/Common.Src/XTColorRef.cpp
++++ b/Src/Common.Src/XTColorRef.cpp
+@@ -351,7 +351,7 @@ CXTColorRef& CXTColorRef::operator /= (COLORREF cr)
+ 
+ #pragma warning( disable  : 4244 ) 
+ 
+-COLORREF CXTColorRef::m_arrColor[52];
++COLORREF CXTColorRef::m_arrColor[53];
+ 
+ #define clrToolBar GetColor(XPCOLOR_BARFACE)
+ #define clrWindow GetColor(COLOR_WINDOW)
 diff --git a/Src/Common.Src/XTColorSelectorCtrl.cpp b/Src/Common.Src/XTColorSelectorCtrl.cpp
 index 8f4e9b1..70a4782 100644
 --- a/Src/Common.Src/XTColorSelectorCtrl.cpp
