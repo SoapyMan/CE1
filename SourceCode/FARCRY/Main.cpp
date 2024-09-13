@@ -151,7 +151,7 @@ char* getenv(const char* varname)
 
 void SetMasterCDFolder()
 {
-	if (IsDebuggerPresent())
+	if (CryIsDebuggerPresent())
 		return;
 
 	char szExeFileName[_MAX_PATH];

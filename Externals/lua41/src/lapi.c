@@ -607,7 +607,7 @@ LUA_API int lua_xref(lua_State *L,int ref){
 #if defined(WIN64) || defined(LINUX64)
 		abort();
 #else
-		DEBUG_BREAK;
+		_DEBUG_BREAK;
 #endif
 	}
 	lua_rawseti(L, -2, ref);
@@ -626,7 +626,7 @@ LUA_API void lua_xunref(lua_State *L,int ref){
 #if defined(WIN64) || defined(LINUX64)
 		abort();
 #else
-		DEBUG_BREAK;
+		_DEBUG_BREAK;
 #endif
 	}
 }

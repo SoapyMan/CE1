@@ -377,7 +377,7 @@ void CServer::SetVariable(enum CryNetworkVarible eVarName, unsigned int nValue)
 		m_ServerVariables.nDataStreamTimeout = nValue;
 		break;
 	default:
-		NET_ASSERT(0);
+		CRYASSERT_FAIL("Invalid Var %d", eVarName);
 		break;
 	}
 }

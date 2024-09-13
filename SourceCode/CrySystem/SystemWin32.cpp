@@ -18,13 +18,8 @@
 #include <IScriptSystem.h>
 #include <IGame.h>
 
-#ifndef _XBOX
-#ifdef WIN32
-#define WIN32_LEAN_AND_MEAN
-#include "windows.h"
-#endif
-#else
-#include <xtl.h>
+#ifdef USE_SDL
+#include <SDL.h>
 #endif
 
 #include "SourceSafeHelper.h"				// _GetSSFileInfo
@@ -882,28 +877,32 @@ void CSystem::Error(const char* format, ...)
 	// remove verbosity tag since it is not supported by ::MessageBox
 	strcpy(szBuffer, szBuffer + 1);
 
-#ifdef WIN32
-	if (!bHandled)
-		::MessageBox(nullptr, szBuffer, "CryEngine Error", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
-	// Dump callstack.
-	DebugCallStack::instance()->LogCallstack();
+	if (CryIsDebuggerPresent())
+	{
+		_DEBUG_BREAK;
+	}
+	else
+	{
+#ifdef USE_SDL
+		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "CryEngine Error", szBuffer, (SDL_Window*)m_hWnd);
+#elif defined(WIN32)
+		if (!bHandled)
+			::MessageBox(nullptr, szBuffer, "CryEngine Error", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
 #endif
+		// Dump callstack.
+		DebugCallStack::instance()->LogCallstack();
+
 #ifndef PS2
-	::OutputDebugString(szBuffer);
+		::OutputDebugString(szBuffer);
 #endif	//PS2
 
-	// try to shutdown renderer (if we crash here - error message will already stay in the log)
-	if (m_pRenderer)
-		m_pRenderer->ShutDown();
+		// try to shutdown renderer (if we crash here - error message will already stay in the log)
+		if (m_pRenderer)
+			m_pRenderer->ShutDown();
 
-	// app can not continue
-#ifdef _DEBUG
-#if defined(WIN32) && !defined(WIN64)
-	DEBUG_BREAK;
-#endif
-#else
-	exit(1);
-#endif
+		// app can not continue
+		exit(1);
+	}	
 }
 
 // tries to log the call stack . for DEBUG purposes only

@@ -144,7 +144,7 @@ NRESULT CDatagramSocket::Listen(WORD wPort, CIPAddress* xaMulticastAddress, CIPA
 	if (xaMulticastAddress)
 	{
 #ifdef _XBOX
-		// DEBUG_BREAK;
+		// _DEBUG_BREAK;
 #else
 		struct ip_mreq imMulticastReq;
 
@@ -343,7 +343,7 @@ return NET_OK;
 const char* GetHostName()
 {
 #ifdef _XBOX
-	//DEBUG_BREAK;
+	//_DEBUG_BREAK;
 	return "__XBOX__";
 #else
 	static char szBuf[56];
@@ -357,7 +357,7 @@ const char* GetHostName()
 const char* CDatagramSocket::GetHostName()
 {
 #ifdef _XBOX
-	//DEBUG_BREAK;
+	//_DEBUG_BREAK;
 	return "__XBOX__";
 #else
 	static char szBuf[56];

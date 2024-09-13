@@ -279,7 +279,7 @@ void CClient::Connect(const char* szIP, WORD wPort, const BYTE* pbAuthorizationI
 {
 	CRYASSERT(pbAuthorizationID);
 	CRYASSERT(uiAuthorizationSize > 0);
-	NET_ASSERT(m_pSink != nullptr); // you forgot something
+	CRYASSERT(m_pSink != nullptr); // you forgot something
 
 	CIPAddress ip(wPort, szIP);
 	m_bLocalHost = ip.IsLocalHost();

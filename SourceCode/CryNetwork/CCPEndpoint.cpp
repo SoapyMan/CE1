@@ -443,8 +443,7 @@ bool CCCPEndpoint::ProcessPayload(unsigned char cFrameType, CStream& stmStream)
 			break;*/
 			///////////////////////////////////////////////////
 			default:
-				GetISystem()->GetILog()->Log("NetDEBUG: cFrameType %d", (int)cFrameType);
-				NET_ASSERT(0);
+				CRYASSERT_FAIL("NetDEBUG: cFrameType %d", (int)cFrameType);
 				break;
 				///////////////////////////////////////////////////
 			}

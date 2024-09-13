@@ -226,7 +226,7 @@ void CClientStateMachine::OnSignal(unsigned int dwOutgoingSignal, DWORD_PTR dwPa
 		m_pParent->OnDisconnect((const char*)dwParam);	// this pointer is destroyed aftr this call
 		break;
 	default:
-		NET_ASSERT(0);
+		CRYASSERT_FAIL("Invalid signal %d", dwOutgoingSignal);
 		break;
 	}
 }

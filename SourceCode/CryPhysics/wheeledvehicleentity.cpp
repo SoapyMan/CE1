@@ -1031,7 +1031,7 @@ void CWheeledVehicleEntity::AddAdditionalImpulses(float time_interval)
 		CRYASSERT(m_Ffriction.len2() >= 0);
 #else
 		if (!(m_Ffriction.len2() >= 0))
-			DEBUG_BREAK;
+			_DEBUG_BREAK;
 #endif
 		m_body.UpdateState();
 		for (i = 0; i < d; i++) {

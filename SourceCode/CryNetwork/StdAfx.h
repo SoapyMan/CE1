@@ -60,62 +60,13 @@ static inline int WSAGetLastError() { return errno; }
 #include <crtdbg.h>
 #endif
 
-
-
-
 #if _MSC_VER > 1000
 #pragma warning( disable : 4786 )
 //#pragma warning( disable : 4716 )
 #endif // _MSC_VER > 1000
 
-
-
-
 #ifdef PS2
 typedef int	BOOL;
-#endif
-
-#ifndef __NET_ASSERT
-#define __NET_ASSERT
-
-#if 1
-
-#if defined(WIN64)
-
-#define NET_ASSERT(x) 
-
-#elif defined(_XBOX)
-
-#define NET_ASSERT(x) 
-
-#elif defined(PS2)
-#include <iostream.h>
-inline void NET_ASSERT(void* x)
-{
-	if (!(x))
-	{
-		cout << "Assertion Failed!!\n\nFile: " << __FILE__ << "\n\nLine: " << __LINE__ << "\n";
-		DEBUG_BREAK;
-	}
-}
-#elif defined(WIN32)
-#define NET_ASSERT(x)																									\
-	{																													\
-			if (!(x)) {																										\
-			static char sAssertionMessage[500];																				\
-																														\
-			wsprintf(sAssertionMessage, "Assertion Failed!!\n\nFile: \"%s\"\n\nLine: %d\n", __FILE__, __LINE__);	\
-			::MessageBox(nullptr, sAssertionMessage, "Assertion Failed", MB_OK | MB_ICONERROR);						\
-			DEBUG_BREAK;																\
-			}																												\
-	}   
-#else
-
-#define NET_ASSERT(x) 
-
-#endif
-
-#endif //1
 #endif
 
 #ifndef NET____TRACE
@@ -158,7 +109,7 @@ inline void __cdecl __NET_TRACE(const char* sFormat, ...)
 	va_start(vl, sFormat);
 	vsprintf(sTraceString, sFormat, vl);
 	va_end(vl);
-	NET_ASSERT(strlen(sTraceString) < 500)
+	CRYASSERT(strlen(sTraceString) < 500)
 	CryLogAlways( sTraceString );
 
 	va_list vl;
@@ -167,7 +118,7 @@ inline void __cdecl __NET_TRACE(const char* sFormat, ...)
 	va_start(vl, sFormat);
 	vsprintf(sTraceString, sFormat, vl);
 	va_end(vl);
-	NET_ASSERT(strlen(sTraceString) < 500)
+	CRYASSERT(strlen(sTraceString) < 500)
 	::OutputDebugString(sTraceString);*/
 
 }
@@ -180,7 +131,7 @@ inline void __NET_TRACE(const char* sFormat, ...)
 	va_start(vl, sFormat);
 	vsprintf(sTraceString, sFormat, vl);
 	va_end(vl);
-	NET_ASSERT(strlen(sTraceString) < 500)
+	CRYASSERT(strlen(sTraceString) < 500)
 		cout << sTraceString;
 
 }

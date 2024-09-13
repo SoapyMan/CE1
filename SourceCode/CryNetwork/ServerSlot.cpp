@@ -226,7 +226,7 @@ bool CServerSlotImpl::SendDisconnect(const char* szCause)
 
 void CServerSlotImpl::OnConnect()
 {
-	NET_ASSERT(m_pSink);
+	CRYASSERT(m_pSink);
 	if (m_pSink)
 	{
 #ifndef NOT_USE_UBICOM_SDK
@@ -372,7 +372,7 @@ void CServerSlotImpl::ProcessPacket(unsigned char cFrameType, bool bSTC, CStream
 
 		break;
 	default:
-		NET_ASSERT(0);
+		CRYASSERT_FAIL("Invalid FrameType %d", cFrameType);
 		break;
 	};
 }
@@ -437,7 +437,7 @@ CServerSlotLocal::~CServerSlotLocal()
 	if (m_pServer == nullptr)
 	{
 		//call alberto
-		NET_ASSERT(0);
+		CRYASSERT_FAIL("call alberto");
 	}
 
 	m_pNetwork->RemoveClientFromDefenceWall(m_ipAddress);

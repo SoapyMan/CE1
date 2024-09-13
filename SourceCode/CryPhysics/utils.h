@@ -305,7 +305,7 @@ extern float g_costab[SINCOSTABSZ], g_sintab[SINCOSTABSZ];
 #if defined(WIN64) || defined(LINUX64)
 #define DoBreak {CRYASSERT(0);}
 #else
-#define DoBreak { DEBUG_BREAK; }
+#define DoBreak { _DEBUG_BREAK; }
 #endif
 
 #if defined LINUX

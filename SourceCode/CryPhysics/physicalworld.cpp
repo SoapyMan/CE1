@@ -484,7 +484,7 @@ int CPhysicalWorld::DestroyPhysicalEntity(IPhysicalEntity* _pent, int mode)
 	CPhysicalEntity *ptmp = m_pTypedEnts[1];
 	for(;ptmp && ptmp!=m_pTypedEntsPerm[1]; ptmp=ptmp->m_next);
 	if (ptmp!=m_pTypedEntsPerm[1])
-	DEBUG_BREAK;
+	_DEBUG_BREAK;
 	#endif*/
 
 	if (!pent->m_pEntBuddy) {
@@ -1120,7 +1120,7 @@ void CPhysicalWorld::RepositionEntity(CPhysicalPlaceholder* pobj, int flags)
 			CPhysicalEntity *ptmp = m_pTypedEnts[1];
 			for(;ptmp && ptmp!=m_pTypedEntsPerm[1]; ptmp=ptmp->m_next);
 			if (ptmp!=m_pTypedEntsPerm[1])
-			DEBUG_BREAK;
+			_DEBUG_BREAK;
 			#endif*/
 		}
 	}

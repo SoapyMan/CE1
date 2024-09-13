@@ -283,7 +283,7 @@ void CTriangulator::CalcCircle(const Vtx& v1, const Vtx& v2, const Vtx& v3, Tri*
 		sprintf(which,"vertices (%.2f,%.2f,%.2f),(%.2f,%.2f,%.2f),(%.2f,%.2f,%.2f) caused CRYASSERT \n",v1.x,v1.y,v1.z,v2.x,v2.y,v2.z,v3.x,v3.y,v3.z);
 		sprintf(which,"ouside data is %d\n",(int)v1.pForeign);
 		OutputDebugString(&which[0]);
-		DEBUG_BREAK; // we should never get here!!!
+		_DEBUG_BREAK; // we should never get here!!!
 */
 		CryError("vertices (%.2f,%.2f,%.2f),(%.2f,%.2f,%.2f),(%.2f,%.2f,%.2f) caused CRYASSERT \n", v1.x, v1.y, v1.z, v2.x, v2.y, v2.z, v3.x, v3.y, v3.z);
 		return;

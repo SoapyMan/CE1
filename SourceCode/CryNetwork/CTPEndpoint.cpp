@@ -232,7 +232,7 @@ void CCTPEndpoint::Update(unsigned int nTime, unsigned char cFrameType, CStream*
 		}
 		break;
 		default:
-			NET_ASSERT(0);
+			CRYASSERT_FAIL("Invalid FrameType %d", cFrameType);
 			break;
 		}
 		///////////////////////////////////////////////////////////
@@ -298,7 +298,7 @@ void CCTPEndpoint::StopAckTimer()
 void CCTPEndpoint::SetTimer(LONG nIndex)
 {
 	//	if(m_OutBuffers[nIndex].dwTimeout!=0)
-	//		DEBUG_BREAK;
+	//		_DEBUG_BREAK;
 	m_OutBuffers[nIndex].dwTimeout = m_nCurrentTime;
 	NET_TRACE("SETTIMER %02d %d\n", nIndex, m_nCurrentTime);
 }
@@ -530,7 +530,7 @@ void CCTPEndpoint::SendFrame(LONG nType, LONG nFrameNum, LONG nFrameExpected, CS
 		pFrame = &nak;
 		break;
 	default:
-		NET_ASSERT(0);
+		CRYASSERT_FAIL("Invalid Send FrameType %d", nType);
 		break;
 	}
 	//	pFrame->m_cClientID = m_pParent->GetID();
@@ -720,7 +720,7 @@ void CCTPEndpoint::BuildOutgoingFrame()
 			SendFrame(FT_CTP_DATA, m_nNextFrameToSend, m_nFrameExpected, &stmUnreliable, false);
 			INC(m_nNextFrameToSend);
 			m_nBuffered += 1;
-			NET_ASSERT(m_nBuffered <= NUM_OF_BUFS);
+			CRYASSERT(m_nBuffered <= NUM_OF_BUFS);
 			NET_TRACE("SEND RELIABLE m_nBuffered=%02d\n", m_nBuffered);
 		}
 		else
@@ -806,7 +806,7 @@ void CCTPServer::BuildOutgoingFrame()
 			SendFrame(FT_CTP_DATA, m_nNextFrameToSend, m_nFrameExpected, &stmUnreliable,false);
 			INC(m_nNextFrameToSend);
 			m_nBuffered += 1;
-			NET_ASSERT(m_nBuffered<=NUM_OF_BUFS);
+			CRYASSERT(m_nBuffered<=NUM_OF_BUFS);
 			NET_TRACE("SEND RELIABLE m_nBuffered=%02d\n",m_nBuffered);
 		}
 		else

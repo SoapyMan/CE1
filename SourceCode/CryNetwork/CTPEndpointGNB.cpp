@@ -179,7 +179,7 @@ void CCTPEndpointGNB::Update(unsigned int nTime, unsigned char cFrameType, CStre
 		}
 		break;
 		default:
-			NET_ASSERT(0);
+			CRYASSERT_FAIL("Invalid FrameType %d", cFrameType);
 			break;
 		}
 		///////////////////////////////////////////////////////////
@@ -483,7 +483,7 @@ void CCTPEndpointGNB::SendFrame(LONG nType, LONG nFrameNum, LONG nFrameExpected,
 		pFrame = &ack;
 		break;
 	default:
-		NET_ASSERT(0);
+		CRYASSERT_FAIL("Invalid Send FrameType %d", nType);
 		break;
 	}
 	pFrame->m_cFrameType = (BYTE)nType;
@@ -605,7 +605,7 @@ void CCTPEndpointGNB::BuildOutgoingFrame()
 			SendFrame(FT_CTP_DATA, m_nNextFrameToSend, m_nFrameExpected, &stmUnreliable, false);
 			INC(m_nNextFrameToSend);
 			m_nBuffered += 1;
-			NET_ASSERT(m_nBuffered <= NUM_OF_BUFS);
+			CRYASSERT(m_nBuffered <= NUM_OF_BUFS);
 			NET_TRACE("SEND RELIABLE m_nBuffered=%02d\n", m_nBuffered);
 		}
 		else

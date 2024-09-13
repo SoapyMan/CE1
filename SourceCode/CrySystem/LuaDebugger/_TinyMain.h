@@ -36,11 +36,11 @@ right now this code is not GPL or LGPL in any way
 #if defined(WIN64) || defined(LINUX64)
 #define _TinyVerify(x) { if (!(x)) CRYASSERT(0); }
 #else
-#define _TinyVerify(x) { if (!(x)) { DEBUG_BREAK; }; }
+#define _TinyVerify(x) { if (!(x)) { _DEBUG_BREAK; }; }
 #endif
 
 #if defined(_DEBUG) && !defined(WIN64) && !defined(LINUX64)
-	#define _TinyAssert(x) { if (!(x)) { DEBUG_BREAK; }; }
+	#define _TinyAssert(x) { if (!(x)) { _DEBUG_BREAK; }; }
 #else
 	#define _TinyAssert(x) __noop(x);
 #endif

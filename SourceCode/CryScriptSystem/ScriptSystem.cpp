@@ -47,7 +47,7 @@ extern "C"
 {			\
 	char sTemp[120];	\
 if (__nStack != lua_stackspace(m_pLS)) \
-{DEBUG_BREAK;}	\
+{_DEBUG_BREAK;}	\
 sprintf(sTemp, "STACK=%d\n", __nStack); \
 ::OutputDebugString(sTemp);	\
 }
@@ -1791,7 +1791,7 @@ CScriptObject* CScriptSystem::CreateScriptObject()
 		//sprintf(sTemp,"Pool size %d new\n",m_stkScriptObjectsPool.size());
 		//::OutputDebugString(sTemp);
 	//	if(m_nObjCreationNumber==42)
-	//		DEBUG_BREAK;
+	//		_DEBUG_BREAK;
 		return new CScriptObject(m_nObjCreationNumber++);
 
 	}

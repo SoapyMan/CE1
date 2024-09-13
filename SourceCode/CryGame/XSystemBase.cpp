@@ -1906,8 +1906,8 @@ void CXSystemBase::OnSpawnContainer( CEntityDesc &ed,IEntity *pEntity )
 		pSpectator->SetEntity(pEntity);
 
 		EntityClass *pClass=m_pGame->GetClassRegistry()->GetByClassId(ed.ClassId);
-		FIXME_ASSERT(pClass);
-		FIXME_ASSERT(pClass->strClassName.c_str());
+		CRYASSERT(pClass);
+		CRYASSERT(pClass->strClassName.c_str());
 
 		ed.className = pClass->strClassName;
 
@@ -1929,8 +1929,8 @@ void CXSystemBase::OnSpawnContainer( CEntityDesc &ed,IEntity *pEntity )
 
 		// get the table name from the entity registry (like "Player")
 		EntityClass *pClass=m_pGame->GetClassRegistry()->GetByClassId(ed.ClassId);
-		FIXME_ASSERT(pClass);
-		FIXME_ASSERT(pClass->strClassName.c_str());
+		CRYASSERT(pClass);
+		CRYASSERT(pClass->strClassName.c_str());
 		//ent->SetClassName(pClass->strClassName);
 		ed.className = pClass->strClassName;
 
@@ -1971,8 +1971,8 @@ void CXSystemBase::OnSpawnContainer( CEntityDesc &ed,IEntity *pEntity )
 		EntityClass *pClass=m_pGame->GetClassRegistry()->GetByClassId(ed.ClassId);
 		if (!pClass)
 			m_pLog->Log("[ERROR] Trying to spawn vehicle from an unknown class : %d",(int)ed.ClassId);
-		FIXME_ASSERT(pClass);
-		FIXME_ASSERT(pClass->strClassName.c_str());
+		CRYASSERT(pClass);
+		CRYASSERT(pClass->strClassName.c_str());
 		ed.className = pClass->strClassName;
 
 		// create the containers script object 
@@ -1993,8 +1993,8 @@ void CXSystemBase::OnSpawnContainer( CEntityDesc &ed,IEntity *pEntity )
 		pAdvCamSystem->SetEntity(pEntity);
 
 		EntityClass *pClass=m_pGame->GetClassRegistry()->GetByClassId(ed.ClassId);
-		FIXME_ASSERT(pClass);
-		FIXME_ASSERT(pClass->strClassName.c_str());
+		CRYASSERT(pClass);
+		CRYASSERT(pClass->strClassName.c_str());
 
 		ed.className = pClass->strClassName;
 
@@ -2009,8 +2009,8 @@ void CXSystemBase::OnSpawnContainer( CEntityDesc &ed,IEntity *pEntity )
 		pSynched2DTable->SetEntity(pEntity);
 
 		EntityClass *pClass=m_pGame->GetClassRegistry()->GetByClassId(ed.ClassId);
-		FIXME_ASSERT(pClass);
-		FIXME_ASSERT(pClass->strClassName.c_str());
+		CRYASSERT(pClass);
+		CRYASSERT(pClass->strClassName.c_str());
 
 		ed.className = pClass->strClassName;
 

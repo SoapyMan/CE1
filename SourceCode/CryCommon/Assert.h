@@ -26,12 +26,15 @@ enum ECryAssertType {
 
 #if defined(_RETAIL) || defined(_PROFILE)
 
+bool CryIsDebuggerPresent();
+
 #define	CRYASSERT_MSG(x, msgFmt, ...)	{ }
 #define	CRYASSERT(x)					{ }
 #define CRYASSERT_FAIL(msgFmt, ...)	{ }
 
 #else
 
+bool CryIsDebuggerPresent();
 int _CryAssertMsg(const char* filename, int line, bool isSkipped, const char* expression, const char* statement, ...);
 
 #define _CRYASSERT_BODY(expression, msgFmt, ...) \

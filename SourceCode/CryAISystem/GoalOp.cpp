@@ -476,7 +476,7 @@ bool COPApproach::Execute(CPipeUser *pOperand)
 	{
 		GraphNode *pThisNode = pSystem->GetGraph()->GetEnclosing(pOperand->GetPos(),pOperand->m_pLastNode);
 		if (!pThisNode)
-			DEBUG_BREAK;
+			_DEBUG_BREAK;
 		GraphNode *pTargetNode = pSystem->GetGraph()->GetEnclosing(pTarget->GetPos(),pTarget->m_pLastNode);
 
 		if (pThisNode!=pTargetNode)

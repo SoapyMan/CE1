@@ -229,7 +229,7 @@ CEditorImpl::~CEditorImpl()
 //////////////////////////////////////////////////////////////////////////
 void CEditorImpl::SetMasterCDFolder()
 {
-	if (IsDebuggerPresent())
+	if (CryIsDebuggerPresent())
 		return;
 
 	// Set`s root folder of the Editor.

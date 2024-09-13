@@ -374,7 +374,7 @@ int qhull(strided_pointer<vectorf> pts, int npts, index_t*& pTris)
 			for (tr = trnew; tr < trend; tr++)
 				if (!tr->buddy[0] || !tr->buddy[2]) {
 #ifdef _DEBUG
-					//DEBUG_BREAK;
+					//_DEBUG_BREAK;
 					//OutputDebugString("WARNING: failed to compute convex hull due to geometric error\n");
 #endif
 					goto endqh;

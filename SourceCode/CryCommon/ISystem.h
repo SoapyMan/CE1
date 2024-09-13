@@ -398,7 +398,7 @@ extern "C"
 // Then terminates execution.
 inline void CryError(const char* format, ...)
 {
-	if (!GetISystem())
+	if (!GetISystem() || !format)
 		return;
 
 	va_list	ArgList;

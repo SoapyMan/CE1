@@ -21,7 +21,7 @@ enum EMessageBoxButton
 	MSGBOX_BUTTON_IGNORE,
 };
 
-static bool CryIsDebuggerPresent()
+bool CryIsDebuggerPresent()
 {
 #ifdef _WIN32
 	return IsDebuggerPresent();

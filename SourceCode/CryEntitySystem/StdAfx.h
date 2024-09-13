@@ -49,21 +49,6 @@ extern bool g_bProfilerEnabled;
 ////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 
-#ifdef PS2
-#ifndef DISABLE_VERIFY
-#define _VERIFY(a)  \
-	{						\
-		if(!(a))			\
-		{					\
-		FORCE_EXIT();		\
-		DEBUG_BREAK; \		
-		}					\
-}
-#else
-#define VERIFY(a) a;
-#endif
-
-#else
 #ifndef DISABLE_VERIFY
 #define _VERIFY(a)  \
 	{						\
@@ -73,10 +58,8 @@ extern bool g_bProfilerEnabled;
 		}					\
 	}						
 #else
-#define VERIFY(a) a;
+#define _VERIFY(a) a;
 #endif
-
-#endif //PS2
 
 // Windows defines
 #if !defined(LINUX)

@@ -600,7 +600,7 @@ static int io_setloc (lua_State *L) {
 static int io_exit (lua_State *L) {
 	//FORCE_EXIT();		
 #if defined(WIN32) && !defined(WIN64)
-	DEBUG_BREAK;
+	_DEBUG_BREAK;
 #endif
   //it(luaL_opt_int(L, 1, EXIT_SUCCESS));
   return 0;  /* to avoid warnings */

@@ -828,11 +828,7 @@ _inline void makeProjectionMatrix(float fovy, float aspect, float nearval, float
 //=============================================================================
 
 // the int 3 call for 32-bit version for .l-generated files.
-#ifdef WIN64
-#define LEX_DBG_BREAK
-#else
-#define LEX_DBG_BREAK DEBUG_BREAK
-#endif
+#define LEX_DBG_BREAK _DEBUG_BREAK;
 
 /*-----------------------------------------------------------------------------
 	The End.

@@ -270,7 +270,7 @@ void CScriptObject::SetValueChain(const char* sKey, IScriptObject* pObj)
 	{
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "\001 ERROR! Passing nullptr IScriptObject to SETVALUE CHAIN!");
 #if defined(_DEBUG) && !defined(WIN64)
-		DEBUG_BREAK;
+		_DEBUG_BREAK;
 #endif
 		lua_pushnil(m_pLS);
 	}
@@ -870,29 +870,12 @@ bool CScriptObject::AddSetGetHandlers(SCRIPT_FUNCTION pSetThunk, SCRIPT_FUNCTION
 	}
 	return true;
 }
-#ifdef PS2
-#define FIXME_ASSERT(cond) { if(!(cond)) { FORCE_EXIT() } }
-#else
 
-#ifdef _DEBUG
-#if defined(WIN64) || defined(LINUX64)
-#define FIXME_ASSERT(cond) CRYASSERT (cond)
-#else
-#define FIXME_ASSERT(cond) { if(!(cond)) { DEBUG_BREAK; } }
-#endif
-#else
-//Timur[2/20/2003]
-//@FIXME Should be removed in gold Release.
-// Debugging mod
-#define FIXME_ASSERT(cond)  { if(!(cond)) { CryError( "<ScriptSystem> CRYASSERT %s",#cond ); }}
-#endif
-
-#endif
 int CScriptObject::GetTableTagHandler(lua_State* L)
 {
 	CScriptObject* pThis = (CScriptObject*)lua_touserdata(L, -1);
 	int nRet;
-	FIXME_ASSERT(pThis->m_pSetGetParams->m_pGetThunk != nullptr);
+	CRYASSERT(pThis->m_pSetGetParams->m_pGetThunk != nullptr);
 	/*{
 		//lua_pop(L,2);
 		FIXME_ASSERT(lua_istable(L,1));
@@ -905,7 +888,7 @@ int CScriptObject::GetTableTagHandler(lua_State* L)
 	if (((nRet = pThis->m_pSetGetParams->m_pGetThunk((HSCRIPT)L)) == -1))
 	{
 		//lua_pop(L,2);
-		FIXME_ASSERT(lua_istable(L, 1));
+		CRYASSERT(lua_istable(L, 1));
 		lua_pop(L, 1);
 		lua_rawget(L, 1);
 		return 1;
@@ -917,7 +900,7 @@ int CScriptObject::SetTableTagHandler(lua_State* L)
 {
 	CScriptObject* pThis = (CScriptObject*)lua_touserdata(L, -1);
 	int nRet;
-	FIXME_ASSERT(pThis->m_pSetGetParams->m_pGetThunk != nullptr);
+	CRYASSERT(pThis->m_pSetGetParams->m_pGetThunk != nullptr);
 	/*if(!pThis->m_pSetThunk)
 	{
 		FIXME_ASSERT(lua_istable(L,1));
@@ -927,11 +910,11 @@ int CScriptObject::SetTableTagHandler(lua_State* L)
 	}*/
 	if ( /*!lua_isfunction(L,-2) && !lua_iscfunction(L,-2) && !lua_isuserdata(L,-2) &&*/ (!((nRet = pThis->m_pSetGetParams->m_pSetThunk((HSCRIPT)L)) == -1)))
 	{
-		FIXME_ASSERT(lua_istable(L, 1));
+		CRYASSERT(lua_istable(L, 1));
 		lua_pop(L, 1);
 	}
 	else {
-		FIXME_ASSERT(lua_istable(L, 1));
+		CRYASSERT(lua_istable(L, 1));
 		lua_pop(L, 1);
 		lua_rawset(L, 1);
 		return 0;
@@ -1355,7 +1338,7 @@ void CScriptObject::EndIteration()
 	{
 		//Timur[2/20/2003]
 		// This is invalid call, fire warning.
-		FIXME_ASSERT(0);
+		CRYASSERT(0);
 		return;
 	}
 

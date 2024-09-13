@@ -59,20 +59,9 @@
 #define USE_NEWPOOL
 #include <CryMemoryManager.h>
 
-
 /////////////////////////////////////////////////////////////////////////////
 // VARIOUS MACROS ///////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
-
-#ifndef PS2
-#if defined(WIN64) || defined(LINUX)
-#define FIXME_ASSERT(cond) { if(!(cond)) abort(); }
-#else
-#define FIXME_ASSERT(cond) { if(!(cond)) { DEBUG_BREAK; } }
-#endif
-#else //PS2
-#define FIXME_ASSERT(cond) { if(!(cond)) { FORCE_EXIT();} }
-#endif
 
 template <class T> inline void ZeroStruct( T &t ) { memset( &t,0,sizeof(t) ); }
 

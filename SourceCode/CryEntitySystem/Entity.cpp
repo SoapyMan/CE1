@@ -735,7 +735,7 @@ bool CEntity::Init(CEntityDesc& ed)
 
 	//SetCommonCallbacks(m_pScriptSystem);
 
-	//if (strcmp("Pig1", m_name.c_str())==0) DEBUG_BREAK;
+	//if (strcmp("Pig1", m_name.c_str())==0) _DEBUG_BREAK;
 
 	m_bTrackable = false;
 	if (m_pScriptObject)

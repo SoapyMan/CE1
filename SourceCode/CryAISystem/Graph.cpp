@@ -765,7 +765,7 @@ int CGraph::WalkBack(GraphNode* pBegin, GraphNode* pEnd, int& nIterations)
 		}
 
 		//		if (std::find(m_lstNodeStack.begin(),m_lstNodeStack.end(),pCurrent) != m_lstNodeStack.end())
-			//			DEBUG_BREAK;
+			//			_DEBUG_BREAK;
 	}
 
 	if (m_pWalkBackCurrent == pEnd)

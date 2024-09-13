@@ -4670,8 +4670,8 @@ bool CPlayer::Read( CStream &stream )
 			GoSwim();
 			break;
 		default:
-			//DEBUG_BREAK;
-			::OutputDebugString("INVALID STANCE\n");
+			//_DEBUG_BREAK;
+			CRYASSERT_FAIL("INVALID STANCE");
 			m_CurStance=(eStance)stance;
 			break;
 		}
@@ -7529,8 +7529,8 @@ bool CPlayer::Read_PATCH_1( CStream &stream )
 			GoSwim();
 			break;
 		default:
-			//DEBUG_BREAK;
-			::OutputDebugString("INVALID STANCE\n");
+			//_DEBUG_BREAK;
+			CRYASSERT_FAIL("INVALID STANCE");
 			m_CurStance=(eStance)stance;
 			break;
 		}

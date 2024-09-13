@@ -237,7 +237,7 @@ void CServerStateMachine::OnSignal(unsigned int dwOutgoingSignal, DWORD_PTR dwPa
 		m_pParent->OnDisconnect((const char*)dwParam);
 		break;
 	default:
-		NET_ASSERT(0);
+		CRYASSERT_FAIL("Invalid Signal type %d", dwOutgoingSignal);
 		break;
 	}
 }
