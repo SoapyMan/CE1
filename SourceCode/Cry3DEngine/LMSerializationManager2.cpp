@@ -159,7 +159,6 @@ bool CLMSerializationManager2::_Load(const char* pszFileName, std::vector<IEntit
 			return false;
 		}
 
-		std::vector<BYTE>vDomLightDir, vColorMap;
 		if (inpIGLMs)
 		{
 			// Create lightmap
@@ -207,22 +206,17 @@ bool CLMSerializationManager2::_Load(const char* pszFileName, std::vector<IEntit
 	// Read texture coordinate data
 	for (UINT iNumTexCoordSets = 0; iNumTexCoordSets < sHeader.iNumTexCoordSets; iNumTexCoordSets++)
 	{
-		UVSetHeader* pUVh(nullptr);
-		if (sHeader.iVersion >= 3)
-			pUVh = new UVSetHeader3();
-		else
-			pUVh = new UVSetHeader();//old format
-		CRYASSERT(pUVh);
-		std::unique_ptr<UVSetHeader> uvh(pUVh);
+		UVSetHeader3 uvSetHdr;
+
 		// Read position of GLM which uses this texture coordinate set
-		if (1 != GetPak()->FRead(pUVh, (sHeader.iVersion >= 3) ? sizeof(UVSetHeader3) : sizeof(UVSetHeader), 1, hFile))
+		if (1 != GetPak()->FRead(&uvSetHdr, (sHeader.iVersion >= 3) ? sizeof(UVSetHeader3) : sizeof(UVSetHeader), 1, hFile))
 		{
 			GetSystem()->GetILog()->Log("Could not read texture coordinates for lightmaps");
 			return false;
 		}
 		std::vector<TexCoord2Comp> vTexCoords;
-		vTexCoords.resize(pUVh->numUVs);
-		if (1 != GetPak()->FRead(&vTexCoords[0], sizeof(TexCoord2Comp) * pUVh->numUVs, 1, hFile))
+		vTexCoords.resize(uvSetHdr.numUVs);
+		if (1 != GetPak()->FRead(&vTexCoords[0], sizeof(TexCoord2Comp) * uvSetHdr.numUVs, 1, hFile))
 		{
 			GetSystem()->GetILog()->Log("Could not read texture coordinates for lightmaps");
 			return false;
@@ -248,9 +242,9 @@ bool CLMSerializationManager2::_Load(const char* pszFileName, std::vector<IEntit
 				IEntityRender* pICurGLM = (*itGLM);
 
 				// Correct GLM for this texture coordinate set ?
-				if (pICurGLM->GetEditorObjectId() == pUVh->nIdGLM && pICurGLM->GetEntityRS())
+				if (pICurGLM->GetEditorObjectId() == uvSetHdr.nIdGLM && pICurGLM->GetEntityRS())
 				{
-					std::map<int, RenderLMData_AutoPtr>::iterator itRenderLMData = mapLMData.find(pUVh->nIdGLM);
+					std::map<int, RenderLMData_AutoPtr>::iterator itRenderLMData = mapLMData.find(uvSetHdr.nIdGLM);
 
 					if (itRenderLMData == mapLMData.end())
 					{
@@ -262,16 +256,15 @@ bool CLMSerializationManager2::_Load(const char* pszFileName, std::vector<IEntit
 					// Copy texture coordinates and hand out a reference to the lightmap object
 					if (sHeader.iVersion >= 3 && (strcmp(pICurGLM->GetEntityClassName(), "Brush") == 0))
 					{
-						const UVSetHeader3* puvh = static_cast<const UVSetHeader3*>(pUVh);
 						//create vector with light ids
-						std::vector<std::pair<EntityId, EntityId> > vIDs;	vIDs.resize(puvh->ucOcclCount);
-						for (int i = 0; i < puvh->ucOcclCount; ++i)
+						std::vector<std::pair<EntityId, EntityId> > vIDs;	vIDs.resize(uvSetHdr.ucOcclCount);
+						for (int i = 0; i < uvSetHdr.ucOcclCount; ++i)
 						{
-							vIDs[i].first = puvh->OcclIds[2 * i];
-							vIDs[i].second = puvh->OcclIds[2 * i + 1];
+							vIDs[i].first = uvSetHdr.OcclIds[2 * i];
+							vIDs[i].second = uvSetHdr.OcclIds[2 * i + 1];
 						}
-						CBrush* pBrush = reinterpret_cast<CBrush*>(pICurGLM);//safe due to GetEntityClassName
-						pBrush->SetLightmap(itRenderLMData->second, (float*)&vTexCoords[0], vTexCoords.size(), puvh->ucOcclCount, vIDs);
+						CBrush* pBrush = static_cast<CBrush*>(pICurGLM);//safe due to GetEntityClassName
+						pBrush->SetLightmap(itRenderLMData->second, (float*)&vTexCoords[0], vTexCoords.size(), uvSetHdr.ucOcclCount, vIDs);
 					}
 					else
 						pICurGLM->SetLightmap(itRenderLMData->second, (float*)&vTexCoords[0], vTexCoords.size());
@@ -283,7 +276,7 @@ bool CLMSerializationManager2::_Load(const char* pszFileName, std::vector<IEntit
 		}
 		else	// !inpIGLMs
 		{
-			m_vTexCoords[pUVh->nIdGLM] = RawTexCoordData(vTexCoords, pUVh->nHashGLM);
+			m_vTexCoords[uvSetHdr.nIdGLM] = RawTexCoordData(vTexCoords, uvSetHdr.nHashGLM);
 		}
 	}
 
