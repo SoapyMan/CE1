@@ -100,7 +100,6 @@ void CClouds::CalcCloudsPerlin(SNoiseParams *sParam, CWnd *pWndStatus)
 	float fYScale = 255;
 	char szStatus[128];
 
-	assert(!IsBadReadPtr(sParam, sizeof(SNoiseParams)));
 	assert(sParam->fFrequency);
 	assert(sParam->iWidth && sParam->iHeight);
 	assert(pWndStatus);

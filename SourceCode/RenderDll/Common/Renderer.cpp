@@ -4264,14 +4264,6 @@ bool CRenderer::DXTDecompress(byte* srcData, byte* dstData, int nWidth, int nHei
 
 bool CRenderer::DXTCompress(byte* raw_data, int nWidth, int nHeight, ETEX_Format eTF, bool bUseHW, bool bGenMips, int nSrcBytesPerPix, MIPDXTcallback callback)
 {
-#ifndef __linux
-	if (IsBadReadPtr(raw_data, nWidth * nHeight * nSrcBytesPerPix))
-	{
-		CRYASSERT(0);
-		iLog->Log("Warning: CRenderer::DXTCompress: invalid data passed to the function");
-		return false;
-	}
-#endif
 #if !defined(WIN64) && !defined(NULL_RENDERER) && defined(ENABLE_DXT)
 	// NOTE: AMD64 port: implement
 	if (!bUseHW)

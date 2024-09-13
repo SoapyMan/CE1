@@ -682,18 +682,7 @@ RenderLMData* CLMSerializationManager2::CreateLightmap(const char* pszFileName, 
 	// Create a DOT3 Lightmap object
 	IRenderer* pIRenderer = GetSystem()->GetIRenderer();
 	int iColorLerpTex = 0, iHDRColorLerpTex = 0, iDomDirectionTex = 0, iOcclTex = 0;
-#ifndef __linux
-	CRYASSERT(!IsBadReadPtr(pColorLerp4, sizeof(BYTE) * 4 * iWidth * iHeight));
-#ifdef USE_DOT3_ALPHA
-	CRYASSERT(!IsBadReadPtr(pDomDirection3, sizeof(BYTE) * 4 * iWidth * iHeight));
-#else
-	CRYASSERT(!IsBadReadPtr(pDomDirection3, sizeof(BYTE) * 3 * iWidth * iHeight));
-#endif
-	if (pOccl2)
-		CRYASSERT(!IsBadReadPtr(pOccl2, sizeof(BYTE) * 2 * iWidth * iHeight));
-	if (pHDRColorLerp)
-		CRYASSERT(!IsBadReadPtr(pHDRColorLerp, sizeof(BYTE) * 4 * iWidth * iHeight));
-#endif
+
 	char szName[128];
 	if (pszFileName)
 	{
@@ -842,9 +831,7 @@ bool CLMSerializationManager2::ExportDLights(const char* pszFilePath, const CDLi
 		pPak->RemoveFile(pFileName);
 		return true;
 	}
-#ifndef __linux
-	CRYASSERT(!IsBadReadPtr(ppLights, sizeof(CDLight*) * iNumLights));
-#endif
+
 	sHeader.iNumDLights = iNumLights;
 	fMem.Write(sHeader);
 

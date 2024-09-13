@@ -238,13 +238,7 @@ public:
 			AddElem(src[i]);
 		}
 	}
-#ifdef _XBOX
-#ifndef _DEBUG
-#ifndef realloc
-#error !!!!!
-#endif
-#endif //_DEBUG
-#endif //_XBOX
+
 	void Realloc()
 	{
 		m_pElements = (T*)realloc(m_pElements, m_nAllocatedCount * sizeof(T));

@@ -1403,8 +1403,6 @@ void CTerrainTexture::OnUseLayer()
 
 	CButton ctrlButton;
 
-	CRYASSERT(!IsBadReadPtr(m_pCurrentLayer, sizeof(CLayer)));
-
 	// Change the internal in use value of the selected layer
 	VERIFY(ctrlButton.Attach(GetDlgItem(IDC_USE_LAYER)->m_hWnd));
 	m_pCurrentLayer->SetInUse((ctrlButton.GetCheck() == 1) ? true : false);

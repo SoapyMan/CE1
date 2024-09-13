@@ -299,9 +299,8 @@ bool C3DEngine::LoadLevel(const char* szFolderName, const char* szMissionName, b
 		m_pObjManager->LoadVegetationModels(szMissionName, bEditorMode);
 
 		// load lsources used for lightmaps
-#if !defined(LINUX64)//fails due to different size of CDLight (pointers have 8 bytes)
 		LoadStaticLightSources(GetLevelFilePath("StatLights.dat"));
-#endif
+
 		// bushes bodies and instances
 		m_pObjManager->LoadBrushes();
 

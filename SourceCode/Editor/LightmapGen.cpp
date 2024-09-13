@@ -75,8 +75,6 @@ const bool CLightmapGen::Generate( ISystem *pSystem, std::vector<std::pair<IEnti
 	//////////////////////////////////////////////////////////////////////////
 	CString levelPath = Path::AddBackslash(GetIEditor()->GetGameEngine()->GetLevelPath());
 	CString pakFilename = levelPath + "LevelLM.pak";
-	CString filenameLM = levelPath + "Dot3LM.dat";
-	CString filenameLights = levelPath + "StatLights.dat";
 
 	if (!CFileUtil::OverwriteFile( pakFilename ))
 		return false;

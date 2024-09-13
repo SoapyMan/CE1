@@ -78,9 +78,6 @@ void CBrush::SetLightmap(RenderLMData* pLMData, float* pTexCoords, UINT iNumTexC
 	IRenderer* pIRenderer = GetRenderer();
 
 	CRYASSERT(iNumTexCoords);
-#ifndef __linux
-	CRYASSERT(!IsBadReadPtr(pTexCoords, sizeof(float) * 2 * iNumTexCoords));
-#endif
 	m_arrLMData[nLod].m_pLMData = pLMData;
 
 	if (m_arrLMData[nLod].m_pLMTCBuffer)

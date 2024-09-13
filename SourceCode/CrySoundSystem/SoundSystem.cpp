@@ -1975,10 +1975,3 @@ bool CSoundSystem::IsEnabled()
 
 #endif
 
-extern "C"
-{
-	void CheckMem(void* pData, size_t nSize)
-	{
-		CRYASSERT(0 == IsBadReadPtr(pData, nSize));
-	}
-}
