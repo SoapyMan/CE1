@@ -630,9 +630,26 @@ public:
 
 	void mfParameterStateMatrix(SCGMatrix* ParamBind)
 	{
-		static int sFrame;
-		static int sFlags;
 		CD3D9Renderer* r = gcpRendD3D;
+
+		switch (ParamBind->m_eCGParamType)
+		{
+		case ECGP_Matr_ViewProj:
+		case ECGP_Matr_View_IT:
+		case ECGP_Matr_View_I:
+		case ECGP_Matr_View_T:
+		case ECGP_Matr_View:
+			if (r->m_RP.m_ClipPlaneEnabled == 2)
+			{
+				// Transform clip plane to clip space
+				Plane srcPlane(r->m_RP.m_CurClipPlane.m_Normal, r->m_RP.m_CurClipPlane.m_Dist);
+				Plane transformedPlane = TransformPlane2(r->m_InvCameraProjMatrix, srcPlane);
+				r->m_pd3dDevice->SetClipPlane(0, &transformedPlane.n[0]);
+				r->m_RP.m_ClipPlaneWasOverrided = 2;
+			}
+			break;
+		}
+
 		LPDIRECT3DDEVICE9 dv = r->mfGetD3DDevice();
 		D3DXMATRIXA16 matWorldViewProj;
 		switch (ParamBind->m_eCGParamType)
@@ -652,21 +669,7 @@ public:
 					m_FrameObj = -1;
 				r->m_RP.m_PersFlags &= ~RBPF_WASWORLDSPACE;
 			}
-			if (sFrame != r->m_RP.m_FrameObject)
-			{
-				sFrame = r->m_RP.m_FrameObject;
-				if (r->m_RP.m_ClipPlaneEnabled == 2)
-				{
-					// Transform clip plane to clip space
-					Plane p;
-					p.n = r->m_RP.m_CurClipPlane.m_Normal;
-					p.d = r->m_RP.m_CurClipPlane.m_Dist;
-					Plane pTr;
-					pTr = TransformPlane2(r->m_InvCameraProjMatrix, p);
-					r->m_pd3dDevice->SetClipPlane(0, &pTr.n[0]);
-					r->m_RP.m_ClipPlaneWasOverrided = 2;
-				}
-			}
+
 			if (m_FrameObj != r->m_RP.m_FrameObject)
 			{
 				m_FrameObj = r->m_RP.m_FrameObject;
