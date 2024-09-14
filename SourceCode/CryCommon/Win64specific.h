@@ -20,8 +20,6 @@
 #include <crtdbg.h>
 #endif
 
-#define localtime_r(a, b) ((b, a) == 0 ? b : nullptr)
-
 // checks if the heap is valid in debug; in release, this function shouldn't be called
 // returns non-0 if it's valid and 0 if not valid
 inline int IsHeapValid()

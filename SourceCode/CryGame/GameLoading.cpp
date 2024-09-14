@@ -271,9 +271,9 @@ bool CXGame::SaveToStream(CStream& stm, Vec3d* pos, Vec3d* angles, string sFilen
 
 	// write current time and date
 	auto now = std::chrono::system_clock::now();
+	
 	std::time_t time = std::chrono::system_clock::to_time_t(now);
-	struct tm localTime;
-	localtime_r(&time, &localTime);
+	tm localTime = *std::localtime(&time);
 
 	stm.Write((unsigned char)localTime.tm_hour);		// hour
 	stm.Write((unsigned char)localTime.tm_min);			// minute
