@@ -6584,117 +6584,110 @@ void CD3D9Renderer::EF_DrawSubsurfacePasses(SShaderTechnique* hs, SShader* ef)
 // Flush HW shader technique (used in FP shaders and in programmable pipeline shaders)
 void CD3D9Renderer::EF_FlushHW()
 {
+	if (!m_RP.m_pRE && (!m_RP.m_RendNumIndices || !m_RP.m_RendNumVerts))
+		return;
+
 	SShader* ef = m_RP.m_pShader;
-	int i;
+	if (m_RP.m_pShaderResources)
+		m_RP.m_pCurLightMaterial = m_RP.m_pShaderResources->m_LMaterial;
+	else if (ef->m_Flags2 & EF2_USELIGHTMATERIAL)
+		m_RP.m_pCurLightMaterial = &m_RP.m_DefLightMaterial;
+	else
+		m_RP.m_pCurLightMaterial = nullptr;
 
-	int nPolys = m_nPolygons;
-
-	if (m_RP.m_ObjFlags & FOB_SELECTED)
+	// Set Z-Bias
+	if (ef->m_Flags & EF_POLYGONOFFSET)
 	{
-		int nnn = 0;
+		if (m_d3dCaps.RasterCaps & (D3DPRASTERCAPS_DEPTHBIAS | D3DPRASTERCAPS_SLOPESCALEDEPTHBIAS))
+		{
+			float fOffs = (float)CV_d3d9_decaloffset;
+			m_pd3dDevice->SetRenderState(D3DRS_DEPTHBIAS, *(DWORD*)(&fOffs));
+		}
 	}
 
-	if (m_RP.m_pRE || (m_RP.m_RendNumIndices && m_RP.m_RendNumVerts))
+	SShaderTechnique* hs = m_RP.m_pCurTechnique;
+	if (!hs)
+		return;
+
+	if (m_RP.m_pRE)
 	{
-		if (m_RP.m_pShaderResources)
-			m_RP.m_pCurLightMaterial = m_RP.m_pShaderResources->m_LMaterial;
+		SRenderShaderResources* Res = m_RP.m_pShaderResources;
+		int nFlags = hs->m_Flags;
+		if (Res && Res->m_bNeedNormals)
+			nFlags |= SHPF_NORMALS;
+		if (ef->m_eSort == eS_TerrainLightPass || ef->m_eSort == eS_Terrain)
+			nFlags |= FHF_TERRAIN;
+		m_RP.m_pRE->mfCheckUpdate(ef->m_VertexFormatId, nFlags);
+	}
+
+	if (ef->m_Flags & EF_NEEDNORMALS)
+		EF_EvalNormalsRB(ef);
+	EF_Eval_DeformVerts(ef->m_Deforms);
+
+	// Set culling mode
+	if (!(m_RP.m_FlagsPerFlush & RBSI_NOCULL))
+	{
+		if (hs->m_eCull != -1)
+			D3DSetCull(hs->m_eCull);
 		else
-			if (ef->m_Flags2 & EF2_USELIGHTMATERIAL)
-				m_RP.m_pCurLightMaterial = &m_RP.m_DefLightMaterial;
-			else
-				m_RP.m_pCurLightMaterial = nullptr;
+			D3DSetCull(ef->m_eCull);
+	}
 
-		// Set Z-Bias
-		if (ef->m_Flags & EF_POLYGONOFFSET)
+	EF_SetVertexStreams(hs->m_Pointers, 1);
+	EF_ApplyMatrixOps(hs->m_MatrixOps, true);
+
+	// Draw shader passes
+	bool bLights = false;
+	const int numPasses = hs->m_Passes.Num();
+	if (numPasses)
+	{
+		int nStart = 0;
+		EShaderPassType eShPass = m_SHPTable[hs->m_Passes[0].m_ePassType];
+
+		int i;
+		for (i = 1; i < numPasses; i++)
 		{
-			if (m_d3dCaps.RasterCaps & (D3DPRASTERCAPS_DEPTHBIAS | D3DPRASTERCAPS_SLOPESCALEDEPTHBIAS))
-			{
-				float fOffs = (float)CV_d3d9_decaloffset;
-				m_pd3dDevice->SetRenderState(D3DRS_DEPTHBIAS, *(DWORD*)(&fOffs));
-			}
-		}
-
-		SShaderTechnique* hs = m_RP.m_pCurTechnique;
-		if (!hs)
-			return;
-
-		if (m_RP.m_pRE)
-		{
-			SRenderShaderResources* Res = m_RP.m_pShaderResources;
-			int nFlags = hs->m_Flags;
-			if (Res && Res->m_bNeedNormals)
-				nFlags |= SHPF_NORMALS;
-			if (ef->m_eSort == eS_TerrainLightPass || ef->m_eSort == eS_Terrain)
-				nFlags |= FHF_TERRAIN;
-			m_RP.m_pRE->mfCheckUpdate(ef->m_VertexFormatId, nFlags);
-		}
-
-		if (ef->m_Flags & EF_NEEDNORMALS)
-			EF_EvalNormalsRB(ef);
-		EF_Eval_DeformVerts(ef->m_Deforms);
-
-		// Set culling mode
-		if (!(m_RP.m_FlagsPerFlush & RBSI_NOCULL))
-		{
-			if (hs->m_eCull != -1)
-				D3DSetCull(hs->m_eCull);
-			else
-				D3DSetCull(ef->m_eCull);
-		}
-
-		EF_SetVertexStreams(hs->m_Pointers, 1);
-		EF_ApplyMatrixOps(hs->m_MatrixOps, true);
-
-		// Draw shader passes
-		bool bLights = false;
-		if (hs->m_Passes.Num())
-		{
-			int nStart = 0;
-			EShaderPassType eShPass = m_SHPTable[hs->m_Passes[0].m_ePassType];
-
-			for (i = 1; i < hs->m_Passes.Num(); i++)
-			{
-				if (m_SHPTable[hs->m_Passes[i].m_ePassType] != eShPass)
-				{
-					int nEnd = i - 1;
-					bLights |= EF_DrawPasses(eShPass, hs, ef, nStart, nEnd);
-					i = nEnd + 1;
-					nStart = i;
-					if (i >= hs->m_Passes.Num())
-						break;
-					eShPass = m_SHPTable[hs->m_Passes[i].m_ePassType];
-				}
-			}
-			if (i - nStart > 0)
+			const SShaderPassHW& pass = hs->m_Passes[i];
+			if (m_SHPTable[pass.m_ePassType] != eShPass)
 			{
 				int nEnd = i - 1;
 				bLights |= EF_DrawPasses(eShPass, hs, ef, nStart, nEnd);
+				i = nEnd + 1;
+				nStart = i;
+				if (i >= numPasses)
+					break;
+				eShPass = m_SHPTable[pass.m_ePassType];
 			}
 		}
-		if (bLights)
+		if (i - nStart > 0)
 		{
-			if (m_RP.m_pShaderResources && m_RP.m_pShaderResources->m_Textures[EFTT_SUBSURFACE])
-				EF_DrawSubsurfacePasses(hs, ef);
+			int nEnd = i - 1;
+			bLights |= EF_DrawPasses(eShPass, hs, ef, nStart, nEnd);
 		}
-
-		// Restore matrix transform states
-		EF_ApplyMatrixOps(hs->m_MatrixOps, false);
-
-		// Reset Z-Bias
-		if (ef->m_Flags & EF_POLYGONOFFSET)
-		{
-			if (m_d3dCaps.RasterCaps & (D3DPRASTERCAPS_DEPTHBIAS | D3DPRASTERCAPS_SLOPESCALEDEPTHBIAS))
-				m_pd3dDevice->SetRenderState(D3DRS_DEPTHBIAS, 0);
-		}
-
-		// Draw detail texture passes
-		if (m_RP.m_pShaderResources && m_RP.m_pShaderResources->m_Textures[EFTT_DETAIL_OVERLAY] && CV_r_detailtextures)
-			EF_DrawDetailOverlayPasses();
-
-		// Draw volumetric fog passes
-		if (m_RP.m_pFogVolume && CV_r_VolumetricFog)
-			EF_DrawFogOverlayPasses();
 	}
+	if (bLights)
+	{
+		if (m_RP.m_pShaderResources && m_RP.m_pShaderResources->m_Textures[EFTT_SUBSURFACE])
+			EF_DrawSubsurfacePasses(hs, ef);
+	}
+
+	// Restore matrix transform states
+	EF_ApplyMatrixOps(hs->m_MatrixOps, false);
+
+	// Reset Z-Bias
+	if (ef->m_Flags & EF_POLYGONOFFSET)
+	{
+		if (m_d3dCaps.RasterCaps & (D3DPRASTERCAPS_DEPTHBIAS | D3DPRASTERCAPS_SLOPESCALEDEPTHBIAS))
+			m_pd3dDevice->SetRenderState(D3DRS_DEPTHBIAS, 0);
+	}
+
+	// Draw detail texture passes
+	if (m_RP.m_pShaderResources && m_RP.m_pShaderResources->m_Textures[EFTT_DETAIL_OVERLAY] && CV_r_detailtextures)
+		EF_DrawDetailOverlayPasses();
+
+	// Draw volumetric fog passes
+	if (m_RP.m_pFogVolume && CV_r_VolumetricFog)
+		EF_DrawFogOverlayPasses();
 }
 
 // Set/Restore shader resources overrided states
