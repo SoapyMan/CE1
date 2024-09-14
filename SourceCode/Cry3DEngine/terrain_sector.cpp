@@ -313,12 +313,18 @@ void CSectorInfo::SetDetailLayersPalette()
 
 void CSectorInfo::RenderEntities(CObjManager* pObjManager, bool bNotAllInFrustum, char* fake, int nStatics)
 {
-	if (m_lstEntities[nStatics].Count())
-		DrawEntities(m_pFogVolume ? m_pFogVolume->nRendererVolumeID : 0,
-			GetRenderer()->EF_GetHeatVision() ? m_nDynLightMaskNoSun : m_nDynLightMask,
-			false, GetViewCamera(), nullptr, nullptr, m_pFogVolume, bNotAllInFrustum,
-			(m_nOriginX == 0 && m_nOriginY == 0) ? 0 : (m_fDistance - TERRAIN_SECTORS_MAX_OVERLAPPING),
-			pObjManager, m_fDistance < GetCVars()->e_area_merging_distance, "", nStatics);
+	if (!m_lstEntities[nStatics].Count())
+		return;
+
+	const int dynLightMask = GetRenderer()->EF_GetHeatVision() ? m_nDynLightMaskNoSun : m_nDynLightMask;
+	const int fogVolId = m_pFogVolume ? m_pFogVolume->nRendererVolumeID : 0;
+	const bool allowBrushMerging = m_fDistance < GetCVars()->e_area_merging_distance;
+	const float sectorMinDist = (m_nOriginX == 0 && m_nOriginY == 0) ? 0.0f : (m_fDistance - TERRAIN_SECTORS_MAX_OVERLAPPING);
+
+	DrawEntities(fogVolId, dynLightMask, false, 
+		GetViewCamera(), nullptr, nullptr, m_pFogVolume, bNotAllInFrustum,
+		sectorMinDist,
+		pObjManager, allowBrushMerging, "", nStatics);
 }
 
 void CSectorInfo::GetMemoryUsage(ICrySizer* pSizer)

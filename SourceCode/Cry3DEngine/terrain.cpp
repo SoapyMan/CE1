@@ -274,14 +274,16 @@ void CTerrain::RefineSector(int x1, int x2, int y1, int y2, bool bAllIN)
 		info->m_fDistance = GetDist2D((float)xm, (float)ym, m_vCameraPos.x, m_vCameraPos.y) - (CTerrain::GetSectorSize() >> 1) * 1.3333f;
 		if (info->m_fDistance > m_pViewCamera->GetZMax())
 			return;
+
 		if (info->m_fDistance < 1)
 			info->m_fDistance = 1;
 		/*
-if( info->m_fDistance>128 && info->m_vBoxMax.z <= m_fGlobalWaterLevel &&
-	m_vCameraPos.z > m_fGlobalWaterLevel+1 && m_bCullUnderwaterTerrain && m_fGlobalWaterLevel)
-  return;																				*/
+		if( info->m_fDistance > 128 && info->m_vBoxMax.z <= m_fGlobalWaterLevel &&
+			m_vCameraPos.z > m_fGlobalWaterLevel+1 && m_bCullUnderwaterTerrain && m_fGlobalWaterLevel)
+			return;
+		*/
 
-  // occlusion test (affects only static objects)
+		// occlusion test (affects only static objects)
 		if (GetCVars()->e_terrain_occlusion_culling)
 			if (m_pObjManager->IsBoxOccluded(info->m_vBoxMin, info->m_vBoxMax, info->m_fDistance, &info->m_OcclusionTestClient))
 				return;

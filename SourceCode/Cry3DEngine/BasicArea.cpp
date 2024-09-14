@@ -160,7 +160,7 @@ void CBasicArea::DrawEntities(int nFogVolumeID, int nDLightMask,
 
 		if (GetCVars()->e_vegetation)
 		{	// fill simple vegetations
-//		FRAME_PROFILER( "*fill simple vegetations", GetSystem(), PROFILE_3DENGINE );
+			//FRAME_PROFILER( "*fill simple vegetations", GetSystem(), PROFILE_3DENGINE );
 			for (int i = 0; i < m_lstStatEntInfoVegetNoCastersNoVolFog.Count(); i++)
 			{
 				IEntityRenderInfo& inf = m_lstStatEntInfoVegetNoCastersNoVolFog[i];
@@ -191,7 +191,7 @@ void CBasicArea::DrawEntities(int nFogVolumeID, int nDLightMask,
 			}
 
 			// render simple vegetations
-//		FRAME_PROFILER( "*render simple vegetations", GetSystem(), PROFILE_3DENGINE );
+			// FRAME_PROFILER( "*render simple vegetations", GetSystem(), PROFILE_3DENGINE );
 			for (int i = 0; i < TmpEntList.Count(); i++)
 			{
 				IEntityRender* pEntityRender = TmpEntList.GetAt(i)->m_pEntityRender;
@@ -214,7 +214,7 @@ void CBasicArea::DrawEntities(int nFogVolumeID, int nDLightMask,
 
 		if (GetCVars()->e_vegetation || GetCVars()->e_brushes)
 		{ // fill complex objects
-//		FRAME_PROFILER( "*fill complex objects", GetSystem(), PROFILE_3DENGINE );
+			// FRAME_PROFILER( "*fill complex objects", GetSystem(), PROFILE_3DENGINE );
 			for (int i = 0; i < m_lstStatEntInfoOthers.Count(); i++)
 			{
 				IEntityRenderInfo& inf = m_lstStatEntInfoOthers[i];
@@ -245,7 +245,7 @@ void CBasicArea::DrawEntities(int nFogVolumeID, int nDLightMask,
 			}
 
 			// render complex objects
-//		FRAME_PROFILER( "*render complex objects", GetSystem(), PROFILE_3DENGINE );
+			//FRAME_PROFILER( "*render complex objects", GetSystem(), PROFILE_3DENGINE );
 			for (int i = 0; i < TmpEntList.Count(); i++)
 			{
 				IEntityRender* pEntityRender = TmpEntList.GetAt(i)->m_pEntityRender;
