@@ -1033,126 +1033,94 @@ bool CShader::mfCompileParams(SShader* ef, char* scr)
 					shGetVector(params, ef->m_NormGen->m_CustomNormal);
 				}
 			}
-			else
-				if (!stricmp(data, "Wave"))
-				{
-					ef->m_NormGen->m_eNormal = eNORM_Wave;
-					mfCompileWaveForm(&ef->m_NormGen->m_WaveEvalNormal, params);
-				}
-				else
-					if (!strnicmp(data, "Front", 5))
-						ef->m_NormGen->m_eNormal = eNORM_Front;
-					else
-						if (!strnicmp(data, "Back", 4))
-							ef->m_NormGen->m_eNormal = eNORM_Back;
-						else
-							if (!stricmp(data, "Edge"))
-								ef->m_NormGen->m_eNormal = eNORM_Edge;
-							else
-								if (!stricmp(data, "InvEdge"))
-									ef->m_NormGen->m_eNormal = eNORM_InvEdge;
+			else if (!stricmp(data, "Wave"))
+			{
+				ef->m_NormGen->m_eNormal = eNORM_Wave;
+				mfCompileWaveForm(&ef->m_NormGen->m_WaveEvalNormal, params);
+			}
+			else if (!strnicmp(data, "Front", 5))
+				ef->m_NormGen->m_eNormal = eNORM_Front;
+			else if (!strnicmp(data, "Back", 4))
+				ef->m_NormGen->m_eNormal = eNORM_Back;
+			else if (!stricmp(data, "Edge"))
+				ef->m_NormGen->m_eNormal = eNORM_Edge;
+			else if (!stricmp(data, "InvEdge"))
+				ef->m_NormGen->m_eNormal = eNORM_InvEdge;
+
 			break;
 
 		case eSort:
 			if (!stricmp(data, "ZBuff"))
 				ef->m_eSort = eS_ZBuff;
+			else if (!stricmp(data, "Portal"))
+				ef->m_nPreprocess |= FSPR_PORTAL;
+			else if (!stricmp(data, "Stencil"))
+				ef->m_eSort = eS_Stencil;
+			else if (!stricmp(data, "Terrain"))
+				ef->m_eSort = eS_Terrain;
+			else if (!stricmp(data, "TerrainShadowPass"))
+				ef->m_eSort = eS_TerrainShadowPass;
+			else if (!stricmp(data, "TerrainLightPass"))
+				ef->m_eSort = eS_TerrainLightPass;
+			else if (!stricmp(data, "TerrainDetailTextures"))
+				ef->m_eSort = eS_TerrainDetailTextures;
+			else if (!stricmp(data, "WaterBeach"))
+				ef->m_eSort = eS_WaterBeach;
+			else if (!stricmp(data, "TerrainDetailObjects"))
+				ef->m_eSort = eS_TerrainDetailObjects;
+			else if (!stricmp(data, "TerrainParticles"))
+				ef->m_eSort = eS_Particles;
+			else if (!stricmp(data, "Sky"))
+				ef->m_eSort = eS_Sky;
+			else if (!stricmp(data, "Opaque"))
+				ef->m_eSort = eS_Opaque;
+			else if (!strnicmp(data, "Tree", 4))
+				ef->m_eSort = eS_Trees;
+			else if (!strnicmp(data, "Sprite", 6))
+				ef->m_eSort = eS_Sprites;
+			else if (!stricmp(data, "Decal"))
+				ef->m_eSort = eS_Decal;
+			else if (!stricmp(data, "SeeThrough"))
+				ef->m_eSort = eS_SeeThrough;
+			else if (!stricmp(data, "Shadowmap"))
+				ef->m_eSort = eS_ShadowMap;
+			else if (!stricmp(data, "Banner"))
+				ef->m_eSort = eS_Banner;
+			else if (!stricmp(data, "UnderWater"))
+				ef->m_eSort = eS_UnderWater;
+			else if (!stricmp(data, "MuzzleFlash"))
+				ef->m_eSort = eS_MuzzleFlash;
+			else if (!stricmp(data, "Water"))
+				ef->m_eSort = eS_Water;
+			else if (!stricmp(data, "Additive"))
+				ef->m_eSort = eS_Additive;
+			else if (!stricmp(data, "Nearest"))
+				ef->m_eSort = eS_Nearest;
+			else if (!stricmp(data, "OcclusionTest"))
+				ef->m_eSort = eS_OcclusionTest;
+			else if (!stricmp(data, "HeatVision"))
+				ef->m_eSort = eS_HeatVision;
+			else if (!stricmp(data, "Glare"))
+				ef->m_eSort = eS_Glare;
+			else if (!stricmp(data, "HDR"))
+				ef->m_eSort = eS_HDR;
+			else if (!strnicmp(data, "Refract", 7))
+				ef->m_eSort = eS_Refractive;
+			else if (!stricmp(data, "Preprocess"))
+				ef->m_eSort = eS_PreProcess;
 			else
-				if (!stricmp(data, "Portal"))
-					ef->m_nPreprocess |= FSPR_PORTAL;
+			{
+				if (!isdigit(data[0]))
+					Warning(0, 0, "Warning: Bad Sort value '%s' in Shader '%s'\n", data, ef->m_Name.c_str());
 				else
-					if (!stricmp(data, "Stencil"))
-						ef->m_eSort = eS_Stencil;
+				{
+					i = shGetInt(data);
+					if (i <= 0 || i >= eS_Max)
+						Warning(0, 0, "Warning: Sort value '%s' out of range in Shader '%s'\n", data, ef->m_Name.c_str());
 					else
-						if (!stricmp(data, "Terrain"))
-							ef->m_eSort = eS_Terrain;
-						else
-							if (!stricmp(data, "TerrainShadowPass"))
-								ef->m_eSort = eS_TerrainShadowPass;
-							else
-								if (!stricmp(data, "TerrainLightPass"))
-									ef->m_eSort = eS_TerrainLightPass;
-								else
-									if (!stricmp(data, "TerrainDetailTextures"))
-										ef->m_eSort = eS_TerrainDetailTextures;
-									else
-										if (!stricmp(data, "WaterBeach"))
-											ef->m_eSort = eS_WaterBeach;
-										else
-											if (!stricmp(data, "TerrainDetailObjects"))
-												ef->m_eSort = eS_TerrainDetailObjects;
-											else
-												if (!stricmp(data, "TerrainParticles"))
-													ef->m_eSort = eS_Particles;
-												else
-													if (!stricmp(data, "Sky"))
-														ef->m_eSort = eS_Sky;
-													else
-														if (!stricmp(data, "Opaque"))
-															ef->m_eSort = eS_Opaque;
-														else
-															if (!strnicmp(data, "Tree", 4))
-																ef->m_eSort = eS_Trees;
-															else
-																if (!strnicmp(data, "Sprite", 6))
-																	ef->m_eSort = eS_Sprites;
-																else
-																	if (!stricmp(data, "Decal"))
-																		ef->m_eSort = eS_Decal;
-																	else
-																		if (!stricmp(data, "SeeThrough"))
-																			ef->m_eSort = eS_SeeThrough;
-																		else
-																			if (!stricmp(data, "Shadowmap"))
-																				ef->m_eSort = eS_ShadowMap;
-																			else
-																				if (!stricmp(data, "Banner"))
-																					ef->m_eSort = eS_Banner;
-																				else
-																					if (!stricmp(data, "UnderWater"))
-																						ef->m_eSort = eS_UnderWater;
-																					else
-																						if (!stricmp(data, "MuzzleFlash"))
-																							ef->m_eSort = eS_MuzzleFlash;
-																						else
-																							if (!stricmp(data, "Water"))
-																								ef->m_eSort = eS_Water;
-																							else
-																								if (!stricmp(data, "Additive"))
-																									ef->m_eSort = eS_Additive;
-																								else
-																									if (!stricmp(data, "Nearest"))
-																										ef->m_eSort = eS_Nearest;
-																									else
-																										if (!stricmp(data, "OcclusionTest"))
-																											ef->m_eSort = eS_OcclusionTest;
-																										else
-																											if (!stricmp(data, "HeatVision"))
-																												ef->m_eSort = eS_HeatVision;
-																											else
-																												if (!stricmp(data, "Glare"))
-																													ef->m_eSort = eS_Glare;
-																												else
-																													if (!stricmp(data, "HDR"))
-																														ef->m_eSort = eS_HDR;
-																													else
-																														if (!strnicmp(data, "Refract", 7))
-																															ef->m_eSort = eS_Refractive;
-																														else
-																															if (!stricmp(data, "Preprocess"))
-																																ef->m_eSort = eS_PreProcess;
-																															else
-																															{
-																																if (!isdigit(data[0]))
-																																	Warning(0, 0, "Warning: Bad Sort value '%s' in Shader '%s'\n", data, ef->m_Name.c_str());
-																																else
-																																{
-																																	i = shGetInt(data);
-																																	if (i <= 0 || i >= eS_Max)
-																																		Warning(0, 0, "Warning: Sort value '%s' out of range in Shader '%s'\n", data, ef->m_Name.c_str());
-																																	else
-																																		ef->m_eSort = (EF_Sort)i;
-																																}
-																															}
+						ef->m_eSort = (EF_Sort)i;
+				}
+			}
 			break;
 
 		case eBumpScale:
@@ -1834,19 +1802,16 @@ bool CShader::mfCompileLayer(SShader* ef, int nl, char* scr, SShaderPass* sm)
 			}
 			if (!stricmp(data, "Bilinear"))
 				Flags2 |= FT2_FILTER_BILINEAR;
+			else if (!stricmp(data, "Trilinear"))
+				Flags2 |= FT2_FILTER_TRILINEAR;
+			else if (!stricmp(data, "Nearest"))
+				Flags2 |= FT2_FILTER_NEAREST;
+			else if (!stricmp(data, "Anisotropic"))
+				Flags2 |= FT2_FILTER_ANISOTROPIC;
 			else
-				if (!stricmp(data, "Trilinear"))
-					Flags2 |= FT2_FILTER_TRILINEAR;
-				else
-					if (!stricmp(data, "Nearest"))
-						Flags2 |= FT2_FILTER_NEAREST;
-					else
-						if (!stricmp(data, "Anisotropic"))
-							Flags2 |= FT2_FILTER_ANISOTROPIC;
-						else
-						{
-							Warning(0, 0, "Warning: unknown TexFilter argument (%s) for layer %d in Shader '%s'\n", data, sm - &ef->m_Passes[0], ef->m_Name.c_str());
-						}
+			{
+				Warning(0, 0, "Warning: unknown TexFilter argument (%s) for layer %d in Shader '%s'\n", data, sm - &ef->m_Passes[0], ef->m_Name.c_str());
+			}
 			break;
 
 		case eSecondPassRendState:
@@ -1875,23 +1840,19 @@ bool CShader::mfCompileLayer(SShader* ef, int nl, char* scr, SShaderPass* sm)
 			}
 			if (!strnicmp(data, "Base", 4))
 				eTT = eTT_Base;
+			else if (!strnicmp(data, "Bump", 4))
+				eTT = eTT_Bumpmap;
+			else if (!strnicmp(data, "DSDTBump", 8))
+				eTT = eTT_DSDTBump;
+			else if (!strnicmp(data, "Volume", 6))
+				eTT = eTT_3D;
+			else if (!strnicmp(data, "Cube", 4))
+				eTT = eTT_Cubemap;
 			else
-				if (!strnicmp(data, "Bump", 4))
-					eTT = eTT_Bumpmap;
-				else
-					if (!strnicmp(data, "DSDTBump", 8))
-						eTT = eTT_DSDTBump;
-					else
-						if (!strnicmp(data, "Volume", 6))
-							eTT = eTT_3D;
-						else
-							if (!strnicmp(data, "Cube", 4))
-								eTT = eTT_Cubemap;
-							else
-							{
-								Warning(0, 0, "Warning: unknown TexType argument (%s) for layer %d in Shader '%s'\n", data, sm - &ef->m_Passes[0], ef->m_Name.c_str());
-								eTT = eTT_Base;
-							}
+			{
+				Warning(0, 0, "Warning: unknown TexType argument (%s) for layer %d in Shader '%s'\n", data, sm - &ef->m_Passes[0], ef->m_Name.c_str());
+				eTT = eTT_Base;
+			}
 			break;
 
 		case eSequence:
@@ -1953,20 +1914,17 @@ bool CShader::mfCompileLayer(SShader* ef, int nl, char* scr, SShaderPass* sm)
 			}
 			if (!stricmp(data, "Red"))
 				BumpDet = FT_BUMP_DETRED;
+			else if (!stricmp(data, "Blue"))
+				BumpDet = FT_BUMP_DETBLUE;
+			else if (!stricmp(data, "Intensity"))
+				BumpDet = FT_BUMP_DETINTENS;
+			else if (!stricmp(data, "Alpha"))
+				BumpDet = FT_BUMP_DETALPHA;
 			else
-				if (!stricmp(data, "Blue"))
-					BumpDet = FT_BUMP_DETBLUE;
-				else
-					if (!stricmp(data, "Intensity"))
-						BumpDet = FT_BUMP_DETINTENS;
-					else
-						if (!stricmp(data, "Alpha"))
-							BumpDet = FT_BUMP_DETALPHA;
-						else
-						{
-							Warning(0, 0, "Warning: invalid BumpDetect argument '%s' in Shader '%s'\n", data, ef->m_Name.c_str());
-							BumpDet = FT_BUMP_DETINTENS;
-						}
+			{
+				Warning(0, 0, "Warning: invalid BumpDetect argument '%s' in Shader '%s'\n", data, ef->m_Name.c_str());
+				BumpDet = FT_BUMP_DETINTENS;
+			}
 			break;
 
 		case ePolyLine:
@@ -1976,27 +1934,23 @@ bool CShader::mfCompileLayer(SShader* ef, int nl, char* scr, SShaderPass* sm)
 		case eAlphaFunc:
 			if (!stricmp(data, "GT0"))
 				af = GS_ALPHATEST_GREATER0;
+			else if (!stricmp(data, "LT128"))
+				af = GS_ALPHATEST_LESS128;
+			else if (!stricmp(data, "GE128"))
+				af = GS_ALPHATEST_GEQUAL128;
 			else
-				if (!stricmp(data, "LT128"))
-					af = GS_ALPHATEST_LESS128;
-				else
-					if (!stricmp(data, "GE128"))
-						af = GS_ALPHATEST_GEQUAL128;
-					else
-						Warning(0, 0, "Warning: invalid AlphaFunc name '%s' in Shader '%s'\n", data, ef->m_Name.c_str());
+				Warning(0, 0, "Warning: invalid AlphaFunc name '%s' in Shader '%s'\n", data, ef->m_Name.c_str());
 			break;
 
 		case eDepthFunc:
 			if (!stricmp(data, "LEqual"))
 				df = 0;
+			else if (!stricmp(data, "Equal"))
+				df = GS_DEPTHFUNC_EQUAL;
+			else if (!strnicmp(data, "Great", 5))
+				df = GS_DEPTHFUNC_GREAT;
 			else
-				if (!stricmp(data, "Equal"))
-					df = GS_DEPTHFUNC_EQUAL;
-				else
-					if (!strnicmp(data, "Great", 5))
-						df = GS_DEPTHFUNC_GREAT;
-					else
-						Warning(0, 0, "Warning: unknown DepthFunc name '%s' in Shader '%s'\n", data, ef->m_Name.c_str());
+				Warning(0, 0, "Warning: unknown DepthFunc name '%s' in Shader '%s'\n", data, ef->m_Name.c_str());
 			break;
 
 		case eClampTexCoords:
@@ -2116,78 +2070,65 @@ bool CShader::mfCompileLayer(SShader* ef, int nl, char* scr, SShaderPass* sm)
 				mfCompileWaveForm(sm->m_WaveEvalRGB, params);
 				sm->m_eEvalRGB = eERGB_Wave;
 			}
-			else
-				if (!stricmp(data, "Noise"))
+			else if (!stricmp(data, "Noise"))
+			{
+				sm->m_RGBNoise = new SRGBGenNoise;
+				mfCompileRGBNoise(sm->m_RGBNoise, params, ef);
+				sm->m_eEvalRGB = eERGB_Noise;
+			}
+			else if (!strnicmp(data, "Comp", 4))
+			{
+				sm->m_RGBComps = new SParam;
+				mfCompileParamComps(sm->m_RGBComps, params, ef);
+				sm->m_eEvalRGB = eERGB_Comps;
+			}
+			else if (!stricmp(data, "Identity"))
+				sm->m_eEvalRGB = eERGB_Identity;
+			else if (!stricmp(data, "NoFill"))
+				sm->m_eEvalRGB = eERGB_NoFill;
+			else if (!stricmp(data, "Object") || !strnicmp(data, "FromObj", 7))
+				sm->m_eEvalRGB = eERGB_Object;
+			else if (!stricmp(data, "OneMinusObject"))
+				sm->m_eEvalRGB = eERGB_OneMinusObject;
+			else if (!stricmp(data, "RE") || !stricmp(data, "FromRE"))
+				sm->m_eEvalRGB = eERGB_RE;
+			else if (!stricmp(data, "OneMinusRE"))
+				sm->m_eEvalRGB = eERGB_OneMinusRE;
+			else if (!stricmp(data, "World") || !stricmp(data, "FromWorld") || !stricmp(data, "WorldColor"))
+				sm->m_eEvalRGB = eERGB_World;
+			else if (!stricmp(data, "FromClient"))
+			{
+				sm->m_eEvalRGB = eERGB_FromClient;
+				sm->m_eEvalAlpha = eEALPHA_FromClient;
+			}
+			else if (!stricmp(data, "OneMinusFromClient"))
+				sm->m_eEvalRGB = eERGB_OneMinusFromClient;
+			else if (!stricmp(data, "Fixed"))
+			{
+				sm->m_eEvalRGB = eERGB_Fixed;
+				sm->m_eEvalAlpha = eEALPHA_Fixed;
+				if (!params || !params[0])
 				{
-					sm->m_RGBNoise = new SRGBGenNoise;
-					mfCompileRGBNoise(sm->m_RGBNoise, params, ef);
-					sm->m_eEvalRGB = eERGB_Noise;
+					Warning(0, 0, "Warning: missing RgbGen Fixed value in Shader '%s' (use 1.0)\n", ef->m_Name.c_str());
+					sm->m_FixedColor.bcolor[0] = 255;
+					sm->m_FixedColor.bcolor[1] = 255;
+					sm->m_FixedColor.bcolor[2] = 255;
 				}
 				else
-					if (!strnicmp(data, "Comp", 4))
-					{
-						sm->m_RGBComps = new SParam;
-						mfCompileParamComps(sm->m_RGBComps, params, ef);
-						sm->m_eEvalRGB = eERGB_Comps;
-					}
-					else
-						if (!stricmp(data, "Identity"))
-							sm->m_eEvalRGB = eERGB_Identity;
-						else
-							if (!stricmp(data, "NoFill"))
-								sm->m_eEvalRGB = eERGB_NoFill;
-							else
-								if (!stricmp(data, "Object") || !strnicmp(data, "FromObj", 7))
-									sm->m_eEvalRGB = eERGB_Object;
-								else
-									if (!stricmp(data, "OneMinusObject"))
-										sm->m_eEvalRGB = eERGB_OneMinusObject;
-									else
-										if (!stricmp(data, "RE") || !stricmp(data, "FromRE"))
-											sm->m_eEvalRGB = eERGB_RE;
-										else
-											if (!stricmp(data, "OneMinusRE"))
-												sm->m_eEvalRGB = eERGB_OneMinusRE;
-											else
-												if (!stricmp(data, "World") || !stricmp(data, "FromWorld") || !stricmp(data, "WorldColor"))
-													sm->m_eEvalRGB = eERGB_World;
-												else
-													if (!stricmp(data, "FromClient"))
-													{
-														sm->m_eEvalRGB = eERGB_FromClient;
-														sm->m_eEvalAlpha = eEALPHA_FromClient;
-													}
-													else
-														if (!stricmp(data, "OneMinusFromClient"))
-															sm->m_eEvalRGB = eERGB_OneMinusFromClient;
-														else
-															if (!stricmp(data, "Fixed"))
-															{
-																sm->m_eEvalRGB = eERGB_Fixed;
-																sm->m_eEvalAlpha = eEALPHA_Fixed;
-																if (!params || !params[0])
-																{
-																	Warning(0, 0, "Warning: missing RgbGen Fixed value in Shader '%s' (use 1.0)\n", ef->m_Name.c_str());
-																	sm->m_FixedColor.bcolor[0] = 255;
-																	sm->m_FixedColor.bcolor[1] = 255;
-																	sm->m_FixedColor.bcolor[2] = 255;
-																}
-																else
-																{
-																	CFColor col;
-																	shGetColor(params, col);
-																	COLCONV(col);
-																	sm->m_FixedColor.dcolor = col.GetTrue();
-																}
-															}
-															else
-																if (!stricmp(data, "Style"))
-																{
-																	mfCompileRGBAStyle(params, ef, sm, true);
-																	sm->m_eEvalRGB = eERGB_StyleIntens;
-																}
-																else
-																	Warning(0, 0, "Warning: unknown rgbGen parameter '%s' in Shader '%s'\n", data, ef->m_Name.c_str());
+				{
+					CFColor col;
+					shGetColor(params, col);
+					COLCONV(col);
+					sm->m_FixedColor.dcolor = col.GetTrue();
+				}
+			}
+			else if (!stricmp(data, "Style"))
+			{
+				mfCompileRGBAStyle(params, ef, sm, true);
+				sm->m_eEvalRGB = eERGB_StyleIntens;
+			}
+			else
+				Warning(0, 0, "Warning: unknown rgbGen parameter '%s' in Shader '%s'\n", data, ef->m_Name.c_str());
 			break;
 
 		case eAlphaGen:
@@ -2196,82 +2137,69 @@ bool CShader::mfCompileLayer(SShader* ef, int nl, char* scr, SShaderPass* sm)
 				Warning(0, 0, "Warning: missing parameters for AlphaGen in Shader '%s' (Skipping)\n", ef->m_Name.c_str());
 				break;
 			}
+
 			ef->m_Flags3 |= EF3_HASALPHAGEN;
+
 			if (!stricmp(data, "Wave"))
 			{
 				sm->m_WaveEvalAlpha = new SWaveForm;
 				mfCompileWaveForm(sm->m_WaveEvalAlpha, params);
 				sm->m_eEvalAlpha = eEALPHA_Wave;
 			}
-			else
-				if (!stricmp(data, "Noise"))
+			else if (!stricmp(data, "Noise"))
+			{
+				sm->m_ANoise = new SAlphaGenNoise;
+				mfCompileAlphaNoise(sm->m_ANoise, params, ef);
+				sm->m_eEvalAlpha = eEALPHA_Noise;
+			}
+			else if (!stricmp(data, "Style"))
+			{
+				mfCompileRGBAStyle(params, ef, sm, false);
+				sm->m_eEvalAlpha = eEALPHA_Style;
+			}
+			else if (!stricmp(data, "Identity"))
+				sm->m_eEvalAlpha = eEALPHA_Identity;
+			else if (!strnicmp(data, "Comp", 4))
+			{
+				sm->m_RGBComps = new SParam;
+				mfCompileParamComps(sm->m_RGBComps, params, ef);
+				sm->m_eEvalAlpha = eEALPHA_Comps;
+			}
+			else if (!stricmp(data, "NoFill"))
+				sm->m_eEvalAlpha = eEALPHA_NoFill;
+			else if (!stricmp(data, "Object") || !strnicmp(data, "FromObj", 7))
+				sm->m_eEvalAlpha = eEALPHA_Object;
+			else if (!stricmp(data, "OneMinusObject"))
+				sm->m_eEvalAlpha = eEALPHA_OneMinusObject;
+			else if (!stricmp(data, "RE") || !stricmp(data, "FromRE"))
+				sm->m_eEvalAlpha = eEALPHA_RE;
+			else if (!stricmp(data, "OneMinusRE"))
+				sm->m_eEvalAlpha = eEALPHA_OneMinusRE;
+			else if (!stricmp(data, "World") || !stricmp(data, "FromWorld") || !stricmp(data, "WorldColor"))
+				sm->m_eEvalAlpha = eEALPHA_World;
+			else if (!stricmp(data, "FromClient"))
+				sm->m_eEvalAlpha = eEALPHA_FromClient;
+			else if (!stricmp(data, "OneMinusFromClient"))
+				sm->m_eEvalAlpha = eEALPHA_OneMinusFromClient;
+			else if (!stricmp(data, "Portal"))
+				sm->m_eEvalAlpha = eEALPHA_Portal;
+			else if (!stricmp(data, "Fixed"))
+			{
+				sm->m_eEvalAlpha = eEALPHA_Fixed;
+				if (!params || !params[0])
 				{
-					sm->m_ANoise = new SAlphaGenNoise;
-					mfCompileAlphaNoise(sm->m_ANoise, params, ef);
-					sm->m_eEvalAlpha = eEALPHA_Noise;
+					Warning(0, 0, "Warning: missing AlphaGen Fixed value in Shader '%s' (use 1.0)\n", ef->m_Name.c_str());
+					sm->m_FixedColor.bcolor[3] = 255;
 				}
 				else
-					if (!stricmp(data, "Style"))
-					{
-						mfCompileRGBAStyle(params, ef, sm, false);
-						sm->m_eEvalAlpha = eEALPHA_Style;
-					}
-					else
-						if (!stricmp(data, "Identity"))
-							sm->m_eEvalAlpha = eEALPHA_Identity;
-						else
-							if (!strnicmp(data, "Comp", 4))
-							{
-								sm->m_RGBComps = new SParam;
-								mfCompileParamComps(sm->m_RGBComps, params, ef);
-								sm->m_eEvalAlpha = eEALPHA_Comps;
-							}
-							else
-								if (!stricmp(data, "NoFill"))
-									sm->m_eEvalAlpha = eEALPHA_NoFill;
-								else
-									if (!stricmp(data, "Object") || !strnicmp(data, "FromObj", 7))
-										sm->m_eEvalAlpha = eEALPHA_Object;
-									else
-										if (!stricmp(data, "OneMinusObject"))
-											sm->m_eEvalAlpha = eEALPHA_OneMinusObject;
-										else
-											if (!stricmp(data, "RE") || !stricmp(data, "FromRE"))
-												sm->m_eEvalAlpha = eEALPHA_RE;
-											else
-												if (!stricmp(data, "OneMinusRE"))
-													sm->m_eEvalAlpha = eEALPHA_OneMinusRE;
-												else
-													if (!stricmp(data, "World") || !stricmp(data, "FromWorld") || !stricmp(data, "WorldColor"))
-														sm->m_eEvalAlpha = eEALPHA_World;
-													else
-														if (!stricmp(data, "FromClient"))
-															sm->m_eEvalAlpha = eEALPHA_FromClient;
-														else
-															if (!stricmp(data, "OneMinusFromClient"))
-																sm->m_eEvalAlpha = eEALPHA_OneMinusFromClient;
-															else
-																if (!stricmp(data, "Portal"))
-																	sm->m_eEvalAlpha = eEALPHA_Portal;
-																else
-																	if (!stricmp(data, "Fixed"))
-																	{
-																		sm->m_eEvalAlpha = eEALPHA_Fixed;
-																		if (!params || !params[0])
-																		{
-																			Warning(0, 0, "Warning: missing AlphaGen Fixed value in Shader '%s' (use 1.0)\n", ef->m_Name.c_str());
-																			sm->m_FixedColor.bcolor[3] = 255;
-																		}
-																		else
-																			sm->m_FixedColor.bcolor[3] = (int)(shGetFloat(params) * 255.0);
-																	}
-																	else
-																		if (!stricmp(data, "Beam"))
-																		{
-																			sm->m_eEvalAlpha = eEALPHA_Beam;
-																		}
-																		else
-																			Warning(0, 0, "Warning: unknown AlphaGen parameter '%s' in Shader '%s'\n", data, ef->m_Name.c_str());
+					sm->m_FixedColor.bcolor[3] = (int)(shGetFloat(params) * 255.0);
+			}
+			else if (!stricmp(data, "Beam"))
+			{
+				sm->m_eEvalAlpha = eEALPHA_Beam;
+			}
+			else
+				Warning(0, 0, "Warning: unknown AlphaGen parameter '%s' in Shader '%s'\n", data, ef->m_Name.c_str());
 			break;
 
 		case eTexGen:
@@ -2283,33 +2211,24 @@ bool CShader::mfCompileLayer(SShader* ef, int nl, char* scr, SShaderPass* sm)
 			}
 			if (!stricmp(data, "NoFill"))
 				ml->m_eGenTC = eGTC_NoFill;
-			else
-				if (!stricmp(data, "Environment"))
-					ml->m_eGenTC = eGTC_Environment;
-				else
-					if (!stricmp(data, "SphereMap"))
-						ml->m_eGenTC = eGTC_SphereMap;
-					else
-						if (!stricmp(data, "Projection"))
-							ml->m_eGenTC = eGTC_Projection;
-						else
-							if (!stricmp(data, "SphereMapEnvironment"))
-								ml->m_eGenTC = eGTC_SphereMapEnvironment;
-							else
-								if (!stricmp(data, "ShadowMap"))
-									ml->m_eGenTC = eGTC_ShadowMap;
-								else
-									if (!stricmp(data, "Lightmap"))
-										ml->m_eGenTC = eGTC_LightMap;
-									else
-										if (!stricmp(data, "Quad"))
-											ml->m_eGenTC = eGTC_Quad;
-										else
-											if (!stricmp(data, "Texture") || !stricmp(data, "Base"))
-												ml->m_eGenTC = eGTC_Base;
-											else
-												if (!mfCompileTexGen(name, params, ef, ml))
-													Warning(0, 0, "Warning: unknown TexGen parameter '%s' in Shader '%s'\n", data, ef->m_Name.c_str());
+			else if (!stricmp(data, "Environment"))
+				ml->m_eGenTC = eGTC_Environment;
+			else if (!stricmp(data, "SphereMap"))
+				ml->m_eGenTC = eGTC_SphereMap;
+			else if (!stricmp(data, "Projection"))
+				ml->m_eGenTC = eGTC_Projection;
+			else if (!stricmp(data, "SphereMapEnvironment"))
+				ml->m_eGenTC = eGTC_SphereMapEnvironment;
+			else if (!stricmp(data, "ShadowMap"))
+				ml->m_eGenTC = eGTC_ShadowMap;
+			else if (!stricmp(data, "Lightmap"))
+				ml->m_eGenTC = eGTC_LightMap;
+			else if (!stricmp(data, "Quad"))
+				ml->m_eGenTC = eGTC_Quad;
+			else if (!stricmp(data, "Texture") || !stricmp(data, "Base"))
+				ml->m_eGenTC = eGTC_Base;
+			else if (!mfCompileTexGen(name, params, ef, ml))
+				Warning(0, 0, "Warning: unknown TexGen parameter '%s' in Shader '%s'\n", data, ef->m_Name.c_str());
 			break;
 
 		case eDepthMask:
