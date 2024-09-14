@@ -13,18 +13,9 @@
 
 #define UICLASSNAME_VIDEOPANEL			"UIVideoPanel"
 
-
 #include "UIWidget.h"
 #include "UISystem.h"
-
-#if defined(WIN64) || defined(LINUX)
-#define NOT_USE_BINK_SDK
-#endif
-
-#if !defined(NOT_USE_BINK_SDK)
-#	include "../binksdk/bink.h"
-#endif
-
+#include "UIVideoFFmpeg.h"
 
 class CUISystem;
 
@@ -45,10 +36,7 @@ public:
 	LRESULT Update(unsigned int iMessage, WPARAM wParam, LPARAM lParam);	//AMD Port
 	int Draw(int iPass);
 
-	int InitBink();
-
 	int LoadVideo(const string& szFileName, bool bSound);
-	//	int LoadVideo_DivX(const string &szFileName, bool bSound);
 
 	int ReleaseVideo();
 	int Play();
@@ -91,19 +79,14 @@ public:
 	int EnableVideo(IFunctionHandler* pH);
 	int EnableAudio(IFunctionHandler* pH);
 
-	bool					m_DivX_Active;
+	string					m_szVideoFile;
 
-	string				m_szVideoFile;
-#if !defined(NOT_USE_BINK_SDK)
-	HBINK					m_hBink;
-#endif
-	bool					m_bPaused;
-	bool					m_bPlaying;
-	bool					m_bLooping;
+	CUIVideoFFmpeg			m_videoPlayer;
 	bool					m_bKeepAspect;
-	int						m_iTextureID;
+	bool					m_bLooping;
+	bool					m_bPaused;
 	UISkinTexture			m_pOverlay;
-	int* m_pSwapBuffer;
+	int*					m_pSwapBuffer;
 };
 
 #endif

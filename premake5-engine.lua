@@ -299,8 +299,8 @@ project "CryGame"
     kind "SharedLib"
 	uses {
 		"CryCommon",
-		-- "ffmpeg" TODO
-		-- "bink"
+		"ffmpeg",
+		"SDL2",
 	}
 	
 	--unitybuild "on"

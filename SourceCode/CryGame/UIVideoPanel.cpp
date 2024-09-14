@@ -17,28 +17,12 @@
 #include "UIVideoPanel.h"
 #include "UISystem.h"
 
-#if !defined(NOT_USE_DIVX_SDK)
-#include "UIDivX_Video.h"
-#endif
-
-#if !defined(NOT_USE_BINK_SDK)
-#pragma comment(lib, "binkw32.lib")
-#endif
-
 _DECLARE_SCRIPTABLEEX(CUIVideoPanel)
-
-//////////////////////////////////////////////////////////////////////
-static bool g_bBinkInit = 0;
 
 ////////////////////////////////////////////////////////////////////// 
 CUIVideoPanel::CUIVideoPanel()
-	:
-#if !defined(NOT_USE_BINK_SDK)
-	m_hBink(0),
-#endif
-	m_bLooping(1), m_bPlaying(0), m_bPaused(0), m_iTextureID(-1), m_pSwapBuffer(0), m_szVideoFile(""), m_bKeepAspect(1)
+	: m_pSwapBuffer(0), m_szVideoFile(""), m_bKeepAspect(1), m_bLooping(0)
 {
-	m_DivX_Active = 0;
 }
 
 ////////////////////////////////////////////////////////////////////// 
@@ -54,175 +38,14 @@ string CUIVideoPanel::GetClassName()
 }
 
 ////////////////////////////////////////////////////////////////////// 
-int CUIVideoPanel::InitBink()
-{
-#if !defined(NOT_USE_BINK_SDK)
-	if (g_bBinkInit)
-	{
-		return 1;
-	}
-
-	if (!BinkSoundUseDirectSound(0))
-	{
-		m_pUISystem->GetISystem()->GetILog()->Log("$4Bink Error$1: %s", BinkGetError());
-		m_pUISystem->GetISystem()->GetILog()->Log("  Trying WaveOut");
-
-		if (!BinkSoundUseWaveOut())
-		{
-			char* szError = BinkGetError();
-			m_pUISystem->GetISystem()->GetILog()->Log("$4Bink Error$1: %s", szError);
-			m_pUISystem->GetISystem()->GetILog()->Log("  No sound will be played!");
-		}
-	}
-
-#endif
-	g_bBinkInit = 1;
-	return 1;
-}
-
-
-////////////////////////////////////////////////////////////////////// 
 int CUIVideoPanel::LoadVideo(const string& szFileName, bool bSound)
 {
-
-	m_DivX_Active = 1; //activate DivX
-
-#if !defined(NOT_USE_BINK_SDK)
-	//check if a BINK-file exists 
-	HBINK hBink = BinkOpen(szFileName.c_str(), BINKSNDTRACK);
-	if (hBink) {
-		m_DivX_Active = 0; //deactivate DivX
-		BinkClose(hBink);
-	}
-#endif
-#if !defined(NOT_USE_DIVX_SDK)	
-	if (m_DivX_Active) {
-		m_DivX_Active = g_DivXPlayer.Load_DivX(this, szFileName);
-		return m_DivX_Active;
-	}
-#endif
-#if !defined(NOT_USE_BINK_SDK)
-
-	if (m_hBink)
+	m_videoPlayer.Terminate();
+	if (m_videoPlayer.Init(szFileName.c_str()))
 	{
-		BinkClose(m_hBink);
-
-		m_hBink = 0;
+		m_szVideoFile = szFileName;
+		return 1;
 	}
-
-	if (m_pSwapBuffer)
-	{
-		delete[] m_pSwapBuffer;
-		m_pSwapBuffer = 0;
-	}
-
-	if (m_iTextureID > -1)
-	{
-		m_pUISystem->GetIRenderer()->RemoveTexture(m_iTextureID);
-		m_iTextureID = -1;
-	}
-
-	if (szFileName.empty())
-	{
-		return 0;
-	}
-
-	if (!InitBink())
-	{
-		return 0;
-	}
-
-	if (!bSound)
-	{
-		unsigned long dwTrack = 0;
-
-		BinkSetSoundTrack(0, &dwTrack);
-	}
-	else
-	{
-		unsigned long dwTrack = 0;
-
-		BinkSetSoundTrack(1, &dwTrack);
-	}
-
-	// load bink file
-	if (stricmp(szFileName.c_str(), "binklogo") == 0)
-	{
-		m_hBink = BinkOpen((const char*)BinkLogoAddress(), BINKFROMMEMORY | BINKSNDTRACK);
-	}
-	else
-	{
-		// check for a MOD first
-		const char* szPrefix = nullptr;
-		IGameMods* pMods = m_pUISystem->GetISystem()->GetIGame()->GetModsInterface();
-		if (pMods)
-			szPrefix = pMods->GetModPath(szFileName.c_str());
-
-		if (szPrefix)
-		{
-			m_hBink = BinkOpen(szPrefix, BINKSNDTRACK);
-		}
-
-		// try in the original folder
-		if (!m_hBink)
-		{
-			m_hBink = BinkOpen(szFileName.c_str(), BINKSNDTRACK);
-		}
-	}
-
-	if (!m_hBink)
-	{
-		char* szError = BinkGetError();
-
-		OnError(szError);
-
-		return 0;
-	}
-
-	// create swap buffer
-	m_pSwapBuffer = new int[m_hBink->Width * m_hBink->Height];
-
-	if (!m_pSwapBuffer)
-	{
-		CRYASSERT(!"Failed to create video swap buffer for blitting video!");
-
-		BinkClose(m_hBink);
-		m_hBink = 0;
-
-		OnError("");
-
-		return 0;
-	}
-
-	// create texture for blitting
-
-  // WORKAROUND: NVidia driver bug during playing of video file
-  // Solution: Never remove video texture (non-power-of-two)
-	if (m_hBink->Width == 640 && m_hBink->Height == 480)
-		m_iTextureID = m_pUISystem->GetIRenderer()->DownLoadToVideoMemory((unsigned char*)m_pSwapBuffer, m_hBink->Width, m_hBink->Height, eTF_0888, eTF_0888, 0, 0, FILTER_LINEAR, 0, "$VideoPanel", FT_DYNAMIC);
-	else
-		m_iTextureID = m_pUISystem->GetIRenderer()->DownLoadToVideoMemory((unsigned char*)m_pSwapBuffer, m_hBink->Width, m_hBink->Height, eTF_0888, eTF_0888, 0, 0, FILTER_LINEAR, 0, nullptr, FT_DYNAMIC);
-
-	if (m_iTextureID == -1)
-	{
-		CRYASSERT(!"Failed to create video memory surface for blitting video!");
-
-		delete[] m_pSwapBuffer;
-		m_pSwapBuffer = 0;
-
-		BinkClose(m_hBink);
-		m_hBink = 0;
-
-		OnError("");
-
-		return 0;
-	}
-	return 1;
-#else
-	OnError("");
-
-	return 0;
-#endif
 
 	return 0;
 }
@@ -230,201 +53,65 @@ int CUIVideoPanel::LoadVideo(const string& szFileName, bool bSound)
 ////////////////////////////////////////////////////////////////////// 
 LRESULT CUIVideoPanel::Update(unsigned int iMessage, WPARAM wParam, LPARAM lParam)	//AMD Port
 {
-
 	FUNCTION_PROFILER(m_pUISystem->GetISystem(), PROFILE_GAME);
-#if !defined(NOT_USE_DIVX_SDK)
-	if (m_DivX_Active) {
-		g_DivXPlayer.Update_DivX(this);
-		return CUISystem::DefaultUpdate(this, iMessage, wParam, lParam);
-	}
-#endif
-#if !defined(NOT_USE_BINK_SDK)
 
-	if ((iMessage == UIM_DRAW) && (wParam == 0))
+	if (!m_videoPlayer.IsPlaying())
+		return 0;
+
+	// update texture
+	m_videoPlayer.Present();
+
+	if (m_videoPlayer.IsFinished())
 	{
-		// stream the frame here
-		if (m_bPlaying && m_hBink && m_pSwapBuffer)
+		if (m_bLooping)
 		{
-			if (!BinkWait(m_hBink))
-			{
-				{
-					FRAME_PROFILER("CUIVideoPanel::Update:BinkDoFrame", m_pUISystem->GetISystem(), PROFILE_GAME);
-					BinkDoFrame(m_hBink);
-				}
-
-				if ((m_iTextureID > -1) && (m_pSwapBuffer))
-				{
-					{
-						FRAME_PROFILER("CUIVideoPanel::Update:BinkCopyToBuffer", m_pUISystem->GetISystem(), PROFILE_GAME);
-						BinkCopyToBuffer(m_hBink, m_pSwapBuffer, m_hBink->Width * 4, m_hBink->Height, 0, 0, BINKCOPYALL | BINKSURFACE32);
-					}
-
-					{
-						FRAME_PROFILER("Renderer::UpdateTextureInVideoMemory", m_pUISystem->GetISystem(), PROFILE_GAME);
-						m_pUISystem->GetIRenderer()->UpdateTextureInVideoMemory(m_iTextureID, (unsigned char*)m_pSwapBuffer, 0, 0, m_hBink->Width, m_hBink->Height, eTF_8888);
-					}
-				}
-
-				if ((m_hBink->FrameNum < m_hBink->Frames) || m_bLooping)
-				{
-					FRAME_PROFILER("CUIVideoPanel::Update:BinkNextFrame", m_pUISystem->GetISystem(), PROFILE_GAME);
-					BinkNextFrame(m_hBink);
-				}
-			}
+			m_videoPlayer.Rewind();
 		}
-
-		int iResult = CUISystem::DefaultUpdate(this, iMessage, wParam, lParam);
-
-		if (m_hBink && ((m_hBink->FrameNum == m_hBink->Frames) && !m_bLooping))
+		else
 		{
 			Stop();
-
 			OnFinished();
 		}
-
-		return iResult;
 	}
 
 	return CUISystem::DefaultUpdate(this, iMessage, wParam, lParam);
-
-#endif
-
-	return 0;
 }
 
 
 ////////////////////////////////////////////////////////////////////// 
 int CUIVideoPanel::Play()
 {
-	if (m_DivX_Active) {
-		m_bPlaying = 1;
-		m_bPaused = 0;
-		return 1;
-	}
+	if (m_videoPlayer.GetTextureId() == -1)
+		return 0;
 
-#if !defined(NOT_USE_BINK_SDK)
-	if (!m_hBink)
-	{
-		if (m_szVideoFile.empty())
-		{
-			return 0;
-		}
-
-		if (!LoadVideo(m_szVideoFile, 1))
-		{
-			return 0;
-		}
-	}
-
-	BinkPause(m_hBink, 0);
-	m_bPlaying = 1;
-	m_bPaused = 0;
+	m_videoPlayer.Start();
 	return 1;
-#else
-	return 0;
-#endif
-
-	return 0;
 }
 
 ////////////////////////////////////////////////////////////////////// 
 int CUIVideoPanel::Stop()
 {
-#if !defined(NOT_USE_DIVX_SDK)
-	if (m_DivX_Active) {
-		g_DivXPlayer.StopSound();
-		m_bPaused = 0;
-		m_bPlaying = 0;
-		return 1;
-	}
-#endif
-#if !defined(NOT_USE_BINK_SDK)
-	if (!m_hBink)
-	{
-		return 0;
-	}
-	BinkPause(m_hBink, 1);
-	BinkClose(m_hBink);
-	m_hBink = 0;
-	m_bPaused = 0;
-	m_bPlaying = 0;
-	return 1;
-#endif
-
-	m_bPaused = 0;
-	m_bPlaying = 0;
+	m_videoPlayer.Stop();
+	m_videoPlayer.Terminate();
 	return 1;
 }
 
 ////////////////////////////////////////////////////////////////////// 
 int CUIVideoPanel::ReleaseVideo()
 {
-	if (m_DivX_Active) {
-		return 1;
-	}
-
-#if !defined(NOT_USE_BINK_SDK)
-	if (m_hBink)
-	{
-		BinkClose(m_hBink);
-	}
-
-	if (m_iTextureID > -1)
-	{
-		m_pUISystem->GetIRenderer()->RemoveTexture(m_iTextureID);
-		m_iTextureID = -1;
-	}
-
-	m_hBink = 0;
-	m_szVideoFile = "";
-
-	if (m_pSwapBuffer)
-	{
-		delete[] m_pSwapBuffer;
-		m_pSwapBuffer = 0;
-	}
-	return 1;
-#else
-	return 0;
-#endif
-
+	m_videoPlayer.Terminate();
 	return 1;
 }
 
 ////////////////////////////////////////////////////////////////////// 
 int CUIVideoPanel::Pause(bool bPause)
 {
-	if (m_DivX_Active) {
-		return 1;
-	}
-
-
-#if !defined(NOT_USE_BINK_SDK)
-	if (!m_hBink)
-	{
-		return 0;
-	}
+	m_bPaused = bPause;
 
 	if (bPause)
-	{
-		if (!m_bPaused)
-		{
-			m_bPaused = 1;
-			BinkPause(m_hBink, 1);
-		}
-	}
+		m_videoPlayer.Stop();
 	else
-	{
-		if (m_bPaused)
-		{
-			m_bPaused = 0;
-			BinkPause(m_hBink, 0);
-		}
-	}
-	return 1;
-#else
-	return 0;
-#endif
+		m_videoPlayer.Start();
 
 	return 1;
 }
@@ -432,121 +119,31 @@ int CUIVideoPanel::Pause(bool bPause)
 ////////////////////////////////////////////////////////////////////// 
 int CUIVideoPanel::IsPlaying()
 {
-	if (m_DivX_Active) {
-		return (m_bPlaying ? 1 : 0);
-	}
-
-#if !defined(NOT_USE_BINK_SDK)
-	if (!m_hBink)
-	{
-		return 0;
-	}
-	return (m_bPlaying ? 1 : 0);
-#else
-	return 0;
-#endif
-
-	return (0);
+	return m_videoPlayer.IsPlaying();
 }
 
 ////////////////////////////////////////////////////////////////////// 
 int CUIVideoPanel::IsPaused()
 {
-	if (m_DivX_Active) {
-		return (m_bPaused ? 1 : 0);
-	}
-#if !defined(NOT_USE_BINK_SDK)
-	if (!m_hBink)
-	{
-		return 0;
-	}
-	return (m_bPaused ? 1 : 0);
-#else
-	return 0;
-#endif
-
-	return 0;
+	return m_bPaused;
 }
 
 ////////////////////////////////////////////////////////////////////// 
 int CUIVideoPanel::SetVolume(int iTrackID, float fVolume)
 {
-
-	if (m_DivX_Active) {
-		return 1;
-	}
-
-#if !defined(NOT_USE_BINK_SDK)
-	if (!m_hBink)
-	{
-		return 0;
-	}
-
-	if (fVolume < 0.0f)
-	{
-		fVolume = 0.0f;
-	}
-
-	BinkSetVolume(m_hBink, iTrackID, (int)(fVolume * 32768));
-
-	return 1;
-#else
-	return 0;
-#endif
-
 	return 1;
 }
 
 //////////////////////////////////////////////////////////////////////
 int CUIVideoPanel::SetPan(int iTrackID, float fPan)
 {
-	if (m_DivX_Active) {
-		return 1;
-	}
-
-#if !defined(NOT_USE_BINK_SDK)
-	if (!m_hBink)
-	{
-		return 0;
-	}
-
-	if (fPan > 1.0f)
-	{
-		fPan = 1.0f;
-	}
-	else if (fPan < -1.0f)
-	{
-		fPan = -1.0f;
-	}
-
-	BinkSetPan(m_hBink, 1, 32768 + (int)(fPan * 32767));
-	return 1;
-#else
-	return 0;
-#endif
-
 	return 1;
 }
 
 ////////////////////////////////////////////////////////////////////// 
 int CUIVideoPanel::SetFrameRate(int iFrameRate)
 {
-	if (m_DivX_Active) {
-		return 1;
-	}
-
-#if !defined(NOT_USE_BINK_SDK)
-	if (!m_hBink) {
-		return 0;
-	}
-
-	BinkSetFrameRate(iFrameRate, 1);
-
-	return 1;
-#else
-	return 0;
-#endif
-
+	m_videoPlayer.SetTimeScale(1);	// TODO: figure out, maybe not needed
 	return 1;
 }
 
@@ -587,15 +184,15 @@ int CUIVideoPanel::Draw(int iPass)
 	UIRect pGreyedRect = pAbsoluteRect;
 
 	// video
-	if (m_iTextureID > -1)
+	const int textureId = m_videoPlayer.GetTextureId();
+	if (textureId > -1)
 	{
 		float fWidth = pAbsoluteRect.fWidth;
 		float fHeight = pAbsoluteRect.fHeight;
 
-#if !defined(NOT_USE_BINK_SDK)
-		if (m_bKeepAspect && m_hBink)
+		if (m_bKeepAspect)
 		{
-			float fAspect = m_hBink->Width / (float)m_hBink->Height;
+			float fAspect = m_videoPlayer.GetWidth() / (float)m_videoPlayer.GetHeight();
 
 			if (fAspect < 1.0f)
 			{
@@ -606,7 +203,6 @@ int CUIVideoPanel::Draw(int iPass)
 				fHeight = fWidth / fAspect;
 			}
 		}
-#endif
 
 		if (fWidth > pAbsoluteRect.fWidth)
 		{
@@ -635,7 +231,7 @@ int CUIVideoPanel::Draw(int iPass)
 			m_pUISystem->DrawQuad(pAbsoluteRect, m_cColor);
 		}
 
-		m_pUISystem->DrawImage(pRect, m_iTextureID, 0, color4f(1.0f, 1.0f, 1.0f, 1.0f));
+		m_pUISystem->DrawImage(pRect, textureId, 0, color4f(1.0f, 1.0f, 1.0f, 1.0f));
 	}
 
 	// draw overlay
@@ -667,35 +263,12 @@ int CUIVideoPanel::Draw(int iPass)
 ////////////////////////////////////////////////////////////////////// 
 int CUIVideoPanel::EnableVideo(bool bEnable)
 {
-#if !defined(NOT_USE_BINK_SDK)
-	if (!m_hBink)
-	{
-		return 0;
-	}
-
-	return BinkSetVideoOnOff(m_hBink, bEnable ? 1 : 0);
-#else
-	return 0;
-#endif
-
 	return 0;
 }
 
 ////////////////////////////////////////////////////////////////////// 
 int CUIVideoPanel::EnableAudio(bool bEnable)
 {
-#if !defined(NOT_USE_BINK_SDK)
-
-	if (!m_hBink)
-	{
-		return 0;
-	}
-
-	return BinkSetSoundOnOff(m_hBink, bEnable ? 1 : 0);
-#else
-	return 0;
-#endif
-
 	return 0;
 }
 
@@ -864,14 +437,10 @@ int CUIVideoPanel::IsPlaying(IFunctionHandler* pH)
 {
 	CHECK_SCRIPT_FUNCTION_PARAMCOUNT(m_pScriptSystem, GetName().c_str(), IsPlaying, 0);
 
-	if (m_bPlaying)
-	{
+	if (IsPlaying())
 		return pH->EndFunction(1);
-	}
 	else
-	{
 		return pH->EndFunctionNull();
-	}
 }
 
 ////////////////////////////////////////////////////////////////////// 
