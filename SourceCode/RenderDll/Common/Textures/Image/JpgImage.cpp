@@ -48,7 +48,9 @@ CImageJpgFile::~CImageJpgFile() {
 	/* do nothing */
 }
 
-CImageJpgFile::CImageJpgFile(byte* ptr, long filesize) : CImageFile() {
+CImageJpgFile::CImageJpgFile(byte* ptr, long filesize) 
+	: CImageFile()
+{
 	struct jpeg_decompress_struct cinfo;
 	struct my_error_mgr jerr;
 	JSAMPARRAY buffer;		/* Output row buffer */
@@ -130,29 +132,28 @@ CImageJpgFile::CImageJpgFile(byte* ptr, long filesize) : CImageFile() {
 				bufp++;
 			}
 		}
-		else
-			if (cinfo.output_components == 3)
-			{ /* rgb triplets */
-				for (i = 0; i < (int)cinfo.output_width; i++)
-				{
-					pixels[bufp].red = buffer[0][i * 3 + 0];
-					pixels[bufp].green = buffer[0][i * 3 + 1];
-					pixels[bufp].blue = buffer[0][i * 3 + 2];
-					pixels[bufp].alpha = 255;
-					bufp++;
-				}
-			}
-			else
+		else if (cinfo.output_components == 3)
+		{ /* rgb triplets */
+			for (i = 0; i < (int)cinfo.output_width; i++)
 			{
-				for (i = 0; i < (int)cinfo.output_width; i++)
-				{
-					pixels[bufp].red = buffer[0][i * 4 + 0];
-					pixels[bufp].green = buffer[0][i * 4 + 1];
-					pixels[bufp].blue = buffer[0][i * 4 + 2];
-					pixels[bufp].alpha = 255;
-					bufp++;
-				}
+				pixels[bufp].red = buffer[0][i * 3 + 0];
+				pixels[bufp].green = buffer[0][i * 3 + 1];
+				pixels[bufp].blue = buffer[0][i * 3 + 2];
+				pixels[bufp].alpha = 255;
+				bufp++;
 			}
+		}
+		else
+		{
+			for (i = 0; i < (int)cinfo.output_width; i++)
+			{
+				pixels[bufp].red = buffer[0][i * 4 + 0];
+				pixels[bufp].green = buffer[0][i * 4 + 1];
+				pixels[bufp].blue = buffer[0][i * 4 + 2];
+				pixels[bufp].alpha = 255;
+				bufp++;
+			}
+		}
 	}
 
 	/* ==== Step 7: Finish decompression */
@@ -176,50 +177,49 @@ CImageJpgFile::CImageJpgFile(byte* ptr, long filesize) : CImageFile() {
 
 void WriteJPG(byte* dat, int wdt, int hgt, char* name)
 {
-#if defined(ENABLE_IJL)
-	JPEG_CORE_PROPERTIES image;
-	ZeroMemory(&image, sizeof(JPEG_CORE_PROPERTIES));
+	jpeg_compress_struct cinfo;
+	jpeg_error_mgr jerr;
 
-	if (ijlInit(&image) != IJL_OK)
-		return;
+	cinfo.err = jpeg_std_error(&jerr);
+	jpeg_create_compress(&cinfo);
 
-	byte* data = new byte[wdt * hgt * 3];
-	for (int i = 0; i < wdt * hgt; i++)
+	const int nChannels = 4;
+
+	cinfo.in_color_space = (nChannels == 1) ? JCS_GRAYSCALE : JCS_RGB;
+	jpeg_set_defaults(&cinfo);
+
+	cinfo.input_components = nChannels;
+	cinfo.num_components = nChannels;
+	cinfo.image_width = wdt;
+	cinfo.image_height = hgt;
+	cinfo.data_precision = 8;
+	cinfo.input_gamma = 1.0;
+
+	jpeg_set_quality(&cinfo, 85, FALSE);
+
+	byte* mem = nullptr;
+	unsigned long memSize = 0;
+	jpeg_mem_dest(&cinfo, &mem, &memSize);
+
+	jpeg_start_compress(&cinfo, TRUE);
+
+	byte* curr_scanline = dat;
+
+	for (int y = 0; y < hgt; y++)
 	{
-		data[i * 3 + 0] = dat[i * 4 + 0];
-		data[i * 3 + 1] = dat[i * 4 + 1];
-		data[i * 3 + 2] = dat[i * 4 + 2];
+		jpeg_write_scanlines(&cinfo, &curr_scanline, 1);
+		curr_scanline += nChannels * wdt;
 	}
 
-	// Setup DIB
-	image.DIBWidth = wdt;
-	image.DIBHeight = hgt;
-	image.DIBBytes = data;
-	image.DIBPadBytes = 0; //IJL_DIB_PAD_BYTES(image.DIBWidth,3);
+	jpeg_finish_compress(&cinfo);
+	jpeg_destroy_compress(&cinfo);
 
-	// Setup JPEG
-	image.JPGFile = name;
-	image.JPGWidth = wdt;
-	image.JPGHeight = hgt;
-
-	image.jquality = 100;
-
-	image.DIBColor = IJL_RGB;
-
-	if (ijlWrite(&image, IJL_JFILE_WRITEWHOLEIMAGE) != IJL_OK)
+	FILE* fp = fopen(name, "wb");
+	if(fp)
 	{
-		delete[] data;
-		return;
+		fwrite(mem, memSize, 1, fp);
+		fclose(fp);
 	}
 
-	if (ijlFree(&image) != IJL_OK)
-	{
-		delete[] data;
-		return;
-	}
-
-	delete[] data;
-#else
-	OutputDebugString("Not Implemented");
-#endif //!defined(PS2) && !defined(WIN64)
+	free(mem);
 }

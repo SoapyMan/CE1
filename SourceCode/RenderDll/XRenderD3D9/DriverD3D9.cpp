@@ -1751,11 +1751,7 @@ void CD3D9Renderer::ScreenShot(const char* filename)
 	{
 		for (i = 0; i < 10000; i++)
 		{
-#ifdef WIN64
 			sprintf(scname, "FarCry%04d.tga", i);
-#else
-			sprintf(scname, "FarCry%04d.jpg", i);
-#endif
 
 			fp = fxopen(scname, "rb");
 			if (!fp)
@@ -1833,23 +1829,7 @@ void CD3D9Renderer::ScreenShot(const char* filename)
 	pSysDeskSurf->UnlockRect();
 	SAFE_RELEASE(pSysDeskSurf);
 
-#ifdef WIN64
-	//TODO: we need a lib for AMD64 to create JPEG-files
-
-	  //for TGA we need to flip picture before we store it
-	uint32* fb1 = (uint32*)pic;
-	uint32* fb2 = (uint32*)malloc(height * width * 32);
-	uint32* buffer = fb2;
-	for (uint32 y = height; y > 0; y--) {
-		uint32* fbuf = fb1 + ((y - 1) * width);
-		for (uint32 x = 0; x < width; x++) { fb2[x] = fbuf[x]; }
-		fb2 += width;
-	}
-	WriteTGA((uint8*)buffer, width, height, scname, 32);
-	free(buffer);
-#else
 	::WriteJPG(pic, width, height, scname);
-#endif
 
 	delete[] pic;
 }

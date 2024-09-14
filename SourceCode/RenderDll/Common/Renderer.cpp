@@ -4385,7 +4385,5 @@ void CRenderer::RemoveAnimatedTexture(AnimTexInfo* pInfo)
 
 void CRenderer::WriteJPG(byte* dat, int wdt, int hgt, char* name)
 {
-#ifndef WIN64
 	::WriteJPG(dat, wdt, hgt, name);
-#endif
 }
