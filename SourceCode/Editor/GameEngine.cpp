@@ -410,7 +410,7 @@ bool CGameEngine::LoadLevel( const CString &levelPath,const CString &mission,boo
 		vegMap->PlaceObjectsOnTerrain();
 
 	//GetIEditor()->GetStatObjMap()->PlaceObjectsOnTerrain();
-	if (bDeleteAIGraph)
+	if (bDeleteAIGraph && m_IAISystem)
 	{
 		m_IAISystem->FlushSystem();
 		m_IAISystem->LoadTriangulation( 0,0 );
