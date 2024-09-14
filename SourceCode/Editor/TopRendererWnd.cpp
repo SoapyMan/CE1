@@ -327,7 +327,7 @@ void CTopRendererWnd::Draw( DisplayContext &dc )
 			uint *tex = m_vegetationTexture.GetData();
 			if (!m_vegetationTextureId)
 			{
-				m_vegetationTextureId = m_renderer->DownLoadToVideoMemory( (unsigned char*)tex,w,h,eTF_8888,eTF_8888,0,0,FILTER_NONE );
+				m_vegetationTextureId = m_renderer->DownLoadToVideoMemory( (unsigned char*)tex,w,h,eTF_8888,eTF_RGBA,0,0,FILTER_NONE );
 			}
 			else
 			{
@@ -357,39 +357,20 @@ void CTopRendererWnd::Draw( DisplayContext &dc )
 	rot.BuildFromVectors( Vec3(0,1,0),Vec3(1,0,0),Vec3(0,0,1),Vec3(0,0,0) );
 
 	dc.PushMatrix( rot*tm );
-	//m_renderer->DrawImage( 0,0,m_heightmapSize.cx,m_heightmapSize.cy, m_terrainTextureId,0,1,1,0,1,1,1,1 );
-	m_renderer->DrawImage( 0,0,m_heightmapSize.cx,m_heightmapSize.cy, m_terrainTextureId, 0,1, 1,0,  1,1,1,1 );
-	dc.PopMatrix();
 
-	//m_renderer->EnableDepthTest(true);
-	//m_renderer->EnableDepthWrites(true);
+	m_renderer->DrawImage( 0, 0, m_heightmapSize.cx,m_heightmapSize.cy, m_terrainTextureId, 0,1, 1,0,  1,1,1,1 );
 
-	//m_renderer->EnableBlend(true);
-	dc.SetState(GS_NODEPTHTEST | GS_BLSRC_SRCALPHA | GS_BLDST_ONEMINUSSRCALPHA);
-
-/*
 	// Draw the static objects into the view
 	if (m_bShowStatObjects && m_vegetationTextureId)
 	{
-		m_renderer->SetBlendMode();
-		m_renderer->EnableBlend(true);
-
-		GetMapRect( m_textureSize,rcMap );
-
-		iWidth = (m_vegetationTextureSize.cx * m_fZoomFactor) * ((float)m_textureSize.cx/m_vegetationTextureSize.cx);
-		iHeight = (m_vegetationTextureSize.cy * m_fZoomFactor) * ((float)m_textureSize.cy/m_vegetationTextureSize.cy);
-
-		// Convert the window coordinates into coordinates for the renderer
-		iX =  ((float)rcMap.left / rcWnd.right * 800.0f);
-		iY =  ((float)rcMap.top / rcWnd.bottom * 600.0f);
-		iWidth = ((float)iWidth / rcWnd.right * 800.0f);
-		iHeight = ((float)iHeight / rcWnd.bottom * 600.0f);
-		m_renderer->Draw2dImage(iX, iY+iHeight, iWidth, -iHeight, m_vegetationTextureId);
-		m_renderer->EnableBlend(false);
+		dc.SetState(GS_NODEPTHTEST | GS_BLSRC_SRCALPHA | GS_BLDST_ONEMINUSSRCALPHA);
+		m_renderer->DrawImage(0, 0, m_heightmapSize.cx, m_heightmapSize.cy, m_vegetationTextureId, 0, 1, 1, 0, 1, 1, 1, 1);
 	}
-*/
 
-	C2DViewport::Draw( dc );
+	dc.PopMatrix();
+
+	C2DViewport::Draw(dc);
+
 }
 
 //////////////////////////////////////////////////////////////////////////
