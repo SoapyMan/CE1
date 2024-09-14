@@ -3937,7 +3937,7 @@ unsigned int CD3D9Renderer::LoadTexture(const char* _filename, int* tex_type, un
 {
 	if (def_tid == 0)
 		def_tid = -1;
-	ITexPic* pPic = EF_LoadTexture((char*)_filename, 0, 0, eTT_Base, -1, -1, def_tid);
+	ITexPic* pPic = EF_LoadTexture(_filename, 0, 0, eTT_Base, -1, -1, def_tid);
 	return pPic->IsTextureLoaded() ? pPic->GetTextureID() : 0;
 }
 
@@ -3951,87 +3951,93 @@ void CD3D9Renderer::UpdateTextureInVideoMemory(uint tnum, unsigned char* newdata
 	D3DFORMAT srcformat = D3DFMT_UNKNOWN;
 	if (eTFSrc == eTF_DXT1)
 		srcformat = D3DFMT_DXT1;
-	else
-		if (eTFSrc == eTF_0888)
-			srcformat = D3DFMT_X8R8G8B8;
-		else
-			if (eTFSrc == eTF_8888)
-				srcformat = D3DFMT_A8R8G8B8;
-			else
-				if (eTFSrc == eTF_4444)
-					srcformat = D3DFMT_A4R4G4B4;
+	else if (eTFSrc == eTF_0888)
+		srcformat = D3DFMT_X8R8G8B8;
+	else if (eTFSrc == eTF_8888)
+		srcformat = D3DFMT_A8R8G8B8;
+	else if (eTFSrc == eTF_4444)
+		srcformat = D3DFMT_A4R4G4B4;
 
-	if (srcformat == D3DFMT_UNKNOWN)
-		CRYASSERT(0);
+	CRYASSERT(srcformat != D3DFMT_UNKNOWN, "Can't update texture - unsupported format")
 
-	if (tnum > TX_FIRSTBIND && srcformat != D3DFMT_UNKNOWN)
+	if (tnum <= TX_FIRSTBIND || srcformat == D3DFMT_UNKNOWN)
+		return;
+
+	STexPicD3D* tp = (STexPicD3D*)(m_TexMan->m_Textures[tnum - TX_FIRSTBIND]);
+	if (!tp)
+		return;
+	IDirect3DTexture9* tex = (IDirect3DTexture9*)tp->m_RefTex.m_VidTex;
+
+	IDirect3DSurface9* pSurf;
+	tex->GetSurfaceLevel(0, &pSurf);
+
+	if (!pSurf)
+		return;
+
+	D3DSURFACE_DESC desc;
+	pSurf->GetDesc(&desc);
+
+	const RECT rc = {
+		posx, posy,
+		posx + w, posy + h
+	};
+
+	CRYASSERT(rc.left >= 0 && rc.left <= desc.Width);
+	CRYASSERT(rc.right >= 0 && rc.right <= desc.Width);
+	CRYASSERT(rc.top >= 0 && rc.top <= desc.Height);
+	CRYASSERT(rc.bottom >= 0 && rc.bottom <= desc.Height);
+
+	if ((eTFSrc == eTF_8888 || eTFSrc == eTF_0888) && (desc.Format == D3DFMT_A8R8G8B8 || desc.Format == D3DFMT_X8R8G8B8))
 	{
-		STexPicD3D* tp = (STexPicD3D*)(m_TexMan->m_Textures[tnum - TX_FIRSTBIND]);
-		if (!tp)
-			return;
-		IDirect3DTexture9* tex = (IDirect3DTexture9*)tp->m_RefTex.m_VidTex;
-
-		IDirect3DSurface9* pSurf;
-		tex->GetSurfaceLevel(0, &pSurf);
-
-		if (pSurf)
+		D3DLOCKED_RECT lr;
+		if (pSurf->LockRect(&lr, &rc, 0) == D3D_OK)
 		{
-			RECT rc = { posx,posy,posx + w,posy + h };
-			D3DSURFACE_DESC desc;
-			pSurf->GetDesc(&desc);
-			if ((eTFSrc == eTF_8888 || eTFSrc == eTF_0888) && (desc.Format == D3DFMT_A8R8G8B8 || desc.Format == D3DFMT_X8R8G8B8))
+			byte* p = (byte*)lr.pBits;
+			for (int y = 0; y < h; y++)
 			{
-				D3DLOCKED_RECT lr;
-				if (pSurf->LockRect(&lr, &rc, 0) == D3D_OK)
-				{
-					byte* p = (byte*)lr.pBits;
-					for (int y = 0; y < h; y++)
-					{
-						cryMemcpy(&p[y * lr.Pitch], &newdata[y * w * 4], w * 4);
-					}
-					pSurf->UnlockRect();
-				}
+				cryMemcpy(&p[y * lr.Pitch], &newdata[y * w * 4], w * 4);
 			}
-			else
-			{
-				int size = CD3D9TexMan::TexSize(w, h, srcformat);
-				int nPitch;
-				if (eTFSrc != eTF_DXT1 && eTFSrc != eTF_DXT3 && eTFSrc != eTF_DXT5)
-					nPitch = size / h;
-				else
-				{
-					int blockSize = (eTFSrc == eTF_DXT1) ? 8 : 16;
-					nPitch = (w + 3) / 4 * blockSize;
-				}
+			pSurf->UnlockRect();
+		}
+	}
+	else
+	{
+		int size = CD3D9TexMan::TexSize(w, h, srcformat);
+		int nPitch;
+		if (eTFSrc != eTF_DXT1 && eTFSrc != eTF_DXT3 && eTFSrc != eTF_DXT5)
+			nPitch = size / h;
+		else
+		{
+			int blockSize = (eTFSrc == eTF_DXT1) ? 8 : 16;
+			nPitch = (w + 3) / 4 * blockSize;
+		}
 
-				if ((eTFSrc == eTF_8888 || eTFSrc == eTF_0888) && (desc.Format == D3DFMT_R5G6B5))
+		if ((eTFSrc == eTF_8888 || eTFSrc == eTF_0888) && (desc.Format == D3DFMT_R5G6B5))
+		{
+			D3DLOCKED_RECT lr;
+			if (pSurf->LockRect(&lr, &rc, 0) == D3D_OK)
+			{
+				byte* pBits = (byte*)lr.pBits;
+				for (int i = 0; i < h; i++)
 				{
-					D3DLOCKED_RECT lr;
-					if (pSurf->LockRect(&lr, &rc, 0) == D3D_OK)
+					uint* src = (uint*)&newdata[i * w * 4];
+					ushort* dst = (ushort*)&pBits[i * lr.Pitch];
+					for (int j = 0; j < w; j++)
 					{
-						byte* pBits = (byte*)lr.pBits;
-						for (int i = 0; i < h; i++)
-						{
-							uint* src = (uint*)&newdata[i * w * 4];
-							ushort* dst = (ushort*)&pBits[i * lr.Pitch];
-							for (int j = 0; j < w; j++)
-							{
-								uint argb = *src++;
-								*dst++ = ((argb >> 8) & 0xF800) |
-									((argb >> 5) & 0x07E0) |
-									((argb >> 3) & 0x001F);
-							}
-						}
-						pSurf->UnlockRect();
+						uint argb = *src++;
+						*dst++ = ((argb >> 8) & 0xF800) |
+								 ((argb >> 5) & 0x07E0) |
+								 ((argb >> 3) & 0x001F);
 					}
 				}
-				else
-				{
-					HRESULT hr = D3DXLoadSurfaceFromMemory(pSurf, nullptr, &rc, newdata, srcformat, nPitch, nullptr, &rc, D3DX_FILTER_NONE, 0);
-				}
-				SAFE_RELEASE(pSurf);
+				pSurf->UnlockRect();
 			}
 		}
+		else
+		{
+			HRESULT hr = D3DXLoadSurfaceFromMemory(pSurf, nullptr, &rc, newdata, srcformat, nPitch, nullptr, &rc, D3DX_FILTER_NONE, 0);
+		}
+		SAFE_RELEASE(pSurf);
 	}
 }
 
@@ -4054,31 +4060,33 @@ unsigned int CD3D9Renderer::DownLoadToVideoMemory(unsigned char* data, int w, in
 		}*/
 		strcpy(name, szCacheName);
 	}
+
 	int flags2 = FT2_NODXT;
 	if (!nummipmap)
 	{
 		if (filter != FILTER_BILINEAR && filter != FILTER_TRILINEAR)
 			flags |= FT_NOMIPS;
 	}
+
 	int DXTSize = 0;
 	int blockSize = 0;
+
 	if (eTFDst == eTF_DXT1)
 	{
 		flags |= FT_DXT1;
 		blockSize = 8;
 	}
-	else
-		if (eTFDst == eTF_DXT3)
-		{
-			flags |= FT_DXT3;
-			blockSize = 16;
-		}
-		else
-			if (eTFDst == eTF_DXT5)
-			{
-				flags |= FT_DXT5;
-				blockSize = 16;
-			}
+	else if (eTFDst == eTF_DXT3)
+	{
+		flags |= FT_DXT3;
+		blockSize = 16;
+	}
+	else if (eTFDst == eTF_DXT5)
+	{
+		flags |= FT_DXT5;
+		blockSize = 16;
+	}
+
 	if (blockSize)
 	{
 		if (!nummipmap)
