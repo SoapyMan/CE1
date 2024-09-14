@@ -152,8 +152,6 @@ void CUndoManager::Begin()
 	if (m_bUndoing || m_bRedoing) // If Undoing or redoing now, ignore this calls.
 		return;
 
-	assert( m_bRecording == false );
-
 	if (m_bRecording)
 	{
 		//CLogFile::WriteLine( "<Undo> Begin (already recording)" );
