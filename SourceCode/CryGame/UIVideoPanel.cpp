@@ -21,7 +21,7 @@ _DECLARE_SCRIPTABLEEX(CUIVideoPanel)
 
 ////////////////////////////////////////////////////////////////////// 
 CUIVideoPanel::CUIVideoPanel()
-	: m_pSwapBuffer(0), m_szVideoFile(""), m_bKeepAspect(1), m_bLooping(0), m_bFinished(false)
+	: m_pSwapBuffer(0), m_szVideoFile(""), m_bKeepAspect(1), m_bLooping(0), m_bFinished(false), m_bPaused(false)
 {
 }
 
@@ -46,6 +46,7 @@ int CUIVideoPanel::LoadVideo(const string& szFileName, bool bSound)
 
 	m_szVideoFile = szFileName;
 	m_bFinished = false;
+	m_bPaused = false;
 	m_videoPlayer.m_onFinished = [this]() {
 		m_bFinished = true;
 	};
@@ -84,6 +85,7 @@ int CUIVideoPanel::Play()
 	if (m_videoPlayer.GetTextureId() == -1)
 		return 0;
 	m_videoPlayer.Start();
+	m_bPaused = false;
 	return 1;
 }
 
