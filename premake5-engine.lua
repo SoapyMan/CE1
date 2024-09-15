@@ -140,6 +140,13 @@ workspace(WORKSPACE_NAME)
 		optimize "On"
 		symbols "On"
 		sanitize "address"
+		
+	filter "configurations:Retail"
+        defines {
+			"NDEBUG",
+			"_RETAIL"
+        }
+		optimize "On"
 
 	filter "system:Linux"
 		defines {
