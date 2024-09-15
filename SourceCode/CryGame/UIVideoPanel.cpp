@@ -21,7 +21,7 @@ _DECLARE_SCRIPTABLEEX(CUIVideoPanel)
 
 ////////////////////////////////////////////////////////////////////// 
 CUIVideoPanel::CUIVideoPanel()
-	: m_pSwapBuffer(0), m_szVideoFile(""), m_bKeepAspect(1), m_bLooping(0)
+	: m_pSwapBuffer(0), m_szVideoFile(""), m_bKeepAspect(1), m_bLooping(0), m_bFinished(false)
 {
 }
 
@@ -41,13 +41,16 @@ string CUIVideoPanel::GetClassName()
 int CUIVideoPanel::LoadVideo(const string& szFileName, bool bSound)
 {
 	m_videoPlayer.Terminate();
-	if (m_videoPlayer.Init(szFileName.c_str()))
-	{
-		m_szVideoFile = szFileName;
-		return 1;
-	}
+	if (!m_videoPlayer.Init(szFileName.c_str(), bSound))
+		return 0;
 
-	return 0;
+	m_szVideoFile = szFileName;
+	m_bFinished = false;
+	m_videoPlayer.m_onFinished = [this]() {
+		m_bFinished = true;
+	};
+
+	return 1;
 }
 
 ////////////////////////////////////////////////////////////////////// 
@@ -55,13 +58,10 @@ LRESULT CUIVideoPanel::Update(unsigned int iMessage, WPARAM wParam, LPARAM lPara
 {
 	FUNCTION_PROFILER(m_pUISystem->GetISystem(), PROFILE_GAME);
 
-	if (!m_videoPlayer.IsPlaying())
-		return 0;
-
 	// update texture
 	m_videoPlayer.Present();
 
-	if (m_videoPlayer.IsFinished())
+	if (m_bFinished)
 	{
 		if (m_bLooping)
 		{
@@ -83,7 +83,6 @@ int CUIVideoPanel::Play()
 {
 	if (m_videoPlayer.GetTextureId() == -1)
 		return 0;
-
 	m_videoPlayer.Start();
 	return 1;
 }
@@ -119,7 +118,7 @@ int CUIVideoPanel::Pause(bool bPause)
 ////////////////////////////////////////////////////////////////////// 
 int CUIVideoPanel::IsPlaying()
 {
-	return m_videoPlayer.IsPlaying();
+	return !m_bFinished;
 }
 
 ////////////////////////////////////////////////////////////////////// 

@@ -1,16 +1,21 @@
 #pragma once
+#include <functional>
 #include "platform.h"
 
 struct MoviePlayerData;
+struct ISoundStream;
+class CMovieAudioSource;
 
 class CUIVideoFFmpeg
 {
 public:
+	using FinishFunc = std::function<void()>;
+
 	CUIVideoFFmpeg() = default;
 	CUIVideoFFmpeg(const char* aliasName);
 	~CUIVideoFFmpeg();
 
-	bool				Init(const char* pathToVideo);
+	bool				Init(const char* pathToVideo, bool needSound);
 	void				Terminate();
 
 	void				Start();
@@ -28,7 +33,7 @@ public:
 	void				SetTimeScale(float value);
 
 	// Used to signal user when movie is completed. Not thread-safe
-	bool				IsFinished() const { return m_isFinished; }
+	FinishFunc			m_onFinished;
 
 protected:
 	int					Run();
@@ -37,10 +42,10 @@ protected:
 	string				m_aliasName;
 
 	void*				m_threadHandle{ nullptr };
-	//ISoundSourcePtr		m_audioSrc;
 	uint8*				m_frameBuffer{ nullptr };
 	MoviePlayerData*	m_player{ nullptr };
+	ISoundStream*		m_audioStream{ nullptr };
+	CMovieAudioSource*	m_audioSrc{ nullptr };
 	int					m_playerCmd{ 0 };
 	int					m_textureId{ -1 };
-	bool				m_isFinished{ true };
 };

@@ -14,7 +14,19 @@ extern "C" {
 #include <SDL_timer.h>
 #include "StdAfx.h"
 #include "ICryPak.h"
+#include "ISound.h"
 #include "UIVideoFFmpeg.h"
+
+class MutexLocker
+{
+public:
+	MutexLocker(SDL_mutex* mutex)	{ SDL_LockMutex(m_mutex = mutex); }
+	~MutexLocker()					{ SDL_UnlockMutex(m_mutex); }
+private:
+	SDL_mutex* m_mutex;
+};
+
+//-----------------------------------------------
 
 class CTimer
 {
@@ -109,10 +121,7 @@ struct AVBufferRef;
 struct SwrContext;
 struct SwsContext;
 
-//using namespace Threading;
-//static CEqMutex	s_audioSourceMutex;
-
-static constexpr const int AV_PACKET_AUDIO_CAPACITY = 25;
+static constexpr const int AV_PACKET_AUDIO_CAPACITY = 40;
 static constexpr const int AV_PACKET_VIDEO_CAPACITY = 10;
 
 using APacketQueue = std::list<AVPacket*>;	// AV_PACKET_AUDIO_CAPACITY
@@ -136,13 +145,13 @@ enum EPlayerCmd : int
 	PLAYER_CMD_STOP,
 };
 
-
 struct MoviePlayerData
 {
 #ifndef CRY_NO_FFMPEG
 	AVPacket			packet;
 	FILE*				file;
 	AVFormatContext*	formatCtx{ nullptr };
+	SDL_mutex*			audioSourceMutex = nullptr;
 
 	// Video
 	struct VideoState
@@ -371,7 +380,7 @@ static MoviePlayerData* CreatePlayerData(AVBufferRef* hw_device_context, const c
 	return player;
 }
 
-static bool PlayerDemuxStep(MoviePlayerData* player, bool& isFinished)
+static bool PlayerDemuxStep(MoviePlayerData* player, CUIVideoFFmpeg::FinishFunc& onFinish)
 {
 #ifndef CRY_NO_FFMPEG
 	if (player->videoPacketQueue.size() >= AV_PACKET_VIDEO_CAPACITY)
@@ -412,7 +421,8 @@ static bool PlayerDemuxStep(MoviePlayerData* player, bool& isFinished)
 		break;
 	case AVERROR_EOF:
 	{
-		isFinished = true;
+		if(onFinish)
+			onFinish();
 		break;
 	}
 	default:
@@ -474,6 +484,8 @@ static bool PlayerVideoDecodeStep(MoviePlayerData* player)
 	MoviePlayerData::VideoState& videoState = player->videoState;
 	DecodeState& state = player->videoState.state;
 
+	ILog* iLog = GetISystem()->GetILog();
+
 	if (state == DEC_DEQUEUE_PACKET)
 	{
 		if (player->videoPacketQueue.size() == 0)
@@ -486,7 +498,8 @@ static bool PlayerVideoDecodeStep(MoviePlayerData* player)
 
 		state = DEC_SEND_PACKET;
 	}
-	else if (state == DEC_SEND_PACKET)
+
+	if (state == DEC_SEND_PACKET)
 	{
 		const int r = avcodec_send_packet(player->videoCodec, videoState.deqPacket);
 		if (r == 0)
@@ -517,18 +530,25 @@ static bool PlayerVideoDecodeStep(MoviePlayerData* player)
 			return false;
 		}
 
-		videoState.frame->pts = videoState.frame->pts / player->clockSpeed;
-
-		const double clock = clock_seconds(player->clockStartTime);
-		const double pts_secs = pts_seconds(videoState.frame, player->videoStream);
-		const double delta = (pts_secs - clock);
-
-		if (delta < -0.01f)
+		if (videoState.frame->pts != AV_NOPTS_VALUE)
+			videoState.frame->pts = videoState.frame->pts / player->clockSpeed;
+		else if(videoState.frame->pkt_dts != AV_NOPTS_VALUE)
+			videoState.frame->pts = videoState.frame->pkt_dts / player->clockSpeed;
+		else
 		{
 			state = DEC_RECV_FRAME;
 			return false;
 		}
 
+		const double clock = clock_seconds(player->clockStartTime);
+		const double pts_secs = pts_seconds(videoState.frame, player->videoStream);
+		const double delta = (pts_secs - clock);
+
+		if (delta < 0)
+		{
+			state = DEC_RECV_FRAME;
+			return false;
+		}
 		videoState.presentationDelay = delta;
 
 		state = DEC_READY_FRAME;
@@ -608,10 +628,17 @@ static void PlayerAudioDecodeStep(MoviePlayerData* player, FrameQueue& frameQueu
 
 		convFrame->format = AV_SAMPLE_FMT_S16;
 		convFrame->sample_rate = 44100;
-		convFrame->pts = static_cast<double>(audioState.frame->pts) / player->clockSpeed;
+
+		if (audioState.frame->pts != AV_NOPTS_VALUE)
+			convFrame->pts = static_cast<double>(audioState.frame->pts) / player->clockSpeed;
+		else if (audioState.frame->pkt_dts != AV_NOPTS_VALUE)
+			convFrame->pts = static_cast<double>(audioState.frame->pkt_dts) / player->clockSpeed;
+		else
+			convFrame->pts = 0;
+
 		if (swr_convert_frame(player->audioSwr, convFrame, audioState.frame) == 0)
 		{
-			// CScopedMutex m(s_audioSourceMutex);
+			MutexLocker m(player->audioSourceMutex);
 			if (frameQueue.size() == AV_PACKET_AUDIO_CAPACITY)
 			{
 				AVFrame* frame = frameQueue.front();
@@ -656,75 +683,49 @@ static bool StartPlayback(MoviePlayerData* player)
 }
 
 //---------------------------------------------------
-/*
-class CMovieAudioSource : public ISoundSource
+class CMovieAudioSource : public ISoundStreamCallback
 {
-	friend class CMoviePlayer;
+	friend class CUIVideoFFmpeg;
 public:
-	CMovieAudioSource();
+	CMovieAudioSource(MoviePlayerData* player);
 
-	int					GetSamples(void* out, int samplesToRead, int startOffset, bool loop) const;
+	bool				ReadSamples(void* pBuffer, int nLength);
 
-	const Format&		GetFormat() const { return m_format; }
-	int					GetSampleCount() const;
-
-	void*				GetDataPtr(int& dataSize) const { return nullptr; }
-	int					GetLoopRegions(int* samplePos) const { return 0; }
-	bool				IsStreaming() const;
+	int					GetChannels() const { return m_channels; }
+	int					GetSampleRate() const { return m_sampleRate; }
 
 private:
-	bool				Load() { return true; }
-	void				Unload() { }
-
 	FrameQueue			m_frameQueue;
-	MoviePlayerData*	m_player{ nullptr };
-	Format				m_format;
-	int					m_cursor{ 0 };
+	MoviePlayerData*	m_player = nullptr;
+	int					m_sampleRate = 0;
+	int					m_channels = 0;
 };
 
-CMovieAudioSource::CMovieAudioSource()
+CMovieAudioSource::CMovieAudioSource(MoviePlayerData* player)
+	: m_player(player)
 {
-	m_format.channels = 2;
-	m_format.frequency = 44100;
-	m_format.bitwidth = 16;
-	m_format.dataFormat = 1;
+	m_channels = 2;
+	m_sampleRate = 44100;
 }
 
-bool CMovieAudioSource::IsStreaming() const
-{
-	// NOTE: this is directly streamed because of alBufferCallbackSOFT
-	// TODO: audio system capabilities?
-	return false;
-}
-
-int CMovieAudioSource::GetSamples(void* out, int samplesToRead, int startOffset, bool loop) const
+bool CMovieAudioSource::ReadSamples(void* out, int nLength)
 {
 #ifndef CRY_NO_FFMPEG
-	CScopedMutex m(s_audioSourceMutex);
+	MutexLocker m(m_player->audioSourceMutex);
 
 	ILog* iLog = GetISystem()->GetILog();
+	memset(out, 0, nLength);
 
-	const int sampleSize = m_format.channels * (m_format.bitwidth >> 3);
+	const int sampleSize = m_channels * sizeof(short);
+	const int requestedSamples = nLength / sampleSize;
 
-	const int requestedSamples = samplesToRead;
+	int samplesToRead = requestedSamples;
 	int numSamplesRead = 0;
 
-	memset(out, 0, requestedSamples * sampleSize);
-
-	auto it = m_frameQueue.front();
-	while (samplesToRead > 0 && !it.atEnd())
+	auto it = m_frameQueue.begin();
+	while (samplesToRead > 0 && it != m_frameQueue.end())
 	{
 		AVFrame* frame = *it;
-
-		const double clock = clock_seconds(m_player->clockStartTime);
-		const double pts_secs = pts_seconds(frame, m_player->audioStream);
-		const double delta = (pts_secs - clock);
-
-		if (delta > gf_EPSILON)
-		{
-			++it;
-			continue;
-		}
 
 		const int frameSamples = frame->nb_samples - frame->height;
 		if (frameSamples <= 0)
@@ -732,11 +733,12 @@ int CMovieAudioSource::GetSamples(void* out, int samplesToRead, int startOffset,
 			++it;
 			continue;
 		}
-		const int paintSamples = min(samplesToRead, frameSamples);
+
+		const int paintSamples = crymin(samplesToRead, frameSamples);
 		if (paintSamples <= 0)
 			break;
 
-		memcpy((BYTE*)out + numSamplesRead * sampleSize,
+		memcpy((byte*)out + numSamplesRead * sampleSize,
 			frame->data[0] + frame->height * sampleSize,
 			paintSamples * sampleSize);
 
@@ -749,20 +751,15 @@ int CMovieAudioSource::GetSamples(void* out, int samplesToRead, int startOffset,
 	}
 
 	if (numSamplesRead < requestedSamples)
-		iLog->LogWarning("CMovieAudioSource::GetSamples underpaint - %d of %d", numSamplesRead, requestedSamples);
+		iLog->LogWarning("CMovieAudioSource::ReadSamples underpaint - %d of %d", numSamplesRead, requestedSamples);
 
 	// we don't have frames yet, return 1 because we need a warmup from video system
-	return requestedSamples;
+	return requestedSamples > 0 ? true : false;
 #else
-	return 0;
+	return false;
 #endif // CRY_NO_FFMPEG
 }
 
-int	CMovieAudioSource::GetSampleCount() const
-{
-	return INT_MAX;
-}
-*/
 //---------------------------------------------------
 
 CUIVideoFFmpeg::~CUIVideoFFmpeg()
@@ -777,13 +774,13 @@ int	CUIVideoFFmpeg::Run()
 #ifndef CRY_NO_FFMPEG
 	m_player->clockStartTime = av_gettime();
 
+	bool started = false;
 	FrameQueue fakeQueue;
-
 	while (m_playerCmd == PLAYER_CMD_PLAYING)
 	{
 		SDL_Delay(0);
 
-		if (!PlayerDemuxStep(m_player, m_isFinished))
+		if (!PlayerDemuxStep(m_player, m_onFinished))
 			break;
 
 		if (m_playerCmd == PLAYER_CMD_REWIND)
@@ -792,12 +789,23 @@ int	CUIVideoFFmpeg::Run()
 			m_playerCmd = PLAYER_CMD_PLAYING;
 		}
 
+		// wait until fully bufferized
+		if (!started)
+		{
+			if (m_player->videoPacketQueue.size() >= crymin(AV_PACKET_VIDEO_CAPACITY, AV_PACKET_AUDIO_CAPACITY) / 2)
+				started = true;
+			continue;
+		}
+
 		if (m_player->videoCodec)
 			PlayerVideoDecodeStep(m_player);
 
 		if (m_player->audioCodec)
 		{
-			PlayerAudioDecodeStep(m_player, fakeQueue);// static_cast<CMovieAudioSource*>(m_audioSrc.Ptr())->m_frameQueue);
+			if(m_audioStream)
+				PlayerAudioDecodeStep(m_player, m_audioSrc->m_frameQueue);
+			else
+				PlayerAudioDecodeStep(m_player, fakeQueue);
 		}
 
 		if (m_player->videoPacketQueue.size() == 0 && m_player->audioPacketQueue.size() == 0)
@@ -818,7 +826,7 @@ CUIVideoFFmpeg::CUIVideoFFmpeg(const char* aliasName)
 	m_aliasName = aliasName;
 }
 
-bool CUIVideoFFmpeg::Init(const char* pathToVideo)
+bool CUIVideoFFmpeg::Init(const char* pathToVideo, bool needSound)
 {
 #ifndef CRY_NO_FFMPEG
 	const char* nameOfPlayer = m_aliasName.length() ? m_aliasName.c_str() : pathToVideo;
@@ -837,13 +845,11 @@ bool CUIVideoFFmpeg::Init(const char* pathToVideo)
 			CRYASSERT_MSG(m_textureId >= 0, "Cannot create texture for movie player");
 		}
 
-		//if (m_player->audioStream)
-		//{
-		//	m_audioSrc = ISoundSourcePtr(CRefPtr_new(CMovieAudioSource));
-		//	((CMovieAudioSource*)m_audioSrc.Ptr())->m_player = m_player;
-		//	m_audioSrc->SetFilename(nameOfPlayer);
-		//	g_audioSystem->AddSample(m_audioSrc);
-		//}
+		if (needSound && m_player->audioStream)
+		{
+			m_audioSrc = new CMovieAudioSource(m_player);
+			m_audioStream = GetISystem()->GetISoundSystem()->CreateStream(m_audioSrc);
+		}
 	}
 #endif // CRY_NO_FFMPEG
 	return m_player != nullptr;
@@ -855,7 +861,10 @@ void CUIVideoFFmpeg::Terminate()
 	FreePlayerData(m_player);
 	SAFE_DELETE(m_player);
 	SAFE_DELETE_ARRAY(m_frameBuffer);
-	//m_audioSrc = nullptr;
+	
+	GetISystem()->GetISoundSystem()->DestroyStream(m_audioStream);
+	m_audioStream = nullptr;
+	SAFE_DELETE(m_audioSrc);
 
 	if (m_textureId > -1)
 	{
@@ -878,10 +887,12 @@ void CUIVideoFFmpeg::Start()
 	}
 
 	m_playerCmd = PLAYER_CMD_PLAYING;
-	m_isFinished = false;
 
 	if(!m_threadHandle)
 		m_threadHandle = SDL_CreateThread(ThreadFn, "UIVideoThread", this);
+
+	if(m_audioStream)
+		m_audioStream->Play();
 }
 
 void CUIVideoFFmpeg::Stop()
@@ -890,7 +901,6 @@ void CUIVideoFFmpeg::Stop()
 		return;
 
 	m_playerCmd = PLAYER_CMD_STOP;
-	m_isFinished = true;
 
 	int status = 0;
 	SDL_WaitThread((SDL_Thread*)m_threadHandle, &status);
@@ -905,9 +915,12 @@ void CUIVideoFFmpeg::Stop()
 		av_packet_free(&packet);
 
 	{
-		//CScopedMutex m(s_audioSourceMutex);
-		//if (m_audioSrc)
-		//	static_cast<CMovieAudioSource*>(m_audioSrc.Ptr())->m_frameQueue.clear();
+		if (m_audioStream)
+			m_audioStream->Stop();
+
+		MutexLocker m(player->audioSourceMutex);
+		if (m_audioSrc)
+			m_audioSrc->m_frameQueue.clear();
 
 		player->videoPacketQueue.clear();
 		player->audioPacketQueue.clear();
@@ -922,7 +935,7 @@ void CUIVideoFFmpeg::Rewind()
 
 bool CUIVideoFFmpeg::IsPlaying() const
 {
-	return m_isFinished == false;
+	return m_playerCmd != PLAYER_CMD_NONE;
 }
 
 void CUIVideoFFmpeg::Present()

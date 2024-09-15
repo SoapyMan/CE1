@@ -85,6 +85,7 @@ public:
 	bool					m_bKeepAspect;
 	bool					m_bLooping;
 	bool					m_bPaused;
+	bool					m_bFinished;
 	UISkinTexture			m_pOverlay;
 	int*					m_pSwapBuffer;
 };
