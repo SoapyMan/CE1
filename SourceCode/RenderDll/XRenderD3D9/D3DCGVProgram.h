@@ -632,13 +632,22 @@ public:
 	{
 		CD3D9Renderer* r = gcpRendD3D;
 
-		if (r->m_RP.m_ClipPlaneEnabled == 2)
+		switch (ParamBind->m_eCGParamType)
 		{
-			// Transform clip plane to clip space
-			Plane srcPlane(r->m_RP.m_CurClipPlane.m_Normal, r->m_RP.m_CurClipPlane.m_Dist);
-			Plane transformedPlane = TransformPlane2(r->m_InvCameraProjMatrix, srcPlane);
-			r->m_pd3dDevice->SetClipPlane(0, &transformedPlane.n[0]);
-			r->m_RP.m_ClipPlaneWasOverrided = 2;
+		case ECGP_Matr_ViewProj:
+		case ECGP_Matr_View_IT:
+		case ECGP_Matr_View_I:
+		case ECGP_Matr_View_T:
+		case ECGP_Matr_View:
+			if (r->m_RP.m_ClipPlaneEnabled == 2)
+			{
+				// Transform clip plane to clip space
+				Plane srcPlane(r->m_RP.m_CurClipPlane.m_Normal, r->m_RP.m_CurClipPlane.m_Dist);
+				Plane transformedPlane = TransformPlane2(r->m_InvCameraProjMatrix, srcPlane);
+				r->m_pd3dDevice->SetClipPlane(0, &transformedPlane.n[0]);
+				r->m_RP.m_ClipPlaneWasOverrided = 2;
+			}
+			break;
 		}
 
 		LPDIRECT3DDEVICE9 dv = r->mfGetD3DDevice();
