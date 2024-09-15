@@ -45,6 +45,16 @@ bool CSDLMouse::Init(ISystem *pSystem)
 															  "Usage: i_mouse_smooth [0 or 1]\n"
 															  "Default is 0");
 
+	i_mouse_sensitivity_scale = m_pSystem->GetIConsole()->CreateVariable("i_mouse_sensitivity_scale", "1", VF_DUMPTODISK,
+																		"Sets mouse sensitivity scale.\n"
+																		"Usage: i_mouse_sensitivity_scale [0...1]\n"
+																		"Default is 1");
+
+	i_mouse_dynamic_sensitivity = m_pSystem->GetIConsole()->CreateVariable("i_mouse_dynamic_sensitivity", "1", VF_DUMPTODISK,
+																			"Allows or disallows dynamic sensitivity changes (made by SetScale).\n"
+																			"Usage: i_mouse_dynamic_sensitivity [0 or 1]\n"
+																			"Default is 1");
+
 	m_pLog->Log("Initializing mouse\n");
 
 	m_fVScreenX = 400.0f;
@@ -69,6 +79,34 @@ bool CSDLMouse::Init(ISystem *pSystem)
 	SDL_SetRelativeMouseMode(SDL_TRUE);
 
 	return (true);
+}
+
+float CSDLMouse::GetDeltaX()
+{
+	float sensitivity = m_fSensitivity * i_mouse_sensitivity_scale->GetFVal();
+	if (i_mouse_dynamic_sensitivity->GetIVal())
+		sensitivity *= m_fSensitivityScale;
+
+	return m_Deltas[0] * sensitivity;
+}
+
+float CSDLMouse::GetDeltaY()
+{
+	float sensitivity = m_fSensitivity * i_mouse_sensitivity_scale->GetFVal();
+	if (i_mouse_dynamic_sensitivity->GetIVal())
+		sensitivity *= m_fSensitivityScale;
+
+	return m_Deltas[1] * sensitivity;
+}
+
+float CSDLMouse::GetDeltaZ()
+{
+	float sensitivity = m_fSensitivity * i_mouse_sensitivity_scale->GetFVal();
+	if (i_mouse_dynamic_sensitivity->GetIVal())
+		sensitivity *= m_fSensitivityScale;
+
+	m_wheelChecked = true;
+	return m_Deltas[2] * sensitivity;
 }
 
 ///////////////////////////////////////////

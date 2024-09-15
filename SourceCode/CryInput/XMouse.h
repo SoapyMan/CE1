@@ -57,13 +57,9 @@ public:
 
 	bool	SetExclusive(bool value, void* hwnd = 0);
 
-	inline float	GetDeltaX() { return m_Deltas[0] * (m_fSensitivity * m_fSensitivityScale); }
-	inline float	GetDeltaY() { return m_Deltas[1] * (m_fSensitivity * m_fSensitivityScale); }
-	inline float	GetDeltaZ()
-	{
-		m_wheelChecked = true;
-		return m_Deltas[2] * (m_fSensitivity * m_fSensitivityScale);
-	}
+	float	GetDeltaX();
+	float	GetDeltaY();
+	float	GetDeltaZ();
 
 	void SetSensitvity(float fSensitivity)
 	{
@@ -120,6 +116,8 @@ private:
 	ICVar* i_mouse_smooth;
 	//! mouse mirror cvar
 	ICVar* i_mouse_mirror;
+	ICVar* i_mouse_sensitivity_scale;
+	ICVar* i_mouse_dynamic_sensitivity;
 
 	float					m_fDblClickTime;
 
