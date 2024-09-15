@@ -305,13 +305,6 @@ bool CD3D9Renderer::ChangeResolution(int nNewWidth, int nNewHeight, int nNewColD
 		nNewColDepth = 16;
 	else
 		nNewColDepth = 32;
-	if (!bFullScreen)
-	{
-		if (nNewWidth > m_deskwidth - 16)
-			nNewWidth = m_deskwidth - 16;
-		if (nNewHeight > m_deskheight - 32)
-			nNewHeight = m_deskheight - 32;
-	}
 
 	// Save the new dimensions
 	CRenderer::m_width = nNewWidth;
@@ -360,8 +353,8 @@ bool CD3D9Renderer::ChangeResolution(int nNewWidth, int nNewHeight, int nNewColD
 	{
 		const int x = (m_deskwidth - CRenderer::m_width) / 2;
 		const int y = (m_deskheight - CRenderer::m_height) / 2;
-		const int wdt = GetSystemMetrics(SM_CXDLGFRAME) * 2 + CRenderer::m_width;
-		const int hgt = GetSystemMetrics(SM_CYCAPTION) + GetSystemMetrics(SM_CXDLGFRAME) * 2 + CRenderer::m_height;
+		const int wdt = CRenderer::m_width;
+		const int hgt = CRenderer::m_height;
 		
 		if (IsWindow((HWND)m_hWnd))
 		{
