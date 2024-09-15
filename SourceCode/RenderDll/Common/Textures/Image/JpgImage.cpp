@@ -177,8 +177,8 @@ CImageJpgFile::CImageJpgFile(byte* ptr, long filesize)
 
 void WriteJPG(byte* dat, int wdt, int hgt, char* name)
 {
-	jpeg_compress_struct cinfo;
-	jpeg_error_mgr jerr;
+	jpeg_compress_struct cinfo{};
+	jpeg_error_mgr jerr{};
 
 	cinfo.err = jpeg_std_error(&jerr);
 	jpeg_create_compress(&cinfo);
@@ -186,16 +186,14 @@ void WriteJPG(byte* dat, int wdt, int hgt, char* name)
 	const int nChannels = 4;
 
 	cinfo.in_color_space = (nChannels == 1) ? JCS_GRAYSCALE : JCS_RGB;
+	cinfo.input_components = 3;
+	cinfo.num_components = 3;
 	jpeg_set_defaults(&cinfo);
-
-	cinfo.input_components = nChannels;
-	cinfo.num_components = nChannels;
 	cinfo.image_width = wdt;
 	cinfo.image_height = hgt;
-	cinfo.data_precision = 8;
 	cinfo.input_gamma = 1.0;
 
-	jpeg_set_quality(&cinfo, 85, FALSE);
+	jpeg_set_quality(&cinfo, 95, FALSE);
 
 	byte* mem = nullptr;
 	unsigned long memSize = 0;
@@ -203,13 +201,20 @@ void WriteJPG(byte* dat, int wdt, int hgt, char* name)
 
 	jpeg_start_compress(&cinfo, TRUE);
 
-	byte* curr_scanline = dat;
-
+	byte* scanLineDataIn = dat;
+	byte* scanLineData = new byte[wdt * 3];
 	for (int y = 0; y < hgt; y++)
 	{
-		jpeg_write_scanlines(&cinfo, &curr_scanline, 1);
-		curr_scanline += nChannels * wdt;
+		for (int x = 0; x < wdt; ++x)
+		{
+			scanLineData[x * 3 + 0] = scanLineDataIn[x * 4 + 0];
+			scanLineData[x * 3 + 1] = scanLineDataIn[x * 4 + 1];
+			scanLineData[x * 3 + 2] = scanLineDataIn[x * 4 + 2];
+		}
+		jpeg_write_scanlines(&cinfo, &scanLineData, 1);
+		scanLineDataIn += nChannels * wdt;
 	}
+	delete[] scanLineData;
 
 	jpeg_finish_compress(&cinfo);
 	jpeg_destroy_compress(&cinfo);

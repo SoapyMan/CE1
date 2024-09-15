@@ -1742,7 +1742,7 @@ void CD3D9Renderer::ScreenShot(const char* filename)
 	{
 		for (i = 0; i < 10000; i++)
 		{
-			sprintf(scname, "FarCry%04d.tga", i);
+			sprintf(scname, "FarCry%04d.jpg", i);
 
 			fp = fxopen(scname, "rb");
 			if (!fp)
