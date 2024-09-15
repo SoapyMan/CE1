@@ -9,6 +9,8 @@
 * Multiple buffer overflows found and fixed with ASAN
 * SDL2 for handling window and input
 * Code file structure cleanup
+* crysound replaced with FMOD, since it's the same thing
+* Bink & DivX replaced with FFMpeg
 
 ### Compatibilty changes
 
