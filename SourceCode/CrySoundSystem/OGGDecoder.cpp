@@ -6,12 +6,9 @@
 #include "OGGDecoder.h"
 #include "MusicSystem.h"
 
-COGGDecoder::COGGDecoder(IMusicSystem* pMusicSystem)
+COGGDecoder::COGGDecoder(ICryPak* pak)
 {
-	m_pMusicSystem = pMusicSystem;
-	ISystem* pSystem = m_pMusicSystem->GetSystem();
-	CRYASSERT(pSystem);
-	m_FileAccess.pPak = pSystem->GetIPak();
+	m_FileAccess.pPak = pak;
 	CRYASSERT(m_FileAccess.pPak);
 }
 

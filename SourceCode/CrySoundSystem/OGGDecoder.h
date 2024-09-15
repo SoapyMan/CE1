@@ -32,7 +32,7 @@ protected:
 protected:
 	virtual ~COGGDecoder();
 public:
-	COGGDecoder(IMusicSystem* pMusicSystem);
+	COGGDecoder(ICryPak* pak);
 	void Release() { delete this; }
 	//! Open a music-pattern-file.
 	bool Open(const char* pszFilename);

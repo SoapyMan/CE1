@@ -26,6 +26,7 @@
 #include "SoundSystem.h"
 #include "MusicSystem.h"
 #include "Sound.h"
+#include "SoundStream.h"
 #include <I3DEngine.h> //needed to check if the listener is in indoor or outdoor
 #include <ICryPak.h> //needed to check if the listener is in indoor or outdoor
 
@@ -462,6 +463,8 @@ void CSoundSystem::Reset()
 	GUARD_HEAP;
 	Silence();
 
+	CRYASSERT(m_soundStreams.size() == 0);
+
 	// for the sake of clarity...
 	m_vecSounds.clear();
 	m_lstSoundSpotsActive.clear();
@@ -472,6 +475,7 @@ void CSoundSystem::Reset()
 
 	m_autoStopSounds.clear();
 	m_stoppedSoundToBeDeleted.clear();
+	m_soundStreams.clear();
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -1205,7 +1209,7 @@ ISound* CSoundSystem::LoadSound(const char* szFile, int flags)
 		flags |= FLAG_SOUND_RADIUS;
 
 	CSoundBuffer* pSB;
-	SSoundBufferProps name = SSoundBufferProps(szFile, flags);
+	SSoundBufferProps name(szFile, flags);
 	SoundBufferPropsMapItor nit = m_soundBuffers.find(name);
 	if ((!(flags & FLAG_SOUND_STREAM)) && (nit != m_soundBuffers.end()))	// we cannot share streams !
 	{
@@ -1221,15 +1225,14 @@ ISound* CSoundSystem::LoadSound(const char* szFile, int flags)
 				return (nullptr);
 			}
 		}
-		else
-			if (flags & FLAG_SOUND_2D)
+		else if (flags & FLAG_SOUND_2D)
+		{
+			if (pSB->GetProps().nFlags & FLAG_SOUND_3D)
 			{
-				if (pSB->GetProps().nFlags & FLAG_SOUND_3D)
-				{
-					m_pILog->Log("\001 [ERROR] trying to load the same sound buffer file as 2d and 3d sound (%s)", szFile);
-					return (nullptr);
-				}
+				m_pILog->Log("\001 [ERROR] trying to load the same sound buffer file as 2d and 3d sound (%s)", szFile);
+				return (nullptr);
 			}
+		}
 
 		//create a new instance	
 		pSound = new CSound(this, szFile);
@@ -1972,6 +1975,25 @@ bool CSoundSystem::IsEnabled()
 {
 	return m_pCVARSoundEnable->GetIVal() != 0;
 }
+
+ISoundStream* CSoundSystem::CreateStream(ISoundStreamCallback* callback)
+{
+	if (!callback)
+		return nullptr;
+
+	CSoundStream* stream = new CSoundStream();
+	stream->Init(callback);
+
+	m_soundStreams.insert(stream);
+	return stream;
+}
+
+void CSoundSystem::DestroyStream(ISoundStream* stream)
+{
+	if(m_soundStreams.erase(stream))
+		delete stream;
+}
+
 
 #endif
 

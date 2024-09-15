@@ -128,52 +128,52 @@ public:
 	void		Release() {}
 	void		Update() {}
 	IMusicSystem* CreateMusicSystem() { return new CDummyMusicSystem(nullptr); }
-	ISound* LoadSound(const char* szFile, int nFlags) { return &m_sndDummy; }
+	ISound*		LoadSound(const char* szFile, int nFlags) { return &m_sndDummy; }
 	void		RemoveSound(int nSoundID) {}
-	ISound* GetSound(int nSoundID) { return &m_sndDummy; }
-	void SetMasterVolume(unsigned char nVol) { }
-	void SetMasterVolumeScale(float fScale, bool bForceRecalc = false) {}
-	void AddSoundFlags(int nSoundID, int nFlags) {}
+	ISound*		GetSound(int nSoundID) { return &m_sndDummy; }
+	void		SetMasterVolume(unsigned char nVol) { }
+	void		SetMasterVolumeScale(float fScale, bool bForceRecalc = false) {}
+	void		AddSoundFlags(int nSoundID, int nFlags) {}
 
 	void		PlaySound(int nSoundID) {}
 	//void		SetListener(const Vec3d &vPos,const Vec3d &vVel,const Vec3d& vAngles) {}
 	void		SetListener(const CCamera& cCam, const Vec3d& vVel) {}
 	Vec3d		GetListenerPos() { return(Vec3d(0, 0, 0)); }
 
-	bool	PlayMusic(const char* szFileName) { return (false); }
-	void	StopMusic() {}
-	void	Silence() {}
-	void	Pause(bool bPause, bool bResetVolume = false) {}
-	void	Mute(bool bMute) {}
+	bool		PlayMusic(const char* szFileName) { return (false); }
+	void		StopMusic() {}
+	void		Silence() {}
+	void		Pause(bool bPause, bool bResetVolume = false) {}
+	void		Mute(bool bMute) {}
 
 	//! Check for EAX support.
-	bool IsEAX(int version) { return(false); }
+	bool		IsEAX(int version) { return(false); }
 	//! Set EAX listener environment.
-	bool SetEaxListenerEnvironment(int nPreset, const SoundReverbProperties* pProps = nullptr, int nFlags = 0) { return(false); }
+	bool		SetEaxListenerEnvironment(int nPreset, const SoundReverbProperties* pProps = nullptr, int nFlags = 0) { return(false); }
 	//! Gets current EAX listener environment.
-	bool GetCurrentEaxEnvironment(int& nPreset, SoundReverbProperties& Props) { nPreset = 0; return (true); }
-	bool SetGroupScale(int nGroup, float fScale) { return true; }
-	void RecomputeSoundOcclusion(bool bRecomputeListener, bool bForceRecompute, bool bReset) {}
+	bool		GetCurrentEaxEnvironment(int& nPreset, SoundReverbProperties& Props) { nPreset = 0; return (true); }
+	bool		SetGroupScale(int nGroup, float fScale) { return true; }
+	void		RecomputeSoundOcclusion(bool bRecomputeListener, bool bForceRecompute, bool bReset) {}
 
 	//! get memory usage info
-	void	GetSoundMemoryUsageInfo(size_t& nCurrentMemory, size_t& nMaxMemory)
-	{
-		nCurrentMemory = nMaxMemory = 0;
-	}
+	void		GetSoundMemoryUsageInfo(size_t& nCurrentMemory, size_t& nMaxMemory) { nCurrentMemory = nMaxMemory = 0; }
 
-	int	GetUsedVoices() { return 0; }
-	float	GetCPUUsage() { return 0.0f; }
-	float GetMusicVolume() { return 0.0f; }
-	void CalcDirectionalAttenuation(Vec3d& Pos, Vec3d& Dir, float fConeInRadians) {}
-	float GetDirectionalAttenuationMaxScale() { return 0.0f; }
-	bool UsingDirectionalAttenuation() { return false; }
-	void GetMemoryUsage(class ICrySizer* pSizer) {}
+	int			GetUsedVoices() { return 0; }
+	float		GetCPUUsage() { return 0.0f; }
+	float		GetMusicVolume() { return 0.0f; }
+	void		CalcDirectionalAttenuation(Vec3d& Pos, Vec3d& Dir, float fConeInRadians) {}
+	float		GetDirectionalAttenuationMaxScale() { return 0.0f; }
+	bool		UsingDirectionalAttenuation() { return false; }
+	void		GetMemoryUsage(class ICrySizer* pSizer) {}
 	//! get the current area the listener is in
-	IVisArea* GetListenerArea() { return(nullptr); }
-	int SetMinSoundPriority(int nPriority) { return 0; };
+	IVisArea*	GetListenerArea() { return(nullptr); }
+	int			SetMinSoundPriority(int nPriority) { return 0; };
 
-	void LockResources() {};
-	void UnlockResources() {};
+	void		LockResources() {};
+	void		UnlockResources() {};
+
+	ISoundStream* CreateStream(ISoundStreamCallback* callback) { return nullptr; }
+	void		DestroyStream(ISoundStream* stream) {}
 
 private:
 	CDummySound m_sndDummy;

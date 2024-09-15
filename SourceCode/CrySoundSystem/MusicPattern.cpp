@@ -26,8 +26,7 @@ CMusicPattern::~CMusicPattern()
 	Close();
 }
 
-static bool inline
-FindFile(ICryPak* pPak, const char* pszFilename)
+static bool inline FindFile(ICryPak* pPak, const char* pszFilename)
 {
 	bool bRet(false);
 	FILE* pFile(pPak->FOpen(pszFilename, "rb"));
@@ -42,12 +41,12 @@ FindFile(ICryPak* pPak, const char* pszFilename)
 bool CMusicPattern::Open(const char* pszFilename)
 {
 	// no valid filename
-	if (0 == pszFilename || strlen(pszFilename) < 5)
+	if (!pszFilename || strlen(pszFilename) < 5)
 	{
 		return(false);
 	}
 
-	if (0 != m_pDecoder)
+	if (m_pDecoder)
 	{
 		Close();
 	}
@@ -57,15 +56,15 @@ bool CMusicPattern::Open(const char* pszFilename)
 	CRYASSERT(0 != pPak);
 
 	string strFilename(pszFilename);
-	if (0 != stricmp(strFilename.c_str() + strFilename.size() - 4, ".ogg"))
+	if (stricmp(strFilename.c_str() + strFilename.size() - 4, ".ogg"))
 	{
 		strFilename = strFilename.substr(0, strFilename.size() - 4) + ".ogg";
 	}
 
-	bool bWaveFallback(false != m_pMusicSystem->StreamOGG() && false == FindFile(pPak, strFilename.c_str()));
-	if (false == m_pMusicSystem->StreamOGG() || false != bWaveFallback)
+	bool bWaveFallback = (m_pMusicSystem->StreamOGG() && !FindFile(pPak, strFilename.c_str()));
+	if (!m_pMusicSystem->StreamOGG() || bWaveFallback)
 	{
-		if (false != bWaveFallback)
+		if (bWaveFallback)
 		{
 #ifdef LOG_MUSICFILES
 			m_pMusicSystem->LogMsg("OGG file %s not found... trying .wav", strFilename.c_str());
@@ -76,7 +75,7 @@ bool CMusicPattern::Open(const char* pszFilename)
 		strFilename = strFilename.substr(0, strFilename.size() - 4) + ".wav";
 
 		FILE* pFile(pPak->FOpen(strFilename.c_str(), "rb"));
-		if (0 != pFile)
+		if (pFile)
 		{
 			// check encoding and spawn PCM or ADPCM decoder accordingly
 			SWaveHdr header;
@@ -97,21 +96,20 @@ bool CMusicPattern::Open(const char* pszFilename)
 				m_pMusicSystem->LogMsg("Initialized ADPCM Decoder for %s", strFilename.c_str());
 #endif
 			}
+			else if (WAVE_FORMAT_PCM == header.wOne_0)
+			{
+				m_pDecoder = new CPCMDecoder(m_pMusicSystem->GetSystem()->GetIPak(), m_pMusicSystem->GetBytesPerSample());
+#ifdef LOG_MUSICFILES
+				m_pMusicSystem->LogMsg("Initialized PCM Decoder for %s", strFilename.c_str());
+#endif
+			}
 			else
-				if (WAVE_FORMAT_PCM == header.wOne_0)
-				{
-					m_pDecoder = new CPCMDecoder(m_pMusicSystem);
+			{
 #ifdef LOG_MUSICFILES
-					m_pMusicSystem->LogMsg("Initialized PCM Decoder for %s", strFilename.c_str());
+				m_pMusicSystem->LogMsg("AD(PCM) expected... failed to initialize %s", strFilename.c_str());
 #endif
-				}
-				else
-				{
-#ifdef LOG_MUSICFILES
-					m_pMusicSystem->LogMsg("AD(PCM) expected... failed to initialize %s", strFilename.c_str());
-#endif
-					return(false);
-				}
+				return(false);
+			}
 			pPak->FClose(pFile);
 		}
 		else
@@ -122,20 +120,20 @@ bool CMusicPattern::Open(const char* pszFilename)
 	else
 	{
 		// use OGG files for music streaming
-		if (0 != stricmp(strFilename.c_str() + strFilename.size() - 4, ".ogg"))
+		if (stricmp(strFilename.c_str() + strFilename.size() - 4, ".ogg"))
 		{
 			strFilename = strFilename.substr(0, strFilename.size() - 4) + ".ogg";
 		}
 
-		m_pDecoder = new COGGDecoder(m_pMusicSystem);
+		m_pDecoder = new COGGDecoder(m_pMusicSystem->GetSystem()->GetIPak());
 #ifdef LOG_MUSICFILES
 		m_pMusicSystem->LogMsg("Initialized OGG Decoder for %s", strFilename.c_str());
 #endif
 	}
 
-	if (0 != m_pDecoder)
+	if (m_pDecoder)
 	{
-		if (false == m_pDecoder->Open(strFilename.c_str()))
+		if (!m_pDecoder->Open(strFilename.c_str()))
 		{
 			m_pDecoder->Release();
 			m_pDecoder = nullptr;
@@ -148,7 +146,7 @@ bool CMusicPattern::Open(const char* pszFilename)
 	}
 
 	SMusicPatternFileInfo fileInfo;
-	if (false != m_pDecoder->GetFileInfo(fileInfo))
+	if (m_pDecoder->GetFileInfo(fileInfo))
 	{
 		m_nSamples = fileInfo.nSamples;
 #ifdef TEST

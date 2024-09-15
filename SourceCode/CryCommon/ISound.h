@@ -27,11 +27,13 @@
 //////////////////////////////////////////////////////////////////////////////////////////////
 //crysound definitions
 
-
-class	CCamera;
-struct	IMusicSystem;
-class	ICrySizer;
-struct	IVisArea;
+class CCamera;
+class ICrySizer;
+struct IVisArea;
+struct IMusicSystem;
+struct IMusicPatternDecoderInstance;
+struct ISoundStreamCallback;
+struct ISoundStream;
 
 //////////////////////////////////////////////////////////////////////
 #define MAX_SFX			1024
@@ -163,6 +165,8 @@ enum ESoundCallbackEvent
 //////////////////////////////////////////////////////////////////////////
 struct ISoundEventListener
 {
+	virtual ~ISoundEventListener() = default;
+
 	//! Callback event.
 	virtual void OnSoundEvent(ESoundCallbackEvent event, ISound* pSound) = 0;
 };
@@ -175,6 +179,8 @@ struct ISoundEventListener
 // Sound system interface
 struct ISoundSystem
 {
+	virtual ~ISoundSystem() = default;
+
 	virtual void Release() = 0;
 	virtual void Update() = 0;
 
@@ -187,33 +193,44 @@ struct ISoundSystem
 	@param nFlags sound flags combination
 	@return	sound interface
 	*/
-	virtual struct ISound* LoadSound(const char* szFile, int nFlags) = 0;
+	virtual ISound* LoadSound(const char* szFile, int nFlags) = 0;
+
+	/*! Load a sound from disk
+	@param callback - a callback interface to read stream from
+	@return	sound stream
+	*/
+	virtual ISoundStream* CreateStream(ISoundStreamCallback* callback) = 0;
+
+	/*! Destroys sound stream of the sound system
+	@param stream - stream pointer
+	*/
+	virtual void	DestroyStream(ISoundStream* stream) = 0;
 
 	/*! SetMasterVolume
 	@param nVol volume (0-255)
 	*/
-	virtual void SetMasterVolume(unsigned char nVol) = 0;
+	virtual void	SetMasterVolume(unsigned char nVol) = 0;
 
 	/*! Set the volume scale for all sounds with FLAG_SOUND_SCALABLE
 	@param fScale volume scale (default 1.0)
 	*/
-	virtual void SetMasterVolumeScale(float fScale, bool bForceRecalc = false) = 0;
+	virtual void	SetMasterVolumeScale(float fScale, bool bForceRecalc = false) = 0;
 
 	/*! Get a sound interface from the sound system
 	@param nSoundId sound id
 	*/
-	virtual struct ISound* GetSound(int nSoundID) = 0;
+	virtual ISound*	GetSound(int nSoundID) = 0;
 
 	/*! Play a sound from the sound system
 	@param nSoundId sound id
 	*/
-	virtual void PlaySound(int nSoundID) = 0;
+	virtual void	PlaySound(int nSoundID) = 0;
 
 	/*! Set the listener position
 	@param cCam camera position
 	@param vVel velocity
 	*/
-	virtual void SetListener(const CCamera& cCam, const Vec3& vVel) = 0;
+	virtual void	SetListener(const CCamera& cCam, const Vec3& vVel) = 0;
 
 	/*! to be called when something changes in the environment which could affect
 	sound occlusion, for example a door closes etc.
@@ -224,17 +241,17 @@ struct ISoundSystem
 	virtual void	RecomputeSoundOcclusion(bool bRecomputeListener, bool bForceRecompute, bool bReset = false) = 0;
 
 	//! Check for EAX support.
-	virtual bool IsEAX(int version) = 0;
+	virtual bool	IsEAX(int version) = 0;
 	//! Set EAX listener environment; one of the predefined presets
 	//! listened above or a custom environmental reverb set
-	virtual bool SetEaxListenerEnvironment(int nPreset, const SoundReverbProperties* pProps = nullptr, int nFlags = 0) = 0;
+	virtual bool	SetEaxListenerEnvironment(int nPreset, const SoundReverbProperties* pProps = nullptr, int nFlags = 0) = 0;
 
 	//! Gets current EAX listener environment or one of the predefined presets
 	//! used to save into the savegame
-	virtual bool GetCurrentEaxEnvironment(int& nPreset, SoundReverbProperties& Props) = 0;
+	virtual bool	GetCurrentEaxEnvironment(int& nPreset, SoundReverbProperties& Props) = 0;
 
 	//! Set the scaling factor for a specific scale group (0-31)
-	virtual bool SetGroupScale(int nGroup, float fScale) = 0;
+	virtual bool	SetGroupScale(int nGroup, float fScale) = 0;
 
 	//! Stop all sounds and music
 	virtual void	Silence() = 0;
@@ -249,24 +266,24 @@ struct ISoundSystem
 	virtual void	GetSoundMemoryUsageInfo(size_t& nCurrentMemory, size_t& nMaxMemory) = 0;
 
 	//! get number of voices playing
-	virtual int	GetUsedVoices() = 0;
+	virtual int		GetUsedVoices() = 0;
 
 	//! get cpu-usuage
 	virtual float	GetCPUUsage() = 0;
 
 	//! get music-volume
-	virtual float GetMusicVolume() = 0;
+	virtual float	GetMusicVolume() = 0;
 
 	//! sets parameters for directional attenuation (for directional microphone effect); set fConeInDegree to 0 to disable the effect
-	virtual void CalcDirectionalAttenuation(Vec3& Pos, Vec3& Dir, float fConeInRadians) = 0;
+	virtual void	CalcDirectionalAttenuation(Vec3& Pos, Vec3& Dir, float fConeInRadians) = 0;
 
 	//! returns the maximum sound-enhance-factor to use it in the binoculars as "graphical-equalizer"...
-	virtual float GetDirectionalAttenuationMaxScale() = 0;
+	virtual float	GetDirectionalAttenuationMaxScale() = 0;
 
 	//! returns if directional attenuation is used
-	virtual bool UsingDirectionalAttenuation() = 0;
+	virtual bool	UsingDirectionalAttenuation() = 0;
 
-	virtual void GetMemoryUsage(class ICrySizer* pSizer) = 0;
+	virtual void	GetMemoryUsage(class ICrySizer* pSizer) = 0;
 
 	//! get the current area the listener is in
 	virtual IVisArea* GetListenerArea() = 0;
@@ -275,76 +292,80 @@ struct ISoundSystem
 	virtual	Vec3	GetListenerPos() = 0;
 
 	//! returns true if sound is being debugged
-	virtual bool DebuggingSound() = 0;
+	virtual bool	DebuggingSound() = 0;
 
 	//! Set minimal priority for sounds to be played.
 	//! Sound`s with priority less then that will not be played.
 	//! @return previous minimal priority.
-	virtual int SetMinSoundPriority(int nPriority) = 0;
+	virtual int		SetMinSoundPriority(int nPriority) = 0;
 
 	//! Lock all sound buffer resources to prevent them from unloading (when restoring checkpoint).
-	virtual void LockResources() = 0;
+	virtual void	LockResources() = 0;
 	//! Unlock all sound buffer resources to prevent them from unloading.
-	virtual void UnlockResources() = 0;
+	virtual void	UnlockResources() = 0;
 };
 
 //////////////////////////////////////////////////////////////////////////
 // String Iterator
 struct IStringItVec
 {
-	virtual bool IsEnd() = 0;
-	virtual const char* Next() = 0;
-	virtual void MoveFirst() = 0;
-	virtual void AddRef() = 0;
-	virtual void Release() = 0;
+	virtual ~IStringItVec() = default;
+
+	virtual bool		IsEnd() = 0;
+	virtual const char*	Next() = 0;
+	virtual void		MoveFirst() = 0;
+	virtual void		AddRef() = 0;
+	virtual void		Release() = 0;
 };
 
 //////////////////////////////
 // A sound...
 struct ISound
 {
+	virtual ~ISound() = default;
+
 	// Register listener to the sound.
-	virtual void AddEventListener(ISoundEventListener* pListener) = 0;
-	virtual void RemoveEventListener(ISoundEventListener* pListener) = 0;
+	virtual void	AddEventListener(ISoundEventListener* pListener) = 0;
+	virtual void	RemoveEventListener(ISoundEventListener* pListener) = 0;
 
-	virtual bool IsPlaying() = 0;
-	virtual bool IsPlayingVirtual() = 0;
+	virtual bool	IsPlaying() = 0;
+	virtual bool	IsPlayingVirtual() = 0;
 	//! Return true if sound is now in the process of asynchronous loading of sound buffer.
-	virtual bool IsLoading() = 0;
+	virtual bool	IsLoading() = 0;
 	//! Return true if sound have already loaded sound buffer.
-	virtual bool IsLoaded() = 0;
+	virtual bool	IsLoaded() = 0;
 
-	virtual void Play(float fVolumeScale = 1.0f, bool bForceActiveState = true, bool bSetRatio = true) = 0;
-	virtual void PlayFadeUnderwater(float fVolumeScale = 1.0f, bool bForceActiveState = true, bool bSetRatio = true) = 0;
-	virtual void Stop() = 0;
+	virtual void	Play(float fVolumeScale = 1.0f, bool bForceActiveState = true, bool bSetRatio = true) = 0;
+	virtual void	PlayFadeUnderwater(float fVolumeScale = 1.0f, bool bForceActiveState = true, bool bSetRatio = true) = 0;
+	virtual void	Stop() = 0;
 
 	//! Get name of sound file.
 	virtual const char* GetName() = 0;
 	//! Get uniq id of sound.
-	virtual const int		GetId() = 0;
+	virtual const int	GetId() = 0;
 
 	//! Set looping mode of sound.
-	virtual void SetLoopMode(bool bLoop) = 0;
+	virtual void	SetLoopMode(bool bLoop) = 0;
 
-	virtual bool Preload() = 0;
+	virtual bool	Preload() = 0;
 
 	//! retrieves the currently played sample-pos, in milliseconds or bytes
 	virtual unsigned int GetCurrentSamplePos(bool bMilliSeconds = false) = 0;
 	//! set the currently played sample-pos in bytes or milliseconds
-	virtual void SetCurrentSamplePos(unsigned int nPos, bool bMilliSeconds) = 0;
+	virtual void	SetCurrentSamplePos(unsigned int nPos, bool bMilliSeconds) = 0;
 
 	//! sets automatic pitching amount (0-1000)
-	virtual void SetPitching(float fPitching) = 0;
+	virtual void	SetPitching(float fPitching) = 0;
 
 	//! sets the volume ratio
-	virtual void SetRatio(float fRatio) = 0;
+	virtual void	SetRatio(float fRatio) = 0;
 
 	//! Return frequency of sound.
-	virtual int	 GetFrequency() = 0;
+	virtual int		GetFrequency() = 0;
 
 	//! Set sound pitch.
 	//! 1000 is default pitch.
-	virtual void SetPitch(int nPitch) = 0;
+	virtual void	SetPitch(int nPitch) = 0;
 
 	//! Set panning values
 	virtual void	SetPan(int nPan) = 0;
@@ -355,18 +376,18 @@ struct ISound
 
 	//! Set Minimal/Maximal distances for sound.
 	//! Sound is not attenuated below minimal distance and not heared outside of max distance.
-	virtual void SetMinMaxDistance(float fMinDist, float fMaxDist) = 0;
+	virtual void	SetMinMaxDistance(float fMinDist, float fMaxDist) = 0;
 
 	//! Define sound cone.
 	//! Angles are in degrees, in range 0-360.
-	virtual void SetConeAngles(float fInnerAngle, float fOuterAngle) = 0;
+	virtual void	SetConeAngles(float fInnerAngle, float fOuterAngle) = 0;
 
 	//! Add sound to specific sound-scale-group (0-31)
-	virtual void AddToScaleGroup(int nGroup) = 0;
+	virtual void	AddToScaleGroup(int nGroup) = 0;
 	//! Remove sound from specific sound-scale-group (0-31)
-	virtual void RemoveFromScaleGroup(int nGroup) = 0;
+	virtual void	RemoveFromScaleGroup(int nGroup) = 0;
 	//! Set sound-scale-groups by bitfield.
-	virtual void SetScaleGroup(unsigned int nGroupBits) = 0;
+	virtual void	SetScaleGroup(unsigned int nGroupBits) = 0;
 
 	//! Set sound volume.
 	//! Range: 0-100
@@ -391,18 +412,18 @@ struct ISound
 	virtual void	SetDirection(const Vec3& dir) = 0;
 	virtual Vec3	GetDirection() = 0;
 
-	virtual void SetLoopPoints(const int iLoopStart, const int iLoopEnd) = 0;
-	virtual bool IsRelative() const = 0;
+	virtual void	SetLoopPoints(const int iLoopStart, const int iLoopEnd) = 0;
+	virtual bool	IsRelative() const = 0;
 
 	// Add/remove sounds.
-	virtual int	AddRef() = 0;
-	virtual int	Release() = 0;
+	virtual int		AddRef() = 0;
+	virtual int		Release() = 0;
 
 	/* Sets certain sound properties
 	//@param	fFadingValue	the value that should be used for fading / sound occlusion
 	// more to come
 	*/
-	virtual void SetSoundProperties(float fFadingValue) = 0;
+	virtual void	SetSoundProperties(float fFadingValue) = 0;
 
 	//virtual void	AddFlags(int nFlags) = 0;
 
@@ -413,13 +434,31 @@ struct ISound
 	virtual	void	FXSetParamEQ(float fCenter, float fBandwidth, float fGain) = 0;
 
 	//! returns the size of the stream in ms
-	virtual int GetLengthMs() = 0;
+	virtual int		GetLengthMs() = 0;
 
 	//! returns the size of the stream in bytes
-	virtual int GetLength() = 0;
+	virtual int		GetLength() = 0;
 
 	//! set sound priority (0-255)
 	virtual void	SetSoundPriority(unsigned char nSoundPriority) = 0;
+};
+
+struct ISoundStreamCallback
+{
+	virtual ~ISoundStreamCallback() = default;
+
+	virtual int		GetChannels() const = 0;
+	virtual int		GetSampleRate() const = 0;
+	virtual bool	ReadSamples(void* pBuffer, int nLength) = 0;
+};
+
+struct ISoundStream
+{
+	virtual ~ISoundStream() = default;
+
+	virtual ISoundStreamCallback* GetCallback() const = 0;
+	virtual void Play() = 0;
+	virtual void Stop() = 0;
 };
 
 //////////////////////////////////////////////////////////////////////////

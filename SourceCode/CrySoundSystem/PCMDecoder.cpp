@@ -5,12 +5,10 @@
 #include <ICryPak.h>
 #include "PCMDecoder.h"
 
-CPCMDecoder::CPCMDecoder(IMusicSystem* pMusicSystem) : m_b44KHz(true)
+CPCMDecoder::CPCMDecoder(ICryPak* pak, int bytesPerSample) : m_b44KHz(true)
 {
-	m_pMusicSystem = pMusicSystem;
-	ISystem* pSystem = m_pMusicSystem->GetSystem();
-	CRYASSERT(pSystem);
-	m_pPak = pSystem->GetIPak();
+	m_pPak = pak;
+	m_bytesPerSample = bytesPerSample;
 	CRYASSERT(m_pPak);
 	m_pFile = nullptr;
 }
@@ -173,7 +171,7 @@ bool CPCMDecoderInstance::GetPCMData(signed long* pDataOut, int nSamples, bool b
 	{
 		if (-m_nPos >= nSamples)
 		{
-			memset(pDataOut, 0, nSamples * m_pDecoder->m_pMusicSystem->GetBytesPerSample());
+			memset(pDataOut, 0, nSamples * m_pDecoder->m_bytesPerSample);
 			m_nPos += nSamples;
 			return true;
 		}
@@ -182,7 +180,7 @@ bool CPCMDecoderInstance::GetPCMData(signed long* pDataOut, int nSamples, bool b
 			nOfs = -m_nPos;
 			m_nPos = 0;
 			nSamples -= nOfs;
-			memset(pDataOut, 0, nOfs * m_pDecoder->m_pMusicSystem->GetBytesPerSample());
+			memset(pDataOut, 0, nOfs * m_pDecoder->m_bytesPerSample);
 		}
 	}
 	if (!SeekBytes(m_nPosBytes))
@@ -212,7 +210,7 @@ bool CPCMDecoderInstance::GetPCMData(signed long* pDataOut, int nSamples, bool b
 		nOfs += nSamplesToRead;
 		if (!bLoop)
 		{
-			memset(&(pDataOut[nOfs]), 0, (nSamples - nSamplesToRead) * m_pDecoder->m_pMusicSystem->GetBytesPerSample());
+			memset(&(pDataOut[nOfs]), 0, (nSamples - nSamplesToRead) * m_pDecoder->m_bytesPerSample);
 			break;
 		}
 		nSamples -= nSamplesToRead;

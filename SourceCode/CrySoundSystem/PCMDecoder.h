@@ -18,22 +18,22 @@ struct SPCMFileInfo
 class CPCMDecoder : public IMusicPatternDecoder
 {
 protected:
-	IMusicSystem* m_pMusicSystem;
-	ICryPak* m_pPak;
-	FILE* m_pFile;
-	int m_nPosBytes;	// current position (in bytes) in the file to reduce seeking-overhead
-	SMusicPatternFileInfo m_FileInfo;
-	SPCMFileInfo m_PCMFileInfo;
+	ICryPak*	m_pPak;
+	FILE*		m_pFile;
+	int			m_nPosBytes;	// current position (in bytes) in the file to reduce seeking-overhead
+	SMusicPatternFileInfo	m_FileInfo;
+	SPCMFileInfo			m_PCMFileInfo;
 	friend class CPCMDecoderInstance;
 private:
-	bool m_b44KHz;	//keeps track of encoded frequency
+	int			m_bytesPerSample;
+	bool		m_b44KHz;	//keeps track of encoded frequency
 
-	int ReadFile(void* pBuf, int nSize, int nCount, int* pNewFilePos = nullptr);
-	bool InitStreamWAV();
+	int			ReadFile(void* pBuf, int nSize, int nCount, int* pNewFilePos = nullptr);
+	bool		InitStreamWAV();
 protected:
 	virtual ~CPCMDecoder();
 public:
-	CPCMDecoder(IMusicSystem* pMusicSystem);
+	CPCMDecoder(ICryPak* pak, int bytesPerSample);
 	void Release() { delete this; }
 	//! Open a music-pattern-file.
 	bool Open(const char* pszFilename);

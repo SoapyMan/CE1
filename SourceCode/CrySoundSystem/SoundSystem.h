@@ -17,11 +17,12 @@
 
 #include "SoundSystemCommon.h"
 #include "SoundBuffer.h"
+#include <Cry_Camera.h>
 
 //////////////////////////////////////////////////////////////////////////////////////////////
-class		CSound;
+class	CSound;
 struct	ICVar;
-class		CCamera;
+class	CCamera;
 struct	SoundBuffer;
 struct	ITimer;
 struct	IStreamEngine;
@@ -31,11 +32,10 @@ struct	IStreamEngine;
 
 #define SETSCALEBIT(bit) (1<<bit)
 
-#include <Cry_Camera.h>
 #define CSSPEAKERCONFIG_5POINT1			0x00000001
 #define CSSPEAKERCONFIG_HEADPHONE		0x00000002
-#define CSSPEAKERCONFIG_MONO				0x00000003
-#define CSSPEAKERCONFIG_QUAD				0x00000004
+#define CSSPEAKERCONFIG_MONO			0x00000003
+#define CSSPEAKERCONFIG_QUAD			0x00000004
 #define CSSPEAKERCONFIG_STEREO			0x00000005
 #define CSSPEAKERCONFIG_SURROUND		0x00000006
 
@@ -55,39 +55,7 @@ enum ESoundActiveState
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////
-struct string_nocase_lt
-{
-	bool operator()(const string& s1, const string& s2) const
-	{
-		return stricmp(s1.c_str(), s2.c_str()) < 0;
-	}
-};
-/*
-struct SoundName
-{
-	SoundName(const char *_name,bool _b3d)
-	{
-		name=_name;
-		b3d=_b3d;
-	}
-	SoundName(const SoundName& o)
-	{
-		name=o.name;
-		b3d=o.b3d;
-	}
-	bool operator<(const SoundName& o)const
-	{
-		if(b3d!=o.b3d)
-		{
-			if (b3d)
-				return true;
-			return false;
-		}
-		return (stricmp(name.c_str(),o.name.c_str())<0);
-	}
-	string name;
-	bool b3d;
-};*/
+
 
 typedef std::map<SSoundBufferProps, CSoundBuffer*>	SoundBufferPropsMap;
 typedef SoundBufferPropsMap::iterator								SoundBufferPropsMapItor;
@@ -113,28 +81,28 @@ public:
 	ISystem* GetSystem() const { return m_pISystem; };
 
 	//! DSP unit callback for sfx-lowpass filter
-	void* DSPUnit_SFXFilter_Callback(void* pOriginalBuffer, void* pNewBuffer, int nLength);
+	void*	DSPUnit_SFXFilter_Callback(void* pOriginalBuffer, void* pNewBuffer, int nLength);
 
 	//! retrieve sfx-filter dsp unit
 	FSOUND_DSPUNIT* GetDSPUnitFilter() { return m_pDSPUnitSFXFilter; }
 
-	bool IsOK() { return m_bOK; }
+	bool	IsOK() { return m_bOK; }
 
 	//!	Release the sound
-	void Release();
+	void	Release();
 
 	//!	Update the sound
-	void Update();
+	void	Update();
 
 	/*! Create a music-system. You should only create one music-system at a time.
 	*/
 	IMusicSystem* CreateMusicSystem();
 
-	void SetSoundActiveState(CSound* pSound, ESoundActiveState State);
+	void	SetSoundActiveState(CSound* pSound, ESoundActiveState State);
 
 	//! Register new playing sound that should be auto stoped when it ends.
-	void RegisterAutoStopSound(CSound* pSound);
-	void UnregisterAutoStopSound(CSound* pSound);
+	void	RegisterAutoStopSound(CSound* pSound);
+	void	UnregisterAutoStopSound(CSound* pSound);
 
 
 	/*! Load a sound from disk
@@ -144,21 +112,24 @@ public:
 	*/
 	ISound* LoadSound(const char* szFile, int nFlags);
 
+	ISoundStream* CreateStream(ISoundStreamCallback* callback);
+	void	DestroyStream(ISoundStream* stream);
+
 	/*! Remove a sound from the sound system
 	@param nSoundId sound id
 	*/
-	void RemoveSound(int nSoundID);
+	void	RemoveSound(int nSoundID);
 
 	/*! Add sound flags (OR)
 	@param nSoundId sound id
 	@param nFlags		additional flags
 	*/
-	void AddSoundFlags(int nSoundID, int nFlags);
+	void	AddSoundFlags(int nSoundID, int nFlags);
 
 	/*! SetMasterVolume
 	@param nVol volume (0-255)
 	*/
-	void SetMasterVolume(unsigned char nVol)
+	void	SetMasterVolume(unsigned char nVol)
 	{
 		GUARD_HEAP;
 		FSOUND_SetSFXMasterVolume(nVol);
@@ -166,12 +137,12 @@ public:
 	/*! Set the volume scale for all sounds with FLAG_SOUND_SCALABLE
 	@param fScale volume scale (default 1.0)
 	*/
-	void SetMasterVolumeScale(float fScale, bool bForceRecalc = false);
+	void	SetMasterVolumeScale(float fScale, bool bForceRecalc = false);
 
 	/*! Remove a sound reference from the sound system
 	@param nSoundId sound id
 	*/
-	void RemoveReference(CSound*);
+	void	RemoveReference(CSound*);
 
 	/*! Get a sound interface from the sound system
 	@param nSoundId sound id
@@ -181,7 +152,7 @@ public:
 	/*! Play a sound from the sound system
 	@param nSoundId sound id
 	*/
-	void PlaySound(int nSoundID);
+	void	PlaySound(int nSoundID);
 
 	/*! Set the listener position
 	@param vPos position
@@ -189,11 +160,11 @@ public:
 	@param vAngles angles
 	*/
 	//void SetListener(const Vec3d &vPos, const Vec3d &vVel,const Vec3d& vAngles);
-	void SetListener(const CCamera& cCam, const Vec3d& vVel);
+	void	SetListener(const CCamera& cCam, const Vec3d& vVel);
 
 	//! Sets minimal priority for sound to be played.
-	int SetMinSoundPriority(int nPriority);
-	int GetMinSoundPriority() { return m_nMinSoundPriority; };
+	int		SetMinSoundPriority(int nPriority);
+	int		GetMinSoundPriority() { return m_nMinSoundPriority; };
 
 	/*! to be called when something changes in the environment which could affect
 	sound occlusion, for example a door closes etc.
@@ -215,13 +186,13 @@ public:
 	void	Reset();
 
 	//! Check for EAX support.
-	bool IsEAX(int version);
+	bool	IsEAX(int version);
 	//! Set EAX listener environment.
-	bool SetEaxListenerEnvironment(int nPreset, const SoundReverbProperties* pProps = nullptr, int nFlags = 0);
+	bool	SetEaxListenerEnvironment(int nPreset, const SoundReverbProperties* pProps = nullptr, int nFlags = 0);
 	//! Gets current EAX listener environment.
-	bool GetCurrentEaxEnvironment(int& nPreset, SoundReverbProperties& Props);
+	bool	GetCurrentEaxEnvironment(int& nPreset, SoundReverbProperties& Props);
 
-	bool SetGroupScale(int nGroup, float fScale);
+	bool	SetGroupScale(int nGroup, float fScale);
 
 	//! Will set speaker config
 	void	SetSpeakerConfig();
@@ -230,44 +201,44 @@ public:
 	void	GetSoundMemoryUsageInfo(size_t& nCurrentMemory, size_t& nMaxMemory);
 
 	//! get number of voices playing
-	int	GetUsedVoices();
+	int		GetUsedVoices();
 
 	//! get cpu-usuage
 	float	GetCPUUsage();
 
 	//! get music-volume
-	float GetMusicVolume();
+	float	GetMusicVolume();
 
 	//! sets parameters for directional attenuation (for directional microphone effect); set fConeInDegree to 0 to disable the effect
-	void CalcDirectionalAttenuation(Vec3d& Pos, Vec3d& Dir, float fConeInRadians);
+	void	CalcDirectionalAttenuation(Vec3d& Pos, Vec3d& Dir, float fConeInRadians);
 
 	//! returns the maximum sound-enhance-factor to use it in the binoculars as "graphical-equalizer"...
-	float GetDirectionalAttenuationMaxScale() { return m_fDirAttMaxScale; }
+	float	GetDirectionalAttenuationMaxScale() { return m_fDirAttMaxScale; }
 
 	//! returns if directional attenuation is used
-	bool UsingDirectionalAttenuation() { return (m_fDirAttCone != 0.0f); }
+	bool	UsingDirectionalAttenuation() { return (m_fDirAttCone != 0.0f); }
 
 	//! remove a sound
-	void RemoveBuffer(SSoundBufferProps& sn);
+	void	RemoveBuffer(SSoundBufferProps& sn);
 
 	//! compute memory-consumption
-	void GetMemoryUsage(class ICrySizer* pSizer);
+	void	GetMemoryUsage(class ICrySizer* pSizer);
 
 	//! get the current area the listener is in
 	IVisArea* GetListenerArea() { return(m_pVisArea); }
-	Vec3d			GetListenerPos() { return(m_cCam.GetPos()); }
+	Vec3d	GetListenerPos() { return(m_cCam.GetPos()); }
 
-	void BufferLoaded(CSoundBuffer* pSoundBuffer) { m_nBuffersLoaded++; }
-	void BufferUnloaded(CSoundBuffer* pSoundBuffer) { m_nBuffersLoaded--; }
+	void	BufferLoaded(CSoundBuffer* pSoundBuffer) { m_nBuffersLoaded++; }
+	void	BufferUnloaded(CSoundBuffer* pSoundBuffer) { m_nBuffersLoaded--; }
 
 	//! Returns true if sound can be stopped.
-	bool ProcessActiveSound(CSound* pSound);
+	bool	ProcessActiveSound(CSound* pSound);
 
-	void LockResources();
-	void UnlockResources();
+	void	LockResources();
+	void	UnlockResources();
 
 	//! Return true.
-	bool IsEnabled();
+	bool	IsEnabled();
 
 public:
 
@@ -291,6 +262,7 @@ public:
 	std::vector<_smart_ptr<CSound> > m_stoppedSoundToBeDeleted;
 	//int				m_nLastInactiveListPos;
 	std::vector<_smart_ptr<CSoundBuffer> > m_lockedResources;
+	std::set<ISoundStream*>	m_soundStreams;
 
 	// sfx-filter stuff //////////////////////////////////////////////////////
 	FSOUND_DSPUNIT* m_pDSPUnitSFXFilter;
