@@ -159,7 +159,7 @@ public:
 	virtual int	EnumAAFormats(TArray<SAAFormat>& Formats, bool bReset);
 
 	//! Changes resolution of the window/device (doen't require to reload the level
-	virtual bool	ChangeResolution(int nNewWidth, int nNewHeight, int nNewColDepth, int nNewRefreshHZ, bool bFullScreen);
+	virtual bool	ChangeResolution(int nNewWidth, int nNewHeight, int nNewColDepth, int nNewRefreshHZ, bool bFullScreen, bool bVSync);
 	virtual void	Reset(void) {};
 #ifdef USE_SDL
 	SDL_Window* SetMode(int x, int y, int width, int height, unsigned int cbpp, int zbpp, int sbits, bool fullscreen, HINSTANCE hinst, HWND Glhwnd);

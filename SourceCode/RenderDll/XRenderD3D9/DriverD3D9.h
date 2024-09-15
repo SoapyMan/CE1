@@ -779,11 +779,8 @@ public:
 	int m_nRecurs;
 
 public:
-#ifndef PS2	
 	virtual WIN_HWND Init(int x, int y, int width, int height, unsigned int cbpp, int zbpp, int sbits, bool fullscreen, WIN_HINSTANCE hinst, WIN_HWND Glhwnd = 0, WIN_HDC Glhdc = 0, WIN_HGLRC hGLrc = 0, bool bReInit = false);
-#else //PS2
-	virtual bool Init(int x, int y, int width, int height, unsigned int cbpp, int zbpp, int sbits, bool fullscreen, bool bReInit = false);
-#endif  //endif	
+
 	virtual bool SetCurrentContext(WIN_HWND hWnd);
 	virtual bool CreateContext(WIN_HWND hWnd, bool bAllowFSAA = false);
 	virtual bool DeleteContext(WIN_HWND hWnd);
@@ -803,7 +800,7 @@ public:
 	virtual int	EnumAAFormats(TArray<SAAFormat>& Formats, bool bReset);
 
 	//! Changes resolution of the window/device (doen't require to reload the level
-	virtual bool	ChangeResolution(int nNewWidth, int nNewHeight, int nNewColDepth, int nNewRefreshHZ, bool bFullScreen);
+	virtual bool	ChangeResolution(int nNewWidth, int nNewHeight, int nNewColDepth, int nNewRefreshHZ, bool bFullScreen, bool bVSync);
 	virtual void	Reset(void);
 	virtual void  WaitForDevice();
 

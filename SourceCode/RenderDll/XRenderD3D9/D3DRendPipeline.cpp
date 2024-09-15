@@ -1414,7 +1414,7 @@ void CD3D9Renderer::EF_SetClipPlane(bool bEnable, float* pPlane, bool bRefract)
 		p[2] = pPlane[2];
 		p[3] = pPlane[3];
 		//if (bRefract)
-		  //p[3] += 0.1f;
+		//	p[3] += 0.1f;
 		m_RP.m_ClipPlaneWasOverrided = 0;
 		m_RP.m_bClipPlaneRefract = bRefract;
 		m_RP.m_CurClipPlane.m_Normal.x = p[0];

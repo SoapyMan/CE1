@@ -467,7 +467,7 @@ void CGLRenderer::BeginFrame()
 	//  EF_ClearBuffers(true);
 }
 
-bool CGLRenderer::ChangeResolution(int nNewWidth, int nNewHeight, int nNewColDepth, int nNewRefreshHZ, bool bFullScreen)
+bool CGLRenderer::ChangeResolution(int nNewWidth, int nNewHeight, int nNewColDepth, int nNewRefreshHZ, bool bFullScreen, bool bVSync)
 {
 	return false;
 }

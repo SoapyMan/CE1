@@ -123,6 +123,7 @@ public:
 	ICVar* m_CVWidth;
 	ICVar* m_CVHeight;
 	ICVar* m_CVFullScreen;
+	ICVar* m_CVVSync;
 	ICVar* m_CVColorBits;
 
 	CXFont* m_pCurFont;
@@ -184,7 +185,7 @@ public:
 	virtual int	EnumAAFormats(TArray<SAAFormat>& Formats, bool bReset) = 0;
 
 	//! Changes resolution of the window/device (doen't require to reload the level
-	virtual bool	ChangeResolution(int nNewWidth, int nNewHeight, int nNewColDepth, int nNewRefreshHZ, bool bFullScreen) = 0;
+	virtual bool	ChangeResolution(int nNewWidth, int nNewHeight, int nNewColDepth, int nNewRefreshHZ, bool bFullScreen, bool bVSync) = 0;
 	virtual bool CheckDeviceLost() { return false; };
 
 	virtual void	ShutDown(bool bReInit = false) = 0;

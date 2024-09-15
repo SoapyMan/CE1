@@ -29,6 +29,8 @@
 
 #include "WaterVolumes.h"
 
+#include <SDL_timer.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////
 // RenderScene
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -43,10 +45,10 @@ void C3DEngine::Draw()
 	{
 		return;
 	}
-#if !defined(LINUX)
+
 	if (GetCVars()->e_sleep)
-		Sleep(GetCVars()->e_sleep);
-#endif
+		SDL_Delay(GetCVars()->e_sleep);
+
 	GetTimer()->MeasureTime("EnterDraw");
 
 	m_nRenderFrameID = GetRenderer()->GetFrameID();
@@ -869,15 +871,14 @@ void C3DEngine::DisplayInfo(float& fTextPosX, float& fTextPosY, float& fTextStep
 			iFrameRateCount = 0;
 			START_TIME = time;
 		}
-		else
-			if (diff < 0)		// timer was reseted
-			{
-				START_TIME = GetCurAsyncTimeSec() * 1000;
-				iFrameRateCount = 0;
-				fFrameRateSum = 0;
-				fFrameRateMin = 0;
-				fFrameRateMax = 0;
-			}
+		else if (diff < 0)		// timer was reseted
+		{
+			START_TIME = GetCurAsyncTimeSec() * 1000;
+			iFrameRateCount = 0;
+			fFrameRateSum = 0;
+			fFrameRateMin = 0;
+			fFrameRateMax = 0;
+		}
 	}
 
 	int nPolygons, nShadowVolPolys;

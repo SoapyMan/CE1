@@ -35,7 +35,7 @@ int CNULLRenderer::EnumDisplayFormats(TArray<SDispFormat>& Formats, bool bReset)
 	return 0;
 }
 
-bool CNULLRenderer::ChangeResolution(int nNewWidth, int nNewHeight, int nNewColDepth, int nNewRefreshHZ, bool bFullScreen)
+bool CNULLRenderer::ChangeResolution(int nNewWidth, int nNewHeight, int nNewColDepth, int nNewRefreshHZ, bool bFullScreen, bool bVSync)
 {
 	return false;
 }

@@ -72,7 +72,7 @@ public:
   //! Return all supported by video card video AA formats
   virtual int	EnumAAFormats(TArray<SAAFormat>& Formats, bool bReset) { return 0; }
 
-  virtual bool	ChangeResolution(int nNewWidth, int nNewHeight, int nNewColDepth, int nNewRefreshHZ, bool bFullScreen);
+  virtual bool	ChangeResolution(int nNewWidth, int nNewHeight, int nNewColDepth, int nNewRefreshHZ, bool bFullScreen, bool bVSync);
   virtual void	Reset (void) {};
   virtual	void	CheckError(const char *comment);
 

@@ -695,7 +695,7 @@ struct IRenderer//: public IRendererCallbackServer
 	virtual int	EnumDisplayFormats(TArray<SDispFormat>& Formats, bool bReset) = 0;
 
 	//! Changes resolution of the window/device (doen't require to reload the level
-	virtual bool	ChangeResolution(int nNewWidth, int nNewHeight, int nNewColDepth, int nNewRefreshHZ, bool bFullScreen) = 0;
+	virtual bool	ChangeResolution(int nNewWidth, int nNewHeight, int nNewColDepth, int nNewRefreshHZ, bool bFullScreen, bool bVSync) = 0;
 
 	//! Shut down the renderer
 	virtual void	Release() = 0;

@@ -286,7 +286,7 @@ void CD3D9Renderer::Reset(void)
 	hReturn = m_pd3dDevice->BeginScene();
 }
 
-bool CD3D9Renderer::ChangeResolution(int nNewWidth, int nNewHeight, int nNewColDepth, int nNewRefreshHZ, bool bFullScreen)
+bool CD3D9Renderer::ChangeResolution(int nNewWidth, int nNewHeight, int nNewColDepth, int nNewRefreshHZ, bool bFullScreen, bool bVSync)
 {
 	HRESULT hReturn;
 
@@ -296,6 +296,7 @@ bool CD3D9Renderer::ChangeResolution(int nNewWidth, int nNewHeight, int nNewColD
 	int nPrevHeight = CRenderer::m_height;
 	int nPrevColorDepth = CRenderer::m_cbpp;
 	bool bPrevFullScreen = m_bFullScreen;
+	bool bPrevVSync = m_VSync;
 	if (nNewWidth < 512)
 		nNewWidth = 512;
 	if (nNewHeight < 300)
@@ -317,6 +318,7 @@ bool CD3D9Renderer::ChangeResolution(int nNewWidth, int nNewHeight, int nNewColD
 	CRenderer::m_height = nNewHeight;
 	CRenderer::m_cbpp = nNewColDepth;
 	m_bFullScreen = bFullScreen;
+	m_VSync = bVSync;
 	if (bFullScreen && nNewColDepth == 16)
 	{
 		CRenderer::m_zbpp = 16;
@@ -339,6 +341,7 @@ bool CD3D9Renderer::ChangeResolution(int nNewWidth, int nNewHeight, int nNewColD
 	// Set up the presentation parameters
 	int nFlags = m_d3dpp.Flags;
 	BuildPresentParamsFromSettings();
+	EnableVSync(bVSync);
 	m_d3dpp.Flags = nFlags;
 
 	if (m_bFullScreen)
@@ -350,7 +353,7 @@ bool CD3D9Renderer::ChangeResolution(int nNewWidth, int nNewHeight, int nNewColD
 		if (m_nRecurs)
 			return false;
 		m_nRecurs = 1;
-		ChangeResolution(nPrevWidth, nPrevHeight, nPrevColorDepth, 0, bPrevFullScreen);
+		ChangeResolution(nPrevWidth, nPrevHeight, nPrevColorDepth, 0, bPrevFullScreen, bPrevVSync);
 		return false;
 	}
 	if (!bFullScreen)
@@ -386,6 +389,8 @@ bool CD3D9Renderer::ChangeResolution(int nNewWidth, int nNewHeight, int nNewColD
 		m_CVHeight->Set(CRenderer::m_height);
 	if (m_CVFullScreen)
 		m_CVFullScreen->Set(m_bFullScreen);
+	if (m_CVVSync)
+		m_CVVSync->Set(m_VSync);
 	if (m_CVColorBits)
 		m_CVColorBits->Set(CRenderer::m_cbpp);
 	ChangeViewport(0, 0, CRenderer::m_width, CRenderer::m_height);
@@ -635,39 +640,37 @@ void CD3D9Renderer::BeginFrame()
 			else
 				m_pd3dDevice->SetRenderState(D3DRS_MULTISAMPLEANTIALIAS, TRUE);
 		}
-		else
-			if (!m_bEditor)
+		else if (!m_bEditor)
+		{
+			if (CV_r_fsaa)
 			{
-				if (CV_r_fsaa)
+				TArray<SAAFormat> Formats;
+				int nNum = GetAAFormat(Formats, false);
+				iLog->Log(" Full scene AA: Enabled: %s (%d Quality)\n", Formats[nNum].szDescr, Formats[nNum].nQuality);
+				bool bChanged = false;
+				if (Formats[nNum].nQuality != m_FSAA_quality || Formats[nNum].nSamples != m_FSAA_samples)
 				{
-					TArray<SAAFormat> Formats;
-					int nNum = GetAAFormat(Formats, false);
-					iLog->Log(" Full scene AA: Enabled: %s (%d Quality)\n", Formats[nNum].szDescr, Formats[nNum].nQuality);
-					bool bChanged = false;
-					if (Formats[nNum].nQuality != m_FSAA_quality || Formats[nNum].nSamples != m_FSAA_samples)
-					{
-						bChanged = true;
-						ICVar* pVar = iConsole->GetCVar("r_FSAA_quality");
-						if (pVar)
-							pVar->Set(Formats[nNum].nQuality);
-						pVar = iConsole->GetCVar("r_FSAA_samples");
-						if (pVar)
-							pVar->Set(Formats[nNum].nSamples);
-					}
-					else
-						if (m_FSAA != CV_r_fsaa)
-							bChanged = true;
-					GetAAFormat(Formats, true);
-					if (bChanged)
-						ChangeResolution(m_CVWidth->GetIVal(), m_CVHeight->GetIVal(), m_CVColorBits->GetIVal(), 75, m_CVFullScreen->GetIVal() != 0);
+					bChanged = true;
+					ICVar* pVar = iConsole->GetCVar("r_FSAA_quality");
+					if (pVar)
+						pVar->Set(Formats[nNum].nQuality);
+					pVar = iConsole->GetCVar("r_FSAA_samples");
+					if (pVar)
+						pVar->Set(Formats[nNum].nSamples);
 				}
 				else
-					if (CV_r_fsaa != m_FSAA)
-					{
-						ChangeResolution(m_CVWidth->GetIVal(), m_CVHeight->GetIVal(), m_CVColorBits->GetIVal(), 75, m_CVFullScreen->GetIVal() != 0);
-						iLog->Log(" Full scene AA: Disabled\n");
-					}
+					if (m_FSAA != CV_r_fsaa)
+						bChanged = true;
+				GetAAFormat(Formats, true);
+				if (bChanged)
+					ChangeResolution(m_CVWidth->GetIVal(), m_CVHeight->GetIVal(), m_CVColorBits->GetIVal(), 75, m_CVFullScreen->GetIVal() != 0, m_CVVSync->GetIVal() != 0);
 			}
+			else if (CV_r_fsaa != m_FSAA)
+			{
+				ChangeResolution(m_CVWidth->GetIVal(), m_CVHeight->GetIVal(), m_CVColorBits->GetIVal(), 75, m_CVFullScreen->GetIVal() != 0, m_CVVSync->GetIVal() != 0);
+				iLog->Log(" Full scene AA: Disabled\n");
+			}
+		}
 		m_FSAA = CV_r_fsaa;
 		m_FSAA_quality = CV_r_fsaa_quality;
 		m_FSAA_samples = CV_r_fsaa_samples;
@@ -801,17 +804,12 @@ void CD3D9Renderer::BeginFrame()
 		}
 	}
 
-	if (CV_r_vsync != m_VSync)
-	{
-		m_VSync = CV_r_vsync;
-		EnableVSync(m_VSync ? true : false);
-	}
 	if (!m_bEditor)
 	{
 		if (m_CVWidth && m_CVHeight && m_CVFullScreen && m_CVColorBits)
 		{
-			if (m_CVWidth->GetIVal() != CRenderer::m_width || m_CVHeight->GetIVal() != CRenderer::m_height || m_CVFullScreen->GetIVal() != (int)m_bFullScreen || m_CVColorBits->GetIVal() != CRenderer::m_cbpp)
-				ChangeResolution(m_CVWidth->GetIVal(), m_CVHeight->GetIVal(), m_CVColorBits->GetIVal(), 75, m_CVFullScreen->GetIVal() != 0);
+			if (m_CVWidth->GetIVal() != CRenderer::m_width || m_CVHeight->GetIVal() != CRenderer::m_height || m_CVFullScreen->GetIVal() != (int)m_bFullScreen || m_CVVSync->GetIVal() != (int)m_VSync || m_CVColorBits->GetIVal() != CRenderer::m_cbpp)
+				ChangeResolution(m_CVWidth->GetIVal(), m_CVHeight->GetIVal(), m_CVColorBits->GetIVal(), 75, m_CVFullScreen->GetIVal() != 0, m_CVVSync->GetIVal() != 0);
 		}
 	}
 

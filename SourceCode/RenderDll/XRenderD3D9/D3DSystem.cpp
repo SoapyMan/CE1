@@ -51,7 +51,7 @@ void CD3D9Renderer::GetClientRect(RECT* rect)
 
 void CD3D9Renderer::DisplaySplash()
 {
-#ifdef _WIN32
+#if 0 //def _WIN32
 #ifdef GAME_IS_FARCRY
 	HBITMAP hImage = (HBITMAP)LoadImage(GetModuleHandle(0), "fcsplash.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
 #else
@@ -801,6 +801,7 @@ WIN_HWND CD3D9Renderer::Init(int x, int y, int width, int height, unsigned int c
 	m_CVWidth = iConsole->GetCVar("r_Width");
 	m_CVHeight = iConsole->GetCVar("r_Height");
 	m_CVFullScreen = iConsole->GetCVar("r_FullScreen");
+	m_CVVSync = iConsole->GetCVar("r_VSync");
 	m_CVColorBits = iConsole->GetCVar("r_ColorBits");
 
 	iLog->Log("Direct3D9 driver is creating...\n");
@@ -835,6 +836,8 @@ WIN_HWND CD3D9Renderer::Init(int x, int y, int width, int height, unsigned int c
 	CRenderer::m_zbpp = zbpp;
 	CRenderer::m_sbpp = sbits;
 	m_bFullScreen = fullscreen;
+	EnableVSync(m_CVVSync->GetIVal());
+
 	while (true)
 	{
 		if (!SetWindow(width, height, fullscreen, Glhwnd))
@@ -891,25 +894,21 @@ WIN_HWND CD3D9Renderer::Init(int x, int y, int width, int height, unsigned int c
 	int nGPU = m_Features & RFT_HW_MASK;
 	if (nGPU == RFT_HW_NV4X)
 		iLog->Log(" Use Hardware Shaders for NV4x GPU\n");
-	else
-		if (nGPU == RFT_HW_GFFX)
-			iLog->Log(" Use Hardware Shaders for NV3x GPU\n");
+	else if (nGPU == RFT_HW_GFFX)
+		iLog->Log(" Use Hardware Shaders for NV3x GPU\n");
+	else if (nGPU == RFT_HW_GF2)
+		iLog->Log(" Use Hardware Shaders for NV1x GPU\n");
+	else if (nGPU == RFT_HW_GF3)
+		iLog->Log(" Use Hardware Shaders for NV2x GPU\n");
+	else if (nGPU == RFT_HW_RADEON)
+	{
+		if (m_bDeviceSupports_PS2X)
+			iLog->Log(" Use Hardware Shaders for ATI R420 GPU\n");
 		else
-			if (nGPU == RFT_HW_GF2)
-				iLog->Log(" Use Hardware Shaders for NV1x GPU\n");
-			else
-				if (nGPU == RFT_HW_GF3)
-					iLog->Log(" Use Hardware Shaders for NV2x GPU\n");
-				else
-					if (nGPU == RFT_HW_RADEON)
-					{
-						if (m_bDeviceSupports_PS2X)
-							iLog->Log(" Use Hardware Shaders for ATI R420 GPU\n");
-						else
-							iLog->Log(" Use Hardware Shaders for ATI R300 GPU\n");
-					}
-					else
-						iLog->Log(" Hardware Shaders are not supported\n");
+			iLog->Log(" Use Hardware Shaders for ATI R300 GPU\n");
+	}
+	else
+		iLog->Log(" Hardware Shaders are not supported\n");
 	if (D3DSHADER_VERSION_MAJOR(di->Caps.PixelShaderVersion) >= 3)
 	{
 		if (CV_r_shadowtype == 0)
@@ -918,13 +917,12 @@ WIN_HWND CD3D9Renderer::Init(int x, int y, int width, int height, unsigned int c
 		m_bDeviceSupports_PS30 = true;
 		m_bDeviceSupports_PS2X = false;
 	}
-	else
-		if (D3DSHADER_VERSION_MAJOR(di->Caps.PixelShaderVersion) >= 2)
-		{
-			if (CV_r_shadowtype == 0)
-				m_Features |= RFT_SHADOWMAP_SELFSHADOW;
-			m_Features |= RFT_HW_PS20;
-		}
+	else if (D3DSHADER_VERSION_MAJOR(di->Caps.PixelShaderVersion) >= 2)
+	{
+		if (CV_r_shadowtype == 0)
+			m_Features |= RFT_SHADOWMAP_SELFSHADOW;
+		m_Features |= RFT_HW_PS20;
+	}
 #ifndef USE_HDR
 	m_Features &= ~RFT_HW_HDR;
 #endif
@@ -1005,44 +1003,41 @@ WIN_HWND CD3D9Renderer::Init(int x, int y, int width, int height, unsigned int c
 	char* str;
 	if (nGPU == RFT_HW_GF2)
 		str = "Not using pixel shaders";
-	else
-		if (CV_r_nops20)
-			str = "Replace PS.2.0 to PS.1.1";
+	else if (CV_r_nops20)
+		str = "Replace PS.2.0 to PS.1.1";
+	else if (CV_r_Quality_BumpMapping == 3)
+	{
+		if (m_bDeviceSupports_PS30)
+			str = "PS.3.0, PS.2.0 and PS.1.1";
 		else
-			if (CV_r_Quality_BumpMapping == 3)
+			if (m_bDeviceSupports_PS2X)
 			{
-				if (m_bDeviceSupports_PS30)
-					str = "PS.3.0, PS.2.0 and PS.1.1";
+				if (nGPU == RFT_HW_GFFX)
+					str = "PS.2.A, PS.2.0 and PS.1.1";
 				else
-					if (m_bDeviceSupports_PS2X)
-					{
-						if (nGPU == RFT_HW_GFFX)
-							str = "PS.2.A, PS.2.0 and PS.1.1";
-						else
-							str = "PS.2.B, PS.2.0 and PS.1.1";
-					}
-					else
-						str = "PS.2.0 and PS.1.1";
+					str = "PS.2.B, PS.2.0 and PS.1.1";
 			}
 			else
-				str = "PS1.1 only";
+				str = "PS.2.0 and PS.1.1";
+	}
+	else
+		str = "PS1.1 only";
+
 	iLog->Log(" Pixel shaders usage: %s\n", str);
 
 	if (nGPU == RFT_HW_GF2)
 		str = "Not using vertex shaders";
-	else
-		if (CV_r_nops20)
-			str = "Replace VS.2.0 to VS.1.1";
+	else if (CV_r_nops20)
+		str = "Replace VS.2.0 to VS.1.1";
+	else if (CV_r_Quality_BumpMapping == 3)
+	{
+		if (D3DSHADER_VERSION_MAJOR(di->Caps.VertexShaderVersion) >= 3)
+			str = "VS.3.0, VS.2.0 and VS.1.1";
 		else
-			if (CV_r_Quality_BumpMapping == 3)
-			{
-				if (D3DSHADER_VERSION_MAJOR(di->Caps.VertexShaderVersion) >= 3)
-					str = "VS.3.0, VS.2.0 and VS.1.1";
-				else
-					str = "VS.2.0 and VS.1.1";
-			}
-			else
-				str = "VS1.1 only";
+			str = "VS.2.0 and VS.1.1";
+	}
+	else
+		str = "VS1.1 only";
 	iLog->Log(" Vertex shaders usage: %s\n", str);
 	iLog->Log(" Shadow maps type: %s\n", (m_Features & RFT_DEPTHMAPS) ? "Depth maps" : (m_Features & RFT_SHADOWMAP_SELFSHADOW) ? "Mixed Depth/2D maps" : "2D shadow maps");
 	iLog->Log(" Stencil shadows type: %s\n", m_d3dCaps.StencilCaps & D3DSTENCILCAPS_TWOSIDED ? "Two sided" : "Single sided");

@@ -494,13 +494,13 @@ void CViewPane::SetFullscreenViewport( bool b )
 		m_viewport->SetParent( 0 );
 		m_viewport->ModifyStyle( WS_CHILD,WS_POPUP,0 );
 		
-		GetIEditor()->GetRenderer()->ChangeResolution( 800,600,32,80,true );
+		GetIEditor()->GetRenderer()->ChangeResolution( 800,600,32,80,true,false );
 
 	}
 	else
 	{
 		m_viewport->SetParent( this );
 		m_viewport->ModifyStyle( WS_POPUP,WS_CHILD,0 );
-		GetIEditor()->GetRenderer()->ChangeResolution( 800,600,32,80,false );
+		GetIEditor()->GetRenderer()->ChangeResolution( 800,600,32,80,false,false );
 	}
 }
