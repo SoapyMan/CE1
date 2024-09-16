@@ -20,6 +20,8 @@
 #include <process.h>
 #endif
 
+#include "TEAEncoder.h"
+
 //#define FARCRY_CD_CHECK_RUSSIAN
 #define FARCRY_CD_LABEL _T("FARCRY_1")
 
@@ -29,30 +31,6 @@
 //////////////////////////////////////////////////////////////////////////
 void AuthCheckFunction(void* data)
 {
-	// src and trg can be the same pointer (in place encryption)
-	// len must be in bytes and must be multiple of 8 byts (64bits).
-	// key is 128bit:  int key[4] = {n1,n2,n3,n4};
-	// void encipher(unsigned int *const v,unsigned int *const w,const unsigned int *const k )
-#define TEA_ENCODE( src,trg,len,key ) {\
-	unsigned int *v = (src), *w = (trg), *k = (key), nlen = (len) >> 3; \
-	unsigned int delta=0x9E3779B9,a=k[0],b=k[1],c=k[2],d=k[3]; \
-	while (nlen--) {\
-	unsigned int y=v[0],z=v[1],n=32,sum=0; \
-	while(n-->0) { sum += delta; y += (z << 4)+a ^ z+sum ^ (z >> 5)+b; z += (y << 4)+c ^ y+sum ^ (y >> 5)+d; } \
-	w[0]=y; w[1]=z; v+=2,w+=2; }}
-
-	// src and trg can be the same pointer (in place decryption)
-	// len must be in bytes and must be multiple of 8 byts (64bits).
-	// key is 128bit: int key[4] = {n1,n2,n3,n4};
-	// void decipher(unsigned int *const v,unsigned int *const w,const unsigned int *const k)
-#define TEA_DECODE( src,trg,len,key ) {\
-	unsigned int *v = (src), *w = (trg), *k = (key), nlen = (len) >> 3; \
-	unsigned int delta=0x9E3779B9,a=k[0],b=k[1],c=k[2],d=k[3]; \
-	while (nlen--) { \
-	unsigned int y=v[0],z=v[1],sum=0xC6EF3720,n=32; \
-	while(n-->0) { z -= (y << 4)+c ^ y+sum ^ (y >> 5)+d; y -= (z << 4)+a ^ z+sum ^ (z >> 5)+b; sum -= delta; } \
-	w[0]=y; w[1]=z; v+=2,w+=2; }}
-
 	// Data assumed to be 32 bytes.
 	int key1[4] = { 1873613783,235688123,812763783,1745863682 };
 	TEA_DECODE((unsigned int*)data, (unsigned int*)data, 32, (unsigned int*)key1);

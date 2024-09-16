@@ -20,6 +20,7 @@
 #include "Client.h"
 #include "Server.h"
 #include "ServerSlot.h"
+#include "TEAEncoder.h"
 
 #include "ICryPak.h"
 #include <algorithm>

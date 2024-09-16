@@ -654,43 +654,35 @@ CCachedFileDataPtr CCryPak::GetFileData(const char* szName)
 #if defined(LINUX)
 	replaceDoublePathFilename((char*)szName);
 #endif
-	unsigned nNameLen = (unsigned)strlen(szName);
+	const int nNameLen = strlen(szName);
+
 	AUTO_LOCK(m_csZips);
+
 	// scan through registered pak files and try to find this file
 	for (ZipArray::reverse_iterator itZip = m_arrZips.rbegin(); itZip != m_arrZips.rend(); ++itZip)
 	{
-		size_t nBindRootLen = itZip->strBindRoot.length();
-#if defined(LINUX)
-		if (nNameLen > nBindRootLen && !comparePathNames(itZip->strBindRoot.c_str(), szName, nBindRootLen))
-#else
-		if (nNameLen > nBindRootLen && !memcmp(itZip->strBindRoot.c_str(), szName, nBindRootLen))
-#endif
-		{
-			//const char	*szDebug1=itZip->strBindRoot.c_str();
-			//const char	*szDebug2=itZip->pZip->GetFilePath();
-#ifdef __linux
-			if (*(szName + nBindRootLen) == '/')
-			{
-				nBindRootLen++;
-			}
-#endif
-			ZipDir::FileEntry* pFileEntry = itZip->pZip->FindFile(szName + nBindRootLen);
-			if (pFileEntry)
-			{
-				CCachedFileData Result(nullptr, itZip->pZip, pFileEntry);
-				AUTO_LOCK(m_csCachedFiles);
+		std::string_view prefix(itZip->strBindRoot);
+		size_t nBindRootLen = prefix.length();
+		if (nNameLen < nBindRootLen || !std::equal(prefix.begin(), prefix.end(), szName))
+			continue;
 
-				CachedFileDataSet::iterator it = m_setCachedFiles.find(&Result);
-				if (it != m_setCachedFiles.end())
-				{
-					CRYASSERT((*it)->GetFileEntry() == pFileEntry); // cached data
-					return *it;
-				}
-				else
-					return new CCachedFileData(this, itZip->pZip, pFileEntry);
-			}
+		ZipDir::Cache* pZip = itZip->pZip;
+		ZipDir::FileEntry* pFileEntry = pZip->FindFile(szName + nBindRootLen);
+		if (!pFileEntry)
+			continue;
+
+		{
+			AUTO_LOCK(m_csCachedFiles);
+			CCachedFileData Result(nullptr, pZip, pFileEntry);
+			CachedFileDataSet::iterator it = m_setCachedFiles.find(&Result);
+			if (it == m_setCachedFiles.end())
+				return new CCachedFileData(this, pZip, pFileEntry);
+
+			CRYASSERT((*it)->GetFileEntry() == pFileEntry); // cached data
+			return *it;
 		}
 	}
+
 	return nullptr;
 }
 
