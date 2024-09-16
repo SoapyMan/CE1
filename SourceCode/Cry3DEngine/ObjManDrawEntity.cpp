@@ -1033,74 +1033,89 @@ void CObjManager::SetupEntityShadowMapping(IEntityRender* pEnt, SRendParams* pDr
 	//	bool bPassiveShadowReseiver = 
 		//	GetCVars()->e_active_shadow_maps_receving ? (pEnt->GetEntityRenderType()!=eERType_Unknown) : true;
 
-		// Init ShadowMapInfo structure
-	if (!pEnt->GetEntityRS()->pShadowMapInfo)
-		pEnt->GetEntityRS()->pShadowMapInfo = new IEntityRenderState::ShadowMapInfo(); // leak
+	IEntityRenderState::ShadowMapInfo* smInfo = pEnt->GetEntityRS()->pShadowMapInfo;
+
+	// Init ShadowMapInfo structure
+	if (!smInfo)
+	{
+		smInfo = new IEntityRenderState::ShadowMapInfo();
+		pEnt->GetEntityRS()->pShadowMapInfo = smInfo;// leak
+	}
 
 	// this list will contain shadow map casters
-	if (!pEnt->GetEntityRS()->pShadowMapInfo->pShadowMapCasters)
-		pEnt->GetEntityRS()->pShadowMapInfo->pShadowMapCasters = new list2<ShadowMapLightSourceInstance>;
+	if (!smInfo->pShadowMapCasters)
+		smInfo->pShadowMapCasters = new list2<ShadowMapLightSourceInstance>;
 	else
-		pEnt->GetEntityRS()->pShadowMapInfo->pShadowMapCasters->Clear();
+		smInfo->pShadowMapCasters->Clear();
 
 	if (pEnt->GetRndFlags() & ERF_CASTSHADOWMAPS)
-	{ // make shadow frustum to project shadow to the world (and this entity)
+	{ 
+		// make shadow frustum to project shadow to the world (and this entity)
 		ProcessShadowMapCasting(pEnt, pDLight);
 		if (GetCVars()->e_entities_debug)
 			m_lstDebugEntityList.Add(pEnt);
 	}
-	else if (pEnt->GetEntityRS()->pShadowMapInfo->pShadowMapFrustumContainer && !bLMapGeneration)
-	{ // unmake if not needed
-		delete pEnt->GetEntityRS()->pShadowMapInfo->pShadowMapFrustumContainer->m_LightFrustums.Get(0)->pEntityList;
-		pEnt->GetEntityRS()->pShadowMapInfo->pShadowMapFrustumContainer->m_LightFrustums.Get(0)->pEntityList = 0;
-		delete pEnt->GetEntityRS()->pShadowMapInfo->pShadowMapFrustumContainer->m_LightFrustums.Get(0)->pModelsList;
-		pEnt->GetEntityRS()->pShadowMapInfo->pShadowMapFrustumContainer->m_LightFrustums.Get(0)->pModelsList = 0;
+	else if (smInfo->pShadowMapFrustumContainer && !bLMapGeneration)
+	{ 
+		// unmake if not needed
+		SAFE_DELETE(smInfo->pShadowMapFrustumContainer->m_LightFrustums.Get(0)->pEntityList);
+		SAFE_DELETE(smInfo->pShadowMapFrustumContainer->m_LightFrustums.Get(0)->pModelsList);
 
 		if (pEnt->GetEntityRenderType() != eERType_Vegetation) // vegetations share containers
-			delete pEnt->GetEntityRS()->pShadowMapInfo->pShadowMapFrustumContainer;
-		pEnt->GetEntityRS()->pShadowMapInfo->pShadowMapFrustumContainer = 0;
+			delete smInfo->pShadowMapFrustumContainer;
+		smInfo->pShadowMapFrustumContainer = nullptr;
 	}
 
 	if (pEnt->GetRndFlags() & ERF_RECVSHADOWMAPS_ACTIVE && GetCVars()->e_active_shadow_maps_receving)
-	{ // make frustum containing all potential shadow casters (even not marked for shadow casting)
+	{ 
+		// make frustum containing all potential shadow casters (even not marked for shadow casting)
 		ProcessActiveShadowReceiving(pEnt, fEntDistance, pDLight, bLMapGeneration);
 	}
 	else if (pEnt->GetRndFlags() & ERF_RECVSHADOWMAPS && GetCVars()->e_shadow_maps_receiving)
-	{ // make list of potential active shadow map casters to cast to this entity
-		MakeShadowMapInstancesList(pEnt, fEntDistance, pEnt->GetEntityRS()->pShadowMapInfo->pShadowMapCasters,
-			SMC_STATICS | SMC_DYNAMICS, pDLight);
-	}
-	else if (pEnt->GetEntityRS()->pShadowMapInfo->pShadowMapCasters && !bLMapGeneration && !(pEnt->GetRndFlags() & ERF_CASTSHADOWMAPS))
 	{
-		pEnt->GetEntityRS()->pShadowMapInfo->pShadowMapCasters->Clear();
-		delete pEnt->GetEntityRS()->pShadowMapInfo->pShadowMapCasters;
-		pEnt->GetEntityRS()->pShadowMapInfo->pShadowMapCasters = 0;
+		// make list of potential active shadow map casters to cast to this entity
+		MakeShadowMapInstancesList(pEnt, fEntDistance, smInfo->pShadowMapCasters, SMC_STATICS | SMC_DYNAMICS, pDLight);
+	}
+	else if (!bLMapGeneration && !(pEnt->GetRndFlags() & ERF_CASTSHADOWMAPS))
+	{
+		SAFE_DELETE(smInfo->pShadowMapCasters);
 	}
 
 	// pass result to output
-	list2<struct ShadowMapLightSourceInstance>* pLsList = pEnt->GetEntityRS()->pShadowMapInfo->pShadowMapCasters;
-	if (pLsList && pLsList->Count() && pLsList->Get(0)->m_pLS && pLsList->Get(0)->m_pLS->GetShadowMapFrustum())
+	list2<ShadowMapLightSourceInstance>* pLsList = smInfo->pShadowMapCasters;
+	if (pLsList && pLsList->Count())
 	{
-		CRYASSERT(pLsList->Get(0)->m_pReceiver == pEnt || !pLsList->Get(0)->m_pReceiver);
-		if (pLsList->Count() == 1 &&
-			pLsList->Get(0)->m_pLS->GetShadowMapFrustum()->pOwner == pLsList->Get(0)->m_pReceiver &&
-			!(pLsList->Get(0)->m_pLS->GetShadowMapFrustum()->dwFlags & SMFF_ACTIVE_SHADOW_MAP))
+		ShadowMapLightSourceInstance* smLSInst = pLsList->Get(0);
+		ShadowMapLightSource* smLS = smLSInst->m_pLS;
+		if(smLS && smLS->GetShadowMapFrustum())
 		{
-			CRYASSERT(pDrawParams->pShadowMapCasters == nullptr); // skip single self shadowing pass
+			CRYASSERT(smLSInst->m_pReceiver == pEnt || !smLSInst->m_pReceiver);
+			if (pLsList->Count() == 1 &&
+				smLS->GetShadowMapFrustum()->pOwner == smLSInst->m_pReceiver &&
+				!(smLS->GetShadowMapFrustum()->dwFlags & SMFF_ACTIVE_SHADOW_MAP))
+			{
+				CRYASSERT(pDrawParams->pShadowMapCasters == nullptr); // skip single self shadowing pass
+			}
+			else
+				pDrawParams->pShadowMapCasters = pLsList;
 		}
-		else
-			pDrawParams->pShadowMapCasters = pLsList;
 	}
 
 	// if entity do not receive shadow - no more than this entity should be in the casters list
 	CRYASSERT(pEnt->GetRndFlags() & ERF_RECVSHADOWMAPS ||
 		((pDrawParams->pShadowMapCasters == 0) || (pDrawParams->pShadowMapCasters->Count() == 1)));
 
+	const int MAX_SHADOWMAP_ENTITIES = 512;
+
 	// add to list of outdoor shadow maps
 	if (!m_nRenderStackLevel && (pEnt->GetRndFlags() & ERF_CASTSHADOWMAPS))
-		if (m_lstStatEntitiesShadowMaps.Count() < 64) // don't go crazy
+	{
+		if (m_lstStatEntitiesShadowMaps.Count() < MAX_SHADOWMAP_ENTITIES) // don't go crazy
+		{
 			if (GetCVars()->e_shadow_maps_from_static_objects || (pEnt->GetEntityRenderType() == eERType_Unknown))
 				m_lstStatEntitiesShadowMaps.Add(pEnt);
+		}
+	}
 }
 /*
 int __cdecl CObjManager__Cmp_EntRadius(const void* v1, const void* v2)
@@ -1177,111 +1192,116 @@ void CObjManager::RenderEntityShadowOnTerrain(IEntityRender* pEntityRnd, bool bL
 	Vec3d vShadowOffset = GetNormalized(m_p3DEngine->GetSunPosition()) * fEntRenderRadius;
 
 	IEntityRenderState* pRendState = pEntityRnd->GetEntityRS();
+	if (!pRendState->pShadowMapInfo->pShadowMapCasters)
+		return;
 
-	if (pEntityRnd->GetShadowMapFrustumContainer() &&
-		pEntityRnd->GetShadowMapFrustumContainer()->m_LightFrustums.Count() &&
-		pRendState->pShadowMapInfo->pShadowMapCasters && fEntRenderRadius)
+	if (!pEntityRnd->GetShadowMapFrustumContainer() ||
+		!pEntityRnd->GetShadowMapFrustumContainer()->m_LightFrustums.Count())
+		return;
+
+	if (fEntRenderRadius <= 0.0f)
+		return;
+
+	Vec3d vEntBoxMin, vEntBoxMax;
+	pEntityRnd->GetBBox(vEntBoxMin, vEntBoxMax);
+	Vec3d vEntCenter = (vEntBoxMin + vEntBoxMax) * 0.5f;
+
+	float fDistance = bLMapGeneration ? 0 : GetDistance(vEntCenter, GetViewCamera().GetPos());
+	float fAlpha = (1.f - fDistance / (pEntityRnd->GetRenderRadius() * GetCVars()->e_shadow_maps_view_dist_ratio)) * 3.f;
+
+	CCObject* pObj = GetIdentityCCObject();
+	pObj->m_ObjFlags |= FOB_IGNOREREPOINTER;
+
+	if (fAlpha < 0)
+		fAlpha = 0;
+
+	pObj->m_SortId = 100.f * fAlpha;
+
+	if (fAlpha > 1.f)
+		fAlpha = 1.f;
+
+	if (GetCVars()->e_shadow_maps_fade_from_light_bit && !bLMapGeneration)
 	{
-		Vec3d vEntBoxMin, vEntBoxMax;
-		pEntityRnd->GetBBox(vEntBoxMin, vEntBoxMax);
-		Vec3d vEntCenter = (vEntBoxMin + vEntBoxMax) * 0.5f;
-
-		float fDistance = bLMapGeneration ? 0 : GetDistance(vEntCenter, GetViewCamera().GetPos());
-		float fAlpha = (1.f - fDistance / (pEntityRnd->GetRenderRadius() * GetCVars()->e_shadow_maps_view_dist_ratio)) * 3.f;
-
-		CCObject* pObj = GetIdentityCCObject();
-		pObj->m_ObjFlags |= FOB_IGNOREREPOINTER;
-
+		int nAreaSize = int(pEntityRnd->GetRenderRadius()) / CTerrain::GetHeightMapUnitSize() * CTerrain::GetHeightMapUnitSize() + CTerrain::GetHeightMapUnitSize();
+		if (nAreaSize > 8)
+			nAreaSize = 8;
+		int x1 = int(vEntCenter.x + nAreaSize / 2) / nAreaSize * nAreaSize;
+		int y1 = int(vEntCenter.y + nAreaSize / 2) / nAreaSize * nAreaSize;
+		for (int x = (x1 - nAreaSize); x <= (x1 + nAreaSize); x += CTerrain::GetHeightMapUnitSize())
+			for (int y = (y1 - nAreaSize); y <= (y1 + nAreaSize); y += CTerrain::GetHeightMapUnitSize())
+			{
+				bool bLight = m_pTerrain->IsOnTheLight(x, y);
+				if (!bLight)
+					fAlpha -= (0.15f * CTerrain::GetHeightMapUnitSize() / nAreaSize * CTerrain::GetHeightMapUnitSize() / nAreaSize);
+			}
 		if (fAlpha < 0)
 			fAlpha = 0;
-
-		pObj->m_SortId = 100.f * fAlpha;
-
-		if (fAlpha > 1.f)
-			fAlpha = 1.f;
-
-		if (GetCVars()->e_shadow_maps_fade_from_light_bit && !bLMapGeneration)
-		{
-			int nAreaSize = int(pEntityRnd->GetRenderRadius()) / CTerrain::GetHeightMapUnitSize() * CTerrain::GetHeightMapUnitSize() + CTerrain::GetHeightMapUnitSize();
-			if (nAreaSize > 8)
-				nAreaSize = 8;
-			int x1 = int(vEntCenter.x + nAreaSize / 2) / nAreaSize * nAreaSize;
-			int y1 = int(vEntCenter.y + nAreaSize / 2) / nAreaSize * nAreaSize;
-			for (int x = (x1 - nAreaSize); x <= (x1 + nAreaSize); x += CTerrain::GetHeightMapUnitSize())
-				for (int y = (y1 - nAreaSize); y <= (y1 + nAreaSize); y += CTerrain::GetHeightMapUnitSize())
-				{
-					bool bLight = m_pTerrain->IsOnTheLight(x, y);
-					if (!bLight)
-						fAlpha -= (0.15f * CTerrain::GetHeightMapUnitSize() / nAreaSize * CTerrain::GetHeightMapUnitSize() / nAreaSize);
-				}
-			if (fAlpha < 0)
-				fAlpha = 0;
-		}
-
-		if (fAlpha < 0)
-			fAlpha = 0;
-
-		ShadowMapLightSource* pShadowMapFrustumContainer = pEntityRnd->GetShadowMapFrustumContainer();
-		//		pObj->m_pShadowFrustum = pShadowMapFrustumContainer ? pShadowMapFrustumContainer->GetShadowMapFrustum() : 0;
-
-		pObj->m_pShadowCasters = pEntityRnd->GetShadowMapCasters();
-
-		pObj->m_Color = CalcShadowOnTerrainColor(1.f - fAlpha, bLMapGeneration);
-
-		Vec3d vPos = vEntCenter - vShadowOffset;
-		float fQuadRadius = fEntRenderRadius * 2.f;
-		if (fQuadRadius > 100)
-			fQuadRadius = 100;
-
-		// setup fading out
-		pObj->m_TempVars[0] = vEntCenter.x;
-		pObj->m_TempVars[1] = vEntCenter.y;
-		pObj->m_TempVars[2] = vEntBoxMin.z;
-		pObj->m_Color.a = bLMapGeneration ? 0 : (0.75f / fQuadRadius);
-
-		// allign by unit size
-		int nUnitSize = CTerrain::GetHeightMapUnitSize();
-		vPos.x = float(int(vPos.x + 0.5f * nUnitSize) / nUnitSize * nUnitSize);
-		vPos.y = float(int(vPos.y + 0.5f * nUnitSize) / nUnitSize * nUnitSize);
-		vPos.z = float(int(vPos.z + 0.5f * nUnitSize) / nUnitSize * nUnitSize);
-		fQuadRadius = float(int(fQuadRadius + 0.5f * nUnitSize) / nUnitSize * nUnitSize);
-
-		bool bREAdded = false;
-		if (!pEntityRnd->GetEntityVisArea() && GetVisAreaManager()->IsOutdoorAreasVisible() &&
-			(!(pEntityRnd->GetRndFlags() & ERF_CASTSHADOWINTOLIGHTMAP) || bLMapGeneration) && fAlpha > 0)
-		{ // generate shadow map and render terrain shadow pass
-			if (vPos.x < 0 || vPos.x >= CTerrain::GetTerrainSize() || vPos.y < 0 || vPos.y >= CTerrain::GetTerrainSize())
-				return;
-
-			// bool bRecalcLeafBuffers = (bLMapGeneration || pRendState->vPrevTerShadowPos != vPos || pRendState->fPrevTerShadowRadius != fQuadRadius);
-			bool bRecalcLeafBuffers = (bLMapGeneration || (!IsEquivalent(pRendState->pShadowMapInfo->vPrevTerShadowPos, vPos)) || pRendState->pShadowMapInfo->fPrevTerShadowRadius != fQuadRadius);
-
-
-			pRendState->pShadowMapInfo->vPrevTerShadowPos = vPos;
-			pRendState->pShadowMapInfo->fPrevTerShadowRadius = fQuadRadius;
-
-			if (!pRendState->pShadowMapInfo->pShadowMapLeafBuffersList)
-				pRendState->pShadowMapInfo->pShadowMapLeafBuffersList = new list2<struct CLeafBuffer*>;
-			pRendState->pShadowMapInfo->pShadowMapLeafBuffersList->PreAllocate(16, 16);
-
-			bREAdded = m_pTerrain->RenderAreaLeafBuffers(vPos, fQuadRadius, 0,
-				pRendState->pShadowMapInfo->pShadowMapLeafBuffersList->GetElements(),
-				pRendState->pShadowMapInfo->pShadowMapLeafBuffersList->Count(),
-				pObj, m_pTerrain->m_pTerrainShadowPassEf, bRecalcLeafBuffers, "EntityShadowOnTerrain", 0, 0,
-				pRendState->pShadowMapInfo->pShadowMapFrustumContainer->GetShadowMapFrustum(),
-				&Vec3d(pEntityRnd->GetPos()),
-				(pEntityRnd->GetEntityRenderType() == eERType_Vegetation) ? pEntityRnd->GetScale() : 1.f);
-		}
-
-		if (pREShadowMapGenerator && !bREAdded)
-		{ // just generate shadow map to use in indoors
-			GetRenderer()->EF_AddEf(0, pREShadowMapGenerator, m_p3DEngine->m_pSHShadowMapGen, nullptr, pObj, 0);
-		}
-
-		if (GetCVars()->e_shadow_maps_frustums)
-			pEntityRnd->GetShadowMapFrustumContainer()->m_LightFrustums.Get(0)->DrawFrustum(GetRenderer(),
-				pEntityRnd->GetPos(), 1.f);
 	}
+
+	if (fAlpha < 0)
+		fAlpha = 0;
+
+	ShadowMapLightSource* pShadowMapFrustumContainer = pEntityRnd->GetShadowMapFrustumContainer();
+	//		pObj->m_pShadowFrustum = pShadowMapFrustumContainer ? pShadowMapFrustumContainer->GetShadowMapFrustum() : 0;
+
+	pObj->m_pShadowCasters = pEntityRnd->GetShadowMapCasters();
+
+	pObj->m_Color = CalcShadowOnTerrainColor(1.f - fAlpha, bLMapGeneration);
+
+	Vec3d vPos = vEntCenter - vShadowOffset;
+	float fQuadRadius = fEntRenderRadius * 2.f;
+	if (fQuadRadius > 100)
+		fQuadRadius = 100;
+
+	// setup fading out
+	pObj->m_TempVars[0] = vEntCenter.x;
+	pObj->m_TempVars[1] = vEntCenter.y;
+	pObj->m_TempVars[2] = vEntBoxMin.z;
+	pObj->m_Color.a = bLMapGeneration ? 0 : (0.75f / fQuadRadius);
+
+	// allign by unit size
+	int nUnitSize = CTerrain::GetHeightMapUnitSize();
+	vPos.x = float(int(vPos.x + 0.5f * nUnitSize) / nUnitSize * nUnitSize);
+	vPos.y = float(int(vPos.y + 0.5f * nUnitSize) / nUnitSize * nUnitSize);
+	vPos.z = float(int(vPos.z + 0.5f * nUnitSize) / nUnitSize * nUnitSize);
+	fQuadRadius = float(int(fQuadRadius + 0.5f * nUnitSize) / nUnitSize * nUnitSize);
+
+	bool bREAdded = false;
+	if (!pEntityRnd->GetEntityVisArea() && GetVisAreaManager()->IsOutdoorAreasVisible() &&
+		(!(pEntityRnd->GetRndFlags() & ERF_CASTSHADOWINTOLIGHTMAP) || bLMapGeneration) && fAlpha > 0)
+	{ // generate shadow map and render terrain shadow pass
+		if (vPos.x < 0 || vPos.x >= CTerrain::GetTerrainSize() || vPos.y < 0 || vPos.y >= CTerrain::GetTerrainSize())
+			return;
+
+		IEntityRenderState::ShadowMapInfo& sMapInfo = *pRendState->pShadowMapInfo;
+
+		// bool bRecalcLeafBuffers = (bLMapGeneration || pRendState->vPrevTerShadowPos != vPos || pRendState->fPrevTerShadowRadius != fQuadRadius);
+		bool bRecalcLeafBuffers = (bLMapGeneration || (!IsEquivalent(sMapInfo.vPrevTerShadowPos, vPos)) || sMapInfo.fPrevTerShadowRadius != fQuadRadius);
+
+		sMapInfo.vPrevTerShadowPos = vPos;
+		sMapInfo.fPrevTerShadowRadius = fQuadRadius;
+
+		if (!sMapInfo.pShadowMapLeafBuffersList)
+			sMapInfo.pShadowMapLeafBuffersList = new list2<struct CLeafBuffer*>;
+		sMapInfo.pShadowMapLeafBuffersList->PreAllocate(16, 16);
+
+		bREAdded = m_pTerrain->RenderAreaLeafBuffers(vPos, fQuadRadius, 0,
+			sMapInfo.pShadowMapLeafBuffersList->GetElements(),
+			sMapInfo.pShadowMapLeafBuffersList->Count(),
+			pObj, m_pTerrain->m_pTerrainShadowPassEf, bRecalcLeafBuffers, "EntityShadowOnTerrain", 0, 0,
+			sMapInfo.pShadowMapFrustumContainer->GetShadowMapFrustum(),
+			&Vec3d(pEntityRnd->GetPos()),
+			(pEntityRnd->GetEntityRenderType() == eERType_Vegetation) ? pEntityRnd->GetScale() : 1.f);
+	}
+
+	if (pREShadowMapGenerator && !bREAdded)
+	{ // just generate shadow map to use in indoors
+		GetRenderer()->EF_AddEf(0, pREShadowMapGenerator, m_p3DEngine->m_pSHShadowMapGen, nullptr, pObj, 0);
+	}
+
+	if (GetCVars()->e_shadow_maps_frustums)
+		pEntityRnd->GetShadowMapFrustumContainer()->m_LightFrustums.Get(0)->DrawFrustum(GetRenderer(),
+			pEntityRnd->GetPos(), 1.f);
 }
 
 float CObjManager::CalculateEntityShadowVolumeExtent(IEntityRender* pEntity, CDLight* pDLight)

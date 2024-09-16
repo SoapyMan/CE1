@@ -24,9 +24,12 @@
 
 void CObjManager::MakeShadowCastersListInArea(CBasicArea* pArea, IEntityRender* pReceiver, list2<IEntityRender*>* pEntList, int dwAllowedTypes, Vec3d vLightPos, float fLightRadius)
 {
+	const int nStaticsAllowed = int(GetCVars()->e_shadow_maps_from_static_objects > 0);
+	if (!nStaticsAllowed)
+		return;
+
 	FUNCTION_PROFILER_FAST(GetSystem(), PROFILE_3DENGINE, m_bProfilerEnabled);
 
-	bool bCmpCasterReceiverDistances = !(GetRenderer()->GetFeatures() & (RFT_DEPTHMAPS | RFT_SHADOWMAP_SELFSHADOW));
 
 	Shadowvolume ResShadowVolume;
 	{
@@ -36,25 +39,18 @@ void CObjManager::MakeShadowCastersListInArea(CBasicArea* pArea, IEntityRender* 
 		NAABB_SV::AABB_ReceiverShadowVolume(vLightPos, aabbReceiver, ResShadowVolume);//, min(fDistFromLsToCaster+pCaster->GetRenderRadius()*4, fLightRadius));
 	}
 
-	float fDistFromLsToReceiver = GetDistance(vLightPos, pReceiver->GetPos());
+	const float fDistFromLsToReceiver = GetDistance(vLightPos, pReceiver->GetPos());
+	const bool bCmpCasterReceiverDistances = !(GetRenderer()->GetFeatures() & (RFT_DEPTHMAPS | RFT_SHADOWMAP_SELFSHADOW));
 
-	int nStaticsAllowed = int(GetCVars()->e_shadow_maps_from_static_objects > 0);
-	for (int nStatic = 0; nStatic <= nStaticsAllowed; nStatic++)
+	for (int nStatic = 0; nStatic < 2; nStatic++)
 	{
-		list2<struct IEntityRender*>* pList = &pArea->m_lstEntities[nStatic];
+		list2<IEntityRender*>* pList = &pArea->m_lstEntities[nStatic];
 		if (nStatic && pArea->m_StaticEntitiesSorted && !(dwAllowedTypes & SMC_ALLOW_PASSIVE_SHADOWMAP_CASTERS))
 			pList = &pArea->m_lstStaticShadowMapCasters;
 
 		for (int e = 0; e < pList->Count(); e++)
 		{
 			IEntityRender* pCaster = (*pList)[e];
-
-			if (e + 1 < pList->Count())
-			{
-				IEntityRender* pNext = (*pList)[e + 1];
-				cryPrefetchT0SSE(pNext);
-			}
-
 			if (pCaster->m_fWSMaxViewDist < MIN_SHADOW_CASTER_VIEW_DIST)
 			{
 				if (!nStatic || !pArea->m_StaticEntitiesSorted)
@@ -63,48 +59,57 @@ void CObjManager::MakeShadowCastersListInArea(CBasicArea* pArea, IEntityRender* 
 					break; // break in sorted list
 			}
 
-#ifdef _DEBUG
-			const char* szClass = pCaster->GetEntityClassName();
-			const char* szName = pCaster->GetName();
-#endif // _DEBUG
+			if(pCaster == pReceiver)
+				continue;
 
-			int dwRndFlags = pCaster->GetRndFlags();
+			const int dwRndFlags = pCaster->GetRndFlags();
+			if (dwRndFlags & ERF_HIDDEN)
+				continue;
+
+			if (pCaster->GetLight() && !pCaster->GetContainer())
+				continue;
+
+			if (!(pCaster->IsStatic() && (dwAllowedTypes & SMC_STATICS)) && !(!pCaster->IsStatic() && (dwAllowedTypes & SMC_DYNAMICS)))
+				continue;
+
+			if (e + 1 < pList->Count())
+			{
+				IEntityRender* pNext = (*pList)[e + 1];
+				cryPrefetchT0SSE(pNext);
+			}
 
 			bool bTakeThisOne = false;
-			{ // take only allowed active shadow casters
-				if ((pCaster->IsStatic() && (dwAllowedTypes & SMC_STATICS)) ||
-					(!pCaster->IsStatic() && (dwAllowedTypes & SMC_DYNAMICS)))
-				{
-					if (dwAllowedTypes & SMC_ALLOW_PASSIVE_SHADOWMAP_CASTERS)
-						bTakeThisOne = true;
-					else
-						if (dwRndFlags & ERF_CASTSHADOWMAPS && pCaster->GetEntityRS()->pShadowMapInfo)
-						{
-							ShadowMapLightSource* pFrustumContainer = pCaster->GetShadowMapFrustumContainer();
-							if (pFrustumContainer && pFrustumContainer->m_LightFrustums.Count() && pFrustumContainer->m_LightFrustums.Get(0)->pLs)
-								bTakeThisOne = true;
-						}
-				}
-			}
 
-			if (bTakeThisOne && pCaster != pReceiver && !(dwRndFlags & ERF_HIDDEN) && (!pCaster->GetLight() || pCaster->GetContainer()))
+			// take only allowed active shadow casters
+			if (dwAllowedTypes & SMC_ALLOW_PASSIVE_SHADOWMAP_CASTERS)
+				bTakeThisOne = true;
+			else if (dwRndFlags & ERF_CASTSHADOWMAPS && pCaster->GetEntityRS()->pShadowMapInfo)
 			{
-				float fDistFromLsToCaster = GetDistance(vLightPos, pCaster->GetPos());
-				if (bCmpCasterReceiverDistances)
-					if (fDistFromLsToReceiver < fDistFromLsToCaster)
-						continue;
-
-				if (fDistFromLsToReceiver - fDistFromLsToCaster > pCaster->GetRenderRadius() * 4 + pReceiver->GetRenderRadius())
-					continue;
-
-				// check if caster is in receiver frustum 
-				Vec3d vBoxMin, vBoxMax;
-				pCaster->GetBBox(vBoxMin, vBoxMax);
-				AABB aabbCaster(vBoxMin, vBoxMax + Vec3d(0.01f, 0.01f, 0.01f));
-				bool bIntersect = NAABB_SV::Is_AABB_In_ShadowVolume(ResShadowVolume, aabbCaster);
-				if (bIntersect && pEntList->Find(pCaster) < 0)
-					pEntList->Add(pCaster);
+				ShadowMapLightSource* pFrustumContainer = pCaster->GetShadowMapFrustumContainer();
+				if (pFrustumContainer && pFrustumContainer->m_LightFrustums.Count() && pFrustumContainer->m_LightFrustums.Get(0)->pLs)
+					bTakeThisOne = true;
 			}
+
+			if (!bTakeThisOne)
+				continue;
+			
+			const float fDistFromLsToCaster = GetDistance(vLightPos, pCaster->GetPos());
+			if (bCmpCasterReceiverDistances)
+			{
+				if (fDistFromLsToReceiver < fDistFromLsToCaster)
+					continue;
+			}
+
+			if (fDistFromLsToReceiver - fDistFromLsToCaster > pCaster->GetRenderRadius() * 4 + pReceiver->GetRenderRadius())
+				continue;
+
+			// check if caster is in receiver frustum 
+			Vec3d vBoxMin, vBoxMax;
+			pCaster->GetBBox(vBoxMin, vBoxMax);
+			AABB aabbCaster(vBoxMin, vBoxMax + Vec3d(0.01f, 0.01f, 0.01f));
+			bool bIntersect = NAABB_SV::Is_AABB_In_ShadowVolume(ResShadowVolume, aabbCaster);
+			if (bIntersect && pEntList->Find(pCaster) < 0)
+				pEntList->Add(pCaster);
 		}
 	}
 }
@@ -118,52 +123,59 @@ void CObjManager::MakeShadowCastersList(IEntityRender* pReceiver, list2<IEntityR
 	pEntList->Clear();
 
 	if (pReceiver->m_pVisArea && pReceiver->IsEntityAreasVisible())
+	{
 		MakeShadowCastersListInArea(pReceiver->m_pVisArea, pReceiver, pEntList, dwAllowedTypes, vLightPos, fLightRadius);
-	else
-	{	// make list of sectors around
-		// find 2d bounds in sectors array
-		Vec3d vBoxMin, vBoxMax;
-		pReceiver->GetBBox(vBoxMin, vBoxMax);
-
-		// get 2d bounds in sectors array
-		int min_x = (int)(((vBoxMin.x - 16.f) / CTerrain::GetSectorSize()));
-		int min_y = (int)(((vBoxMin.y - 16.f) / CTerrain::GetSectorSize()));
-		int max_x = (int)(((vBoxMax.x + 16.f) / CTerrain::GetSectorSize()));
-		int max_y = (int)(((vBoxMax.y + 16.f) / CTerrain::GetSectorSize()));
-
-		// limit bounds
-		if (min_x < 0) min_x = 0; else if (min_x >= CTerrain::GetSectorsTableSize()) min_x = CTerrain::GetSectorsTableSize() - 1;
-		if (min_y < 0) min_y = 0; else if (min_y >= CTerrain::GetSectorsTableSize()) min_y = CTerrain::GetSectorsTableSize() - 1;
-		if (max_x < 0) max_x = 0; else if (max_x >= CTerrain::GetSectorsTableSize()) max_x = CTerrain::GetSectorsTableSize() - 1;
-		if (max_y < 0) max_y = 0; else if (max_y >= CTerrain::GetSectorsTableSize()) max_y = CTerrain::GetSectorsTableSize() - 1;
-
-		m_lstTmpSectors_MELFP.Clear();
-		m_lstTmpSectors_MELFP.Add(m_pTerrain->m_arrSecInfoTable[0][0]);
-		for (int x = min_x; x <= max_x && x >= 0 && x <= CTerrain::GetTerrainSize(); x++)
-			for (int y = min_y; y <= max_y && y >= 0 && y <= CTerrain::GetTerrainSize(); y++)
-			{
-				CSectorInfo* pSectorInfo = m_pTerrain->m_arrSecInfoTable[x][y];
-
-				// check if sector cast shadow to the receiver
-				if (m_lstTmpSectors_MELFP.Find(pSectorInfo) < 0 && pSectorInfo)
-				{
-					Shadowvolume sv;
-					Vec3d vBoxMin, vBoxMax;
-					pReceiver->GetBBox(vBoxMin, vBoxMax);
-					AABB aabbReceiver(vBoxMin, vBoxMax);
-					AABB aabbCaster(pSectorInfo->m_vBoxMin, pSectorInfo->m_vBoxMax);
-					aabbCaster.max.z += 0.01f;
-					NAABB_SV::AABB_ShadowVolume(vLightPos, aabbCaster, sv, fLightRadius);
-					bool bIntersect = NAABB_SV::Is_AABB_In_ShadowVolume(sv, aabbReceiver);
-					if (bIntersect)
-						m_lstTmpSectors_MELFP.Add(pSectorInfo);
-				}
-			}
-
-		// make list of entities
-		for (int s = 0; s < m_lstTmpSectors_MELFP.Count(); s++)
-			MakeShadowCastersListInArea(m_lstTmpSectors_MELFP[s], pReceiver, pEntList, dwAllowedTypes, vLightPos, fLightRadius);
+		return;
 	}
+
+	// make list of sectors around
+	// find 2d bounds in sectors array
+	Vec3d vBoxMin, vBoxMax;
+	pReceiver->GetBBox(vBoxMin, vBoxMax);
+
+	const float extraOfs = 16.0f;
+
+	// get 2d bounds in sectors array
+	int min_x = (int)(((vBoxMin.x - extraOfs) / CTerrain::GetSectorSize()));
+	int min_y = (int)(((vBoxMin.y - extraOfs) / CTerrain::GetSectorSize()));
+	int max_x = (int)(((vBoxMax.x + extraOfs) / CTerrain::GetSectorSize()));
+	int max_y = (int)(((vBoxMax.y + extraOfs) / CTerrain::GetSectorSize()));
+
+	// limit bounds
+	min_x = clamp(min_x, 0, CTerrain::GetSectorsTableSize() - 1);
+	max_x = clamp(max_x, 0, CTerrain::GetSectorsTableSize() - 1);
+	min_y = clamp(min_y, 0, CTerrain::GetSectorsTableSize() - 1);
+	max_y = clamp(max_y, 0, CTerrain::GetSectorsTableSize() - 1);
+
+	m_lstTmpSectors_MELFP.Clear();
+	m_lstTmpSectors_MELFP.Add(m_pTerrain->m_arrSecInfoTable[0][0]);
+	for (int x = min_x; x <= max_x; x++)
+	{
+		for (int y = min_y; y <= max_y; y++)
+		{
+			CSectorInfo* pSectorInfo = m_pTerrain->m_arrSecInfoTable[x][y];
+
+			// check if sector cast shadow to the receiver
+			if (!pSectorInfo || m_lstTmpSectors_MELFP.Find(pSectorInfo) >= 0)
+				continue;
+			
+			Vec3d vBoxMin, vBoxMax;
+			pReceiver->GetBBox(vBoxMin, vBoxMax);
+
+			AABB aabbReceiver(vBoxMin, vBoxMax);
+			AABB aabbCaster(pSectorInfo->m_vBoxMin, pSectorInfo->m_vBoxMax);
+			aabbCaster.max.z += 0.01f;
+
+			Shadowvolume sv;
+			NAABB_SV::AABB_ShadowVolume(vLightPos, aabbCaster, sv, fLightRadius);
+			if (NAABB_SV::Is_AABB_In_ShadowVolume(sv, aabbReceiver))
+				m_lstTmpSectors_MELFP.Add(pSectorInfo);
+		}
+	}
+
+	// make list of entities
+	for (int s = 0; s < m_lstTmpSectors_MELFP.Count(); s++)
+		MakeShadowCastersListInArea(m_lstTmpSectors_MELFP[s], pReceiver, pEntList, dwAllowedTypes, vLightPos, fLightRadius);
 }
 
 void CObjManager::MakeShadowMapInstancesList(IEntityRender* pReceiver, float obj_distance,
@@ -187,20 +199,20 @@ void CObjManager::MakeShadowMapInstancesList(IEntityRender* pReceiver, float obj
 	// make list of shadow casters
 	for (int e = 0; e < lstEntList_MLSMCIA.Count(); e++)
 	{
-		const char* szClass = lstEntList_MLSMCIA[e]->GetEntityClassName();
-		const char* szName = lstEntList_MLSMCIA[e]->GetName();
+		IEntityRender* ent = lstEntList_MLSMCIA[e];
+		const char* szClass = ent->GetEntityClassName();
+		const char* szName = ent->GetName();
 
-		if (!lstEntList_MLSMCIA[e]->GetShadowMapFrustumContainer() ||
-			!lstEntList_MLSMCIA[e]->GetShadowMapFrustumContainer()->m_LightFrustums.Count() ||
-			!(lstEntList_MLSMCIA[e]->GetRndFlags() & ERF_CASTSHADOWMAPS))
+		if (!ent->GetShadowMapFrustumContainer() ||
+			!ent->GetShadowMapFrustumContainer()->m_LightFrustums.Count() ||
+			!(ent->GetRndFlags() & ERF_CASTSHADOWMAPS))
 			continue;
 
 		ShadowMapLightSourceInstance LightSourceInfo;
-		LightSourceInfo.m_pLS = lstEntList_MLSMCIA[e]->GetShadowMapFrustumContainer();
-		LightSourceInfo.m_vProjTranslation = lstEntList_MLSMCIA[e]->GetPos();
-		LightSourceInfo.m_fProjScale = lstEntList_MLSMCIA[e]->GetScale();
-		Vec3d vThisEntityPos = pReceiver->GetPos();
-		LightSourceInfo.m_fDistance = GetDistance(vThisEntityPos, lstEntList_MLSMCIA[e]->GetPos()) - lstEntList_MLSMCIA[e]->GetRenderRadius() / 3;
+		LightSourceInfo.m_pLS = ent->GetShadowMapFrustumContainer();
+		LightSourceInfo.m_vProjTranslation = ent->GetPos();
+		LightSourceInfo.m_fProjScale = ent->GetScale();
+		LightSourceInfo.m_fDistance = GetDistance(pReceiver->GetPos(), ent->GetPos()) - ent->GetRenderRadius() / 3;
 		LightSourceInfo.m_pReceiver = pReceiver;
 		if (!LightSourceInfo.m_pLS->m_LightFrustums.Count())// || !LightSourceInfo.m_pLS->m_LightFrustums[0].depth_tex_id)
 			continue;
@@ -290,6 +302,9 @@ static int __cdecl CObjManager_Cmp_EntSize(const void* v1, const void* v2)
 
 void CObjManager::DrawAllShadowsOnTheGroundInSector(list2<IEntityRender*>* pEntList)
 {
+	if (!pEntList || !pEntList->Count())
+		return;
+
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Draw entity shadows
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -299,8 +314,7 @@ void CObjManager::DrawAllShadowsOnTheGroundInSector(list2<IEntityRender*>* pEntL
 	GetRenderer()->SetClearColor(Vec3d(1, 1, 1));
 
 	// sort by size to draw small shadows last or skip them
-	if (pEntList && pEntList->Count())
-		qsort(&(*pEntList)[0], (*pEntList).Count(), sizeof((*pEntList)[0]), CObjManager_Cmp_EntSize);
+	qsort(&(*pEntList)[0], (*pEntList).Count(), sizeof((*pEntList)[0]), CObjManager_Cmp_EntSize);
 
 	GetRenderer()->EF_StartEf();
 	int nRealCout = 0;
@@ -308,33 +322,32 @@ void CObjManager::DrawAllShadowsOnTheGroundInSector(list2<IEntityRender*>* pEntL
 	{
 		IEntityRender* pEnt = (*pEntList)[i];
 
-		if (!(pEnt->GetRndFlags() & ERF_HIDDEN))
-			if (pEnt->GetRndFlags() & ERF_CASTSHADOWINTOLIGHTMAP)
-				if (!pEnt->GetEntityVisArea())
-				{
-					CRYASSERT(m_nRenderStackLevel == 0);
-					pEnt->SetDrawFrame(-100, m_nRenderStackLevel);
+		if (pEnt->GetRndFlags() & ERF_HIDDEN)
+			continue;
+		if (!(pEnt->GetRndFlags() & ERF_CASTSHADOWINTOLIGHTMAP))
+			continue;
+		if (pEnt->GetEntityVisArea())
+			continue;
 
-					int nFlags = pEnt->GetRndFlags();
-					pEnt->SetRndFlags(nFlags | ERF_CASTSHADOWMAPS | ERF_RECVSHADOWMAPS);
-					pEnt->SetRndFlags(ERF_CASTSHADOWINTOLIGHTMAP, false);
+		CRYASSERT(m_nRenderStackLevel == 0);
+		CRYASSERT(((C3DEngine*)Get3DEngine())->GetRealLightsNum() == 1);
 
-					int nRealLightsNum = ((C3DEngine*)Get3DEngine())->GetRealLightsNum();
-					CRYASSERT(nRealLightsNum == 1);
-					RenderObject(pEnt, 0, 1, true, GetViewCamera(), nullptr, 0, 0, false, pEnt->GetMaxViewDist());
-					RenderEntitiesShadowMapsOnTerrain(true, 0);
+		pEnt->SetDrawFrame(-100, m_nRenderStackLevel);
 
-					// increase frame id to help shadow map menager in renderer
-					unsigned short* pPtr2FrameID = (unsigned short*)GetRenderer()->EF_Query(EFQ_Pointer2FrameID);
-					if (pPtr2FrameID)
-						(*pPtr2FrameID)++;
+		int nFlags = pEnt->GetRndFlags();
+		pEnt->SetRndFlags(nFlags | ERF_CASTSHADOWMAPS | ERF_RECVSHADOWMAPS);
+		pEnt->SetRndFlags(ERF_CASTSHADOWINTOLIGHTMAP, false);
 
-					pEnt->SetRndFlags(nFlags);
+		RenderObject(pEnt, 0, 1, true, GetViewCamera(), nullptr, 0, 0, false, pEnt->GetMaxViewDist());
+		RenderEntitiesShadowMapsOnTerrain(true, 0);
 
-					nRealCout++;
-					if ((GetRenderer()->GetType() == R_GL_RENDERER) && nRealCout >= 64) // maximum number of shadow maps in frame is limited in ogl to MAX_DYNAMIC_SHADOW_MAPS_COUNT
-						break;
-				}
+		// increase frame id to help shadow map menager in renderer
+		unsigned short* pPtr2FrameID = (unsigned short*)GetRenderer()->EF_Query(EFQ_Pointer2FrameID);
+		if (pPtr2FrameID)
+			(*pPtr2FrameID)++;
+
+		pEnt->SetRndFlags(nFlags);
+		nRealCout++;
 	}
 	GetRenderer()->EF_EndEf3D(SHDF_SORT);
 
@@ -343,18 +356,24 @@ void CObjManager::DrawAllShadowsOnTheGroundInSector(list2<IEntityRender*>* pEntL
 	{
 		IEntityRender* pEnt = (*pEntList)[i];
 		IEntityRenderState* pEntRendState = pEnt->m_pEntityRenderState;
-		if (pEntRendState && pEntRendState->pShadowMapInfo && pEntRendState->pShadowMapInfo->pShadowMapLeafBuffersList)
+		if (!pEntRendState)
+			continue;
+
+		IEntityRenderState::ShadowMapInfo* shadMap = pEntRendState->pShadowMapInfo;
+		if(!shadMap)
+			continue;
+
+		list2<CLeafBuffer*>* shadowLeafBuffers = shadMap->pShadowMapLeafBuffersList;
+		shadMap->pShadowMapLeafBuffersList = nullptr;
+		if (!shadowLeafBuffers)
+			continue;
+
+		for (int i = 0; i < shadowLeafBuffers->Count(); i++)
 		{
-			for (int i = 0; i < pEntRendState->pShadowMapInfo->pShadowMapLeafBuffersList->Count(); i++)
-			{
-				if (pEntRendState->pShadowMapInfo->pShadowMapLeafBuffersList->GetAt(i))
-				{
-					GetRenderer()->DeleteLeafBuffer(pEntRendState->pShadowMapInfo->pShadowMapLeafBuffersList->GetAt(i));
-					pEntRendState->pShadowMapInfo->pShadowMapLeafBuffersList->GetAt(i) = 0;
-				}
-			}
-			delete pEntRendState->pShadowMapInfo->pShadowMapLeafBuffersList;
-			pEntRendState->pShadowMapInfo->pShadowMapLeafBuffersList = 0;
+			if (!shadowLeafBuffers->GetAt(i))
+				continue;
+			GetRenderer()->DeleteLeafBuffer(shadowLeafBuffers->GetAt(i));
 		}
+		delete shadowLeafBuffers;
 	}
 }
