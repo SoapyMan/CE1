@@ -34,6 +34,7 @@
 #include "IStatObj.h"
 // !!! Do not add any headers here !!!
 
+struct IStatObj;
 struct ISystem;
 struct ITexPic;
 struct ICryCharInstance;
@@ -639,32 +640,33 @@ struct IStatInstGroup
 		bFadeSize = true;
 	}
 
-	struct IStatObj* pStatObj;
-	bool	bHideability;
-	bool	bPhysNonColl;
-	float fBending;
-	bool	bCastShadow;
-	bool	bRecvShadow;
-	bool	bPrecShadow;
-	bool	bUseAlphaBlending;
-	//	bool	bTakeBrightnessFromLightBit;
-	float fSpriteDistRatio;
-	float fShadowDistRatio;
-	float fMaxViewDistRatio;
-	float	fBrightness;
-	bool  bUpdateShadowEveryFrame;
-	//	float fAmbScale;
-	int		nSpriteTexRes;
-	float fBackSideLevel;
-	bool  bCalcLighting;
-	bool  bUseSprites;
-	bool  bFadeSize;
-
+	IStatObj* pStatObj;	
+	
 	//! Override material for this instance group.
 	IMatInfo* pMaterial;
 
 	//! flags similar to entity render flags
-	int m_dwRndFlags;
+	int		m_dwRndFlags;
+	float	fBending;
+
+	float	fSpriteDistRatio;
+	float	fShadowDistRatio;
+	float	fMaxViewDistRatio;
+	float	fBrightness;
+	//	float fAmbScale;
+	int		nSpriteTexRes;
+	float	fBackSideLevel;
+	//	bool	bTakeBrightnessFromLightBit;
+	bool	bCalcLighting;
+	bool	bUseSprites;
+	bool	bFadeSize;
+	bool	bHideability;
+	bool	bPhysNonColl;
+	bool	bCastShadow;
+	bool	bRecvShadow;
+	bool	bPrecShadow;
+	bool	bUseAlphaBlending;
+	bool	bUpdateShadowEveryFrame;
 };
 
 //! Interface for water volumes editing from editor
