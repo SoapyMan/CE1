@@ -47,7 +47,7 @@ int CD3D9Renderer::CV_d3d9_nodepthmaps;
 float CD3D9Renderer::CV_d3d9_normalmapscale;
 ICVar* CD3D9Renderer::CV_d3d9_texturefilter;
 
-char* resourceName[] = {
+static char* resourceName[] = {
 	"UNKNOWN",
 	"Surfaces",
 	"Volumes",

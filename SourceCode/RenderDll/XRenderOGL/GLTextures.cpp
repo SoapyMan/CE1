@@ -5481,7 +5481,7 @@ void CGLTexMan::Update()
 			{ // count shadow map memory
 				float nShadowMapSize = 0;
 				int nShadowMapCount = 0;
-				for (int i = 0; i < MAX_DYNAMIC_SHADOW_MAPS_COUNT; i++)
+				for (int i = 0; i < CGLRenderer::MAX_DYNAMIC_SHADOW_MAPS_COUNT; i++)
 				{
 					if (((CGLRenderer*)rd)->m_ShadowTexIDBuffer[i].nTexId)
 					{

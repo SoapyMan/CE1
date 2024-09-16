@@ -635,7 +635,6 @@ public:
 
 public:
 
-#define MAX_DYNAMIC_SHADOW_MAPS_COUNT 64
 	struct ShadowMapTexInfo
 	{
 		ShadowMapTexInfo() { nTexId0 = nTexId1 = 0; pOwner = 0; pOwnerGroup = 0; nLastFrameID = -1; nTexSize = 0; dwFlags = 0; }
@@ -647,6 +646,9 @@ public:
 		int nLastFrameID;
 		int nTexSize;
 	};
+
+	static const int MAX_DYNAMIC_SHADOW_MAPS_COUNT = 256;
+
 	ShadowMapTexInfo m_ShadowTexIDBuffer[MAX_DYNAMIC_SHADOW_MAPS_COUNT];
 	TArray<ShadowMapTexInfo> m_TempShadowTextures;
 

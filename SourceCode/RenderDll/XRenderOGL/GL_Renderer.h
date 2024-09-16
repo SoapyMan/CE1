@@ -374,7 +374,7 @@ private:
 	int m_nTempTextWidth, m_nTempTextHeight;
 
 
-#define MAX_DYNAMIC_SHADOW_MAPS_COUNT 128
+	static const int MAX_DYNAMIC_SHADOW_MAPS_COUNT = 256;
 	struct ShadowMapTexInfo
 	{
 		ShadowMapTexInfo() { nTexId = 0; pOwner = 0; nLastFrameID = -1; nTexSize = 0; dwFlags = 0; }
