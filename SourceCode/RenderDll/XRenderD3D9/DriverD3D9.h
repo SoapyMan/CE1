@@ -687,7 +687,6 @@ private:
 	bool SetWindow(int width, int height, bool fullscreen, WIN_HWND hWnd);
 	bool SetRes();
 	bool ChooseDevice();
-	void DisplaySplash(); //!< Load a bitmap from a file, blit it to the windowdc and free it
 	void UnSetRes();
 	HRESULT DeleteDeviceObjects();
 	HRESULT InvalidateDeviceObjects();

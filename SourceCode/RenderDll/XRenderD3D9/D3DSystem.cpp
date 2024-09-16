@@ -49,39 +49,6 @@ void CD3D9Renderer::GetClientRect(RECT* rect)
 	SDL_GetWindowSize((SDL_Window*)m_hWnd, (int*)&rect->right, (int*)&rect->bottom);
 }
 
-void CD3D9Renderer::DisplaySplash()
-{
-#if 0 //def _WIN32
-#ifdef GAME_IS_FARCRY
-	HBITMAP hImage = (HBITMAP)LoadImage(GetModuleHandle(0), "fcsplash.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
-#else
-	HBITMAP hImage = (HBITMAP)LoadImage(GetModuleHandle(0), "splash.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
-#endif
-	
-	if (hImage != INVALID_HANDLE_VALUE)
-	{
-		HWND hWnd = Cry_GetHWND(m_hWnd);
-
-		RECT rect;
-		HDC hDC = GetDC(hWnd);
-		HDC hDCBitmap = CreateCompatibleDC(hDC);
-		BITMAP bm;
-	
-		::GetClientRect(hWnd, &rect);
-		GetObject(hImage, sizeof(bm), &bm);
-		SelectObject(hDCBitmap, hImage);
-	
-		DWORD x = rect.left + (((rect.right-rect.left)-bm.bmWidth) >> 1);
-		DWORD y = rect.top + (((rect.bottom-rect.top)-bm.bmHeight) >> 1);
-	
-		BitBlt(hDC, x, y, bm.bmWidth, bm.bmHeight, hDCBitmap, 0, 0, SRCCOPY);
-	
-		DeleteObject(hImage);
-		DeleteDC(hDCBitmap);
-	}
-#endif
-}
-
 void CD3D9Renderer::UnSetRes()
 {
 	m_Features |= RFT_DIRECTACCESSTOVIDEOMEMORY | RFT_SUPPORTZBIAS | RFT_DETAILTEXTURE;
@@ -1465,12 +1432,13 @@ HRESULT CD3D9Renderer::Initialize3DEnvironment()
 	if (!(m_d3dpp.Flags & D3DPRESENTFLAG_LOCKABLE_BACKBUFFER))
 	{
 		hr = m_pd3dDevice->CreateQuery(D3DQUERYTYPE_EVENT, nullptr);
+
 		if (hr != D3DERR_NOTAVAILABLE)
 			hr = m_pd3dDevice->CreateQuery(D3DQUERYTYPE_OCCLUSION, nullptr);
+
 		if (hr == D3DERR_NOTAVAILABLE)
 		{
 			SAFE_RELEASE(m_pd3dDevice);
-			Sleep(1000);
 			m_d3dpp.Flags |= D3DPRESENTFLAG_LOCKABLE_BACKBUFFER;
 
 			// Create the device
@@ -1478,7 +1446,6 @@ HRESULT CD3D9Renderer::Initialize3DEnvironment()
 			if (FAILED(hr))
 			{
 				SAFE_RELEASE(m_pd3dDevice);
-				Sleep(1000);
 				m_d3dpp.Flags &= ~D3DPRESENTFLAG_LOCKABLE_BACKBUFFER;
 				hr = m_pD3D->CreateDevice(m_D3DSettings.AdapterOrdinal(), pDeviceInfo->DevType, hWnd, behaviorFlags, &m_d3dpp, &m_pd3dDevice);
 			}
@@ -1491,26 +1458,7 @@ HRESULT CD3D9Renderer::Initialize3DEnvironment()
 		return hr;
 	}
 	
-	// When moving from fullscreen to windowed mode, it is important to
-	// adjust the window size after recreating the device rather than
-	// beforehand to ensure that you get the window size you want.  For
-	// example, when switching from 640x480 fullscreen to windowed with
-	// a 1000x600 window on a 1024x768 desktop, it is impossible to set
-	// the window size to 1000x600 until after the display mode has
-	// changed to 1024x768, because windows cannot be larger than the
-	// desktop.
-			//ShowWindow(m_hWnd, SW_SHOW);
-			//UpdateWindow(m_hWnd);
-			//
-			//SetForegroundWindow(m_hWnd);
-			//SetFocus(m_hWnd);
-
-	if (!m_bFullScreen)
-	{
-		//SetWindowPos(m_hWnd, HWND_NOTOPMOST, m_rcWindowBounds.left, m_rcWindowBounds.top, (m_rcWindowBounds.right-m_rcWindowBounds.left), (m_rcWindowBounds.bottom - m_rcWindowBounds.top), SWP_SHOWWINDOW);
-	}
 	ChangeLog();
-	DisplaySplash();
 
 	// Store device Caps
 	m_pd3dDevice->GetDeviceCaps(&m_d3dCaps);

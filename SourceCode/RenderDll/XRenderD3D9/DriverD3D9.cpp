@@ -545,24 +545,23 @@ void CD3D9Renderer::ChangeLog()
 			fprintf(m_LogFile, "==========================================\n");
 		}
 	}
-	else
-		if (!CV_r_log && m_LogFile)
-		{
-			SetLogFuncs(false);
+	else if (!CV_r_log && m_LogFile)
+	{
+		SetLogFuncs(false);
 
-			char time[128];
-			char date[128];
-			_strtime(time);
-			_strdate(date);
+		char time[128];
+		char date[128];
+		_strtime(time);
+		_strdate(date);
 
-			fprintf(m_LogFile, "\n==========================================\n");
-			fprintf(m_LogFile, "Direct3D Log file closed: %s (%s)\n", date, time);
-			fprintf(m_LogFile, "==========================================\n");
+		fprintf(m_LogFile, "\n==========================================\n");
+		fprintf(m_LogFile, "Direct3D Log file closed: %s (%s)\n", date, time);
+		fprintf(m_LogFile, "==========================================\n");
 
-			fclose(m_LogFile);
-			m_LogFile = nullptr;
-			iLog->Log("Direct3D log file '%s' closed\n", "Direct3DLog.txt");
-		}
+		fclose(m_LogFile);
+		m_LogFile = nullptr;
+		iLog->Log("Direct3D log file '%s' closed\n", "Direct3DLog.txt");
+	}
 
 	if (CV_r_logTexStreaming && !m_LogFileStr)
 	{
@@ -581,22 +580,21 @@ void CD3D9Renderer::ChangeLog()
 			fprintf(m_LogFileStr, "==========================================\n");
 		}
 	}
-	else
-		if (!CV_r_logTexStreaming && m_LogFileStr)
-		{
-			char time[128];
-			char date[128];
-			_strtime(time);
-			_strdate(date);
+	else if (!CV_r_logTexStreaming && m_LogFileStr)
+	{
+		char time[128];
+		char date[128];
+		_strtime(time);
+		_strdate(date);
 
-			fprintf(m_LogFileStr, "\n==========================================\n");
-			fprintf(m_LogFileStr, "Direct3D Textures streaming Log file closed: %s (%s)\n", date, time);
-			fprintf(m_LogFileStr, "==========================================\n");
+		fprintf(m_LogFileStr, "\n==========================================\n");
+		fprintf(m_LogFileStr, "Direct3D Textures streaming Log file closed: %s (%s)\n", date, time);
+		fprintf(m_LogFileStr, "==========================================\n");
 
-			fclose(m_LogFileStr);
-			m_LogFileStr = nullptr;
-			iLog->Log("Direct3D texture streaming log file '%s' closed\n", "Direct3DLogStreaming.txt");
-		}
+		fclose(m_LogFileStr);
+		m_LogFileStr = nullptr;
+		iLog->Log("Direct3D texture streaming log file '%s' closed\n", "Direct3DLogStreaming.txt");
+	}
 }
 
 void CD3D9Renderer::BeginFrame()
