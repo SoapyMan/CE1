@@ -2206,39 +2206,42 @@ struct CMatInfo : public IMatInfo
 
 //////////////////////////////////////////////////////////////////////
 // DLights
-#define DLF_DETAIL					1
-#define DLF_DIRECTIONAL			2
-#define DLF_DYNAMIC					4				//dynamic lights
-#define DLF_ACTIVE					8				//light is active/disactive
-#define DLF_CASTSHADOW_MAPS 0x10		//light casting shadows
-#define DLF_POINT						0x20
-#define DLF_PROJECT					0x40
-#define DLF_CASTSHADOW_VOLUME			0x80		//light casting shadows
-#define DLF_POSITIONCHANGED 0x100
-#define DLF_NOATTENUATION   0x200
-#define DLF_UPDATED					0x400
-#define DLF_INWORLDSPACE  	0x800
-#define DLF_TEMP   					0x1000
-#define DLF_STATIC_ADDED		0x2000	//this static light has been already added to the list
-#define DLF_HASAMBIENT			0x4000
-#define DLF_HEATSOURCE			0x8000
-#define DLF_LIGHTSOURCE			0x10000
-#define DLF_FAKE      			0x20000 //actually it's not LS, just render elements (Flares, beams, ...)
-#define DLF_SUN      			  0x40000 //only sun may use this flag
-#define DLF_COPY     			  0x80000
-#define DLF_LOCAL    			  0x100000
-#define DLF_LM      			  0x200000
-#define DLF_THIS_AREA_ONLY  0x400000 // affects only current area/sector
-#define DLF_AMBIENT_LIGHT		0x800000 // only used to add better ambient lighting to polybump characters
-#define DLF_IGNORE_OWNER		0x1000000 // do not affect light owner object
-#define DLF_IGNORE_TERRAIN	0x2000000 // do not affect heightmap
-#define DLF_ONLY_FOR_HIGHSPEC	0x4000000 //!< This light is active as dynamic light only for high spec machines.
-#define DLF_SPECULAR_ONLY_FOR_HIGHSPEC	0x8000000 //!< This light have specular component enabled only for high spec machines.
-#define DLF_LMDOT3          0x10000000
-#define DLF_FAKE_RADIOSITY  0x20000000
-#define DLF_LMOCCL			0x40000000
+enum EDlightFlags
+{
+	DLF_DETAIL = 1,
+	DLF_DIRECTIONAL = 2,
+	DLF_DYNAMIC = 4,				//dynamic lights
+	DLF_ACTIVE = 8,				//light is active/disactive
+	DLF_CASTSHADOW_MAPS = 0x10,		//light casting shadows
+	DLF_POINT = 0x20,
+	DLF_PROJECT = 0x40,
+	DLF_CASTSHADOW_VOLUME = 0x80,		//light casting shadows
+	DLF_POSITIONCHANGED = 0x100,
+	DLF_NOATTENUATION = 0x200,
+	DLF_UPDATED = 0x400,
+	DLF_INWORLDSPACE = 0x800,
+	DLF_TEMP = 0x1000,
+	DLF_STATIC_ADDED = 0x2000,	//this static light has been already added to the list
+	DLF_HASAMBIENT = 0x4000,
+	DLF_HEATSOURCE = 0x8000,
+	DLF_LIGHTSOURCE = 0x10000,
+	DLF_FAKE = 0x20000, //actually it's not LS, just render elements (Flares, beams, ...)
+	DLF_SUN = 0x40000, //only sun may use this flag
+	DLF_COPY = 0x80000,
+	DLF_LOCAL = 0x100000,
+	DLF_LM = 0x200000,
+	DLF_THIS_AREA_ONLY = 0x400000, // affects only current area/sector
+	DLF_AMBIENT_LIGHT = 0x800000, // only used to add better ambient lighting to polybump characters
+	DLF_IGNORE_OWNER = 0x1000000, // do not affect light owner object
+	DLF_IGNORE_TERRAIN = 0x2000000, // do not affect heightmap
+	DLF_ONLY_FOR_HIGHSPEC = 0x4000000, //!< This light is active as dynamic light only for high spec machines.
+	DLF_SPECULAR_ONLY_FOR_HIGHSPEC = 0x8000000, //!< This light have specular component enabled only for high spec machines.
+	DLF_LMDOT3 = 0x10000000,
+	DLF_FAKE_RADIOSITY = 0x20000000,
+	DLF_LMOCCL = 0x40000000,
 
-#define DLF_LIGHTTYPE_MASK (DLF_DIRECTIONAL | DLF_POINT | DLF_PROJECT)
+	DLF_LIGHTTYPE_MASK = DLF_DIRECTIONAL | DLF_POINT | DLF_PROJECT
+};
 
 struct IEntity;
 struct ShadowMapLightSourceInstance;
