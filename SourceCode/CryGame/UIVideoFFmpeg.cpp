@@ -590,7 +590,8 @@ static void PlayerAudioDecodeStep(MoviePlayerData* player, FrameQueue& frameQueu
 
 		state = DEC_SEND_PACKET;
 	}
-	else if (state == DEC_SEND_PACKET)
+	
+	if (state == DEC_SEND_PACKET)
 	{
 		int r = avcodec_send_packet(player->audioCodec, audioState.deqPacket);
 		if (r == 0)

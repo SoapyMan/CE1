@@ -48,7 +48,10 @@ int CUIVideoPanel::LoadVideo(const string& szFileName, bool bSound)
 	m_bFinished = false;
 	m_bPaused = false;
 	m_videoPlayer.m_onFinished = [this]() {
-		m_bFinished = true;
+		if(m_bLooping)
+			m_videoPlayer.Rewind();
+		else
+			m_bFinished = true;
 	};
 
 	return 1;
