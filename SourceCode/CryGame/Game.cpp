@@ -68,13 +68,8 @@
 #include "TimeDemoRecorder.h"
 #include "GameMods.h"
 
-#ifdef WIN32
-#include <winioctl.h>
-#include <tchar.h>
+#include <SDL.h>
 
-typedef std::basic_string< TCHAR > tstring;
-typedef std::vector< TCHAR > tvector;
-#endif
  
 //////////////////////////////////////////////////////////////////////////
 // Pointer to Global ISystem.
@@ -813,17 +808,15 @@ bool CXGame::Update()
 	// Cannot Run Without System.
 	CRYASSERT( m_pSystem );
 
-	float	maxFPS=g_maxfps->GetFVal();
-	if(maxFPS>0)
+	float maxFPS = g_maxfps->GetFVal();
+	if(maxFPS > 0)
 	{
 //		float	extraTime = pTimer->GetAsyncCurTime() + 1.0f/maxFPS - pTimer->GetFrameTime();
 //		while(extraTime - pTimer->GetAsyncCurTime() > 0)
 //			;
 		DWORD	extraTime = (DWORD)((1.0f/maxFPS - pTimer->GetFrameTime())*1000.0f);
-#if !defined(LINUX)
-		if(extraTime>0&&extraTime<300)//thread sleep not process sleep
-			Sleep(extraTime);
-#endif
+		if(extraTime > 0 && extraTime < 300) //thread sleep not process sleep
+			SDL_Delay(extraTime);
 	}
 
 	PhysicsVars *pVars = m_pSystem->GetIPhysicalWorld()->GetPhysVars();
@@ -1895,57 +1888,7 @@ void CXGame::LoadingError(const char *szError)
 //------------------------------------------------------------------------------------------------- 
 bool CXGame::GetCDPath(string &szCDPath)
 {
-	bool bRet( false );
-#ifdef WIN32
-	DWORD nBufferSize( GetLogicalDriveStrings( 0, 0 ) );
-	if( 0 < nBufferSize )
-	{
-		// get list of all available logical drives
-		tvector rawDriveLetters( nBufferSize + 1 );
-		GetLogicalDriveStrings( nBufferSize, &rawDriveLetters[ 0 ] );
-
-		// quickly scan all drives
-		tvector::size_type i( 0 );
-		while( true )
-		{
-			// check if current drive is cd/dvd drive
-			if( DRIVE_CDROM == GetDriveType( &rawDriveLetters[ i ] ) )
-			{
-				// get volume name
-				tvector cdVolumeName( MAX_VOLUME_ID_SIZE + 1 );
-				if( FALSE != GetVolumeInformation( &rawDriveLetters[ i ],
-					&cdVolumeName[ 0 ], (DWORD) cdVolumeName.size(), 0, 0, 0, 0, 0 ) )
-				{
-					// check volume name to verify it's Far Cry's game cd/dvd
-					tstring cdVolumeLabel( &cdVolumeName[ 0 ] );
-					tstring farCryDisk1Label( _T( "FARCRY_1" ) );
-					if( cdVolumeLabel == farCryDisk1Label  )
-					{
-						// found Far Cry's game cd/dvd, copy information and bail out
-						szCDPath = &rawDriveLetters[ i ];
-						bRet = true;
-						break;
-					}
-				}
-			}
-
-			// proceed to next drive
-			while( 0 != rawDriveLetters[ i ] )
-			{
-				++i;
-			}
-			++i; // skip null termination of current drive
-
-			// check if we're out of drive letters
-			if( 0 == rawDriveLetters[ i ] )
-			{
-				// double null termination found, bail out
-				break;
-			}
-		}
-	}
-#endif
-	return( bRet );
+	return false;
 }
 
 ITagPointManager* CXGame::GetTagPointManager()
