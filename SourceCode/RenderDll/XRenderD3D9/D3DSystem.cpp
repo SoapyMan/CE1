@@ -2505,18 +2505,16 @@ HRESULT CD3D9Renderer::InitDeviceObjects()
 			// Depth formats
 			if (CV_d3d9_forcesoftware)
 				m_Features |= RFT_DEPTHMAPS;
-			else
-				if (SUCCEEDED(m_pD3D->CheckDeviceFormat(pAI->AdapterOrdinal, m_d3dCaps.DeviceType, m_D3DSettings.AdapterFormat(), 0, D3DRTYPE_TEXTURE, D3DFMT_D24S8)))
-				{
-					m_Features |= RFT_DEPTHMAPS;
-					RecognizePixelFormat(mFormatDepth24, D3DFMT_D24S8, 8, "Depth24");
-				}
-				else
-					if (SUCCEEDED(m_pD3D->CheckDeviceFormat(pAI->AdapterOrdinal, m_d3dCaps.DeviceType, m_D3DSettings.AdapterFormat(), 0, D3DRTYPE_TEXTURE, D3DFMT_D16)))
-					{
-						m_Features |= RFT_DEPTHMAPS;
-						RecognizePixelFormat(mFormatDepth16, D3DFMT_D16, 8, "Depth16");
-					}
+			else if (SUCCEEDED(m_pD3D->CheckDeviceFormat(pAI->AdapterOrdinal, m_d3dCaps.DeviceType, m_D3DSettings.AdapterFormat(), 0, D3DRTYPE_TEXTURE, D3DFMT_D24S8)))
+			{
+				m_Features |= RFT_DEPTHMAPS;
+				RecognizePixelFormat(mFormatDepth24, D3DFMT_D24S8, 8, "Depth24");
+			}
+			else if (SUCCEEDED(m_pD3D->CheckDeviceFormat(pAI->AdapterOrdinal, m_d3dCaps.DeviceType, m_D3DSettings.AdapterFormat(), 0, D3DRTYPE_TEXTURE, D3DFMT_D16)))
+			{
+				m_Features |= RFT_DEPTHMAPS;
+				RecognizePixelFormat(mFormatDepth16, D3DFMT_D16, 8, "Depth16");
+			}
 			//// REMOVED DRIVER HACK -- Carsten
    //   // Workaround for NVidia drivers less than 61.00
    //   // Depth maps are working extremely bad on rel5X drivers
@@ -2817,53 +2815,47 @@ HRESULT CD3D9Renderer::InitDeviceObjects()
 		m_Features &= ~RFT_HW_MASK;
 		m_Features |= RFT_HW_GF2;
 	}
-	else
+	else if (m_d3dCaps.MaxSimultaneousTextures == 4 && D3DSHADER_VERSION_MAJOR(m_d3dCaps.PixelShaderVersion) == 1)
 	{
-		if (m_d3dCaps.MaxSimultaneousTextures == 4 && D3DSHADER_VERSION_MAJOR(m_d3dCaps.PixelShaderVersion) == 1)
+		m_Features &= ~RFT_HW_MASK;
+		m_Features |= RFT_HW_GF3;
+		if (ai->VendorId == 4318 && !CV_d3d9_nodepthmaps)
+			m_Features |= RFT_DEPTHMAPS;
+	}
+	else if (ai->VendorId == 4318)
+	{
+		if (m_d3dCaps.MaxSimultaneousTextures >= 8 && (D3DSHADER_VERSION_MAJOR(m_d3dCaps.PixelShaderVersion) >= 3 || (D3DSHADER_VERSION_MAJOR(m_d3dCaps.PixelShaderVersion) >= 2 && D3DSHADER_VERSION_MINOR(m_d3dCaps.PixelShaderVersion) >= 1)))
+		{
+			m_Features &= ~RFT_HW_MASK;
+			m_Features |= RFT_HW_NV4X;
+		}
+		else if (m_d3dCaps.MaxSimultaneousTextures >= 8 && D3DSHADER_VERSION_MAJOR(m_d3dCaps.PixelShaderVersion) >= 2)
+		{
+			m_Features &= ~RFT_HW_MASK;
+			m_Features |= RFT_HW_GFFX;
+		}
+		else
 		{
 			m_Features &= ~RFT_HW_MASK;
 			m_Features |= RFT_HW_GF3;
-			if (ai->VendorId == 4318 && !CV_d3d9_nodepthmaps)
-				m_Features |= RFT_DEPTHMAPS;
 		}
-		else
-			if (ai->VendorId == 4318)
-			{
-				if (m_d3dCaps.MaxSimultaneousTextures >= 8 && (D3DSHADER_VERSION_MAJOR(m_d3dCaps.PixelShaderVersion) >= 3 || (D3DSHADER_VERSION_MAJOR(m_d3dCaps.PixelShaderVersion) >= 2 && D3DSHADER_VERSION_MINOR(m_d3dCaps.PixelShaderVersion) >= 1)))
-				{
-					m_Features &= ~RFT_HW_MASK;
-					m_Features |= RFT_HW_NV4X;
-				}
-				else
-					if (m_d3dCaps.MaxSimultaneousTextures >= 8 && D3DSHADER_VERSION_MAJOR(m_d3dCaps.PixelShaderVersion) >= 2)
-					{
-						m_Features &= ~RFT_HW_MASK;
-						m_Features |= RFT_HW_GFFX;
-					}
-					else
-					{
-						m_Features &= ~RFT_HW_MASK;
-						m_Features |= RFT_HW_GF3;
-					}
-				if (!CV_d3d9_nodepthmaps)
-					m_Features |= RFT_DEPTHMAPS;
-				if (m_bDeviceSupportsComprNormalmaps == 1)
-				{
-					iLog->Log("Warning: Disabled 3DC for NVidia card\n");
-					if (mFormatV8U8.BitsPerPixel)
-						m_bDeviceSupportsComprNormalmaps = 2;
-				}
-			}
-			else
-				if (m_d3dCaps.MaxSimultaneousTextures >= 8 && D3DSHADER_VERSION_MAJOR(m_d3dCaps.PixelShaderVersion) >= 2)
-				{
-					m_Features &= ~RFT_HW_MASK;
-					m_Features |= RFT_HW_RADEON;
-				}
-				else
-					if (!(m_Features & RFT_HW_MASK))
-						m_Features |= RFT_HW_GF3;
+		if (!CV_d3d9_nodepthmaps)
+			m_Features |= RFT_DEPTHMAPS;
+		if (m_bDeviceSupportsComprNormalmaps == 1)
+		{
+			iLog->Log("Warning: Disabled 3DC for NVidia card\n");
+			if (mFormatV8U8.BitsPerPixel)
+				m_bDeviceSupportsComprNormalmaps = 2;
+		}
 	}
+	else if (m_d3dCaps.MaxSimultaneousTextures >= 8 && D3DSHADER_VERSION_MAJOR(m_d3dCaps.PixelShaderVersion) >= 2)
+	{
+		m_Features &= ~RFT_HW_MASK;
+		m_Features |= RFT_HW_RADEON;
+	}
+	else if (!(m_Features & RFT_HW_MASK))
+		m_Features |= RFT_HW_GF3;
+
 	if (m_d3dCaps.MaxSimultaneousTextures >= 4 && D3DSHADER_VERSION_MAJOR(m_d3dCaps.PixelShaderVersion) >= 1)
 		m_Features |= RFT_HW_TS | RFT_HW_VS;
 

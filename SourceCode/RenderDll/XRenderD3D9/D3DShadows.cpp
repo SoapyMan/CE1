@@ -141,160 +141,158 @@ void CD3D9Renderer::BlurImage(int nSizeX, int nSizeY, int nType, ShadowMapTexInf
 		}
 		Set2DMode(false, 1, 1);
 	}
-	else
-		if (nType == 2)
+	else if (nType == 2)
+	{
+		EF_SetState(GS_NODEPTHTEST | GS_COLMASKONLYALPHA);
+		Set2DMode(true, 1, 1);
+
+		float s1 = 1.0f / (float)nSizeX;
+		float t1 = 1.0f / (float)nSizeY;
+		float s_off = s1 * 0.5f;
+		float t_off = t1 * 0.5f;
+
+		D3DXVECTOR4 avSampleOffsets[16];
+		D3DXVECTOR4 avSampleWeights[16];
+
+		// setup screen aligned quad
+		struct_VERTEX_FORMAT_P3F_TEX2F pScreenBlur[] =
 		{
-			EF_SetState(GS_NODEPTHTEST | GS_COLMASKONLYALPHA);
-			Set2DMode(true, 1, 1);
+			Vec3(-s_off, -t_off, 0), 0, 0,
+			Vec3(-s_off, 1 - t_off, 0), 0, 1,
+			Vec3(1 - s_off, -t_off, 0), 1, 0,
+			Vec3(1 - s_off, 1 - t_off, 0), 1, 1,
+		};
 
-			float s1 = 1.0f / (float)nSizeX;
-			float t1 = 1.0f / (float)nSizeY;
-			float s_off = s1 * 0.5f;
-			float t_off = t1 * 0.5f;
+		RECT rectSrc;
+		GetTextureRect(tpSrc, &rectSrc);
+		InflateRect(&rectSrc, -1, -1);
 
-			D3DXVECTOR4 avSampleOffsets[16];
-			D3DXVECTOR4 avSampleWeights[16];
+		RECT rectDest;
+		GetTextureRect(tpDst, &rectDest);
+		InflateRect(&rectDest, -1, -1);
 
-			// setup screen aligned quad
-			struct_VERTEX_FORMAT_P3F_TEX2F pScreenBlur[] =
-			{
-			  Vec3(-s_off, -t_off, 0), 0, 0,
-			  Vec3(-s_off, 1 - t_off, 0), 0, 1,
-			  Vec3(1 - s_off, -t_off, 0), 1, 0,
-			  Vec3(1 - s_off, 1 - t_off, 0), 1, 1,
-			};
+		CoordRect coords;
+		GetTextureCoords(tpSrc, &rectSrc, tpDst, &rectDest, &coords);
 
-			RECT rectSrc;
-			GetTextureRect(tpSrc, &rectSrc);
-			InflateRect(&rectSrc, -1, -1);
+		HRESULT hr = GetSampleOffsets_GaussBlur5x5Bilinear(tpSrc->m_Width, tpSrc->m_Height, avSampleOffsets, avSampleWeights, 1.0f);
 
-			RECT rectDest;
-			GetTextureRect(tpDst, &rectDest);
-			InflateRect(&rectDest, -1, -1);
-
-			CoordRect coords;
-			GetTextureCoords(tpSrc, &rectSrc, tpDst, &rectDest, &coords);
-
-			HRESULT hr = GetSampleOffsets_GaussBlur5x5Bilinear(tpSrc->m_Width, tpSrc->m_Height, avSampleOffsets, avSampleWeights, 1.0f);
-
-			if (tpSrc)
-			{
-				tpSrc->m_RefTex.m_MinFilter = D3DTEXF_LINEAR;
-				tpSrc->m_RefTex.m_MagFilter = D3DTEXF_LINEAR;
-				tpSrc->m_RefTex.bRepeats = false;
-				tpSrc->Set();
-			}
-
-			CCGPShader_D3D* fpGaussBlur5x5 = (CCGPShader_D3D*)PShaderForName(m_RP.m_PS_HDRGaussBlur5x5_Bilinear, "CGRC_HDR_GaussBlur5x5_Bilinear_PS20");
-			if (fpGaussBlur5x5)
-			{
-				fpGaussBlur5x5->mfSet(true);
-
-				SCGBind* bind = fpGaussBlur5x5->mfGetParameterBind("vSampleOffsets");
-				CRYASSERT(bind);
-				fpGaussBlur5x5->mfParameter(bind, &avSampleOffsets[0].x, 9);
-
-				bind = fpGaussBlur5x5->mfGetParameterBind("vSampleWeights");
-				CRYASSERT(bind);
-				fpGaussBlur5x5->mfParameter(bind, &avSampleWeights[0].x, 9);
-
-				// Draw a fullscreen quad to sample the RT
-				DrawTriStrip(&(CVertexBuffer(pScreenBlur, VERTEX_FORMAT_P3F_TEX2F)), 4);
-
-				fpGaussBlur5x5->mfSet(false);
-			}
-			Set2DMode(false, 1, 1);
+		if (tpSrc)
+		{
+			tpSrc->m_RefTex.m_MinFilter = D3DTEXF_LINEAR;
+			tpSrc->m_RefTex.m_MagFilter = D3DTEXF_LINEAR;
+			tpSrc->m_RefTex.bRepeats = false;
+			tpSrc->Set();
 		}
-		else
-			if (nType >= 3)
+
+		CCGPShader_D3D* fpGaussBlur5x5 = (CCGPShader_D3D*)PShaderForName(m_RP.m_PS_HDRGaussBlur5x5_Bilinear, "CGRC_HDR_GaussBlur5x5_Bilinear_PS20");
+		if (fpGaussBlur5x5)
+		{
+			fpGaussBlur5x5->mfSet(true);
+
+			SCGBind* bind = fpGaussBlur5x5->mfGetParameterBind("vSampleOffsets");
+			CRYASSERT(bind);
+			fpGaussBlur5x5->mfParameter(bind, &avSampleOffsets[0].x, 9);
+
+			bind = fpGaussBlur5x5->mfGetParameterBind("vSampleWeights");
+			CRYASSERT(bind);
+			fpGaussBlur5x5->mfParameter(bind, &avSampleWeights[0].x, 9);
+
+			// Draw a fullscreen quad to sample the RT
+			DrawTriStrip(&(CVertexBuffer(pScreenBlur, VERTEX_FORMAT_P3F_TEX2F)), 4);
+
+			fpGaussBlur5x5->mfSet(false);
+		}
+		Set2DMode(false, 1, 1);
+	}
+	else if (nType >= 3)
+	{
+		if (!st->nTexId1)
+			st->nTexId1 = GenShadowTexture(st->nTexSize, false);
+		STexPicD3D* tpDst2 = (STexPicD3D*)m_TexMan->GetByID(st->nTexId1);
+		LPDIRECT3DTEXTURE9 pIRGBTarget2 = nullptr;
+		IDirect3DSurface9* pIRGBTargetSurf2 = nullptr;
+		pIRGBTarget2 = (LPDIRECT3DTEXTURE9)tpDst2->m_RefTex.m_VidTex;
+		hReturn = pIRGBTarget2->GetSurfaceLevel(0, &pIRGBTargetSurf2);
+		hReturn = m_pd3dDevice->SetRenderTarget(0, pIRGBTargetSurf2);
+		SAFE_RELEASE(pIRGBTargetSurf2);
+		Set2DMode(true, 1, 1);
+		EF_SetState(GS_NODEPTHTEST | GS_COLMASKONLYALPHA);
+
+		// setup screen aligned quad
+		struct_VERTEX_FORMAT_P3F_TEX2F pScreenBlur[] =
+		{
+			Vec3(0, 0, 0), 0, 0,
+			Vec3(0, 1, 0), 0, 1,
+			Vec3(1, 0, 0), 1, 0,
+			Vec3(1, 1, 0), 1, 1,
+		};
+
+		if (tpSrc)
+		{
+			tpSrc->m_RefTex.m_MinFilter = D3DTEXF_LINEAR;
+			tpSrc->m_RefTex.m_MagFilter = D3DTEXF_LINEAR;
+			tpSrc->m_RefTex.bRepeats = false;
+			tpSrc->Set();
+		}
+
+		CCGPShader_D3D* fpGaussSep = (CCGPShader_D3D*)PShaderForName(m_RP.m_PS_GaussBlurSep, "CGRCBlurSep");
+		CCGVProgram_D3D* vpGaussSep = (CCGVProgram_D3D*)VShaderForName(m_RP.m_VS_GaussBlurSep, "CGVProgBlurSep");
+		if (fpGaussSep && vpGaussSep)
+		{
+			static float sW[8] = { 0.2537f, 0.2185f, 0.0821f, 0.0461f, 0.0262f, 0.0162f, 0.0102f, 0.0052f };
+			int i;
+
+			fpGaussSep->mfSet(true);
+			vpGaussSep->mfSet(true);
+
+			vec4_t v;
+			v[0] = 1.0f / (float)nSizeX;
+			v[1] = 1.0f / (float)nSizeY;
+			v[2] = 0;
+			v[3] = 0;
+			SCGBind* bindOffs = vpGaussSep->mfGetParameterBind("PixelOffset");
+			CRYASSERT(bindOffs);
+			vpGaussSep->mfParameter(bindOffs, v, 1);
+
+			// X Blur
+			v[0] = 1.0f / (float)nSizeX;
+			v[1] = 0;
+			bindOffs = fpGaussSep->mfGetParameterBind("BlurOffset");
+			CRYASSERT(bindOffs);
+			fpGaussSep->mfParameter(bindOffs, v, 1);
+
+			vec4_t vWeight[8];
+			for (i = 0; i < 8; i++)
 			{
-				if (!st->nTexId1)
-					st->nTexId1 = GenShadowTexture(st->nTexSize, false);
-				STexPicD3D* tpDst2 = (STexPicD3D*)m_TexMan->GetByID(st->nTexId1);
-				LPDIRECT3DTEXTURE9 pIRGBTarget2 = nullptr;
-				IDirect3DSurface9* pIRGBTargetSurf2 = nullptr;
-				pIRGBTarget2 = (LPDIRECT3DTEXTURE9)tpDst2->m_RefTex.m_VidTex;
-				hReturn = pIRGBTarget2->GetSurfaceLevel(0, &pIRGBTargetSurf2);
-				hReturn = m_pd3dDevice->SetRenderTarget(0, pIRGBTargetSurf2);
-				SAFE_RELEASE(pIRGBTargetSurf2);
-				Set2DMode(true, 1, 1);
-				EF_SetState(GS_NODEPTHTEST | GS_COLMASKONLYALPHA);
-
-				// setup screen aligned quad
-				struct_VERTEX_FORMAT_P3F_TEX2F pScreenBlur[] =
-				{
-				  Vec3(0, 0, 0), 0, 0,
-				  Vec3(0, 1, 0), 0, 1,
-				  Vec3(1, 0, 0), 1, 0,
-				  Vec3(1, 1, 0), 1, 1,
-				};
-
-				if (tpSrc)
-				{
-					tpSrc->m_RefTex.m_MinFilter = D3DTEXF_LINEAR;
-					tpSrc->m_RefTex.m_MagFilter = D3DTEXF_LINEAR;
-					tpSrc->m_RefTex.bRepeats = false;
-					tpSrc->Set();
-				}
-
-				CCGPShader_D3D* fpGaussSep = (CCGPShader_D3D*)PShaderForName(m_RP.m_PS_GaussBlurSep, "CGRCBlurSep");
-				CCGVProgram_D3D* vpGaussSep = (CCGVProgram_D3D*)VShaderForName(m_RP.m_VS_GaussBlurSep, "CGVProgBlurSep");
-				if (fpGaussSep && vpGaussSep)
-				{
-					static float sW[8] = { 0.2537f, 0.2185f, 0.0821f, 0.0461f, 0.0262f, 0.0162f, 0.0102f, 0.0052f };
-					int i;
-
-					fpGaussSep->mfSet(true);
-					vpGaussSep->mfSet(true);
-
-					vec4_t v;
-					v[0] = 1.0f / (float)nSizeX;
-					v[1] = 1.0f / (float)nSizeY;
-					v[2] = 0;
-					v[3] = 0;
-					SCGBind* bindOffs = vpGaussSep->mfGetParameterBind("PixelOffset");
-					CRYASSERT(bindOffs);
-					vpGaussSep->mfParameter(bindOffs, v, 1);
-
-					// X Blur
-					v[0] = 1.0f / (float)nSizeX;
-					v[1] = 0;
-					bindOffs = fpGaussSep->mfGetParameterBind("BlurOffset");
-					CRYASSERT(bindOffs);
-					fpGaussSep->mfParameter(bindOffs, v, 1);
-
-					vec4_t vWeight[8];
-					for (i = 0; i < 8; i++)
-					{
-						vWeight[i][0] = sW[i];
-						vWeight[i][1] = sW[i];
-						vWeight[i][2] = sW[i];
-						vWeight[i][3] = sW[i];
-					}
-					SCGBind* bindW = fpGaussSep->mfGetParameterBind("vPixelWeights");
-					CRYASSERT(bindW);
-					fpGaussSep->mfParameter(bindW, &vWeight[0][0], 8);
-
-					// Draw a fullscreen quad to sample the RT
-					DrawTriStrip(&(CVertexBuffer(pScreenBlur, VERTEX_FORMAT_P3F_TEX2F)), 4);
-
-					// Y Blur
-					v[0] = 0;
-					v[1] = 1.0f / (float)nSizeY;
-					fpGaussSep->mfParameter(bindOffs, v, 1);
-
-					hReturn = m_pd3dDevice->SetRenderTarget(0, pIRGBTargetSurf);
-					SAFE_RELEASE(pIRGBTargetSurf);
-					tpDst2->Set();
-
-					// Draw a fullscreen quad to sample the RT
-					DrawTriStrip(&(CVertexBuffer(pScreenBlur, VERTEX_FORMAT_P3F_TEX2F)), 4);
-
-					fpGaussSep->mfSet(false);
-					vpGaussSep->mfSet(false);
-				}
-				Set2DMode(false, 1, 1);
+				vWeight[i][0] = sW[i];
+				vWeight[i][1] = sW[i];
+				vWeight[i][2] = sW[i];
+				vWeight[i][3] = sW[i];
 			}
+			SCGBind* bindW = fpGaussSep->mfGetParameterBind("vPixelWeights");
+			CRYASSERT(bindW);
+			fpGaussSep->mfParameter(bindW, &vWeight[0][0], 8);
+
+			// Draw a fullscreen quad to sample the RT
+			DrawTriStrip(&(CVertexBuffer(pScreenBlur, VERTEX_FORMAT_P3F_TEX2F)), 4);
+
+			// Y Blur
+			v[0] = 0;
+			v[1] = 1.0f / (float)nSizeY;
+			fpGaussSep->mfParameter(bindOffs, v, 1);
+
+			hReturn = m_pd3dDevice->SetRenderTarget(0, pIRGBTargetSurf);
+			SAFE_RELEASE(pIRGBTargetSurf);
+			tpDst2->Set();
+
+			// Draw a fullscreen quad to sample the RT
+			DrawTriStrip(&(CVertexBuffer(pScreenBlur, VERTEX_FORMAT_P3F_TEX2F)), 4);
+
+			fpGaussSep->mfSet(false);
+			vpGaussSep->mfSet(false);
+		}
+		Set2DMode(false, 1, 1);
+	}
 	SAFE_RELEASE(pIRGBTargetSurf);
 }
 
@@ -1094,52 +1092,52 @@ void CD3D9Renderer::ConfigShadowTexgen(int Num, int rangeMap, ShadowMapFrustum* 
 		mathMatrixTranspose(pf, m2, g_CpuFlags);
 	}
 
-	if (Num >= 0)
-	{
-		if (pFrustum->depth_tex_id <= 0)
-			Warning(0, 0, "Warning: CD3D9Renderer::ConfigShadowTexgen: pFrustum->depth_tex_id not set");
-		else
-		{
-			if (m_RP.m_pRE)
-			{
-				m_RP.m_pRE->m_CustomTexBind[Num] = pFrustum->depth_tex_id;
-				m_RP.m_pRE->m_Color[Num] = pFrustum->fAlpha;
-			}
-			else
-			{
-				m_RP.m_RECustomTexBind[Num] = pFrustum->depth_tex_id;
-				m_RP.m_REColor[Num] = pFrustum->fAlpha;
-			}
-		}
-		if (m_RP.m_pCurLight)
-		{
-			float fRadius;
-			if (m_RP.m_ObjFlags & FOB_TRANS_MASK)
-			{
-				float fLen = m_RP.m_pCurObject->m_Matrix(0, 0) * m_RP.m_pCurObject->m_Matrix(0, 0) + m_RP.m_pCurObject->m_Matrix(0, 1) * m_RP.m_pCurObject->m_Matrix(0, 1) + m_RP.m_pCurObject->m_Matrix(0, 2) * m_RP.m_pCurObject->m_Matrix(0, 2);
-				unsigned int* n1 = (unsigned int*)&fLen;
-				unsigned int n = 0x5f3759df - (*n1 >> 1);
-				float* n2 = (float*)&n;
-				float fISqrt = (1.5f - (fLen * 0.5f) * *n2 * *n2) * *n2;
-				fRadius = m_RP.m_pCurLight->m_fRadius * fISqrt;
-			}
-			else
-				fRadius = m_RP.m_pCurLight->m_fRadius;
+	if (Num < 0)
+		return;
 
-			m_RP.m_REColor[3] = 1.0f / fRadius;
-			if (m_RP.m_pRE)
-				m_RP.m_pRE->m_Color[3] = m_RP.m_REColor[3];
+	if (pFrustum->depth_tex_id <= 0)
+		Warning(0, 0, "Warning: CD3D9Renderer::ConfigShadowTexgen: pFrustum->depth_tex_id not set");
+	else
+	{
+		if (m_RP.m_pRE)
+		{
+			m_RP.m_pRE->m_CustomTexBind[Num] = pFrustum->depth_tex_id;
+			m_RP.m_pRE->m_Color[Num] = pFrustum->fAlpha;
 		}
 		else
 		{
-			m_RP.m_REColor[3] = 1.0f / 10000.0f;
-			if (m_RP.m_pRE)
-				m_RP.m_pRE->m_Color[3] = m_RP.m_REColor[3];
+			m_RP.m_RECustomTexBind[Num] = pFrustum->depth_tex_id;
+			m_RP.m_REColor[Num] = pFrustum->fAlpha;
 		}
-		STexPic* tp = (STexPic*)EF_GetTextureByID(pFrustum->depth_tex_id);
-		tp->m_RefTex.m_MinFilter = D3DTEXF_LINEAR;
-		tp->m_RefTex.m_MagFilter = D3DTEXF_LINEAR;
 	}
+	if (m_RP.m_pCurLight)
+	{
+		float fRadius;
+		if (m_RP.m_ObjFlags & FOB_TRANS_MASK)
+		{
+			float fLen = m_RP.m_pCurObject->m_Matrix(0, 0) * m_RP.m_pCurObject->m_Matrix(0, 0) + m_RP.m_pCurObject->m_Matrix(0, 1) * m_RP.m_pCurObject->m_Matrix(0, 1) + m_RP.m_pCurObject->m_Matrix(0, 2) * m_RP.m_pCurObject->m_Matrix(0, 2);
+			unsigned int* n1 = (unsigned int*)&fLen;
+			unsigned int n = 0x5f3759df - (*n1 >> 1);
+			float* n2 = (float*)&n;
+			float fISqrt = (1.5f - (fLen * 0.5f) * *n2 * *n2) * *n2;
+			fRadius = m_RP.m_pCurLight->m_fRadius * fISqrt;
+		}
+		else
+			fRadius = m_RP.m_pCurLight->m_fRadius;
+
+		m_RP.m_REColor[3] = 1.0f / fRadius;
+		if (m_RP.m_pRE)
+			m_RP.m_pRE->m_Color[3] = m_RP.m_REColor[3];
+	}
+	else
+	{
+		m_RP.m_REColor[3] = 1.0f / 10000.0f;
+		if (m_RP.m_pRE)
+			m_RP.m_pRE->m_Color[3] = m_RP.m_REColor[3];
+	}
+	STexPic* tp = (STexPic*)EF_GetTextureByID(pFrustum->depth_tex_id);
+	tp->m_RefTex.m_MinFilter = D3DTEXF_LINEAR;
+	tp->m_RefTex.m_MagFilter = D3DTEXF_LINEAR;
 }
 
 

@@ -311,11 +311,11 @@ int CREScreenProcess::mfSetParameter(int iProcess, int iParams, void* dwValue)
 			break;
 
 			SET_PARAMETER(SCREENPROCESS_FLASHBANGTIMESCALE, m_pVars->m_fFlashBangTimeScale, float, dwValue)
-				SET_PARAMETER(SCREENPROCESS_FLASHBANGFLASHPOSX, m_pVars->m_fFlashBangFlashPosX, float, dwValue)
-				SET_PARAMETER(SCREENPROCESS_FLASHBANGFLASHPOSY, m_pVars->m_fFlashBangFlashPosY, float, dwValue)
-				SET_PARAMETER(SCREENPROCESS_FLASHBANGFLASHSIZEX, m_pVars->m_fFlashBangFlashSizeX, float, dwValue)
-				SET_PARAMETER(SCREENPROCESS_FLASHBANGFLASHSIZEY, m_pVars->m_fFlashBangFlashSizeY, float, dwValue)
-				SET_PARAMETER(SCREENPROCESS_FLASHBANGFORCEAFTERIMAGE, m_pVars->m_iFlashBangForce, int, dwValue)
+			SET_PARAMETER(SCREENPROCESS_FLASHBANGFLASHPOSX, m_pVars->m_fFlashBangFlashPosX, float, dwValue)
+			SET_PARAMETER(SCREENPROCESS_FLASHBANGFLASHPOSY, m_pVars->m_fFlashBangFlashPosY, float, dwValue)
+			SET_PARAMETER(SCREENPROCESS_FLASHBANGFLASHSIZEX, m_pVars->m_fFlashBangFlashSizeX, float, dwValue)
+			SET_PARAMETER(SCREENPROCESS_FLASHBANGFLASHSIZEY, m_pVars->m_fFlashBangFlashSizeY, float, dwValue)
+			SET_PARAMETER(SCREENPROCESS_FLASHBANGFORCEAFTERIMAGE, m_pVars->m_iFlashBangForce, int, dwValue)
 		}
 		break;
 
@@ -335,7 +335,7 @@ int CREScreenProcess::mfSetParameter(int iProcess, int iParams, void* dwValue)
 		switch (iParams)
 		{
 			SET_PARAMETER(SCREENPROCESS_ACTIVE, m_pVars->m_bDofActive, bool, dwValue)
-				SET_PARAMETER(SCREENPROCESS_DOFFOCALDISTANCE, m_pVars->m_fDofFocalDistance, float, dwValue)
+			SET_PARAMETER(SCREENPROCESS_DOFFOCALDISTANCE, m_pVars->m_fDofFocalDistance, float, dwValue)
 		}
 		break;
 
@@ -387,8 +387,8 @@ void* CREScreenProcess::mfGetParameter(int iProcess, int iParams)
 		switch (iParams)
 		{
 			RETURN_PARAMETER(SCREENPROCESS_COLORTRANSFERAMOUNT, m_pVars->m_fColorTransferAmount)
-				RETURN_PARAMETER(SCREENPROCESS_COLORTRANSFERCOLOR, m_pVars->m_pColorTransferColor)
-				RETURN_PARAMETER(SCREENPROCESS_ACTIVE, m_pVars->m_bColorTransferActive)
+			RETURN_PARAMETER(SCREENPROCESS_COLORTRANSFERCOLOR, m_pVars->m_pColorTransferColor)
+			RETURN_PARAMETER(SCREENPROCESS_ACTIVE, m_pVars->m_bColorTransferActive)
 		}
 		break;
 
@@ -397,9 +397,9 @@ void* CREScreenProcess::mfGetParameter(int iProcess, int iParams)
 		switch (iParams)
 		{
 			RETURN_PARAMETER(SCREENPROCESS_MOTIONBLURDISPLACE, m_pVars->m_iMotionBlurDisplace)
-				RETURN_PARAMETER(SCREENPROCESS_MOTIONBLURAMOUNT, m_pVars->m_fMotionBlurAmount)
-				RETURN_PARAMETER(SCREENPROCESS_MOTIONBLURTYPE, m_pVars->m_iMotionBlurType)
-				RETURN_PARAMETER(SCREENPROCESS_ACTIVE, m_pVars->m_bMotionBlurActive)
+			RETURN_PARAMETER(SCREENPROCESS_MOTIONBLURAMOUNT, m_pVars->m_fMotionBlurAmount)
+			RETURN_PARAMETER(SCREENPROCESS_MOTIONBLURTYPE, m_pVars->m_iMotionBlurType)
+			RETURN_PARAMETER(SCREENPROCESS_ACTIVE, m_pVars->m_bMotionBlurActive)
 		}
 		break;
 
@@ -408,11 +408,11 @@ void* CREScreenProcess::mfGetParameter(int iProcess, int iParams)
 		switch (iParams)
 		{
 			RETURN_PARAMETER(SCREENPROCESS_ACTIVE, m_pVars->m_bGlareActive)
-				RETURN_PARAMETER(SCREENPROCESS_GLAREAMOUNT, m_pVars->m_fGlareAmount)
-				RETURN_PARAMETER(SCREENPROCESS_GLARELUMSIZE, m_pVars->m_iGlareLumSize)
-				RETURN_PARAMETER(SCREENPROCESS_GLAREMAXAMOUNT, m_pVars->m_fGlareMaxAmount)
-				RETURN_PARAMETER(SCREENPROCESS_GLAREBOXSIZE, m_pVars->m_iGlareSize)
-				RETURN_PARAMETER(SCREENPROCESS_GLARETHRESHOLD, m_pVars->m_fGlareThreshold)
+			RETURN_PARAMETER(SCREENPROCESS_GLAREAMOUNT, m_pVars->m_fGlareAmount)
+			RETURN_PARAMETER(SCREENPROCESS_GLARELUMSIZE, m_pVars->m_iGlareLumSize)
+			RETURN_PARAMETER(SCREENPROCESS_GLAREMAXAMOUNT, m_pVars->m_fGlareMaxAmount)
+			RETURN_PARAMETER(SCREENPROCESS_GLAREBOXSIZE, m_pVars->m_iGlareSize)
+			RETURN_PARAMETER(SCREENPROCESS_GLARETHRESHOLD, m_pVars->m_fGlareThreshold)
 		}
 		break;
 
@@ -430,8 +430,8 @@ void* CREScreenProcess::mfGetParameter(int iProcess, int iParams)
 			break;
 
 			RETURN_PARAMETER(SCREENPROCESS_NIGHTVISIONCOLORRED, m_pVars->m_pNightVisionColor.r)
-				RETURN_PARAMETER(SCREENPROCESS_NIGHTVISIONCOLORGREEN, m_pVars->m_pNightVisionColor.g)
-				RETURN_PARAMETER(SCREENPROCESS_NIGHTVISIONCOLORBLUE, m_pVars->m_pNightVisionColor.b)
+			RETURN_PARAMETER(SCREENPROCESS_NIGHTVISIONCOLORGREEN, m_pVars->m_pNightVisionColor.g)
+			RETURN_PARAMETER(SCREENPROCESS_NIGHTVISIONCOLORBLUE, m_pVars->m_pNightVisionColor.b)
 		}
 		break;
 
@@ -455,13 +455,13 @@ void* CREScreenProcess::mfGetParameter(int iProcess, int iParams)
 		switch (iParams)
 		{
 			RETURN_PARAMETER(SCREENPROCESS_ACTIVE, m_pVars->m_bFlashBangActive)
-				RETURN_PARAMETER(SCREENPROCESS_FLASHBANGTIMESCALE, m_pVars->m_fFlashBangTimeScale)
-				RETURN_PARAMETER(SCREENPROCESS_FLASHBANGTIMEOUT, m_pVars->m_fFlashBangTimeOut)
-				RETURN_PARAMETER(SCREENPROCESS_FLASHBANGFLASHPOSX, m_pVars->m_fFlashBangFlashPosX)
-				RETURN_PARAMETER(SCREENPROCESS_FLASHBANGFLASHPOSY, m_pVars->m_fFlashBangFlashPosY)
-				RETURN_PARAMETER(SCREENPROCESS_FLASHBANGFLASHSIZEX, m_pVars->m_fFlashBangFlashSizeX)
-				RETURN_PARAMETER(SCREENPROCESS_FLASHBANGFLASHSIZEY, m_pVars->m_fFlashBangFlashSizeY)
-				RETURN_PARAMETER(SCREENPROCESS_FLASHBANGFORCEAFTERIMAGE, m_pVars->m_iFlashBangForce)
+			RETURN_PARAMETER(SCREENPROCESS_FLASHBANGTIMESCALE, m_pVars->m_fFlashBangTimeScale)
+			RETURN_PARAMETER(SCREENPROCESS_FLASHBANGTIMEOUT, m_pVars->m_fFlashBangTimeOut)
+			RETURN_PARAMETER(SCREENPROCESS_FLASHBANGFLASHPOSX, m_pVars->m_fFlashBangFlashPosX)
+			RETURN_PARAMETER(SCREENPROCESS_FLASHBANGFLASHPOSY, m_pVars->m_fFlashBangFlashPosY)
+			RETURN_PARAMETER(SCREENPROCESS_FLASHBANGFLASHSIZEX, m_pVars->m_fFlashBangFlashSizeX)
+			RETURN_PARAMETER(SCREENPROCESS_FLASHBANGFLASHSIZEY, m_pVars->m_fFlashBangFlashSizeY)
+			RETURN_PARAMETER(SCREENPROCESS_FLASHBANGFORCEAFTERIMAGE, m_pVars->m_iFlashBangForce)
 		}
 		break;
 
@@ -478,7 +478,7 @@ void* CREScreenProcess::mfGetParameter(int iProcess, int iParams)
 		switch (iParams)
 		{
 			RETURN_PARAMETER(SCREENPROCESS_ACTIVE, m_pVars->m_bDofActive)
-				RETURN_PARAMETER(SCREENPROCESS_DOFFOCALDISTANCE, m_pVars->m_fDofFocalDistance)
+			RETURN_PARAMETER(SCREENPROCESS_DOFFOCALDISTANCE, m_pVars->m_fDofFocalDistance)
 		}
 		break;
 
