@@ -2898,6 +2898,8 @@ void CCGVProgram_D3D::mfBind()
 	if (FAILED(hr))
 		return;
 
+	gcpRendD3D->EF_ApplyClipPlane();
+
 	if (!inst.m_BindConstants)
 		return;
 

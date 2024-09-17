@@ -1017,6 +1017,8 @@ void CD3D9Renderer::EF_SetCameraInfo()
 
 	m_RP.m_PersFlags &= ~RBPF_WASWORLDSPACE;
 	m_RP.m_ObjFlags = FOB_TRANS_MASK;
+
+	EF_ApplyClipPlane();
 }
 
 _declspec(align(16)) static Matrix44 sIdentityMatrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
@@ -1420,7 +1422,7 @@ void CD3D9Renderer::EF_SetClipPlane(bool bEnable, float* pPlane, bool bRefract)
 		p[3] = pPlane[3];
 		//if (bRefract)
 		//	p[3] += 0.1f;
-		m_RP.m_ClipPlaneWasOverrided = 0;
+		m_RP.m_ClipPlaneClipSpace = -1;
 		m_RP.m_bClipPlaneRefract = bRefract;
 		m_RP.m_CurClipPlane.m_Normal.x = p[0];
 		m_RP.m_CurClipPlane.m_Normal.y = p[1];
@@ -1428,15 +1430,15 @@ void CD3D9Renderer::EF_SetClipPlane(bool bEnable, float* pPlane, bool bRefract)
 		m_RP.m_CurClipPlane.m_Dist = p[3];
 		m_RP.m_CurClipPlane.Init();
 
-		m_RP.m_CurClipPlaneCull = m_RP.m_CurClipPlane;
-		m_RP.m_CurClipPlaneCull.m_Dist = -m_RP.m_CurClipPlaneCull.m_Dist;
+		m_RP.m_CurClipPlaneCull.m_Normal = m_RP.m_CurClipPlane.m_Normal;
+		m_RP.m_CurClipPlaneCull.m_Dist = -m_RP.m_CurClipPlane.m_Dist;
 		int nGPU = m_Features & RFT_HW_MASK;
 		if (CV_d3d9_clipplanes && m_d3dCaps.MaxUserClipPlanes > 0 && nGPU != RFT_HW_GF3 && nGPU != RFT_HW_GF2 && nGPU != RFT_HW_GFFX)
 		{
 			m_RP.m_ClipPlaneEnabled = 2;
-			m_pd3dDevice->SetClipPlane(0, p);
-
 			m_pd3dDevice->SetRenderState(D3DRS_CLIPPLANEENABLE, 1);
+
+			EF_ApplyClipPlane();
 		}
 		else
 		{
@@ -1450,7 +1452,7 @@ void CD3D9Renderer::EF_SetClipPlane(bool bEnable, float* pPlane, bool bRefract)
 			Logv(SRendItem::m_RecurseLevel, "Reset clip-plane\n");
 #endif
 		m_RP.m_ClipPlaneEnabled = 0;
-		m_RP.m_ClipPlaneWasOverrided = 0;
+		m_RP.m_ClipPlaneClipSpace = -1;
 
 		if (m_d3dCaps.MaxUserClipPlanes > 0)
 		{
@@ -1459,6 +1461,25 @@ void CD3D9Renderer::EF_SetClipPlane(bool bEnable, float* pPlane, bool bRefract)
 	}
 }
 
+void CD3D9Renderer::EF_ApplyClipPlane()
+{
+	if (m_RP.m_ClipPlaneEnabled != 2)
+		return;
+
+	const int clipSpace = m_RP.m_CurVP != nullptr;
+	m_RP.m_ClipPlaneClipSpace = clipSpace;
+
+	if (clipSpace)
+	{
+		Plane srcPlane(m_RP.m_CurClipPlane.m_Normal, m_RP.m_CurClipPlane.m_Dist);
+		Plane transformedPlane = TransformPlane2(m_InvCameraProjMatrix, srcPlane);
+		m_pd3dDevice->SetClipPlane(0, &transformedPlane.n[0]);
+	}
+	else
+	{
+		m_pd3dDevice->SetClipPlane(0, &m_RP.m_CurClipPlane.m_Normal[0]);
+	}
+}
 
 //==============================================================================
 // Shader Pipeline
@@ -3787,12 +3808,11 @@ bool CD3D9Renderer::EF_PreDraw(SShaderPass* sl, bool bSetVertexDecl)
 			m_RP.m_MergedStreams[1].VBPtr_0->Bind(m_pd3dDevice, 1, m_RP.m_nStreamOffset[1], sizeof(SPipTangents));
 			m_RP.m_PersFlags |= RBPF_USESTREAM1;
 		}
-		else
-			if (m_RP.m_PersFlags & RBPF_USESTREAM1)
-			{
-				m_RP.m_PersFlags &= ~RBPF_USESTREAM1;
-				m_pd3dDevice->SetStreamSource(1, nullptr, 0, 0);
-			}
+		else if (m_RP.m_PersFlags & RBPF_USESTREAM1)
+		{
+			m_RP.m_PersFlags &= ~RBPF_USESTREAM1;
+			m_pd3dDevice->SetStreamSource(1, nullptr, 0, 0);
+		}
 		if (m_RP.m_FlagsModificators & RBMF_LMTCUSED)
 		{
 			if (!(m_RP.m_FlagsPerFlush & RBSI_LMTCMERGED))
@@ -3831,16 +3851,14 @@ bool CD3D9Renderer::EF_PreDraw(SShaderPass* sl, bool bSetVertexDecl)
 			m_RP.m_MergedStreams[2].VBPtr_0->Bind(m_pd3dDevice, 2, m_RP.m_nStreamOffset[2], sizeof(SMRendTexVert));
 			m_RP.m_PersFlags |= RBPF_USESTREAM2;
 		}
-		else
-			if (m_RP.m_PersFlags & RBPF_USESTREAM2)
-			{
-				m_RP.m_PersFlags &= ~RBPF_USESTREAM2;
-				m_pd3dDevice->SetStreamSource(2, nullptr, 0, 0);
-			}
+		else if (m_RP.m_PersFlags & RBPF_USESTREAM2)
+		{
+			m_RP.m_PersFlags &= ~RBPF_USESTREAM2;
+			m_pd3dDevice->SetStreamSource(2, nullptr, 0, 0);
+		}
 	}
-	else
-		if (m_RP.m_pRE)
-			bRet = m_RP.m_pRE->mfPreDraw(sl);
+	else if (m_RP.m_pRE)
+		bRet = m_RP.m_pRE->mfPreDraw(sl);
 
 	return bRet;
 }

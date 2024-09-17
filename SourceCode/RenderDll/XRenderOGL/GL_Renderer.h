@@ -1445,9 +1445,9 @@ public:
 			}
 		}
 		// Restore clip-planes status
-		if (gcpOGL->m_RP.m_ClipPlaneWasOverrided && CTexMan::m_nCurStages < 4 && SUPPORTS_GL_NV_texture_shader)
+		if (gcpOGL->m_RP.m_ClipPlaneClipSpace && CTexMan::m_nCurStages < 4 && SUPPORTS_GL_NV_texture_shader)
 		{
-			gcpOGL->m_RP.m_ClipPlaneWasOverrided = 1;
+			gcpOGL->m_RP.m_ClipPlaneClipSpace = 1;
 			gcpOGL->m_RP.m_ClipPlaneEnabled = 1;
 			int nTMUs = min(gcpOGL->m_numtmus, 4);
 			for (int i = 0; i < nTMUs; i++)
@@ -1475,7 +1475,7 @@ public:
 					if (Stage == 3)
 					{
 						gcpOGL->m_RP.m_ClipPlaneEnabled = 0;
-						gcpOGL->m_RP.m_ClipPlaneWasOverrided = 1;
+						gcpOGL->m_RP.m_ClipPlaneClipSpace = 1;
 						glDisable(GL_TEXTURE_SHADER_NV);
 					}
 					else

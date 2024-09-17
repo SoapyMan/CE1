@@ -567,7 +567,7 @@ void CGLRenderer::EF_SetClipPlane(bool bEnable, float* pPlane, bool bRefract)
 			Logv(SRendItem::m_RecurseLevel, "Set clip-plane\n");
 		if (m_RP.m_ClipPlaneEnabled)
 			return;
-		m_RP.m_ClipPlaneWasOverrided = 0;
+		m_RP.m_ClipPlaneClipSpace = 0;
 		m_RP.m_bClipPlaneRefract = bRefract;
 		m_RP.m_CurClipPlane.m_Normal.x = pPlane[0];
 		m_RP.m_CurClipPlane.m_Normal.y = pPlane[1];
@@ -676,7 +676,7 @@ void CGLRenderer::EF_SetClipPlane(bool bEnable, float* pPlane, bool bRefract)
 			EF_SelectTMU(0);
 		}
 		m_RP.m_ClipPlaneEnabled = 0;
-		m_RP.m_ClipPlaneWasOverrided = 0;
+		m_RP.m_ClipPlaneClipSpace = 0;
 	}
 }
 

@@ -632,24 +632,6 @@ public:
 	{
 		CD3D9Renderer* r = gcpRendD3D;
 
-		switch (ParamBind->m_eCGParamType)
-		{
-		case ECGP_Matr_ViewProj:
-		case ECGP_Matr_View_IT:
-		case ECGP_Matr_View_I:
-		case ECGP_Matr_View_T:
-		case ECGP_Matr_View:
-			if (r->m_RP.m_ClipPlaneEnabled == 2)
-			{
-				// Transform clip plane to clip space
-				Plane srcPlane(r->m_RP.m_CurClipPlane.m_Normal, r->m_RP.m_CurClipPlane.m_Dist);
-				Plane transformedPlane = TransformPlane2(r->m_InvCameraProjMatrix, srcPlane);
-				r->m_pd3dDevice->SetClipPlane(0, &transformedPlane.n[0]);
-				r->m_RP.m_ClipPlaneWasOverrided = 2;
-			}
-			break;
-		}
-
 		LPDIRECT3DDEVICE9 dv = r->mfGetD3DDevice();
 		D3DXMATRIXA16 matWorldViewProj;
 		switch (ParamBind->m_eCGParamType)
@@ -793,18 +775,13 @@ public:
 	void mfSetStateMatrices()
 	{
 		//PROFILE_FRAME(Shader_VShadersMatr);
-		for (int i = 0; i < m_MatrixObj.Num(); i++)
-		{
-			SCGMatrix* tm = &m_MatrixObj[i];
-			mfParameterStateMatrix(tm);
-		}
+		for (SCGMatrix& tm : m_MatrixObj)
+			mfParameterStateMatrix(&tm);
+
 		if (m_Insts[m_CurInst].m_MatrixObj)
 		{
-			for (int i = 0; i < m_Insts[m_CurInst].m_MatrixObj->Num(); i++)
-			{
-				SCGMatrix* tm = &m_Insts[m_CurInst].m_MatrixObj->Get(i);
-				mfParameterStateMatrix(tm);
-			}
+			for (SCGMatrix& tm : *m_Insts[m_CurInst].m_MatrixObj)
+				mfParameterStateMatrix(&tm);
 		}
 	}
 	static int m_nResetDeviceFrame;

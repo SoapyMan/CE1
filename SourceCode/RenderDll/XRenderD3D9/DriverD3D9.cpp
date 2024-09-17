@@ -3451,11 +3451,7 @@ void CD3D9Renderer::ResetToDefault()
 		Logv(SRendItem::m_RecurseLevel, ".... ResetToDefault ....\n");
 
 	EF_Scissor(false, 0, 0, 0, 0);
-	if (m_RP.m_ClipPlaneWasOverrided == 2)
-	{
-		m_pd3dDevice->SetClipPlane(0, &m_RP.m_CurClipPlane.m_Normal[0]);
-		m_RP.m_ClipPlaneWasOverrided = 0;
-	}
+	EF_ApplyClipPlane();
 
 	for (int i = 0; i < m_numtmus; i++)
 	{

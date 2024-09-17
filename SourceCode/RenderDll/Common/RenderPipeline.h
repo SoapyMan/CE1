@@ -745,7 +745,7 @@ struct SRenderPipeline
 	bool m_bClipPlaneRefract;
 	SPlane m_CurClipPlane;
 	SPlane m_CurClipPlaneCull;
-	int m_ClipPlaneWasOverrided;
+	int m_ClipPlaneClipSpace;
 	int m_nClipPlaneTMU;
 
 	int m_FT;

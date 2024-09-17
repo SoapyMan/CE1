@@ -1143,12 +1143,11 @@ public:
 				m_pd3dDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 				m_pd3dDevice->SetRenderState(D3DRS_NORMALIZENORMALS, FALSE);
 			}
-			else
-				if (m_RP.m_CurrentVLights && !m_RP.m_EnabledVLights)
-				{
-					m_pd3dDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
-					m_pd3dDevice->SetRenderState(D3DRS_NORMALIZENORMALS, TRUE);
-				}
+			else if (m_RP.m_CurrentVLights && !m_RP.m_EnabledVLights)
+			{
+				m_pd3dDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
+				m_pd3dDevice->SetRenderState(D3DRS_NORMALIZENORMALS, TRUE);
+			}
 			m_RP.m_EnabledVLights = m_RP.m_CurrentVLights;
 		}
 		if (m_RP.m_EnabledVLights)
@@ -1162,22 +1161,16 @@ public:
 			}
 			m_RP.m_EnabledVLightFlags = m_RP.m_CurrentVLightFlags;
 		}
-		else
-			if (!(m_RP.m_EnabledVLightFlags & (LMF_NOADDSPECULAR | LMF_NOSPECULAR)))
-			{
-				m_RP.m_EnabledVLightFlags |= (LMF_NOADDSPECULAR | LMF_NOSPECULAR);
-				m_pd3dDevice->SetRenderState(D3DRS_SPECULARENABLE, FALSE);
-			}
+		else if (!(m_RP.m_EnabledVLightFlags & (LMF_NOADDSPECULAR | LMF_NOSPECULAR)))
+		{
+			m_RP.m_EnabledVLightFlags |= (LMF_NOADDSPECULAR | LMF_NOSPECULAR);
+			m_pd3dDevice->SetRenderState(D3DRS_SPECULARENABLE, FALSE);
+		}
 	}
 	_inline void EF_CommitShadersState()
 	{
 		if (!(m_RP.m_PersFlags & RBPF_VSNEEDSET) && CVProgram::m_LastVP)
 		{
-			if (m_RP.m_ClipPlaneWasOverrided == 2)
-			{
-				m_pd3dDevice->SetClipPlane(0, &m_RP.m_CurClipPlane.m_Normal[0]);
-				m_RP.m_ClipPlaneWasOverrided = 0;
-			}
 			m_pd3dDevice->SetVertexShader(nullptr);
 			CVProgram::m_LastVP = 0;
 			if (m_FS.m_bEnable && ((m_Features & RFT_HW_MASK) != RFT_HW_RADEON))
@@ -1189,18 +1182,17 @@ public:
 				}
 			}
 		}
-		else
-			if ((m_RP.m_PersFlags & RBPF_VSNEEDSET) && ((m_Features & RFT_HW_MASK) != RFT_HW_RADEON))
+		else if ((m_RP.m_PersFlags & RBPF_VSNEEDSET) && ((m_Features & RFT_HW_MASK) != RFT_HW_RADEON))
+		{
+			if (m_FS.m_bEnable)
 			{
-				if (m_FS.m_bEnable)
+				if (m_FS.m_nCurFogMode != 0)
 				{
-					if (m_FS.m_nCurFogMode != 0)
-					{
-						m_FS.m_nCurFogMode = 0;
-						m_pd3dDevice->SetRenderState(D3DRS_FOGTABLEMODE, D3DFOG_NONE);
-					}
+					m_FS.m_nCurFogMode = 0;
+					m_pd3dDevice->SetRenderState(D3DRS_FOGTABLEMODE, D3DFOG_NONE);
 				}
 			}
+		}
 		if (!(m_RP.m_PersFlags & RBPF_PS1NEEDSET) && CPShader::m_LastVP)
 		{
 			m_pd3dDevice->SetPixelShader(nullptr);
@@ -1316,6 +1308,7 @@ public:
 
 	// Clip Planes support
 	void EF_SetClipPlane(bool bEnable, float* pPlane, bool bRefract);
+	void EF_ApplyClipPlane();
 
 	void EF_HDRPostProcessing();
 

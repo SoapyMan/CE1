@@ -2553,9 +2553,9 @@ void CGLRenderer::ResetToDefault()
 	if (SUPPORTS_GL_ARB_vertex_program)
 		glDisable(GL_VERTEX_PROGRAM_ARB);
 
-	if (m_RP.m_ClipPlaneWasOverrided == 1)
+	if (m_RP.m_ClipPlaneClipSpace == 1)
 	{
-		m_RP.m_ClipPlaneWasOverrided = 0;
+		m_RP.m_ClipPlaneClipSpace = 0;
 		m_RP.m_ClipPlaneEnabled = 1;
 	}
 	for (int i = 0; i < m_numtmus; i++)
