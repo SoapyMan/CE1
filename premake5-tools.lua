@@ -83,4 +83,8 @@ project "Editor"
 		"./SourceCode/Editor",
 		"./SourceCode/Editor/Include",
 	}
+	
+	flags {
+		"NoManifest"
+	}
 end

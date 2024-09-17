@@ -42,6 +42,8 @@ IDI_SMALLICON           ICON                    "res\\editor_icon16.ico"
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 #pragma code_page(1252)
 
+CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "CryEdit.manifest"
+
 /////////////////////////////////////////////////////////////////////////////
 //
 // Icon
@@ -4157,4 +4159,5 @@ LANGUAGE 9, 1
 
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
+
 
