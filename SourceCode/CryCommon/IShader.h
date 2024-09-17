@@ -31,6 +31,8 @@ struct STexPic;
 struct SParam;
 struct ICryCharInstance;
 struct IDeformableRenderMesh;
+struct ShadowMapLightSourceInstance;
+struct ShadowMapFrustum;
 class CPShader;
 template	<class T> class list2;
 
@@ -548,8 +550,8 @@ public:
 	};
 	float m_fHeatFactor;
 
-	list2<struct ShadowMapLightSourceInstance>* m_pShadowCasters; // list of shadow casters 
-	struct ShadowMapFrustum* m_pShadowFrustum; // will define projection of shadow from this object
+	list2<ShadowMapLightSourceInstance>* m_pShadowCasters; // list of shadow casters 
+	ShadowMapFrustum* m_pShadowFrustum; // will define projection of shadow from this object
 
 	Vec3d m_AmbColor;
 	CFColor m_Color;

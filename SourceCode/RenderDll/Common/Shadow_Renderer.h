@@ -1,6 +1,10 @@
 #ifndef SHADOWMAP_H
 #define SHADOWMAP_H
 
+struct IStatObj;
+struct IEntityRender;
+struct ShadowMapLightSource;
+
 enum EShadowType
 {
 	EST_DEPTH_BUFFER,
@@ -16,34 +20,31 @@ struct ShadowMapFrustum
 {
 	float debugLightFrustumMatrix[16];
 	float debugLightViewMatrix[16];
-	unsigned int depth_tex_id;
-	struct ShadowMapLightSource* pLs;
-	EShadowType shadow_type;
+	Plane arrFrusrumPlanes[4];
+	list2<IStatObj*>* pModelsList;
+	list2<IEntityRender*>* pEntityList;
+	ShadowMapFrustum* pPenumbra;
+	IEntityRender* pOwner;
+	IStatObj* pOwnerGroup;
+	ShadowMapLightSource* pLs;
+	Vec3d target;
 	float FOV;
 	float min_dist;
 	float max_dist;
-	Vec3d target;
-	bool  bUpdateRequested;
-	int nDLightId;
-	int   nTexSize;
-	ShadowMapFrustum* pPenumbra;
-	struct IEntityRender* pOwner;
-	IStatObj* pOwnerGroup;
-	int nTexIdSlot;
-	int nResetID;
-	int dwFlags;
 	float fAlpha;
 	float ProjRatio;
 	float fOffsetScale;
-
-	list2<struct IStatObj*>* pModelsList;
-	list2<struct IEntityRender*>* pEntityList;
-
-	Plane arrFrusrumPlanes[4];
-
 	float m_fCeachedFrustumScale;
-	int m_nCeachedFrustumFrameId;
 	float m_fBending;
+	int depth_tex_id;
+	EShadowType shadow_type;
+	int nDLightId;
+	int nTexSize;
+	int nTexIdSlot;
+	int nResetID;
+	int dwFlags;
+	int m_nCeachedFrustumFrameId;
+	bool bUpdateRequested;
 
 	ShadowMapFrustum()
 	{
@@ -65,8 +66,6 @@ struct ShadowMapFrustum
 	void UnProject(float sx, float sy, float sz, float* px, float* py, float* pz, IRenderer* pRend)
 	{
 		const int shadowViewport[4] = { 0,0,1,1 };
-
-
 		pRend->UnProject(sx, sy, sz,
 			px, py, pz,
 			debugLightViewMatrix,
@@ -201,13 +200,12 @@ struct ShadowMapFrustum
 
 struct ShadowMapLightSource
 {
-	ShadowMapLightSource() { ZeroStruct(*this); nDLightId = -1; }
-	Vec3 vSrcPos; // relative world space
-	Vec3 vObjSpaceSrcPos; // objects space
-	float fRadius;
 	list2<ShadowMapFrustum> m_LightFrustums;
-	int nDLightId;
-	int SizeOf();
+	Vec3 vSrcPos{ zero }; // relative world space
+	Vec3 vObjSpaceSrcPos{ zero }; // objects space
+	float fRadius = 0.0f;
+	int nDLightId = -1;
+
 	ShadowMapFrustum* GetShadowMapFrustum(int nId = 0)
 	{
 		if (nId < m_LightFrustums.Count())
@@ -218,13 +216,12 @@ struct ShadowMapLightSource
 
 struct ShadowMapLightSourceInstance
 {
-	ShadowMapLightSourceInstance() { ZeroStruct(*this); }
-	ShadowMapLightSource* m_pLS;
-	Vec3 m_vProjTranslation;
-	float m_fProjScale;
-	float m_fDistance;
-	struct IEntityRender* m_pReceiver;
-	bool m_bNoDepthTest;
+	ShadowMapLightSource* m_pLS = nullptr;
+	IEntityRender* m_pReceiver = nullptr;
+	Vec3 m_vProjTranslation{ zero };
+	float m_fProjScale = 0.0f;
+	float m_fDistance = 0.0f;
+	bool m_bNoDepthTest = false;
 };
 
 #endif 

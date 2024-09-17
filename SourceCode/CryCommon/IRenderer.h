@@ -55,36 +55,40 @@ typedef void* WIN_HINSTANCE;
 typedef void* WIN_HDC;
 typedef void* WIN_HGLRC;
 
-class		CVertexBuffer;
-class		CREOcLeaf;
-//class		CImage;
-struct  CStatObj;
-class   CStatObjInst;
-struct	ShadowMapFrustum;
-class		CXFont;
-struct	IStatObj;
+class CVertexBuffer;
+class CREOcLeaf;
+//class	CImage;
+struct CStatObj;
+class CStatObjInst;
+struct ShadowMapFrustum;
+class CXFont;
+struct IStatObj;
 class CObjManager;
-struct	ShadowMapLightSource;
+struct ShadowMapLightSource;
 struct SPrimitiveGroup;
-struct  ICryCharInstance;
-class		CRendElement;
-struct	ShadowMapLightSourceInstance;
-class		CCObject;
-class		CTexMan;
+struct ICryCharInstance;
+class CRendElement;
+struct ShadowMapLightSourceInstance;
+class CCObject;
+class CTexMan;
 //class CVar;
-struct	SVrect;
-struct	SColorVert2D;
-struct	SColorVert;
-class		CFColor;
-class		CShadowVolEdge;
-class		CCamera;
-class		CDLight;
-struct	ILog;
-struct	IConsole;
-struct	ITimer;
-struct	ISystem;
-class		IPhysicalWorld;
-class   ICrySizer;
+struct SVrect;
+struct SColorVert2D;
+struct SColorVert;
+class CFColor;
+class CShadowVolEdge;
+class CCamera;
+class CDLight;
+struct ILog;
+struct IConsole;
+struct ITimer;
+struct ISystem;
+class IPhysicalWorld;
+class ICrySizer;
+struct SShaderParam;
+struct IEntityRender;
+struct RenderLMData;
+struct CLeafBuffer;
 
 //////////////////////////////////////////////////////////////////////
 typedef unsigned char bvec4[4];
@@ -1183,64 +1187,41 @@ struct SRendParams
 		memcpy(this, &rThat, sizeof(SRendParams));
 	}
 
-	//! position of render elements
-	Vec3				vPos;
-	//! scale of render elements
-	float				fScale;
-	//! angles of the object
-	Vec3				vAngles;
-	//! object transformations
-	Matrix44* pMatrix;
-	//! custom offset for sorting by distance
-	float				fCustomSortOffset;
-	//! shader template to use
-	int					nShaderTemplate;
-	//! light mask to specifiy which light to use on the object
-	unsigned int nDLightMask;
-	//! strongest light affecting the object
-	unsigned int nStrongestDLightMask;
-	//! fog volume id
-	int					nFogVolumeID;
-	//! amount of bending animations for vegetations
-	float				fBending;
-	//! state shader
-	IShader* pStateShader;
-	//! list of shadow map casters
-	list2<ShadowMapLightSourceInstance>* pShadowMapCasters;
-	//! object color
-	Vec3     vColor;
-	//! object alpha
-	float     fAlpha;
-	//! force a sort value for render elements
-	int				nSortValue;
-	//! Ambient color for the object
-	Vec3			vAmbientColor;
-	//! distance from camera
-	float     fDistance;
-	//! CCObject flags
-	int		    dwFObjFlags;
-	//! light source for shadow volume calculations
-	CDLight* pShadowVolumeLightSource;
-	//! reference to entity, allows to improve handling of shadow volumes of IStatObj instances
-	struct IEntityRender* pCaller;
-	//! Heat Amount for heat vision
-	float			fHeatAmount;
-	//! define size of shadow volume
-	float			fShadowVolumeExtent;
-	//! lightmap informaion
-	struct RenderLMData* pLightMapInfo;
-	struct CLeafBuffer* pLMTCBuffer; // Object instance specific tex LM texture coords;
-	byte arrOcclusionLightIds[4];
-	//! Override material.
-	IMatInfo* pMaterial;
-	//! Scissor settings for this object
-  //  int nScissorX1, nScissorY1, nScissorX2, nScissorY2;
-	  //! custom shader params
-	TArray <struct SShaderParam>* pShaderParams;
-	//! squared distance to the center of object
-	float fSQDistance;
-	//! CCObject custom data
-	void* pCCObjCustomData;
+	IEntityRender*		pCaller;				//! reference to entity, allows to improve handling of shadow volumes of IStatObj instances
+
+	CLeafBuffer*		pLMTCBuffer;			// Object instance specific tex LM texture coords;
+	IMatInfo*			pMaterial;				//! Override material.
+	IShader*			pStateShader;			//! state shader
+	TArray<SShaderParam>* pShaderParams;		//! custom shader params
+	Matrix44*			pMatrix;				//! object transformations
+	list2<ShadowMapLightSourceInstance>* pShadowMapCasters;		//! list of shadow map casters
+	CDLight*			pShadowVolumeLightSource;	//! light source for shadow volume calculations
+	RenderLMData*		pLightMapInfo;			//! lightmap informaion
+	void*				pCCObjCustomData;		//! CCObject custom data
+
+	Vec3				vPos;					//! position of render elements
+	float				fScale;					//! scale of render elements
+	Vec3				vAngles;				//! angles of the object
+	float				fBending;				//! amount of bending animations for vegetations
+
+	int					nShaderTemplate;		//! shader template to use
+	unsigned int		nDLightMask;			//! light mask to specifiy which light to use on the object
+	unsigned int		nStrongestDLightMask;	//! strongest light affecting the object
+	int					nFogVolumeID;			//! fog volume id
+
+	Vec3				vAmbientColor;			//! Ambient color for the object
+	float				fHeatAmount;			//! Heat Amount for heat vision
+	Vec3				vColor;					//! object color
+	float				fAlpha;					//! object alpha
+	byte				arrOcclusionLightIds[4];
+
+	int					nSortValue;				//! force a sort value for render elements
+	float				fCustomSortOffset;		//! custom offset for sorting by distance
+
+	float				fSQDistance;			//! squared distance to the center of object
+	float				fDistance;				//! distance from camera
+	float				fShadowVolumeExtent;	//! define size of shadow volume
+	int					dwFObjFlags;			//! CCObject flags
 };
 
 //! holds shadow volume informations for static objects
