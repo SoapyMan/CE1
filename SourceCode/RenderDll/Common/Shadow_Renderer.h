@@ -54,6 +54,7 @@ struct ShadowMapFrustum
 		ProjRatio = 1.f;
 		nDLightId = -1;
 		fOffsetScale = 1.f;
+		depth_tex_id = -1;
 	}
 
 	~ShadowMapFrustum()

@@ -206,7 +206,7 @@ void CD3D9Renderer::BlurImage(int nSizeX, int nSizeY, int nType, ShadowMapTexInf
 	}
 	else if (nType >= 3)
 	{
-		if (!st->nTexId1)
+		if (st->nTexId1 < 0)
 			st->nTexId1 = GenShadowTexture(st->nTexSize, false);
 		STexPicD3D* tpDst2 = (STexPicD3D*)m_TexMan->GetByID(st->nTexId1);
 		LPDIRECT3DTEXTURE9 pIRGBTarget2 = nullptr;
@@ -298,25 +298,28 @@ void CD3D9Renderer::BlurImage(int nSizeX, int nSizeY, int nType, ShadowMapTexInf
 
 unsigned int CD3D9Renderer::GenShadowTexture(int nSize, bool bProjected)
 {
-	byte* data = new byte[nSize * nSize * 4];
 	char name[128];
 	sprintf(name, "$AutoShadowMaps_%d", m_TexGenID++);
 	int flags = FT_NOMIPS | FT_CLAMP | FT_NOSTREAM | FT_HASALPHA;
+
 	if (bProjected)
 		flags |= FT_PROJECTED;
-	int flags2 = FT2_RENDERTARGET | FT2_NODXT;
+
+	const int flags2 = FT2_RENDERTARGET | FT2_NODXT;
 	ETEX_Format eTF;
 	if ((m_Features & RFT_DEPTHMAPS) && bProjected)
 		eTF = eTF_DEPTH;
 	else
 		eTF = eTF_8888;
+
+	byte* data = new byte[nSize * nSize * 4];
 	STexPic* tp = m_TexMan->CreateTexture(name, nSize, nSize, 1, flags, flags2, data, eTT_Base, -1.0f, -1.0f, 0, nullptr, 0, eTF);
 	STexPicD3D* t = (STexPicD3D*)tp;
-	LPDIRECT3DTEXTURE9 pID3DTexture = nullptr;
 	delete[] data;
 	if (!t)
 		return 0;
-	pID3DTexture = (LPDIRECT3DTEXTURE9)t->m_RefTex.m_VidTex;
+
+	LPDIRECT3DTEXTURE9 pID3DTexture = (LPDIRECT3DTEXTURE9)t->m_RefTex.m_VidTex;
 	if (!pID3DTexture)
 		return 0;
 	return t->m_Bind;
@@ -334,13 +337,14 @@ int CD3D9Renderer::MakeShadowIdentityTexture()
 }
 
 void CD3D9Renderer::OnEntityDeleted(IEntityRender* pEntityRender)
-{ // remove references to the entity
-	for (int i = 0; i < MAX_DYNAMIC_SHADOW_MAPS_COUNT; i++)
-	{
-		ShadowMapTexInfo* pInf = &m_ShadowTexIDBuffer[i];
-		if (pInf->pOwner == pEntityRender)
-			pInf->pOwner = nullptr;
-	}
+{
+	// remove references to the entity
+	//for (int i = 0; i < MAX_DYNAMIC_SHADOW_MAPS_COUNT; i++)
+	//{
+	//	ShadowMapTexInfo* pInf = &m_ShadowTexIDBuffer[i];
+	//	if (pInf->pOwner == pEntityRender)
+	//		pInf->pOwner = nullptr;
+	//}
 }
 
 void DrawText(ISystem* pSystem, int x, int y, const char* format, ...)
@@ -369,7 +373,6 @@ void DrawText(ISystem* pSystem, int x, int y, const char* format, ...)
 }
 
 void CD3D9Renderer::DrawAllShadowsOnTheScreen()
-
 {
 	float width = 800;
 	float height = 600;
@@ -380,10 +383,11 @@ void CD3D9Renderer::DrawAllShadowsOnTheScreen()
 	float fPicDimY = height / fArrDim;
 	int nShadowId = 0;
 	for (float x = 0; nShadowId < MAX_DYNAMIC_SHADOW_MAPS_COUNT && x < width - 10; x += fPicDimX)
+	{
 		for (float y = 0; nShadowId < MAX_DYNAMIC_SHADOW_MAPS_COUNT && y < height - 10; y += fPicDimY)
 		{
 			ShadowMapTexInfo* pInf = &m_ShadowTexIDBuffer[nShadowId++];
-			if (pInf->nTexId0 && (pInf->pOwner || pInf->pOwnerGroup))
+			if (pInf->nTexId0 >= 0)// && (pInf->pOwner || pInf->pOwnerGroup))
 			{
 				STexPic* tp = (STexPic*)EF_GetTextureByID(pInf->nTexId0);
 				if (tp)
@@ -392,15 +396,94 @@ void CD3D9Renderer::DrawAllShadowsOnTheScreen()
 					tp->m_RefTex.bProjected = false;
 					SetState(GS_BLSRC_SRCALPHA | GS_BLDST_ONEMINUSSRCALPHA | GS_NODEPTHTEST);
 					Draw2dImage(x, y, fPicDimX, fPicDimY, pInf->nTexId0, 0, 0, 1, 1, 180);
-					const char* pName = pInf->pOwner ? pInf->pOwner->GetName() : pInf->pOwnerGroup->GetFileName();
-					int nLen = strlen(pName);
-					DrawText(iSystem, (int)(x / width * 800.f), (int)(y / height * 600.f), "%8s-%d", pName + max(0, nLen - 12), pInf->nLastFrameID & 7);
+					//const char* pName = pInf->pOwner ? pInf->pOwner->GetName() : pInf->pOwnerGroup->GetFileName();
+					//int nLen = strlen(pName);
+					//DrawText(iSystem, (int)(x / width * 800.f), (int)(y / height * 600.f), "%8s-%d", pName + max(0, nLen - 12), pInf->nLastFrameID & 7);
 					tp->m_RefTex.bProjected = bSaveProj;
 				}
 			}
 		}
+	}
 
 	Set2DMode(false, m_width, m_height);
+}
+
+CD3D9Renderer::ShadowMapTexInfo* CD3D9Renderer::GetShadowMapTexInfo(ShadowMapFrustum* lof)
+{
+	static int nCurFrameId = 0;
+
+	if (nCurFrameId != GetFrameID())
+	{
+		nCurFrameId = GetFrameID();
+	}
+
+	const uint64 ownerId = reinterpret_cast<uint64>(lof->pOwner) * 31 + reinterpret_cast<uint64>(lof->pOwnerGroup);
+
+	ShadowMapTexInfo* curSlot = lof->nTexIdSlot >= 0 ? &m_ShadowTexIDBuffer[lof->nTexIdSlot] : nullptr;
+	if (curSlot)
+	{
+		// check if current slot was invalidated due to not rendering for some time
+		if (curSlot->nLastFrameID != nCurFrameId &&
+			(curSlot->nTexSize != lof->nTexSize || curSlot->ownerId != ownerId))
+		{
+			// not valid, need lookup a new slot
+			curSlot = nullptr;
+		}
+	}
+
+	if (!curSlot)
+	{
+		int ownSlot = -1;
+		int oldestSlot = -1;
+		int oldestFrameId = GetFrameID();
+		for (int i = 0; i < MAX_DYNAMIC_SHADOW_MAPS_COUNT; ++i)
+		{
+			// check if slot used by this object in previous frames
+			if (ownSlot == -1 &&
+				m_ShadowTexIDBuffer[i].nLastFrameID != nCurFrameId &&
+				m_ShadowTexIDBuffer[i].nTexSize == lof->nTexSize &&
+				m_ShadowTexIDBuffer[i].ownerId == ownerId)
+			{
+				ownSlot = i;
+			}
+
+			if (m_ShadowTexIDBuffer[i].nTexSize == 0 || m_ShadowTexIDBuffer[i].nLastFrameID < oldestFrameId && lof->nTexSize == m_ShadowTexIDBuffer[i].nTexSize)
+			{
+				oldestFrameId = m_ShadowTexIDBuffer[i].nLastFrameID;
+				oldestSlot = i;
+			}
+		}
+
+		int bestSlot = ownSlot >= 0 ? ownSlot : oldestSlot;
+		if (bestSlot == -1)
+			return nullptr;
+
+		curSlot = &m_ShadowTexIDBuffer[lof->nTexIdSlot = bestSlot];
+		curSlot->ownerId = ownerId;
+		curSlot->nTexSize = lof->nTexSize;
+
+		// force render
+		lof->bUpdateRequested = true;
+	}
+
+	if (curSlot->nTexId0 >= 0)
+	{
+		STexPic* tpOld = m_TexMan->GetByID(curSlot->nTexId0);
+		if (!tpOld || tpOld->m_Width != lof->nTexSize)
+		{
+			if (tpOld)
+				tpOld->Release(0);
+			curSlot->nTexId0 = -1;
+		}
+	}
+
+	if (curSlot->nTexId0 < 0)
+	{
+		curSlot->nTexId0 = GenShadowTexture(lof->nTexSize, true);
+		//make_new_tid = true;
+	}
+
+	return curSlot;
 }
 
 void CD3D9Renderer::PrepareDepthMap(ShadowMapFrustum* lof, bool make_new_tid)
@@ -410,55 +493,60 @@ void CD3D9Renderer::PrepareDepthMap(ShadowMapFrustum* lof, bool make_new_tid)
 	if (!lof || !lof->pLs)
 		return;
 
-	static int nCurTexIdSlot = 0;
-
 	//lof->bUpdateRequested = true;
-
-
 	if (lof->nResetID != m_nFrameReset)
 	{
 		lof->nResetID = m_nFrameReset;
 		lof->bUpdateRequested = true;
 	}
-	lof->nTexSize = max(lof->nTexSize, 32);
-	if (lof->nTexIdSlot >= 0)
+
+	// adjust texture size
+	lof->nTexSize = crymax(lof->nTexSize, CV_d3d9_minshadowmapsize);
+
+	ShadowMapTexInfo* shTexInfo = nullptr;
+	if (make_new_tid)
 	{
-		if (m_ShadowTexIDBuffer[lof->nTexIdSlot].pOwner == lof->pOwner)
-		{
-			char* pName = 0;
-			if (lof->pOwner)
-				pName = (char*)lof->pOwner->GetName();
-			if (m_ShadowTexIDBuffer[lof->nTexIdSlot].pOwnerGroup == lof->pOwnerGroup)
-				if (m_ShadowTexIDBuffer[lof->nTexIdSlot].dwFlags == lof->dwFlags)
-					if (lof->depth_tex_id && !lof->bUpdateRequested)
-					{
-						m_ShadowTexIDBuffer[lof->nTexIdSlot].nLastFrameID = GetFrameID();
-						return;
-					}
-		}
+		// new id for static objects
+		CRYASSERT(lof->depth_tex_id == -1);
+		lof->depth_tex_id = GenShadowTexture(lof->nTexSize, true);
 	}
-	int nShadowTexSize = lof->nTexSize;
+	else
+	{
+		shTexInfo = CD3D9Renderer::GetShadowMapTexInfo(lof);
+		if (!shTexInfo)
+			return;
+
+		shTexInfo->nLastFrameID = GetFrameID();
+
+		if (!lof->bUpdateRequested)
+			return;
+	}
+
 	lof->bUpdateRequested = false;
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//  Render objects into frame and Z buffers
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	  // remember fog value
+	// remember fog value
 	EF_PushFog();
 	EnableFog(false);
 	EF_PushMatrix();
 	m_matProj->Push();
+
+	const int nShadowTexSize = lof->nTexSize;
 
 	// normalize size
 	//while(nShadowTexSize>m_height || nShadowTexSize>m_width)
 	//  nShadowTexSize/=2;
 
 	if (m_LogFile)
+	{
 		Logv(SRendItem::m_RecurseLevel, "   Really generating %dx%d shadow map for %s, [%s] \n",
 			nShadowTexSize, nShadowTexSize,
 			lof->pOwner ? lof->pOwner->GetName() : "NoOwner",
 			lof->pOwnerGroup ? lof->pOwnerGroup->GetFileName() : "NoGroup");
+	}
 
 	// setup matrices
 	int vX, vY, vWidth, vHeight;
@@ -472,145 +560,76 @@ void CD3D9Renderer::PrepareDepthMap(ShadowMapFrustum* lof, bool make_new_tid)
 		D3DXMatrixPerspectiveFovRH(m, lof->FOV * (gf_PI / 180.0f), lof->ProjRatio, lof->min_dist, lof->max_dist + 50);
 	else
 		D3DXMatrixPerspectiveFovRH(m, lof->FOV * (gf_PI / 180.0f), lof->ProjRatio, lof->min_dist, lof->max_dist);
+
 	//makeProjectionMatrix(lof->FOV, 1, lof->min_dist, lof->max_dist, (float *)m);
 	m_pd3dDevice->SetTransform(D3DTS_PROJECTION, m);
 	m_bInvertedMatrix = false;
 	memcpy(lof->debugLightFrustumMatrix, m, sizeof(lof->debugLightFrustumMatrix));
 
 	m = m_matView->GetTop();
-	D3DXVECTOR3 Eye = D3DXVECTOR3(lof->pLs->vSrcPos.x, lof->pLs->vSrcPos.y, lof->pLs->vSrcPos.z);
-	D3DXVECTOR3 At = D3DXVECTOR3(lof->target.x, lof->target.y, lof->target.z);
-	D3DXVECTOR3 Up = D3DXVECTOR3(0, 0, 1);
+
+	D3DXVECTOR3 Eye(lof->pLs->vSrcPos.x, lof->pLs->vSrcPos.y, lof->pLs->vSrcPos.z);
+	D3DXVECTOR3 At(lof->target.x, lof->target.y, lof->target.z);
+	D3DXVECTOR3 Up(0, 0, 1);
 	D3DXMatrixLookAtRH(m, &Eye, &At, &Up);
 	m_pd3dDevice->SetTransform(D3DTS_VIEW, m);
 	memcpy(lof->debugLightViewMatrix, m, sizeof(lof->debugLightViewMatrix));
-	//EF_SetCameraInfo();
 
 	if (!m_SceneRecurseCount)
 		m_pd3dDevice->BeginScene();
 	m_SceneRecurseCount++;
 
-
-	if (make_new_tid)
-	{ // new id for static objects
-		CRYASSERT(!lof->depth_tex_id);
-		lof->depth_tex_id = GenShadowTexture(nShadowTexSize, true);
-		CRYASSERT(lof->depth_tex_id < 14000);
-	}
-	else
-	{
-		// try to reuse slot if it was not modified
-		if (lof->nTexIdSlot >= 0 &&
-			m_ShadowTexIDBuffer[lof->nTexIdSlot].nTexId0 == lof->depth_tex_id &&
-			m_ShadowTexIDBuffer[lof->nTexIdSlot].nTexSize == nShadowTexSize &&
-			m_ShadowTexIDBuffer[lof->nTexIdSlot].pOwner == lof->pOwner &&
-			m_ShadowTexIDBuffer[lof->nTexIdSlot].pOwnerGroup == lof->pOwnerGroup &&
-			m_ShadowTexIDBuffer[lof->nTexIdSlot].dwFlags == lof->dwFlags)
-		{
-			nCurTexIdSlot = lof->nTexIdSlot;
-		}
-		else
-		{ // find oldest slot
-			int nOldestSlot = -1;
-			int nOldestFrameId = GetFrameID();
-			for (int i = 0; i < MAX_DYNAMIC_SHADOW_MAPS_COUNT; i++)
-			{
-				if (m_ShadowTexIDBuffer[i].nLastFrameID < nOldestFrameId && nShadowTexSize == m_ShadowTexIDBuffer[i].nTexSize)
-				{
-					nOldestFrameId = m_ShadowTexIDBuffer[i].nLastFrameID;
-					nOldestSlot = i;
-				}
-			}
-
-			if (nOldestSlot < 0)
-				nCurTexIdSlot++;
-			else
-				nCurTexIdSlot = nOldestSlot;
-		}
-
-		if (nCurTexIdSlot >= MAX_DYNAMIC_SHADOW_MAPS_COUNT)
-			nCurTexIdSlot = 0;
-
-		if (!m_ShadowTexIDBuffer[nCurTexIdSlot].nTexId0)
-		{
-			//CRYASSERT(false);
-			m_ShadowTexIDBuffer[nCurTexIdSlot].nTexId0 = GenShadowTexture(nShadowTexSize, true);
-			CRYASSERT(m_ShadowTexIDBuffer[nCurTexIdSlot].nTexId0 < 14000);
-			//CRYASSERT(m_TexMan->GetByID(m_ShadowTexIDBuffer[nCurTexIdSlot].nTexId));
-			make_new_tid = true;
-		}
-
-		lof->nTexIdSlot = nCurTexIdSlot;
-		STexPic* tpOld = m_TexMan->GetByID(m_ShadowTexIDBuffer[nCurTexIdSlot].nTexId0);
-		CRYASSERT(tpOld);
-		if (!tpOld || tpOld->m_Width != nShadowTexSize)
-		{
-			//CRYASSERT (false);
-			//ResetToDefault();
-			if (tpOld)
-				tpOld->Release(0);
-			m_ShadowTexIDBuffer[nCurTexIdSlot].nTexId0 = lof->depth_tex_id = GenShadowTexture(nShadowTexSize, true);
-		}
-		else
-			lof->depth_tex_id = m_ShadowTexIDBuffer[nCurTexIdSlot].nTexId0;
-
-
-		m_ShadowTexIDBuffer[nCurTexIdSlot].pOwner = lof->pOwner;
-		m_ShadowTexIDBuffer[nCurTexIdSlot].pOwnerGroup = lof->pOwnerGroup;
-		m_ShadowTexIDBuffer[nCurTexIdSlot].dwFlags = lof->dwFlags;
-		m_ShadowTexIDBuffer[nCurTexIdSlot].nLastFrameID = GetFrameID();
-		m_ShadowTexIDBuffer[nCurTexIdSlot].nTexSize = nShadowTexSize;
-	}
-
-	CRYASSERT(m_ShadowTexIDBuffer[0].nTexId0 ? m_TexMan->GetByID(m_ShadowTexIDBuffer[0].nTexId0) != nullptr : 1);
-	//	CRYASSERT(m_ShadowTexIDBuffer[1].nTexId ? m_TexMan->GetByID(m_ShadowTexIDBuffer[1].nTexId)!=nullptr : 1);
-
-	ShadowMapTexInfo* st = nullptr;
 	HRESULT hReturn;
 	IDirect3DSurface9* pIRGBTargetSurf = nullptr;
 	IDirect3DSurface9* pIZBufferSurf = nullptr;
 	LPDIRECT3DTEXTURE9 pID3DTexture = nullptr;
 	LPDIRECT3DTEXTURE9 pIRGBTarget = nullptr;
+
+	ShadowMapTexInfo* st = nullptr;
+
 	// Create color buffer render target. We aren't actually going to use it for anything,
 	// but D3D required one as rendertarget
-	bool bStatus = false;
 	if (m_Features & RFT_DEPTHMAPS)
 	{
-		bStatus = true;
-		// Set render target
-		STexPicD3D* tp = (STexPicD3D*)m_TexMan->GetByID(lof->depth_tex_id);
-		CRYASSERT(tp->m_ETF == eTF_DEPTH);
-		int i;
-		for (i = 0; i < m_TempShadowTextures.Num(); i++)
+		int tempTextureId = -1;
+		for (ShadowMapTexInfo& tmpShd : m_TempShadowTextures)
 		{
-			st = &m_TempShadowTextures[i];
-			if (st->nTexSize == nShadowTexSize)
+			if (tmpShd.nTexSize == nShadowTexSize)
+			{
+				st = &tmpShd;
 				break;
+			}
 		}
-		if (i == m_TempShadowTextures.Num())
+
+		if (!st)
 		{
-			ShadowMapTexInfo smt;
-			smt.nTexId0 = 0;
-			smt.nTexSize = nShadowTexSize;
-			m_TempShadowTextures.AddElem(smt);
-		}
-		st = &m_TempShadowTextures[i];
-		if (!st->nTexId0)
+			m_TempShadowTextures.AddElem({});
+			st = &m_TempShadowTextures[m_TempShadowTextures.Num()-1];
+
 			st->nTexId0 = GenShadowTexture(nShadowTexSize, false);
-		STexPicD3D* tpRGB = (STexPicD3D*)m_TexMan->GetByID(st->nTexId0);
+			st->nTexSize = nShadowTexSize;
+		}
+
+		CRYASSERT(st->nTexId0 >= 0);
+
+		// Set render target
+		STexPicD3D* tp = (STexPicD3D*)m_TexMan->GetByID(shTexInfo->nTexId0);
 		if (tp)
 		{
+			CRYASSERT(tp->m_ETF == eTF_DEPTH);
 			pID3DTexture = (LPDIRECT3DTEXTURE9)tp->m_RefTex.m_VidTex;
 			if (pID3DTexture)
 				hReturn = pID3DTexture->GetSurfaceLevel(0, &pIZBufferSurf);
 		}
-		//hReturn = m_pd3dDevice->CreateTexture(nShadowTexSize, nShadowTexSize, 1, D3DUSAGE_RENDERTARGET, m_d3dsdBackBuffer.Format, D3DPOOL_DEFAULT, &pIRGBTarget, nullptr);
+
+		STexPicD3D* tpRGB = (STexPicD3D*)m_TexMan->GetByID(st->nTexId0);
 		if (tpRGB)
 		{
 			pIRGBTarget = (LPDIRECT3DTEXTURE9)tpRGB->m_RefTex.m_VidTex;
 			if (pIRGBTarget)
 				hReturn = pIRGBTarget->GetSurfaceLevel(0, &pIRGBTargetSurf);
 		}
+		CRYASSERT(pIRGBTargetSurf);
 		hReturn = m_pd3dDevice->SetRenderTarget(0, pIRGBTargetSurf);
 		hReturn = m_pd3dDevice->SetDepthStencilSurface(pIZBufferSurf);
 
@@ -619,35 +638,40 @@ void CD3D9Renderer::PrepareDepthMap(ShadowMapFrustum* lof, bool make_new_tid)
 	}
 	else
 	{
-		bStatus = true;
 		// Set render target
-		STexPicD3D* tp = (STexPicD3D*)m_TexMan->GetByID(lof->depth_tex_id);
+		STexPicD3D* tp = (STexPicD3D*)m_TexMan->GetByID(shTexInfo->nTexId0);
 		//CRYASSERT(tp->m_ETF == eTF_DEPTH);
 		if (tp)
 			pID3DTexture = (LPDIRECT3DTEXTURE9)tp->m_RefTex.m_VidTex;
+
 		if (CV_r_shadowblur)
 		{
-			int i;
-			for (i = 0; i < m_TempShadowTextures.Num(); i++)
+			int tempTextureId = -1;
+			for (ShadowMapTexInfo& tmpShd : m_TempShadowTextures)
 			{
-				st = &m_TempShadowTextures[i];
-				if (st->nTexSize == nShadowTexSize)
+				if (tmpShd.nTexSize == nShadowTexSize)
+				{
+					st = &tmpShd;
 					break;
+				}
 			}
-			if (i == m_TempShadowTextures.Num())
+
+			if (!st)
 			{
-				ShadowMapTexInfo smt;
-				smt.nTexId0 = 0;
-				smt.nTexSize = nShadowTexSize;
-				m_TempShadowTextures.AddElem(smt);
-			}
-			st = &m_TempShadowTextures[i];
-			if (!st->nTexId0)
+				m_TempShadowTextures.AddElem({});
+				st = &m_TempShadowTextures[m_TempShadowTextures.Num()-1];
+
 				st->nTexId0 = GenShadowTexture(nShadowTexSize, false);
+				st->nTexSize = nShadowTexSize;
+			}
+
+			CRYASSERT(st->nTexId0 != 0);
+
 			tp = (STexPicD3D*)m_TexMan->GetByID(st->nTexId0);
 			if (tp)
 				pID3DTexture = (LPDIRECT3DTEXTURE9)tp->m_RefTex.m_VidTex;
 		}
+
 		if (pID3DTexture)
 		{
 			hReturn = pID3DTexture->GetSurfaceLevel(0, &pIRGBTargetSurf);
@@ -661,7 +685,6 @@ void CD3D9Renderer::PrepareDepthMap(ShadowMapFrustum* lof, bool make_new_tid)
 	int nPersFlags = m_RP.m_PersFlags;
 	m_RP.m_PersFlags &= ~RBPF_HDR;
 
-	if (bStatus)
 	{
 		// clear frame buffer
 		CFColor col;
@@ -697,7 +720,7 @@ void CD3D9Renderer::PrepareDepthMap(ShadowMapFrustum* lof, bool make_new_tid)
 			}
 
 			EF_StartEf();
-			for (int m = 0; m < lof->pModelsList->Count(); m++)
+			for (IStatObj* statObj : *lof->pModelsList)
 			{
 				SRendParams rParms;
 				rParms.pStateShader = pStateShader;
@@ -711,34 +734,34 @@ void CD3D9Renderer::PrepareDepthMap(ShadowMapFrustum* lof, bool make_new_tid)
 					rParms.vPos -= (*lof->pEntityList)[0]->GetPos();
 				rParms.dwFObjFlags |= FOB_TRANS_MASK;
 				rParms.dwFObjFlags |= FOB_RENDER_INTO_SHADOWMAP;
-
 				rParms.fBending = lof->m_fBending;
 
-				(*lof->pModelsList)[m]->Render(rParms, Vec3(zero), 0);
+				statObj->Render(rParms, Vec3(zero), 0);
 			}
-			EF_EndEf3D(true);
+			EF_EndEf3D(0);
 		}
 
-		// draw entities
-		EF_StartEf();
-		for (int m = 0; lof->pEntityList && m_RP.m_pCurObject && m < lof->pEntityList->Count(); m++)
+		if(lof->pEntityList && lof->pEntityList->Count())
 		{
-			IEntityRender* pEnt = (*lof->pEntityList)[m];
-			const char* name = pEnt->GetName();
-			Vec3d vOffSetDir = -GetNormalized(lof->pLs->vSrcPos) * (0.1f + 0.035f * (256.f / nShadowTexSize));
-			IEntityRender* pEnt0 = (*lof->pEntityList)[0];
-			SRendParams rParams;
-			if (m_Features & RFT_DEPTHMAPS)
-				rParams.nShaderTemplate = EFT_WHITE;
-			else
-				rParams.nShaderTemplate = EFT_WHITESHADOW;
-			rParams.pStateShader = pStateShader;
-			rParams.vPos = vOffSetDir * lof->fOffsetScale + (pEnt->GetPos() - lof->pOwner->GetPos());
-			rParams.dwFObjFlags |= FOB_RENDER_INTO_SHADOWMAP;
-			rParams.dwFObjFlags |= FOB_TRANS_MASK;
-			pEnt->DrawEntity(rParams);
+			// draw entities
+			EF_StartEf();
+			for (IEntityRender* pEnt : *lof->pEntityList)
+			{
+				Vec3d vOffSetDir = -GetNormalized(lof->pLs->vSrcPos) * (0.1f + 0.035f * (256.f / nShadowTexSize));
+
+				SRendParams rParams;
+				if (m_Features & RFT_DEPTHMAPS)
+					rParams.nShaderTemplate = EFT_WHITE;
+				else
+					rParams.nShaderTemplate = EFT_WHITESHADOW;
+				rParams.pStateShader = pStateShader;
+				rParams.vPos = vOffSetDir * lof->fOffsetScale + (pEnt->GetPos() - lof->pOwner->GetPos());
+				rParams.dwFObjFlags |= FOB_RENDER_INTO_SHADOWMAP;
+				rParams.dwFObjFlags |= FOB_TRANS_MASK;
+				pEnt->DrawEntity(rParams);
+			}
+			EF_EndEf3D(0);
 		}
-		EF_EndEf3D(true);
 		//memcpy(lof->debugLightViewMatrix, &CCGVProgram_D3D::m_CurParams[0][0], 4*4*sizeof(float));
 
 		if (m_Features & RFT_DEPTHMAPS)
@@ -746,6 +769,7 @@ void CD3D9Renderer::PrepareDepthMap(ShadowMapFrustum* lof, bool make_new_tid)
 			// Enable color writes
 			m_pd3dDevice->SetRenderState(D3DRS_COLORWRITEENABLE, 0xf);
 		}
+
 		// Blur 2D texture
 		if (st && !(m_Features & RFT_DEPTHMAPS))
 		{
@@ -757,14 +781,13 @@ void CD3D9Renderer::PrepareDepthMap(ShadowMapFrustum* lof, bool make_new_tid)
 				if (CRenderer::CV_r_nops20)
 					BlurType = 1;
 			}
-			BlurImage(nShadowTexSize, nShadowTexSize, BlurType, st, lof->depth_tex_id);
+			BlurImage(nShadowTexSize, nShadowTexSize, BlurType, st, shTexInfo->nTexId0);
 		}
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		//  Now make texture from frame buffer
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
+#if 0
 		if (CD3D9Renderer::CV_d3d9_savedepthmaps)
 		{
 			if (m_Features & RFT_DEPTHMAPS)
@@ -839,12 +862,13 @@ void CD3D9Renderer::PrepareDepthMap(ShadowMapFrustum* lof, bool make_new_tid)
 				SAFE_RELEASE(pID3DSysTexture);
 			}
 		}
+#endif // 0
 	}
+
 	if (ClipPlanes)
 		EF_SetClipPlane(true, &clP.m_Normal.x, false);
 
 	m_RP.m_PersFlags = nPersFlags;
-
 	if (m_Features & RFT_DEPTHMAPS)
 	{
 		hReturn = m_pd3dDevice->SetDepthStencilSurface(m_pCurZBuffer);
@@ -889,8 +913,6 @@ void CD3D9Renderer::PrepareDepthMap(ShadowMapFrustum* lof, bool make_new_tid)
 	m_SceneRecurseCount--;
 	if (!m_SceneRecurseCount)
 		m_pd3dDevice->EndScene();
-
-	CRYASSERT(m_ShadowTexIDBuffer[0].nTexId0 ? m_TexMan->GetByID(m_ShadowTexIDBuffer[0].nTexId0) != nullptr : 1);
 
 	if (lof->pPenumbra && lof->pPenumbra->bUpdateRequested)
 		PrepareDepthMap(lof->pPenumbra, make_new_tid);
@@ -1095,18 +1117,22 @@ void CD3D9Renderer::ConfigShadowTexgen(int Num, int rangeMap, ShadowMapFrustum* 
 	if (Num < 0)
 		return;
 
-	if (pFrustum->depth_tex_id <= 0)
-		Warning(0, 0, "Warning: CD3D9Renderer::ConfigShadowTexgen: pFrustum->depth_tex_id not set");
+	const int depthTexId = pFrustum->nTexIdSlot >= 0 ? m_ShadowTexIDBuffer[pFrustum->nTexIdSlot].nTexId0 : pFrustum->depth_tex_id;
+
+	if (depthTexId < 0)
+	{
+		CRYASSERT_FAIL("invalid depth texture id %d", depthTexId);
+	}
 	else
 	{
 		if (m_RP.m_pRE)
 		{
-			m_RP.m_pRE->m_CustomTexBind[Num] = pFrustum->depth_tex_id;
+			m_RP.m_pRE->m_CustomTexBind[Num] = depthTexId;
 			m_RP.m_pRE->m_Color[Num] = pFrustum->fAlpha;
 		}
 		else
 		{
-			m_RP.m_RECustomTexBind[Num] = pFrustum->depth_tex_id;
+			m_RP.m_RECustomTexBind[Num] = depthTexId;
 			m_RP.m_REColor[Num] = pFrustum->fAlpha;
 		}
 	}
@@ -1135,7 +1161,7 @@ void CD3D9Renderer::ConfigShadowTexgen(int Num, int rangeMap, ShadowMapFrustum* 
 		if (m_RP.m_pRE)
 			m_RP.m_pRE->m_Color[3] = m_RP.m_REColor[3];
 	}
-	STexPic* tp = (STexPic*)EF_GetTextureByID(pFrustum->depth_tex_id);
+	STexPic* tp = (STexPic*)EF_GetTextureByID(depthTexId);
 	tp->m_RefTex.m_MinFilter = D3DTEXF_LINEAR;
 	tp->m_RefTex.m_MagFilter = D3DTEXF_LINEAR;
 }

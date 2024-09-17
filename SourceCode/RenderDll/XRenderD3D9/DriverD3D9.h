@@ -637,20 +637,19 @@ public:
 
 	struct ShadowMapTexInfo
 	{
-		ShadowMapTexInfo() { nTexId0 = nTexId1 = 0; pOwner = 0; pOwnerGroup = 0; nLastFrameID = -1; nTexSize = 0; dwFlags = 0; }
-		unsigned int nTexId0;
-		unsigned int nTexId1;
-		IEntityRender* pOwner;
-		IStatObj* pOwnerGroup;
-		int dwFlags;
-		int nLastFrameID;
-		int nTexSize;
+		uint64 ownerId = 0;
+		int nTexId0 = -1;
+		int nTexId1 = -1;	// used for blur
+		int nLastFrameID = -1;
+		int nTexSize = 0;
 	};
 
 	static const int MAX_DYNAMIC_SHADOW_MAPS_COUNT = 256;
 
-	ShadowMapTexInfo m_ShadowTexIDBuffer[MAX_DYNAMIC_SHADOW_MAPS_COUNT];
+	ShadowMapTexInfo m_ShadowTexIDBuffer[MAX_DYNAMIC_SHADOW_MAPS_COUNT]; 
 	TArray<ShadowMapTexInfo> m_TempShadowTextures;
+
+	ShadowMapTexInfo* GetShadowMapTexInfo(ShadowMapFrustum* lof);
 
 	void BlurImage(int nSizeX, int nSizeY, int nType, ShadowMapTexInfo* st, int nTexDst);
 	unsigned int GenShadowTexture(int nSize, bool bProjected);
@@ -740,6 +739,7 @@ public:
 	static int CV_d3d9_palettedtextures;
 	static int CV_d3d9_vbpools;
 	static int CV_d3d9_vbpoolsize;
+	static int CV_d3d9_minshadowmapsize;
 	static int CV_d3d9_psforce11;
 	static int CV_d3d9_vsforce11;
 	static int CV_d3d9_nv30_ps20;

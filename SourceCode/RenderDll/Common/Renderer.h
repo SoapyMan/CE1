@@ -376,7 +376,7 @@ public:
 
 	// Shadow Mapping
 	virtual void PrepareDepthMap(ShadowMapFrustum* lof, bool make_new_tid = 0) = 0;
-	virtual ShadowMapFrustum* MakeShadowMapFrustum(ShadowMapFrustum* lof, struct ShadowMapLightSource* pLs, const Vec3& obj_pos, list2<IStatObj*>* pStatObjects, int shadow_type);
+	virtual void MakeShadowMapFrustum(ShadowMapFrustum& lof, struct ShadowMapLightSource* pLs, const Vec3& obj_pos, IStatObj* pStatObject, int shadow_type);
 	virtual void SetupShadowOnlyPass(int Num, ShadowMapFrustum* pFrustum, Vec3* vShadowTrans, const float fShadowScale, Vec3 vObjTrans, float fObjScale, const Vec3 vObjAngles, Matrix44* pObjMat) = 0;
 	virtual void DrawAllShadowsOnTheScreen() = 0;
 	virtual void OnEntityDeleted(IEntityRender* pEntityRender) = 0;

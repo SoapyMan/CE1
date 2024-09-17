@@ -1106,7 +1106,7 @@ struct IRenderer//: public IRendererCallbackServer
 	virtual void	SetType(char type) = 0;
 	virtual unsigned int  MakeSprite(float object_scale, int tex_size, float angle, IStatObj* pStatObj, uchar* pTmpBuffer, uint def_tid) = 0;
 	virtual unsigned int  Make3DSprite(int nTexSize, float fAngleStep, IStatObj* pStatObj) = 0;
-	virtual ShadowMapFrustum* MakeShadowMapFrustum(ShadowMapFrustum* lof, ShadowMapLightSource* pLs, const Vec3& obj_pos, list2<IStatObj*>* pStatObjects, int shadow_type) = 0;
+	virtual void MakeShadowMapFrustum(ShadowMapFrustum& lof, ShadowMapLightSource* pLs, const Vec3& obj_pos, IStatObj* pStatObject, int shadow_type) = 0;
 	virtual void Set2DMode(bool enable, int ortox, int ortoy) = 0;
 	virtual int ScreenToTexture() = 0;
 	virtual void SetTexClampMode(bool clamp) = 0;

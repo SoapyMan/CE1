@@ -24,6 +24,7 @@ int CD3D9Renderer::CV_d3d9_nvperfhud;
 int CD3D9Renderer::CV_d3d9_palettedtextures;
 int CD3D9Renderer::CV_d3d9_vbpools;
 int CD3D9Renderer::CV_d3d9_vbpoolsize;
+int CD3D9Renderer::CV_d3d9_minshadowmapsize;
 int CD3D9Renderer::CV_d3d9_nv30_ps20;
 int CD3D9Renderer::CV_d3d9_occlusion_query;
 int CD3D9Renderer::CV_d3d9_compressedtextures;
@@ -97,6 +98,8 @@ CD3D9Renderer::CD3D9Renderer()
 	iConsole->Register("d3d9_PalettedTextures", &CV_d3d9_palettedtextures, 1, VF_REQUIRE_APP_RESTART);
 	iConsole->Register("d3d9_VBPools", &CV_d3d9_vbpools, 1, VF_REQUIRE_APP_RESTART);
 	iConsole->Register("d3d9_VBPoolSize", &CV_d3d9_vbpoolsize, 256 * 1024);
+	iConsole->Register("d3d9_MinShadowMapSize", &CV_d3d9_minshadowmapsize, 64, VF_DUMPTODISK);
+	
 	iConsole->Register("d3d9_NV30_PS20", &CV_d3d9_nv30_ps20, 1, VF_REQUIRE_APP_RESTART);
 	iConsole->Register("d3d9_Occlusion_Query", &CV_d3d9_occlusion_query, 1, VF_REQUIRE_APP_RESTART);
 	iConsole->Register("d3d9_CompressedTextures", &CV_d3d9_compressedtextures, 1, VF_REQUIRE_APP_RESTART);

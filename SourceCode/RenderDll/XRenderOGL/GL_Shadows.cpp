@@ -271,7 +271,7 @@ void CGLRenderer::PrepareDepthMap(ShadowMapFrustum* lof, bool make_new_tid)
 
 			(*lof->pModelsList)[m]->Render(rParms, Vec3(zero), 0);
 		}
-		EF_EndEf3D(true);
+		EF_EndEf3D(0);
 
 		gRenDev->SetClipPlane(0, nullptr);
 	}
@@ -292,7 +292,7 @@ void CGLRenderer::PrepareDepthMap(ShadowMapFrustum* lof, bool make_new_tid)
 		rParams.dwFObjFlags |= FOB_TRANS_MASK;
 		pEnt->DrawEntity(rParams);
 	}
-	EF_EndEf3D(true);
+	EF_EndEf3D(0);
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//  Now make texture from frame buffer
@@ -300,7 +300,7 @@ void CGLRenderer::PrepareDepthMap(ShadowMapFrustum* lof, bool make_new_tid)
 
 	if (make_new_tid)
 	{ // new id for static objects
-		glGenTextures(1, &lof->depth_tex_id);
+		glGenTextures(1, (unsigned int*)&lof->depth_tex_id);
 		CRYASSERT(lof->depth_tex_id < 14000);
 	}
 	else
@@ -692,7 +692,7 @@ void CGLRenderer::ConfigShadowTexgen(int Num, int rangeMap, ShadowMapFrustum* pF
 
 		if (Num >= 0)
 		{
-			if (pFrustum->depth_tex_id <= 0)
+			if (pFrustum->depth_tex_id < 0)
 				iLog->Log("Warning: CGLRenderer::ConfigShadowTexgen: pFrustum->depth_tex_id not set");
 			else
 			{

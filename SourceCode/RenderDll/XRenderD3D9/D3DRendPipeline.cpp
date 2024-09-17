@@ -1285,9 +1285,11 @@ bool CD3D9Renderer::EF_ObjectChange(SShader* Shader, SRenderShaderResources* Res
 					CMatInfo* mi = pREOCL->m_pBuffer->m_pMats->Get(i);
 					if (!mi->pRE || !mi->shaderItem.m_pShader)
 						continue;
+
 					SShader* pSH = (SShader*)mi->shaderItem.m_pShader->GetTemplate(-1);
 					if (pSH->m_Flags3 & EF3_NODRAW)
 						continue;
+
 					if (nVertFormat < 0)
 						nVertFormat = pSH->m_VertexFormatId;
 					else
@@ -1299,6 +1301,7 @@ bool CD3D9Renderer::EF_ObjectChange(SShader* Shader, SRenderShaderResources* Res
 						nFlags |= SHPF_NORMALS;
 				}
 				pRE->mfCheckUpdate(nVertFormat, nFlags | FHF_FORANIM);
+
 				CLeafBuffer* pLB = pREOCL->m_pBuffer->GetVertexContainer();
 				bool bForceUpdate = (pLB->m_UpdateFrame == GetFrameID());
 				if (pLB->m_pVertexBuffer && pLB->m_pVertexBuffer->m_bFenceSet)
@@ -1313,22 +1316,23 @@ bool CD3D9Renderer::EF_ObjectChange(SShader* Shader, SRenderShaderResources* Res
 		if (obj->m_pShadowCasters)
 		{
 			// process casters maps
-			for (int i = 0; i < obj->m_pShadowCasters->Count(); i++)
-				if (obj->m_pShadowCasters->GetAt(i).m_pLS && obj->m_pShadowCasters->GetAt(i).m_pLS->GetShadowMapFrustum())
-				{
+			for (ShadowMapLightSourceInstance& lsInst : *obj->m_pShadowCasters)
+			{
+				if (!lsInst.m_pLS || !lsInst.m_pLS->GetShadowMapFrustum())
+					continue;
+
 #ifdef DO_RENDERLOG
-					if (m_LogFile)
-						Logv(SRendItem::m_RecurseLevel, "*** Prepare shadow maps for REOcLeaf***\n");
+				if (m_LogFile)
+					Logv(SRendItem::m_RecurseLevel, "*** Prepare shadow maps for REOcLeaf***\n");
 #endif
-					PrepareDepthMap(obj->m_pShadowCasters->GetAt(i).m_pLS->GetShadowMapFrustum(), false);
-					m_RP.m_pCurObject = obj;
-				}
+				PrepareDepthMap(lsInst.m_pLS->GetShadowMapFrustum(), false);
+				m_RP.m_pCurObject = obj;
+			}
 
 			// process receiver map
-			/*if(obj->m_pShadowCasters->Count() && obj->m_pShadowCasters->GetAt(0).m_pLS)
-			  if(obj->m_pShadowCasters->GetAt(0).m_pLS->GetShadowMapFrustumPassiveCasters())
-				PrepareDepthMap(obj->m_pShadowCasters->GetAt(0).m_pLS->GetShadowMapFrustumPassiveCasters(), false);
-			m_RP.m_pCurObject = obj;*/
+			//if(obj->m_pShadowCasters->Count() && obj->m_pShadowCasters->GetAt(0).m_pLS)
+			//  if(obj->m_pShadowCasters->GetAt(0).m_pLS->GetShadowMapFrustumPassiveCasters())
+			//	PrepareDepthMap(obj->m_pShadowCasters->GetAt(0).m_pLS->GetShadowMapFrustumPassiveCasters(), false);
 		}
 
 		if (obj->m_ObjFlags & FOB_NEAREST)
@@ -1377,6 +1381,7 @@ bool CD3D9Renderer::EF_ObjectChange(SShader* Shader, SRenderShaderResources* Res
 			m_pd3dDevice->SetViewport(&m_Viewport);
 			m_RP.m_Flags &= ~RBF_NEAREST;
 		}
+
 		m_RP.m_pCurObject->m_Matrix.SetIdentity();
 		m_ViewMatrix = m_CameraMatrix;
 		// Restore transform

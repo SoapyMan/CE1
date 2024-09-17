@@ -1598,57 +1598,42 @@ void CRenderer::FlushTextMessages()
 	m_listMessages.Clear();
 }
 
-ShadowMapFrustum* CRenderer::MakeShadowMapFrustum(ShadowMapFrustum* lof, ShadowMapLightSource* pLs, const Vec3d& obj_pos, list2<IStatObj*>* pStatObjects, int shadow_type)
+void CRenderer::MakeShadowMapFrustum(ShadowMapFrustum& lof, ShadowMapLightSource* pLs, const Vec3d& obj_pos, IStatObj* pStatObject, int shadow_type)
 {
 	//  soft2d = cVars->e_2dshadows>0;
-
-	//  memset(lof,0,sizeof(ShadowMapFrustum));
-
 	//  Vec3d vCenter = ((*pStatObjects)[0]->GetBoxMin() + (*pStatObjects)[0]->GetBoxMax())*0.5;
 
-	lof->target = obj_pos;// + vCenter;
-	Vec3d dir = lof->target - pLs->vSrcPos;
+	lof.target = obj_pos;// + vCenter;
+	const Vec3d dir = lof.target - pLs->vSrcPos;
+	const float distance = dir.Length();
 
-	float distance = dir.Length();
 	//  if(distance > pLs->radius+pModel->radius)
-	  //  return 0; // too far
+	//		return 0; // too far
 
-	//  dir.Normalize();
+	float radius = 1.0f;
+	if (pStatObject)
+		radius = pStatObject->GetRadius();
 
-	float radius = 1;
-	if (pStatObjects && pStatObjects->Count())
-		radius = (*pStatObjects)[0]->GetRadius();
+	lof.FOV = RAD2DEG(radius / distance) * 1.8f;
+	if (lof.FOV > 90)
+		lof.FOV = 90;
 
-	lof->FOV = RAD2DEG(radius / distance) * 1.8f;
+	lof.min_dist = distance - radius;
+	lof.max_dist = distance + radius;
 
-	if (lof->FOV > 90)
-		lof->FOV = 90;
+	if (lof.min_dist < 0.1f)
+		lof.min_dist = 0.1f;
 
-	lof->min_dist = distance - radius;
-	if (lof->min_dist < 0.1f)
-		lof->min_dist = 0.1f;
+	lof.pLs = pLs;
+	lof.shadow_type = (EShadowType)shadow_type;
 
-	lof->max_dist = distance + radius;
-
-	lof->pLs = pLs;
-	lof->shadow_type = (EShadowType)shadow_type;
-
-	if (pStatObjects)
+	if (pStatObject)
 	{
-		if (pStatObjects->Count() && !lof->pModelsList)
-		{
-			CRYASSERT(0);
-			lof->pModelsList = new list2<IStatObj*>;
-		}
-
-		for (int o = 0; o < pStatObjects->Count(); o++)
-		{
-			IStatObj* pStatObj = (*pStatObjects)[o];
-			lof->pModelsList->Add(pStatObj);
-		}
+		if (!lof.pModelsList)
+			lof.pModelsList = new list2<IStatObj*>;
+		lof.pModelsList->PreAllocate(128);
+		lof.pModelsList->Add(pStatObject);
 	}
-
-	return lof;
 }
 
 void CRenderer::GetViewport(int* x, int* y, int* width, int* height)

@@ -35,9 +35,9 @@ void CObjManager::ProcessActiveShadowReceiving(IEntityRender* pEnt, float fEntDi
 	if (!pLsource)
 	{ // make lsource
 		pLsource = new ShadowMapLightSource;
-		ShadowMapFrustum lof;
+		pLsource->m_LightFrustums.Add({});
+		ShadowMapFrustum& lof = pLsource->m_LightFrustums[pLsource->m_LightFrustums.Count() - 1];
 		lof.pOwner = pEnt;
-		pLsource->m_LightFrustums.Add(lof);
 	}
 
 	// get needed size of shadow map
@@ -66,7 +66,7 @@ void CObjManager::ProcessActiveShadowReceiving(IEntityRender* pEnt, float fEntDi
 	{
 		if (nTexSize != pLsource->GetShadowMapFrustum()->nTexSize ||
 			!IsEquivalent(pLsource->vObjSpaceSrcPos, vObjSpaceLightPos, 0.001f) ||
-			pEnt->HasChanged() || pLsource->GetShadowMapFrustum()->depth_tex_id == 0)
+			pEnt->HasChanged() || pLsource->GetShadowMapFrustum()->nTexIdSlot == -1)
 		{
 			pLsource->GetShadowMapFrustum()->bUpdateRequested = true;
 			pLsource->vSrcPos = (pLight ? pLight->m_Origin : m_p3DEngine->GetSunPosition()) - pEnt->GetPos();
@@ -1462,9 +1462,10 @@ bool CObjManager::ProcessShadowMapCasting(IEntityRender* pEnt, CDLight* pDLight)
 		if (!pLsource)
 		{ // make lsource
 			pLsource = new ShadowMapLightSource;
-			ShadowMapFrustum lof;
+
+			pLsource->m_LightFrustums.Add({});
+			ShadowMapFrustum& lof = pLsource->m_LightFrustums[pLsource->m_LightFrustums.Count()-1];
 			lof.pOwner = pEnt;
-			pLsource->m_LightFrustums.Add(lof);
 		}
 
 		// get needed size of shadow map
@@ -1495,7 +1496,7 @@ bool CObjManager::ProcessShadowMapCasting(IEntityRender* pEnt, CDLight* pDLight)
 		// process shadow map for casting
 		if (nTexSize != pLsource->GetShadowMapFrustum()->nTexSize ||
 			!IsEquivalent(pLsource->vObjSpaceSrcPos, vObjSpaceLightPos, 0.01f) ||
-			pEnt->HasChanged() || pLsource->GetShadowMapFrustum()->depth_tex_id == 0)
+			pEnt->HasChanged() || pLsource->GetShadowMapFrustum()->nTexIdSlot == -1)
 		{
 			pLsource->GetShadowMapFrustum()->bUpdateRequested = true;
 			pLsource->vSrcPos = (pDLight ? pDLight->m_Origin : m_p3DEngine->GetSunPosition()) - pEnt->GetPos();
