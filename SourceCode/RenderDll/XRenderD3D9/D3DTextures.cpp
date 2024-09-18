@@ -2320,15 +2320,15 @@ STexPic* CD3D9TexMan::CreateTexture(const char* name, int wdt, int hgt, int dept
 	else if (eTF == eTF_DEPTH)
 	{
 		SizeSrc = wdt * hgt * 4;
-		if (gcpRendD3D->mFormatDepth16.BitsPerPixel)
-		{
-			srcFormat = gcpRendD3D->mFormatDepth16.Format;
-			format = gcpRendD3D->mFormatDepth16.Format;
-		}
-		else if (gcpRendD3D->mFormatDepth24.BitsPerPixel)
+		if (gcpRendD3D->mFormatDepth24.BitsPerPixel)
 		{
 			srcFormat = gcpRendD3D->mFormatDepth24.Format;
 			format = gcpRendD3D->mFormatDepth24.Format;
+		}
+		else if (gcpRendD3D->mFormatDepth16.BitsPerPixel)
+		{
+			srcFormat = gcpRendD3D->mFormatDepth16.Format;
+			format = gcpRendD3D->mFormatDepth16.Format;
 		}
 		else
 			return nullptr;

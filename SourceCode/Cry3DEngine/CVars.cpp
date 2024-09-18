@@ -149,7 +149,7 @@ void CVars::Init()
 	INIT_CVAR_PUBL_(e_vegetation_update_shadow_every_frame, 1, "Allow updating vegetations shadow maps every frame");
 	INIT_CVAR_CHEAT(e_particles_receive_shadows, 0, "Enable shadow maps receiving for particles");
 	INIT_CVAR_CHEAT(e_light_maps_occlusion, 0, "Enable usage of occlusion maps");
-	INIT_CVAR_CHEAT(e_shadow_maps_self_shadowing, 0, "Allow self-shadowing with shadow maps");
+	INIT_CVAR_CHEAT(e_shadow_maps_self_shadowing, 1, "Allow self-shadowing with shadow maps");
 	INIT_CVAR_CHEAT(e_voxel_build, 0, "Regenerate voxel world");
 	INIT_CVAR_CHEAT(e_voxel_debug, 0, "Draw voxel debug info");
 	INIT_CVAR_CHEAT(e_voxel_realtime_light_update, 0, "Recalculate voxel terrain vertex colors every frame");
