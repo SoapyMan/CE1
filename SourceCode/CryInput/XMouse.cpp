@@ -345,11 +345,14 @@ void CXMouse::Update(bool bPrevFocus)
 			}
 		}
 
-		POINT p;
-		p.x = GetSystemMetrics(SM_CXFULLSCREEN) / 2;
-		p.y = GetSystemMetrics(SM_CYFULLSCREEN) / 2;
-		SetCursorPos(p.x, p.y);
-		SetCursor(NULL);
+		if(!m_pSystem->IsEditor())
+		{
+			POINT p;
+			p.x = GetSystemMetrics(SM_CXFULLSCREEN) / 2;
+			p.y = GetSystemMetrics(SM_CYFULLSCREEN) / 2;
+			SetCursorPos(p.x, p.y);
+			SetCursor(NULL);
+		}
 	}
 	else
 	{
@@ -386,8 +389,11 @@ void CXMouse::Update(bool bPrevFocus)
 		POINT p;
 		p.x = GetSystemMetrics(SM_CXFULLSCREEN) / 2;
 		p.y = GetSystemMetrics(SM_CYFULLSCREEN) / 2;
-		SetCursorPos(p.x, p.y);
-		SetCursor(NULL);
+		if (!m_pSystem->IsEditor())
+		{
+			SetCursorPos(p.x, p.y);
+			SetCursor(NULL);
+		}
 
 		if (bPrevFocus)
 		{

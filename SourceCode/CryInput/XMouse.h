@@ -119,33 +119,33 @@ private:
 	ICVar* i_mouse_sensitivity_scale;
 	ICVar* i_mouse_dynamic_sensitivity;
 
-	float					m_fDblClickTime;
+	float			m_fDblClickTime;
 
-	float					m_Deltas[5];
-	float					m_OldDeltas[2];//!< just old x,y, to smooth movement.
+	float			m_Deltas[5];
+	float			m_OldDeltas[2];//!< just old x,y, to smooth movement.
 
-	float					m_DeltasInertia[2];
-	float					m_kInertia;
-	unsigned char			m_Events[XMOUSE_MAX_MOUSE_EVENTS];				//!<
-	unsigned char			m_oldEvents[XMOUSE_MAX_MOUSE_EVENTS];			//!<
-	float					m_fLastRelease[XMOUSE_MAX_MOUSE_EVENTS];	//!<
-	bool					m_bDblClick[XMOUSE_MAX_MOUSE_EVENTS];			//!<
+	float			m_DeltasInertia[2];
+	float			m_kInertia;
+	unsigned char	m_Events[XMOUSE_MAX_MOUSE_EVENTS];				//!<
+	unsigned char	m_oldEvents[XMOUSE_MAX_MOUSE_EVENTS];			//!<
+	float			m_fLastRelease[XMOUSE_MAX_MOUSE_EVENTS];	//!<
+	bool			m_bDblClick[XMOUSE_MAX_MOUSE_EVENTS];			//!<
 
-	bool					m_exmode;
-	bool					m_dinput;
-	bool					m_wheelChecked;
+	bool			m_exmode;
+	bool			m_dinput;
+	bool			m_wheelChecked;
 
-	float					m_fVScreenX;
-	float					m_fVScreenY;
+	float			m_fVScreenX;
+	float			m_fVScreenY;
 
-	ILog* m_pLog;
-	ITimer* m_pTimer;
-	ISystem* m_pSystem;
+	ILog*			m_pLog;
+	ITimer*			m_pTimer;
+	ISystem*		m_pSystem;
 
-	float					m_fSensitivity;
-	float 					m_fSensitivityScale;
-	float 					m_fAccelerationScale;
-	bool					m_bAcceleration;
+	float			m_fSensitivity;
+	float 			m_fSensitivityScale;
+	float 			m_fAccelerationScale;
+	bool			m_bAcceleration;
 };
 
 #endif // !defined(AFX_XMOUSE_H__E79C3125_5BF0_499D_B76E_6C1070554E8F__INCLUDED_)
