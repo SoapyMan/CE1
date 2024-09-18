@@ -120,116 +120,114 @@ void CryStaticModel::LoadMaterials(CXFile* f, int pos)
 			return;*/
 		}
 	}
-	else
-		if (ch.ChunkVersion == MTL_CHUNK_DESC_0745::VERSION)
+	else if (ch.ChunkVersion == MTL_CHUNK_DESC_0745::VERSION)
+	{
+		f->FSeek(pos, SEEK_SET);
+		MTL_CHUNK_DESC_0745 chunk;
+		int res = f->FRead(&chunk, 1, sizeof(chunk));
+		if (res != sizeof(chunk))
+			return;
+
+		MAT_ENTITY me;
+		memset(&me, 0, sizeof(MAT_ENTITY));
+		me.opacity = 1.0f;
+		me.alpharef = 0;
+		me.m_New = 1;
+		strcpy(me.name, chunk.name);
+		switch (chunk.MtlType)
 		{
-			f->FSeek(pos, SEEK_SET);
-			MTL_CHUNK_DESC_0745 chunk;
-			int res = f->FRead(&chunk, 1, sizeof(chunk));
-			if (res != sizeof(chunk))
-				return;
+		case MTL_STANDARD:
+			me.IsStdMat = true;
+			me.col_d = chunk.col_d;
+			me.col_a = chunk.col_a;
+			me.col_s = chunk.col_s;
 
-			MAT_ENTITY me;
-			memset(&me, 0, sizeof(MAT_ENTITY));
-			me.opacity = 1.0f;
-			me.alpharef = 0;
-			me.m_New = 1;
-			strcpy(me.name, chunk.name);
-			switch (chunk.MtlType)
-			{
-			case MTL_STANDARD:
-				me.IsStdMat = true;
-				me.col_d = chunk.col_d;
-				me.col_a = chunk.col_a;
-				me.col_s = chunk.col_s;
+			me.specLevel = chunk.specLevel;
+			me.specShininess = chunk.specShininess * 100;
+			me.opacity = chunk.opacity;
+			me.selfIllum = chunk.selfIllum;
+			me.flags = chunk.flags;
 
-				me.specLevel = chunk.specLevel;
-				me.specShininess = chunk.specShininess * 100;
-				me.opacity = chunk.opacity;
-				me.selfIllum = chunk.selfIllum;
-				me.flags = chunk.flags;
+			me.Dyn_Bounce = chunk.Dyn_Bounce;
+			me.Dyn_StaticFriction = chunk.Dyn_StaticFriction;
+			me.Dyn_SlidingFriction = chunk.Dyn_SlidingFriction;
+			/* //Timur[10/24/2001]
+			strcpy(me.map_a, chunk.tex_a.name);
+			strcpy(me.map_d, chunk.tex_d.name);
+			strcpy(me.map_o, chunk.tex_o.name);
+			strcpy(me.map_b, chunk.tex_b.name);
+			strcpy(me.map_s, chunk.tex_s.name);
+			strcpy(me.map_g, chunk.tex_g.name);
+			strcpy(me.map_c, chunk.tex_c.name);
+			strcpy(me.map_e, chunk.tex_rl.name);
+			strcpy(me.map_rr, chunk.tex_rr.name);
+			strcpy(me.map_det, chunk.tex_det.name);
+			*/
+			me.map_a = chunk.tex_a;
+			me.map_d = chunk.tex_d;
+			me.map_o = chunk.tex_o;
+			me.map_b = chunk.tex_b;
+			me.map_s = chunk.tex_s;
+			me.map_g = chunk.tex_g;
+			me.map_detail = chunk.tex_c;
+			me.map_e = chunk.tex_rl;
+			me.map_subsurf = chunk.tex_subsurf;
+			me.map_displ = chunk.tex_det;
 
-				me.Dyn_Bounce = chunk.Dyn_Bounce;
-				me.Dyn_StaticFriction = chunk.Dyn_StaticFriction;
-				me.Dyn_SlidingFriction = chunk.Dyn_SlidingFriction;
-				/* //Timur[10/24/2001]
-		strcpy(me.map_a, chunk.tex_a.name);
-		strcpy(me.map_d, chunk.tex_d.name);
-		strcpy(me.map_o, chunk.tex_o.name);
-		strcpy(me.map_b, chunk.tex_b.name);
-		strcpy(me.map_s, chunk.tex_s.name);
-		strcpy(me.map_g, chunk.tex_g.name);
-		strcpy(me.map_c, chunk.tex_c.name);
-		strcpy(me.map_e, chunk.tex_rl.name);
-		strcpy(me.map_rr, chunk.tex_rr.name);
-		strcpy(me.map_det, chunk.tex_det.name);
-				*/
-				me.map_a = chunk.tex_a;
-				me.map_d = chunk.tex_d;
-				me.map_o = chunk.tex_o;
-				me.map_b = chunk.tex_b;
-				me.map_s = chunk.tex_s;
-				me.map_g = chunk.tex_g;
-				me.map_detail = chunk.tex_c;
-				me.map_e = chunk.tex_rl;
-				me.map_subsurf = chunk.tex_subsurf;
-				me.map_displ = chunk.tex_det;
+			me.nChildren = chunk.nChildren;
 
-				me.nChildren = chunk.nChildren;
+			m_lstMaterials.Add(me);
+			break;
 
-				m_lstMaterials.Add(me);
-				break;
-
-				/*      case MTL_MULTI:
-						me.IsStdMat = 0;
-						me.nChildren = chunk.nChildren;
-						me.children = new int [chunk.nChildren];
-						int res=f->FRead(me.children,sizeof(int),chunk.nChildren);
-						if (res != chunk.nChildren)
-						  return;*/
-			}
-		}
-		else
-			if (ch.ChunkVersion == MTL_CHUNK_DESC_0744::VERSION)
-			{
-				f->FSeek(pos, SEEK_SET);
-				MTL_CHUNK_DESC_0744 chunk;
-				int res = f->FRead(&chunk, 1, sizeof(chunk));
-				if (res != sizeof(chunk))
-					return;
-
-				MAT_ENTITY me;
-				memset(&me, 0, sizeof(MAT_ENTITY));
-				me.opacity = 1.0f;
-				me.alpharef = 0;
-				strcpy(me.name, chunk.name);
-				switch (chunk.MtlType)
-				{
-				case MTL_STANDARD:
-					me.IsStdMat = true;
-					me.col_d = chunk.col_d;
-					me.col_a = chunk.col_a;
-					me.col_s = chunk.col_s;
-					me.Dyn_Bounce = chunk.Dyn_Bounce;
-					me.Dyn_StaticFriction = chunk.Dyn_StaticFriction;
-					me.Dyn_SlidingFriction = chunk.Dyn_SlidingFriction;
-					strcpy(me.map_d.name, chunk.tex_d.name);
-					strcpy(me.map_o.name, chunk.tex_o.name);
-					strcpy(me.map_b.name, chunk.tex_b.name);
-					me.nChildren = chunk.nChildren;
-
-					m_lstMaterials.Add(me);
-					break;
-
-				case MTL_MULTI:
+			/*      case MTL_MULTI:
 					me.IsStdMat = 0;
 					me.nChildren = chunk.nChildren;
-					me.m_pMaterialChildren = new int[chunk.nChildren];//leak
-					int res = f->FRead(me.m_pMaterialChildren, sizeof(int), chunk.nChildren);
+					me.children = new int [chunk.nChildren];
+					int res=f->FRead(me.children,sizeof(int),chunk.nChildren);
 					if (res != chunk.nChildren)
-						return;
-				}
-			}
+						return;*/
+		}
+	}
+	else if (ch.ChunkVersion == MTL_CHUNK_DESC_0744::VERSION)
+	{
+		f->FSeek(pos, SEEK_SET);
+		MTL_CHUNK_DESC_0744 chunk;
+		int res = f->FRead(&chunk, 1, sizeof(chunk));
+		if (res != sizeof(chunk))
+			return;
+
+		MAT_ENTITY me;
+		memset(&me, 0, sizeof(MAT_ENTITY));
+		me.opacity = 1.0f;
+		me.alpharef = 0;
+		strcpy(me.name, chunk.name);
+		switch (chunk.MtlType)
+		{
+		case MTL_STANDARD:
+			me.IsStdMat = true;
+			me.col_d = chunk.col_d;
+			me.col_a = chunk.col_a;
+			me.col_s = chunk.col_s;
+			me.Dyn_Bounce = chunk.Dyn_Bounce;
+			me.Dyn_StaticFriction = chunk.Dyn_StaticFriction;
+			me.Dyn_SlidingFriction = chunk.Dyn_SlidingFriction;
+			strcpy(me.map_d.name, chunk.tex_d.name);
+			strcpy(me.map_o.name, chunk.tex_o.name);
+			strcpy(me.map_b.name, chunk.tex_b.name);
+			me.nChildren = chunk.nChildren;
+
+			m_lstMaterials.Add(me);
+			break;
+
+		case MTL_MULTI:
+			me.IsStdMat = 0;
+			me.nChildren = chunk.nChildren;
+			me.m_pMaterialChildren = new int[chunk.nChildren];//leak
+			int res = f->FRead(me.m_pMaterialChildren, sizeof(int), chunk.nChildren);
+			if (res != chunk.nChildren)
+				return;
+		}
+	}
 }
 
 bool CryStaticModel::OnLoadgeom(char* FileName, const char* szGeomName, bool bLoadMats, bool bKeepInLocalSpace)

@@ -2191,73 +2191,62 @@ void main(int argc, char* argv[])
 			const char* szOption = argv[i] + 1;
 			if (!strcmpi(szOption, "keys"))
 				g_bDumpKeys = true;
-			else
-				if (!strcmpi(szOption, "mesh"))
-				{
-					g_bDumpMeshVerts = true;
-					g_bDumpMeshFaces = true;
-					g_bDumpMeshUVs = true;
-					g_bDumpMeshTexFaces = true;
-					g_bDumpMeshBones = true;
-					g_bDumpMeshVertCols = true;
-				}
-				else
-					if (!strcmpi(szOption, "boneInitPos"))
-					{
-						g_bDumpBoneInitPos = true;
-					}
-					else
-						if (!strcmpi(szOption, "meshVerts"))
-						{
-							g_bDumpMeshVerts = true;
-							if (i < argc - 1 && argv[i + 1][0] >= 'X' && argv[i + 1][0] <= 'Z')
-								strcpy(g_szVertexSortOrder, argv[++i]);
-						}
-						else
-							if (!strcmpi(szOption, "meshFaces"))
-							{
-								g_bDumpMeshFaces = true;
-								if (i < argc - 1 && argv[i + 1][0] >= '0' && argv[i + 1][0] <= '2')
-									strcpy(g_szFaceSortOrder, argv[++i]);
-							}
-							else
-								if (!strcmpi(szOption, "meshUVs"))
-								{
-									g_bDumpMeshUVs = true;
-									if (i < argc - 1 && argv[i + 1][0] >= 'U' && argv[i + 1][0] <= 'V')
-										strcpy(g_szUVSortOrder, argv[++i]);
-								}
-								else
-									if (!strcmpi(szOption, "meshTexFaces"))
-									{
-										g_bDumpMeshTexFaces = true;
-									}
-									else
-										if (!strcmpi(szOption, "meshBones"))
-										{
-											g_bDumpMeshBones = true;
-										}
-										else
-											if (!strcmpi(szOption, "meshVertCols"))
-											{
-												g_bDumpMeshVertCols = true;
-											}
-											else
-												if (!strcmpi(szOption, "collectTextures"))
-												{
-													g_bCollectTextures = true;
-												}
-												else
-													if (!strcmpi(szOption, "collectTexturesForCopying"))
-													{
-														g_bCollectTextures = true;
-														g_bCollectTexturesForCopying = true;
-													}
-													else
-														if (!strcmpi(szOption, "briefInfo"))
-														{
-															g_bBriefInfo = true;
-														}
+			else if (!strcmpi(szOption, "mesh"))
+			{
+				g_bDumpMeshVerts = true;
+				g_bDumpMeshFaces = true;
+				g_bDumpMeshUVs = true;
+				g_bDumpMeshTexFaces = true;
+				g_bDumpMeshBones = true;
+				g_bDumpMeshVertCols = true;
+			}
+			else if (!strcmpi(szOption, "boneInitPos"))
+			{
+				g_bDumpBoneInitPos = true;
+			}
+			else if (!strcmpi(szOption, "meshVerts"))
+			{
+				g_bDumpMeshVerts = true;
+				if (i < argc - 1 && argv[i + 1][0] >= 'X' && argv[i + 1][0] <= 'Z')
+					strcpy(g_szVertexSortOrder, argv[++i]);
+			}
+			else if (!strcmpi(szOption, "meshFaces"))
+			{
+				g_bDumpMeshFaces = true;
+				if (i < argc - 1 && argv[i + 1][0] >= '0' && argv[i + 1][0] <= '2')
+					strcpy(g_szFaceSortOrder, argv[++i]);
+			}
+			else if (!strcmpi(szOption, "meshUVs"))
+			{
+				g_bDumpMeshUVs = true;
+				if (i < argc - 1 && argv[i + 1][0] >= 'U' && argv[i + 1][0] <= 'V')
+					strcpy(g_szUVSortOrder, argv[++i]);
+			}
+			else if (!strcmpi(szOption, "meshTexFaces"))
+			{
+				g_bDumpMeshTexFaces = true;
+			}
+			else if (!strcmpi(szOption, "meshBones"))
+			{
+				g_bDumpMeshBones = true;
+			}
+			else if (!strcmpi(szOption, "meshVertCols"))
+			{
+				g_bDumpMeshVertCols = true;
+			}
+			else if (!strcmpi(szOption, "collectTextures"))
+			{
+				g_bCollectTextures = true;
+			}
+			else if (!strcmpi(szOption, "collectTexturesForCopying"))
+			{
+				g_bCollectTextures = true;
+				g_bCollectTexturesForCopying = true;
+			}
+			else if (!strcmpi(szOption, "briefInfo"))
+			{
+				g_bBriefInfo = true;
+			}
 		}
 	}
 
