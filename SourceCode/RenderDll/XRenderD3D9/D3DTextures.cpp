@@ -1030,9 +1030,12 @@ int CD3D9TexMan::TexSize(int wdt, int hgt, int mode)
 	case D3DFMT_R16F:
 		return wdt * hgt * 2;
 
+	case MAKEFOURCC('I', 'N', 'T', 'Z'):
 	case D3DFMT_R32F:
 		return wdt * hgt * 4;
 
+	case MAKEFOURCC('N', 'U', 'L', 'L'):
+		return 0;
 	default:
 		CRYASSERT(0);
 		break;
@@ -1450,12 +1453,14 @@ void CD3D9TexMan::D3DCreateVideoTexture(int tgt, byte* src, int wdt, int hgt, in
 		D3DUsage |= D3DUSAGE_RENDERTARGET;
 		D3DPool = D3DPOOL_DEFAULT;
 	}
-	if (DstFormat == D3DFMT_D24S8 || DstFormat == D3DFMT_D16)
+	if (DstFormat == D3DFMT_D24S8 || DstFormat == D3DFMT_D16 || DstFormat == MAKEFOURCC('I','N','T','Z'))
 	{
 		D3DUsage |= D3DUSAGE_DEPTHSTENCIL;
 		D3DUsage &= ~D3DUSAGE_RENDERTARGET;
 		D3DPool = D3DPOOL_DEFAULT;
 	}
+
+	CRYASSERT(SrcFormat != D3DFMT_UNKNOWN);
 
 	if (ti->m_eTT == eTT_Cubemap)
 	{
@@ -1515,8 +1520,17 @@ void CD3D9TexMan::D3DCreateVideoTexture(int tgt, byte* src, int wdt, int hgt, in
 				return;
 			}
 		}
+
+		if (DstFormat == D3DFMT_UNKNOWN)
+		{
+			D3DSURFACE_DESC surfDesc;
+			pID3DTexture->GetLevelDesc(0, &surfDesc);
+			ti->m_DstFormat = surfDesc.Format;
+		}
+
 		if (D3DUsage & D3DUSAGE_AUTOGENMIPMAP)
 			hr = pID3DTexture->SetAutoGenFilterType(MipFilter);
+
 		ti->m_RefTex.m_VidTex = pID3DTexture;
 		//if (D3DPool == D3DPOOL_DEFAULT)
 		//  sAddTX(ti, nullptr);
@@ -1539,6 +1553,13 @@ void CD3D9TexMan::D3DCreateVideoTexture(int tgt, byte* src, int wdt, int hgt, in
 			if (FAILED(hr = D3DXCreateCubeTexture(dv, wdt, bMips ? D3DX_DEFAULT : 1, D3DUsage, DstFormat, D3DPool, &pID3DCubeTexture)))
 				return;
 			ti->m_RefTex.m_VidTex = pID3DCubeTexture;
+			if (DstFormat == D3DFMT_UNKNOWN)
+			{
+				D3DSURFACE_DESC surfDesc;
+				pID3DTexture->GetLevelDesc(0, &surfDesc);
+				ti->m_DstFormat = surfDesc.Format;
+			}
+
 			if (D3DUsage & D3DUSAGE_AUTOGENMIPMAP)
 				hr = pID3DCubeTexture->SetAutoGenFilterType(MipFilter);
 			m_pCurCubeTexture = pID3DCubeTexture;
@@ -1547,6 +1568,7 @@ void CD3D9TexMan::D3DCreateVideoTexture(int tgt, byte* src, int wdt, int hgt, in
 		}
 		else
 			pID3DCubeTexture = (LPDIRECT3DCUBETEXTURE9)m_pCurCubeTexture;
+
 		if (ti->m_Flags2 & FT2_RENDERTARGET)
 			return;
 	}
@@ -1562,8 +1584,16 @@ void CD3D9TexMan::D3DCreateVideoTexture(int tgt, byte* src, int wdt, int hgt, in
 		if (FAILED(hr = D3DXCreateVolumeTexture(dv, wdt, hgt, depth, bMips ? D3DX_DEFAULT : 1, D3DUsage, DstFormat, D3DPool, &pID3DVolTexture)))
 			return;
 		ti->m_RefTex.m_VidTex = pID3DVolTexture;
+		if (DstFormat == D3DFMT_UNKNOWN)
+		{
+			D3DSURFACE_DESC surfDesc;
+			pID3DTexture->GetLevelDesc(0, &surfDesc);
+			ti->m_DstFormat = surfDesc.Format;
+		}
+
 		if (D3DUsage & D3DUSAGE_AUTOGENMIPMAP)
 			hr = pID3DVolTexture->SetAutoGenFilterType(MipFilter);
+
 		//if (D3DPool == D3DPOOL_DEFAULT)
 		//  sAddTX(ti, nullptr);
 		if (ti->m_Flags2 & FT2_RENDERTARGET)
@@ -2302,6 +2332,22 @@ STexPic* CD3D9TexMan::CreateTexture(const char* name, int wdt, int hgt, int dept
 		}
 		else
 			return nullptr;
+	}
+	else if (eTF == eTF_NULL)
+	{
+		if (gcpRendD3D->mFormatNULL.BitsPerPixel)
+		{
+			srcFormat = gcpRendD3D->mFormatNULL.Format;
+			format = gcpRendD3D->mFormatNULL.Format;
+		}
+		else
+		{
+			// fall back to RGBA8
+			SizeSrc = wdt * hgt * 4;
+			srcFormat = D3DFMT_A8R8G8B8;
+			format = D3DFMT_A8R8G8B8;
+			eTF = eTF_8888;
+		}
 	}
 
 	if (dst)
@@ -3764,7 +3810,7 @@ void CD3D9TexMan::DrawToTexture(Plane& Pl, STexPic* Tex, int RendFlags)
 		Tex->m_nMips = 0;
 		AddToHash(Tex->m_Bind, Tex);
 
-		r->m_TexMan->CreateTexture(nullptr, tex_size, tex_size, 1, FT_NOMIPS | FT_CLAMP, FT2_NODXT | FT2_RENDERTARGET, nullptr, eTT_Base, -1.0f, -1.0f, 0, Tex);
+		r->m_TexMan->CreateTexture(nullptr, tex_size, tex_size, 1, FT_NOMIPS | FT_CLAMP, FT2_NODXT | FT2_RENDERTARGET, nullptr, eTT_Base, -1.0f, -1.0f, eTF_8888, Tex);
 	}
 	if (!Tex->m_RefTex.m_VidTex)
 		return;

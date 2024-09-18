@@ -203,7 +203,6 @@ public:
 
   void PrepareDepthMap(ShadowMapFrustum * lof, bool make_new_tid);
   virtual void SetupShadowOnlyPass(int Num, ShadowMapFrustum * pFrustum, Vec3d * vShadowTrans, const float fShadowScale, Vec3d vObjTrans=Vec3d(0,0,0), float fObjScale=1.f, const Vec3d vObjAngles=Vec3d(0,0,0), Matrix44 * pObjMat=0);
-	virtual void OnEntityDeleted(IEntityRender * pEntityRender);
 	void DrawAllShadowsOnTheScreen();
 
   virtual void EF_PolygonOffset(bool bEnable, float fFactor, float fUnits) {};

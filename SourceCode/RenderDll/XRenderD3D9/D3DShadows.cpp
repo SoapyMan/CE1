@@ -310,18 +310,14 @@ unsigned int CD3D9Renderer::GenShadowTexture(int nSize, bool bProjected)
 	if ((m_Features & RFT_DEPTHMAPS) && bProjected)
 		eTF = eTF_DEPTH;
 	else
-		eTF = eTF_8888;
+		eTF = eTF_NULL;
 
 	STexPic* tp = m_TexMan->CreateTexture(name, nSize, nSize, 1, flags, flags2, nullptr, eTT_Base, -1.0f, -1.0f, 0, nullptr, 0, eTF);
-	STexPicD3D* t = (STexPicD3D*)tp;
-
-	if (!t)
+	if (!tp)
 		return 0;
-
-	LPDIRECT3DTEXTURE9 pID3DTexture = (LPDIRECT3DTEXTURE9)t->m_RefTex.m_VidTex;
-	if (!pID3DTexture)
+	if (!tp->m_RefTex.m_VidTex)
 		return 0;
-	return t->m_Bind;
+	return tp->m_Bind;
 }
 
 // draw grid and project depth map on it
@@ -333,17 +329,6 @@ unsigned int CD3D9Renderer::GenShadowTexture(int nSize, bool bProjected)
 int CD3D9Renderer::MakeShadowIdentityTexture()
 {
 	return 0;
-}
-
-void CD3D9Renderer::OnEntityDeleted(IEntityRender* pEntityRender)
-{
-	// remove references to the entity
-	//for (int i = 0; i < MAX_DYNAMIC_SHADOW_MAPS_COUNT; i++)
-	//{
-	//	ShadowMapTexInfo* pInf = &m_ShadowTexIDBuffer[i];
-	//	if (pInf->pOwner == pEntityRender)
-	//		pInf->pOwner = nullptr;
-	//}
 }
 
 void DrawText(ISystem* pSystem, int x, int y, const char* format, ...)
@@ -386,21 +371,21 @@ void CD3D9Renderer::DrawAllShadowsOnTheScreen()
 		for (float y = 0; nShadowId < MAX_DYNAMIC_SHADOW_MAPS_COUNT && y < height - 10; y += fPicDimY)
 		{
 			ShadowMapTexInfo* pInf = &m_ShadowTexIDBuffer[nShadowId++];
-			if (pInf->nTexId0 >= 0)// && (pInf->pOwner || pInf->pOwnerGroup))
-			{
-				STexPic* tp = (STexPic*)EF_GetTextureByID(pInf->nTexId0);
-				if (tp)
-				{
-					byte bSaveProj = tp->m_RefTex.bProjected;
-					tp->m_RefTex.bProjected = false;
-					SetState(GS_BLSRC_SRCALPHA | GS_BLDST_ONEMINUSSRCALPHA | GS_NODEPTHTEST);
-					Draw2dImage(x, y, fPicDimX, fPicDimY, pInf->nTexId0, 0, 0, 1, 1, 180);
-					//const char* pName = pInf->pOwner ? pInf->pOwner->GetName() : pInf->pOwnerGroup->GetFileName();
-					//int nLen = strlen(pName);
-					//DrawText(iSystem, (int)(x / width * 800.f), (int)(y / height * 600.f), "%8s-%d", pName + max(0, nLen - 12), pInf->nLastFrameID & 7);
-					tp->m_RefTex.bProjected = bSaveProj;
-				}
-			}
+			if (pInf->nTexId0 < 0)
+				continue;
+
+			STexPic* tp = (STexPic*)EF_GetTextureByID(pInf->nTexId0);
+			if (!tp)
+				continue;
+
+			byte bSaveProj = tp->m_RefTex.bProjected;
+			tp->m_RefTex.bProjected = false;
+			SetState(GS_BLSRC_SRCALPHA | GS_BLDST_ONEMINUSSRCALPHA | GS_NODEPTHTEST);
+			Draw2dImage(x, y, fPicDimX, fPicDimY, pInf->nTexId0, 0, 0, 1, 1, 180);
+			//const char* pName = pInf->pOwner ? pInf->pOwner->GetName() : pInf->pOwnerGroup->GetFileName();
+			//int nLen = strlen(pName);
+			//DrawText(iSystem, (int)(x / width * 800.f), (int)(y / height * 600.f), "%8s-%d", pName + max(0, nLen - 12), pInf->nLastFrameID & 7);
+			tp->m_RefTex.bProjected = bSaveProj;
 		}
 	}
 
@@ -639,7 +624,6 @@ void CD3D9Renderer::PrepareDepthMap(ShadowMapFrustum* lof, bool make_new_tid)
 	{
 		// Set render target
 		STexPicD3D* tp = (STexPicD3D*)m_TexMan->GetByID(shTexInfo->nTexId0);
-		//CRYASSERT(tp->m_ETF == eTF_DEPTH);
 		if (tp)
 			pID3DTexture = (LPDIRECT3DTEXTURE9)tp->m_RefTex.m_VidTex;
 

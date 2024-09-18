@@ -26,10 +26,6 @@ void CNULLRenderer::SetupShadowOnlyPass(int Num, ShadowMapFrustum* pFrustum, Vec
 {
 }
 
-void CNULLRenderer::OnEntityDeleted(IEntityRender* pEntityRender)
-{
-}
-
 void CNULLRenderer::DrawAllShadowsOnTheScreen()
 {
 }

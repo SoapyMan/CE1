@@ -144,9 +144,6 @@ void CGLRenderer::BlurImage(int nSizeX, int nSizeY, int nType, int nTexIdSrc, in
 		}
 }
 
-void CGLRenderer::OnEntityDeleted(IEntityRender* pEntityRender)
-{
-}
 
 // render depth/shadow map into texture from light source position
 void CGLRenderer::PrepareDepthMap(ShadowMapFrustum* lof, bool make_new_tid)

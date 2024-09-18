@@ -842,7 +842,6 @@ WIN_HWND CD3D9Renderer::Init(int x, int y, int width, int height, unsigned int c
 		iLog->Log(" Full scene AA: Disabled\n");
 	iLog->Log(" Projective EMBM: %s\n", (GetFeatures() & RFT_HW_ENVBUMPPROJECTED) ? "Enabled" : "Disabled");
 	iLog->Log(" Detail textures: %s\n", (GetFeatures() & RFT_DETAILTEXTURE) ? "Enabled" : "Disabled");
-	iLog->Log(" Z Buffer Locking: %s\n", (m_Features & RFT_ZLOCKABLE) ? "Enabled" : "Disabled");
 	iLog->Log(" Multitexturing: %s (%d textures)\n", (m_Features & RFT_MULTITEXTURE) ? "Supported" : "Not supported", di->Caps.MaxSimultaneousTextures);
 	iLog->Log(" Use bumpmapping : %s\n", (m_Features & RFT_BUMP) ? "Enabled (DOT3)" : "Disabled");
 	iLog->Log(" Use paletted textures : %s\n", (m_Features & RFT_PALTEXTURE) ? "Enabled" : "Disabled");
@@ -2416,6 +2415,8 @@ HRESULT CD3D9Renderer::InitDeviceObjects()
 		mFormatPal8.Init();   // Paletted8
 		mFormatDepth24.Init(); // Depth teture
 		mFormatDepth16.Init(); // Depth teture
+		mFormatNULL.Init();	// NULL render target texture that does not consume video memory
+		mFormatINTZ.Init();	// INTZ depth texture
 
 		// Find the needed texture formats.
 		{
@@ -2463,15 +2464,16 @@ HRESULT CD3D9Renderer::InitDeviceObjects()
 				m_Features |= RFT_DEPTHMAPS;
 				RecognizePixelFormat(mFormatDepth16, D3DFMT_D16, 8, "Depth16");
 			}
-			//// REMOVED DRIVER HACK -- Carsten
-   //   // Workaround for NVidia drivers less than 61.00
-   //   // Depth maps are working extremely bad on rel5X drivers
-   //   if (LOWORD(ai->DriverVersion.u.LowPart) < 6100)
-   //   {
-   //     ICVar *pVar = iConsole->GetCVar("d3d9_NoDepthMaps");
-   //     if (pVar)
-   //       pVar->Set(1);
-   //   }
+			if (SUCCEEDED(m_pD3D->CheckDeviceFormat(pAI->AdapterOrdinal, m_d3dCaps.DeviceType, m_D3DSettings.AdapterFormat(), 0, D3DRTYPE_TEXTURE, D3DFMT_INTZ)))
+			{
+				m_Features |= RFT_DEPTHMAPS;
+				RecognizePixelFormat(mFormatINTZ, D3DFMT_INTZ, 8, "INTZ");
+			}
+			if (SUCCEEDED(m_pD3D->CheckDeviceFormat(pAI->AdapterOrdinal, m_d3dCaps.DeviceType, m_D3DSettings.AdapterFormat(), 0, D3DRTYPE_TEXTURE, D3DFMT_NULL)))
+			{
+				RecognizePixelFormat(mFormatNULL, D3DFMT_NULL, 8, "NULL");
+			}
+
 			if (CV_r_shadowtype == 1 || CV_d3d9_nodepthmaps)
 				m_Features &= ~RFT_DEPTHMAPS;
 
@@ -2493,9 +2495,9 @@ HRESULT CD3D9Renderer::InitDeviceObjects()
 				RecognizePixelFormat(mFormatX8L8U8V8, D3DFMT_X8L8V8U8, 32, "BumpX8L8U8V8");
 			if (SUCCEEDED(m_pD3D->CheckDeviceFormat(pAI->AdapterOrdinal, m_d3dCaps.DeviceType, m_D3DSettings.AdapterFormat(), 0, D3DRTYPE_TEXTURE, D3DFMT_L6V5U5)))
 				RecognizePixelFormat(mFormatU5V5L6, D3DFMT_L6V5U5, 16, "BumpU5V5L6");
-			if (SUCCEEDED(m_pD3D->CheckDeviceFormat(pAI->AdapterOrdinal, m_d3dCaps.DeviceType, m_D3DSettings.AdapterFormat(), 0, D3DRTYPE_TEXTURE, (D3DFORMAT)(MAKEFOURCC('A', 'T', 'I', '2')))))
+			if (SUCCEEDED(m_pD3D->CheckDeviceFormat(pAI->AdapterOrdinal, m_d3dCaps.DeviceType, m_D3DSettings.AdapterFormat(), 0, D3DRTYPE_TEXTURE, D3DFMT_ATI2)))
 			{
-				RecognizePixelFormat(mFormat3Dc, (D3DFORMAT)(MAKEFOURCC('A', 'T', 'I', '2')), 16, "3Dc");
+				RecognizePixelFormat(mFormat3Dc, D3DFMT_ATI2, 16, "3Dc");
 				m_bDeviceSupportsComprNormalmaps = 1;
 			}
 
@@ -2561,9 +2563,9 @@ HRESULT CD3D9Renderer::InitDeviceObjects()
 		m_d3dCaps.MaxTextureAspectRatio = 1;
 		iLog->Log("D3D Driver: Requires square textures\n");
 	}
-	else
-		if (!m_d3dCaps.MaxTextureAspectRatio)
-			m_d3dCaps.MaxTextureAspectRatio = max(1, max(m_d3dCaps.MaxTextureWidth, m_d3dCaps.MaxTextureHeight));
+	else if (!m_d3dCaps.MaxTextureAspectRatio)
+		m_d3dCaps.MaxTextureAspectRatio = max(1, max(m_d3dCaps.MaxTextureWidth, m_d3dCaps.MaxTextureHeight));
+
 	if (m_d3dCaps.RasterCaps & D3DPRASTERCAPS_FOGRANGE)
 		iLog->Log("D3D Driver: Supports range-based fog\n");
 	if (m_d3dCaps.RasterCaps & D3DPRASTERCAPS_WFOG)
@@ -2576,6 +2578,7 @@ HRESULT CD3D9Renderer::InitDeviceObjects()
 		iLog->Log("D3D Driver: Supports Z biasing\n");
 	else
 		m_Features &= ~RFT_SUPPORTZBIAS;
+
 	if (m_d3dCaps.RasterCaps & D3DPRASTERCAPS_ZBUFFERLESSHSR)
 		iLog->Log("D3D Driver: Device can perform hidden-surface removal (HSR)\n");
 	if (m_d3dCaps.RasterCaps & D3DPRASTERCAPS_SCISSORTEST)
@@ -2810,23 +2813,14 @@ HRESULT CD3D9Renderer::InitDeviceObjects()
 	m_bDeviceSupportsInstancing = (D3DSHADER_VERSION_MAJOR(m_d3dCaps.VertexShaderVersion) >= 3);
 	if (!m_bDeviceSupportsInstancing)
 	{
-		D3DFORMAT instanceSupport = (D3DFORMAT)MAKEFOURCC('I', 'N', 'S', 'T');
-		if (SUCCEEDED(m_pD3D->CheckDeviceFormat(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, D3DFMT_X8R8G8B8, 0, D3DRTYPE_SURFACE, instanceSupport)))
+		if (SUCCEEDED(m_pD3D->CheckDeviceFormat(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, D3DFMT_X8R8G8B8, 0, D3DRTYPE_SURFACE, D3DFMT_INST)))
 		{
 			m_bDeviceSupportsInstancing = 2;
 			// Notify the driver that instancing support is expected
-			m_pd3dDevice->SetRenderState(D3DRS_POINTSIZE, instanceSupport);
+			m_pd3dDevice->SetRenderState(D3DRS_POINTSIZE, D3DFMT_INST);
 		}
 	}
 	m_bDeviceSupportsMRT = (m_d3dCaps.NumSimultaneousRTs >= 4) && SUCCEEDED(m_pD3D->CheckDeviceFormat(pAI->AdapterOrdinal, m_d3dCaps.DeviceType, m_D3DSettings.AdapterFormat(), D3DUSAGE_RENDERTARGET, D3DRTYPE_TEXTURE, D3DFMT_G16R16F));
-
-	//// REMOVED DRIVER HACK -- Carsten
-	//// Workaround for NVidia drivers less than 66.00
- // // Don't use MRT on old drivers
- // if (LOWORD(ai->DriverVersion.u.LowPart) < 6600)
- // {
- //   m_bDeviceSupportsMRT = 0;
- // }
 
 	m_bDeviceSupportsFP16Filter = true;
 	if (FAILED(m_pD3D->CheckDeviceFormat(pAI->AdapterOrdinal, m_d3dCaps.DeviceType, m_D3DSettings.AdapterFormat(), D3DUSAGE_RENDERTARGET | D3DUSAGE_QUERY_FILTER, D3DRTYPE_TEXTURE, D3DFMT_A16B16G16R16F)))
@@ -2839,21 +2833,20 @@ HRESULT CD3D9Renderer::InitDeviceObjects()
 		// Check support for HDR rendering
 		D3DDeviceCombo* pDev = m_D3DSettings.PDeviceCombo();
 		m_HDR_FloatFormat_Scalar = D3DFMT_R16F;
+
 		if (CV_r_Quality_BumpMapping < 3)
 			nHDRSupported = 0;
-		else
-			if (FAILED(m_pD3D->CheckDeviceFormat(pDev->AdapterOrdinal, pDev->DevType, pDev->AdapterFormat, D3DUSAGE_RENDERTARGET | D3DUSAGE_QUERY_POSTPIXELSHADER_BLENDING, D3DRTYPE_TEXTURE, D3DFMT_A16B16G16R16F)))
+		else if (FAILED(m_pD3D->CheckDeviceFormat(pDev->AdapterOrdinal, pDev->DevType, pDev->AdapterFormat, D3DUSAGE_RENDERTARGET | D3DUSAGE_QUERY_POSTPIXELSHADER_BLENDING, D3DRTYPE_TEXTURE, D3DFMT_A16B16G16R16F)))
+			nHDRSupported = 0;
+		else if (FAILED(m_pD3D->CheckDeviceFormat(pDev->AdapterOrdinal, pDev->DevType, pDev->AdapterFormat, D3DUSAGE_RENDERTARGET | D3DUSAGE_QUERY_POSTPIXELSHADER_BLENDING, D3DRTYPE_SURFACE, D3DFMT_A16B16G16R16F)))
+			nHDRSupported = 0;
+		else if (FAILED(m_pD3D->CheckDeviceFormat(pDev->AdapterOrdinal, pDev->DevType, pDev->AdapterFormat, D3DUSAGE_RENDERTARGET, D3DRTYPE_TEXTURE, D3DFMT_R16F)))
+		{
+			m_HDR_FloatFormat_Scalar = D3DFMT_R32F;
+			if (FAILED(m_pD3D->CheckDeviceFormat(pDev->AdapterOrdinal, pDev->DevType, pDev->AdapterFormat, D3DUSAGE_RENDERTARGET, D3DRTYPE_TEXTURE, D3DFMT_R32F)))
 				nHDRSupported = 0;
-			else
-				if (FAILED(m_pD3D->CheckDeviceFormat(pDev->AdapterOrdinal, pDev->DevType, pDev->AdapterFormat, D3DUSAGE_RENDERTARGET | D3DUSAGE_QUERY_POSTPIXELSHADER_BLENDING, D3DRTYPE_SURFACE, D3DFMT_A16B16G16R16F)))
-					nHDRSupported = 0;
-				else
-					if (FAILED(m_pD3D->CheckDeviceFormat(pDev->AdapterOrdinal, pDev->DevType, pDev->AdapterFormat, D3DUSAGE_RENDERTARGET, D3DRTYPE_TEXTURE, D3DFMT_R16F)))
-					{
-						m_HDR_FloatFormat_Scalar = D3DFMT_R32F;
-						if (FAILED(m_pD3D->CheckDeviceFormat(pDev->AdapterOrdinal, pDev->DevType, pDev->AdapterFormat, D3DUSAGE_RENDERTARGET, D3DRTYPE_TEXTURE, D3DFMT_R32F)))
-							nHDRSupported = 0;
-					}
+		}
+
 		if (D3DSHADER_VERSION_MAJOR(m_d3dCaps.PixelShaderVersion) < 2)
 			nHDRSupported = 0;
 	}

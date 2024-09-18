@@ -1608,8 +1608,9 @@ enum ETEX_Format
 	eTF_V8U8,
 	eTF_V16U16,
 
-	eTF_0088,  // Luminance, Alpha
+	eTF_0088,	// Luminance, Alpha
 	eTF_DEPTH,
+	eTF_NULL,	// D3D9 NULL format that does not comsume video memory.
 };
 
 //===================================================================================

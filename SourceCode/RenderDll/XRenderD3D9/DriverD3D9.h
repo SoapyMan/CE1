@@ -277,11 +277,11 @@ struct SPixFormat
 {
 	// Pixel format info.
 	D3DFORMAT       Format;   // Pixel format from Direct3D.
-	SPixFormat* Next;     // Next in linked list of all compatible pixel formats.
-	const TCHAR* Desc;     // Stat: Human readable name for stats.
-	int         BitsPerPixel; // Total bits per pixel.
-	DWORD       MaxWidth;
-	DWORD       MaxHeight;
+	SPixFormat*		Next;     // Next in linked list of all compatible pixel formats.
+	const TCHAR*	Desc;     // Stat: Human readable name for stats.
+	int				BitsPerPixel; // Total bits per pixel.
+	DWORD			MaxWidth;
+	DWORD			MaxHeight;
 
 	// Multi-frame stats.
 	int         Binned;     // Stat: How many textures of this format are available in bins.
@@ -293,6 +293,7 @@ struct SPixFormat
 	int         Sets;     // Stat: Number of SetTexture was called this frame on textures of this format.
 	int         Uploads;    // Stat: Number of texture Blts this frame.
 	int         UploadCycles; // Stat: Cycles spent Blting.
+
 	void Init()
 	{
 		Next = nullptr;
@@ -585,6 +586,11 @@ public:
 	CGcontext m_CGContext;
 #endif
 
+	static const D3DFORMAT D3DFMT_NULL = (D3DFORMAT)MAKEFOURCC('N','U','L','L');
+	static const D3DFORMAT D3DFMT_INTZ = (D3DFORMAT)MAKEFOURCC('I','N','T','Z');
+	static const D3DFORMAT D3DFMT_ATI2 = (D3DFORMAT)MAKEFOURCC('A','T','I','2');
+	static const D3DFORMAT D3DFMT_INST = (D3DFORMAT)MAKEFOURCC('I','N','S','T');
+
 	// Pixel formats from D3D.
 	SPixFormat        mFormatA8;      //8 bit alpha
 	SPixFormat        mFormatA8L8;    //16
@@ -606,6 +612,8 @@ public:
 	SPixFormat        mFormatDepth24; //Depth texture
 	SPixFormat        mFormatDepth16; //Depth texture
 	SPixFormat        mFormatU16V16;  //16 bit per component
+	SPixFormat        mFormatNULL;	  //NULL render target color
+	SPixFormat        mFormatINTZ;	  //INTZ format allowing to read depth textures in shaders
 
 	SPixFormat* mFirstPixelFormat;
 
@@ -658,7 +666,6 @@ public:
 	virtual void SetupShadowOnlyPass(int Num, ShadowMapFrustum* pFrustum, Vec3* vShadowTrans, const float fShadowScale, Vec3 vObjTrans = Vec3(0, 0, 0), float fObjScale = 1.f, const Vec3 vObjAngles = Vec3(0, 0, 0), Matrix44* pObjMat = 0);
 	int MakeShadowIdentityTexture();
 	void DrawAllShadowsOnTheScreen();
-	void OnEntityDeleted(IEntityRender* pEntityRender);
 
 	//=============================================================
 
