@@ -281,6 +281,7 @@ struct ISystem
 	virtual bool GetForceNonDevMode() const = 0;
 	virtual bool WasInDevMode() const = 0;
 	virtual bool IsDevMode() const = 0;
+	virtual bool IsEditor() const = 0;
 	//////////////////////////////////////////////////////////////////////////
 
 	virtual XDOM::IXMLDOMDocument* CreateXMLDocument() = 0;

@@ -298,6 +298,7 @@ public:
 	virtual bool GetForceNonDevMode() const;
 	virtual bool WasInDevMode() const { return m_bWasInDevMode; };
 	virtual bool IsDevMode() const { return m_bInDevMode && !GetForceNonDevMode(); }
+	virtual bool IsEditor() const { return m_bEditor; }
 
 	// -------------------------------------------------------------
 
@@ -307,29 +308,29 @@ public:
 
 private: // ------------------------------------------------------
 
-	CTimer								m_Time;								//!<
-	CCamera								m_ViewCamera;					//!<
-	CXConsole* m_pConsole;						//!<
-	bool									m_bQuit;							//!< if is true the system is quitting
-	bool									m_bRelaunch;					//!< relaunching the app or not (true beforerelaunch)
-	bool									m_bRelaunched;				//!< Application was started with the -RELAUNCH option (true after relaunch)
-	bool									m_bTestMode;					//!< If running in testing mode.
-	bool									m_bEditor;						//!< If running in Editor.
-	bool									m_bDedicatedServer;		//!< If running as Dedicated server.
-	bool									m_bIgnoreUpdates;			//!< When set to true will ignore Update and Render calls,
-	IValidator* m_pValidator;					//!< Pointer to validator interface.
-	bool									m_bForceNonDevMode;		//!< true when running on a cheat protected server or a client that is connected to it (not used in singlplayer)
-	bool									m_bWasInDevMode;			//!< Set to true if was in dev mode.
-	bool									m_bInDevMode;					//!< Set to true if was in dev mode.
-	SDefaultValidator* m_pDefaultValidator;	//!<
-	int										m_nStrangeRatio;			//!<
+	CTimer				m_Time;								//!<
+	CCamera				m_ViewCamera;					//!<
+	CXConsole*			m_pConsole;						//!<
+	bool				m_bQuit;							//!< if is true the system is quitting
+	bool				m_bRelaunch;					//!< relaunching the app or not (true beforerelaunch)
+	bool				m_bRelaunched;				//!< Application was started with the -RELAUNCH option (true after relaunch)
+	bool				m_bTestMode;					//!< If running in testing mode.
+	bool				m_bEditor;						//!< If running in Editor.
+	bool				m_bDedicatedServer;		//!< If running as Dedicated server.
+	bool				m_bIgnoreUpdates;			//!< When set to true will ignore Update and Render calls,
+	IValidator*			m_pValidator;					//!< Pointer to validator interface.
+	bool				m_bForceNonDevMode;		//!< true when running on a cheat protected server or a client that is connected to it (not used in singlplayer)
+	bool				m_bWasInDevMode;			//!< Set to true if was in dev mode.
+	bool				m_bInDevMode;					//!< Set to true if was in dev mode.
+	SDefaultValidator*	m_pDefaultValidator;	//!<
+	int					m_nStrangeRatio;			//!<
 
 	//! Input system
 	//! @see CRenderer
-	IRenderer* m_pRenderer;
+	IRenderer*			m_pRenderer;
 
 	//! CPU features
-	CCpuFeatures* m_pCpu;
+	CCpuFeatures*		m_pCpu;
 
 	//! DLLs handles.
 	struct SDllHandles
