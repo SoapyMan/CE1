@@ -531,13 +531,13 @@ void CShader::mfCompileLayers(SShader* ef, char* scr, TArray<SShaderPassHW>& Lay
 		{
 			int n = Layers.Num();
 			mfCompileHWShadeLayer(ef, params, Layers);
+
 			Layers[n].m_ePassType = eType;
 			if (Layers[n].m_CGFSParamsNoObj)
 			{
-				for (int i = 0; i < Layers[n].m_CGFSParamsNoObj->Num(); i++)
+				for (SParam& pr : *Layers[n].m_CGFSParamsNoObj)
 				{
-					SParam* pr = &Layers[n].m_CGFSParamsNoObj->Get(i);
-					if (pr->m_Comps[0] && (pr->m_Comps[0]->m_eType == EParamComp_AmbLightColor || pr->m_Comps[0]->m_eType == EParamComp_WorldColor))
+					if (pr.m_Comps[0] && (pr.m_Comps[0]->m_eType == EParamComp_AmbLightColor || pr.m_Comps[0]->m_eType == EParamComp_WorldColor))
 					{
 						Layers[n].m_LightFlags |= DLF_HASAMBIENT;
 						break;
@@ -546,10 +546,9 @@ void CShader::mfCompileLayers(SShader* ef, char* scr, TArray<SShaderPassHW>& Lay
 			}
 			if (Layers[n].m_CGFSParamsObj)
 			{
-				for (int i = 0; i < Layers[n].m_CGFSParamsObj->Num(); i++)
+				for (SParam& pr : *Layers[n].m_CGFSParamsObj)
 				{
-					SParam* pr = &Layers[n].m_CGFSParamsObj->Get(i);
-					if (pr->m_Comps[0] && (pr->m_Comps[0]->m_eType == EParamComp_AmbLightColor || pr->m_Comps[0]->m_eType == EParamComp_WorldColor))
+					if (pr.m_Comps[0] && (pr.m_Comps[0]->m_eType == EParamComp_AmbLightColor || pr.m_Comps[0]->m_eType == EParamComp_WorldColor))
 					{
 						Layers[n].m_LightFlags |= DLF_HASAMBIENT;
 						break;

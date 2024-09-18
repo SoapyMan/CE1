@@ -1913,6 +1913,9 @@ char* CCGPShader_D3D::mfLoadCG_Int(char* prog_text)
 		char* szPr;
 		switch (pr)
 		{
+			case CG_PROFILE_PS_1_1:
+			case CG_PROFILE_PS_1_2:
+			case CG_PROFILE_PS_1_3: szPr = "ps_1_4"; break;
 			case CG_PROFILE_PS_2_0: szPr = "ps_2_0"; break;
 			case CG_PROFILE_PS_2_X: szPr = sz2AProfile; break;
 			case CG_PROFILE_PS_3_0: szPr = "ps_3_0"; break;
@@ -1975,42 +1978,73 @@ char* CCGPShader_D3D::mfLoadCG_Int(char* prog_text)
 		char szCmdLine[512];
 		sprintf(szCmdLine, "cgc.exe -DCGC=1 -profile ps_1_1 -o $$out.cg $$in.cg");
 
-		STARTUPINFO si;
-		ZeroMemory(&si, sizeof(si));
-		si.cb = sizeof(si);
-		si.dwX = 100;
-		si.dwY = 100;
-		si.dwFlags = STARTF_USEPOSITION;
+		SECURITY_ATTRIBUTES sa;
+		sa.nLength = sizeof(SECURITY_ATTRIBUTES);
+		sa.bInheritHandle = TRUE;  // Pipe handles are inherited by the child process.
+		sa.lpSecurityDescriptor = nullptr;
 
-		PROCESS_INFORMATION pi;
-		ZeroMemory(&pi, sizeof(pi));
-		if (!CreateProcess(nullptr, // No module name (use command line). 
-			szCmdLine,				// Command line. 
-			nullptr,             // Process handle not inheritable. 
-			nullptr,             // Thread handle not inheritable. 
-			FALSE,            // Set handle inheritance to FALSE. 
-			CREATE_NO_WINDOW, // No creation flags. 
-			nullptr,             // Use parent's environment block. 
-			nullptr/*szFolderName*/,     // Set starting directory. 
-			&si,              // Pointer to STARTUPINFO structure.
-			&pi)             // Pointer to PROCESS_INFORMATION structure.
-			)
+		HANDLE hChildStdOutRd = nullptr;	
 		{
-			iLog->LogError("CreateProcess failed: %s", szCmdLine);
-			return nullptr;
+			HANDLE hChildStdOutWr = nullptr;
+			CreatePipe(&hChildStdOutRd, &hChildStdOutWr, &sa, 0);
+			SetHandleInformation(hChildStdOutRd, HANDLE_FLAG_INHERIT, 0);
+
+			STARTUPINFO si;
+			ZeroMemory(&si, sizeof(si));
+			si.cb = sizeof(si);
+			si.dwX = 100;
+			si.dwY = 100;
+			si.dwFlags = STARTF_USEPOSITION | STARTF_USESTDHANDLES;
+			si.hStdError = hChildStdOutWr;   // Redirect STDERR to the same pipe (optional).
+			si.hStdOutput = hChildStdOutWr;  // Redirect STDOUT to the pipe.
+
+			PROCESS_INFORMATION pi;
+			ZeroMemory(&pi, sizeof(pi));
+			if (!CreateProcess(nullptr, // No module name (use command line). 
+				szCmdLine,				// Command line. 
+				nullptr,             // Process handle not inheritable. 
+				nullptr,             // Thread handle not inheritable. 
+				FALSE,            // Set handle inheritance to FALSE. 
+				CREATE_NO_WINDOW, // No creation flags. 
+				nullptr,             // Use parent's environment block. 
+				nullptr/*szFolderName*/,     // Set starting directory. 
+				&si,              // Pointer to STARTUPINFO structure.
+				&pi)             // Pointer to PROCESS_INFORMATION structure.
+				)
+			{
+				iLog->LogError("CreateProcess failed: %s", szCmdLine);
+				return nullptr;
+			}
+
+			while (WAIT_OBJECT_0 != WaitForSingleObject(pi.hProcess, 10000))
+				iLog->LogWarning("CG runtime takes forever to compile.. waiting.. (last error %d)", GetLastError());
+
+			CloseHandle(hChildStdOutWr);
+			CloseHandle(pi.hProcess);
+			CloseHandle(pi.hThread);
 		}
 
-		while (WAIT_OBJECT_0 != WaitForSingleObject(pi.hProcess, 10000))
-			iLog->LogWarning("CG runtime takes forever to compile.. waiting.. (last error %d)", GetLastError());
+		auto displayCGCOutput = [&]()
+		{
+			DWORD dwRead;
+			CHAR buffer[4096];
+			BOOL success = FALSE;
 
-		CloseHandle(pi.hProcess);
-		CloseHandle(pi.hThread);
+			while (true) {
+				success = ReadFile(hChildStdOutRd, buffer, sizeof(buffer) - 1, &dwRead, nullptr);
+				if (!success || dwRead == 0) break;  // Exit on pipe EOF or failure.
+				buffer[dwRead] = '\0';  // Null-terminate the output.
+				iLog->LogError(buffer);
+			}
+		};
 
 		fp = fopen("$$out.cg", "rb");
 		if (!fp)
 		{
 			remove("$$in.cg");
 			remove("$$out.cg");
+			displayCGCOutput();
+			CloseHandle(hChildStdOutRd);
 			return nullptr;
 		}
 		fseek(fp, 0, SEEK_END);
@@ -2020,6 +2054,8 @@ char* CCGPShader_D3D::mfLoadCG_Int(char* prog_text)
 		{
 			remove("$$in.cg");
 			remove("$$out.cg");
+			displayCGCOutput();
+			CloseHandle(hChildStdOutRd);
 			return nullptr;
 		}
 		char* pBuf = new char[size + 1];
@@ -2028,6 +2064,7 @@ char* CCGPShader_D3D::mfLoadCG_Int(char* prog_text)
 		fclose(fp);
 		remove("$$in.cg");
 		remove("$$out.cg");
+		CloseHandle(hChildStdOutRd);
 
 		return pBuf;
 #endif

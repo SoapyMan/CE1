@@ -1157,9 +1157,8 @@ void CCObject::SetAlphaState(CPShader* pPS, int nCurState)
 		State &= ~GS_DEPTHWRITE;
 		rd->EF_SetState(State);
 	}
-	else
-		if (rd->m_CurState & GS_DEPTHFUNC_EQUAL)
-			rd->EF_SetState(rd->m_CurState & ~GS_DEPTHFUNC_EQUAL);
+	else if (rd->m_CurState & GS_DEPTHFUNC_EQUAL)
+		rd->EF_SetState(rd->m_CurState & ~GS_DEPTHFUNC_EQUAL);
 
 	rd->m_RP.m_fCurOpacity = rd->m_RP.m_pCurObject->m_Color.a;
 	if (!pPS)
@@ -1182,28 +1181,27 @@ void CCObject::SetAlphaState(CPShader* pPS, int nCurState)
 			rd->m_RP.m_TexStages[0].m_AA = eCA_Texture | (eCA_Constant << 3);
 			rd->m_RP.m_FlagsPerFlush |= RBSI_GLOBALRGB;
 		}
+		else if (State == (GS_BLSRC_ONE | GS_BLDST_ONE))
+		{
+			fColor = rd->m_RP.m_fCurOpacity;
+			byte bCol = (byte)(fColor * 255.0f);
+			rd->m_RP.m_NeedGlobalColor.bcolor[0] = bCol;
+			rd->m_RP.m_NeedGlobalColor.bcolor[1] = bCol;
+			rd->m_RP.m_NeedGlobalColor.bcolor[2] = bCol;
+			rd->m_RP.m_NeedGlobalColor.bcolor[3] = bCol;
+			rd->m_RP.m_TexStages[0].m_CO = eCO_MODULATE;
+			rd->m_RP.m_TexStages[0].m_AO = eCO_MODULATE;
+			rd->m_RP.m_TexStages[0].m_CA = eCA_Texture | (eCA_Constant << 3);
+			rd->m_RP.m_TexStages[0].m_AA = eCA_Texture | (eCA_Constant << 3);
+			rd->m_RP.m_FlagsPerFlush |= RBSI_GLOBALRGB;
+		}
 		else
-			if (State == (GS_BLSRC_ONE | GS_BLDST_ONE))
-			{
-				fColor = rd->m_RP.m_fCurOpacity;
-				byte bCol = (byte)(fColor * 255.0f);
-				rd->m_RP.m_NeedGlobalColor.bcolor[0] = bCol;
-				rd->m_RP.m_NeedGlobalColor.bcolor[1] = bCol;
-				rd->m_RP.m_NeedGlobalColor.bcolor[2] = bCol;
-				rd->m_RP.m_NeedGlobalColor.bcolor[3] = bCol;
-				rd->m_RP.m_TexStages[0].m_CO = eCO_MODULATE;
-				rd->m_RP.m_TexStages[0].m_AO = eCO_MODULATE;
-				rd->m_RP.m_TexStages[0].m_CA = eCA_Texture | (eCA_Constant << 3);
-				rd->m_RP.m_TexStages[0].m_AA = eCA_Texture | (eCA_Constant << 3);
-				rd->m_RP.m_FlagsPerFlush |= RBSI_GLOBALRGB;
-			}
-			else
-			{
-				rd->m_RP.m_NeedGlobalColor.bcolor[3] = (byte)(rd->m_RP.m_fCurOpacity * 255.0f);
-				rd->m_RP.m_TexStages[0].m_AO = eCO_MODULATE;
-				rd->m_RP.m_TexStages[0].m_AA = eCA_Texture | (eCA_Constant << 3);
-				rd->m_RP.m_FlagsPerFlush |= RBSI_GLOBALALPHA;
-			}
+		{
+			rd->m_RP.m_NeedGlobalColor.bcolor[3] = (byte)(rd->m_RP.m_fCurOpacity * 255.0f);
+			rd->m_RP.m_TexStages[0].m_AO = eCO_MODULATE;
+			rd->m_RP.m_TexStages[0].m_AA = eCA_Texture | (eCA_Constant << 3);
+			rd->m_RP.m_FlagsPerFlush |= RBSI_GLOBALALPHA;
+		}
 	}
 }
 
@@ -4683,8 +4681,6 @@ static _inline int Compare(SShadowLight& a, SShadowLight& b)
 	return 0;
 }
 
-#include <IEntityRenderState.h>
-
 int CD3D9Renderer::EF_DrawMultiShadowPasses(SShaderTechnique* hs, SShader* ef, int nStart)
 {
 	int i, j;
@@ -4696,10 +4692,7 @@ int CD3D9Renderer::EF_DrawMultiShadowPasses(SShaderTechnique* hs, SShader* ef, i
 	int nEndLight = -1;
 	int nEnd = -1;
 	nStart++;
-	if (m_RP.m_pCurObject->m_ObjFlags & FOB_SELECTED)
-	{
-		int nnn = 0;
-	}
+
 	bool bMultiLights = false;
 	for (i = nStart; i < hs->m_Passes.Num(); i++)
 	{
@@ -4707,9 +4700,9 @@ int CD3D9Renderer::EF_DrawMultiShadowPasses(SShaderTechnique* hs, SShader* ef, i
 		{
 		case eSHP_MultiLights:
 			bMultiLights = true;
-		case eSHP_SpecularLight:
-		case eSHP_DiffuseLight:
 		case eSHP_Light:
+		case eSHP_DiffuseLight:
+		case eSHP_SpecularLight:
 			if (nStartLight < 0)
 				nStartLight = i;
 			else
@@ -4734,9 +4727,10 @@ int CD3D9Renderer::EF_DrawMultiShadowPasses(SShaderTechnique* hs, SShader* ef, i
 	if (nEnd < 0)
 		nEnd = i - 1;
 
-	list2<ShadowMapLightSourceInstance>* lsources = (list2<ShadowMapLightSourceInstance>*)m_RP.m_pCurObject->m_pShadowCasters;
+	list2<ShadowMapLightSourceInstance>* lsources = m_RP.m_pCurObject->m_pShadowCasters;
 	if (!lsources || !lsources->Count())
 		return nEnd;
+
 	int nCaster = 0;
 	/*if (ef->m_eSort != eS_TerrainShadowPass)
 	{
@@ -4760,6 +4754,7 @@ int CD3D9Renderer::EF_DrawMultiShadowPasses(SShaderTechnique* hs, SShader* ef, i
 	int nFrustrums = 0;
 	list2<ShadowMapLightSourceInstance> SmLI[16];
 	SShadowLight SL[16];
+
 	int nLights = m_RP.m_NumActiveDLights;
 	bool bHasDot3LM = m_RP.m_pShaderResources && m_RP.m_pCurObject->m_nLMDirId;
 
@@ -4767,6 +4762,7 @@ int CD3D9Renderer::EF_DrawMultiShadowPasses(SShaderTechnique* hs, SShader* ef, i
 	{
 		SL[i].pSmLI = &SmLI[i];
 		SL[i].pDL = m_RP.m_pActiveDLights[i];
+
 		int nLightID = SL[i].pDL->m_Id;
 		for (j = nCaster; j < lsources->Count(); j++)
 		{
@@ -4775,52 +4771,57 @@ int CD3D9Renderer::EF_DrawMultiShadowPasses(SShaderTechnique* hs, SShader* ef, i
 				SmLI[i].Add(*Inst);
 		}
 	}
+
 	sbHasDot3LM = bHasDot3LM;
 	::Sort(&SL[0], nLights);
 	int nStartLightWithoutSC = -1;
 	m_RP.m_FlagsPerFlush &= ~RBSI_ALPHATEST;
 	for (i = 0; i < nLights; i++)
 	{
-		if (SL[i].pSmLI->Count())
-		{
-			m_RP.m_pCurObject->m_pShadowCasters = SL[i].pSmLI;
-			m_RP.m_pActiveDLights[0] = SL[i].pDL;
-			m_RP.m_NumActiveDLights = 1;
-			m_RP.m_pCurLight = SL[i].pDL;
-			// Draw shadows in back-buffer alpha-channel
-			EF_DrawShadowPasses(hs, ef, nStartShadow, nEndShadow, true);
-			if (bHasDot3LM && (SL[i].pDL->m_Flags & DLF_LM))
-			{ // Shadow maps on light-map case
-			  // Specular pass
-				if (bMultiLights)
-					EF_DrawLightPasses_PS30(hs, ef, nStartLight, nEndLight, true);
-				else
-					EF_DrawLightPasses(hs, ef, nStartLight, nEndLight, true);
-				// LM pass
-				EF_DrawGeneralPasses(hs, ef, false, nStartAmb, nEndAmb, true);
-			}
-			else
-			{
-				// Shadow maps on dynamically lighted object case
-				if (bMultiLights)
-					EF_DrawLightPasses_PS30(hs, ef, nStartLight, nEndLight, true);
-				else
-					EF_DrawLightPasses(hs, ef, nStartLight, nEndLight, true);
-			}
-		}
-		else
+		if (!SL[i].pSmLI->Count())
 		{
 			if (nStartLightWithoutSC < 0)
 				nStartLightWithoutSC = i;
 			m_RP.m_pActiveDLights[i - nStartLightWithoutSC] = SL[i].pDL;
+			continue;
+		}
+
+		m_RP.m_pCurObject->m_pShadowCasters = SL[i].pSmLI;
+		m_RP.m_pActiveDLights[0] = SL[i].pDL;
+		m_RP.m_NumActiveDLights = 1;
+		m_RP.m_pCurLight = SL[i].pDL;
+
+		// Draw shadows in back-buffer alpha-channel
+		EF_DrawShadowPasses(hs, ef, nStartShadow, nEndShadow, true);
+		if (bHasDot3LM && (SL[i].pDL->m_Flags & DLF_LM))
+		{
+			// Shadow maps on light-map case
+			// Specular pass
+			if (bMultiLights)
+				EF_DrawLightPasses_PS30(hs, ef, nStartLight, nEndLight, true);
+			else
+				EF_DrawLightPasses(hs, ef, nStartLight, nEndLight, true);
+			
+			// LM pass
+			EF_DrawGeneralPasses(hs, ef, false, nStartAmb, nEndAmb, true);
+		}
+		else
+		{
+			// Shadow maps on dynamically lighted object case
+			if (bMultiLights)
+				EF_DrawLightPasses_PS30(hs, ef, nStartLight, nEndLight, true);
+			else
+				EF_DrawLightPasses(hs, ef, nStartLight, nEndLight, true);
 		}
 	}
+
 	if (nStartLightWithoutSC >= 0)
 	{
 		// Draw light sources without shadow-casters
 		m_RP.m_NumActiveDLights = nLights - nStartLightWithoutSC;
 		EF_DrawLightPasses(hs, ef, nStartLight, nEndLight, false);
 	}
+
 	m_RP.m_pCurObject->m_pShadowCasters = lsources;
 	for (i = 0; i < m_RP.m_NumActiveDLights; i++)
 	{
@@ -7862,11 +7863,12 @@ void CD3D9Renderer::EF_DrawDebugLights()
 					continue;
 			}
 			SetMaterialColor(dl->m_Color[0], dl->m_Color[1], dl->m_Color[2], dl->m_Color[3]);
+
 			if (dl->m_Flags & DLF_DIRECTIONAL)
 				DrawPoint(dl->m_Origin[0], dl->m_Origin[1], dl->m_Origin[2], 10);
-			else
-				if (dl->m_Flags & DLF_POINT)
-					DrawBall(dl->m_Origin[0], dl->m_Origin[1], dl->m_Origin[2], 0.05f);
+			else if (dl->m_Flags & DLF_POINT)
+				DrawBall(dl->m_Origin[0], dl->m_Origin[1], dl->m_Origin[2], 0.05f);
+
 			if (dl->m_Flags & DLF_PROJECT)
 			{
 				Vec3d dir, rgt, org;
