@@ -117,74 +117,6 @@ void CObjManager::RequestEntityShadowMapGeneration(IEntityRender* pEntityRnd)
 			pEntityRnd->GetPos(), 1.f);
 }
 
-
-char BoxSides[0x40 * 8] = {
-	0,0,0,0, 0,0,0,0, //00
-		0,4,6,2, 0,0,0,4, //01
-		7,5,1,3, 0,0,0,4, //02
-		0,0,0,0, 0,0,0,0, //03
-		0,1,5,4, 0,0,0,4, //04
-		0,1,5,4, 6,2,0,6, //05
-		7,5,4,0, 1,3,0,6, //06
-		0,0,0,0, 0,0,0,0, //07
-		7,3,2,6, 0,0,0,4, //08
-		0,4,6,7, 3,2,0,6, //09
-		7,5,1,3, 2,6,0,6, //0a
-		0,0,0,0, 0,0,0,0, //0b
-		0,0,0,0, 0,0,0,0, //0c
-		0,0,0,0, 0,0,0,0, //0d
-		0,0,0,0, 0,0,0,0, //0e
-		0,0,0,0, 0,0,0,0, //0f
-		0,2,3,1, 0,0,0,4, //10
-		0,4,6,2, 3,1,0,6, //11
-		7,5,1,0, 2,3,0,6, //12
-		0,0,0,0, 0,0,0,0, //13
-		0,2,3,1, 5,4,0,6, //14
-		1,5,4,6, 2,3,0,6, //15
-		7,5,4,0, 2,3,0,6, //16
-		0,0,0,0, 0,0,0,0, //17
-		0,2,6,7, 3,1,0,6, //18
-		0,4,6,7, 3,1,0,6, //19
-		7,5,1,0, 2,6,0,6, //1a
-		0,0,0,0, 0,0,0,0, //1b
-		0,0,0,0, 0,0,0,0, //1c
-		0,0,0,0, 0,0,0,0, //1d
-		0,0,0,0, 0,0,0,0, //1e
-		0,0,0,0, 0,0,0,0, //1f
-		7,6,4,5, 0,0,0,4, //20
-		0,4,5,7, 6,2,0,6, //21
-		7,6,4,5, 1,3,0,6, //22
-		0,0,0,0, 0,0,0,0, //23
-		7,6,4,0, 1,5,0,6, //24
-		0,1,5,7, 6,2,0,6, //25
-		7,6,4,0, 1,3,0,6, //26
-		0,0,0,0, 0,0,0,0, //27
-		7,3,2,6, 4,5,0,6, //28
-		0,4,5,7, 3,2,0,6, //29
-		6,4,5,1, 3,2,0,6, //2a
-		0,0,0,0, 0,0,0,0, //2b
-		0,0,0,0, 0,0,0,0, //2c
-		0,0,0,0, 0,0,0,0, //2d
-		0,0,0,0, 0,0,0,0, //2e
-		0,0,0,0, 0,0,0,0, //2f
-		0,0,0,0, 0,0,0,0, //30
-		0,0,0,0, 0,0,0,0, //31
-		0,0,0,0, 0,0,0,0, //32
-		0,0,0,0, 0,0,0,0, //33
-		0,0,0,0, 0,0,0,0, //34
-		0,0,0,0, 0,0,0,0, //35
-		0,0,0,0, 0,0,0,0, //36
-		0,0,0,0, 0,0,0,0, //37
-		0,0,0,0, 0,0,0,0, //38
-		0,0,0,0, 0,0,0,0, //39
-		0,0,0,0, 0,0,0,0, //3a
-		0,0,0,0, 0,0,0,0, //3b
-		0,0,0,0, 0,0,0,0, //3c
-		0,0,0,0, 0,0,0,0, //3d
-		0,0,0,0, 0,0,0,0, //3e
-		0,0,0,0, 0,0,0,0, //3f
-};
-
 float CObjManager::GetSortOffset(const Vec3d& vPos, const Vec3d& vCamPos, float fUserWaterLevel)
 {
 	float fWaterLevel = fUserWaterLevel > WATER_LEVEL_UNKNOWN ? fUserWaterLevel : m_pTerrain->GetWaterLevel();
@@ -1204,6 +1136,7 @@ void CObjManager::RenderEntityShadowOnTerrain(IEntityRender* pEntityRnd, bool bL
 
 	Vec3d vEntBoxMin, vEntBoxMax;
 	pEntityRnd->GetBBox(vEntBoxMin, vEntBoxMax);
+
 	Vec3d vEntCenter = (vEntBoxMin + vEntBoxMax) * 0.5f;
 
 	float fDistance = bLMapGeneration ? 0 : GetDistance(vEntCenter, GetViewCamera().GetPos());
@@ -1450,84 +1383,81 @@ void CObjManager::MakeShadowBBox(Vec3d& vBoxMin, Vec3d& vBoxMax, const Vec3d& vL
 
 bool CObjManager::ProcessShadowMapCasting(IEntityRender* pEnt, CDLight* pDLight)
 {
+	IEntityRenderState* pEntRS = pEnt->GetEntityRS();
+	IEntityRenderState::ShadowMapInfo* pSMInfo = pEntRS->pShadowMapInfo;
+
 	if (pEnt->GetEntityRenderType() == eERType_Vegetation)
-	{ // shadow casting already prepared at loading time, todo: move it in real-time
-		pEnt->GetEntityRS()->pShadowMapInfo->pShadowMapFrustumContainer = pEnt->GetShadowMapFrustumContainer();
+	{
+		// shadow casting already prepared at loading time, todo: move it in real-time
+		pSMInfo->pShadowMapFrustumContainer = pEnt->GetShadowMapFrustumContainer();
 		pEnt->GetShadowMapCasters();
+		return true;
+	}
+
+	ShadowMapLightSource*& pLsource = pSMInfo->pShadowMapFrustumContainer;
+	if (!pLsource)
+	{
+		pLsource = new ShadowMapLightSource;
+		pLsource->m_LightFrustums.Add({});
+		pLsource->m_LightFrustums.Last().pOwner = pEnt;
+	}
+
+	// get needed size of shadow map
+	int nTexSize = GetCVars()->e_max_shadow_map_size;
+	const float fDistToTheCamera = pEnt->m_arrfDistance[m_nRenderStackLevel];
+
+	Vec3d vBoxMin, vBoxMax;
+	pEnt->GetBBox(vBoxMin, vBoxMax);
+
+	float fCasterRadius = (vBoxMax - vBoxMin).len() * 0.5f;
+	while (nTexSize * fDistToTheCamera > fCasterRadius * GetCVars()->e_shadow_maps_size_ratio)
+		nTexSize /= 2;
+
+	// get obj space light pos
+	Vec3d vObjSpaceLightPos;
+	Matrix44 objMatrix;
+	IStatObj* pStatObj = pEnt->GetEntityStatObj(0, &objMatrix);
+	if (pStatObj)
+	{
+		objMatrix.Invert44();
+		vObjSpaceLightPos = objMatrix.TransformVectorOLD(pDLight ? pDLight->m_Origin : m_p3DEngine->GetSunPosition());
 	}
 	else
+		vObjSpaceLightPos = (pDLight ? pDLight->m_Origin : m_p3DEngine->GetSunPosition()) - pEnt->GetPos();
+
+	// request shadow map update if needed
+	CRYASSERT(pDLight);
+	if (!pDLight)
+		return true;
+
+	ShadowMapFrustum& lof = *pLsource->GetShadowMapFrustum();
+
+	// process shadow map for casting
+	if (nTexSize != lof.nTexSize ||
+		!IsEquivalent(pLsource->vObjSpaceSrcPos, vObjSpaceLightPos, 0.01f) ||
+		pEnt->HasChanged() || lof.nTexIdSlot == -1)
 	{
-		ShadowMapLightSource*& pLsource = pEnt->GetEntityRS()->pShadowMapInfo->pShadowMapFrustumContainer;
+		lof.bUpdateRequested = true;
+		pLsource->vSrcPos = (pDLight ? pDLight->m_Origin : m_p3DEngine->GetSunPosition()) - pEnt->GetPos();
+		pLsource->vObjSpaceSrcPos = vObjSpaceLightPos;
+		pLsource->fRadius = pDLight ? pDLight->m_fRadius : 5000000;
 
-		if (!pLsource)
-		{ // make lsource
-			pLsource = new ShadowMapLightSource;
-
-			pLsource->m_LightFrustums.Add({});
-			ShadowMapFrustum& lof = pLsource->m_LightFrustums[pLsource->m_LightFrustums.Count()-1];
-			lof.pOwner = pEnt;
-		}
-
-		// get needed size of shadow map
-		int nTexSize = GetCVars()->e_max_shadow_map_size;
-		float fDistToTheCamera = pEnt->m_arrfDistance[m_nRenderStackLevel];
-		Vec3d vBoxMin, vBoxMax;
-		pEnt->GetBBox(vBoxMin, vBoxMax);
-		float fCasterRadius = (vBoxMax - vBoxMin).len() * 0.5f;
-		while (nTexSize * fDistToTheCamera > fCasterRadius * GetCVars()->e_shadow_maps_size_ratio)
-			nTexSize /= 2;
-
-		// get obj space light pos
-		Vec3d vObjSpaceLightPos; Matrix44 objMatrix;
-		IStatObj* pStatObj = pEnt->GetEntityStatObj(0, &objMatrix);
-		if (pStatObj)
-		{
-			objMatrix.Invert44();
-			vObjSpaceLightPos = objMatrix.TransformVectorOLD(pDLight ? pDLight->m_Origin : m_p3DEngine->GetSunPosition());
-		}
-		else
-			vObjSpaceLightPos = (pDLight ? pDLight->m_Origin : m_p3DEngine->GetSunPosition()) - pEnt->GetPos();
-
-		// request shadow map update if needed
-		CRYASSERT(pDLight);
-		if (!pDLight)
-			return true;
-
-		// process shadow map for casting
-		if (nTexSize != pLsource->GetShadowMapFrustum()->nTexSize ||
-			!IsEquivalent(pLsource->vObjSpaceSrcPos, vObjSpaceLightPos, 0.01f) ||
-			pEnt->HasChanged() || pLsource->GetShadowMapFrustum()->nTexIdSlot == -1)
-		{
-			pLsource->GetShadowMapFrustum()->bUpdateRequested = true;
-			pLsource->vSrcPos = (pDLight ? pDLight->m_Origin : m_p3DEngine->GetSunPosition()) - pEnt->GetPos();
-			pLsource->vObjSpaceSrcPos = vObjSpaceLightPos;
-			pLsource->fRadius = pDLight ? pDLight->m_fRadius : 5000000;
-			MakeEntityShadowFrustum(pLsource->GetShadowMapFrustum(), pLsource, pEnt, EST_DEPTH_BUFFER, 0);
-			pLsource->GetShadowMapFrustum()->nTexSize = nTexSize;
-		}
-
-		if (pLsource->GetShadowMapFrustum())
-		{
-			float fAlpha = (1.f - fDistToTheCamera / (pEnt->GetRenderRadius() * GetCVars()->e_shadow_maps_view_dist_ratio)) * 3.f;
-			pLsource->GetShadowMapFrustum()->fAlpha = crymin(1.f, fAlpha);
-
-			pLsource->GetShadowMapFrustum()->nDLightId = pLsource->nDLightId = pDLight ? pDLight->m_Id : -1;
-		}
-
-		// add this frustum to the list of shadow casters for self shadowing and shadow on terrain
-		if (pEnt->GetEntityRS()->pShadowMapInfo->pShadowMapFrustumContainer)
-		{
-			ShadowMapLightSourceInstance LightSourceInfo;
-			LightSourceInfo.m_pLS = pEnt->GetEntityRS()->pShadowMapInfo->pShadowMapFrustumContainer;
-			LightSourceInfo.m_vProjTranslation = pEnt->GetPos();
-			LightSourceInfo.m_fProjScale = 1.f;
-			Vec3d vThisEntityPos = pEnt->GetPos();
-			LightSourceInfo.m_fDistance = 0;
-			LightSourceInfo.m_pReceiver = pEnt;
-			if (LightSourceInfo.m_pLS->m_LightFrustums.Count())
-				pEnt->GetEntityRS()->pShadowMapInfo->pShadowMapCasters->Add(LightSourceInfo);
-		}
+		MakeEntityShadowFrustum(pLsource->GetShadowMapFrustum(), pLsource, pEnt, EST_DEPTH_BUFFER, 0);
+		lof.nTexSize = nTexSize;
 	}
+
+	const float fAlpha = (1.f - fDistToTheCamera / (pEnt->GetRenderRadius() * GetCVars()->e_shadow_maps_view_dist_ratio)) * 3.f;
+	lof.fAlpha = crymin(1.f, fAlpha);
+	lof.nDLightId = pLsource->nDLightId = pDLight ? pDLight->m_Id : -1;
+
+	// add this frustum to the list of shadow casters for self shadowing and shadow on terrain
+	pSMInfo->pShadowMapCasters->Add({});
+	ShadowMapLightSourceInstance& LightSourceInfo = pSMInfo->pShadowMapCasters->Last();
+	LightSourceInfo.m_pLS = pLsource;
+	LightSourceInfo.m_vProjTranslation = pEnt->GetPos();
+	LightSourceInfo.m_fProjScale = 1.f;
+	LightSourceInfo.m_fDistance = 0;
+	LightSourceInfo.m_pReceiver = pEnt;
 
 	return true;
 }

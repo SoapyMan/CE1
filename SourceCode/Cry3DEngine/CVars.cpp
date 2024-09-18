@@ -138,7 +138,7 @@ void CVars::Init()
 	INIT_CVAR_SER__(e_shadow_spots, 0, "Draw shadow spot under entities");
 	INIT_CVAR_SER_R(e_use_global_fog_in_fog_volumes, 0, "simulate ocean volume fog using global fog");
 	INIT_CVAR_SER__(e_precache_level, 1, "Pre-render objects right after level loading");
-	INIT_CVAR_PUBL_(e_shadow_maps_max_casters_per_object, 8, "Maximum number of active shadow casters per object");
+	INIT_CVAR_PUBL_(e_shadow_maps_max_casters_per_object, 32, "Maximum number of active shadow casters per object");
 	INIT_CVAR_PUBL_(e_water_ocean_sun_reflection, 1, "Draw sun reflection in the ocean");
 	INIT_CVAR_CHEAT(e_objects_fade_on_distance, 1, "Objects fading out on distance");
 	INIT_CVAR_PUBL_(e_area_merging_max_tris_in_input_brush, 512, "Merge only objects containing no more than x triangles");
