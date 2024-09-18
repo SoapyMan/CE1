@@ -1121,20 +1121,16 @@ bool CREFlare::mfCheckVis(CCObject* obj)
 			int sizeTex = 128;//m_Map->GetWidth();
 			if (!obj->m_TexId0)
 			{
-				byte* data = new byte[sizeMask * sizeMask * 4];
 				char name[128];
 				sprintf(name, "$AutoCoronas_%d", gcpRendD3D->m_TexGenID++);
-				STexPic* tp = rd->m_TexMan->CreateTexture(name, sizeMask, sizeMask, 1, FT_NOMIPS | FT_ALLOCATED | FT_HASALPHA, FT2_NODXT | FT2_RENDERTARGET | FT_CLAMP, data, eTT_Base, -1.0f, -1.0f, 0, nullptr, 0, eTF_8888);
-				delete[] data;
+				STexPic* tp = rd->m_TexMan->CreateTexture(name, sizeMask, sizeMask, 1, FT_NOMIPS | FT_ALLOCATED | FT_HASALPHA, FT2_NODXT | FT2_RENDERTARGET | FT_CLAMP, nullptr, eTT_Base, -1.0f, -1.0f, 0, nullptr, 0, eTF_8888);
 				obj->m_TexId0 = tp->m_Id;
 			}
 			if (!obj->m_TexId1)
 			{
-				byte* data = new byte[sizeTex * sizeTex * 4];
 				char name[128];
 				sprintf(name, "$AutoCoronas_%d", gcpRendD3D->m_TexGenID++);
-				STexPic* tp = rd->m_TexMan->CreateTexture(name, sizeTex, sizeTex, 1, FT_NOMIPS | FT_ALLOCATED | FT_HASALPHA, FT2_NODXT | FT2_RENDERTARGET, data, eTT_Base, -1.0f, -1.0f, 0, nullptr, 0, eTF_8888);
-				delete[] data;
+				STexPic* tp = rd->m_TexMan->CreateTexture(name, sizeTex, sizeTex, 1, FT_NOMIPS | FT_ALLOCATED | FT_HASALPHA, FT2_NODXT | FT2_RENDERTARGET, nullptr, eTT_Base, -1.0f, -1.0f, 0, nullptr, 0, eTF_8888);
 				obj->m_TexId1 = tp->m_Id;
 			}
 

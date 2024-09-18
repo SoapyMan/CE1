@@ -312,10 +312,9 @@ unsigned int CD3D9Renderer::GenShadowTexture(int nSize, bool bProjected)
 	else
 		eTF = eTF_8888;
 
-	byte* data = new byte[nSize * nSize * 4];
-	STexPic* tp = m_TexMan->CreateTexture(name, nSize, nSize, 1, flags, flags2, data, eTT_Base, -1.0f, -1.0f, 0, nullptr, 0, eTF);
+	STexPic* tp = m_TexMan->CreateTexture(name, nSize, nSize, 1, flags, flags2, nullptr, eTT_Base, -1.0f, -1.0f, 0, nullptr, 0, eTF);
 	STexPicD3D* t = (STexPicD3D*)tp;
-	delete[] data;
+
 	if (!t)
 		return 0;
 
@@ -787,7 +786,7 @@ void CD3D9Renderer::PrepareDepthMap(ShadowMapFrustum* lof, bool make_new_tid)
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		//  Now make texture from frame buffer
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#if 0
+#if 1
 		if (CD3D9Renderer::CV_d3d9_savedepthmaps)
 		{
 			if (m_Features & RFT_DEPTHMAPS)
@@ -817,7 +816,7 @@ void CD3D9Renderer::PrepareDepthMap(ShadowMapFrustum* lof, bool make_new_tid)
 				// Copy data to the texture 
 				cryMemcpy(pic, d3dlrSys.pBits, nShadowTexSize * nShadowTexSize * 4);
 				char buff[128];
-				sprintf(buff, "ShadowMap%02d.tga", nCurTexIdSlot);
+				sprintf(buff, "ShadowMap%02d.tga", lof->nTexIdSlot);
 				::WriteTGA(pic, nShadowTexSize, nShadowTexSize, buff, 32);
 				delete[] pic;
 				hReturn = pID3DSysTexture->UnlockRect(0);
@@ -855,7 +854,7 @@ void CD3D9Renderer::PrepareDepthMap(ShadowMapFrustum* lof, bool make_new_tid)
 				}*/
 				hReturn = pID3DSysTexture->UnlockRect(0);
 				char buff[128];
-				sprintf(buff, "ShadowMap%02d.tga", nCurTexIdSlot);
+				sprintf(buff, "ShadowMap%02d.tga", lof->nTexIdSlot);
 				::WriteTGA(pic, nShadowTexSize, nShadowTexSize, buff, 32);
 				delete[] pic;
 				SAFE_RELEASE(pSysSurf);
@@ -992,10 +991,11 @@ void CD3D9Renderer::SetupShadowOnlyPass(int Num, ShadowMapFrustum* pFrustum, Vec
 	D3DXMATRIX lightViewMatrix;
 
 	if (vShadowTrans)
-	{ // make tmp matrix for this obj position if shadow frustum is not translated (translate original mats)
-	  //float fDist = (pFrustum->min_dist + pFrustum->max_dist)*0.5f;
-	  //float fDiam = (pFrustum->max_dist - pFrustum->min_dist);//*fShadowScale;
-	  //D3DXMatrixPerspectiveFovRH(&lightFrustumMatrix, pFrustum->FOV*fShadowScale*(gf_PI/180.0f), 1, pFrustum->min_dist, pFrustum->max_dist+10);
+	{ 
+		// make tmp matrix for this obj position if shadow frustum is not translated (translate original mats)
+		//float fDist = (pFrustum->min_dist + pFrustum->max_dist)*0.5f;
+		//float fDiam = (pFrustum->max_dist - pFrustum->min_dist);//*fShadowScale;
+		//D3DXMatrixPerspectiveFovRH(&lightFrustumMatrix, pFrustum->FOV*fShadowScale*(gf_PI/180.0f), 1, pFrustum->min_dist, pFrustum->max_dist+10);
 		if (m_Features & RFT_DEPTHMAPS)
 			makeProjectionMatrix(pFrustum->FOV * fShadowScale, pFrustum->ProjRatio, pFrustum->min_dist, pFrustum->max_dist + 50, lightFrustumMatrix);
 		else
@@ -1038,20 +1038,19 @@ void CD3D9Renderer::SetupShadowOnlyPass(int Num, ShadowMapFrustum* pFrustum, Vec
 void CD3D9Renderer::ConfigShadowTexgen(int Num, int rangeMap, ShadowMapFrustum* pFrustum, float* pLightFrustumMatrix, float* pLightViewMatrix, float* ModelVPMatrix)
 {
 	float m1[16], m2[16];
-	float* mtexSc;
+	float* mtexSc = nullptr;
 
 	if (rangeMap)
 	{
-		int to_map_8bit = MakeShadowIdentityTexture();
-
-		float RSmatrix[16] =
+		static float RSmatrix[16] =
 		{
-		  0,    0,   0,   0,
-		  0,    0,   0,   0,
-		  0.5f, 128, 0,   0,
-		  0.5f, 128, 0,   1.0f
+			0,    0,   0,   0,
+			0,    0,   0,   0,
+			0.5f, 128, 0,   0,
+			0.5f, 128, 0,   1.0f
 		};
 
+		const int to_map_8bit = MakeShadowIdentityTexture();
 		if (Num >= 0)
 		{
 			m_RP.m_pRE->m_CustomTexBind[Num] = to_map_8bit;
@@ -1066,37 +1065,38 @@ void CD3D9Renderer::ConfigShadowTexgen(int Num, int rangeMap, ShadowMapFrustum* 
 
 		memcpy(m1, RSmatrix, sizeof(m1));
 	}
+	else if (m_Features & RFT_DEPTHMAPS)
+	{
+		// Compensate for D3D's texel adressing, we need 1:1 texel - pixel matching
+		float fOffsetX = 0.5f + (0.5f / (float)pFrustum->nTexSize);
+		float fOffsetY = 0.5f + (0.5f / (float)pFrustum->nTexSize);
+
+		static float Smatrix[16] =
+		{
+			0.5f,  0,    0,    0,
+			0,    -0.5f, 0,    0,
+			0,     0,    0.5f, 0,
+			0.0f,  0.0f, 0.5f, 1.0f
+		};
+
+		Smatrix[12] = fOffsetX;
+		Smatrix[13] = fOffsetY;
+
+		mtexSc = Smatrix;
+	}
 	else
 	{
-		if ((m_Features & RFT_DEPTHMAPS))
+		static float Smatrix[16] =
 		{
-			// Compensate for D3D's texel adressing, we need 1:1 texel - pixel matching
-			float fOffsetX = 0.5f + (0.5f / (float)pFrustum->nTexSize);
-			float fOffsetY = 0.5f + (0.5f / (float)pFrustum->nTexSize);
+			0.5f, 0,     0,    0,
+			0,    -0.5f, 0,    0,
+			0,    0,     0,    0,
+			0.5f, 0.5f,  1.0f, 1.0f
+		};
 
-			static float Smatrix[16] =
-			{
-			  0.5f,     0,        0,             0,
-			  0,       -0.5f,     0,             0,
-			  0,        0,        0.5f,          0,
-			  fOffsetX, fOffsetY, 0.5f,          1.0f
-			};
-
-			mtexSc = Smatrix;
-		}
-		else
-		{
-			static float Smatrix[16] =
-			{
-			  0.5f, 0,     0,    0,
-			  0,    -0.5f, 0,    0,
-			  0,    0,     0,    0,
-			  0.5f, 0.5f,  1.0f, 1.0f
-			};
-
-			mtexSc = Smatrix;
-		}
+		mtexSc = Smatrix;
 	}
+
 	mathMatrixMultiply(m2, pLightFrustumMatrix, pLightViewMatrix, g_CpuFlags);
 	mathMatrixMultiply(m1, mtexSc, m2, g_CpuFlags);
 
@@ -1117,18 +1117,19 @@ void CD3D9Renderer::ConfigShadowTexgen(int Num, int rangeMap, ShadowMapFrustum* 
 	if (Num < 0)
 		return;
 
-	const int depthTexId = pFrustum->nTexIdSlot >= 0 ? m_ShadowTexIDBuffer[pFrustum->nTexIdSlot].nTexId0 : pFrustum->depth_tex_id;
+	CRendElement* pRE = m_RP.m_pRE;
 
+	const int depthTexId = pFrustum->nTexIdSlot >= 0 ? m_ShadowTexIDBuffer[pFrustum->nTexIdSlot].nTexId0 : pFrustum->depth_tex_id;
 	if (depthTexId < 0)
 	{
 		CRYASSERT_FAIL("invalid depth texture id %d", depthTexId);
 	}
 	else
 	{
-		if (m_RP.m_pRE)
+		if (pRE)
 		{
-			m_RP.m_pRE->m_CustomTexBind[Num] = depthTexId;
-			m_RP.m_pRE->m_Color[Num] = pFrustum->fAlpha;
+			pRE->m_CustomTexBind[Num] = depthTexId;
+			pRE->m_Color[Num] = pFrustum->fAlpha;
 		}
 		else
 		{
@@ -1136,6 +1137,7 @@ void CD3D9Renderer::ConfigShadowTexgen(int Num, int rangeMap, ShadowMapFrustum* 
 			m_RP.m_REColor[Num] = pFrustum->fAlpha;
 		}
 	}
+
 	if (m_RP.m_pCurLight)
 	{
 		float fRadius;
@@ -1152,14 +1154,14 @@ void CD3D9Renderer::ConfigShadowTexgen(int Num, int rangeMap, ShadowMapFrustum* 
 			fRadius = m_RP.m_pCurLight->m_fRadius;
 
 		m_RP.m_REColor[3] = 1.0f / fRadius;
-		if (m_RP.m_pRE)
-			m_RP.m_pRE->m_Color[3] = m_RP.m_REColor[3];
+		if (pRE)
+			pRE->m_Color[3] = m_RP.m_REColor[3];
 	}
 	else
 	{
 		m_RP.m_REColor[3] = 1.0f / 10000.0f;
-		if (m_RP.m_pRE)
-			m_RP.m_pRE->m_Color[3] = m_RP.m_REColor[3];
+		if (pRE)
+			pRE->m_Color[3] = m_RP.m_REColor[3];
 	}
 	STexPic* tp = (STexPic*)EF_GetTextureByID(depthTexId);
 	tp->m_RefTex.m_MinFilter = D3DTEXF_LINEAR;

@@ -4844,7 +4844,7 @@ void CD3D9Renderer::EF_DrawShadowPasses(SShaderTechnique* hs, SShader* ef, int n
 	CVProgram* curVP = nullptr;
 	CVProgram* newVP;
 
-	list2<ShadowMapLightSourceInstance>* lsources = (list2<ShadowMapLightSourceInstance>*)m_RP.m_pCurObject->m_pShadowCasters;
+	list2<ShadowMapLightSourceInstance>* lsources = m_RP.m_pCurObject->m_pShadowCasters;
 	if (!lsources || !lsources->Count())
 		return;
 	m_RP.m_FlagsPerFlush |= RBSI_SHADOWPASS;
@@ -4886,6 +4886,7 @@ void CD3D9Renderer::EF_DrawShadowPasses(SShaderTechnique* hs, SShader* ef, int n
 				if (!(msk & (m_RP.m_pCurLight->m_Flags & DLF_LIGHTTYPE_MASK)))
 					continue;
 			}
+
 			if (slw->m_LMFlags & LMF_SAMPLES)
 			{
 				if (slw->m_LMFlags & LMF_4SAMPLES)
@@ -4894,27 +4895,24 @@ void CD3D9Renderer::EF_DrawShadowPasses(SShaderTechnique* hs, SShader* ef, int n
 						continue;
 					nDeltaCasters = 4;
 				}
-				else
-					if (slw->m_LMFlags & LMF_3SAMPLES)
-					{
-						if (nCasters - nCaster < 3)
-							continue;
-						nDeltaCasters = 3;
-					}
-					else
-						if (slw->m_LMFlags & LMF_2SAMPLES)
-						{
-							if (nCasters - nCaster < 2)
-								continue;
-							nDeltaCasters = 2;
-						}
-						else
-							if (slw->m_LMFlags & LMF_1SAMPLES)
-							{
-								if (nCasters - nCaster < 1)
-									continue;
-								nDeltaCasters = 1;
-							}
+				else if (slw->m_LMFlags & LMF_3SAMPLES)
+				{
+					if (nCasters - nCaster < 3)
+						continue;
+					nDeltaCasters = 3;
+				}
+				else if (slw->m_LMFlags & LMF_2SAMPLES)
+				{
+					if (nCasters - nCaster < 2)
+						continue;
+					nDeltaCasters = 2;
+				}
+				else if (slw->m_LMFlags & LMF_1SAMPLES)
+				{
+					if (nCasters - nCaster < 1)
+						continue;
+					nDeltaCasters = 1;
+				}
 			}
 			m_RP.m_CurrPass = slw;
 
@@ -4928,6 +4926,7 @@ void CD3D9Renderer::EF_DrawShadowPasses(SShaderTechnique* hs, SShader* ef, int n
 			newVP = slw->m_VProgram;
 			if (newVP)
 				m_RP.m_FlagsPerFlush |= RBSI_USEVP;
+
 			if (slw->mfSetTextures())
 			{
 				// Set vertex program for the current pass if needed
@@ -5000,12 +4999,12 @@ void CD3D9Renderer::EF_DrawShadowPasses(SShaderTechnique* hs, SShader* ef, int n
 				bool bFogVP = (m_RP.m_PersFlags & RBPF_HDR) || (curVP && (curVP->m_Flags & VPFI_VS30ONLY));
 				bFogOverrided = EF_FogCorrection(bFogDisable, bFogVP);
 
-				int nObj = 0;
 				CCObject* pSaveObj = m_RP.m_pCurObject;
 				CCObject* pObj = pSaveObj;
-				while (true)
+
+				for (int nObj = -1; nObj < m_RP.m_MergedObjects.Num(); ++nObj)
 				{
-					if (nObj)
+					if (nObj >= 0)
 					{
 						m_RP.m_pCurObject = m_RP.m_MergedObjects[nObj];
 						m_RP.m_FrameObject++;
@@ -5020,11 +5019,11 @@ void CD3D9Renderer::EF_DrawShadowPasses(SShaderTechnique* hs, SShader* ef, int n
 							{
 								for (int nt = 0; nt < gRenDev->m_TexMan->m_nCurStages; nt++)
 								{
-									if (m_RP.m_pGTC[nt])
-									{
-										EF_SelectTMU(nt);
-										m_RP.m_pGTC[nt]->mfSet(true);
-									}
+									if (!m_RP.m_pGTC[nt])
+										continue;
+
+									EF_SelectTMU(nt);
+									m_RP.m_pGTC[nt]->mfSet(true);
 								}
 							}
 						}
@@ -5045,8 +5044,11 @@ void CD3D9Renderer::EF_DrawShadowPasses(SShaderTechnique* hs, SShader* ef, int n
 						curVP->mfSetStateMatrices();
 						curVP->mfSetVariables(true, &slw->m_VPParamsObj);
 					}
+
 					if (slw->m_FShader)
+					{
 						slw->m_FShader->mfSetVariables(true, slw->m_CGFSParamsObj);
+					}
 					else
 					{
 						if (slw->m_RGBComps && slw->m_RGBComps->m_Comps[0] && slw->m_RGBComps->m_Comps[0]->m_bDependsOnObject)
@@ -5069,10 +5071,8 @@ void CD3D9Renderer::EF_DrawShadowPasses(SShaderTechnique* hs, SShader* ef, int n
 						else
 							EF_DrawIndexedMesh(R_PRIMV_TRIANGLES);
 					}
-					nObj++;
-					if (nObj >= m_RP.m_MergedObjects.Num())
-						break;
 				}
+
 				EF_FogRestore(bFogOverrided);
 				if (!CVProgram::m_LastVP)
 				{
@@ -5081,6 +5081,7 @@ void CD3D9Renderer::EF_DrawShadowPasses(SShaderTechnique* hs, SShader* ef, int n
 				}
 				else
 					m_RP.m_FlagsModificators &= ~(RBMF_TCM | RBMF_TCG);
+
 				if (pSaveObj != m_RP.m_pCurObject)
 				{
 					m_RP.m_pCurObject = pSaveObj;
