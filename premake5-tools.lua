@@ -54,6 +54,42 @@ project "ResourceCompilerPC"
 			"./SourceCode/CryAnimation/CrySkinAMD64.asm"
 		}
 		
+project "CgfDump"
+    kind "ConsoleApp"
+	
+	--unitybuild "on"
+    uses  "CryCommon"
+    files {
+		"./SourceCode/CgfDump/**",
+	}
+
+    includedirs {
+		"./SourceCode/CryCommon"
+	}
+	
+	defines {
+		"DONT_USE_FILE_MAPPING"
+	}
+
+project "CcgDump"
+    kind "ConsoleApp"
+
+	--unitybuild "on"
+    uses  "CryCommon"
+    files {
+		"./SourceCode/CcgDump/**",
+		"./SourceCode/CryAnimation/*.asm",
+	}
+
+    includedirs {
+		"./SourceCode/CryCommon"
+	}
+	
+	defines {
+		"DONT_USE_FILE_MAPPING"
+	}
+
+		
 if ENABLE_EDITOR then
 
 project "Editor"
