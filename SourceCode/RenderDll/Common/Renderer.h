@@ -1124,6 +1124,7 @@ public:
 	static float CV_r_detaildistance;
 	static int CV_r_detailnumlayers;
 	static int CV_r_usehwshaders;
+	static int CV_r_shaderlatestprofile;
 	static int CV_r_nolightcalc;
 	static int CV_r_nopreprocess;
 	static int CV_r_noloadtextures;

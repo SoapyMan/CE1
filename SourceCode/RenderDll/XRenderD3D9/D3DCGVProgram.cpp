@@ -1912,6 +1912,19 @@ bool CCGVProgram_D3D::mfCompile(char* scr)
 		}
 	}
 
+	if(gRenDev->CV_r_shaderlatestprofile)
+	{
+		if (gRenDev->GetFeatures() & RFT_HW_PS30)
+		{
+			m_Flags &= ~VPFI_VS20ONLY;
+			m_Flags |= VPFI_VS30ONLY;
+		}
+		else if(gRenDev->GetFeatures() & RFT_HW_PS20)
+		{
+			m_Flags |= VPFI_VS20ONLY;
+		}
+	}
+
 	int i;
 	for (i = 0; i < m_MatrixObj.Num(); i++)
 	{

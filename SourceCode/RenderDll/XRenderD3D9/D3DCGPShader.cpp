@@ -1077,6 +1077,19 @@ bool CCGPShader_D3D::mfCompile(char* scr)
 		}
 	}
 
+	if (gRenDev->CV_r_shaderlatestprofile)
+	{
+		if (gRenDev->GetFeatures() & RFT_HW_PS30)
+		{
+			m_Flags &= ~(PSFI_PS20ONLY | PSFI_PS2XONLY);
+			m_Flags |= PSFI_PS30ONLY;
+		}
+		else if (gRenDev->GetFeatures() & RFT_HW_PS20)
+		{
+			m_Flags |= PSFI_PS20ONLY;
+		}
+	}
+
 	gRenDev->m_cEF.mfCheckObjectDependParams(&m_ParamsNoObj, &m_ParamsObj);
 
 	return 1;
