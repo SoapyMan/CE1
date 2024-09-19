@@ -44,7 +44,7 @@ void CVars::Init()
 	INIT_CVAR_CHEAT(e_detail_objects, 1, "Activates drawing of detail objects");
 	INIT_CVAR_CHEAT(e_fog, 1, "Activates distance based fog");
 	INIT_CVAR_CHEAT(e_motion_blur, 0, "Activates motion blur, values from 1 to 7 will change blur type");
-	INIT_CVAR_SER_R(e_beach, 1, "Activates drawing of shore on the border of the ocean");
+	INIT_CVAR_CHEAT(e_beach, 1, "Activates drawing of shore on the border of the ocean");
 	INIT_CVAR_CHEAT(e_detail_texture, 1, "Activates drawing of detail textures on terrain ground");
 	INIT_CVAR_SER_R(e_detail_texture_quality, 1, "0 - use one single texture per entire level, 1 - use multiple textures");
 	INIT_CVAR_CHEAT(e_particles, 1, "Activates drawing of particles");
