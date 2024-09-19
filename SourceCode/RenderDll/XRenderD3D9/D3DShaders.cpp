@@ -86,7 +86,8 @@ char* D3DCompileShader(const char* name, const char* shaderSource, const char* s
 	{
 		if (pErrorBlob)
 		{
-			iLog->LogError("Shader %s compile failed: %s", name, (char*)pErrorBlob->GetBufferPointer());
+			const char* message = (char*)pErrorBlob->GetBufferPointer();
+			iLog->LogError("Shader %s compile failed: %s", name, message);
 			pErrorBlob->Release();
 		}
 		else

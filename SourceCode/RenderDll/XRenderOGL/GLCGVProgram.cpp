@@ -1115,8 +1115,7 @@ bool CCGVProgram_GL::mfCompile(char* scr)
 			m_Flags |= VPFI_VS20ONLY;
 			if (m_CGProfileType == CG_PROFILE_VP20)
 			{
-#ifndef WIN64
-				// NOTE: AMD64 port: find the 64-bit CG runtime
+#if defined(USE_CG)
 				m_CGProfileType = cgGLGetLatestProfile(CG_GL_VERTEX);
 #endif
 				if (SUPPORTS_GL_ARB_vertex_program)
@@ -1387,27 +1386,24 @@ bool CCGVProgram_GL::mfActivate(CVProgram* pPosVP)
 		if (m_Flags & VPFI_VS30ONLY)
 		{
 			if (gRenDev->GetFeatures() & RFT_HW_PS30)
-				m_CGProfileType = CG_PROFILE_ARBVP2;
+				m_CGProfileType = CG_PROFILE_VP30;
+			else if (gRenDev->GetFeatures() & RFT_HW_PS20)
+				m_CGProfileType = VS20Profile;
 			else
-				if (gRenDev->GetFeatures() & RFT_HW_PS20)
-					m_CGProfileType = VS20Profile;
-				else
-					m_CGProfileType = CG_PROFILE_VP20;
+				m_CGProfileType = CG_PROFILE_VP20;
 		}
-		else
-			if (m_Flags & VPFI_VS20ONLY)
-			{
-				if (gRenDev->GetFeatures() & RFT_HW_PS20)
-					m_CGProfileType = VS20Profile;
-				else
-					m_CGProfileType = CG_PROFILE_VP20;
-			}
+		else if (m_Flags & VPFI_VS20ONLY)
+		{
+			if (gRenDev->GetFeatures() & RFT_HW_PS20)
+				m_CGProfileType = VS20Profile;
 			else
-				if (SUPPORTS_GL_NV_vertex_program)
-					m_CGProfileType = CG_PROFILE_VP20;
-				else
-					if (SUPPORTS_GL_ARB_vertex_program)
-						m_CGProfileType = VS20Profile;
+				m_CGProfileType = CG_PROFILE_VP20;
+		}
+		else if (SUPPORTS_GL_NV_vertex_program)
+			m_CGProfileType = CG_PROFILE_VP20;
+		else if (SUPPORTS_GL_ARB_vertex_program)
+			m_CGProfileType = VS20Profile;
+
 		if (m_CGProfileType == CG_PROFILE_VP20 && !SUPPORTS_GL_NV_vertex_program)
 			return false;
 		if (m_CGProfileType == CG_PROFILE_ARBVP1 && !SUPPORTS_GL_ARB_vertex_program)

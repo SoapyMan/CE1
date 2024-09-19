@@ -594,8 +594,7 @@ void CD3D9Renderer::ShutDown(bool bReInit)
 		}
 	}
 
-#if !defined(WIN64) && defined(USE_CG)
-	// NOTE: AMD64 port: find the 64-bit CG runtime
+#if defined(USE_CG)
 	if (m_CGContext)
 	{
 		cgDestroyContext(m_CGContext);
@@ -1014,8 +1013,7 @@ WIN_HWND CD3D9Renderer::Init(int x, int y, int width, int height, unsigned int c
 
 	m_numtmus = di->Caps.MaxSimultaneousTextures;
 
-#if !defined(WIN64) && defined(USE_CG)
-	// NOTE: AMD64 port: find the 64-bit CG runtime
+#if defined(USE_CG)
 	if (!m_CGContext)
 	{
 		m_CGContext = cgCreateContext();

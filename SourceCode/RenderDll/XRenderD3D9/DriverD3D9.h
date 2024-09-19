@@ -35,8 +35,8 @@ The DXRenderer interface Class
 
 //=======================================================================
 
-#if defined(WIN32) && !defined(WIN64)
-#include "cg\cgD3D9.h"
+#if defined(USE_CG)
+#include <Cg\cgD3D9.h>
 #endif
 
 // DRIVERD3D.H

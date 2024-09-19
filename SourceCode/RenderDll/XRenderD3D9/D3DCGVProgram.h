@@ -10,7 +10,7 @@
 #ifndef __D3DCGVPROGRAM_H__
 #define __D3DCGVPROGRAM_H__
 
-#include "cg\cgD3D9.h"
+#include <Cg/cgD3D9.h>
 #include <direct.h>
 
 #define CG_VP_CACHE_VER    3.4
@@ -171,8 +171,7 @@ public:
 	}
 	void mfInit()
 	{
-#if !defined(WIN64) && defined(USE_CG)
-		// NOTE: AMD64 port: find the 64-bit CG runtime
+#if defined(USE_CG)
 		if (!gcpRendD3D->m_CGContext)
 		{
 			cgD3D9SetDevice(gcpRendD3D->mfGetD3DDevice());

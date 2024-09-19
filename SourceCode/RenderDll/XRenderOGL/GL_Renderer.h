@@ -38,7 +38,7 @@ The GLRenderer interface Class
 #undef GL_EXT
 #undef GL_PROC
 
-#include "CG/cgGL.h"
+#include <Cg/cgGL.h>
 #ifdef USE_SDL
 #ifdef _WIN32
 #include <SDL.h>

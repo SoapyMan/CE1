@@ -135,8 +135,7 @@ void CCGPShader_GL::mfReset()
 CCGPShader_GL::CCGPShader_GL()
 {
 	mfInit();
-#ifndef WIN64
-	// NOTE: AMD64 port: find the 64-bit CG runtime
+#if defined(USE_CG)
 	m_CGProfileType = cgGLGetLatestProfile(CG_GL_FRAGMENT);
 	if (m_CGProfileType == CG_PROFILE_FP30)
 #endif
@@ -613,27 +612,24 @@ bool CCGPShader_GL::mfActivate()
 		if (m_Flags & PSFI_PS30ONLY)
 		{
 			if (gRenDev->GetFeatures() & RFT_HW_PS30)
-				m_CGProfileType = CG_PROFILE_ARBFP2;
+				m_CGProfileType = CG_PROFILE_FP30;
 			else
 				if (gRenDev->GetFeatures() & RFT_HW_PS20)
 					m_CGProfileType = CG_PROFILE_ARBFP1;
 				else
 					m_CGProfileType = CG_PROFILE_FP20;
 		}
-		else
-			if (m_Flags & PSFI_PS20ONLY)
-			{
-				if (gRenDev->GetFeatures() & RFT_HW_PS20)
-					m_CGProfileType = CG_PROFILE_ARBFP1;
-				else
-					m_CGProfileType = CG_PROFILE_FP20;
-			}
+		else if (m_Flags & PSFI_PS20ONLY)
+		{
+			if (gRenDev->GetFeatures() & RFT_HW_PS20)
+				m_CGProfileType = CG_PROFILE_ARBFP1;
 			else
-				if (SUPPORTS_GL_NV_register_combiners)
-					m_CGProfileType = CG_PROFILE_FP20;
-				else
-					if (SUPPORTS_GL_ARB_fragment_program)
-						m_CGProfileType = CG_PROFILE_ARBFP1;
+				m_CGProfileType = CG_PROFILE_FP20;
+		}
+		else if (SUPPORTS_GL_NV_register_combiners)
+			m_CGProfileType = CG_PROFILE_FP20;
+		else if (SUPPORTS_GL_ARB_fragment_program)
+			m_CGProfileType = CG_PROFILE_ARBFP1;
 
 		if (m_CGProfileType == CG_PROFILE_FP20 && !SUPPORTS_GL_NV_register_combiners)
 			return false;

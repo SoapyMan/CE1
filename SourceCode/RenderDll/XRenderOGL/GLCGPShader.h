@@ -10,7 +10,7 @@
 #ifndef __GLCGPSHADER_H__
 #define __GLCGPSHADER_H__
 
-#include "CG/cgGL.h"
+#include <Cg/cgGL.h>
 #include "NVParse/nvparse.h"
 
 #define CG_FP_CACHE_VER    3.4
@@ -205,8 +205,7 @@ public:
 	}
 	void mfInit()
 	{
-#ifndef WIN64
-		// NOTE: AMD64 port: find the 64-bit CG runtime
+#if defined(USE_CG)
 		if (!gcpOGL->m_CGContext)
 		{
 			gcpOGL->m_CGContext = cgCreateContext();
@@ -399,15 +398,14 @@ public:
 			{
 				if ((m_Flags & PSFI_AUTOENUMTC) && m_CGProfileType == CG_PROFILE_FP20 && (gRenDev->GetFeatures() & RFT_HW_PS20))
 				{
-#ifndef WIN64
-					// NOTE: AMD64 port: find the 64-bit CG runtime
+#if defined(USE_CG)
 					m_CGProfileType = cgGLGetLatestProfile(CG_GL_FRAGMENT);
 #endif
 					if (SUPPORTS_GL_ARB_vertex_program)
 						m_CGProfileType = CG_PROFILE_ARBFP1;
 					return mfLoadCG(prog_text);
 				}
-				Warning(0, 0, "Couldn't create CG program '%s' (%s)", m_Name.c_str(), cgGetErrorString(err));
+				Warning(0, 0, "Couldn't create CG program '%s' (%s)", m_Name.c_str(), cgGetLastErrorString(&err));
 				mfSaveCGFile(prog_text);
 				return nullptr;
 			}

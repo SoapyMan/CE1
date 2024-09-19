@@ -9,7 +9,7 @@
 
 #include "RenderPCH.h"
 #include "GL_Renderer.h"
-#include "CG/cgGL.h"
+#include <Cg/cgGL.h>
 #include "GLCGVProgram.h"
 #include "GLCGPShader.h"
 #ifdef USE_SDL
@@ -2490,8 +2490,7 @@ void CGLRenderer::ShutDown(bool bReInit)
 
 	if (m_CGContext)
 	{
-#ifndef WIN64
-		// TODO: AMD64 port: find 64-bit CG
+#if defined(USE_CG)
 		cgDestroyContext(m_CGContext);
 #endif
 		m_CGContext = nullptr;

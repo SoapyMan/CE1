@@ -67,12 +67,11 @@ CPShader* CPShader::mfForName(const char* name, std::vector<SFXStruct>& Structs,
 	}
 	if (eSHV == eSHV_PS_2_0)
 		p->m_Flags |= PSFI_PS20ONLY;
-	else
-		if (eSHV == eSHV_PS_3_0)
-			p->m_Flags |= PSFI_PS30ONLY;
-		else
-			if (eSHV == eSHV_PS_2_x)
-				p->m_Flags |= PSFI_PS2XONLY;
+	else if (eSHV == eSHV_PS_3_0)
+		p->m_Flags |= PSFI_PS30ONLY;
+	else if (eSHV == eSHV_PS_2_x)
+		p->m_Flags |= PSFI_PS2XONLY;
+
 	p->m_Flags |= PSFI_FX;
 	CCGPShader_D3D* pr = (CCGPShader_D3D*)p;
 	pr->mfConstructFX(Structs, Macros, entryFunc);
@@ -1933,28 +1932,28 @@ char* CCGPShader_D3D::mfLoadCG_Int(char* prog_text)
 	else
 	{
 #ifdef USE_CG
-		char szParams[256];
-		sprintf(szParams, "-DCGC=1");
-		const char* profileOpts[] =
-		{
-			szParams,
-			cgD3D9GetOptimalOptions(pr),
-			nullptr,
-		};
+		const char** optimalOpts = cgD3D9GetOptimalOptions(pr);
 
-		CGprogram cgPr;
-		if (m_EntryFunc.GetIndex())
-			cgPr = cgCreateProgram(gcpRendD3D->m_CGContext, CG_SOURCE, prog_text, pr, m_EntryFunc.c_str(), profileOpts);
-		else
-			cgPr = cgCreateProgram(gcpRendD3D->m_CGContext, CG_SOURCE, prog_text, pr, "main", profileOpts);
-		CGerror err = cgGetError();
-		if (err != CG_NO_ERROR)
-			return nullptr;
+		static const char* dCGC1 = "-DCGC=1";
+		TArray<const char*> profileOpts;
+
+		const char** optsPtrs = optimalOpts;
+		while (*optsPtrs)
+			profileOpts.Add(*optsPtrs++);
+
+		profileOpts.Add(dCGC1);
+		profileOpts.Add(nullptr);
+
+		CGprogram cgPr = cgCreateProgram(gcpRendD3D->m_CGContext, CG_SOURCE, prog_text, pr, m_EntryFunc.GetIndex() ? m_EntryFunc.c_str() : "main", profileOpts.Data());
 		if (!cgPr)
 		{
-			Warning(0, 0, "Couldn't find function '%s' in CG pixel program '%s'", "main", m_Name.c_str());
+			CGerror err;
+			const char* message = cgGetLastErrorString(&err);
+			const char* listing = (err == CG_COMPILER_ERROR) ? cgGetLastListing(gcpRendD3D->m_CGContext) : "";
+			Warning(0, 0, "Couldn't create CG program '%s': %s - %s", m_Name.c_str(), message, listing);
 			return nullptr;
 		}
+
 		if (CRenderer::CV_r_shaderssave == 2)
 		{
 			_chdir("c:\\MasterCD\\TestCG");

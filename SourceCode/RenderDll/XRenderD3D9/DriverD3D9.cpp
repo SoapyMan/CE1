@@ -4141,7 +4141,7 @@ char* CD3D9Renderer::GetVertexProfile(bool bSupportedProfile)
 
 	if (bSupportedProfile)
 	{
-#if !defined(WIN64) && defined(USE_CG)
+#if defined(USE_CG)
 		pr = cgD3D9GetLatestVertexProfile();
 #else
 		if (GetFeatures() & RFT_HW_PS20)
@@ -4167,7 +4167,7 @@ char* CD3D9Renderer::GetPixelProfile(bool bSupportedProfile)
 
 	if (bSupportedProfile)
 	{
-#if !defined(WIN64) && defined(USE_CG)
+#if defined(USE_CG)
 		pr = cgD3D9GetLatestPixelProfile();
 		if (pr == CG_PROFILE_PS_1_2 || pr == CG_PROFILE_PS_1_3)
 			pr = CG_PROFILE_PS_1_1;

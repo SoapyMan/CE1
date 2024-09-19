@@ -3058,8 +3058,7 @@ void CGLRenderer::MakeMatrix(const Vec3d& pos, const Vec3d& angles, const Vec3d&
 char* CGLRenderer::GetVertexProfile(bool bSupportedProfile)
 {
 	CGprofile pr;
-#ifndef WIN64
-	// TODO: AMD64 port: find 64-bit CG
+#if defined(USE_CG)
 	pr = cgGLGetLatestProfile(CG_GL_VERTEX);
 #else
 	if ((m_Features & RFT_HW_MASK) == RFT_HW_GFFX)
@@ -3082,8 +3081,7 @@ char* CGLRenderer::GetVertexProfile(bool bSupportedProfile)
 char* CGLRenderer::GetPixelProfile(bool bSupportedProfile)
 {
 	CGprofile pr;
-#ifndef WIN64
-	// TODO: AMD64 port: find 64-bit CG
+#if defined(USE_CG)
 	pr = cgGLGetLatestProfile(CG_GL_FRAGMENT);
 #else
 	if ((m_Features & RFT_HW_MASK) == RFT_HW_GFFX)

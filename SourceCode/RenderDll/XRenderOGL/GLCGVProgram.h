@@ -10,7 +10,7 @@
 #ifndef __GLCGVPROGRAM_H__
 #define __GLCGVPROGRAM_H__
 
-#include "CG/cgGL.h"
+#include <Cg/cgGL.h>
 
 #define CG_VP_CACHE_VER    3.4
 
@@ -309,8 +309,7 @@ public:
 	}
 	CCGVProgram_GL()
 	{
-#ifndef WIN64
-		// NOTE: AMD64 port: find the 64-bit CG runtime
+#if defined(USE_CG)
 		m_CGProfileType = cgGLGetLatestProfile(CG_GL_VERTEX);
 		if (m_CGProfileType != CG_PROFILE_VP20 && SUPPORTS_GL_ARB_vertex_program)
 #endif
@@ -332,8 +331,7 @@ public:
 	}
 	void mfInit()
 	{
-#ifndef WIN64
-		// NOTE: AMD64 port: find the 64-bit CG runtime
+#if defined(USE_CG)
 		if (!gcpOGL->m_CGContext)
 		{
 			gcpOGL->m_CGContext = cgCreateContext();
@@ -408,8 +406,7 @@ public:
 
 	char* mfLoadCG(const char* prog_text)
 	{
-#ifndef WIN64
-		// TODO: AMD64 port: find 64-bit CG
+#if defined(USE_CG)
 		const char* profileOpts[] =
 		{
 		  "-DCGC=1",
@@ -422,15 +419,12 @@ public:
 		{
 			if ((m_Flags & PSFI_AUTOENUMTC) && m_CGProfileType == CG_PROFILE_VP20 && (gRenDev->GetFeatures() & RFT_HW_PS20))
 			{
-#ifndef WIN64
-				// NOTE: AMD64 port: find the 64-bit CG runtime
 				m_CGProfileType = cgGLGetLatestProfile(CG_GL_VERTEX);
-#endif
 				if (SUPPORTS_GL_ARB_vertex_program)
 					m_CGProfileType = CG_PROFILE_ARBVP1;
 				return mfLoadCG(prog_text);
 			}
-			Warning(0, 0, "Couldn't create CG program '%s' (%s)", m_Name.c_str(), cgGetErrorString(err));
+			Warning(0, 0, "Couldn't create CG program '%s' (%s)", m_Name.c_str(), cgGetLastErrorString(&err));
 			mfSaveCGFile(prog_text);
 			return nullptr;
 		}

@@ -2493,8 +2493,7 @@ bool CCGVProgram_D3D::mfActivate(CVProgram* pPosVP)
 						CloseHandle(hdst);
 					}
 				}
-#if !defined(WIN64) && defined(USE_CG)
-				// NOTE: AMD64 port: find the 64-bit CG runtime
+#if defined(USE_CG)
 				if (m_Insts[m_CurInst].m_CGProgram)
 					cgDestroyProgram(m_Insts[m_CurInst].m_CGProgram);
 #endif

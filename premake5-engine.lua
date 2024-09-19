@@ -526,7 +526,7 @@ project "XRenderOGL"
 		"nvtristrip",
 		"libjpeg",
 		"SDL2",
-		--"cg"
+		"cg"
 	}
 	files {
 		"./SourceCode/RenderDll/XRenderOGL/**.cpp",
@@ -535,12 +535,13 @@ project "XRenderOGL"
 
 	links {
 		"glu32", "opengl32",
-		--"cg", "cgGL"
+		"cg", "cgGL"
 	}
 	
 	defines {
 		"XRENDEROGL_EXPORTS",
 		"OPENGL",
+		"USE_CG",
 	}
 
 if os.target() == "windows" then
@@ -553,7 +554,7 @@ project "XRenderD3D9"
 		"nvtristrip",
 		"libjpeg",
 		"SDL2",
-		--"cg"
+		"cg"
 	}
 	files {
 		"./SourceCode/RenderDll/XRenderD3D9/**.cpp",
@@ -564,12 +565,13 @@ project "XRenderD3D9"
 	}
 	links {
 		"d3d9", "d3dx9", "DXErr",
-		--"cg", "cgD3D9",
+		"cg", "cgD3D9",
 		"winmm", "version"
 	}
 	defines {
 		"XRENDERD3D9_EXPORTS",
 		"DIRECT3D9",
+		"USE_CG",
 	}
 	filter "platforms:x86"
 		libdirs {

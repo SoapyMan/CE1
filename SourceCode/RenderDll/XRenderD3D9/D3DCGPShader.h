@@ -10,7 +10,7 @@
 #ifndef __D3DCGPSHADER_H__
 #define __D3DCGPSAHDER_H__
 
-#include "cg\cgD3D9.h"
+#include <Cg/cgD3D9.h>
 #include <direct.h>
 
 #define CG_FP_CACHE_VER    3.4
@@ -212,14 +212,13 @@ public:
 	}
 	void mfInit()
 	{
-#if !defined(WIN64) && defined(USE_CG)
-		// NOTE: AMD64 port: find the 64-bit CG runtime
+#if defined(USE_CG)
 		if (!gcpRendD3D->m_CGContext)
 		{
 			cgD3D9SetDevice(gcpRendD3D->mfGetD3DDevice());
 			gcpRendD3D->m_CGContext = cgCreateContext();
 			CRYASSERT(gcpRendD3D->m_CGContext);
-#ifdef _DEBUG
+#ifdef _RETAIL
 			cgD3D9EnableDebugTracing(true);
 #endif
 		}
