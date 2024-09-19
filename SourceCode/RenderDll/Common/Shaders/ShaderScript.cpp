@@ -1003,321 +1003,297 @@ char* CShader::mfPreprCheckConditions(char* buf, const char* nameFile)
 				nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
 			bAccept = false;
 		}
-		else
-			if (!strnicmp(ni, "PROFILE_VS", 10))
+		else if (!strnicmp(ni, "PROFILE_VS", 10))
+		{
+			if (!stricmp(ni, VP))
 			{
-				if (!stricmp(ni, VP))
-				{
-					nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
-					bAccept = true;
-				}
-				else
-				{
-					nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
-					bAccept = false;
-				}
+				nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
+				bAccept = true;
 			}
 			else
-				if (!strnicmp(ni, "PROFILE_PS", 10))
-				{
-					if (!stricmp(ni, PP))
-					{
-						nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
-						bAccept = true;
-					}
-					else
-					{
-						nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
-						bAccept = false;
-					}
-				}
-				else
-					if (!strnicmp(ni, "SUPPORT_PROFILE_VS", 18))
-					{
-						if (!stricmp(&ni[8], VPSup))
-						{
-							nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
-							bAccept = true;
-						}
-						else
-						{
-							nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
-							bAccept = false;
-						}
-					}
-					else
-						if (!strnicmp(ni, "SUPPORT_PROFILE_PS", 18))
-						{
-							if (!stricmp(&ni[8], PPSup))
-							{
-								nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
-								bAccept = true;
-							}
-							else
-							{
-								nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
-								bAccept = false;
-							}
-						}
-						else
-							if (!stricmp(ni, "DIRECT3D") || !stricmp(ni, "D3D"))
-							{
+			{
+				nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
+				bAccept = false;
+			}
+		}
+		else if (!strnicmp(ni, "PROFILE_PS", 10))
+		{
+			if (!stricmp(ni, PP))
+			{
+				nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
+				bAccept = true;
+			}
+			else
+			{
+				nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
+				bAccept = false;
+			}
+		}
+		else if (!strnicmp(ni, "SUPPORT_PROFILE_VS", 18))
+		{
+			if (!stricmp(&ni[8], VPSup))
+			{
+				nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
+				bAccept = true;
+			}
+			else
+			{
+				nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
+				bAccept = false;
+			}
+		}
+		else if (!strnicmp(ni, "SUPPORT_PROFILE_PS", 18))
+		{
+			if (!stricmp(&ni[8], PPSup))
+			{
+				nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
+				bAccept = true;
+			}
+			else
+			{
+				nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
+				bAccept = false;
+			}
+		}
+		else if (!stricmp(ni, "DIRECT3D") || !stricmp(ni, "D3D"))
+		{
 #if defined (DIRECT3D8) || defined (DIRECT3D9) || defined (XBOX)
-								nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
-								bAccept = true;
+			nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
+			bAccept = true;
 #else
-								nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
-								bAccept = false;
+			nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
+			bAccept = false;
 #endif
-							}
-							else
-								if (!stricmp(ni, "DIRECT3D8") || !stricmp(ni, "D3D8"))
-								{
+		}
+		else if (!stricmp(ni, "DIRECT3D8") || !stricmp(ni, "D3D8"))
+		{
 #if defined (DIRECT3D8)
-									nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
-									bAccept = true;
+			nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
+			bAccept = true;
 #else
-									nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
-									bAccept = false;
+			nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
+			bAccept = false;
 #endif
-								}
-								else
-									if (!stricmp(ni, "DIRECT3D9") || !stricmp(ni, "D3D9"))
-									{
+		}
+		else if (!stricmp(ni, "DIRECT3D9") || !stricmp(ni, "D3D9"))
+		{
 #if defined (DIRECT3D9)
-										nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
-										bAccept = true;
+			nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
+			bAccept = true;
 #else
-										nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
-										bAccept = false;
+			nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
+			bAccept = false;
 #endif
-									}
-									else
-										if (!stricmp(ni, "XBOX"))
-										{
+		}
+		else if (!stricmp(ni, "XBOX"))
+		{
 #if defined (XBOX)
-											nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
-											bAccept = true;
+			nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
+			bAccept = true;
 #else
-											nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
-											bAccept = false;
+			nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
+			bAccept = false;
 #endif
-										}
-										else
-											if (!stricmp(ni, "OPENGL"))
-											{
+		}
+		else if (!stricmp(ni, "OPENGL"))
+		{
 #if defined (OPENGL)
-												nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
-												bAccept = true;
+			nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
+			bAccept = true;
 #else
-												nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
-												bAccept = false;
+			nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
+			bAccept = false;
 #endif
-											}
-											else
-												if (!stricmp(ni, "GAMECUBE") || !stricmp(ni, "GC"))
-												{
+	}
+		else if (!stricmp(ni, "GAMECUBE") || !stricmp(ni, "GC"))
+		{
 #if defined (GC)
-													nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
-													bAccept = true;
+			nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
+			bAccept = true;
 #else
-													nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
-													bAccept = false;
+			nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
+			bAccept = false;
 #endif
-												}
-												else
-													if (!stricmp(ni, "PS2"))
-													{
+}
+		else if (!stricmp(ni, "PS2"))
+		{
 #if defined (PS2)
-														nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
-														bAccept = true;
+			nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
+			bAccept = true;
 #else
-														nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
-														bAccept = false;
+			nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
+			bAccept = false;
 #endif
-													}
-													else
-														if (!strnicmp(ni, "DEPTHMAP", 8))
-														{
-															if (gRenDev->GetFeatures() & RFT_DEPTHMAPS)
-															{
-																nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
-																bAccept = true;
-															}
-															else
-															{
-																nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
-																bAccept = false;
-															}
+		}
+		else if (!strnicmp(ni, "DEPTHMAP", 8))
+		{
+			if (gRenDev->GetFeatures() & RFT_DEPTHMAPS)
+			{
+				nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
+				bAccept = true;
+		}
+			else
+			{
+				nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
+				bAccept = false;
+			}
 														}
-														else
-															if (!strnicmp(ni, "SELFSHADOW", 10))
-															{
-																if (gRenDev->GetFeatures() & RFT_SHADOWMAP_SELFSHADOW)
-																{
-																	nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
-																	bAccept = true;
-																}
-																else
-																{
-																	nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
-																	bAccept = false;
-																}
-															}
-															else
-																if (!stricmp(ni, "PROJECTEDENVBUMP"))
-																{
-																	if (gRenDev->GetFeatures() & RFT_HW_ENVBUMPPROJECTED)
-																	{
-																		nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
-																		bAccept = true;
-																	}
-																	else
-																	{
-																		nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
-																		bAccept = false;
-																	}
-																}
-																else
-																	if (!stricmp(ni, "NV1X") || !stricmp(ni, "NV10") || !stricmp(ni, "NV17") || !stricmp(ni, "GF2"))
-																	{
-																		if (nGPU == RFT_HW_GF2)
-																		{
-																			nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
-																			bAccept = true;
-																		}
-																		else
-																		{
-																			nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
-																			bAccept = false;
-																		}
-																	}
-																	else
-																		if (!stricmp(ni, "NV2X") || !stricmp(ni, "NV20") || !stricmp(ni, "NV25") || !stricmp(ni, "GF3"))
-																		{
-																			if (nGPU == RFT_HW_GF3)
-																			{
-																				nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
-																				bAccept = true;
-																			}
-																			else
-																			{
-																				nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
-																				bAccept = false;
-																			}
-																		}
-																		else
-																			if (!stricmp(ni, "NV3X") || !stricmp(ni, "NV30") || !stricmp(ni, "NV35") || !stricmp(ni, "GEFORCEFX"))
-																			{
-																				if (nGPU == RFT_HW_GFFX)
-																				{
-																					nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
-																					bAccept = true;
-																				}
-																				else
-																				{
-																					nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
-																					bAccept = false;
-																				}
-																			}
-																			else
-																				if (!stricmp(ni, "NV4X") || !stricmp(ni, "NV40") || !stricmp(ni, "NV45"))
-																				{
-																					if (nGPU == RFT_HW_NV4X)
-																					{
-																						nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
-																						bAccept = true;
-																					}
-																					else
-																					{
-																						nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
-																						bAccept = false;
-																					}
-																				}
-																				else
-																					if (!stricmp(ni, "R250") || !strnicmp(ni, "RADEON", 6))
-																					{
-																						if (nGPU == RFT_HW_RADEON)
-																						{
-																							nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
-																							bAccept = true;
-																						}
-																						else
-																						{
-																							nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
-																							bAccept = false;
-																						}
-																					}
-																					else
-																						if (!stricmp(ni, "R300"))
-																						{
-																							if (nGPU == RFT_HW_RADEON)
-																							{
-																								nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
-																								bAccept = true;
-																							}
-																							else
-																							{
-																								nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
-																								bAccept = false;
-																							}
-																						}
-																						else
-																							if (!stricmp(ni, "HDR"))
-																							{
-																								if (gRenDev->GetFeatures() & RFT_HW_HDR)
-																								{
-																									nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
-																									bAccept = true;
-																								}
-																								else
-																								{
-																									nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
-																									bAccept = false;
-																								}
-																							}
-																							else
-																								if (!stricmp(ni, "HDR_FP16"))
-																								{
-																									if ((gRenDev->GetFeatures() & RFT_HW_HDR) && gRenDev->m_nHDRType == 1)
-																									{
-																										nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
-																										bAccept = true;
-																									}
-																									else
-																									{
-																										nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
-																										bAccept = false;
-																									}
-																								}
-																								else
-																									if (!stricmp(ni, "PS30"))
-																									{
-																										if (gRenDev->m_nEnabled_PS30)
-																										{
-																											nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
-																											bAccept = true;
-																										}
-																										else
-																										{
-																											nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
-																											bAccept = false;
-																										}
-																									}
-																									else
-																										if (!stricmp(ni, "PS2X"))
-																										{
-																											if (gRenDev->m_nEnabled_PS2X)
-																											{
-																												nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
-																												bAccept = true;
-																											}
-																											else
-																											{
-																												nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
-																												bAccept = false;
-																											}
-																										}
+		else if (!strnicmp(ni, "SELFSHADOW", 10))
+		{
+			if (gRenDev->GetFeatures() & RFT_SHADOWMAP_SELFSHADOW)
+			{
+				nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
+				bAccept = true;
+			}
+			else
+			{
+				nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
+				bAccept = false;
+			}
+		}
+		else if (!stricmp(ni, "PROJECTEDENVBUMP"))
+		{
+			if (gRenDev->GetFeatures() & RFT_HW_ENVBUMPPROJECTED)
+			{
+				nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
+				bAccept = true;
+			}
+			else
+			{
+				nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
+				bAccept = false;
+			}
+		}
+		else if (!stricmp(ni, "NV1X") || !stricmp(ni, "NV10") || !stricmp(ni, "NV17") || !stricmp(ni, "GF2"))
+		{
+			if (nGPU == RFT_HW_GF2)
+			{
+				nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
+				bAccept = true;
+			}
+			else
+			{
+				nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
+				bAccept = false;
+			}
+		}
+		else if (!stricmp(ni, "NV2X") || !stricmp(ni, "NV20") || !stricmp(ni, "NV25") || !stricmp(ni, "GF3"))
+		{
+			if (nGPU == RFT_HW_GF3)
+			{
+				nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
+				bAccept = true;
+			}
+			else
+			{
+				nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
+				bAccept = false;
+			}
+		}
+		else if (!stricmp(ni, "NV3X") || !stricmp(ni, "NV30") || !stricmp(ni, "NV35") || !stricmp(ni, "GEFORCEFX"))
+		{
+			if (nGPU == RFT_HW_GFFX)
+			{
+				nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
+				bAccept = true;
+			}
+			else
+			{
+				nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
+				bAccept = false;
+			}
+		}
+		else if (!stricmp(ni, "NV4X") || !stricmp(ni, "NV40") || !stricmp(ni, "NV45"))
+		{
+			if (nGPU == RFT_HW_NV4X)
+			{
+				nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
+				bAccept = true;
+			}
+			else
+			{
+				nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
+				bAccept = false;
+			}
+		}
+		else if (!stricmp(ni, "R250") || !strnicmp(ni, "RADEON", 6))
+		{
+			if (nGPU == RFT_HW_RADEON)
+			{
+				nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
+				bAccept = true;
+			}
+			else
+			{
+				nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
+				bAccept = false;
+			}
+		}
+		else if (!stricmp(ni, "R300"))
+		{
+			if (nGPU == RFT_HW_RADEON)
+			{
+				nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
+				bAccept = true;
+			}
+			else
+			{
+				nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
+				bAccept = false;
+			}
+		}
+		else if (!stricmp(ni, "HDR"))
+		{
+			if (gRenDev->GetFeatures() & RFT_HW_HDR)
+			{
+				nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
+				bAccept = true;
+			}
+			else
+			{
+				nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
+				bAccept = false;
+			}
+		}
+		else if (!stricmp(ni, "HDR_FP16"))
+		{
+			if ((gRenDev->GetFeatures() & RFT_HW_HDR) && gRenDev->m_nHDRType == 1)
+			{
+				nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
+				bAccept = true;
+			}
+			else
+			{
+				nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
+				bAccept = false;
+			}
+		}
+		else if (!stricmp(ni, "PS30"))
+		{
+			if (gRenDev->m_nEnabled_PS30)
+			{
+				nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
+				bAccept = true;
+			}
+			else
+			{
+				nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
+				bAccept = false;
+			}
+		}
+		else if (!stricmp(ni, "PS2X"))
+		{
+			if (gRenDev->m_nEnabled_PS2X)
+			{
+				nPos = mfRemoveScript_ifdef(posStart, posEnd, false, nPos, buf, nameFile);
+				bAccept = true;
+			}
+			else
+			{
+				nPos = mfRemoveScript_ifdef(posStart, posEnd, true, nPos, buf, nameFile);
+				bAccept = false;
+			}
+		}
 		if (!stricmp(ni, "PS30|PS2X"))
 		{
 			if (gRenDev->m_nEnabled_PS30 || gRenDev->m_nEnabled_PS2X)
@@ -2762,6 +2738,6 @@ SShader* CShader::mfForName(const char* nameSh, EShClass Class, int flags, const
 	ef->m_Passes[0].m_RenderState = GS_DEPTHWRITE;
 
 	return ef;
-}
+			}
 
 

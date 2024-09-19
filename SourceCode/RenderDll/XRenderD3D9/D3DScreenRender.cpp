@@ -583,16 +583,13 @@ bool CREScreenProcess::mfDraw(SShader* ef, SShaderPass* sfm)
 	{
 		CRenderer::CV_r_maxtexlod_bias = 0.0f;
 	}
+	else if (m_pVars->m_bCartoonActive)
+	{
+		CRenderer::CV_r_maxtexlod_bias = -1.5f;
+	}
 	else
 	{
-		if (m_pVars->m_bCartoonActive)
-		{
-			CRenderer::CV_r_maxtexlod_bias = -1.5f;
-		}
-		else
-		{
-			CRenderer::CV_r_maxtexlod_bias = 0.0f;
-		}
+		CRenderer::CV_r_maxtexlod_bias = 0.0f;
 	}
 
 	// Do not allow cinematic rendermode in patch02
@@ -858,16 +855,15 @@ bool CREScreenProcess::mfDraw(SShader* ef, SShaderPass* sfm)
 					// glare amount
 					pGlareMapConsts[3] = 0.5f;
 				}
-				else
-					if (CRenderer::CV_r_glare == 3)  // indoor position ?
-					{
-						// threshold
-						pGlareMapConsts[0] = 0.25f;
-						pGlareMapConsts[1] = 0.25f;
-						pGlareMapConsts[2] = 0.25f;
-						// glare amount
-						pGlareMapConsts[3] = 0.8f;
-					}
+				else if (CRenderer::CV_r_glare == 3)  // indoor position ?
+				{
+					// threshold
+					pGlareMapConsts[0] = 0.25f;
+					pGlareMapConsts[1] = 0.25f;
+					pGlareMapConsts[2] = 0.25f;
+					// glare amount
+					pGlareMapConsts[3] = 0.8f;
+				}
 
 				// set saturation amount
 				pSaturationConsts[3] = 0.2f;
@@ -876,73 +872,68 @@ bool CREScreenProcess::mfDraw(SShader* ef, SShaderPass* sfm)
 				pContrastConsts[2] = 0.05f;
 				pContrastConsts[3] = 0.95f;
 			}
-			else
-				if (CRenderer::CV_r_rendermode == 2) // paradisiacal render mode
+			else if (CRenderer::CV_r_rendermode == 2) // paradisiacal render mode
+			{
+				// adjust glare properties     
+				if (CRenderer::CV_r_glare == 2)   // outdoor position ?
 				{
-					// adjust glare properties     
-					if (CRenderer::CV_r_glare == 2)   // outdoor position ?
+					// threshold
+					pGlareMapConsts[0] = 0.2f;
+					pGlareMapConsts[1] = 0.2f;
+					pGlareMapConsts[2] = 0.2f;
+					// glare amount
+					pGlareMapConsts[3] = 1.0f;
+				}
+				else if (CRenderer::CV_r_glare == 3)  // indoor position ?
+				{
+					// threshold
+					pGlareMapConsts[0] = 0.1f;
+					pGlareMapConsts[1] = 0.1f;
+					pGlareMapConsts[2] = 0.1f;
+					// glare amount
+					pGlareMapConsts[3] = 0.8f;
+				}
+
+				// set saturation amount
+				pSaturationConsts[3] = 0.1f;
+
+				// set contrast amount 
+				pContrastConsts[2] = 0.05f;
+				pContrastConsts[3] = 0.95f;
+			}
+			else if (CRenderer::CV_r_rendermode == 3) // cold reality render mode
+			{
+				// adjust glare properties     
+				if (CRenderer::CV_r_glare == 2)   // outdoor position ?
+				{
+					// threshold
+					pGlareMapConsts[0] = 0.2f;
+					pGlareMapConsts[1] = 0.2f;
+					pGlareMapConsts[2] = 0.2f;
+					// glare amount
+					pGlareMapConsts[3] = 0.5f;
+				}
+				else if (CRenderer::CV_r_glare == 3)  // indoor position ?
 					{
 						// threshold
-						pGlareMapConsts[0] = 0.2f;
-						pGlareMapConsts[1] = 0.2f;
-						pGlareMapConsts[2] = 0.2f;
+						pGlareMapConsts[0] = 0.1f;
+						pGlareMapConsts[1] = 0.1f;
+						pGlareMapConsts[2] = 0.1f;
 						// glare amount
-						pGlareMapConsts[3] = 1.0f;
+						pGlareMapConsts[3] = 0.65f;
 					}
-					else
-						if (CRenderer::CV_r_glare == 3)  // indoor position ?
-						{
-							// threshold
-							pGlareMapConsts[0] = 0.1f;
-							pGlareMapConsts[1] = 0.1f;
-							pGlareMapConsts[2] = 0.1f;
-							// glare amount
-							pGlareMapConsts[3] = 0.8f;
-						}
 
-					// set saturation amount
-					pSaturationConsts[3] = 0.1f;
+				// set saturation amount
+				pSaturationConsts[3] = 0.425f;
 
-					// set contrast amount 
-					pContrastConsts[2] = 0.05f;
-					pContrastConsts[3] = 0.95f;
-				}
-				else
-					if (CRenderer::CV_r_rendermode == 3) // cold reality render mode
-					{
-						// adjust glare properties     
-						if (CRenderer::CV_r_glare == 2)   // outdoor position ?
-						{
-							// threshold
-							pGlareMapConsts[0] = 0.2f;
-							pGlareMapConsts[1] = 0.2f;
-							pGlareMapConsts[2] = 0.2f;
-							// glare amount
-							pGlareMapConsts[3] = 0.5f;
-						}
-						else
-							if (CRenderer::CV_r_glare == 3)  // indoor position ?
-							{
-								// threshold
-								pGlareMapConsts[0] = 0.1f;
-								pGlareMapConsts[1] = 0.1f;
-								pGlareMapConsts[2] = 0.1f;
-								// glare amount
-								pGlareMapConsts[3] = 0.65f;
-							}
-
-						// set saturation amount
-						pSaturationConsts[3] = 0.425f;
-
-						// set contrast amount 
-						pContrastConsts[2] = 0.0f;
-						pContrastConsts[3] = 1.0f;
-					}
-					else
-						if (CRenderer::CV_r_rendermode == 5)
-						{
-							pSaturationConsts[3] = 0;
-						}
+				// set contrast amount 
+				pContrastConsts[2] = 0.0f;
+				pContrastConsts[3] = 1.0f;
+			}
+			else if (CRenderer::CV_r_rendermode == 5)
+			{
+				pSaturationConsts[3] = 0;
+			}
 
 			// glare vars                        
 
@@ -1085,8 +1076,8 @@ bool CREScreenProcess::mfDraw(SShader* ef, SShaderPass* sfm)
 
 			LOG_EFFECT("*** Begin Cryvision... ***\n");
 			// get data      
-			STexPic* pTex = gRenDev->m_TexMan->m_Text_Glare,
-				* pHeatTexture = gRenDev->m_TexMan->m_Text_ScreenLowMap;
+			STexPic* pTex = gRenDev->m_TexMan->m_Text_Glare;
+			STexPic* pHeatTexture = gRenDev->m_TexMan->m_Text_ScreenLowMap;
 
 			// get vertex/fragment programs    
 			CCGPShader_D3D* fpGlareMap = (CCGPShader_D3D*)m_pVars->m_pRCGlareMap;
@@ -1114,7 +1105,7 @@ bool CREScreenProcess::mfDraw(SShader* ef, SShaderPass* sfm)
 				pRenderer->EF_SetRenderTarget(pTexSurf, 1);
 				SAFE_RELEASE(pTexSurf)
 
-					gRenDev->SetViewport(0, 0, pHeatTexture->m_Width, pHeatTexture->m_Height);
+				gRenDev->SetViewport(0, 0, pHeatTexture->m_Width, pHeatTexture->m_Height);
 
 				// set pixel/vertex programs 
 				vpNightGlare->mfSet(true, 0);
@@ -1198,7 +1189,7 @@ bool CREScreenProcess::mfDraw(SShader* ef, SShaderPass* sfm)
 			pRenderer->EF_SetRenderTarget(pTexSurf, 1);
 			SAFE_RELEASE(pTexSurf)
 
-				gRenDev->SetViewport(0, 0, pTex->m_Width, pTex->m_Height);
+			gRenDev->SetViewport(0, 0, pTex->m_Width, pTex->m_Height);
 
 			// set fragment program
 			vpGlare->mfSet(true, 0);

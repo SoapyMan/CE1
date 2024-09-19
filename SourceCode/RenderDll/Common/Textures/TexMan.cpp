@@ -592,14 +592,12 @@ create:
 
 	if (ti->m_eTT == eTT_Cubemap)
 		ti->m_TargetType = GL_TEXTURE_CUBE_MAP_EXT;
+	else if (ti->m_eTT == eTT_Rectangle)
+		ti->m_TargetType = GL_TEXTURE_RECTANGLE_NV;
+	else if (ti->m_eTT == eTT_3D)
+		ti->m_TargetType = GL_TEXTURE_3D;
 	else
-		if (ti->m_eTT == eTT_Rectangle)
-			ti->m_TargetType = GL_TEXTURE_RECTANGLE_NV;
-		else
-			if (ti->m_eTT == eTT_3D)
-				ti->m_TargetType = GL_TEXTURE_3D;
-			else
-				ti->m_TargetType = GL_TEXTURE_2D;
+		ti->m_TargetType = GL_TEXTURE_2D;
 
 	return ti;
 }
