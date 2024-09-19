@@ -3810,7 +3810,7 @@ void CD3D9TexMan::DrawToTexture(Plane& Pl, STexPic* Tex, int RendFlags)
 		Tex->m_nMips = 0;
 		AddToHash(Tex->m_Bind, Tex);
 
-		r->m_TexMan->CreateTexture(nullptr, tex_size, tex_size, 1, FT_NOMIPS | FT_CLAMP, FT2_NODXT | FT2_RENDERTARGET, nullptr, eTT_Base, -1.0f, -1.0f, eTF_8888, Tex);
+		r->m_TexMan->CreateTexture(nullptr, tex_size, tex_size, 1, FT_NOMIPS | FT_CLAMP, FT2_NODXT | FT2_RENDERTARGET, nullptr, eTT_Base, -1.0f, -1.0f, 0, Tex);
 	}
 	if (!Tex->m_RefTex.m_VidTex)
 		return;
@@ -3954,15 +3954,12 @@ void CD3D9TexMan::DrawToTextureForRainMap(int Id)
 	{
 		if (CRenderer::CV_r_rainmapsize <= 64)
 			CRenderer::CV_r_rainmapsize = 64;
-		else
-			if (CRenderer::CV_r_rainmapsize <= 128)
-				CRenderer::CV_r_rainmapsize = 128;
-			else
-				if (CRenderer::CV_r_rainmapsize <= 256)
-					CRenderer::CV_r_rainmapsize = 256;
-				else
-					if (CRenderer::CV_r_rainmapsize <= 512)
-						CRenderer::CV_r_rainmapsize = 512;
+		else if (CRenderer::CV_r_rainmapsize <= 128)
+			CRenderer::CV_r_rainmapsize = 128;
+		else if (CRenderer::CV_r_rainmapsize <= 256)
+			CRenderer::CV_r_rainmapsize = 256;
+		else if (CRenderer::CV_r_rainmapsize <= 512)
+			CRenderer::CV_r_rainmapsize = 512;
 
 		gRenDev->m_RP.m_RainMapSize = CRenderer::CV_r_rainmapsize;
 		Tex->m_Flags &= ~FT_ALLOCATED;
