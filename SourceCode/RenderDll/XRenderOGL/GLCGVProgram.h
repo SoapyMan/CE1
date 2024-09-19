@@ -336,9 +336,6 @@ public:
 		{
 			gcpOGL->m_CGContext = cgCreateContext();
 			CRYASSERT(gcpOGL->m_CGContext != nullptr);
-			//CGSetCompilerExe("cgc.exe");
-
-			//cgSetErrorCallback(mfErrorCallback);
 		}
 #endif
 		m_dwFrame = 1;
@@ -375,28 +372,27 @@ public:
 				}
 			}
 		}
-		else
-			if (m_CGProfileType == CG_PROFILE_ARBVP1)
+		else if (m_CGProfileType == CG_PROFILE_ARBVP1)
+		{
+			glBindProgramARB(GL_VERTEX_PROGRAM_ARB, m_Insts[m_CurInst].m_dwHandle);
+			if (m_Insts[m_CurInst].m_BindConstants)
 			{
-				glBindProgramARB(GL_VERTEX_PROGRAM_ARB, m_Insts[m_CurInst].m_dwHandle);
-				if (m_Insts[m_CurInst].m_BindConstants)
+				int i;
+				for (i = 0; i < m_Insts[m_CurInst].m_BindConstants->Num(); i++)
 				{
-					int i;
-					for (i = 0; i < m_Insts[m_CurInst].m_BindConstants->Num(); i++)
+					SCGBindConst* p = &m_Insts[m_CurInst].m_BindConstants->Get(i);
+					int n = p->m_dwBind;
+					if (m_CurParams[n][0] != p->m_Val[0] || m_CurParams[n][1] != p->m_Val[1] || m_CurParams[n][2] != p->m_Val[2] || m_CurParams[n][3] != p->m_Val[3])
 					{
-						SCGBindConst* p = &m_Insts[m_CurInst].m_BindConstants->Get(i);
-						int n = p->m_dwBind;
-						if (m_CurParams[n][0] != p->m_Val[0] || m_CurParams[n][1] != p->m_Val[1] || m_CurParams[n][2] != p->m_Val[2] || m_CurParams[n][3] != p->m_Val[3])
-						{
-							m_CurParams[n][0] = p->m_Val[0];
-							m_CurParams[n][1] = p->m_Val[1];
-							m_CurParams[n][2] = p->m_Val[2];
-							m_CurParams[n][3] = p->m_Val[3];
-							glProgramEnvParameter4fvARB(GL_VERTEX_PROGRAM_ARB, p->m_dwBind, &p->m_Val[0]);
-						}
+						m_CurParams[n][0] = p->m_Val[0];
+						m_CurParams[n][1] = p->m_Val[1];
+						m_CurParams[n][2] = p->m_Val[2];
+						m_CurParams[n][3] = p->m_Val[3];
+						glProgramEnvParameter4fvARB(GL_VERTEX_PROGRAM_ARB, p->m_dwBind, &p->m_Val[0]);
 					}
 				}
 			}
+		}
 	}
 
 	void mfUnbind()
@@ -409,30 +405,31 @@ public:
 #if defined(USE_CG)
 		const char* profileOpts[] =
 		{
-		  "-DCGC=1",
+			"-DCGC=1",
 			nullptr,
 		};
 		cgGLSetOptimalOptions((CGprofile)m_CGProfileType);
 		CGprogram cgPr = cgCreateProgram(gcpOGL->m_CGContext, CG_SOURCE, prog_text, (CGprofile)m_CGProfileType, "main", profileOpts);
-		CGerror err = cgGetError();
-		if (err != CG_NO_ERROR)
+		if (!cgPr)
 		{
 			if ((m_Flags & PSFI_AUTOENUMTC) && m_CGProfileType == CG_PROFILE_VP20 && (gRenDev->GetFeatures() & RFT_HW_PS20))
 			{
-				m_CGProfileType = cgGLGetLatestProfile(CG_GL_VERTEX);
 				if (SUPPORTS_GL_ARB_vertex_program)
 					m_CGProfileType = CG_PROFILE_ARBVP1;
+				else
+					m_CGProfileType = cgGLGetLatestProfile(CG_GL_VERTEX);
 				return mfLoadCG(prog_text);
 			}
-			Warning(0, 0, "Couldn't create CG program '%s' (%s)", m_Name.c_str(), cgGetLastErrorString(&err));
+
+			CGerror err;
+			const char* message = cgGetLastErrorString(&err);
+			const char* listing = (err == CG_COMPILER_ERROR) ? cgGetLastListing(gcpOGL->m_CGContext) : "";
+			Warning(0, 0, "Couldn't create CG program '%s': %s - %s", m_Name.c_str(), message, listing);
+
 			mfSaveCGFile(prog_text);
 			return nullptr;
 		}
-		if (!cgPr)
-		{
-			iLog->Log("Couldn't find function '%s' in CG pixel program '%s'", "main", m_Name.c_str());
-			return nullptr;
-		}
+
 		char* code = mfGetObjectCode(cgPr);
 		cgDestroyProgram(cgPr);
 		return code;
@@ -539,30 +536,29 @@ public:
 				iLog->Log("\n");
 			}
 		}
-		else
-			if (m_CGProfileType == CG_PROFILE_ARBVP1)
+		else if (m_CGProfileType == CG_PROFILE_ARBVP1)
+		{
+			glGenProgramsARB(1, &m_Insts[m_CurInst].m_dwHandle);
+			glBindProgramARB(GL_VERTEX_PROGRAM_ARB, m_Insts[m_CurInst].m_dwHandle);
+			int size = strlen(prog_text);
+			glProgramStringARB(GL_VERTEX_PROGRAM_ARB, GL_PROGRAM_FORMAT_ASCII_ARB, size, (const GLubyte*)prog_text);
+			GLint errpos;
+			glGetIntegerv(GL_PROGRAM_ERROR_POSITION_ARB, &errpos);
+			if (errpos != -1)
 			{
-				glGenProgramsARB(1, &m_Insts[m_CurInst].m_dwHandle);
-				glBindProgramARB(GL_VERTEX_PROGRAM_ARB, m_Insts[m_CurInst].m_dwHandle);
-				int size = strlen(prog_text);
-				glProgramStringARB(GL_VERTEX_PROGRAM_ARB, GL_PROGRAM_FORMAT_ASCII_ARB, size, (const GLubyte*)prog_text);
-				GLint errpos;
-				glGetIntegerv(GL_PROGRAM_ERROR_POSITION_ARB, &errpos);
-				if (errpos != -1)
+				iLog->Log("Warning: VProgram error:\n");
+				int bgn = errpos - 10;
+				bgn < 0 ? 0 : bgn;
+				const char* c = (const char*)(prog_text + bgn);
+				for (int i = 0; i < 30; i++)
 				{
-					iLog->Log("Warning: VProgram error:\n");
-					int bgn = errpos - 10;
-					bgn < 0 ? 0 : bgn;
-					const char* c = (const char*)(prog_text + bgn);
-					for (int i = 0; i < 30; i++)
-					{
-						if (bgn + i >= int(size - 1))
-							break;
-						iLog->Log("%c", *c++);
-					}
-					iLog->Log("\n");
+					if (bgn + i >= int(size - 1))
+						break;
+					iLog->Log("%c", *c++);
 				}
+				iLog->Log("\n");
 			}
+		}
 	}
 
 	void mfParameter(SCGBind* ParamBind, const float* v, int nComps)

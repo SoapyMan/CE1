@@ -298,125 +298,40 @@ public:
 
 	char* mfLoadCG(char* prog_text)
 	{
-#ifndef WIN64
+#if defined(USE_CG)
 		CGprofile pr = (CGprofile)m_CGProfileType;
 
-#if 0
-		// Use HLSL compiler for PS_2_X profile since it generates more efficient code (and allmost bugs free)
-		if (pr == CG_PROFILE_FP30 || pr == CG_PROFILE_ARBFP1)
+		// Test adding source text to context
+		const char* profileOpts[] =
 		{
-			char* Buf = sReplaceInText(prog_text, "pixout OUT", "float4 Color = (float4)0");
-			char* Buf1 = sReplaceInText(Buf, "pixout main", "float4 main");
-			remove("$$out.cg");
-			if (Buf != Buf1)
-			{
-				if (Buf != prog_text)
-					delete[] Buf;
-				Buf = Buf1;
-			}
-			Buf1 = sReplaceInText(Buf, "return OUT", "return Color");
-			if (Buf != Buf1)
-			{
-				if (Buf != prog_text)
-					delete[] Buf;
-				Buf = Buf1;
-			}
-			Buf1 = sReplaceInText(Buf, "OUT.Color", "Color");
-			if (Buf != Buf1)
-			{
-				if (Buf != prog_text)
-					delete[] Buf;
-				Buf = Buf1;
-			}
-
-			// make command for execution
-			FILE* fp = fopen("$$in.cg", "w");
-			if (!fp)
-				return nullptr;
-			fputs(Buf, fp);
-			fclose(fp);
-
-			char szCmdLine[512];
-			sprintf(szCmdLine, "fxc.exe /T %s /Fc $$out.cg $$in.cg", pr == CG_PROFILE_FP30 ? "ps_2_a" : "ps_2_0");
-
-			STARTUPINFO si;
-			ZeroMemory(&si, sizeof(si));
-			si.cb = sizeof(si);
-			si.dwX = 100;
-			si.dwY = 100;
-			si.dwFlags = STARTF_USEPOSITION;
-
-			PROCESS_INFORMATION pi;
-			ZeroMemory(&pi, sizeof(pi));
-			if (!CreateProcess(nullptr, // No module name (use command line). 
-				szCmdLine,				// Command line. 
-				nullptr,             // Process handle not inheritable. 
-				nullptr,             // Thread handle not inheritable. 
-				FALSE,            // Set handle inheritance to FALSE. 
-				CREATE_NO_WINDOW, // No creation flags. 
-				nullptr,             // Use parent's environment block. 
-				nullptr/*szFolderName*/,     // Set starting directory. 
-				&si,              // Pointer to STARTUPINFO structure.
-				&pi)             // Pointer to PROCESS_INFORMATION structure.
-				)
-			{
-				iLog->LogError("CreateProcess failed: %s", szCmdLine);
-				return nullptr;
-			}
-
-			while (WAIT_OBJECT_0 != WaitForSingleObject(pi.hProcess, 10000))
-				iLog->LogWarning("CG runtime takes forever to compile.. waiting.. (last error %d)", GetLastError());
-
-			CloseHandle(pi.hProcess);
-			CloseHandle(pi.hThread);
-			char* pBuf;
-			if (pr == CG_PROFILE_FP30)
-				pBuf = PS20toNV30fp("$$out.cg");
-			else
-				pBuf = PS20toARBfp("$$out.cg");
-
-			if (Buf != prog_text)
-				delete[] Buf;
-			remove("$$in.cg");
-			remove("$$out.cg");
-
-			return pBuf;
-		}
-		else
-#endif
+			"-DCGC=1",
+			nullptr,
+		};
+		cgGLGetOptimalOptions(pr);
+		CGprogram cgPr = cgCreateProgram(gcpOGL->m_CGContext, CG_SOURCE, prog_text, pr, "main", profileOpts);
+		if (!cgPr)
 		{
-			// Test adding source text to context
-			const char* profileOpts[] =
+			if ((m_Flags & PSFI_AUTOENUMTC) && m_CGProfileType == CG_PROFILE_FP20 && (gRenDev->GetFeatures() & RFT_HW_PS20))
 			{
-			  "-DCGC=1",
-			  nullptr,
-			};
-			cgGLSetOptimalOptions((CGprofile)m_CGProfileType);
-			CGprogram cgPr = cgCreateProgram(gcpOGL->m_CGContext, CG_SOURCE, prog_text, (CGprofile)m_CGProfileType, "main", profileOpts);
-			CGerror err = cgGetError();
-			if (err != CG_NO_ERROR)
-			{
-				if ((m_Flags & PSFI_AUTOENUMTC) && m_CGProfileType == CG_PROFILE_FP20 && (gRenDev->GetFeatures() & RFT_HW_PS20))
-				{
-#if defined(USE_CG)
+				if (SUPPORTS_GL_ARB_vertex_program)
+					m_CGProfileType = CG_PROFILE_ARBFP1;
+				else
 					m_CGProfileType = cgGLGetLatestProfile(CG_GL_FRAGMENT);
-#endif
-					if (SUPPORTS_GL_ARB_vertex_program)
-						m_CGProfileType = CG_PROFILE_ARBFP1;
-					return mfLoadCG(prog_text);
-				}
-				Warning(0, 0, "Couldn't create CG program '%s' (%s)", m_Name.c_str(), cgGetLastErrorString(&err));
-				mfSaveCGFile(prog_text);
-				return nullptr;
+				return mfLoadCG(prog_text);
 			}
-			if (cgPr)
-			{
-				char* code = mfGetObjectCode(cgPr);
-				cgDestroyProgram(cgPr);
-				return code;
-			}
+
+			CGerror err;
+			const char* message = cgGetLastErrorString(&err);
+			const char* listing = (err == CG_COMPILER_ERROR) ? cgGetLastListing(gcpOGL->m_CGContext) : "";
+			Warning(0, 0, "Couldn't create CG program '%s': %s - %s", m_Name.c_str(), message, listing);
+
+			mfSaveCGFile(prog_text);
+			return nullptr;
 		}
-		return nullptr;
+
+		char* code = mfGetObjectCode(cgPr);
+		cgDestroyProgram(cgPr);
+		return code;
 #else
 		// make command for execution
 		FILE* fp = fopen("$$in.cg", "w");
@@ -517,128 +432,126 @@ public:
 				iLog->Log("\n");
 			}
 		}
-		else
-			if (m_CGProfileType == CG_PROFILE_FP30)
+		else if (m_CGProfileType == CG_PROFILE_FP30)
+		{
+			glGenProgramsNV(1, &m_Insts[m_CurInst].m_dwHandle);
+			glBindProgramNV(GL_FRAGMENT_PROGRAM_NV, m_Insts[m_CurInst].m_dwHandle);
+			int size = strlen(prog_text);
+			glLoadProgramNV(GL_FRAGMENT_PROGRAM_NV, m_Insts[m_CurInst].m_dwHandle, size, (const GLubyte*)prog_text);
+			const GLubyte* pError = glGetString(GL_PROGRAM_ERROR_STRING_NV);
+			if (pError && pError[0])
+				iLog->Log("Error: %s", pError);
+		}
+		else if (m_CGProfileType == CG_PROFILE_FP20)
+		{
+			const char* sStr = strstr(prog_text, "!!TS1.0");
+			if (sStr)
 			{
-				glGenProgramsNV(1, &m_Insts[m_CurInst].m_dwHandle);
-				glBindProgramNV(GL_FRAGMENT_PROGRAM_NV, m_Insts[m_CurInst].m_dwHandle);
-				int size = strlen(prog_text);
-				glLoadProgramNV(GL_FRAGMENT_PROGRAM_NV, m_Insts[m_CurInst].m_dwHandle, size, (const GLubyte*)prog_text);
-				const GLubyte* pError = glGetString(GL_PROGRAM_ERROR_STRING_NV);
-				if (pError && pError[0])
-					iLog->Log("Error: %s", pError);
-			}
-			else
-				if (m_CGProfileType == CG_PROFILE_FP20)
+				char sLine[4][128];
+				int n = 8;
+				int i;
+				for (i = 0; i < 4; i++)
 				{
-					const char* sStr = strstr(prog_text, "!!TS1.0");
-					if (sStr)
+					int m = 0;
+					while (sStr[n] != 0xa)
 					{
-						char sLine[4][128];
-						int n = 8;
-						int i;
-						for (i = 0; i < 4; i++)
-						{
-							int m = 0;
-							while (sStr[n] != 0xa)
-							{
-								if (sStr[n] == '/' && sStr[n + 1] == '/')
-									break;
-								sLine[i][m++] = sStr[n++];
-							}
-							if (sStr[n] == '/' && sStr[n + 1] == '/')
-								break;
-							n++;
-							sLine[i][m++] = 0;
-						}
-						int nS = i;
-						bool bUseTS = false;
-						for (i = 0; i < nS; i++)
-						{
-							if (strcmp(sLine[i], "texture_2d();") && strcmp(sLine[i], "nop();") && strcmp(sLine[i], "texture_3d();") && strcmp(sLine[i], "texture_cube_map();") && strcmp(sLine[i], "texture_rectangle();"))
-							{
-								bUseTS = true;
-								// Use projected env. bump mapping if it's supported
-								if (gRenDev->GetFeatures() & RFT_HW_ENVBUMPPROJECTED)
-								{
-									if (!strncmp(sLine[i], "offset_rectangle", 16) || !strncmp(sLine[i], "offset_2d", 9))
-									{
-										// replace texture shader offset operation by projective one
-										char sTemp[128];
-										char* s = strchr(sLine[i], '(');
-										if (s)
-										{
-											strcpy(sTemp, s);
-											if (!strncmp(sLine[i], "offset_rectangle", 16))
-												strcpy(sLine[i], "offset_projective_rectangle");
-											else
-												strcpy(sLine[i], "offset_projective_2d");
-											strcat(sLine[i], sTemp);
-										}
-									}
-								}
-							}
-						}
-						if (bUseTS)
-						{
-							char code[256];
-							switch (nS)
-							{
-							case 1:
-								sprintf(code, "!!TS1.0\n %s\n", sLine[0]);
-								break;
-							case 2:
-								sprintf(code, "!!TS1.0\n %s\n %s\n", sLine[0], sLine[1]);
-								break;
-							case 3:
-								sprintf(code, "!!TS1.0\n %s\n %s\n %s\n", sLine[0], sLine[1], sLine[2]);
-								break;
-							case 4:
-								sprintf(code, "!!TS1.0\n %s\n %s\n %s\n %s\n", sLine[0], sLine[1], sLine[2], sLine[3]);
-								break;
-							default:
-								CRYASSERT(0);
-							}
-							uint listTS = glGenLists(1);
-							glNewList(listTS, GL_COMPILE);
-							nvparse(false, code);
-							int n = 0;
-							for (char* const* errors = nvparse_get_errors(); *errors; errors++)
-							{
-								n++;
-								iLog->Log(*errors);
-							}
-							glEndList();
-							if (!n)
-								m_Insts[m_CurInst].m_dwHandleExt = listTS;
-						}
+						if (sStr[n] == '/' && sStr[n + 1] == '/')
+							break;
+						sLine[i][m++] = sStr[n++];
 					}
-
-					sStr = strstr(prog_text, "!!RC1.0");
-					if (sStr)
+					if (sStr[n] == '/' && sStr[n + 1] == '/')
+						break;
+					n++;
+					sLine[i][m++] = 0;
+				}
+				int nS = i;
+				bool bUseTS = false;
+				for (i = 0; i < nS; i++)
+				{
+					if (strcmp(sLine[i], "texture_2d();") && strcmp(sLine[i], "nop();") && strcmp(sLine[i], "texture_3d();") && strcmp(sLine[i], "texture_cube_map();") && strcmp(sLine[i], "texture_rectangle();"))
 					{
-						uint listRC = glGenLists(1);
-						glNewList(listRC, GL_COMPILE);
-						nvparse(false, sStr);
-						int n = 0;
-						for (char* const* errors = nvparse_get_errors(); *errors; errors++)
+						bUseTS = true;
+						// Use projected env. bump mapping if it's supported
+						if (gRenDev->GetFeatures() & RFT_HW_ENVBUMPPROJECTED)
 						{
-							n++;
-							iLog->Log(*errors);
-						}
-						glEndList();
-						if (!n)
-						{
-							m_Insts[m_CurInst].m_dwHandle = listRC;
-							if (gParseConsts.Num())
+							if (!strncmp(sLine[i], "offset_rectangle", 16) || !strncmp(sLine[i], "offset_2d", 9))
 							{
-								m_Insts[m_CurInst].m_BindConstants = new TArray<SCGBindConst>;
-								m_Insts[m_CurInst].m_BindConstants->Copy(gParseConsts);
-								gParseConsts.Free();
+								// replace texture shader offset operation by projective one
+								char sTemp[128];
+								char* s = strchr(sLine[i], '(');
+								if (s)
+								{
+									strcpy(sTemp, s);
+									if (!strncmp(sLine[i], "offset_rectangle", 16))
+										strcpy(sLine[i], "offset_projective_rectangle");
+									else
+										strcpy(sLine[i], "offset_projective_2d");
+									strcat(sLine[i], sTemp);
+								}
 							}
 						}
 					}
 				}
+				if (bUseTS)
+				{
+					char code[256];
+					switch (nS)
+					{
+					case 1:
+						sprintf(code, "!!TS1.0\n %s\n", sLine[0]);
+						break;
+					case 2:
+						sprintf(code, "!!TS1.0\n %s\n %s\n", sLine[0], sLine[1]);
+						break;
+					case 3:
+						sprintf(code, "!!TS1.0\n %s\n %s\n %s\n", sLine[0], sLine[1], sLine[2]);
+						break;
+					case 4:
+						sprintf(code, "!!TS1.0\n %s\n %s\n %s\n %s\n", sLine[0], sLine[1], sLine[2], sLine[3]);
+						break;
+					default:
+						CRYASSERT(0);
+					}
+					uint listTS = glGenLists(1);
+					glNewList(listTS, GL_COMPILE);
+					nvparse(false, code);
+					int n = 0;
+					for (char* const* errors = nvparse_get_errors(); *errors; errors++)
+					{
+						n++;
+						iLog->Log(*errors);
+					}
+					glEndList();
+					if (!n)
+						m_Insts[m_CurInst].m_dwHandleExt = listTS;
+				}
+			}
+
+			sStr = strstr(prog_text, "!!RC1.0");
+			if (sStr)
+			{
+				uint listRC = glGenLists(1);
+				glNewList(listRC, GL_COMPILE);
+				nvparse(false, sStr);
+				int n = 0;
+				for (char* const* errors = nvparse_get_errors(); *errors; errors++)
+				{
+					n++;
+					iLog->Log(*errors);
+				}
+				glEndList();
+				if (!n)
+				{
+					m_Insts[m_CurInst].m_dwHandle = listRC;
+					if (gParseConsts.Num())
+					{
+						m_Insts[m_CurInst].m_BindConstants = new TArray<SCGBindConst>;
+						m_Insts[m_CurInst].m_BindConstants->Copy(gParseConsts);
+						gParseConsts.Free();
+					}
+				}
+			}
+		}
 	}
 
 	void mfParameter(SCGBind* ParamBind, const float* vData, int nComps)
