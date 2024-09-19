@@ -1377,16 +1377,15 @@ bool CCGPShader_D3D::mfActivate()
 		{
 			if (gRenDev->GetFeatures() & RFT_HW_PS30)
 				m_CGProfileType = CG_PROFILE_PS_3_0;
-			else
-				if (gRenDev->GetFeatures() & RFT_HW_PS20)
-				{
-					if ((gRenDev->GetFeatures() & RFT_HW_MASK) == RFT_HW_GFFX)
-						m_CGProfileType = CG_PROFILE_PS_2_X;
-					else
-						m_CGProfileType = CG_PROFILE_PS_2_0;
-				}
+			else if (gRenDev->GetFeatures() & RFT_HW_PS20)
+			{
+				if ((gRenDev->GetFeatures() & RFT_HW_MASK) == RFT_HW_GFFX)
+					m_CGProfileType = CG_PROFILE_PS_2_X;
 				else
-					m_CGProfileType = CG_PROFILE_PS_1_1;
+					m_CGProfileType = CG_PROFILE_PS_2_0;
+			}
+			else
+				m_CGProfileType = CG_PROFILE_PS_1_1;
 		}
 		else if (m_Flags & PSFI_PS2XONLY)
 		{
@@ -1638,18 +1637,17 @@ bool CCGPShader_D3D::mfActivate()
 						cgp.m_dwBind = atoi(&szReg[1]);
 						inst.m_BindVars->AddElem(cgp);
 					}
-					else
-						if (szReg[0] == 's' && isdigit(szReg[1]) && (m_Flags & PSFI_FX))
-						{
-							SCGBind cgp;
-							if (!inst.m_BindVars)
-								inst.m_BindVars = new TArray<SCGBind>;
-							char* szSize = sGetText(&token);
-							cgp.m_nComponents = atoi(szSize);
-							cgp.m_Name = szName;
-							cgp.m_dwBind = atoi(&szReg[1]) | SHADER_BIND_SAMPLER;
-							inst.m_BindVars->AddElem(cgp);
-						}
+					else if (szReg[0] == 's' && isdigit(szReg[1]) && (m_Flags & PSFI_FX))
+					{
+						SCGBind cgp;
+						if (!inst.m_BindVars)
+							inst.m_BindVars = new TArray<SCGBind>;
+						char* szSize = sGetText(&token);
+						cgp.m_nComponents = atoi(szSize);
+						cgp.m_Name = szName;
+						cgp.m_dwBind = atoi(&szReg[1]) | SHADER_BIND_SAMPLER;
+						inst.m_BindVars->AddElem(cgp);
+					}
 				}
 				else if (!strncmp(token, "const", 5))
 				{
