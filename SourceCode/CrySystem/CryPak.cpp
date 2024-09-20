@@ -649,6 +649,7 @@ FILE* CCryPak::FOpen(const char* pName, const char* szMode, unsigned nFlags2)
 // and it's important that the autoptr is returned: another thread may release the existing
 // cached data before the function returns
 // the path must be absolute normalized lower-case with forward-slashes
+
 CCachedFileDataPtr CCryPak::GetFileData(const char* szName)
 {
 #if defined(LINUX)
@@ -1398,7 +1399,7 @@ size_t CZipPseudoFile::FRead(void* pDest, size_t nSize, size_t nCount, FILE* hFi
 			unsigned char* itSrc = pSrc, * itSrcEnd = pSrc + nTotal;
 			for (; itSrc != itSrcEnd; ++itSrc)
 			{
-				if (*pSrc != 0xd)
+				if (*itSrc != 0xd)
 					*(itDest++) = *itSrc;
 			}
 			m_nCurSeek += nTotal;
@@ -1445,9 +1446,8 @@ char* CZipPseudoFile::FGets(char* pBuf, int n)
 			i++;
 			break;
 		}
-		else
-			if (c == 0xd)
-				continue;
+		else if (c == 0xd)
+			continue;
 		pBuf[nn++] = c;
 	}
 	pBuf[nn] = 0;

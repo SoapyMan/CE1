@@ -221,9 +221,8 @@ bool CShader::mfCompileHWShadeLayer(SShader* ef, char* scr, TArray<SShaderPassHW
 		data = nullptr;
 		if (name)
 			data = name;
-		else
-			if (params)
-				data = params;
+		else if (params)
+			data = params;
 		switch (cmd)
 		{
 		case eRendState:
