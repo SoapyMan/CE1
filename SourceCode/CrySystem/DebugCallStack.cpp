@@ -30,15 +30,8 @@
 
 #include "Resource.h"
 
-#pragma comment(lib, "version.lib")
-
 //! Needs one external of DLL handle.
 extern HMODULE gDLLHandle;
-
-#ifndef WIN98
-//#pragma comment( lib, "imagehlp" )
-#pragma comment( lib, "dbghelp" )
-#endif
 
 #define MAX_PATH_LENGTH 1024
 #define MAX_SYMBOL_LENGTH 512
@@ -53,6 +46,38 @@ LONG __stdcall UnhandledExceptionHandler(EXCEPTION_POINTERS* pex)
 {
 	DebugCallStack::instance()->handleException(pex);
 	return EXCEPTION_EXECUTE_HANDLER;
+}
+
+static void CreateMiniDump(EXCEPTION_POINTERS* pep)
+{
+	SYSTEMTIME t;
+	GetSystemTime(&t);
+
+	char dumpPath[2048];
+	snprintf(dumpPath, sizeof(dumpPath), "%s_%4d%02d%02d_%02d%02d%02d.mdmp", "FarCry", t.wYear, t.wMonth, t.wDay, t.wHour, t.wMinute, t.wSecond);
+
+	HANDLE dumpFileFd = CreateFileA(dumpPath, GENERIC_READ | GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	if (!dumpFileFd || dumpFileFd == INVALID_HANDLE_VALUE)
+	{
+		CryLogAlways("Unable to create crash dump");
+		return;
+	}
+
+	const MINIDUMP_TYPE dumpType = MINIDUMP_TYPE(MiniDumpWithIndirectlyReferencedMemory | MiniDumpScanMemory);
+
+	MINIDUMP_EXCEPTION_INFORMATION dumpExceptionInfo;
+	dumpExceptionInfo.ThreadId = GetCurrentThreadId();
+	dumpExceptionInfo.ExceptionPointers = pep;
+	dumpExceptionInfo.ClientPointers = FALSE;
+
+	const bool result = MiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(), dumpFileFd, dumpType, (pep != 0) ? &dumpExceptionInfo : 0, 0, 0);
+	if (!result)
+		CryLogAlways("Minidump write error\n");
+	else
+		CryLogAlways("Minidump saved to:\n%s\n", dumpPath);
+
+	// Close the file
+	CloseHandle(dumpFileFd);
 }
 
 //=============================================================================
@@ -85,85 +110,40 @@ DebugCallStack::~DebugCallStack()
 
 bool DebugCallStack::initSymbols()
 {
-#ifndef WIN98
-	if (m_symbols) return true;
-
-	char fullpath[MAX_PATH_LENGTH + 1];
-	char pathname[MAX_PATH_LENGTH + 1];
-	char fname[MAX_PATH_LENGTH + 1];
-	char directory[MAX_PATH_LENGTH + 1];
-	char drive[10];
-	HANDLE process;
-
-	//	SymSetOptions(SYMOPT_DEFERRED_LOADS|SYMOPT_UNDNAME|SYMOPT_LOAD_LINES|SYMOPT_OMAP_FIND_NEAREST|SYMOPT_INCLUDE_32BIT_MODULES);
-	SymSetOptions(SYMOPT_DEFERRED_LOADS | SYMOPT_UNDNAME | SYMOPT_LOAD_LINES | SYMOPT_OMAP_FIND_NEAREST);
-
-	process = GetCurrentProcess();
-
-	// Get module file name.
-	GetModuleFileName(nullptr, fullpath, MAX_PATH_LENGTH);
-
-	// Convert it into search path for symbols.
-	strcpy(pathname, fullpath);
-	_splitpath(pathname, drive, directory, fname, nullptr);
-	sprintf(pathname, "%s%s", drive, directory);
-
-	// Append the current directory to build a search path forSymInit
-	strcat(pathname, ";.;");
-
-	int result = 0;
+	if (m_symbols) 
+		return true;
 
 	m_symbols = false;
 
-	result = SymInitialize(process, pathname, TRUE);
+	SymSetOptions(SYMOPT_DEFERRED_LOADS | SYMOPT_UNDNAME | SYMOPT_LOAD_LINES | SYMOPT_OMAP_FIND_NEAREST);
+
+	HANDLE process = GetCurrentProcess();
+	HRESULT result = SymInitialize(process, nullptr, TRUE);
 	if (result) {
-		//HMODULE hMod = GetModuleHandle( "imagehlp" );
-		//SymGetLineFromAddrPtr = (SymGetLineFromAddrFunction)GetProcAddress( hMod,"SymGetLineFromAddr" );
-
-		char pdb[MAX_PATH_LENGTH + 1];
-		char res_pdb[MAX_PATH_LENGTH + 1];
-		sprintf(pdb, "%s.pdb", fname);
-		sprintf(pathname, "%s%s", drive, directory);
-		if (SearchTreeForFile(pathname, pdb, res_pdb)) {
-			m_symbols = true;
-		}
-
-		/*
-		if (SymLoadModule( process,nullptr,fullpath,nullptr,0,0 ))
-		{
-			//You could load dll/lib information ifyou wish here...
-			// if(::SymLoadModule(process, 	nullptr, GLibDLLName, nullptr, 0, 0))
-			{
-				m_symbols = true;
-			}
-		} else {
-			SymCleanup( process );
-		}
-		*/
+		m_symbols = true;
 	}
-	else {
-		result = SymInitialize(process, pathname, FALSE);
+	else 
+	{
+		result = SymInitialize(process, nullptr , FALSE);
 		if (!result)
 		{
 			CryWarning(VALIDATOR_MODULE_SYSTEM, VALIDATOR_WARNING, "SymInitialize faield");
 		}
 	}
-#else
-	return false;
-#endif
 
-	//return m_symbols;
+	if (!m_symbols)
+		SymCleanup(process);
+
 	return result != 0;
 }
 
-void	DebugCallStack::doneSymbols()
+void DebugCallStack::doneSymbols()
 {
-#ifndef WIN98
-	if (m_symbols) {
+	if (m_symbols) 
+	{
 		SymCleanup(GetCurrentProcess());
 	}
 	m_symbols = false;
-#endif
 }
 
 void DebugCallStack::getCallStack(std::vector<string>& functions)
@@ -221,7 +201,7 @@ int DebugCallStack::updateCallStack(void* exception_pointer)
 
 	//! Find Name of .DLL from Exception address.
 	strcpy(m_excModule, "<Unknown>");
-#if !defined(WIN98) && !defined(WIN64)
+
 
 	if (m_symbols) {
 		DWORD dwAddr = SymGetModuleBase(process, (DWORD)pex->ExceptionRecord->ExceptionAddress);
@@ -239,14 +219,15 @@ int DebugCallStack::updateCallStack(void* exception_pointer)
 				_makepath(fdir, nullptr, nullptr, file, fext);
 
 				strcpy(m_excModule, fdir);
-			}
 		}
+			}
 	}
-
+#if defined(WIN64)
+	// Fill stack trace info.
+	FillStackTrace(pex->ContextRecord->Rip, pex->ContextRecord->Rsp, pex->ContextRecord->Rbp, pex->ContextRecord);
+#else
 	// Fill stack trace info.
 	FillStackTrace(pex->ContextRecord->Eip, pex->ContextRecord->Esp, pex->ContextRecord->Ebp, pex->ContextRecord);
-
-
 #endif
 	return EXCEPTION_CONTINUE_EXECUTION;
 }
@@ -282,8 +263,7 @@ void DebugCallStack::FillStackTrace(DWORD64 eip, DWORD64 esp, DWORD64 ebp, PCONT
 	//While there are still functions on the stack.. 
 	for (count = 0; count < MAX_DEBUG_STACK_ENTRIES && b_ret == TRUE; count++)
 	{
-		b_ret = StackWalk64(IMAGE_FILE_MACHINE_I386, hProcess, hThread, &stack_frame, pContextRecord,
-			nullptr, SymFunctionTableAccess64, SymGetModuleBase64, nullptr);
+		b_ret = StackWalk64(IMAGE_FILE_MACHINE_I386, hProcess, hThread, &stack_frame, pContextRecord, nullptr, SymFunctionTableAccess64, SymGetModuleBase64, nullptr);
 
 		if (m_symbols)
 		{
@@ -293,7 +273,8 @@ void DebugCallStack::FillStackTrace(DWORD64 eip, DWORD64 esp, DWORD64 ebp, PCONT
 			}
 			m_functions.push_back(funcName);
 		}
-		else {
+		else 
+		{
 			DWORD p = stack_frame.AddrPC.Offset;
 			char str[80];
 			sprintf(str, "function=0x%X", p);
@@ -307,7 +288,6 @@ string DebugCallStack::LookupFunctionName(void* pointer, bool fileInfo)
 {
 	string symName = "";
 
-#ifndef WIN98
 	HANDLE process = GetCurrentProcess();
 	char symbolBuf[sizeof(SYMBOL_INFO) + MAX_SYMBOL_LENGTH];
 	memset(symbolBuf, 0, sizeof(symbolBuf));
@@ -354,7 +334,6 @@ string DebugCallStack::LookupFunctionName(void* pointer, bool fileInfo)
 			}
 		}
 	}
-#endif
 
 	CryLogAlways(symName.c_str());
 	return symName;
@@ -372,8 +351,6 @@ void DebugCallStack::installErrorHandler(ISystem* pSystem)
 {
 	m_pSystem = pSystem;
 	prevExceptionHandler = (void*)SetUnhandledExceptionFilter(UnhandledExceptionHandler);
-	// Crash.
-	//PrintException( 0 );
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -412,34 +389,14 @@ int	DebugCallStack::handleException(void* exception_pointer)
 		ret = PrintException(pex);
 
 		doneSymbols();
-		//exit(0);
+		exit(0);
 	}
-	/*
-	if (ret == IDB_DEBUG)
-	{
-		//SetUnhandledExceptionFilter( (LPTOP_LEVEL_EXCEPTION_FILTER)prevExceptionHandler );
-		//SetUnhandledExceptionFilter( (LPTOP_LEVEL_EXCEPTION_FILTER)prevExceptionHandler );
-		DebugActiveProcess( GetCurrentProcessId() );
-		DebugBreak();
-	}
-	*/
+	ret = PrintException(pex);
 
-	if (pex->ExceptionRecord->ExceptionFlags & EXCEPTION_NONCONTINUABLE)
-	{
-		// This is non continuable exception. abort application now.
-		exit(1);
-	}
-
-	//typedef long (__stdcall *ExceptionFunc)(EXCEPTION_POINTERS*);
-	//ExceptionFunc prevFunc = (ExceptionFunc)prevExceptionHandler;
-	//return prevFunc( (EXCEPTION_POINTERS*)exception_pointer );
 	if (ret == IDB_EXIT)
 	{
 		// Immidiate exit.
 		exit(1);
-	}
-	else {
-
 	}
 
 	// Continue;
@@ -514,7 +471,7 @@ static const char* TranslateExceptionCode(DWORD dwExcept)
 	}
 }
 
-BOOL CALLBACK ExceptionDialogProc(HWND hwndDlg, unsigned int message, WPARAM wParam, LPARAM lParam)
+INT_PTR CALLBACK ExceptionDialogProc(HWND hwndDlg, unsigned int message, WPARAM wParam, LPARAM lParam)
 {
 	static EXCEPTION_POINTERS* pex;
 
@@ -526,6 +483,12 @@ BOOL CALLBACK ExceptionDialogProc(HWND hwndDlg, unsigned int message, WPARAM wPa
 	{
 		pex = (EXCEPTION_POINTERS*)lParam;
 		HWND h;
+
+		if (!GetISystem()->IsEditor())
+		{
+			h = GetDlgItem( hwndDlg, IDB_SAVE );
+			if (h) ShowWindow( h, SW_HIDE );
+		}
 
 		if (pex->ExceptionRecord->ExceptionFlags & EXCEPTION_NONCONTINUABLE) {
 			// Disable continue button for non continuable exceptions.
@@ -579,7 +542,7 @@ BOOL CALLBACK ExceptionDialogProc(HWND hwndDlg, unsigned int message, WPARAM wPa
 		CryLogAlways("Exception Description: %s", desc);
 		DebugCallStack::instance()->dumpCallStack(funcs);
 
-		char errs[32768];
+		static char errs[32768];
 		sprintf(errs, "Exception Code: %s\nException Addr: %s\nException Module: %s\nException Description: %s, %s\n",
 			excCode, excAddr, excModule, excName, desc);
 
@@ -657,35 +620,11 @@ BOOL CALLBACK ExceptionDialogProc(HWND hwndDlg, unsigned int message, WPARAM wPa
 		switch (LOWORD(wParam))
 		{
 
-		case IDB_MAIL:
+		case IDB_DUMP:
 		{
-			HWND h = GetDlgItem(hwndDlg, IDC_ERROR_TEXT);
-			if (h) {
-				char errs[4096];
-				strcpy(errs, "");
-				SendMessage(h, WM_GETTEXT, (WPARAM)sizeof(errs), (LPARAM)errs);
-				strcat(errorString, "\nError Description:\n");
-				strcat(errorString, errs);
-			}
-
-			char dir[1024];
-			GetCurrentDirectory(1024, dir);
-			std::vector<const char*> emails;
-			std::vector<const char*> files;
-			emails.push_back("timur@crytek.de");
-			emails.push_back("xtest@crytek.de");
-			emails.push_back("xcode@crytek.de");
-			///files.push_back( string(dir)+"\\error.log" );
-			files.push_back(DebugCallStack::instance()->GetSystem()->GetILog()->GetFileName());
-
-			if (CMailer::SendMessage("Critical Exception", errorString, emails, files, true))
-			{
-				MessageBox(nullptr, "Mail Successfully Sent", "Send Mail", MB_OK);
-			}
-			else
-			{
-				MessageBox(nullptr, "Mail has not been sent", "Send Mail", MB_OK | MB_ICONWARNING);
-			}
+			CreateMiniDump(pex);
+			EndDialog(hwndDlg, wParam);
+			return TRUE;
 		}
 		break;
 
@@ -718,12 +657,7 @@ BOOL CALLBACK ExceptionDialogProc(HWND hwndDlg, unsigned int message, WPARAM wPa
 
 static int	PrintException(EXCEPTION_POINTERS* pex)
 {
-#ifdef WIN64
-	// NOTE: AMD64: implement
-	return 0;
-#else
 	return  DialogBoxParam(gDLLHandle, MAKEINTRESOURCE(IDD_CRITICAL_ERROR), nullptr, ExceptionDialogProc, (LPARAM)pex);
-#endif
 }
 
 static void PutVersion(char* str)

@@ -69,18 +69,15 @@ extern "C"
 			pSystem = (CSystem*)initParams.pSystem;
 		}
 
-#ifndef _DEBUG
 #ifdef WIN32
-		// Install exception handler in Release modes.
 		DebugCallStack::instance()->installErrorHandler(pSystem);
 #endif
-#endif
-
 		if (!pSystem->Init(initParams))
 		{
 			delete pSystem;
 			return 0;
 		}
+
 		return pSystem;
 	}
 };

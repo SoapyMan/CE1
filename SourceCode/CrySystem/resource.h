@@ -1,8 +1,9 @@
 //{{NO_DEPENDENCIES}}
-// Microsoft Visual C++ generated include file.
-// Used by CrySystem.rc
+// Включаемый файл, созданный в Microsoft Visual C++.
+// Используется CrySystem.rc
 //
 #define IDB_MAIL                        3
+#define IDB_DUMP                        3
 #define IDD_CRITICAL_ERROR              101
 #define IDC_LUADBG                      102
 #define IDB_TREE_VIEW                   104
@@ -48,7 +49,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        127
+#define _APS_NEXT_RESOURCE_VALUE        128
 #define _APS_NEXT_COMMAND_VALUE         40072
 #define _APS_NEXT_CONTROL_VALUE         1001
 #define _APS_NEXT_SYMED_VALUE           101

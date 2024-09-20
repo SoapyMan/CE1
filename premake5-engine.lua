@@ -207,6 +207,7 @@ project "CrySystem"
 	
     files {
 		"./SourceCode/CrySystem/**.cpp",
+		"./SourceCode/CrySystem/**.rc",
 		"./SourceCode/CrySystem/**.h"
 	}
 	defines {
@@ -218,7 +219,9 @@ project "CrySystem"
 			"./SourceCode/CrySystem/LuaDebugger/**.h"
 		}
 		links {
-			"wininet"
+			"wininet",
+			"version",
+			"dbghelp"
 		}
 		
 project "Cry3DEngine"
