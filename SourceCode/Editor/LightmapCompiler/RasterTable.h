@@ -294,6 +294,9 @@ T* CRasterTable<T>::GetElementsAt(int iniX, int iniY)
 	CRYASSERT(iniY >= 0);
 	CRYASSERT(iniY < (int)m_dwYSize);
 
+	if (iniX < 0 || iniY < 0 || iniX >= (int)m_dwXSize || iniY >= (int)m_dwYSize)
+		return nullptr;
+
 	T* pRet = m_pDataPtr[iniY * m_dwXSize + iniX];
 	if (pRet)
 	{

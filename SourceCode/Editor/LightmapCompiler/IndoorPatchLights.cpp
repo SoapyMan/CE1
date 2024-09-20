@@ -75,11 +75,13 @@ void CRasterCubeManager::Clear()
 const Vec3d RotateIntoPlane(const Vec3d& vPlaneNormal0, const Vec3d& vPlaneNormal1, const Vec3d& rInPosition, const Vec3d& rSource0)
 {
 	Vec3d vDir = rInPosition - rSource0;
+
 	//first try to rotate
 	Vec3d vPlaneCross = vPlaneNormal0 % vPlaneNormal1;	//this is gonna be the rotation axis
 	float cfSinPlaneCross = vPlaneCross.GetLength();	//this is the sinus of the angle between both plane normals
 	if (cfSinPlaneCross < 0.001f)
 		return rInPosition;
+
 	float cfCosPlaneCross = vPlaneNormal0 * vPlaneNormal1;
 	vPlaneCross *= 1.0f / cfSinPlaneCross;	//normalize rotation axis
 	Vec3d origin = vPlaneCross * (vPlaneCross | vDir);
@@ -87,22 +89,27 @@ const Vec3d RotateIntoPlane(const Vec3d& vPlaneNormal0, const Vec3d& vPlaneNorma
 	assert(fabs(cfSinPlaneCross * cfSinPlaneCross + cfCosPlaneCross * cfCosPlaneCross - 1.f) < 0.01f);
 
 	Vec3d vRet = (origin + (vDir - origin) * cfCosPlaneCross + (vPlaneCross % vDir) * cfSinPlaneCross);
+
 	//now check	how accurate this is
 	const float cfPlaneDist = -(vRet * vPlaneNormal1);
+
 	//it was a good rotation, use rotated result
 	if (fabs(cfPlaneDist) < 0.01f)
 	{
 		return (vRet + rSource0);
 	}
+
 	//result of rotation is close to the plane, correct this difference
 	if (fabs(cfPlaneDist) < 0.1f)
 	{
 		vRet = vRet + vPlaneNormal1 * cfPlaneDist;
 		return (vRet + rSource0);
 	}
+
 	//use plane projection, rotation went wrong
 	if (vDir * vPlaneNormal1 > 0)
 		vDir *= -1;//opposite direction
+
 	const float cfPlaneDist2 = -(vDir * vPlaneNormal1);
 	Vec3d r = vPlaneNormal1 * (cfPlaneDist2);
 	return (rInPosition + r);
@@ -1391,9 +1398,6 @@ bool CLightScene::CreateFromEntity(const IndoorBaseInterface& pInterface, LMGenP
 
 void CLightScene::Shadow(LMCompLight& cLight, UINT& iNumHit, CRadMesh* pMesh, CRadPoly* pSource, const CRadVertex& Vert, const Vec3d& vSamplePos) const
 {
-	if (pMesh->m_pClusterRC == NULL)
-		iNumHit++;
-
 	CAnyHit cAnyHit;
 	// Ray from vertex to light surface sample point
 	// Vec3d vRayDir = pLight->m_vObjectSpacePos - vSamplePos;
@@ -1412,6 +1416,7 @@ void CLightScene::Shadow(LMCompLight& cLight, UINT& iNumHit, CRadMesh* pMesh, CR
 		vRayDirNormalized.Normalize();
 		fRayLen = vRayDir.Length();
 	}
+
 	Vec3d vRayOrigin = vSamplePos;
 	cAnyHit.SetupRay(vRayDirNormalized,
 		vRayOrigin,
@@ -1426,61 +1431,35 @@ void CLightScene::Shadow(LMCompLight& cLight, UINT& iNumHit, CRadMesh* pMesh, CR
 	cAnyHit.m_vPNormal = pSource->m_Plane.n;
 
 	// Check the last intersection first to exploit coherence
-	bool bSkip = false;
-	if ((cLight.m_pLastIntersectionRasterCube == pMesh->m_pClusterRC) && cLight.m_pLastIntersection)//do not use cached result from deleted rastercube
+	if (cLight.m_pLastIntersectionRasterCube == pMesh->m_pClusterRC && cLight.m_pLastIntersection)//do not use cached result from deleted rastercube
 	{
 		float fDist = FLT_MAX;
 		cAnyHit.ReturnElement(*cLight.m_pLastIntersection, fDist);
 
 		if (cAnyHit.IsIntersecting())
-			bSkip = true;
+			return;
 	}
 
-	if (!bSkip)
+	if (!pMesh->m_pClusterRC)
 	{
-		if (cLight.eType == eDirectional)
-		{
-			// Use raster cube of cluster for current mesh
-			if (pMesh->m_pClusterRC != NULL)
-			{
-				// Check occlusion
-				pMesh->m_pClusterRC->GatherRayHitsDirection(
-					CVector3D(vRayOrigin.x, vRayOrigin.y, vRayOrigin.z),
-					CVector3D(vRayDirNormalized.x, vRayDirNormalized.y, vRayDirNormalized.z),
-					cAnyHit);
+		iNumHit++;
+		return;
+	}
 
-				if (!cAnyHit.IsIntersecting())
-					iNumHit++;
-				else
-				{
-					cLight.m_pLastIntersection = cAnyHit.m_pHitResult;
-					cLight.m_pLastIntersectionRasterCube = pMesh->m_pClusterRC;
-				}
-			}
-			else
-				iNumHit++;
-		}
-		else
-		{
-			if (pMesh->m_pClusterRC != NULL)
-			{
-				// Check occlusion using raster cube for the current lightsource
-				pMesh->m_pClusterRC->GatherRayHitsDirection(
-					CVector3D(vRayOrigin.x, vRayOrigin.y, vRayOrigin.z),
-					CVector3D(vRayDirNormalized.x, vRayDirNormalized.y, vRayDirNormalized.z),
-					cAnyHit);
+	// Check occlusion
+	pMesh->m_pClusterRC->GatherRayHitsDirection(
+		CVector3D(vRayOrigin.x, vRayOrigin.y, vRayOrigin.z),
+		CVector3D(vRayDirNormalized.x, vRayDirNormalized.y, vRayDirNormalized.z),
+		cAnyHit);
 
-				if (!cAnyHit.IsIntersecting())
-					iNumHit++;
-				else
-				{
-					cLight.m_pLastIntersection = cAnyHit.m_pHitResult;
-					cLight.m_pLastIntersectionRasterCube = pMesh->m_pClusterRC;
-				}
-			}
-			else
-				iNumHit++;
-		}
+	if (cAnyHit.IsIntersecting())
+	{
+		cLight.m_pLastIntersection = cAnyHit.m_pHitResult;
+		cLight.m_pLastIntersectionRasterCube = pMesh->m_pClusterRC;
+	}
+	else
+	{
+		iNumHit++;
 	}
 }
 

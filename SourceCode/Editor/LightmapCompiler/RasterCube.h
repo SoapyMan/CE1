@@ -254,13 +254,16 @@ public:
 		if constexpr (bUseXRaster)
 		{
 			pElX = m_XRaster.GetElementsAt(iniPos[1], iniPos[2]);	// YZ
-			if (!pElX)return(false);
+			if (!pElX)
+				return(false);
 		}
 
 		DWORD* pElY = m_YRaster.GetElementsAt(iniPos[2], iniPos[0]);	// ZX
-		if (!pElY)return(false);
+		if (!pElY)
+			return(false);
 		DWORD* pElZ = m_ZRaster.GetElementsAt(iniPos[0], iniPos[1]);	// XY
-		if (!pElZ)return(false);
+		if (!pElZ)
+			return(false);
 
 		if constexpr (bUseXRaster)
 		{
@@ -287,7 +290,7 @@ public:
 					{
 						if (*pElX == *pElY && *pElY == *pElZ)
 						{
-							if (bBreakAfterFirstHit)
+							if constexpr (bBreakAfterFirstHit)
 							{
 								if (!inSink.ReturnElement(m_vElements[(*pElX++) - 1], rfRet))
 								{
@@ -323,7 +326,7 @@ public:
 					}
 					else	//*pElY == *pElZ
 					{
-						if (bBreakAfterFirstHit)
+						if constexpr (bBreakAfterFirstHit)
 						{
 							if (!inSink.ReturnElement(m_vElements[(*pElY++) - 1], rfRet))
 							{
@@ -333,6 +336,7 @@ public:
 						}
 						else
 							inSink.ReturnElement(m_vElements[(*pElY++) - 1], rfRet);		// -1 because 0 is used for termination
+
 						if (*pElY == 0)
 							break;
 						pElZ++;
@@ -359,22 +363,42 @@ public:
 		// tranform the ray into the RasterCubeSpace
 		for (int i = 0; i < 3; i++)
 		{
-			double fScale = (((double)(m_iSize[i])) / ((double)m_vMax.p[i] - (double)m_vMin.p[i]));
-			invStart.p[i] = (_invStart.p[i] - m_vMin.p[i]) * fScale; vDirRelative.p[i] = _invDir.p[i] * fScale;
+			const double fScale = (double)m_iSize[i] / (m_vMax.p[i] - m_vMin.p[i]);
+			invStart.p[i] = (_invStart.p[i] - m_vMin.p[i]) * fScale;
+			vDirRelative.p[i] = _invDir.p[i] * fScale;
 		}
 
 		CVector3D vDir = vDirRelative;
 
-		int iPos[3] = { (int)floor(invStart.p[0]),(int)floor(invStart.p[1]),(int)floor(invStart.p[2]) };	// floor done
+		int iPos[3] = { 
+			(int)floor(invStart.p[0]),
+			(int)floor(invStart.p[1]),
+			(int)floor(invStart.p[2])
+		};	// floor done
 
 		// integer direction
 		int iDir[3] = { -1,-1,-1 };
 
 		CVector3D vPosInCube(fmod(fabs(invStart.p[0]), 1), fmod(fabs(invStart.p[1]), 1), fmod(fabs(invStart.p[2]), 1));
 
-		if (vDir.p[0] > 0) { iDir[0] = 1; vDir.p[0] = -vDir.p[0]; vPosInCube.p[0] = 1.0f - vPosInCube.p[0]; }
-		if (vDir.p[1] > 0) { iDir[1] = 1; vDir.p[1] = -vDir.p[1]; vPosInCube.p[1] = 1.0f - vPosInCube.p[1]; }
-		if (vDir.p[2] > 0) { iDir[2] = 1; vDir.p[2] = -vDir.p[2]; vPosInCube.p[2] = 1.0f - vPosInCube.p[2]; }
+		if (vDir.p[0] > 0)
+		{
+			iDir[0] = 1; 
+			vDir.p[0] = -vDir.p[0];
+			vPosInCube.p[0] = 1.0f - vPosInCube.p[0];
+		}
+		if (vDir.p[1] > 0)
+		{
+			iDir[1] = 1;
+			vDir.p[1] = -vDir.p[1];
+			vPosInCube.p[1] = 1.0f - vPosInCube.p[1];
+		}
+		if (vDir.p[2] > 0)
+		{
+			iDir[2] = 1;
+			vDir.p[2] = -vDir.p[2];
+			vPosInCube.p[2] = 1.0f - vPosInCube.p[2];
+		}
 
 		// make sure it's in the range 0..1
 		if (vPosInCube.p[0] <= 0)vPosInCube.p[0]++;
@@ -429,42 +453,62 @@ public:
 		int iEndBorder[3];
 		CalcNewBorder(invStart, vDirRelative, fRayMax, iDir, iEndBorder);
 
-		float fNewRayMax;
+		float fNewRayMax = 0.0f;
 		for (;;)
 		{
 			// get elements if we are in the block
-			if (iPos[0] < m_iSize[0] && iPos[1] < m_iSize[1] && iPos[2] < m_iSize[2])
 			{
-				if (bBreakAfterFirstHit)
+				if constexpr (bBreakAfterFirstHit)
 				{
 					if (GatherElementsAt(iPos, inSink, fNewRayMax))
 						return;//one valid hit found, stop here
 				}
 				else
-					GatherElementsAt(iPos, inSink, fNewRayMax);		// Baustelle
+				{
+					GatherElementsAt(iPos, inSink, fNewRayMax);
+				}
 
 				// new Border
-				if (fNewRayMax < fRayMax)
+				if (fRayMax > fNewRayMax)
 				{
 					fRayMax = fNewRayMax;
-
 					CalcNewBorder(invStart, vDirRelative, fRayMax, iDir, iEndBorder);
 				}
 			}
 
 			// advance position
-			int iAxis = GetBiggestValue(fT);
+			const int iAxis = GetBiggestValue(fT);
 
 			fT[iAxis] += fTStep[iAxis];
 			iPos[iAxis] += iDir[iAxis];
 
 			// stop on border hit
-			if (iDir[0] > 0) { if (iPos[0] >= iEndBorder[0])break; }
-			else { if (iPos[0] <= iEndBorder[0])break; }
-			if (iDir[1] > 0) { if (iPos[1] >= iEndBorder[1])break; }
-			else { if (iPos[1] <= iEndBorder[1])break; }
-			if (iDir[2] > 0) { if (iPos[2] >= iEndBorder[2])break; }
-			else { if (iPos[2] <= iEndBorder[2])break; }
+			if (iDir[0] > 0)
+			{
+				if (iPos[0] >= iEndBorder[0]) break; 
+			}
+			else
+			{
+				if (iPos[0] <= iEndBorder[0]) break; 
+			}
+
+			if (iDir[1] > 0)
+			{
+				if (iPos[1] >= iEndBorder[1]) break; 
+			}
+			else 
+			{
+				if (iPos[1] <= iEndBorder[1]) break;
+			}
+
+			if (iDir[2] > 0)
+			{
+				if (iPos[2] >= iEndBorder[2]) break;
+			}
+			else
+			{
+				if (iPos[2] <= iEndBorder[2]) break;
+			}
 		}
 	}
 
