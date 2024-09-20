@@ -18,6 +18,7 @@
 #include "../Material/Material.h"
 #include "../../CryCommon/CryHeaders.h"
 
+
 //threshold constants
 static const float scfBaryThreshold = 1.001f;
 
@@ -36,14 +37,15 @@ const bool CRadPoly::CheckPointInTriangle(Vec3d &inPosition, const Vec3d &rVert0
 		vDir *= -1;
 	const float cfPlaneDist2 = -(vDir*vTrianglePlaneNormal); 
 	Vec3d r	= vTrianglePlaneNormal*(cfPlaneDist2); 
-	const Vec3d vNewInPos = inPosition = (inPosition + r);
+	const Vec3d vNewInPos = (inPosition + r);
 	rfArea3d = CalcTriangleArea(rVert0,rVert1,rVert2);
 	// to prevent crash
-	if(rfArea3d == 0.0f)
+	if(rfArea3d <= gf_EPSILON)
 	{
 		rOutfAlpha = rOutfBeta = 0.0f;
 		return false;  
 	}
+
 	//first sub tri
 	const float a1=CalcTriangleArea(vNewInPos,rVert1,rVert2);
 	//second sub tri  
@@ -52,15 +54,19 @@ const bool CRadPoly::CheckPointInTriangle(Vec3d &inPosition, const Vec3d &rVert0
 	const float a3=CalcTriangleArea(rVert0,rVert1,vNewInPos);
 	//check sum, must be close to real area
 	const float asum = a1+a2+a3;
-	bool cbBaryFailCond = false;
-	if(fabs(asum - rfArea3d) > rfArea3d*0.01f)
-		cbBaryFailCond = true;	//area difference to large
-	if(cbBaryFailCond == false)
+
+	//area difference to large?
+	bool cbBaryFailCond = fabs(asum - rfArea3d) > rfArea3d * 0.01f;
+
+	if(!cbBaryFailCond)
 	{
 		//calc alpha beta and gamma components as area ratio
-		rOutfAlpha			= a1 / rfArea3d;
-		rOutfBeta			= a2 / rfArea3d;
-		cbBaryFailCond = ((rOutfAlpha + rOutfBeta) > scfBaryThreshold)?true:false;	//set to fail if barycentric coords are invalid
+		rOutfAlpha = a1 / rfArea3d;
+		rOutfBeta = a2 / rfArea3d;
+
+		cbBaryFailCond = (rOutfAlpha + rOutfBeta) > scfBaryThreshold;	//set to fail if barycentric coords are invalid
+		if(!cbBaryFailCond)
+			inPosition = vNewInPos;
 	}
 	return cbBaryFailCond;
 }
@@ -188,6 +194,10 @@ void CRadPoly::ApplyBaryCoordsToVertex(CRadVertex& rDest, const CRadVertex& rSou
 			+ rSource2.m_vTangent * cfGamma;
 		rDest.m_vTangent.Normalize();
 	}
+
+	CRYASSERT(rDest.m_vPos.x == rDest.m_vPos.x);
+	CRYASSERT(rDest.m_vPos.y == rDest.m_vPos.y);
+	CRYASSERT(rDest.m_vPos.z == rDest.m_vPos.z);
 }
 
 CRadPoly::CRadPoly() : 
@@ -363,8 +373,9 @@ bool CRadPoly::InterpolateVertexAt( const float infX, const float infY, CRadVert
 
 	// interpolate normals and tangent base vectors within the triangle
 	CRadPoly* nearestpoly = GetNearestPolyAt(rvPoint);
-	if((nearestpoly == NULL) || !nearestpoly->ApplyBarycentricCoordinates(rvPoint, outVertex, rDot3Texel, false, cbSnap))
+	if(!nearestpoly || !nearestpoly->ApplyBarycentricCoordinates(rvPoint, outVertex, rDot3Texel, false, cbSnap))
 		return false;
+
 	return true;
 }
 
@@ -810,21 +821,21 @@ bool CRadPoly::ApplyBarycentricCoordinates( Vec3d &inPosition, CRadVertex &outVe
 	const bool cbBaryFailCond = CheckPointInTriangle(inPosition, m_lstOriginals[0].m_vPos, m_lstOriginals[1].m_vPos, m_lstOriginals[2].m_vPos, outfAlpha, outfBeta, fArea3d);
 
 	rDot3Texel.pSourcePatch = this;	//tangent space will come from here
+
 	//if barycentric coordinates are invalid and the fix is requested, snap vertex onto one triangle edge and retrieve new barycentric coordinates
 	if(cbBaryFailCond)
 	{
 		rDot3Texel.bNotHit = true;	//indicate that this texel was not hit properly (to signal subsampling requirement)
 		if(cbImmedReturn)
 			return false;	//was used for quick check to cache polygon
+
 		//snap vertex if no sharing polygons are there
 		if(m_SharingPolygons.size() == 0)
 		{
-			if(cbSnap)
-			{
-				if(!SnapVertex(inPosition,outfAlpha,outfBeta,fArea3d))
-					return false;
-			}
-			else
+			if(!cbSnap)
+				return false;
+
+			if(!SnapVertex(inPosition,outfAlpha,outfBeta,fArea3d))
 				return false;
 		}
 		else
@@ -833,18 +844,19 @@ bool CRadPoly::ApplyBarycentricCoordinates( Vec3d &inPosition, CRadVertex &outVe
 			//compute nearest vertex, rotate into other plane by rotating around cross product between both plane up vectors with angle (sin of cross product)
 			if(!SmoothVertex(outVertex,inPosition, fArea3d, rDot3Texel))
 			{
-				if(cbSnap)
-				{
-					if(!SnapVertex(inPosition,outfAlpha,outfBeta,fArea3d))
-						return false;
-				}
-				else
+				if(!cbSnap)
 					return false;
+
+				if(!SnapVertex(inPosition,outfAlpha,outfBeta,fArea3d))
+					return false;				
 			}
 			else
-				return true;				
+			{
+				return true;
+			}
 		}
 	}
+
 	//now apply the barycentric coordinates
 	ApplyBaryCoordsToVertex(outVertex, m_lstOriginals[0], m_lstOriginals[1], m_lstOriginals[2], outfAlpha, outfBeta);
 	rDot3Texel.fAlpha = outfAlpha;	
@@ -874,7 +886,11 @@ const bool CRadPoly::SmoothVertex(CRadVertex &outVertex, const Vec3d &inPosition
 	Vec3d vPlaneNormal =  oneEdge % secondEdge; 
 	vPlaneNormal.Normalize();
 	//retrieve direction vectors to all vertices to use for shared vertex, array is used since we have stored a index
-	Vec3d vDir[3]; vDir[0] = inPosition - rV0; vDir[1] = inPosition - rV1; vDir[2] = inPosition - rV2;
+	Vec3d vDir[3]; 
+	vDir[0] = inPosition - rV0; 
+	vDir[1] = inPosition - rV1; 
+	vDir[2] = inPosition - rV2;
+
 	//now iterate all triangles and rotate direction vector into plane of this triangle
 	//add this to closest vertex and check barycentric coordinates
 	for(SharedIter sharedIter = m_SharingPolygons.begin(); sharedIter != m_SharingPolygons.end(); ++sharedIter)
@@ -901,9 +917,10 @@ const bool CRadPoly::SmoothVertex(CRadVertex &outVertex, const Vec3d &inPosition
 		const Vec3d& rSource0 = m_lstOriginals[cuiIndex0].m_vPos; 
 		const Vec3d& rSource1 = (cbOnlyOneVertexShared)?m_lstOriginals[0].m_vPos:m_lstOriginals[cuiIndex1].m_vPos; 
 		Vec3d vNewDir;
-		float cfDIst0 = 0.f,  cfDIst1 = 0.f;
+
 		if(!cbOnlyOneVertexShared)
 		{
+			float cfDIst0 = 0.f, cfDIst1 = 0.f;
 			cfDIst0 = (rSource0 - inPosition).GetLengthSquared();
 			cfDIst1 = (rSource1 - inPosition).GetLengthSquared();
 			vNewDir = (cfDIst0 < cfDIst1)?
@@ -912,6 +929,7 @@ const bool CRadPoly::SmoothVertex(CRadVertex &outVertex, const Vec3d &inPosition
 		}
 		else
 			vNewDir = RotateIntoPlane(vPlaneNormal, vSharedPlaneNormal, inPosition, rSource0);
+
 		float bary0, bary1, fArea3d;	//variables set up by the function below
 		bool cbBaryFailCond = CheckPointInTriangle(vNewDir, rV02, rV12, rV22, bary0, bary1, fArea3d);
 		if(cbBaryFailCond == true)
@@ -927,6 +945,7 @@ const bool CRadPoly::SmoothVertex(CRadVertex &outVertex, const Vec3d &inPosition
 				const Vec3d& rV02 = pSharedSharedPoly->m_lstOriginals[0].m_vPos;
 				const Vec3d& rV12 = pSharedSharedPoly->m_lstOriginals[1].m_vPos;
 				const Vec3d& rV22 = pSharedSharedPoly->m_lstOriginals[2].m_vPos;
+
 				const bool cbSharedBaryFailCond = CheckPointInTriangle(vNewDir, rV02, rV12, rV22, bary0, bary1, fArea3d);//use the position already retrieved
 				if(cbSharedBaryFailCond == false)//found the triangle which this texel lies in
 				{
@@ -936,6 +955,7 @@ const bool CRadPoly::SmoothVertex(CRadVertex &outVertex, const Vec3d &inPosition
 				}
 			}
 		}
+
 		if(cbBaryFailCond == true)
 		{
 			//if still not found, try all other shared triangles of this one
@@ -954,15 +974,18 @@ const bool CRadPoly::SmoothVertex(CRadVertex &outVertex, const Vec3d &inPosition
 				Vec3d secondEdge = rV02 - rV22; 
 				Vec3d vSharedSharedPlaneNormal =  oneEdge % secondEdge; 
 				vSharedSharedPlaneNormal.Normalize();
+
 				//try to rotate vertex into plane of this shared triangle, if rotations fails, it will just get projected
 				if(!cbOnlyOneVertexShared)
 				{
+					float cfDIst0 = 0.f, cfDIst1 = 0.f;
 					vNewDir = (cfDIst0 < cfDIst1)?
 						RotateIntoPlane(vPlaneNormal, vSharedSharedPlaneNormal, inPosition, rSource0) :
 						RotateIntoPlane(vPlaneNormal, vSharedSharedPlaneNormal, inPosition, rSource1);
 				}
 				else
 					vNewDir = RotateIntoPlane(vPlaneNormal, vSharedSharedPlaneNormal, inPosition, rSource0);
+
 				const bool cbSharedBaryFailCond = CheckPointInTriangle(vNewDir, rV02, rV12, rV22, bary0, bary1, fArea3d);
 				if(cbSharedBaryFailCond == false)//found the triangle which this texel lies in
 				{
@@ -972,6 +995,7 @@ const bool CRadPoly::SmoothVertex(CRadVertex &outVertex, const Vec3d &inPosition
 				}
 			}
 		}
+
 		if(cbBaryFailCond == false)
 		{ 
 			//we have found a triangle which the vertex lies really in
@@ -988,6 +1012,7 @@ const bool CRadPoly::SmoothVertex(CRadVertex &outVertex, const Vec3d &inPosition
 				rDot3Texel.fBeta = fBeta;
 			}
 			ApplyBaryCoordsToVertex(outVertex, pSharedPoly->m_lstOriginals[0], pSharedPoly->m_lstOriginals[1], pSharedPoly->m_lstOriginals[2], bary0, bary1, !bSnapped);
+
 			//apply new position
 			outVertex.m_vPos = vNewDir;
 			if(!bSnapped)
