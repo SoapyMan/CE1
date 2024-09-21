@@ -40,7 +40,7 @@ local function include_in_unitybuild(cfg)
 end 
 
 local function dont_include_in_unitybuild(cfg) 
-	if cfg.dontincludeinunity then
+	if cfg ~= nil and cfg.dontincludeinunity then
 		--print("Not included in unity build!")
 		--print(cfg.name)
 		premake.w('<IncludeInUnityFile>false</IncludeInUnityFile>') --todo use premake.element 
