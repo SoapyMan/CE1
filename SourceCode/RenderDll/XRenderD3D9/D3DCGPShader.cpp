@@ -1960,9 +1960,6 @@ char* CCGPShader_D3D::mfLoadCG_Int(char* prog_text)
 		CGprogram cgPr = cgCreateProgram(gcpRendD3D->m_CGContext, CG_SOURCE, prog_text, pr, m_EntryFunc.GetIndex() ? m_EntryFunc.c_str() : "main", profileOpts.Data());
 		if (!cgPr)
 		{
-			m_CGProfileType = CG_PROFILE_PS_2_0;
-			return mfLoadCG_Int(prog_text);
-
 			CGerror err;
 			const char* message = cgGetLastErrorString(&err);
 			const char* listing = (err == CG_COMPILER_ERROR) ? cgGetLastListing(gcpRendD3D->m_CGContext) : "";
