@@ -8686,17 +8686,9 @@ void CD3D9Renderer::EF_FlushRefractedObjects(SShader* pSHRefr[], CRendElement* p
 // Current scene preprocess operations (drawing to texture, screen effects initializing, ...)
 int CD3D9Renderer::EF_Preprocess(SRendItemPre* ri, int nums, int nume)
 {
-	int i, j;
-	SShader* Shader;
-	SShader* ShaderState;
-	SRenderShaderResources* Res;
-	int nObject;
-	int nFog;
-
-	SPreprocess Procs[512];
-	int nProcs = 0;
-	TArray<SRendItemPreprocess> RIs;
-	TArray<SWarpSurf> srfs;
+	TArray<SPreprocess> Procs(0, 512);
+	TArray<SRendItemPreprocess> RIs(0, 512);
+	TArray<SWarpSurf> srfs(0, 512);
 	int nPortals = 0;
 	int nRefractedStuff = 0;
 
@@ -8713,38 +8705,44 @@ int CD3D9Renderer::EF_Preprocess(SRendItemPre* ri, int nums, int nume)
 	int DLDFlags = 0;
 	int nReturn = 0;
 
-	for (i = nums; i < nume; i++)
+	for (int i = nums; i < nume; i++)
 	{
-		if (nProcs >= 512)
-			break;
+		SShader* Shader;
+		SShader* ShaderState;
+		SRenderShaderResources* Res;
+		int nObject;
+		int nFog;
 
 		SRendItem::mfGet(ri[i].SortVal, &nObject, &Shader, &ShaderState, &nFog, &Res);
 		if ((ri[i].SortVal.i.High >> 26) != eS_PreProcess)
 			break;
+
+		if (!Shader)
+			continue;
+
 		nReturn++;
-		for (j = 0; j < 32; j++)
+		for (int j = 0; j < 32; j++)
 		{
-			int nMask = 1 << j;
+			const int nMask = 1 << j;
 			if (nMask >= FSPR_MAX || nMask > Shader->m_nPreprocess)
 				break;
 			if (nMask & Shader->m_nPreprocess)
 			{
-				if (nProcs >= 512)
-					break;
+				SPreprocess proc;
+				proc.m_nPreprocess = j;
+				proc.m_Num = i;
+				proc.m_Shader = Shader;
+				proc.m_pRes = Res;
+				proc.m_RE = ri[i].Item;
+				proc.m_nObject = nObject;
 
-				Procs[nProcs].m_nPreprocess = j;
-				Procs[nProcs].m_Num = i;
-				Procs[nProcs].m_Shader = Shader;
-				Procs[nProcs].m_pRes = Res;
-				Procs[nProcs].m_RE = ri[i].Item;
-				Procs[nProcs].m_nObject = nObject;
-				nProcs++;
+				Procs.Add(proc);
 			}
 		}
 	}
-	if (!nProcs)
+	if (!Procs.Num())
 		return 0;
-	::Sort(&Procs[0], nProcs);
+	::Sort(Procs.Data(), Procs.Num());
 
 	if (m_RP.m_pRenderFunc != EF_Flush)
 		return nReturn;
@@ -8754,12 +8752,9 @@ int CD3D9Renderer::EF_Preprocess(SRendItemPre* ri, int nums, int nume)
 	CRendElement* pRERefr[8];
 	CCObject* pObjRefr[8];
 
-	for (i = 0; i < nProcs; i++)
+	for (SPreprocess& pr : Procs)
 	{
-		SPreprocess* pr = &Procs[i];
-		if (!pr->m_Shader)
-			continue;
-		switch (pr->m_nPreprocess)
+		switch (pr.m_nPreprocess)
 		{
 		case SPRID_SCANCM:
 			// Draw environment to cube texture
@@ -8767,12 +8762,12 @@ int CD3D9Renderer::EF_Preprocess(SRendItemPre* ri, int nums, int nume)
 			{
 				CCObject* objIgn = m_RP.m_pIgnoreObject;
 				Vec3d Pos;
-				m_RP.m_pRE = pr->m_RE;
-				if (pr->m_nObject < 0)
+				m_RP.m_pRE = pr.m_RE;
+				if (pr.m_nObject < 0)
 					Pos(0, 0, 0);
 				else
 				{
-					CCObject* obj = m_RP.m_VisObjects[pr->m_nObject];
+					CCObject* obj = m_RP.m_VisObjects[pr.m_nObject];
 					if (!IsEquivalent(obj->GetTranslation(), Vec3d(0, 0, 0)))
 						m_RP.m_pIgnoreObject = obj;
 					Pos = obj->GetTranslation();
@@ -8783,7 +8778,7 @@ int CD3D9Renderer::EF_Preprocess(SRendItemPre* ri, int nums, int nume)
 				if (!IsEquivalent(Pos, Vec3d(0, 0, 0)))
 				{
 					float fDistToCam = (Pos - m_cam.GetPos()).Length();
-					SEnvTexture* cm = gRenDev->m_cEF.mfFindSuitableEnvCMap(Pos, false, pr->m_Shader->m_DLDFlags, fDistToCam);
+					SEnvTexture* cm = gRenDev->m_cEF.mfFindSuitableEnvCMap(Pos, false, pr.m_Shader->m_DLDFlags, fDistToCam);
 				}
 				m_RP.m_pIgnoreObject = objIgn;
 			}
@@ -8792,12 +8787,12 @@ int CD3D9Renderer::EF_Preprocess(SRendItemPre* ri, int nums, int nume)
 			// Draw environment to cube texture
 			if (!m_RP.m_bDrawToTexture)
 			{
-				CCObject* obj = m_RP.m_VisObjects[pr->m_nObject];
+				CCObject* obj = m_RP.m_VisObjects[pr.m_nObject];
 				if ((obj->m_ObjFlags & FOB_ENVLIGHTING) && CV_r_envlighting)
 				{
 					CCObject* objIgn = m_RP.m_pIgnoreObject;
 					Vec3d Pos;
-					m_RP.m_pRE = pr->m_RE;
+					m_RP.m_pRE = pr.m_RE;
 					if (!IsEquivalent(obj->GetTranslation(), Vec3d(0, 0, 0)))
 						m_RP.m_pIgnoreObject = obj;
 					Pos = obj->GetTranslation();
@@ -8863,15 +8858,15 @@ int CD3D9Renderer::EF_Preprocess(SRendItemPre* ri, int nums, int nume)
 						CCObject* savedObj = m_RP.m_pCurObject;
 						CCObject* objIgn = m_RP.m_pIgnoreObject;
 						CCObject* obj = nullptr;
-						if (pr->m_nObject > 0)
-							obj = m_RP.m_VisObjects[pr->m_nObject];
+						if (pr.m_nObject > 0)
+							obj = m_RP.m_VisObjects[pr.m_nObject];
 						m_RP.m_PersFlags |= RBPF_DONTDRAWSUN;
 						m_RP.m_pCurObject = obj;
 						if (!IsEquivalent(obj->GetTranslation(), Vec3d(0, 0, 0)))
 							m_RP.m_pIgnoreObject = obj;
 						if (m_LogFile)
 							Logv(SRendItem::m_RecurseLevel, "*** Draw environment to texture for water reflections ***\n");
-						m_TexMan->DrawToTexture(Pl, gRenDev->m_TexMan->m_Text_WaterMap, pr->m_Shader->m_DLDFlags);
+						m_TexMan->DrawToTexture(Pl, gRenDev->m_TexMan->m_Text_WaterMap, pr.m_Shader->m_DLDFlags);
 						m_RP.m_pCurObject = savedObj;
 						m_RP.m_pIgnoreObject = objIgn;
 						m_RP.m_PersFlags &= ~RBPF_DONTDRAWSUN;
@@ -8882,17 +8877,17 @@ int CD3D9Renderer::EF_Preprocess(SRendItemPre* ri, int nums, int nume)
 		case SPRID_SCANTEX:
 			if (!m_RP.m_bDrawToTexture)
 			{ // Draw environment to texture
-				bool bWater = (pr->m_Shader->m_nPreprocess & FSPR_SCANTEXWATER) != 0;
+				bool bWater = (pr.m_Shader->m_nPreprocess & FSPR_SCANTEXWATER) != 0;
 				bool bDraw = true;
 				if (!bWater || CV_r_waterrefractions)
 				{
-					CCObject* obj = m_RP.m_VisObjects[pr->m_nObject];
-					if (pr->m_Shader->m_fUpdateFactor > 0)
+					CCObject* obj = m_RP.m_VisObjects[pr.m_nObject];
+					if (pr.m_Shader->m_fUpdateFactor > 0)
 					{
-						float fDist = pr->m_RE->mfMinDistanceToCamera(obj);
+						float fDist = pr.m_RE->mfMinDistanceToCamera(obj);
 						if (fDist > 0)
 						{
-							fDist *= pr->m_Shader->m_fUpdateFactor;
+							fDist *= pr.m_Shader->m_fUpdateFactor;
 							if (fDist > 0.5f)
 								fDist = 0.5f;
 							if (m_RP.m_pCurObject->m_fLastUpdate - 1.0f > m_RP.m_RealTime)
@@ -8907,27 +8902,27 @@ int CD3D9Renderer::EF_Preprocess(SRendItemPre* ri, int nums, int nume)
 					{
 						Vec3d Angs = GetCamera().GetAngles();
 						Vec3d Pos = GetCamera().GetPos();
-						m_RP.m_pRE = pr->m_RE;
+						m_RP.m_pRE = pr.m_RE;
 
 						bool bReflect = false;
-						if ((pr->m_Shader->m_Flags3 & (EF3_CLIPPLANE_FRONT | EF3_REFLECTION)))
+						if ((pr.m_Shader->m_Flags3 & (EF3_CLIPPLANE_FRONT | EF3_REFLECTION)))
 							bReflect = true;
 						if (bReflect)
 						{
 							m_RP.m_PersFlags |= RBPF_DONTDRAWSUN;
 							m_RP.m_pCurObject = obj;
 							m_RP.m_pIgnoreObject = obj;
-							SEnvTexture* cm = gRenDev->m_cEF.mfFindSuitableEnvTex(Pos, Angs, false, pr->m_Shader->m_DLDFlags, false, pr->m_Shader, pr->m_pRes, obj, bReflect, pr->m_RE);
+							SEnvTexture* cm = gRenDev->m_cEF.mfFindSuitableEnvTex(Pos, Angs, false, pr.m_Shader->m_DLDFlags, false, pr.m_Shader, pr.m_pRes, obj, bReflect, pr.m_RE);
 							m_RP.m_pIgnoreObject = nullptr;
 							m_RP.m_PersFlags &= ~RBPF_DONTDRAWSUN;
 						}
 						else
 						{
 							nRefractedStuff |= 2;
-							DLDFlags |= pr->m_Shader->m_DLDFlags;
+							DLDFlags |= pr.m_Shader->m_DLDFlags;
 							obj->m_ObjFlags |= FOB_REFRACTED;
-							pSHRefr[nRefrObjects] = pr->m_Shader;
-							pRERefr[nRefrObjects] = pr->m_RE;
+							pSHRefr[nRefrObjects] = pr.m_Shader;
+							pRERefr[nRefrObjects] = pr.m_RE;
 							pObjRefr[nRefrObjects] = obj;
 							if (nRefrObjects != 7)
 								nRefrObjects++;
@@ -8944,7 +8939,7 @@ int CD3D9Renderer::EF_Preprocess(SRendItemPre* ri, int nums, int nume)
 			if (!m_RP.m_bDrawToTexture)
 			{
 				nRefractedStuff |= 1;
-				CCObject* obj = m_RP.m_VisObjects[pr->m_nObject];
+				CCObject* obj = m_RP.m_VisObjects[pr.m_nObject];
 				obj->m_ObjFlags |= FOB_REFRACTED;
 			}
 			break;
@@ -8966,11 +8961,11 @@ int CD3D9Renderer::EF_Preprocess(SRendItemPre* ri, int nums, int nume)
 			}
 		case SPRID_SHADOWMAPGEN:
 		{
-			CCObject* obj = m_RP.m_VisObjects[pr->m_nObject];
+			CCObject* obj = m_RP.m_VisObjects[pr.m_nObject];
 			m_RP.m_pCurObject = obj;
-			if (pr->m_RE->mfGetType() == eDATA_OcLeaf || pr->m_RE->mfGetType() == eDATA_ShadowMapGen)
+			if (pr.m_RE->mfGetType() == eDATA_OcLeaf || pr.m_RE->mfGetType() == eDATA_ShadowMapGen)
 			{
-				CREOcLeaf* pRE = (CREOcLeaf*)pr->m_RE;
+				CREOcLeaf* pRE = (CREOcLeaf*)pr.m_RE;
 				//ShadowMapFrustum * pFr = obj->m_pShadowFrustum;
 
 				// Please never comment this lines !!!
@@ -8982,12 +8977,12 @@ int CD3D9Renderer::EF_Preprocess(SRendItemPre* ri, int nums, int nume)
 		}
 		break;
 		case SPRID_CORONA:
-			if (pr->m_nObject > 0 && !m_RP.m_bDrawToTexture)
+			if (pr.m_nObject > 0 && !m_RP.m_bDrawToTexture)
 			{
-				if (pr->m_RE->mfGetType() == eDATA_Flare)
+				if (pr.m_RE->mfGetType() == eDATA_Flare)
 				{
-					CREFlare* fl = (CREFlare*)pr->m_RE;
-					CCObject* obj = m_RP.m_VisObjects[pr->m_nObject];
+					CREFlare* fl = (CREFlare*)pr.m_RE;
+					CCObject* obj = m_RP.m_VisObjects[pr.m_nObject];
 					if (m_LogFile)
 						Logv(SRendItem::m_RecurseLevel, "*** Check corona visibility ***\n");
 					bool bVis = fl->mfCheckVis(obj);
@@ -9009,33 +9004,33 @@ int CD3D9Renderer::EF_Preprocess(SRendItemPre* ri, int nums, int nume)
 			{
 				nPortals = srfs.Num();
 				srfs.AddIndex(1);
-				srfs[nPortals].nobj = pr->m_nObject;
-				srfs[nPortals].srf = pr->m_RE;
-				srfs[nPortals].Shader = pr->m_Shader;
+				srfs[nPortals].nobj = pr.m_nObject;
+				srfs[nPortals].srf = pr.m_RE;
+				srfs[nPortals].Shader = pr.m_Shader;
 			}
 			else
 			{
 				Plane pl;
-				pr->m_RE->mfGetPlane(pl);
+				pr.m_RE->mfGetPlane(pl);
 				if (m_RP.m_CurWarp->plane.d != pl.d || !IsEquivalent(m_RP.m_CurWarp->plane.n, pl.n))
 				{
 					nPortals = srfs.Num();
 					srfs.AddIndex(1);
-					srfs[nPortals].nobj = pr->m_nObject;
-					srfs[nPortals].srf = pr->m_RE;
-					srfs[nPortals].Shader = pr->m_Shader;
+					srfs[nPortals].nobj = pr.m_nObject;
+					srfs[nPortals].srf = pr.m_RE;
+					srfs[nPortals].Shader = pr.m_Shader;
 				}
 			}
 		}
 		break;
 		default:
 		{
-			if (pr->m_nObject < 0)
+			if (pr.m_nObject < 0)
 				continue;
 			SRendItemPreprocess rip;
-			SRendItemPre* r = &ri[pr->m_Num];
+			SRendItemPre* r = &ri[pr.m_Num];
 			rip.Item = r->Item;
-			rip.m_Object = m_RP.m_VisObjects[pr->m_nObject];
+			rip.m_Object = m_RP.m_VisObjects[pr.m_nObject];
 			if (rip.m_Object->m_ObjFlags & FOB_CUBE_MASK)
 				RIs.AddElem(rip);
 		}
@@ -9054,16 +9049,16 @@ int CD3D9Renderer::EF_Preprocess(SRendItemPre* ri, int nums, int nume)
 
 	if (srfs.Num())
 	{
-		for (i = 0; i < srfs.Num(); i++)
+		for (SWarpSurf& warpSurf : srfs)
 		{
-			EF_SetWarpZone(&srfs[i], &NumWarps, Warps);
+			EF_SetWarpZone(&warpSurf, &NumWarps, Warps);
 		}
 
 		m_RP.m_RecurseLevel++;
 		m_RP.m_WasPortals += NumWarps;
 		m_RP.m_CurPortal += NumWarps;
 
-		for (i = 0; i < NumWarps; i++)
+		for (int i = 0; i < NumWarps; i++)
 		{
 			wp = &Warps[i];
 

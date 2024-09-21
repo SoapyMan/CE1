@@ -1802,7 +1802,7 @@ enum EF_Sort
 #define  SPRID_SCREENTEXMAP   16
 #define  FSPR_SCREENTEXMAP    (1<<SPRID_SCREENTEXMAP)
 
-#define  FSPR_MAX             0x40000
+#define  FSPR_MAX             (1 << 18)
 
 
 // SShader::m_Flags
