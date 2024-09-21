@@ -8717,6 +8717,7 @@ int CD3D9Renderer::EF_Preprocess(SRendItemPre* ri, int nums, int nume)
 	{
 		if (nProcs >= 512)
 			break;
+
 		SRendItem::mfGet(ri[i].SortVal, &nObject, &Shader, &ShaderState, &nFog, &Res);
 		if ((ri[i].SortVal.i.High >> 26) != eS_PreProcess)
 			break;
@@ -8728,6 +8729,9 @@ int CD3D9Renderer::EF_Preprocess(SRendItemPre* ri, int nums, int nume)
 				break;
 			if (nMask & Shader->m_nPreprocess)
 			{
+				if (nProcs >= 512)
+					break;
+
 				Procs[nProcs].m_nPreprocess = j;
 				Procs[nProcs].m_Num = i;
 				Procs[nProcs].m_Shader = Shader;
