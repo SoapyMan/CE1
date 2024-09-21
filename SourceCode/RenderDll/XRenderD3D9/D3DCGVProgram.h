@@ -437,7 +437,7 @@ public:
 		HRESULT hr;
 		LPD3DXBUFFER pCode;
 		LPD3DXBUFFER pBuffer = nullptr;
-		hr = D3DXAssembleShader(prog_text, strlen(prog_text), nullptr, nullptr, D3DXSHADER_SKIPVALIDATION, &pCode, &pBuffer);
+		hr = D3DXAssembleShader(prog_text, strlen(prog_text), nullptr, nullptr, 0, &pCode, &pBuffer);
 		if (FAILED(hr))
 		{
 			Warning(0, 0, "WARNING: CCGVProgram_D3D::mfLoad: Could not assemble vertex shader '%s' (%s)\n", m_Name.c_str(), gcpRendD3D->D3DError(hr));

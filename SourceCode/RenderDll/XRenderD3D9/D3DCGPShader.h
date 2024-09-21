@@ -354,9 +354,9 @@ public:
 			}
 		}
 		if (pNewText)
-			hr = D3DXAssembleShader(pNewText, strlen(pNewText), nullptr, nullptr, D3DXSHADER_SKIPVALIDATION, &pCode, &pBuffer);
+			hr = D3DXAssembleShader(pNewText, strlen(pNewText), nullptr, nullptr, 0, &pCode, &pBuffer);
 		else
-			hr = D3DXAssembleShader(prog_text, strlen(prog_text), nullptr, nullptr, D3DXSHADER_SKIPVALIDATION, &pCode, &pBuffer);
+			hr = D3DXAssembleShader(prog_text, strlen(prog_text), nullptr, nullptr, 0, &pCode, &pBuffer);
 		if (FAILED(hr))
 		{
 			Warning(0, 0, "WARNING: CCGPShader_D3D::mfLoad: Could not assemble pixel shader '%s'(0x%x) (%s)\n", m_Name.c_str(), m_nMaskGen, gcpRendD3D->D3DError(hr));
