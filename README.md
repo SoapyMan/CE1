@@ -1,16 +1,19 @@
-# CryEngine 1 and Far Cry
+# CE1 (CryEngine 1)
+
+Project aims to bring CryEngine 1 to modern systems, improve overall stability, add QoL changes while maintaining compatibility with Far Cry.
 
 ## Key changes
 
 * Using Premake5 for project files generation
 * Converted code to build with Visual Studio 2022 and GCC
 * Enabled C++17, removed legacy stuff
-* Sandbox Editor compiles with VS2022
+* Sandbox Editor runs on latest MFC
 * Multiple buffer overflows found and fixed with ASAN
 * SDL2 for handling window and input
 * Code file structure cleanup
 * crysound replaced with FMOD, since it's the same thing
 * Bink & DivX replaced with FFMpeg
+* Updated Cg to 3.1
 
 ### Compatibilty changes
 
@@ -20,13 +23,17 @@
 ### Future work TODO
 
 * Fix original bugs
-* Optimize game loading times
-* Replace FMOD 3.74 with OpenAL or Steam Audio
+* Bring multi-threading
+* Optimize loading times
+* Merge some bits of code from more recent CryEngine versions
+* Support for importing FBX to use as static and skinned objects
+* Replace FMOD 3.74 with OpenAL
 * Replace nvTriStrip with meshoptimizer
 * Replace nvDXT with nvtt
-* Replace/remove nvidia cg
-* Rewrite renderers - to not rely on old D3D9 and OpenGL
-* Linux port
+* Rewrite renderers and get rid of obsolete hardware support
+* Remove x86 assembly code
+* Remove custom data structures like TArray, list2, etc and replace with eastl or e2ds (Eq2 Engine Data Structures)
+* Cross platform compiling and running
 
 ### Legal notes
 
