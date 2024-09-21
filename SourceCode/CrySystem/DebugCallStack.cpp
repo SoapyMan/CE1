@@ -41,6 +41,91 @@ static int	PrintException(EXCEPTION_POINTERS* pex);
 
 void PutVersion(char* str);
 
+struct exception_codes {
+	DWORD		exCode;
+	const char* exName;
+	const char* exDescription;
+};
+
+static exception_codes except_info[] = {
+	{EXCEPTION_ACCESS_VIOLATION,		"ACCESS VIOLATION",
+	"The thread tried to read from or write to a virtual address for which it does not have the appropriate access."},
+
+	{EXCEPTION_ARRAY_BOUNDS_EXCEEDED,	"ARRAY BOUNDS EXCEEDED",
+	"The thread tried to access an array element that is out of bounds and the underlying hardware supports bounds checking."},
+
+	{EXCEPTION_BREAKPOINT,				"BREAKPOINT",
+	"A breakpoint was encountered."},
+
+	{EXCEPTION_DATATYPE_MISALIGNMENT,	"DATATYPE MISALIGNMENT",
+	"The thread tried to read or write data that is misaligned on hardware that does not provide alignment. For example, 16-bit values must be aligned on 2-byte boundaries; 32-bit values on 4-byte boundaries, and so on."},
+
+	{EXCEPTION_FLT_DENORMAL_OPERAND,	"FLT DENORMAL OPERAND",
+	"One of the operands in a floating-point operation is denormal. A denormal value is one that is too small to represent as a standard floating-point value. "},
+
+	{EXCEPTION_FLT_DIVIDE_BY_ZERO,		"FLT DIVIDE BY ZERO",
+	"The thread tried to divide a floating-point value by a floating-point divisor of zero. "},
+
+	{EXCEPTION_FLT_INEXACT_RESULT,		"FLT INEXACT RESULT",
+	"The result of a floating-point operation cannot be represented exactly as a decimal fraction. "},
+
+	{EXCEPTION_FLT_INVALID_OPERATION,	"FLT INVALID OPERATION",
+	"This exception represents any floating-point exception not included in this list. "},
+
+	{EXCEPTION_FLT_OVERFLOW,			"FLT OVERFLOW",
+	"The exponent of a floating-point operation is greater than the magnitude allowed by the corresponding type. "},
+
+	{EXCEPTION_FLT_STACK_CHECK,			"FLT STACK CHECK",
+	"The stack overflowed or underflowed as the result of a floating-point operation. "},
+
+	{EXCEPTION_FLT_UNDERFLOW,			"FLT UNDERFLOW",
+	"The exponent of a floating-point operation is less than the magnitude allowed by the corresponding type. "},
+
+	{EXCEPTION_ILLEGAL_INSTRUCTION,		"ILLEGAL INSTRUCTION",
+	"The thread tried to execute an invalid instruction. "},
+
+	{EXCEPTION_IN_PAGE_ERROR,			"IN PAGE ERROR",
+	"The thread tried to access a page that was not present, and the system was unable to load the page. For example, this exception might occur if a network connection is lost while running a program over the network. "},
+
+	{EXCEPTION_INT_DIVIDE_BY_ZERO,		"INT DIVIDE BY ZERO",
+	"The thread tried to divide an integer value by an integer divisor of zero. "},
+
+	{EXCEPTION_INT_OVERFLOW,			"INT OVERFLOW",
+	"The result of an integer operation caused a carry out of the most significant bit of the result. "},
+
+	{EXCEPTION_INVALID_DISPOSITION,		"INVALID DISPOSITION",
+	"An exception handler returned an invalid disposition to the exception dispatcher. Programmers using a high-level language such as C should never encounter this exception. "},
+
+	{EXCEPTION_NONCONTINUABLE_EXCEPTION,"NONCONTINUABLE EXCEPTION",
+	"The thread tried to continue execution after a noncontinuable exception occurred. "},
+
+	{EXCEPTION_PRIV_INSTRUCTION,		"PRIV INSTRUCTION",
+	"The thread tried to execute an instruction whose operation is not allowed in the current machine mode. "},
+
+	{EXCEPTION_SINGLE_STEP,				"SINGLE STEP",
+	"A trace trap or other single-instruction mechanism signaled that one instruction has been executed. "},
+
+	{EXCEPTION_STACK_OVERFLOW,			"STACK OVERFLOW",
+	"The thread used up its stack. "}
+};
+
+static void GetExceptionStrings(DWORD code, const char** pName, const char** pDescription)
+{
+	for (int i = 0; i < sizeof(except_info) / sizeof(except_info[0]); i++)
+	{
+		if (code == except_info[i].exCode)
+		{
+			*pName = except_info[i].exName;
+			*pDescription = except_info[i].exDescription;
+			return;
+		}
+	}
+
+	*pName = "Unknown exception";
+	*pDescription = "n/a";
+}
+
+
 //=============================================================================
 LONG __stdcall UnhandledExceptionHandler(EXCEPTION_POINTERS* pex)
 {
@@ -48,13 +133,16 @@ LONG __stdcall UnhandledExceptionHandler(EXCEPTION_POINTERS* pex)
 	return EXCEPTION_EXECUTE_HANDLER;
 }
 
-static void CreateMiniDump(EXCEPTION_POINTERS* pep)
+static void CreateCrashDump(EXCEPTION_POINTERS* pep, bool fullDump)
 {
 	SYSTEMTIME t;
 	GetSystemTime(&t);
 
 	char dumpPath[2048];
-	snprintf(dumpPath, sizeof(dumpPath), "%s_%4d%02d%02d_%02d%02d%02d.mdmp", "FarCry", t.wYear, t.wMonth, t.wDay, t.wHour, t.wMinute, t.wSecond);
+	if(fullDump)
+		snprintf(dumpPath, sizeof(dumpPath), "%s_%4d%02d%02d_%02d%02d%02d.dmp", "FarCry", t.wYear, t.wMonth, t.wDay, t.wHour, t.wMinute, t.wSecond);
+	else
+		snprintf(dumpPath, sizeof(dumpPath), "%s_%4d%02d%02d_%02d%02d%02d.mdmp", "FarCry", t.wYear, t.wMonth, t.wDay, t.wHour, t.wMinute, t.wSecond);
 
 	HANDLE dumpFileFd = CreateFileA(dumpPath, GENERIC_READ | GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (!dumpFileFd || dumpFileFd == INVALID_HANDLE_VALUE)
@@ -63,13 +151,13 @@ static void CreateMiniDump(EXCEPTION_POINTERS* pep)
 		return;
 	}
 
-	const MINIDUMP_TYPE dumpType = MINIDUMP_TYPE(MiniDumpWithIndirectlyReferencedMemory | MiniDumpScanMemory);
+	const MINIDUMP_TYPE dumpType = fullDump ? MiniDumpWithFullMemory : MINIDUMP_TYPE(MiniDumpWithIndirectlyReferencedMemory | MiniDumpScanMemory);
 
 	MINIDUMP_EXCEPTION_INFORMATION dumpExceptionInfo;
 	dumpExceptionInfo.ThreadId = GetCurrentThreadId();
 	dumpExceptionInfo.ExceptionPointers = pep;
 	dumpExceptionInfo.ClientPointers = FALSE;
-
+	
 	const bool result = MiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(), dumpFileFd, dumpType, (pep != 0) ? &dumpExceptionInfo : 0, 0, 0);
 	if (!result)
 		CryLogAlways("Minidump write error\n");
@@ -438,39 +526,6 @@ void DebugCallStack::LogCallstack()
 	CryLogAlways("=============================================================================");
 }
 
-static const char* TranslateExceptionCode(DWORD dwExcept)
-{
-	switch (dwExcept)
-	{
-	case EXCEPTION_ACCESS_VIOLATION:	return "EXCEPTION_ACCESS_VIOLATION"; break;
-	case EXCEPTION_DATATYPE_MISALIGNMENT: return "EXCEPTION_DATATYPE_MISALIGNMENT"; break;
-	case EXCEPTION_BREAKPOINT: return "EXCEPTION_BREAKPOINT";	break;
-	case EXCEPTION_SINGLE_STEP:	return "EXCEPTION_SINGLE_STEP";	break;
-	case EXCEPTION_ARRAY_BOUNDS_EXCEEDED: return "EXCEPTION_ARRAY_BOUNDS_EXCEEDED"; break;
-	case EXCEPTION_FLT_DENORMAL_OPERAND:	return "EXCEPTION_FLT_DENORMAL_OPERAND"; break;
-	case EXCEPTION_FLT_DIVIDE_BY_ZERO: return "EXCEPTION_FLT_DIVIDE_BY_ZERO"; break;
-	case EXCEPTION_FLT_INEXACT_RESULT: return "EXCEPTION_FLT_INEXACT_RESULT";	break;
-	case EXCEPTION_FLT_INVALID_OPERATION: return "EXCEPTION_FLT_INVALID_OPERATION"; break;
-	case EXCEPTION_FLT_OVERFLOW: return "EXCEPTION_FLT_OVERFLOW"; break;
-	case EXCEPTION_FLT_STACK_CHECK: 	return "EXCEPTION_FLT_STACK_CHECK";	break;
-	case EXCEPTION_FLT_UNDERFLOW:	return "EXCEPTION_FLT_UNDERFLOW";	break;
-	case EXCEPTION_INT_DIVIDE_BY_ZERO: return "EXCEPTION_INT_DIVIDE_BY_ZERO"; break;
-	case EXCEPTION_INT_OVERFLOW:return "EXCEPTION_INT_OVERFLOW"; break;
-	case EXCEPTION_PRIV_INSTRUCTION:	return "EXCEPTION_PRIV_INSTRUCTION";	break;
-	case EXCEPTION_IN_PAGE_ERROR:	return "EXCEPTION_IN_PAGE_ERROR";	break;
-	case EXCEPTION_ILLEGAL_INSTRUCTION:	return "EXCEPTION_ILLEGAL_INSTRUCTION";	break;
-	case EXCEPTION_NONCONTINUABLE_EXCEPTION:	return "EXCEPTION_NONCONTINUABLE_EXCEPTION";	break;
-	case EXCEPTION_STACK_OVERFLOW:	return "EXCEPTION_STACK_OVERFLOW";	break;
-	case EXCEPTION_INVALID_DISPOSITION:	return "EXCEPTION_INVALID_DISPOSITION";	break;
-	case EXCEPTION_GUARD_PAGE:	return "EXCEPTION_GUARD_PAGE";	break;
-	case EXCEPTION_INVALID_HANDLE:	return "EXCEPTION_INVALID_HANDLE";	break;
-
-	default:
-		return "Unknown";
-		break;
-	}
-}
-
 INT_PTR CALLBACK ExceptionDialogProc(HWND hwndDlg, unsigned int message, WPARAM wParam, LPARAM lParam)
 {
 	static EXCEPTION_POINTERS* pex;
@@ -490,10 +545,9 @@ INT_PTR CALLBACK ExceptionDialogProc(HWND hwndDlg, unsigned int message, WPARAM 
 			if (h) ShowWindow( h, SW_HIDE );
 		}
 
-		if (pex->ExceptionRecord->ExceptionFlags & EXCEPTION_NONCONTINUABLE) {
-			// Disable continue button for non continuable exceptions.
-			//h = GetDlgItem( hwndDlg,IDB_CONTINUE );
-			//if (h) EnableWindow( h,FALSE );
+		if (pex->ExceptionRecord->ExceptionCode != EXCEPTION_BREAKPOINT) {
+			h = GetDlgItem(hwndDlg, IDB_DUMP);
+			if (h) SendMessage(h, WM_SETTEXT, 0, (LPARAM)"Save Crash Dump");
 		}
 
 		// Time and Version.
@@ -518,10 +572,11 @@ INT_PTR CALLBACK ExceptionDialogProc(HWND hwndDlg, unsigned int message, WPARAM 
 		string moduleName = DebugCallStack::instance()->getExceptionModule();
 		const char* excModule = moduleName.c_str();
 
-		char desc[1024];
-		char excDesc[1024];
-		const char* excName = TranslateExceptionCode(pex->ExceptionRecord->ExceptionCode);
+		const char* excNameStr;
+		const char* excDescStr;
+		GetExceptionStrings(pex->ExceptionRecord->ExceptionCode, &excNameStr, &excDescStr);
 
+		char desc[2048]{ 0 };
 		if (pex->ExceptionRecord->ExceptionCode == EXCEPTION_ACCESS_VIOLATION) {
 			if (pex->ExceptionRecord->NumberParameters > 1) {
 				int iswrite = pex->ExceptionRecord->ExceptionInformation[0];
@@ -534,17 +589,19 @@ INT_PTR CALLBACK ExceptionDialogProc(HWND hwndDlg, unsigned int message, WPARAM 
 				}
 			}
 		}
-		sprintf(excDesc, "%s\r\n%s", excName, desc);
+
+		char excDesc[2048];
+		sprintf(excDesc, "%s\r\n%s", excNameStr, desc);
 
 		CryLogAlways("Exception Code: %s", excCode);
 		CryLogAlways("Exception Addr: %s", excAddr);
 		CryLogAlways("Exception Module: %s", excModule);
-		CryLogAlways("Exception Description: %s", desc);
+		CryLogAlways("Exception Description: %s", excDescStr);
 		DebugCallStack::instance()->dumpCallStack(funcs);
 
 		static char errs[32768];
 		sprintf(errs, "Exception Code: %s\nException Addr: %s\nException Module: %s\nException Description: %s, %s\n",
-			excCode, excAddr, excModule, excName, desc);
+			excCode, excAddr, excModule, excNameStr, excDescStr);
 
 		// Level Info.
 		//char szLevel[1024];
@@ -622,7 +679,12 @@ INT_PTR CALLBACK ExceptionDialogProc(HWND hwndDlg, unsigned int message, WPARAM 
 
 		case IDB_DUMP:
 		{
-			CreateMiniDump(pex);
+			bool fullDump = false;
+			if (pex->ExceptionRecord->ExceptionCode != EXCEPTION_BREAKPOINT) {
+				fullDump = true;
+			}
+
+			CreateCrashDump(pex, fullDump);
 			EndDialog(hwndDlg, wParam);
 			return TRUE;
 		}
