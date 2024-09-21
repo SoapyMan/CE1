@@ -539,6 +539,13 @@ void CServerSlotLocal::UpdateSlot()
 	}
 }
 
+void CServerSlotLocal::ResetSink()
+{
+	if (m_pSink)
+		m_pSink->OnXServerSlotDisconnect("");
+	m_pSink = nullptr;
+}
+
 void CServerSlotLocal::GetMemoryStatistics(ICrySizer* pSizer)
 {
 	pSizer->AddObject(this, sizeof(CServerSlotLocal));

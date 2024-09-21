@@ -225,8 +225,9 @@ void CMovieUser::EndCutScene()
 		}
 	}
 
-  // reset subtitles
-  m_pGame->m_pClient->ResetSubtitles();
+	// reset subtitles
+	if(m_pGame->m_pClient)
+		m_pGame->m_pClient->ResetSubtitles();
 }
 
 //////////////////////////////////////////////////////////////////////////

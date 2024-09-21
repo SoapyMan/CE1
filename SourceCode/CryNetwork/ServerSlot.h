@@ -206,7 +206,7 @@ class CClientLocal;
 class CServer;
 
 //! fake CServerSlot implementation for local clients, doesn't use the network!*/
-class CServerSlotLocal :public CServerSlot
+class CServerSlotLocal : public CServerSlot
 {
 public:
 	//! constructor
@@ -221,7 +221,7 @@ public:
 	void PushData(CStream& stm);
 	void UpdateSlot();
 	void Unlink() { m_pServer = nullptr; }
-	void ResetSink() { m_pClient = nullptr; if (m_pSink)m_pSink->OnXServerSlotDisconnect(""); }
+	void ResetSink();
 
 	// interface IServerSlot ---------------------------------------------------
 

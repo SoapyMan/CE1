@@ -414,7 +414,8 @@ void CXClient::OnXClientDisconnect(const char *szCause)
 	m_pScriptSystem->PushFuncParam(szCause);
 	m_pScriptSystem->EndCall();
 
-	m_pGame->MarkClientForDestruct();		// to make sure the client is only released in one place
+	if(m_pGame)
+		m_pGame->MarkClientForDestruct();		// to make sure the client is only released in one place
 
 	// hide console and reset progress bar after a disconnection
 	GetISystem()->GetIConsole()->ResetProgressBar(0);

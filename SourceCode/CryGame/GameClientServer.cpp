@@ -136,9 +136,10 @@ void CXGame::ShutdownClient()
 	m_pClient->XDisconnect("@ClientHasQuit");
 	m_pLog->Log("Shutdown the Client");
 
+	if (!m_pClient)
+		return;
 	m_pClient->MarkForDestruct();
-	m_pClient->DestructIfMarked();
-	m_pClient=nullptr;
+	m_pClient = nullptr;
 }
 
 bool CXGame::IsClient()
