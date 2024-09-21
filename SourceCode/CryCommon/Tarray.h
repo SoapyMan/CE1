@@ -205,7 +205,7 @@ public:
 
 	TArray(void) { m_pElements = nullptr, m_nCount = m_nAllocatedCount = 0; }
 	TArray(int Count) { m_pElements = nullptr; m_nCount = Count; m_nAllocatedCount = Count; Realloc(); }
-	TArray(int Use, int Max) { m_nCount = Use; m_nAllocatedCount = Max; Realloc(); }
+	TArray(int Use, int Max) { m_pElements = nullptr; m_nCount = Use; m_nAllocatedCount = Max; Realloc(); }
 	~TArray(void)
 	{
 		Free();
