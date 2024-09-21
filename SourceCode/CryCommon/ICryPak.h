@@ -237,13 +237,13 @@ struct ICryPak
 	virtual FILE* FOpen(const char* pName, const char* mode, unsigned nFlags = 0) = 0;
 	virtual FILE* FOpen(const char* pName, const char* mode, char* szFileGamePath, int nLen) = 0;
 	virtual size_t FRead(void* data, size_t length, size_t elems, FILE* handle) = 0;
-	virtual size_t FWrite(void* data, size_t length, size_t elems, FILE* handle) = 0;
+	virtual size_t FWrite(const void* data, size_t length, size_t elems, FILE* handle) = 0;
 	virtual int FSeek(FILE* handle, long seek, int mode) = 0;
 	virtual long FTell(FILE* handle) = 0;
 	virtual int FClose(FILE* handle) = 0;
 	virtual int FEof(FILE* handle) = 0;
 	virtual int FFlush(FILE* handle) = 0;
-	//virtual int FScanf(FILE *, const char *, ...)=0;
+	virtual int FScanf(FILE* handle, const char* format, ...) = 0;
 	virtual int FPrintf(FILE* handle, const char* format, ...) = 0;
 	virtual char* FGets(char*, int, FILE*) = 0;
 	virtual int Getc(FILE*) = 0;

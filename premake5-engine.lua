@@ -445,7 +445,8 @@ project "CryScriptSystem"
 	}
 	
 	defines {
-		"CRYSCRIPTSYSTEM_EXPORTS"
+		"CRYSCRIPTSYSTEM_EXPORTS",
+		"USE_CRYPAK"
 	}
 	
 project "CrySoundSystem"

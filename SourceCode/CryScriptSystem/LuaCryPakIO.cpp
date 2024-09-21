@@ -123,7 +123,7 @@ size_t CryPakFRead(void* data, size_t length, size_t elems, FILE* handle)
 }
 
 //////////////////////////////////////////////////////////////////////////
-size_t CryPakFWrite(void* data, size_t length, size_t elems, FILE* handle)
+size_t CryPakFWrite(const void* data, size_t length, size_t elems, FILE* handle)
 {
 #ifdef USE_CRYPAK
 	ICryPak* pPak = GetISystem()->GetIPak();

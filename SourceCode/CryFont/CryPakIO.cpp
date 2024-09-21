@@ -22,13 +22,13 @@ FILE* CryPakOpen(const char* szFile, const char* szMode)
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CryPakClose(FILE* fp)
+int CryPakClose(FILE* fp)
 {
 #ifdef USE_CRYPAK
 	ICryPak* pPak = GetISystem()->GetIPak();
-	pPak->FClose(fp);
+	return pPak->FClose(fp);
 #else
-	fclose(fp);
+	return fclose(fp);
 #endif
 }
 
@@ -76,7 +76,7 @@ int   CryPakGetc(FILE* handle)
 	return(getc(handle));
 #endif
 }
-/*
+
 //////////////////////////////////////////////////////////////////////////
 int CryPakFScanf(FILE *handle, const char *format, ...)
 {
@@ -89,7 +89,7 @@ int CryPakFScanf(FILE *handle, const char *format, ...)
   return fscanf(handle, format, arglist);
 #endif
 }
-*/
+
 //////////////////////////////////////////////////////////////////////////
 int CryPakFSeek(FILE* handle, long seek, int mode)
 {
@@ -126,7 +126,7 @@ size_t CryPakFRead(void* data, size_t length, size_t elems, FILE* handle)
 }
 
 //////////////////////////////////////////////////////////////////////////
-size_t CryPakFWrite(void* data, size_t length, size_t elems, FILE* handle)
+size_t CryPakFWrite(const void* data, size_t length, size_t elems, FILE* handle)
 {
 #ifdef USE_CRYPAK
 	ICryPak* pPak = GetISystem()->GetIPak();

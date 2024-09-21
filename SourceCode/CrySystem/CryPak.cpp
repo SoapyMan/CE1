@@ -809,7 +809,7 @@ int CCryPak::FSeek(FILE* hFile, long seek, int mode)
 		return fseek(hFile, seek, mode);
 }
 
-size_t CCryPak::FWrite(void* data, size_t length, size_t elems, FILE* hFile)
+size_t CCryPak::FWrite(const void* data, size_t length, size_t elems, FILE* hFile)
 {
 	AUTO_LOCK(m_csMain);
 	INT_PTR nPseudoFile = ((INT_PTR)hFile) - g_nPseudoFileIdxOffset;
@@ -863,7 +863,7 @@ int CCryPak::FScanf(FILE* hFile, const char* format, ...)
 	if ((UINT_PTR)nPseudoFile < m_arrOpenFiles.size())
 		return m_arrOpenFiles[nPseudoFile].FScanfv(format, arglist);
 	else
-		return 0;//vfscanf(handle, format, arglist);
+		return vfscanf(hFile, format, arglist);
 	va_end(arglist);
 }
 
@@ -1423,7 +1423,7 @@ int CZipPseudoFile::FScanfv(const char* szFormat, va_list args)
 	if (!pSrc)
 		return 0;
 	// now scan the pSrc+m_nCurSeek
-	return 0;
+	return vsscanf(pSrc + m_nCurSeek, szFormat, args);
 }
 
 char* CZipPseudoFile::FGets(char* pBuf, int n)

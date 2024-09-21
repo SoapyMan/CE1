@@ -376,7 +376,7 @@ public:
 	virtual FILE* FOpen(const char* pName, const char* mode, unsigned nFlags);
 	virtual FILE* FOpen(const char* pName, const char* mode, char* szFileGamePath, int nLen);
 	virtual size_t FRead(void* data, size_t length, size_t elems, FILE* handle);
-	virtual size_t FWrite(void* data, size_t length, size_t elems, FILE* handle);
+	virtual size_t FWrite(const void* data, size_t length, size_t elems, FILE* handle);
 	virtual int FSeek(FILE* handle, long seek, int mode);
 	virtual long FTell(FILE* handle);
 	virtual int FFlush(FILE* handle);
