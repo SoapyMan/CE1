@@ -49,11 +49,6 @@ project "ResourceCompilerPC"
 			"dbghelp"
 		}
 		
-	filter "platforms:x64"
-		files {
-			"./SourceCode/CryAnimation/CrySkinAMD64.asm"
-		}
-		
 project "CgfDump"
     kind "ConsoleApp"
 	

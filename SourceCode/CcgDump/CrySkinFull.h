@@ -31,13 +31,6 @@ public:
 	void skin(const Matrix44* pBones, Vec3* pDest);
 	// Skins skipping the translation components of bone matrices
 	void skinAsVec3d16(const Matrix44* pBones, Vec3dA16* pDest);
-#if defined (_CPU_X86) || defined (_CPU_AMD64)
-	// skins using the given bone matrices, into the given destination array,
-	// SIDE EFFECT: calculates the bounding box into the g_BBox
-	void skinSSE(const Matrix44* pBones, Vec3dA16* pDest);
-	__declspec (align(32)) // align by cache line boundaries
-		static CryBBoxA16 g_BBox;
-#endif
 
 	// takes each offset and includes it into the bbox of corresponding bone
 	void computeBoneBBoxes(CryBBoxA16* pBBox);

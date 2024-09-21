@@ -40,11 +40,7 @@ public:
 	// does the skinning out of the given array of global matrices:
 	// calculates the bases and fills the PipVertices in
 	void skin(const Matrix44* pBones, SPipTangentsA* pDest)const;
-#ifdef _CPU_X86
-	// uses SSE for skinning; NOTE: EVERYTHING must be 16-aligned:
-	// destination, bones, and the data in this object
-	void skinSSE(const Matrix44* pBones, SPipTangentsA* pDest)const;
-#endif
+
 	friend class CrySkinBasisBuilder;
 
 	// does the same as the base class init() but also remembers the number of bases (numVerts/2)

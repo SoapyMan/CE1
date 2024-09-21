@@ -241,7 +241,7 @@ void CFrameProfileSystem::SetProfiling(bool on, bool display, char* prefix, ISys
 	if (on && m_nCurSample < 0)
 	{
 		m_nCurSample = 0;
-		pSystem->GetILog()->Log("\001Profiling data started (%s), prefix = \"%s\"", display ? "display only" : "tracing", prefix);
+		pSystem->GetILog()->Log("\001Profiling data started (%s), prefix = \"%s\"", display ? "display only" : "tracing", prefix ? prefix : "");
 
 		m_frameTimeOfflineHistory.m_selfTime.reserve(1000);
 		m_frameTimeOfflineHistory.m_count.reserve(1000);

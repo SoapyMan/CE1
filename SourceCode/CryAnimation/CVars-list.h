@@ -177,14 +177,6 @@ DECLARE_INT_VARIABLE_IMMEDIATE(ca_VertsPerTangSubskin, 3000, "this parameter det
 // purposes.
 DECLARE_INT_VARIABLE_IMMEDIATE(ca_ZDeleteConstructionData, 1, "if this is 0, then the data that was used during construction of instances\nof CryGeometryInfo and all its clients will be retained in memory for debugging purposes");
 
-// if this is 1, then SSE is used for tangent space calculations and perhaps other things
-DECLARE_INT_VARIABLE_IMMEDIATE(ca_SSEEnable, 1, "If this is 1, then SSE is used for tangent space calculations and perhaps other things (like skinning)");
-
-/*
-DECLARE_INT_VARIABLE_IMMEDIATE (ca_SSEEnable1, 0);
-DECLARE_INT_VARIABLE_IMMEDIATE (ca_SSEEnable2, 0);
-DECLARE_INT_VARIABLE_IMMEDIATE (ca_SSEEnable3, 0);
-*/
 // this is the number of repeats of skinning for testing
 DECLARE_INT_VARIABLE_IMMEDIATE(ca_TestSkinningRepeats, 1, "this is the number of repeats of skinning for testing");
 

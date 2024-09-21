@@ -713,12 +713,7 @@ void CryModelSubmesh::Deform(int nLodToDeform, unsigned nDeformFlags)
 				pTangentBases = (SPipTangentsA*)g_Temp.data(); // use the same mem for the tangents
 				CRYASSERT(m_pMesh->numBoneInfos());
 				numTangents = pTangSkin->size();
-#if defined(_CPU_X86) && !defined(LINUX)
-				if (g_GetCVars()->ca_SSEEnable() && cpu::hasSSE())
-					pTangSkin->skinSSE(m_pParent->getBoneGlobalMatrices(), pTangentBases);
-				else
-#endif
-					pTangSkin->skin(m_pParent->getBoneGlobalMatrices(), pTangentBases);
+				pTangSkin->skin(m_pParent->getBoneGlobalMatrices(), pTangentBases);
 
 #if 0 && defined(_DEBUG)
 				for (unsigned nTang = 0; nTang < numTangents; ++nTang)
@@ -810,34 +805,12 @@ const Vec3d* CryModelSubmesh::SelfSkin(int nLOD, Vec3d* pVertices, Vec3dA16* pNo
 	if (m_pMesh->numBoneInfos())
 	{
 		unsigned numVertices = pGeomInfo->numUsedVertices();
-#if ( defined(_CPU_X86) || defined (_AMD64_) ) && !defined(LINUX)
-		if (g_GetCVars()->ca_SSEEnable() && cpu::hasSSE())
+		if (!pVertices)
 		{
-			if (!pVertices)
-			{
-				g_Temp.reserve(sizeof(Vec3dA16) * numVertices);
-				pVertices = (Vec3d*)g_Temp.data();
-			}
-			CrySkinFull* pSkin = pGeomInfo->getGeomSkin();
-			pSkin->skinSSE(m_pParent->getBoneGlobalMatrices(), (Vec3dA16*)pVertices);
-			packVec3d16(pVertices, numVertices);
-
-			CryAABB caabb;
-			caabb.vMin = pSkin->g_BBox.vMin.v;
-			caabb.vMax = pSkin->g_BBox.vMax.v;
-			m_SubBBox = caabb;
-			m_nLastSkinBBoxUpdateFrameId = g_nFrameID;
+			g_Temp.reserve(sizeof(Vec3d) * numVertices);
+			pVertices = (Vec3d*)g_Temp.data();
 		}
-		else
-#endif
-		{
-			if (!pVertices)
-			{
-				g_Temp.reserve(sizeof(Vec3d) * numVertices);
-				pVertices = (Vec3d*)g_Temp.data();
-			}
-			pGeomInfo->getGeomSkin()->skin(m_pParent->getBoneGlobalMatrices(), pVertices);
-		}
+		pGeomInfo->getGeomSkin()->skin(m_pParent->getBoneGlobalMatrices(), pVertices);
 
 		if (nLOD == 0 && NeedMorph() && !g_GetCVars()->ca_NoMorph())
 		{

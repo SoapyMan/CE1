@@ -260,7 +260,6 @@ project "CryAnimation"
 	
 	--unitybuild "on"
     files {
-		"./SourceCode/CryAnimation/*.asm",
         "./SourceCode/CryAnimation/*.cpp",
 		"./SourceCode/CryAnimation/*.c",
         "./SourceCode/CryAnimation/*.h"
