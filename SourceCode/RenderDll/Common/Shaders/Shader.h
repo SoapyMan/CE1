@@ -3961,12 +3961,14 @@ struct SShaderTechnique
 		}
 		return nSize;
 	}
+
 	SShaderTechnique()
 	{
 		m_MatrixOps = nullptr;
 		m_Flags = 0;
 		m_eCull = (ECull)-1;
 	}
+
 	SShaderTechnique& operator = (const SShaderTechnique& sl)
 	{
 		memcpy(this, &sl, sizeof(SShaderTechnique));
@@ -3974,11 +3976,7 @@ struct SShaderTechnique
 		{
 			m_Passes.Copy(sl.m_Passes);
 			for (int i = 0; i < sl.m_Passes.Num(); i++)
-			{
-				const SShaderPassHW* s = &sl.m_Passes[i];
-				SShaderPassHW* d = &m_Passes[i];
-				*d = *s;
-			}
+				m_Passes[i] = sl.m_Passes[i];
 		}
 
 		if (sl.m_Pointers.Num())
@@ -3997,23 +3995,10 @@ struct SShaderTechnique
 
 	~SShaderTechnique()
 	{
-		for (int i = 0; i < m_Passes.Num(); i++)
-		{
-			SShaderPassHW* sl = &m_Passes[i];
-
-			sl->mfFree();
-		}
+		for (SShaderPassHW& sl : m_Passes)
+			sl.mfFree();
 		m_Passes.Free();
 	}
-
-#ifdef DEBUGALLOC
-#undef new
-#endif
-	void* operator new(size_t Size) { void* ptr = malloc(Size); memset(ptr, 0, Size); return ptr; }
-	void operator delete(void* Ptr) { free(Ptr); }
-#ifdef DEBUGALLOC
-#define new DEBUG_CLIENTBLOCK
-#endif
 };
 
 //===============================================================================
