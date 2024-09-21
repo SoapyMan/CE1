@@ -3967,9 +3967,11 @@ struct SShaderTechnique
 		m_MatrixOps = nullptr;
 		m_Flags = 0;
 		m_eCull = (ECull)-1;
+		m_Id = -1;
 	}
 
-	SShaderTechnique& operator = (const SShaderTechnique& sl)
+	SShaderTechnique(const SShaderTechnique& sl) 
+		: SShaderTechnique()
 	{
 		memcpy(this, &sl, sizeof(SShaderTechnique));
 		if (sl.m_Passes.Num())
@@ -3989,8 +3991,6 @@ struct SShaderTechnique
 			m_MatrixOps = new TArray<SMatrixTransform>;
 			m_MatrixOps->Copy(*sl.m_MatrixOps);
 		}
-
-		return *this;
 	}
 
 	~SShaderTechnique()

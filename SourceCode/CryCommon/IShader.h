@@ -1028,10 +1028,12 @@ struct SShaderTexUnit
 	void mfFree()
 	{
 		SAFE_DELETE(m_GTC);
+		if (!m_AnimInfo)
+		{
+			if (m_TexPic)
+				m_ITexPic->Release(false);
+		}
 		SAFE_DELETE(m_AnimInfo);
-
-		if (m_TexPic)
-			m_ITexPic->Release(false);
 		m_ITexPic = nullptr;
 	}
 
