@@ -315,187 +315,134 @@ STexPic* CShader::mfCheckTemplateTexName(char* mapname, ETexType eTT, short& nFl
 
 	if (!stricmp(mapname, "$NormalizeCubemap") || !stricmp(mapname, "$NormalizationCubemap"))
 		TexPic = gRenDev->m_TexMan->m_Text_NormalizeCMap;
-	else
-		if (!stricmp(mapname, "$Lightmap"))
-			TexPic = &gRenDev->m_TexMan->m_Templates[EFTT_LIGHTMAP];
+	else if (!stricmp(mapname, "$Lightmap"))
+		TexPic = &gRenDev->m_TexMan->m_Templates[EFTT_LIGHTMAP];
+	else if (!stricmp(mapname, "$LightmapDirection"))
+		TexPic = &gRenDev->m_TexMan->m_Templates[EFTT_LIGHTMAP_DIR];
+	else if (!strnicmp(mapname, "$VFog", 4))
+		TexPic = gRenDev->m_TexMan->m_Text_VFog;
+	else if (!strnicmp(mapname, "$FogEnter", 8))
+		TexPic = gRenDev->m_TexMan->m_Text_Fog_Enter;
+	else if (!strnicmp(mapname, "$Fog", 4))
+		TexPic = gRenDev->m_TexMan->m_Text_Fog;
+	else if (!strnicmp(mapname, "$Flare", 6))
+		TexPic = gRenDev->m_TexMan->m_Text_Flare;
+	else if (!stricmp(mapname, "$LightCubemap"))
+		TexPic = gRenDev->m_TexMan->m_Text_LightCMap;
+	else if (!stricmp(mapname, "$FromRE") || !stricmp(mapname, "$FromRE0"))
+		TexPic = gRenDev->m_TexMan->m_Text_FromRE[0];
+	else if (!stricmp(mapname, "$FromRE1"))
+		TexPic = gRenDev->m_TexMan->m_Text_FromRE[1];
+	else if (!stricmp(mapname, "$FromRE2"))
+		TexPic = gRenDev->m_TexMan->m_Text_FromRE[2];
+	else if (!stricmp(mapname, "$FromRE3"))
+		TexPic = gRenDev->m_TexMan->m_Text_FromRE[3];
+	else if (!stricmp(mapname, "$FromRE4"))
+		TexPic = gRenDev->m_TexMan->m_Text_FromRE[4];
+	else if (!stricmp(mapname, "$FromRE5"))
+		TexPic = gRenDev->m_TexMan->m_Text_FromRE[5];
+	else if (!stricmp(mapname, "$FromRE6"))
+		TexPic = gRenDev->m_TexMan->m_Text_FromRE[6];
+	else if (!stricmp(mapname, "$FromRE7"))
+		TexPic = gRenDev->m_TexMan->m_Text_FromRE[7];
+	else if (!stricmp(mapname, "$FromObj") || !stricmp(mapname, "$FromObj0"))
+		TexPic = gRenDev->m_TexMan->m_Text_FromObj;
+	else if (!stricmp(mapname, "$FromLight"))
+		TexPic = gRenDev->m_TexMan->m_Text_FromLight;
+	else if (!strnicmp(mapname, "$Phong_", 7))
+	{
+		int n = atoi(&mapname[7]);
+		TexPic = gRenDev->EF_MakePhongTexture(n);
+	}
+	else if (!strnicmp(mapname, "$Phong", 6))
+	{
+		TexPic = &gRenDev->m_TexMan->m_Templates[EFTT_PHONG];
+	}
+	else if (!stricmp(mapname, "$WhiteShadow"))
+		TexPic = gRenDev->m_TexMan->LoadTexture(*gRenDev->m_TexMan->m_Text_WhiteShadow->m_SearchName, 0, FT2_NOANISO, eTT);
+	else if (!strnicmp(mapname, "$White", 6))
+		TexPic = gRenDev->m_TexMan->LoadTexture(*gRenDev->m_TexMan->m_Text_White->m_SearchName, 0, FT2_NOANISO, eTT);
+	else if (!strnicmp(mapname, "$EnvCMap", 8) || !stricmp(mapname, "$EnvironmentCubeMap"))
+		TexPic = gRenDev->m_TexMan->m_Text_EnvCMap;
+	else if (!strnicmp(mapname, "$EnvLightCMap", 13) || !stricmp(mapname, "$EnvironmentLightCubeMap"))
+		TexPic = gRenDev->m_TexMan->m_Text_EnvLCMap;
+	else if (!stricmp(mapname, "$Ghost"))
+		TexPic = gRenDev->m_TexMan->m_Text_Ghost;
+	else if (!stricmp(mapname, "$RainMap"))
+		TexPic = gRenDev->m_TexMan->m_Text_RainMap;
+	else if (!strnicmp(mapname, "$EnvTex", 7) || !stricmp(mapname, "$EnvironmentTexture"))
+		TexPic = gRenDev->m_TexMan->m_Text_EnvTex;
+	else if (!strnicmp(mapname, "$EnvScr", 7) || !stricmp(mapname, "$EnvironmentScreen"))
+		TexPic = gRenDev->m_TexMan->m_Text_EnvScr;
+	else if (!strnicmp(mapname, "$WaterMap", 9))
+		TexPic = gRenDev->m_TexMan->m_Text_WaterMap;
+	else if (!strnicmp(mapname, "$CustomCMap", 11))
+	{
+		int n;
+		if (mapname[11] == '_')
+			n = atoi(&mapname[12]);
 		else
-			if (!stricmp(mapname, "$LightmapDirection"))
-				TexPic = &gRenDev->m_TexMan->m_Templates[EFTT_LIGHTMAP_DIR];
-			else
-				if (!strnicmp(mapname, "$VFog", 4))
-					TexPic = gRenDev->m_TexMan->m_Text_VFog;
-				else
-					if (!strnicmp(mapname, "$FogEnter", 8))
-						TexPic = gRenDev->m_TexMan->m_Text_Fog_Enter;
-					else
-						if (!strnicmp(mapname, "$Fog", 4))
-							TexPic = gRenDev->m_TexMan->m_Text_Fog;
-						else
-							if (!strnicmp(mapname, "$Flare", 6))
-								TexPic = gRenDev->m_TexMan->m_Text_Flare;
-							else
-								if (!stricmp(mapname, "$LightCubemap"))
-									TexPic = gRenDev->m_TexMan->m_Text_LightCMap;
-								else
-									if (!stricmp(mapname, "$FromRE") || !stricmp(mapname, "$FromRE0"))
-										TexPic = gRenDev->m_TexMan->m_Text_FromRE[0];
-									else
-										if (!stricmp(mapname, "$FromRE1"))
-											TexPic = gRenDev->m_TexMan->m_Text_FromRE[1];
-										else
-											if (!stricmp(mapname, "$FromRE2"))
-												TexPic = gRenDev->m_TexMan->m_Text_FromRE[2];
-											else
-												if (!stricmp(mapname, "$FromRE3"))
-													TexPic = gRenDev->m_TexMan->m_Text_FromRE[3];
-												else
-													if (!stricmp(mapname, "$FromRE4"))
-														TexPic = gRenDev->m_TexMan->m_Text_FromRE[4];
-													else
-														if (!stricmp(mapname, "$FromRE5"))
-															TexPic = gRenDev->m_TexMan->m_Text_FromRE[5];
-														else
-															if (!stricmp(mapname, "$FromRE6"))
-																TexPic = gRenDev->m_TexMan->m_Text_FromRE[6];
-															else
-																if (!stricmp(mapname, "$FromRE7"))
-																	TexPic = gRenDev->m_TexMan->m_Text_FromRE[7];
-																else
-																	if (!stricmp(mapname, "$FromObj") || !stricmp(mapname, "$FromObj0"))
-																		TexPic = gRenDev->m_TexMan->m_Text_FromObj;
-																	else
-																		if (!stricmp(mapname, "$FromLight"))
-																			TexPic = gRenDev->m_TexMan->m_Text_FromLight;
-																		else
-																			if (!strnicmp(mapname, "$Phong_", 7))
-																			{
-																				int n = atoi(&mapname[7]);
-																				TexPic = gRenDev->EF_MakePhongTexture(n);
-																			}
-																			else
-																				if (!strnicmp(mapname, "$Phong", 6))
-																				{
-																					TexPic = &gRenDev->m_TexMan->m_Templates[EFTT_PHONG];
-																				}
-																				else
-																					if (!stricmp(mapname, "$WhiteShadow"))
-																						TexPic = gRenDev->m_TexMan->LoadTexture(*gRenDev->m_TexMan->m_Text_WhiteShadow->m_SearchName, 0, FT2_NOANISO, eTT);
-																					else
-																						if (!strnicmp(mapname, "$White", 6))
-																							TexPic = gRenDev->m_TexMan->LoadTexture(*gRenDev->m_TexMan->m_Text_White->m_SearchName, 0, FT2_NOANISO, eTT);
-																						else
-																							if (!strnicmp(mapname, "$EnvCMap", 8) || !stricmp(mapname, "$EnvironmentCubeMap"))
-																								TexPic = gRenDev->m_TexMan->m_Text_EnvCMap;
-																							else
-																								if (!strnicmp(mapname, "$EnvLightCMap", 13) || !stricmp(mapname, "$EnvironmentLightCubeMap"))
-																									TexPic = gRenDev->m_TexMan->m_Text_EnvLCMap;
-																								else
-																									if (!stricmp(mapname, "$Ghost"))
-																										TexPic = gRenDev->m_TexMan->m_Text_Ghost;
-																									else
-																										if (!stricmp(mapname, "$RainMap"))
-																											TexPic = gRenDev->m_TexMan->m_Text_RainMap;
-																										else
-																											if (!strnicmp(mapname, "$EnvTex", 7) || !stricmp(mapname, "$EnvironmentTexture"))
-																												TexPic = gRenDev->m_TexMan->m_Text_EnvTex;
-																											else
-																												if (!strnicmp(mapname, "$EnvScr", 7) || !stricmp(mapname, "$EnvironmentScreen"))
-																													TexPic = gRenDev->m_TexMan->m_Text_EnvScr;
-																												else
-																													if (!strnicmp(mapname, "$WaterMap", 9))
-																														TexPic = gRenDev->m_TexMan->m_Text_WaterMap;
-																													else
-																														if (!strnicmp(mapname, "$CustomCMap", 11))
-																														{
-																															int n;
-																															if (mapname[11] == '_')
-																																n = atoi(&mapname[12]);
-																															else
-																																n = atoi(&mapname[11]);
-																															TexPic = gRenDev->m_TexMan->m_CustomCMaps[n].m_Tex;
-																														}
-																														else
-																															if (!strnicmp(mapname, "$CustomTexture", 14))
-																															{
-																																int n;
-																																if (mapname[11] == '_')
-																																	n = atoi(&mapname[12]);
-																																else
-																																	n = atoi(&mapname[11]);
-																																TexPic = gRenDev->m_TexMan->m_CustomTextures[n].m_Tex;
-																															}
-																															else
-																																if (!stricmp(mapname, "$Diffuse"))
-																																	TexPic = &gRenDev->m_TexMan->m_Templates[EFTT_DIFFUSE];
-																																else
-																																	if (!stricmp(mapname, "$DecalOverlay"))
-																																		TexPic = &gRenDev->m_TexMan->m_Templates[EFTT_DECAL_OVERLAY];
-																																	else
-																																		if (!stricmp(mapname, "$Detail"))
-																																			TexPic = &gRenDev->m_TexMan->m_Templates[EFTT_DETAIL_OVERLAY];
-																																		else
-																																			if (!stricmp(mapname, "$Opacity"))
-																																				TexPic = &gRenDev->m_TexMan->m_Templates[EFTT_OPACITY];
-																																			else
-																																				if (!strnicmp(mapname, "$Specular", 9))
-																																					TexPic = &gRenDev->m_TexMan->m_Templates[EFTT_SPECULAR];
-																																				else
-																																					if (!stricmp(mapname, "$Attenuation2D"))
-																																						TexPic = &gRenDev->m_TexMan->m_Templates[EFTT_ATTENUATION2D];
-																																					else
-																																						if (!stricmp(mapname, "$Attenuation1D"))
-																																							TexPic = &gRenDev->m_TexMan->m_Templates[EFTT_ATTENUATION1D];
-																																						else
-																																							if (!strnicmp(mapname, "$BumpPlants", 11))
-																																							{
-																																								TexPic = &gRenDev->m_TexMan->m_Templates[EFTT_BUMP];
-																																								nFlags |= FTU_BUMPPLANTS;
-																																							}
-																																							else
-																																								if (!strnicmp(mapname, "$BumpDiffuse", 12))
-																																									TexPic = &gRenDev->m_TexMan->m_Templates[EFTT_BUMP_DIFFUSE];
-																																								else
-																																									if (!strnicmp(mapname, "$BumpHeight", 10))
-																																										TexPic = &gRenDev->m_TexMan->m_Templates[EFTT_BUMP_HEIGHT];
-																																									else
-																																										if (!strnicmp(mapname, "$Bump", 5))
-																																											TexPic = &gRenDev->m_TexMan->m_Templates[EFTT_BUMP];
-																																										else
-																																											if (!strnicmp(mapname, "$Subsurface", 11))
-																																												TexPic = &gRenDev->m_TexMan->m_Templates[EFTT_SUBSURFACE];
-																																											else
-																																												if (!stricmp(mapname, "$Cubemap"))
-																																													TexPic = &gRenDev->m_TexMan->m_Templates[EFTT_CUBEMAP];
-																																												else
-																																													if (!strnicmp(mapname, "$Occlusion", 10))
-																																														TexPic = &gRenDev->m_TexMan->m_Templates[EFTT_OCCLUSION];
-																																													else
-																																														if (!strnicmp(mapname, "$Gloss", 6))
-																																															TexPic = &gRenDev->m_TexMan->m_Templates[EFTT_GLOSS];
-																																														else // tiago: added
-																																															if (!stricmp(mapname, "$FlashBangMap"))
-																																																TexPic = gRenDev->m_TexMan->m_Text_FlashBangMap;
-																																															else
-																																																if (!stricmp(mapname, "$ScreenTexMap"))
-																																																	TexPic = gRenDev->m_TexMan->m_Text_ScreenMap;
-																																																else
-																																																	if (!stricmp(mapname, "$PrevScreenTexMap"))
-																																																		TexPic = gRenDev->m_TexMan->m_Text_PrevScreenMap;
-																																																	else
-																																																		if (!stricmp(mapname, "$ScreenLuminosityMap"))
-																																																			TexPic = gRenDev->m_TexMan->m_Text_ScreenLuminosityMap;
-																																																		else
-																																																			if (!stricmp(mapname, "$ScreenCurrLuminosityMap"))
-																																																				TexPic = gRenDev->m_TexMan->m_Text_ScreenCurrLuminosityMap;
-																																																			else
-																																																				if (!stricmp(mapname, "$ScreenLowMap"))
-																																																					TexPic = gRenDev->m_TexMan->m_Text_ScreenLowMap;
-																																																				else
-																																																					if (!stricmp(mapname, "$ScreenAvg1x1"))
-																																																						TexPic = gRenDev->m_TexMan->m_Text_ScreenAvg1x1;
-																																																					else
-																																																						if (!stricmp(mapname, "$DofTexMap"))
-																																																							TexPic = gRenDev->m_TexMan->m_Text_DofMap;
+			n = atoi(&mapname[11]);
+		TexPic = gRenDev->m_TexMan->m_CustomCMaps[n].m_Tex;
+	}
+	else if (!strnicmp(mapname, "$CustomTexture", 14))
+	{
+		int n;
+		if (mapname[11] == '_')
+			n = atoi(&mapname[12]);
+		else
+			n = atoi(&mapname[11]);
+		TexPic = gRenDev->m_TexMan->m_CustomTextures[n].m_Tex;
+	}
+	else if (!stricmp(mapname, "$Diffuse"))
+		TexPic = &gRenDev->m_TexMan->m_Templates[EFTT_DIFFUSE];
+	else if (!stricmp(mapname, "$DecalOverlay"))
+		TexPic = &gRenDev->m_TexMan->m_Templates[EFTT_DECAL_OVERLAY];
+	else if (!stricmp(mapname, "$Detail"))
+		TexPic = &gRenDev->m_TexMan->m_Templates[EFTT_DETAIL_OVERLAY];
+	else if (!stricmp(mapname, "$Opacity"))
+		TexPic = &gRenDev->m_TexMan->m_Templates[EFTT_OPACITY];
+	else if (!strnicmp(mapname, "$Specular", 9))
+		TexPic = &gRenDev->m_TexMan->m_Templates[EFTT_SPECULAR];
+	else if (!stricmp(mapname, "$Attenuation2D"))
+		TexPic = &gRenDev->m_TexMan->m_Templates[EFTT_ATTENUATION2D];
+	else if (!stricmp(mapname, "$Attenuation1D"))
+		TexPic = &gRenDev->m_TexMan->m_Templates[EFTT_ATTENUATION1D];
+	else if (!strnicmp(mapname, "$BumpPlants", 11))
+	{
+		TexPic = &gRenDev->m_TexMan->m_Templates[EFTT_BUMP];
+		nFlags |= FTU_BUMPPLANTS;
+	}
+	else if (!strnicmp(mapname, "$BumpDiffuse", 12))
+		TexPic = &gRenDev->m_TexMan->m_Templates[EFTT_BUMP_DIFFUSE];
+	else if (!strnicmp(mapname, "$BumpHeight", 10))
+		TexPic = &gRenDev->m_TexMan->m_Templates[EFTT_BUMP_HEIGHT];
+	else if (!strnicmp(mapname, "$Bump", 5))
+		TexPic = &gRenDev->m_TexMan->m_Templates[EFTT_BUMP];
+	else if (!strnicmp(mapname, "$Subsurface", 11))
+		TexPic = &gRenDev->m_TexMan->m_Templates[EFTT_SUBSURFACE];
+	else if (!stricmp(mapname, "$Cubemap"))
+		TexPic = &gRenDev->m_TexMan->m_Templates[EFTT_CUBEMAP];
+	else if (!strnicmp(mapname, "$Occlusion", 10))
+		TexPic = &gRenDev->m_TexMan->m_Templates[EFTT_OCCLUSION];
+	else if (!strnicmp(mapname, "$Gloss", 6))
+		TexPic = &gRenDev->m_TexMan->m_Templates[EFTT_GLOSS];
+	else if (!stricmp(mapname, "$FlashBangMap")) // tiago: added
+		TexPic = gRenDev->m_TexMan->m_Text_FlashBangMap;
+	else if (!stricmp(mapname, "$ScreenTexMap"))
+		TexPic = gRenDev->m_TexMan->m_Text_ScreenMap;
+	else if (!stricmp(mapname, "$PrevScreenTexMap"))
+		TexPic = gRenDev->m_TexMan->m_Text_PrevScreenMap;
+	else if (!stricmp(mapname, "$ScreenLuminosityMap"))
+		TexPic = gRenDev->m_TexMan->m_Text_ScreenLuminosityMap;
+	else if (!stricmp(mapname, "$ScreenCurrLuminosityMap"))
+		TexPic = gRenDev->m_TexMan->m_Text_ScreenCurrLuminosityMap;
+	else if (!stricmp(mapname, "$ScreenLowMap"))
+		TexPic = gRenDev->m_TexMan->m_Text_ScreenLowMap;
+	else if (!stricmp(mapname, "$ScreenAvg1x1"))
+		TexPic = gRenDev->m_TexMan->m_Text_ScreenAvg1x1;
+	else if (!stricmp(mapname, "$DofTexMap"))
+		TexPic = gRenDev->m_TexMan->m_Text_DofMap;
 
 	return TexPic;
 }
@@ -652,218 +599,207 @@ void CShader::mfCheckShaderResTextures(TArray<SShaderPass>& Dst, SShader* ef, SR
 				else
 					mfCheckAnimatedSequence(&Res->m_Textures[EFTT_DIFFUSE]->m_TU, Res->m_Textures[EFTT_DIFFUSE]->m_TU.m_TexPic);
 			}
-			else
-				if (Dst[i].m_TUnits[j].m_TexPic == &gRenDev->m_TexMan->m_Templates[EFTT_PHONG])
+			else if (Dst[i].m_TUnits[j].m_TexPic == &gRenDev->m_TexMan->m_Templates[EFTT_PHONG])
+			{
+				if (!Res->m_Textures[EFTT_PHONG])
 				{
-					if (!Res->m_Textures[EFTT_PHONG])
+					Res->AddTextureMap(EFTT_PHONG);
+					Tex = Res->m_Textures[EFTT_PHONG];
+					if (!Tex->m_TU.m_TexPic)
 					{
-						Res->AddTextureMap(EFTT_PHONG);
-						Tex = Res->m_Textures[EFTT_PHONG];
-						if (!Tex->m_TU.m_TexPic)
+						float n = CRenderer::CV_r_shininess;
+						if (Res->m_LMaterial)
+							n = Res->m_LMaterial->Front.m_SpecShininess;
+						Tex->m_TU.m_TexPic = gRenDev->EF_MakePhongTexture((int)n);
+					}
+				}
+			}
+			else if (Dst[i].m_TUnits[j].m_TexPic == &gRenDev->m_TexMan->m_Templates[EFTT_GLOSS])
+			{
+				if (!Res->m_Textures[EFTT_GLOSS])
+				{
+					Warning(VALIDATOR_FLAG_TEXTURE, 0, "WARNING: Missed texture '%s' for shader template '%s'", mfTemplateTexIdToName(EFTT_GLOSS), ef->m_Name.c_str());
+					Res->AddTextureMap(EFTT_GLOSS);
+				}
+				Tex = Res->m_Textures[EFTT_GLOSS];
+				if (!Tex->m_TU.m_TexPic)
+				{
+					if (!Tex->m_Name.empty())
+						Tex->m_TU.m_TexPic = mfLoadResourceTexture(Tex->m_Name.c_str(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
+					if (!Tex->m_TU.m_TexPic || !Tex->m_TU.m_TexPic->IsTextureLoaded())
+					{
+						if (!stricmp(CRenderer::CV_r_glossdefault->GetString(), "$Diffuse"))
+							Tex->m_TU.m_TexPic = mfLoadResourceTexture(Res->m_Textures[EFTT_DIFFUSE]->m_Name.c_str(), patch, Res->m_Textures[EFTT_DIFFUSE]->m_TU.GetTexFlags() | Flags, Res->m_Textures[EFTT_DIFFUSE]->m_TU.GetTexFlags2(), eTT_Base, ef, Res->m_Textures[EFTT_GLOSS]);
+						else
+							Tex->m_TU.m_TexPic = mfLoadResourceTexture(CRenderer::CV_r_glossdefault->GetString(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
+					}
+				}
+			}
+			else if (Dst[i].m_TUnits[j].m_TexPic == &gRenDev->m_TexMan->m_Templates[EFTT_DETAIL_OVERLAY])
+			{
+				if (!Res->m_Textures[EFTT_DETAIL_OVERLAY])
+					Warning(VALIDATOR_FLAG_TEXTURE, 0, "WARNING: Missed texture '%s' for shader template '%s'", mfTemplateTexIdToName(EFTT_DETAIL_OVERLAY), ef->m_Name.c_str());
+				else
+				{
+					Tex = Res->m_Textures[EFTT_DETAIL_OVERLAY];
+					if (!Tex->m_TU.m_TexPic)
+					{
+						Tex->m_TU.m_TexPic = mfLoadResourceTexture(Tex->m_Name.c_str(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
+						if (!Tex->m_TU.m_TexPic->IsTextureLoaded())
 						{
-							float n = CRenderer::CV_r_shininess;
-							if (Res->m_LMaterial)
-								n = Res->m_LMaterial->Front.m_SpecShininess;
-							Tex->m_TU.m_TexPic = gRenDev->EF_MakePhongTexture((int)n);
+							Tex->m_TU.m_TexPic = mfLoadResourceTexture(CRenderer::CV_r_detaildefault->GetString(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
+							if (!Tex->m_TU.m_TexPic->IsTextureLoaded())
+								Tex->m_TU.m_TexPic = mfLoadResourceTexture("detail/dirty", patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
 						}
 					}
 				}
+			}
+			else if (Dst[i].m_TUnits[j].m_TexPic == &gRenDev->m_TexMan->m_Templates[EFTT_OPACITY])
+			{
+				if (!Res->m_Textures[EFTT_OPACITY])
+					Warning(VALIDATOR_FLAG_TEXTURE, 0, "WARNING: Missed texture '%s' for shader template '%s'", mfTemplateTexIdToName(EFTT_OPACITY), ef->m_Name.c_str());
 				else
-					if (Dst[i].m_TUnits[j].m_TexPic == &gRenDev->m_TexMan->m_Templates[EFTT_GLOSS])
+				{
+					Tex = Res->m_Textures[EFTT_OPACITY];
+					if (!Tex->m_TU.m_TexPic)
 					{
-						if (!Res->m_Textures[EFTT_GLOSS])
+						Tex->m_TU.m_TexPic = mfLoadResourceTexture(Tex->m_Name.c_str(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
+						if (!Tex->m_TU.m_TexPic->IsTextureLoaded())
 						{
-							Warning(VALIDATOR_FLAG_TEXTURE, 0, "WARNING: Missed texture '%s' for shader template '%s'", mfTemplateTexIdToName(EFTT_GLOSS), ef->m_Name.c_str());
-							Res->AddTextureMap(EFTT_GLOSS);
-						}
-						Tex = Res->m_Textures[EFTT_GLOSS];
-						if (!Tex->m_TU.m_TexPic)
-						{
-							if (!Tex->m_Name.empty())
-								Tex->m_TU.m_TexPic = mfLoadResourceTexture(Tex->m_Name.c_str(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
-							if (!Tex->m_TU.m_TexPic || !Tex->m_TU.m_TexPic->IsTextureLoaded())
-							{
-								if (!stricmp(CRenderer::CV_r_glossdefault->GetString(), "$Diffuse"))
-									Tex->m_TU.m_TexPic = mfLoadResourceTexture(Res->m_Textures[EFTT_DIFFUSE]->m_Name.c_str(), patch, Res->m_Textures[EFTT_DIFFUSE]->m_TU.GetTexFlags() | Flags, Res->m_Textures[EFTT_DIFFUSE]->m_TU.GetTexFlags2(), eTT_Base, ef, Res->m_Textures[EFTT_GLOSS]);
-								else
-									Tex->m_TU.m_TexPic = mfLoadResourceTexture(CRenderer::CV_r_glossdefault->GetString(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
-							}
+							Tex->m_TU.m_TexPic = mfLoadResourceTexture(CRenderer::CV_r_opacitydefault->GetString(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
+							if (!Tex->m_TU.m_TexPic->IsTextureLoaded())
+								Tex->m_TU.m_TexPic = mfLoadResourceTexture("Textures/white", patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
 						}
 					}
-					else
-						if (Dst[i].m_TUnits[j].m_TexPic == &gRenDev->m_TexMan->m_Templates[EFTT_DETAIL_OVERLAY])
+				}
+			}
+			else if (Dst[i].m_TUnits[j].m_TexPic == &gRenDev->m_TexMan->m_Templates[EFTT_SPECULAR])
+			{
+				if (!Res->m_Textures[EFTT_SPECULAR])
+					Warning(VALIDATOR_FLAG_TEXTURE, 0, "WARNING: Missed texture '%s' for shader template '%s'", mfTemplateTexIdToName(EFTT_SPECULAR), ef->m_Name.c_str());
+				else
+				{
+					Tex = Res->m_Textures[EFTT_SPECULAR];
+					if (!Tex->m_TU.m_TexPic)
+					{
+						Tex->m_TU.m_TexPic = mfLoadResourceTexture(Tex->m_Name.c_str(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
+						if (!Tex->m_TU.m_TexPic->IsTextureLoaded())
 						{
-							if (!Res->m_Textures[EFTT_DETAIL_OVERLAY])
-								Warning(VALIDATOR_FLAG_TEXTURE, 0, "WARNING: Missed texture '%s' for shader template '%s'", mfTemplateTexIdToName(EFTT_DETAIL_OVERLAY), ef->m_Name.c_str());
-							else
-							{
-								Tex = Res->m_Textures[EFTT_DETAIL_OVERLAY];
-								if (!Tex->m_TU.m_TexPic)
-								{
-									Tex->m_TU.m_TexPic = mfLoadResourceTexture(Tex->m_Name.c_str(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
-									if (!Tex->m_TU.m_TexPic->IsTextureLoaded())
-									{
-										Tex->m_TU.m_TexPic = mfLoadResourceTexture(CRenderer::CV_r_detaildefault->GetString(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
-										if (!Tex->m_TU.m_TexPic->IsTextureLoaded())
-											Tex->m_TU.m_TexPic = mfLoadResourceTexture("detail/dirty", patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
-									}
-								}
-							}
+							if (Res->m_Textures[EFTT_DIFFUSE])
+								Tex->m_TU.m_TexPic = mfLoadResourceTexture(Res->m_Textures[EFTT_DIFFUSE]->m_Name.c_str(), patch, Res->m_Textures[EFTT_DIFFUSE]->m_TU.GetTexFlags() | Flags, Res->m_Textures[EFTT_DIFFUSE]->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
 						}
+					}
+				}
+			}
+			else if (Dst[i].m_TUnits[j].m_TexPic == &gRenDev->m_TexMan->m_Templates[EFTT_BUMP])
+			{
+				if (Res->m_Textures[EFTT_BUMP] && Res->m_Textures[EFTT_NORMALMAP])
+				{
+					char fullname[256];
+					sprintf(fullname, "%s+norm_%s", Res->m_Textures[EFTT_BUMP]->m_Name.c_str(), Res->m_Textures[EFTT_NORMALMAP]->m_Name.c_str());
+					Res->m_Textures[EFTT_BUMP]->m_TU.m_TexPic = mfLoadResourceTexture(fullname, patch, Res->m_Textures[EFTT_BUMP]->m_TU.GetTexFlags() | Flags, Res->m_Textures[EFTT_BUMP]->m_TU.GetTexFlags2(), eTT_Bumpmap, ef, Res->m_Textures[EFTT_BUMP], (float)Res->m_Textures[EFTT_BUMP]->m_Amount, (float)Res->m_Textures[EFTT_NORMALMAP]->m_Amount);
+				}
+				if (!Res->m_Textures[EFTT_BUMP])
+					Res->AddTextureMap(EFTT_BUMP);
+				Tex = Res->m_Textures[EFTT_BUMP];
+				if (!Tex->m_TU.m_TexPic || !Tex->m_TU.m_TexPic->IsTextureLoaded())
+				{
+					Tex = Res->m_Textures[EFTT_BUMP];
+					if (!Tex->m_Name.empty())
+						Tex->m_TU.m_TexPic = mfLoadResourceTexture(Tex->m_Name.c_str(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Bumpmap, ef, Tex, (float)Tex->m_Amount);
+					if (!Tex->m_TU.m_TexPic || !Tex->m_TU.m_TexPic->IsTextureLoaded())
+					{
+						if (Res->m_Textures[EFTT_NORMALMAP])
+							Tex->m_TU.m_TexPic = mfLoadResourceTexture(Res->m_Textures[EFTT_NORMALMAP]->m_Name.c_str(), patch, Res->m_Textures[EFTT_NORMALMAP]->m_TU.GetTexFlags() | Flags, Res->m_Textures[EFTT_NORMALMAP]->m_TU.GetTexFlags2(), eTT_Bumpmap, ef, Res->m_Textures[EFTT_BUMP], (float)Res->m_Textures[EFTT_NORMALMAP]->m_Amount);
+					}
+					if (!Tex->m_TU.m_TexPic || !Tex->m_TU.m_TexPic->IsTextureLoaded())
+					{
+						Tex->m_TU.m_nFlags |= FTU_NOBUMP;
+						if (!(Tex->m_TU.m_nFlags & FTU_BUMPPLANTS))
+							Tex->m_TU.m_TexPic = mfLoadResourceTexture("Textures/white_ddn", patch, Flags, 0, eTT_Bumpmap, ef, Tex);
 						else
-							if (Dst[i].m_TUnits[j].m_TexPic == &gRenDev->m_TexMan->m_Templates[EFTT_OPACITY])
-							{
-								if (!Res->m_Textures[EFTT_OPACITY])
-									Warning(VALIDATOR_FLAG_TEXTURE, 0, "WARNING: Missed texture '%s' for shader template '%s'", mfTemplateTexIdToName(EFTT_OPACITY), ef->m_Name.c_str());
-								else
-								{
-									Tex = Res->m_Textures[EFTT_OPACITY];
-									if (!Tex->m_TU.m_TexPic)
-									{
-										Tex->m_TU.m_TexPic = mfLoadResourceTexture(Tex->m_Name.c_str(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
-										if (!Tex->m_TU.m_TexPic->IsTextureLoaded())
-										{
-											Tex->m_TU.m_TexPic = mfLoadResourceTexture(CRenderer::CV_r_opacitydefault->GetString(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
-											if (!Tex->m_TU.m_TexPic->IsTextureLoaded())
-												Tex->m_TU.m_TexPic = mfLoadResourceTexture("Textures/white", patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
-										}
-									}
-								}
-							}
-							else
-								if (Dst[i].m_TUnits[j].m_TexPic == &gRenDev->m_TexMan->m_Templates[EFTT_SPECULAR])
-								{
-									if (!Res->m_Textures[EFTT_SPECULAR])
-										Warning(VALIDATOR_FLAG_TEXTURE, 0, "WARNING: Missed texture '%s' for shader template '%s'", mfTemplateTexIdToName(EFTT_SPECULAR), ef->m_Name.c_str());
-									else
-									{
-										Tex = Res->m_Textures[EFTT_SPECULAR];
-										if (!Tex->m_TU.m_TexPic)
-										{
-											Tex->m_TU.m_TexPic = mfLoadResourceTexture(Tex->m_Name.c_str(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
-											if (!Tex->m_TU.m_TexPic->IsTextureLoaded())
-											{
-												if (Res->m_Textures[EFTT_DIFFUSE])
-													Tex->m_TU.m_TexPic = mfLoadResourceTexture(Res->m_Textures[EFTT_DIFFUSE]->m_Name.c_str(), patch, Res->m_Textures[EFTT_DIFFUSE]->m_TU.GetTexFlags() | Flags, Res->m_Textures[EFTT_DIFFUSE]->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
-											}
-										}
-									}
-								}
-								else
-									if (Dst[i].m_TUnits[j].m_TexPic == &gRenDev->m_TexMan->m_Templates[EFTT_BUMP])
-									{
-										if (Res->m_Textures[EFTT_BUMP] && Res->m_Textures[EFTT_NORMALMAP])
-										{
-											char fullname[256];
-											sprintf(fullname, "%s+norm_%s", Res->m_Textures[EFTT_BUMP]->m_Name.c_str(), Res->m_Textures[EFTT_NORMALMAP]->m_Name.c_str());
-											Res->m_Textures[EFTT_BUMP]->m_TU.m_TexPic = mfLoadResourceTexture(fullname, patch, Res->m_Textures[EFTT_BUMP]->m_TU.GetTexFlags() | Flags, Res->m_Textures[EFTT_BUMP]->m_TU.GetTexFlags2(), eTT_Bumpmap, ef, Res->m_Textures[EFTT_BUMP], (float)Res->m_Textures[EFTT_BUMP]->m_Amount, (float)Res->m_Textures[EFTT_NORMALMAP]->m_Amount);
-										}
-										if (!Res->m_Textures[EFTT_BUMP])
-											Res->AddTextureMap(EFTT_BUMP);
-										Tex = Res->m_Textures[EFTT_BUMP];
-										if (!Tex->m_TU.m_TexPic || !Tex->m_TU.m_TexPic->IsTextureLoaded())
-										{
-											Tex = Res->m_Textures[EFTT_BUMP];
-											if (!Tex->m_Name.empty())
-												Tex->m_TU.m_TexPic = mfLoadResourceTexture(Tex->m_Name.c_str(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Bumpmap, ef, Tex, (float)Tex->m_Amount);
-											if (!Tex->m_TU.m_TexPic || !Tex->m_TU.m_TexPic->IsTextureLoaded())
-											{
-												if (Res->m_Textures[EFTT_NORMALMAP])
-													Tex->m_TU.m_TexPic = mfLoadResourceTexture(Res->m_Textures[EFTT_NORMALMAP]->m_Name.c_str(), patch, Res->m_Textures[EFTT_NORMALMAP]->m_TU.GetTexFlags() | Flags, Res->m_Textures[EFTT_NORMALMAP]->m_TU.GetTexFlags2(), eTT_Bumpmap, ef, Res->m_Textures[EFTT_BUMP], (float)Res->m_Textures[EFTT_NORMALMAP]->m_Amount);
-											}
-											if (!Tex->m_TU.m_TexPic || !Tex->m_TU.m_TexPic->IsTextureLoaded())
-											{
-												Tex->m_TU.m_nFlags |= FTU_NOBUMP;
-												if (!(Tex->m_TU.m_nFlags & FTU_BUMPPLANTS))
-													Tex->m_TU.m_TexPic = mfLoadResourceTexture("Textures/white_ddn", patch, Flags, 0, eTT_Bumpmap, ef, Tex);
-												else
-													Tex->m_TU.m_TexPic = mfLoadResourceTexture("Textures/white_ddn", patch, Flags, 0, eTT_Bumpmap, ef, Tex);
-											}
-										}
-									}
-									else
-										if (Dst[i].m_TUnits[j].m_TexPic == &gRenDev->m_TexMan->m_Templates[EFTT_DECAL_OVERLAY])
-										{
-											if (!Res->m_Textures[EFTT_DECAL_OVERLAY])
-												Res->AddTextureMap(EFTT_DECAL_OVERLAY);
-											Tex = Res->m_Textures[EFTT_DECAL_OVERLAY];
-											if (!Tex->m_TU.m_TexPic || !Tex->m_TU.m_TexPic->IsTextureLoaded())
-											{
-												if (!Tex->m_Name.empty())
-													Tex->m_TU.m_TexPic = mfLoadResourceTexture(Tex->m_Name.c_str(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex, (float)Tex->m_Amount);
-												else
-													Tex->m_TU.m_TexPic = mfLoadResourceTexture("Textures/white", patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex, (float)Tex->m_Amount);
-											}
-										}
-										else
-											if (Dst[i].m_TUnits[j].m_TexPic == &gRenDev->m_TexMan->m_Templates[EFTT_ATTENUATION2D])
-											{
-												if (!Res->m_Textures[EFTT_ATTENUATION2D])
-													Res->AddTextureMap(EFTT_ATTENUATION2D);
-												Tex = Res->m_Textures[EFTT_ATTENUATION2D];
-												if (!Tex->m_TU.m_TexPic)
-												{
-													if (!Tex->m_Name.empty())
-														Tex->m_TU.m_TexPic = mfLoadResourceTexture(Tex->m_Name.c_str(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
-													if (!Tex->m_TU.m_TexPic->IsTextureLoaded())
-														Tex->m_TU.m_TexPic = mfLoadResourceTexture("Textures/Defaults/PointLight2D", patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
-												}
-											}
-											else
-												if (Dst[i].m_TUnits[j].m_TexPic == &gRenDev->m_TexMan->m_Templates[EFTT_SUBSURFACE])
-												{
-													if (!Res->m_Textures[EFTT_SUBSURFACE])
-														Warning(VALIDATOR_FLAG_TEXTURE, 0, "WARNING: Missed texture '%s' for shader template '%s'", mfTemplateTexIdToName(EFTT_SUBSURFACE), ef->m_Name.c_str());
-													else
-													{
-														Tex = Res->m_Textures[EFTT_SUBSURFACE];
-														if (!Tex->m_TU.m_TexPic)
-														{
-															Tex->m_TU.m_TexPic = mfLoadResourceTexture(Tex->m_Name.c_str(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
-															if (!Tex->m_TU.m_TexPic->IsTextureLoaded())
-															{
-																Tex->m_TU.m_TexPic = nullptr;
-															}
-														}
-													}
-												}
-												else
-													if (Dst[i].m_TUnits[j].m_TexPic == &gRenDev->m_TexMan->m_Templates[EFTT_ATTENUATION1D])
-													{
-														if (!Res->m_Textures[EFTT_ATTENUATION1D])
-															Res->AddTextureMap(EFTT_ATTENUATION1D);
-														Tex = Res->m_Textures[EFTT_ATTENUATION1D];
-														if (!Tex->m_TU.m_TexPic)
-														{
-															if (!Tex->m_Name.empty())
-																Tex->m_TU.m_TexPic = mfLoadResourceTexture(Tex->m_Name.c_str(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
-															if (!Tex->m_TU.m_TexPic || !Tex->m_TU.m_TexPic->IsTextureLoaded())
-															{
-																if (gRenDev->m_TexMan->m_Text_Atten1D)
-																	Tex->m_TU.m_TexPic = gRenDev->m_TexMan->m_Text_Atten1D;
-																else
-																	Tex->m_TU.m_TexPic = mfLoadResourceTexture("Textures/Defaults/PointLight1D", patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
-															}
-														}
-													}
-													else
-														if (Dst[i].m_TUnits[j].m_TexPic == &gRenDev->m_TexMan->m_Templates[EFTT_CUBEMAP])
-														{
-															if (!Res->m_Textures[EFTT_CUBEMAP])
-															{
-																Warning(VALIDATOR_FLAG_TEXTURE, 0, "WARNING: Missed texture '%s' for shader template '%s'", mfTemplateTexIdToName(EFTT_CUBEMAP), ef->m_Name.c_str());
-																Res->AddTextureMap(EFTT_CUBEMAP);
-															}
-															Tex = Res->m_Textures[EFTT_CUBEMAP];
-															if (!Tex->m_TU.m_TexPic)
-															{
-																Tex->m_TU.m_TexPic = mfLoadResourceTexture(Tex->m_Name.c_str(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Cubemap, ef, Tex);
-																if (!Tex->m_TU.m_TexPic->IsTextureLoaded())
-																{
-																	Tex->m_TU.m_TexPic = mfLoadResourceTexture("Textures/Defaults/DefaultCM", patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Cubemap, ef, Tex);
-																}
-															}
-														}
+							Tex->m_TU.m_TexPic = mfLoadResourceTexture("Textures/white_ddn", patch, Flags, 0, eTT_Bumpmap, ef, Tex);
+					}
+				}
+			}
+			else if (Dst[i].m_TUnits[j].m_TexPic == &gRenDev->m_TexMan->m_Templates[EFTT_DECAL_OVERLAY])
+			{
+				if (!Res->m_Textures[EFTT_DECAL_OVERLAY])
+					Res->AddTextureMap(EFTT_DECAL_OVERLAY);
+				Tex = Res->m_Textures[EFTT_DECAL_OVERLAY];
+				if (!Tex->m_TU.m_TexPic || !Tex->m_TU.m_TexPic->IsTextureLoaded())
+				{
+					if (!Tex->m_Name.empty())
+						Tex->m_TU.m_TexPic = mfLoadResourceTexture(Tex->m_Name.c_str(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex, (float)Tex->m_Amount);
+					else
+						Tex->m_TU.m_TexPic = mfLoadResourceTexture("Textures/white", patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex, (float)Tex->m_Amount);
+				}
+			}
+			else if (Dst[i].m_TUnits[j].m_TexPic == &gRenDev->m_TexMan->m_Templates[EFTT_ATTENUATION2D])
+			{
+				if (!Res->m_Textures[EFTT_ATTENUATION2D])
+					Res->AddTextureMap(EFTT_ATTENUATION2D);
+				Tex = Res->m_Textures[EFTT_ATTENUATION2D];
+				if (!Tex->m_TU.m_TexPic)
+				{
+					if (!Tex->m_Name.empty())
+						Tex->m_TU.m_TexPic = mfLoadResourceTexture(Tex->m_Name.c_str(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
+					if (!Tex->m_TU.m_TexPic->IsTextureLoaded())
+						Tex->m_TU.m_TexPic = mfLoadResourceTexture("Textures/Defaults/PointLight2D", patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
+				}
+			}
+			else if (Dst[i].m_TUnits[j].m_TexPic == &gRenDev->m_TexMan->m_Templates[EFTT_SUBSURFACE])
+			{
+				if (!Res->m_Textures[EFTT_SUBSURFACE])
+					Warning(VALIDATOR_FLAG_TEXTURE, 0, "WARNING: Missed texture '%s' for shader template '%s'", mfTemplateTexIdToName(EFTT_SUBSURFACE), ef->m_Name.c_str());
+				else
+				{
+					Tex = Res->m_Textures[EFTT_SUBSURFACE];
+					if (!Tex->m_TU.m_TexPic)
+					{
+						Tex->m_TU.m_TexPic = mfLoadResourceTexture(Tex->m_Name.c_str(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
+						if (!Tex->m_TU.m_TexPic->IsTextureLoaded())
+						{
+							Tex->m_TU.m_TexPic = nullptr;
+						}
+					}
+				}
+			}
+			else if (Dst[i].m_TUnits[j].m_TexPic == &gRenDev->m_TexMan->m_Templates[EFTT_ATTENUATION1D])
+			{
+				if (!Res->m_Textures[EFTT_ATTENUATION1D])
+					Res->AddTextureMap(EFTT_ATTENUATION1D);
+				Tex = Res->m_Textures[EFTT_ATTENUATION1D];
+				if (!Tex->m_TU.m_TexPic)
+				{
+					if (!Tex->m_Name.empty())
+						Tex->m_TU.m_TexPic = mfLoadResourceTexture(Tex->m_Name.c_str(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
+					if (!Tex->m_TU.m_TexPic || !Tex->m_TU.m_TexPic->IsTextureLoaded())
+					{
+						if (gRenDev->m_TexMan->m_Text_Atten1D)
+							Tex->m_TU.m_TexPic = gRenDev->m_TexMan->m_Text_Atten1D;
+						else
+							Tex->m_TU.m_TexPic = mfLoadResourceTexture("Textures/Defaults/PointLight1D", patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
+					}
+				}
+			}
+			else if (Dst[i].m_TUnits[j].m_TexPic == &gRenDev->m_TexMan->m_Templates[EFTT_CUBEMAP])
+			{
+				if (!Res->m_Textures[EFTT_CUBEMAP])
+				{
+					Warning(VALIDATOR_FLAG_TEXTURE, 0, "WARNING: Missed texture '%s' for shader template '%s'", mfTemplateTexIdToName(EFTT_CUBEMAP), ef->m_Name.c_str());
+					Res->AddTextureMap(EFTT_CUBEMAP);
+				}
+				Tex = Res->m_Textures[EFTT_CUBEMAP];
+				if (!Tex->m_TU.m_TexPic)
+				{
+					Tex->m_TU.m_TexPic = mfLoadResourceTexture(Tex->m_Name.c_str(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Cubemap, ef, Tex);
+					if (!Tex->m_TU.m_TexPic->IsTextureLoaded())
+					{
+						Tex->m_TU.m_TexPic = mfLoadResourceTexture("Textures/Defaults/DefaultCM", patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Cubemap, ef, Tex);
+					}
+				}
+			}
 		}
 	}
 }
@@ -896,299 +832,287 @@ void CShader::mfCheckShaderResTexturesHW(TArray<SShaderPassHW>& Dst, SShader* ef
 				else
 					mfCheckAnimatedSequence(&Res->m_Textures[EFTT_DIFFUSE]->m_TU, Res->m_Textures[EFTT_DIFFUSE]->m_TU.m_TexPic);
 			}
-			else
-				if (Dst[i].m_TUnits[j].m_TexPic == &gRenDev->m_TexMan->m_Templates[EFTT_PHONG])
+			else if (Dst[i].m_TUnits[j].m_TexPic == &gRenDev->m_TexMan->m_Templates[EFTT_PHONG])
+			{
+				if (!Res->m_Textures[EFTT_PHONG])
 				{
-					if (!Res->m_Textures[EFTT_PHONG])
+					Res->AddTextureMap(EFTT_PHONG);
+					Tex = Res->m_Textures[EFTT_PHONG];
+					if (!Tex->m_TU.m_TexPic)
 					{
-						Res->AddTextureMap(EFTT_PHONG);
-						Tex = Res->m_Textures[EFTT_PHONG];
-						if (!Tex->m_TU.m_TexPic)
+						float n = CRenderer::CV_r_shininess;
+						if (Res->m_LMaterial)
+							n = Res->m_LMaterial->Front.m_SpecShininess;
+						Tex->m_TU.m_TexPic = gRenDev->EF_MakePhongTexture((int)n);
+					}
+				}
+			}
+			else if (Dst[i].m_TUnits[j].m_TexPic == &gRenDev->m_TexMan->m_Templates[EFTT_GLOSS])
+			{
+				if (!Res->m_Textures[EFTT_GLOSS])
+				{
+					Warning(VALIDATOR_FLAG_TEXTURE, 0, "WARNING: Missed texture '%s' for shader template '%s'", mfTemplateTexIdToName(EFTT_GLOSS), ef->m_Name.c_str());
+					Res->AddTextureMap(EFTT_GLOSS);
+				}
+				Tex = Res->m_Textures[EFTT_GLOSS];
+				if (!Tex->m_TU.m_TexPic)
+				{
+					if (!Tex->m_Name.empty())
+						Tex->m_TU.m_TexPic = mfLoadResourceTexture(Tex->m_Name.c_str(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
+					if (!Tex->m_TU.m_TexPic || !Tex->m_TU.m_TexPic->IsTextureLoaded())
+					{
+						if (!stricmp(CRenderer::CV_r_glossdefault->GetString(), "$Diffuse"))
+							Tex->m_TU.m_TexPic = mfLoadResourceTexture(Res->m_Textures[EFTT_DIFFUSE]->m_Name.c_str(), patch, Res->m_Textures[EFTT_DIFFUSE]->m_TU.GetTexFlags() | Flags, Res->m_Textures[EFTT_DIFFUSE]->m_TU.GetTexFlags2(), eTT_Base, ef, Res->m_Textures[EFTT_GLOSS]);
+						else
+							Tex->m_TU.m_TexPic = mfLoadResourceTexture(CRenderer::CV_r_glossdefault->GetString(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
+					}
+				}
+			}
+			else if (Dst[i].m_TUnits[j].m_TexPic == &gRenDev->m_TexMan->m_Templates[EFTT_DETAIL_OVERLAY])
+			{
+				if (!Res->m_Textures[EFTT_DETAIL_OVERLAY])
+					Warning(VALIDATOR_FLAG_TEXTURE, 0, "WARNING: Missed texture '%s' for shader template '%s'", mfTemplateTexIdToName(EFTT_DETAIL_OVERLAY), ef->m_Name.c_str());
+				else
+				{
+					Tex = Res->m_Textures[EFTT_DETAIL_OVERLAY];
+					if (!Tex->m_TU.m_TexPic)
+					{
+						Tex->m_TU.m_TexPic = mfLoadResourceTexture(Tex->m_Name.c_str(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
+						if (!Tex->m_TU.m_TexPic->IsTextureLoaded())
 						{
-							float n = CRenderer::CV_r_shininess;
-							if (Res->m_LMaterial)
-								n = Res->m_LMaterial->Front.m_SpecShininess;
-							Tex->m_TU.m_TexPic = gRenDev->EF_MakePhongTexture((int)n);
+							Tex->m_TU.m_TexPic = mfLoadResourceTexture(CRenderer::CV_r_detaildefault->GetString(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
+							if (!Tex->m_TU.m_TexPic->IsTextureLoaded())
+								Tex->m_TU.m_TexPic = mfLoadResourceTexture("detail/dirty", patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
 						}
 					}
 				}
+			}
+			else if (Dst[i].m_TUnits[j].m_TexPic == &gRenDev->m_TexMan->m_Templates[EFTT_OPACITY])
+			{
+				if (!Res->m_Textures[EFTT_OPACITY])
+					Warning(VALIDATOR_FLAG_TEXTURE, 0, "WARNING: Missed texture '%s' for shader template '%s'", mfTemplateTexIdToName(EFTT_OPACITY), ef->m_Name.c_str());
 				else
-					if (Dst[i].m_TUnits[j].m_TexPic == &gRenDev->m_TexMan->m_Templates[EFTT_GLOSS])
+				{
+					Tex = Res->m_Textures[EFTT_OPACITY];
+					if (!Tex->m_TU.m_TexPic)
 					{
-						if (!Res->m_Textures[EFTT_GLOSS])
+						Tex->m_TU.m_TexPic = mfLoadResourceTexture(Tex->m_Name.c_str(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
+						if (!Tex->m_TU.m_TexPic->IsTextureLoaded())
 						{
-							Warning(VALIDATOR_FLAG_TEXTURE, 0, "WARNING: Missed texture '%s' for shader template '%s'", mfTemplateTexIdToName(EFTT_GLOSS), ef->m_Name.c_str());
-							Res->AddTextureMap(EFTT_GLOSS);
-						}
-						Tex = Res->m_Textures[EFTT_GLOSS];
-						if (!Tex->m_TU.m_TexPic)
-						{
-							if (!Tex->m_Name.empty())
-								Tex->m_TU.m_TexPic = mfLoadResourceTexture(Tex->m_Name.c_str(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
-							if (!Tex->m_TU.m_TexPic || !Tex->m_TU.m_TexPic->IsTextureLoaded())
-							{
-								if (!stricmp(CRenderer::CV_r_glossdefault->GetString(), "$Diffuse"))
-									Tex->m_TU.m_TexPic = mfLoadResourceTexture(Res->m_Textures[EFTT_DIFFUSE]->m_Name.c_str(), patch, Res->m_Textures[EFTT_DIFFUSE]->m_TU.GetTexFlags() | Flags, Res->m_Textures[EFTT_DIFFUSE]->m_TU.GetTexFlags2(), eTT_Base, ef, Res->m_Textures[EFTT_GLOSS]);
-								else
-									Tex->m_TU.m_TexPic = mfLoadResourceTexture(CRenderer::CV_r_glossdefault->GetString(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
-							}
+							Tex->m_TU.m_TexPic = mfLoadResourceTexture(CRenderer::CV_r_opacitydefault->GetString(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
+							if (!Tex->m_TU.m_TexPic->IsTextureLoaded())
+								Tex->m_TU.m_TexPic = mfLoadResourceTexture("Textures/white", patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
 						}
 					}
-					else
-						if (Dst[i].m_TUnits[j].m_TexPic == &gRenDev->m_TexMan->m_Templates[EFTT_DETAIL_OVERLAY])
+				}
+			}
+			else if (Dst[i].m_TUnits[j].m_TexPic == &gRenDev->m_TexMan->m_Templates[EFTT_SPECULAR])
+			{
+				if (!Res->m_Textures[EFTT_SPECULAR])
+					Warning(VALIDATOR_FLAG_TEXTURE, 0, "WARNING: Missed texture '%s' for shader template '%s'", mfTemplateTexIdToName(EFTT_SPECULAR), ef->m_Name.c_str());
+				else
+				{
+					Tex = Res->m_Textures[EFTT_SPECULAR];
+					if (!Tex->m_TU.m_TexPic)
+					{
+						Tex->m_TU.m_TexPic = mfLoadResourceTexture(Tex->m_Name.c_str(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
+						if (!Tex->m_TU.m_TexPic->IsTextureLoaded())
 						{
-							if (!Res->m_Textures[EFTT_DETAIL_OVERLAY])
-								Warning(VALIDATOR_FLAG_TEXTURE, 0, "WARNING: Missed texture '%s' for shader template '%s'", mfTemplateTexIdToName(EFTT_DETAIL_OVERLAY), ef->m_Name.c_str());
-							else
-							{
-								Tex = Res->m_Textures[EFTT_DETAIL_OVERLAY];
-								if (!Tex->m_TU.m_TexPic)
-								{
-									Tex->m_TU.m_TexPic = mfLoadResourceTexture(Tex->m_Name.c_str(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
-									if (!Tex->m_TU.m_TexPic->IsTextureLoaded())
-									{
-										Tex->m_TU.m_TexPic = mfLoadResourceTexture(CRenderer::CV_r_detaildefault->GetString(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
-										if (!Tex->m_TU.m_TexPic->IsTextureLoaded())
-											Tex->m_TU.m_TexPic = mfLoadResourceTexture("detail/dirty", patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
-									}
-								}
-							}
+							if (Res->m_Textures[EFTT_DIFFUSE])
+								Tex->m_TU.m_TexPic = mfLoadResourceTexture(Res->m_Textures[EFTT_DIFFUSE]->m_Name.c_str(), patch, Res->m_Textures[EFTT_DIFFUSE]->m_TU.GetTexFlags() | Flags, Res->m_Textures[EFTT_DIFFUSE]->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
 						}
-						else
-							if (Dst[i].m_TUnits[j].m_TexPic == &gRenDev->m_TexMan->m_Templates[EFTT_OPACITY])
-							{
-								if (!Res->m_Textures[EFTT_OPACITY])
-									Warning(VALIDATOR_FLAG_TEXTURE, 0, "WARNING: Missed texture '%s' for shader template '%s'", mfTemplateTexIdToName(EFTT_OPACITY), ef->m_Name.c_str());
-								else
-								{
-									Tex = Res->m_Textures[EFTT_OPACITY];
-									if (!Tex->m_TU.m_TexPic)
-									{
-										Tex->m_TU.m_TexPic = mfLoadResourceTexture(Tex->m_Name.c_str(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
-										if (!Tex->m_TU.m_TexPic->IsTextureLoaded())
-										{
-											Tex->m_TU.m_TexPic = mfLoadResourceTexture(CRenderer::CV_r_opacitydefault->GetString(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
-											if (!Tex->m_TU.m_TexPic->IsTextureLoaded())
-												Tex->m_TU.m_TexPic = mfLoadResourceTexture("Textures/white", patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
-										}
-									}
-								}
-							}
-							else
-								if (Dst[i].m_TUnits[j].m_TexPic == &gRenDev->m_TexMan->m_Templates[EFTT_SPECULAR])
-								{
-									if (!Res->m_Textures[EFTT_SPECULAR])
-										Warning(VALIDATOR_FLAG_TEXTURE, 0, "WARNING: Missed texture '%s' for shader template '%s'", mfTemplateTexIdToName(EFTT_SPECULAR), ef->m_Name.c_str());
-									else
-									{
-										Tex = Res->m_Textures[EFTT_SPECULAR];
-										if (!Tex->m_TU.m_TexPic)
-										{
-											Tex->m_TU.m_TexPic = mfLoadResourceTexture(Tex->m_Name.c_str(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
-											if (!Tex->m_TU.m_TexPic->IsTextureLoaded())
-											{
-												if (Res->m_Textures[EFTT_DIFFUSE])
-													Tex->m_TU.m_TexPic = mfLoadResourceTexture(Res->m_Textures[EFTT_DIFFUSE]->m_Name.c_str(), patch, Res->m_Textures[EFTT_DIFFUSE]->m_TU.GetTexFlags() | Flags, Res->m_Textures[EFTT_DIFFUSE]->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
-											}
-										}
-									}
-								}
-								else
-									if (Dst[i].m_TUnits[j].m_TexPic == &gRenDev->m_TexMan->m_Templates[EFTT_BUMP])
-									{
+					}
+				}
+			}
+			else if (Dst[i].m_TUnits[j].m_TexPic == &gRenDev->m_TexMan->m_Templates[EFTT_BUMP])
+			{
 #ifdef USE_3DC
-										if (gRenDev->m_bDeviceSupportsComprNormalmaps && (ef->m_Flags & EF_ALLOW3DC))
-										{
-											Flags |= FT_ALLOW3DC;
-											if (CRenderer::CV_r_texnormalmapcompressed)
-												Flags |= FT_3DC;
-										}
+				if (gRenDev->m_bDeviceSupportsComprNormalmaps && (ef->m_Flags & EF_ALLOW3DC))
+				{
+					Flags |= FT_ALLOW3DC;
+					if (CRenderer::CV_r_texnormalmapcompressed)
+						Flags |= FT_3DC;
+				}
 #endif
-										if (Res->m_Textures[EFTT_BUMP] && !Res->m_Textures[EFTT_BUMP]->m_Name.empty() && Res->m_Textures[EFTT_NORMALMAP] && !Res->m_Textures[EFTT_NORMALMAP]->m_Name.empty())
-										{
-											char fullname[512];
-											sprintf(fullname, "%s+norm_%s", Res->m_Textures[EFTT_BUMP]->m_Name.c_str(), Res->m_Textures[EFTT_NORMALMAP]->m_Name.c_str());
-											Res->m_Textures[EFTT_BUMP]->m_TU.m_TexPic = mfLoadResourceTexture(fullname, patch, Res->m_Textures[EFTT_BUMP]->m_TU.GetTexFlags() | Flags, Res->m_Textures[EFTT_BUMP]->m_TU.GetTexFlags2(), eTT_Bumpmap, ef, Res->m_Textures[EFTT_BUMP], (float)Res->m_Textures[EFTT_BUMP]->m_Amount, (float)Res->m_Textures[EFTT_NORMALMAP]->m_Amount);
-										}
-										if (!Res->m_Textures[EFTT_BUMP])
-											Res->AddTextureMap(EFTT_BUMP);
-										Tex = Res->m_Textures[EFTT_BUMP];
-										if (!Tex->m_TU.m_TexPic || !Tex->m_TU.m_TexPic->IsTextureLoaded())
-										{
-											Tex = Res->m_Textures[EFTT_BUMP];
-											ETexType eTT = Dst[i].m_TUnits[j].m_eTexType == eTT_DSDTBump ? eTT_DSDTBump : eTT_Bumpmap;
-											if (!Tex->m_Name.empty())
-												Tex->m_TU.m_TexPic = mfLoadResourceTexture(Tex->m_Name.c_str(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT, ef, Tex, (float)Tex->m_Amount);
-											if (!Tex->m_TU.m_TexPic || !Tex->m_TU.m_TexPic->IsTextureLoaded())
-											{
-												if (Res->m_Textures[EFTT_NORMALMAP])
-												{
-													Tex->m_TU.m_TexPic = mfLoadResourceTexture(Res->m_Textures[EFTT_NORMALMAP]->m_Name.c_str(), patch, Res->m_Textures[EFTT_NORMALMAP]->m_TU.GetTexFlags() | Flags, Res->m_Textures[EFTT_NORMALMAP]->m_TU.GetTexFlags2(), eTT, ef, Res->m_Textures[EFTT_BUMP], (float)Res->m_Textures[EFTT_NORMALMAP]->m_Amount);
-													SAFE_DELETE(Res->m_Textures[EFTT_NORMALMAP]);
-												}
-											}
-											if (!Tex->m_TU.m_TexPic || !Tex->m_TU.m_TexPic->IsTextureLoaded())
-											{
-												Tex->m_TU.m_nFlags |= FTU_NOBUMP;
-												if (!(Dst[i].m_TUnits[j].m_nFlags & FTU_BUMPPLANTS))
-													Tex->m_TU.m_TexPic = mfLoadResourceTexture("Textures/white_ddn", patch, Flags, 0, eTT_Bumpmap, ef, Tex);
-												else
-													Tex->m_TU.m_TexPic = mfLoadResourceTexture("Textures/white_ddn", patch, Flags, 0, eTT_Bumpmap, ef, Tex);
-											}
-										}
-									}
-									else
-										if (Dst[i].m_TUnits[j].m_TexPic == &gRenDev->m_TexMan->m_Templates[EFTT_BUMP_DIFFUSE])
-										{
-											char nameBump[256];
-											char nameNorm[256];
-											nameBump[0] = 0;
-											nameNorm[0] = 0;
-											if (Res->m_Textures[EFTT_BUMP] && !Res->m_Textures[EFTT_BUMP]->m_Name.empty())
-											{
-												const char* str = strstr(Res->m_Textures[EFTT_BUMP]->m_Name.c_str(), "_ddn");
-												if (str)
-												{
-													int nSize = str - Res->m_Textures[EFTT_BUMP]->m_Name.c_str();
-													memcpy(nameBump, Res->m_Textures[EFTT_BUMP]->m_Name.c_str(), nSize);
-													memcpy(&nameBump[nSize], "_ddndif", 7);
-													strcpy(&nameBump[nSize + 7], &str[4]);
-													FILE* fp = iSystem->GetIPak()->FOpen(nameBump, "rb");
-													if (!fp)
-														nameBump[0] = 0;
-													else
-														iSystem->GetIPak()->FClose(fp);
-												}
-												if (!nameBump[0])
-													strcpy(nameBump, Res->m_Textures[EFTT_BUMP]->m_Name.c_str());
-											}
-											if (Res->m_Textures[EFTT_NORMALMAP] && !Res->m_Textures[EFTT_NORMALMAP]->m_Name.empty())
-											{
-												const char* str = strstr(Res->m_Textures[EFTT_NORMALMAP]->m_Name.c_str(), "_ddn");
-												if (str)
-												{
-													int nSize = str - Res->m_Textures[EFTT_NORMALMAP]->m_Name.c_str();
-													memcpy(nameNorm, Res->m_Textures[EFTT_NORMALMAP]->m_Name.c_str(), nSize);
-													memcpy(&nameNorm[nSize], "_ddndif", 7);
-													strcpy(&nameNorm[nSize + 7], &str[4]);
-													FILE* fp = iSystem->GetIPak()->FOpen(nameNorm, "rb");
-													if (!fp)
-														nameNorm[0] = 0;
-													else
-														iSystem->GetIPak()->FClose(fp);
-												}
-												if (!nameNorm[0])
-													strcpy(nameNorm, Res->m_Textures[EFTT_NORMALMAP]->m_Name.c_str());
-											}
-											if (!Res->m_Textures[EFTT_BUMP_DIFFUSE])
-												Res->AddTextureMap(EFTT_BUMP_DIFFUSE);
-											if (nameBump[0] && nameNorm[0])
-											{
-												char fullname[256];
-												sprintf(fullname, "%s+norm_%s", nameBump, nameNorm);
-												Res->m_Textures[EFTT_BUMP_DIFFUSE]->m_TU.m_TexPic = mfLoadResourceTexture(fullname, patch, Res->m_Textures[EFTT_BUMP]->m_TU.GetTexFlags() | Flags, Res->m_Textures[EFTT_BUMP]->m_TU.GetTexFlags2(), eTT_Bumpmap, ef, Res->m_Textures[EFTT_BUMP_DIFFUSE], (float)Res->m_Textures[EFTT_BUMP]->m_Amount, (float)Res->m_Textures[EFTT_NORMALMAP]->m_Amount);
-											}
-											Tex = Res->m_Textures[EFTT_BUMP_DIFFUSE];
-											if (!Tex->m_TU.m_TexPic || !Tex->m_TU.m_TexPic->IsTextureLoaded())
-											{
-												ETexType eTT = Dst[i].m_TUnits[j].m_eTexType == eTT_DSDTBump ? eTT_DSDTBump : eTT_Bumpmap;
-												if (nameBump[0])
-													Tex->m_TU.m_TexPic = mfLoadResourceTexture(nameBump, patch, Res->m_Textures[EFTT_BUMP]->m_TU.GetTexFlags() | Flags, Res->m_Textures[EFTT_BUMP]->m_TU.GetTexFlags2(), eTT, ef, Tex, (float)Res->m_Textures[EFTT_BUMP]->m_Amount);
-												if (!Tex->m_TU.m_TexPic || !Tex->m_TU.m_TexPic->IsTextureLoaded())
-												{
-													if (nameNorm[0])
-														Tex->m_TU.m_TexPic = mfLoadResourceTexture(nameNorm, patch, Res->m_Textures[EFTT_NORMALMAP]->m_TU.GetTexFlags() | Flags, Res->m_Textures[EFTT_NORMALMAP]->m_TU.GetTexFlags2(), eTT, ef, Tex, (float)Res->m_Textures[EFTT_NORMALMAP]->m_Amount);
-												}
-												if (!Tex->m_TU.m_TexPic || !Tex->m_TU.m_TexPic->IsTextureLoaded())
-												{
-													Tex->m_TU.m_nFlags |= FTU_NOBUMP;
-													Tex->m_TU.m_TexPic = mfLoadResourceTexture("Textures/white_ddn", patch, Flags, 0, eTT_Bumpmap, ef, Tex);
-												}
-											}
-										}
-										else
-											if (Dst[i].m_TUnits[j].m_TexPic == &gRenDev->m_TexMan->m_Templates[EFTT_DECAL_OVERLAY])
-											{
-												if (!Res->m_Textures[EFTT_DECAL_OVERLAY])
-													Res->AddTextureMap(EFTT_DECAL_OVERLAY);
-												Tex = Res->m_Textures[EFTT_DECAL_OVERLAY];
-												if (!Tex->m_TU.m_TexPic || !Tex->m_TU.m_TexPic->IsTextureLoaded())
-												{
-													if (!Tex->m_Name.empty())
-														Tex->m_TU.m_TexPic = mfLoadResourceTexture(Tex->m_Name.c_str(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex, (float)Tex->m_Amount);
-													else
-														Tex->m_TU.m_TexPic = mfLoadResourceTexture("Textures/white", patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex, (float)Tex->m_Amount);
-												}
-											}
-											else
-												if (Dst[i].m_TUnits[j].m_TexPic == &gRenDev->m_TexMan->m_Templates[EFTT_ATTENUATION2D])
-												{
-													if (!Res->m_Textures[EFTT_ATTENUATION2D])
-														Res->AddTextureMap(EFTT_ATTENUATION2D);
-													Tex = Res->m_Textures[EFTT_ATTENUATION2D];
-													if (!Tex->m_TU.m_TexPic)
-													{
-														if (!Tex->m_Name.empty())
-															Tex->m_TU.m_TexPic = mfLoadResourceTexture(Tex->m_Name.c_str(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
-														if (!Tex->m_TU.m_TexPic || !Tex->m_TU.m_TexPic->IsTextureLoaded())
-															Tex->m_TU.m_TexPic = mfLoadResourceTexture("Textures/Defaults/PointLight2D", patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
-													}
-												}
-												else
-													if (Dst[i].m_TUnits[j].m_TexPic == &gRenDev->m_TexMan->m_Templates[EFTT_SUBSURFACE])
-													{
-														if (!Res->m_Textures[EFTT_SUBSURFACE])
-															Warning(VALIDATOR_FLAG_TEXTURE, 0, "WARNING: Missed texture '%s' for shader template '%s'", mfTemplateTexIdToName(EFTT_SUBSURFACE), ef->m_Name.c_str());
-														else
-														{
-															Tex = Res->m_Textures[EFTT_SUBSURFACE];
-															if (!Tex->m_TU.m_TexPic)
-															{
-																Tex->m_TU.m_TexPic = mfLoadResourceTexture(Tex->m_Name.c_str(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
-																if (!Tex->m_TU.m_TexPic->IsTextureLoaded())
-																{
-																	Tex->m_TU.m_TexPic = nullptr;
-																}
-															}
-														}
-													}
-													else
-														if (Dst[i].m_TUnits[j].m_TexPic == &gRenDev->m_TexMan->m_Templates[EFTT_ATTENUATION1D])
-														{
-															if (!Res->m_Textures[EFTT_ATTENUATION1D])
-																Res->AddTextureMap(EFTT_ATTENUATION1D);
-															Tex = Res->m_Textures[EFTT_ATTENUATION1D];
-															if (!Tex->m_TU.m_TexPic)
-															{
-																if (!Tex->m_Name.empty())
-																	Tex->m_TU.m_TexPic = mfLoadResourceTexture(Tex->m_Name.c_str(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
-																if (!Tex->m_TU.m_TexPic || !Tex->m_TU.m_TexPic->IsTextureLoaded())
-																{
-																	if (gRenDev->m_TexMan->m_Text_Atten1D)
-																		Tex->m_TU.m_TexPic = gRenDev->m_TexMan->m_Text_Atten1D;
-																	else
-																		Tex->m_TU.m_TexPic = mfLoadResourceTexture("Textures/Defaults/PointLight1D", patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
-																}
-															}
-														}
-														else
-															if (Dst[i].m_TUnits[j].m_TexPic == &gRenDev->m_TexMan->m_Templates[EFTT_CUBEMAP])
-															{
-																if (!Res->m_Textures[EFTT_CUBEMAP])
-																{
-																	Warning(VALIDATOR_FLAG_TEXTURE, 0, "WARNING: Missed texture '%s' for shader template '%s'", mfTemplateTexIdToName(EFTT_CUBEMAP), ef->m_Name.c_str());
-																	Res->AddTextureMap(EFTT_CUBEMAP);
-																}
-																Tex = Res->m_Textures[EFTT_CUBEMAP];
-																if (!Tex->m_TU.m_TexPic)
-																{
-																	Tex->m_TU.m_TexPic = mfLoadResourceTexture(Tex->m_Name.c_str(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Cubemap, ef, Tex);
-																	if (!Tex->m_TU.m_TexPic->IsTextureLoaded())
-																	{
-																		Tex->m_TU.m_TexPic = mfLoadResourceTexture("Textures/Defaults/DefaultCM", patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Cubemap, ef, Tex);
-																	}
-																}
-															}
+				if (Res->m_Textures[EFTT_BUMP] && !Res->m_Textures[EFTT_BUMP]->m_Name.empty() && Res->m_Textures[EFTT_NORMALMAP] && !Res->m_Textures[EFTT_NORMALMAP]->m_Name.empty())
+				{
+					char fullname[512];
+					sprintf(fullname, "%s+norm_%s", Res->m_Textures[EFTT_BUMP]->m_Name.c_str(), Res->m_Textures[EFTT_NORMALMAP]->m_Name.c_str());
+					Res->m_Textures[EFTT_BUMP]->m_TU.m_TexPic = mfLoadResourceTexture(fullname, patch, Res->m_Textures[EFTT_BUMP]->m_TU.GetTexFlags() | Flags, Res->m_Textures[EFTT_BUMP]->m_TU.GetTexFlags2(), eTT_Bumpmap, ef, Res->m_Textures[EFTT_BUMP], (float)Res->m_Textures[EFTT_BUMP]->m_Amount, (float)Res->m_Textures[EFTT_NORMALMAP]->m_Amount);
+				}
+				if (!Res->m_Textures[EFTT_BUMP])
+					Res->AddTextureMap(EFTT_BUMP);
+				Tex = Res->m_Textures[EFTT_BUMP];
+				if (!Tex->m_TU.m_TexPic || !Tex->m_TU.m_TexPic->IsTextureLoaded())
+				{
+					Tex = Res->m_Textures[EFTT_BUMP];
+					ETexType eTT = Dst[i].m_TUnits[j].m_eTexType == eTT_DSDTBump ? eTT_DSDTBump : eTT_Bumpmap;
+					if (!Tex->m_Name.empty())
+						Tex->m_TU.m_TexPic = mfLoadResourceTexture(Tex->m_Name.c_str(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT, ef, Tex, (float)Tex->m_Amount);
+					if (!Tex->m_TU.m_TexPic || !Tex->m_TU.m_TexPic->IsTextureLoaded())
+					{
+						if (Res->m_Textures[EFTT_NORMALMAP])
+						{
+							Tex->m_TU.m_TexPic = mfLoadResourceTexture(Res->m_Textures[EFTT_NORMALMAP]->m_Name.c_str(), patch, Res->m_Textures[EFTT_NORMALMAP]->m_TU.GetTexFlags() | Flags, Res->m_Textures[EFTT_NORMALMAP]->m_TU.GetTexFlags2(), eTT, ef, Res->m_Textures[EFTT_BUMP], (float)Res->m_Textures[EFTT_NORMALMAP]->m_Amount);
+							SAFE_DELETE(Res->m_Textures[EFTT_NORMALMAP]);
+						}
+					}
+					if (!Tex->m_TU.m_TexPic || !Tex->m_TU.m_TexPic->IsTextureLoaded())
+					{
+						Tex->m_TU.m_nFlags |= FTU_NOBUMP;
+						if (!(Dst[i].m_TUnits[j].m_nFlags & FTU_BUMPPLANTS))
+							Tex->m_TU.m_TexPic = mfLoadResourceTexture("Textures/white_ddn", patch, Flags, 0, eTT_Bumpmap, ef, Tex);
+						else
+							Tex->m_TU.m_TexPic = mfLoadResourceTexture("Textures/white_ddn", patch, Flags, 0, eTT_Bumpmap, ef, Tex);
+					}
+				}
+			}
+			else if (Dst[i].m_TUnits[j].m_TexPic == &gRenDev->m_TexMan->m_Templates[EFTT_BUMP_DIFFUSE])
+			{
+				char nameBump[256];
+				char nameNorm[256];
+				nameBump[0] = 0;
+				nameNorm[0] = 0;
+				if (Res->m_Textures[EFTT_BUMP] && !Res->m_Textures[EFTT_BUMP]->m_Name.empty())
+				{
+					const char* str = strstr(Res->m_Textures[EFTT_BUMP]->m_Name.c_str(), "_ddn");
+					if (str)
+					{
+						int nSize = str - Res->m_Textures[EFTT_BUMP]->m_Name.c_str();
+						memcpy(nameBump, Res->m_Textures[EFTT_BUMP]->m_Name.c_str(), nSize);
+						memcpy(&nameBump[nSize], "_ddndif", 7);
+						strcpy(&nameBump[nSize + 7], &str[4]);
+						FILE* fp = iSystem->GetIPak()->FOpen(nameBump, "rb");
+						if (!fp)
+							nameBump[0] = 0;
+						else
+							iSystem->GetIPak()->FClose(fp);
+					}
+					if (!nameBump[0])
+						strcpy(nameBump, Res->m_Textures[EFTT_BUMP]->m_Name.c_str());
+				}
+				if (Res->m_Textures[EFTT_NORMALMAP] && !Res->m_Textures[EFTT_NORMALMAP]->m_Name.empty())
+				{
+					const char* str = strstr(Res->m_Textures[EFTT_NORMALMAP]->m_Name.c_str(), "_ddn");
+					if (str)
+					{
+						int nSize = str - Res->m_Textures[EFTT_NORMALMAP]->m_Name.c_str();
+						memcpy(nameNorm, Res->m_Textures[EFTT_NORMALMAP]->m_Name.c_str(), nSize);
+						memcpy(&nameNorm[nSize], "_ddndif", 7);
+						strcpy(&nameNorm[nSize + 7], &str[4]);
+						FILE* fp = iSystem->GetIPak()->FOpen(nameNorm, "rb");
+						if (!fp)
+							nameNorm[0] = 0;
+						else
+							iSystem->GetIPak()->FClose(fp);
+					}
+					if (!nameNorm[0])
+						strcpy(nameNorm, Res->m_Textures[EFTT_NORMALMAP]->m_Name.c_str());
+				}
+				if (!Res->m_Textures[EFTT_BUMP_DIFFUSE])
+					Res->AddTextureMap(EFTT_BUMP_DIFFUSE);
+				if (nameBump[0] && nameNorm[0])
+				{
+					char fullname[256];
+					sprintf(fullname, "%s+norm_%s", nameBump, nameNorm);
+					Res->m_Textures[EFTT_BUMP_DIFFUSE]->m_TU.m_TexPic = mfLoadResourceTexture(fullname, patch, Res->m_Textures[EFTT_BUMP]->m_TU.GetTexFlags() | Flags, Res->m_Textures[EFTT_BUMP]->m_TU.GetTexFlags2(), eTT_Bumpmap, ef, Res->m_Textures[EFTT_BUMP_DIFFUSE], (float)Res->m_Textures[EFTT_BUMP]->m_Amount, (float)Res->m_Textures[EFTT_NORMALMAP]->m_Amount);
+				}
+				Tex = Res->m_Textures[EFTT_BUMP_DIFFUSE];
+				if (!Tex->m_TU.m_TexPic || !Tex->m_TU.m_TexPic->IsTextureLoaded())
+				{
+					ETexType eTT = Dst[i].m_TUnits[j].m_eTexType == eTT_DSDTBump ? eTT_DSDTBump : eTT_Bumpmap;
+					if (nameBump[0])
+						Tex->m_TU.m_TexPic = mfLoadResourceTexture(nameBump, patch, Res->m_Textures[EFTT_BUMP]->m_TU.GetTexFlags() | Flags, Res->m_Textures[EFTT_BUMP]->m_TU.GetTexFlags2(), eTT, ef, Tex, (float)Res->m_Textures[EFTT_BUMP]->m_Amount);
+					if (!Tex->m_TU.m_TexPic || !Tex->m_TU.m_TexPic->IsTextureLoaded())
+					{
+						if (nameNorm[0])
+							Tex->m_TU.m_TexPic = mfLoadResourceTexture(nameNorm, patch, Res->m_Textures[EFTT_NORMALMAP]->m_TU.GetTexFlags() | Flags, Res->m_Textures[EFTT_NORMALMAP]->m_TU.GetTexFlags2(), eTT, ef, Tex, (float)Res->m_Textures[EFTT_NORMALMAP]->m_Amount);
+					}
+					if (!Tex->m_TU.m_TexPic || !Tex->m_TU.m_TexPic->IsTextureLoaded())
+					{
+						Tex->m_TU.m_nFlags |= FTU_NOBUMP;
+						Tex->m_TU.m_TexPic = mfLoadResourceTexture("Textures/white_ddn", patch, Flags, 0, eTT_Bumpmap, ef, Tex);
+					}
+				}
+			}
+			else if (Dst[i].m_TUnits[j].m_TexPic == &gRenDev->m_TexMan->m_Templates[EFTT_DECAL_OVERLAY])
+			{
+				if (!Res->m_Textures[EFTT_DECAL_OVERLAY])
+					Res->AddTextureMap(EFTT_DECAL_OVERLAY);
+				Tex = Res->m_Textures[EFTT_DECAL_OVERLAY];
+				if (!Tex->m_TU.m_TexPic || !Tex->m_TU.m_TexPic->IsTextureLoaded())
+				{
+					if (!Tex->m_Name.empty())
+						Tex->m_TU.m_TexPic = mfLoadResourceTexture(Tex->m_Name.c_str(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex, (float)Tex->m_Amount);
+					else
+						Tex->m_TU.m_TexPic = mfLoadResourceTexture("Textures/white", patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex, (float)Tex->m_Amount);
+				}
+			}
+			else if (Dst[i].m_TUnits[j].m_TexPic == &gRenDev->m_TexMan->m_Templates[EFTT_ATTENUATION2D])
+			{
+				if (!Res->m_Textures[EFTT_ATTENUATION2D])
+					Res->AddTextureMap(EFTT_ATTENUATION2D);
+				Tex = Res->m_Textures[EFTT_ATTENUATION2D];
+				if (!Tex->m_TU.m_TexPic)
+				{
+					if (!Tex->m_Name.empty())
+						Tex->m_TU.m_TexPic = mfLoadResourceTexture(Tex->m_Name.c_str(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
+					if (!Tex->m_TU.m_TexPic || !Tex->m_TU.m_TexPic->IsTextureLoaded())
+						Tex->m_TU.m_TexPic = mfLoadResourceTexture("Textures/Defaults/PointLight2D", patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
+				}
+			}
+			else if (Dst[i].m_TUnits[j].m_TexPic == &gRenDev->m_TexMan->m_Templates[EFTT_SUBSURFACE])
+			{
+				if (!Res->m_Textures[EFTT_SUBSURFACE])
+					Warning(VALIDATOR_FLAG_TEXTURE, 0, "WARNING: Missed texture '%s' for shader template '%s'", mfTemplateTexIdToName(EFTT_SUBSURFACE), ef->m_Name.c_str());
+				else
+				{
+					Tex = Res->m_Textures[EFTT_SUBSURFACE];
+					if (!Tex->m_TU.m_TexPic)
+					{
+						Tex->m_TU.m_TexPic = mfLoadResourceTexture(Tex->m_Name.c_str(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
+						if (!Tex->m_TU.m_TexPic->IsTextureLoaded())
+						{
+							Tex->m_TU.m_TexPic = nullptr;
+						}
+					}
+				}
+			}
+			else if (Dst[i].m_TUnits[j].m_TexPic == &gRenDev->m_TexMan->m_Templates[EFTT_ATTENUATION1D])
+			{
+				if (!Res->m_Textures[EFTT_ATTENUATION1D])
+					Res->AddTextureMap(EFTT_ATTENUATION1D);
+				Tex = Res->m_Textures[EFTT_ATTENUATION1D];
+				if (!Tex->m_TU.m_TexPic)
+				{
+					if (!Tex->m_Name.empty())
+						Tex->m_TU.m_TexPic = mfLoadResourceTexture(Tex->m_Name.c_str(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
+					if (!Tex->m_TU.m_TexPic || !Tex->m_TU.m_TexPic->IsTextureLoaded())
+					{
+						if (gRenDev->m_TexMan->m_Text_Atten1D)
+							Tex->m_TU.m_TexPic = gRenDev->m_TexMan->m_Text_Atten1D;
+						else
+							Tex->m_TU.m_TexPic = mfLoadResourceTexture("Textures/Defaults/PointLight1D", patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Base, ef, Tex);
+					}
+				}
+			}
+			else if (Dst[i].m_TUnits[j].m_TexPic == &gRenDev->m_TexMan->m_Templates[EFTT_CUBEMAP])
+			{
+				if (!Res->m_Textures[EFTT_CUBEMAP])
+				{
+					Warning(VALIDATOR_FLAG_TEXTURE, 0, "WARNING: Missed texture '%s' for shader template '%s'", mfTemplateTexIdToName(EFTT_CUBEMAP), ef->m_Name.c_str());
+					Res->AddTextureMap(EFTT_CUBEMAP);
+				}
+				Tex = Res->m_Textures[EFTT_CUBEMAP];
+				if (!Tex->m_TU.m_TexPic)
+				{
+					Tex->m_TU.m_TexPic = mfLoadResourceTexture(Tex->m_Name.c_str(), patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Cubemap, ef, Tex);
+					if (!Tex->m_TU.m_TexPic || !Tex->m_TU.m_TexPic->IsTextureLoaded())
+					{
+						Tex->m_TU.m_TexPic = mfLoadResourceTexture("Textures/Defaults/DefaultCM", patch, Tex->m_TU.GetTexFlags() | Flags, Tex->m_TU.GetTexFlags2(), eTT_Cubemap, ef, Tex);
+					}
+				}
+			}
 		}
 	}
 }
