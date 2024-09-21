@@ -165,11 +165,7 @@ void SShader::mfFree()
 	}
 	m_Passes.Free();
 
-	if (m_Deforms)
-	{
-		delete m_Deforms;
-		m_Deforms = nullptr;
-	}
+	SAFE_DELETE (m_Deforms)
 	for (i = 0; i < m_HWTechniques.Num(); i++)
 	{
 		SAFE_DELETE(m_HWTechniques[i]);
@@ -179,8 +175,7 @@ void SShader::mfFree()
 	for (i = 0; i < m_HWConditions.Num(); i++)
 	{
 		SHWConditions* hc = &m_HWConditions[i];
-		if (hc->m_Vars)
-			delete[] hc->m_Vars;
+		SAFE_DELETE_ARRAY(hc->m_Vars);
 	}
 	m_HWConditions.Free();
 
@@ -191,9 +186,8 @@ void SShader::mfFree()
 	}
 	if (m_ShaderGenParams)
 	{
-		for (i = 0; i < m_ShaderGenParams->m_BitMask.Num(); i++)
+		for (SShaderGenBit* shgb : m_ShaderGenParams->m_BitMask)
 		{
-			SShaderGenBit* shgb = m_ShaderGenParams->m_BitMask[i];
 			SAFE_DELETE(shgb);
 		}
 		SAFE_DELETE(m_ShaderGenParams);
@@ -245,16 +239,7 @@ SShader& SShader::operator = (const SShader& src)
 	{
 		m_HWTechniques.Create(src.m_HWTechniques.Num());
 		for (i = 0; i < src.m_HWTechniques.Num(); i++)
-		{
-#ifdef DEBUGALLOC
-#undef new
-#endif
-			m_HWTechniques[i] = new SShaderTechnique;
-#ifdef DEBUGALLOC
-#define new DEBUG_CLIENTBLOCK
-#endif
-			* m_HWTechniques[i] = *src.m_HWTechniques[i];
-		}
+			m_HWTechniques[i] = new SShaderTechnique(*src.m_HWTechniques[i]);
 	}
 
 	m_PublicParams.Copy(src.m_PublicParams);
@@ -263,11 +248,7 @@ SShader& SShader::operator = (const SShader& src)
 	{
 		m_Passes.Create(src.m_Passes.Num());
 		for (i = 0; i < src.m_Passes.Num(); i++)
-		{
-			const SShaderPass* s = &src.m_Passes[i];
-			SShaderPass* d = &m_Passes[i];
-			*d = *s;
-		}
+			m_Passes[i] = src.m_Passes[i];
 	}
 	if (src.m_Deforms)
 	{

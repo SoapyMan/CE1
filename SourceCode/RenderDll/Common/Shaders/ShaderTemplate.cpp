@@ -26,11 +26,7 @@ SRenderShaderResources::~SRenderShaderResources()
 
 	for (i = 0; i < EFTT_MAX; i++)
 	{
-		if (m_Textures[i])
-		{
-			delete m_Textures[i];
-			m_Textures[i] = nullptr;
-		}
+		SAFE_DELETE(m_Textures[i]);
 	}
 	SAFE_RELEASE(m_LMaterial);
 	SShader::m_ShaderResources_known[m_Id] = nullptr;
@@ -535,7 +531,7 @@ bool CShader::mfCheckAnimatedSequence(SShaderTexUnit* tl, STexPic* tx)
 STexPic* CShader::mfTryToLoadTexture(const char* nameTex, int Flags, int Flags2, byte eTT, SShader* sh, float fAmount1, float fAmount2)
 {
 	STexPic* tx = nullptr;
-	if (nameTex && (strchr(nameTex, '#') && !strstr(nameTex, " #")) || (strchr(nameTex, '$') && !strstr(nameTex, " $"))) // test for " #" to skip max material names
+	if (nameTex && (strchr(nameTex, '#') && !strstr(nameTex, " #") || strchr(nameTex, '$') && !strstr(nameTex, " $"))) // test for " #" to skip max material names
 	{
 		TArray<STexPic*> Texs;
 		int n = mfReadTexSequence(sh, Texs, nameTex, eTT, Flags, Flags2, fAmount1, fAmount2);
@@ -552,10 +548,12 @@ STexPic* CShader::mfTryToLoadTexture(const char* nameTex, int Flags, int Flags2,
 				}
 				else
 					tp->m_NextTxt = t;
+
 				tp = t;
 			}
 		}
 	}
+
 	if (!tx)
 	{
 		tx = (STexPic*)gRenDev->EF_LoadTexture(nameTex, Flags, Flags2, eTT, fAmount1, fAmount2);
@@ -567,20 +565,24 @@ STexPic* CShader::mfTryToLoadTexture(const char* nameTex, int Flags, int Flags2,
 
 STexPic* CShader::mfLoadResourceTexture(const char* nameTex, const char* path, int Flags, int Flags2, byte eTT, SShader* sh, SEfResTexture* Tex, float fAmount1, float fAmount2)
 {
+	CRYASSERT_MSG(nameTex, "No texture name specified");
+
 	STexPic* tx = mfTryToLoadTexture(nameTex, Flags, Flags2, eTT, sh, fAmount1, fAmount2);
 
-	if ((!tx || !tx->IsTextureLoaded()) && nameTex && path)
+	if (!tx || !tx->IsTextureLoaded())
 	{
-		if (strnicmp(nameTex, path, strlen(path)))
+		if (tx)
+			tx->Release(false);
+		tx = nullptr;
+
+		if (path && strnicmp(nameTex, path, strlen(path)))
 		{
-			if (tx)
-				tx->Release(false);
 			char name[256];
 
 			char* pPath = (char*)path;
 			size_t ln = strlen(nameTex);
 			size_t lp = strlen(path);
-			if (ln + lp >= 250)
+			if (ln + lp >= 256)
 			{
 				Warning(VALIDATOR_FLAG_TEXTURE, nameTex, "Warning: Too long texture name (path: '%s', name: '%s')\n", path, nameTex);
 				pPath = "Textures\\";
@@ -595,7 +597,7 @@ STexPic* CShader::mfLoadResourceTexture(const char* nameTex, const char* path, i
 			char pname[256];
 			UsePath((char*)name, (char*)pPath, pname);
 			tx = mfTryToLoadTexture(pname, Flags, Flags2, eTT, sh, fAmount1, fAmount2);
-			if ((!tx || !tx->IsTextureLoaded()) && nameTex && path)
+			if (!tx || !tx->IsTextureLoaded())
 			{
 				if (tx)
 					tx->Release(false);
@@ -612,6 +614,11 @@ STexPic* CShader::mfLoadResourceTexture(const char* nameTex, const char* path, i
 		mfCheckAnimatedSequence(&Tex->m_TU, tx);
 		if (!strchr(tx->m_SourceName.c_str(), '+'))
 			Tex->m_Name = tx->m_SourceName;
+	}
+
+	if (!tx || !tx->IsTextureLoaded())
+	{
+		Warning(VALIDATOR_FLAG_TEXTURE, nameTex, "Warning: unable to load texture (path: '%s', name: '%s')\n", path, nameTex);
 	}
 
 	return tx;
@@ -1255,8 +1262,7 @@ void SEfTemplates::mfFree(SShader* ef)
 {
 	for (int i = 0; i < m_TemplShaders.Num(); i++)
 	{
-		if (m_TemplShaders[i])
-			m_TemplShaders[i]->Release();
+		SAFE_RELEASE(m_TemplShaders[i]);
 	}
 	m_TemplShaders.Free();
 	delete this;

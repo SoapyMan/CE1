@@ -1028,13 +1028,11 @@ struct SShaderTexUnit
 	void mfFree()
 	{
 		SAFE_DELETE(m_GTC);
-		if (m_AnimInfo)
-		{
-			SAFE_DELETE(m_AnimInfo);
-		}
-		else
-			if (m_ITexPic)
-				m_ITexPic->Release(false);
+		SAFE_DELETE(m_AnimInfo);
+
+		if (m_TexPic)
+			m_ITexPic->Release(false);
+		m_ITexPic = nullptr;
 	}
 
 	~SShaderTexUnit()
@@ -1317,10 +1315,6 @@ struct SEfResTexture
 		nSize += m_TU.Size();
 
 		return nSize;
-	}
-
-	~SEfResTexture()
-	{
 	}
 
 	void Reset()

@@ -2037,58 +2037,58 @@ ITexPic* CRenderer::EF_LoadTexture(const char* nameTex, uint flags, uint flags2,
 {
 	if (m_type == R_NULL_RENDERER && m_TexMan->m_Text_NoTexture)
 		return m_TexMan->m_Text_NoTexture;
-	else
+
+	
+	STexPic* tx = nullptr;
+	bool bValid = true;
+
+	if (!nameTex || !nameTex[0])
 	{
-		STexPic* tx = nullptr;
-		bool bValid = true;
+		nameTex = "<DEFAULT>";
+		bValid = false;
+	}
 
-		if (!nameTex || !nameTex[0])
+	bool bAbsolute = false;
+	if (!strnicmp(nameTex, "Textures", 8) || !strnicmp(nameTex, "Objects", 7) || nameTex[1] == ':')
+		bAbsolute = true;
+
+	bool bTryed = false;
+	if (!bAbsolute && bValid && !(flags2 & FT2_RELOAD))
+	{
+		if (strchr(nameTex, '/') || strchr(nameTex, '\\'))
 		{
-			nameTex = "<DEFAULT>";
-			bValid = false;
-		}
-
-		bool bAbsolute = false;
-		if (!strnicmp(nameTex, "Textures", 8) || !strnicmp(nameTex, "Objects", 7) || nameTex[1] == ':')
-			bAbsolute = true;
-
-		bool bTryed = false;
-		if (!bAbsolute && bValid && !(flags2 & FT2_RELOAD))
-		{
-			if (strchr(nameTex, '/') || strchr(nameTex, '\\'))
-			{
-				if (eTT == eTT_Cubemap)
-					tx = m_TexMan->LoadCubeTex(nameTex, flags, flags2, 0, eTT, 0, Id, BindId, fAmount1);
-				else
-					tx = m_TexMan->LoadTexture(nameTex, flags, flags2, eTT, fAmount1, fAmount2, BindId, Id);
-				bTryed = true;
-			}
-			if (!tx || (tx->m_Flags & FT_NOTFOUND))
-			{
-				if (tx)
-					tx->Release(false);
-
-				string str;
-				str = string("Textures/") + string(nameTex);
-				if (eTT == eTT_Cubemap)
-					tx = m_TexMan->LoadCubeTex(str.c_str(), flags, flags2, 0, eTT, 0, Id, BindId, fAmount1);
-				else
-					tx = m_TexMan->LoadTexture(str.c_str(), flags, flags2, eTT, fAmount1, fAmount2, BindId, Id);
-			}
-		}
-
-		if (!bTryed && (!tx || (tx->m_Flags & FT_NOTFOUND)))
-		{
-			if (tx)
-				tx->Release(false);
-
 			if (eTT == eTT_Cubemap)
 				tx = m_TexMan->LoadCubeTex(nameTex, flags, flags2, 0, eTT, 0, Id, BindId, fAmount1);
 			else
 				tx = m_TexMan->LoadTexture(nameTex, flags, flags2, eTT, fAmount1, fAmount2, BindId, Id);
+			bTryed = true;
 		}
-		return tx;
+		if (!tx || (tx->m_Flags & FT_NOTFOUND))
+		{
+			if (tx)
+				tx->Release(false);
+
+			string str;
+			str = string("Textures/") + string(nameTex);
+			if (eTT == eTT_Cubemap)
+				tx = m_TexMan->LoadCubeTex(str.c_str(), flags, flags2, 0, eTT, 0, Id, BindId, fAmount1);
+			else
+				tx = m_TexMan->LoadTexture(str.c_str(), flags, flags2, eTT, fAmount1, fAmount2, BindId, Id);
+		}
 	}
+
+	if (!bTryed && (!tx || (tx->m_Flags & FT_NOTFOUND)))
+	{
+		if (tx)
+			tx->Release(false);
+
+		if (eTT == eTT_Cubemap)
+			tx = m_TexMan->LoadCubeTex(nameTex, flags, flags2, 0, eTT, 0, Id, BindId, fAmount1);
+		else
+			tx = m_TexMan->LoadTexture(nameTex, flags, flags2, eTT, fAmount1, fAmount2, BindId, Id);
+	}
+
+	return tx;
 }
 
 int CRenderer::EF_ReadAllImgFiles(IShader* ef, SShaderTexUnit* tl, STexAnim* ta, char* name)

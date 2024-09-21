@@ -3689,9 +3689,8 @@ struct SShaderPass
 		int i;
 		int nSize = sizeof(SShaderPass);
 		for (i = 0; i < m_TUnits.Num(); i++)
-		{
 			nSize += m_TUnits[i].Size();
-		}
+
 		if (m_WaveEvalRGB)
 			nSize += m_WaveEvalRGB->Size();
 		if (m_WaveEvalAlpha)
@@ -3709,62 +3708,41 @@ struct SShaderPass
 	{
 		memcpy(this, &sl, sizeof(SShaderPass));
 		if (sl.m_WaveEvalAlpha)
-		{
-			m_WaveEvalAlpha = new SWaveForm;
-			*m_WaveEvalAlpha = *sl.m_WaveEvalAlpha;
-		}
+			m_WaveEvalAlpha = new SWaveForm(*sl.m_WaveEvalAlpha);
+
 		if (sl.m_RGBComps)
-		{
-			m_RGBComps = new SParam;
-			*m_RGBComps = *sl.m_RGBComps;
-		}
+			m_RGBComps = new SParam(*sl.m_RGBComps);
+
 		if (sl.m_WaveEvalRGB)
-		{
-			m_WaveEvalRGB = new SWaveForm;
-			*m_WaveEvalRGB = *sl.m_WaveEvalRGB;
-		}
-		TArray<SShaderTexUnit> L;
-		m_TUnits = L;
+			m_WaveEvalRGB = new SWaveForm(*sl.m_WaveEvalRGB);
+
+		m_TUnits = TArray<SShaderTexUnit>{};
 		if (sl.m_TUnits.Num())
 		{
 			mfAddNewTexUnits(sl.m_TUnits.Num());
 			for (int j = 0; j < sl.m_TUnits.Num(); j++)
-			{
 				sl.m_TUnits[j].mfCopy(&m_TUnits[j]);
-			}
+
 		}
 		return *this;
 	}
 
 	void mfAddNewTexUnits(int nums)
 	{
-		SShaderTexUnit tl;
 		for (int i = 0; i < nums; i++)
-		{
-			m_TUnits.AddElem(tl);
-		}
+			m_TUnits.AddElem({});
+
 		m_TUnits.Shrink();
 	}
 	void mfFree()
 	{
-		if (m_WaveEvalAlpha)
-		{
-			delete m_WaveEvalAlpha;
-			m_WaveEvalAlpha = nullptr;
-		}
-		if (m_WaveEvalRGB)
-		{
-			delete m_WaveEvalRGB;
-			m_WaveEvalRGB = nullptr;
-		}
-		for (int j = 0; j < m_TUnits.Num(); j++)
-		{
-			SShaderTexUnit* tl = &m_TUnits[j];
-			tl->mfFree();
-		}
+		SAFE_DELETE(m_WaveEvalAlpha);
+		SAFE_DELETE(m_WaveEvalRGB);
+		for (SShaderTexUnit& tl : m_TUnits)
+			tl.mfFree();
+		
 		m_TUnits.Free();
-		if (m_RGBComps)
-			delete m_RGBComps;
+		SAFE_DELETE(m_RGBComps);
 	}
 	bool mfSetTextures();
 	void mfResetTextures();
@@ -3831,10 +3809,8 @@ struct SShaderPassHW : public SShaderPass
 	{
 		SShaderPass::mfFree();
 
-		if (m_CGFSParamsNoObj)
-			delete m_CGFSParamsNoObj;
-		if (m_CGFSParamsObj)
-			delete m_CGFSParamsObj;
+		SAFE_DELETE(m_CGFSParamsNoObj);
+		SAFE_DELETE(m_CGFSParamsObj);
 		m_Pointers.Free();
 		m_VPParamsNoObj.Free();
 		m_VPParamsObj.Free();
@@ -3871,9 +3847,7 @@ struct SShaderPassHW : public SShaderPass
 		}
 
 		if (sl.m_Pointers.Num())
-		{
 			m_Pointers.Copy(sl.m_Pointers);
-		}
 
 		if (sl.m_MatrixOps)
 		{
