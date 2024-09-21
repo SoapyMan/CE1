@@ -563,11 +563,6 @@ STexPic* CShader::mfLoadResourceTexture(const char* nameTex, const char* path, i
 			Tex->m_Name = tx->m_SourceName;
 	}
 
-	if (!tx || !tx->IsTextureLoaded())
-	{
-		Warning(VALIDATOR_FLAG_TEXTURE, nameTex, "Warning: unable to load texture (path: '%s', name: '%s')\n", path, nameTex);
-	}
-
 	return tx;
 }
 
