@@ -24,12 +24,6 @@
 #include "Cry_Vector3.h"
 
 
-#if defined(LINUX)
-#undef CRYASSERT
-#define CRYASSERT(exp) (void)( (exp) || (printf("Assert: ' %s ' has failed\n", #exp), 0) )
-#endif
-
-
 #define l_00 l.data[SI1*0+SJ1*0]
 #define l_10 l.data[SI1*1+SJ1*0]
 #define l_20 l.data[SI1*2+SJ1*0]
@@ -277,7 +271,7 @@ template<class F, int SI, int SJ> struct Matrix33_tpl {
 
 	//Convert unit quaternion to matrix.
 	explicit ILINE Matrix33_tpl(const Quaternion_tpl<F>& q) {
-		CRYASSERT((fabs_tpl(1 - (q | q))) < 0.1); //check if unit-quaternion
+		CRYASSERT_MSG(fabs_tpl(1 - (q | q)) < 0.1, "Quaternion is not unit"); //check if unit-quaternion
 		F vxvx = q.v.x * q.v.x;		F	vzvz = q.v.z * q.v.z;		F	vyvy = q.v.y * q.v.y;
 		F	vxvy = q.v.x * q.v.y;		F	vxvz = q.v.x * q.v.z;		F	vyvz = q.v.y * q.v.z;
 		F	svx = q.w * q.v.x;			F	svy = q.w * q.v.y;			F	svz = q.w * q.v.z;
@@ -308,7 +302,7 @@ template<class F, int SI, int SJ> struct Matrix33_tpl {
 
 	ILINE void SetRotationAA(F angle, Vec3_tpl<F> axis) { F cs[2]; sincos_tpl(angle, cs);	SetRotationAA(cs[0], cs[1], axis); }
 	ILINE void SetRotationAA(F c, F s, Vec3_tpl<F> axis) {
-		CRYASSERT((fabs_tpl(1 - (axis | axis))) < 0.001); //check if unit-vector
+		CRYASSERT_MSG((fabs_tpl(1 - (axis | axis))) < 0.001, "Vector is not unit"); //check if unit-vector
 		F	mc = (F)1.0 - c;
 		M00 = mc * axis.x * axis.x + c;					M01 = mc * axis.x * axis.y - axis.z * s;	M02 = mc * axis.x * axis.z + axis.y * s;
 		M10 = mc * axis.y * axis.x + axis.z * s;	M11 = mc * axis.y * axis.y + c;					M12 = mc * axis.y * axis.z - axis.x * s;
@@ -382,8 +376,8 @@ template<class F, int SI, int SJ> struct Matrix33_tpl {
 	   *
 	   */
 	ILINE void SetRotationV0V1(const Vec3_tpl<F>& v0, const Vec3_tpl<F>& v1) {
-		CRYASSERT((fabs_tpl(1 - (v0 | v0))) < 0.001); //check if unit-vector
-		CRYASSERT((fabs_tpl(1 - (v1 | v1))) < 0.001); //check if unit-vector
+		CRYASSERT_MSG((fabs_tpl(1 - (v0 | v0))) < 0.001, "v0 is not unit"); //check if unit-vector
+		CRYASSERT_MSG((fabs_tpl(1 - (v1 | v1))) < 0.001, "v1 is not unit"); //check if unit-vector
 		F e = v0 | v1;
 		M00 = e;	M01 = 0;	M02 = 0;
 		M10 = 0;	M11 = 1;	M12 = 0;
@@ -402,7 +396,7 @@ template<class F, int SI, int SJ> struct Matrix33_tpl {
 	   *  This is an optimized version of SetRotationV0V1();
 	   */
 	ILINE void SetRotationV0(const Vec3_tpl<F>& n) {
-		CRYASSERT((fabs_tpl(1 - (n | n))) < 0.001); //check if unit-vector
+		CRYASSERT_MSG((fabs_tpl(1 - (n | n))) < 0.001, "Vector is not unit"); //check if unit-vector
 		F div = (n.x * n.x + n.y * n.y);
 		M00 = n.z;	M01 = 0;	M02 = 0;
 		M10 = 0;		M11 = +1;	M12 = 0;
@@ -494,8 +488,7 @@ template<class F, int SI, int SJ> struct Matrix33_tpl {
 		M20 = m.M10 * m.M21 - m.M20 * m.M11;	M21 = m.M20 * m.M01 - m.M00 * m.M21;	M22 = m.M00 * m.M11 - m.M10 * m.M01;
 		// calculate determinant
 		F det = (m.M00 * M00 + m.M10 * M01 + m.M20 * M02);
-		if (fabs_tpl(det) < 1E-20f)
-			return 0;
+		CRYASSERT (fabs_tpl(det) > 1E-20f)
 		//devide the cofactor-matrix by the determinat
 		F idet = (F)1.0 / det;
 		M00 *= idet; M01 *= idet;	M02 *= idet;
@@ -1134,7 +1127,7 @@ ILINE Vec3_tpl<F> Matrix34_tpl<F>::GetTranslation() const { return Vec3_tpl<F>(m
 */
 template<class F>
 ILINE void Matrix34_tpl<F>::SetRotationAA(const F rad, const Vec3_tpl<F>& axis, const Vec3_tpl<F>& t) {
-	CRYASSERT((fabs_tpl(1 - (axis | axis))) < 0.001); //check if unit-vector
+	CRYASSERT_MSG((fabs_tpl(1 - (axis | axis))) < 0.001, "Vector is not unit"); //check if unit-vector
 	*this = Matrix33::CreateRotationAA(rad, axis); this->SetTranslation(t);
 }
 template<class F>
@@ -1261,12 +1254,13 @@ ILINE void Matrix34_tpl<F>::Invert(void) {
 	m13 = (m.m12 * m.m23 * m.m00 + m.m22 * m.m03 * m.m10 + m.m02 * m.m13 * m.m20) - (m.m22 * m.m13 * m.m00 + m.m02 * m.m23 * m.m10 + m.m12 * m.m03 * m.m20);
 	m23 = (m.m20 * m.m11 * m.m03 + m.m00 * m.m21 * m.m13 + m.m10 * m.m01 * m.m23) - (m.m10 * m.m21 * m.m03 + m.m20 * m.m01 * m.m13 + m.m00 * m.m11 * m.m23);
 	// calculate determinant
-	F det = 1.0f / (m.m00 * m00 + m.m10 * m01 + m.m20 * m02);
-	CRYASSERT(det > 0.0001);
+	const F det = (m.m00 * m00 + m.m10 * m01 + m.m20 * m02);
+	CRYASSERT(fabs_tpl(det) > 1E-20f);
+	F idet = 1.0f / det;
 	// calculate matrix inverse/
-	m00 *= det; m01 *= det; m02 *= det; m03 *= det;
-	m10 *= det; m11 *= det; m12 *= det; m13 *= det;
-	m20 *= det; m21 *= det; m22 *= det; m23 *= det;
+	m00 *= idet; m01 *= idet; m02 *= idet; m03 *= idet;
+	m10 *= idet; m11 *= idet; m12 *= idet; m13 *= idet;
+	m20 *= idet; m21 *= idet; m22 *= idet; m23 *= idet;
 }
 
 template<class F>
@@ -1296,9 +1290,9 @@ ILINE Matrix34 CreateReflectionMat(const Vec3& p, const Vec3& n)
 	f32 vyz = -2.0f * n.y * n.z;
 	f32 pdotn = 2.0f * (p | n);
 
-	m.m00 = 1.0f - 2.0f * n.x * n.x;	m.m01 = vxy;    						m.m02 = vxz;    						m.m03 = pdotn * n.x;
-	m.m10 = vxy;  							m.m11 = 1.0f - 2.0f * n.y * n.y; 	m.m12 = vyz;    						m.m13 = pdotn * n.y;
-	m.m20 = vxz;  							m.m21 = vyz;   							m.m22 = 1.0f - 2.0f * n.z * n.z; 	m.m23 = pdotn * n.z;
+	m.m00 = 1.0f - 2.0f * n.x * n.x;	m.m01 = vxy;    					m.m02 = vxz;    					m.m03 = pdotn * n.x;
+	m.m10 = vxy;  						m.m11 = 1.0f - 2.0f * n.y * n.y; 	m.m12 = vyz;    					m.m13 = pdotn * n.y;
+	m.m20 = vxz;  						m.m21 = vyz;   						m.m22 = 1.0f - 2.0f * n.z * n.z; 	m.m23 = pdotn * n.z;
 
 	return m;
 }
@@ -1835,7 +1829,7 @@ template<class F, int SI, int SJ> struct Matrix44_tpl {
 
 		/* calculate determinant */
 		F det = (m.M00 * M00 + m.M10 * M01 + m.M20 * M02 + m.M30 * M03);
-		if (fabs_tpl(det) < 0.0001f) CRYASSERT(0);
+		CRYASSERT(fabs_tpl(det) > 1E-20f);
 
 		//devide the cofactor-matrix by the determinat
 		F idet = (F)1.0 / det;
