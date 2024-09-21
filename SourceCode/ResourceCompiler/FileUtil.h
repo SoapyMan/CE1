@@ -17,6 +17,8 @@
 #define __fileutil_h__
 #pragma once
 
+#include "PortableString.h"
+
 namespace FileUtil
 {
 	// Find all files matching filespec.

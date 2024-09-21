@@ -13,14 +13,7 @@
 #include <platform.h>
 #include <stdio.h>
 #include <tchar.h>
-// Windows Header Files:
-#ifdef WIN64
 #include "PortableString.h"
-typedef CPortableString CString;
-#else
-#include <atlbase.h>
-#include <atlstr.h>
-#endif
 
 // Standart C headers.
 #include <direct.h>

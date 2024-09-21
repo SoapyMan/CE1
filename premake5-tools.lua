@@ -9,13 +9,15 @@ project "ResourceCompiler"
     files {
 		"./SourceCode/ResourceCompiler/**",
 	}
-
     includedirs {
-		"./SourceCode/CryCommon"
+		"./SourceCode/CryCommon",
+		"./SourceCode/CryAnimation"
 	}
-	
 	defines {
 		"RESOURCECOMPILER_EXPORTS"
+	}
+	links {
+		"CryAnimation"
 	}
 
     filter "system:Windows"
@@ -34,14 +36,16 @@ project "ResourceCompilerPC"
     files {
 		"./SourceCode/ResourceCompilerPC/**",
 	}
-
     includedirs {
 		"./SourceCode/CryCommon",
+		"./SourceCode/CryAnimation",
 		"./SourceCode/ResourceCompiler"
 	}
-	
 	defines {
 		"RESOURCECOMPILERPC_EXPORTS"
+	}
+	links {
+		"CryAnimation"
 	}
 
     filter "system:Windows"
@@ -57,13 +61,15 @@ project "CgfDump"
     files {
 		"./SourceCode/CgfDump/**",
 	}
-
     includedirs {
-		"./SourceCode/CryCommon"
+		"./SourceCode/CryCommon",
+		"./SourceCode/CryAnimation"
 	}
-	
 	defines {
 		"DONT_USE_FILE_MAPPING"
+	}
+	links {
+		"CryAnimation"
 	}
 
 project "CcgDump"
@@ -73,17 +79,17 @@ project "CcgDump"
     uses  "CryCommon"
     files {
 		"./SourceCode/CcgDump/**",
-		"./SourceCode/CryAnimation/*.asm",
 	}
-
     includedirs {
-		"./SourceCode/CryCommon"
+		"./SourceCode/CryCommon",
+		"./SourceCode/CryAnimation"
 	}
-	
 	defines {
 		"DONT_USE_FILE_MAPPING"
 	}
-
+	links {
+		"CryAnimation"
+	}
 		
 if ENABLE_EDITOR then
 

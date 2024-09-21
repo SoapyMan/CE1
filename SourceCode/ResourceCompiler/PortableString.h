@@ -150,4 +150,6 @@ namespace std
 	}
 }
 
+typedef CPortableString CString;
+
 #endif

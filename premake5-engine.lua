@@ -213,6 +213,9 @@ project "CrySystem"
 	defines {
 		"CRYSYSTEM_EXPORTS"
 	}
+	links {
+		"CryAnimation"
+	}
 	filter "system:Windows"
 		files {
 			"./SourceCode/CrySystem/LuaDebugger/**.cpp",
@@ -255,7 +258,7 @@ project "CryAISystem"
 	}
 
 project "CryAnimation"
-    kind "SharedLib"
+    kind "StaticLib"
 	uses "CryCommon"
 	
 	--unitybuild "on"

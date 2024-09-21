@@ -17,6 +17,8 @@
 #define __pathutil_h__
 #pragma once
 
+#include "PortableString.h"
+
 namespace Path
 {
 	// compatibility with CPortableString

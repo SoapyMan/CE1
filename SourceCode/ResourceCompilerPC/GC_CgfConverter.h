@@ -100,7 +100,7 @@ public:
 		}
 
 		// write the size of the chunk to the chunk header
-		fseek(m_pFile, (int)(&((CCFChunkHeader*)m_nLastChunk)->nSize), SEEK_SET);
+		fseek(m_pFile, (INT_PTR)(&((CCFChunkHeader*)0)->nSize) + m_nLastChunk, SEEK_SET);
 		unsigned nSize = SWAP32(nNewChunkPos - m_nLastChunk);
 		fwrite(&nSize, sizeof(nSize), 1, m_pFile);
 		// set the file pointer back where it was

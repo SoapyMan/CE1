@@ -43,13 +43,6 @@ using namespace CryStringUtils;
 _ACCESS_POOL;
 //#endif 
 
-#ifdef WIN32
-BOOL APIENTRY DllMain(HANDLE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved)
-{
-	return TRUE;
-}
-#endif
-
 float g_YLine = 0.0f;
 
 //////////////////////////////////////////////////////////////////////////

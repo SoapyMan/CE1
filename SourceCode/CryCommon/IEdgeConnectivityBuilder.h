@@ -17,6 +17,9 @@
 #ifndef __IEDGE_CONNECTIVITYBUILDER_H
 #define __IEDGE_CONNECTIVITYBUILDER_H
 
+#include "Cry_Math.h"
+#include "IMiniLog.h"
+#include "CrySizer.h"
 
 class IStencilShadowConnectivity;
 class CStencilShadowConnectivity;

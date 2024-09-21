@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+
 #include "StencilShadowConnectivity.h"
 #include "StencilShadowConnectivityBuilder.h"
 

@@ -35,7 +35,9 @@
 #ifndef _STENCIL_SHADOW_CONNECTIVITY_HDR_
 #define _STENCIL_SHADOW_CONNECTIVITY_HDR_
 
-#include <IEdgeConnectivityBuilder.h>				// IStencilShadowConnectivity
+#include <vector>
+#include <map>
+#include "IEdgeConnectivityBuilder.h"				// IStencilShadowConnectivity
 
 // the empty connectivity info:
 class CStencilShadowConnectivityNull :public IStencilShadowConnectivity

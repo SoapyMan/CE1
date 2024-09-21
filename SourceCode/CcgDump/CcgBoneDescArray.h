@@ -46,14 +46,14 @@ protected:
 			pBone - m_pBegin, (boneDepthStr(pBone) + "\"" + pBone->getName() + "\"").c_str(),
 			pBone->getControllerId());
 
-		if (int(pBone->getPhysics(0).pPhysGeom) == -1)
+		if (intptr_t(pBone->getPhysics(0).pPhysGeom) == -1)
 			dumpPlus("NO");
 		else
 			dumpPlus("%d", pBone->getPhysics(0).pPhysGeom);
 
 		dumpPlus(",");
 
-		if (int(pBone->getPhysics(1).pPhysGeom) == -1)
+		if (intptr_t(pBone->getPhysics(1).pPhysGeom) == -1)
 			dumpPlus("NO");
 		else
 			dumpPlus("%d", pBone->getPhysics(1).pPhysGeom);

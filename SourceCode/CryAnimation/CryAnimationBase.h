@@ -100,7 +100,7 @@ __forceinline void g_DeleteInterfaces()
 
 
 __forceinline	CCamera& GetViewCamera() { return g_pISystem->GetViewCamera(); }
-__forceinline ISystem* GetISystem() { return g_pISystem; }  //we need this one just for the profiler
+//__forceinline ISystem* GetISystem() { return g_pISystem; }  //we need this one just for the profiler
 
 __forceinline ISystem* g_GetISystem() { return g_pISystem; }
 __forceinline ITimer* g_GetTimer() { return g_pITimer; }

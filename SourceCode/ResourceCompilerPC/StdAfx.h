@@ -10,14 +10,7 @@
 #define NOSHLWAPI
 
 #include <platform.h>
-// Windows Header Files:
-#ifdef WIN64
 #include "PortableString.h"
-typedef CPortableString CString;
-#else
-#include <atlbase.h>
-#include <atlstr.h>
-#endif
 
 #include <string>
 #include <set>
