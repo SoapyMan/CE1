@@ -2,11 +2,6 @@
 #include "FileMapping.h"
 #include "ChunkFileReader.h"
 
-#ifdef _DEBUG
-
-
-#endif
-
 const char* CChunkFileReader::gLastError = "";
 
 CChunkFileReader::CChunkFileReader() :

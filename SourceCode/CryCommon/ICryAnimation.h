@@ -16,16 +16,6 @@
 #ifndef ICRY_ANIMATION
 #define ICRY_ANIMATION
 
-#if !defined(_XBOX) && !defined(LINUX)
-#ifdef CRYANIMATION_EXPORTS
-#define CRYANIMATION_API __declspec(dllexport)
-#else
-#define CRYANIMATION_API __declspec(dllimport)
-#endif
-#else
-#define CRYANIMATION_API
-#endif
-
 //DOC-IGNORE-BEGIN
 #include "smartptr.h"
 #include "Cry_Math.h"
@@ -1439,7 +1429,7 @@ extern "C" {
 	//     szInterfaceVersion - String version of with the build date
 	// Summary:
 	//     Create an instance of the Animation System
-	CRYANIMATION_API ICryCharManager* CreateCharManager(ISystem* pSystem, const char* szInterfaceVersion = gAnimInterfaceVersion);
+	ICryCharManager* CreateCharManager(ISystem* pSystem, const char* szInterfaceVersion = gAnimInterfaceVersion);
 
 #ifdef __cplusplus
 }

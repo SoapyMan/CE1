@@ -1,6 +1,7 @@
 //////////////////////////////////////////////////////////////////////
 //
 //  CryEngine Source code
+//	Copyright (c) Crytek 2001-2004
 //	
 //	File:CryHeaders.h
 //  Definition of cgf, caf file chunks

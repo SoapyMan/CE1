@@ -347,7 +347,6 @@ private: // ------------------------------------------------------
 		WIN_HMODULE	hFont;
 		WIN_HMODULE hScript;
 		WIN_HMODULE h3DEngine;
-		WIN_HMODULE hAnimation;
 		WIN_HMODULE hIndoor;
 		WIN_HMODULE hGame;
 	};

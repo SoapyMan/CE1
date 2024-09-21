@@ -31,6 +31,7 @@
 #include <ICryPak.h>
 #include <IMovieSystem.h>
 #include <IEntitySystem.h>
+#include <ICryAnimation.h>
 #include <IInput.h>
 #include <ILog.h>
 #include <ISound.h>
@@ -47,6 +48,7 @@
 #include "XML/xml.h"
 #include "DataProbe.h"
 #include "ApplicationHelper.h"				// CApplicationHelper
+
 
 #define  PROFILE_WITH_VTUNE
 
@@ -956,20 +958,7 @@ bool CSystem::Init3DEngine()
 //////////////////////////////////////////////////////////////////////////
 bool CSystem::InitAnimationSystem()
 {
-#if defined(LINUX)
-	m_dll.hAnimation = LoadDLL("libCryAnimation.so");
-#else
-	m_dll.hAnimation = LoadDLL("CryAnimation.dll");
-#endif
-	if (!m_dll.hAnimation)
-		return false;
-
-	PFNCREATECRYANIMATION pfnCreateCharManager;
-	pfnCreateCharManager = (PFNCREATECRYANIMATION)CryGetProcAddress(m_dll.hAnimation, "CreateCharManager");
-	if (!pfnCreateCharManager)
-		return false;
-
-	m_pICryCharManager = (*pfnCreateCharManager)(this, gAnimInterfaceVersion);
+	m_pICryCharManager = CreateCharManager(this, gAnimInterfaceVersion);
 
 	if (m_pICryCharManager)
 		GetILog()->LogPlus(" ok");

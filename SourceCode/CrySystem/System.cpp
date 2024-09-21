@@ -250,7 +250,6 @@ CSystem::~CSystem()
 	FreeLib(m_dll.hMovie);
 	FreeLib(m_dll.hIndoor);
 	FreeLib(m_dll.h3DEngine);
-	FreeLib(m_dll.hAnimation);
 	FreeLib(m_dll.hGame);
 	SAFE_DELETE(m_pDataProbe);
 	g_System = nullptr;
