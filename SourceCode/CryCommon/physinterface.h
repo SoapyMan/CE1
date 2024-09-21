@@ -36,6 +36,7 @@ IPhysicalEntity* const WORLD_ENTITY = (IPhysicalEntity*)-10;
 
 class IPhysicsStreamer {
 public:
+	virtual ~IPhysicsStreamer() = default;
 	virtual int CreatePhysicalEntity(void* pForeignData, int iForeignData, int iForeignFlags) = 0;
 	virtual int DestroyPhysicalEntity(IPhysicalEntity* pent) = 0;
 	virtual const char* GetForeignName(void* pForeignData, int iForeignData, int iForeignFlags) = 0;
@@ -1050,6 +1051,7 @@ enum geomtypes { GEOM_TRIMESH = 0, GEOM_HEIGHTFIELD = 1, GEOM_CYLINDER = 2, GEOM
 
 class IGeometry {
 public:
+	virtual ~IGeometry() = default;
 	virtual int GetType() = 0;
 	virtual void Release() = 0;
 	virtual void GetBBox(primitives::box* pbox) = 0;
@@ -1088,6 +1090,7 @@ enum meshflags {
 
 class IGeomManager {
 public:
+	virtual ~IGeomManager() = default;
 	virtual void InitGeoman() = 0;
 	virtual void ShutDownGeoman() = 0;
 
@@ -1115,6 +1118,7 @@ public:
 
 class IPhysUtils {
 public:
+	virtual ~IPhysUtils() = default;
 	virtual int BreakPolygon(vector2df* ptSrc, int nPt, int nCellx, int nCelly, int maxPatchTris, vector2df*& ptout, int*& nPtOut,
 		float jointhresh = 0.5f, int seed = -1) = 0;
 	virtual int CoverPolygonWithCircles(strided_pointer<vector2df> pt, int npt, bool bConsecutive, const vector2df& center,
@@ -1130,6 +1134,7 @@ enum snapshot_flags { ssf_compensate_time_diff = 1, ssf_checksum_only = 2, ssf_n
 
 class IPhysicalEntity {
 public:
+	virtual ~IPhysicalEntity() = default;
 	/*! Retrieves entity type
 		@returb entity type enum
 	*/
@@ -1220,6 +1225,7 @@ public:
 
 class IPhysicsEventClient {
 public:
+	virtual ~IPhysicsEventClient() = default;
 	virtual void OnBBoxOverlap(IPhysicalEntity* pEntity, void* pForeignData, int iForeignData,
 		IPhysicalEntity* pCollider, void* pColliderForeignData, int iColliderForeignData) = 0;
 	virtual void OnStateChange(IPhysicalEntity* pEntity, void* pForeignData, int iForeignData, int iOldSimClass, int iNewSimClass) = 0;
@@ -1326,6 +1332,8 @@ struct ray_hit {
 
 class IPhysicalWorld {
 public:
+	virtual ~IPhysicalWorld() = default;
+
 	/*! Inits world
 		@param pconsole pointer of IConsole interace
 	*/

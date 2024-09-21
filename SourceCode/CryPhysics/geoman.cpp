@@ -15,12 +15,13 @@ void CGeomManager::ShutDownGeoman()
 {
 	int i, j;
 	for (i = 0; i < m_nGeomChunks; i++) {
-		for (j = 0; j < GEOM_CHUNK_SZ; j++) if (m_pGeoms[i][j].pGeom)
-			delete m_pGeoms[i][j].pGeom;
+		for (j = 0; j < GEOM_CHUNK_SZ; j++)
+		{
+			SAFE_DELETE(m_pGeoms[i][j].pGeom)
+		}
 		delete[] m_pGeoms[i];
 	}
-	if (m_nGeomChunks)
-		delete[] m_pGeoms;
+	SAFE_DELETE_ARRAY(m_pGeoms);
 	m_nGeomChunks = 0; m_nGeomsInLastChunk = 0;
 }
 
