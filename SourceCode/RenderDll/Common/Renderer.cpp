@@ -2038,7 +2038,7 @@ ITexPic* CRenderer::EF_LoadTexture(const char* nameTex, uint flags, uint flags2,
 	if (m_type == R_NULL_RENDERER && m_TexMan->m_Text_NoTexture)
 		return m_TexMan->m_Text_NoTexture;
 
-	
+
 	STexPic* tx = nullptr;
 	bool bValid = true;
 
@@ -3431,18 +3431,15 @@ bool CRenderer::EF_IsFakeDLight(CDLight* Source)
 	bool bIgnore = false;
 	if (Source->m_Flags & DLF_FAKE)
 		bIgnore = true;
-	else
-		if (Source->m_pShader != 0 && (Source->m_pShader->GetLFlags() & LMF_DISABLE))
+	else if (Source->m_pShader != 0 && (Source->m_pShader->GetLFlags() & LMF_DISABLE))
+		bIgnore = true;
+	else if (m_bHeatVision && !(Source->m_Flags & DLF_HEATSOURCE) && !CV_r_lightsourcesasheatsources)
+		bIgnore = true;
+	else if (Source->m_Flags & DLF_HEATSOURCE)
+	{
+		if (!m_bHeatVision && !(Source->m_Flags & DLF_LIGHTSOURCE))
 			bIgnore = true;
-		else
-			if (m_bHeatVision && !(Source->m_Flags & DLF_HEATSOURCE) && !CV_r_lightsourcesasheatsources)
-				bIgnore = true;
-			else
-				if (Source->m_Flags & DLF_HEATSOURCE)
-				{
-					if (!m_bHeatVision && !(Source->m_Flags & DLF_LIGHTSOURCE))
-						bIgnore = true;
-				}
+	}
 	return bIgnore;
 }
 
@@ -3459,76 +3456,91 @@ void CRenderer::EF_ADDDlight(CDLight* Source)
 	//Source->m_Flags |= DLF_DIRECTIONAL;
 
 	if (bIgnore)
+	{
 		Source->m_Id = -1;
+	}
 	else
 	{
 		CRYASSERT((Source->m_Flags & DLF_LIGHTTYPE_MASK) != 0);
-		Source->m_Id = m_RP.m_DLights[SRendItem::m_RecurseLevel].Num();
+		TArray<CDLight*>& lights = gRenDev->m_RP.m_DLights[SRendItem::m_RecurseLevel];
+		Source->m_Id = lights.Num();
 		if (Source->m_Id >= 32)
 		{
 			//iLog->Log("Warning: EF_ADDDlight: Too many light sources (Ignored)\n");
 			Source->m_Id = -1;
 			return;
 		}
-		m_RP.m_DLights[SRendItem::m_RecurseLevel].AddElem(Source);
+		lights.AddElem(Source);
 	}
 	EF_PrecacheResource(Source, (m_cam.GetPos() - Source->m_Origin).Length(), 0.1f, 0);
 
 	// Add light coronas, lens flares, beams and so on (depends on shader)
-	if (Source->m_pShader != 0 && Source->m_pShader->GetREs()->Num())
-	{
-		I3DEngine* eng = (I3DEngine*)iSystem->GetI3DEngine();
-		int rl = SRendItem::m_RecurseLevel;
-		float fWaterLevel = eng->GetWaterLevel();
-		float fCamZ = m_cam.GetPos().z;
-		for (int nr = 0; nr < Source->m_pShader->GetREs()->Num(); nr++)
-		{
-			//get the permanent object
-			if (!Source->m_pObject[rl][nr])
-			{
-				Source->m_pObject[rl][nr] = EF_GetObject(false, -1);
-				Source->m_pObject[rl][nr]->m_Color.a = 0;
-				Source->m_pObject[rl][nr]->m_AmbColor = Vec3d(0, 0, 0);
-				Source->m_pObject[rl][nr]->m_Angs2[0] = 0;
-				Source->m_pObject[rl][nr]->m_Angs2[1] = 0;
-				Source->m_pObject[rl][nr]->m_Angs2[2] = 0;
-				Source->m_pObject[rl][nr]->m_TempVars[3] = 0;
-				Source->m_pObject[rl][nr]->m_TempVars[4] = 0;
-				Source->m_pObject[rl][nr]->m_fDistanceToCam = 0;
-			}
-			else
-				EF_GetObject(false, Source->m_pObject[rl][nr]->m_Id);
-			CRendElement* pRE = Source->m_pShader->GetREs()->Get(nr);
-			float fCustomSort = 0;
-			if (pRE->mfGetType() == eDATA_Flare)
-			{
-				Source->m_pObject[rl][nr]->m_Color.r = Source->m_Color.r;
-				Source->m_pObject[rl][nr]->m_Color.g = Source->m_Color.g;
-				Source->m_pObject[rl][nr]->m_Color.b = Source->m_Color.b;
-				fCustomSort = 4000.0f;
-			}
-			else
-			{
-				Source->m_pObject[rl][nr]->m_Color = Source->m_Color;
-			}
+	if (!Source->m_pShader)
+		return;
 
-			if (Source->m_Flags & DLF_SUN)
-				Source->m_pObject[rl][nr]->m_ObjFlags |= FOB_DRSUN;
-			mathCalcMatrix(Source->m_pObject[rl][nr]->m_Matrix, Source->m_Origin, Source->m_ProjAngles, Vec3d(1, 1, 1), g_CpuFlags);
-			Source->m_pObject[rl][nr]->m_pLight = Source;
-			Source->m_pObject[rl][nr]->m_DynLMMask = 1 << Source->m_Id;
-			Source->m_pObject[rl][nr]->m_ObjFlags |= FOB_TRANS_MASK;
-			Source->m_pObject[rl][nr]->m_InvMatrixId = -1;
-			Source->m_pObject[rl][nr]->m_VPMatrixId = -1;
-			if ((fCamZ - fWaterLevel) * (Source->m_Origin.z - fWaterLevel) > 0)
-				Source->m_pObject[rl][nr]->m_SortId = -1000000 - fCustomSort;
-			else
-				Source->m_pObject[rl][nr]->m_SortId = 1000000 - fCustomSort;
-			EF_AddEf(0, pRE, Source->m_pShader, nullptr, Source->m_pObject[rl][nr], -1, nullptr, EFSLIST_DISTSORT);
+	const int numREs = Source->m_pShader->GetREs()->Num();
+	if (!numREs)
+		return;
+
+	I3DEngine* eng = (I3DEngine*)iSystem->GetI3DEngine();
+	CCObject** objsLevel = Source->m_pObject[SRendItem::m_RecurseLevel];
+
+	CRYASSERT(SRendItem::m_RecurseLevel < 4);
+
+	float fWaterLevel = eng->GetWaterLevel();
+	float fCamZ = m_cam.GetPos().z;
+	for (int nr = 0; nr < numREs; nr++)
+	{
+		CRYASSERT(nr < 4);
+		CCObject* obj = objsLevel[nr];
+
+		//get the permanent object
+		if (!obj)
+		{
+			objsLevel[nr] = obj = EF_GetObject(false, -1);
+			obj->m_Color.a = 0;
+			obj->m_AmbColor = Vec3d(0, 0, 0);
+			obj->m_Angs2[0] = 0;
+			obj->m_Angs2[1] = 0;
+			obj->m_Angs2[2] = 0;
+			obj->m_TempVars[3] = 0;
+			obj->m_TempVars[4] = 0;
+			obj->m_fDistanceToCam = 0;
 		}
+		else
+			EF_GetObject(false, obj->m_Id);
+
+		CRendElement* pRE = Source->m_pShader->GetREs()->Get(nr);
+		float fCustomSort = 0;
+		if (pRE->mfGetType() == eDATA_Flare)
+		{
+			obj->m_Color.r = Source->m_Color.r;
+			obj->m_Color.g = Source->m_Color.g;
+			obj->m_Color.b = Source->m_Color.b;
+			fCustomSort = 4000.0f;
+		}
+		else
+		{
+			obj->m_Color = Source->m_Color;
+		}
+
+		if (Source->m_Flags & DLF_SUN)
+			obj->m_ObjFlags |= FOB_DRSUN;
+
+		mathCalcMatrix(obj->m_Matrix, Source->m_Origin, Source->m_ProjAngles, Vec3d(1, 1, 1), g_CpuFlags);
+		obj->m_pLight = Source;
+		obj->m_DynLMMask = 1 << Source->m_Id;
+		obj->m_ObjFlags |= FOB_TRANS_MASK;
+		obj->m_InvMatrixId = -1;
+		obj->m_VPMatrixId = -1;
+
+		if ((fCamZ - fWaterLevel) * (Source->m_Origin.z - fWaterLevel) > 0)
+			obj->m_SortId = -1000000 - fCustomSort;
+		else
+			obj->m_SortId = 1000000 - fCustomSort;
+
+		EF_AddEf(0, pRE, Source->m_pShader, nullptr, obj, -1, nullptr, EFSLIST_DISTSORT);
 	}
-	//Source->m_Flags &= ~DLF_LIGHTTYPE_MASK;
-	//Source->m_Flags |= DLF_DIRECTIONAL;
 }
 
 void CRenderer::EF_ClearLightsList()
@@ -4249,7 +4261,7 @@ bool CRenderer::DXTDecompress(byte* srcData, byte* dstData, int nWidth, int nHei
 #endif
 	{
 		return false;
-	}
+}
 }
 
 bool CRenderer::DXTCompress(byte* raw_data, int nWidth, int nHeight, ETEX_Format eTF, bool bUseHW, bool bGenMips, int nSrcBytesPerPix, MIPDXTcallback callback)
@@ -4345,7 +4357,7 @@ bool CRenderer::DXTCompress(byte* raw_data, int nWidth, int nHeight, ETEX_Format
 		delete[] data;
 		if (nDst != raw_data)
 			delete[] nDst;
-	}
+}
 	return true;
 }
 

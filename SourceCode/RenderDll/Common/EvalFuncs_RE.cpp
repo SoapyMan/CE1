@@ -255,42 +255,35 @@ void SEvalFuncs_RE::FlareDeform(SDeform* df)
 		else
 			vCross.z = 1.0f;
 	}
-	else
-		if (vCross.x == 0 && vCross.z == 0)
-		{
-			if (vCross.y <= 0)
-				vCross.y = -1.0f;
-			else
-				vCross.y = 1.0f;
-		}
+	else if (vCross.x == 0 && vCross.z == 0)
+	{
+		if (vCross.y <= 0)
+			vCross.y = -1.0f;
 		else
-			if (vCross.y == 0 && vCross.z == 0)
-			{
-				if (vCross.x <= 0)
-					vCross.x = -1.0f;
-				else
-					vCross.x = 1.0f;
-			}
-			else
-			{
-				if (fabs(vCross.x) == 1.0f)
-				{
-					vCross.y = 0;
-					vCross.z = 0;
-				}
-				else
-					if (fabs(vCross.y) == 1.0f)
-					{
-						vCross.x = 0;
-						vCross.z = 0;
-					}
-					else
-						if (fabs(vCross.z) == 1.0f)
-						{
-							vCross.x = 0;
-							vCross.y = 0;
-						}
-			}
+			vCross.y = 1.0f;
+	}
+	else if (vCross.y == 0 && vCross.z == 0)
+	{
+		if (vCross.x <= 0)
+			vCross.x = -1.0f;
+		else
+			vCross.x = 1.0f;
+	}
+	else if (fabs(vCross.x) == 1.0f)
+	{
+		vCross.y = 0;
+		vCross.z = 0;
+	}
+	else if (fabs(vCross.y) == 1.0f)
+	{
+		vCross.x = 0;
+		vCross.z = 0;
+	}
+	else if (fabs(vCross.z) == 1.0f)
+	{
+		vCross.x = 0;
+		vCross.y = 0;
+	}
 	float f = -vCross.Dot(vbSrcData[indsSrc[1]]);
 	Vec3d vOrg;
 	SCoord crd;
@@ -910,28 +903,27 @@ void SRendItem::mfCalcProjectVectors(int type, float* Mat, float RefractIndex, b
 	if (type == GL_UNSIGNED_BYTE)
 	{
 	}
-	else
-		if (type == GL_FLOAT)
+	else if (type == GL_FLOAT)
+	{
+		for (int i = 0; i < numVerts; i++, Dst += StrDst, verts += StrV, norms += StrN)
 		{
-			for (int i = 0; i < numVerts; i++, Dst += StrDst, verts += StrV, norms += StrN)
-			{
-				float* v = (float*)verts;
-				float* n = (float*)norms;
-				Vec3d vv;
+			float* v = (float*)verts;
+			float* n = (float*)norms;
+			Vec3d vv;
 
-				vv.x = v[0] + n[0] * RefractIndex;
-				vv.y = v[1] + n[1] * RefractIndex;
-				vv.z = v[2] + n[2] * RefractIndex;
+			vv.x = v[0] + n[0] * RefractIndex;
+			vv.y = v[1] + n[1] * RefractIndex;
+			vv.z = v[2] + n[2] * RefractIndex;
 
-				float tx = v[0] * Mat[0] + v[1] * Mat[4] + v[2] * Mat[8] + Mat[12];
-				float ty = v[0] * Mat[1] + v[1] * Mat[5] + v[2] * Mat[9] + Mat[13];
+			float tx = v[0] * Mat[0] + v[1] * Mat[4] + v[2] * Mat[8] + Mat[12];
+			float ty = v[0] * Mat[1] + v[1] * Mat[5] + v[2] * Mat[9] + Mat[13];
 
-				float s = CLAMP(tx, -1.0f, 1.0f);
-				float t = CLAMP(ty, -1.0f, 1.0f);
-				*(float*)(Dst + 0) = s;
-				*(float*)(Dst + 4) = t;
-			}
+			float s = CLAMP(tx, -1.0f, 1.0f);
+			float t = CLAMP(ty, -1.0f, 1.0f);
+			*(float*)(Dst + 0) = s;
+			*(float*)(Dst + 4) = t;
 		}
+	}
 }
 
 
@@ -945,15 +937,20 @@ void SEvalFuncs_RE::EALPHA_Beam()
 	CCObject* obj = gRenDev->m_RP.m_pCurObject;
 	if (!obj)
 		return;
-	CDLight* dl;
 
-	for (i = 0; i < gRenDev->m_RP.m_DLights[SRendItem::m_RecurseLevel].Num(); i++)
+	CDLight* dl = nullptr;
+	TArray<CDLight*>& lights = gRenDev->m_RP.m_DLights[SRendItem::m_RecurseLevel];
+
+	for (CDLight* pdl : lights)
 	{
-		dl = gRenDev->m_RP.m_DLights[SRendItem::m_RecurseLevel][i];
-		if (dl->m_pObject[0][0] == obj)
+		if (pdl->m_pObject[0][0] == obj)
+		{
+			dl = pdl;
 			break;
+		}
 	}
-	if (i == gRenDev->m_RP.m_DLights[SRendItem::m_RecurseLevel].Num())
+
+	if (!dl)
 		return;
 
 	Vec3d Pos;
@@ -975,17 +972,19 @@ void SEvalFuncs_RE::EALPHA_Beam()
 	byte* norms = (byte*)gRenDev->EF_GetPointer(eSrcPointer_TNormal, &StrNRM, GL_FLOAT, eSrcPointer_TNormal, FGP_SRC | FGP_REAL);
 	byte* verts = (byte*)gRenDev->EF_GetPointer(eSrcPointer_Vert, &Str, GL_FLOAT, eSrcPointer_Vert, FGP_SRC | FGP_REAL);
 	byte* vertsDst = (byte*)gRenDev->EF_GetPointer(eSrcPointer_Vert, &StrVD, GL_FLOAT, eSrcPointer_Vert, FGP_REAL);
-	int nv = gRenDev->m_RP.m_RendNumVerts;
+	const int nv = gRenDev->m_RP.m_RendNumVerts;
 	gRenDev->m_RP.m_pRE->mfUpdateFlags(FCEF_MODIF_COL | FCEF_MODIF_VERT);
 	for (i = 0; i < nv; i++, norms += StrNRM, verts += Str, vertsDst += StrVD, ptr += StrRGBA)
 	{
 		Vec3d* vrt = (Vec3d*)verts;
 		Vec3d* vrtD = (Vec3d*)vertsDst;
+
+		const float fLerp = vrt->x / rb->m_fLengthScale;
+		const float fCurRadius = LERP(rb->m_fStartRadius, rb->m_fEndRadius, fLerp);
+		CFColor col = LERP(rb->m_StartColor, rb->m_EndColor, fLerp);
+
 		Vec3d v;
 		v.x = vrt->x / rb->m_fLengthScale * rb->m_fLength;
-		float fLerp = vrt->x / rb->m_fLengthScale;
-		CFColor col = LERP(rb->m_StartColor, rb->m_EndColor, fLerp);
-		float fCurRadius = LERP(rb->m_fStartRadius, rb->m_fEndRadius, fLerp);
 		v.y = vrt->y / rb->m_fWidthScale * fCurRadius;
 		v.z = vrt->z / rb->m_fWidthScale * fCurRadius;
 		*vrtD = v;
@@ -993,12 +992,8 @@ void SEvalFuncs_RE::EALPHA_Beam()
 		Vec3d* nrm = (Vec3d*)norms;
 		Vec3d p = Pos - v;
 		p.Normalize();
-		float fd = p.Dot(lightForWard);
-		if (fd < 0)
-			fd = -fd;
-		float d = p.Dot(*nrm);
-		if (d < 0)
-			d = -d;
+		float fd = cry_fabsf(p.Dot(lightForWard));
+		float d = cry_fabsf(p.Dot(*nrm));
 		fd *= fd;
 		d *= d;
 		d += fd;

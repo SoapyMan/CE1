@@ -631,11 +631,12 @@ bool CRETriMeshShadow::mfDraw(SShader* ef, SShaderPass* sfm)
 	CDLight* pDL = nullptr;
 	if (rd->m_RP.m_DynLMask)
 	{
-		for (int n = 0; n < rd->m_RP.m_DLights[SRendItem::m_RecurseLevel].Num(); n++)
+		TArray<CDLight*>& lights = gRenDev->m_RP.m_DLights[SRendItem::m_RecurseLevel];
+		for (int n = 0; n < lights.Num(); n++)
 		{
 			if (rd->m_RP.m_DynLMask & (1 << n))
 			{
-				pDL = rd->m_RP.m_DLights[SRendItem::m_RecurseLevel][n];
+				pDL = lights[n];
 				break;
 			}
 		}

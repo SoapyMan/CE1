@@ -11,14 +11,6 @@
 #include "I3DEngine.h"
 #include "CryHeaders.h"
 
-#if defined(WIN32) || defined(WIN64)
-#include <direct.h>
-#include <io.h>
-#elif defined(LINUX)
-#endif
-
-
-
 //=================================================================================================
 
 TArray<SArrayPointer*> SArrayPointer::m_Arrays;
@@ -232,79 +224,56 @@ ESrcPointer CShader::mfParseSrcPointer(char* parms, SShader* ef)
 
 	if (!strnicmp(parms, "Color", 5))
 		ePT = eSrcPointer_Color;
+	else if (!strnicmp(parms, "SecColor", 8))
+		ePT = eSrcPointer_SecColor;
+	else if (!strnicmp(parms, "Vertex", 6))
+		ePT = eSrcPointer_Vert;
+	else if (!stricmp(parms, "Texture0"))
+		ePT = eSrcPointer_Tex;
+	else if (!stricmp(parms, "Texture1") || !stricmp(parms, "TextureLM"))
+		ePT = eSrcPointer_TexLM;
+	else if (!strnicmp(parms, "Normal", 6))
+		ePT = eSrcPointer_Normal;
+	else if (!strnicmp(parms, "Binormal", 8))
+		ePT = eSrcPointer_Binormal;
+	else if (!strnicmp(parms, "TNormal", 7))
+		ePT = eSrcPointer_TNormal;
+	else if (!strnicmp(parms, "Tangent", 7))
+		ePT = eSrcPointer_Tangent;
+	else if (!strnicmp(parms, "LightVector", 11))
+		ePT = eSrcPointer_LightVector;
+	else if (!strnicmp(parms, "TerrainLightVector", 18))
+		ePT = eSrcPointer_LightVector_Terrain;
+	else if (!strnicmp(parms, "NormLightVector", 15))
+		ePT = eSrcPointer_NormLightVector;
+	else if (!strnicmp(parms, "Refract", 7))
+		ePT = eSrcPointer_Refract;
+	else if (!stricmp(parms, "Project"))
+		ePT = eSrcPointer_Project;
+	else if (!stricmp(parms, "ProjectTexture"))
+		ePT = eSrcPointer_ProjectTexture;
+	else if (!strnicmp(parms, "HalfAngle", 9))
+		ePT = eSrcPointer_HalfAngleVector;
+	else if (!strnicmp(parms, "TerrainHalfAngle", 16))
+		ePT = eSrcPointer_HalfAngleVector_Terrain;
+	else if (!strnicmp(parms, "Attenuation", 11))
+		ePT = eSrcPointer_Attenuation;
+	else  if (!stricmp(parms, "LAttenuationSpec0"))
+		ePT = eSrcPointer_LAttenuationSpec0;
+	else if (!stricmp(parms, "LAttenuationSpec1"))
+		ePT = eSrcPointer_LAttenuationSpec1;
+	else if (!stricmp(parms, "TerrainLAttenuationSpec0"))
+		ePT = eSrcPointer_LAttenuationSpec0_Terrain;
+	else if (!stricmp(parms, "TerrainLAttenuationSpec1"))
+		ePT = eSrcPointer_LAttenuationSpec1_Terrain;
+	else if (!stricmp(parms, "Detail"))
+		ePT = eSrcPointer_Detail;
+	else if (!stricmp(parms, "ProjectAttenFromCamera"))
+		ePT = eSrcPointer_ProjectAttenFromCamera;
 	else
-		if (!strnicmp(parms, "SecColor", 8))
-			ePT = eSrcPointer_SecColor;
-		else
-			if (!strnicmp(parms, "Vertex", 6))
-				ePT = eSrcPointer_Vert;
-			else
-				if (!stricmp(parms, "Texture0"))
-					ePT = eSrcPointer_Tex;
-				else
-					if (!stricmp(parms, "Texture1") || !stricmp(parms, "TextureLM"))
-						ePT = eSrcPointer_TexLM;
-					else
-						if (!strnicmp(parms, "Normal", 6))
-							ePT = eSrcPointer_Normal;
-						else
-							if (!strnicmp(parms, "Binormal", 8))
-								ePT = eSrcPointer_Binormal;
-							else
-								if (!strnicmp(parms, "TNormal", 7))
-									ePT = eSrcPointer_TNormal;
-								else
-									if (!strnicmp(parms, "Tangent", 7))
-										ePT = eSrcPointer_Tangent;
-									else
-										if (!strnicmp(parms, "LightVector", 11))
-											ePT = eSrcPointer_LightVector;
-										else
-											if (!strnicmp(parms, "TerrainLightVector", 18))
-												ePT = eSrcPointer_LightVector_Terrain;
-											else
-												if (!strnicmp(parms, "NormLightVector", 15))
-													ePT = eSrcPointer_NormLightVector;
-												else
-													if (!strnicmp(parms, "Refract", 7))
-														ePT = eSrcPointer_Refract;
-													else
-														if (!stricmp(parms, "Project"))
-															ePT = eSrcPointer_Project;
-														else
-															if (!stricmp(parms, "ProjectTexture"))
-																ePT = eSrcPointer_ProjectTexture;
-															else
-																if (!strnicmp(parms, "HalfAngle", 9))
-																	ePT = eSrcPointer_HalfAngleVector;
-																else
-																	if (!strnicmp(parms, "TerrainHalfAngle", 16))
-																		ePT = eSrcPointer_HalfAngleVector_Terrain;
-																	else
-																		if (!strnicmp(parms, "Attenuation", 11))
-																			ePT = eSrcPointer_Attenuation;
-																		else
-																			if (!stricmp(parms, "LAttenuationSpec0"))
-																				ePT = eSrcPointer_LAttenuationSpec0;
-																			else
-																				if (!stricmp(parms, "LAttenuationSpec1"))
-																					ePT = eSrcPointer_LAttenuationSpec1;
-																				else
-																					if (!stricmp(parms, "TerrainLAttenuationSpec0"))
-																						ePT = eSrcPointer_LAttenuationSpec0_Terrain;
-																					else
-																						if (!stricmp(parms, "TerrainLAttenuationSpec1"))
-																							ePT = eSrcPointer_LAttenuationSpec1_Terrain;
-																						else
-																							if (!stricmp(parms, "Detail"))
-																								ePT = eSrcPointer_Detail;
-																							else
-																								if (!stricmp(parms, "ProjectAttenFromCamera"))
-																									ePT = eSrcPointer_ProjectAttenFromCamera;
-																								else
-																								{
-																									Warning(0, 0, "Warning: Unknown Pointer type '%s' in Shader '%s'\n", parms, ef->m_Name.c_str());
-																								}
+	{
+		Warning(0, 0, "Warning: Unknown Pointer type '%s' in Shader '%s'\n", parms, ef->m_Name.c_str());
+	}
 
 	return ePT;
 }
@@ -352,595 +321,527 @@ bool CShader::mfGetParmComps(int comp, SParam* vpp, char* name, char* params, SS
 		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
 		return true;
 	}
-	else
-		if (!strnicmp(name, "FromRE", 6))
+	else if (!strnicmp(name, "FromRE", 6))
+	{
+		SParamComp_FromRE p;
+		if (strlen(name) > 6)
+			p.m_Offs = atol(&name[7]);
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!strnicmp(name, "REColor", 7))
+	{
+		SParamComp_REColor p;
+		p.m_Offs = atol(&name[8]);
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!stricmp(name, "ObjRefrFactor"))
+	{
+		SParamComp_ObjRefrFactor p;
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!strnicmp(name, "FromObject", 10))
+	{
+		SParamComp_FromObject p;
+		p.m_Offs = atol(&name[11]);
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!strnicmp(name, "Time", 4))
+	{
+		SParamComp_Time p;
+		char s[64];
+		float sc;
+		int n = sscanf(name, "%s %f", s, &sc);
+		if (n == 2)
+			p.m_Scale = sc;
+		else
+			p.m_Scale = 1;
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!strnicmp(name, "Distance", 4))
+	{
+		SParamComp_Distance p;
+		char s[64];
+		float sc;
+		int n = sscanf(name, "%s %f", s, &sc);
+		if (n == 2)
+			p.m_Scale = sc;
+		else
+			p.m_Scale = 1;
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!stricmp(name, "MinDistance"))
+	{
+		SParamComp_MinDistance p;
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!stricmp(name, "MinLightDistance"))
+	{
+		SParamComp_MinLightDistance p;
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!strnicmp(name, "Random", 4))
+	{
+		SParamComp_Random p;
+		char s[64];
+		float sc;
+		int n = sscanf(name, "%s %f", s, &sc);
+		if (n == 2)
+			p.m_Scale = sc;
+		else
+			p.m_Scale = 1;
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!strnicmp(name, "SunDirect", 9))
+	{
+		SParamComp_SunDirect p;
+		p.m_Offs = atol(&name[10]);
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!strnicmp(name, "SunFlarePos", 11))
+	{
+		SParamComp_SunFlarePos p;
+		p.m_Offs = atol(&name[12]);
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!strnicmp(name, "LightPos", 8))
+	{
+		SParamComp_LightPos p;
+		p.m_Offs = atol(&name[9]);
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!strnicmp(name, "LightBright", 11))
+	{
+		SParamComp_LightBright p;
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!strnicmp(name, "LightDirectFactor", 17))
+	{
+		SParamComp_LightDirectFactor p;
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!strnicmp(name, "LightIntens", 11))
+	{
+		SParamComp_LightIntens p;
+		p.m_bInv = 0;
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!strnicmp(name, "InvLightIntens", 13))
+	{
+		SParamComp_LightIntens p;
+		p.m_bInv = 1;
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!stricmp(name, "LightsNum"))
+	{
+		SParamComp_LightsNum p;
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!strnicmp(name, "OSLightPos", 10))
+	{
+		SParamComp_OSLightPos p;
+		p.m_Offs = atol(&name[11]);
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!strnicmp(name, "SLightPos", 9))
+	{
+		SParamComp_SLightPos p;
+		p.m_Offs = atol(&name[10]);
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!strnicmp(name, "SCameraPos", 10))
+	{
+		SParamComp_SCameraPos p;
+		p.m_Offs = atol(&name[11]);
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!strnicmp(name, "LightOcclusion", 14))
+	{
+		SParamComp_LightOcclusion p;
+		p.m_Offs = atol(&name[15]);
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!strnicmp(name, "VolFogColor", 11))
+	{
+		SParamComp_VolFogColor p;
+		p.m_Offs = atol(&name[12]);
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!strnicmp(name, "VolFogDensity", 13))
+	{
+		SParamComp_VolFogDensity p;
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!strnicmp(name, "CameraAngle", 11))
+	{
+		SParamComp_CameraAngle p;
+		char s[64];
+		char op;
+		char sign[8];
+		int offs;
+		float oper;
+		int n = sscanf(name, "%s %s %d %c %f", s, sign, &offs, &op, &oper);
+		if (!strnicmp(sign, "neg", 3))
+			p.m_Sign = -1;
+		else
+			p.m_Sign = 1;
+		p.m_Offs = offs;
+		if (n == 5)
 		{
-			SParamComp_FromRE p;
-			if (strlen(name) > 6)
-				p.m_Offs = atol(&name[7]);
-			vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-			return true;
+			if (op == '+')
+				p.m_Op = 1;
+			else if (op == '*')
+				p.m_Op = 2;
+			else if (op == '/')
+				p.m_Op = 3;
+			else if (op == '-')
+				p.m_Op = 4;
+			else
+				p.m_Op = 0;
+			p.m_Operand = oper;
 		}
 		else
-			if (!strnicmp(name, "REColor", 7))
-			{
-				SParamComp_REColor p;
-				p.m_Offs = atol(&name[8]);
-				vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-				return true;
-			}
+			p.m_Op = 0;
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!strnicmp(name, "CameraPos", 9))
+	{
+		SParamComp_CameraPos p;
+		char s[64];
+		char op;
+		char sign[8];
+		int offs;
+		float oper;
+		int n = sscanf(name, "%s %s %d %c %f", s, sign, &offs, &op, &oper);
+		if (!strnicmp(sign, "neg", 3))
+			p.m_Sign = -1;
+		else
+			p.m_Sign = 1;
+		p.m_Offs = offs;
+		if (n == 5)
+		{
+			if (op == '+')
+				p.m_Op = 1;
+			else if (op == '*')
+				p.m_Op = 2;
+			else if (op == '/')
+				p.m_Op = 3;
+			else if (op == '-')
+				p.m_Op = 4;
 			else
-				if (!stricmp(name, "ObjRefrFactor"))
-				{
-					SParamComp_ObjRefrFactor p;
-					vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-					return true;
-				}
-				else
-					if (!strnicmp(name, "FromObject", 10))
-					{
-						SParamComp_FromObject p;
-						p.m_Offs = atol(&name[11]);
-						vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-						return true;
-					}
-					else
-						if (!strnicmp(name, "Time", 4))
-						{
-							SParamComp_Time p;
-							char s[64];
-							float sc;
-							int n = sscanf(name, "%s %f", s, &sc);
-							if (n == 2)
-								p.m_Scale = sc;
-							else
-								p.m_Scale = 1;
-							vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-							return true;
-						}
-						else
-							if (!strnicmp(name, "Distance", 4))
-							{
-								SParamComp_Distance p;
-								char s[64];
-								float sc;
-								int n = sscanf(name, "%s %f", s, &sc);
-								if (n == 2)
-									p.m_Scale = sc;
-								else
-									p.m_Scale = 1;
-								vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-								return true;
-							}
-							else
-								if (!stricmp(name, "MinDistance"))
-								{
-									SParamComp_MinDistance p;
-									vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-									return true;
-								}
-								else
-									if (!stricmp(name, "MinLightDistance"))
-									{
-										SParamComp_MinLightDistance p;
-										vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-										return true;
-									}
-									else
-										if (!strnicmp(name, "Random", 4))
-										{
-											SParamComp_Random p;
-											char s[64];
-											float sc;
-											int n = sscanf(name, "%s %f", s, &sc);
-											if (n == 2)
-												p.m_Scale = sc;
-											else
-												p.m_Scale = 1;
-											vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-											return true;
-										}
-										else
-											if (!strnicmp(name, "SunDirect", 9))
-											{
-												SParamComp_SunDirect p;
-												p.m_Offs = atol(&name[10]);
-												vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-												return true;
-											}
-											else
-												if (!strnicmp(name, "SunFlarePos", 11))
-												{
-													SParamComp_SunFlarePos p;
-													p.m_Offs = atol(&name[12]);
-													vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-													return true;
-												}
-												else
-													if (!strnicmp(name, "LightPos", 8))
-													{
-														SParamComp_LightPos p;
-														p.m_Offs = atol(&name[9]);
-														vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-														return true;
-													}
-													else
-														if (!strnicmp(name, "LightBright", 11))
-														{
-															SParamComp_LightBright p;
-															vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-															return true;
-														}
-														else
-															if (!strnicmp(name, "LightDirectFactor", 17))
-															{
-																SParamComp_LightDirectFactor p;
-																vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-																return true;
-															}
-															else
-																if (!strnicmp(name, "LightIntens", 11))
-																{
-																	SParamComp_LightIntens p;
-																	p.m_bInv = 0;
-																	vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-																	return true;
-																}
-																else
-																	if (!strnicmp(name, "InvLightIntens", 13))
-																	{
-																		SParamComp_LightIntens p;
-																		p.m_bInv = 1;
-																		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-																		return true;
-																	}
-																	else
-																		if (!stricmp(name, "LightsNum"))
-																		{
-																			SParamComp_LightsNum p;
-																			vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-																			return true;
-																		}
-																		else
-																			if (!strnicmp(name, "OSLightPos", 10))
-																			{
-																				SParamComp_OSLightPos p;
-																				p.m_Offs = atol(&name[11]);
-																				vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-																				return true;
-																			}
-																			else
-																				if (!strnicmp(name, "SLightPos", 9))
-																				{
-																					SParamComp_SLightPos p;
-																					p.m_Offs = atol(&name[10]);
-																					vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-																					return true;
-																				}
-																				else
-																					if (!strnicmp(name, "SCameraPos", 10))
-																					{
-																						SParamComp_SCameraPos p;
-																						p.m_Offs = atol(&name[11]);
-																						vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-																						return true;
-																					}
-																					else
-																						if (!strnicmp(name, "LightOcclusion", 14))
-																						{
-																							SParamComp_LightOcclusion p;
-																							p.m_Offs = atol(&name[15]);
-																							vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-																							return true;
-																						}
-																						else
-																							if (!strnicmp(name, "VolFogColor", 11))
-																							{
-																								SParamComp_VolFogColor p;
-																								p.m_Offs = atol(&name[12]);
-																								vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-																								return true;
-																							}
-																							else
-																								if (!strnicmp(name, "VolFogDensity", 13))
-																								{
-																									SParamComp_VolFogDensity p;
-																									vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-																									return true;
-																								}
-																								else
-																									if (!strnicmp(name, "CameraAngle", 11))
-																									{
-																										SParamComp_CameraAngle p;
-																										char s[64];
-																										char op;
-																										char sign[8];
-																										int offs;
-																										float oper;
-																										int n = sscanf(name, "%s %s %d %c %f", s, sign, &offs, &op, &oper);
-																										if (!strnicmp(sign, "neg", 3))
-																											p.m_Sign = -1;
-																										else
-																											p.m_Sign = 1;
-																										p.m_Offs = offs;
-																										if (n == 5)
-																										{
-																											if (op == '+')
-																												p.m_Op = 1;
-																											else
-																												if (op == '*')
-																													p.m_Op = 2;
-																												else
-																													if (op == '/')
-																														p.m_Op = 3;
-																													else
-																														if (op == '-')
-																															p.m_Op = 4;
-																														else
-																															p.m_Op = 0;
-																											p.m_Operand = oper;
-																										}
-																										else
-																											p.m_Op = 0;
-																										vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-																										return true;
-																									}
-																									else
-																										if (!strnicmp(name, "CameraPos", 9))
-																										{
-																											SParamComp_CameraPos p;
-																											char s[64];
-																											char op;
-																											char sign[8];
-																											int offs;
-																											float oper;
-																											int n = sscanf(name, "%s %s %d %c %f", s, sign, &offs, &op, &oper);
-																											if (!strnicmp(sign, "neg", 3))
-																												p.m_Sign = -1;
-																											else
-																												p.m_Sign = 1;
-																											p.m_Offs = offs;
-																											if (n == 5)
-																											{
-																												if (op == '+')
-																													p.m_Op = 1;
-																												else
-																													if (op == '*')
-																														p.m_Op = 2;
-																													else
-																														if (op == '/')
-																															p.m_Op = 3;
-																														else
-																															if (op == '-')
-																																p.m_Op = 4;
-																															else
-																																p.m_Op = 0;
-																												p.m_Operand = oper;
-																											}
-																											else
-																												p.m_Op = 0;
-																											vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-																											return true;
-																										}
-																										else
-																											if (!strnicmp(name, "ObjPos", 6))
-																											{
-																												SParamComp_ObjPos p;
-																												char s[64];
-																												char op;
-																												char sign[8];
-																												int offs;
-																												float oper;
-																												int n = sscanf(name, "%s %s %d %c %f", s, sign, &offs, &op, &oper);
-																												if (!strnicmp(sign, "neg", 3))
-																													p.m_Sign = -1;
-																												else
-																													p.m_Sign = 1;
-																												p.m_Offs = offs;
-																												if (n == 5)
-																												{
-																													if (op == '+')
-																														p.m_Op = 1;
-																													else
-																														if (op == '*')
-																															p.m_Op = 2;
-																														else
-																															if (op == '/')
-																																p.m_Op = 3;
-																															else
-																																if (op == '-')
-																																	p.m_Op = 4;
-																																else
-																																	p.m_Op = 0;
-																													p.m_Operand = oper;
-																												}
-																												else
-																													p.m_Op = 0;
-																												vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-																												return true;
-																											}
-																											else
-																												if (!strnicmp(name, "OSCameraPos", 11))
-																												{
-																													SParamComp_OSCameraPos p;
-																													char s[64];
-																													char op;
-																													char sign[8];
-																													int offs;
-																													float oper;
-																													int n = sscanf(name, "%s %s %d %c %f", s, sign, &offs, &op, &oper);
-																													if (!strnicmp(sign, "neg", 3))
-																														p.m_Sign = -1;
-																													else
-																														p.m_Sign = 1;
-																													p.m_Offs = offs;
-																													if (n == 5)
-																													{
-																														if (op == '+')
-																															p.m_Op = 1;
-																														else
-																															if (op == '*')
-																																p.m_Op = 2;
-																															else
-																																if (op == '/')
-																																	p.m_Op = 3;
-																																else
-																																	if (op == '-')
-																																		p.m_Op = 4;
-																																	else
-																																		p.m_Op = 0;
-																														p.m_Operand = oper;
-																													}
-																													else
-																														p.m_Op = 0;
-																													vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-																													return true;
-																												}
-																												else
-																													if (!strnicmp(name, "SunColor", 8))
-																													{
-																														SParamComp_SunColor p;
-																														p.m_Offs = atol(&name[9]);
-																														char s[64];
-																														float mult = 1.0f;
-																														int n = sscanf(name, "%s %f", s, &mult);
-																														p.m_Mult = mult;
-																														vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-																														return true;
-																													}
-																													else
-																														if (!strnicmp(name, "WorldColor", 10))
-																														{
-																															SParamComp_WorldColor p;
-																															p.m_Offs = atol(&name[11]);
-																															vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-																															return true;
-																														}
-																														else
-																															if (!stricmp(name, "WaterLevel"))
-																															{
-																																SParamComp_WaterLevel p;
-																																vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-																																return true;
-																															}
-																															else
-																																if (!strnicmp(name, "WorldObjColor", 13))
-																																{
-																																	SParamComp_WorldColor p;
-																																	p.m_Offs = atol(&name[14]) | 0x80000000;
-																																	vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-																																	return true;
-																																}
-																																else
-																																	if (!strnicmp(name, "ObjVal", 6))
-																																	{
-																																		SParamComp_ObjVal p;
-																																		p.m_Offs = atol(&name[7]);
-																																		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-																																		return true;
-																																	}
-																																	else
-																																		if (!strnicmp(name, "GeomCenter", 10))
-																																		{
-																																			SParamComp_GeomCenter p;
-																																			p.m_Offs = atol(&name[11]);
-																																			vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-																																			return true;
-																																		}
-																																		else
-																																			if (!strnicmp(name, "Bending", 7))
-																																			{
-																																				SParamComp_Bending p;
-																																				vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-																																				return true;
-																																			}
-																																			else
-																																				if (!strnicmp(name, "LightColor", 10))
-																																				{
-																																					SParamComp_LightColor p;
-																																					p.m_Offs = atol(&name[11]);
-																																					vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-																																					return true;
-																																				}
-																																				else
-																																					if (!strnicmp(name, "DiffuseColor", 12))
-																																					{
-																																						SParamComp_DiffuseColor p;
-																																						p.m_Offs = atol(&name[13]);
-																																						vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-																																						return true;
-																																					}
-																																					else
-																																						if (!stricmp(name, "SpecularPower"))
-																																						{
-																																							SParamComp_SpecularPower p;
-																																							vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-																																							return true;
-																																						}
-																																						else
-																																							if (!strnicmp(name, "ObjColor", 8))
-																																							{
-																																								SParamComp_ObjColor p;
-																																								p.m_Offs = atol(&name[9]);
-																																								vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-																																								return true;
-																																							}
-																																							else
-																																								if (!strnicmp(name, "SpecLightColor", 14))
-																																								{
-																																									SParamComp_SpecLightColor p;
-																																									p.m_Offs = atol(&name[15]);
-																																									vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-																																									return true;
-																																								}
-																																								else
-																																									if (!strnicmp(name, "AmbLightColor", 13))
-																																									{
-																																										SParamComp_AmbLightColor p;
-																																										p.m_Offs = atol(&name[14]);
-																																										char s[64];
-																																										float mult;
-																																										int n = sscanf(name, "%s %f", s, &mult);
-																																										if (n == 2)
-																																											p.m_fMul = mult;
-																																										vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-																																										return true;
-																																									}
-																																									else
-																																										if (!stricmp(name, "FlashBangBrightness"))
-																																										{
-																																											SParamComp_FlashBangBrightness p;
-																																											vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-																																											return true;
-																																										}
-																																										else
-																																											if (!strnicmp(name, "ScreenSize", 10))
-																																											{
-																																												SParamComp_ScreenSize p;
-																																												char s[64];
-																																												char op;
-																																												char sign[8];
-																																												int offs;
-																																												float oper;
-																																												int n = sscanf(name, "%s %s %d %c %f", s, sign, &offs, &op, &oper);
-																																												if (!strnicmp(sign, "neg", 3))
-																																													p.m_Sign = -1;
-																																												else
-																																													p.m_Sign = 1;
-																																												p.m_Offs = offs;
-																																												if (n == 5)
-																																												{
-																																													if (op == '+')
-																																														p.m_Op = 1;
-																																													else
-																																														if (op == '*')
-																																															p.m_Op = 2;
-																																														else
-																																															if (op == '/')
-																																																p.m_Op = 3;
-																																															else
-																																																if (op == '-')
-																																																	p.m_Op = 4;
-																																																else
-																																																	p.m_Op = 0;
-																																													p.m_Operand = oper;
-																																												}
-																																												else
-																																													p.m_Op = 0;
+				p.m_Op = 0;
+			p.m_Operand = oper;
+		}
+		else
+			p.m_Op = 0;
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!strnicmp(name, "ObjPos", 6))
+	{
+		SParamComp_ObjPos p;
+		char s[64];
+		char op;
+		char sign[8];
+		int offs;
+		float oper;
+		int n = sscanf(name, "%s %s %d %c %f", s, sign, &offs, &op, &oper);
+		if (!strnicmp(sign, "neg", 3))
+			p.m_Sign = -1;
+		else
+			p.m_Sign = 1;
+		p.m_Offs = offs;
+		if (n == 5)
+		{
+			if (op == '+')
+				p.m_Op = 1;
+			else if (op == '*')
+				p.m_Op = 2;
+			else if (op == '/')
+				p.m_Op = 3;
+			else if (op == '-')
+				p.m_Op = 4;
+			else
+				p.m_Op = 0;
+			p.m_Operand = oper;
+		}
+		else
+			p.m_Op = 0;
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!strnicmp(name, "OSCameraPos", 11))
+	{
+		SParamComp_OSCameraPos p;
+		char s[64];
+		char op;
+		char sign[8];
+		int offs;
+		float oper;
+		int n = sscanf(name, "%s %s %d %c %f", s, sign, &offs, &op, &oper);
+		if (!strnicmp(sign, "neg", 3))
+			p.m_Sign = -1;
+		else
+			p.m_Sign = 1;
+		p.m_Offs = offs;
+		if (n == 5)
+		{
+			if (op == '+')
+				p.m_Op = 1;
+			else if (op == '*')
+				p.m_Op = 2;
+			else if (op == '/')
+				p.m_Op = 3;
+			else if (op == '-')
+				p.m_Op = 4;
+			else
+				p.m_Op = 0;
+			p.m_Operand = oper;
+		}
+		else
+			p.m_Op = 0;
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!strnicmp(name, "SunColor", 8))
+	{
+		SParamComp_SunColor p;
+		p.m_Offs = atol(&name[9]);
+		char s[64];
+		float mult = 1.0f;
+		int n = sscanf(name, "%s %f", s, &mult);
+		p.m_Mult = mult;
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!strnicmp(name, "WorldColor", 10))
+	{
+		SParamComp_WorldColor p;
+		p.m_Offs = atol(&name[11]);
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!stricmp(name, "WaterLevel"))
+	{
+		SParamComp_WaterLevel p;
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!strnicmp(name, "WorldObjColor", 13))
+	{
+		SParamComp_WorldColor p;
+		p.m_Offs = atol(&name[14]) | 0x80000000;
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!strnicmp(name, "ObjVal", 6))
+	{
+		SParamComp_ObjVal p;
+		p.m_Offs = atol(&name[7]);
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!strnicmp(name, "GeomCenter", 10))
+	{
+		SParamComp_GeomCenter p;
+		p.m_Offs = atol(&name[11]);
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!strnicmp(name, "Bending", 7))
+	{
+		SParamComp_Bending p;
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!strnicmp(name, "LightColor", 10))
+	{
+		SParamComp_LightColor p;
+		p.m_Offs = atol(&name[11]);
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!strnicmp(name, "DiffuseColor", 12))
+	{
+		SParamComp_DiffuseColor p;
+		p.m_Offs = atol(&name[13]);
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!stricmp(name, "SpecularPower"))
+	{
+		SParamComp_SpecularPower p;
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!strnicmp(name, "ObjColor", 8))
+	{
+		SParamComp_ObjColor p;
+		p.m_Offs = atol(&name[9]);
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!strnicmp(name, "SpecLightColor", 14))
+	{
+		SParamComp_SpecLightColor p;
+		p.m_Offs = atol(&name[15]);
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!strnicmp(name, "AmbLightColor", 13))
+	{
+		SParamComp_AmbLightColor p;
+		p.m_Offs = atol(&name[14]);
+		char s[64];
+		float mult;
+		int n = sscanf(name, "%s %f", s, &mult);
+		if (n == 2)
+			p.m_fMul = mult;
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!stricmp(name, "FlashBangBrightness"))
+	{
+		SParamComp_FlashBangBrightness p;
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!strnicmp(name, "ScreenSize", 10))
+	{
+		SParamComp_ScreenSize p;
+		char s[64];
+		char op;
+		char sign[8];
+		int offs;
+		float oper;
+		int n = sscanf(name, "%s %s %d %c %f", s, sign, &offs, &op, &oper);
+		if (!strnicmp(sign, "neg", 3))
+			p.m_Sign = -1;
+		else
+			p.m_Sign = 1;
+		p.m_Offs = offs;
+		if (n == 5)
+		{
+			if (op == '+')
+				p.m_Op = 1;
+			else if (op == '*')
+				p.m_Op = 2;
+			else if (op == '/')
+				p.m_Op = 3;
+			else if (op == '-')
+				p.m_Op = 4;
+			else
+				p.m_Op = 0;
+			p.m_Operand = oper;
+		}
+		else
+			p.m_Op = 0;
 
-																																												vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-																																												return true;
-																																											}
-																																											else
-																																												if (!strnicmp(name, "DofFocalParams", 14))
-																																												{
-																																													SParamComp_DofFocalParams p;
-																																													char s[64];
-																																													char op;
-																																													char sign[8];
-																																													int offs;
-																																													float oper;
-																																													int n = sscanf(name, "%s %s %d %c %f", s, sign, &offs, &op, &oper);
-																																													if (!strnicmp(sign, "neg", 3))
-																																														p.m_Sign = -1;
-																																													else
-																																														p.m_Sign = 1;
-																																													p.m_Offs = offs;
-																																													if (n == 5)
-																																													{
-																																														if (op == '+')
-																																															p.m_Op = 1;
-																																														else
-																																															if (op == '*')
-																																																p.m_Op = 2;
-																																															else
-																																																if (op == '/')
-																																																	p.m_Op = 3;
-																																																else
-																																																	if (op == '-')
-																																																		p.m_Op = 4;
-																																																	else
-																																																		p.m_Op = 0;
-																																														p.m_Operand = oper;
-																																													}
-																																													else
-																																														p.m_Op = 0;
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!strnicmp(name, "DofFocalParams", 14))
+	{
+		SParamComp_DofFocalParams p;
+		char s[64];
+		char op;
+		char sign[8];
+		int offs;
+		float oper;
+		int n = sscanf(name, "%s %s %d %c %f", s, sign, &offs, &op, &oper);
+		if (!strnicmp(sign, "neg", 3))
+			p.m_Sign = -1;
+		else
+			p.m_Sign = 1;
+		p.m_Offs = offs;
+		if (n == 5)
+		{
+			if (op == '+')
+				p.m_Op = 1;
+			else if (op == '*')
+				p.m_Op = 2;
+			else if (op == '/')
+				p.m_Op = 3;
+			else if (op == '-')
+				p.m_Op = 4;
+			else
+				p.m_Op = 0;
+			p.m_Operand = oper;
+		}
+		else
+			p.m_Op = 0;
 
-																																													vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-																																													return true;
-																																												}
-																																												else
-																																													if (!strnicmp(name, "BumpAmount", 10) || !strnicmp(name, "BumpScale", 9))
-																																													{
-																																														SParamComp_BumpAmount p;
-																																														vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-																																														return true;
-																																													}
-																																													else
-																																														if (!stricmp(name, "ObjScale"))
-																																														{
-																																															SParamComp_ObjScale p;
-																																															vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-																																															return true;
-																																														}
-																																														else
-																																															if (!stricmp(name, "FogStart"))
-																																															{
-																																																SParamComp_Fog p;
-																																																p.m_Type = 1;
-																																																vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-																																																return true;
-																																															}
-																																															else
-																																																if (!stricmp(name, "FogEnd"))
-																																																{
-																																																	SParamComp_Fog p;
-																																																	p.m_Type = 2;
-																																																	vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-																																																	return true;
-																																																}
-																																																else
-																																																	if (!stricmp(name, "FogRange"))
-																																																	{
-																																																		SParamComp_Fog p;
-																																																		p.m_Type = 3;
-																																																		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-																																																		return true;
-																																																	}
-																																																	else
-																																																		if (!strnicmp(name, "HeatFactor", 10))
-																																																		{
-																																																			SParamComp_HeatFactor p;
-																																																			vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-																																																			return true;
-																																																		}
-																																																		else
-																																																			if (!strnicmp(name, "Opacity", 7))
-																																																			{
-																																																				SParamComp_Opacity p;
-																																																				vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
-																																																				return true;
-																																																			}
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!strnicmp(name, "BumpAmount", 10) || !strnicmp(name, "BumpScale", 9))
+	{
+		SParamComp_BumpAmount p;
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!stricmp(name, "ObjScale"))
+	{
+		SParamComp_ObjScale p;
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!stricmp(name, "FogStart"))
+	{
+		SParamComp_Fog p;
+		p.m_Type = 1;
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!stricmp(name, "FogEnd"))
+	{
+		SParamComp_Fog p;
+		p.m_Type = 2;
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!stricmp(name, "FogRange"))
+	{
+		SParamComp_Fog p;
+		p.m_Type = 3;
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!strnicmp(name, "HeatFactor", 10))
+	{
+		SParamComp_HeatFactor p;
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
+	else if (!strnicmp(name, "Opacity", 7))
+	{
+		SParamComp_Opacity p;
+		vpp->m_Comps[comp] = SParamComp::mfAdd(&p);
+		return true;
+	}
 	Warning(0, 0, "Warning: Unknown component type '%s' for params section in Shader '%s'\n", name, ef->m_Name.c_str());
 	return false;
 }
@@ -2977,14 +2878,12 @@ void SParamComp_LightsType::mfGet4f(vec4_t v)
 			CDLight* dl = lp->pLights[i];
 			if (dl->m_Flags & DLF_DIRECTIONAL)
 				v[i] = 0;
+			else if (dl->m_Flags & DLF_POINT)
+				v[i] = 1;
+			else if (dl->m_Flags & DLF_PROJECT)
+				v[i] = 2;
 			else
-				if (dl->m_Flags & DLF_POINT)
-					v[i] = 1;
-				else
-					if (dl->m_Flags & DLF_PROJECT)
-						v[i] = 2;
-					else
-						v[i] = 0;
+				v[i] = 0;
 		}
 	}
 }

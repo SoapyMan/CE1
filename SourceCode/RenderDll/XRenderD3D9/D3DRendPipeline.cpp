@@ -3041,9 +3041,10 @@ void CD3D9Renderer::EF_PreRender(int Stage)
 		if (Stage == 1)
 			CCGVProgram_D3D::mfSetGlobalParams();
 
-		for (i = 0; i < m_RP.m_DLights[SRendItem::m_RecurseLevel].Num(); i++)
+		TArray<CDLight*>& lights = gRenDev->m_RP.m_DLights[SRendItem::m_RecurseLevel];
+		for (i = 0; i < lights.Num(); i++)
 		{
-			CDLight* dl = m_RP.m_DLights[SRendItem::m_RecurseLevel][i];
+			CDLight* dl = lights[i];
 			if (dl->m_Flags & DLF_FAKE)
 				continue;
 
@@ -3057,7 +3058,7 @@ void CD3D9Renderer::EF_PreRender(int Stage)
 			}
 		}
 		//  if (i == m_RP.m_DLights.Num() && m_RP.m_SunDir == Vec3d(0,0,0))
-		if (i == m_RP.m_DLights[SRendItem::m_RecurseLevel].Num() && IsEquivalent(m_RP.m_SunDir, Vec3d(0, 0, 0)))
+		if (i == lights.Num() && IsEquivalent(m_RP.m_SunDir, Vec3d(0, 0, 0)))
 			m_RP.m_SunDir = Vec3d(0, 0, 1);
 	}
 
@@ -4801,7 +4802,7 @@ int CD3D9Renderer::EF_DrawMultiShadowPasses(SShaderTechnique* hs, SShader* ef, i
 				EF_DrawLightPasses_PS30(hs, ef, nStartLight, nEndLight, true);
 			else
 				EF_DrawLightPasses(hs, ef, nStartLight, nEndLight, true);
-			
+
 			// LM pass
 			EF_DrawGeneralPasses(hs, ef, false, nStartAmb, nEndAmb, true);
 		}
@@ -5616,10 +5617,6 @@ void CD3D9Renderer::EF_DrawLightPasses_PS30(SShaderTechnique* hs, SShader* ef, i
 	int nLights = m_RP.m_NumActiveDLights;
 
 	// make sure for each pass not more then 1 projected light
-	if (gRenDev->m_RP.m_pCurObject->m_ObjFlags & FOB_SELECTED)
-	{
-		int nnn = 0;
-	}
 
 	int nStencState = 0;
 	bool bStencState = m_RP.m_pStateShader && m_RP.m_pStateShader->m_State && m_RP.m_pStateShader->m_State->m_Stencil;
@@ -5637,19 +5634,21 @@ void CD3D9Renderer::EF_DrawLightPasses_PS30(SShaderTechnique* hs, SShader* ef, i
 	{
 		bHasAmb = false;
 	}
+
 	for (nLight = 0; nLight < nLights; nLight++)
 	{
 		CDLight* dl = m_RP.m_pActiveDLights[nLight];
+
 		// ignore LM light sources for diffuse only materials with LM but without specular
 		if (bHasLM && (dl->m_Flags & DLF_LM) && (slw->m_LMFlags & LMF_NOSPECULAR))
 			continue;
+
 		if (bStencState && (dl->m_Flags & DLF_CASTSHADOW_VOLUME))
 			StencLights[nStencLights++] = dl;
+		else if (dl->m_Flags & DLF_PROJECT)
+			ProjLights[nProjLights++] = dl;
 		else
-			if (dl->m_Flags & DLF_PROJECT)
-				ProjLights[nProjLights++] = dl;
-			else
-				OtherLights[nOtherLights++] = dl;
+			OtherLights[nOtherLights++] = dl;
 	}
 	if (!bHasAmb && !nOtherLights && !nProjLights && !nStencLights)
 		return;
@@ -5661,19 +5660,17 @@ void CD3D9Renderer::EF_DrawLightPasses_PS30(SShaderTechnique* hs, SShader* ef, i
 	int nP = 0;
 	float fO = 0;
 	float fP = 0;
+
 	int nMaxLights = (m_Features & RFT_HW_PS30) ? NUM_PPLIGHTS_PERPASS_PS30 : NUM_PPLIGHTS_PERPASS_PS2X;
 	int nAmbLights = nMaxLights;
 	if (bHasAmb)
 	{
 		for (i = nStart; i <= nEnd; i++, slw++)
 		{
-			if (slw->m_LMFlags & LMF_HASAMBIENT)
+			if (slw->m_LMFlags & (LMF_HASAMBIENT | LMF_HASDOT3LM))
 			{
-				if (slw->m_LMFlags & LMF_HASDOT3LM)
-				{
-					if (!m_RP.m_pShaderResources || !m_RP.m_pCurObject->m_nLMDirId)
-						continue;
-				}
+				if (!m_RP.m_pShaderResources || !m_RP.m_pCurObject->m_nLMDirId)
+					continue;
 			}
 			break;
 		}
@@ -5687,6 +5684,7 @@ void CD3D9Renderer::EF_DrawLightPasses_PS30(SShaderTechnique* hs, SShader* ef, i
 		m_RP.m_LPasses[i].nLights = 1;
 		m_RP.m_LPasses[i].pLights[0] = StencLights[i];
 	}
+
 	for (; i < 32; i++)
 	{
 		if (nP >= nProjLights && nO >= nOtherLights)
@@ -5712,13 +5710,16 @@ void CD3D9Renderer::EF_DrawLightPasses_PS30(SShaderTechnique* hs, SShader* ef, i
 				j++;
 				nO++;
 			}
+
 			if (nP >= nProjLights && nO >= nOtherLights)
 				break;
+
 			if (j == nAmbLights)
 			{
 				nAmbLights = nMaxLights;
 				break;
 			}
+
 			if (m_RP.m_LPasses[i].nProjectors == 0)
 			{
 				fP += fFP;
@@ -5765,14 +5766,13 @@ void CD3D9Renderer::EF_DrawLightPasses_PS30(SShaderTechnique* hs, SShader* ef, i
 			CDLight* dl = lp->pLights[i];
 			if (dl->m_Flags & DLF_POINT)
 				Types[i] = SLMF_POINT;
+			else if (dl->m_Flags & DLF_PROJECT)
+			{
+				Types[i] = SLMF_PROJECTED;
+				m_RP.m_pCurLight = dl;
+			}
 			else
-				if (dl->m_Flags & DLF_PROJECT)
-				{
-					Types[i] = SLMF_PROJECTED;
-					m_RP.m_pCurLight = dl;
-				}
-				else
-					Types[i] = SLMF_DIRECT;
+				Types[i] = SLMF_DIRECT;
 			if ((dl->m_Flags & DLF_LM) && bHasLM)
 			{
 				Types[i] |= SLMF_ONLYSPEC;
@@ -5921,13 +5921,12 @@ void CD3D9Renderer::EF_DrawLightPasses_PS30(SShaderTechnique* hs, SShader* ef, i
 				bool bFogVP = (m_RP.m_PersFlags & RBPF_HDR) || (curVP && (curVP->m_Flags & VPFI_VS30ONLY));
 				bFogOverrided = EF_FogCorrection(bFogDisable, bFogVP);
 
-				int nObj = 0;
 				CCObject* pSaveObj = m_RP.m_pCurObject;
 				CCObject* pObj = pSaveObj;
 				HRESULT h;
-				while (true)
+				for (int nObj = -1; nObj < m_RP.m_MergedObjects.Num(); ++nObj)
 				{
-					if (nObj)
+					if (nObj >= 0)
 					{
 						m_RP.m_pCurObject = m_RP.m_MergedObjects[nObj];
 						m_RP.m_FrameObject++;
@@ -6005,9 +6004,6 @@ void CD3D9Renderer::EF_DrawLightPasses_PS30(SShaderTechnique* hs, SShader* ef, i
 						else
 							EF_DrawIndexedMesh(R_PRIMV_TRIANGLES);
 					}
-					nObj++;
-					if (nObj >= m_RP.m_MergedObjects.Num())
-						break;
 				}
 				EF_FogRestore(bFogOverrided);
 				if (!CVProgram::m_LastVP)
@@ -6017,6 +6013,7 @@ void CD3D9Renderer::EF_DrawLightPasses_PS30(SShaderTechnique* hs, SShader* ef, i
 				}
 				else
 					m_RP.m_FlagsModificators &= ~(RBMF_TCM | RBMF_TCG);
+
 				if (pSaveObj != m_RP.m_pCurObject)
 				{
 					m_RP.m_pCurObject = pSaveObj;
@@ -6362,17 +6359,17 @@ void CD3D9Renderer::EF_DrawLightPasses(SShaderTechnique* hs, SShader* ef, int nS
 						EF_SetObjectTransform(pSaveObj, ef, pSaveObj->m_ObjFlags);
 				}
 #endif
-			}
+				}
 
 			slw->mfResetTextures();
 			EF_ApplyMatrixOps(slw->m_MatrixOps, false);
 			break;
+			}
 		}
-	}
 
 	//m_RP.m_nCurLight = -1;
 	//m_RP.m_pCurLight = nullptr;
-}
+	}
 
 // Draw bump self-shadowing pass using horizon-maps technique (used in programmable pipeline shaders only)
 void CD3D9Renderer::EF_DrawLightShadowMask(int nLight)
@@ -7219,19 +7216,17 @@ void CD3D9Renderer::EF_Flush()
 	if (!(ef->m_Flags & EF_HASVSHADER))
 		rd->EF_SetObjectTransform(obj, ef, rd->m_RP.m_ObjFlags);
 
-	if (CV_r_showlight->GetString()[0] != '0')
+	const char* dbgLightName = CV_r_showlight->GetString();
+	if (*dbgLightName != '0')
 	{
-		for (int i = 0; i < rd->m_RP.m_DLights[SRendItem::m_RecurseLevel].Num(); i++)
+		TArray<CDLight*>& lights = gRenDev->m_RP.m_DLights[SRendItem::m_RecurseLevel];
+		for (int i = 0; i < lights.Num(); i++)
 		{
-			CDLight* dl = rd->m_RP.m_DLights[SRendItem::m_RecurseLevel][i];
+			CDLight* dl = lights[i];
 			if (!dl)
 				continue;
-			char* str = CV_r_showlight->GetString();
-			if (strcmp(str, "0") != 0)
-			{
-				if (!dl->m_Name || !strstr(dl->m_Name, str))
-					rd->m_RP.m_DynLMask &= ~(1 << i);
-			}
+			if (!dl->m_Name || !strstr(dl->m_Name, dbgLightName))
+				rd->m_RP.m_DynLMask &= ~(1 << i);
 		}
 	}
 
@@ -7317,9 +7312,10 @@ void CD3D9Renderer::EF_Flush()
 	{
 		if (CV_r_log == 4 && rd->m_RP.m_DynLMask)
 		{
-			for (int n = 0; n < rd->m_RP.m_DLights[SRendItem::m_RecurseLevel].Num(); n++)
+			TArray<CDLight*>& lights = gRenDev->m_RP.m_DLights[SRendItem::m_RecurseLevel];
+			for (int n = 0; n < lights.Num(); n++)
 			{
-				CDLight* dl = rd->m_RP.m_DLights[SRendItem::m_RecurseLevel][n];
+				CDLight* dl = lights[n];
 				if (rd->m_RP.m_DynLMask & (1 << n))
 					rd->Logv(SRendItem::m_RecurseLevel, "   Light %d (\"%s\")\n", n, dl->m_Name ? dl->m_Name : "<Unknown>");
 			}
@@ -7619,7 +7615,7 @@ void CD3D9Renderer::EF_PipeLine(int nums, int nume, int nList, void (*RenderFunc
 				pRE->mfPrepare();
 			}
 			continue;
-		}
+}
 		oldVal.SortVal = ri->SortVal.SortVal;
 		SRendItem::mfGet(ri->SortVal, &nObject, &pShader, &pShaderState, &nFog, &pRes);
 		bChanged = (pCurRes != pRes || pShader != pCurShader || pShaderState != pCurShaderState || nFog != nCurFog);
@@ -7673,7 +7669,7 @@ void CD3D9Renderer::EF_PipeLine(int nums, int nume, int nList, void (*RenderFunc
 			//PROFILE_FRAME_TOTAL(Mesh_REPrepare);
 			pRE->mfPrepare();
 		}
-	}
+}
 	if (pCurShader)
 		m_RP.m_pRenderFunc();
 
@@ -7850,16 +7846,19 @@ void CD3D9Renderer::EF_DrawDebugLights()
 		sFrame = m_nFrameID;
 
 		gRenDev->m_TexMan->m_Text_White->Set();
+		const char* dbgLightName = CV_r_showlight->GetString();
+		if (*dbgLightName == '0')
+			dbgLightName = nullptr;
 
-		for (i = 0; i < m_RP.m_DLights[SRendItem::m_RecurseLevel].Num(); i++)
+		TArray<CDLight*>& lights = gRenDev->m_RP.m_DLights[SRendItem::m_RecurseLevel];
+		for (CDLight* dl : lights)
 		{
-			CDLight* dl = m_RP.m_DLights[SRendItem::m_RecurseLevel][i];
 			if (!dl)
 				continue;
-			char* str = CV_r_showlight->GetString();
-			if (strcmp(str, "0") != 0)
+
+			if (dbgLightName)
 			{
-				if (!dl->m_Name || strcmp(str, dl->m_Name))
+				if (!dl->m_Name || strcmp(dbgLightName, dl->m_Name))
 					continue;
 			}
 			SetMaterialColor(dl->m_Color[0], dl->m_Color[1], dl->m_Color[2], dl->m_Color[3]);

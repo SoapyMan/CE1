@@ -83,11 +83,12 @@ bool CRETriMeshShadow::mfCheckUpdate(int nVertFormat, int Flags)
 	CDLight* pDLight = nullptr;
 	if (gRenDev->m_RP.m_DynLMask)
 	{
-		for (int n = 0; n < gRenDev->m_RP.m_DLights[SRendItem::m_RecurseLevel].Num(); n++)
+		TArray<CDLight*>& lights = gRenDev->m_RP.m_DLights[SRendItem::m_RecurseLevel];
+		for (int n = 0; n < lights.Num(); n++)
 		{
 			if (gRenDev->m_RP.m_DynLMask & (1 << n))
 			{
-				pDLight = gRenDev->m_RP.m_DLights[SRendItem::m_RecurseLevel][n];
+				pDLight = lights[n];
 				break;
 			}
 		}
