@@ -134,51 +134,47 @@ void CShader::mfCompileArrayPointer(TArray<SArrayPointer*>& Pointers, char* scr,
 			Pointers.AddElem(p);
 		}
 	}
-	else
-		if (!strnicmp(type, "Texture", 7))
+	else if (!strnicmp(type, "Texture", 7))
+	{
+		SArrayPointer_Texture ap;
+		ap.Stage = atol(&type[7]);
+		if (ap.mfCompile(scr, ef))
 		{
-			SArrayPointer_Texture ap;
-			ap.Stage = atol(&type[7]);
-			if (ap.mfCompile(scr, ef))
-			{
-				p = SArrayPointer::AddNew(ap);
-				Pointers.AddElem(p);
-			}
+			p = SArrayPointer::AddNew(ap);
+			Pointers.AddElem(p);
 		}
-		else
-			if (!strnicmp(type, "Color", 5))
-			{
-				SArrayPointer_Color ap;
-				if (ap.mfCompile(scr, ef))
-				{
-					p = SArrayPointer::AddNew(ap);
-					Pointers.AddElem(p);
-				}
-			}
-			else
-				if (!stricmp(type, "SecColor"))
-				{
-					SArrayPointer_SecColor ap;
-					if (ap.mfCompile(scr, ef))
-					{
-						p = SArrayPointer::AddNew(ap);
-						Pointers.AddElem(p);
-					}
-				}
-				else
-					if (!strnicmp(type, "Normal", 6))
-					{
-						SArrayPointer_Normal ap;
-						if (ap.mfCompile(scr, ef))
-						{
-							p = SArrayPointer::AddNew(ap);
-							Pointers.AddElem(p);
-						}
-					}
-					else
-					{
-						Warning(0, 0, "Warning: Unknown array pointer type '%s' int effector '%s'\n", type, ef->m_Name.c_str());
-					}
+	}
+	else if (!strnicmp(type, "Color", 5))
+	{
+		SArrayPointer_Color ap;
+		if (ap.mfCompile(scr, ef))
+		{
+			p = SArrayPointer::AddNew(ap);
+			Pointers.AddElem(p);
+		}
+	}
+	else if (!stricmp(type, "SecColor"))
+	{
+		SArrayPointer_SecColor ap;
+		if (ap.mfCompile(scr, ef))
+		{
+			p = SArrayPointer::AddNew(ap);
+			Pointers.AddElem(p);
+		}
+	}
+	else if (!strnicmp(type, "Normal", 6))
+	{
+		SArrayPointer_Normal ap;
+		if (ap.mfCompile(scr, ef))
+		{
+			p = SArrayPointer::AddNew(ap);
+			Pointers.AddElem(p);
+		}
+	}
+	else
+	{
+		Warning(0, 0, "Warning: Unknown array pointer type '%s' int effector '%s'\n", type, ef->m_Name.c_str());
+	}
 }
 
 

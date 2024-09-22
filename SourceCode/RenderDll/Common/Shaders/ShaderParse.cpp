@@ -3424,123 +3424,101 @@ void CShader::mfClEfCompile(SShader* ef, char* scr, char* name)
 			delete ps;
 		return;
 	}
-	else
-		if (!stricmp(name, "AnimPolyBlend"))
+	else if (!stricmp(name, "AnimPolyBlend"))
+	{
+		CREAnimPolyBlend* ps = new CREAnimPolyBlend;
+		if (ps->mfCompile(ef, scr))
+			ef->m_REs.AddElem(ps);
+		else
+			delete ps;
+		return;
+	}
+	else if (!stricmp(name, "ParticleSpray"))
+	{
+		CREParticleSpray* ps = new CREParticleSpray;
+		if (ps->mfCompile(ef, scr))
+			ef->m_REs.AddElem(ps);
+		else
+			delete ps;
+		return;
+	}
+	else if (!stricmp(name, "Corona"))
+	{
+		CREFlare* ps = new CREFlare;
+		if (ps->mfCompile(ef, scr))
 		{
-			CREAnimPolyBlend* ps = new CREAnimPolyBlend;
-			if (ps->mfCompile(ef, scr))
-				ef->m_REs.AddElem(ps);
-			else
-				delete ps;
-			return;
+			ef->m_REs.AddElem(ps);
+			ef->m_nPreprocess |= FSPR_CORONA;
 		}
 		else
-			if (!stricmp(name, "ParticleSpray"))
-			{
-#ifdef DEBUGALLOC
-#undef new
-#endif
-				CREParticleSpray* ps = new CREParticleSpray;
-#ifdef DEBUGALLOC
-#define new DEBUG_CLIENTBLOCK
-#endif
-				if (ps->mfCompile(ef, scr))
-					ef->m_REs.AddElem(ps);
-				else
-					delete ps;
-				return;
-			}
-			else
-				if (!stricmp(name, "Corona"))
-				{
-					CREFlare* ps = new CREFlare;
-					if (ps->mfCompile(ef, scr))
-					{
-						ef->m_REs.AddElem(ps);
-						ef->m_nPreprocess |= FSPR_CORONA;
-					}
-					else
-						delete ps;
-					return;
-				}
-				else
-					if (!stricmp(name, "Beam"))
-					{
-						CREBeam* ps = new CREBeam;
-						if (ps->mfCompile(ef, scr))
-						{
-							ef->m_REs.AddElem(ps);
-						}
-						else
-							delete ps;
-						return;
-					}
-					else
-						if (!stricmp(name, "Tree"))
-						{
-							/*CRETree *ps = new CRETree;
-							if (ps->mfCompile(ef, scr))
-							  ef->m_RE = ps;
-							else
-							  delete ps;*/
-							return;
-						}
-						else
-							if (!stricmp(name, "GeomPrefab") || !stricmp(name, "Prefab"))
-							{
-								CREPrefabGeom* ps = new CREPrefabGeom;
-								if (ps->mfCompile(ef, scr))
-									ef->m_REs.AddElem(ps);
-								else
-									delete ps;
-								return;
-							}
-							else
-								if (!stricmp(name, "Flare"))
-								{
-									CREFlareProp* ps = new CREFlareProp;
-									if (ps->mfCompile(ef, scr))
-										ef->m_REs.AddElem(ps);
-									else
-										delete ps;
-								}
-								else
-									if (!stricmp(name, "Terrain"))
-									{
-										/*CRETerrain *ps = new CRETerrain;
-										if (ps->mfCompile(ef, scr))
-										  ef->m_RE = ps;
-										else
-										  delete ps;*/
-									}
-									else
-										if (!stricmp(name, "SkyZone"))
-										{
-											CRESkyZone* ps = nullptr;//new CRESkyZone;
-											if (ps->mfCompile(ef, scr))
-												ef->m_REs.AddElem(ps);
-											else
-												delete ps;
-											return;
-										}
-										else
-											if (!stricmp(name, "Ocean"))
-											{
-#ifdef DEBUGALLOC
-#undef new
-#endif
-												CREOcean* ps = new CREOcean;
-#ifdef DEBUGALLOC
-#define new DEBUG_CLIENTBLOCK
-#endif
-												if (ps->mfCompile(ef, scr))
-													ef->m_REs.AddElem(ps);
-												else
-													delete ps;
-												return;
-											}
-											else
-												Warning(0, 0, "Warning: unknown ClientEffect (%s) in Shader '%s' (skipping)\n", name, ef->m_Name.c_str());
+			delete ps;
+		return;
+	}
+	else if (!stricmp(name, "Beam"))
+	{
+		CREBeam* ps = new CREBeam;
+		if (ps->mfCompile(ef, scr))
+		{
+			ef->m_REs.AddElem(ps);
+		}
+		else
+			delete ps;
+		return;
+	}
+	else if (!stricmp(name, "Tree"))
+	{
+		/*CRETree *ps = new CRETree;
+		if (ps->mfCompile(ef, scr))
+		  ef->m_RE = ps;
+		else
+		  delete ps;*/
+		return;
+	}
+	else if (!stricmp(name, "GeomPrefab") || !stricmp(name, "Prefab"))
+	{
+		CREPrefabGeom* ps = new CREPrefabGeom;
+		if (ps->mfCompile(ef, scr))
+			ef->m_REs.AddElem(ps);
+		else
+			delete ps;
+		return;
+	}
+	else if (!stricmp(name, "Flare"))
+	{
+		CREFlareProp* ps = new CREFlareProp;
+		if (ps->mfCompile(ef, scr))
+			ef->m_REs.AddElem(ps);
+		else
+			delete ps;
+	}
+	else if (!stricmp(name, "Terrain"))
+	{
+		/*CRETerrain *ps = new CRETerrain;
+		if (ps->mfCompile(ef, scr))
+		  ef->m_RE = ps;
+		else
+		  delete ps;*/
+	}
+	else if (!stricmp(name, "SkyZone"))
+	{
+		CRESkyZone* ps = nullptr;//new CRESkyZone;
+		if (ps->mfCompile(ef, scr))
+			ef->m_REs.AddElem(ps);
+		else
+			delete ps;
+		return;
+	}
+	else if (!stricmp(name, "Ocean"))
+	{
+		CREOcean* ps = new CREOcean;
+		if (ps->mfCompile(ef, scr))
+			ef->m_REs.AddElem(ps);
+		else
+			delete ps;
+		return;
+	}
+	else
+		Warning(0, 0, "Warning: unknown ClientEffect (%s) in Shader '%s' (skipping)\n", name, ef->m_Name.c_str());
 }
 
 
