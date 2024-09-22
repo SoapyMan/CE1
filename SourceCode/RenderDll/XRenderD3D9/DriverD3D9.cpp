@@ -4137,25 +4137,20 @@ bool CD3D9Renderer::EF_SetLightHole(Vec3d vPos, Vec3d vNormal, int idTex, float 
 
 char* CD3D9Renderer::GetVertexProfile(bool bSupportedProfile)
 {
-	CGprofile pr = CG_PROFILE_VS_1_1;
-
+	CGprofileVS pr = CG_PROFILE_VS_2_0;
 	if (bSupportedProfile)
 	{
-#if defined(USE_CG)
-		pr = cgD3D9GetLatestVertexProfile();
-#else
-		if (GetFeatures() & RFT_HW_PS20)
-			pr = CG_PROFILE_VS_2_0;
-#endif
+		if (GetFeatures() & RFT_HW_PS30)
+			pr = CG_PROFILE_VS_3_0;
 	}
 
 	switch (pr)
 	{
-	case CG_PROFILE_VS_1_1:
-		return "PROFILE_VS_1_1";
 	case CG_PROFILE_VS_2_0:
 	case CG_PROFILE_VS_2_X:
 		return "PROFILE_VS_2_0";
+	case CG_PROFILE_VS_3_0:
+		return "PROFILE_VS_3_0";
 	default:
 		return "Unknown";
 	}
@@ -4163,34 +4158,30 @@ char* CD3D9Renderer::GetVertexProfile(bool bSupportedProfile)
 
 char* CD3D9Renderer::GetPixelProfile(bool bSupportedProfile)
 {
-	CGprofile pr = CG_PROFILE_PS_1_1;
+	CGprofilePS pr = CG_PROFILE_PS_2_0;
 
 	if (bSupportedProfile)
 	{
-#if defined(USE_CG)
-		pr = cgD3D9GetLatestPixelProfile();
-		if (pr == CG_PROFILE_PS_1_2 || pr == CG_PROFILE_PS_1_3)
-			pr = CG_PROFILE_PS_1_1;
-#else
-		if (GetFeatures() & RFT_HW_PS20)
+		if (GetFeatures() & RFT_HW_PS30)
+		{
+			pr = CG_PROFILE_PS_3_0;
+		}
+		else if (GetFeatures() & RFT_HW_PS20)
 		{
 			if ((GetFeatures() & RFT_HW_MASK) == RFT_HW_GFFX)
 				pr = CG_PROFILE_PS_2_X;
 			else
 				pr = CG_PROFILE_PS_2_0;
 		}
-#endif
 	}
 
 	switch (pr)
 	{
-	case CG_PROFILE_PS_1_1:
-	case CG_PROFILE_PS_1_2:
-	case CG_PROFILE_PS_1_3:
-		return "PROFILE_PS_1_1";
 	case CG_PROFILE_PS_2_0:
 	case CG_PROFILE_PS_2_X:
 		return "PROFILE_PS_2_0";
+	case CG_PROFILE_PS_3_0:
+		return "PROFILE_PS_3_0";
 	default:
 		return "Unknown";
 	}

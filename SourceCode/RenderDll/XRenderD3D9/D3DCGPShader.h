@@ -10,8 +10,14 @@
 #ifndef __D3DCGPSHADER_H__
 #define __D3DCGPSAHDER_H__
 
-#include <Cg/cgD3D9.h>
 #include <direct.h>
+
+enum CGprofilePS : int
+{
+	CG_PROFILE_PS_2_0,
+	CG_PROFILE_PS_2_X,
+	CG_PROFILE_PS_3_0
+};
 
 #define CG_FP_CACHE_VER    3.4
 
@@ -184,7 +190,7 @@ public:
 			return &m_ParamsObj;
 	}
 
-	CCGPShader_D3D(CGprofile ProfType)
+	CCGPShader_D3D(CGprofilePS ProfType)
 	{
 		m_CGProfileType = ProfType;
 		mfInit();
@@ -192,7 +198,7 @@ public:
 	CCGPShader_D3D()
 	{
 		mfInit();
-		m_CGProfileType = CG_PROFILE_PS_1_1;
+		m_CGProfileType = CG_PROFILE_PS_2_0;
 	}
 	void mfSaveCGFile(const char* scr)
 	{
@@ -212,17 +218,6 @@ public:
 	}
 	void mfInit()
 	{
-#if defined(USE_CG)
-		if (!gcpRendD3D->m_CGContext)
-		{
-			cgD3D9SetDevice(gcpRendD3D->mfGetD3DDevice());
-			gcpRendD3D->m_CGContext = cgCreateContext();
-			CRYASSERT(gcpRendD3D->m_CGContext);
-#ifdef _RETAIL
-			cgD3D9EnableDebugTracing(true);
-#endif
-		}
-#endif
 		m_dwFrame = 1;
 		m_CurInst = -1;
 		m_CoreScript = nullptr;
@@ -618,14 +613,6 @@ public:
 	virtual bool mfIsCombiner() { return false; }
 	virtual void mfGatherFXParameters(const char* buf, SShaderPassHW* pSHPass, std::vector<SFXParam>& Params, std::vector<SFXSampler>& Samplers, std::vector<SFXTexture>& Textures, SShader* ef);
 	virtual void mfPostLoad();
-	char* mfGetObjectCode(CGprogram cgPr)
-	{
-		const char* code = cgGetProgramString(cgPr, CG_COMPILED_PROGRAM);
-		size_t size = strlen(code) + 1;
-		char* str = new char[size];
-		cryMemcpy(str, code, size);
-		return str;
-	}
 
 	static vec4_t m_CurParams[32];
 };

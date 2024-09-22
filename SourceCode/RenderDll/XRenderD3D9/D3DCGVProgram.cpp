@@ -1912,19 +1912,6 @@ bool CCGVProgram_D3D::mfCompile(char* scr)
 		}
 	}
 
-	if(gRenDev->CV_r_shaderlatestprofile)
-	{
-		if (gRenDev->GetFeatures() & RFT_HW_PS30)
-		{
-			m_Flags &= ~VPFI_VS20ONLY;
-			m_Flags |= VPFI_VS30ONLY;
-		}
-		else if(gRenDev->GetFeatures() & RFT_HW_PS20)
-		{
-			m_Flags |= VPFI_VS20ONLY;
-		}
-	}
-
 	int i;
 	for (i = 0; i < m_MatrixObj.Num(); i++)
 	{
@@ -1971,8 +1958,6 @@ void CCGVProgram_D3D::mfGetDstFileName(char* dstname, int nSize, bool bUseASCIIC
 
 	if (m_Flags & VPFI_AUTOENUMTC)
 		type = "D3D9_Auto";
-	else if (m_CGProfileType == CG_PROFILE_VS_1_1)
-		type = "D3D9_VS11";
 	else if (m_CGProfileType == CG_PROFILE_VS_2_0)
 		type = "D3D9_VS20";
 	else if (m_CGProfileType == CG_PROFILE_VS_2_X)
@@ -2358,11 +2343,12 @@ bool CCGVProgram_D3D::mfActivate(CVProgram* pPosVP)
 
 	CD3D9Renderer* r = gcpRendD3D;
 	LPDIRECT3DDEVICE9 dv = r->mfGetD3DDevice();
-	if (!m_Insts[m_CurInst].m_CGProgram)
+	if (!m_Insts[m_CurInst].m_pHandle)
 	{
 		int VS20Profile = CG_PROFILE_VS_2_0;
 		if ((gRenDev->GetFeatures() & RFT_HW_MASK) == RFT_HW_GFFX || (gRenDev->GetFeatures() & RFT_HW_MASK) == RFT_HW_NV4X)
 			VS20Profile = CG_PROFILE_VS_2_X;
+
 		if (m_Flags & VPFI_VS30ONLY)
 		{
 			if (gRenDev->GetFeatures() & RFT_HW_PS30)
@@ -2370,17 +2356,17 @@ bool CCGVProgram_D3D::mfActivate(CVProgram* pPosVP)
 			else if (gRenDev->GetFeatures() & RFT_HW_PS20)
 				m_CGProfileType = VS20Profile;
 			else
-				m_CGProfileType = CG_PROFILE_VS_1_1;
+				m_CGProfileType = CG_PROFILE_VS_2_0;
 		}
 		else if (m_Flags & VPFI_VS20ONLY)
 		{
 			if (gRenDev->GetFeatures() & RFT_HW_PS20)
 				m_CGProfileType = VS20Profile;
 			else
-				m_CGProfileType = CG_PROFILE_VS_1_1;
+				m_CGProfileType = CG_PROFILE_VS_2_0;
 		}
 		else
-			m_CGProfileType = CG_PROFILE_VS_1_1;
+			m_CGProfileType = CG_PROFILE_VS_2_0;
 
 		if (m_Insts[m_CurInst].m_Mask & (VPVST_INSTANCING_NOROT | VPVST_INSTANCING_ROT))
 		{
@@ -2506,11 +2492,6 @@ bool CCGVProgram_D3D::mfActivate(CVProgram* pPosVP)
 						CloseHandle(hdst);
 					}
 				}
-#if defined(USE_CG)
-				if (m_Insts[m_CurInst].m_CGProgram)
-					cgDestroyProgram(m_Insts[m_CurInst].m_CGProgram);
-#endif
-				m_Insts[m_CurInst].m_CGProgram = nullptr;
 				statusdst = iSystem->GetIPak()->FOpen(namedst, "r");
 			}
 		}
@@ -2550,38 +2531,36 @@ bool CCGVProgram_D3D::mfActivate(CVProgram* pPosVP)
 					}
 					m_CGProfileType = CG_PROFILE_VS_2_X;
 				}
-				else
-					if (strstr(pbuf, "vs_2_0"))
+				else if (strstr(pbuf, "vs_2_0"))
+				{
+					if (D3DSHADER_VERSION_MAJOR(gcpRendD3D->m_d3dCaps.VertexShaderVersion) < 2)
 					{
-						if (D3DSHADER_VERSION_MAJOR(gcpRendD3D->m_d3dCaps.VertexShaderVersion) < 2)
+						SAFE_DELETE_ARRAY(pbuf);
+						bCreate = true;
+						goto create;
+					}
+					else
+						if ((gRenDev->GetFeatures() & RFT_HW_MASK) == RFT_HW_GFFX)
 						{
 							SAFE_DELETE_ARRAY(pbuf);
+							m_CGProfileType = CG_PROFILE_VS_2_X;
 							bCreate = true;
 							goto create;
 						}
-						else
-							if ((gRenDev->GetFeatures() & RFT_HW_MASK) == RFT_HW_GFFX)
-							{
-								SAFE_DELETE_ARRAY(pbuf);
-								m_CGProfileType = CG_PROFILE_VS_2_X;
-								bCreate = true;
-								goto create;
-							}
-						m_CGProfileType = CG_PROFILE_VS_2_0;
+					m_CGProfileType = CG_PROFILE_VS_2_0;
+				}
+				else if (strstr(pbuf, "vs_3_0"))
+				{
+					if (D3DSHADER_VERSION_MAJOR(gcpRendD3D->m_d3dCaps.VertexShaderVersion) < 3)
+					{
+						SAFE_DELETE_ARRAY(pbuf);
+						bCreate = true;
+						goto create;
 					}
-					else
-						if (strstr(pbuf, "vs_3_0"))
-						{
-							if (D3DSHADER_VERSION_MAJOR(gcpRendD3D->m_d3dCaps.VertexShaderVersion) < 3)
-							{
-								SAFE_DELETE_ARRAY(pbuf);
-								bCreate = true;
-								goto create;
-							}
-							m_CGProfileType = CG_PROFILE_VS_3_0;
-						}
-						else
-							m_CGProfileType = CG_PROFILE_VS_1_1;
+					m_CGProfileType = CG_PROFILE_VS_3_0;
+				}
+				else
+					m_CGProfileType = CG_PROFILE_VS_2_0;
 			}
 		}
 		CRYASSERT(!m_Insts[m_CurInst].m_BindVars);
@@ -2641,7 +2620,7 @@ bool CCGVProgram_D3D::mfActivate(CVProgram* pPosVP)
 		}
 	}
 
-	if (!m_Insts[m_CurInst].m_CGProgram)
+	if (!m_Insts[m_CurInst].m_pHandle)
 		return false;
 	return true;
 }
@@ -2860,10 +2839,7 @@ bool CCGVProgram_D3D::mfSet(bool bStat, SShaderPassHW* slw, int nFlags)
 		rd->Logv(SRendItem::m_RecurseLevel, "--- Set CGVProgram \"%s\", LightMask: 0x%x, Mask: 0x%I64x (0x%x Type)\n", m_Name.c_str(), m_Insts[m_CurInst].m_LightMask, m_nMaskGen, Mask);
 #endif
 
-	if ((INT_PTR)m_Insts[Id].m_CGProgram == -1)
-		return false;
-
-	if (!m_Insts[Id].m_CGProgram)
+	if (!m_Insts[Id].m_pHandle)
 	{
 		if (!mfActivate(pPosVP))
 		{
@@ -2937,27 +2913,26 @@ void CCGVProgram_D3D::mfUnbind()
 
 char* CCGVProgram_D3D::mfLoadCG(const char* prog_text)
 {
-	CGprofile pr = (CGprofile)m_CGProfileType;
+	CGprofileVS pr = (CGprofileVS)m_CGProfileType;
 	char* Buf = fxReplaceInText((char*)prog_text, "vertout OUT", "vertout OUT = (vertout)0");
 
 	char* szPr;
 	switch (pr)
 	{
-		case CG_PROFILE_VS_1_1: szPr = "vs_1_1"; break;
-		case CG_PROFILE_VS_2_0: szPr = "vs_2_0"; break;
-		case CG_PROFILE_VS_2_X: szPr = "vs_2_a"; break;
-		case CG_PROFILE_VS_3_0: szPr = "vs_3_0"; break;
-		default:
-			return nullptr;
+	case CG_PROFILE_VS_2_0: szPr = "vs_2_0"; break;
+	case CG_PROFILE_VS_2_X: szPr = "vs_2_a"; break;
+	case CG_PROFILE_VS_3_0: szPr = "vs_3_0"; break;
+	default:
+		return nullptr;
 	}
 
 	char* pBuf = gcpRendD3D->CompileShader(
 		m_Name.c_str(),
-		Buf, 
+		Buf,
 		szPr,
 		m_EntryFunc.GetIndex() ? m_EntryFunc.c_str() : nullptr
 	);
-	
+
 	if (Buf != prog_text)
 		delete[] Buf;
 

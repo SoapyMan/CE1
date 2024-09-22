@@ -594,14 +594,6 @@ void CD3D9Renderer::ShutDown(bool bReInit)
 		}
 	}
 
-#if defined(USE_CG)
-	if (m_CGContext)
-	{
-		cgDestroyContext(m_CGContext);
-		cgD3D9SetDevice(nullptr);
-		m_CGContext = nullptr;
-	}
-#endif
 	FinalCleanup();
 	CName::mfExitSubsystem();
 
@@ -1012,18 +1004,6 @@ WIN_HWND CD3D9Renderer::Init(int x, int y, int width, int height, unsigned int c
 	iLog->Log("Init Shaders\n");
 
 	m_numtmus = di->Caps.MaxSimultaneousTextures;
-
-#if defined(USE_CG)
-	if (!m_CGContext)
-	{
-		m_CGContext = cgCreateContext();
-		CRYASSERT(m_CGContext);
-		cgD3D9SetDevice(mfGetD3DDevice());
-#ifdef _DEBUG
-		cgD3D9EnableDebugTracing(true);
-#endif
-	}
-#endif
 
 	gRenDev->m_cEF.mfInit();
 	EF_Init();

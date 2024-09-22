@@ -10,8 +10,14 @@
 #ifndef __D3DCGVPROGRAM_H__
 #define __D3DCGVPROGRAM_H__
 
-#include <Cg/cgD3D9.h>
 #include <direct.h>
+
+enum CGprofileVS : int
+{
+	CG_PROFILE_VS_2_0,
+	CG_PROFILE_VS_2_X,
+	CG_PROFILE_VS_3_0
+};
 
 #define CG_VP_CACHE_VER    3.4
 
@@ -70,11 +76,7 @@ class CCGVProgram_D3D : public CVProgram
 		TArray<SCGBindConst>* m_BindConstants;
 		TArray<SCGBind>* m_BindVars;
 		int m_nCacheID;
-		union
-		{
-			CGprogram m_CGProgram;
-			void* m_pHandle;
-		};
+		void* m_pHandle;
 		SCGInstance()
 		{
 			m_Mask = 0;
@@ -167,21 +169,10 @@ public:
 	CCGVProgram_D3D()
 	{
 		mfInit();
-		m_CGProfileType = CG_PROFILE_VS_1_1;
+		m_CGProfileType = CG_PROFILE_VS_2_0;
 	}
 	void mfInit()
 	{
-#if defined(USE_CG)
-		if (!gcpRendD3D->m_CGContext)
-		{
-			cgD3D9SetDevice(gcpRendD3D->mfGetD3DDevice());
-			gcpRendD3D->m_CGContext = cgCreateContext();
-			CRYASSERT(gcpRendD3D->m_CGContext);
-#ifdef _DEBUG
-			cgD3D9EnableDebugTracing(true);
-#endif
-		}
-#endif
 		m_dwFrame = 1;
 		m_CurInst = -1;
 		m_Script = nullptr;
@@ -263,8 +254,7 @@ public:
 		cg.m_LightMask = LightMask;
 		cg.m_BindConstants = nullptr;
 		cg.m_BindVars = nullptr;
-		cg.m_pHandle = 0;
-		cg.m_CGProgram = nullptr;
+		cg.m_pHandle = nullptr;
 		cg.m_ParamsNoObj = nullptr;
 		cg.m_MatrixNoObj = nullptr;
 		cg.m_ParamsObj = nullptr;
@@ -418,15 +408,6 @@ public:
 		m_Insts.AddElem(cg);
 		m_CurInst = m_Insts.Num() - 1;
 		return m_CurInst;
-	}
-
-	char* mfGetObjectCode(CGprogram cgPr)
-	{
-		const char* code = cgGetProgramString(cgPr, CG_COMPILED_PROGRAM);
-		size_t size = strlen(code) + 1;
-		char* str = new char[size];
-		cryMemcpy(str, code, size);
-		return str;
 	}
 
 	char* mfLoadCG(const char* prog_text);
@@ -718,20 +699,14 @@ public:
 
 	void mfDelInst()
 	{
-		if (m_Insts[m_CurInst].m_CGProgram && (INT_PTR)m_Insts[m_CurInst].m_CGProgram != -1)
+		if (m_Insts[m_CurInst].m_pHandle)
 		{
-			if (m_Insts[m_CurInst].m_BindConstants)
-				delete m_Insts[m_CurInst].m_BindConstants;
-			if (m_Insts[m_CurInst].m_BindVars)
-				delete m_Insts[m_CurInst].m_BindVars;
-			if (m_Insts[m_CurInst].m_ParamsNoObj)
-				delete m_Insts[m_CurInst].m_ParamsNoObj;
-			if (m_Insts[m_CurInst].m_ParamsObj)
-				delete m_Insts[m_CurInst].m_ParamsObj;
-			if (m_Insts[m_CurInst].m_MatrixNoObj)
-				delete m_Insts[m_CurInst].m_MatrixNoObj;
-			if (m_Insts[m_CurInst].m_MatrixObj)
-				delete m_Insts[m_CurInst].m_MatrixObj;
+			SAFE_DELETE(m_Insts[m_CurInst].m_BindConstants);
+			SAFE_DELETE(m_Insts[m_CurInst].m_BindVars);
+			SAFE_DELETE(m_Insts[m_CurInst].m_ParamsNoObj);
+			SAFE_DELETE(m_Insts[m_CurInst].m_ParamsObj);
+			SAFE_DELETE(m_Insts[m_CurInst].m_MatrixNoObj);
+			SAFE_DELETE(m_Insts[m_CurInst].m_MatrixObj);
 			IDirect3DVertexShader9* pVS = (IDirect3DVertexShader9*)m_Insts[m_CurInst].m_pHandle;
 			if (pVS)
 			{
@@ -739,10 +714,10 @@ public:
 				m_Insts[m_CurInst].m_pHandle = nullptr;
 			}
 		}
-		m_Insts[m_CurInst].m_CGProgram = nullptr;
+		m_Insts[m_CurInst].m_pHandle = nullptr;
 	}
 
-	bool mfIsValid(int Num) const { return (m_Insts[Num].m_CGProgram != nullptr); }
+	bool mfIsValid(int Num) const { return (m_Insts[Num].m_pHandle != nullptr); }
 	SCGScript* mfGenerateScriptVP(CVProgram* pPosVP);
 	char* mfGenerateTCScript(char* Script, int nt);
 	void mfCompileVertAttributes(char* scr, SShader* ef);

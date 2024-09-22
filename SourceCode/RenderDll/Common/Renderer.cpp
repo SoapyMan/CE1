@@ -276,7 +276,6 @@ float CRenderer::CV_r_detailscale;
 float CRenderer::CV_r_detaildistance;
 int CRenderer::CV_r_logloadshaders;
 int CRenderer::CV_r_usehwshaders;
-int CRenderer::CV_r_shaderlatestprofile;
 int CRenderer::CV_r_nolightcalc;
 int CRenderer::CV_r_texbindmode;
 int CRenderer::CV_r_nodrawshaders;
@@ -994,10 +993,6 @@ CRenderer::CRenderer()
 		"Enables loading of hardware dependent shaders.\n"
 		"Usage: r_UseHWShaders [0/1]\n"
 		"Default is 1 (HW shaders enabled).");
-	iConsole->Register("r_ShaderLatestProfile", &CV_r_shaderlatestprofile, 0, VF_REQUIRE_APP_RESTART,
-		"Use best possible shader profile when compiling.\n"
-		"Usage: r_ShaderLatestProfile [0/1]\n"
-		"Default is 0.");
 	iConsole->Register("r_NoLightCalc", &CV_r_nolightcalc, 0, 0,
 		"Toggles software real-time light calculations.\n"
 		"Usage: r_NoLightCalc [0/1]\n"

@@ -571,13 +571,11 @@ project "XRenderD3D9"
 	}
 	links {
 		"d3d9", "d3dx9", "DXErr",
-		"cg", "cgD3D9",
 		"winmm", "version"
 	}
 	defines {
 		"XRENDERD3D9_EXPORTS",
 		"DIRECT3D9",
-		"USE_CG",
 	}
 	filter "platforms:x86"
 		libdirs {

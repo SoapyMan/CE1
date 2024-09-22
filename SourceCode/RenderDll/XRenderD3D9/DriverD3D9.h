@@ -35,10 +35,6 @@ The DXRenderer interface Class
 
 //=======================================================================
 
-#if defined(USE_CG)
-#include <Cg\cgD3D9.h>
-#endif
-
 // DRIVERD3D.H
 // CRender3D Direct3D rasterizer class.
 
@@ -581,10 +577,6 @@ public:
 	void AllocVBInPool(int nSize, int nVFormat, SVertexStream* pVB);
 	bool AllocateVBChunk(int size, TVertPool* Ptr, SVertexStream* pVB, const char* szSource);
 	bool ReleaseVBChunk(TVertPool* Ptr, SVertexStream* pVB);
-
-#if defined(USE_CG)
-	CGcontext m_CGContext;
-#endif
 
 	static const D3DFORMAT D3DFMT_NULL = (D3DFORMAT)MAKEFOURCC('N','U','L','L');
 	static const D3DFORMAT D3DFMT_INTZ = (D3DFORMAT)MAKEFOURCC('I','N','T','Z');

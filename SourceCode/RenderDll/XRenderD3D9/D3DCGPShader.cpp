@@ -713,9 +713,6 @@ char* CCGPShader_D3D::mfGenerateScriptPS()
 
 	newScr.Copy("# define _PS\n", strlen("# define _PS\n"));
 
-	if (m_CGProfileType == CG_PROFILE_PS_1_1)
-		newScr.Copy("# define _PS_1_1\n", strlen("# define _PS_1_1\n"));
-
 	if (inst.m_Mask & VPVST_HDR)
 	{
 		newScr.Copy("# define _HDR\n", strlen("# define _HDR\n"));
@@ -951,9 +948,7 @@ char* CCGPShader_D3D::mfCreateAdditionalPS()
 					m++;
 				n++;
 			}
-			char* strFog = ", uniform float3 GlobalFogColor : register(c7)";
-			if (m_CGProfileType > CG_PROFILE_PS_1_1)
-				strFog = ", uniform float3 GlobalFogColor : register(c31)";
+			char* strFog = ", uniform float3 GlobalFogColor : register(c31)";
 			len = strlen(strFog);
 			int len2 = strlen(pScr) + 1;
 			newScr = new char[len + len2];
@@ -1077,19 +1072,6 @@ bool CCGPShader_D3D::mfCompile(char* scr)
 		}
 	}
 
-	if (gRenDev->CV_r_shaderlatestprofile)
-	{
-		if (gRenDev->GetFeatures() & RFT_HW_PS30)
-		{
-			m_Flags &= ~(PSFI_PS20ONLY | PSFI_PS2XONLY);
-			m_Flags |= PSFI_PS30ONLY;
-		}
-		else if (gRenDev->GetFeatures() & RFT_HW_PS20)
-		{
-			m_Flags |= PSFI_PS20ONLY;
-		}
-	}
-
 	gRenDev->m_cEF.mfCheckObjectDependParams(&m_ParamsNoObj, &m_ParamsObj);
 
 	return 1;
@@ -1132,7 +1114,7 @@ void CCGPShader_D3D::mfSetVariables(bool bObj, TArray<SCGParam4f>* Parms)
 {
 	SCGInstance& inst = m_Insts[m_CurInst];
 
-	if (inst.m_pHandle == nullptr || (INT_PTR)inst.m_pHandle == -1)
+	if (inst.m_pHandle == nullptr)
 		return;
 
 	//PROFILE_FRAME(Shader_PShadersParms);
@@ -1189,12 +1171,6 @@ void CCGPShader_D3D::mfGetDstFileName(char* dstname, int nSize, bool bUseASCIICa
 		else
 			type = "D3D9_Auto";
 	}
-	else if (m_CGProfileType == CG_PROFILE_PS_1_1)
-		type = "D3D9_PS11";
-	else if (m_CGProfileType == CG_PROFILE_PS_1_2)
-		type = "D3D9_PS11";
-	else if (m_CGProfileType == CG_PROFILE_PS_1_3)
-		type = "D3D9_PS11";
 	else if (m_CGProfileType == CG_PROFILE_PS_2_0)
 		type = "D3D9_PS20";
 	else if (m_CGProfileType == CG_PROFILE_PS_3_0)
@@ -1385,6 +1361,12 @@ bool CCGPShader_D3D::mfActivate()
 	SCGInstance& inst = m_Insts[m_CurInst];
 	if (!inst.m_pHandle)
 	{
+		// HDR requires at least PS2.0 shader profile
+		if ((gRenDev->GetFeatures() & RFT_HW_MASK) == RFT_HW_GFFX)
+			m_CGProfileType = CG_PROFILE_PS_2_X;
+		else
+			m_CGProfileType = CG_PROFILE_PS_2_0;
+
 		if (m_Flags & PSFI_PS30ONLY)
 		{
 			if (gRenDev->GetFeatures() & RFT_HW_PS30)
@@ -1396,8 +1378,6 @@ bool CCGPShader_D3D::mfActivate()
 				else
 					m_CGProfileType = CG_PROFILE_PS_2_0;
 			}
-			else
-				m_CGProfileType = CG_PROFILE_PS_1_1;
 		}
 		else if (m_Flags & PSFI_PS2XONLY)
 		{
@@ -1410,8 +1390,6 @@ bool CCGPShader_D3D::mfActivate()
 				else
 					m_CGProfileType = CG_PROFILE_PS_2_0;
 			}
-			else
-				m_CGProfileType = CG_PROFILE_PS_1_1;
 		}
 		else if (m_Flags & PSFI_PS20ONLY)
 		{
@@ -1422,19 +1400,6 @@ bool CCGPShader_D3D::mfActivate()
 				else
 					m_CGProfileType = CG_PROFILE_PS_2_0;
 			}
-			else
-				m_CGProfileType = CG_PROFILE_PS_1_1;
-		}
-		else
-			m_CGProfileType = CG_PROFILE_PS_1_1;
-
-		if ((inst.m_Mask & VPVST_HDR) && m_CGProfileType == CG_PROFILE_PS_1_1)
-		{
-			// HDR requires at least PS2.0 shader profile
-			if ((gRenDev->GetFeatures() & RFT_HW_MASK) == RFT_HW_GFFX)
-				m_CGProfileType = CG_PROFILE_PS_2_X;
-			else
-				m_CGProfileType = CG_PROFILE_PS_2_0;
 		}
 
 		char strVer[128];
@@ -1615,8 +1580,6 @@ bool CCGPShader_D3D::mfActivate()
 					}
 					m_CGProfileType = CG_PROFILE_PS_3_0;
 				}
-				else
-					m_CGProfileType = CG_PROFILE_PS_1_1;
 			}
 		}
 		CRYASSERT(!inst.m_BindVars);
@@ -1847,18 +1810,12 @@ bool CCGPShader_D3D::mfSet(bool bEnable, SShaderPassHW* slw, int nFlags)
 		rd->Logv(SRendItem::m_RecurseLevel, "--- Set CGPShader \"%s\", LightMask: 0x%x, Mask: 0x%I64x (0x%x Type)\n", m_Name.c_str(), m_Insts[m_CurInst].m_LightMask, m_nMaskGen, Mask);
 #endif
 
-	if ((INT_PTR)m_Insts[Type].m_pHandle == -1)
-	{
-		m_LastTypeVP = Mask;
-		return false;
-	}
-
 	if (!m_Insts[Type].m_pHandle)
 	{
 		rd->m_RP.m_CurPS = this;
 		if (!mfActivate())
 		{
-			m_Insts[Type].m_pHandle = (CGprogram)-1;
+			m_Insts[Type].m_pHandle = nullptr;
 			return false;
 		}
 		m_LastVP = nullptr;
@@ -1914,169 +1871,26 @@ void CCGPShader_D3D::mfUnbind()
 
 char* CCGPShader_D3D::mfLoadCG_Int(char* prog_text)
 {
-	CGprofile pr = (CGprofile)m_CGProfileType;
+	CGprofilePS pr = (CGprofilePS)m_CGProfileType;
 
-	if (pr == CG_PROFILE_PS_2_0 || pr == CG_PROFILE_PS_2_X || pr == CG_PROFILE_PS_3_0)
+	char* sz2AProfile = (gRenDev->GetFeatures() & RFT_HW_MASK) == RFT_HW_GFFX ? "ps_2_a" : "ps_2_b";
+
+	char* szPr;
+	switch (pr)
 	{
-		char* sz2AProfile = (gRenDev->GetFeatures() & RFT_HW_MASK) == RFT_HW_GFFX ? "ps_2_a" : "ps_2_b";
-
-		char* szPr;
-		switch (pr)
-		{
-			case CG_PROFILE_PS_1_1:
-			case CG_PROFILE_PS_1_2:
-			case CG_PROFILE_PS_1_3: szPr = "ps_1_4"; break;
-			case CG_PROFILE_PS_2_0: szPr = "ps_2_0"; break;
-			case CG_PROFILE_PS_2_X: szPr = sz2AProfile; break;
-			case CG_PROFILE_PS_3_0: szPr = "ps_3_0"; break;
-			default:
-				return nullptr;
-		}
-
-		char* pBuf = gcpRendD3D->CompileShader(
-			m_Name.c_str(),
-			prog_text,
-			szPr,
-			m_EntryFunc.GetIndex() ? m_EntryFunc.c_str() : nullptr
-		);
-
-		return pBuf;
+		case CG_PROFILE_PS_2_0: szPr = "ps_2_0"; break;
+		case CG_PROFILE_PS_2_X: szPr = sz2AProfile; break;
+		case CG_PROFILE_PS_3_0: szPr = "ps_3_0"; break;
+		default:
+			return nullptr;
 	}
-	else
-	{
-#ifdef USE_CG
-		const char** optimalOpts = cgD3D9GetOptimalOptions(pr);
 
-		static const char* dCGC1 = "-DCGC=1";
-		TArray<const char*> profileOpts;
+	char* pBuf = gcpRendD3D->CompileShader(
+		m_Name.c_str(),
+		prog_text,
+		szPr,
+		m_EntryFunc.GetIndex() ? m_EntryFunc.c_str() : nullptr
+	);
 
-		const char** optsPtrs = optimalOpts;
-		while (*optsPtrs)
-			profileOpts.Add(*optsPtrs++);
-
-		profileOpts.Add(dCGC1);
-		profileOpts.Add(nullptr);
-
-		CGprogram cgPr = cgCreateProgram(gcpRendD3D->m_CGContext, CG_SOURCE, prog_text, pr, m_EntryFunc.GetIndex() ? m_EntryFunc.c_str() : "main", profileOpts.Data());
-		if (!cgPr)
-		{
-			CGerror err;
-			const char* message = cgGetLastErrorString(&err);
-			const char* listing = (err == CG_COMPILER_ERROR) ? cgGetLastListing(gcpRendD3D->m_CGContext) : "";
-			Warning(0, 0, "Couldn't create CG program '%s': %s - %s", m_Name.c_str(), message, listing);
-			return nullptr;
-		}
-
-		if (CRenderer::CV_r_shaderssave == 2)
-		{
-			_chdir("c:\\MasterCD\\TestCG");
-			mfSaveCGFile(prog_text);
-			_chdir("c:\\MasterCD");
-		}
-		char* code = mfGetObjectCode(cgPr);
-		cgDestroyProgram(cgPr);
-		return code;
-#else
-		// make command for execution
-		FILE* fp = fopen("$$in.cg", "w");
-		if (!fp)
-			return nullptr;
-		CRYASSERT(*prog_text);
-		fputs(prog_text, fp);
-		fclose(fp);
-
-		char szCmdLine[512];
-		sprintf(szCmdLine, "cgc.exe -DCGC=1 -profile ps_1_1 -o $$out.cg $$in.cg");
-
-		SECURITY_ATTRIBUTES sa;
-		sa.nLength = sizeof(SECURITY_ATTRIBUTES);
-		sa.bInheritHandle = TRUE;  // Pipe handles are inherited by the child process.
-		sa.lpSecurityDescriptor = nullptr;
-
-		HANDLE hChildStdOutRd = nullptr;	
-		{
-			HANDLE hChildStdOutWr = nullptr;
-			CreatePipe(&hChildStdOutRd, &hChildStdOutWr, &sa, 0);
-			SetHandleInformation(hChildStdOutRd, HANDLE_FLAG_INHERIT, 0);
-
-			STARTUPINFO si;
-			ZeroMemory(&si, sizeof(si));
-			si.cb = sizeof(si);
-			si.dwX = 100;
-			si.dwY = 100;
-			si.dwFlags = STARTF_USEPOSITION | STARTF_USESTDHANDLES;
-			si.hStdError = hChildStdOutWr;   // Redirect STDERR to the same pipe (optional).
-			si.hStdOutput = hChildStdOutWr;  // Redirect STDOUT to the pipe.
-
-			PROCESS_INFORMATION pi;
-			ZeroMemory(&pi, sizeof(pi));
-			if (!CreateProcess(nullptr, // No module name (use command line). 
-				szCmdLine,				// Command line. 
-				nullptr,             // Process handle not inheritable. 
-				nullptr,             // Thread handle not inheritable. 
-				FALSE,            // Set handle inheritance to FALSE. 
-				CREATE_NO_WINDOW, // No creation flags. 
-				nullptr,             // Use parent's environment block. 
-				nullptr/*szFolderName*/,     // Set starting directory. 
-				&si,              // Pointer to STARTUPINFO structure.
-				&pi)             // Pointer to PROCESS_INFORMATION structure.
-				)
-			{
-				iLog->LogError("CreateProcess failed: %s", szCmdLine);
-				return nullptr;
-			}
-
-			while (WAIT_OBJECT_0 != WaitForSingleObject(pi.hProcess, 10000))
-				iLog->LogWarning("CG runtime takes forever to compile.. waiting.. (last error %d)", GetLastError());
-
-			CloseHandle(hChildStdOutWr);
-			CloseHandle(pi.hProcess);
-			CloseHandle(pi.hThread);
-		}
-
-		auto displayCGCOutput = [&]()
-		{
-			DWORD dwRead;
-			CHAR buffer[4096];
-			BOOL success = FALSE;
-
-			while (true) {
-				success = ReadFile(hChildStdOutRd, buffer, sizeof(buffer) - 1, &dwRead, nullptr);
-				if (!success || dwRead == 0) break;  // Exit on pipe EOF or failure.
-				buffer[dwRead] = '\0';  // Null-terminate the output.
-				iLog->LogError(buffer);
-			}
-		};
-
-		fp = fopen("$$out.cg", "rb");
-		if (!fp)
-		{
-			remove("$$in.cg");
-			remove("$$out.cg");
-			displayCGCOutput();
-			CloseHandle(hChildStdOutRd);
-			return nullptr;
-		}
-		fseek(fp, 0, SEEK_END);
-		int size = ftell(fp);
-		fseek(fp, 0, SEEK_SET);
-		if (size < 20)
-		{
-			remove("$$in.cg");
-			remove("$$out.cg");
-			displayCGCOutput();
-			CloseHandle(hChildStdOutRd);
-			return nullptr;
-		}
-		char* pBuf = new char[size + 1];
-		fread(pBuf, sizeof(char), size, fp);
-		pBuf[size] = '\0';
-		fclose(fp);
-		remove("$$in.cg");
-		remove("$$out.cg");
-		CloseHandle(hChildStdOutRd);
-
-		return pBuf;
-#endif
-	}
+	return pBuf;
 }
