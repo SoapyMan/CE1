@@ -4008,15 +4008,14 @@ void CD3D9Renderer::EF_DrawFogOverlayPasses()
 				fDist = m_RP.m_pRE->mfMinDistanceToCamera(m_RP.m_pCurObject);
 #else
 				CCObject* pObj = m_RP.m_pCurObject;
-				int nObj = 0;
+
 				fDist = 999999.0f;
-				while (true)
+				const int objectsCnt = crymax(1, m_RP.m_MergedObjects.Num());
+				for (int nObj = 0; nObj < objectsCnt; ++nObj)
 				{
+					if (nObj > 0)
+						pObj = gRenDev->m_RP.m_MergedObjects[nObj];
 					fDist = min(fDist, m_RP.m_pRE->mfMinDistanceToCamera(pObj));
-					nObj++;
-					if (nObj >= m_RP.m_MergedObjects.Num())
-						break;
-					pObj = gRenDev->m_RP.m_MergedObjects[nObj];
 				}
 #endif
 				if (fDist < 40.0f && fb->bCaustics)
@@ -4072,21 +4071,21 @@ void CD3D9Renderer::EF_DrawDetailOverlayPasses()
 			return;
 #else
 		CCObject* pObj = gRenDev->m_RP.m_pCurObject;
-		int nObj = 0;
+
 		float fDistToCam = 999999.0f;
 		sfDistRender.SetUse(0);
-		while (true)
+		const int objectsCnt = crymax(1, m_RP.m_MergedObjects.Num());
+		for (int nObj = 0; nObj < objectsCnt; ++nObj)
 		{
+			if (nObj > 0)
+				pObj = gRenDev->m_RP.m_MergedObjects[nObj];
+
 			float fDistObj = m_RP.m_pRE->mfMinDistanceToCamera(pObj);
 			if (fDistObj <= fDist + 1.0f)
 				sfDistRender.AddElem(fDistObj);
 			else
 				sfDistRender.AddElem(-1.0f);
-			fDistToCam = min(fDistToCam, fDistObj);
-			nObj++;
-			if (nObj >= gRenDev->m_RP.m_MergedObjects.Num())
-				break;
-			pObj = gRenDev->m_RP.m_MergedObjects[nObj];
+			fDistToCam = min(fDistToCam, fDistObj);		
 		}
 		if (fDistToCam > fDist + 1.0f)
 			return;
@@ -4210,57 +4209,55 @@ void CD3D9Renderer::EF_DrawDetailOverlayPasses()
 
 			CCObject* pSaveObj = m_RP.m_pCurObject;
 			CCObject* pObj = pSaveObj;
-			int nObj = 0;
-			while (true)
+
+			const int objectsCnt = crymax(1, m_RP.m_MergedObjects.Num());
+			for (int nObj = 0; nObj < objectsCnt; ++nObj)
 			{
-				if (sfDistRender[nObj] > 0)
+				if (sfDistRender[nObj] <= 0.0f)
+					continue;
+
+				if (nObj > 0)
 				{
-					if (nObj)
-					{
-						m_RP.m_pCurObject = m_RP.m_MergedObjects[nObj];
-						m_RP.m_FrameObject++;
-						pObj = m_RP.m_pCurObject;
-						EF_SetObjectTransform(pObj, sh, pObj->m_ObjFlags);
-					}
+					m_RP.m_pCurObject = m_RP.m_MergedObjects[nObj];
+					m_RP.m_FrameObject++;
+					pObj = m_RP.m_pCurObject;
+					EF_SetObjectTransform(pObj, sh, pObj->m_ObjFlags);
+				}
 
-					mi = EF_InverseMatrix();
-					FM.m_Offs = 0;
-					FM.mfGet4f(Vals);
-					mat.m[0][0] = Vals[0];
-					mat.m[1][0] = Vals[1];
-					mat.m[2][0] = Vals[2];
-					mat.m[3][0] = Vals[3];
+				mi = EF_InverseMatrix();
+				FM.m_Offs = 0;
+				FM.mfGet4f(Vals);
+				mat.m[0][0] = Vals[0];
+				mat.m[1][0] = Vals[1];
+				mat.m[2][0] = Vals[2];
+				mat.m[3][0] = Vals[3];
 
-					FM.m_Offs = 1;
-					FM.mfGet4f(Vals);
-					mat.m[0][1] = Vals[0];
-					mat.m[1][1] = Vals[1];
-					mat.m[2][1] = Vals[2];
-					mat.m[3][1] = Vals[3];
+				FM.m_Offs = 1;
+				FM.mfGet4f(Vals);
+				mat.m[0][1] = Vals[0];
+				mat.m[1][1] = Vals[1];
+				mat.m[2][1] = Vals[2];
+				mat.m[3][1] = Vals[3];
 
 
-					D3DXMatrixMultiply(&ma, mi, &mat);
-					m_pd3dDevice->SetTransform(D3DTS_TEXTURE1, &ma);
+				D3DXMatrixMultiply(&ma, mi, &mat);
+				m_pd3dDevice->SetTransform(D3DTS_TEXTURE1, &ma);
 
 #ifdef DO_RENDERLOG
-					if (CRenderer::CV_r_log >= 3)
-					{
-						Vec3d vPos = pObj->GetTranslation();
-						Logv(SRendItem::m_RecurseLevel, "+++ Detail Pass %d [Dist: %.3f] (Obj: %d [%.3f, %.3f, %.3f])\n", m_RP.m_RendPass, fDist, pObj->m_VisId, vPos[0], vPos[1], vPos[2]);
-					}
+				if (CRenderer::CV_r_log >= 3)
+				{
+					Vec3d vPos = pObj->GetTranslation();
+					Logv(SRendItem::m_RecurseLevel, "+++ Detail Pass %d [Dist: %.3f] (Obj: %d [%.3f, %.3f, %.3f])\n", m_RP.m_RendPass, fDist, pObj->m_VisId, vPos[0], vPos[1], vPos[2]);
+				}
 #endif
 
-					{
-						//PROFILE_FRAME(Draw_ShaderIndexMesh);
-						if (m_RP.m_pRE)
-							m_RP.m_pRE->mfDraw(sh, nullptr);
-						else
-							EF_DrawIndexedMesh(R_PRIMV_TRIANGLES);
-					}
+				{
+					//PROFILE_FRAME(Draw_ShaderIndexMesh);
+					if (m_RP.m_pRE)
+						m_RP.m_pRE->mfDraw(sh, nullptr);
+					else
+						EF_DrawIndexedMesh(R_PRIMV_TRIANGLES);
 				}
-				nObj++;
-				if (nObj >= m_RP.m_MergedObjects.Num())
-					break;
 			}
 			EF_FogRestore(bFogOverrided);
 			if (m_RP.m_FlagsModificators & (RBMF_TCM | RBMF_TCG))
@@ -4355,50 +4352,48 @@ void CD3D9Renderer::EF_DrawDetailOverlayPasses()
 
 			CCObject* pSaveObj = m_RP.m_pCurObject;
 			CCObject* pObj = pSaveObj;
-			int nObj = 0;
-			while (true)
+
+			const int objectsCnt = crymax(1, m_RP.m_MergedObjects.Num());
+			for (int nObj = 0; nObj < objectsCnt; ++nObj)
 			{
-				if (sfDistRender[nObj])
+				if (sfDistRender[nObj] < 0)
+					continue;
+
+				if (nObj > 0)
 				{
-					if (nObj)
-					{
-						m_RP.m_pCurObject = m_RP.m_MergedObjects[nObj];
-						m_RP.m_FrameObject++;
-						pObj = m_RP.m_pCurObject;
-					}
+					m_RP.m_pCurObject = m_RP.m_MergedObjects[nObj];
+					m_RP.m_FrameObject++;
+					pObj = m_RP.m_pCurObject;
+				}
 
-					FM.m_Offs = 0;
-					FM.mfGet4f(Vals);
-					if (pBindTG0)
-						vpD3D->mfParameter4f(pBindTG0, Vals);
+				FM.m_Offs = 0;
+				FM.mfGet4f(Vals);
+				if (pBindTG0)
+					vpD3D->mfParameter4f(pBindTG0, Vals);
 
-					FM.m_Offs = 1;
-					FM.mfGet4f(Vals);
-					if (pBindTG1)
-						vpD3D->mfParameter4f(pBindTG1, Vals);
+				FM.m_Offs = 1;
+				FM.mfGet4f(Vals);
+				if (pBindTG1)
+					vpD3D->mfParameter4f(pBindTG1, Vals);
 
-					vpD3D->mfSetVariables(true, nullptr);
-					vpD3D->mfSetStateMatrices();
+				vpD3D->mfSetVariables(true, nullptr);
+				vpD3D->mfSetStateMatrices();
 
 #ifdef DO_RENDERLOG
-					if (CRenderer::CV_r_log >= 3)
-					{
-						Vec3d vPos = pObj->GetTranslation();
-						Logv(SRendItem::m_RecurseLevel, "+++ Detail Pass %d [Dist: %.3f] (Obj: %d [%.3f, %.3f, %.3f])\n", m_RP.m_RendPass, fDist, pObj->m_VisId, vPos[0], vPos[1], vPos[2]);
-					}
+				if (CRenderer::CV_r_log >= 3)
+				{
+					Vec3d vPos = pObj->GetTranslation();
+					Logv(SRendItem::m_RecurseLevel, "+++ Detail Pass %d [Dist: %.3f] (Obj: %d [%.3f, %.3f, %.3f])\n", m_RP.m_RendPass, fDist, pObj->m_VisId, vPos[0], vPos[1], vPos[2]);
+				}
 #endif
 
-					{
-						//PROFILE_FRAME(Draw_ShaderIndexMesh);
-						if (m_RP.m_pRE)
-							m_RP.m_pRE->mfDraw(sh, nullptr);
-						else
-							EF_DrawIndexedMesh(R_PRIMV_TRIANGLES);
-					}
+				{
+					//PROFILE_FRAME(Draw_ShaderIndexMesh);
+					if (m_RP.m_pRE)
+						m_RP.m_pRE->mfDraw(sh, nullptr);
+					else
+						EF_DrawIndexedMesh(R_PRIMV_TRIANGLES);
 				}
-				nObj++;
-				if (nObj >= m_RP.m_MergedObjects.Num())
-					break;
 			}
 			EF_FogRestore(bFogOverrided);
 			if (m_RP.m_FlagsModificators & (RBMF_TCM | RBMF_TCG))
@@ -4533,12 +4528,12 @@ void CD3D9Renderer::EF_DrawFurPasses(SShaderTechnique* hs, SShader* ef, int nSta
 		if (m_FS.m_bEnable)
 			bFogOverrided = EF_FogCorrection(false, false);
 
-		int nObj = 0;
 		CCObject* pSaveObj = m_RP.m_pCurObject;
 		CCObject* pObj = pSaveObj;
-		while (true)
+		const int objectsCnt = crymax(1, m_RP.m_MergedObjects.Num());
+		for (int nObj = 0; nObj < objectsCnt; ++nObj)
 		{
-			if (nObj)
+			if (nObj > 0)
 			{
 				m_RP.m_pCurObject = m_RP.m_MergedObjects[nObj];
 				m_RP.m_FrameObject++;
@@ -4633,9 +4628,6 @@ void CD3D9Renderer::EF_DrawFurPasses(SShaderTechnique* hs, SShader* ef, int nSta
 				}
 			}
 			m_pd3dDevice->SetSamplerState(2, D3DSAMP_MIPMAPLODBIAS, 0);
-			nObj++;
-			if (nObj >= m_RP.m_MergedObjects.Num())
-				break;
 		}
 		EF_FogRestore(bFogOverrided);
 		if (!CVProgram::m_LastVP)
@@ -5004,9 +4996,10 @@ void CD3D9Renderer::EF_DrawShadowPasses(SShaderTechnique* hs, SShader* ef, int n
 				CCObject* pSaveObj = m_RP.m_pCurObject;
 				CCObject* pObj = pSaveObj;
 
-				for (int nObj = -1; nObj < m_RP.m_MergedObjects.Num(); ++nObj)
+				const int objectsCnt = crymax(1, m_RP.m_MergedObjects.Num());
+				for (int nObj = 0; nObj < objectsCnt; ++nObj)
 				{
-					if (nObj >= 0)
+					if (nObj > 0)
 					{
 						m_RP.m_pCurObject = m_RP.m_MergedObjects[nObj];
 						m_RP.m_FrameObject++;
@@ -5485,12 +5478,12 @@ void CD3D9Renderer::EF_DrawGeneralPasses(SShaderTechnique* hs, SShader* ef, bool
 				// Unlock all VB (if needed) and set current streams
 				EF_PreDraw(slw);
 
-				int nObj = 0;
 				CCObject* pSaveObj = m_RP.m_pCurObject;
 				CCObject* pObj = pSaveObj;
-				while (true)
+				const int objectsCnt = crymax(1, m_RP.m_MergedObjects.Num());
+				for (int nObj = 0; nObj < objectsCnt; ++nObj)
 				{
-					if (nObj)
+					if (nObj > 0)
 					{
 						m_RP.m_pCurObject = m_RP.m_MergedObjects[nObj];
 						m_RP.m_FrameObject++;
@@ -5574,9 +5567,6 @@ void CD3D9Renderer::EF_DrawGeneralPasses(SShaderTechnique* hs, SShader* ef, bool
 						else
 							EF_DrawIndexedMesh(R_PRIMV_TRIANGLES);
 					}
-					nObj++;
-					if (nObj >= m_RP.m_MergedObjects.Num())
-						break;
 				}
 				EF_FogRestore(bFogOverrided);
 				if (!CVProgram::m_LastVP)
@@ -5924,9 +5914,10 @@ void CD3D9Renderer::EF_DrawLightPasses_PS30(SShaderTechnique* hs, SShader* ef, i
 				CCObject* pSaveObj = m_RP.m_pCurObject;
 				CCObject* pObj = pSaveObj;
 				HRESULT h;
-				for (int nObj = -1; nObj < m_RP.m_MergedObjects.Num(); ++nObj)
+				const int objectsCnt = crymax(1, m_RP.m_MergedObjects.Num());
+				for (int nObj = 0; nObj < objectsCnt; ++nObj)
 				{
-					if (nObj >= 0)
+					if (nObj > 0)
 					{
 						m_RP.m_pCurObject = m_RP.m_MergedObjects[nObj];
 						m_RP.m_FrameObject++;
@@ -6237,7 +6228,6 @@ void CD3D9Renderer::EF_DrawLightPasses(SShaderTechnique* hs, SShader* ef, int nS
 				bool bFogVP = (m_RP.m_PersFlags & RBPF_HDR) || (curVP && (curVP->m_Flags & VPFI_VS30ONLY));
 				bFogOverrided = EF_FogCorrection(bFogDisable, bFogVP);
 
-				int nObj = 0;
 				CCObject* pSaveObj = m_RP.m_pCurObject;
 				CCObject* pObj = pSaveObj;
 				bool bLightSicssorWasSet = false;
@@ -6256,9 +6246,11 @@ void CD3D9Renderer::EF_DrawLightPasses(SShaderTechnique* hs, SShader* ef, int nS
 					else
 						pObj->SetScissor();
 				}
-				while (true)
+
+				const int objectsCnt = crymax(1, m_RP.m_MergedObjects.Num());
+				for (int nObj = 0; nObj < objectsCnt; ++nObj)
 				{
-					if (nObj)
+					if (nObj > 0)
 					{
 						// Object changed
 						m_RP.m_pCurObject = m_RP.m_MergedObjects[nObj];
@@ -6339,9 +6331,6 @@ void CD3D9Renderer::EF_DrawLightPasses(SShaderTechnique* hs, SShader* ef, int nS
 						else
 							EF_DrawIndexedMesh(R_PRIMV_TRIANGLES);
 					}
-					nObj++;
-					if (nObj >= m_RP.m_MergedObjects.Num())
-						break;
 				}
 				EF_FogRestore(bFogOverrided);
 				if (!CVProgram::m_LastVP)
@@ -6414,12 +6403,12 @@ void CD3D9Renderer::EF_DrawLightShadowMask(int nLight)
 #else
 	EF_PreDraw(nullptr);
 
-	int nObj = 0;
 	CCObject* pSaveObj = m_RP.m_pCurObject;
 	CCObject* pObj = pSaveObj;
-	while (true)
+	const int objectsCnt = crymax(1, m_RP.m_MergedObjects.Num());
+	for (int nObj = 0; nObj < objectsCnt; ++nObj)
 	{
-		if (nObj)
+		if (nObj > 0)
 		{
 			m_RP.m_pCurObject = m_RP.m_MergedObjects[nObj];
 			pObj = m_RP.m_pCurObject;
@@ -6449,9 +6438,6 @@ void CD3D9Renderer::EF_DrawLightShadowMask(int nLight)
 			else
 				EF_DrawIndexedMesh(R_PRIMV_TRIANGLES);
 		}
-		nObj++;
-		if (nObj >= m_RP.m_MergedObjects.Num())
-			break;
 	}
 	if (pSaveObj != m_RP.m_pCurObject)
 	{
@@ -6555,12 +6541,12 @@ void CD3D9Renderer::EF_DrawSubsurfacePasses(SShaderTechnique* hs, SShader* ef)
 #else
 		EF_PreDraw(nullptr);
 
-		int nObj = 0;
 		CCObject* pSaveObj = m_RP.m_pCurObject;
 		CCObject* pObj = pSaveObj;
-		while (true)
+		const int objectsCnt = crymax(1, m_RP.m_MergedObjects.Num());
+		for (int nObj = 0; nObj < objectsCnt; ++nObj)
 		{
-			if (nObj)
+			if (nObj > 0)
 			{
 				m_RP.m_pCurObject = m_RP.m_MergedObjects[nObj];
 				pObj = m_RP.m_pCurObject;
@@ -6586,9 +6572,6 @@ void CD3D9Renderer::EF_DrawSubsurfacePasses(SShaderTechnique* hs, SShader* ef)
 				else
 					EF_DrawIndexedMesh(R_PRIMV_TRIANGLES);
 			}
-			nObj++;
-			if (nObj >= m_RP.m_MergedObjects.Num())
-				break;
 		}
 		if (pSaveObj != m_RP.m_pCurObject)
 		{
@@ -7033,14 +7016,14 @@ void CD3D9Renderer::EF_FlushShader()
 			if (m_FS.m_bEnable)
 				bFogOverrided = EF_FogCorrection(false, false);
 
-			int nObj = 0;
 			CCObject* pSaveObj = m_RP.m_pCurObject;
 			CCObject* pObj = pSaveObj;
 			bool bLightSicssorWasSet = false;
 
-			while (true)
+			const int objectsCnt = crymax(1, m_RP.m_MergedObjects.Num());
+			for (int nObj = 0; nObj < objectsCnt; ++nObj)
 			{
-				if (nObj)
+				if (nObj > 0)
 				{
 					// Object changed
 					m_RP.m_pCurObject = m_RP.m_MergedObjects[nObj];
@@ -7077,9 +7060,6 @@ void CD3D9Renderer::EF_FlushShader()
 					else
 						EF_DrawIndexedMesh(R_PRIMV_TRIANGLES);
 				}
-				nObj++;
-				if (nObj >= m_RP.m_MergedObjects.Num())
-					break;
 			}
 			EF_FogRestore(bFogOverrided);
 			if (!CVProgram::m_LastVP)
