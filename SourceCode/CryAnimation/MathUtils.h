@@ -165,9 +165,8 @@ __inline void quaternionExponentOptimized(const Vec3& rSrcVector, CryQuat& rDstQ
 
 struct CryAABB
 {
-
-	Vec3 vMin;
-	Vec3 vMax;
+	Vec3 vMin{ gf_INFINITY };
+	Vec3 vMax{ -gf_INFINITY };
 
 	CryAABB() {}
 
