@@ -714,8 +714,9 @@ void CObjManager::DrawEntitiesLightPass()
 
 	for (int nLightId = 0; nLightId < MAX_LIGHTS_NUM; nLightId++)
 	{
+		list2<IEntityRender*>& lightEnts = m_lstLightEntities[nLightId];
 		CDLight* pDLight = (CDLight*)GetRenderer()->EF_Query(EFQ_LightSource, nLightId);
-		if (!pDLight || !m_lstLightEntities[nLightId].Count())
+		if (!pDLight || !lightEnts.Count())
 			continue;
 
 		CRYASSERT(pDLight->m_Flags & DLF_CASTSHADOW_VOLUME);
@@ -726,9 +727,9 @@ void CObjManager::DrawEntitiesLightPass()
 
 		// sort entities by distance to light source
 		const Vec3d& vLightPos = pDLight->m_Origin;
-		for (int nEntId = 0; nEntId < m_lstLightEntities[nLightId].Count(); nEntId++)
+		for (int nEntId = 0; nEntId < lightEnts.Count(); nEntId++)
 		{
-			IEntityRender* pEntityRS = m_lstLightEntities[nLightId][nEntId];
+			IEntityRender* pEntityRS = lightEnts[nEntId];
 			if (pEntityRS == (IEntityRender*)-1)
 				continue; // terrain light pass
 
@@ -737,12 +738,12 @@ void CObjManager::DrawEntitiesLightPass()
 			pEntityRS->GetEntityRS()->fTmpDistance = GetDistance(vLightPos, (vBoxMin + vBoxMax) * 0.5f);
 		}
 
-		qsort(&m_lstLightEntities[nLightId][0], m_lstLightEntities[nLightId].Count(), sizeof(m_lstLightEntities[nLightId][0]), CObjManager__Cmp_EntTmpDistance);
+		qsort(&lightEnts[0], lightEnts.Count(), sizeof(lightEnts[0]), CObjManager__Cmp_EntTmpDistance);
 
 		// draw SS entity shadow volumes into stencil
-		for (int nEntId = 0; nEntId < m_lstLightEntities[nLightId].Count(); nEntId++)
+		for (int nEntId = 0; nEntId < lightEnts.Count(); nEntId++)
 		{
-			IEntityRender* pEntityRS = m_lstLightEntities[nLightId][nEntId];
+			IEntityRender* pEntityRS = lightEnts[nEntId];
 			if (pEntityRS == (IEntityRender*)-1)
 				continue; // terrain light pass
 			if (!(pEntityRS->GetRndFlags() & ERF_SELFSHADOW))
@@ -777,9 +778,9 @@ void CObjManager::DrawEntitiesLightPass()
 		}
 
 		// draw NSS entity light pass and THEN shadow volumes into stencil
-		for (int nEntId = 0; nEntId < m_lstLightEntities[nLightId].Count(); nEntId++)
+		for (int nEntId = 0; nEntId < lightEnts.Count(); nEntId++)
 		{
-			IEntityRender* pEntityRS = m_lstLightEntities[nLightId][nEntId];
+			IEntityRender* pEntityRS = lightEnts[nEntId];
 			if (pEntityRS == (IEntityRender*)-1)
 				continue; // terrain light pass
 			if (pEntityRS->GetRndFlags() & ERF_SELFSHADOW)
@@ -795,7 +796,7 @@ void CObjManager::DrawEntitiesLightPass()
 				if (bUseStencilStateTest)
 				{
 					CRYASSERT(pDLight->m_Flags & DLF_CASTSHADOW_VOLUME);
-					CRYASSERT(m_lstLightEntities[nLightId].Count());
+					CRYASSERT(lightEnts.Count());
 					DrawParams.pStateShader = m_p3DEngine->m_pSHStencilState;
 				}
 				DrawParams.fDistance = pEntityRS->m_arrfDistance[m_nRenderStackLevel];
@@ -835,16 +836,15 @@ void CObjManager::DrawEntitiesLightPass()
 		}
 
 		// draw SS light pass with stencil test
-		for (int nEntId = 0; nEntId < m_lstLightEntities[nLightId].Count(); nEntId++)
+		for (int nEntId = 0; nEntId < lightEnts.Count(); nEntId++)
 		{
-			IEntityRender* pEntityRS = m_lstLightEntities[nLightId][nEntId];
+			IEntityRender* pEntityRS = lightEnts[nEntId];
 			if (pEntityRS == (IEntityRender*)-1)
 			{
 				if (GetVisAreaManager()->IsOutdoorAreasVisible())
 					m_pTerrain->RenderDLightOnHeightMap(pDLight); // light on terrain
 			}
-			else if (!(pDLight->m_Flags & DLF_LM && pEntityRS->GetRndFlags() & ERF_USELIGHTMAPS && pEntityRS->HasLightmap(0))
-				|| pDLight->m_SpecColor != Col_Black)
+			else if (!(pDLight->m_Flags & DLF_LM && pEntityRS->GetRndFlags() & ERF_USELIGHTMAPS && pEntityRS->HasLightmap(0)) || pDLight->m_SpecColor != Col_Black)
 			{ // entity light pass
 				if (!(pEntityRS->GetRndFlags() & ERF_SELFSHADOW))
 					continue;
@@ -856,7 +856,7 @@ void CObjManager::DrawEntitiesLightPass()
 				if (bUseStencilStateTest)
 				{
 					CRYASSERT(pDLight->m_Flags & DLF_CASTSHADOW_VOLUME);
-					CRYASSERT(m_lstLightEntities[nLightId].Count());
+					CRYASSERT(lightEnts.Count());
 					DrawParams.pStateShader = m_p3DEngine->m_pSHStencilState;
 				}
 				DrawParams.fDistance = pEntityRS->m_arrfDistance[m_nRenderStackLevel];
@@ -868,9 +868,9 @@ void CObjManager::DrawEntitiesLightPass()
 
 		// draw shadow pass with stencil test for lightmapped objects
 		if (bUseStencilStateTest) // todo: add shadow-object bbox test
-			for (int nEntId = 0; nEntId < m_lstLightEntities[nLightId].Count(); nEntId++)
+			for (int nEntId = 0; nEntId < lightEnts.Count(); nEntId++)
 			{
-				IEntityRender* pEntityRS = m_lstLightEntities[nLightId][nEntId];
+				IEntityRender* pEntityRS = lightEnts[nEntId];
 				if (pEntityRS != (IEntityRender*)-1)
 					if (pEntityRS->GetRndFlags() & ERF_USELIGHTMAPS && pEntityRS->HasLightmap(0) &&
 						pDLight->m_Flags & DLF_LM &&
@@ -883,15 +883,15 @@ void CObjManager::DrawEntitiesLightPass()
 
 							// detect if object recives shadow
 							bool bDraw = false;
-							for (int nCasterId = 0; nCasterId < m_lstLightEntities[nLightId].Count(); nCasterId++)
+							for (int nCasterId = 0; nCasterId < lightEnts.Count(); nCasterId++)
 							{
-								if (m_lstLightEntities[nLightId][nCasterId]->GetRndFlags() & ERF_CASTSHADOWVOLUME &&
-									pEntityRS != m_lstLightEntities[nLightId][nCasterId] &&
-									!m_lstLightEntities[nLightId][nCasterId]->GetEntityVisArea())
+								if (lightEnts[nCasterId]->GetRndFlags() & ERF_CASTSHADOWVOLUME &&
+									pEntityRS != lightEnts[nCasterId] &&
+									!lightEnts[nCasterId]->GetEntityVisArea())
 								{
-									if (IsSphereAffectedByShadow(m_lstLightEntities[nLightId][nCasterId], pEntityRS, pDLight))
+									if (IsSphereAffectedByShadow(lightEnts[nCasterId], pEntityRS, pDLight))
 									{
-										IEntityRender* pCaster = m_lstLightEntities[nLightId][nCasterId];
+										IEntityRender* pCaster = lightEnts[nCasterId];
 										float fShadowVolumeExtent = CalculateEntityShadowVolumeExtent(pCaster, pDLight);
 										Vec3d vShadowBoxMin = pCaster->m_vWSBoxMin, vShadowBoxMax = pCaster->m_vWSBoxMax;
 										MakeShadowBBox(vShadowBoxMin, vShadowBoxMax, pDLight->m_Origin, pDLight->m_fRadius, fShadowVolumeExtent);
@@ -920,7 +920,7 @@ void CObjManager::DrawEntitiesLightPass()
 							if (bUseStencilStateTest)
 							{
 								CRYASSERT(pDLight->m_Flags & DLF_CASTSHADOW_VOLUME);
-								CRYASSERT(m_lstLightEntities[nLightId].Count());
+								CRYASSERT(lightEnts.Count());
 								DrawParams.pStateShader = m_p3DEngine->m_pSHStencilStateInv;
 							}
 							DrawParams.fDistance = pEntityRS->m_arrfDistance[m_nRenderStackLevel];
@@ -943,7 +943,7 @@ void CObjManager::DrawEntitiesLightPass()
 							if (bUseStencilStateTest)
 							{
 								CRYASSERT(pDLight->m_Flags & DLF_CASTSHADOW_VOLUME);
-								CRYASSERT(m_lstLightEntities[nLightId].Count());
+								CRYASSERT(lightEnts.Count());
 								DrawParams.pStateShader = m_p3DEngine->m_pSHStencilStateInv;
 							}
 							DrawParams.fDistance = pEntityRS->m_arrfDistance[m_nRenderStackLevel];
@@ -954,7 +954,7 @@ void CObjManager::DrawEntitiesLightPass()
 					}
 			}
 
-		m_lstLightEntities[nLightId].Clear();
+		lightEnts.Clear();
 	}
 }
 

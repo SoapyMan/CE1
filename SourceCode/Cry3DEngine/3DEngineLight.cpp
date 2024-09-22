@@ -22,9 +22,6 @@
 #include "DataMap.h"
 #include "partman.h"
 #include <LMCompStructures.h>
-#ifndef PI
-#define PI 3.14159f
-#endif
 
 void C3DEngine::RegisterLightSourceInSectors(CDLight* pDynLight)
 {
@@ -351,60 +348,60 @@ void C3DEngine::AddDynamicLightSource(const class CDLight& LSource, IEntityRende
 	// Try to update present lsource
 	////////////////////////////////////////////////////////////////////////////////////////////////
 
-	for (int i = 0; i < m_lstDynLights.Count(); i++)
+	for (CDLight& dlight : m_lstDynLights)
 	{
-		if (m_lstDynLights[i].m_pOwner == pEnt && m_lstDynLights[i].m_nEntityLightId == nEntityLightId)
+		if (dlight.m_pOwner == pEnt && dlight.m_nEntityLightId == nEntityLightId)
 		{
 			// copy lsource (do not owerwrite m_arrLightLeafBuffers, pEntityRS and nEntityLightId)
 			CLeafBuffer* TmpLightLeafBuffers[8];
-			CRYASSERT(sizeof(TmpLightLeafBuffers) == sizeof(m_lstDynLights[i].m_arrLightLeafBuffers));
+			CRYASSERT(sizeof(TmpLightLeafBuffers) == sizeof(dlight.m_arrLightLeafBuffers));
 
-			memcpy(TmpLightLeafBuffers, m_lstDynLights[i].m_arrLightLeafBuffers, sizeof(TmpLightLeafBuffers));
+			memcpy(TmpLightLeafBuffers, dlight.m_arrLightLeafBuffers, sizeof(TmpLightLeafBuffers));
 
 			CCObject* pObj[4][4];
-			memcpy(&pObj[0][0], &m_lstDynLights[i].m_pObject[0][0], sizeof(pObj));
+			memcpy(&pObj[0][0], &dlight.m_pObject[0][0], sizeof(pObj));
 
-			m_lstDynLights[i] = LSource;
+			dlight = LSource;
 			// !HACK: Needs to decrement refcounter of shader because m_lstDynLights never release light sources
 			if (LSource.m_pShader)
 				LSource.m_pShader->Release();
 
-			memcpy(&m_lstDynLights[i].m_pObject[0][0], &pObj[0][0], sizeof(pObj));
+			memcpy(&dlight.m_pObject[0][0], &pObj[0][0], sizeof(pObj));
 
-			memcpy(m_lstDynLights[i].m_arrLightLeafBuffers, TmpLightLeafBuffers, sizeof(TmpLightLeafBuffers));
-			m_lstDynLights[i].m_pOwner = pEnt;
-			m_lstDynLights[i].m_nEntityLightId = nEntityLightId;
-			m_lstDynLights[i].m_pCharInstance = 0;
+			memcpy(dlight.m_arrLightLeafBuffers, TmpLightLeafBuffers, sizeof(TmpLightLeafBuffers));
+			dlight.m_pOwner = pEnt;
+			dlight.m_nEntityLightId = nEntityLightId;
+			dlight.m_pCharInstance = 0;
 
 			// reinit start time
-			m_lstDynLights[i].m_fStartTime = GetTimer()->GetCurrTime();
-			m_lstDynLights[i].m_fLifeTime = LSource.m_fLifeTime;
+			dlight.m_fStartTime = GetTimer()->GetCurrTime();
+			dlight.m_fLifeTime = LSource.m_fLifeTime;
 
 			// transform if needed
 			if (pMatrix)
 			{
-				m_lstDynLights[i].m_Origin = vWSOrigin;//pMatrix->TransformPoint(LSource.m_vObjectSpacePos);
+				dlight.m_Origin = vWSOrigin;//pMatrix->TransformPoint(LSource.m_vObjectSpacePos);
 				//CHANGED_BY_IVO
-				//m_lstDynLights[i].m_ProjAngles = pMatrix->TransformVector(LSource.m_ProjAngles);
-				m_lstDynLights[i].m_ProjAngles = GetTransposed44(*pMatrix) * (LSource.m_ProjAngles);
+				//dlight.m_ProjAngles = pMatrix->TransformVector(LSource.m_ProjAngles);
+				dlight.m_ProjAngles = GetTransposed44(*pMatrix) * (LSource.m_ProjAngles);
 			}
 
-			strncpy(m_lstDynLights[i].m_sDebugName, sName, 8);
+			strncpy(dlight.m_sDebugName, sName, 8);
 			/*
 			Vec3d Angles(pDLight->m_ProjAngles[1], 0, pDLight->m_ProjAngles[2]+90.0f);
 			cam.SetAngle(Angles);
 			cam.Init(1, 1, (pDLight->m_fLightFrustumAngle*2)/180.0f*PI, pDLight->m_fRadius, 1.0f, 0.1f);
 			cam.Update();                       */
 
-			m_lstDynLights[i].m_ProjAngles = ConvertProjAngles(LSource.m_ProjAngles);
+			dlight.m_ProjAngles = ConvertProjAngles(LSource.m_ProjAngles);
 
 			// set base params
-			m_lstDynLights[i].m_BaseOrigin = m_lstDynLights[i].m_Origin;
-			m_lstDynLights[i].m_BaseProjAngles = m_lstDynLights[i].m_ProjAngles;
+			dlight.m_BaseOrigin = dlight.m_Origin;
+			dlight.m_BaseProjAngles = dlight.m_ProjAngles;
 
-			if ((m_lstDynLights[i].m_Flags & DLF_SPECULAR_ONLY_FOR_HIGHSPEC) && (m_LightConfigSpec < CONFIG_HIGH_SPEC))
+			if ((dlight.m_Flags & DLF_SPECULAR_ONLY_FOR_HIGHSPEC) && (m_LightConfigSpec < CONFIG_HIGH_SPEC))
 			{
-				m_lstDynLights[i].m_SpecColor = Col_Black;
+				dlight.m_SpecColor = Col_Black;
 			}
 
 			return;
@@ -417,39 +414,41 @@ void C3DEngine::AddDynamicLightSource(const class CDLight& LSource, IEntityRende
 
 	m_lstDynLights.Add(LSource);
 
-	// add ref to avoid shader deleting
-	if (m_lstDynLights.Last().m_pShader)
-		m_lstDynLights.Last().m_pShader->AddRef();
-	m_lstDynLights.Last().m_Flags |= DLF_COPY;
+	CDLight& dlight = m_lstDynLights.Last();
 
-	m_lstDynLights.Last().m_fStartTime = GetTimer()->GetCurrTime();
-	m_lstDynLights.Last().m_fLifeTime = LSource.m_fLifeTime;
+	// add ref to avoid shader deleting
+	if (dlight.m_pShader)
+		dlight.m_pShader->AddRef();
+	dlight.m_Flags |= DLF_COPY;
+
+	dlight.m_fStartTime = GetTimer()->GetCurrTime();
+	dlight.m_fLifeTime = LSource.m_fLifeTime;
 
 	if (!LSource.m_fEndRadius)
-		m_lstDynLights.Last().m_fStartRadius = LSource.m_fRadius;
+		dlight.m_fStartRadius = LSource.m_fRadius;
 
-	m_lstDynLights.Last().m_pOwner = pEnt;
-	m_lstDynLights.Last().m_nEntityLightId = nEntityLightId;
+	dlight.m_pOwner = pEnt;
+	dlight.m_nEntityLightId = nEntityLightId;
 
 	// transform if needed
 	if (pMatrix)
 	{
-		m_lstDynLights.Last().m_Origin = vWSOrigin;//pMatrix->TransformPoint(LSource.m_vObjectSpacePos);
+		dlight.m_Origin = vWSOrigin;//pMatrix->TransformPoint(LSource.m_vObjectSpacePos);
 		//CHANGED_BY_IVO
-		//m_lstDynLights.Last().m_ProjAngles = pMatrix->TransformVector(LSource.m_ProjAngles);
-		m_lstDynLights.Last().m_ProjAngles = GetTransposed44(*pMatrix) * (LSource.m_ProjAngles);
+		//dlight.m_ProjAngles = pMatrix->TransformVector(LSource.m_ProjAngles);
+		dlight.m_ProjAngles = GetTransposed44(*pMatrix) * (LSource.m_ProjAngles);
 	}
 
-	strncpy(m_lstDynLights.Last().m_sDebugName, sName, 8);
-	m_lstDynLights.Last().m_ProjAngles = ConvertProjAngles(LSource.m_ProjAngles);
+	strncpy(dlight.m_sDebugName, sName, 8);
+	dlight.m_ProjAngles = ConvertProjAngles(LSource.m_ProjAngles);
 
 	// set base params
-	m_lstDynLights.Last().m_BaseOrigin = m_lstDynLights.Last().m_Origin;
-	m_lstDynLights.Last().m_BaseProjAngles = m_lstDynLights.Last().m_ProjAngles;
+	dlight.m_BaseOrigin = dlight.m_Origin;
+	dlight.m_BaseProjAngles = dlight.m_ProjAngles;
 
-	if ((m_lstDynLights.Last().m_Flags & DLF_SPECULAR_ONLY_FOR_HIGHSPEC) && (m_LightConfigSpec < CONFIG_HIGH_SPEC))
+	if ((dlight.m_Flags & DLF_SPECULAR_ONLY_FOR_HIGHSPEC) && (m_LightConfigSpec < CONFIG_HIGH_SPEC))
 	{
-		m_lstDynLights.Last().m_SpecColor = Col_Black;
+		dlight.m_SpecColor = Col_Black;
 	}
 }
 
@@ -464,9 +463,12 @@ void C3DEngine::PrepareLightSourcesForRendering()
 	//	GetRenderer()->EF_ClearLightsList();
 	m_lstDynLightsNoLight.Clear();
 
+	CRYASSERT(m_nRealLightsNum <= m_lstDynLights.Count());
+
 	// update lmasks in terrain sectors
 	if (m_pObjManager->m_nRenderStackLevel)
-	{ // do not delete lsources during reqursion, becasue hmap lpasses are shared between levels
+	{
+		// do not delete lsources during reqursion, becasue hmap lpasses are shared between levels
 		for (int i = 0; i < m_nRealLightsNum/*m_lstDynLights.Count()*/; i++)
 		{
 			m_lstDynLights[i].m_Id = -1;
@@ -475,136 +477,140 @@ void C3DEngine::PrepareLightSourcesForRendering()
 			if (m_lstDynLights[i].m_Id != -1)
 				RegisterLightSourceInSectors(&m_lstDynLights[i]);
 		}
+		return;
 	}
-	else
+
+	for (int i = 0; i < m_lstDynLights.Count(); ++i)
 	{
-		for (int i = 0; i < m_lstDynLights.Count(); i++)
+		CDLight& dlight = m_lstDynLights[i];
+		dlight.m_Id = -1;
+		/*
+		if(i >= MAX_LIGHTS_NUM)
+		{ // no more sources can be accepted by renderer
+		Warning( 0,0,"C3DEngine::PrepareLightSourcesForRendering: No more than %d lsources allowed on the screen", (int)MAX_LIGHTS_NUM);
+		FreeLightSourceComponents(&dlight);
+		m_lstDynLights.Delete(i); i--;
+		continue;
+		}
+		*/
+
+		if (dlight.m_pOwner && dlight.m_pOwner->GetEntityVisArea())
 		{
-			m_lstDynLights[i].m_Id = -1;
-			/*
-			if(i >= MAX_LIGHTS_NUM)
-			{ // no more sources can be accepted by renderer
-			Warning( 0,0,"C3DEngine::PrepareLightSourcesForRendering: No more than %d lsources allowed on the screen", (int)MAX_LIGHTS_NUM);
-			FreeLightSourceComponents(&m_lstDynLights[i]);
-			m_lstDynLights.Delete(i); i--;
-			continue;
+			// vis area lsource
+			if (!GetViewCamera().IsSphereVisibleFast(Sphere(dlight.m_Origin, dlight.m_fRadius)))
+			{
+				FreeLightSourceComponents(&dlight);
+				m_lstDynLights.Delete(i); i--;
+				continue; // invisible
 			}
-			*/
-			if (m_lstDynLights[i].m_pOwner && m_lstDynLights[i].m_pOwner->GetEntityVisArea())
-			{ // vis area lsource
 
-				if (!GetViewCamera().IsSphereVisibleFast(Sphere(m_lstDynLights[i].m_Origin, m_lstDynLights[i].m_fRadius)))
+			// check if lsource is in visible area
+			if (GetCVars()->e_dynamic_light_exact_vis_test && !dlight.m_pOwner->IsEntityAreasVisible())
+			{
+				if (dlight.m_Flags & DLF_THIS_AREA_ONLY)
 				{
-					FreeLightSourceComponents(&m_lstDynLights[i]);
-					m_lstDynLights.Delete(i); i--;
-					continue; // invisible
-				}
-
-				// check if lsource is in visible area
-				if (GetCVars()->e_dynamic_light_exact_vis_test)
-					if (!m_lstDynLights[i].m_pOwner->IsEntityAreasVisible())
+					IEntityRender* pEnt = dlight.m_pOwner;
+					if (pEnt->m_pVisArea)
 					{
-						if (m_lstDynLights[i].m_Flags & DLF_THIS_AREA_ONLY)
+						int nRndFrameId = pEnt->m_pVisArea->m_nRndFrameId;
+						if (GetFrameID() - pEnt->GetDrawFrame(0) > MAX_FRAME_ID_STEP_PER_FRAME)
 						{
-							IEntityRender* pEnt = m_lstDynLights[i].m_pOwner;
-							if (pEnt->m_pVisArea)
-							{
-								int nRndFrameId = pEnt->m_pVisArea->m_nRndFrameId;
-								if (GetFrameID() - pEnt->GetDrawFrame(0) > MAX_FRAME_ID_STEP_PER_FRAME)
-								{
-									FreeLightSourceComponents(&m_lstDynLights[i]);
-									m_lstDynLights.Delete(i); i--;
-									continue; // area invisible
-								}
-							}
-							else
-							{
-								FreeLightSourceComponents(&m_lstDynLights[i]);
-								m_lstDynLights.Delete(i); i--;
-								continue; // area invisible
-							}
+							FreeLightSourceComponents(&dlight);
+							m_lstDynLights.Delete(i); i--;
+							continue; // area invisible
 						}
 					}
-			}
-			else
-			{ // outdoor lsource
-				if ((!(m_lstDynLights[i].m_Flags & DLF_DIRECTIONAL)) &&
-					!IsSphereVisibleOnTheScreen(m_lstDynLights[i].m_Origin, m_lstDynLights[i].m_fRadius, 0))
-				{
-					FreeLightSourceComponents(&m_lstDynLights[i]);
-					m_lstDynLights.Delete(i); i--;
-					continue; // outdoor invisible
+					else
+					{
+						FreeLightSourceComponents(&dlight);
+						m_lstDynLights.Delete(i); i--;
+						continue; // area invisible
+					}
 				}
 			}
-
-			if (GetRenderer()->EF_IsFakeDLight(&m_lstDynLights[i]))
-			{ // ignored by renderer
-				m_lstDynLightsNoLight.Add(m_lstDynLights[i]);
-				m_lstDynLights.Delete(i); i--;
-				continue;
-			}
-
-			GetRenderer()->EF_ADDDlight(&m_lstDynLights[i]);
-
-			if (m_lstDynLights[i].m_Id == -1)
-			{ // ignored by renderer
-
-				CRYASSERT(i >= MAX_LIGHTS_NUM);
-
-				if (i >= MAX_LIGHTS_NUM)
-				{ // no more sources can be accepted by renderer
-					Warning(0, 0, "C3DEngine::PrepareLightSourcesForRendering: No more than %d real lsources allowed on the screen", (int)MAX_LIGHTS_NUM);
-				}
-
-				FreeLightSourceComponents(&m_lstDynLights[i]);
-				m_lstDynLights.Delete(i); i--;
-				continue;
-			}
-
-			if (m_lstDynLights[i].m_pShader != 0 && (m_lstDynLights[i].m_pShader->GetLFlags() & LMF_DISABLE))
-			{ // fake
-				CRYASSERT_FAIL("should not be here"); // should not be called, but no problem
-				FreeLightSourceComponents(&m_lstDynLights[i]);
-				m_lstDynLights.Delete(i); i--;
-				continue;
-			}
-
-			if (i != m_lstDynLights[i].m_Id)
-				Warning(0, 0, "C3DEngine::PrepareLightSourcesForRendering: Invalid light source id");
-
-			if (m_lstDynLights[i].m_Flags & DLF_PROJECT
-				&& m_lstDynLights[i].m_fLightFrustumAngle < 90 // actual fov is twice bigger
-				&& m_lstDynLights[i].m_pLightImage
-				&& !(m_lstDynLights[i].m_pLightImage->GetFlags2() & FT2_REPLICATETOALLSIDES)
-				&& (m_lstDynLights[i].m_pLightImage->GetFlags2() & FT2_CUBEASSINGLETEXTURE))
-			{ // prepare projector camera for frustum test
-				CCamera& cam = m_arrCameraProjectors[i];
-				cam.SetPos(m_lstDynLights[i].m_Origin);
-				Vec3d Angles(m_lstDynLights[i].m_ProjAngles[1], 0, m_lstDynLights[i].m_ProjAngles[2] + 90.0f);
-				cam.SetAngle(Angles);
-				cam.Init(1, 1, (m_lstDynLights[i].m_fLightFrustumAngle * 2) / 180.0f * PI, m_lstDynLights[i].m_fRadius, 1.0f, 0.1f);
-				cam.Update();
-			}
-
-			if (m_lstDynLights[i].m_fRadius >= 0.5f)
+		}
+		else
+		{ 
+			// outdoor lsource
+			if (!(dlight.m_Flags & DLF_DIRECTIONAL) && !IsSphereVisibleOnTheScreen(dlight.m_Origin, dlight.m_fRadius, 0))
 			{
-				CRYASSERT(m_lstDynLights[i].m_fRadius >= 0.5f && !(m_lstDynLights[i].m_Flags & DLF_FAKE));
-				RegisterLightSourceInSectors(&m_lstDynLights[i]);
+				FreeLightSourceComponents(&dlight);
+				m_lstDynLights.Delete(i); i--;
+				continue; // outdoor invisible
 			}
 		}
 
-		m_nRealLightsNum = m_lstDynLights.Count();
-		m_lstDynLights.AddList(m_lstDynLightsNoLight);
-
-		for (int i = m_nRealLightsNum; i < m_lstDynLights.Count(); i++)
-		{ // ignored by renderer
-			m_lstDynLights[i].m_Id = -1;
-			GetRenderer()->EF_ADDDlight(&m_lstDynLights[i]);
-			CRYASSERT(m_lstDynLights[i].m_Id == -1);
+		if (GetRenderer()->EF_IsFakeDLight(&dlight))
+		{ 
+			// ignored by renderer
+			m_lstDynLightsNoLight.Add(dlight);
+			m_lstDynLights.Delete(i); i--;
+			continue;
 		}
 
-		m_lstDynLightsNoLight.Clear();
+		GetRenderer()->EF_ADDDlight(&dlight);
+
+		if (dlight.m_Id == -1)
+		{ 
+			// ignored by renderer
+			CRYASSERT(i >= MAX_LIGHTS_NUM);
+
+			if (i >= MAX_LIGHTS_NUM)
+			{ // no more sources can be accepted by renderer
+				Warning(0, 0, "C3DEngine::PrepareLightSourcesForRendering: No more than %d real lsources allowed on the screen", (int)MAX_LIGHTS_NUM);
+			}
+
+			FreeLightSourceComponents(&dlight);
+			m_lstDynLights.Delete(i); i--;
+			continue;
+		}
+
+		if (dlight.m_pShader != 0 && (dlight.m_pShader->GetLFlags() & LMF_DISABLE))
+		{
+			// fake
+			CRYASSERT_FAIL("should not be here"); // should not be called, but no problem
+			FreeLightSourceComponents(&dlight);
+			m_lstDynLights.Delete(i); i--;
+			continue;
+		}
+
+		if (i != dlight.m_Id)
+			Warning(0, 0, "C3DEngine::PrepareLightSourcesForRendering: Invalid light source id");
+
+		if (dlight.m_Flags & DLF_PROJECT
+			&& dlight.m_fLightFrustumAngle < 90 // actual fov is twice bigger
+			&& dlight.m_pLightImage
+			&& !(dlight.m_pLightImage->GetFlags2() & FT2_REPLICATETOALLSIDES)
+			&& (dlight.m_pLightImage->GetFlags2() & FT2_CUBEASSINGLETEXTURE))
+		{
+			// prepare projector camera for frustum test
+			CCamera& cam = m_arrCameraProjectors[i];
+			cam.SetPos(dlight.m_Origin);
+			Vec3d Angles(dlight.m_ProjAngles[1], 0, dlight.m_ProjAngles[2] + 90.0f);
+			cam.SetAngle(Angles);
+			cam.Init(1, 1, (dlight.m_fLightFrustumAngle * 2) / 180.0f * gf_PI, dlight.m_fRadius, 1.0f, 0.1f);
+			cam.Update();
+		}
+
+		if (dlight.m_fRadius >= 0.5f)
+		{
+			CRYASSERT(dlight.m_fRadius >= 0.5f && !(dlight.m_Flags & DLF_FAKE));
+			RegisterLightSourceInSectors(&dlight);
+		}
 	}
+
+	m_nRealLightsNum = m_lstDynLights.Count();
+	m_lstDynLights.AddList(m_lstDynLightsNoLight);
+
+	for (int i = m_nRealLightsNum; i < m_lstDynLights.Count(); i++)
+	{ 
+		// ignored by renderer
+		m_lstDynLights[i].m_Id = -1;
+		GetRenderer()->EF_ADDDlight(&m_lstDynLights[i]);
+		CRYASSERT(m_lstDynLights[i].m_Id == -1);
+	}
+
+	m_lstDynLightsNoLight.Clear();
 }
 
 void C3DEngine::FreeLightSourceComponents(CDLight* pLight)
@@ -911,7 +917,7 @@ CDLight* C3DEngine::CheckDistancesToLightSources(uint& nDLightMask,
 	// make list of all affecting light sources
 	Vec3d vSummLightAmmount(0, 0, 0);
 	int nProjectorsNum = 0;
-	for (int n = 0; n < 32 && n < m_nRealLightsNum/*m_lstDynLights.Count()*/; n++)
+	for (int n = 0; n < MAX_LIGHTS_NUM && n < m_nRealLightsNum/*m_lstDynLights.Count()*/; n++)
 	{
 		const int nId = m_lstDynLights[n].m_Id;
 

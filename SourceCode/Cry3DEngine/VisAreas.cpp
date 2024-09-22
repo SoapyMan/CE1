@@ -431,44 +431,48 @@ void CVisArea::DrawVolume(CObjManager* pObjManager, int nReqursionLevel,
 	int nDLMask = Get3DEngine()->GetLightMaskFromPosition(vCenter, fRadius);
 
 	// todo: prepare flag once
-	bool bThisIsPortal = strstr(m_sName, "portal") != 0;
+	const bool bThisIsPortal = strstr(m_sName, "portal") != 0;
 
 	// remove sun bit if it not allowed on exit portal geometry
 	if (!bThisIsPortal || !m_bAfectedByOutLights || m_lstConnections.Count() != 1)
-		for (int nId = 0; nId < 32; nId++)
+	{
+		for (int nId = 0; nId < MAX_LIGHTS_NUM; nId++)
 		{
-			if (nDLMask & (1 << nId))
-			{
-				CDLight* pDLight = (CDLight*)pRenderer->EF_Query(EFQ_LightSource, nId);
-				if (pDLight && pDLight->m_Flags & DLF_SUN)
-				{
-					nDLMask = nDLMask & ~(1 << nId);
-					break;
-				}
+			if (!(nDLMask & (1 << nId)))
+				continue;
 
-				if (!pObjManager->m_nRenderStackLevel) // light scissor can not be shared between reqursion levels because same CDlight objects are used
-					if (pDLight && pDLight->m_Flags & DLF_THIS_AREA_ONLY && pDLight->m_pOwner)
-						if (pDLight->m_pOwner->GetEntityVisArea() == this)
-						{
-							if (!pDLight->m_sWidth || pDLight->m_sWidth == (CurCamera.m_ScissorInfo.x2 - CurCamera.m_ScissorInfo.x1))
-							{ // first time - set
-								pDLight->m_sX = CurCamera.m_ScissorInfo.x1;
-								pDLight->m_sY = CurCamera.m_ScissorInfo.y1;
-								pDLight->m_sWidth = CurCamera.m_ScissorInfo.x2 - CurCamera.m_ScissorInfo.x1;
-								pDLight->m_sHeight = CurCamera.m_ScissorInfo.y2 - CurCamera.m_ScissorInfo.y1;
-							}
-							else
-							{ // not first time - merge
-								int nMaxX = crymax(pDLight->m_sX + pDLight->m_sWidth, CurCamera.m_ScissorInfo.x2);
-								int nMaxY = crymax(pDLight->m_sY + pDLight->m_sHeight, CurCamera.m_ScissorInfo.y2);
-								pDLight->m_sX = crymin(pDLight->m_sX, CurCamera.m_ScissorInfo.x1);
-								pDLight->m_sY = crymin(pDLight->m_sY, CurCamera.m_ScissorInfo.y1);
-								pDLight->m_sWidth = nMaxX - pDLight->m_sX;
-								pDLight->m_sHeight = nMaxY - pDLight->m_sY;
-							}
-						}
+			CDLight* pDLight = (CDLight*)pRenderer->EF_Query(EFQ_LightSource, nId);
+			if (pDLight && (pDLight->m_Flags & DLF_SUN))
+			{
+				nDLMask = nDLMask & ~(1 << nId);
+				break;
+			}
+
+			if (pObjManager->m_nRenderStackLevel)
+				continue;
+
+			// light scissor can not be shared between reqursion levels because same CDlight objects are used
+			if (pDLight && pDLight->m_Flags & DLF_THIS_AREA_ONLY && pDLight->m_pOwner && pDLight->m_pOwner->GetEntityVisArea() == this)
+			{
+				if (!pDLight->m_sWidth || pDLight->m_sWidth == (CurCamera.m_ScissorInfo.x2 - CurCamera.m_ScissorInfo.x1))
+				{ // first time - set
+					pDLight->m_sX = CurCamera.m_ScissorInfo.x1;
+					pDLight->m_sY = CurCamera.m_ScissorInfo.y1;
+					pDLight->m_sWidth = CurCamera.m_ScissorInfo.x2 - CurCamera.m_ScissorInfo.x1;
+					pDLight->m_sHeight = CurCamera.m_ScissorInfo.y2 - CurCamera.m_ScissorInfo.y1;
+				}
+				else
+				{ // not first time - merge
+					int nMaxX = crymax(pDLight->m_sX + pDLight->m_sWidth, CurCamera.m_ScissorInfo.x2);
+					int nMaxY = crymax(pDLight->m_sY + pDLight->m_sHeight, CurCamera.m_ScissorInfo.y2);
+					pDLight->m_sX = crymin(pDLight->m_sX, CurCamera.m_ScissorInfo.x1);
+					pDLight->m_sY = crymin(pDLight->m_sY, CurCamera.m_ScissorInfo.y1);
+					pDLight->m_sWidth = nMaxX - pDLight->m_sX;
+					pDLight->m_sHeight = nMaxY - pDLight->m_sY;
+				}
 			}
 		}
+	}
 
 	// render area statics
 	DrawEntities(m_nFogVolumeId, nDLMask, 0, CurCamera,

@@ -690,40 +690,37 @@ RenderLMData* CLMSerializationManager2::CreateLightmap(const string& strDirPath,
 		iColorLerpTex = tp->GetTextureID();
 		return new RenderLMData(pIRenderer, iColorLerpTex, iHDRColorLerpTex, 0);
 	}
-	else
-		if (GetCVars()->e_light_maps_quality == 1)
-		{
-			//load lightsmaps in DXT3-format
-			iColorLerpTex = pIRenderer->EF_LoadTexture((strDirPath + "\\c" + szPostfix).c_str(), FT_LM | FT_CLAMP, FT2_NOANISO, eTT_Base)->GetTextureID();
-			iDomDirectionTex = pIRenderer->EF_LoadTexture((strDirPath + "\\d" + szPostfix).c_str(), FT_LM | FT_CLAMP, FT2_NOANISO, eTT_Base)->GetTextureID();
-		}
+	else if (GetCVars()->e_light_maps_quality == 1)
+	{
+		//load lightsmaps in DXT3-format
+		iColorLerpTex = pIRenderer->EF_LoadTexture((strDirPath + "\\c" + szPostfix).c_str(), FT_LM | FT_CLAMP, FT2_NOANISO, eTT_Base)->GetTextureID();
+		iDomDirectionTex = pIRenderer->EF_LoadTexture((strDirPath + "\\d" + szPostfix).c_str(), FT_LM | FT_CLAMP, FT2_NOANISO, eTT_Base)->GetTextureID();
+	}
+	else if (GetCVars()->e_light_maps_quality == 2)
+	{
+		//load lightmaps with high quality
+		ITexPic* tp = pIRenderer->EF_LoadTexture((strDirPath + "\\h" + szPostfix).c_str(), FT_LM | FT_CLAMP, FT2_NOANISO, eTT_Base);
+		if (tp && tp->IsTextureLoaded())
+			iColorLerpTex = tp->GetTextureID();
 		else
-			if (GetCVars()->e_light_maps_quality == 2)
-			{
-
-				//load lightmaps with high quality
-				ITexPic* tp = pIRenderer->EF_LoadTexture((strDirPath + "\\h" + szPostfix).c_str(), FT_LM | FT_CLAMP, FT2_NOANISO, eTT_Base);
-				if (tp && tp->IsTextureLoaded())
-					iColorLerpTex = tp->GetTextureID();
-				else
-				{
-					SAFE_RELEASE(tp);
-					iColorLerpTex = pIRenderer->EF_LoadTexture((strDirPath + "\\c" + szPostfix).c_str(), FT_LM | FT_CLAMP, FT2_NOANISO, eTT_Base)->GetTextureID();
-				}
-				iDomDirectionTex = pIRenderer->EF_LoadTexture((strDirPath + "\\d" + szPostfix).c_str(), FT_LM | FT_CLAMP, FT2_NOANISO, eTT_Base)->GetTextureID();
-				if (cbLoadOcclMaps)
-				{
-					iOcclTex = pIRenderer->EF_LoadTexture((strDirPath + "\\o" + szPostfix).c_str(), FT_LM | FT_CLAMP, FT2_NOANISO, eTT_Base)->GetTextureID();
-				}
-				if ((pIRenderer->GetFeatures() & RFT_HW_HDR) && cbLoadHDRMaps)
-				{
-					ITexPic* tp = pIRenderer->EF_LoadTexture((strDirPath + "\\r" + szPostfix).c_str(), FT_LM | FT_CLAMP, FT2_NOANISO, eTT_Base);
-					if (tp && tp->IsTextureLoaded())
-						iHDRColorLerpTex = tp->GetTextureID();
-					else
-						SAFE_RELEASE(tp);
-				}
-			}
+		{
+			SAFE_RELEASE(tp);
+			iColorLerpTex = pIRenderer->EF_LoadTexture((strDirPath + "\\c" + szPostfix).c_str(), FT_LM | FT_CLAMP, FT2_NOANISO, eTT_Base)->GetTextureID();
+		}
+		iDomDirectionTex = pIRenderer->EF_LoadTexture((strDirPath + "\\d" + szPostfix).c_str(), FT_LM | FT_CLAMP, FT2_NOANISO, eTT_Base)->GetTextureID();
+		if (cbLoadOcclMaps)
+		{
+			iOcclTex = pIRenderer->EF_LoadTexture((strDirPath + "\\o" + szPostfix).c_str(), FT_LM | FT_CLAMP, FT2_NOANISO, eTT_Base)->GetTextureID();
+		}
+		if ((pIRenderer->GetFeatures() & RFT_HW_HDR) && cbLoadHDRMaps)
+		{
+			ITexPic* tp = pIRenderer->EF_LoadTexture((strDirPath + "\\r" + szPostfix).c_str(), FT_LM | FT_CLAMP, FT2_NOANISO, eTT_Base);
+			if (tp && tp->IsTextureLoaded())
+				iHDRColorLerpTex = tp->GetTextureID();
+			else
+				SAFE_RELEASE(tp);
+		}
+	}
 	return new RenderLMData(pIRenderer, iColorLerpTex, iHDRColorLerpTex, iDomDirectionTex, iOcclTex);
 }
 
@@ -883,7 +880,7 @@ bool CLMSerializationManager2::ExportDLights(const char* pszFilePath, const CDLi
 		return true;
 	}
 
-	sHeader.iNumDLights = iNumLights; 
+	sHeader.iNumDLights = iNumLights;
 	sHeader.iSizeOfDLight = DataMap<CDLight>::Size;
 
 	CTempFile fMem;
