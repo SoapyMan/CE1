@@ -873,13 +873,14 @@ void CXConsole::Draw()
 		}
 		else
 		{
-			m_pRenderer->SetState(GS_NODEPTHTEST);
+			m_pRenderer->SetState(GS_BLSRC_SRCALPHA | GS_BLDST_ONEMINUSSRCALPHA | GS_NODEPTHTEST);
+			m_pRenderer->SetMaterialColor(1, 1, 1, 0.25f);
+
 			m_pRenderer->TransformTextureMatrix(time, 0, 0, 1);
 			m_pRenderer->Draw2dImage(0, (float)(m_nScrollPos - m_nScrollMax), 800, (float)(m_nScrollMax), m_pImage->GetTextureID(), 4.0f, 2.0f);
 			m_pRenderer->ResetTextureMatrix();
 
-			m_pRenderer->SetState(GS_BLSRC_SRCALPHA | GS_BLDST_ONEMINUSSRCALPHA | GS_NODEPTHTEST);
-			m_pRenderer->SetMaterialColor(1, 1, 1, 0.5f);
+			m_pRenderer->SetMaterialColor(1, 1, 1, 0.1f);
 
 			m_pRenderer->TransformTextureMatrix(time, 0, 0, -1);
 			m_pRenderer->Draw2dImage(0, (float)(m_nScrollPos - m_nScrollMax), 800, (float)(m_nScrollMax), m_pImage->GetTextureID(), 4.0f, 2.0f);
