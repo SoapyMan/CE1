@@ -751,8 +751,10 @@ bool CMovieAudioSource::ReadSamples(void* out, int nLength)
 		++it;
 	}
 
+#if 0
 	if (numSamplesRead < requestedSamples)
 		iLog->LogWarning("CMovieAudioSource::ReadSamples underpaint - %d of %d", numSamplesRead, requestedSamples);
+#endif
 
 	// we don't have frames yet, return 1 because we need a warmup from video system
 	return requestedSamples > 0 ? true : false;
