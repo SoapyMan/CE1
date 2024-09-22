@@ -16,6 +16,8 @@ struct TangData
 
 struct CLeafBuffer
 {
+	using PrepareBufferCb = bool (*)(CLeafBuffer* Data, bool bNeedTangents);
+
 	//! constructor
 	//! /param szSource this pointer is stored - make sure the memory stays
 	CLeafBuffer(const char* szSource);
@@ -25,11 +27,13 @@ struct CLeafBuffer
 
 	// --------------------------------------------------------------
 
-	static CLeafBuffer			m_Root;
+	static CLeafBuffer	m_RootGlobal;
+	static CLeafBuffer	m_Root;
 
-	CLeafBuffer* m_Next;						//!<
-	CLeafBuffer* m_Prev;						//!<
-	char* m_sSource;				//!< pointer to the give name in the constructor call
+	CLeafBuffer*		m_Next;
+	CLeafBuffer*		m_Prev;
+	CLeafBuffer*		m_NextGlobal;
+	CLeafBuffer*		m_PrevGlobal;
 
 	_inline void Unlink()
 	{
@@ -49,10 +53,6 @@ struct CLeafBuffer
 		m_Prev = Before;
 	}
 
-	static CLeafBuffer			m_RootGlobal;							//!<
-	CLeafBuffer* m_NextGlobal;							//!<
-	CLeafBuffer* m_PrevGlobal;							//!<
-
 	_inline void UnlinkGlobal()
 	{
 		if (!m_NextGlobal || !m_PrevGlobal)
@@ -70,15 +70,6 @@ struct CLeafBuffer
 		Before->m_NextGlobal = this;
 		m_PrevGlobal = Before;
 	}
-
-	Vec3* m_TempNormals;								//!<
-	SMRendTexVert* m_TempTexCoords;							//!<
-	UCol* m_TempColors;									//!<
-	UCol* m_TempSecColors;							//!<
-
-	void* m_pCustomData;								//!< userdata, useful for PrepareBufferCallback, currently this is used only for CDetailGrass
-
-	bool (*PrepareBufferCallback)(CLeafBuffer* Data, bool bNeedTangents);
 
 	_inline void SetVertexContainer(CLeafBuffer* pBuf)
 	{
@@ -256,50 +247,75 @@ struct CLeafBuffer
 		return (byte*)&lb->m_TempTexCoords[Id];
 	}
 
-	CVertexBuffer*			m_pVertexBuffer;						//!< video memory
-	CLeafBuffer*			m_pVertexContainer;					//!<
+	char*				m_sSource;	//!< pointer to the give name in the constructor call
 
-	uint					m_bMaterialsWasCreatedInRenderer : 1;
-	uint					m_bOnlyVideoBuffer : 1;
-	uint					m_bDynamic : 1;
+	Vec3*				m_TempNormals;					
+	SMRendTexVert*		m_TempTexCoords;	
+	UCol*				m_TempColors;
+	UCol*				m_TempSecColors;
+	Vec3*				m_pLoadedColors;
+	void*				m_pCustomData;			//!< userdata, useful for PrepareBufferCallback, currently this is used only for CDetailGrass
 
-	uint					m_UpdateVBufferMask;				//!<
-	uint                    m_UpdateFrame;
-	uint                    m_SortFrame;						//!< to prevent unneccessary sorting during one frame
-	int						m_SecVertCount;						//!< number of vertices in m_pSecVertBuffer
-	CVertexBuffer*			m_pSecVertBuffer;					//!< system memory
+	PrepareBufferCb		m_prepareBufferCb;
+	CVertexBuffer*		m_pVertexBuffer;		//!< video memory
+	CLeafBuffer*		m_pVertexContainer;		//!<
+	CVertexBuffer*		m_pSecVertBuffer;		//!< system memory
 
-	SVertexStream           m_Indices;
-	TArray <ushort>         m_SecIndices;
-	int                     m_NumIndices;
-	list2<ushort>*			m_pIndicesPreStrip;
+	list2<ushort>*		m_pIndicesPreStrip;
+	uint*				m_arrVertStripMap;		//!<
+	list2<CMatInfo>*	m_pMats;				//!<
+	uint*				m_arrVtxMap;			//!< [Anton] mapping table leaf buffer vertex idx->original vertex idx
 
-	uint*					m_arrVertStripMap;					//!<
+	uint				m_UpdateVBufferMask;	//!<
+	uint                m_UpdateFrame;
+	uint                m_SortFrame;			//!< to prevent unneccessary sorting during one frame
+	int					m_SecVertCount;			//!< number of vertices in m_pSecVertBuffer
 
-	int						m_nVertexFormat;
-	int						m_nPrimetiveType;					//!< R_PRIMV_TRIANGLES, R_PRIMV_TRIANGLE_STRIP, R_PRIMV...
+	SVertexStream       m_Indices;
+	TArray <ushort>     m_SecIndices;
+	int                 m_NumIndices;
 
-	list2<CMatInfo>*		m_pMats;							//!<
+	int					m_nVertexFormat;
+	int					m_nPrimetiveType;		//!< R_PRIMV_TRIANGLES, R_PRIMV_TRIANGLE_STRIP, R_PRIMV...
 
-	uint*					m_arrVtxMap;						//!< [Anton] mapping table leaf buffer vertex idx->original vertex idx
-	float					m_fMinU, m_fMinV, m_fMaxU, m_fMaxV;	//!< only needed for fur rendering (room for improvement)
+	float				m_fMinU, m_fMinV, m_fMaxU, m_fMaxV;	//!< only needed for fur rendering (room for improvement)
+
+	Vec3				m_vBoxMin, m_vBoxMax;	//!< used for hw occlusion test
+
+	int					m_nClientTextureBindID;
+	bool				m_bMaterialsWasCreatedInRenderer : 1;
+	bool				m_bOnlyVideoBuffer : 1;
+	bool				m_bDynamic : 1;
+
+	static int SetTexType(struct TextureMap3* tm);
+
+	
+	//! /param Flags ????
+	//! /return memory consumption of the object in bytes
+	int		Size(int Flags);
+	void	SerializeMemBuffer(uchar* pSerialBuffer, uchar* pData, int nSize, bool bSaveToBuffer);
+	bool	LoadMaterial(int m, const char* szFileName, const char* szFolderName, list2<CMatInfo>& lstMatTable, IRenderer* pRenderer, MAT_ENTITY* me, bool bFake);
+	bool	IsEmpty() { return !m_SecVertCount || !m_pSecVertBuffer || !m_SecIndices.Num(); }
+
+	// compact buffer
+	int		FindInBuffer(struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F& opt, SPipTangents& origBasis, uint nMatInfo, uint* uiInfo, struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F* _vbuff, SPipTangents* _vbasis, int _vcount, list2<unsigned short>* pHash, TArray<uint>& ShareNewInfo);
+	void	CompactBuffer(struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F* _vbuff, SPipTangents* _tbuff, int* _vcount, TArray<unsigned short>* pindices, bool bShareVerts[128], uint* uiInfo);
+
+	void	SaveTexCoords(byte* pD, SBufInfoTable* pOffs, int Size);
+	void	SaveColors(byte* pD, SBufInfoTable* pOffs, int Size);
+	void	SaveSecColors(byte* pD, SBufInfoTable* pOffs, int Size);
+	void	SaveNormals(byte* pD, SBufInfoTable* pOffs, int Size);
 
 	//! /param StripType e.g. STRIPTYPE_NONE,STRIPTYPE_ONLYLISTS,STRIPTYPE_SINGLESTRIP,STRIPTYPE_MULTIPLESTRIPS,STRIPTYPE_DEFAULT (in IRenderer.h)
-	void StripifyMesh(int inStripType);
+	void	StripifyMesh(int inStripType);
+	void	SortTris();
+
+	bool	ReCreateSystemBuffer(int VertFormat);
+	void	UpdateDynBufPtr(int VertFormat);
 
 	virtual void CalcFaceNormals(void);
-
 	virtual void AddRE(CCObject* pObj, IShader* pEf, int nNumSort = 0, IShader* pStateEff = 0);
 
-	void SaveTexCoords(byte* pD, SBufInfoTable* pOffs, int Size);
-	void SaveColors(byte* pD, SBufInfoTable* pOffs, int Size);
-	void SaveSecColors(byte* pD, SBufInfoTable* pOffs, int Size);
-	void SaveNormals(byte* pD, SBufInfoTable* pOffs, int Size);
-
-	void SortTris();
-
-	bool ReCreateSystemBuffer(int VertFormat);
-	void UpdateDynBufPtr(int VertFormat);
 	virtual bool CheckUpdate(int VertFormat, int Flags, bool bNeedAddNormals);
 	virtual bool CreateTangBuffer();
 	virtual void ReleaseShaders();
@@ -310,10 +326,6 @@ struct CLeafBuffer
 	virtual bool CreateBuffer(struct VertexBufferSource* pSource);
 
 	virtual int GetAllocatedBytes(bool bVideoMem);
-
-	// compact buffer
-	int FindInBuffer(struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F& opt, SPipTangents& origBasis, uint nMatInfo, uint* uiInfo, struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F* _vbuff, SPipTangents* _vbasis, int _vcount, list2<unsigned short>* pHash, TArray<uint>& ShareNewInfo);
-	void CompactBuffer(struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F* _vbuff, SPipTangents* _tbuff, int* _vcount, TArray<unsigned short>* pindices, bool bShareVerts[128], uint* uiInfo);
 
 	virtual void Unload();
 	virtual void UpdateCustomLighting(float fBackSideLevel, Vec3 vStatObjAmbientColor, const Vec3& vLight, bool bCalcLighting);
@@ -332,38 +344,19 @@ struct CLeafBuffer
 	virtual void CreateVidVertices(int nVerts, int VertFormat);
 
 	virtual void SetRECustomData(float* pfCustomData, float fFogScale = 0, float fAlpha = 1);
-
-	virtual void SetChunk(IShader* pShader,
-		int nFirstVertId, int nVertCount,
-		int nFirstIndexId, int nIndexCount, int nMatID = 0,
-		bool bForceInitChunk = false);
-
-	int									m_nClientTextureBindID;
+	virtual void SetChunk(IShader* pShader, int nFirstVertId, int nVertCount, int nFirstIndexId, int nIndexCount, int nMatID = 0, bool bForceInitChunk = false);
 
 	virtual void SetShader(IShader* pShader, int nCustomTID = 0);
 
 	virtual void* GetSecVerticesPtr(int* pVerticesCount);
 
-	//! /param Flags ????
-	//! /return memory consumption of the object in bytes
-	int Size(int Flags);
-
-	Vec3								m_vBoxMin, m_vBoxMax;							//!< used for hw occlusion test
-	Vec3* m_pLoadedColors;									//!<
-
 	virtual void AllocateSystemBuffer(int nVertCount);
 	virtual void FreeSystemBuffer(void);
-	virtual bool Serialize(int& nPos, uchar* pSaveBuffer, bool bSaveToBuffer,
-		char* szFolderName, char* szFileName, double& dCIndexedMesh__LoadMaterial);
-	void SerializeMemBuffer(uchar* pSerialBuffer, uchar* pData, int nSize, bool bSaveToBuffer);
+	virtual bool Serialize(int& nPos, uchar* pSaveBuffer, bool bSaveToBuffer,char* szFolderName, char* szFileName, double& dCIndexedMesh__LoadMaterial);
+
 	virtual void DrawImmediately(void);
-	bool LoadMaterial(int m,
-		const char* szFileName, const char* szFolderName,
-		list2<CMatInfo>& lstMatTable, IRenderer* pRenderer,
-		MAT_ENTITY* me, bool bFake);
-	static int SetTexType(struct TextureMap3* tm);
 	virtual bool UpdateTangBuffer(SPipTangents* pBasis);
-	bool IsEmpty() { return !m_SecVertCount || !m_pSecVertBuffer || !m_SecIndices.Num(); }
+
 	virtual void RenderDebugLightPass(const Matrix44& mat, int nLightMask, float fAlpha);
 	virtual void Render(const struct SRendParams& rParams, CCObject* pObj, TArray<int>& ShaderTemplates, int e_overlay_geometry, bool bNotCurArea, IMatInfo* pMaterial, bool bSupportDefaultShaderTemplates);
 };

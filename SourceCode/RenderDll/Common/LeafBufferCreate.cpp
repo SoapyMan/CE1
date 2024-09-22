@@ -1804,7 +1804,7 @@ bool CLeafBuffer::CheckUpdate(int VertFormat, int Flags, bool bNeedAddNormals)
 			lb->m_UpdateFrame = gRenDev->GetFrameID();
 			if (bCreate)
 				lb->m_UpdateVBufferMask |= 1;
-			if (lb->PrepareBufferCallback)
+			if (lb->m_prepareBufferCb)
 			{
 				int nnn = 0;
 			}
@@ -1814,10 +1814,10 @@ bool CLeafBuffer::CheckUpdate(int VertFormat, int Flags, bool bNeedAddNormals)
 				lb->CreateVidVertices(lb->m_SecVertCount, RequestedVertFormat);
 				lb->m_nVertexFormat = RequestedVertFormat;
 			}
-			if (lb->PrepareBufferCallback)
+			if (lb->m_prepareBufferCb)
 			{
 				PROFILE_FRAME(Mesh_CheckUpdateCallback);
-				if (!lb->PrepareBufferCallback(lb, (Flags & SHPF_TANGENTS) != 0))
+				if (!lb->m_prepareBufferCb(lb, (Flags & SHPF_TANGENTS) != 0))
 					return false;
 				bWasReleased = true;
 				lb->m_UpdateVBufferMask &= ~0x100;
@@ -2295,7 +2295,7 @@ CLeafBuffer::CLeafBuffer(const char* szSource)
 	m_vBoxMin = m_vBoxMax = Vec3d(0, 0, 0);//used for hw occlusion test
 	m_pLoadedColors = 0;
 	m_arrVertStripMap = 0;
-	PrepareBufferCallback = nullptr;
+	m_prepareBufferCb = nullptr;
 	if (this != &m_RootGlobal && this != &m_Root)
 		LinkGlobal(&m_RootGlobal);
 	m_arrVtxMap = 0;

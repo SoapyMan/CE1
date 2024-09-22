@@ -3854,7 +3854,7 @@ CLeafBuffer* CRenderer::CreateLeafBufferInitialized(
 	pLeafBuffer->m_pCustomData = CustomData;
 	pLeafBuffer->m_nVertexFormat = nVertFormat;
 
-	pLeafBuffer->PrepareBufferCallback = PrepareBufferCallback;
+	pLeafBuffer->m_prepareBufferCb = PrepareBufferCallback;
 
 	if (pIndices)
 		pLeafBuffer->UpdateSysIndices(pIndices, nIndices);
