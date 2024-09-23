@@ -463,8 +463,6 @@ void C3DEngine::PrepareLightSourcesForRendering()
 	//	GetRenderer()->EF_ClearLightsList();
 	m_lstDynLightsNoLight.Clear();
 
-	CRYASSERT(m_nRealLightsNum <= m_lstDynLights.Count());
-
 	// update lmasks in terrain sectors
 	if (m_pObjManager->m_nRenderStackLevel)
 	{
