@@ -594,6 +594,11 @@ public:
 //////////////////////////////////////////////////////////////////////////
 bool CSystem::CreateGame(const SGameInitParams& params)
 {
+	if (params.szAppTitle)
+		strcpy(m_szAppTitle, params.szAppTitle);
+	else
+		*m_szAppTitle = 0;
+
 #if defined(WIN32) || defined(LINUX)
 	if (m_bEditor)
 	{

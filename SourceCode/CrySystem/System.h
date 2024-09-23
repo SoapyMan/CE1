@@ -114,6 +114,9 @@ public:
 	void SetAffinity();
 	const char* GetUserName();
 
+	// Retrieve the name of application
+	const char* GetAppTitle() { return m_szAppTitle; }
+
 	IGame* GetIGame() { return m_pGame; }
 	INetwork* GetINetwork() { return m_pNetwork; }
 	IRenderer* GetIRenderer() { return CSystem::m_pRenderer; }
@@ -418,6 +421,9 @@ private: // ------------------------------------------------------
 
 	//! game path folder
 	char	m_szGameMOD[MAX_PATH];
+
+	//! application window title
+	char	m_szAppTitle[256];
 
 	//! to hold the values stored in system.cfg
 	//! because editor uses it's own values,

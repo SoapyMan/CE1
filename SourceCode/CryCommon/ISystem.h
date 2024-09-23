@@ -153,18 +153,11 @@ struct SSystemInitParams
 // Structure passed to CreateGame method of ISystem interface.
 struct SGameInitParams
 {
-	const char* sGameDLL;							// Name of Game DLL. (Win32 Only)
-	IGame* pGame;								// Pointer to already created game interface.
-	bool					bDedicatedServer;			// When runing a dedicated server.
-	char					szGameCmdLine[256];		// command line, used to execute the console commands after game creation e.g. -DEVMODE "g_gametype ASSAULT"
-
-	SGameInitParams()
-	{
-		sGameDLL = nullptr;
-		pGame = nullptr;
-		bDedicatedServer = false;
-		memset(szGameCmdLine, 0, 256);
-	}
+	const char* szAppTitle = nullptr;
+	const char* sGameDLL = nullptr;				// Name of Game DLL. (Win32 Only)
+	IGame*		pGame = nullptr;				// Pointer to already created game interface.
+	bool		bDedicatedServer = false;		// When runing a dedicated server.
+	char		szGameCmdLine[256]{ 0 };		// command line, used to execute the console commands after game creation e.g. -DEVMODE "g_gametype ASSAULT"
 };
 
 
@@ -205,6 +198,9 @@ struct ISystem
 
 	// Retrieve the name of the user currently logged in to the computer
 	virtual const char* GetUserName() = 0;
+
+	// Retrieve the name of application
+	virtual const char* GetAppTitle() = 0;
 
 	// Gets current supported CPU features flags. (CPUF_SSE, CPUF_SSE2, CPUF_3DNOW, CPUF_MMX)
 	virtual int GetCPUFlags() = 0;

@@ -730,6 +730,12 @@ COMPRESSOR_ERROR(*CompressTextureATI)(DWORD width,
 	DWORD* outDataSize);
 #endif
 
+#define _QUOTE(x) # x
+#define QUOTE(x) _QUOTE(x)
+
+#define PROJECT_COMPILE_PLATFORM_STR		QUOTE(PROJECT_COMPILE_PLATFORM)
+#define PROJECT_COMPILE_CONFIGURATION_STR	QUOTE(PROJECT_COMPILE_CONFIGURATION)
+
 WIN_HWND CD3D9Renderer::Init(int x, int y, int width, int height, unsigned int cbpp, int zbpp, int sbits, bool fullscreen, WIN_HINSTANCE hinst, WIN_HWND Glhwnd, WIN_HDC Glhdc, WIN_HGLRC hGLrc, bool bReInit)
 {
 	if (m_IsDedicated)
@@ -739,20 +745,6 @@ WIN_HWND CD3D9Renderer::Init(int x, int y, int width, int height, unsigned int c
 	}
 	if (!iSystem || !iLog)
 		return 0;
-
-	/*float *f = (float *)0x402a92c0;
-	FILE *fp = fopen("fl.txt", "w");
-	for (int i=0; i<4; i++)
-	{
-	  fprintf(fp, "{\n");
-	  for (int j=0; j<6; j++)
-	  {
-		fprintf(fp, "  {%ff, %ff, %ff, %ff},\n", f[0], f[1], f[2], f[3]);
-		f += 4;
-	  }
-	  fprintf(fp, "}\n");
-	}
-	fclose(fp);*/
 
 	bool b = false;
 
@@ -765,12 +757,14 @@ WIN_HWND CD3D9Renderer::Init(int x, int y, int width, int height, unsigned int c
 	iLog->Log("Direct3D9 driver is creating...\n");
 	iLog->Log("\nCrytek Direct3D9 driver version %4.2f (%s <%s>).\n", VERSION_D3D, __DATE__, __TIME__);
 
-	//strcpy(m_WinTitle, "- Far Cry -");
-#ifdef GAME_IS_FARCRY
-	sprintf(m_WinTitle, "- Far Cry - %s (%s)", __DATE__, __TIME__);
+	const char* appTitle = GetISystem()->GetAppTitle();
+
+#ifdef _RETAIL
+	sprintf(m_WinTitle, "%s", *appTitle ? appTitle : "CryEngine");
 #else
-	sprintf(m_WinTitle, "- CryEngine - %s (%s)", __DATE__, __TIME__);
+	sprintf(m_WinTitle, "%s | %s %s | %s (%s)", *appTitle ? appTitle : "CryEngine", PROJECT_COMPILE_CONFIGURATION_STR, PROJECT_COMPILE_PLATFORM_STR, __DATE__, __TIME__);
 #endif
+	
 	m_hInst = (HINSTANCE)hinst;
 
 	if (Glhwnd)
