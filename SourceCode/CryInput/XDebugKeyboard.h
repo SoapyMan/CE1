@@ -225,7 +225,7 @@ public:
 	//! clear the key (pressed) state
 	void ClearKeyState();
 	//! return the name (ascii name mapped to the virtual keyboard layout) of the key specified in kKeyCode
-	//const char *GetKeyName(unsigned short nKey);
+	//const char *GetKeyName(ushort nKey);
 	//!
 	void Update();
 	/////////////////////////////////////////////////////////////
@@ -233,16 +233,16 @@ private:
 	static XAsciiKey m_AsciiTable[256];
 
 public:
-	unsigned short DIK2XKEY(unsigned char cCode);
-	unsigned char XKEY2DIK(unsigned short nCode);
-	unsigned char XKEY2ASCII(unsigned short nCode);
+	ushort DIK2XKEY(uchar cCode);
+	uchar XKEY2DIK(ushort nCode);
+	uchar XKEY2ASCII(ushort nCode);
 
 protected:
 	//bool Acquire();
 	//bool UnAcquire();
 	void SetupKeyNames();
-	unsigned char	m_cKeysState[0x0000011F];
-	unsigned char	m_cOldKeysState[0x0000011F];
+	uchar	m_cKeysState[0x0000011F];
+	uchar	m_cOldKeysState[0x0000011F];
 
 private:
 	ILog* m_pLog;

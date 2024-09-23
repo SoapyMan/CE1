@@ -1,9 +1,5 @@
 #pragma once
 
-#ifndef WIN64
-typedef unsigned int uint32;
-#endif
-
 #define N (624)                 // length of state vector
 
 class CPseudoRandGen

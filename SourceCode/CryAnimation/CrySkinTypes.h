@@ -20,7 +20,7 @@ struct CrySkinVertexAligned
 #define CRY_SKIN_AUX_INT_SIZE 2
 
 #if CRY_SKIN_AUX_INT_SIZE==2
-typedef unsigned short CrySkinAuxInt;
+typedef ushort CrySkinAuxInt;
 #elif CRY_SKIN_AUX_INT_SIZE==4
 typedef unsigned CrySkinAuxInt;
 #if defined _CPU_AMD64
@@ -60,11 +60,11 @@ struct CrySkinRigidVertex
 struct SPipTangentsA16
 {
 	Vec3 m_Tangent;
-	unsigned int m_Pad0;
+	uint m_Pad0;
 	Vec3 m_Binormal;
-	unsigned int m_Pad1;
+	uint m_Pad1;
 	Vec3 m_TNormal;
-	unsigned int m_Pad2;
+	uint m_Pad2;
 
 	inline SPipTangentsA16& operator = (const SPipTangents& right)
 	{

@@ -27,11 +27,11 @@ private:
 	HDC          m_MyDC;      // Handle to a device context.
 	HGLRC        m_MyGLctx;   // Handle to a GL context.
 	HPBUFFERARB  m_Buffer;    // Handle to a pbuffer.
-	unsigned int m_Mode;      // Flags indicating the type of pbuffer.
+	uint m_Mode;      // Flags indicating the type of pbuffer.
 public:
 	int          m_Width;
 	int          m_Height;
-	CPBuffer(int width, int height, unsigned int mode);
+	CPBuffer(int width, int height, uint mode);
 	~CPBuffer();
 	void  mfHandleModeSwitch();
 	bool mfMakeCurrent();

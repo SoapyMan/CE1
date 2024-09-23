@@ -47,7 +47,7 @@ NRESULT CDatagramSocket::Create(SocketType st)
 #if defined(LINUX)
 		if (fcntl(m_hSocket, F_SETFL, O_NONBLOCK) < 0)
 #else
-		unsigned long nTrue = 1;
+		ulong nTrue = 1;
 		if (ioctlsocket(m_hSocket, FIONBIO, &nTrue) == SOCKET_ERROR)
 #endif
 		{
@@ -217,7 +217,7 @@ NRESULT CDatagramSocket::GetSocketAddresses(CIPAddress* pAddr, DWORD nMaCIPAddre
 #ifndef PS2	
 	getsockname(m_hSocket, (sockaddr*)&port, &n);
 #else	//PS2
-	getsockname((int)m_hSocket, (sockaddr*)&port, (unsigned int*)&n);
+	getsockname((int)m_hSocket, (sockaddr*)&port, (uint*)&n);
 #endif	//PS2
 	if (!gethostname(buf, sizeof(buf)))
 	{
@@ -283,7 +283,7 @@ NRESULT CDatagramSocket::Send(BYTE* pBuffer, int nLenBytes, CIPAddress* saAddres
 }
 
 //////////////////////////////////////////////////////////////////////////
-NRESULT CDatagramSocket::Receive(unsigned char* pBuf/*[MAX_UDP_PACKET_SIZE]*/, int nBufLen, int& nRecvBytes, CIPAddress& pFrom)
+NRESULT CDatagramSocket::Receive(uchar* pBuf/*[MAX_UDP_PACKET_SIZE]*/, int nBufLen, int& nRecvBytes, CIPAddress& pFrom)
 {
 	if (m_hSocket == INVALID_SOCKET)
 		return NET_SOCKET_NOT_CREATED;

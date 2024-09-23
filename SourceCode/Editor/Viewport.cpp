@@ -1477,7 +1477,7 @@ void CViewport::AVIRecordFrame()
 		if (currTime - m_aviLastFrameTime > 1.0f / m_aviFrameRate)
 		{
 			m_aviLastFrameTime = currTime;
-			//m_renderer->ReadFrameBuffer( (unsigned char*)m_aviFrame.GetData(),m_aviFrame.GetWidth(),m_aviFrame.GetHeight(),true,false );
+			//m_renderer->ReadFrameBuffer( (uchar*)m_aviFrame.GetData(),m_aviFrame.GetWidth(),m_aviFrame.GetHeight(),true,false );
 
 			int width = m_aviFrame.GetWidth();
 			int height = m_aviFrame.GetHeight();

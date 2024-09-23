@@ -16,10 +16,8 @@
 #include "StdAfx.h"
 #include "BBox.h"
 
-typedef unsigned int udword;
-
 // Integer representation of a floating-Vec3 value.
-#define IR(x)	((udword&)x)
+#define IR(x)	((uint&)x)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
@@ -57,7 +55,7 @@ bool BBox::IsIntersectRay( const Vec3& vOrigin, const Vec3& vDir, Vec3& pntConta
 	float dir[3] = { vDir.x,vDir.y,vDir.z };
 
 	// Find candidate planes.
-	for(udword i=0;i<3;i++)
+	for(int i=0;i<3;i++)
 	{
 		if(origin[i] < MinB[i])
 		{
@@ -88,7 +86,7 @@ bool BBox::IsIntersectRay( const Vec3& vOrigin, const Vec3& vDir, Vec3& pntConta
 	}
 
 	// Get largest of the maxT's for final choice of intersection
-	udword WhichPlane = 0;
+	int WhichPlane = 0;
 	if(MaxT[1] > MaxT[WhichPlane])	WhichPlane = 1;
 	if(MaxT[2] > MaxT[WhichPlane])	WhichPlane = 2;
 

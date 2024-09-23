@@ -17,12 +17,12 @@ class Crc32Gen {
 public:
 	Crc32Gen();
 	//! Creates a CRC from a text string 
-	static unsigned int GetCRC32(const char* text);
-	static unsigned int GetCRC32(const char* data, int size, unsigned int ulCRC);
+	static uint GetCRC32(const char* text);
+	static uint GetCRC32(const char* data, int size, uint ulCRC);
 
 protected:
-	unsigned int crc32_table[256];  //!< Lookup table array 
+	uint crc32_table[256];  //!< Lookup table array 
 	void init_CRC32_Table();  //!< Builds lookup table array 
-	unsigned int reflect(unsigned int ref, char ch); //!< Reflects CRC bits in the lookup table 
-	unsigned int get_CRC32(const char* data, int size, unsigned int ulCRC);
+	uint reflect(uint ref, char ch); //!< Reflects CRC bits in the lookup table 
+	uint get_CRC32(const char* data, int size, uint ulCRC);
 };

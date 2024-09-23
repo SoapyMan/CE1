@@ -229,7 +229,7 @@ bool CXKeyboard::UnAcquire()
 }
 
 //////////////////////////////////////////////////////////////////////////
-unsigned short CXKeyboard::DIK2XKEY(unsigned char cCode)
+ushort CXKeyboard::DIK2XKEY(uchar cCode)
 {
 	switch (cCode)
 	{
@@ -361,7 +361,7 @@ unsigned short CXKeyboard::DIK2XKEY(unsigned char cCode)
 }
 
 //////////////////////////////////////////////////////////////////////////
-unsigned char CXKeyboard::XKEY2DIK(unsigned short nCode)
+uchar CXKeyboard::XKEY2DIK(ushort nCode)
 {
 	switch (nCode)
 	{
@@ -485,7 +485,7 @@ unsigned char CXKeyboard::XKEY2DIK(unsigned short nCode)
 }
 
 //////////////////////////////////////////////////////////////////////////
-unsigned char CXKeyboard::XKEY2ASCII(unsigned short nCode, int modifiers)
+uchar CXKeyboard::XKEY2ASCII(ushort nCode, int modifiers)
 {
 	if ((modifiers & XKEY_MOD_CONTROL) && (modifiers & XKEY_MOD_ALT))
 	{
@@ -544,10 +544,10 @@ void CXKeyboard::SetupKeyNames()
 		memset(m_AsciiTable[k].cl, 0, sizeof(m_AsciiTable[k].cl));
 	}
 
-	unsigned char sKState[256];
-	unsigned short ascii[2];
+	uchar sKState[256];
+	ushort ascii[2];
 	int nResult;
-	unsigned int vKeyCode;
+	uint vKeyCode;
 
 	for (int k = 0; k < 256; k++)
 	{
@@ -701,7 +701,7 @@ void CXKeyboard::FeedVirtualKey(int nVirtualKey, long lParam, bool bDown)
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CXKeyboard::ProcessKey(int cKey, bool bPressed, unsigned char* cTempKeys)
+void CXKeyboard::ProcessKey(int cKey, bool bPressed, uchar* cTempKeys)
 {
 	if (bPressed)
 	{
@@ -782,7 +782,7 @@ void CXKeyboard::ProcessKey(int cKey, bool bPressed, unsigned char* cTempKeys)
 
 	// Post Input events.
 	SInputEvent event;
-	event.key = DIK2XKEY((unsigned char)cKey);
+	event.key = DIK2XKEY((uchar)cKey);
 	if (bPressed)
 		event.type = SInputEvent::KEY_PRESS;
 	else
@@ -842,7 +842,7 @@ void CXKeyboard::Update()
 			if (m_cvBufferedKeys->GetIVal())
 			{
 				// go through all buffered items
-				for (unsigned int k = 0; k < dwItems; k++)
+				for (uint k = 0; k < dwItems; k++)
 				{
 					int cKey = rgdod[k].dwOfs;
 					bool bPressed = ((rgdod[k].dwData & 0x80) != 0);
@@ -899,14 +899,14 @@ void CXKeyboard::SetPrevKey(int p_key, int value)
 //////////////////////////////////////////////////////////////////////////
 bool CXKeyboard::KeyDown(int p_key)
 {
-	unsigned char cDik = XKEY2DIK(p_key);
+	uchar cDik = XKEY2DIK(p_key);
 	return ((m_cKeysState[cDik] & 0x80) != 0);
 }
 
 //////////////////////////////////////////////////////////////////////////
 bool CXKeyboard::KeyPressed(int p_key)
 {
-	unsigned char cDik = XKEY2DIK(p_key);
+	uchar cDik = XKEY2DIK(p_key);
 	if (((m_cKeysState[cDik] & 0x80) != 0) && ((m_cOldKeysState[cDik] & 0x80) == 0))
 		return true;
 	else return false;
@@ -915,14 +915,14 @@ bool CXKeyboard::KeyPressed(int p_key)
 //////////////////////////////////////////////////////////////////////////
 bool CXKeyboard::KeyReleased(int p_key)
 {
-	unsigned char cDik = XKEY2DIK(p_key);
+	uchar cDik = XKEY2DIK(p_key);
 	return ((m_cKeysState[cDik] & 0x80) == 0) && ((m_cOldKeysState[cDik] & 0x80) != 0);
 }
 
 //////////////////////////////////////////////////////////////////////////
 void CXKeyboard::ClearKey(int p_key)
 {
-	unsigned char cDik = XKEY2DIK(p_key);
+	uchar cDik = XKEY2DIK(p_key);
 
 	if (cDik < 256 && cDik >= 0)
 	{
@@ -989,7 +989,7 @@ void CXKeyboard::ClearKeyState()
 	m_modifiers = 0;
 }
 
-unsigned char CXKeyboard::GetKeyState(int nKey)
+uchar CXKeyboard::GetKeyState(int nKey)
 {
 	nKey = XKEY2DIK(nKey);
 

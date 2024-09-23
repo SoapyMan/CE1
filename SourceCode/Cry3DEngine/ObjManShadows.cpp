@@ -342,7 +342,7 @@ void CObjManager::DrawAllShadowsOnTheGroundInSector(list2<IEntityRender*>* pEntL
 		RenderEntitiesShadowMapsOnTerrain(true, 0);
 
 		// increase frame id to help shadow map menager in renderer
-		unsigned short* pPtr2FrameID = (unsigned short*)GetRenderer()->EF_Query(EFQ_Pointer2FrameID);
+		ushort* pPtr2FrameID = (ushort*)GetRenderer()->EF_Query(EFQ_Pointer2FrameID);
 		if (pPtr2FrameID)
 			(*pPtr2FrameID)++;
 

@@ -51,14 +51,14 @@ void CStatObj::CompactPosBuffer(Vec3d* _vbuff, int* _vcount, list2<int>* pindice
 
 	for (uint v = 0; v < (uint)(*_vcount); v++)
 	{
-		list2<int>* pHash = &pos_hash_table[(unsigned char)(_vbuff[v].x * 100)];//[(unsigned char)(_vbuff[v].y*100)];
+		list2<int>* pHash = &pos_hash_table[(uchar)(_vbuff[v].x * 100)];//[(uchar)(_vbuff[v].y*100)];
 		int find = FindInPosBuffer(_vbuff[v], tmp_buff, tmp_count, pHash);
 		if (find < 0)
 		{
 			tmp_buff[tmp_count] = _vbuff[v];
 			pindices->Add(tmp_count);
 
-			pos_hash_table[(unsigned char)(_vbuff[v].x * 100)]/*[(unsigned char)(_vbuff[v].y*100)]*/.Add(tmp_count);
+			pos_hash_table[(uchar)(_vbuff[v].x * 100)]/*[(uchar)(_vbuff[v].y*100)]*/.Add(tmp_count);
 
 			tmp_count++;
 		}
@@ -137,7 +137,7 @@ void CStatObj::Physicalize()
 	for (int nMesh = 0; nMesh <= 3; nMesh++)
 	{ // fill physics indices
 		list2<int> lstPhysIndices;
-		list2<unsigned char> lstFaceMaterials;
+		list2<uchar> lstFaceMaterials;
 
 		if (nMesh == MESH_PHYSIC)
 		{ // find all physicalized faces
@@ -341,7 +341,7 @@ void CStatObj::PhysicalizeCompiled()
 	{ // fill physics indices
 
 	//  list2<int> & lstPhysIndices = 
-  //    list2<unsigned char> & lstFaceMaterials;
+  //    list2<uchar> & lstFaceMaterials;
 
   //    for(int i=0; i<3; i++)
   //    {
@@ -446,7 +446,7 @@ void CStatObj::PhysicalizeCompiled()
 #endif
 				}
 
-				list2<unsigned char>& lstFaceMaterials = m_lstProxyFaceMaterials[nMesh];
+				list2<uchar>& lstFaceMaterials = m_lstProxyFaceMaterials[nMesh];
 
 				// remap shader id to game mat id
 				for (int f = 0; f < lstFaceMaterials.Count(); f++)

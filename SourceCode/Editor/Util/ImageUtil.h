@@ -66,7 +66,7 @@ public:
 	//! \param iniX in fix point 24.8
 	//! \param iniY in fix point 24.8
 	//! \return 0..255
-	static unsigned char GetBilinearFilteredAt( const int iniX256, const int iniY256, const CByteImage &image );
+	static uchar GetBilinearFilteredAt( const int iniX256, const int iniY256, const CByteImage &image );
 };
 
 #endif // __ImageUtil_h__

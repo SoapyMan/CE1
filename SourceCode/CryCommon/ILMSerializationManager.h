@@ -31,7 +31,7 @@ struct ILMSerializationManager
 	virtual bool Load(const char* pszFileName, const bool cbNoTextures) = 0;
 
 	//!
-	virtual unsigned int Save(const char* pszFileName, struct LMGenParam sParams, const bool cbAppend = false) = 0;
+	virtual uint Save(const char* pszFileName, struct LMGenParam sParams, const bool cbAppend = false) = 0;
 	//!
 	//! /param _pColorLerp4 if !=0 this memory is copied
 	//! /param _pDomDirection3 if !=0 this memory is copied

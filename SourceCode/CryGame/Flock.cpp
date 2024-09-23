@@ -1432,7 +1432,7 @@ bool CFlock::RayTest( Vec3 &raySrc,Vec3 &rayTrg,SFlockHit &hit )
 //	Vec3 v;
 	Vec3 p1,p2;
 	// Check all boids.
-	for (unsigned int i = 0; i < m_boids.size(); i++)
+	for (uint i = 0; i < m_boids.size(); i++)
 	{
 		CBoidObject *boid = m_boids[i];
 		if ( Intersect::Lineseg_Sphere( raySrc,rayTrg,  boid->m_pos,m_bc.boidScale,  p1,p2 ) > 0)

@@ -119,7 +119,7 @@ void CXmlNode::setAttr( const char *key,int value )
 	setAttr( key,str );
 }
 
-void CXmlNode::setAttr( const char *key,unsigned int value )
+void CXmlNode::setAttr( const char *key,uint value )
 {
 	char str[128];
 	ultoa( value,str,10 );
@@ -159,7 +159,7 @@ bool CXmlNode::getAttr( const char *key,int &value ) const
 	return false;
 }
 
-bool CXmlNode::getAttr( const char *key,unsigned int &value ) const
+bool CXmlNode::getAttr( const char *key,uint &value ) const
 {
 	tempAttr.key = key;
 	XmlAttributes::const_iterator it = m_attributes.find( tempAttr );

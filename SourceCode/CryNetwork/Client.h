@@ -75,25 +75,25 @@ public:
 
 	// interface IClient ----------------------------------------------------------------------------
 
-	virtual void Connect(const char* szIP, WORD wPort, const BYTE* pbAuthorizationID, unsigned int iAuthorizationSize);
+	virtual void Connect(const char* szIP, WORD wPort, const BYTE* pbAuthorizationID, uint iAuthorizationSize);
 	virtual void Disconnect(const char* szCause);
 	virtual void ContextReady(CStream& stm);
 	virtual void SendReliable(CStream& stm);
 	virtual void SendUnreliable(CStream& stm);
 	virtual bool IsReady();
-	virtual bool Update(unsigned int nTime);
+	virtual bool Update(uint nTime);
 	virtual void GetBandwidth(float& fIncomingKbPerSec, float& fOutgoinKbPerSec, DWORD& nIncomingPackets, DWORD& nOutgoingPackets);
 	virtual void Release();
-	virtual unsigned int GetPing();
-	virtual unsigned int GetRemoteTimestamp(unsigned int nTime)
+	virtual uint GetPing();
+	virtual uint GetRemoteTimestamp(uint nTime)
 	{
 		return m_ctpEndpoint.GetRemoteTimestamp(nTime);
 	}
-	virtual unsigned int GetPacketsLostCount()
+	virtual uint GetPacketsLostCount()
 	{
 		return m_ctpEndpoint.GetLostPackets();
 	}
-	virtual unsigned int GetUnreliablePacketsLostCount()
+	virtual uint GetUnreliablePacketsLostCount()
 	{
 		return m_ctpEndpoint.GetUnreliableLostPackets();
 	}
@@ -129,7 +129,7 @@ private: // ----------------------------------------------------------------
 	DWORD										m_dwKeepAliveTimer;
 
 	BYTE* m_pbAuthorizationID;		//!< CD Key AuthorizationID (use new and delete)
-	unsigned int						m_uiAuthorizationSize;	//!< Size of AuthorizationID in bytes
+	uint						m_uiAuthorizationSize;	//!< Size of AuthorizationID in bytes
 
 protected: // ------------------------------------------------------------------
 
@@ -138,7 +138,7 @@ protected: // ------------------------------------------------------------------
 	//REMOTE PROTOCOL VARIBLES (update by the connect packet)
 	struct CNPServerVariables m_ServerVariables;
 
-	unsigned int						m_nCurrentTime;
+	uint						m_nCurrentTime;
 	bool										m_bLocalHost;			//!< the client is connected to the local server (no timeouts)
 	bool										m_bWaiting;				//!< the client is waiting for the server.. probably the server just dropped, or is stalled for some time..
 
@@ -148,7 +148,7 @@ protected: // ------------------------------------------------------------------
 	{
 		float						m_fTimeToSend;					//!<
 		BYTE						m_Data[8192];						//!<
-		unsigned int		m_dwLengthInBytes;			//!<
+		uint		m_dwLengthInBytes;			//!<
 	};
 	typedef std::list<DelayedPacket*>	TDelayPacketList;
 

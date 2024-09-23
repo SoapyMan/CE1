@@ -26,7 +26,7 @@ public:
 		m_nBytesOffs = m_BytesCount;
 	}
 
-	DynamicVB(const LPDIRECT3DDEVICE9 pD3D, const DWORD& theFVF, const unsigned int& theVertsCount)
+	DynamicVB(const LPDIRECT3DDEVICE9 pD3D, const DWORD& theFVF, const uint& theVertsCount)
 	{
 		m_pVB = 0;
 
@@ -42,7 +42,7 @@ public:
 
 	LPDIRECT3DVERTEXBUFFER9 GetInterface() const { return m_pVB; }
 
-	VertexType* Lock(const unsigned int& theLockBytesCount, int& nOffs)
+	VertexType* Lock(const uint& theLockBytesCount, int& nOffs)
 	{
 		if (theLockBytesCount > m_BytesCount)
 		{

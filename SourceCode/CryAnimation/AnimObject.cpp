@@ -49,7 +49,7 @@ CAnimObject::~CAnimObject()
 void CAnimObject::ReleaseNodes()
 {
 	I3DEngine* engine = Get3DEngine();
-	for (unsigned int i = 0; i < m_nodes.size(); i++)
+	for (uint i = 0; i < m_nodes.size(); i++)
 	{
 		Node* pNode = m_nodes[i];
 		if (pNode->m_object)
@@ -63,7 +63,7 @@ void CAnimObject::ReleaseNodes()
 //////////////////////////////////////////////////////////////////////////
 void CAnimObject::ReleaseAnims()
 {
-	for (unsigned int i = 0; i < m_animations.size(); i++)
+	for (uint i = 0; i < m_animations.size(); i++)
 	{
 		delete m_animations[i];
 	}
@@ -129,7 +129,7 @@ void CAnimObject::Draw(const SRendParams& rp, const Vec3& t)
 		renderTM = rt34 * diag;	//optimised concatenation: m34*diag
 		renderTM = GetTransposed44(renderTM);			//TODO: remove this after E3 and use Matrix34 instead of Matrix44
 	}
-	for (unsigned int i = 0; i < m_nodes.size(); i++)
+	for (uint i = 0; i < m_nodes.size(); i++)
 	{
 		Node* node = m_nodes[i];
 		if (node->m_object)
@@ -170,7 +170,7 @@ void CAnimObject::RenderShadowVolumes(const SRendParams* rParams, int nLimitLOD)
 		renderTM = GetTransposed44(renderTM);			//TODO: remove this after E3 and use Matrix34 instead of Matrix44
 
 	}
-	for (unsigned int i = 0; i < m_nodes.size(); i++)
+	for (uint i = 0; i < m_nodes.size(); i++)
 	{
 		Node* node = m_nodes[i];
 		if (node->m_object)
@@ -204,7 +204,7 @@ void CAnimObject::Animate(float time)
 		time = m_currAnimation->endTime + time;
 	}
 
-	for (unsigned int i = 0; i < m_nodes.size(); i++)
+	for (uint i = 0; i < m_nodes.size(); i++)
 	{
 		Node* node = m_nodes[i];
 		NodeAnim* nodeAnim = GetNodeAnim(node);
@@ -250,7 +250,7 @@ void CAnimObject::RecalcBBox()
 	m_bbox[0] = SetMaxBB();
 	m_bbox[1] = SetMinBB();
 	// Re calc bbox.
-	for (unsigned int i = 0; i < m_nodes.size(); i++)
+	for (uint i = 0; i < m_nodes.size(); i++)
 	{
 		Node* node = m_nodes[i];
 		Matrix44& tm = GetNodeMatrix(node);
@@ -340,7 +340,7 @@ void CAnimObject::RemoveAnimation(Animation* anim)
 //////////////////////////////////////////////////////////////////////////
 CAnimObject::Animation* CAnimObject::FindAnimation(const char* szAnimationName)
 {
-	for (unsigned int i = 0; i < m_animations.size(); i++)
+	for (uint i = 0; i < m_animations.size(); i++)
 	{
 		if (stricmp(m_animations[i]->name.c_str(), szAnimationName) == 0)
 		{
@@ -353,7 +353,7 @@ CAnimObject::Animation* CAnimObject::FindAnimation(const char* szAnimationName)
 //////////////////////////////////////////////////////////////////////////
 int CAnimObject::FindNodeByName(const char* szNodeName)
 {
-	for (unsigned int i = 0; i < m_nodes.size(); i++)
+	for (uint i = 0; i < m_nodes.size(); i++)
 	{
 		if (stricmp(m_nodes[i]->m_name.c_str(), szNodeName) == 0)
 		{
@@ -486,7 +486,7 @@ void CAnimObject::BuildPhysicalEntity(IPhysicalEntity* pent, float mass, int sur
 
 	m_physic = pent;
 
-	unsigned int i;
+	uint i;
 	float totalVolume = 0;
 
 	for (i = 0; i < m_nodes.size(); i++)
@@ -601,7 +601,7 @@ void CAnimObject::Node::GetSize(ICrySizer* pSizer)const
 //////////////////////////////////////////////////////////////////////////
 ICryBone* CAnimObject::GetBoneByName(const char* szName)
 {
-	for (unsigned int i = 0; i < m_nodes.size(); i++)
+	for (uint i = 0; i < m_nodes.size(); i++)
 	{
 		if (m_nodes[i] != nullptr && stricmp(m_nodes[i]->m_name.c_str(), szName) == 0)
 			return m_nodes[i];
@@ -661,7 +661,7 @@ void CAnimObject::PreloadResources(float fDistance, float fTime, int nFlags)
 {
 	CryCharInstanceBase::PreloadResources(fDistance, fTime, nFlags);
 
-	for (unsigned int i = 0; i < m_nodes.size(); i++)
+	for (uint i = 0; i < m_nodes.size(); i++)
 		if (m_nodes[i] != nullptr && m_nodes[i]->m_object)
 			m_nodes[i]->m_object->PreloadResources(fDistance, fTime, nFlags);
 }

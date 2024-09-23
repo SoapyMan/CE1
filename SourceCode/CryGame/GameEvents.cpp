@@ -62,7 +62,7 @@ void EventPlayerCmd::Execute(CXGame *pGame)
 //////////////////////////////////////////////////////////////////////////
 void EventExplosion::Write(CStream &stm,int iPhysicalTime, IBitStream *pBitStream )
 {
-	stm.WritePacked((unsigned int)iPhysicalTime);
+	stm.WritePacked((uint)iPhysicalTime);
 	stm.Write(pos);
 	stm.Write(damage);
 	stm.Write(rmin);
@@ -92,7 +92,7 @@ void EventExplosion::Write(CStream &stm,int iPhysicalTime, IBitStream *pBitStrea
 //////////////////////////////////////////////////////////////////////////
 void EventExplosion::Read(CStream &stm,int &iPhysicalTime, IBitStream *pBitStream )
 {
-	stm.ReadPacked((unsigned int &)iPhysicalTime);
+	stm.ReadPacked((uint &)iPhysicalTime);
 	stm.Read(pos);
 	stm.Read(damage);
 	stm.Read(rmin);
@@ -135,7 +135,7 @@ void EventExplosion::Execute(CXGame *pGame)
 //////////////////////////////////////////////////////////////////////////
 void EventPhysImpulse::Write(CStream &stm,int iPhysicalTime, IBitStream *pBitStream )
 {
-	stm.WritePacked((unsigned int)iPhysicalTime);
+	stm.WritePacked((uint)iPhysicalTime);
 	stm.Write(idPhysEnt);
 	stm.Write(impulse);
 	stm.Write(bHasPt);
@@ -149,7 +149,7 @@ void EventPhysImpulse::Write(CStream &stm,int iPhysicalTime, IBitStream *pBitStr
 //////////////////////////////////////////////////////////////////////////
 void EventPhysImpulse::Read(CStream &stm,int &iPhysicalTime, IBitStream *pBitStream )
 {
-	stm.ReadPacked((unsigned int &)iPhysicalTime);
+	stm.ReadPacked((uint &)iPhysicalTime);
 	stm.Read(idPhysEnt);
 	stm.Read(impulse);
 	stm.Read(bHasPt);
@@ -180,7 +180,7 @@ void EventPhysImpulse::Execute(CXGame *pGame)
 //////////////////////////////////////////////////////////////////////////
 void EventVehicleDamage::Write(CStream &stm,int iPhysicalTime, IBitStream *pBitStream )
 {
-	stm.WritePacked((unsigned int)iPhysicalTime);
+	stm.WritePacked((uint)iPhysicalTime);
 	pBitStream->WriteBitStream(stm,idVehicle,eEntityId);
 	stm.Write(damage);
 }
@@ -188,7 +188,7 @@ void EventVehicleDamage::Write(CStream &stm,int iPhysicalTime, IBitStream *pBitS
 //////////////////////////////////////////////////////////////////////////
 void EventVehicleDamage::Read(CStream &stm,int &iPhysicalTime, IBitStream *pBitStream )
 {
-	stm.ReadPacked((unsigned int &)iPhysicalTime);
+	stm.ReadPacked((uint &)iPhysicalTime);
 	pBitStream->ReadBitStream(stm,idVehicle,eEntityId);
 	stm.Read(damage);
 }
@@ -325,7 +325,7 @@ void CXGame::WriteScheduledEvents(CStream &stm, int &iLastEventWritten, int iTim
 {
 	IBitStream *pBitStream=GetIBitStream();
 
-	unsigned int i,sz;
+	uint i,sz;
 	int iLastEventCur = -1;
 	for(i=sz=0; i<m_lstEvents.size(); i++)
 		sz += m_lstEvents[i].idx>iLastEventWritten;

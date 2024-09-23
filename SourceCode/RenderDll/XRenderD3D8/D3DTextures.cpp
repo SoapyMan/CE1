@@ -3866,14 +3866,14 @@ STexPic *CD3D8Renderer::EF_MakePhongTexture(int Exp)
 
   double shininess = Exp;
 	int imgsize = 256;
-	unsigned char * img = new unsigned char[imgsize*imgsize*4];
-	unsigned char * ip = img;
+	uchar * img = new uchar[imgsize*imgsize*4];
+	uchar * ip = img;
 	for(int j=0; j<imgsize; j++)
 	{
-		unsigned char a = (unsigned char)(255.99 * pow(j/(imgsize-1.0), shininess));
+		uchar a = (uchar)(255.99 * pow(j/(imgsize-1.0), shininess));
 		for(int i=0; i<imgsize; i++)
 		{
-      byte b = (unsigned char)(255.99 * (i/(imgsize-1.0)));
+      byte b = (uchar)(255.99 * (i/(imgsize-1.0)));
 			*ip++ = b;
       *ip++ = b;
       *ip++ = b;

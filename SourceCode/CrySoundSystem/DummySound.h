@@ -40,7 +40,7 @@ public:
 	const char* GetName() { return "dummy sound"; }
 	const int GetId() { return 0; }
 	void	SetLoopMode(bool bLoop) {}
-	unsigned int GetCurrentSamplePos() { return 0; }
+	uint GetCurrentSamplePos() { return 0; }
 	void	SetPitching(float fPitching) {}
 	void	SetBaseFrequency(int nFreq) {}
 	int		GetBaseFrequency(int nFreq) { return 44100; }
@@ -56,7 +56,7 @@ public:
 	void	SetLooping(bool bLooping) {}
 	void	AddToScaleGroup(int nGroup) {}
 	void	RemoveFromScaleGroup(int nGroup) {}
-	void	SetScaleGroup(unsigned int nGroupBits) {}
+	void	SetScaleGroup(uint nGroupBits) {}
 	int		GetFrequency() { return (0); }
 	void	SetPitch(int nValue) {}
 	void	SetPan(int nPan) {}
@@ -72,7 +72,7 @@ public:
 	void    SetLoopPoints(const int iLoopStart, const int iLoopEnd) { };
 	bool    IsRelative() const { return false; };
 	bool	RegisterInIndoor() { return(false); };
-	void	SetSoundPriority(unsigned char nSoundPriority) {};
+	void	SetSoundPriority(uchar nSoundPriority) {};
 	bool  Preload() { return true; }
 	// Sets certain sound properties  
 	void SetSoundProperties(float fFadingValue) {};
@@ -91,9 +91,9 @@ public:
 	void	FXSetParamEQ(float fCenter, float fBandwidth, float fGain) {}
 
 	//! retrieves the currently played sample-pos, in milliseconds or bytes
-	unsigned int GetCurrentSamplePos(bool bMilliSeconds = false) { return (0); }
+	uint GetCurrentSamplePos(bool bMilliSeconds = false) { return (0); }
 	//! set the currently played sample-pos in bytes or milliseconds
-	void SetCurrentSamplePos(unsigned int nPos, bool bMilliSeconds) {}
+	void SetCurrentSamplePos(uint nPos, bool bMilliSeconds) {}
 
 	//! returns the size of the stream in ms
 	int GetLengthMs() { return(0); }
@@ -131,7 +131,7 @@ public:
 	ISound*		LoadSound(const char* szFile, int nFlags) { return &m_sndDummy; }
 	void		RemoveSound(int nSoundID) {}
 	ISound*		GetSound(int nSoundID) { return &m_sndDummy; }
-	void		SetMasterVolume(unsigned char nVol) { }
+	void		SetMasterVolume(uchar nVol) { }
 	void		SetMasterVolumeScale(float fScale, bool bForceRecalc = false) {}
 	void		AddSoundFlags(int nSoundID, int nFlags) {}
 

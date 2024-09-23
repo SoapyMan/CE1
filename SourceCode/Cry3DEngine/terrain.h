@@ -109,7 +109,7 @@ public:
 // HM data
 class CHighMap : public Cry3DEngineBase
 {
-	Array2d<unsigned short> m_arrusHightMapData;
+	Array2d<ushort> m_arrusHightMapData;
 
 public:
 	// Access to hmap data
@@ -125,7 +125,7 @@ public:
 	float GetZApr(const float x1, const float y1);
 	bool GetHole(const int& x, const int& y) { return (m_arrusHightMapData[(x + HMAP_BIT_SHIFT) >> HMAP_BIT_SHIFT][(y + HMAP_BIT_SHIFT) >> HMAP_BIT_SHIFT] & STYPE_BIT_MASK) == STYPE_HOLE; }
 	bool GetHoleSafe(const int& x, const int& y);
-	inline unsigned short& GetHMValue(const int& x, const int& y) { return m_arrusHightMapData[x >> HMAP_BIT_SHIFT][y >> HMAP_BIT_SHIFT]; }
+	inline ushort& GetHMValue(const int& x, const int& y) { return m_arrusHightMapData[x >> HMAP_BIT_SHIFT][y >> HMAP_BIT_SHIFT]; }
 	void SetLightValue(const int x, const int y, const bool bValue);
 	bool IntersectWithSector(Vec3d vStartPoint, Vec3d vStopPoint, float fDist, int nMaxTestsToScip);
 	bool IsPointOccludedByTerrain(const Vec3d& _vPoint, float fDist, const Vec3d& vCamPos, int nMaxTestsToScip);
@@ -212,7 +212,7 @@ public:
 
 	float GetWaterLevel() { return m_fGlobalWaterLevel;/* ? m_fGlobalWaterLevel : WATER_LEVEL_UNKNOWN;*/ }
 
-	unsigned char m_ucTerrainFrame;
+	uchar m_ucTerrainFrame;
 	int  m_nUploadsInFrame;
 	int RenderEntitiesOutOfTheMap(CObjManager* pObjManager);
 	int RenderTerrainWater(bool bRenderShore);
@@ -281,8 +281,8 @@ public:
 
 	IShader* m_pSHShore;
 
-	void MergeLowResTerrainSectorIndices(list2<unsigned short>* pIndices);
-	void MergeReflectedTerrainSectorIndices(list2<unsigned short>* pIndices);
+	void MergeLowResTerrainSectorIndices(list2<ushort>* pIndices);
+	void MergeReflectedTerrainSectorIndices(list2<ushort>* pIndices);
 	void ResetDLightMaskInSectors();
 
 	list2<struct_VERTEX_FORMAT_P3F_N_COL4UB_COL4UB> m_lstSectorVertArray;
@@ -299,7 +299,7 @@ public:
 	float m_fShoreSize;
 
 	void InitBeaches(bool bEditorMode);
-	//  void SetTerainSectorTexture(int nSectorOroginX, int nSectorOroginY, unsigned char * pTexData, int nSizeOffTexData);
+	//  void SetTerainSectorTexture(int nSectorOroginX, int nSectorOroginY, uchar * pTexData, int nSizeOffTexData);
 	void SetDetailTextures(int nId, const char* szFileName, float fScaleX, float fScaleY, uchar ucProjAxis, const char* szSurfName);
 	void SetCBuffer(class CCoverageBuffer* pBuffer) { m_pCoverageBuffer = pBuffer; };
 	void RenderReflectedTerrain();
@@ -325,7 +325,7 @@ protected:
 
 	CLeafBuffer* m_pLowResTerrainLeafBuffer, * m_pReflectedTerrainLeafBuffer;
 	int m_nLowResTerrainVertCount;
-	list2<unsigned short> m_lstLowResTerrainIdxArray, m_lstReflectedTerrainIdxArray;
+	list2<ushort> m_lstLowResTerrainIdxArray, m_lstReflectedTerrainIdxArray;
 	IShader* m_pLowResTerrainShader;
 	void RenderLowResTerrain();
 	float m_arrLowResTerrainShaderCustomData[8];
@@ -359,7 +359,7 @@ public:
 	// low res terrain with smoothed under water areas
 	void MakeUnderWaterSmoothHMap(int nWaterUnitSize);
 	ushort* GetUnderWaterSmoothHMap(int& nDimensions);
-	Array2d<unsigned short> m_arrusUnderWaterSmoothHMap;
+	Array2d<ushort> m_arrusUnderWaterSmoothHMap;
 
 	//  int RenderStaticObjects(CObjManager * pObjManager);
 	bool RenderAreaLeafBuffers(Vec3d vPos, float fRadius, int nDynLMask,

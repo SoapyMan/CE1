@@ -22,7 +22,7 @@ enum rentity_flags_int {
 	ref_contact_overflow = 0x4000000
 };
 
-//typedef unsigned int masktype;
+//typedef uint masktype;
 //#define getmask(i) (1u<<(i))
 //const int NMASKBITS = 32;
 
@@ -31,14 +31,14 @@ enum constr_info_flags { constraint_limited_1axis = 1, constraint_limited_2axes 
 struct constraint_info {
 	quaternionf qframe_rel[2];
 	float limits[2];
-	unsigned int flags;
+	uint flags;
 	CPhysicalEntity* pConstraintEnt;
 	int bActive;
 };
 
 struct checksum_item {
 	int iPhysTime;
-	unsigned int checksum;
+	uint checksum;
 };
 const int NCHECKSUMS = 32;
 
@@ -73,7 +73,7 @@ public:
 	virtual int GetStateSnapshot(class CStream& stm, float time_back = 0, int flags = 0);
 	virtual int SetStateFromSnapshot(class CStream& stm, int flags = 0);
 	virtual int PostSetStateFromSnapshot();
-	virtual unsigned int GetStateChecksum();
+	virtual uint GetStateChecksum();
 	int WriteContacts(CStream& stm, int flags);
 	int ReadContacts(CStream& stm, int flags);
 
@@ -126,7 +126,7 @@ public:
 	int m_bJustLoaded;
 	int m_bStable;
 	int m_bHadSeverePenetration;
-	unsigned int m_nRestMask;
+	uint m_nRestMask;
 	int m_nPrevColliders;
 	int m_bSteppedBack, m_nStepBackCount;
 	float m_velFastDir, m_sizeFastDir;

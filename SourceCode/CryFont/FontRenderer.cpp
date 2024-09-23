@@ -54,7 +54,7 @@ int CFontRenderer::LoadFromFile(const string& szFileName)
 }
 
 //------------------------------------------------------------------------------------------------- 
-int CFontRenderer::LoadFromMemory(unsigned char* pBuffer, int iBufferSize)
+int CFontRenderer::LoadFromMemory(uchar* pBuffer, int iBufferSize)
 {
 	FT_Error iError = FT_Init_FreeType(&m_pLibrary);
 	if (iError)
@@ -220,14 +220,14 @@ int CFontRenderer::GetGlyph(CGlyphBitmap* pGlyphBitmap, int* iGlyphWidth, int* i
 		*iGlyphHeight = (glyph->metrics.height >> 6);
 
 	const int iTopOffset = (m_iGlyphBitmapHeight - (int)(m_iGlyphBitmapHeight * m_fSizeRatio)) + glyph->bitmap_top;
-	unsigned char* pBuffer = pGlyphBitmap->GetBuffer();
+	uchar* pBuffer = pGlyphBitmap->GetBuffer();
 
 	for (int i = 0; i < glyph->bitmap.rows; i++)
 	{
 		const int iNewY = i + (iY + m_iGlyphBitmapHeight - iTopOffset);
 		for (int j = 0; j < glyph->bitmap.width; j++)
 		{
-			const unsigned char cColor = glyph->bitmap.buffer[(i * glyph->bitmap.width) + j];
+			const uchar cColor = glyph->bitmap.buffer[(i * glyph->bitmap.width) + j];
 			const int iOffset = iNewY * m_iGlyphBitmapWidth + iX + j;
 
 			if ((iOffset >= m_iGlyphBitmapWidth * m_iGlyphBitmapHeight) || (iOffset < 0))

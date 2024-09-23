@@ -105,8 +105,8 @@ private:
 	//Keyboard's ID 
 	int m_KeyboardNumber;
 
-	unsigned char ASCIPRESSED[255];
-	unsigned char ASCIPRESSEDOLD[255];
+	uchar ASCIPRESSED[255];
+	uchar ASCIPRESSEDOLD[255];
 
 	//Just one key pressed a time (as the PC version) to be updated
 	char m_KeyPressedName;
@@ -139,7 +139,7 @@ private:
 
 	ICVar* m_cvBufferedKeys;
 
-	unsigned char	m_Keys[256], m_oldKeys[256];
+	uchar	m_Keys[256], m_oldKeys[256];
 	int				m_KeyTable[256];
 	bool			m_exmode;
 

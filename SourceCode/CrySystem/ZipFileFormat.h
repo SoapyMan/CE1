@@ -12,9 +12,6 @@
 
 namespace ZipFile
 {
-	typedef unsigned int ulong;
-	typedef unsigned short ushort;
-
 	// General-purpose bit field flags
 	enum {
 		GPF_ENCRYPTED = 1, // If set, indicates that the file is encrypted.

@@ -59,7 +59,7 @@ public:
 	float m_fMaxZ, m_fMidZ, m_fMinZ;  // sector bounds
 	uchar m_cGeometryMML, m_cTextureMML, m_cNewTextMML; // calculated lods
 	uchar m_bGroundVisible; // for finer occlusion
-	unsigned int m_nTextureID, m_nLowLodTextureID; // curr texture id and always loaded low lod texture id
+	uint m_nTextureID, m_nLowLodTextureID; // curr texture id and always loaded low lod texture id
 	int m_cLastTimeUsed, m_cLastTimeRendered; // unload sector after x sec of not in use
 	bool m_bAllStaticsInFrustum;  // entire sector is visible, but maybe not dynamics
 	OcclusionTestClient m_OcclusionTestClient;
@@ -88,11 +88,11 @@ protected:
 
 	struct CArrayInfo
 	{
-		list2<CStripInfo> strip_info; list2<unsigned short> idx_array;
+		list2<CStripInfo> strip_info; list2<ushort> idx_array;
 		inline void Clear() { strip_info.Clear(); idx_array.Clear(); }
 		inline void AddIndex(int _x, int _y, int _step)
 		{
-			unsigned short id = _x / _step * (CTerrain::GetSectorSize() / _step + 1) + _y / _step;
+			ushort id = _x / _step * (CTerrain::GetSectorSize() / _step + 1) + _y / _step;
 			idx_array.Add(id);
 		}
 
@@ -142,7 +142,7 @@ public:
 
 	struct VolumeInfo* m_pFogVolume;
 
-	list2<unsigned short> m_lstLowResTerrainIdxArray[2];
+	list2<ushort> m_lstLowResTerrainIdxArray[2];
 	uint m_nLowResTerrainIdxRange[2][2]; // for dx optimizations
 	void AddLowResSectorIndex(int _x, int _y, int _step, int _lod);
 

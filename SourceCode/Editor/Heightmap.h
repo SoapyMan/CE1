@@ -113,9 +113,9 @@ public:
 
 	bool GetPreviewBitmap( DWORD *pBitmapData,int width,bool bSmooth = true, bool bNoise = true);
 
-	unsigned char& InfoAt( int x,int y ) { return m_info.ValueAt(x,y); };
-	const unsigned char& InfoAt( int x,int y ) const { return m_info.ValueAt(x,y); };
-	unsigned char* GetInfoData() { return m_info.GetData(); };
+	uchar& InfoAt( int x,int y ) { return m_info.ValueAt(x,y); };
+	const uchar& InfoAt( int x,int y ) const { return m_info.ValueAt(x,y); };
+	uchar* GetInfoData() { return m_info.GetData(); };
 
 	// Hold / fetch
 	void Fetch();
@@ -168,7 +168,7 @@ public:
 	void ClearLightingBit();
 
 	// Drawing
-	void DrawSpot(unsigned long iX, unsigned long iY, 
+	void DrawSpot(ulong iX, ulong iY, 
 		uint8 iWidth, float fAddVal, float fSetToHeight = -1.0f,
 		bool bAddNoise = false);
 
@@ -201,7 +201,7 @@ public:
 	};
 
 	//! Copy from different heightmap data.
-	void CopyFrom( t_hmap *pHmap,unsigned char *pInfo,int resolution );
+	void CopyFrom( t_hmap *pHmap,uchar *pInfo,int resolution );
 
 	//! Dump to log sizes of all layers.
 	//! @return Total size allocated for layers.

@@ -680,7 +680,7 @@ bool CryModelGeometryLoader::loadBoneMesh(const CHUNK_HEADER& chunkHeader, const
 		points.reinit(GeomInfo.numVertices());
 		TElementaryArray<int> indices("CryModelGeometryLoader::loadBoneMesh.indices");
 		indices.reinit(GeomInfo.numFaces() * 3);
-		TElementaryArray<unsigned char> pmats("CryModelGeometryLoader::loadBoneMesh.pmats");
+		TElementaryArray<uchar> pmats("CryModelGeometryLoader::loadBoneMesh.pmats");
 		pmats.reinit(GeomInfo.numFaces());
 
 		unsigned j, k;

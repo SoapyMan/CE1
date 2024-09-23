@@ -618,7 +618,7 @@ int CXPuppetProxy::Update(SOBJECTSTATE *state)
 }
 
 
-bool CXPuppetProxy::QueryProxy(unsigned char type, void **pProxy)
+bool CXPuppetProxy::QueryProxy(uchar type, void **pProxy)
 {
 	if (type == AIPROXY_PUPPET)
 	{
@@ -938,7 +938,7 @@ void CXPuppetProxy::OnEndAnimation(const char *sAnimation)
 	
 }
 
-bool CXPuppetProxy::CheckStatus(unsigned char status) 
+bool CXPuppetProxy::CheckStatus(uchar status) 
 { 
 	switch( status ){
 		case AIPROXYSTATUS_INVEHICLE:

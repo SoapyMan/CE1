@@ -227,7 +227,7 @@ void CTerrainTexture::ReloadLayerList()
 	// Fill the layer list box with the data from the document
 	////////////////////////////////////////////////////////////////////////
 
-	unsigned int i;
+	uint i;
 	int iIndex;
 
 	CLogFile::WriteLine("Retrieving layer data from document...");
@@ -643,7 +643,7 @@ void CTerrainTexture::DrawLayerPreview( LPRECT rcPos, CDC *pDC )
 			m_bMaskPreviewValid = true;
 			
 			int w = FINAL_TEX_PREVIEW_PRECISION_CX;
-			unsigned char *pLayerData = mask->GetData();
+			uchar *pLayerData = mask->GetData();
 
 			CImage previewData;
 			previewData.Allocate( w,w );

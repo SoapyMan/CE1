@@ -167,7 +167,7 @@ void CTerrain::MakeUnderWaterSmoothHMap(int nWaterUnitSize)
 	// blur underwater terrain
 	for (int nPass = 0; nPass < 2; nPass++)
 	{
-		Array2d<unsigned short> arrusTemp;
+		Array2d<ushort> arrusTemp;
 		arrusTemp = m_arrusUnderWaterSmoothHMap;
 
 		int nDim = nSize - 2;

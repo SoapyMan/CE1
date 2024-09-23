@@ -68,11 +68,11 @@ public:
 	bool RemoveStringFromRegistry(const string& szKeyName, const string& szValueName);
 	bool IsValueOnRegistry(const string& szKeyName, const string& szValueName);
 
-	bool EncryptString(unsigned char* szOut, const unsigned char* szIn);
-	bool DecryptString(unsigned char* szOut, const unsigned char* szIn);
+	bool EncryptString(uchar* szOut, const uchar* szIn);
+	bool DecryptString(uchar* szOut, const uchar* szIn);
 
-	bool EncodeHex(unsigned char* szOut, const unsigned char* szIn);
-	bool DecodeHex(unsigned char* szOut, const unsigned char* szIn);
+	bool EncodeHex(uchar* szOut, const uchar* szIn);
+	bool DecodeHex(uchar* szOut, const uchar* szIn);
 
 	//! establish the connection to the script object (call this only once)
 	//! \param inpObject must not be 0
@@ -141,16 +141,16 @@ public:
 	void Server_CheckCDKeys(bool bCheck) { m_bCheckCDKeys = bCheck; };
 
 	// create the server on the Game Service
-	bool Server_CreateServer(const char* szServerName, unsigned int uiMaxPlayer);
+	bool Server_CreateServer(const char* szServerName, uint uiMaxPlayer);
 
 	// set the connection to the server
-	void Server_SetGamePort(unsigned short usGamePort);
+	void Server_SetGamePort(ushort usGamePort);
 
 	// create the server on the Game Service
 	bool Server_RecreateServer();
 
 	// Update settings on the Game Service
-	bool Server_UpdateServer(unsigned int uiMaxPlayers, unsigned short usPort);
+	bool Server_UpdateServer(uint uiMaxPlayers, ushort usPort);
 
 	// Remove the server from Game Service
 	bool Server_DestroyServer();
@@ -172,7 +172,7 @@ public:
 	void Client_GameServer(int iLobbyID, int iRoomID, const char* szServerName, const char* szIPAddress,
 		const char* szLANIPAddress, int iMaxPlayers, int iNumPlayers);
 	void Client_RequestFinished();
-	void Client_JoinGameServerSuccess(const char* szIPAddress, const char* szLanIPAddress, unsigned short usPort);
+	void Client_JoinGameServerSuccess(const char* szIPAddress, const char* szLanIPAddress, ushort usPort);
 	void Client_JoinGameServerFail(const char* szText);
 	void Client_CreateAccountSuccess();
 	void Client_CreateAccountFail(const char* szText);
@@ -215,8 +215,8 @@ private: // -----------------------------------------------------------------
 	// Helper function to download gs.ini file from internet
 	bool DownloadGSini(const char* szUsername);
 	// Helper function to parse gs.ini file
-	bool GetRouterAddress(int iIndex, char* szIPAddress, unsigned short* pusClientPort,
-		unsigned short* pusRegServerPort);
+	bool GetRouterAddress(int iIndex, char* szIPAddress, ushort* pusClientPort,
+		ushort* pusRegServerPort);
 
 	void RegServerDisconnected();
 	void MSClientDisconnected();
@@ -225,7 +225,7 @@ private: // -----------------------------------------------------------------
 
 	//CD Key methods
 	bool InitCDKeySystem();
-	bool GetCDKeyServerAddress(int iIndex, char* szIPAddress, unsigned short* pusPort);
+	bool GetCDKeyServerAddress(int iIndex, char* szIPAddress, ushort* pusPort);
 
 	// Save a clients Authoriziation ID
 	bool AddAuthorizedID(BYTE bPlayerID, const CDKeyIDVector& stAuthorizationID);
@@ -246,7 +246,7 @@ private: // -----------------------------------------------------------------
 	bool CDKey_Error(GSushort usError);
 
 	//Helper functions for Authorization IDs
-	void CopyIDToVector(CDKeyIDVector& stVector, const GSubyte* pubArray, unsigned int uiSize);
+	void CopyIDToVector(CDKeyIDVector& stVector, const GSubyte* pubArray, uint uiSize);
 	void CopyIDToString(const CDKeyIDVector& stVector, string& strString);
 
 
@@ -338,8 +338,8 @@ private: // -----------------------------------------------------------------
 
 	// These are the settings to use when creating the game server
 	string																	m_strGameServerName;	//!<
-	unsigned int														m_uiMaxPlayers;				//!<
-	unsigned short													m_usGamePort;					//!<
+	uint														m_uiMaxPlayers;				//!<
+	ushort													m_usGamePort;					//!<
 
 	int 																		m_iJoinedLobbyID;			//!< The id of the lobby we joined
 	int 																		m_iJoinedRoomID;			//!< The id of the room we joined

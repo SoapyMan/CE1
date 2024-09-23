@@ -38,7 +38,7 @@ CXEntityProcessingCmd::~CXEntityProcessingCmd()
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CXEntityProcessingCmd::AddAction(unsigned int nFlags)
+void CXEntityProcessingCmd::AddAction(uint nFlags)
 {
 	int nSlot=nFlags/32;
 
@@ -46,7 +46,7 @@ void CXEntityProcessingCmd::AddAction(unsigned int nFlags)
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CXEntityProcessingCmd::RemoveAction(unsigned int nFlags)
+void CXEntityProcessingCmd::RemoveAction(uint nFlags)
 {
 	int nSlot=nFlags/32;
 	m_nActionFlags[nSlot] &= ~(1<<(nFlags-1&31));
@@ -54,7 +54,7 @@ void CXEntityProcessingCmd::RemoveAction(unsigned int nFlags)
 }
 
 //////////////////////////////////////////////////////////////////////////
-bool CXEntityProcessingCmd::CheckAction(unsigned int nFlags)
+bool CXEntityProcessingCmd::CheckAction(uint nFlags)
 {
 	int nSlot=nFlags/32;
 	return (m_nActionFlags[nSlot] & (1<<(nFlags-1&31)))?true:false;
@@ -80,9 +80,9 @@ void CXEntityProcessingCmd::SetDeltaAngles( const Vec3d &ang )
 {
 #ifndef NO_QUANTIZED_ANGLES
 	Ang3d q=ang;
-	unsigned short x=(q.x*0xFFFF/360);
-	unsigned short y=(q.y*0xFFFF/360);
-	unsigned short z=(q.z*0xFFFF/360);
+	ushort x=(q.x*0xFFFF/360);
+	ushort y=(q.y*0xFFFF/360);
+	ushort z=(q.z*0xFFFF/360);
 	m_vDeltaAngles.x=((float)x*360)/0xFFFF;
 	m_vDeltaAngles.y=((float)y*360)/0xFFFF;
 	m_vDeltaAngles.z=((float)z*360)/0xFFFF;
@@ -94,7 +94,7 @@ void CXEntityProcessingCmd::SetDeltaAngles( const Vec3d &ang )
 //////////////////////////////////////////////////////////////////////////
 bool CXEntityProcessingCmd::Write( CStream &stm, IBitStream *pBitStream, bool bWriteAngles )
 {
-	if(!stm.WritePacked((unsigned int)m_iPhysicalTime))
+	if(!stm.WritePacked((uint)m_iPhysicalTime))
 		return false;
 
 	if(!stm.WritePacked(m_nActionFlags[0]))
@@ -126,7 +126,7 @@ bool CXEntityProcessingCmd::Write( CStream &stm, IBitStream *pBitStream, bool bW
 	else
 		stm.Write(false);
 
-	unsigned char i,nSameSlices;
+	uchar i,nSameSlices;
 	stm.Write(m_nTimeSlices);
 
 	for(i=0,nSameSlices=1;i<m_nTimeSlices;i++) 
@@ -146,7 +146,7 @@ bool CXEntityProcessingCmd::Write( CStream &stm, IBitStream *pBitStream, bool bW
 //////////////////////////////////////////////////////////////////////////
 bool CXEntityProcessingCmd::Read( CStream &stm, IBitStream *pBitStream )
 {
-	if(!stm.ReadPacked((unsigned int&)m_iPhysicalTime))
+	if(!stm.ReadPacked((uint&)m_iPhysicalTime))
 		return false;
 
 	if(!stm.ReadPacked(m_nActionFlags[0]))
@@ -182,7 +182,7 @@ bool CXEntityProcessingCmd::Read( CStream &stm, IBitStream *pBitStream )
 	}
 
 	float fCurSlice;
-	unsigned char nSlices,nSameSlices,i;
+	uchar nSlices,nSameSlices,i;
 	const int nMaxSlices = sizeof(m_fTimeSlices)/sizeof(m_fTimeSlices[0]);
 	for(stm.Read(nSlices),m_nTimeSlices=0; nSlices>0 && m_nTimeSlices<nMaxSlices; nSlices-=nSameSlices)
 	{

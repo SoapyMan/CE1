@@ -25,7 +25,7 @@ public:
 	int Update(SOBJECTSTATE *state);
 	void Release() { delete this; }
 
-	bool QueryProxy(unsigned char type, void **pProxy);
+	bool QueryProxy(uchar type, void **pProxy);
 	void GetDimensions(int bodypos, float &eye_height, float &height) { return; }
 	bool CustomUpdate(Vec3d& pos, Vec3d& angle) {return false;}
 	void Reset() { return; }
@@ -35,14 +35,14 @@ public:
 		return m_pEntity->GetPhysics();
 	}
 
-	bool CheckStatus(unsigned char status) { return false; }
+	bool CheckStatus(uchar status) { return false; }
 
 	void SetSignalFunc(HSCRIPTFUNCTION pFunc);
 	void SetBehaviourFunc(HSCRIPTFUNCTION pFunc);
 	void SetMotorFunc(HSCRIPTFUNCTION pFunc);
 
 	void SetSpeeds(float fwd, float bkw=-1);
-	void SetType( unsigned short	type ) { m_Type = type; }
+	void SetType( ushort	type ) { m_Type = type; }
 
 	Vec3d	UpdateThreat( void* threat );
 	void	SetMinAltitude( float minAlt ) { m_MinAltitude = minAlt; }
@@ -89,7 +89,7 @@ private:
 	CVehicle	*m_pVehicle;
 
 
-	unsigned short	m_Type;
+	ushort	m_Type;
 
 	_HScriptFunction	m_hBehaviourFunc;
 	_HScriptFunction	m_hMotorFunc;

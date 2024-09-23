@@ -57,14 +57,14 @@ void CSimpleStatObj::CompactPosBuffer(Vec3d* _vbuff, int* _vcount, list2<int>* p
 
 	for (uint v = 0; v < (uint)(*_vcount); v++)
 	{
-		list2<int>* pHash = &pos_hash_table[(unsigned char)(_vbuff[v].x * 100)];//[(unsigned char)(_vbuff[v].y*100)];
+		list2<int>* pHash = &pos_hash_table[(uchar)(_vbuff[v].x * 100)];//[(uchar)(_vbuff[v].y*100)];
 		int find = FindInPosBuffer(_vbuff[v], tmp_buff, tmp_count, pHash);
 		if (find < 0)
 		{
 			tmp_buff[tmp_count] = _vbuff[v];
 			pindices->Add(tmp_count);
 
-			pos_hash_table[(unsigned char)(_vbuff[v].x * 100)]/*[(unsigned char)(_vbuff[v].y*100)]*/.Add(tmp_count);
+			pos_hash_table[(uchar)(_vbuff[v].x * 100)]/*[(uchar)(_vbuff[v].y*100)]*/.Add(tmp_count);
 
 			tmp_count++;
 		}
@@ -143,7 +143,7 @@ void CSimpleStatObj::Physicalize()
 	for (int nMesh = 0; nMesh <= 2; nMesh++)
 	{ // fill physics indices
 		list2<int> lstPhysIndices;
-		list2<unsigned char> lstFaceMaterials;
+		list2<uchar> lstFaceMaterials;
 
 		if (nMesh == MESH_PHYSIC)
 		{ // find all physicalized faces
@@ -155,7 +155,7 @@ void CSimpleStatObj::Physicalize()
 					for (int v = 0; v < 3; v++)
 						lstPhysIndices.Add(m_pTriData->m_pFaces[i].v[v]);
 
-					lstFaceMaterials.Add((unsigned char)m_pTriData->m_pFaces[i].shader_id);
+					lstFaceMaterials.Add((uchar)m_pTriData->m_pFaces[i].shader_id);
 
 					if (m_pTriData->m_pFaces[i].shader_id == nPhysMatID)
 					{ // remove face from list (it's not needed for rendering)
@@ -179,7 +179,7 @@ void CSimpleStatObj::Physicalize()
 						for (int v = 0; v < 3; v++)
 							lstPhysIndices.Add(m_pTriData->m_pFaces[i].v[v]);
 
-						lstFaceMaterials.Add((unsigned char)m_pTriData->m_pFaces[i].shader_id);
+						lstFaceMaterials.Add((uchar)m_pTriData->m_pFaces[i].shader_id);
 
 						if (m_pTriData->m_pFaces[i].shader_id == nObstrMatID)
 						{	// remove face from list (it's not needed for rendering)
@@ -203,7 +203,7 @@ void CSimpleStatObj::Physicalize()
 						for (int v = 0; v < 3; v++)
 							lstPhysIndices.Add(m_pTriData->m_pFaces[i].v[v]);
 
-						lstFaceMaterials.Add((unsigned char)m_pTriData->m_pFaces[i].shader_id);
+						lstFaceMaterials.Add((uchar)m_pTriData->m_pFaces[i].shader_id);
 
 						// remove face from list (it's not needed for rendering)
 						if (m_pTriData->m_nFaceCount > 1)

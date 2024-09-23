@@ -39,7 +39,7 @@ public:
 	int m_nGridThunksAlloc : 16;
 
 	CPhysicalPlaceholder* m_pEntBuddy;
-	unsigned int m_bProcessed : 1;
+	uint m_bProcessed : 1;
 	int m_id : 23;
 	int m_iSimClass : 8;
 
@@ -63,7 +63,7 @@ public:
 	virtual int PostSetStateFromSnapshot();
 	virtual int GetStateSnapshotTxt(char* txtbuf, int szbuf, float time_back = 0);
 	virtual void SetStateFromSnapshotTxt(const char* txtbuf, int szbuf);
-	virtual unsigned int GetStateChecksum();
+	virtual uint GetStateChecksum();
 
 	virtual void StartStep(float time_interval);
 	virtual int Step(float time_interval);

@@ -97,10 +97,10 @@ class CGLRenderer : public CRenderer
 	friend class CREOcean;
 
 	char m_LibName[64];
-	const unsigned char* m_VendorName;
-	const unsigned char* m_RendererName;
-	const unsigned char* m_VersionName;
-	const unsigned char* m_ExtensionsName;
+	const uchar* m_VendorName;
+	const uchar* m_RendererName;
+	const uchar* m_VersionName;
+	const uchar* m_ExtensionsName;
 
 	HANDLE m_hLibHandle;
 	HANDLE m_hLibHandleGDI;
@@ -127,9 +127,9 @@ public:
 	~CGLRenderer();
 
 #ifndef PS2	
-	virtual WIN_HWND Init(int x, int y, int width, int height, unsigned int cbpp, int zbpp, int sbits, bool fullscreen, WIN_HINSTANCE hinst, WIN_HWND Glhwnd = 0, WIN_HDC Glhdc = 0, WIN_HGLRC hGLrc = 0, bool bReInit = false);
+	virtual WIN_HWND Init(int x, int y, int width, int height, uint cbpp, int zbpp, int sbits, bool fullscreen, WIN_HINSTANCE hinst, WIN_HWND Glhwnd = 0, WIN_HDC Glhdc = 0, WIN_HGLRC hGLrc = 0, bool bReInit = false);
 #else //PS2
-	virtual bool Init(int x, int y, int width, int height, unsigned int cbpp, int zbpp, int sbits, bool fullscreen, bool bReInit = false);
+	virtual bool Init(int x, int y, int width, int height, uint cbpp, int zbpp, int sbits, bool fullscreen, bool bReInit = false);
 #endif  //endif	
 	virtual bool SetCurrentContext(WIN_HWND hWnd);
 	virtual bool CreateContext(WIN_HWND hWnd, bool bAllowFSAA = false);
@@ -162,9 +162,9 @@ public:
 	virtual bool	ChangeResolution(int nNewWidth, int nNewHeight, int nNewColDepth, int nNewRefreshHZ, bool bFullScreen, bool bVSync);
 	virtual void	Reset(void) {};
 #ifdef USE_SDL
-	SDL_Window* SetMode(int x, int y, int width, int height, unsigned int cbpp, int zbpp, int sbits, bool fullscreen, HINSTANCE hinst, HWND Glhwnd);
+	SDL_Window* SetMode(int x, int y, int width, int height, uint cbpp, int zbpp, int sbits, bool fullscreen, HINSTANCE hinst, HWND Glhwnd);
 #else
-	HWND  SetMode(int x, int y, int width, int height, unsigned int cbpp, int zbpp, int sbits, bool fullscreen, HINSTANCE hinst, HWND Glhwnd);
+	HWND  SetMode(int x, int y, int width, int height, uint cbpp, int zbpp, int sbits, bool fullscreen, HINSTANCE hinst, HWND Glhwnd);
 #endif
 	bool  CheckOGLExtensions();
 	void  GLSetDefaultState();
@@ -234,18 +234,18 @@ public:
 	void	SetViewport(int x = 0, int y = 0, int width = 0, int height = 0);
 	void	SetScissor(int x = 0, int y = 0, int width = 0, int height = 0);
 
-	virtual bool	ChangeDisplay(unsigned int width, unsigned int height, unsigned int cbpp);
-	virtual void  ChangeViewport(unsigned int x, unsigned int y, unsigned int width, unsigned int height);
+	virtual bool	ChangeDisplay(uint width, uint height, uint cbpp);
+	virtual void  ChangeViewport(uint x, uint y, uint width, uint height);
 
-	virtual unsigned int DownLoadToVideoMemory(unsigned char* data, int w, int h, ETEX_Format eTFSrc, ETEX_Format eTFDst, int nummipmap, bool repeat = true, int filter = FILTER_BILINEAR, int Id = 0, char* szCacheName = nullptr, int flags = 0);
-	virtual void UpdateTextureInVideoMemory(uint tid, unsigned char* data, int posx, int posy, int w, int h, ETEX_Format eTF = eTF_0888);
+	virtual uint DownLoadToVideoMemory(uchar* data, int w, int h, ETEX_Format eTFSrc, ETEX_Format eTFDst, int nummipmap, bool repeat = true, int filter = FILTER_BILINEAR, int Id = 0, char* szCacheName = nullptr, int flags = 0);
+	virtual void UpdateTextureInVideoMemory(uint tid, uchar* data, int posx, int posy, int w, int h, ETEX_Format eTF = eTF_0888);
 
 	//  CImage *TryLoadImage(const char *szFilename);
 	//	void	RemoveTexture(CImage *image);
-	void	RemoveTexture(unsigned int TextureId);
+	void	RemoveTexture(uint TextureId);
 	void  RemoveTexture(ITexPic* pTexPic);
 
-	unsigned int LoadTexture(const char* filename, int* tex_type = nullptr, unsigned int def_tid = 0, bool compresstodisk = true, bool bWarn = true);
+	uint LoadTexture(const char* filename, int* tex_type = nullptr, uint def_tid = 0, bool compresstodisk = true, bool bWarn = true);
 
 	virtual void	SetTexture(int tnum, ETexType eTT = eTT_Base);
 
@@ -298,7 +298,7 @@ public:
 
 	void ClearDepthBuffer();
 	void ClearColorBuffer(const Vec3d vColor);
-	void ReadFrameBuffer(unsigned char* pRGB, int nSizeX, int nSizeY, bool bBackBuffer, bool bRGBA, int nScaledX = -1, int nScaledY = -1);
+	void ReadFrameBuffer(uchar* pRGB, int nSizeX, int nSizeY, bool bBackBuffer, bool bRGBA, int nScaledX = -1, int nScaledY = -1);
 
 	void DrawTransparentQuad2D(float color);
 
@@ -336,13 +336,13 @@ public:
 	virtual void FontReleaseTexture(class CFBitmap* pBmp);
 	void FontSetTexture(class CFBitmap*, int nFilterMode);
 	virtual void FontSetTexture(int nTexId, int nFilterMode);
-	void FontSetRenderingState(unsigned long nVirtualScreenWidth, unsigned long nVirtualScreenHeight);
+	void FontSetRenderingState(ulong nVirtualScreenWidth, ulong nVirtualScreenHeight);
 	void FontSetBlending(int src, int dst);
 	void FontRestoreRenderingState();
 
 private:
 
-	bool	SetupPixelFormat(unsigned char colorbits, unsigned char zbits, unsigned char sbits, SRendContext* rc);
+	bool	SetupPixelFormat(uchar colorbits, uchar zbits, uchar sbits, SRendContext* rc);
 	void	Print(CXFont* currfont, float x, float y, const char* buf, float xscale, float yscale, float r, float g, float b, float a = 1.f);
 	void	CheckGLError(const char* comment) { CheckError(comment); };
 	int   _wglExtensionSupported(const char* extension);
@@ -367,7 +367,7 @@ private:
 	void  GenerateVBLog(const char* szName);
 
 	int		m_pip_buffer_size /*m_pip_water_level*/, m_var_valid;
-	unsigned char* m_AGPbuf;
+	uchar* m_AGPbuf;
 	struct alloc_info_struct { void* ptr; int bytes_num; bool busy; const char* szSource; };
 	list2<alloc_info_struct> m_alloc_info;
 
@@ -378,8 +378,8 @@ private:
 	struct ShadowMapTexInfo
 	{
 		ShadowMapTexInfo() { nTexId = 0; pOwner = 0; nLastFrameID = -1; nTexSize = 0; dwFlags = 0; }
-		unsigned int nTexId;
-		unsigned int nTexIdTemp;
+		uint nTexId;
+		uint nTexIdTemp;
 		IEntityRender* pOwner;
 		IStatObj* pOwnerGroup;
 		int dwFlags;

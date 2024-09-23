@@ -63,7 +63,7 @@ public:
 	void render(CCObject* pObj);
 
 	void assignMaterial(unsigned nMaterial, IShader* pShader, int nTextureId, int nFirstIndex, int numIndices, int nFirstVertex, int numVertices);
-	void updateIndices(const unsigned short* pIndices, unsigned numIndices);
+	void updateIndices(const ushort* pIndices, unsigned numIndices);
 protected:
 
 	// the leaf buffer for rendering the decals

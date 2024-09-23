@@ -58,7 +58,7 @@ bool CSDLKeyboard::UnAcquire()
 	return true;
 }
 
-unsigned short CSDLKeyboard::SDL2XKEY(SDL_Keycode kc)
+ushort CSDLKeyboard::SDL2XKEY(SDL_Keycode kc)
 {
 	switch (kc)
 	{
@@ -161,9 +161,9 @@ unsigned short CSDLKeyboard::SDL2XKEY(SDL_Keycode kc)
 }
 
 //////////////////////////////////////////////////////////////////////////
-unsigned char CSDLKeyboard::XKEY2ASCII(unsigned short nCode, int modifiers)
+uchar CSDLKeyboard::XKEY2ASCII(ushort nCode, int modifiers)
 {
-	unsigned char ret = '\0';
+	uchar ret = '\0';
 #define HANDLE_CASE(XKEY, C) case XKEY: \
 	ret = C; \
 	break;
@@ -237,7 +237,7 @@ unsigned char CSDLKeyboard::XKEY2ASCII(unsigned short nCode, int modifiers)
 	else if ((modifiers & XKEY_MOD_LSHIFT) != 0)
 		upperCase = true;
 
-	const int shift = int((unsigned char)'A' - (unsigned char)'a');
+	const int shift = int((uchar)'A' - (uchar)'a');
 
 	if (ret == '-' && shiftPressed)
 		ret = '_';
@@ -370,7 +370,7 @@ void CSDLKeyboard::FeedVirtualKey(int nVirtualKey, long lParam, bool bDown)
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CSDLKeyboard::ProcessKey(unsigned short cKey, bool bPressed, unsigned char* cTempKeys)
+void CSDLKeyboard::ProcessKey(ushort cKey, bool bPressed, uchar* cTempKeys)
 {
 	CRYASSERT(cKey < 256);
 	CRYASSERT(cKey > 0);
@@ -450,7 +450,7 @@ void CSDLKeyboard::ProcessKey(unsigned short cKey, bool bPressed, unsigned char*
 void CSDLKeyboard::Update()
 {
 	SDL_Event event;
-	unsigned short xkey;
+	ushort xkey;
 	std::vector<SDL_Event> events;
 
 	while (SDL_PollEvent(&event))
@@ -579,7 +579,7 @@ void CSDLKeyboard::ClearKeyState()
 	m_modifiers = 0;
 }
 
-unsigned char CSDLKeyboard::GetKeyState(int nKey)
+uchar CSDLKeyboard::GetKeyState(int nKey)
 {
 	if (nKey >= 0 && nKey < 256)
 		return m_cKeysState[nKey];

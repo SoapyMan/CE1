@@ -1559,7 +1559,7 @@ bool CXSystemBase::LoadLevelCommon( SMissionInfo &missionInfo )
 	if (missionInfo.dwProgressBarRange == 0)
 		missionInfo.dwProgressBarRange = 500;
 
-	unsigned int dwProgressBarRange = missionInfo.dwProgressBarRange;
+	uint dwProgressBarRange = missionInfo.dwProgressBarRange;
 	if (missionInfo.bEditor)
 	{
 		if (dwProgressBarRange > 50) 
@@ -2221,7 +2221,7 @@ bool Team::Write(CStream &stm)
 	stm.Write((BYTE)m_setEntities.size());
 	for(EntitiesSetItor itor=m_setEntities.begin();itor!=m_setEntities.end();++itor)
 	{
-		stm.Write((unsigned short)(*itor));
+		stm.Write((ushort)(*itor));
 	}
 	return true;
 }
@@ -2239,7 +2239,7 @@ bool Team::Read(CStream &stm)
 	nFlags=s;
 	stm.Read(sName);
 	stm.Read(t);
-	unsigned short eid;
+	ushort eid;
 	for(int i=0;i<t;i++)
 	{
 		stm.Read(eid);

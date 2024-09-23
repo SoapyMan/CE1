@@ -3077,25 +3077,25 @@ bool STexPic::IsTextureLoaded()
 
 typedef struct
 {
-	unsigned char  id_length, colormap_type, image_type;
-	unsigned short colormap_index, colormap_length;
-	unsigned char  colormap_size;
-	unsigned short x_origin, y_origin, width, height;
-	unsigned char  pixel_size, attributes;
+	uchar  id_length, colormap_type, image_type;
+	ushort colormap_index, colormap_length;
+	uchar  colormap_size;
+	ushort x_origin, y_origin, width, height;
+	uchar  pixel_size, attributes;
 } TargaHeader_t;
 
 void WriteTGA32(byte* dat, int wdt, int hgt, char* name);
 
 
 ///////////////////////////////////////////////////
-bool STexPic::SaveTga(unsigned char* sourcedata, int sourceformat, int w, int h, const char* filename, bool flip)
+bool STexPic::SaveTga(uchar* sourcedata, int sourceformat, int w, int h, const char* filename, bool flip)
 {
 	/*	if (flip)
 		{
 			int size=w*(sourceformat/8);
-			unsigned char *tempw=new unsigned char [size];
-			unsigned char *src1=sourcedata;
-			unsigned char *src2=sourcedata+(w*(sourceformat/8))*(h-1);
+			uchar *tempw=new uchar [size];
+			uchar *src1=sourcedata;
+			uchar *src2=sourcedata+(w*(sourceformat/8))*(h-1);
 			for (int k=0;k<h/2;k++)
 			{
 				memcpy(tempw,src1,size);
@@ -3107,17 +3107,17 @@ bool STexPic::SaveTga(unsigned char* sourcedata, int sourceformat, int w, int h,
 			delete [] tempw;
 		}*/
 
-	unsigned char* oldsourcedata = sourcedata;
+	uchar* oldsourcedata = sourcedata;
 
 	if (sourceformat == FORMAT_8_BIT)
 	{
-		unsigned char* desttemp = new unsigned char[w * h * 4];
+		uchar* desttemp = new uchar[w * h * 4];
 		memset(desttemp, 0, w * h * 3);
 
-		unsigned char* destptr = desttemp;
-		unsigned char* srcptr = sourcedata;
+		uchar* destptr = desttemp;
+		uchar* srcptr = sourcedata;
 
-		unsigned char col;
+		uchar col;
 
 		for (int k = 0; k < w * h; k++)
 		{

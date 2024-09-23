@@ -156,8 +156,8 @@ bool CImage_DXTC::Load( const char *filename,CImage &outImage )
 	{
 		if (ddsd.ddspf.dwRGBBitCount == 24)
 		{
-			unsigned char *dest = pDecompBytes;
-			unsigned char *src = pCompBytes;
+			uchar *dest = pDecompBytes;
+			uchar *src = pCompBytes;
 			for (int y = 0; y < ddsd.dwHeight; y++)
 			{
 				for (int x = 0; x < ddsd.dwWidth; x++)
@@ -173,8 +173,8 @@ bool CImage_DXTC::Load( const char *filename,CImage &outImage )
 		}
 		else if (ddsd.ddspf.dwRGBBitCount == 32)
 		{
-			unsigned char *dest = pDecompBytes;
-			unsigned char *src = pCompBytes;
+			uchar *dest = pDecompBytes;
+			uchar *src = pCompBytes;
 			for (int y = 0; y < ddsd.dwHeight; y++)
 			{
 				for (int x = 0; x < ddsd.dwWidth; x++)

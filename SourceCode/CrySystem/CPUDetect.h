@@ -77,7 +77,7 @@ struct SCpu
 {
 	ECpuVendor meVendor;
 	ECpuModel meModel;
-	unsigned long mFeatures;
+	ulong mFeatures;
 	bool mbSerialPresent;
 	char  mSerialNumber[30];
 	int mFamily;

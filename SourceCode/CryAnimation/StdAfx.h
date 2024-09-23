@@ -35,15 +35,6 @@
 #include <direct.h>
 #include <search.h>
 #include <stdarg.h>
-#if !defined(DWORD)
-#if defined(LINUX64)
-typedef unsigned int DWORD;
-#else
-typedef unsigned long DWORD;
-#endif
-#endif
-typedef unsigned short WORD;
-typedef unsigned char BYTE;
 
 #endif
 

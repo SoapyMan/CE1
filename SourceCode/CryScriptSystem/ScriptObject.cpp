@@ -1263,7 +1263,7 @@ bool CScriptObject::GetCurrent(IScriptObject* pObj)
 
 
 // MartinM, used to create a hash value out of a lua function (for cheat protection)
-bool CScriptObject::GetCurrentFuncData(unsigned int*& pCode, int& iSize)
+bool CScriptObject::GetCurrentFuncData(uint*& pCode, int& iSize)
 {
 	if (m_nIterationCounter == -1)
 		return false;
@@ -1277,7 +1277,7 @@ bool CScriptObject::GetCurrentFuncData(unsigned int*& pCode, int& iSize)
 
 
 // MartinM, used to create a hash value out of a lua function (for cheat protection)
-bool CScriptObject::GetFuncData(const char* sKey, unsigned int*& pCode, int& iSize)
+bool CScriptObject::GetFuncData(const char* sKey, uint*& pCode, int& iSize)
 {
 	_GUARD_STACK(m_pLS);
 	bool res = false;

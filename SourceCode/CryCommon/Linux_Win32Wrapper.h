@@ -56,7 +56,7 @@ extern uint64_t __rdtsc();
 extern HRESULT GetOverlappedResult(HANDLE hFile, void* lpOverlapped, LPDWORD lpNumberOfBytesTransferred, BOOL bWait);
 
 extern const BOOL compareTextFileStrings(const char* cpReadFromFile, const char* cpToCompareWith);
-extern unsigned long timeGetTime(void);
+extern ulong timeGetTime(void);
 
 
 typedef struct _MEMORYSTATUS
@@ -89,7 +89,7 @@ typedef union _ULARGE_INTEGER
 		DWORD LowPart;
 		DWORD HighPart;
 	};
-	unsigned long long QuadPart;
+	ulonglong QuadPart;
 } ULARGE_INTEGER;
 
 #ifdef __cplusplus
@@ -128,7 +128,7 @@ typedef struct _SYSTEMTIME
 //////////////////////////////////////////////////////////////////////////
 extern BOOL SystemTimeToFileTime(const SYSTEMTIME* syst, LPFILETIME ft);
 //Win32API function declarations actually used
-extern bool IsBadReadPtr(void* ptr, unsigned int size);
+extern bool IsBadReadPtr(void* ptr, uint size);
 
 // Defined in the launcher.
 void OutputDebugString(const char*);
@@ -318,7 +318,7 @@ extern HANDLE CreateThread(
 
 //helper function
 extern void adaptFilenameToLinux(string& rAdjustedFilename);
-extern const int comparePathNames(const char* cpFirst, const char* cpSecond, unsigned int len);//returns 0 if identical
+extern const int comparePathNames(const char* cpFirst, const char* cpSecond, uint len);//returns 0 if identical
 extern void replaceDoublePathFilename(char* szFileName);//removes "\.\" to "\" and "/./" to "/"
 
 //////////////////////////////////////////////////////////////////////////

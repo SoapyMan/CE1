@@ -632,7 +632,7 @@ void CTerrainDialog::OnHeightmapShowLargePreview()
 	////////////////////////////////////////////////////////////////////////
 
 	DWORD *pImageData = NULL;
-	unsigned int i, j;
+	uint i, j;
 	uint8 iColor;
 	t_hmap *pHeightmap = NULL;
 
@@ -931,7 +931,7 @@ void CTerrainDialog::OnOptionsEditTerrainCurve()
 
 	cDialog.DoModal();
 
-	unsigned int i, j;
+	uint i, j;
 	CCurveObject *pCurveObj = &GLOBAL_GET_DOC->m_cTerrainCurve;
 	CHeightmap *pHeightmap = &GLOBAL_GET_DOC->m_cHeightmap;
 	HEIGHTMAP_DATA *pData = pHeightmap->GetData();

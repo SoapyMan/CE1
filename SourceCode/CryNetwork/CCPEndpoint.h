@@ -50,18 +50,18 @@ public:
 
 	void SendSecurityQuery(CStream& stm);
 	void SendSecurityResp(CStream& stm);
-	void SetPublicCryptKey(unsigned int nKey) { m_nPublicKey = nKey; };
-	unsigned int GetPublicCryptKey(unsigned int nKey) { return m_nPublicKey; };
+	void SetPublicCryptKey(uint nKey) { m_nPublicKey = nKey; };
+	uint GetPublicCryptKey(uint nKey) { return m_nPublicKey; };
 
 	//! @return true=disconnect and this pointer is destrozed, false otherwise
-	bool Update(unsigned int nTime, unsigned char cFrameType, CStream* pStm);
+	bool Update(uint nTime, uchar cFrameType, CStream* pStm);
 	void Reset();
 
 	void GetMemoryStatistics(ICrySizer* pSizer);
 protected:
 
 	//! @return true=disconnect and this pointer is destrozed, false otherwise
-	bool ProcessPayload(unsigned char cFrameType, CStream& stmStrea);
+	bool ProcessPayload(uchar cFrameType, CStream& stmStrea);
 	void HandleTimeout();
 	void ProcessTimers();
 	void SetTimer();
@@ -78,15 +78,15 @@ private:		// --------------------------------------------------------------
 	bool							m_bNextFrameToSend;					//!<
 	bool							m_bAckExpected;							//!<
 	bool							m_bReadyToSend;							//!<
-	unsigned int			m_ulTimeout;								//!<
+	uint			m_ulTimeout;								//!<
 
 	_ICCPUser* m_pParent;									//!< pointer to the parent object (is not released), is 0 is you forgot to call Init()
 
 	CCP_QUEUE					m_qOutgoingData;						//!<
 	CStream						m_stmRetrasmissionBuffer;		//!<
 
-	unsigned int			m_nCurrentTime;							//!< 
-	unsigned int			m_nPublicKey;
+	uint			m_nCurrentTime;							//!< 
+	uint			m_nPublicKey;
 };
 
 #endif //_CCPENDPOINT_H_

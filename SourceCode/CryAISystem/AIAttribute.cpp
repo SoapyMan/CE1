@@ -14,7 +14,7 @@ void CAIAttribute::ParseParameters(const AIObjectParameters& params)
 {
 }
 
-void CAIAttribute::Event(unsigned short eType, SAIEVENT* pEvent)
+void CAIAttribute::Event(ushort eType, SAIEVENT* pEvent)
 {
 }
 
@@ -28,7 +28,7 @@ void CAIAttribute::Update()
 {
 }
 
-bool CAIAttribute::CanBeConvertedTo(unsigned short type, void** pConverted)
+bool CAIAttribute::CanBeConvertedTo(ushort type, void** pConverted)
 {
 	if (type == AIOBJECT_ATTRIBUTE)
 	{

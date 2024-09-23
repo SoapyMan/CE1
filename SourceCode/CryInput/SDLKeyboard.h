@@ -43,13 +43,13 @@ public:
 	void SetExclusive(bool value, void* hwnd = 0);
 	void WaitForKey();
 	void ClearKeyState();
-	unsigned char GetKeyState(int nKey);
+	uchar GetKeyState(int nKey);
 	void Update();
 	int GetModifiers() const { return m_modifiers; };
 
 public:
-	unsigned short SDL2XKEY(SDL_Keycode kc);
-	unsigned char XKEY2ASCII(unsigned short nCode, int modifiers);
+	ushort SDL2XKEY(SDL_Keycode kc);
+	uchar XKEY2ASCII(ushort nCode, int modifiers);
 	bool GetOSKeyName(int nKey, wchar_t* szwKeyName, int iBufSize);
 	void FeedVirtualKey(int nVirtualKey, long lParam, bool bDown);
 
@@ -57,10 +57,10 @@ protected:
 	bool	Acquire();
 	bool	UnAcquire();
 	void	SetupKeyNames();
-	void	ProcessKey(unsigned short nKey, bool bPressed, unsigned char* cTempKeys);
-	unsigned char	m_cKeysState[256];
-	unsigned char	m_cOldKeysState[256];
-	unsigned char m_cTempKeys[256];
+	void	ProcessKey(ushort nKey, bool bPressed, uchar* cTempKeys);
+	uchar	m_cKeysState[256];
+	uchar	m_cOldKeysState[256];
+	uchar m_cTempKeys[256];
 	CInputSDL* m_pInput;
 	bool m_bExclusiveMode;
 	ISystem* m_pSystem;

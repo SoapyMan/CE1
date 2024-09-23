@@ -28,7 +28,6 @@ protected:
 	// can construct uninitialized copy of this class, because they know how to initialize it afterwards.
 	TSparseArrayDriver() {}
 public:
-	typedef unsigned char byte;
 
 	// initializes the sparse array: the pointer to the first element, and the distance between elements
 	// in bytes (by default, as for non-sparse arrays, the distance is the sizeof(T))

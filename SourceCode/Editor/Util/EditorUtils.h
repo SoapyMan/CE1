@@ -197,7 +197,7 @@ struct Version
 //////////////////////////////////////////////////////////////////////////
 inline COLORREF String2Color( const CString &val )
 {
-	unsigned int r=0,g=0,b=0;
+	uint r=0,g=0,b=0;
 	int res = 0;
 	res = sscanf( val,"R:%d,G:%d,B:%d",&r,&g,&b );
 	if (res != 3)

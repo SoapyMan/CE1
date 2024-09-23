@@ -572,7 +572,7 @@ int CArticulatedEntity::GetStatus(pe_status* _status)
 		if (!is_unused(status->partid))
 			for (i = 0; i < m_nParts && m_parts[i].id != status->partid; i++);
 		else i = status->ipart;
-		if ((unsigned int)i >= (unsigned int)m_nParts) {
+		if ((uint)i >= (uint)m_nParts) {
 			m_body.pos.Set(0, 0, 0); m_body.M = 0;
 			for (i = 0; i < m_nJoints; i++) {
 				m_body.pos += m_joints[i].body.pos * m_joints[i].body.M;
@@ -619,7 +619,7 @@ int CArticulatedEntity::Action(pe_action* _action)
 				return 1;
 
 		box bbox; vectorf posloc;
-		if ((unsigned int)i >= (unsigned int)m_nParts) {
+		if ((uint)i >= (uint)m_nParts) {
 			if (is_unused(action->point)) return 0;
 			for (i = 0; i < m_nParts; i++) {
 				m_parts[i].pPhysGeomProxy->pGeom->GetBBox(&bbox);
@@ -628,7 +628,7 @@ int CArticulatedEntity::Action(pe_action* _action)
 				for (j = 0; j < 3 && posloc[j] < bbox.size[j]; j++);
 				if (j == 3) break;
 			}
-			if ((unsigned int)i >= (unsigned int)m_nParts) return 0;
+			if ((uint)i >= (uint)m_nParts) return 0;
 		}
 
 		j = m_infos[i].iJoint;
@@ -732,7 +732,7 @@ int CArticulatedEntity::CheckSelfCollision(int ipart0, int ipart1)
 
 RigidBody* CArticulatedEntity::GetRigidBody(int ipart)
 {
-	return (unsigned int)ipart < (unsigned int)m_nParts ? &m_joints[m_infos[ipart].iJoint].body : &m_body;
+	return (uint)ipart < (uint)m_nParts ? &m_joints[m_infos[ipart].iJoint].body : &m_body;
 }
 
 
@@ -958,7 +958,7 @@ float CArticulatedEntity::GetDamping(float time_interval)
 
 int CArticulatedEntity::IsAwake(int ipart)
 {
-	return (unsigned int)ipart < (unsigned int)m_nParts ? m_joints[m_infos[ipart].iJoint].bAwake : m_bAwake;
+	return (uint)ipart < (uint)m_nParts ? m_joints[m_infos[ipart].iJoint].bAwake : m_bAwake;
 }
 
 
@@ -1529,7 +1529,7 @@ void CArticulatedEntity::JointListUpdated()
 int CArticulatedEntity::GetStateSnapshot(CStream& stm, float time_back, int flags)
 {
 	stm.WriteNumberInBits(SNAPSHOT_VERSION, 4);
-	stm.Write((unsigned char)m_nJoints);
+	stm.Write((uchar)m_nJoints);
 	stm.Write(m_pos);
 	stm.Write(m_body.v);
 	stm.Write(m_bAwake != 0);
@@ -1584,7 +1584,7 @@ int CArticulatedEntity::SetStateFromSnapshot(CStream& stm, int flags)
 	int i = 0, j, ver = 0;
 	bool bnz;
 	matrix3x3f R;
-	unsigned char nJoints;
+	uchar nJoints;
 
 	stm.ReadNumberInBits(ver, 4);
 	if (ver != SNAPSHOT_VERSION)
@@ -2160,7 +2160,7 @@ int CArticulatedEntity::RegisterContacts(float time_interval, int nMaxPlaneConta
 
 		for (i = 0; i < NMASKBITS && getmask(i) <= constraints_mask; i++)
 			if (constraints_mask & getmask(i) && m_pConstraintInfos[i].bActive &&
-				(unsigned int)(m_pConstraints[i].ipart[0] - m_joints[idx].iStartPart) < (unsigned int)m_joints[idx].nParts)
+				(uint)(m_pConstraints[i].ipart[0] - m_joints[idx].iStartPart) < (uint)m_joints[idx].nParts)
 				RegisterContact(m_pConstraints + i);
 
 		if (m_bGrounded || m_joints[idx].iParent >= 0) {
@@ -2191,7 +2191,7 @@ int CArticulatedEntity::RegisterContacts(float time_interval, int nMaxPlaneConta
 				iAxes[j++] = i;
 			else
 				axisDrift += m_joints[idx].rotaxes[i] * min(1.0f, m_joints[idx].q0[i] - m_joints[idx].q[i]);
-			if ((unsigned int)j - 1u < 2u) {
+			if ((uint)j - 1u < 2u) {
 				if (!(pcontact = CreateConstraintContact(idx)))
 					break;
 

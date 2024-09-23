@@ -247,7 +247,7 @@ protected:
 	// There are as many elements in this array, as there are bones at all
 	// the values are from the enum DamageAreaEnum
 	// Numbering by BoneID
-	TFixedArray<unsigned char> m_arrDamageTable;
+	TFixedArray<uchar> m_arrDamageTable;
 
 #if ENABLE_BONE_BBOXES
 	typedef TAllocator16<CryBBoxA16> BBoxAllocatorA16;

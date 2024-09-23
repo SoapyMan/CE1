@@ -59,7 +59,7 @@ string CUIComboBox::GetClassName()
 }
 
 //------------------------------------------------------------------------------------------------- 
-LRESULT CUIComboBox::Update(unsigned int iMessage, WPARAM wParam, LPARAM lParam)	//AMD Port
+LRESULT CUIComboBox::Update(uint iMessage, WPARAM wParam, LPARAM lParam)	//AMD Port
 {
 	m_fButtonSize = m_pUISystem->AdjustWidth(m_fButtonSize);
 

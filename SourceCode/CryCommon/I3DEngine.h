@@ -605,8 +605,8 @@ enum EDrawLowDetailFlags
 /*struct OcclusionTestClient
 {
   OcclusionTestClient() { memset(this,0,sizeof(OcclusionTestClient)); bLastResult = true; }
-  unsigned char ucOcclusionByTerrainFrames;
-  unsigned char ucOcclusionByObjectsFrames;
+  uchar ucOcclusionByTerrainFrames;
+  uchar ucOcclusionByObjectsFrames;
   bool  bLastResult;
   int   nLastVisibleFrameID;
 //	class CREOcclusionQuery * arrREOcclusionQuery[2];
@@ -1056,7 +1056,7 @@ struct I3DEngine : public IProcess
 			//     ICryCharManager::MakeCharacter
 			// Note:
 			//     This function simply call ICryCharManager::MakeCharacter
-	virtual ICryCharInstance* MakeCharacter(const char* cid_file_name, unsigned int dwFlags = 0) = 0;
+	virtual ICryCharInstance* MakeCharacter(const char* cid_file_name, uint dwFlags = 0) = 0;
 
 	// Summary:
 	//     Scan the file and determine if it's a valid animated object
@@ -1219,7 +1219,7 @@ struct I3DEngine : public IProcess
 		// Internal functions, mostly used by the editor, which won't be documented for now
 
 		//! Places object at specified position (for editor)
-	virtual bool AddStaticObject(int nObjectID, const Vec3& vPos, const float fScale, unsigned char ucBright = 255) = 0;
+	virtual bool AddStaticObject(int nObjectID, const Vec3& vPos, const float fScale, uchar ucBright = 255) = 0;
 	//! Removes static object from specified position (for editor)
 	virtual bool RemoveStaticObject(int nObjectID, const Vec3& vPos) = 0;
 	//! On-demand physicalization of a static object
@@ -1233,7 +1233,7 @@ struct I3DEngine : public IProcess
 	virtual int  GetTerrainSurfaceType(int x, int y) = 0; // from 0 to 6 - sur type ( 7 = hole )
 
 	//! Updates part of hight map (in terrain units, by default update only elevation)
-	virtual void SetTerainHightMapBlock(int x1, int y1, int nSizeX, int nSizeY, unsigned short* TerrainBlock, unsigned short nUpdateMask = (((unsigned short)-1) & (~31))) = 0;
+	virtual void SetTerainHightMapBlock(int x1, int y1, int nSizeX, int nSizeY, ushort* TerrainBlock, ushort nUpdateMask = (((ushort)-1) & (~31))) = 0;
 	//! Returns true if game modified terrain hight map since last update by editor
 	virtual bool IsTerainHightMapModifiedByGame() = 0;
 
@@ -1365,7 +1365,7 @@ struct I3DEngine : public IProcess
 
 	// Internal function used by the 3d engine and editor
 		//! Returns light mask for this point (valid only during rendering stage)
-	virtual unsigned int GetLightMaskFromPosition(const Vec3& vPos, float fRadius = 1.f) = 0;
+	virtual uint GetLightMaskFromPosition(const Vec3& vPos, float fRadius = 1.f) = 0;
 
 	// Internal function used by the 3d engine
 		//! Returns lighting level for this point
@@ -1381,7 +1381,7 @@ struct I3DEngine : public IProcess
 //Internal function used by 3d engine and editor
 
 	//! Render shadows of objects into frame buffer and read this picture
-	virtual bool MakeSectorLightMap(int nSectorOriginX, int nSectorOriginY, unsigned char* pImage, int nImageSize) = 0;
+	virtual bool MakeSectorLightMap(int nSectorOriginX, int nSectorOriginY, uchar* pImage, int nImageSize) = 0;
 
 	//Internal function used by 3d engine and renderer
 		//! get distance to the sector containig ocean water
@@ -1465,7 +1465,7 @@ struct I3DEngine : public IProcess
 	virtual void MakeUnderWaterSmoothHMap(int nWaterUnitSize) = 0;
 
 	//! returns ptr to smoothed terrain for ocean calculations
-	virtual unsigned short* GetUnderWaterSmoothHMap(int& nDimensions) = 0;
+	virtual ushort* GetUnderWaterSmoothHMap(int& nDimensions) = 0;
 
 	//Never used
 		//! refresh detail objects

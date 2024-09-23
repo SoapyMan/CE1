@@ -78,7 +78,7 @@ void CCCPEndpoint::StopTimer()
 	m_ulTimeout = 0;
 }
 
-bool CCCPEndpoint::Update(unsigned int nTime, unsigned char cFrameType, CStream* pStm)
+bool CCCPEndpoint::Update(uint nTime, uchar cFrameType, CStream* pStm)
 {
 	m_nCurrentTime = nTime;
 	// manage incoming frames
@@ -328,7 +328,7 @@ void PrintPacket(CCPPayload ccpPayload)
 	}
 }
 
-bool CCCPEndpoint::ProcessPayload(unsigned char cFrameType, CStream& stmStream)
+bool CCCPEndpoint::ProcessPayload(uchar cFrameType, CStream& stmStream)
 {
 	CCPPayload ccpPayload;
 	ccpPayload.Load(stmStream);

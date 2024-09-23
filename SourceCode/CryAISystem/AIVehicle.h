@@ -29,20 +29,20 @@ public:
 	void Steer(const Vec3d& vTargetPos, GraphNode* pNode);
 	//	void UpdateVehicleInternalState();
 	void Navigate(CAIObject* pTarget);
-	void Event(unsigned short eType, SAIEVENT* pEvent);
+	void Event(ushort eType, SAIEVENT* pEvent);
 
 	void Reset(void);
 	void ParseParameters(const AIObjectParameters& params);
 	void OnObjectRemoved(CAIObject* pObject);
 
-	bool CanBeConvertedTo(unsigned short type, void** pConverted);
+	bool CanBeConvertedTo(ushort type, void** pConverted);
 
 	void	SetParameters(AgentParameters& sParams);
 	AgentParameters GetPuppetParameters() { return GetParameters(); }
 	void SetPuppetParameters(AgentParameters& pParams) { SetParameters(pParams); }
 
-	void SetVehicleType(unsigned short type) { m_VehicleType = type; }
-	unsigned short GetVehicleType() { return m_VehicleType; }
+	void SetVehicleType(ushort type) { m_VehicleType = type; }
+	ushort GetVehicleType() { return m_VehicleType; }
 
 	void UpdateThread();
 
@@ -51,7 +51,7 @@ public:
 	void Unbind();
 	//	IAIObject* GetBound( )  { return m_Gunner; }
 	//	void	SetGunner( IAIObject *pGunner );				//CPuppet	*gunner);
-	//	void Event(unsigned short eType, SAIEVENT *pEvent);
+	//	void Event(ushort eType, SAIEVENT *pEvent);
 
 	IVehicleProxy* m_pProxy;
 
@@ -59,7 +59,7 @@ public:
 
 private:
 
-	unsigned short m_VehicleType;
+	ushort m_VehicleType;
 
 	CPuppet* m_Gunner;
 

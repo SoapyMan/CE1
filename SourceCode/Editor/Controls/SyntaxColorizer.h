@@ -38,9 +38,9 @@ public:
 
 //protected vars
 protected:
-	unsigned char *m_pTableZero, *m_pTableOne;
-	unsigned char *m_pTableTwo,  *m_pTableThree;
-	unsigned char *m_pTableFour, *m_pAllowable;
+	uchar *m_pTableZero, *m_pTableOne;
+	uchar *m_pTableTwo,  *m_pTableThree;
+	uchar *m_pTableFour, *m_pAllowable;
 
 	enum Types
 	{

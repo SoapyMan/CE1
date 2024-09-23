@@ -297,14 +297,14 @@ void CJoystick::Update()
 		if (joyinfo.dwPOV == JOY_POVBACKWARD)	m_hatdirs[JOY_DIR_DOWN] = 1;
 	}
 
-	m_buttons[0] = (unsigned char)(joyinfo.dwButtons & JOY_BUTTON1);
-	m_buttons[1] = (unsigned char)(joyinfo.dwButtons & JOY_BUTTON2);
-	m_buttons[2] = (unsigned char)(joyinfo.dwButtons & JOY_BUTTON3);
-	m_buttons[3] = (unsigned char)(joyinfo.dwButtons & JOY_BUTTON4);
-	m_buttons[4] = (unsigned char)(joyinfo.dwButtons & JOY_BUTTON5);
-	m_buttons[5] = (unsigned char)(joyinfo.dwButtons & JOY_BUTTON6);
-	m_buttons[6] = (unsigned char)(joyinfo.dwButtons & JOY_BUTTON7);
-	m_buttons[7] = (unsigned char)(joyinfo.dwButtons & JOY_BUTTON8);
+	m_buttons[0] = (uchar)(joyinfo.dwButtons & JOY_BUTTON1);
+	m_buttons[1] = (uchar)(joyinfo.dwButtons & JOY_BUTTON2);
+	m_buttons[2] = (uchar)(joyinfo.dwButtons & JOY_BUTTON3);
+	m_buttons[3] = (uchar)(joyinfo.dwButtons & JOY_BUTTON4);
+	m_buttons[4] = (uchar)(joyinfo.dwButtons & JOY_BUTTON5);
+	m_buttons[5] = (uchar)(joyinfo.dwButtons & JOY_BUTTON6);
+	m_buttons[6] = (uchar)(joyinfo.dwButtons & JOY_BUTTON7);
+	m_buttons[7] = (uchar)(joyinfo.dwButtons & JOY_BUTTON8);
 
 	// this is a bit ugly, but the input system doesn't deserve better
 	int iAnalog1X = joyinfo.dwXpos - 32768;
@@ -360,7 +360,7 @@ void CJoystick::Update()
 #ifdef PS2
 
 	int readReturn = 0;
-	unsigned char JoyData[32];
+	uchar JoyData[32];
 	int PadState;
 
 
@@ -609,7 +609,7 @@ int CJoystick::GetHatDir()
 }
 
 ///////////////////////////////////////////
-Vec3 CJoystick::GetAnalog1Dir(unsigned int joystickID) const
+Vec3 CJoystick::GetAnalog1Dir(uint joystickID) const
 {
 	if (joystickID < m_numjoysticks)
 		return m_vAnalog1Dir[joystickID];
@@ -617,7 +617,7 @@ Vec3 CJoystick::GetAnalog1Dir(unsigned int joystickID) const
 		return Vec3(0, 0, 0);
 }
 ///////////////////////////////////////////
-Vec3 CJoystick::GetAnalog2Dir(unsigned int joystickID) const
+Vec3 CJoystick::GetAnalog2Dir(uint joystickID) const
 {
 	if (joystickID < m_numjoysticks)
 		return m_vAnalog2Dir[joystickID];
@@ -665,7 +665,7 @@ void CJoystick::ShutDown()
 
 #ifdef PS2
 
-void CJoystick::GetAnalog(unsigned char* pData)
+void CJoystick::GetAnalog(uchar* pData)
 {
 
 	//Get Joystick analog values
@@ -682,12 +682,12 @@ void CJoystick::GetAnalog(unsigned char* pData)
 
 }
 
-void CJoystick::GetDigital(unsigned char* pData)
+void CJoystick::GetDigital(uchar* pData)
 {
 	//get Joystick digital "cross" values
 
 	m_Left = m_Right = m_Up = m_Down = false;
-	unsigned char tempFlags;
+	uchar tempFlags;
 
 
 	tempFlags = pData[2];
@@ -716,11 +716,11 @@ void CJoystick::GetDigital(unsigned char* pData)
 
 }
 
-void CJoystick::GetButton(unsigned char* pData)
+void CJoystick::GetButton(uchar* pData)
 {
 
 	//Get PS2 button pression (digital not analog...)
-	unsigned int tempFlags;
+	uint tempFlags;
 
 
 
@@ -1058,25 +1058,25 @@ bool CJoystick::DigitalCrossDirection(int Type)
 }
 
 
-unsigned char CJoystick::LeftStickX()
+uchar CJoystick::LeftStickX()
 {
 	return m_LeftX;
 }
 
 
-unsigned char CJoystick::LeftStickY()
+uchar CJoystick::LeftStickY()
 {
 	return m_LeftY;
 }
 
 
-unsigned char CJoystick::RightStickX()
+uchar CJoystick::RightStickX()
 {
 	return m_RightX;
 }
 
 
-unsigned char CJoystick::RightStickY()
+uchar CJoystick::RightStickY()
 {
 	return m_RightY;
 }

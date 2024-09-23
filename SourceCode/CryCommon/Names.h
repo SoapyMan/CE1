@@ -23,7 +23,7 @@ extern long gHashTable[];
 struct SNameEntry
 {
 	int mNumName;
-	unsigned int mFlags;
+	uint mFlags;
 	SNameEntry* mNext;
 	char mName[MAX_SNAME_LEN];
 
@@ -56,11 +56,11 @@ public:
 	int operator==(const CName& cFN) const { return (cFN.mNameIndex == mNameIndex); }
 
 	const char* c_str() const { return mNames[mNameIndex]->mName; }
-	unsigned long mfGetFlags(void) const { return mNames[mNameIndex]->mFlags; }
+	ulong mfGetFlags(void) const { return mNames[mNameIndex]->mFlags; }
 	long mfGetHash(const char* str)
 	{
-		unsigned char ch;
-		unsigned int hash = 0;
+		uchar ch;
+		uint hash = 0;
 		int temp;
 
 		while (ch = *str++)
@@ -77,8 +77,8 @@ public:
 		return mNameIndex;
 	}
 	void mfClear() { mNameIndex = 0; }
-	void mfClearFlags(unsigned int flag) { mNames[mNameIndex]->mFlags &= ~flag; }
-	void mfSetFlags(unsigned int flag) { mNames[mNameIndex]->mFlags |= flag; }
+	void mfClearFlags(uint flag) { mNames[mNameIndex]->mFlags &= ~flag; }
+	void mfSetFlags(uint flag) { mNames[mNameIndex]->mFlags |= flag; }
 	int mfGetIndex(void) const { return mNameIndex; }
 	int mfIsValid(void)
 	{

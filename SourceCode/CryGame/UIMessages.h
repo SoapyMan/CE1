@@ -15,29 +15,29 @@
 //! Convert a 2d float coordinate into an 2d integer packed in a dword [xxxx:yyyy]
 #define UIM_PACK_COORD(x, y)		((((short)(x)) << 16) | ((short)(y)))
 
-//! Get coordingates from packed unsigned int
+//! Get coordingates from packed uint
 #define UIM_GET_X_FLOAT(packed)		((float)((packed) >> 16))
-//! Get coordingates from packed unsigned int
+//! Get coordingates from packed uint
 #define UIM_GET_Y_FLOAT(packed)		((float)((packed) & 0xffff))
-//! Get coordingates from packed unsigned int
+//! Get coordingates from packed uint
 #define UIM_GET_X(packed)			((short)((packed) >> 16))
-//! Get coordingates from packed unsigned int
+//! Get coordingates from packed uint
 #define UIM_GET_Y(packed)			((short)((packed) & 0xffff))
 
 
 // Convert a float to a int without casting, so it can be recovered back
-inline unsigned int UIM_FLOAT_TO_DWORD(float fValue)
+inline uint UIM_FLOAT_TO_DWORD(float fValue)
 {
 	static float fValueToDW;
 	fValueToDW = fValue;
 	
-	return *((unsigned int *)(&fValueToDW));
+	return *((uint *)(&fValueToDW));
 }
 
 // Convert a int to a float without casting, so it can be recovered back
-inline float UIM_DWORD_TO_FLOAT(unsigned int iValue)
+inline float UIM_DWORD_TO_FLOAT(uint iValue)
 {
-	static unsigned int iValueToFloat = iValue;
+	static uint iValueToFloat = iValue;
 	iValueToFloat = iValue;
 
 	return *((float *)(&iValueToFloat));

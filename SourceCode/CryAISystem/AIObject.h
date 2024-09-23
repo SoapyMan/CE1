@@ -28,7 +28,7 @@ class CAIObject : public IAIObject
 
 protected:
 
-	unsigned short	m_nObjectType;
+	ushort	m_nObjectType;
 	Vec3						m_vPosition;
 
 	Vec3						m_vOrientation;
@@ -58,8 +58,8 @@ public:
 	void SetEyeHeight(float height);
 	void SetAssociation(void* pAssociation);
 	void* GetAssociation();
-	void SetType(unsigned short type);
-	unsigned short GetType();
+	void SetType(ushort type);
+	ushort GetType();
 	const Vec3& GetPos();
 	void SetPos(const Vec3& pos, bool bKeepEyeHeight = true);
 	const Vec3& GetAngles() { return m_vOrientation; }
@@ -68,8 +68,8 @@ public:
 
 	virtual void ParseParameters(const AIObjectParameters& params);
 	virtual void Update();
-	virtual void Event(unsigned short eType, SAIEVENT* pEvent) {}
-	virtual bool CanBeConvertedTo(unsigned short type, void** pConverted);
+	virtual void Event(ushort eType, SAIEVENT* pEvent) {}
+	virtual bool CanBeConvertedTo(ushort type, void** pConverted);
 	virtual void OnObjectRemoved(CAIObject* pObject) {}
 	virtual void NeedsPathOutdoor(bool bNeeds, bool bForce = false) {
 		m_bNeedsPathOutdoor = bNeeds;
@@ -113,7 +113,7 @@ public:
 
 	//	void CAIObject::SetEyeHeight(float height);
 
-	void	CreateBoundObject(unsigned short type, const Vec3& vBindPos, const Vec3& vBindAngl);
+	void	CreateBoundObject(ushort type, const Vec3& vBindPos, const Vec3& vBindAngl);
 	void	SetPosBound(const Vec3& pos);
 	const Vec3& GetPosBound();
 	void SetRadius(float fRadius);

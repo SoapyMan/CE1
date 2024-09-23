@@ -145,7 +145,7 @@ public:
 	virtual void DebugDisable() { m_bsBreakState = bsNoBreak; }
 	virtual BreakState GetBreakState() { return m_bsBreakState; }
 	virtual void GetMemoryStatistics(ICrySizer* pSizer);
-	virtual void GetScriptHash(const char* sPath, const char* szKey, unsigned int& dwHash);
+	virtual void GetScriptHash(const char* sPath, const char* szKey, uint& dwHash);
 	virtual void PostInit();
 
 private: // ---------------------------------------------------------------------
@@ -175,7 +175,7 @@ private: // --------------------------------------------------------------------
 	//!
 	static int GCTagHandler(lua_State* L);
 
-	//	void GetScriptHashFunction( IScriptObject &Current, unsigned int &dwHash);
+	//	void GetScriptHashFunction( IScriptObject &Current, uint &dwHash);
 
 		// ----------------------------------------------------------------------------
 

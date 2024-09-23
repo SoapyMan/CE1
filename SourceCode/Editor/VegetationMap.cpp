@@ -1274,7 +1274,7 @@ void CVegetationMap::LoadOldStuff( CXmlArchive &xmlAr )
 				if (!pMap[i])
 					continue;
 
-				unsigned int objIndex = pMap[i] - 1;
+				uint objIndex = pMap[i] - 1;
 				if (!usedObjects[objIndex])
 					continue;
 
@@ -1318,8 +1318,8 @@ void CVegetationMap::GenerateShadowMap( CByteImage &shadowmap,float shadowAmmoun
 	bool bProgress = width >= 2048;
 	CWaitProgress wait( "Calculating Objects Shadows",bProgress );
 
-	unsigned char *sectorImage = (unsigned char*)malloc(sectorSize*sectorSize*3);
-	unsigned char *sectorImage2 = (unsigned char*)malloc(sectorSize2*sectorSize2*3);
+	uchar *sectorImage = (uchar*)malloc(sectorSize*sectorSize*3);
+	uchar *sectorImage2 = (uchar*)malloc(sectorSize2*sectorSize2*3);
 
 	for (int y = 0; y < numSectors; y++)
 	{

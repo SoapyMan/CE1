@@ -47,7 +47,7 @@ CBugsFlock::~CBugsFlock()
 
 void CBugsFlock::ReleaseObjects()
 {
-	for (unsigned int i = 0; i < m_objects.size(); i++)
+	for (uint i = 0; i < m_objects.size(); i++)
 	{
 		if (m_objects[i])
 			m_bc.engine->ReleaseObject( m_objects[i] );
@@ -426,7 +426,7 @@ void CBoidBug::Render( SRendParams &rp,CCamera &cam,SBoidContext &bc )
 
 void CBugsFlock::PreloadInstanceResources(Vec3d vPrevPortalPos, float fPrevPortalDistance, float fTime)
 {
-	for (unsigned int i = 0; i < m_objects.size(); i++)
+	for (uint i = 0; i < m_objects.size(); i++)
 	{
 		IStatObj * pStatObj = m_objects[i];
 		float fDistance = fPrevPortalDistance + vPrevPortalPos.GetDistance((m_bounds.min+m_bounds.min)*0.5f);

@@ -11,7 +11,7 @@ struct SByteColor
 
 struct SLongColor
 {
-	unsigned long r, g, b, a;
+	ulong r, g, b, a;
 };
 
 class CREGlare : public CRendElement

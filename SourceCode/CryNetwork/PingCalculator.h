@@ -42,7 +42,7 @@ public:
 		// return (fSum*(DIV_MULTIPLIER));
 		return m_fPing;
 	}
-	bool IsTimeToPing(unsigned int nCurrentTime)
+	bool IsTimeToPing(uint nCurrentTime)
 	{
 		if ((nCurrentTime - m_nLastSample) > PING_RATE)
 		{
@@ -51,7 +51,7 @@ public:
 		}
 		return false;
 	}
-	void AddSample(float f, unsigned int nLocalTimestamp, unsigned int nRemoteTimestamp)
+	void AddSample(float f, uint nLocalTimestamp, uint nRemoteTimestamp)
 	{
 		float fSum = 0;
 		float fTemp[NUM_OF_SAMPLES];
@@ -64,15 +64,15 @@ public:
 
 		INC_INDEX(m_nSampleIndex);
 		NET_TRACE("PING %04d\n", LONG(m_fPing));
-		m_nRemoteTimestamp = (unsigned int)(nRemoteTimestamp - m_fPing);
+		m_nRemoteTimestamp = (uint)(nRemoteTimestamp - m_fPing);
 		m_nLocalTimestamp = nLocalTimestamp;
 	}
-	unsigned int GetCurrentRemoteTimestamp(unsigned int nLocalTimestamp) {
-		unsigned int nCurrentDelta = m_nLocalTimestamp - nLocalTimestamp;
+	uint GetCurrentRemoteTimestamp(uint nLocalTimestamp) {
+		uint nCurrentDelta = m_nLocalTimestamp - nLocalTimestamp;
 		return m_nRemoteTimestamp + nCurrentDelta;
 	}
-	unsigned int GetPacketLatency(unsigned int nLocalTimestamp, unsigned int nPacketTimestamp) {
-		unsigned int nRemote = GetCurrentRemoteTimestamp(nLocalTimestamp);
+	uint GetPacketLatency(uint nLocalTimestamp, uint nPacketTimestamp) {
+		uint nRemote = GetCurrentRemoteTimestamp(nLocalTimestamp);
 		return nPacketTimestamp - nRemote;
 	}
 	static int __cdecl Compare(const void* arg1, const void* arg2)
@@ -88,13 +88,13 @@ private:
 	float m_fSample[NUM_OF_SAMPLES];
 	//! middle value of all samples
 	float m_fPing;
-	unsigned int m_nSampleIndex;
-	unsigned int m_nLastSample;
+	uint m_nSampleIndex;
+	uint m_nLastSample;
 	bool m_bSyncronized;
 	//! average remote timestamp
-	unsigned int m_nRemoteTimestamp;
+	uint m_nRemoteTimestamp;
 	//! local timestamp
-	unsigned int m_nLocalTimestamp;
+	uint m_nLocalTimestamp;
 };
 
 #endif // _PING_CALCULATOR_H_

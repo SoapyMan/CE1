@@ -17,7 +17,7 @@ public:
 		return mVertexCount;
 	}
 
-	StaticVB(const LPDIRECT3DDEVICE9 pD3D, const DWORD& theFVF, const unsigned int& theVertexCount)
+	StaticVB(const LPDIRECT3DDEVICE9 pD3D, const DWORD& theFVF, const uint& theVertexCount)
 	{
 		mpVB = 0;
 
@@ -32,7 +32,7 @@ public:
 
 	LPDIRECT3DVERTEXBUFFER9 GetInterface() const { return mpVB; }
 
-	VertexType* Lock(const unsigned int& theLockCount, unsigned int& theStartVertex)
+	VertexType* Lock(const uint& theLockCount, uint& theStartVertex)
 	{
 		theStartVertex = 0;
 

@@ -35,9 +35,9 @@ enum DirtyFlags
 		nLastUpdate=0;
 		nUpdateNumber=0;
 	}
-	unsigned int nUserFlags;
-	unsigned int nLastUpdate;
-	unsigned int nUpdateNumber;
+	uint nUserFlags;
+	uint nLastUpdate;
+	uint nUpdateNumber;
 };*/
 ///////////////////////////////////////////////
 /*! This interface must be implemented by all objects that must be serialized

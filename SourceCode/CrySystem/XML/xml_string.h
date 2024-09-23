@@ -32,7 +32,7 @@ public:
 	{
 		if(m_sBuf)free(m_sBuf);
 		size_t len=strlen(s);
-		m_sBuf=(unsigned char*)malloc(len+2);
+		m_sBuf=(uchar*)malloc(len+2);
 		m_sBuf[0]=0;
 		strcpy((char *)&m_sBuf[1],s);
 	}
@@ -40,7 +40,7 @@ public:
 	{
 		if(m_sBuf)free(m_sBuf);
 		size_t len=wcslen(s);
-		m_sBuf=(unsigned char*)malloc((len+2)*sizeof(wchar_t));
+		m_sBuf=(uchar*)malloc((len+2)*sizeof(wchar_t));
 		m_sBuf[0]=1;
 		wcscpy(((wchar_t *)&m_sBuf[1]),s);
 	}
@@ -49,7 +49,7 @@ public:
 		if(!m_sBuf) return nullptr;
 		if(m_sBuf[0]!=0)
 		{
-			unsigned char *t=m_sBuf;
+			uchar *t=m_sBuf;
 			m_sBuf=wide2single((const wchar_t *)&t[1]);
 			free(t);
 			return ((const char *)&m_sBuf[1]);
@@ -62,7 +62,7 @@ public:
 		if(!m_sBuf) return nullptr;
 		if(m_sBuf[0]==0)
 		{
-			unsigned char *t=m_sBuf;
+			uchar *t=m_sBuf;
 			m_sBuf=single2wide((const char *)&t[1]);
 			free(t);
 			return ((const wchar_t *)&m_sBuf[1]);
@@ -86,10 +86,10 @@ public:
 	}
 
 private:
-	unsigned char *wide2single(const wchar_t *s)
+	uchar *wide2single(const wchar_t *s)
 	{
 		size_t len=wcslen(s);
-		unsigned char *ns=allocsingle(len);
+		uchar *ns=allocsingle(len);
 		char *t=((char *)&ns[1]);
 		for(size_t i=0;i<len;i++)
 		{
@@ -97,27 +97,27 @@ private:
 		}
 		return ns;
 	}
-	unsigned char *single2wide(const char *s)
+	uchar *single2wide(const char *s)
 	{
 		size_t len=strlen(s);
-		unsigned char *w=allocwide(len);
+		uchar *w=allocwide(len);
 		wchar_t *t=(wchar_t *)&w[1];
 		for(size_t i=0;i<len;i++)
 		{
-			t[i]=(unsigned char)s[i];
+			t[i]=(uchar)s[i];
 		}
 		return w;
 	}
-	unsigned char *allocsingle(size_t len)
+	uchar *allocsingle(size_t len)
 	{
-		unsigned char* buf=(unsigned char*)malloc(len+2);
+		uchar* buf=(uchar*)malloc(len+2);
 		memset(buf,0,len+2);
 		buf[0]=0;
 		return buf;
 	}
-	unsigned char *allocwide(size_t len)
+	uchar *allocwide(size_t len)
 	{
-		unsigned char *buf=(unsigned char*)malloc((len+2)*sizeof(wchar_t));
+		uchar *buf=(uchar*)malloc((len+2)*sizeof(wchar_t));
 		memset(buf,0,(len+2)*sizeof(wchar_t));
 		buf[0]=1;
 		return buf;
@@ -125,7 +125,7 @@ private:
 	//the first byte tell if is a wide char or a single char
 	//first byte != 0 widechar
 	//first byte == 0 singlechar
-	unsigned char *m_sBuf;
+	uchar *m_sBuf;
 };
 
 /*int _tmain(int argc, _TCHAR* argv[])

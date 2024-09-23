@@ -331,7 +331,7 @@ void CAdvCamSystem::SetMaxRadius(float radius)
 	m_fMaxRadius = radius;
 }
 
-Vec3 CAdvCamSystem::CalcPlayerMoveDirection(const Matrix33 &matCamera, unsigned int joyID) const
+Vec3 CAdvCamSystem::CalcPlayerMoveDirection(const Matrix33 &matCamera, uint joyID) const
 {
 	Vec3 vMoveDir;
 

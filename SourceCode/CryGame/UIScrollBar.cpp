@@ -35,7 +35,7 @@ string CUIScrollBar::GetClassName()
 }
 
 //------------------------------------------------------------------------------------------------- 
-LRESULT CUIScrollBar::Update(unsigned int iMessage, WPARAM wParam, LPARAM lParam)	//AMD Port
+LRESULT CUIScrollBar::Update(uint iMessage, WPARAM wParam, LPARAM lParam)	//AMD Port
 {
 	m_fValue = CLAMP(m_fValue, 0.0f, 1.0f);
 

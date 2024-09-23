@@ -51,7 +51,7 @@ void CTexelSampler::Init(const EAATYPE ceAAType)
 			//uniform grid sampling
 			sample.fWeight = 1.f/(2.0f*(float)(HIGH-1));
 			static const float scfGrid = sqrtf((float)HIGH);
-			static const unsigned int scuiCount = (unsigned int)scfGrid;
+			static const uint scuiCount = (uint)scfGrid;
 			sample.bTexelCenter = false;
 			float y = 1.f/(2.f * scfGrid);
 			for(int v=0;v<scuiCount;v++)

@@ -40,7 +40,7 @@ void CServerStateMachine::_Trace(char* s)
 	NET_TRACE(s);
 }
 
-void CServerStateMachine::_TraceStatus(unsigned int dwStatus)
+void CServerStateMachine::_TraceStatus(uint dwStatus)
 {
 	switch (dwStatus)
 	{
@@ -68,7 +68,7 @@ void CServerStateMachine::_TraceStatus(unsigned int dwStatus)
 	}
 }
 
-void CServerStateMachine::HandleIDLE(unsigned int dwIncomingSignal, DWORD_PTR dwParam)
+void CServerStateMachine::HandleIDLE(uint dwIncomingSignal, DWORD_PTR dwParam)
 {
 	BEGIN_SIGNAL_HANDLER(dwIncomingSignal)
 		/////////////////////////////////////////////////////////////////////
@@ -97,7 +97,7 @@ void CServerStateMachine::HandleIDLE(unsigned int dwIncomingSignal, DWORD_PTR dw
 		END_SIGNAL_HANDLER()
 }
 
-void CServerStateMachine::HandleWAIT_FOR_CONNECT_RESP(unsigned int dwIncomingSignal, DWORD_PTR dwParam)
+void CServerStateMachine::HandleWAIT_FOR_CONNECT_RESP(uint dwIncomingSignal, DWORD_PTR dwParam)
 {
 	BEGIN_SIGNAL_HANDLER(dwIncomingSignal)
 		/////////////////////////////////////////////////////////////////////
@@ -115,7 +115,7 @@ void CServerStateMachine::HandleWAIT_FOR_CONNECT_RESP(unsigned int dwIncomingSig
 		END_SIGNAL_HANDLER()
 }
 
-void CServerStateMachine::HandleCONNECTED(unsigned int dwIncomingSignal, DWORD_PTR dwParam)
+void CServerStateMachine::HandleCONNECTED(uint dwIncomingSignal, DWORD_PTR dwParam)
 {
 	BEGIN_SIGNAL_HANDLER(dwIncomingSignal)
 		/////////////////////////////////////////////////////////////////////
@@ -140,7 +140,7 @@ void CServerStateMachine::HandleCONNECTED(unsigned int dwIncomingSignal, DWORD_P
 		END_SIGNAL_HANDLER()
 }
 
-void CServerStateMachine::HandleWAIT_FOR_CONTEXT_READY(unsigned int dwIncomingSignal, DWORD_PTR dwParam)
+void CServerStateMachine::HandleWAIT_FOR_CONTEXT_READY(uint dwIncomingSignal, DWORD_PTR dwParam)
 {
 	BEGIN_SIGNAL_HANDLER(dwIncomingSignal)
 		/////////////////////////////////////////////////////////////////////
@@ -178,7 +178,7 @@ void CServerStateMachine::HandleWAIT_FOR_CONTEXT_READY(unsigned int dwIncomingSi
 
 }
 
-void CServerStateMachine::HandleREADY(unsigned int dwIncomingSignal, DWORD_PTR dwParam)
+void CServerStateMachine::HandleREADY(uint dwIncomingSignal, DWORD_PTR dwParam)
 {
 	BEGIN_SIGNAL_HANDLER(dwIncomingSignal)
 		/////////////////////////////////////////////////////////////////////
@@ -209,12 +209,12 @@ void CServerStateMachine::Init(_IServerSlotServices* pParent)
 	m_pParent = pParent;
 }
 
-void CServerStateMachine::HandleDISCONNECTED(unsigned int dwIncomingSignal, DWORD_PTR dwParam)
+void CServerStateMachine::HandleDISCONNECTED(uint dwIncomingSignal, DWORD_PTR dwParam)
 {
 	// the machine can't leave this status
 }
 
-void CServerStateMachine::OnSignal(unsigned int dwOutgoingSignal, DWORD_PTR dwParam)
+void CServerStateMachine::OnSignal(uint dwOutgoingSignal, DWORD_PTR dwParam)
 {
 	switch (dwOutgoingSignal)
 	{

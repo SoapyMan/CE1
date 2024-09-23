@@ -40,7 +40,7 @@ inline vectorf DecodeVec6b(const Vec3_tpl<short>& vec) {
 struct vec4b {
 	short yaw;
 	char pitch;
-	unsigned char len;
+	uchar len;
 };
 inline vec4b EncodeVec4b(const vectorf& vec) {
 	vec4b res = { 0,0,0 };
@@ -730,10 +730,10 @@ int CLivingEntity::GetStateSnapshot(CStream& stm, float time_back, int flags)
 	}
 	if (m_timeFlying > 0) {
 		stm.Write(true);
-		stm.Write((unsigned short)float2int(m_timeFlying * 6553.6f));
+		stm.Write((ushort)float2int(m_timeFlying * 6553.6f));
 	}
 	else stm.Write(false);
-	unsigned int imft = isneg(0.1f - m_minFlyTime) + isneg(0.35f - m_minFlyTime) + isneg(0.75f - m_minFlyTime); // snap to 0..0.2..0.5..1
+	uint imft = isneg(0.1f - m_minFlyTime) + isneg(0.35f - m_minFlyTime) + isneg(0.75f - m_minFlyTime); // snap to 0..0.2..0.5..1
 	stm.WriteNumberInBits(imft, 2);
 	stm.Write((bool)(m_bFlying != 0));
 
@@ -759,7 +759,7 @@ int CLivingEntity::GetStateSnapshot(CStream& stm, float time_back, int flags)
 int CLivingEntity::SetStateFromSnapshot(CStream& stm, int flags)
 {
 	bool bnz, bCompressed;
-	unsigned short tmp;
+	ushort tmp;
 	int ver = 0;
 	stm.ReadNumberInBits(ver, 4);
 	if (ver != SNAPSHOT_VERSION)
@@ -821,7 +821,7 @@ int CLivingEntity::SetStateFromSnapshot(CStream& stm, int flags)
 		stm.Read(tmp); m_timeFlying = tmp * (10.0f / 65536);
 	}
 	else m_timeFlying = 0;
-	unsigned int imft; stm.ReadNumberInBits(imft, 2);
+	uint imft; stm.ReadNumberInBits(imft, 2);
 	static float flytable[] = { 0.0f, 0.2f, 0.5f, 1.0f };
 	m_minFlyTime = flytable[imft];
 	stm.Read(bnz);
@@ -959,7 +959,7 @@ void CLivingEntity::AddLegsImpulse(const vectorf& vel, const vectorf& nslope, bo
 	(ssca.ptTest = m_pos).z -= m_hPivot; ssca.dirTest = m_gravity;
 
 	if (m_pLastGroundCollider && m_flags & lef_push_objects &&
-		(unsigned int)m_pLastGroundCollider->m_iSimClass - 1u < 2u && m_pLastGroundCollider->m_flags & pef_pushable_by_players &&
+		(uint)m_pLastGroundCollider->m_iSimClass - 1u < 2u && m_pLastGroundCollider->m_flags & pef_pushable_by_players &&
 		((pbody = m_pLastGroundCollider->GetRigidBody(m_iLastGroundColliderPart))->Minv < m_massinv * 2 ||
 			(ncoll = m_pLastGroundCollider->GetColliders(pColliders)) == 0 || (ncoll == 1 && pColliders[0] == m_pLastGroundCollider)) &&
 		!m_pLastGroundCollider->GetStatus(&ssca))
@@ -1146,7 +1146,7 @@ int CLivingEntity::Step(float time_interval)
 						pentlist[i] != this))// && pentlist[i]->GetParams(&pdyn) && pdyn.bActive))
 				{
 					if (pentlist[i]->m_iSimClass == 1 && m_timeSinceImpulseContact < 0.2f && pentlist[i]->GetMassInv()>0) {
-						int ipart; unsigned int flags;
+						int ipart; uint flags;
 						for (ipart = 0, flags = 0; ipart < pentlist[i]->m_nParts; ipart++)
 							flags |= pentlist[i]->m_parts[ipart].flags;
 						if (flags & geom_colltype_player)

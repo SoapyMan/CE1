@@ -84,7 +84,7 @@ protected:
 	// extracts the file path from the file header with subsequent information
 	// may, or may not, put all letters to lower-case (depending on whether the system is to be case-sensitive or not)
 	// it's the responsibility of the caller to ensure that the file name is in readable valid memory
-	string GetFilePath (const char* pFileName, ZipFile::ushort nFileNameLength);
+	string GetFilePath (const char* pFileName, ushort nFileNameLength);
 
 	// validates (if the init method has the corresponding value) the given file/header
 	void Validate(const FileEntry& fileEntry);
@@ -94,7 +94,7 @@ protected:
 	void InitDataOffset (FileEntry& fileEntry, const ZipFile::CDRFileHeader* pFileHeader);
 
 	// seeks in the file relative to the starting position
-	void Seek (ZipFile::ulong nPos, int nOrigin = SEEK_SET); // throw
+	void Seek (ulong nPos, int nOrigin = SEEK_SET); // throw
 	long Tell (); // throw
 	void Read (void* pDest, unsigned nSize); // throw
 protected:

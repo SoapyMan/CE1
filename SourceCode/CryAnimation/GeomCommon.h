@@ -3,7 +3,7 @@
 
 #include "TFace.h"
 #pragma pack(push,1)
-typedef TFace<unsigned short> GeomFace;
+typedef TFace<ushort> GeomFace;
 #pragma pack(pop)
-typedef unsigned char GeomMtlID;
+typedef uchar GeomMtlID;
 #endif

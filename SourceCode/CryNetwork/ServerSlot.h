@@ -54,7 +54,7 @@ public:
 
 	virtual bool IsActive() = 0;
 	virtual void Unlink() = 0;
-	virtual void Update(unsigned int nTime, CNP* pCNP, CStream* pStream) = 0;
+	virtual void Update(uint nTime, CNP* pCNP, CStream* pStream) = 0;
 	virtual CIPAddress& GetIP() { return m_ipAddress; }
 	virtual void GetMemoryStatistics(ICrySizer* pSizer) = 0;
 	virtual bool SendSecurityQuery(CStream& stm) { return true; };
@@ -65,29 +65,29 @@ public:
 	virtual void Advise(IServerSlotSink* pSink) { m_pSink = pSink; }
 	virtual void ResetBandwidthStats();
 	virtual void GetBandwidthStats(SServerSlotBandwidthStats& out) const;
-	virtual unsigned int GetClientIP() const { return m_ipAddress.GetAsUINT(); };
+	virtual uint GetClientIP() const { return m_ipAddress.GetAsUINT(); };
 	virtual void OnPlayerAuthorization(bool bAllow, const char* szError, const BYTE* pGlobalID,
-		unsigned int uiGlobalIDSize);
+		uint uiGlobalIDSize);
 
 	//////////////////////////////////////////////////////////////////////////
 	// Returns client specific flags.
-	virtual unsigned int GetClientFlags() { return 0; };
+	virtual uint GetClientFlags() { return 0; };
 
 	virtual bool IsLocalSlot() const { return false; };
 
 public: // -----------------------------------------------------------------------
 
 	BYTE* m_pbAuthorizationID;				//!< CD Key AuthorizationID (use new and delete)
-	unsigned int								m_uiAuthorizationSize;			//!< Size of AuthorizationID in bytes
+	uint								m_uiAuthorizationSize;			//!< Size of AuthorizationID in bytes
 
 	BYTE* m_pbGlobalID;								//!< CD Key GlobalID (use new and delete)
-	unsigned int								m_uiGlobalIDSize;						//!< Size of GlobalID in bytes
+	uint								m_uiGlobalIDSize;						//!< Size of GlobalID in bytes
 
 protected: // --------------------------------------------------------------------
 
 	CNetwork* m_pNetwork;									//!<
 	CIPAddress									m_ipAddress;								//!<
-	unsigned char								m_cClientID;								//!<	//<<FIXME>> this can be removed in future
+	uchar								m_cClientID;								//!<	//<<FIXME>> this can be removed in future
 
 	SServerSlotBandwidthStats		m_BandwidthStats;						//!< used for bandwidth calculations (to adjust the bandwidth)
 	IServerSlotSink* m_pSink;										//!< connected CXServerSlot (game specific part)
@@ -111,7 +111,7 @@ public: // --------------------------------------------------------------
 	//!
 	bool IsActive();
 	//!
-	void Update(unsigned int nTime, CNP* pCNP, CStream* pStream);
+	void Update(uint nTime, CNP* pCNP, CStream* pStream);
 	//! unlink from the local server
 	void Unlink() { m_pParent = nullptr; }
 
@@ -123,10 +123,10 @@ public: // --------------------------------------------------------------
 	virtual void SendUnreliable(CStream& stm);
 	virtual bool IsReady();
 	virtual void Release();
-	virtual unsigned int GetPacketsLostCount() { return m_ctpEndpoint.GetLostPackets(); }
-	virtual unsigned int GetUnreliablePacketsLostCount();
-	virtual unsigned int GetPing();
-	virtual unsigned char GetID() { return m_cClientID; }
+	virtual uint GetPacketsLostCount() { return m_ctpEndpoint.GetLostPackets(); }
+	virtual uint GetUnreliablePacketsLostCount();
+	virtual uint GetPing();
+	virtual uchar GetID() { return m_cClientID; }
 
 	// interface _IServerSlotServices ----------------------------------------------
 
@@ -139,7 +139,7 @@ public: // --------------------------------------------------------------
 	virtual bool SendServerReady();
 	virtual bool SendSecurityQuery(CStream& stm);
 	virtual bool SendPunkBusterMsg(CStream& stm);
-	virtual void Start(unsigned char cClientID, CIPAddress& ip);
+	virtual void Start(uchar cClientID, CIPAddress& ip);
 
 	// interface _IEndpointUser ----------------------------------------------------
 
@@ -159,13 +159,13 @@ public: // --------------------------------------------------------------
 	virtual void OnCCPSecurityResp(CStream& stm);
 	virtual void OnCCPPunkBusterMsg(CStream& stm);
 
-	virtual unsigned int GetClientFlags() { return m_nClientFlags; };
+	virtual uint GetClientFlags() { return m_nClientFlags; };
 
 	virtual bool IsLocalSlot() const { return false; };
 
 private: // --------------------------------------------------------------------------
 
-	void ProcessPacket(unsigned char cFrameType, bool bSTC, CStream* pStream);
+	void ProcessPacket(uchar cFrameType, bool bSTC, CStream* pStream);
 
 	CServerStateMachine					m_smCCPMachine;					//!<
 #ifdef NO_GNB
@@ -188,8 +188,8 @@ private: // --------------------------------------------------------------------
 
 	struct CNPServerVariables		m_ServerVariables;			//!<
 
-	unsigned int								m_nCurrentTime;					//!<
-	unsigned int								m_nPublicKey;						//!<
+	uint								m_nCurrentTime;					//!<
+	uint								m_nPublicKey;						//!<
 	//////////////////////////////////////////////////////////////////////////
 	// Client info.
 	//////////////////////////////////////////////////////////////////////////
@@ -197,7 +197,7 @@ private: // --------------------------------------------------------------------
 	unsigned										m_nClientOS_Minor;			//!<
 	unsigned										m_nClientOS_Major;			//!<
 	// Client flags.
-	unsigned int								m_nClientFlags;					//!<
+	uint								m_nClientFlags;					//!<
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -217,7 +217,7 @@ public:
 	void GetMemoryStatistics(ICrySizer* pSizer);
 
 	bool IsActive() { return true; }
-	void Update(unsigned int nTime, CNP* pCNP, CStream* pStream) {};
+	void Update(uint nTime, CNP* pCNP, CStream* pStream) {};
 	void PushData(CStream& stm);
 	void UpdateSlot();
 	void Unlink() { m_pServer = nullptr; }
@@ -231,10 +231,10 @@ public:
 	virtual void SendUnreliable(CStream& stm);
 	virtual bool IsReady() { return ((m_pClient && m_pSink) ? true : false); }
 	virtual void Release();
-	virtual unsigned int GetPacketsLostCount() { return 0; }
-	virtual unsigned int GetUnreliablePacketsLostCount() { return 0; }
-	virtual unsigned int GetPing() { return 0; }
-	virtual unsigned char GetID() { return m_cClientID; }
+	virtual uint GetPacketsLostCount() { return 0; }
+	virtual uint GetUnreliablePacketsLostCount() { return 0; }
+	virtual uint GetPing() { return 0; }
+	virtual uchar GetID() { return m_cClientID; }
 
 	// interface _IServerSlotServices ------------------------------------------
 
@@ -245,7 +245,7 @@ public:
 	virtual bool SendContextSetup() { return true; }
 	virtual bool SendDisconnect(const char* szCause) { return true; }
 	virtual bool SendServerReady() { return true; }
-	virtual void Start(unsigned char cClientID, CIPAddress& ip) {}
+	virtual void Start(uchar cClientID, CIPAddress& ip) {}
 
 	// interface _IEndpointUser ----------------------------------------------------
 

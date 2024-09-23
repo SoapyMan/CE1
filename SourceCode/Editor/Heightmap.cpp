@@ -120,9 +120,9 @@ protected:
 
 private:
 	CRect m_rc;
-	TImage<unsigned char> m_undo;
-	TImage<unsigned char> m_redo;
-	TImage<unsigned char> m_hmap;
+	TImage<uchar> m_undo;
+	TImage<uchar> m_redo;
+	TImage<uchar> m_hmap;
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -200,7 +200,7 @@ void CHeightmap::Resize( int iWidth, int iHeight,int unitSize,bool bCleanOld )
 	prevUnitSize = m_unitSize;
 
 	TImage<t_hmap> prevHeightmap;
-	TImage<unsigned char> prevInfo;
+	TImage<uchar> prevInfo;
 
 	if (bCleanOld)
 	{
@@ -374,7 +374,7 @@ void CHeightmap::LoadBMP(LPCSTR pszFileName, bool bNoiseAndFilter)
 void CHeightmap::SaveImage(LPCSTR pszFileName, bool bNoiseAndFilter)
 {
 	uint *pImageData = NULL;
-	unsigned int i, j;
+	uint i, j;
 	uint8 iColor;
 	t_hmap *pHeightmap = NULL;
 	UINT iWidth = GetWidth();
@@ -513,7 +513,7 @@ void CHeightmap::Noise()
 
 	Verify();
 
-	unsigned int i, j;
+	uint i, j;
 	long iCurPos;
 	UINT iNoiseSwapMode, iNoiseX, iNoiseY;
 	UINT iNoiseOffsetX, iNoiseOffsetY;
@@ -649,7 +649,7 @@ void CHeightmap::Smooth()
 	// Smooth the heightmap
 	////////////////////////////////////////////////////////////////////////
 
-	unsigned int i, j;
+	uint i, j;
 
 	Verify();
 
@@ -680,7 +680,7 @@ void CHeightmap::Invert()
 	// Invert the heightmap
 	////////////////////////////////////////////////////////////////////////
 
-	unsigned int i;
+	uint i;
 
 	Verify();
 
@@ -697,7 +697,7 @@ void CHeightmap::RemoveWater()
 	// Remove any water from the heightmap
 	////////////////////////////////////////////////////////////////////////
 
-	unsigned int i;
+	uint i;
 
 	Verify();
 
@@ -714,7 +714,7 @@ void CHeightmap::Normalize()
 	// Normalize the heightmap to a 0 - 255 range
 	////////////////////////////////////////////////////////////////////////
 
-	unsigned int i, j;
+	uint i, j;
 	float fLowestPoint = 512000.0f, fHighestPoint = -512000.0f;
 	float fValueRange;
 	float fHeight;
@@ -767,7 +767,7 @@ bool CHeightmap::GetDataEx(t_hmap *pData, UINT iDestWidth, bool bSmooth, bool bN
 	// Retrieve heightmap data. Scaling and noising is optional
 	////////////////////////////////////////////////////////////////////////
 
-	unsigned int i, j;
+	uint i, j;
 	long iXSrcFl, iXSrcCe, iYSrcFl, iYSrcCe;
 	float fXSrc, fYSrc;
 	float fHeight[4];
@@ -907,7 +907,7 @@ bool CHeightmap::GetData( CRect &srcRect,CFloatImage &hmap, bool bSmooth,bool bN
 	// Retrieve heightmap data. Scaling and noising is optional
 	////////////////////////////////////////////////////////////////////////
 
-	unsigned int i, j;
+	uint i, j;
 	int iXSrcFl, iXSrcCe, iYSrcFl, iYSrcCe;
 	float fXSrc, fYSrc;
 	float fHeight[4];
@@ -1088,7 +1088,7 @@ void CHeightmap::GenerateTerrain(const SNoiseParams &noiseParam)
 	// Generate a new terrain with the parameters stored in sParam
 	////////////////////////////////////////////////////////////////////////
 
-	unsigned int i, j;
+	uint i, j;
 	CDynamicArray2D cHeightmap(GetWidth(), GetHeight());
 	CNoise cNoise;
 	float fYScale = 255.0f;
@@ -1164,7 +1164,7 @@ void CHeightmap::SmoothSlope()
 
 	UINT iCurPos;
 	float fAverage;
-	unsigned int i, j;
+	uint i, j;
 
 	CLogFile::WriteLine("Smoothing the slope of the heightmap...");
 
@@ -1401,7 +1401,7 @@ void CHeightmap::MakeBeaches()
   if(TerrainFormulaDlg.DoModal()!=IDOK)
     return;
 
-	unsigned int i, j;
+	uint i, j;
 	t_hmap *pHeightmapData = NULL;
 	t_hmap *pHeightmapDataStart = NULL;
 	double dCurHeight;
@@ -1462,7 +1462,7 @@ void CHeightmap::LowerRange(float fFactor)
 	// more flat
 	//////////////////////////////////////////////////////////////////////
 
-	unsigned int i;
+	uint i;
 	float fWaterHeight = m_fWaterLevel;
 
 	CLogFile::WriteLine("Lowering range...");
@@ -1481,7 +1481,7 @@ void CHeightmap::Randomize()
 	// Add a small amount of random noise
 	////////////////////////////////////////////////////////////////////////
 
-	unsigned int i;
+	uint i;
 
 	CLogFile::WriteLine("Lowering range...");
 
@@ -1496,7 +1496,7 @@ void CHeightmap::Randomize()
 	SetModified();
 }
 
-void CHeightmap::DrawSpot(unsigned long iX, unsigned long iY,
+void CHeightmap::DrawSpot(ulong iX, ulong iY,
 						              uint8 iWidth, float fAddVal, 
 						              float fSetToHeight, bool bAddNoise)
 {
@@ -1819,7 +1819,7 @@ void CHeightmap::Hold()
 	VERIFY(fwrite(m_pHeightmap, sizeof(t_hmap), m_iWidth * m_iHeight, hFile));
 
 	//! Write the info.
-	VERIFY(fwrite( m_info.GetData(),sizeof(unsigned char), m_info.GetSize(), hFile));
+	VERIFY(fwrite( m_info.GetData(),sizeof(uchar), m_info.GetSize(), hFile));
 	
 	fclose(hFile);
 
@@ -1875,7 +1875,7 @@ bool CHeightmap::Read(CString strFileName)
 
 	//! Write the info.
 	m_info.Allocate( m_iWidth,m_iHeight );
-	VERIFY(fread( m_info.GetData(),sizeof(unsigned char), m_info.GetSize(), hFile));
+	VERIFY(fread( m_info.GetData(),sizeof(uchar), m_info.GetSize(), hFile));
 
 	fclose(hFile);
 
@@ -1896,7 +1896,7 @@ void CHeightmap::InitNoise()
 	float fFade = 0.46f;
 	float fLowestPoint = 256000.0f, fHighestPoint = -256000.0f;
 	float fValueRange;
-	unsigned int i, j;
+	uint i, j;
 
 	CRYASSERT(!m_pNoise);
 
@@ -1955,7 +1955,7 @@ void CHeightmap::CalcSurfaceTypes( const CRect *rect )
 	else
 		rc.SetRect( 0,0,m_iWidth,m_iHeight );
 
-	unsigned char *pInfo = m_info.GetData();
+	uchar *pInfo = m_info.GetData();
 
 	// Generate the masks
 	CCryEditDoc *doc = GetIEditor()->GetDocument();
@@ -2078,7 +2078,7 @@ void CHeightmap::UpdateEngineTerrain( int x1,int y1,int width,int height,bool bE
 	image.Allocate( w,h );
 	ushort *terrainBlock = image.GetData();
 
-	unsigned char *pInfo = m_info.GetData();
+	uchar *pInfo = m_info.GetData();
 
 	ushort terrUpdateFlags = 0;
 	if (bInfoBits)
@@ -2089,12 +2089,12 @@ void CHeightmap::UpdateEngineTerrain( int x1,int y1,int width,int height,bool bE
 			int yp = y*m_iWidth;
 			for (int x = x1; x < x2; x++)
 			{
-				unsigned short *p = &terrainBlock[(y-y1)*w + (x-x1)];
+				ushort *p = &terrainBlock[(y-y1)*w + (x-x1)];
 				// Must be 256 for compatability with engine.
 				//*p = ftoi( m_pHeightmap[x + yp]*256.0f );
 
 				//m_info[x+yp] &= ~HEIGHTMAP_INFO_SFTYPE_MASK;
-				unsigned char hinfo = pInfo[x+yp];
+				uchar hinfo = pInfo[x+yp];
 				*p = ((hinfo&HEIGHTMAP_INFO_SFTYPE_MASK) >> HEIGHTMAP_INFO_SFTYPE_SHIFT);
 				if (hinfo&HEIGHTMAP_INFO_HOLE)
 				{
@@ -2112,7 +2112,7 @@ void CHeightmap::UpdateEngineTerrain( int x1,int y1,int width,int height,bool bE
 		{
 			for (int x = x1; x < x2; x++)
 			{
-				unsigned short *p = &terrainBlock[(y-y1)*w + (x-x1)];
+				ushort *p = &terrainBlock[(y-y1)*w + (x-x1)];
 				// Must be 256 for compatability with engine.
 				*p = ftoi( m_pHeightmap[x + y*m_iWidth]*256.0f );
 			}
@@ -2526,7 +2526,7 @@ CPoint CHeightmap::ImportBlock( CXmlArchive &xmlAr,CPoint newPos,bool bUseNewPos
 	if (xmlAr.pNamedData->GetDataBlock( "HeightmapInfo",pData,size ))
 	{
 		CByteImage infoSubImage;
-		infoSubImage.Attach( (unsigned char*)pData,subRc.Width(),subRc.Height() );
+		infoSubImage.Attach( (uchar*)pData,subRc.Width(),subRc.Height() );
 
 		m_info.SetSubImage( subRc.left,subRc.top,infoSubImage );
 	}
@@ -2573,7 +2573,7 @@ CPoint CHeightmap::ImportBlock( CXmlArchive &xmlAr,CPoint newPos,bool bUseNewPos
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CHeightmap::CopyFrom( t_hmap *pHmap,unsigned char *pInfo,int resolution )
+void CHeightmap::CopyFrom( t_hmap *pHmap,uchar *pInfo,int resolution )
 {
 	int x,y;
 	int res = crymin(resolution,m_iWidth);

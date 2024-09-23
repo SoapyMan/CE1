@@ -564,14 +564,11 @@ public:
 
 	void mfDelInst()
 	{
-		if (m_Insts[m_CurInst].m_pHandle && (INT_PTR)m_Insts[m_CurInst].m_pHandle != -1)
+		if (m_Insts[m_CurInst].m_pHandle && m_Insts[m_CurInst].m_pHandle != (void*)-1)
 		{
-			if (m_Insts[m_CurInst].m_BindConstants)
-				delete m_Insts[m_CurInst].m_BindConstants;
-			if (m_Insts[m_CurInst].m_BindVars)
-				delete m_Insts[m_CurInst].m_BindVars;
-			if (m_Insts[m_CurInst].m_ParamsNoObj)
-				delete m_Insts[m_CurInst].m_ParamsNoObj;
+			SAFE_DELETE(m_Insts[m_CurInst].m_BindConstants);
+			SAFE_DELETE(m_Insts[m_CurInst].m_BindVars);
+			SAFE_DELETE(m_Insts[m_CurInst].m_ParamsNoObj);
 			IDirect3DPixelShader9* pVS = (IDirect3DPixelShader9*)m_Insts[m_CurInst].m_pHandle;
 			SAFE_RELEASE(pVS);
 		}

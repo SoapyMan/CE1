@@ -50,14 +50,14 @@ CCTPEndpoint::~CCTPEndpoint()
 {
 }
 
-void CCTPEndpoint::SetPublicCryptKey(unsigned int key)
+void CCTPEndpoint::SetPublicCryptKey(uint key)
 {
 	m_nEncryptKey[1] = key;
 }
 
 //////////////////////////////////////////////////////////////////////
 //!	set the average rate of the outgoing stream
-void CCTPEndpoint::SetRate(unsigned int nBytePerSec)
+void CCTPEndpoint::SetRate(uint nBytePerSec)
 {
 	m_nRate = nBytePerSec;
 	m_fBytePerMillisec = ((float)m_nRate) / 1000.0f;
@@ -191,7 +191,7 @@ void CCTPEndpoint::Dump()
 
 //////////////////////////////////////////////////////////////////////
 //! main loop of the class
-void CCTPEndpoint::Update(unsigned int nTime, unsigned char cFrameType, CStream* pStm)
+void CCTPEndpoint::Update(uint nTime, uchar cFrameType, CStream* pStm)
 {
 	m_nCurrentTime = nTime;
 	// if there is a incoming frame
@@ -326,8 +326,8 @@ void CCTPEndpoint::CryptStream(CStream& stm)
 	IDataProbe *pProbe = GetISystem()->GetIDataProbe();
 	char temp[2048];
 	//int len = stm.
-	unsigned int* pBuffer = (unsigned int*)stm.GetPtr();
-	unsigned int destLen = 2048;
+	uint* pBuffer = (uint*)stm.GetPtr();
+	uint destLen = 2048;
 	pProbe->Compress( temp,destLen,pBuffer,stm.GetSize()*8 );
 	int len = TEA_GETSIZE(stm.GetSize()*8);
 	//TEA_ENCODE( pBuffer,pBuffer,len,m_nEncryptKey );
@@ -339,7 +339,7 @@ void CCTPEndpoint::CryptStream(CStream& stm)
 void CCTPEndpoint::UncyptStream(CStream& stm)
 {
 	/*
-	unsigned int* pBuffer = (unsigned int*)stm.GetPtr();
+	uint* pBuffer = (uint*)stm.GetPtr();
 	int len = TEA_GETSIZE(stm.GetSize()*8);
 	//TEA_DECODE( pBuffer,pBuffer,len,m_nEncryptKey );
 	*/
@@ -369,12 +369,12 @@ bool CCTPEndpoint::SendUnreliable(CStream& stmData)
 /*
 void MTFEncode(BYTE *pDest,BYTE *pSource,int nSize)
 {
-	unsigned char order[ 256 ];
+	uchar order[ 256 ];
 	int i,c,count;
 
 	for ( i = 0 ; i < 256 ; i++ )
 	{
-		order[ i ] = (unsigned char) i;
+		order[ i ] = (uchar) i;
 	}
 
 	for(count=0;count<nSize;count++)
@@ -398,19 +398,19 @@ void MTFEncode(BYTE *pDest,BYTE *pSource,int nSize)
 		{
 			order[ j ] = order[ j - 1 ];
 		}
-		order[ 0 ] = (unsigned char) c;
+		order[ 0 ] = (uchar) c;
 	}
 }
 
 void MTFDecode(BYTE *pDest,BYTE *pSource,int nSize)
 {
 
-	 unsigned char order[ 256 ];
+	 uchar order[ 256 ];
 	 int i,c,count;
 
 	 for ( i = 0 ; i < 256 ; i++ )
 	 {
-		 order[ i ] = (unsigned char) i;
+		 order[ i ] = (uchar) i;
 	 }
 
 	 for(count=0;count<nSize;count++)
@@ -431,7 +431,7 @@ void MTFDecode(BYTE *pDest,BYTE *pSource,int nSize)
 		 {
 			 order[ j ] = order[ j - 1 ];
 		 }
-		 order[ 0 ] = (unsigned char) c;
+		 order[ 0 ] = (uchar) c;
 	 }
 }
 */
@@ -443,9 +443,9 @@ CStream CCTPEndpoint::CompressStream(CStream &stmUncompressed)
 #ifdef USE_PACKET_COMPRESSION
 	BYTE *pUncompressed=nullptr;
 	pUncompressed=stmUncompressed.GetPtr();
-	unsigned short nUncompressedSizeInBits=stmUncompressed.GetSize();
-	unsigned short nUncompressedSize=BITS2BYTES(nUncompressedSizeInBits);
-	unsigned short n=0;
+	ushort nUncompressedSizeInBits=stmUncompressed.GetSize();
+	ushort nUncompressedSize=BITS2BYTES(nUncompressedSizeInBits);
+	ushort n=0;
 	stmCompressed.Write(nUncompressedSizeInBits);
 	while(n<nUncompressedSize)
 	{
@@ -477,7 +477,7 @@ CStream CCTPEndpoint::UncompressStream(CStream &stmCompressed)
 {
 	CStream stmUncompressed;
 #ifdef USE_PACKET_COMPRESSION
-	unsigned short nUncompressedSize;
+	ushort nUncompressedSize;
 	stmUncompressed.Reset();
 	stmCompressed.Read(nUncompressedSize);
 	while(!stmCompressed.EOS())
@@ -624,7 +624,7 @@ void CCTPEndpoint::HandleAckTimeout()
 //!	check "the clock" for a possible buffers timer expiration
 void CCTPEndpoint::ProcessBufferTimers()
 {
-	unsigned int ulTick = m_nCurrentTime;
+	uint ulTick = m_nCurrentTime;
 	DWORD nLowest = 0xFFFFFFFF;
 	DWORD nLowestIdx;
 	bool bFound = false;
@@ -654,7 +654,7 @@ void CCTPEndpoint::ProcessBufferTimers()
 void CCTPEndpoint::ProcessAckTimer()
 {
 	// Process Ack timeout
-	unsigned int ulTick = m_nCurrentTime;
+	uint ulTick = m_nCurrentTime;
 	/////////////////////////////////
 	if (m_dwOutAckTimer)
 	{
@@ -667,9 +667,9 @@ void CCTPEndpoint::ProcessAckTimer()
 }
 
 
-unsigned int CCTPEndpoint::GetPing()
+uint CCTPEndpoint::GetPing()
 {
-	return (unsigned int)m_LatencyCalculator.GetAverageLatency();
+	return (uint)m_LatencyCalculator.GetAverageLatency();
 }
 ///////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////

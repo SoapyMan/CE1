@@ -67,7 +67,7 @@ public:
 		if (sz == 4)
 			*(int*)m_pBuf = *(int*)pbuf;
 		else
-			memcpy(m_pBuf + m_iPos, pbuf, (unsigned int)sz);
+			memcpy(m_pBuf + m_iPos, pbuf, (uint)sz);
 		m_iPos += sz;
 	}
 
@@ -77,7 +77,7 @@ public:
 		void GrowBuf(int sz) {
 		int prevsz = m_nSize; char* prevbuf = m_pBuf;
 		m_pBuf = new char[m_nSize = (m_iPos + sz - 1 & ~0xFFF) + 0x1000];
-		memcpy(m_pBuf, prevbuf, (unsigned int)prevsz);
+		memcpy(m_pBuf, prevbuf, (uint)prevsz);
 	}
 
 	template<class ftype> void Read(ftype& op) { Read(&op, sizeof(op)); }
@@ -85,7 +85,7 @@ public:
 		if (sz == 4)
 			*(int*)pbuf = *(int*)m_pBuf;
 		else
-			memcpy(pbuf, (m_pBuf + m_iPos), (unsigned int)sz);
+			memcpy(pbuf, (m_pBuf + m_iPos), (uint)sz);
 		m_iPos += sz;
 	}
 
@@ -166,8 +166,8 @@ struct pe_params_part : pe_params {	// Sets geometrical parameters of entity par
 	float* pMtx3x3T;
 	float* pMtx4x4;	// optional position and orientation via 4x4 matrix
 	float* pMtx4x4T;
-	unsigned int flagsOR, flagsAND; // new flags = (flags & flagsAND) | flagsOR
-	unsigned int flagsColliderOR, flagsColliderAND;
+	uint flagsOR, flagsAND; // new flags = (flags & flagsAND) | flagsOR
+	uint flagsColliderOR, flagsColliderAND;
 	float mass;
 	float density;
 	struct phys_geometry* pPhysGeom, * pPhysGeomProxy;
@@ -246,9 +246,9 @@ enum phentity_flags {
 struct pe_params_flags : pe_params {
 	enum entype { type_id = 15 };
 	pe_params_flags() { type = type_id; MARK_UNUSED flags, flagsOR, flagsAND; }
-	unsigned int flags;
-	unsigned int flagsOR;
-	unsigned int flagsAND;
+	uint flags;
+	uint flagsOR;
+	uint flagsAND;
 };
 
 ////////// articulated entity params
@@ -268,7 +268,7 @@ struct pe_params_joint : pe_params {
 		animationTimeStep = 0.01f;
 	}
 
-	unsigned int flags; // should be a combination of angle0,1,2_locked, angle0,1,2_auto_kd, joint_no_gravity
+	uint flags; // should be a combination of angle0,1,2_locked, angle0,1,2_auto_kd, joint_no_gravity
 	vectorf pivot; // joint pivot in entity CS
 	quaternionf q0;	// orientation of child in parent coordinates that corresponds to angles (0,0,0)
 	float* pMtx0; // same as 3x3 row major matrix
@@ -387,7 +387,7 @@ struct pe_params_particle : pe_params {
 		MARK_UNUSED surface_idx, normal, q0, minBounceVel, flags, pColliderToIgnore, iPierceability;
 	}
 
-	unsigned int flags; // see entity flags
+	uint flags; // see entity flags
 	float mass;
 	float size; // pseudo-radius
 	float thickness; // thickness when lying on a surface (if left unused, size will be used)
@@ -568,7 +568,7 @@ struct pe_action_add_constraint : pe_action {
 	quaternionf qframe[2];
 	float xlimits[2];
 	float yzlimits[2];
-	unsigned int flags;
+	uint flags;
 	IPhysicalEntity* pConstraintEntity;
 };
 
@@ -669,9 +669,9 @@ struct pe_status_pos : pe_status {
 
 	int partid; // part identifier, -1 for entire entity
 	int ipart; // optionally, part slot index
-	unsigned int flags; // status_local if part coordinates should be returned in entity CS rather than world CS
-	unsigned int flagsOR; // boolean OR for all parts flags of the object (or just flags for the selected part)
-	unsigned int flagsAND; // boolean AND for all parts flags of the object (or just flags for the selected part)
+	uint flags; // status_local if part coordinates should be returned in entity CS rather than world CS
+	uint flagsOR; // boolean OR for all parts flags of the object (or just flags for the selected part)
+	uint flagsAND; // boolean AND for all parts flags of the object (or just flags for the selected part)
 	vectorf pos; // position of center
 	vectorf BBox[2]; // bounding box relative to pos (bbox[0]-min, bbox[1]-max)
 	quaternionf q;
@@ -691,7 +691,7 @@ struct pe_status_sensors : pe_status { // Requests status of attached to the ent
 
 	vectorf* pPoints;	// pointer to array of points where sensors touch environment (assigned by physical entity)
 	vectorf* pNormals; // pointer to array of surface normals at points where sensors touch environment
-	unsigned int flags; // bitmask of flags, bit==1 - sensor touched environment
+	uint flags; // bitmask of flags, bit==1 - sensor touched environment
 };
 
 struct pe_status_dynamics : pe_status {
@@ -788,7 +788,7 @@ struct pe_status_sample_contact_area : pe_status {
 struct pe_status_caps : pe_status {
 	enum entype { type_id = 20 };
 	pe_status_caps() { type = type_id; }
-	unsigned int bCanAlterOrientation; // can change orientation that is explicitly set from outside
+	uint bCanAlterOrientation; // can change orientation that is explicitly set from outside
 };
 
 ////////// living entity statuses
@@ -863,7 +863,7 @@ struct pe_status_joint : pe_status {
 	pe_status_joint() { type = type_id; idChildBody = -1; }
 
 	int idChildBody; // requested joint is identified by child body id
-	unsigned int flags; // joint flags
+	uint flags; // joint flags
 	vectorf q;	// current joint angles (controlled by physics)
 	vectorf qext; // external angles (from animation)
 	vectorf dq; // current joint angular velocities
@@ -923,7 +923,7 @@ struct pe_geomparams {
 	float* pMtx4x4;	// optional 4x4 transformation matrix
 	float* pMtx4x4T;	// optional 4x4 column-major transformation matrix
 	int surface_idx; // surface identifier (used if corresponding CGeometry does not contain materials)
-	unsigned int flags, flagsCollider;
+	uint flags, flagsCollider;
 	float minContactDist;
 	int bRecalcBBox;
 
@@ -1196,7 +1196,7 @@ public:
 	virtual int PostSetStateFromSnapshot() = 0;
 	virtual int GetStateSnapshotTxt(char* txtbuf, int szbuf, float time_back = 0) = 0;
 	virtual void SetStateFromSnapshotTxt(const char* txtbuf, int szbuf) = 0;
-	virtual unsigned int GetStateChecksum() = 0;
+	virtual uint GetStateChecksum() = 0;
 	/*! StartStep should be called before step with the full time interval (if the step will be split into substeps)
 	*/
 	virtual void StartStep(float time_interval) = 0;
@@ -1402,8 +1402,8 @@ public:
 		@param flags bitmask (see surface_flags enum)
 		@return nonzero if success
 	*/
-	virtual int SetSurfaceParameters(int surface_idx, float bounciness, float friction, unsigned int flags = 0) = 0;
-	virtual int GetSurfaceParameters(int surface_idx, float& bounciness, float& friction, unsigned int& flags) = 0;
+	virtual int SetSurfaceParameters(int surface_idx, float bounciness, float friction, uint flags = 0) = 0;
+	virtual int GetSurfaceParameters(int surface_idx, float& bounciness, float& friction, uint& flags) = 0;
 
 	/*! Perfomes a time step
 		@param time_interval time interval
@@ -1444,7 +1444,7 @@ public:
 		@param pskipent entity to skip
 		@return number of collisions
 	*/
-	virtual int RayWorldIntersection(vectorf org, vectorf dir, int objtypes, unsigned int flags, ray_hit* hits, int nMaxHits,
+	virtual int RayWorldIntersection(vectorf org, vectorf dir, int objtypes, uint flags, ray_hit* hits, int nMaxHits,
 		IPhysicalEntity* pSkipEnt = 0, IPhysicalEntity* pSkipEntAux = 0) = 0;
 
 	/*! Freezes (resets velocities of) all physical, living, and detached entities

@@ -58,17 +58,17 @@ public:
 	void Init(_IEndpointUser* pParent, bool bSecondary) { m_pParent = pParent; m_bSecondary = bSecondary; }
 	bool SendUnreliable(CStream& stmData);
 	bool SendReliable(CStream& stmData);
-	void Update(unsigned int nTime, unsigned char cFrameType = 0, CStream* pStm = nullptr);
-	void SetRate(unsigned int nBytePerSec);
+	void Update(uint nTime, uchar cFrameType = 0, CStream* pStm = nullptr);
+	void SetRate(uint nBytePerSec);
 	void Dump();
-	unsigned int GetRemoteTimestamp(unsigned int nTime) {
+	uint GetRemoteTimestamp(uint nTime) {
 		return m_LatencyCalculator.GetCurrentRemoteTimestamp(nTime);
 	}
 	//
-	unsigned int GetPing();
-	unsigned int GetLostPackets() { return m_nLostPackets; }
+	uint GetPing();
+	uint GetLostPackets() { return m_nLostPackets; }
 	// Changes crypt key specifically for this connection.
-	void SetPublicCryptKey(unsigned int key);
+	void SetPublicCryptKey(uint key);
 protected:
 	virtual void BuildOutgoingFrame() = 0;
 	virtual bool IsTimeToSend() = 0;
@@ -116,15 +116,15 @@ protected:
 	DWORD									m_nLostPackets;
 	DWORD									m_dwPingTime;									//!< store the timestamp of the latest pong request
 	//<<FIXME>> implement the rate control
-	unsigned int					m_nRate;
+	uint					m_nRate;
 	float									m_fBytePerMillisec;						//!< only used when RATE_CONTROL is defined
 	int									m_nAllowedBytes;
-	unsigned int					m_nLastPacketSent;
+	uint					m_nLastPacketSent;
 protected:
-	unsigned int					m_nSnaps;
-	unsigned int					m_nCurrentTime;
+	uint					m_nSnaps;
+	uint					m_nCurrentTime;
 	// Encryption key used in Transfer protocol.
-	unsigned int					m_nEncryptKey[4];
+	uint					m_nEncryptKey[4];
 };
 
 class CCTPClient :public CCTPEndpoint

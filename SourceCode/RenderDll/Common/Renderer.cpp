@@ -1147,7 +1147,7 @@ CRenderer::CRenderer()
 	CName::mfInitSubsystem();
 	init_math();
 
-	m_nFrameID = (unsigned short)-2;
+	m_nFrameID = (ushort)-2;
 
 	// tiago added
 	m_bRefraction = 0;
@@ -1648,15 +1648,15 @@ void CRenderer::GetViewport(int* x, int* y, int* width, int* height)
 #pragma pack (1)
 typedef struct
 {
-	unsigned char  id_length, colormap_type, image_type;
-	unsigned short colormap_index, colormap_length;
-	unsigned char  colormap_size;
-	unsigned short x_origin, y_origin, width, height;
-	unsigned char  pixel_size, attributes;
+	uchar  id_length, colormap_type, image_type;
+	ushort colormap_index, colormap_length;
+	uchar  colormap_size;
+	ushort x_origin, y_origin, width, height;
+	uchar  pixel_size, attributes;
 } TargaHeader_t;
 #pragma pack (pop)
 
-bool  CRenderer::SaveTga(unsigned char* sourcedata, int sourceformat, int w, int h, const char* filename, bool flip)
+bool  CRenderer::SaveTga(uchar* sourcedata, int sourceformat, int w, int h, const char* filename, bool flip)
 {
 	//CRYASSERT(0);
   //  return CImage::SaveTga(sourcedata,sourceformat,w,h,filename,flip);
@@ -1664,9 +1664,9 @@ bool  CRenderer::SaveTga(unsigned char* sourcedata, int sourceformat, int w, int
 	if (flip)
 	{
 		int size = w * (sourceformat / 8);
-		unsigned char* tempw = new unsigned char[size];
-		unsigned char* src1 = sourcedata;
-		unsigned char* src2 = sourcedata + (w * (sourceformat / 8)) * (h - 1);
+		uchar* tempw = new uchar[size];
+		uchar* src1 = sourcedata;
+		uchar* src2 = sourcedata + (w * (sourceformat / 8)) * (h - 1);
 		for (int k = 0; k < h / 2; k++)
 		{
 			memcpy(tempw, src1, size);
@@ -1679,18 +1679,18 @@ bool  CRenderer::SaveTga(unsigned char* sourcedata, int sourceformat, int w, int
 	}
 
 
-	unsigned char* oldsourcedata = sourcedata;
+	uchar* oldsourcedata = sourcedata;
 
 	if (sourceformat == FORMAT_8_BIT)
 	{
 
-		unsigned char* desttemp = new unsigned char[w * h * 3];
+		uchar* desttemp = new uchar[w * h * 3];
 		memset(desttemp, 0, w * h * 3);
 
-		unsigned char* destptr = desttemp;
-		unsigned char* srcptr = sourcedata;
+		uchar* destptr = desttemp;
+		uchar* srcptr = sourcedata;
 
-		unsigned char col;
+		uchar col;
 
 		for (int k = 0; k < w * h; k++)
 		{
@@ -1713,9 +1713,9 @@ bool  CRenderer::SaveTga(unsigned char* sourcedata, int sourceformat, int w, int
 	header.height = h;
 	header.pixel_size = sourceformat;
 
-	unsigned char* data = new unsigned char[w * h * (sourceformat >> 3)];
-	unsigned char* dest = data;
-	unsigned char* source = sourcedata;
+	uchar* data = new uchar[w * h * (sourceformat >> 3)];
+	uchar* dest = data;
+	uchar* source = sourcedata;
 
 	//memcpy(dest,source,w*h*(sourceformat>>3));
 
@@ -1723,7 +1723,7 @@ bool  CRenderer::SaveTga(unsigned char* sourcedata, int sourceformat, int w, int
 	{
 		for (int by = 0; by < w; by++)
 		{
-			unsigned char r, g, b, a;
+			uchar r, g, b, a;
 			r = *source; source++;
 			g = *source; source++;
 			b = *source; source++;
@@ -1915,7 +1915,7 @@ void CRenderer::WriteTGA(byte* dat, int wdt, int hgt, const char* name, int bits
 }
 
 const char* sourceFile;
-unsigned int sourceLine;
+uint sourceLine;
 
 
 void CRenderer::WriteDDS(byte* dat, int wdt, int hgt, int Size, const char* nam, EImFormat eF, int NumMips)

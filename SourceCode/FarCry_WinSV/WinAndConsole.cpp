@@ -9,7 +9,7 @@
 //Set subsystem to console, just overwrites the default windows subsystem
 #pragma comment ( linker, "/subsystem:console" )
 
-BOOL WINAPI ConsoleWinHandlerRoutine(unsigned long dwCtrlType)
+BOOL WINAPI ConsoleWinHandlerRoutine(ulong dwCtrlType)
 {
 	// Signal type
 	switch (dwCtrlType)
@@ -32,7 +32,7 @@ BOOL WINAPI ConsoleWinHandlerRoutine(unsigned long dwCtrlType)
 }
 
 // Console main function, this code is from WinMainCRTStartup()
-int _tmain(unsigned long, TCHAR**, TCHAR**)
+int _tmain(ulong, TCHAR**, TCHAR**)
 {
 #define SPACECHAR _T(' ')
 #define DQUOTECHAR _T('\"')

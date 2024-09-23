@@ -487,7 +487,7 @@ int BreakPolygon(vector2df* ptSrc, int nPt, int nCellx, int nCelly, int maxPatch
 	memset(pGrid, 0, sizeof(int) * (nCells + 1));
 
 	if (seed != -1)
-		srand((unsigned int)seed);
+		srand((uint)seed);
 
 	for (i = 0; i < nPt; i++) // snap source points
 		ptin[i].set(float2int((ptSrc[i].x - ptmin.x) * rsnap) * snap, float2int((ptSrc[i].y - ptmin.y) * rsnap) * snap);
@@ -1062,7 +1062,7 @@ struct ComputeBitCount {
 };
 static ComputeBitCount now;
 
-int bin2ascii(const unsigned char* pin, int sz, unsigned char* pout)
+int bin2ascii(const uchar* pin, int sz, uchar* pout)
 {
 	int a0, a1, a2, i, j, nout, chr[3];
 	for (i = nout = 0; i < sz; i += 3, nout += 4) {
@@ -1074,7 +1074,7 @@ int bin2ascii(const unsigned char* pin, int sz, unsigned char* pout)
 	}
 	return nout;
 }
-int ascii2bin(const unsigned char* pin, int sz, unsigned char* pout)
+int ascii2bin(const uchar* pin, int sz, uchar* pout)
 {
 	int a0, a1, a2, a3, i, nout;
 	for (i = nout = 0; i < sz; i += 4, nout += 3) {
@@ -1189,7 +1189,7 @@ allcircles:
 
 void WritePacked(CStream& stm, int num)
 {
-	int i; for (i = 0; i < 16 && (unsigned int)num >= 1u << i * 2; i++);
+	int i; for (i = 0; i < 16 && (uint)num >= 1u << i * 2; i++);
 	stm.WriteNumberInBits(i, 5);
 	if (i > 0)
 		stm.WriteNumberInBits(num, i * 2);
@@ -1214,7 +1214,7 @@ void ReadPacked(CStream& stm, uint64& num)
 	int ilo, ihi;
 	ReadPacked(stm, ilo);
 	ReadPacked(stm, ihi);
-	num = (uint64)(unsigned int)ihi << 32 | (uint64)(unsigned int)ilo;
+	num = (uint64)(uint)ihi << 32 | (uint64)(uint)ilo;
 }
 
 void WriteCompressedPos(CStream& stm, const vectorf& pos, bool bCompress)
@@ -1235,7 +1235,7 @@ void ReadCompressedPos(CStream& stm, vectorf& pos, bool& bWasCompressed)
 {
 	stm.Read(bWasCompressed);
 	if (bWasCompressed) {
-		unsigned int ix, iy, iz;
+		uint ix, iy, iz;
 		stm.ReadNumberInBits(ix, 20); pos.x = ix * (1.0f / 512);
 		stm.ReadNumberInBits(iy, 20); pos.y = iy * (1.0f / 512);
 		stm.ReadNumberInBits(iz, 18); pos.z = iz * (1.0f / 512);

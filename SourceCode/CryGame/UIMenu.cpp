@@ -21,7 +21,7 @@ string CUIMenu::GetClassName()
 }
 
 //------------------------------------------------------------------------------------
-int CUIMenu::Update(unsigned int iMessage, unsigned int wParam, unsigned int lParam)
+int CUIMenu::Update(uint iMessage, uint wParam, uint lParam)
 {
 	return 1;
 }

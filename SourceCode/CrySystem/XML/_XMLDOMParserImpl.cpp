@@ -107,10 +107,10 @@ void _XMLDOMParserImpl::EndDocument(const char* error)
 	m_bErrorState = false;
 }
 
-unsigned int _XMLDOMParserImpl::GetByte()
+uint _XMLDOMParserImpl::GetByte()
 {
 	if (m_nFilePos >= (int)(m_pBuffer->size()))return -1;
-	return ((unsigned int)(*m_pBuffer)[m_nFilePos++]);
+	return ((uint)(*m_pBuffer)[m_nFilePos++]);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -190,7 +190,7 @@ void _XMLDOMParserImpl::OnCharacterData(const char* s, int len)
 }
 
 //////////////////////////////////////////////////////////////////////////
-bool _XMLDOMParserImpl::parse(std::vector<unsigned char>& buffer, string& errorString)
+bool _XMLDOMParserImpl::parse(std::vector<uchar>& buffer, string& errorString)
 {
 	/*
 	m_nFilePos=0;

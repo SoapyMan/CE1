@@ -39,7 +39,7 @@ void CAnimationToolBar::OnSize(UINT nType, int cx, int cy)
 	// Resize the keyframe slider
 	////////////////////////////////////////////////////////////////////////
 
-	unsigned int iIndex;
+	uint iIndex;
 	RECT rcCtrl, rcToolbar;
 
 	CToolBar::OnSize(nType, cx, cy);

@@ -93,7 +93,7 @@ void CryCharFxTrail::UpdateEntries(const Matrix44* pBones)
 
 void CryCharFxTrail::UpdateIndices()
 {
-	std::vector<unsigned short> arrIndices;
+	std::vector<ushort> arrIndices;
 	// 6 indices per quad; numVerts-1 quads per strip; numEntries-1 strips
 	arrIndices.resize((m_Params.numVerts - 1) * 6 * (m_numEntries - 1));
 

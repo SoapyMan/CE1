@@ -215,7 +215,7 @@ namespace Intersect {
 	//--- 0x03 = two intersection, lineseg has ENTRY and EXIT point  --
 	//----------------------------------------------------------------------------------
 
-	inline unsigned char Line_Sphere(const Line& line, const Sphere& s, Vec3& i0, Vec3& i1) {
+	inline uchar Line_Sphere(const Line& line, const Sphere& s, Vec3& i0, Vec3& i1) {
 
 		Vec3 end = line.pointonline + line.direction;
 
@@ -225,7 +225,7 @@ namespace Intersect {
 
 		float desc = (b * b) - (4 * a * c);
 
-		unsigned char intersection = 0;
+		uchar intersection = 0;
 		if (desc >= 0.0f)
 		{
 			float lamba0 = (-b - cry_sqrtf(desc)) / (2.0f * a);
@@ -253,7 +253,7 @@ namespace Intersect {
 	//--- 0x03 = two intersection, lineseg has ENTRY and EXIT point  --
 	//----------------------------------------------------------------------------------
 
-	inline unsigned char Ray_Sphere(const Ray& ray, const Sphere& s, Vec3& i0, Vec3& i1) {
+	inline uchar Ray_Sphere(const Ray& ray, const Sphere& s, Vec3& i0, Vec3& i1) {
 		Vec3 end = ray.origin + ray.direction;
 		float a = ray.direction | ray.direction;
 		float b = (ray.direction | (ray.origin - s.center)) * 2.0f;
@@ -261,7 +261,7 @@ namespace Intersect {
 
 		float desc = (b * b) - (4 * a * c);
 
-		unsigned char intersection = 0;
+		uchar intersection = 0;
 		if (desc >= 0.0f)
 		{
 			float lamba0 = (-b - cry_sqrtf(desc)) / (2.0f * a);
@@ -286,7 +286,7 @@ namespace Intersect {
 	inline bool Ray_SphereFirst(const Ray& ray, const Sphere& s, Vec3& intPoint)
 	{
 		Vec3 p2;
-		unsigned char res = Ray_Sphere(ray, s, intPoint, p2);
+		uchar res = Ray_Sphere(ray, s, intPoint, p2);
 		if (res == 2) { intPoint = p2; }
 		if (res > 1)	return true;
 		return false;
@@ -300,7 +300,7 @@ namespace Intersect {
 	//--- 0x02 = one intersection, lineseg has just an EXIT point but no ENTRY point (ls.start is inside the sphere)  --
 	//--- 0x03 = two intersection, lineseg has ENTRY and EXIT point  --
 	//----------------------------------------------------------------------------------
-	inline unsigned char Lineseg_Sphere(const Lineseg& ls, const Sphere& s, Vec3& i0, Vec3& i1) {
+	inline uchar Lineseg_Sphere(const Lineseg& ls, const Sphere& s, Vec3& i0, Vec3& i1) {
 
 		Vec3 dir = (ls.end - ls.start);
 
@@ -309,7 +309,7 @@ namespace Intersect {
 		float c = ((ls.start - s.center) | (ls.start - s.center)) - (s.radius * s.radius);
 		float desc = (b * b) - (4 * a * c);
 
-		unsigned char intersection = 0;
+		uchar intersection = 0;
 		if (desc >= 0.0f) {
 
 			float lamba0 = (-b - cry_sqrtf(desc)) / (2.0f * a);

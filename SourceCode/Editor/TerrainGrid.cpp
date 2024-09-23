@@ -144,7 +144,7 @@ int CTerrainGrid::LockSectorTexture( CPoint sector,CTerrainTexGen &texGen,int ge
 
 			texGen.GenerateSectorTexture( sector,rect,genFlags|ETTG_ABGR,image );
 
-			unsigned char *pSrc = (unsigned char*)image.GetData();
+			uchar *pSrc = (uchar*)image.GetData();
 			int tid = pRenderer->DownLoadToVideoMemory( pSrc,m_sectorResolution,m_sectorResolution,eTF_8888,eTF_8888,0,0,0,st->textureId );
 			//pRenderer->UpdateTextureInVideoMemory( tid,pSrc,0,0,m_sectorResolution,m_sectorResolution,eTF_8888 );
 

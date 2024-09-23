@@ -29,7 +29,7 @@
 #define DEBUG_STRING(sss) cout << sss;
 #endif
 
-#define BEGIN_STATUS_MAP()	void _ProcessSignal(unsigned int dwIncomingSignal,ULONG_PTR dwParam)	\
+#define BEGIN_STATUS_MAP()	void _ProcessSignal(uint dwIncomingSignal,ULONG_PTR dwParam)	\
 	{		\
 	if(HandleANY(dwIncomingSignal,dwParam)==ANY_SIGNAL_NOT_HANDLED) \
 	switch(m_dwStatus)	\
@@ -73,8 +73,8 @@
 class CStateMachine
 {
 protected:
-	virtual void _ProcessSignal(unsigned int dwIncomingSignal, ULONG_PTR dwParam) = 0;
-	void SetTimer(unsigned int dwName, unsigned int dwElapsed)
+	virtual void _ProcessSignal(uint dwIncomingSignal, ULONG_PTR dwParam) = 0;
+	void SetTimer(uint dwName, uint dwElapsed)
 	{
 		m_dwTimerName = dwName;
 		m_dwTimerElapsed = dwElapsed;
@@ -87,7 +87,7 @@ protected:
 		m_dwTimerName = 0;
 
 	}
-	void SetStatus(unsigned int dwStatus)
+	void SetStatus(uint dwStatus)
 	{
 		_TraceStatus(m_dwStatus);
 		_Trace(">>");
@@ -95,16 +95,16 @@ protected:
 		_Trace("\n");
 		m_dwStatus = dwStatus;
 	}
-	virtual unsigned int HandleANY(unsigned int dwIncomingSignal, DWORD_PTR dwParam)
+	virtual uint HandleANY(uint dwIncomingSignal, DWORD_PTR dwParam)
 	{
 		return ANY_SIGNAL_NOT_HANDLED;
 	}
-	virtual void OnSignal(unsigned int dwOutgoingSignal, DWORD_PTR  dwParam)
+	virtual void OnSignal(uint dwOutgoingSignal, DWORD_PTR  dwParam)
 	{
 		NET_TRACE("WARNING default OnSignal called\n");
 	}
 	virtual void _Trace(char* s) {};
-	virtual void _TraceStatus(unsigned int dwStatus) {};
+	virtual void _TraceStatus(uint dwStatus) {};
 
 public:
 	CStateMachine()
@@ -117,12 +117,12 @@ public:
 		SetStatus(STATUS_IDLE);
 		ResetTimer();
 	}
-	BOOL Update(unsigned int dwIncomingSignal = 0, DWORD_PTR dwParam = 0)
+	BOOL Update(uint dwIncomingSignal = 0, DWORD_PTR dwParam = 0)
 	{
 		if (m_dwTimerName)
 			if ((::GetTickCount() - m_dwTimerStart) >= m_dwTimerElapsed)
 			{
-				unsigned int dwTimerName = m_dwTimerName;
+				uint dwTimerName = m_dwTimerName;
 				ResetTimer();
 				_ProcessSignal(dwTimerName, 0);
 			}
@@ -135,11 +135,11 @@ public:
 		return TRUE;
 	}
 
-	unsigned int GetCurrentStatus() { return m_dwStatus; }
-	unsigned int m_dwStatus;
+	uint GetCurrentStatus() { return m_dwStatus; }
+	uint m_dwStatus;
 	//
-	unsigned int m_dwTimerStart;
-	unsigned int m_dwTimerElapsed;
-	unsigned int m_dwTimerName;
+	uint m_dwTimerStart;
+	uint m_dwTimerElapsed;
+	uint m_dwTimerName;
 };
 #endif //_STATE_MACHINE_H_

@@ -17,12 +17,12 @@ template < class IndexType > class StaticIB
 
   public :
 
-    unsigned int GetIndexCount() const 
+    uint GetIndexCount() const 
     { 
       return mIndexCount; 
     }
 
-    StaticIB( const LPDIRECT3DDEVICE8 pD3D, const unsigned int& theIndexCount )
+    StaticIB( const LPDIRECT3DDEVICE8 pD3D, const uint& theIndexCount )
     {
       mpIB = 0;
       mbLocked = false;
@@ -36,7 +36,7 @@ template < class IndexType > class StaticIB
 
     LPDIRECT3DINDEXBUFFER8 GetInterface() const { return mpIB; }
 
-    IndexType* Lock( const unsigned int& theLockCount, unsigned int& theStartIndex )
+    IndexType* Lock( const uint& theLockCount, uint& theStartIndex )
     {
       IndexType* pLockedData = 0;
 
@@ -82,7 +82,7 @@ template < class IndexType > class StaticIB
   
 };
 
-typedef StaticIB< unsigned short > StaticIB16;
-typedef StaticIB< unsigned int > StaticIB32;
+typedef StaticIB< ushort > StaticIB16;
+typedef StaticIB< uint > StaticIB32;
 
 #endif  _STATICIB_H_

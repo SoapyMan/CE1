@@ -412,7 +412,7 @@ unsigned* CStencilShadowEdgeDetector::getOrientationBitfield(int iniNumTriangles
 // The size of the vertex buffer must be at least numVertices()
 // The size of the index buffer must be at least numIndices()
 //////////////////////////////////////////////////////////////////////////////
-void CStencilShadowEdgeDetector::meshShadowVolume(Vec3d vLight, float fFactor, Vec3d* outpVertexBuf, unsigned short* pIndexBuf)
+void CStencilShadowEdgeDetector::meshShadowVolume(Vec3d vLight, float fFactor, Vec3d* outpVertexBuf, ushort* pIndexBuf)
 {
 	CRYASSERT(outpVertexBuf);
 
@@ -442,14 +442,14 @@ void CStencilShadowEdgeDetector::meshShadowVolume(Vec3d vLight, float fFactor, V
 	}
 
 
-	unsigned short* pIndex = pIndexBuf;
+	ushort* pIndex = pIndexBuf;
 	unsigned nNumEdges;
-	const unsigned short* pEdgeArray = getShadowEdgeArray(nNumEdges);
+	const ushort* pEdgeArray = getShadowEdgeArray(nNumEdges);
 
 	// fill in the shadow volume quads (extruded vertices)
 	for (i = 0; i < nNumEdges; ++i)
 	{
-		unsigned short Edge1 = *pEdgeArray++, Edge2 = *pEdgeArray++;
+		ushort Edge1 = *pEdgeArray++, Edge2 = *pEdgeArray++;
 
 		CRYASSERT(Edge1 < nNumVerts);
 		CRYASSERT(Edge2 < nNumVerts);
@@ -468,8 +468,8 @@ void CStencilShadowEdgeDetector::meshShadowVolume(Vec3d vLight, float fFactor, V
 
 	// fill in the shadow volume caps 
 	unsigned nFaceIndices;
-	const unsigned short* pFaceIndex = getShadowFaceIndices(nFaceIndices);
-	const unsigned short* pFaceIndexEnd = pFaceIndex + nFaceIndices;
+	const ushort* pFaceIndex = getShadowFaceIndices(nFaceIndices);
+	const ushort* pFaceIndexEnd = pFaceIndex + nFaceIndices;
 	// fill the near cap
 	memcpy(pIndex, pFaceIndex, sizeof(*pFaceIndex) * nFaceIndices);
 

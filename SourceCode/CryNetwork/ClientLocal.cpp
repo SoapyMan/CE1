@@ -45,7 +45,7 @@ CClientLocal::~CClientLocal()
 		m_pServerSlot->ResetSink();
 }
 
-void CClientLocal::Connect(const char* szIP, WORD wPort, const BYTE* pbAuthorizationID, unsigned int uiAuthorizationSize)
+void CClientLocal::Connect(const char* szIP, WORD wPort, const BYTE* pbAuthorizationID, uint uiAuthorizationSize)
 {
 	CRYASSERT(pbAuthorizationID);
 	CRYASSERT(uiAuthorizationSize > 0);
@@ -114,7 +114,7 @@ bool CClientLocal::IsReady()
 	return ((m_pSink && m_pServerSlot) ? true : false);
 }
 
-bool CClientLocal::Update(unsigned int nTime)
+bool CClientLocal::Update(uint nTime)
 {
 	int iCount = 0;
 
@@ -190,7 +190,7 @@ void CClientLocal::OnCDKeyAuthorization(BYTE* pbAuthorizationID)
 	}
 
 	char* sSemicolon;
-	unsigned short port = 0;
+	ushort port = 0;
 	char temp[256];
 	strncpy(temp, m_sServerIP.c_str(), 256);
 

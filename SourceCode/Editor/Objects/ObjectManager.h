@@ -259,7 +259,7 @@ private:
 	//! Array of currently visible objects.
 	std::vector<CBaseObjectPtr> m_visibleObjects;
 	bool m_bVisibleObjectValid;
-	unsigned int m_lastHideMask;
+	uint m_lastHideMask;
 	//! List of objects that was displayed at last frame.
 	std::vector<CBaseObject*> m_displayedObjects;
 

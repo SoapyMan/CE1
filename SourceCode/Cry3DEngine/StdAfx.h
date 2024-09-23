@@ -58,12 +58,6 @@
 #include <CryMemoryManager.h>
 #endif
 
-#ifndef uchar
-typedef unsigned char		uchar;
-typedef unsigned int		uint;
-typedef unsigned short	ushort;
-#endif
-
 #include <vector>
 #include <list>
 #include <map>	
@@ -95,10 +89,10 @@ inline int __cdecl stricmp(const char* dst, const char* src)
 	int f, l;
 	do
 	{
-		if (((f = (unsigned char)(*(dst++))) >= 'A') && (f <= 'Z'))
+		if (((f = (uchar)(*(dst++))) >= 'A') && (f <= 'Z'))
 			f -= ('A' - 'a');
 
-		if (((l = (unsigned char)(*(src++))) >= 'A') && (l <= 'Z'))
+		if (((l = (uchar)(*(src++))) >= 'A') && (l <= 'Z'))
 			l -= ('A' - 'a');
 	} while (f && (f == l));
 
@@ -114,10 +108,10 @@ inline int __cdecl strnicmp(const char* first, const char* last, size_t count)
 	{
 		do
 		{
-			if (((f = (unsigned char)(*(first++))) >= 'A') && (f <= 'Z'))
+			if (((f = (uchar)(*(first++))) >= 'A') && (f <= 'Z'))
 				f -= 'A' - 'a';
 
-			if (((l = (unsigned char)(*(last++))) >= 'A') && (l <= 'Z'))
+			if (((l = (uchar)(*(last++))) >= 'A') && (l <= 'Z'))
 				l -= 'A' - 'a';
 		} while (--count && f && (f == l));
 

@@ -289,7 +289,7 @@ void CGLRenderer::CreateBuffer(int size, int vertexformat, CVertexBuffer* buf, i
 		}
 		else
 		{ // System buffer 
-			data = new unsigned char[size];
+			data = new uchar[size];
 		}
 	buf->m_VS[Type].m_VData = data;
 }
@@ -423,7 +423,7 @@ CVertexBuffer* CGLRenderer::CreateBuffer(int vertexcount, int vertexformat, cons
 		}
 		else
 		{ // System buffer 
-			vtemp->m_VS[VSF_GENERAL].m_VData = new unsigned char[size];
+			vtemp->m_VS[VSF_GENERAL].m_VData = new uchar[size];
 			vtemp->m_fence = 0;
 		}
 
@@ -1058,7 +1058,7 @@ void* CGLRenderer::AllocateVarShunk(int bytes_count, const char* szSource)
 	{
 		return nullptr;
 		iConsole->Exit("Error: Pipline buffer overflow.");// Please increase pip_buffer_size value in engine.ini file and restart");
-		/*    ptr = (void *)new unsigned char [bytes_count];
+		/*    ptr = (void *)new uchar [bytes_count];
 			iLog->Log("Error: pip buffer overflow");
 			iLog->Log("  Please close app and increase pip_buffer_size value in ini file, sorry :)");
 			glDisableClientState (GL_VERTEX_ARRAY_RANGE_NV);*/

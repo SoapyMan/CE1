@@ -119,7 +119,7 @@ public:
 	Vec3d m_vPhysBoxMin[4], m_vPhysBoxMax[4];
 	list2<Vec3d> m_lstProxyVerts[4];
 	list2<int>   m_lstProxyInds[4];
-	list2<unsigned char> m_lstProxyFaceMaterials[4];
+	list2<uchar> m_lstProxyFaceMaterials[4];
 
 #define MAX_PHYS_GEOMS_IN_CGF 4
 	phys_geometry* m_arrPhysGeomInfo[MAX_PHYS_GEOMS_IN_CGF];
@@ -176,7 +176,7 @@ public:
 	virtual void UnregisterUser();
 
 	virtual bool IsDefaultObject() { return (m_bDefaultObject); }
-	virtual bool MakeObjectPicture(unsigned char* pRGBAData, int nWidth);
+	virtual bool MakeObjectPicture(uchar* pRGBAData, int nWidth);
 
 #define MAX_STATOBJ_LODS_NUM 3
 	CStatObj* m_arrpLowLODs[MAX_STATOBJ_LODS_NUM];

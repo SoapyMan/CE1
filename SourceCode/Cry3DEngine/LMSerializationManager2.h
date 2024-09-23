@@ -73,7 +73,7 @@ public:
 	virtual void Release() { delete this; };
 	virtual bool ApplyLightmapfile(const char* pszFileName, std::vector<IEntityRender*>& vIGLMs);
 	virtual bool Load(const char* pszFileName, const bool cbLoadTextures = true);
-	virtual unsigned int Save(const char* pszFileName, LMGenParam rParam, const bool cbAppend = false);
+	virtual uint Save(const char* pszFileName, LMGenParam rParam, const bool cbAppend = false);
 	virtual void AddRawLMData(
 		const DWORD indwWidth, const DWORD indwHeight, const std::vector<int>& _cGLM_IDs_UsingPatch,
 		BYTE* _pColorLerp4, BYTE* _pHDRColorLerp4, BYTE* _pDomDirection3, BYTE* _pOccl2 = 0);
@@ -123,7 +123,7 @@ protected:
 	struct UVSetHeader3 : UVSetHeader
 	{
 		EntityId OcclIds[4 * 2];	//new: the occlusion map colour channel light id's, this corresponds to the std::pair<EntityId, EntityId>
-		unsigned char ucOcclCount/*1..4*/;
+		uchar ucOcclCount/*1..4*/;
 		UVSetHeader3() :ucOcclCount(0)
 		{
 			UVSetHeader::UVSetHeader();

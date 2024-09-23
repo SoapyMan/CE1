@@ -909,8 +909,8 @@ void CGameExporter::ExportMapInfo( XmlNodeRef &node )
 //////////////////////////////////////////////////////////////////////////
 bool CGameExporter::ExportSurfaceTexture( const CString &path,uint *pSurface,int iExportTexWidth,bool bHiQuality )
 {
-	unsigned int iTexSX, iTexSY;
-	unsigned int iCurTexelX, iCurTexelY;
+	uint iTexSX, iTexSY;
+	uint iCurTexelX, iCurTexelY;
 	uint dwBlendColor,dwClr1, dwClr2;
 	uint iStartPosX, iStartPosY;
 
@@ -1163,7 +1163,7 @@ void CGameExporter::FlattenHeightmap( uint16 *pSaveHeightmapData,int width,int h
 				
 				// Make the area around the building flat
 				uint16 *src = &pSaveHeightmapData[iX+iY*width];
-				unsigned int h = ftoi(fAttenuation * (fZ * 256.0f) + (1.0f - fAttenuation) * (*src));
+				uint h = ftoi(fAttenuation * (fZ * 256.0f) + (1.0f - fAttenuation) * (*src));
 				
 				*src &= TERRAIN_BITMASK; // Leave only bitsflags.
 				*src |= h & ~(TERRAIN_BITMASK); // Combine height width flags.
@@ -1182,7 +1182,7 @@ void CGameExporter::FlattenHeightmap( uint16 *pSaveHeightmapData,int width,int h
 	{
 		for (i=0; i<width; i++)
 		{
-			unsigned char hinfo = pHeightmap->InfoAt(i,j);
+			uchar hinfo = pHeightmap->InfoAt(i,j);
 			uint sfType = ((hinfo&HEIGHTMAP_INFO_SFTYPE_MASK) >> HEIGHTMAP_INFO_SFTYPE_SHIFT);
 			pSaveHeightmapData[i + j*width] |= sfType;
 			if (hinfo&HEIGHTMAP_INFO_HOLE)

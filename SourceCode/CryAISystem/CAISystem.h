@@ -54,18 +54,18 @@ typedef struct BeaconStruct
 	}
 } BeaconStruct;
 
-typedef std::multimap<unsigned short, CAIObject*> AIObjects;
+typedef std::multimap<ushort, CAIObject*> AIObjects;
 typedef std::multimap<IVisArea*, int> VisIntMultiMap;
 typedef std::list<CAIObject*> ListAIObjects;
 typedef std::map<string, FormationDescriptor> DescriptorMap;
 typedef std::map<int, CFormation*> FormationMap;
-typedef std::map<unsigned short, BeaconStruct> BeaconMap;
+typedef std::map<ushort, BeaconStruct> BeaconMap;
 typedef std::map<string, CGoalPipe*> GoalMap;
 typedef std::map<string, ListPositions> DesignerPathMap;
 typedef std::vector<CPuppet*> ListPuppets;
 typedef std::map<int, float> MapMultipliers;
-typedef std::multimap<unsigned short, AuxSignalDesc> MapSignalStrings;
-typedef std::list<unsigned short> ListOfUnsignedShort;
+typedef std::multimap<ushort, AuxSignalDesc> MapSignalStrings;
+typedef std::list<ushort> ListOfUnsignedShort;
 
 //<<FIXME>> just used for profiling
 typedef std::map<string, float> TimingMap;
@@ -104,7 +104,7 @@ typedef struct PathFindRequest
 	Vec3 startpos;
 	bool bSuccess;
 	CAIObject* pRequester;
-	unsigned int	m_nSelectedHeuristic;
+	uint	m_nSelectedHeuristic;
 
 	PathFindRequest()
 	{
@@ -145,7 +145,7 @@ class CAISystem : public IAISystem
 	std::list<IVisArea*> lstSectors;
 	int m_nRaysThisUpdateFrame;
 
-	unsigned int m_nNumBuildings;
+	uint m_nNumBuildings;
 	VisIntMultiMap m_mapBuildingMap;
 
 
@@ -161,7 +161,7 @@ class CAISystem : public IAISystem
 
 	ListPositions m_lstVisibilityRays;
 
-	unsigned int m_nTickCount;
+	uint m_nTickCount;
 	bool m_bInitialized;
 
 	CAIObject* DEBUG_object;
@@ -224,9 +224,9 @@ public:
 	void RemoveDummyObject(CAIObject* pObject);
 	CAIObject* GetAIObjectByName(const char* pName);
 	void TracePath(const Vec3& start, const Vec3& end, CAIObject* pRequester);
-	IAIObject* GetAIObjectByName(unsigned short type, const char* pName);
+	IAIObject* GetAIObjectByName(ushort type, const char* pName);
 	CAIObject* GetPlayer();
-	IAIObject* CreateAIObject(unsigned short type, void* pAssociation);
+	IAIObject* CreateAIObject(ushort type, void* pAssociation);
 	int RayOcclusionPlaneIntersection(const Vec3d& start, const Vec3d& end);
 
 
@@ -330,11 +330,11 @@ protected:
 
 public:
 	// Sends a signal using the desired filter to the desired agents
-	void SendSignal(unsigned char cFilter, int nSignalId, const char* szText, IAIObject* pSenderObject);
+	void SendSignal(uchar cFilter, int nSignalId, const char* szText, IAIObject* pSenderObject);
 	// adds an object to a group
-	void AddToGroup(CAIObject* pObject, unsigned short nGroup);
+	void AddToGroup(CAIObject* pObject, ushort nGroup);
 	// adds an object to a species
-	void AddToSpecies(CAIObject* pObject, unsigned short nSpecies);
+	void AddToSpecies(CAIObject* pObject, ushort nSpecies);
 	// creates a formation and associates it with a group of agents
 	CFormation* CreateFormation(int nGroupID, const char* szFormationName);
 	// retrieves the next available formation point if a formation exists for the group of the requester
@@ -364,24 +364,24 @@ public:
 	float GetPerceptionValue(IAIObject* pObject);
 	int GetAITickCount(void);
 protected:
-	unsigned int m_nNumPuppets;
+	uint m_nNumPuppets;
 	IPhysicalEntity* m_pTheSkip;	// phys entity which will be skipped on raytracing when determinig visibility
 
 public:
 	void SendAnonimousSignal(int nSignalID, const char* szText, const Vec3& vPos, float fRadius, IAIObject* pObject);
 	void ReleaseFormationPoint(CAIObject* pReserved);
-	IAIObject* GetNearestObjectOfType(const Vec3& pos, unsigned int nTypeID, float fRadius = 0, IAIObject* pSkip = nullptr);
-	void UpdateBeacon(unsigned short nGroupID, const Vec3& vPos, CAIObject* pOwner = 0);
-	CAIObject* GetBeacon(unsigned short nGroupID);
+	IAIObject* GetNearestObjectOfType(const Vec3& pos, uint nTypeID, float fRadius = 0, IAIObject* pSkip = nullptr);
+	void UpdateBeacon(ushort nGroupID, const Vec3& vPos, CAIObject* pOwner = 0);
+	CAIObject* GetBeacon(ushort nGroupID);
 	void CancelAnyPathsFor(CPuppet* pRequester);
-	void SetAssesmentMultiplier(unsigned short type, float fMultiplier);
-	IAIObject* GetNearestToObject(IAIObject* pRef, unsigned short nType, float fRadius);
+	void SetAssesmentMultiplier(ushort type, float fMultiplier);
+	IAIObject* GetNearestToObject(IAIObject* pRef, ushort nType, float fRadius);
 protected:
 	void AddForbiddenAreas(void);
 public:
 	GraphNode* RefineTriangle(GraphNode* pNode, const Vec3& start, const Vec3& end);
 	//void FillGraphNodeData(GraphNode* pNode);
-	IAIObject* GetNearestObjectOfType(IAIObject* pObject, unsigned int nTypeID, float fRadius, int nOption = 0);
+	IAIObject* GetNearestObjectOfType(IAIObject* pObject, uint nTypeID, float fRadius, int nOption = 0);
 	void CalculatePassRadiuses();
 	void CreateNewTriangle(const ObstacleData& od1, const ObstacleData& od2, const ObstacleData& od3, bool tag = false);
 
@@ -405,7 +405,7 @@ public:
 
 	void SingleDryUpdate(CPuppet* pObject);
 	bool SingleFullUpdate(CPuppet* pPuppet);
-	void CheckVisibility(CPuppet* pPuppet, unsigned short TypeToCheck);
+	void CheckVisibility(CPuppet* pPuppet, ushort TypeToCheck);
 	Vec3 IntersectPolygon(const Vec3& start, const Vec3& end, ListPositions& lstPolygon);
 	bool BehindSpecialArea(const Vec3& vStart, const Vec3& vEnd, string& strSpecial);
 	bool IntersectsForbidden(const Vec3& vStart, const Vec3& vEnd, Vec3& vClosestPoint);
@@ -429,7 +429,7 @@ public:
 	void DrawPuppetAutobalanceValues(IRenderer* pRenderer);
 	void SetSpeciesThreatMultiplier(int nSpeciesID, float fMultiplier);
 	void DumpStateOf(IAIObject* pObject);
-	int GetNumberOfObjects(unsigned short type);
+	int GetNumberOfObjects(ushort type);
 	bool ThroughVehicle(const Vec3d& start, const Vec3d& end);
 };
 

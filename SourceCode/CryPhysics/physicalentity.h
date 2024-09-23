@@ -26,7 +26,7 @@ struct geom {
 	float scale;
 	float mass;
 	int surface_idx;
-	unsigned int flags, flagsCollider;
+	uint flags, flagsCollider;
 	float maxdim;
 	float minContactDist;
 	vectorf BBox[2];
@@ -91,14 +91,14 @@ public:
 	virtual int GetStateSnapshot(class CStream& stm, float time_back = 0, int flags = 0) { return 0; }
 	virtual int SetStateFromSnapshot(class CStream& stm, int flags = 0) { return 0; }
 	virtual int PostSetStateFromSnapshot() { return 1; }
-	virtual unsigned int GetStateChecksum() { return 0; }
+	virtual uint GetStateChecksum() { return 0; }
 	virtual int GetStateSnapshotTxt(char* txtbuf, int szbuf, float time_back = 0);
 	virtual void SetStateFromSnapshotTxt(const char* txtbuf, int szbuf);
 
 	virtual void ComputeBBox();
 
 	int m_nRefCount;
-	unsigned int m_flags;
+	uint m_flags;
 	CPhysicalEntity* m_next, * m_prev;
 	CPhysicalWorld* m_pWorld;
 

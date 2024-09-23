@@ -177,7 +177,7 @@ int CPhysicalPlaceholder::GetStateSnapshotTxt(char* txtbuf, int szbuf, float tim
 void CPhysicalPlaceholder::SetStateFromSnapshotTxt(const char* txtbuf, int szbuf) {
 	GetEntity()->SetStateFromSnapshotTxt(txtbuf, szbuf);
 }
-unsigned int CPhysicalPlaceholder::GetStateChecksum() {
+uint CPhysicalPlaceholder::GetStateChecksum() {
 	return GetEntity()->GetStateChecksum();
 }
 

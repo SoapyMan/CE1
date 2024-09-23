@@ -28,7 +28,7 @@ struct _IEndpointUser
 {
 	virtual bool Send(CStream& stm) = 0;
 	virtual void OnData(CStream& stm) = 0;
-	//	virtual unsigned char GetID() = 0;
+	//	virtual uchar GetID() = 0;
 };
 
 struct _ICCPUser :
@@ -59,7 +59,7 @@ struct _ICCPUser :
 struct _IServerSlotServices :
 	public _ICCPUser
 {
-	virtual void Start(unsigned char cClientID, CIPAddress& ip) = 0;
+	virtual void Start(uchar cClientID, CIPAddress& ip) = 0;
 	virtual bool SendConnect() = 0;
 	virtual bool SendContextSetup() = 0;
 	virtual bool SendServerReady() = 0;

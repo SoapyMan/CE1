@@ -2815,8 +2815,8 @@ float SParamComp_LightIntens::mfGet()
 	if (gRenDev->m_RP.m_ObjFlags & FOB_TRANS_MASK)
 	{
 		float fLen = gRenDev->m_RP.m_pCurObject->m_Matrix(0, 0) * gRenDev->m_RP.m_pCurObject->m_Matrix(0, 0) + gRenDev->m_RP.m_pCurObject->m_Matrix(0, 1) * gRenDev->m_RP.m_pCurObject->m_Matrix(0, 1) + gRenDev->m_RP.m_pCurObject->m_Matrix(0, 2) * gRenDev->m_RP.m_pCurObject->m_Matrix(0, 2);
-		unsigned int* n1 = (unsigned int*)&fLen;
-		unsigned int n = 0x5f3759df - (*n1 >> 1);
+		uint* n1 = (uint*)&fLen;
+		uint n = 0x5f3759df - (*n1 >> 1);
 		float* n2 = (float*)&n;
 		float fISqrt = (1.5f - (fLen * 0.5f) * *n2 * *n2) * *n2;
 		fRadius = gRenDev->m_RP.m_pCurLight->m_fRadius * fISqrt;
@@ -2839,8 +2839,8 @@ void SParamComp_LightsIntens::mfGet4f(vec4_t v)
 	if (rd->m_RP.m_ObjFlags & FOB_TRANS_MASK)
 	{
 		float fLen = rd->m_RP.m_pCurObject->m_Matrix(0, 0) * rd->m_RP.m_pCurObject->m_Matrix(0, 0) + rd->m_RP.m_pCurObject->m_Matrix(0, 1) * rd->m_RP.m_pCurObject->m_Matrix(0, 1) + rd->m_RP.m_pCurObject->m_Matrix(0, 2) * rd->m_RP.m_pCurObject->m_Matrix(0, 2);
-		unsigned int* n1 = (unsigned int*)&fLen;
-		unsigned int n = 0x5f3759df - (*n1 >> 1);
+		uint* n1 = (uint*)&fLen;
+		uint n = 0x5f3759df - (*n1 >> 1);
 		float* n2 = (float*)&n;
 		fISqrt = (1.5f - (fLen * 0.5f) * *n2 * *n2) * *n2;
 	}
@@ -2900,8 +2900,8 @@ void SParamComp_LightIntens::mfGet4f(vec4_t v)
 	if (gRenDev->m_RP.m_ObjFlags & FOB_TRANS_MASK)
 	{
 		float fLen = gRenDev->m_RP.m_pCurObject->m_Matrix(0, 0) * gRenDev->m_RP.m_pCurObject->m_Matrix(0, 0) + gRenDev->m_RP.m_pCurObject->m_Matrix(0, 1) * gRenDev->m_RP.m_pCurObject->m_Matrix(0, 1) + gRenDev->m_RP.m_pCurObject->m_Matrix(0, 2) * gRenDev->m_RP.m_pCurObject->m_Matrix(0, 2);
-		unsigned int* n1 = (unsigned int*)&fLen;
-		unsigned int n = 0x5f3759df - (*n1 >> 1);
+		uint* n1 = (uint*)&fLen;
+		uint n = 0x5f3759df - (*n1 >> 1);
 		float* n2 = (float*)&n;
 		float fISqrt = (1.5f - (fLen * 0.5f) * *n2 * *n2) * *n2;
 

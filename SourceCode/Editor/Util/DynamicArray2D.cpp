@@ -9,13 +9,13 @@
 // Construction / destruction
 //////////////////////////////////////////////////////////////////////
 
-CDynamicArray2D::CDynamicArray2D(unsigned int iDimension1, unsigned int iDimension2)
+CDynamicArray2D::CDynamicArray2D(uint iDimension1, uint iDimension2)
 {
 	////////////////////////////////////////////////////////////////////////
 	// Declare a 2D array on the free store
 	////////////////////////////////////////////////////////////////////////
 
-	unsigned int i;
+	uint i;
 
 	// Save the position of the array dimensions
 	m_Dimension1 = iDimension1;
@@ -41,7 +41,7 @@ CDynamicArray2D::~CDynamicArray2D()
 	// Remove the 2D array and all its sub arrays from the free store
 	////////////////////////////////////////////////////////////////////////
 
-	unsigned int i;
+	uint i;
 
 	for (i=0; i<m_Dimension1; ++i)   
 		delete [] m_Array[i];
@@ -56,7 +56,7 @@ void CDynamicArray2D::ScaleImage(CDynamicArray2D *pDestination)
 	// Scale an image stored (in an array class) to a new size
 	////////////////////////////////////////////////////////////////////////
 
-	unsigned int i, j, iOldWidth;
+	uint i, j, iOldWidth;
 	int iXSrcFl, iXSrcCe, iYSrcFl, iYSrcCe;
 	float fXSrc, fYSrc;
 	float fHeight[4];

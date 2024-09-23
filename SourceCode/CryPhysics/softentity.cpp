@@ -423,7 +423,7 @@ int CSoftEntity::Action(pe_action* _action)
 			else i = action->partid;
 			m_bAwake = 1;
 
-			if ((unsigned int)i < (unsigned int)pMesh->m_nTris) {
+			if ((uint)i < (uint)pMesh->m_nTris) {
 				float rarea, k; int idx[3];
 				for (j = 0; j < 3; j++) idx[j] = pMesh->m_pIndices[i * 3 + j];
 				rarea = (m_vtx[idx[1]].pos - m_vtx[idx[0]].pos ^ m_vtx[idx[2]].pos - m_vtx[idx[0]].pos).len();

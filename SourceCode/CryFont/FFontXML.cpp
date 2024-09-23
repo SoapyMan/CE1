@@ -310,7 +310,7 @@ public:
 public:
 	CFFont* m_pFont;
 
-	unsigned long			m_nElement;
+	ulong			m_nElement;
 
 	CFFont::SEffect* m_pEffect;
 	CFFont::SRenderingPass* m_pPass;

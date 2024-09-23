@@ -63,7 +63,7 @@ bool CRefReadStreamProxy::IsFinished()
 }
 
 // returns the number of bytes read so far (the whole buffer size if IsFinished())
-unsigned int CRefReadStreamProxy::GetBytesRead(bool bWait)
+uint CRefReadStreamProxy::GetBytesRead(bool bWait)
 {
 	if (m_bPending)
 	{

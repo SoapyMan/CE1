@@ -229,15 +229,15 @@ const bool CPCMDecoderInstance::FillPCMBuffer22KHz(signed long* pBuffer, int nSa
 		nSamples -= 1;
 		m_bCopyFromLastFrame = false;
 	}
-	const unsigned int cuiSamplesPerBlock = scuiEncodedBlockSize / m_pDecoder->m_PCMFileInfo.nBytesPerSample;//number of samples to read per block (according to allocated static array)
-	const unsigned int cuiBlocks = nSamples / (cuiSamplesPerBlock * 2);	//blocks to read, remember samples will be doubled
-	for (unsigned int i = 0; i < cuiBlocks; i++)
+	const uint cuiSamplesPerBlock = scuiEncodedBlockSize / m_pDecoder->m_PCMFileInfo.nBytesPerSample;//number of samples to read per block (according to allocated static array)
+	const uint cuiBlocks = nSamples / (cuiSamplesPerBlock * 2);	//blocks to read, remember samples will be doubled
+	for (uint i = 0; i < cuiBlocks; i++)
 	{
 		if (!m_pDecoder->ReadFile(m_aEncodedBlock, m_pDecoder->m_PCMFileInfo.nBytesPerSample, cuiSamplesPerBlock, &m_nPosBytes))
 			return false;
 		//now double up interleaved samples
 		const signed long* pEncodedData = reinterpret_cast<signed long*>(&m_aEncodedBlock[0]);
-		for (unsigned int j = 0; j < cuiSamplesPerBlock; j++)
+		for (uint j = 0; j < cuiSamplesPerBlock; j++)
 		{
 			*pBuffer++ = *pEncodedData;		//double up samples
 			*pBuffer++ = *pEncodedData++;

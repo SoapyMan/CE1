@@ -55,8 +55,8 @@ static _inline float sCalcSplash(SSplash* spl, float fX, float fY)
 	float fSqDist = vDelt[0] * vDelt[0] + vDelt[1] * vDelt[1];
 
 	// Inverse square root
-	unsigned int* n1 = (unsigned int*)&fSqDist;
-	unsigned int nn = 0x5f3759df - (*n1 >> 1);
+	uint* n1 = (uint*)&fSqDist;
+	uint nn = 0x5f3759df - (*n1 >> 1);
 	float* n2 = (float*)&nn;
 	float fDistSplash = 1.0f / ((1.5f - (fSqDist * 0.5f) * *n2 * *n2) * *n2);
 

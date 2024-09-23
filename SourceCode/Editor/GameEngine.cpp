@@ -114,8 +114,8 @@ struct SInGameEntitySystemListener  : public IEntitySystemSink
 	{
 		m_entities.erase(e->GetId());
 	}
-	virtual void OnBind(EntityId id,EntityId child,unsigned char param){}
-	virtual void OnUnbind(EntityId id,EntityId child,unsigned char param){}
+	virtual void OnBind(EntityId id,EntityId child,uchar param){}
+	virtual void OnUnbind(EntityId id,EntityId child,uchar param){}
 	// Ids of all spawned entities.
 	std::set<int> m_entities;
 };
@@ -133,9 +133,9 @@ static void GameSystemAuthCheckFunction( void *data )
 {
 	// Data assumed to be 32 bytes.
 	int key1[4] = {1178362782,223786232,371615531,90884141};
-	TEA_DECODE( (unsigned int*)data,(unsigned int*)data,32,(unsigned int*)key1 );
+	TEA_DECODE( (uint*)data,(uint*)data,32,(uint*)key1 );
 	int key2[4] = {89158165, 1389745433,971685123,785741042};
-	TEA_ENCODE( (unsigned int*)data,(unsigned int*)data,32,(unsigned int*)key2 );
+	TEA_ENCODE( (uint*)data,(uint*)data,32,(uint*)key2 );
 }
 
 //////////////////////////////////////////////////////////////////////////

@@ -99,7 +99,7 @@ PoolContext *AllocPool(PoolContext *pCtx, int size)
 
 //static PoolContext globalpool;
 //static PoolContext *g_pool = AllocPool(InitPoolContext(&globalpool), GLOBALPOOLSIZE);
-static unsigned int biggestalloc = 0;
+static uint biggestalloc = 0;
 /*
 #define MAXSTAT 1000
 static int stats[MAXSTAT];
@@ -160,7 +160,7 @@ class PageBucketAllocator
 		//if(b-first+PAGESIZE>BUCKETQUANT) bpool(g_pool, first+PAGEBLOCKSIZE-PAGESIZE, b-first+PAGESIZE);
 	};
 
-	void* newpage(unsigned int bsize)
+	void* newpage(uint bsize)
 	{
 		if (!pages) newpageblocks();
 		void** page = pages;
@@ -190,7 +190,7 @@ public:
 		for (int i = 0; i < MAXBUCKETS; i++) reuse[i] = nullptr;
 	};
 
-	void* alloc(unsigned int size)
+	void* alloc(uint size)
 	{
 		if (size > biggestalloc)
 		{
@@ -206,7 +206,7 @@ public:
 		return (void*)r;
 	};
 
-	void dealloc(void* p, unsigned int size)
+	void dealloc(void* p, uint size)
 	{
 		if (size > MAXREUSESIZE)
 		{
@@ -271,8 +271,8 @@ CRYMEMORYMANAGER_API void CryFree(void* p)
 	{
 		if (p != nullptr)
 		{
-			unsigned int* t = (unsigned int*)p;
-			unsigned int size = *--t;
+			uint* t = (uint*)p;
+			uint size = *--t;
 
 #ifdef MINIMALDEBUG
 			if (size >= 100000000)
@@ -295,8 +295,8 @@ CRYMEMORYMANAGER_API void CryFree(void* p)
 		if (p != nullptr)
 		{
 			FUNCTION_PROFILER_FAST(g_System, PROFILE_SYSTEM, g_bProfilerEnabled);
-			unsigned int* t = (unsigned int*)p;
-			unsigned int size = *--t;
+			uint* t = (uint*)p;
+			uint size = *--t;
 
 #ifdef MINIMALDEBUG
 			if (size >= 100000000)

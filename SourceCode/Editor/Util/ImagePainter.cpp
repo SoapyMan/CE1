@@ -26,7 +26,7 @@ CImagePainter::~CImagePainter()
 {}
 
 //////////////////////////////////////////////////////////////////////////
-void CImagePainter::PaintBrush( TImage<unsigned char> &image,int px,int py,SPaintBrush &brush )
+void CImagePainter::PaintBrush( TImage<uchar> &image,int px,int py,SPaintBrush &brush )
 {
 	if (brush.type == SMOOTH_BRUSH)
 	{
@@ -41,9 +41,9 @@ void CImagePainter::PaintBrush( TImage<unsigned char> &image,int px,int py,SPain
 	float fMaxDist, fAttenuation, fYSquared;
 	float fHardness = brush.hardness;
 
-	unsigned int pos;
+	uint pos;
 
-	unsigned char *src = image.GetData();
+	uchar *src = image.GetData();
 
 	int value = brush.color;
 
@@ -99,9 +99,9 @@ void CImagePainter::SmoothBrush( CByteImage &image,int px,int py,SPaintBrush &br
 	float fMaxDist, fYSquared;
 	float fHardness = brush.hardness;
 
-	unsigned int pos;
+	uint pos;
 
-	unsigned char *src = image.GetData();
+	uchar *src = image.GetData();
 
 	int value = brush.color;
 

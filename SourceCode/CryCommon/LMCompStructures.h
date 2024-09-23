@@ -28,10 +28,10 @@ typedef enum ELMMode
 
 namespace NSAVE_RESULT
 {
-	static const unsigned int ESUCCESS = 0;
-	static const unsigned int EPAK_FILE_UPDATE_FAIL = 1;
-	static const unsigned int EDXT_COMPRESS_FAIL = 2;
-	static const unsigned int EPAK_FILE_OPEN_FAIL = 3;
+	static const uint ESUCCESS = 0;
+	static const uint EPAK_FILE_UPDATE_FAIL = 1;
+	static const uint EDXT_COMPRESS_FAIL = 2;
+	static const uint EPAK_FILE_OPEN_FAIL = 3;
 };
 
 //! \brief Contains a Color + lerp factor / Dominant direction texture pair
@@ -141,11 +141,11 @@ typedef struct SSharedLMEditorData
 {
 	HWND			hwnd;				//!< window handle to set the progress 	
 	bool			bCancelled;			//!< if cancel has been pressed, change that to true
-	unsigned char	ucProgress;			//!< progress in percent (corresponds to processed GLMs) 
-	unsigned int	uiProgressMessage;	//!< message to send to progress bar
-	unsigned int	uiMemUsageMessage;	//!< message to send to memory usage bar
-	unsigned int	uiMemUsageStatic;	//!< message to send to text for memory usage bar static element
-	unsigned int	uiGLMNameEdit;		//!< message to send to display the current glm name
+	uchar	ucProgress;			//!< progress in percent (corresponds to processed GLMs) 
+	uint	uiProgressMessage;	//!< message to send to progress bar
+	uint	uiMemUsageMessage;	//!< message to send to memory usage bar
+	uint	uiMemUsageStatic;	//!< message to send to text for memory usage bar static element
+	uint	uiGLMNameEdit;		//!< message to send to display the current glm name
 
 	SSharedLMEditorData() : ucProgress(0), uiMemUsageMessage(0), bCancelled(false), hwnd(0), uiMemUsageStatic(0), uiGLMNameEdit(0)
 	{}
@@ -224,14 +224,14 @@ typedef struct SOcclusionMapTexel
 typedef struct GLMOcclLightInfo
 {
 	EOCCLCOLOURASSIGNMENT iChannelAssignment[4];					//!< channels assigned, -1 if not used, usually assigned in ascending order 0..3 
-	unsigned int uiLightCount;										//!< number of active lights
+	uint uiLightCount;										//!< number of active lights
 	std::pair<EntityId, EntityId>  iLightIDs[4];
 	GLMOcclLightInfo() : uiLightCount(0)
 	{
 		iChannelAssignment[0] = iChannelAssignment[1] = iChannelAssignment[2] = iChannelAssignment[3] = EOCCLCOLOURASSIGNMENT_NONE;
 		iLightIDs[0] = iLightIDs[1] = iLightIDs[2] = iLightIDs[3] = std::pair<EntityId, EntityId>(0, 0);
 	}
-	const unsigned int UsedChannelCount()const { return uiLightCount; }
+	const uint UsedChannelCount()const { return uiLightCount; }
 	const EOCCLCOLOURASSIGNMENT FindLightSource(const std::pair<EntityId, EntityId>& ciID)
 	{
 		EOCCLCOLOURASSIGNMENT ret = EOCCLCOLOURASSIGNMENT_NONE;

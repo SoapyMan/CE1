@@ -32,9 +32,6 @@ public:
 	// returns the number of vertices in the resulting vertex buffer
 	unsigned numVertices()const;
 
-	// face/vertex index type
-	typedef unsigned short ushort;
-
 	// this is the index buffer	(external indexation)
 	std::vector<ushort> m_arrIndices;
 

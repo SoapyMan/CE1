@@ -32,15 +32,15 @@ typedef struct MyCrtMemBlockHeader
 	size_t                      nDataSize;
 	int                         nBlockUse;
 	long                        lRequest;
-	unsigned char               gap[nNoMansLandSize];
+	uchar               gap[nNoMansLandSize];
 	/* followed by:
-	*  unsigned char           data[nDataSize];
-	*  unsigned char           anotherGap[nNoMansLandSize];
+	*  uchar           data[nDataSize];
+	*  uchar           anotherGap[nNoMansLandSize];
 	*/
 } MyCrtMemBlockHeader;
 #pragma pack (pop)
 
-#define pbData(pblock) ((unsigned char *)((MyCrtMemBlockHeader *)pblock + 1))
+#define pbData(pblock) ((uchar *)((MyCrtMemBlockHeader *)pblock + 1))
 #define pHdr(pbData) (((MyCrtMemBlockHeader *)pbData)-1)
 
 
@@ -61,7 +61,7 @@ void crtdebug( const char *s,... )
 
 int crtAllocHook(int nAllocType, void *pvData, 
       size_t nSize, int nBlockUse, long lRequest, 
-      const unsigned char * szFileName, int nLine )
+      const uchar * szFileName, int nLine )
 {
 	if (nBlockUse == _CRT_BLOCK)
 		return( TRUE );

@@ -37,7 +37,7 @@ void init_math(void);
 //==========================================================================
 
 #define FP_BITS(fp) (*(DWORD *)&(fp))
-extern unsigned int gFastSqrtTable[0x10000];  // declare table of square roots 
+extern uint gFastSqrtTable[0x10000];  // declare table of square roots 
 extern float gSinTable[1024];
 
 _inline float crySqrtf(float n)

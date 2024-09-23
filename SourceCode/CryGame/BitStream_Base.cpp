@@ -53,7 +53,7 @@ bool CBitStream_Base::ReadBitStream( CStream &stm, int16 &Value, const eBitStrea
 
 bool CBitStream_Base::WriteBitStream( CStream &stm, const int32 Value, const eBitStreamHint eHint )
 {
-	return stm.Write((unsigned int)Value);
+	return stm.Write((uint)Value);
 }
 
 bool CBitStream_Base::ReadBitStream( CStream &stm, int32 &Value, const eBitStreamHint eHint )
@@ -95,12 +95,12 @@ bool CBitStream_Base::ReadBitStream( CStream &stm, uint16 &Value, const eBitStre
 
 bool CBitStream_Base::WriteBitStream( CStream &stm, const uint32 Value, const eBitStreamHint eHint )
 {
-	return stm.Write((unsigned int)Value);
+	return stm.Write((uint)Value);
 }
 
 bool CBitStream_Base::ReadBitStream( CStream &stm, uint32 &Value, const eBitStreamHint eHint )
 {
-	return stm.Read((unsigned int&)Value);
+	return stm.Read((uint&)Value);
 }
 
 // -------------------------------------------------------------------------------------------------------------------

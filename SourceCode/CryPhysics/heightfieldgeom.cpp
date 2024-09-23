@@ -36,7 +36,7 @@ CHeightfield* CHeightfield::CreateHeightfield(heightfield* phf)
 	m_pIndices = new index_t[m_nTrisAlloc * 3];
 	m_pIds = new short[m_nTrisAlloc];
 	m_pTopology = new trinfo[m_nTrisAlloc];
-	m_Tree.m_pUsedTriMap = new unsigned int[(m_nTrisAlloc - 1 >> 5) + 1];
+	m_Tree.m_pUsedTriMap = new uint[(m_nTrisAlloc - 1 >> 5) + 1];
 	m_minVtxDist = (m_hf.step.x + m_hf.step.y) * 1E-3f;
 	m_nVertices = m_nTris = 0;
 	m_flags = 3;
@@ -205,7 +205,7 @@ int CHeightfield::PrepareForIntersectionTest(geometry_under_test* pGTest, CGeome
 		m_pIndices = new index_t[m_nTrisAlloc * 3];
 		m_pIds = new short[m_nTrisAlloc];
 		m_pTopology = new trinfo[m_nTrisAlloc];
-		m_Tree.m_pUsedTriMap = new unsigned int[(m_nTrisAlloc - 1 >> 5) + 1];
+		m_Tree.m_pUsedTriMap = new uint[(m_nTrisAlloc - 1 >> 5) + 1];
 	}
 
 	m_Tree.m_minHeight = m_Tree.m_minHeight = m_hf.getheight(ix, iy);
@@ -275,7 +275,7 @@ int CHeightfield::FindClosestPoint(geom_world_data* pgwd, int& iPrim, int& iFeat
 	if (pgwd->scale != 1.0f) pt /= pgwd->scale;
 	ix = float2int(pt.x * m_hf.stepr.x - 0.5f); iy = float2int(pt.y * m_hf.stepr.y - 0.5f);
 	icell = ix * m_hf.stride.x + iy * m_hf.stride.y;
-	if ((unsigned int)ix > (unsigned int)m_hf.size.x - 2 || (unsigned int)iy > (unsigned int)m_hf.size.y - 2 || m_hf.gettype(icell) < 0) {
+	if ((uint)ix > (uint)m_hf.size.x - 2 || (uint)iy > (uint)m_hf.size.y - 2 || m_hf.gettype(icell) < 0) {
 		ptres[0].Set(1E10, 1E10, 1E10); return -1;
 	}
 

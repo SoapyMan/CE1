@@ -43,7 +43,7 @@ struct ICfgFile
 
 	virtual bool SetConfig(const char* section, IConfig* config) = 0;
 
-	virtual const char* GetSectionName(unsigned int n) = 0;
+	virtual const char* GetSectionName(uint n) = 0;
 	virtual int Find(const char* sectionname) = 0;
 };
 

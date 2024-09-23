@@ -73,7 +73,7 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	CVarBlock* GetShaderGenParamsVars();
 	void SetShaderGenParamsVars( CVarBlock *pBlock );
-	unsigned int GetShaderGenMask() { return m_nShaderGenMask; }
+	uint GetShaderGenMask() { return m_nShaderGenMask; }
 
 	//! Sets variable block of publich shader parameters.
 	//! VarBlock must be in same format as returned by GetPublicVars().
@@ -83,7 +83,7 @@ public:
 	SShaderItem& GetShaderItem() { return m_shaderItem; };
 
 	//! Get texture map usage mask for shader in this material.
-	unsigned int GetTexmapUsageMask() const;
+	uint GetTexmapUsageMask() const;
 
 	//! Load new shader.
 	bool LoadShader( const CString &shaderName );
@@ -158,7 +158,7 @@ private:
 	ShaderPublicParams m_shaderParams;
 	//CVarBlockPtr m_shaderParamsVar;
 	//! Common shader flags.
-	unsigned int m_nShaderGenMask;
+	uint m_nShaderGenMask;
 
 	IMatInfo *m_pMatInfo;
 

@@ -33,14 +33,14 @@ public:
 	virtual bool HasChanged();
 	virtual bool DrawEntity(const struct SRendParams& EntDrawParams);
 	virtual bool IsStatic() const;
-	virtual struct IStatObj* GetEntityStatObj(unsigned int nSlot, Matrix44* pMatrix = nullptr, bool bReturnOnlyVisible = false);
-	virtual struct ICryCharInstance* GetEntityCharacter(unsigned int nSlot, Matrix44* pMatrix = nullptr);
+	virtual struct IStatObj* GetEntityStatObj(uint nSlot, Matrix44* pMatrix = nullptr, bool bReturnOnlyVisible = false);
+	virtual struct ICryCharInstance* GetEntityCharacter(uint nSlot, Matrix44* pMatrix = nullptr);
 
-	virtual void SetEntityStatObj(unsigned int nSlot, IStatObj* pStatObj, Matrix44* pMatrix = nullptr);
+	virtual void SetEntityStatObj(uint nSlot, IStatObj* pStatObj, Matrix44* pMatrix = nullptr);
 
 	virtual void SetLightmap(RenderLMData* pLMData, float* pTexCoords, UINT iNumTexCoords, int nLod);
 	//special call from lightmap serializer/compiler to set occlusion map values
-	virtual void SetLightmap(RenderLMData* pLMData, float* pTexCoords, UINT iNumTexCoords, const unsigned char cucOcclIDCount, const std::vector<std::pair<EntityId, EntityId> >& aIDs);
+	virtual void SetLightmap(RenderLMData* pLMData, float* pTexCoords, UINT iNumTexCoords, const uchar cucOcclIDCount, const std::vector<std::pair<EntityId, EntityId> >& aIDs);
 
 	virtual bool HasLightmap(int nLod)
 	{

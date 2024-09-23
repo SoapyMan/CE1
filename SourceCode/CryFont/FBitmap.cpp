@@ -23,7 +23,7 @@
 //	m_nWidth = nWidth;
 //	m_nHeight = nHeight;
 //
-//	m_pData = new unsigned long[m_nWidth*m_nHeight];
+//	m_pData = new ulong[m_nWidth*m_nHeight];
 //	if(!m_pData)
 //	{
 //		CryError( "<CryFont> Only 32bpp images are supported" );
@@ -48,7 +48,7 @@
 //	m_nWidth = pImg->GetWidth();/
 //	m_nHeight = pImg->GetHeight();
 //
-//	m_pData = new unsigned long[m_nWidth*m_nHeight];
+//	m_pData = new ulong[m_nWidth*m_nHeight];
 //	if(!m_pData)
 //	{
 //		_asm int 3	// <<FIXME>>
@@ -88,12 +88,12 @@
 //	int sum;
 //	int xoffset;
 //	int yoffset;
-//	unsigned long *ptr;
+//	ulong *ptr;
 //
 //	// create the destination buffer
 //	int w = m_nWidth >> 2;
 //	int h = m_nHeight >> 2;
-//	unsigned long *pNew = new unsigned long[w*h];	
+//	ulong *pNew = new ulong[w*h];	
 //	if(!pNew)
 //		return false;
 //	
@@ -151,8 +151,8 @@
 //	while(iH--)
 //	{
 //		int w = iW;
-//		unsigned long *pS = pSrc->GetData() + (sy*pSrc->GetWidth()) + iSX;
-//		unsigned long *pD = m_pData + (dy*m_nWidth) + iDX;
+//		ulong *pS = pSrc->GetData() + (sy*pSrc->GetWidth()) + iSX;
+//		ulong *pD = m_pData + (dy*m_nWidth) + iDX;
 //		while(w--)
 //		{
 //			*(pD++) = *(pS++);
@@ -172,10 +172,10 @@ bool CFBitmap::SaveBitmap(const char *szFile, bool bSaveRGB)
 
 	int bfSize = 54 + m_nWidth*m_nHeight*3;
 	int i, j;
-	unsigned long c;
-	unsigned char rgb[3];
-	unsigned short tmp16;
-	unsigned long tmp32;
+	ulong c;
+	uchar rgb[3];
+	ushort tmp16;
+	ulong tmp32;
 
 	#define W16(val) tmp16 = val; fwrite(&tmp16,2,1,fp);
 	#define W32(val) tmp32 = val; fwrite(&tmp32,4,1,fp);
@@ -208,9 +208,9 @@ bool CFBitmap::SaveBitmap(const char *szFile, bool bSaveRGB)
 			for(j = 0; j < m_nWidth; j++)
 			{
 				c = (m_pData[(i*m_nWidth)+j]>>24)&0xFF;
-				rgb[0] = (unsigned char)c;
-				rgb[1] = (unsigned char)c;
-				rgb[2] = (unsigned char)c;
+				rgb[0] = (uchar)c;
+				rgb[1] = (uchar)c;
+				rgb[2] = (uchar)c;
 				fwrite(rgb,3,1,fp);
 			}
 		}
@@ -222,9 +222,9 @@ bool CFBitmap::SaveBitmap(const char *szFile, bool bSaveRGB)
 			for(j = 0; j < m_nWidth; j++)
 			{
 				c = m_pData[(i*m_nWidth)+j];
-				rgb[2] = (unsigned char)((c>>16)&0xFF);
-				rgb[1] = (unsigned char)((c>>8)&0xFF);
-				rgb[0] = (unsigned char)(c&0xFF);
+				rgb[2] = (uchar)((c>>16)&0xFF);
+				rgb[1] = (uchar)((c>>8)&0xFF);
+				rgb[0] = (uchar)(c&0xFF);
 				fwrite(rgb,3,1,fp);
 			}
 		}
@@ -323,7 +323,7 @@ int CFBitmap::Scale(float fScaleX, float fScaleY)
 	int iNewWidth = (int)(m_iWidth * fScaleX);
 	int iNewHeight = (int)(m_iHeight * fScaleY);
 
-	unsigned char* pNewData = new unsigned char[iNewWidth * iNewHeight];
+	uchar* pNewData = new uchar[iNewWidth * iNewHeight];
 
 	if (!pNewData)
 	{
@@ -336,7 +336,7 @@ int CFBitmap::Scale(float fScaleX, float fScaleY)
 	float xFractioned, yFractioned, xFraction, yFraction, oneMinusX, oneMinusY, fR0, fR1;
 	int xCeil, yCeil, xFloor, yFloor, yNewOffset;
 
-	unsigned char c0, c1, c2, c3;
+	uchar c0, c1, c2, c3;
 
 	for (int y = 0; y < iNewHeight; ++y)
 	{
@@ -378,7 +378,7 @@ int CFBitmap::Scale(float fScaleX, float fScaleY)
 			fR0 = (oneMinusX * c0 + xFraction * c1);
 			fR1 = (oneMinusX * c2 + xFraction * c3);
 
-			pNewData[yNewOffset + x] = (unsigned char)((oneMinusY * fR0) + (yFraction * fR1));
+			pNewData[yNewOffset + x] = (uchar)((oneMinusY * fR0) + (yFraction * fR1));
 		}
 	}
 
@@ -424,7 +424,7 @@ int CFBitmap::Create(int iWidth, int iHeight)
 {
 	SAFE_DELETE_ARRAY(m_pData);
 
-	m_pData = new unsigned char[iWidth * iHeight];
+	m_pData = new uchar[iWidth * iHeight];
 
 	m_iWidth = iWidth;
 	m_iHeight = iHeight;
@@ -447,8 +447,8 @@ int CFBitmap::Release()
 
 //------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------
-#define W16(val) { unsigned short t16 = (val); fwrite(&t16, 2, 1, hFile); }
-#define W32(val) { unsigned int t32 = (val); fwrite(&t32, 4, 1, hFile); }
+#define W16(val) { ushort t16 = (val); fwrite(&t16, 2, 1, hFile); }
+#define W32(val) { uint t32 = (val); fwrite(&t32, 4, 1, hFile); }
 //------------------------------------------------------------------------------------
 int CFBitmap::SaveBitmap(const std::string& szFileName)
 {

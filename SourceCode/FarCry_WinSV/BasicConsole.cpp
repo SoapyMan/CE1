@@ -215,12 +215,12 @@ int MainCON(const char* szCmdLine)
 	bool frameRateDisplayed = false;
 	bool frameRateDisplayedLastFrame = false;
 
-	unsigned long long lastSecond = t.tv_sec;
+	ulonglong lastSecond = t.tv_sec;
 
 	bool bFirstTime = true;	//for sleep 
 	bool bLoop = true;
-	unsigned char cursorPressed = 0;
-	static const unsigned char scCursorUp = 1, scCursorDown = 2;//constants for cursor key processing
+	uchar cursorPressed = 0;
+	static const uchar scCursorUp = 1, scCursorDown = 2;//constants for cursor key processing
 	printf("\033[s");//save cursor pos
 	fflush(stdout);
 #endif
@@ -379,7 +379,7 @@ int MainCON(const char* szCmdLine)
 #else
 		while (kbhit())
 		{
-			unsigned char c = getch();
+			uchar c = getch();
 			// tab (auto completion)
 			if (c == 9)
 			{
@@ -401,7 +401,7 @@ int MainCON(const char* szCmdLine)
 			// special keys (second value in the input buffer nees different treatment)
 			if (c == 224)
 			{
-				unsigned char c2 = getch();
+				uchar c2 = getch();
 
 				switch (c2)
 				{

@@ -29,7 +29,7 @@ class CStencilShadowConnectivity;
 class IStencilShadowConnectivity
 {
 public:
-	typedef unsigned short vindex;				// vertex index (0..0xffff)
+	typedef ushort vindex;				// vertex index (0..0xffff)
 
 	//! don't forget to call Release for freeing the memory resources
 	virtual void Release(void) = 0;
@@ -129,7 +129,7 @@ class IEdgeDetector
 public:
 	virtual ~IEdgeDetector() {}
 	// vertex index
-	typedef unsigned short vindex;
+	typedef ushort vindex;
 
 
 	//! for deformable objects
@@ -150,7 +150,7 @@ public:
 	// pointer to the triplets defining shadow faces
 	virtual const vindex* getShadowFaceIndices(unsigned& outCount) const = 0;
 
-	//! O(1), returs the pointer to an array of unsigned short pairs of vertex numbers
+	//! O(1), returs the pointer to an array of ushort pairs of vertex numbers
 	virtual const vindex* getShadowEdgeArray(unsigned& outiNumEdges) const = 0;
 
 	//!
@@ -171,7 +171,7 @@ public:
 	//! /param fFactor
 	//! /param outpVertexBuf The size of the vertex buffer must be at least numVertices()
 	//! /param outpIndexBuf The size of the index buffer must be at least numIndices()
-	virtual void meshShadowVolume(Vec3d vLight, float fFactor, Vec3d* outpVertexBuf, unsigned short* outpIndexBuf) = 0;
+	virtual void meshShadowVolume(Vec3d vLight, float fFactor, Vec3d* outpVertexBuf, ushort* outpIndexBuf) = 0;
 
 	//! get memory usage
 	virtual void GetMemoryUsage(class ICrySizer* pSizer) {}

@@ -295,7 +295,7 @@ void CPunkBusterInterface::ValidateClient(CServerSlot* pSlot)
 	//this function is called as client is trying to connect before level load
 	//if PB is enabled at this server, it checks to see if the PB client is enabled for the player
 	//   and checks for any ban issues with the id/hash
-	unsigned int nFlags = pSlot->GetClientFlags();
+	uint nFlags = pSlot->GetClientFlags();
 	char idhash[PB_GUIDLEN + 1] = "", addr[32] = "";
 	strncpy(addr, pSlot->GetIP().GetAsString(true), 31);
 	addr[31] = 0;
@@ -424,7 +424,7 @@ void PBsendPktToServer(int datalen, char* data)
 //
 // Sys_PBSendUdpPacket
 //
-void Sys_PBSendUdpPacket(char* addr, unsigned short port, int datalen, char* data, int isFromClient)
+void Sys_PBSendUdpPacket(char* addr, ushort port, int datalen, char* data, int isFromClient)
 {
 	if (pbsdk == nullptr) return;
 	CPunkBusterInterface* pip = (CPunkBusterInterface*)pbsdk->pbinterface;
@@ -456,7 +456,7 @@ void PBsendPktToClient(int datalen, char* data, char* addr)
 	stm.SetBits((BYTE*)data, 0, datalen * 8);
 	stm.SetSize(datalen * 8);
 	char ip[32];
-	unsigned short port = 0;
+	ushort port = 0;
 	strncpy(ip, addr, 31);
 	ip[31] = 0;
 	char* cp = strstr(ip, ":");
@@ -508,7 +508,7 @@ int PBgetClientInfo(stPb_Sv_Client* c)
 	if (pip->m_pServer == nullptr) return 0;
 
 	char ip[32];
-	unsigned short port = 0;
+	ushort port = 0;
 	strncpy(ip, c->ip, 31);
 	ip[31] = 0;
 	char* cp = strstr(ip, ":");
@@ -550,7 +550,7 @@ int PBgetStats(int index, char* Data)
 	if (pip->m_pServer == nullptr) return 0;
 
 	char ip[32];
-	unsigned short port = 0;
+	ushort port = 0;
 	strncpy(ip, pbsdk->pbsv.m_client[index].pbc.ip, 31);
 	ip[31] = 0;
 	char* cp = strstr(ip, ":");
@@ -651,7 +651,7 @@ void PBdropClient(int clientIndex, char* reason)
 	if (pip->m_pServer == nullptr) return;
 
 	char ip[32];
-	unsigned short port = 0;
+	ushort port = 0;
 	strncpy(ip, pbsdk->pbsv.m_client[clientIndex].pbc.ip, 31);
 	ip[31] = 0;
 	char* cp = strstr(ip, ":");

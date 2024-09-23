@@ -33,9 +33,9 @@ void AuthCheckFunction(void* data)
 {
 	// Data assumed to be 32 bytes.
 	int key1[4] = { 1873613783,235688123,812763783,1745863682 };
-	TEA_DECODE((unsigned int*)data, (unsigned int*)data, 32, (unsigned int*)key1);
+	TEA_DECODE((uint*)data, (uint*)data, 32, (uint*)key1);
 	int key2[4] = { 1897178562,734896899,156436554,902793442 };
-	TEA_ENCODE((unsigned int*)data, (unsigned int*)data, 32, (unsigned int*)key2);
+	TEA_ENCODE((uint*)data, (uint*)data, 32, (uint*)key2);
 }
 
 
@@ -554,7 +554,7 @@ string TryFormatWinError(DWORD dwError)
 		// we'll copy it into sResult and free it and return sResult
 		string sResult = (LPCTSTR)lpMsgBuf;
 		LocalFree(lpMsgBuf);
-		while (!sResult.empty() && ((unsigned char)sResult[sResult.length() - 1]) < 0x20)
+		while (!sResult.empty() && ((uchar)sResult[sResult.length() - 1]) < 0x20)
 			sResult.resize(sResult.length() - 1);
 		return sResult;
 	}

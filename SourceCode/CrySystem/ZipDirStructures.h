@@ -166,11 +166,11 @@ typedef TSmartHeapPtr<CMTSafeHeap> SmartPtr;
 
 // Uncompresses raw (without wrapping) data that is compressed with method 8 (deflated) in the Zip file
 // returns one of the Z_* errors (Z_OK upon success)
-extern int ZipRawUncompress (CMTSafeHeap*pHeap, void* pUncompressed, unsigned long* pDestSize, const void* pCompressed, unsigned long nSrcSize);
+extern int ZipRawUncompress (CMTSafeHeap*pHeap, void* pUncompressed, ulong* pDestSize, const void* pCompressed, ulong nSrcSize);
 
 // compresses the raw data into raw data. The buffer for compressed data itself with the heap passed. Uses method 8 (deflate)
 // returns one of the Z_* errors (Z_OK upon success), and the size in *pDestSize. the pCompressed buffer must be at least nSrcSize*1.001+12 size
-extern int ZipRawCompress (CMTSafeHeap*pHeap, const void* pUncompressed, unsigned long* pDestSize, void* pCompressed, unsigned long nSrcSize, int nLevel);
+extern int ZipRawCompress (CMTSafeHeap*pHeap, const void* pUncompressed, ulong* pDestSize, void* pCompressed, ulong nSrcSize, int nLevel);
 
 // this is the record about the file in the Zip file.
 struct FileEntry
@@ -178,18 +178,18 @@ struct FileEntry
 	enum {INVALID_DATA_OFFSET = 0xFFFFFFFF};
 	
 	ZipFile::DataDescriptor desc;
-	ZipFile::ulong nFileHeaderOffset; // offset of the local file header
-	ZipFile::ulong nFileDataOffset; // offsed of the packed info inside the file; NOTE: this can be INVALID_DATA_OFFSET, if not calculated yet!
-	ZipFile::ushort nMethod; // the method of compression (0 if no compression/store)
-	ZipFile::ushort nNameOffset; // offset of the file name in the name pool for the directory
+	uint nFileHeaderOffset; // offset of the local file header
+	uint nFileDataOffset; // offsed of the packed info inside the file; NOTE: this can be INVALID_DATA_OFFSET, if not calculated yet!
+	ushort nMethod; // the method of compression (0 if no compression/store)
+	ushort nNameOffset; // offset of the file name in the name pool for the directory
 
 	// the file modification times
-	ZipFile::ushort nLastModTime;
-	ZipFile::ushort nLastModDate;
+	ushort nLastModTime;
+	ushort nLastModDate;
 
 	// the offset to the start of the next file's header - this
 	// can be used to calculate the available space in zip file
-	ZipFile::ulong nEOFOffset;
+	ulong nEOFOffset;
 
 
 	FileEntry():nFileHeaderOffset(INVALID_DATA_OFFSET){}
@@ -227,11 +227,11 @@ extern ErrorEnum UpdateLocalHeader (FILE*f, FileEntry* pFileEntry);
 extern ErrorEnum WriteLocalHeader (FILE*f, FileEntry* pFileEntry, const char* szRelativePath);
 
 // conversion routines for the date/time fields used in Zip
-extern ZipFile::ushort DOSDate(tm*);
-extern ZipFile::ushort DOSTime(tm*);
+extern ushort DOSDate(tm*);
+extern ushort DOSTime(tm*);
 
-extern const char* DOSTimeCStr(ZipFile::ushort nTime);
-extern const char* DOSDateCStr(ZipFile::ushort nTime);
+extern const char* DOSTimeCStr(ushort nTime);
+extern const char* DOSDateCStr(ushort nTime);
 
 struct DirHeader;
 // this structure represents a subdirectory descriptor in the directory record.
@@ -239,9 +239,9 @@ struct DirHeader;
 // as on its name
 struct DirEntry
 {
-	ZipFile::ulong  nDirHeaderOffset; // offset, in bytes, relative to this object, of the actual directory record header
-	ZipFile::ushort nNameOffset; // offset of the dir name in the name pool of the parent directory
-	ZipFile::ushort nPadBytes; // just padding
+	uint  nDirHeaderOffset; // offset, in bytes, relative to this object, of the actual directory record header
+	ushort nNameOffset; // offset of the dir name in the name pool of the parent directory
+	ushort nPadBytes; // just padding
 
 	// returns the name of this directory, given the pointer to the name pool of hte parent directory
 	const char* GetName(const char* pNamePool)const
@@ -266,8 +266,8 @@ struct DirEntry
 // the name pool follows straight the directory and file entries.
 struct DirHeader
 {
-	ZipFile::ushort numDirs; // number of directory entries - DirEntry structures
-	ZipFile::ushort numFiles; // number of file entries - FileEntry structures
+	ushort numDirs; // number of directory entries - DirEntry structures
+	ushort numFiles; // number of file entries - FileEntry structures
 
 	// returns the pointer to the name pool that follows this object
 	// you can only call this method for the structure instance actually followed by the dir record

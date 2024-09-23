@@ -454,7 +454,7 @@ void CXGame::OnCollectUserData(INT_PTR nValue,int nCookie)		//AMD Port
 }
 
 //////////////////////////////////////////////////////////////////////////
-int CXGame::AddTimer(IScriptObject *pTable,unsigned int nStartTimer,unsigned int nTimer,IScriptObject *pUserData,bool bUpdateDuringPause)
+int CXGame::AddTimer(IScriptObject *pTable,uint nStartTimer,uint nTimer,IScriptObject *pUserData,bool bUpdateDuringPause)
 {
 	return (m_pScriptTimerMgr->AddTimer(pTable,nStartTimer,nTimer,pUserData,bUpdateDuringPause));
 }

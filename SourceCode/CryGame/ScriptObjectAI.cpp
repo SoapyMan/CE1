@@ -628,7 +628,7 @@ int CScriptObjectAI::SetAssesmentMultiplier(IFunctionHandler * pH)
 		return pH->EndFunction();
 	}
 
-	m_pAISystem->SetAssesmentMultiplier((unsigned short)type, fMultiplier);
+	m_pAISystem->SetAssesmentMultiplier((ushort)type, fMultiplier);
 
 	return pH->EndFunction();
 }

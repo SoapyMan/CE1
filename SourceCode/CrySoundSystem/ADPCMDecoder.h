@@ -11,18 +11,18 @@ struct	ICryPak;
 typedef struct SADPCMWaveHdr
 {
 	char RIFF[4];							// "RIFF" tag, identifies it as WAV
-	unsigned long dwSize;					// Size of data to follow (filesize-8)
+	ulong dwSize;					// Size of data to follow (filesize-8)
 	char WAVE[4];							// "WAVE" tag
 	char fmt_[4];							// "fmt " tag
-	unsigned long  dw16;					// 16
-	unsigned short FormatTag;				// should be WAVE_FORMAT_ADPCM=2
-	unsigned short wChnls;					// Number of Channels (1 for mono, 2 for stereo), should be always 2
-	unsigned long  dwSRate;					// Sample Rate
-	unsigned long  BytesPerSec;				// Bytes per second
-	unsigned short wBlkAlign;				// Block align,  usually 2048
-	unsigned short BitsPerSample;			// Bits Per Sample, usually 4
-	unsigned short wExtSize;				// not important
-	unsigned short SamplesPerBlock;			// samples per block, usually 2036   
+	ulong  dw16;					// 16
+	ushort FormatTag;				// should be WAVE_FORMAT_ADPCM=2
+	ushort wChnls;					// Number of Channels (1 for mono, 2 for stereo), should be always 2
+	ulong  dwSRate;					// Sample Rate
+	ulong  BytesPerSec;				// Bytes per second
+	ushort wBlkAlign;				// Block align,  usually 2048
+	ushort BitsPerSample;			// Bits Per Sample, usually 4
+	ushort wExtSize;				// not important
+	ushort SamplesPerBlock;			// samples per block, usually 2036   
 	//followed by number of coeficients and coeficients themselves
 } SADPCMWaveHdr;
 
@@ -38,7 +38,7 @@ struct MsState
 class CADPCMDecoder : public IMusicPatternDecoder
 {
 public:
-	static const unsigned int scuiSizeOfWavHeader = sizeof(SWaveHdr);	//need to hardcode here since SADPCMWaveHdr is not complined with usual header
+	static const uint scuiSizeOfWavHeader = sizeof(SWaveHdr);	//need to hardcode here since SADPCMWaveHdr is not complined with usual header
 
 	CADPCMDecoder(IMusicSystem* pMusicSystem);
 	void Release() { delete this; }
@@ -59,7 +59,7 @@ public:
 	//! retreieves file name
 	const char* FileName() const;
 	//! decode function for one block
-	static void AdpcmBlockExpandI(int nCoef, const short* iCoef, const unsigned char* ibuff, short* obuff, int n);
+	static void AdpcmBlockExpandI(int nCoef, const short* iCoef, const uchar* ibuff, short* obuff, int n);
 	const bool IsOpen()const;
 	//! retrieves frequency encoding
 	const bool Is44KHz() const { return m_b44KHz; }
@@ -69,7 +69,7 @@ protected:
 
 	//! decode function for one sample, called exclusively by AdpcmBlockExpandI
 	static int CADPCMDecoder::AdpcmDecode(int c, MsState& rState, int sample1, int sample2);
-	void SetFileInfo(const unsigned int cuiSampleCount, const bool cbIs44KHz = true);
+	void SetFileInfo(const uint cuiSampleCount, const bool cbIs44KHz = true);
 
 	virtual ~CADPCMDecoder();
 
@@ -87,9 +87,9 @@ class CADPCMDecoderInstance : public IMusicPatternDecoderInstance
 {
 public:
 	//hardcoded constants,  can be changed when using a different format
-	static const unsigned int scuiBlockSize = 2048;	//constant value in 44 KHz Microsoft format, half the size for 22KHz
-	static const unsigned int scuiSamplesPerBlock = 2036; //constant value in 44 KHz Microsoft format, half the size for 22KHz
-	static const unsigned int scuiNumberOfCoefs = 7;	//constant number of coefs
+	static const uint scuiBlockSize = 2048;	//constant value in 44 KHz Microsoft format, half the size for 22KHz
+	static const uint scuiSamplesPerBlock = 2036; //constant value in 44 KHz Microsoft format, half the size for 22KHz
+	static const uint scuiNumberOfCoefs = 7;	//constant number of coefs
 
 	CADPCMDecoderInstance(CADPCMDecoder* pDecoder);	//initializes as well
 	void Release() { Close(); delete this; }
@@ -102,7 +102,7 @@ public:
 	//! closes all
 	void Close();
 	//! retrieves number of total contained samples
-	const unsigned int Samples();
+	const uint Samples();
 
 protected:
 	CADPCMDecoder* m_pDecoder;			// one decoder per file
@@ -113,17 +113,17 @@ protected:
 	bool			m_bCopyFromLastFrame;	// indicates some copying from last frame (due to odd sample count request)
 	signed long		m_lLastSample;			// sample to reuse for next frame 
 
-	unsigned int	m_uiCurrentBlockSize;	// block size in file, always less than static allocated buffer
-	unsigned int	m_uiCurrentSamplesPerBlock;// sampels per block in file(usually m_uiCurrentBlockSize-12), always less than static allocated buffer
+	uint	m_uiCurrentBlockSize;	// block size in file, always less than static allocated buffer
+	uint	m_uiCurrentSamplesPerBlock;// sampels per block in file(usually m_uiCurrentBlockSize-12), always less than static allocated buffer
 
 	//ADPCM specific stuff
-	unsigned char   m_aEncodedBlock[scuiBlockSize];			//static allocated encoded block
+	uchar   m_aEncodedBlock[scuiBlockSize];			//static allocated encoded block
 	short			m_aDecodedBlock[scuiSamplesPerBlock * 2];	//static allocated decoded block, 2 per channel (1:4)
 	short			m_aCoefs[scuiNumberOfCoefs * 2/*2 per channel, stereo assumed*/];				//static allocated coeficients
 
-	unsigned int	m_uiDataStartPos;			// usually at position 90, set by InitStreamWav
-	unsigned int	m_uiNumSamples;				// total sample count
-	unsigned short	m_sCoefs;					// ADPCM: number of coef sets
+	uint	m_uiDataStartPos;			// usually at position 90, set by InitStreamWav
+	uint	m_uiNumSamples;				// total sample count
+	ushort	m_sCoefs;					// ADPCM: number of coef sets
 	short* m_psSamplePtr;				// Pointer to current sample
 	int				m_iState[16];				// step-size info for *ADPCM writes
 
@@ -134,7 +134,7 @@ protected:
 	const bool FillPCMBuffer22KHz(signed long* pBuffer, int nSamples);
 
 	const bool InitStreamWAV();					// for now has every instance its own file handle
-	unsigned short AdpcmReadBlock(short* pDest = nullptr);		// decoded one block, if dest not specified, default static buffer is chosen
+	ushort AdpcmReadBlock(short* pDest = nullptr);		// decoded one block, if dest not specified, default static buffer is chosen
 
 	virtual ~CADPCMDecoderInstance();			// to hit right destructor
 };

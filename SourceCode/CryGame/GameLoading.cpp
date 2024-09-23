@@ -206,7 +206,7 @@ private:
 void SaveName(string& s, string& prof)
 {
 	if (!s[0]) s = "quicksave";
-	for (unsigned int i = 0; i < s.size(); i++) if (!isalnum(s[i])) s[i] = '_';
+	for (uint i = 0; i < s.size(); i++) if (!isalnum(s[i])) s[i] = '_';
 	s = "profiles/player/" + prof + "/savegames/" + s + ".sav";
 };
 
@@ -275,12 +275,12 @@ bool CXGame::SaveToStream(CStream& stm, Vec3d* pos, Vec3d* angles, string sFilen
 	std::time_t time = std::chrono::system_clock::to_time_t(now);
 	tm localTime = *std::localtime(&time);
 
-	stm.Write((unsigned char)localTime.tm_hour);		// hour
-	stm.Write((unsigned char)localTime.tm_min);			// minute
-	stm.Write((unsigned char)localTime.tm_sec);			// second
-	stm.Write((unsigned char)localTime.tm_mday);		// day
-	stm.Write((unsigned char)(localTime.tm_mon + 1));	// month
-	stm.Write((unsigned short)(localTime.tm_year + 1900)); // year
+	stm.Write((uchar)localTime.tm_hour);		// hour
+	stm.Write((uchar)localTime.tm_min);			// minute
+	stm.Write((uchar)localTime.tm_sec);			// second
+	stm.Write((uchar)localTime.tm_mday);		// day
+	stm.Write((uchar)(localTime.tm_mon + 1));	// month
+	stm.Write((ushort)(localTime.tm_year + 1900)); // year
 
 	// save savegame name
 	stm.Write(sFilename);
@@ -409,8 +409,8 @@ bool CXGame::SaveToStream(CStream& stm, Vec3d* pos, Vec3d* angles, string sFilen
 
 		stm.Write(pEnt->GetRndFlags());
 
-		unsigned char uViewDistRatio = (int)(pEnt->GetViewDistRatioNormilized() * 100.0f);
-		unsigned char uLodRatio = (int)(pEnt->GetLodRatioNormilized() * 100.0f);
+		uchar uViewDistRatio = (int)(pEnt->GetViewDistRatioNormilized() * 100.0f);
+		uchar uLodRatio = (int)(pEnt->GetLodRatioNormilized() * 100.0f);
 
 		stm.Write(uViewDistRatio);
 		stm.Write(uLodRatio);
@@ -761,8 +761,8 @@ bool CXGame::LoadFromStream(CStream& stm, bool isdemo)
 	stm.Read(sMissionName);
 
 	// read dummy save date and time
-	unsigned char bDummy;
-	unsigned short wDummy;
+	uchar bDummy;
+	ushort wDummy;
 	stm.Read(bDummy);	// hour
 	stm.Read(bDummy);	// minute
 	stm.Read(bDummy);	// second
@@ -1019,9 +1019,9 @@ bool CXGame::LoadFromStream(CStream& stm, bool isdemo)
 
 			int dwRendFlags;
 			stm.Read(dwRendFlags);
-			unsigned char uViewDistRatio;
+			uchar uViewDistRatio;
 			stm.Read(uViewDistRatio);
-			unsigned char uLodRatio;
+			uchar uLodRatio;
 			stm.Read(uLodRatio);
 
 			string MatName;
@@ -1795,8 +1795,8 @@ bool CXGame::LoadFromStream_RELEASEVERSION(CStream& stm, bool isdemo, CScriptObj
 	stm.Read(sMissionName);
 
 	// read dummy save date and time
-	unsigned char bDummy;
-	unsigned short wDummy;
+	uchar bDummy;
+	ushort wDummy;
 	stm.Read(bDummy);	// hour
 	stm.Read(bDummy);	// minute
 	stm.Read(bDummy);	// second
@@ -2052,9 +2052,9 @@ bool CXGame::LoadFromStream_RELEASEVERSION(CStream& stm, bool isdemo, CScriptObj
 
 			int dwRendFlags;
 			stm.Read(dwRendFlags);
-			unsigned char uViewDistRatio;
+			uchar uViewDistRatio;
 			stm.Read(uViewDistRatio);
-			unsigned char uLodRatio;
+			uchar uLodRatio;
 			stm.Read(uLodRatio);
 
 			string MatName;
@@ -2357,8 +2357,8 @@ bool CXGame::LoadFromStream_PATCH_1(CStream& stm, bool isdemo, CScriptObjectStre
 	stm.Read(sMissionName);
 
 	// read dummy save date and time
-	unsigned char bDummy;
-	unsigned short wDummy;
+	uchar bDummy;
+	ushort wDummy;
 	stm.Read(bDummy);	// hour
 	stm.Read(bDummy);	// minute
 	stm.Read(bDummy);	// second
@@ -2614,9 +2614,9 @@ bool CXGame::LoadFromStream_PATCH_1(CStream& stm, bool isdemo, CScriptObjectStre
 
 			int dwRendFlags;
 			stm.Read(dwRendFlags);
-			unsigned char uViewDistRatio;
+			uchar uViewDistRatio;
 			stm.Read(uViewDistRatio);
-			unsigned char uLodRatio;
+			uchar uLodRatio;
 			stm.Read(uLodRatio);
 
 			string MatName;

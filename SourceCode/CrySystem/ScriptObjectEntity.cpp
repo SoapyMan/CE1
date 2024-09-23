@@ -594,7 +594,7 @@ int CScriptObjectEntity::KillCharacter(IFunctionHandler* pH)
 */
 int CScriptObjectEntity::LoadObject(IFunctionHandler* pH)
 {
-	CRYASSERT((unsigned int)(pH->GetParamCount() - 3) < 2u);
+	CRYASSERT((uint)(pH->GetParamCount() - 3) < 2u);
 	const char* sFileName;
 	const char* sGeomName;
 	int nPos;
@@ -886,7 +886,7 @@ int CScriptObjectEntity::CreateRigidBodyPiece(IFunctionHandler* pH)
 int CScriptObjectEntity::CreateStaticEntity(IFunctionHandler* pH)
 {
 	//	CHECK_PARAMETERS(2);
-	CRYASSERT((unsigned int)pH->GetParamCount() - 1u < 3u);
+	CRYASSERT((uint)pH->GetParamCount() - 1u < 3u);
 
 	float fMass;
 	int nSurfaceID = -1;
@@ -1130,7 +1130,7 @@ int CScriptObjectEntity::Bind(IFunctionHandler* pH)
 	//if(pSrv)
 	//{
 	m_pEntity->Bind(nID, cParam);
-	//pSrv->BindEntity(m_pEntity->GetId(),nID,(unsigned char)cParam);
+	//pSrv->BindEntity(m_pEntity->GetId(),nID,(uchar)cParam);
 //}
 	return pH->EndFunction();
 }
@@ -1151,7 +1151,7 @@ int CScriptObjectEntity::Unbind(IFunctionHandler* pH)
 	//if(pSrv)
 	//{
 	m_pEntity->Unbind(nID, cParam);
-	//pSrv->UnbindEntity(m_pEntity->GetId(),nID,(unsigned char)cParam);
+	//pSrv->UnbindEntity(m_pEntity->GetId(),nID,(uchar)cParam);
 //}
 	return pH->EndFunction();
 }

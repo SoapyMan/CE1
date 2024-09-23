@@ -11,17 +11,17 @@ protected:
 	//info for one particular patch 
 	typedef struct GLMInfoPatch
 	{
-		unsigned int uiOffsetX;
-		unsigned int uiOffsetY;
-		unsigned int uiWidth;
-		unsigned int uiHeight;
+		uint uiOffsetX;
+		uint uiOffsetY;
+		uint uiWidth;
+		uint uiHeight;
 	}GLMInfoPatch;
 
 	//info struct for one GLM
 	typedef struct GLMInfoMesh
 	{
 		CString GLMName;
-		unsigned int uiLMIndex;
+		uint uiLMIndex;
 		std::vector<GLMInfoPatch> vPatchInfos;
 	}GLMInfoMesh;
 

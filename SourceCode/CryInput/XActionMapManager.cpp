@@ -120,7 +120,7 @@ IActionMap* CXActionMapManager::GetActionMap(const char* s)
 	return nullptr;
 }
 
-void CXActionMapManager::Update(unsigned int nTimeMSec)
+void CXActionMapManager::Update(uint nTimeMSec)
 {
 	m_nCurrentTime = nTimeMSec;
 	if (m_pCurrentActionMap)
@@ -299,7 +299,7 @@ bool CXActionMapManager::CheckPressedKey(struct XActionBind::tagKey& key)
 
 bool CXActionMapManager::CheckDoublePressedKey(struct XActionBind::tagKey& key)
 {
-	unsigned int nDeltaTime = m_nCurrentTime - key.nLastPess;
+	uint nDeltaTime = m_nCurrentTime - key.nLastPess;
 	if (IS_NULL_KEY(key.Bind.nKey))
 		return false;
 

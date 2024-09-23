@@ -16,7 +16,7 @@ public:
 	CAIPlayer(void);
 	~CAIPlayer(void);
 	void ParseParameters(const AIObjectParameters& params);
-	bool CanBeConvertedTo(unsigned short type, void** pConverted);
+	bool CanBeConvertedTo(ushort type, void** pConverted);
 
 	AgentParameters		m_Parameters;
 	void RegisterPerception(float fValue);

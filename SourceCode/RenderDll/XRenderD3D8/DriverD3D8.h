@@ -476,8 +476,8 @@ private:
   list2<texture_info> m_texture_registry;
   int FindTextureInRegistry(const char * filename, int * tex_type);
   int RegisterTextureInRegistry(const char * filename, int tex_type, int tid, int low_tid);
-  unsigned int MakeTextureREAL(const char * filename,int *tex_type, unsigned int load_low_res);
-  unsigned int CheckTexturePlus(const char * filename, const char * postfix);
+  uint MakeTextureREAL(const char * filename,int *tex_type, uint load_low_res);
+  uint CheckTexturePlus(const char * filename, const char * postfix);
 
 public:  
   LPD3DXMATRIXSTACK m_matView;  
@@ -521,9 +521,9 @@ public:
 
 public:
 #ifndef PS2	
-  virtual WIN_HWND Init(int x,int y,int width,int height,unsigned int cbpp, int zbpp, int sbits, bool fullscreen,WIN_HINSTANCE hinst, WIN_HWND Glhwnd=0, WIN_HDC Glhdc=0, WIN_HGLRC hGLrc=0, bool bReInit=false);
+  virtual WIN_HWND Init(int x,int y,int width,int height,uint cbpp, int zbpp, int sbits, bool fullscreen,WIN_HINSTANCE hinst, WIN_HWND Glhwnd=0, WIN_HDC Glhdc=0, WIN_HGLRC hGLrc=0, bool bReInit=false);
 #else //PS2
-  virtual bool Init(int x,int y,int width,int height,unsigned int cbpp, int zbpp, int sbits, bool fullscreen, bool bReInit=false);
+  virtual bool Init(int x,int y,int width,int height,uint cbpp, int zbpp, int sbits, bool fullscreen, bool bReInit=false);
 #endif  //endif	
   virtual bool SetCurrentContext(WIN_HWND hWnd);
   virtual bool CreateContext(WIN_HWND hWnd, bool bAllowFSAA=false);
@@ -532,8 +532,8 @@ public:
   virtual void  ShareResources( IRenderer *renderer );
   virtual void	MakeCurrent();
 
-	virtual bool ChangeDisplay(unsigned int width,unsigned int height,unsigned int cbpp);
-  virtual void ChangeViewport(unsigned int x,unsigned int y,unsigned int width,unsigned int height);
+	virtual bool ChangeDisplay(uint width,uint height,uint cbpp);
+  virtual void ChangeViewport(uint x,uint y,uint width,uint height);
 	virtual int	EnumDisplayFormats(TArray<SDispFormat>& Formats, bool bReset);
 
   virtual void  RefreshResources(int nFlags);
@@ -561,12 +561,12 @@ public:
   virtual void EnableTMU(bool enable);
   virtual void SetTexture(int tnum, ETexType Type=eTT_Base);
   virtual void SetEnviMode(int mode);
-  virtual unsigned int DownLoadToVideoMemory(unsigned char *data,int w, int h, ETEX_Format eTFSrc, ETEX_Format eTFDst, int nummipmap, bool repeat=true, int filter=FILTER_BILINEAR, int Id=0);
-  virtual	void UpdateTextureInVideoMemory(uint tnum, unsigned char *newdata,int posx,int posy,int w,int h,ETEX_Format eTF=eTF_0888){};
-  virtual void RemoveTexture(unsigned int TextureId);
+  virtual uint DownLoadToVideoMemory(uchar *data,int w, int h, ETEX_Format eTFSrc, ETEX_Format eTFDst, int nummipmap, bool repeat=true, int filter=FILTER_BILINEAR, int Id=0);
+  virtual	void UpdateTextureInVideoMemory(uint tnum, uchar *newdata,int posx,int posy,int w,int h,ETEX_Format eTF=eTF_0888){};
+  virtual void RemoveTexture(uint TextureId);
   virtual void RemoveTexture(ITexPic * pTexPic);
-  virtual unsigned int MakeTexture(const char * filename,int *tex_type=NULL/*,unsigned int def_tid=0*/);
-  virtual unsigned int LoadTexture(const char * filename,int *tex_type=NULL,unsigned int def_tid=0,bool compresstodisk=true,bool bWarn=true);
+  virtual uint MakeTexture(const char * filename,int *tex_type=NULL/*,uint def_tid=0*/);
+  virtual uint LoadTexture(const char * filename,int *tex_type=NULL,uint def_tid=0,bool compresstodisk=true,bool bWarn=true);
 
 	virtual void SetCamera(const CCamera &cam);
   virtual	void SetViewport(int x=0, int y=0, int width=0, int height=0);
@@ -609,7 +609,7 @@ public:
   virtual int GenerateAlphaGlowTexture(float k);
 
   virtual void SetMaterialColor(float r, float g, float b, float a);
-  virtual void SetColorMask(unsigned char r,unsigned char g,unsigned char b,unsigned char a);
+  virtual void SetColorMask(uchar r,uchar g,uchar b,uchar a);
   virtual int LoadAnimatedTexture(const char * format,const int nCount);
   virtual char * GetStatusText(ERendStats type);
   virtual char * GetTexturesStatusText();
@@ -657,7 +657,7 @@ public:
   virtual void DrawQuad(const Vec3d &right, const Vec3d &up, const Vec3d &origin,int nFlipMode=0);
   virtual void DrawQuad(float dy,float dx, float dz, float x, float y, float z);
   virtual void DrawQuadInFogVolume(float dy,float dx, float dz, float x, float y, float z, float fFogLevel, float fFogViewDist);
-  virtual void GenTexID(int num, unsigned int * ids){};
+  virtual void GenTexID(int num, uint * ids){};
 
  //fog	
   void EnableFogCoordExt(bool enable){};
@@ -669,7 +669,7 @@ public:
 
   virtual void ClearDepthBuffer();
   virtual void ClearColorBuffer(const Vec3d vColor);  
-  virtual void ReadFrameBuffer(unsigned char * pRGB, int nSizeX, int nSizeY, bool bBackBuffer, bool bRGBA);  
+  virtual void ReadFrameBuffer(uchar * pRGB, int nSizeX, int nSizeY, bool bBackBuffer, bool bRGBA);  
 
   //misc	
   virtual void ScreenShot(const char *filename=NULL) {};  
@@ -691,7 +691,7 @@ public:
   virtual void SetDepthFunc(int mode);
 
   virtual void EnableStencilTest(bool enable);
-  virtual void SetStencilMask(unsigned char value);
+  virtual void SetStencilMask(uchar value);
   virtual void SetStencilFunc(int func,int ref,int mask);
   virtual void SetStencilOp(int fail,int zfail,int pass);
   virtual void DrawTransparentQuad2D(float color);
@@ -705,7 +705,7 @@ public:
   virtual	bool FontUploadTexture(class CFBitmap*);
   virtual	void FontReleaseTexture(class CFBitmap *pBmp);
   virtual void FontSetTexture(class CFBitmap*);
-  virtual void FontSetRenderingState(unsigned long nVirtualScreenWidth, unsigned long nVirtualScreenHeight);
+  virtual void FontSetRenderingState(ulong nVirtualScreenWidth, ulong nVirtualScreenHeight);
   virtual void FontSetBlending(int src, int dst);
   virtual void FontRestoreRenderingState();
   

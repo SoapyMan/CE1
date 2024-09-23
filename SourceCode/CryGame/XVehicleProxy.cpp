@@ -198,7 +198,7 @@ void CXVehicleProxy::SetMotorFunc(HSCRIPTFUNCTION pFunc)
 
 //
 //--------------------------------------------------------------------------------------------------
-bool CXVehicleProxy::QueryProxy(unsigned char type, void **pProxy)
+bool CXVehicleProxy::QueryProxy(uchar type, void **pProxy)
 {
 	if (type == AIPROXY_VEHICLE)
 	{

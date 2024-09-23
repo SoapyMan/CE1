@@ -119,8 +119,8 @@ struct ISelectKey : public IKey
 struct ISoundKey : public IKey
 {
 	char pszFilename[128];
-	unsigned char nVolume;
-	unsigned char nPan;
+	uchar nVolume;
+	uchar nPan;
 	float inRadius;
 	float outRadius;
 	bool bStream;	//!< Stream sound from disk.

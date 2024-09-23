@@ -20,19 +20,19 @@ class CVertexBuffer;
 
 typedef union tag_Clr
 {
-	unsigned int c;
-	unsigned char cc[4];
+	uint c;
+	uchar cc[4];
 }_Clr;
 
 typedef struct tag_Vtx
 {
 	float x,y,z;
-	unsigned char cc[4];
+	uchar cc[4];
 	float u,v;
 }_Vtx;
 
 typedef std::vector<_Vtx> _VtxVec;
-typedef std::vector<unsigned short> _IdxBuf;
+typedef std::vector<ushort> _IdxBuf;
 
 class CScriptObjectRenderer :
 	public _ScriptableEx<CScriptObjectRenderer>

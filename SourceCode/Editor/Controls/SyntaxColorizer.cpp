@@ -87,9 +87,9 @@ void CSyntaxColorizer::createDefaultKeywordList()
 
 void CSyntaxColorizer::createTables()
 {
-	m_pTableZero = new unsigned char[256]; m_pTableOne   = new unsigned char[256];
-	m_pTableTwo  = new unsigned char[256]; m_pTableThree = new unsigned char[256];
-	m_pTableFour = new unsigned char[256]; m_pAllowable  = new unsigned char[256];
+	m_pTableZero = new uchar[256]; m_pTableOne   = new uchar[256];
+	m_pTableTwo  = new uchar[256]; m_pTableThree = new uchar[256];
+	m_pTableFour = new uchar[256]; m_pAllowable  = new uchar[256];
 
 	memset(m_pTableZero,SKIP,256); memset(m_pTableOne,SKIP,256);
 	memset(m_pTableTwo,SKIP,256);  memset(m_pTableThree,SKIP,256);
@@ -408,7 +408,7 @@ void CSyntaxColorizer::colorize(LPTSTR lpszBuf, CRichEditCtrl *pCtrl, long iOffs
 	long iStart;
 	long x = 0;
 	SKeyword* pskTemp = m_pskKeyword;
-	unsigned char* pTable = m_pTableZero;
+	uchar* pTable = m_pTableZero;
 
 	//do the work
 	while(lpszBuf[x])

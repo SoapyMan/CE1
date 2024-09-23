@@ -200,21 +200,21 @@ typedef struct IAIObject
 	virtual const Vec3& GetPos() = 0;
 	virtual void SetAngles(const Vec3& angles) = 0;
 	virtual const Vec3& GetAngles() = 0;
-	virtual unsigned short GetType() = 0;
+	virtual ushort GetType() = 0;
 	virtual void* GetAssociation() = 0;
 	virtual void Release() = 0;
 	virtual void ParseParameters(const AIObjectParameters& params) = 0;
-	virtual bool CanBeConvertedTo(unsigned short type, void** pConverted) = 0;
+	virtual bool CanBeConvertedTo(ushort type, void** pConverted) = 0;
 	virtual void SetName(const char* pName) = 0;
 	virtual char* GetName() = 0;
 	virtual void IsEnabled(bool enabled) = 0;
-	virtual void Event(unsigned short, SAIEVENT* pEvent) = 0;
+	virtual void Event(ushort, SAIEVENT* pEvent) = 0;
 	virtual void SetEyeHeight(float fHeight) = 0;
 	virtual SOBJECTSTATE* GetState() = 0;
 	virtual void Bind(IAIObject* bind) = 0;
 	virtual void Unbind() = 0;
 	//	virtual IAIObject* GetBound( ) = 0;
-	virtual	void CreateBoundObject(unsigned short type, const Vec3& vBindPos, const Vec3& vBindAngl) = 0;
+	virtual	void CreateBoundObject(ushort type, const Vec3& vBindPos, const Vec3& vBindAngl) = 0;
 	virtual void EDITOR_DrawRanges(bool bEnable = true) = 0;
 	virtual IUnknownProxy* GetProxy() = 0;
 	virtual void SetSignal(int nSignalID, const char* szText, void* pSender = 0) = 0;
@@ -432,13 +432,13 @@ class IPhysicalEntity;
 
 typedef struct IUnknownProxy
 {
-	virtual bool QueryProxy(unsigned char type, void** pProxy) = 0;
+	virtual bool QueryProxy(uchar type, void** pProxy) = 0;
 	virtual int Update(SOBJECTSTATE*) = 0;
 	virtual void Release() = 0;
 	virtual bool CustomUpdate(Vec3& pos, Vec3& angles) = 0;
 	virtual IPhysicalEntity* GetPhysics() = 0;
 	virtual void DebugDraw(struct IRenderer* pRenderer) = 0;
-	virtual bool CheckStatus(unsigned char status) = 0;
+	virtual bool CheckStatus(uchar status) = 0;
 	virtual void ApplyHealth(float fHealth) = 0;
 	virtual void Load(CStream& str) = 0;
 	virtual void Load_PATCH_1(CStream& str) = 0;
@@ -508,7 +508,7 @@ struct GraphNode;
 typedef struct GraphLink
 {
 	GraphNode* pLink;											// next triangle this way
-	unsigned int nStartIndex, nEndIndex;						// indices of the edge vertices of this edge
+	uint nStartIndex, nEndIndex;						// indices of the edge vertices of this edge
 	float	fMaxRadius;											// maximum size sphere that can pass trough this edge
 	Vec3	vEdgeCenter;
 	Vec3	vWayOut;											// shows the out direction from this edge

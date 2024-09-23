@@ -29,7 +29,7 @@ void CNULLRenderer::FontSetTexture(class CFBitmap* pBmp, int nTexFiltMode)
 {
 }
 
-void CNULLRenderer::FontSetRenderingState(unsigned long nVPWidth, unsigned long nVPHeight)
+void CNULLRenderer::FontSetRenderingState(ulong nVPWidth, ulong nVPHeight)
 {
 }
 

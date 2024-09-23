@@ -260,17 +260,17 @@ private:
 	// Flags for this property item.
 	//////////////////////////////////////////////////////////////////////////
 	//! True if item selected.
-	unsigned int m_bSelected : 1;
+	uint m_bSelected : 1;
 	//! True if item currently expanded
-	unsigned int m_bExpanded : 1;
+	uint m_bExpanded : 1;
 	//! True if item can be expanded
-	unsigned int m_bExpandable : 1;
+	uint m_bExpandable : 1;
 	//! True if item can not be category.
-	unsigned int m_bNoCategory : 1;
+	uint m_bNoCategory : 1;
 	//! If tru ignore update that comes from childs.
-	unsigned int m_bIgnoreChildsUpdate : 1;
+	uint m_bIgnoreChildsUpdate : 1;
 	//! True if item modified.
-	unsigned int m_modified : 1;
+	uint m_modified : 1;
 
 	// Used for number controls.
 	float m_rangeMin;

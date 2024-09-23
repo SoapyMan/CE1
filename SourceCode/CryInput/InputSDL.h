@@ -89,8 +89,8 @@ public:
 	inline	bool	JoyButtonPressed(int p_numButton) { return false; }
 	inline	int		JoyGetDir() { return 0; }
 	inline	int		JoyGetHatDir() { return 0; }
-	inline	Vec3	JoyGetAnalog1Dir(unsigned int joystickID) const { return Vec3(zero); }
-	inline	Vec3	JoyGetAnalog2Dir(unsigned int joystickID) const { return Vec3(zero); }
+	inline	Vec3	JoyGetAnalog1Dir(uint joystickID) const { return Vec3(zero); }
+	inline	Vec3	JoyGetAnalog2Dir(uint joystickID) const { return Vec3(zero); }
 	inline  IKeyboard* GetKeyboard() { return (&m_Keyboard); }
 	inline  IMouse* GetMouse() { return (&m_Mouse); }
 	inline	int		GetKeyPressedCode() { return (m_Keyboard.GetKeyPressedCode()); }
@@ -98,7 +98,7 @@ public:
 	inline	int		GetKeyDownCode() { return (m_Keyboard.GetKeyDownCode()); }
 	inline	const char* GetKeyDownName() { return (m_Keyboard.GetKeyDownName()); }
 	inline	void	WaitForKey() { m_Keyboard.WaitForKey(); }
-	inline	unsigned char	GetKeyState(int nKey) { return m_Keyboard.GetKeyState(nKey); };
+	inline	uchar	GetKeyState(int nKey) { return m_Keyboard.GetKeyState(nKey); };
 	//Interface specifics
 	inline  IKeyboard* GetIKeyboard() { return (&m_Keyboard); }
 	inline  IMouse* GetIMouse() { return (&m_Mouse); }

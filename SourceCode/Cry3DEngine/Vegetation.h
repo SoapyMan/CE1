@@ -69,7 +69,7 @@ public:
 	void Physicalize(bool bInstant = false);
 
 	virtual float GetMaxViewDist();
-	IStatObj* GetEntityStatObj(unsigned int nSlot, Matrix44* pMatrix = nullptr, bool bReturnOnlyVisible = false);
+	IStatObj* GetEntityStatObj(uint nSlot, Matrix44* pMatrix = nullptr, bool bReturnOnlyVisible = false);
 	CStatObj* GetStatObj() const;
 
 	virtual void Serialize(bool bSave, ICryPak* pPak, FILE* f);
@@ -78,9 +78,9 @@ public:
 	void Dematerialize();
 	virtual int GetMemoryUsage();
 
-	virtual unsigned int GetRndFlags(); // get flags from StatObjGroup
-	virtual void SetRndFlags(unsigned int dwFlags); // there is no flags in the instance
-	virtual void SetRndFlags(unsigned int dwFlags, bool bEnable); // there is no flags in the instance
+	virtual uint GetRndFlags(); // get flags from StatObjGroup
+	virtual void SetRndFlags(uint dwFlags); // there is no flags in the instance
+	virtual void SetRndFlags(uint dwFlags, bool bEnable); // there is no flags in the instance
 	virtual struct ShadowMapLightSource* GetShadowMapFrustumContainer();
 	virtual list2<struct ShadowMapLightSourceInstance>* GetShadowMapCasters();
 	virtual void PreloadInstanceResources(Vec3d vPrevPortalPos, float fPrevPortalDistance, float fTime);

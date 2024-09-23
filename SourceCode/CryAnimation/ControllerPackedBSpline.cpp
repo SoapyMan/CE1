@@ -21,20 +21,20 @@ bool CControllerPackedBSpline::Load(const CONTROLLER_CHUNK_DESC_0826* pChunk, in
 	switch (pChunk->type)
 	{
 	case CTRL_BSPLINE_1C:
-		m_pRot = new TBSplineVec3dPacked<false, unsigned char>();
-		m_pPos = new TBSplineVec3dPacked<false, unsigned char>();
+		m_pRot = new TBSplineVec3dPacked<false, uchar>();
+		m_pPos = new TBSplineVec3dPacked<false, uchar>();
 		break;
 	case CTRL_BSPLINE_2C:
-		m_pRot = new TBSplineVec3dPacked<false, unsigned short>();
-		m_pPos = new TBSplineVec3dPacked<false, unsigned short>();
+		m_pRot = new TBSplineVec3dPacked<false, ushort>();
+		m_pPos = new TBSplineVec3dPacked<false, ushort>();
 		break;
 	case CTRL_BSPLINE_1O:
-		m_pRot = new TBSplineVec3dPacked<true, unsigned char>();
-		m_pPos = new TBSplineVec3dPacked<true, unsigned char>();
+		m_pRot = new TBSplineVec3dPacked<true, uchar>();
+		m_pPos = new TBSplineVec3dPacked<true, uchar>();
 		break;
 	case CTRL_BSPLINE_2O:
-		m_pRot = new TBSplineVec3dPacked<true, unsigned short>();
-		m_pPos = new TBSplineVec3dPacked<true, unsigned short>();
+		m_pRot = new TBSplineVec3dPacked<true, ushort>();
+		m_pPos = new TBSplineVec3dPacked<true, ushort>();
 		break;
 	default:
 		return false;

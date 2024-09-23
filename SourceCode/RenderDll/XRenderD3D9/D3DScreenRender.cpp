@@ -91,8 +91,8 @@ bool CreateRenderTarget(STexPic* pTex, int iWidth, int iHeight, bool bUseAlpha, 
 		pTex->m_Flags &= ~FT_ALLOCATED;
 	}
 
-	unsigned int nHasAlpha = (bUseAlpha) ? FT_HASALPHA : 0;
-	unsigned int nHasMips = (bMipMaps) ? 0 : FT_NOMIPS;
+	uint nHasAlpha = (bUseAlpha) ? FT_HASALPHA : 0;
+	uint nHasMips = (bMipMaps) ? 0 : FT_NOMIPS;
 
 	// if not created yet, create texture
 	if (!(pTex->m_Flags & FT_ALLOCATED))

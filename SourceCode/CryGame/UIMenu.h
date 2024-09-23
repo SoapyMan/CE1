@@ -36,7 +36,7 @@ public:
 
 	string GetClassName();
 
-	int Update(unsigned int iMessage, unsigned int wParam, unsigned int lParam);
+	int Update(uint iMessage, uint wParam, uint lParam);
 	int Draw();
 
 	int Release();

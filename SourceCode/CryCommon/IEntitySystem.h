@@ -20,7 +20,7 @@
 #endif
 
 // !!! don't change the type !!!
-typedef unsigned short EntityClassId;			//! unique identifier for the entity class (defined in ClassRegistry.lua)
+typedef ushort EntityClassId;			//! unique identifier for the entity class (defined in ClassRegistry.lua)
 typedef ULONG_PTR BoneBindHandle;
 
 class CEntityDesc;
@@ -322,7 +322,7 @@ struct IEntity :
 {
 public:
 	/*!	Retrieves the unique identifier of this entity assigned to it by the Entity System.
-		@return The entity id as an unsigned short if succesfull. This function always suceeds if a pointer to the interface is acquired.
+		@return The entity id as an ushort if succesfull. This function always suceeds if a pointer to the interface is acquired.
 	*/
 	virtual	EntityId GetId() const = 0;
 
@@ -455,7 +455,7 @@ public:
 	//     eEntityFlags
 	// Arguments:
 	//     flags - Flags to be set from eEntityFlags enum, they will be ORed with flags already in the entity (m_flags |= flags).
-	virtual void	SetFlags(unsigned int flags) = 0;
+	virtual void	SetFlags(uint flags) = 0;
 
 	// Description:
 	//     Sets the flags of an entity.
@@ -463,7 +463,7 @@ public:
 	//     eEntityFlags
 	// Arguments:
 	//     flags - Flags to be removed from eEntityFlags enum, they will be removed from the flags theat already in the entity (m_flags &= ~flags).
-	virtual void ClearFlags(unsigned int flags) = 0;
+	virtual void ClearFlags(uint flags) = 0;
 
 	// Description:
 	//     Get the flags of an entity.
@@ -471,7 +471,7 @@ public:
 	//     eEntityFlags
 	// Returns:
 	//     Entity flags, a combination of the flags from eEntityFlags enum.
-	virtual unsigned int GetFlags() = 0;
+	virtual uint GetFlags() = 0;
 
 	// Description:
 	//     Get camera attached to this entity.
@@ -673,11 +673,11 @@ public:
 		@param  scale	The desired scale of the object
 		@return True upon successful loading of cgf file
 	*/
-	virtual bool	LoadObject(unsigned int slot, const char* fileName, float scale, const char* geomName = nullptr) = 0;
-	virtual bool GetObjectPos(unsigned int slot, Vec3& pos) = 0;
-	virtual bool SetObjectPos(unsigned int slot, const Vec3& pos) = 0;
-	virtual bool GetObjectAngles(unsigned int slot, Vec3& ang) = 0;
-	virtual bool SetObjectAngles(unsigned int slot, const Vec3& ang) = 0;
+	virtual bool	LoadObject(uint slot, const char* fileName, float scale, const char* geomName = nullptr) = 0;
+	virtual bool GetObjectPos(uint slot, Vec3& pos) = 0;
+	virtual bool SetObjectPos(uint slot, const Vec3& pos) = 0;
+	virtual bool GetObjectAngles(uint slot, Vec3& ang) = 0;
+	virtual bool SetObjectAngles(uint slot, const Vec3& ang) = 0;
 	/*! Load a pre-broken object into the entity, piece by piece from the cgf-file. The pre broken pieces will be loaded in a separate slot
 	  each with a separate IStatObj pointer.
 		@param	fileName	The filename of the cgf
@@ -690,14 +690,14 @@ public:
 		@param object The object to be put in this slot.
 		@see CEntityObject
 	*/
-	virtual bool	SetEntityObject(unsigned int slot, const CEntityObject& object) = 0;
+	virtual bool	SetEntityObject(uint slot, const CEntityObject& object) = 0;
 
 	/*! Get object at specified slot.
 		@param slot Identifier of the slot.
 		@param object The returned object at this slot
 		@see CEntityObject
 	*/
-	virtual bool	GetEntityObject(unsigned int slot, CEntityObject& object) = 0;
+	virtual bool	GetEntityObject(uint slot, CEntityObject& object) = 0;
 	/*! Get number of attached objects.
 		@return number of objects in this entity
 	*/
@@ -708,7 +708,7 @@ public:
 		@return Pointer to an IStatObj object interface
 		@see IStatObj
 	*/
-	virtual struct IStatObj* GetIStatObj(unsigned int pos) = 0;
+	virtual struct IStatObj* GetIStatObj(uint pos) = 0;
 
 	/*! Play sound from entity position
 		@param pSound Sound-handle
@@ -722,7 +722,7 @@ public:
 		@param	pos	The slot of the object that we are modifying.
 		@param	mode The desired drawing mode of this object
 	*/
-	virtual void	DrawObject(unsigned int pos, int mode) = 0;
+	virtual void	DrawObject(uint pos, int mode) = 0;
 
 	/*! Control draw method of all objects. Mode can be ETY_DRAW_NORMAL, ETY_DRAW_NEAR or ETY_DRAW_NONE.
 		NOTE: The static object slots are different than the character animated object slots.
@@ -834,12 +834,12 @@ public:
 	//! @param id The unique id of the entity which should be bounded to this entity.
 	//! @param cBind
 	//! @param bClientOnly true=don't send this message to the server again because it came from it
-	virtual void Bind(EntityId id, unsigned char cBind = 0, const bool bClientOnly = false, const bool bSetPos = false) = 0;
+	virtual void Bind(EntityId id, uchar cBind = 0, const bool bClientOnly = false, const bool bSetPos = false) = 0;
 
 	//! Unbind another entity from this entity.
 	//! @param id The unique if of the entity which needs to be unbinded from this entity.
 	//! @param bClientOnly true=don't send this message to the server again because it came from it
-	virtual void Unbind(EntityId id, unsigned char cBind, const bool bClientOnly = false) = 0;
+	virtual void Unbind(EntityId id, uchar cBind, const bool bClientOnly = false) = 0;
 
 	/*! Forces the entity to act like a bind entity, when in reality it doesn't have to be
 	 */
@@ -988,7 +988,7 @@ public:
 
 	/*! Registers this entity in the ai system so that agents can see it and interact with it
 	*/
-	virtual bool RegisterInAISystem(unsigned short type, const AIObjectParameters& params) = 0;
+	virtual bool RegisterInAISystem(ushort type, const AIObjectParameters& params) = 0;
 
 	/*! Gets AI representation
 	*/
@@ -1360,9 +1360,9 @@ struct IEntitySystemSink
 	*/
 	virtual void OnRemove(IEntity* e) = 0;
 
-	virtual void OnBind(EntityId id, EntityId child, unsigned char param) = 0;
+	virtual void OnBind(EntityId id, EntityId child, uchar param) = 0;
 
-	virtual void OnUnbind(EntityId id, EntityId child, unsigned char param) = 0;
+	virtual void OnUnbind(EntityId id, EntityId child, uchar param) = 0;
 
 };
 
@@ -1418,7 +1418,7 @@ struct IEntitySystem
 	//virtual	void SetMyPlayer( EntityId id ) = 0;
 
 /*! Get the entity id of the entity that represents the player.
-	@return The entity id as an unsigned short*/
+	@return The entity id as an ushort*/
 
 	//virtual EntityId GetMyPlayer() const = 0;
 
@@ -1563,7 +1563,7 @@ struct IEntityCamera
 	virtual Vec3 GetPos() const = 0;
 	virtual void SetAngles(const Vec3& p) = 0;
 	virtual Vec3 GetAngles() const = 0;
-	virtual void SetFov(const float& f, const unsigned int iWidth, const unsigned int iHeight) = 0;
+	virtual void SetFov(const float& f, const uint iWidth, const uint iHeight) = 0;
 	virtual float GetFov() const = 0;
 	//	virtual void SetMatrix( const Matrix44& m ) = 0;
 	virtual Matrix44 GetMatrix() const = 0;

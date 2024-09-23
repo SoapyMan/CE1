@@ -90,8 +90,8 @@ struct IVariable : public CRefCountBase
 	virtual	int	GetSize() const = 0;
 
 	//! Type of data stored in this variable.
-	virtual	unsigned char	GetDataType() const = 0;
-	virtual void SetDataType( unsigned char dataType ) = 0;
+	virtual	uchar	GetDataType() const = 0;
+	virtual void SetDataType( uchar dataType ) = 0;
 
 	//////////////////////////////////////////////////////////////////////////
 	// Flags
@@ -205,8 +205,8 @@ public:
 	EType	GetType() const { return  IVariable::UNKNOWN; };
 	int	GetSize() const { return sizeof(*this); };
 
-	unsigned char	GetDataType() const { return m_dataType; };
-	void SetDataType( unsigned char dataType ) { m_dataType = dataType; }
+	uchar	GetDataType() const { return m_dataType; };
+	void SetDataType( uchar dataType ) { m_dataType = dataType; }
 
 	void SetFlags( int flags ) { m_flags = flags; }
 	int  GetFlags() const { return m_flags; }
@@ -336,8 +336,8 @@ protected:
 
 	// Wired params.
 	//! Limited to 8 flags.
-	unsigned char m_flags;
-	unsigned char m_dataType;
+	uchar m_flags;
+	uchar m_dataType;
 };
 
 /**
@@ -981,8 +981,8 @@ public:
 	void Serialize( XmlNodeRef node,bool load );
 	CVarBlock* GetVarBlock() const { return m_vars; };
 
-	void AddVariable( CVariableBase &var,const CString &varName,VarOnSetCallback cb=NULL,unsigned char dataType=IVariable::DT_SIMPLE );
-	void AddVariable( CVariableBase &var,const CString &varName,const CString &varHumanName,VarOnSetCallback cb=NULL,unsigned char dataType=IVariable::DT_SIMPLE );
+	void AddVariable( CVariableBase &var,const CString &varName,VarOnSetCallback cb=NULL,uchar dataType=IVariable::DT_SIMPLE );
+	void AddVariable( CVariableBase &var,const CString &varName,const CString &varHumanName,VarOnSetCallback cb=NULL,uchar dataType=IVariable::DT_SIMPLE );
 	void ReserveNumVariables( int numVars );
 
 protected:

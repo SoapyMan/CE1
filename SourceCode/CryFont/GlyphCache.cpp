@@ -126,7 +126,7 @@ int CGlyphCache::LoadFontFromFile(const string& szFileName)
 }
 
 //------------------------------------------------------------------------------------------------- 
-int CGlyphCache::LoadFontFromMemory(unsigned char* pFileBuffer, int iDataSize)
+int CGlyphCache::LoadFontFromMemory(uchar* pFileBuffer, int iDataSize)
 {
 	return m_pFontRenderer.LoadFromMemory(pFileBuffer, iDataSize);
 }
@@ -252,7 +252,7 @@ int CGlyphCache::GlyphCached(wchar_t cChar)
 //------------------------------------------------------------------------------------------------- 
 CCacheSlot* CGlyphCache::GetLRUSlot()
 {
-	unsigned int	dwMinUsage = 0xffffffff;
+	uint	dwMinUsage = 0xffffffff;
 	CCacheSlot* pLRUSlot = 0;
 	CCacheSlot* pSlot;
 
@@ -284,7 +284,7 @@ CCacheSlot* CGlyphCache::GetLRUSlot()
 //------------------------------------------------------------------------------------------------- 
 CCacheSlot* CGlyphCache::GetMRUSlot()
 {
-	unsigned int	dwMaxUsage = 0;
+	uint	dwMaxUsage = 0;
 	CCacheSlot* pMRUSlot = 0;
 	CCacheSlot* pSlot;
 

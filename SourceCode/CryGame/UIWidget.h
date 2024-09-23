@@ -266,7 +266,7 @@ public:
 	virtual int GetToolTip(const float fX, const float fY, wstring &szwToolTip);
     
 	//! Process messages
-	virtual LRESULT Update(unsigned int iMessage, WPARAM wParam, LPARAM lParam) = 0;	//AMD Port
+	virtual LRESULT Update(uint iMessage, WPARAM wParam, LPARAM lParam) = 0;	//AMD Port
 	//! Draw the widget, this is usually called by the widget, when the message UIM_DRAW is sent to it
 	virtual int Draw(int iPass) = 0;
 

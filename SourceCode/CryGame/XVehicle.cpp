@@ -987,7 +987,7 @@ void CVehicle::ProcessMovement(CXEntityProcessingCmd &cmd)
 	}
 
 
-//	unsigned long nFlags = cmd.GetActionFlags();
+//	ulong nFlags = cmd.GetActionFlags();
 
 	//drive the car
 	IPhysicalEntity *icar = GetEntity()->GetPhysics();
@@ -1305,7 +1305,7 @@ bool CVehicle::Write(CStream& stm,EntityCloneState *cs)
 
 	if (!cs || cs->m_bOffSync)
 	{
-		unsigned char ucHealth = (int)(m_fEngineHealth*2+0.5f);
+		uchar ucHealth = (int)(m_fEngineHealth*2+0.5f);
 		stm.Write(ucHealth);
 		if (m_pGame->UseFixedStep() && (m_Type == VHT_BOAT))
 		{
@@ -1357,7 +1357,7 @@ bool CVehicle::Read(CStream& stm)
 	icar->GetParams(&pf);
 	if (!(pf.flags & pef_checksum_received))
 	{
-		unsigned char ucHealth;
+		uchar ucHealth;
 		stm.Read(ucHealth);
 		m_fEngineHealth =  ucHealth*0.5f;
 		bool bnz; stm.Read(bnz);

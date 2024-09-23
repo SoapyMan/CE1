@@ -369,9 +369,9 @@ void CDetailGrass::AddIndexedArray(GrassType* o, float X, float Y, float Z, floa
 	struct_VERTEX_FORMAT_P3F_COL4UB_TEX2F* pVert = &pGrassVertices[m_GrassVerticesCount];
 	struct_VERTEX_FORMAT_P3F_COL4UB_TEX2F* pSourceVert = &o->pVertices[0];
 
-	unsigned char grass_r = (unsigned char)fObjBr;
-	unsigned char grass_g = (unsigned char)fObjBr;
-	unsigned char grass_b = (unsigned char)fObjBr;
+	uchar grass_r = (uchar)fObjBr;
+	uchar grass_g = (uchar)fObjBr;
+	uchar grass_b = (uchar)fObjBr;
 
 	for (uint v = 0; v < o->nVertCount; v++)
 	{

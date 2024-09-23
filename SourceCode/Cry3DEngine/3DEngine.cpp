@@ -722,7 +722,7 @@ void C3DEngine::CreateDecal(const CryEngineDecalInfo& DecalInfo)
 	}
 }
 
-ICryCharInstance* C3DEngine::MakeCharacter(const char* cid_file_name, unsigned int dwFlags)
+ICryCharInstance* C3DEngine::MakeCharacter(const char* cid_file_name, uint dwFlags)
 {
 	ICryCharManager* pCharManager = GetSystem()->GetIAnimationSystem();
 	CRYASSERT(pCharManager);
@@ -1156,7 +1156,7 @@ bool C3DEngine::MakeSectorLightMap(int nSectorOriginX, int nSectorOriginY, uchar
 	CRYASSERT(nRealLightsNum == 1);
 
 	// increase frame id to help shadow map manager in renderer
-	unsigned short* pPtr2FrameID = (unsigned short*)GetRenderer()->EF_Query(EFQ_Pointer2FrameID);
+	ushort* pPtr2FrameID = (ushort*)GetRenderer()->EF_Query(EFQ_Pointer2FrameID);
 	if (pPtr2FrameID)
 		(*pPtr2FrameID)++;
 
@@ -2195,13 +2195,13 @@ CRY_GCRENDER_API void _epilog(void) {
 // If _unresolved is not specified, the branch to the symbol
 // will instead branch back to itself.
 CRY_GCRENDER_API void _unresolved(void) {
-	u32     i;
-	u32* p;
+	uint32     i;
+	uint32* p;
 	OSReport("\nError: Unlinked function called in module %s.\n", __FILE__);
 	OSReport("Address:      Back Chain    LR Save\n");
-	for (i = 0, p = (u32*)OSGetStackPointer(); // get current sp
-		p && (u32)p != 0xffffffff && i++ < 16;
-		p = (u32*)*p)                         // get caller sp
+	for (i = 0, p = (uint32*)OSGetStackPointer(); // get current sp
+		p && (uint32)p != 0xffffffff && i++ < 16;
+		p = (uint32*)*p)                         // get caller sp
 	{
 		OSReport("0x%08x:   0x%08x    0x%08x\n", p, p[0], p[1]);
 	}

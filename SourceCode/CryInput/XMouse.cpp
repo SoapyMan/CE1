@@ -231,28 +231,28 @@ void CXMouse::Update(bool bPrevFocus)
 							mouseDelta[2] += float((int)Events[i].dwData);
 							break;
 						case DIMOFS_BUTTON0:
-							m_Events[0] = (unsigned char)Events[i].dwData;
+							m_Events[0] = (uchar)Events[i].dwData;
 							break;
 						case DIMOFS_BUTTON1:
-							m_Events[1] = (unsigned char)Events[i].dwData;
+							m_Events[1] = (uchar)Events[i].dwData;
 							break;
 						case DIMOFS_BUTTON2:
-							m_Events[2] = (unsigned char)Events[i].dwData;
+							m_Events[2] = (uchar)Events[i].dwData;
 							break;
 						case DIMOFS_BUTTON3:
-							m_Events[3] = (unsigned char)Events[i].dwData;
+							m_Events[3] = (uchar)Events[i].dwData;
 							break;
 						case DIMOFS_BUTTON4:
-							m_Events[4] = (unsigned char)Events[i].dwData;
+							m_Events[4] = (uchar)Events[i].dwData;
 							break;
 						case DIMOFS_BUTTON5:
-							m_Events[5] = (unsigned char)Events[i].dwData;
+							m_Events[5] = (uchar)Events[i].dwData;
 							break;
 						case DIMOFS_BUTTON6:
-							m_Events[6] = (unsigned char)Events[i].dwData;
+							m_Events[6] = (uchar)Events[i].dwData;
 							break;
 						case DIMOFS_BUTTON7:
-							m_Events[7] = (unsigned char)Events[i].dwData;
+							m_Events[7] = (uchar)Events[i].dwData;
 							break;
 						}
 					}
@@ -916,7 +916,7 @@ float CXMouse::GetVScreenY()
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CXMouse::PostEvent(int key, SInputEvent::EType type, float value, unsigned int timestamp)
+void CXMouse::PostEvent(int key, SInputEvent::EType type, float value, uint timestamp)
 {
 	// Post Input events.
 	SInputEvent event;

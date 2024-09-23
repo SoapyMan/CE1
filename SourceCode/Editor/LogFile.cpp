@@ -725,7 +725,7 @@ void CLogFile::AboutSystem()
 	LogLine("--------------------------------------------------------------------------------");
 }
 
-unsigned int CLogFile::GetCPUSpeed()
+uint CLogFile::GetCPUSpeed()
 {
 	//////////////////////////////////////////////////////////////////////
 	// Return system CPU speed in Mhz (Code by Frank Blaha)
@@ -830,7 +830,7 @@ unsigned int CLogFile::GetCPUSpeed()
 	ulResult.QuadPart = ulEAX_EDX.QuadPart - ulStartCounter.QuadPart;     
 
 	// Return the value
-	return (unsigned int) ulResult.QuadPart / 1000000;
+	return (uint) ulResult.QuadPart / 1000000;
 	*/
 	return 0;
 }
@@ -1000,19 +1000,19 @@ CString CLogFile::GetMemUsage()
 const char* CLogFile::CheckAgainstVerbosity(const char * pText,bool &bOnlyFile )
 {
 	// the max verbosity (most detailed level)
-	const unsigned char nMaxVerbosity = 8;
+	const uchar nMaxVerbosity = 8;
 
 	if (!pText)
 		return 0;
 	
 	// the verbosity of unqualified strings not really needed
-//	const unsigned char nDefaultVerbosity = nMaxVerbosity;
+//	const uchar nDefaultVerbosity = nMaxVerbosity;
 	
 	// the current verbosity of the log
-	unsigned int nLogVerbosity = m_pLogVerbosity ? m_pLogVerbosity->GetIVal() : nMaxVerbosity;
+	uint nLogVerbosity = m_pLogVerbosity ? m_pLogVerbosity->GetIVal() : nMaxVerbosity;
 
 	int textVerbosity = CheckVerbosity(pText);
-	if ((unsigned char)pText[0] > nMaxVerbosity) 
+	if ((uchar)pText[0] > nMaxVerbosity) 
 	{
 	 if (nLogVerbosity >= nMaxVerbosity)			
 				return pText;															
@@ -1024,7 +1024,7 @@ const char* CLogFile::CheckAgainstVerbosity(const char * pText,bool &bOnlyFile )
 	}
 	else
 	{
-		if (nLogVerbosity >= (unsigned char)pText[0])
+		if (nLogVerbosity >= (uchar)pText[0])
 			// if the text is an empty string, a NULL will be returned
 			return pText[0] ? pText + 1 : NULL;
 		else
@@ -1039,7 +1039,7 @@ const char* CLogFile::CheckAgainstVerbosity(const char * pText,bool &bOnlyFile )
 int CLogFile::CheckVerbosity( const char * pText )
 {
 	// the max verbosity (most detailed level)
-	const unsigned char nMaxVerbosity = 5;
+	const uchar nMaxVerbosity = 5;
 
 	// set message verbosity for error and warning messages
 	char sBuff[256]; 
@@ -1051,7 +1051,7 @@ int CLogFile::CheckVerbosity( const char * pText )
 	if(strstr(sBuff,"warning"))
 		return 3;
 	
-	int textVerbosity = (unsigned char)pText[0];
+	int textVerbosity = (uchar)pText[0];
 	if (textVerbosity > nMaxVerbosity) 
 	{
 		return nMaxVerbosity;

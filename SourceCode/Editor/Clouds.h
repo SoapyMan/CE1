@@ -30,10 +30,10 @@ public:
 
 protected:
 	void CleanUp();
-	float CloudExpCurve(float v, unsigned int iCover, float fSharpness);
+	float CloudExpCurve(float v, uint iCover, float fSharpness);
 
-	unsigned int m_iWidth;
-	unsigned int m_iHeight;
+	uint m_iWidth;
+	uint m_iHeight;
 
 	CBitmap m_bmpClouds;
 	CDC m_dcClouds;

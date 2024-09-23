@@ -38,22 +38,22 @@ public:
 	void Init(_IEndpointUser* pParent, bool bSecondary) { m_pParent = pParent; m_bSecondary = bSecondary; }
 	bool SendUnreliable(CStream& stmData);
 	bool SendReliable(CStream& stmData);
-	void Update(unsigned int nTime, unsigned char cFrameType = 0, CStream* pStm = nullptr);
-	void SetRate(unsigned int nBytePerSec);
+	void Update(uint nTime, uchar cFrameType = 0, CStream* pStm = nullptr);
+	void SetRate(uint nBytePerSec);
 	void Dump();
-	unsigned int GetRemoteTimestamp(unsigned int nTime) {
+	uint GetRemoteTimestamp(uint nTime) {
 		return m_LatencyCalculator.GetCurrentRemoteTimestamp(nTime);
 	}
 	void GetMemoryStatistics(ICrySizer* pSizer);
 	//
-	unsigned int GetPing();
-	unsigned int GetLostPackets() { return m_nLostPackets; }
-	unsigned int GetUnreliableLostPackets() { return m_nUnreliableLostPackets; }
+	uint GetPing();
+	uint GetLostPackets() { return m_nLostPackets; }
+	uint GetUnreliableLostPackets() { return m_nUnreliableLostPackets; }
 
 
 	void EnableCompression(bool bEnable) { m_bCompress = bEnable; }
 	// Changes crypt key specifically for this connection.
-	void SetPublicCryptKey(unsigned int key);
+	void SetPublicCryptKey(uint key);
 
 protected:
 	virtual void BuildOutgoingFrame();
@@ -95,11 +95,11 @@ private:
 	DWORD m_nLastPacketSent;
 	DWORD m_nLostPackets;
 	DWORD m_nUnreliableLostPackets;
-	unsigned int m_nCurrentTime;
+	uint m_nCurrentTime;
 	CPingCalculator m_LatencyCalculator;
 	bool m_bCompress;
 	// Encryption key used in Transfer protocol.
-	unsigned int					m_nEncryptKey[4];
+	uint					m_nEncryptKey[4];
 };
 
 #endif //_CTP_ENDPOINT_GNB_

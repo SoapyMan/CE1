@@ -44,7 +44,7 @@ public:
 	//!
 	inline IEntity *GetEntity(){return m_pEntity;}
 	//!
-	inline unsigned int GetPriority(){return m_nPriority;}
+	inline uint GetPriority(){return m_nPriority;}
 	//!
 	float GetTimeAffectedPriority();
 	//!

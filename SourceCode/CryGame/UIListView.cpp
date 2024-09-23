@@ -67,7 +67,7 @@ string CUIListView::GetClassName()
 }
 
 //------------------------------------------------------------------------------------------------- 
-LRESULT CUIListView::Update(unsigned int iMessage, WPARAM wParam, LPARAM lParam)	//AMD Port
+LRESULT CUIListView::Update(uint iMessage, WPARAM wParam, LPARAM lParam)	//AMD Port
 {
 	if (iMessage == UIM_DRAW)
 	{
@@ -81,7 +81,7 @@ LRESULT CUIListView::Update(unsigned int iMessage, WPARAM wParam, LPARAM lParam)
 		// check if we need an horizontal scrollbar
 		m_fTotalWidth = 0.0f;
 
-		for (unsigned int i = 0; i < m_vColumnList.size(); i++)
+		for (uint i = 0; i < m_vColumnList.size(); i++)
 		{
 			m_fTotalWidth += m_vColumnList[i].fWidth + m_fCellSpacing;
 		}
@@ -682,7 +682,7 @@ int CUIListView::Draw(int iPass)
 	// if we have columns, draw them
 	if (m_vColumnList.size())
 	{
-		for (unsigned int i = 0; i < m_vColumnList.size(); i++)
+		for (uint i = 0; i < m_vColumnList.size(); i++)
 		{
 			pColumn = &m_vColumnList[i];
 
@@ -835,7 +835,7 @@ int CUIListView::FindColumnAt(float fX, float fY, UIListColumn **pColumn)
 
 	if (m_vColumnList.size())
 	{
-		for (unsigned int i = 0; i < m_vColumnList.size(); i++)
+		for (uint i = 0; i < m_vColumnList.size(); i++)
 		{
 			if ((fX >= fListX) && (fX <= fListX + m_vColumnList[i].fWidth))
 			{
@@ -1476,7 +1476,7 @@ int CUIListView::DrawListColumn(int iIndex, const UIRect &pColumnRect, const UIR
 			}
 		}
 
-		if (pItem->vSubItem.size() > (unsigned int)iIndex)
+		if (pItem->vSubItem.size() > (uint)iIndex)
 		{
 			UIRect pCellRect(pItemRect);
 

@@ -93,12 +93,12 @@ const Vec3d& CAIObject::GetPos()
 	return  m_vPosition;
 }
 
-unsigned short CAIObject::GetType()
+ushort CAIObject::GetType()
 {
 	return m_nObjectType;
 }
 
-void CAIObject::SetType(unsigned short type)
+void CAIObject::SetType(ushort type)
 {
 	m_nObjectType = type;
 }
@@ -144,7 +144,7 @@ void CAIObject::UpdateHierarchy()
 	}
 }
 
-void	CAIObject::CreateBoundObject(unsigned short type, const Vec3d& vBindPos, const Vec3d& vBindAngl)
+void	CAIObject::CreateBoundObject(ushort type, const Vec3d& vBindPos, const Vec3d& vBindAngl)
 {
 	CAIObject* pChild = (CAIObject*)m_pAISystem->CreateAIObject(type, nullptr);
 	string name;
@@ -194,7 +194,7 @@ void CAIObject::ParseParameters(const AIObjectParameters& params)
 
 
 
-bool CAIObject::CanBeConvertedTo(unsigned short type, void** pConverted)
+bool CAIObject::CanBeConvertedTo(ushort type, void** pConverted)
 {
 	*pConverted = 0;
 	return false;

@@ -30,13 +30,13 @@ public:
 	bool CustomUpdate(Vec3d& pos, Vec3d& angle);
 	void ApplyHealth(float fHealth) {};
 
-	bool QueryProxy(unsigned char type, void ** pProxy) {return false;}
+	bool QueryProxy(uchar type, void ** pProxy) {return false;}
 
 //	bool IsBound() { return false;}
 
 	void DebugDraw(struct IRenderer * pRenderer);
 
-	bool CheckStatus(unsigned char status) { return false; }
+	bool CheckStatus(uchar status) { return false; }
 	void Save(CStream &str){}
 	void Load(CStream &str){}
 	void Load_PATCH_1(CStream &str){ }

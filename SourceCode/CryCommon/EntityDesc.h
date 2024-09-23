@@ -181,9 +181,9 @@ inline bool CEntityDesc::Write(IBitStream* pIBitStream, CStream& stm)
 	{
 		stm.Write(false);
 	}
-	if ((*((unsigned int*)(&pos.x)) == 0)
-		&& (*((unsigned int*)(&pos.y)) == 0)
-		&& (*((unsigned int*)(&pos.z)) == 0))
+	if ((*((uint*)(&pos.x)) == 0)
+		&& (*((uint*)(&pos.y)) == 0)
+		&& (*((uint*)(&pos.z)) == 0))
 	{
 		stm.Write(false);
 	}
@@ -196,9 +196,9 @@ inline bool CEntityDesc::Write(IBitStream* pIBitStream, CStream& stm)
 	if (vColor != Vec3(1, 1, 1))
 	{
 		stm.Write(true);
-		stm.Write((unsigned char)(vColor.x * 255.0f));
-		stm.Write((unsigned char)(vColor.y * 255.0f));
-		stm.Write((unsigned char)(vColor.z * 255.0f));
+		stm.Write((uchar)(vColor.x * 255.0f));
+		stm.Write((uchar)(vColor.y * 255.0f));
+		stm.Write((uchar)(vColor.z * 255.0f));
 	}
 	else
 		stm.Write(false);
@@ -243,7 +243,7 @@ inline bool CEntityDesc::Read(IBitStream* pIBitStream, CStream& stm)
 	stm.Read(bTeamColor);
 	if (bTeamColor)
 	{
-		unsigned char x, y, z;
+		uchar x, y, z;
 		stm.Read(x); stm.Read(y); stm.Read(z);
 
 		vColor = Vec3(x / 255.0f, y / 255.0f, z / 255.0f);

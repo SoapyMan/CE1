@@ -61,23 +61,6 @@ extern bool g_bProfilerEnabled;
 #define _VERIFY(a) a;
 #endif
 
-// Windows defines
-#if !defined(LINUX)
-typedef unsigned long       DWORD;
-typedef int                 BOOL;
-typedef unsigned char       BYTE;
-typedef unsigned short      WORD;
-typedef float               FLOAT;
-typedef int                 INT;
-typedef unsigned int        UINT;
-
-#ifndef uchar
-typedef unsigned char		uchar;
-typedef unsigned int		uint;
-typedef unsigned short		ushort;
-#endif
-#endif
-
 #ifndef PS2
 #include <memory.h>
 #endif

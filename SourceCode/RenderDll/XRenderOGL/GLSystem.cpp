@@ -1160,7 +1160,7 @@ void CGLRenderer::ShareResources(IRenderer* renderer)
 
 
 //////////////////////////////////////////////////////////////////////
-bool CGLRenderer::SetupPixelFormat(unsigned char colorbits, unsigned char zbits, unsigned char sbits, SRendContext* rc)
+bool CGLRenderer::SetupPixelFormat(uchar colorbits, uchar zbits, uchar sbits, SRendContext* rc)
 {
 #ifdef WIN32
 	iLog->LogToFile("SetupPixelFormat ...");
@@ -1293,9 +1293,9 @@ int CGLRenderer::EnumDisplayFormats(TArray<SDispFormat>& Formats, bool bReset)
 }
 
 #ifdef USE_SDL
-SDL_Window* CGLRenderer::SetMode(int x, int y, int width, int height, unsigned int cbpp, int zbpp, int sbits, bool fullscreen, HINSTANCE hinst, HWND Glhwnd)
+SDL_Window* CGLRenderer::SetMode(int x, int y, int width, int height, uint cbpp, int zbpp, int sbits, bool fullscreen, HINSTANCE hinst, HWND Glhwnd)
 #else
-HWND CGLRenderer::SetMode(int x, int y, int width, int height, unsigned int cbpp, int zbpp, int sbits, bool fullscreen, HINSTANCE hinst, HWND Glhwnd)
+HWND CGLRenderer::SetMode(int x, int y, int width, int height, uint cbpp, int zbpp, int sbits, bool fullscreen, HINSTANCE hinst, HWND Glhwnd)
 #endif
 {
 	///////////////////////////////////Get Desktop Settings
@@ -1721,7 +1721,7 @@ void __stdcall nglDeleteTextures(GLsizei n, const GLuint* textures)
 
 #ifndef PS2
 
-WIN_HWND CGLRenderer::Init(int x, int y, int width, int height, unsigned int cbpp, int zbpp, int sbits, bool fullscreen, WIN_HINSTANCE hinst, WIN_HWND Glhwnd, WIN_HDC Glhdc, WIN_HGLRC hGLrc, bool bReInit)
+WIN_HWND CGLRenderer::Init(int x, int y, int width, int height, uint cbpp, int zbpp, int sbits, bool fullscreen, WIN_HINSTANCE hinst, WIN_HWND Glhwnd, WIN_HDC Glhdc, WIN_HGLRC hGLrc, bool bReInit)
 {
 #ifdef USE_3DC
 	CompressTextureATI = 0;
@@ -2425,7 +2425,7 @@ bool CGLRenderer::DeleteContext(WIN_HWND hWnd)
 
 #else //PS2
 
-bool CGLRenderer::Init(int x, int y, int width, int height, unsigned int cbpp, int zbpp, int sbits, bool fullscreen)
+bool CGLRenderer::Init(int x, int y, int width, int height, uint cbpp, int zbpp, int sbits, bool fullscreen)
 {
 	return false;
 }

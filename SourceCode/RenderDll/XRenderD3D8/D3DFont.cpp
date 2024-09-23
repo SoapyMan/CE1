@@ -35,7 +35,7 @@ void CD3D8Renderer::FontSetTexture(class CFBitmap* pBmp)
   EF_SetColorOp(eCO_MODULATE);
 }
 
-void CD3D8Renderer::FontSetRenderingState(unsigned long nVPWidth, unsigned long nVPHeight)
+void CD3D8Renderer::FontSetRenderingState(ulong nVPWidth, ulong nVPHeight)
 {
   // setup various d3d things that we need
   FontSetState(false);

@@ -32,7 +32,7 @@ static inline ushort us_endian(const byte* ptr)
 	return convert_endian(n);
 }
 
-static inline unsigned long ul_endian(const byte* ptr)
+static inline ulong ul_endian(const byte* ptr)
 {
 	long n;
 	memcpy(&n, ptr, sizeof(n));

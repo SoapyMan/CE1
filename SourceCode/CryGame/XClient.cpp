@@ -852,7 +852,7 @@ void CXClient::Update()
 		}
 
 		if((!m_pGame->m_pSystem->GetIConsole()->IsOpened()) && (!m_pGame->m_bMenuOverlay) && m_pIActionMapManager)
-			m_pIActionMapManager->Update((unsigned int)(time*1000.f));
+			m_pIActionMapManager->Update((uint)(time*1000.f));
 
 		if(en==nullptr)
 			return;
@@ -914,7 +914,7 @@ void CXClient::Update()
 	{
 		// send the list of off-sync entities			
 		CStream stm;
-		unsigned char nEnts = crymin(255,m_lstUpdatedEntities.size());
+		uchar nEnts = crymin(255,m_lstUpdatedEntities.size());
 		stm.Write(nEnts);
 		for(int i=0;i<nEnts;i++)
 			stm.WritePkd(m_lstUpdatedEntities[i]->GetId());
@@ -964,7 +964,7 @@ void CXClient::Update()
 
 //////////////////////////////////////////////
 // XCLIENTMSG_RETURNSCRIPTHASH
-void CXClient::SendScriptHashResponse( const unsigned int dwHash )
+void CXClient::SendScriptHashResponse( const uint dwHash )
 {
 	CStream stm;
 
@@ -1214,8 +1214,8 @@ void CXClient::DrawNetStats()
 	float fIncomingKbPerSec,fOutgoingKbPerSec;
 	DWORD nIncomingPacketsPerSec,nOutgoingPacketsPerSec;
 	m_pIClient->GetBandwidth(fIncomingKbPerSec,fOutgoingKbPerSec,nIncomingPacketsPerSec,nOutgoingPacketsPerSec);
-	unsigned int lost = m_pIClient->GetPacketsLostCount();
-	unsigned int ulost = m_pIClient->GetUnreliablePacketsLostCount();
+	uint lost = m_pIClient->GetPacketsLostCount();
+	uint ulost = m_pIClient->GetUnreliablePacketsLostCount();
 	IRenderer *pRen=m_pGame->m_pSystem->GetIRenderer();
 	pRen->TextToScreen(10,70,"Roundtrip [%dms] LOST [%d] ULOST [%d] DISCARDED[%d]",iRoundtripInMS,lost,ulost,m_nDiscardedPackets);
 
@@ -2264,7 +2264,7 @@ bool CXClient::OnServerMsgRemoveTeam(CStream &stm)
 
 
 
-inline void CalcNCombineHash( const unsigned int indwValue, unsigned int &inoutHash )
+inline void CalcNCombineHash( const uint indwValue, uint &inoutHash )
 {
 	inoutHash^=(inoutHash%600011) + (inoutHash/600011) + indwValue;
 }
@@ -2279,7 +2279,7 @@ bool CXClient::OnServerMsgRequestScriptHash(CStream &stm)
 	char szPath[256];
 	char szKey[256];
 
-	u32 dwHash;
+	uint32 dwHash;
 	EntityId entity=INVALID_WID;
 
 	if(!pBitStream->ReadBitStream(stm,entity,eEntityId))							// e.g. INVALID_WID for globals, otherwise it's and entity
@@ -2329,7 +2329,7 @@ bool CXClient::OnServerMsgRequestScriptHash(CStream &stm)
 
 	if(*szKey)
 	{
-		unsigned int *pCode;
+		uint *pCode;
 		int iSize;
 
 		if(pPath->GetFuncData(szKey,pCode,iSize))		// get function data
@@ -2341,7 +2341,7 @@ bool CXClient::OnServerMsgRequestScriptHash(CStream &stm)
 	}
 	else
 	{
-		std::map<string,unsigned int> Sorter;
+		std::map<string,uint> Sorter;
 
 todo: Sorter is needed because lua table don't have a fixed order
 
@@ -2349,13 +2349,13 @@ todo: Sorter is needed because lua table don't have a fixed order
 		pPath->BeginIteration();
 		while(pPath->MoveNext())
 		{
-			unsigned int *pCode;
+			uint *pCode;
 			int iSize;
 
 			if(pPath->GetCurrentFuncData(pCode,iSize))		// get function data
 			if(pCode)																		// it's a lua function
 			{
-				unsigned int dwLocalHash=0;
+				uint dwLocalHash=0;
 
 				for(int i=0;i<iSize;i++)
 					CalcNCombineHash(*pCode++,dwLocalHash);
@@ -2423,7 +2423,7 @@ bool CXClient::OnServerMsgSetEntityState(CStream &stm)
 	IBitStream *pBitStream = m_pGame->GetIBitStream();			// compression helper
 
 	EntityId id;
-	unsigned char cState;
+	uchar cState;
 	IEntity *pEntity;
 	VERIFY_COOKIE(stm);
 	pBitStream->ReadBitStream(stm,id,eEntityId);
@@ -2450,7 +2450,7 @@ bool CXClient::OnServerMsgBindEntity(CStream &stm)
 
 	EntityId idParent;
 	EntityId idChild;
-	unsigned char cParam;
+	uchar cParam;
 	IEntity *pParent,*pChild;
 	bool bBindUnbind;
 	Vec3 vParent,vChild;
@@ -2858,7 +2858,7 @@ bool CXClient::OnServerMsgCmd(CStream &stm)
 
 	string cmd;
 	bool bExtra;
-	unsigned char cUserByte;
+	uchar cUserByte;
 	Vec3 vNormal,vPos;
 	EntityId id;
 
@@ -2956,11 +2956,11 @@ void CXClient::SendTextMessage(TextMessage &tm)
 	SendReliableMsg(XCLIENTMSG_TEXT,stm);
 }
 
-void CXClient::SetBitsPerSecond( const unsigned int dwBitsPerSecond )
+void CXClient::SetBitsPerSecond( const uint dwBitsPerSecond )
 {
 	CStream stm;
 
-	unsigned char cVar=0;
+	uchar cVar=0;
 
 	stm.Write(cVar);
 	stm.Write(dwBitsPerSecond);								// cVar=0
@@ -2969,11 +2969,11 @@ void CXClient::SetBitsPerSecond( const unsigned int dwBitsPerSecond )
 }
 
 
-void CXClient::SetUpdateRate( const unsigned int dwUpdatesPerSec )
+void CXClient::SetUpdateRate( const uint dwUpdatesPerSec )
 {
 	CStream stm;
 
-	unsigned char cVar=1;
+	uchar cVar=1;
 
 	stm.Write(cVar);
 	stm.Write(dwUpdatesPerSec);								// cVar=1
@@ -3180,7 +3180,7 @@ void CXClient::LoadingError(const char *szError)
 	m_pScriptSystem->EndCall();
 }
 
-unsigned int CXClient::GetTimeoutCompensation()
+uint CXClient::GetTimeoutCompensation()
 {
 	if (m_nGameState == CGS_INTERMISSION)
 	{
@@ -3189,7 +3189,7 @@ unsigned int CXClient::GetTimeoutCompensation()
 			return 5000;
 		}
 
-		return (unsigned int)(m_pGame->cl_loadtimeout->GetFVal() * 1000.0f);
+		return (uint)(m_pGame->cl_loadtimeout->GetFVal() * 1000.0f);
 	}
 
 	return 0;

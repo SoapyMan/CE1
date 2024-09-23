@@ -252,7 +252,7 @@ int CScriptObjectSound::Load3DSound(IFunctionHandler* pH)
 			//				pSound->SetMaxSoundDistance(fClipDistance/2); // :) 				
 			if (pH->GetParamCount() > 6)
 			{
-				unsigned int nGroups;
+				uint nGroups;
 				pH->GetParam(7, nGroups);
 				pSound->SetScaleGroup(nGroups);
 			}
@@ -354,7 +354,7 @@ int CScriptObjectSound::Load3DSoundLocalized(IFunctionHandler *pH)
 			//				pSound->SetMaxSoundDistance(fClipDistance/2); // :)
 			if (pH->GetParamCount()>6)
 			{
-				unsigned int nGroups;
+				uint nGroups;
 				pH->GetParam(7, nGroups);
 				pSound->SetScaleGroup(nGroups);
 			}
@@ -422,7 +422,7 @@ int CScriptObjectSound::SetEaxEnvironment(IFunctionHandler* pH)
 
 	SoundReverbProperties pProps;
 
-	int nTemp; //cannot use unsigned int as parameter to getvaluechain function
+	int nTemp; //cannot use uint as parameter to getvaluechain function
 
 	INT_PTR nFlags = 0;
 	if (pH->GetParamCount() >= 2)
@@ -432,7 +432,7 @@ int CScriptObjectSound::SetEaxEnvironment(IFunctionHandler* pH)
 	if (pH->GetParam(1, pObj))
 	{
 		pObj->BeginSetGetChain();
-		pObj->GetValueChain("nEnvironment", nTemp); pProps.Environment = (unsigned int)nTemp;
+		pObj->GetValueChain("nEnvironment", nTemp); pProps.Environment = (uint)nTemp;
 		pObj->GetValueChain("fEnvSize", pProps.EnvSize);
 		pObj->GetValueChain("fEnvDiffusion", pProps.EnvDiffusion);
 		pObj->GetValueChain("nRoom", pProps.Room);
@@ -459,7 +459,7 @@ int CScriptObjectSound::SetEaxEnvironment(IFunctionHandler* pH)
 		pObj->GetValueChain("fRoomRolloffFactor", pProps.RoomRolloffFactor);
 		pObj->GetValueChain("fDiffusion", pProps.Diffusion);
 		pObj->GetValueChain("fDensity", pProps.Density);
-		pObj->GetValueChain("nFlags", nTemp); pProps.Flags = (unsigned int)nTemp;
+		pObj->GetValueChain("nFlags", nTemp); pProps.Flags = (uint)nTemp;
 		pObj->EndSetGetChain();
 
 		if (m_pSoundSystem)

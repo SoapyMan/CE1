@@ -17,9 +17,9 @@ public:
 	int Release();
 
 	int SaveBitmap(const std::string& szFileName);
-	int Get32Bpp(unsigned int** pBuffer)
+	int Get32Bpp(uint** pBuffer)
 	{
-		(*pBuffer) = new unsigned int[m_iWidth * m_iHeight];
+		(*pBuffer) = new uint[m_iWidth * m_iHeight];
 
 		if (!(*pBuffer))
 		{
@@ -44,14 +44,14 @@ public:
 
 	void GetMemoryUsage(class ICrySizer* pSizer);
 
-	unsigned char* GetData() { return m_pData; }
+	uchar* GetData() { return m_pData; }
 
 public:
 
 	int				m_iWidth;
 	int				m_iHeight;
 
-	unsigned char* m_pData;
+	uchar* m_pData;
 	void* m_pIRenderData;
 };
 

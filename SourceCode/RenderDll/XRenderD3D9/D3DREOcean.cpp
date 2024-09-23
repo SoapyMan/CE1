@@ -229,9 +229,9 @@ void CREOcean::UpdateTexture()
 	byte data[OCEANGRID][OCEANGRID][4];
 	double time0 = 0;
 	ticks(time0);
-	for (unsigned int y = 0; y < OCEANGRID; y++)
+	for (uint y = 0; y < OCEANGRID; y++)
 	{
-		for (unsigned int x = 0; x < OCEANGRID; x++)
+		for (uint x = 0; x < OCEANGRID; x++)
 		{
 			data[y][x][0] = (byte)(m_Normals[y][x].x * 127.0f);
 			data[y][x][1] = (byte)(m_Normals[y][x].y * 127.0f);
@@ -365,8 +365,8 @@ static _inline float sCalcSplash(SSplash* spl, float fX, float fY)
 	float fSqDist = vDelt[0] * vDelt[0] + vDelt[1] * vDelt[1];
 
 	// Inverse square root
-	unsigned int* n1 = (unsigned int*)&fSqDist;
-	unsigned int nn = 0x5f3759df - (*n1 >> 1);
+	uint* n1 = (uint*)&fSqDist;
+	uint nn = 0x5f3759df - (*n1 >> 1);
 	float* n2 = (float*)&nn;
 	float fDistSplash = 1.0f / ((1.5f - (fSqDist * 0.5f) * *n2 * *n2) * *n2);
 

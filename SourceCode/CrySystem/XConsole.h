@@ -114,7 +114,7 @@ public:
 	virtual int Register(const char* name, void* src, float defaultvalue, int flags, int type, const char* help = "");
 	virtual float Register(const char* name, float* src, float defaultvalue, int flags = 0, const char* help = "");
 	virtual int Register(const char* name, int* src, float defaultvalue, int flags = 0, const char* help = "");
-	virtual void DumpCVars(ICVarDumpSink* pCallback, unsigned int nFlagsFilter = 0);
+	virtual void DumpCVars(ICVarDumpSink* pCallback, uint nFlagsFilter = 0);
 	virtual void DumpKeyBinds(IKeyBindDumpSink* pCallback);
 	virtual void CreateKeyBind(const char* sCmd, const char* sRes, bool bExecute);
 	virtual const char* FindKeyBind(const char* sCmd);

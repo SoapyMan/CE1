@@ -132,9 +132,9 @@ public:
 	void RequestPathTo(const Vec3d& pos);
 	void Navigate(CAIObject* pTarget);
 	bool PointVisible(const Vec3d& pos);
-	void Event(unsigned short eType, SAIEVENT* pEvent);
+	void Event(ushort eType, SAIEVENT* pEvent);
 	void UpdatePuppetInternalState();
-	bool CanBeConvertedTo(unsigned short type, void** pConverted);
+	bool CanBeConvertedTo(ushort type, void** pConverted);
 	void AddToVisibleList(CAIObject* pAIObject, bool bForce = false, float fAdditionalMultiplier = 1.f);
 	void QuickVisibility();
 	CPuppet();

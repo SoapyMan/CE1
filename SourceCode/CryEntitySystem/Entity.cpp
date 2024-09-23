@@ -1682,7 +1682,7 @@ void CEntity::UpdatePhysics(SEntityUpdateContext& ctx)
 		if ((bOnCollideImplemented) || (m_pOnCollide))
 			OnCollide(fDeltaTime);
 
-		for (unsigned int j = 0; j < m_objects.size(); j++)
+		for (uint j = 0; j < m_objects.size(); j++)
 		{
 			pos.partid = j;
 			if (m_physic->GetStatus(&pos))
@@ -2113,7 +2113,7 @@ int CEntity::DestroyPhysicalEntityCallback(IPhysicalEntity* pent)
 				delete[] m_pPhysState; m_pPhysState = 0;
 			}
 			if (m_iPhysStateSize)
-				memcpy(m_pPhysState = new unsigned char[m_iPhysStateSize], stm.GetPtr(), m_iPhysStateSize);
+				memcpy(m_pPhysState = new uchar[m_iPhysStateSize], stm.GetPtr(), m_iPhysStateSize);
 			ClearFlags(ETY_FLAG_CALC_PHYSICS);
 		}
 		m_physic = 0;
@@ -2299,7 +2299,7 @@ void CEntity::GetHelperPosition(const char* helper, Vec3d& vPos, bool objectspac
 }
 
 
-bool CEntity::IsObjectLoaded(unsigned int slot)
+bool CEntity::IsObjectLoaded(uint slot)
 {
 	if (slot < m_objects.size())
 	{
@@ -2309,7 +2309,7 @@ bool CEntity::IsObjectLoaded(unsigned int slot)
 	return false;
 }
 
-bool CEntity::SetEntityObject(unsigned int slot, const CEntityObject& object)
+bool CEntity::SetEntityObject(uint slot, const CEntityObject& object)
 {
 	if (slot < m_objects.size())
 	{
@@ -2329,7 +2329,7 @@ bool CEntity::SetEntityObject(unsigned int slot, const CEntityObject& object)
 	return false;
 }
 
-bool CEntity::GetEntityObject(unsigned int slot, CEntityObject& object)
+bool CEntity::GetEntityObject(uint slot, CEntityObject& object)
 {
 	if (slot < m_objects.size())
 	{
@@ -2387,7 +2387,7 @@ void CEntity::SinkRebind(IEntitySystemSink* pSink)
 
 // bSetPos -- needed to be able to set position before OnBind is called (it can set some other position)
 // 
-void CEntity::Bind(EntityId id, unsigned char cBind, const bool bClientOnly, const bool bSetPos)
+void CEntity::Bind(EntityId id, uchar cBind, const bool bClientOnly, const bool bSetPos)
 {
 	// safe upcast since we know what the entity system holds
 	CEntity* pEntity = (CEntity*)m_pEntitySystem->GetEntity(id);
@@ -2417,7 +2417,7 @@ void CEntity::Bind(EntityId id, unsigned char cBind, const bool bClientOnly, con
 	}
 }
 
-void CEntity::Unbind(EntityId id, unsigned char cBind, const bool bClientOnly)
+void CEntity::Unbind(EntityId id, uchar cBind, const bool bClientOnly)
 {
 	CEntity* pEntity = (CEntity*)m_pEntitySystem->GetEntity(id);
 
@@ -2491,7 +2491,7 @@ void CEntity::ResolveCollision()
 }
 
 //////////////////////////////////////////////////////////////////////////
-IStatObj* CEntity::GetIStatObj(unsigned int pos)
+IStatObj* CEntity::GetIStatObj(uint pos)
 {
 	CEntityObject object;
 

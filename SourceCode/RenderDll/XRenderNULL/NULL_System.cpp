@@ -44,7 +44,7 @@ void CNULLRenderer::PS2SetDefaultState()
 {
 }
 
-WIN_HWND CNULLRenderer::Init(int x, int y, int width, int height, unsigned int cbpp, int zbpp, int sbits, bool fullscreen, WIN_HINSTANCE hinst, WIN_HWND Glhwnd, WIN_HDC Glhdc, WIN_HGLRC hGLrc, bool bReInit)
+WIN_HWND CNULLRenderer::Init(int x, int y, int width, int height, uint cbpp, int zbpp, int sbits, bool fullscreen, WIN_HINSTANCE hinst, WIN_HWND Glhwnd, WIN_HDC Glhdc, WIN_HGLRC hGLrc, bool bReInit)
 {
 	//=======================================
 	// Add init code here

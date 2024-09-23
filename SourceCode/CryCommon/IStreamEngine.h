@@ -277,7 +277,7 @@ public:
 	// returns the number of bytes read so far (the whole buffer size if IsFinished())
 	// if bWait == true, then waits until the pending I/O operation completes
 	// returns the total number of bytes read (if it completes successfully, returns the size of block being read)
-	virtual unsigned int GetBytesRead(bool bWait = false) = 0;
+	virtual uint GetBytesRead(bool bWait = false) = 0;
 	// returns the buffer into which the data has been or will be read
 	// at least GetBytesRead() bytes in this buffer are guaranteed to be already read
 	// DO NOT USE THIS BUFFER during read operation! DO NOT READ from it, it can lead to memory corruption!

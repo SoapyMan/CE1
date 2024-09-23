@@ -338,7 +338,7 @@ BOOL CCryEditDoc::OnNewDocument()
 
 void CCryEditDoc::Serialize(CArchive& ar)
 {
-	unsigned char *pData = NULL, *pImageData = NULL;
+	uchar *pData = NULL, *pImageData = NULL;
 	CString currentMissionName;
 
 	CString szFilename = ar.GetFile()->GetFilePath();
@@ -958,7 +958,7 @@ void CCryEditDoc::ClearLayers()
 	////////////////////////////////////////////////////////////////////////
 	// Clear all texture layers
 	////////////////////////////////////////////////////////////////////////
-	unsigned int i;
+	uint i;
 
 	// Free the layer objects
 	for (i=0; i<GetLayerCount(); i++)
@@ -1013,7 +1013,7 @@ void CCryEditDoc::InvalidateLayers()
 	// Set the update needed flag for all layer
 	////////////////////////////////////////////////////////////////////////
 
-	unsigned int i;
+	uint i;
 
 	// Free the layer objects
 	for (i=0; i< GetLayerCount(); i++)
@@ -1103,7 +1103,7 @@ bool CCryEditDoc::OnExportTerrainAsGeometrie(const char *pszFileName, RECT rcExp
 	////////////////////////////////////////////////////////////////////////
 
 	t_hmap *pHeigthmap = NULL;
-	unsigned int i, j;
+	uint i, j;
 	COBJExporter cModel;
 	CVector3D vVertex[6];
 	CTexCoord2D cTexCoord[6];
@@ -1320,7 +1320,7 @@ bool CCryEditDoc::GetHeightmapData16(uint16 *pData, UINT iDestWidth,
 	// Get the heightmap data interpolated & noised up to 2 byte
 	////////////////////////////////////////////////////////////////////////
 	
-	unsigned int i, j;
+	uint i, j;
 	long iXSrcFl, iXSrcCe, iYSrcFl, iYSrcCe;
 	float fXSrc, fYSrc;
 	float fHeight[4];
@@ -1536,7 +1536,7 @@ bool CCryEditDoc::GetHeightmapData(HEIGHTMAPVALUE *pData, UINT iDestWidth)
 	// (TODO: Maybe this should be rewritten, can be done a hell lot faster)
 	////////////////////////////////////////////////////////////////////////
 
-	unsigned int i, j;
+	uint i, j;
 	int iXSrcFl, iXSrcCe, iYSrcFl, iYSrcCe;
 	float fXSrc, fYSrc;
 	float fHeight[4];

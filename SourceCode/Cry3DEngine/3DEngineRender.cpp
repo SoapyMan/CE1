@@ -165,7 +165,7 @@ void C3DEngine::Draw()
 		delete [] pImage;*/
 }
 
-void C3DEngine::RenderScene(unsigned int dwDrawFlags)
+void C3DEngine::RenderScene(uint dwDrawFlags)
 {
 	FUNCTION_PROFILER(GetSystem(), PROFILE_3DENGINE);
 	if (!m_pTerrain)
@@ -614,7 +614,7 @@ void C3DEngine::RenderScene(unsigned int dwDrawFlags)
 
 		/*
 	  list2<struct_VERTEX_FORMAT_P3F_COL4UB> lstVert;
-	  list2<unsigned short> lstIdx;
+	  list2<ushort> lstIdx;
 	  static CLeafBuffer * pLeafBuffer = nullptr;
 	  static IShader* pTempShader = nullptr;
 
@@ -1350,7 +1350,7 @@ void C3DEngine::MakeHiResScreenShot()
 #if !defined(LINUX)
 	static int nFileId = 0;
 	static int nHiResShootCounter = -1;
-	static list2<unsigned char*> lstSubImages;
+	static list2<uchar*> lstSubImages;
 
 	if (nHiResShootCounter < 0)
 	{ // start loop
@@ -1381,7 +1381,7 @@ void C3DEngine::MakeHiResScreenShot()
 #ifndef GAMECUBE  
 		CreateDirectory("HiResScreenShoots", 0);
 		lstSubImages.Add(0);
-		lstSubImages.Last() = new unsigned char[GetRenderer()->GetWidth() * GetRenderer()->GetHeight() * 4];
+		lstSubImages.Last() = new uchar[GetRenderer()->GetWidth() * GetRenderer()->GetHeight() * 4];
 		GetRenderer()->ReadFrameBuffer(lstSubImages.Last(),
 			GetRenderer()->GetWidth(), GetRenderer()->GetHeight(), false, true);
 #endif
@@ -1407,10 +1407,10 @@ void C3DEngine::MakeHiResScreenShot()
 		int nFinSize = lstSubImages.Count() *
 			GetRenderer()->GetWidth() * GetRenderer()->GetHeight() * 4;
 
-		unsigned char* pFinalImage = nullptr;
+		uchar* pFinalImage = nullptr;
 
 #ifdef WIN32
-		pFinalImage = (unsigned char*)VirtualAlloc(nullptr, nFinSize, MEM_COMMIT, PAGE_READWRITE);
+		pFinalImage = (uchar*)VirtualAlloc(nullptr, nFinSize, MEM_COMMIT, PAGE_READWRITE);
 #endif // WIN32
 
 		if (pFinalImage)
@@ -1474,12 +1474,12 @@ void C3DEngine::CaptureFrameBufferToFile()
 		strlwr(pFileFormat);
 
 		// get image
-		unsigned char* pImage = new unsigned char[GetRenderer()->GetWidth() * GetRenderer()->GetHeight() * 4];
+		uchar* pImage = new uchar[GetRenderer()->GetWidth() * GetRenderer()->GetHeight() * 4];
 		GetRenderer()->ReadFrameBuffer(pImage, GetRenderer()->GetWidth(), GetRenderer()->GetHeight(), true, true);
 
 
 		{ // flip up side down
-			unsigned char* pImageFlip = new unsigned char[GetRenderer()->GetWidth() * GetRenderer()->GetHeight() * 4];
+			uchar* pImageFlip = new uchar[GetRenderer()->GetWidth() * GetRenderer()->GetHeight() * 4];
 			int nSizeY = GetRenderer()->GetHeight();
 			int nSizeX = GetRenderer()->GetWidth();
 			for (int i = 0; i < nSizeY; i++)

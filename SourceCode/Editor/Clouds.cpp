@@ -90,7 +90,7 @@ void CClouds::CalcCloudsPerlin(SNoiseParams *sParam, CWnd *pWndStatus)
  	// Generate perlin noise based clouds
 	//////////////////////////////////////////////////////////////////////
 
-	unsigned int i, j, h;
+	uint i, j, h;
 	COLORREF clrfColor;
 	float fValueRange;
 	CDynamicArray2D cCloud(sParam->iWidth, sParam->iHeight);
@@ -208,7 +208,7 @@ void CClouds::CleanUp()
 }
 
 
-float CClouds::CloudExpCurve(float v, unsigned int iCover, float fSharpness)
+float CClouds::CloudExpCurve(float v, uint iCover, float fSharpness)
 {
 	//////////////////////////////////////////////////////////////////////
 	// Exponential function to generate separated clouds
@@ -281,21 +281,21 @@ void CClouds::CalcCloudsBezierFault(CLOUDPARAM *sParam, CWnd *pWndStatus)
 	// the supplied window to provide status informations
 	//////////////////////////////////////////////////////////////////////
 
-	unsigned int i, j, h, iScanline, iScanlineCurX;
+	uint i, j, h, iScanline, iScanlineCurX;
 	uint8 iColor;
 	COLORREF clrfColor;
 	POINT p1, p2, p3;
 	float fValueRange;
 	CDynamicArray2D cCloud(sParam->iWidth, sParam->iHeight);
-	unsigned int *pScanlineIntersection = new unsigned int [m_iHeight];
+	uint *pScanlineIntersection = new uint [m_iHeight];
 	float fLowestPoint = 65536.0f, fHighestPoint = -65536.0f;
 	float fIncreasement = 1.0f;
 	KeyPoint sKeyPoints[MAX_KEY_POINTS];
-	unsigned int iKeyPointCount;
+	uint iKeyPointCount;
 	int iDeltaX, iDeltaY;
 	int iUDeltaX, iUDeltaY;
 	char szWindowTitel[32];
-	unsigned int iStatus, iLastStatus = 0;
+	uint iStatus, iLastStatus = 0;
 
 	assert(sParam);
 	assert(sParam->iIterations);
@@ -471,7 +471,7 @@ void CClouds::CalcCloudsBezierFault(CLOUDPARAM *sParam, CWnd *pWndStatus)
 	pScanlineIntersection = 0;
 }
 
-unsigned int CClouds::QuadricSubdivide(LPPOINT p1, LPPOINT p2, LPPOINT p3, unsigned int iLevel, 
+uint CClouds::QuadricSubdivide(LPPOINT p1, LPPOINT p2, LPPOINT p3, uint iLevel, 
 								          KeyPoint *pKeyPointArray, bool bFirstSubdivision)
 {
 	//////////////////////////////////////////////////////////////////////
@@ -535,7 +535,7 @@ unsigned int CClouds::QuadricSubdivide(LPPOINT p1, LPPOINT p2, LPPOINT p3, unsig
 }
 
 void CClouds::TraceCurveSegment(LPPOINT p1, LPPOINT p2, int iUCurveDeltaX, 
-								   int iUCurveDeltaY, unsigned int *pScanlineIntersection)
+								   int iUCurveDeltaY, uint *pScanlineIntersection)
 {
 	//////////////////////////////////////////////////////////////////////
 	// Use the Bresenham line drawing algorithm to find the scanline

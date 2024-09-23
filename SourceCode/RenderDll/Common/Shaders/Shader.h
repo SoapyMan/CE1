@@ -96,7 +96,7 @@ struct SCoord
 struct SOrient
 {
 	SCoord m_Coord;
-	unsigned int m_Flags;
+	uint m_Flags;
 };
 
 //===========================================================
@@ -3032,8 +3032,8 @@ struct SParamComp_Opacity : public SParamComp
 struct SParam
 {
 	static vec4_t m_sFVals;
-	unsigned int m_Flags;
-	unsigned int m_Reg;
+	uint m_Flags;
+	uint m_Reg;
 	SParamComp* m_Comps[4];
 
 	int Size()
@@ -3659,8 +3659,8 @@ struct SShaderPass
 {
 	TArray <SShaderTexUnit> m_TUnits;  // List of texture units
 
-	unsigned int m_RenderState;          // Render state flags
-	unsigned int m_SecondRenderState;    // Render state flags for all subsequent passes
+	uint m_RenderState;          // Render state flags
+	uint m_SecondRenderState;    // Render state flags for all subsequent passes
 
 	SWaveForm* m_WaveEvalRGB;    // Wave form definition for RGB evaluation (usually software evaluations)
 	SRGBGenNoise* m_RGBNoise;    // Noise parameters definition for RGB evaluation
@@ -4073,14 +4073,14 @@ struct SShader : public IShader
 
 	int m_nRefCounter;
 	float m_fProfileTime;
-	unsigned int m_Flags;             // Different usefull flags EF_  (see IShader.h)
-	unsigned int m_Flags2;            // Different usefull flags EF2_ (see IShader.h)
-	unsigned int m_Flags3;            // Different usefull flags EF3_ (see IShader.h)
+	uint m_Flags;             // Different usefull flags EF_  (see IShader.h)
+	uint m_Flags2;            // Different usefull flags EF2_ (see IShader.h)
+	uint m_Flags3;            // Different usefull flags EF3_ (see IShader.h)
 	ECull m_eCull;            // Base shader culling type (Can be overriden by Pass m_eCull value)
 	EF_Sort m_eSort;          // Sort category eS_ (see IShader.h)
 	EShClass m_eClass;        // Shader class eSH_ (see IShader.h)
 	float m_fUpdateFactor;           // Updating time factor for drawing to the texture
-	unsigned int m_DLDFlags;                 // Preprocessor shader flags for "DrawLowDetail" function (see I3DEngine.h)
+	uint m_DLDFlags;                 // Preprocessor shader flags for "DrawLowDetail" function (see I3DEngine.h)
 	int m_nPreprocess;        // Preprocess flags for shader (see IShader.h)
 
 	SEfTemplates* m_Templates; // List of all templates registered in this shader
@@ -4152,8 +4152,8 @@ struct SShader : public IShader
 	virtual IShader* GetTemplate(int num) { return (IShader*)mfGetTemplate(num); }
 	virtual SEfTemplates* GetTemplates() { return m_Templates; }
 	virtual int GetTexId();
-	virtual unsigned int GetUsedTextureTypes(void);
-	virtual unsigned int GetPreprocessFlags() { return m_nPreprocess; }
+	virtual uint GetUsedTextureTypes(void);
+	virtual uint GetPreprocessFlags() { return m_nPreprocess; }
 	virtual int GetVertexFormat(void) { return m_VertexFormatId; }
 	virtual uint64 GetGenerationMask() { return m_nMaskGen; }
 	virtual SShaderGen* GetGenerationParams()

@@ -141,7 +141,7 @@ public:
 
 
 // Helpers for casting
-__inline HMENU UIntToHMenu(const unsigned int ui )
+__inline HMENU UIntToHMenu(const uint ui )
 {
   return( (HMENU)(UINT_PTR)ui );
 }

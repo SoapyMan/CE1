@@ -288,7 +288,7 @@ struct IClientSink
 			this function should return a number in milliseconds, that is the additional time to wait for the server.
 			if not timeout is expected, this should return 0, and the normal timeout will take place.
 	*/
-	virtual unsigned int GetTimeoutCompensation() = 0;
+	virtual uint GetTimeoutCompensation() = 0;
 	//!
 	virtual void MarkForDestruct() = 0;
 	//!
@@ -313,7 +313,7 @@ struct IClient
 		@param iAuthorizationSize >0
 		--@param wPort the remote port of the server
 	*/
-	virtual void Connect(const char* szIP, WORD wPort, const BYTE* pbAuthorizationID, unsigned int iAuthorizationSize) = 0;
+	virtual void Connect(const char* szIP, WORD wPort, const BYTE* pbAuthorizationID, uint iAuthorizationSize) = 0;
 	/*! start disconnect from a server
 		@param szCause cause of the disconneciton that will be send to the server
 	*/
@@ -342,7 +342,7 @@ struct IClient
 
 		REMARKS: to keep the connection working correctly this function must be called at least every frame
 	*/
-	virtual bool Update(unsigned int nTime) = 0;
+	virtual bool Update(uint nTime) = 0;
 	/*! get the average bandwidth used by the current connection
 		@param fIncomingKbPerSec incoming kb per sec
 		@param fOutgoingKbPerSec outgoing kb per sec
@@ -356,13 +356,13 @@ struct IClient
 	/*! get the average round trip delay through client and server
 		@return the average ping in milliseconds
 	*/
-	virtual unsigned int GetPing() = 0;
+	virtual uint GetPing() = 0;
 	//!
-	virtual unsigned int GetRemoteTimestamp(unsigned int nTime) = 0;
+	virtual uint GetRemoteTimestamp(uint nTime) = 0;
 	//!
-	virtual unsigned int GetPacketsLostCount() = 0;
+	virtual uint GetPacketsLostCount() = 0;
 	//!
-	virtual unsigned int GetUnreliablePacketsLostCount() = 0;
+	virtual uint GetUnreliablePacketsLostCount() = 0;
 	//! returns IP of server.
 	virtual CIPAddress GetServerIP() const = 0;
 	//!
@@ -377,8 +377,8 @@ struct IServerSnooper
 {
 	/*! query the LAN for servers
 	*/
-	virtual void SearchForLANServers(unsigned int nTime = 0) = 0;
-	virtual void Update(unsigned int nTime) = 0;
+	virtual void SearchForLANServers(uint nTime = 0) = 0;
+	virtual void Update(uint nTime) = 0;
 	//! release the interface(and delete the object that implements it)
 	virtual void Release() = 0;
 };
@@ -395,14 +395,14 @@ struct IServerSnooperSink
 
 struct INetworkPacketSink
 {
-	virtual void OnReceivingPacket(const unsigned char inPacketID, CStream& stmPacket, CIPAddress& ip) = 0;
+	virtual void OnReceivingPacket(const uchar inPacketID, CStream& stmPacket, CIPAddress& ip) = 0;
 };
 
 
 struct INETServerSnooper
 {
 	//! query internet servers for info
-	virtual void Update(unsigned int dwTime) = 0;
+	virtual void Update(uint dwTime) = 0;
 	//!
 	virtual void AddServer(const CIPAddress& ip) = 0;
 	//!
@@ -433,7 +433,7 @@ struct IRConSystem
 {
 	//! query response packets
 	//! Can specify optional client, to get server ip from.
-	virtual void Update(unsigned int dwTime, IClient* pClient = nullptr) = 0;
+	virtual void Update(uint dwTime, IClient* pClient = nullptr) = 0;
 	//! release the interface(and delete the object that implements it)
 	virtual void Release() = 0;
 	//!
@@ -448,7 +448,7 @@ struct IRConSystem
 struct IServerSlotSink
 {
 	//! called by the serverslot when the connection occur
-	virtual void OnXServerSlotConnect(const BYTE* pbAuthorizationID, unsigned int uiAuthorizationSize) = 0;
+	virtual void OnXServerSlotConnect(const BYTE* pbAuthorizationID, uint uiAuthorizationSize) = 0;
 	/*! called by the serverslot when the disconnection occur
 		@param string representation of the disconnection cause
 	*/
@@ -463,7 +463,7 @@ struct IServerSlotSink
 	virtual void OnData(CStream& stm) = 0;
 	//! 
 	virtual void OnXPlayerAuthorization(bool bAllow, const char* szError, const BYTE* pGlobalID,
-		unsigned int uiGlobalIDSize) = 0;
+		uint uiGlobalIDSize) = 0;
 };
 
 struct SServerSlotBandwidthStats
@@ -474,10 +474,10 @@ struct SServerSlotBandwidthStats
 		Reset();
 	}
 
-	unsigned int		m_nReliableBitCount;				//!<
-	unsigned int		m_nReliablePacketCount;			//!<
-	unsigned int		m_nUnreliableBitCount;			//!<
-	unsigned int		m_nUnreliablePacketCount;		//!<
+	uint		m_nReliableBitCount;				//!<
+	uint		m_nReliablePacketCount;			//!<
+	uint		m_nUnreliableBitCount;			//!<
+	uint		m_nUnreliablePacketCount;		//!<
 
 	void Reset()
 	{
@@ -522,27 +522,27 @@ struct IServerSlot
 	/*! get the unique id that identify the server slot on a server
 		@return ID of the serverslot
 	*/
-	virtual unsigned char GetID() = 0;
+	virtual uchar GetID() = 0;
 
 	// Return IP in integer form.
-	virtual unsigned int GetClientIP() const = 0;
+	virtual uint GetClientIP() const = 0;
 	//! release the interface(and delete the object that implements it)
 	virtual void Release() = 0;
 	/*! get the average round trip delay through client and server
 		@return the average ping in milliseconds
 	*/
-	virtual unsigned int GetPing() = 0;
+	virtual uint GetPing() = 0;
 	//!
-	virtual unsigned int GetPacketsLostCount() = 0;
+	virtual uint GetPacketsLostCount() = 0;
 	//!
-	virtual unsigned int GetUnreliablePacketsLostCount() = 0;
+	virtual uint GetUnreliablePacketsLostCount() = 0;
 	//! used for bandwidth calculations (to adjust the bandwidth)
 	virtual void ResetBandwidthStats() = 0;
 	//! used for bandwidth calculations (to adjust the bandwidth)
 	virtual void GetBandwidthStats(SServerSlotBandwidthStats& out) const = 0;
 	//! just calles OnXPlayerAuthorization of the corresponding game specific object
 	virtual void OnPlayerAuthorization(bool bAllow, const char* szError, const BYTE* pGlobalID,
-		unsigned int uiGlobalIDSize) = 0;
+		uint uiGlobalIDSize) = 0;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -583,27 +583,27 @@ struct IServerSecuritySink
 	/*!	check the state of an ip address before creating the slot
 			\return the state of the ip (banned or not)
 	*/
-	virtual bool IsIPBanned(const unsigned int dwIP) = 0;
+	virtual bool IsIPBanned(const uint dwIP) = 0;
 
 	/*! ban an ip address
 			\param dwIP the ip address to ban
 	*/
-	virtual void BanIP(const unsigned int dwIP) = 0;
+	virtual void BanIP(const uint dwIP) = 0;
 
 	/*! ban an ip address
 	\param dwIP the ip address to ban
 	*/
-	virtual void UnbanIP(const unsigned int dwIP) = 0;
+	virtual void UnbanIP(const uint dwIP) = 0;
 
 	/*! Report cheating user.
 	 *
 	 */
-	virtual void CheaterFound(const unsigned int dwIP, int type, const char* sMsg) = 0;
+	virtual void CheaterFound(const uint dwIP, int type, const char* sMsg) = 0;
 
 	/*! Request slot information from the game.
 	 *
 	 */
-	virtual bool GetSlotInfo(const unsigned int dwIP, SSlotInfo& info, int nameOnly) = 0;
+	virtual bool GetSlotInfo(const uint dwIP, SSlotInfo& info, int nameOnly) = 0;
 };
 
 
@@ -624,11 +624,11 @@ struct IServer
 
 		REMARKS: to keep the connection working correctly this function must be called at least every frame
 	*/
-	virtual void Update(unsigned int nTime) = 0;
+	virtual void Update(uint nTime) = 0;
 	//! release the interface and delete the implemetation
 	virtual void Release() = 0;
 	//! set a server veriable
-	virtual void SetVariable(enum CryNetworkVarible eVarName, unsigned int nValue) = 0;
+	virtual void SetVariable(enum CryNetworkVarible eVarName, uint nValue) = 0;
 	/*! get the average bandwidth used by all active connections
 		@param fIncomingKbPerSec incoming kb per sec
 		@param fOutgoingKbPerSec outgoing kb per sec
@@ -642,7 +642,7 @@ struct IServer
 	virtual const char* GetHostName() = 0;
 	//! \param inPacketID e.g. FT_CQP_RCON_COMMAND
 	//! \param inpSink must not be 0
-	virtual void RegisterPacketSink(const unsigned char inPacketID, INetworkPacketSink* inpSink) = 0;
+	virtual void RegisterPacketSink(const uchar inPacketID, INetworkPacketSink* inpSink) = 0;
 
 	/*! set the security sink
 			\param pSecurirySink pointer to a class that implements the IServerSecuritySink interface
@@ -652,21 +652,21 @@ struct IServer
 	/*!	check the state of an ip address before creating the slot
 		\return the state of the ip (banned or not)
 	*/
-	virtual bool IsIPBanned(const unsigned int dwIP) = 0;
+	virtual bool IsIPBanned(const uint dwIP) = 0;
 
 	/*! ban an ip address
 		\param dwIP the ip address to ban
 	*/
-	virtual void BanIP(const unsigned int dwIP) = 0;
+	virtual void BanIP(const uint dwIP) = 0;
 
 	/*! ban an ip address
 		\param dwIP the ip address to ban
 	*/
-	virtual void UnbanIP(const unsigned int dwIP) = 0;
+	virtual void UnbanIP(const uint dwIP) = 0;
 
 	//! time complexity: O(n) n=connected server slots
 	//! \return 0 if there is no serverslot with this client (was never there or disconnected)
-	virtual IServerSlot* GetServerSlotbyID(const unsigned char ucId) const = 0;
+	virtual IServerSlot* GetServerSlotbyID(const uchar ucId) const = 0;
 
 	//! to iterate through all clients (new clients ids are the lowest available at that time)
 	virtual uint8 GetMaxClientID() const = 0;

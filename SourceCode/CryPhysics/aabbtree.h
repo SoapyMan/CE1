@@ -2,15 +2,15 @@
 #define aabbtree_h
 
 struct AABBnode {
-	unsigned int minx : 7;
-	unsigned int maxx : 7;
-	unsigned int miny : 7;
-	unsigned int maxy : 7;
-	unsigned int minz : 7;
-	unsigned int maxz : 7;
-	unsigned int ichild : 15;
-	unsigned int ntris : 6;
-	unsigned int bSingleColl : 1;
+	uint minx : 7;
+	uint maxx : 7;
+	uint miny : 7;
+	uint maxy : 7;
+	uint minz : 7;
+	uint maxz : 7;
+	uint ichild : 15;
+	uint ntris : 6;
+	uint bSingleColl : 1;
 };
 
 class CTriMesh;

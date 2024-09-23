@@ -196,7 +196,7 @@ void WriteJPG(byte* dat, int wdt, int hgt, char* name)
 	jpeg_set_quality(&cinfo, 95, FALSE);
 
 	byte* mem = nullptr;
-	unsigned long memSize = 0;
+	ulong memSize = 0;
 	jpeg_mem_dest(&cinfo, &mem, &memSize);
 
 	jpeg_start_compress(&cinfo, TRUE);

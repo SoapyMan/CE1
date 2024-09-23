@@ -47,7 +47,7 @@ struct VertexBufferSource
 	// the number of indices in the index buffer
 	unsigned numIndices;
 	// the indices
-	const unsigned short* pIndices;
+	const ushort* pIndices;
 
 	// the number of vertices
 	unsigned numVertices;

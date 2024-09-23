@@ -161,12 +161,12 @@ void CTerrain::DrawVisibleSectors()
 	RenderLowResTerrain();
 }
 
-void CTerrain::MergeLowResTerrainSectorIndices(list2<unsigned short>* pIndices)
+void CTerrain::MergeLowResTerrainSectorIndices(list2<ushort>* pIndices)
 {
 	m_lstLowResTerrainIdxArray.AddList(*pIndices);
 }
 
-void CTerrain::MergeReflectedTerrainSectorIndices(list2<unsigned short>* pIndices)
+void CTerrain::MergeReflectedTerrainSectorIndices(list2<ushort>* pIndices)
 {
 	m_lstReflectedTerrainIdxArray.AddList(*pIndices);
 }

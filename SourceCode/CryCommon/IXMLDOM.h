@@ -81,7 +81,7 @@ namespace XDOM {
 		virtual IXMLDOMNode* createNode(_DOMNodeType Type, const char* name) = 0;
 		//virtual const XMLCHAR *getXML() = 0;
 		virtual const XMLCHAR* getErrorString() = 0;
-		virtual unsigned short getCheckSum() = 0;
+		virtual ushort getCheckSum() = 0;
 	};
 
 	//////////////////////////////////////////////////////////////////

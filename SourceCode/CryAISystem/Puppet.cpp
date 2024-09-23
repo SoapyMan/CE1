@@ -399,7 +399,7 @@ void CPuppet::AddToVisibleList(CAIObject* pAIObject, bool bForce, float fAdditio
 
 }
 
-bool CPuppet::CanBeConvertedTo(unsigned short type, void** pConverted)
+bool CPuppet::CanBeConvertedTo(ushort type, void** pConverted)
 {
 	if (type == AIOBJECT_PIPEUSER)
 	{
@@ -729,7 +729,7 @@ void CPuppet::UpdatePuppetInternalState()
 
 }
 
-void CPuppet::Event(unsigned short eType, SAIEVENT* pEvent)
+void CPuppet::Event(ushort eType, SAIEVENT* pEvent)
 {
 	switch (eType)
 	{
@@ -1141,7 +1141,7 @@ void CPuppet::Devalue(CAIObject* pObject, bool bDevaluePuppets)
 	if ((vi = m_mapVisibleAgents.find(pObject)) != m_mapVisibleAgents.end())
 		fAmount += (vi->second).fExposureTime;
 
-	unsigned short type = pObject->GetType();
+	ushort type = pObject->GetType();
 
 	if ((type == AIOBJECT_PUPPET) && !bDevaluePuppets)
 		return;

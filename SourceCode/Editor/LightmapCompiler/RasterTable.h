@@ -419,7 +419,7 @@ void CRasterTable<T>::Debug(const char* inPathFileName) const
 	for (DWORD i = 0; i < m_DataSize; i++)
 		m_pDataCounter[i] = m_pDataCounter[i] * 10 + 0x0800;
 
-	PIX_SaveTGA32(inPathFileName, (unsigned char*)m_pDataCounter, m_dwXSize, m_dwYSize, false, false);
+	PIX_SaveTGA32(inPathFileName, (uchar*)m_pDataCounter, m_dwXSize, m_dwYSize, false, false);
 
 	for (DWORD i = 0; i < m_DataSize; i++)
 		m_pDataCounter[i] = (m_pDataCounter[i] - 0x0800) / 10;

@@ -15,8 +15,8 @@ public:
 
 	void ParseParameters(const AIObjectParameters& params);
 	void Update();
-	void Event(unsigned short eType, SAIEVENT* pEvent);
-	bool CanBeConvertedTo(unsigned short type, void** pConverted);
+	void Event(ushort eType, SAIEVENT* pEvent);
+	bool CanBeConvertedTo(ushort type, void** pConverted);
 	void OnObjectRemoved(CAIObject* pObject);
 	CAIObject* GetPrincipalObject(void);
 

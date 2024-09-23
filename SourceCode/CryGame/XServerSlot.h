@@ -30,12 +30,12 @@ class CXServer;
 
 struct SlotNetStats
 {
-	unsigned int								ping;										//!<
-	unsigned int								packetslost;						//!<
-	unsigned int								upacketslost;						//!<
+	uint								ping;										//!<
+	uint								packetslost;						//!<
+	uint								upacketslost;						//!<
 	string											name;										//!<
-	unsigned int								maxsnapshotbitsize;			//!<
-	unsigned int								lastsnapshotbitsize;		//!<
+	uint								maxsnapshotbitsize;			//!<
+	uint								lastsnapshotbitsize;		//!<
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -64,11 +64,11 @@ public:
 
 	// interface IServerSlotSink ----------------------------------
 
-	virtual void OnXServerSlotConnect(const BYTE *pbAuthorizationID, unsigned int uiAuthorizationSize);
+	virtual void OnXServerSlotConnect(const BYTE *pbAuthorizationID, uint uiAuthorizationSize);
 	virtual void OnXServerSlotDisconnect(const char *szCause);
 	virtual void OnContextReady(CStream &stm);
 	virtual void OnData(CStream &stm);
-	virtual void OnXPlayerAuthorization( bool bAllow, const char *szError, const BYTE *pGlobalID, unsigned int uiGlobalIDSize );
+	virtual void OnXPlayerAuthorization( bool bAllow, const char *szError, const BYTE *pGlobalID, uint uiGlobalIDSize );
 
 	// ------------------------------------------------------------
 
@@ -91,7 +91,7 @@ public:
 	//!
 	bool IsLocalHost();
 	//! \return pin in milliseconds
-	unsigned int GetPing();
+	uint GetPing();
 	//! \param idPlayer
 	void SetPlayerID(EntityId idPlayer);
 	//! \return 
@@ -123,7 +123,7 @@ public:
 	void SendCommand(const char *sCmd);
 	//!
 	void SendCommand(const char *sCmd, const Vec3 &invPos, const Vec3 &invNormal, 
-		const EntityId inId, const unsigned char incUserByte );
+		const EntityId inId, const uchar incUserByte );
 	//!
 	bool IsReady();
 	//!
@@ -138,12 +138,12 @@ public:
 		return 0.0f;
 	}
 	//!
-	unsigned int GetCommandClientPhysTime() 
+	uint GetCommandClientPhysTime() 
 	{
 		return m_iLastCommandClientPhysTime ? m_iLastCommandClientPhysTime : m_pPhysicalWorld->GetiPhysicsTime();
 	}
 	//!
-	unsigned int GetClientWorldPhysTime()
+	uint GetClientWorldPhysTime()
 	{
 		return m_pPhysicalWorld->GetiPhysicsTime()+m_iClientWorldPhysTimeDelta;
 	}
@@ -259,9 +259,9 @@ private: // --------------------------------------------------------------
 	float											m_fClientVehicleSimTime;
 
 	BYTE											m_vGlobalID[64];
-	unsigned char							m_bGlobalIDSize;
+	uchar							m_bGlobalIDSize;
 	BYTE											m_vAuthID[64];
-	unsigned char							m_bAuthIDSize;
+	uchar							m_bAuthIDSize;
 	bool											m_bServerLazyChannelState;				//!< used for sending ordered reliable data over the unreliable connection (slow but never stalls, used for scoreboard)
 	bool											m_bClientLazyChannelState;				//!< used for sending ordered reliable data over the unreliable connection (slow but never stalls, used for scoreboard)
 	uint32										m_dwUpdatesSinceLastLazySend;			//!< update cylces we wait for response (for resending), 0=it wasn't set at all

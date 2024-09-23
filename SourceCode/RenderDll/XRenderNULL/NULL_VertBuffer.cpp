@@ -39,7 +39,7 @@ void CNULLRenderer::CreateBuffer(int size, int vertexformat, CVertexBuffer* buf,
 	void* data;
 
 	// System buffer 
-	data = new unsigned char[size];
+	data = new uchar[size];
 	buf->m_VS[Type].m_VData = data;
 }
 
@@ -51,7 +51,7 @@ CVertexBuffer* CNULLRenderer::CreateBuffer(int vertexcount, int vertexformat, co
 
 	int size = m_VertexSize[vertexformat] * vertexcount;
 	// System buffer 
-	vtemp->m_VS[VSF_GENERAL].m_VData = new unsigned char[size];
+	vtemp->m_VS[VSF_GENERAL].m_VData = new uchar[size];
 	vtemp->m_fence = 0;
 
 	vtemp->m_vertexformat = vertexformat;

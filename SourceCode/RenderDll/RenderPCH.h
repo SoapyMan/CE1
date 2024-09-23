@@ -56,10 +56,6 @@
 #include <search.h>
 #include <stdarg.h>
 
-typedef unsigned long DWORD;
-typedef unsigned short WORD;
-typedef unsigned char BYTE;
-
 #include <xtl.h>
 
 #else

@@ -250,12 +250,12 @@ public:
 	void	ReTriggerArea(IEntity* pEntity,const Vec3 &vPos,bool bIndoor);
 
 	void	UpdatePlayer( CXAreaUser& user );
-	bool	ProceedExclusiveEnter( CXAreaUser& user, unsigned int curIdx );
-	bool	ProceedExclusiveLeave( CXAreaUser& user, unsigned int curIdx );
-	void	ProceedExclusiveUpdate( CXAreaUser& user, unsigned int curIdx );
-//	int		FindHighestHostedArea( CPlayer* const player, unsigned int curIdx );
+	bool	ProceedExclusiveEnter( CXAreaUser& user, uint curIdx );
+	bool	ProceedExclusiveLeave( CXAreaUser& user, uint curIdx );
+	void	ProceedExclusiveUpdate( CXAreaUser& user, uint curIdx );
+//	int		FindHighestHostedArea( CPlayer* const player, uint curIdx );
 typedef std::vector<int>	intVector;
-	int		FindHighestHostedArea( intVector& hostedAreas, unsigned int curIdx );
+	int		FindHighestHostedArea( intVector& hostedAreas, uint curIdx );
 	void	ExitAllAreas( CXAreaUser& user );
 	CXArea*	GetArea( const Vec3& point );
 //	CXArea*	GetArea(const int nBuilding, const int nSectorId, const EntityId entityID);

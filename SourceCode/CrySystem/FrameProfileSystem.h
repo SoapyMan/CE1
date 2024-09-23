@@ -136,8 +136,8 @@ public:
 	// Graphs.
 	//////////////////////////////////////////////////////////////////////////
 	bool m_bDrawGraph;
-	std::vector<unsigned char> m_timeGraph;
-	std::vector<unsigned char> m_timeGraph2;
+	std::vector<uchar> m_timeGraph;
+	std::vector<uchar> m_timeGraph2;
 	int m_timeGraphCurrentPos;
 	CFrameProfiler* m_pGraphProfiler;
 

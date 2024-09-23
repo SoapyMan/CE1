@@ -176,7 +176,7 @@ struct SBasisProperties
 };
 
 extern const char* getMtlType(unsigned nMtlType);
-extern const char* getTexType(unsigned char nTexType);
+extern const char* getTexType(uchar nTexType);
 extern string getLightType(LightTypes nType);
 extern string getMtlFlags(int nFlags);
 

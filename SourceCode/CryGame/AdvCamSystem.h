@@ -58,7 +58,7 @@ private:
 
 			@return	movement direction of the player (not normalized)
 	*/
-	Vec3 CalcPlayerMoveDirection(const Matrix33 &matCamera, unsigned int joyID) const;
+	Vec3 CalcPlayerMoveDirection(const Matrix33 &matCamera, uint joyID) const;
 
 	/*!	Calculate the source and target vectors of the camera based on the script-side parameter table, which is passed
 			to the function via the script object.

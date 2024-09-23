@@ -4,7 +4,7 @@
 template	<class T> class list2;
 
 // !!! don't change the type !!!
-typedef unsigned short EntityId;					//! unique identifier for each entity instance
+typedef ushort EntityId;					//! unique identifier for each entity instance
 
 struct IMatInfo;
 struct IVisArea;
@@ -19,8 +19,8 @@ enum EERType
 struct OcclusionTestClient
 {
 	OcclusionTestClient() { memset(this, 0, sizeof(OcclusionTestClient)); bLastResult = true; }
-	unsigned char ucOcclusionByTerrainFrames;
-	unsigned char ucOcclusionByObjectsFrames;
+	uchar ucOcclusionByTerrainFrames;
+	uchar ucOcclusionByObjectsFrames;
 	bool  bLastResult;
 	int   nLastVisibleFrameID;
 	//	class CREOcclusionQuery * arrREOcclusionQuery[2];
@@ -61,9 +61,9 @@ struct IEntityRenderState
 	// tmp flaot (distance to the light source, used for sorting)
 	float fTmpDistance;
 
-	//  unsigned short nScissorX1, nScissorY1, nScissorX2, nScissorY2;
+	//  ushort nScissorX1, nScissorY1, nScissorX2, nScissorY2;
 
-	unsigned int nStrongestLightId;
+	uint nStrongestLightId;
 };
 
 //! EntityRender flags
@@ -126,9 +126,9 @@ struct IEntityRender
 	virtual bool HasChanged() { return false; }
 	virtual bool DrawEntity(const struct SRendParams& EntDrawParams) = 0;
 	virtual bool IsStatic() const = 0;
-	virtual struct IStatObj* GetEntityStatObj(unsigned int nSlot, Matrix44* pMatrix = nullptr, bool bReturnOnlyVisible = false) { return 0; }
-	virtual void SetEntityStatObj(unsigned int nSlot, IStatObj* pStatObj, Matrix44* pMatrix = nullptr) {};
-	virtual struct ICryCharInstance* GetEntityCharacter(unsigned int nSlot, Matrix44* pMatrix = nullptr) { return 0; }
+	virtual struct IStatObj* GetEntityStatObj(uint nSlot, Matrix44* pMatrix = nullptr, bool bReturnOnlyVisible = false) { return 0; }
+	virtual void SetEntityStatObj(uint nSlot, IStatObj* pStatObj, Matrix44* pMatrix = nullptr) {};
+	virtual struct ICryCharInstance* GetEntityCharacter(uint nSlot, Matrix44* pMatrix = nullptr) { return 0; }
 	virtual void Physicalize(bool bInstant = false) {}
 	virtual class CDLight* GetLight() { return 0; }
 	virtual struct IEntityContainer* GetContainer() const { return 0; }
@@ -136,12 +136,12 @@ struct IEntityRender
 	float m_fWSMaxViewDist;
 
 	// rendering flags
-	virtual void SetRndFlags(unsigned int dwFlags) { m_dwRndFlags = dwFlags; }
-	virtual void SetRndFlags(unsigned int dwFlags, bool bEnable)
+	virtual void SetRndFlags(uint dwFlags) { m_dwRndFlags = dwFlags; }
+	virtual void SetRndFlags(uint dwFlags, bool bEnable)
 	{
 		if (bEnable) m_dwRndFlags |= dwFlags; else m_dwRndFlags &= ~dwFlags;
 	}
-	virtual unsigned int GetRndFlags() { return m_dwRndFlags; }
+	virtual uint GetRndFlags() { return m_dwRndFlags; }
 	int m_dwRndFlags;
 
 	// object draw frames (set if was drawn)
@@ -150,8 +150,8 @@ struct IEntityRender
 	int m_narrDrawFrames[2];
 
 	// shadow draw frames (set if was drawn)
-	void SetShadowFrame(unsigned short nFrameID, int nRecursionLevel) { m_narrShadowFrames[nRecursionLevel] = nFrameID; }
-	unsigned short GetShadowFrame(int nRecursionLevel = 0) const { return m_narrShadowFrames[nRecursionLevel]; }
+	void SetShadowFrame(ushort nFrameID, int nRecursionLevel) { m_narrShadowFrames[nRecursionLevel] = nFrameID; }
+	ushort GetShadowFrame(int nRecursionLevel = 0) const { return m_narrShadowFrames[nRecursionLevel]; }
 
 	// current distance to the camera (with reqursioin)
 	float m_arrfDistance[2];
@@ -159,15 +159,15 @@ struct IEntityRender
 	//! contains rendering properties, not 0 only if entity going to be rendered
 	struct IEntityRenderState* m_pEntityRenderState;
 
-	unsigned short m_narrShadowFrames[2];
+	ushort m_narrShadowFrames[2];
 
 	Vec3 m_vWSBoxMin, m_vWSBoxMax;
 	float m_fWSRadius;
 	//##  float m_fMaxViewDist;
-	unsigned char m_bForceBBox;
-	unsigned char ucViewDistRatio;
-	unsigned char ucLodRatio;
-	unsigned char m_nFogVolumeID;
+	uchar m_bForceBBox;
+	uchar ucViewDistRatio;
+	uchar ucLodRatio;
+	uchar m_nFogVolumeID;
 
 	// cur areas info
 	struct CSectorInfo* m_pSector;
@@ -187,7 +187,7 @@ struct IEntityRender
 
 	// Summary: 
 	//   Assigns a texture set reference for dot3 lightmapping. The object will Release() it at the end of its lifetime, special call from lightmap serializer/compiler to set occlusion map values
-	virtual void SetLightmap(RenderLMData* pLMData, float* pTexCoords, UINT iNumTexCoords, const unsigned char cucOcclIDCount, const std::vector<std::pair<EntityId, EntityId> >& aIDs) {};
+	virtual void SetLightmap(RenderLMData* pLMData, float* pTexCoords, UINT iNumTexCoords, const uchar cucOcclIDCount, const std::vector<std::pair<EntityId, EntityId> >& aIDs) {};
 
 	//  Returns:
 	//    true if there are lightmap texture coodinates and a lightmap texture assignment

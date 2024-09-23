@@ -297,7 +297,7 @@ void CGLRenderer::PrepareDepthMap(ShadowMapFrustum* lof, bool make_new_tid)
 
 	if (make_new_tid)
 	{ // new id for static objects
-		glGenTextures(1, (unsigned int*)&lof->depth_tex_id);
+		glGenTextures(1, (uint*)&lof->depth_tex_id);
 		CRYASSERT(lof->depth_tex_id < 14000);
 	}
 	else
@@ -632,10 +632,10 @@ void CGLRenderer::SetupShadowOnlyPass(int Num, ShadowMapFrustum* pFrustum, Vec3d
 int MakeShadowIdentityTexture()
 {
 	uchar texmap[256];
-	for (unsigned int i = 0; i < 256; i++)
+	for (uint i = 0; i < 256; i++)
 		texmap[i] = i;
 
-	unsigned int tid;
+	uint tid;
 	glGenTextures(1, &tid);
 	CRYASSERT(tid < 14000);
 	glBindTexture(GL_TEXTURE_1D, tid);

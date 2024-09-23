@@ -388,7 +388,7 @@ BOOL CStartupDialog::OnInitDialog()
 		return TRUE;
 	
 	// Loop trough the array and add each string
-	for (i=0; i<(unsigned int) pList->GetSize() - 1; i++)
+	for (i=0; i<(uint) pList->GetSize() - 1; i++)
 	{
 		// Does the file exist ?
 		if (PathFileExists((* pList)[i].GetBuffer(0)))
@@ -448,7 +448,7 @@ void CStartupDialog::OnChangeLevDir()
 		bPathIsValid = false;
 
 	// User entered string, check for invalid chars
-	for (i=0; i<(unsigned int) cDialog.m_strString.GetLength(); i++)
+	for (i=0; i<(uint) cDialog.m_strString.GetLength(); i++)
 	{
 		// Paste the char into the compare buffer
 		szCompBuf[0] = cDialog.m_strString.GetBuffer(0)[i];

@@ -13,7 +13,7 @@
 
 struct swap_4
 {
-	unsigned char b1, b2, b3, b4;
+	uchar b1, b2, b3, b4;
 };
 
 #ifdef CS_BIG_ENDIAN
@@ -23,7 +23,7 @@ struct swap_4
 #else
 
 /// Convert a long from big-endian to machine format
-static inline unsigned long big_endian_long(unsigned long l)
+static inline ulong big_endian_long(ulong l)
 {
 	return (l >> 24) | ((l >> 8) & 0xff00) | ((l << 8) & 0xff0000) | (l << 24);
 }
@@ -38,7 +38,7 @@ static inline ushort big_endian_short(ushort s)
 //@@WARNING: Should be removed -- use float2long instead
 static inline float big_endian_float(float f)
 {
-	unsigned char tmp;
+	uchar tmp;
 	swap_4* pf = (swap_4*)&f;
 	tmp = pf->b1; pf->b1 = pf->b4; pf->b4 = tmp;
 	tmp = pf->b2; pf->b2 = pf->b3; pf->b3 = tmp;
@@ -54,7 +54,7 @@ static inline float big_endian_float(float f)
 #else
 
 /// Convert a long from little-endian to machine format
-static inline unsigned long little_endian_long(unsigned long l)
+static inline ulong little_endian_long(ulong l)
 {
 	return (l >> 24) | ((l >> 8) & 0xff00) | ((l << 8) & 0xff0000) | (l << 24);
 }
@@ -68,7 +68,7 @@ static inline ushort little_endian_short(ushort s)
 /// Convert a little-endian floating-point number to machine format
 static inline float little_endian_float(float f)
 {
-	unsigned char tmp;
+	uchar tmp;
 	swap_4* pf = (swap_4*)&f;
 	tmp = pf->b1; pf->b1 = pf->b4; pf->b4 = tmp;
 	tmp = pf->b2; pf->b2 = pf->b3; pf->b3 = tmp;
@@ -141,8 +141,8 @@ static inline float short2float(short s)
 	return (float)ldexp(mant, exp);
 }
 
-/// Swap the bytes in a unsigned long value.
-static inline unsigned long convert_endian(unsigned long l)
+/// Swap the bytes in a ulong value.
+static inline ulong convert_endian(ulong l)
 {
 	return little_endian_long(l);
 }
@@ -183,20 +183,20 @@ inline ushort get_le_short(void* buff)
 }
 
 /// Read a little-endian long from address
-inline unsigned long get_le_long(void* buff)
+inline ulong get_le_long(void* buff)
 {
 #ifdef PROC_NEEDS_STRICT_ALIGNMENT
-	unsigned long l; memcpy(&l, buff, sizeof(l));
+	ulong l; memcpy(&l, buff, sizeof(l));
 	return little_endian_long(l);
 #else
-	return little_endian_long(*(unsigned long*)buff);
+	return little_endian_long(*(ulong*)buff);
 #endif
 }
 
 /// Read a little-endian 32-bit float from address
 inline float get_le_float32(void* buff)
 {
-	unsigned long l = get_le_long(buff); return long2float(l);
+	ulong l = get_le_long(buff); return long2float(l);
 }
 
 /// Read a little-endian 16-bit float from address
@@ -217,13 +217,13 @@ inline void set_le_short(void* buff, ushort s)
 }
 
 /// Set a little-endian long on a address
-inline void set_le_long(void* buff, unsigned long l)
+inline void set_le_long(void* buff, ulong l)
 {
 #ifdef PROC_NEEDS_STRICT_ALIGNMENT
 	l = little_endian_long(l);
 	memcpy(buff, &l, sizeof(l));
 #else
-	* ((unsigned long*)buff) = little_endian_long(l);
+	* ((ulong*)buff) = little_endian_long(l);
 #endif
 }
 

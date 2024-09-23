@@ -26,7 +26,7 @@ bool CD3D9Renderer::FontUploadTexture(class CFBitmap* pBmp, ETEX_Format eTF)
 		return false;
 	}
 
-	unsigned int* pData = new unsigned int[pBmp->GetWidth() * pBmp->GetHeight()];
+	uint* pData = new uint[pBmp->GetWidth() * pBmp->GetHeight()];
 
 	if (!pData)
 	{
@@ -39,7 +39,7 @@ bool CD3D9Renderer::FontUploadTexture(class CFBitmap* pBmp, ETEX_Format eTF)
 	sprintf(szName, "$AutoFont_%d", m_TexGenID++);
 
 	int iFlags = FT_HASALPHA | FT_FONT | FT_NOSTREAM;
-	STexPic* tp = m_TexMan->CreateTexture(szName, pBmp->GetWidth(), pBmp->GetHeight(), 1, iFlags, 0, (unsigned char*)pData, eTT_Base, -1.0f, -1.0f, 0, nullptr, 0, eTF);
+	STexPic* tp = m_TexMan->CreateTexture(szName, pBmp->GetWidth(), pBmp->GetHeight(), 1, iFlags, 0, (uchar*)pData, eTT_Base, -1.0f, -1.0f, 0, nullptr, 0, eTF);
 
 	SAFE_DELETE_ARRAY(pData);
 
@@ -210,7 +210,7 @@ void CD3D9Renderer::FontSetTexture(int nTexId, int nFilterMode)
 	}
 }
 
-void CD3D9Renderer::FontSetRenderingState(unsigned long nVPWidth, unsigned long nVPHeight)
+void CD3D9Renderer::FontSetRenderingState(ulong nVPWidth, ulong nVPHeight)
 {
 	// setup various d3d things that we need
 	FontSetState(false);

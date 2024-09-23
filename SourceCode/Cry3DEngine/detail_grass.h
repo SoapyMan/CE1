@@ -32,7 +32,7 @@ class CDetailGrass : public Cry3DEngineBase
 	void AddIndexedArray(GrassType* o, float X, float Y, float Z, float fbr, float fSizeRatio,
 		float fXSign, float fYSign, int nSwapXY, struct_VERTEX_FORMAT_P3F_COL4UB_TEX2F* pGrassVertices);
 
-	list2<unsigned short> m_GrassIndices;
+	list2<ushort> m_GrassIndices;
 	//  struct_VERTEX_FORMAT_P3F_COL4UB_TEX2F * m_pGrassVertices;
 	int m_GrassVerticesCount;
 	int m_GrassFocusX, m_GrassFocusY; // grass focus

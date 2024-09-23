@@ -39,7 +39,7 @@ void CStencilShadowConnectivityBuilder::Reinit(void)
 // these vertex indices will be used later when accessing the array of
 // deformed character/model vertices to determine the shadow volume boundary
 ///////////////////////////////////////////////////////////////////////////////////
-void CStencilShadowConnectivityBuilder::AddTriangle(unsigned short nV0, unsigned short nV1, unsigned short nV2)
+void CStencilShadowConnectivityBuilder::AddTriangle(ushort nV0, ushort nV1, ushort nV2)
 {
 	unsigned nNumFaces = m_vFaces.size();
 	AddNewEdge(BasicEdge(nV0, nV1), EdgeFace(nNumFaces, nV2));
@@ -81,7 +81,7 @@ unsigned CStencilShadowConnectivityBuilder::WeldVertex(const Vec3d& v, unsigned 
 // to the list of triangles that will cast shadows. Welds the vertices based on their
 // coordinates
 void CStencilShadowConnectivityBuilder::AddTriangleWelded(
-	unsigned short nV0, unsigned short nV1, unsigned short nV2,
+	ushort nV0, ushort nV1, ushort nV2,
 	const Vec3d& vV0, const Vec3d& vV1, const Vec3d& vV2)
 {
 	nV0 = WeldVertex(vV0, nV0);

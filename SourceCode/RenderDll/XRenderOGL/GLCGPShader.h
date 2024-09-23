@@ -55,8 +55,8 @@ class CCGPShader_GL : public CPShader
 		TArray<SCGParam4f>* m_ParamsNoObj;
 		TArray<SCGParam4f>* m_ParamsObj;
 		TArray<SCGMatrix>* m_MatrixObj;
-		unsigned int m_dwHandle;
-		unsigned int m_dwHandleExt;
+		uint m_dwHandle;
+		uint m_dwHandleExt;
 		TArray<SCGBindConst>* m_BindConstants;
 		TArray<SCGBind>* m_BindVars;
 		int m_nCacheID;

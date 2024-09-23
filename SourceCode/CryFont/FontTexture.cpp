@@ -47,7 +47,7 @@ int CFontTexture::CreateFromFile(const string& szFileName, int iWidth, int iHeig
 }
 
 //------------------------------------------------------------------------------------------------- 
-int CFontTexture::CreateFromMemory(unsigned char* pFileData, int iDataSize, int iWidth, int iHeight, int iSmoothMethod, int iSmoothAmount, float fSizeRatio, int iWidthCellCount, int iHeightCellCount)
+int CFontTexture::CreateFromMemory(uchar* pFileData, int iDataSize, int iWidth, int iHeight, int iSmoothMethod, int iSmoothAmount, float fSizeRatio, int iWidthCellCount, int iHeightCellCount)
 {
 	if (!m_pGlyphCache.LoadFontFromMemory(pFileData, iDataSize))
 	{
@@ -68,9 +68,9 @@ int CFontTexture::CreateFromMemory(unsigned char* pFileData, int iDataSize, int 
 int CFontTexture::Create(int iWidth, int iHeight, int iSmoothMethod, int iSmoothAmount, float fSizeRatio, int iWidthCellCount, int iHeightCellCount)
 {
 #ifdef FONT_USE_32BIT_TEXTURE
-	m_pBuffer = new unsigned int[iWidth * iHeight];
+	m_pBuffer = new uint[iWidth * iHeight];
 #else
-	m_pBuffer = new unsigned char[iWidth * iHeight];
+	m_pBuffer = new uchar[iWidth * iHeight];
 #endif
 
 	if (!m_pBuffer)
@@ -181,7 +181,7 @@ CTextureSlot* CFontTexture::GetCharSlot(wchar_t cChar)
 //-------------------------------------------------------------------------------------------------
 CTextureSlot* CFontTexture::GetLRUSlot()
 {
-	unsigned int	dwMinUsage = 0xffffffff;
+	uint	dwMinUsage = 0xffffffff;
 	CTextureSlot* pLRUSlot = 0;
 	CTextureSlot* pSlot;
 
@@ -213,7 +213,7 @@ CTextureSlot* CFontTexture::GetLRUSlot()
 //-------------------------------------------------------------------------------------------------
 CTextureSlot* CFontTexture::GetMRUSlot()
 {
-	unsigned int	dwMaxUsage = 0;
+	uint	dwMaxUsage = 0;
 	CTextureSlot* pMRUSlot = 0;
 	CTextureSlot* pSlot;
 
@@ -241,7 +241,7 @@ CTextureSlot* CFontTexture::GetMRUSlot()
 //------------------------------------------------------------------------------------------------- 
 int CFontTexture::PreCacheString(const wchar_t* szString, int* pUpdated)
 {
-	unsigned int dwUsage = m_dwUsage++;
+	uint dwUsage = m_dwUsage++;
 	int iLength = wcslen(szString);
 	int iUpdated = 0;
 
@@ -366,7 +366,7 @@ int CFontTexture::WriteToFile(const string& szFileName)
 	fwrite(&pHeader, 1, sizeof(BITMAPFILEHEADER), hFile);
 	fwrite(&pInfoHeader, 1, sizeof(BITMAPINFOHEADER), hFile);
 
-	unsigned char cRGB[3];
+	uchar cRGB[3];
 
 	for (int i = m_iHeight - 1; i >= 0; i--)
 	{
@@ -436,7 +436,7 @@ int CFontTexture::ReleaseSlotList()
 }
 
 //-------------------------------------------------------------------------------------------------
-int CFontTexture::UpdateSlot(int iSlot, unsigned int dwUsage, wchar_t cChar)
+int CFontTexture::UpdateSlot(int iSlot, uint dwUsage, wchar_t cChar)
 {
 	CTextureSlot* pSlot = m_pSlotList[iSlot];
 

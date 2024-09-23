@@ -66,9 +66,9 @@ public:
 
 	//////////////////////////////////////////////////////////////////////////
 	// Compress block of data with zlib.
-	virtual int Compress(void* dest, unsigned int& destLen, const void* source, unsigned int sourceLen, int level = 6);
+	virtual int Compress(void* dest, uint& destLen, const void* source, uint sourceLen, int level = 6);
 	// Uncompress block of data with zlib.
-	virtual int Uncompress(void* dest, unsigned int& destLen, const void* source, unsigned int sourceLen);
+	virtual int Uncompress(void* dest, uint& destLen, const void* source, uint sourceLen);
 
 	void GetMD5(const char* pSrcBuffer, int nSrcSize, char signatureMD5[16]);
 	void AESDecryptBuffer(const char* pSrcBuffer, int nSrcSize, char* pDestBuffer, int& nDestSize, const char* sKey);

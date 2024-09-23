@@ -126,7 +126,7 @@ struct XActionBind
 		//		int nKey;
 		//		int nModifier;
 		XActionActivationMode aam;
-		unsigned int nLastPess;
+		uint nLastPess;
 	}keys[MAX_BINDS_PER_ACTION];
 
 
@@ -172,7 +172,7 @@ public:
 	bool CheckActionMap(XACTIONID nActionID);
 	bool CheckActionMap(const char* sActionName);
 	void Reset();
-	void Update(unsigned int nTimeMSec);
+	void Update(uint nTimeMSec);
 	void Release();
 	//@}
 	///////////////////////////////////////////
@@ -207,7 +207,7 @@ private:
 	ActionMapMap m_mapActionMaps;
 	CXActionMap* m_pCurrentActionMap;
 	IActionMapSink* m_pSink;
-	unsigned int m_nCurrentTime;
+	uint m_nCurrentTime;
 	bool m_bInvertedMouse;
 	bool m_bEnabled;
 };

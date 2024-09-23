@@ -614,7 +614,7 @@ int CRigidEntity::HasCollisionContactsWith(CPhysicalEntity* pent)
 
 int CRigidEntity::Awake(int bAwake, int iSource)
 {
-	if ((unsigned int)m_iSimClass > 6u) {
+	if ((uint)m_iSimClass > 6u) {
 		m_pWorld->m_pLog->Log("\002Error: trying to awake deleted rigid entity");
 		return -1;
 	}
@@ -643,7 +643,7 @@ void CRigidEntity::AlertNeighbourhoodND()
 
 	for (i = 0, constraint_mask = 0; i < m_nColliders; constraint_mask |= m_pColliderConstraints[i++]);
 	for (i = 0; i < NMASKBITS && getmask(i) <= constraint_mask; i++)
-		if (constraint_mask & getmask(i) && m_pConstraintInfos[i].pConstraintEnt && (unsigned int)m_pConstraintInfos[i].pConstraintEnt->m_iSimClass < 7u)
+		if (constraint_mask & getmask(i) && m_pConstraintInfos[i].pConstraintEnt && (uint)m_pConstraintInfos[i].pConstraintEnt->m_iSimClass < 7u)
 			m_pConstraintInfos[i].pConstraintEnt->Awake();
 	m_iSimClass = iSimClass;
 
@@ -1920,7 +1920,7 @@ float CRigidEntity::GetMaxTimeStep(float time_interval)
 
 	box bbox;	float bestvol = 0;
 	int i, iBest = -1;
-	unsigned int flagsCollider = 0;
+	uint flagsCollider = 0;
 	for (i = 0; i < m_nParts; i++) if (m_parts[i].flags & geom_collides) {
 		m_parts[i].pPhysGeomProxy->pGeom->GetBBox(&bbox);
 		if (bbox.size.volume() > bestvol) {
@@ -2172,7 +2172,7 @@ int CRigidEntity::Update(float time_interval, float damping)
 	masktype contacts_mask;
 	float E, E_accum, Emin = m_bFloating && m_nColliders == 0 ? m_EminWater : m_Emin;
 	vectorf v_accum, w_accum, L_accum, pt[4];
-	unsigned int collFlags;
+	uint collFlags;
 	//m_nStickyContacts = m_nSlidingContacts = 0;
 	m_nStepBackCount = (m_nStepBackCount & -m_bSteppedBack) + m_bSteppedBack;
 	if (m_flags & ref_use_simple_solver)
@@ -2369,7 +2369,7 @@ int CRigidEntity::SetStateFromSnapshot(CStream& stm, int flags)
 	bool bnz;
 	int ver = 0;
 	int iMiddle, iBound[2] = { m_iLastChecksum + 1 - NCHECKSUMS,m_iLastChecksum + 1 };
-	unsigned int checksum, checksum_hist;
+	uint checksum, checksum_hist;
 	if (m_pWorld->m_iTimeSnapshot[2] >= m_checksums[iBound[0] & NCHECKSUMS - 1].iPhysTime &&
 		m_pWorld->m_iTimeSnapshot[2] <= m_checksums[iBound[1] - 1 & NCHECKSUMS - 1].iPhysTime)
 	{
@@ -2581,8 +2581,8 @@ int CRigidEntity::PostSetStateFromSnapshot()
 		for (i = contact_mask = 0; i < m_nColliders; i++) contact_mask |= m_pColliderContacts[i];
 		for (i = 0; i < NMASKBITS; i++) if (contact_mask & getmask(i)) {
 			m_pContacts[i].pent[1] = (CPhysicalEntity*)m_pWorld->GetPhysicalEntityById((int)m_pContacts[i].pent[1]);
-			if (m_pContacts[i].pent[1] && (unsigned int)m_pContacts[i].ipart[0] < (unsigned int)m_pContacts[i].pent[0]->m_nParts &&
-				(unsigned int)m_pContacts[i].ipart[1] < (unsigned int)m_pContacts[i].pent[1]->m_nParts)
+			if (m_pContacts[i].pent[1] && (uint)m_pContacts[i].ipart[0] < (uint)m_pContacts[i].pent[0]->m_nParts &&
+				(uint)m_pContacts[i].ipart[1] < (uint)m_pContacts[i].pent[1]->m_nParts)
 			{
 				m_pContacts[i].pbody[1] = m_pContacts[i].pent[1]->GetRigidBody(m_pContacts[i].ipart[1]);
 				si.ipart = m_pContacts[i].ipart[1];
@@ -2627,9 +2627,9 @@ int CRigidEntity::PostSetStateFromSnapshot()
 }
 
 
-unsigned int CRigidEntity::GetStateChecksum()
+uint CRigidEntity::GetStateChecksum()
 {
-	return //*(unsigned int*)&m_testval;
+	return //*(uint*)&m_testval;
 		float2int(m_pos.x * 1024) ^ float2int(m_pos.y * 1024) ^ float2int(m_pos.z * 1024) ^
 		float2int(m_qrot.v.x * 1024) ^ float2int(m_qrot.v.y * 1024) ^ float2int(m_qrot.v.z * 1024) ^
 		float2int(m_body.v.x * 1024) ^ float2int(m_body.v.y * 1024) ^ float2int(m_body.v.z * 1024) ^

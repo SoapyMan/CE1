@@ -113,7 +113,7 @@ return RenderInit();
 
 ///////////////////////////////////////////////
 // Load a font from a TTF file
-bool CFFont::Load(const char* szFile, unsigned long nWidth, unsigned long nHeight, unsigned long nTTFFlags)
+bool CFFont::Load(const char* szFile, ulong nWidth, ulong nHeight, ulong nTTFFlags)
 {
 	Free();
 
@@ -151,7 +151,7 @@ bool CFFont::Load(const char* szFile, unsigned long nWidth, unsigned long nHeigh
 		return false;
 	}
 
-	unsigned char* pBuffer = new unsigned char[nSize];
+	uchar* pBuffer = new uchar[nSize];
 
 	if (!pPak->FRead(pBuffer, nSize, 1, pFile))
 	{
@@ -424,7 +424,7 @@ void CFFont::DrawString(float fBaseX, float fBaseY, const char* szMsg, const boo
 	szwMsg[iSize] = 0;
 	while (iSize--)
 	{
-		szwMsg[iSize] = (unsigned char)szMsg[iSize];
+		szwMsg[iSize] = (uchar)szMsg[iSize];
 	}
 
 	DrawStringW(fBaseX, fBaseY, szwMsg, bASCIIMultiLine);
@@ -743,7 +743,7 @@ vector2f CFFont::GetTextSize(const char* szMsg, const bool bASCIIMultiLine)
 	szwMsg[iSize] = 0;
 	while (iSize--)
 	{
-		szwMsg[iSize] = (unsigned char)szMsg[iSize];
+		szwMsg[iSize] = (uchar)szMsg[iSize];
 	}
 
 	return GetTextSizeW(szwMsg, bASCIIMultiLine);
@@ -1009,7 +1009,7 @@ CFFont::SEffect* CFFont::GetCurrentEffect()
 bool CFFont::RenderInit()
 {
 #ifdef FONT_USE_32BIT_TEXTURE
-	m_iTextureID = m_pISystem->GetIRenderer()->FontCreateTexture(m_pFontTexture.GetWidth(), m_pFontTexture.GetHeight(), (unsigned char*)m_pFontTexture.GetBuffer(), eTF_8888);
+	m_iTextureID = m_pISystem->GetIRenderer()->FontCreateTexture(m_pFontTexture.GetWidth(), m_pFontTexture.GetHeight(), (uchar*)m_pFontTexture.GetBuffer(), eTF_8888);
 #else
 	m_iTextureID = m_pISystem->GetIRenderer()->FontCreateTexture(m_pFontTexture.GetWidth(), m_pFontTexture.GetHeight(), m_pFontTexture.GetBuffer(), eTF_8000);
 #endif
@@ -1057,7 +1057,7 @@ void CFFont::Prepare(const wchar_t* szString)
 	static int n = 0;
 	if (m_pFontTexture.PreCacheString(szString) == 1)
 	{
-		m_pISystem->GetIRenderer()->FontUpdateTexture(m_iTextureID, 0, 0, m_pFontTexture.GetWidth(), m_pFontTexture.GetHeight(), (unsigned char*)m_pFontTexture.GetBuffer());
+		m_pISystem->GetIRenderer()->FontUpdateTexture(m_iTextureID, 0, 0, m_pFontTexture.GetWidth(), m_pFontTexture.GetHeight(), (uchar*)m_pFontTexture.GetBuffer());
 	}
 }
 

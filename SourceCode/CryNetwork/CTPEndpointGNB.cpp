@@ -22,7 +22,7 @@ CCTPEndpointGNB::~CCTPEndpointGNB(void)
 {
 }
 
-void CCTPEndpointGNB::SetPublicCryptKey(unsigned int key)
+void CCTPEndpointGNB::SetPublicCryptKey(uint key)
 {
 	m_nEncryptKey[2] = key;
 }
@@ -67,9 +67,9 @@ void CCTPEndpointGNB::CryptPacket(CTPData& data)
 	// Write 1 bit of compressed packed info.
 	data.m_bCompressed = false;
 	CStream& stm = data.m_stmData;
-	unsigned int* pBuffer = (unsigned int*)stm.GetPtr();
-	unsigned int srclen = (stm.GetSize() + 7) / 8; // Always cover last byte.
-	unsigned int destlen = srclen;
+	uint* pBuffer = (uint*)stm.GetPtr();
+	uint srclen = (stm.GetSize() + 7) / 8; // Always cover last byte.
+	uint destlen = srclen;
 	// Try to compress big packets.
 	if (srclen > PACKET_SIZE_COMPRESSION_LIMIT && m_pNetwork->IsPacketCompressionEnabled())
 	{
@@ -81,7 +81,7 @@ void CCTPEndpointGNB::CryptPacket(CTPData& data)
 		{
 			data.m_bCompressed = true;
 			data.m_nUncompressedSize = stm.GetSize(); // In bits.
-			TEA_ENCODE((unsigned int*)temp, (unsigned int*)temp, TEA_GETSIZE(destlen), m_nEncryptKey);
+			TEA_ENCODE((uint*)temp, (uint*)temp, TEA_GETSIZE(destlen), m_nEncryptKey);
 			stm.Reset();
 			stm.WriteBits(temp, destlen * 8);
 		}
@@ -113,10 +113,10 @@ void CCTPEndpointGNB::UncryptPacket(CTPData& data)
 	{
 		// Compressed data packet.
 		BYTE temp[DEFAULT_STREAM_BYTESIZE * 2];
-		unsigned int* pBuffer = (unsigned int*)stm.GetPtr();
+		uint* pBuffer = (uint*)stm.GetPtr();
 		int srclen = (stm.GetSize() + 7) / 8; // Always cover last byte.
 		TEA_DECODE(pBuffer, pBuffer, TEA_GETSIZE(srclen), m_nEncryptKey);
-		unsigned int destLen = sizeof(temp);
+		uint destLen = sizeof(temp);
 		IDataProbe* pProbe = GetISystem()->GetIDataProbe();
 		pProbe->Uncompress(temp, destLen, pBuffer, srclen);
 
@@ -127,7 +127,7 @@ void CCTPEndpointGNB::UncryptPacket(CTPData& data)
 	else
 	{
 		// Uncompressed data packet.
-		unsigned int* pBuffer = (unsigned int*)stm.GetPtr();
+		uint* pBuffer = (uint*)stm.GetPtr();
 		int len = stm.GetSize() / 8;
 		if (len >= 8)
 		{
@@ -149,7 +149,7 @@ bool CCTPEndpointGNB::SendReliable(CStream& stmData)
 	return true;
 }
 
-void CCTPEndpointGNB::Update(unsigned int nTime, unsigned char cFrameType, CStream* pStm)
+void CCTPEndpointGNB::Update(uint nTime, uchar cFrameType, CStream* pStm)
 {
 	m_nCurrentTime = nTime;
 	CTP* pFrame = nullptr;
@@ -226,7 +226,7 @@ void CCTPEndpointGNB::Update(unsigned int nTime, unsigned char cFrameType, CStre
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void CCTPEndpointGNB::SetRate(unsigned int nBytePerSec)
+void CCTPEndpointGNB::SetRate(uint nBytePerSec)
 {
 
 }
@@ -241,9 +241,9 @@ void CCTPEndpointGNB::Dump()
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-unsigned int CCTPEndpointGNB::GetPing()
+uint CCTPEndpointGNB::GetPing()
 {
-	return (unsigned int)m_LatencyCalculator.GetAverageLatency();
+	return (uint)m_LatencyCalculator.GetAverageLatency();
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -308,7 +308,7 @@ void CCTPEndpointGNB::HandleDataFrame(CTPData& f)
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CCTPEndpointGNB::ProcessBufferTimers()
 {
-	unsigned int ulTick = m_nCurrentTime;
+	uint ulTick = m_nCurrentTime;
 	DWORD nLowest = 0xFFFFFFFF;
 	DWORD nLowestIdx;
 	bool bFound = false;
@@ -348,7 +348,7 @@ void CCTPEndpointGNB::ProcessBufferTimers()
 void CCTPEndpointGNB::ProcessAckTimer()
 {
 	// Process Ack timeout
-	unsigned int ulTick = m_nCurrentTime;
+	uint ulTick = m_nCurrentTime;
 	/////////////////////////////////
 	if (m_dwOutAckTimer)
 	{
@@ -393,9 +393,9 @@ CStream CCTPEndpointGNB::CompressStream(CStream &stmUncompressed)
 	{
 		BYTE *pUncompressed=nullptr;
 		pUncompressed=stmUncompressed.GetPtr();
-		unsigned short nUncompressedSizeInBits=(unsigned short)stmUncompressed.GetSize();
-		unsigned short nUncompressedSize=BITS2BYTES(nUncompressedSizeInBits);
-		unsigned short n=0;
+		ushort nUncompressedSizeInBits=(ushort)stmUncompressed.GetSize();
+		ushort nUncompressedSize=BITS2BYTES(nUncompressedSizeInBits);
+		ushort n=0;
 		stmCompressed.Write(true);
 		stmCompressed.Write(nUncompressedSizeInBits);
 		while(n<nUncompressedSize)
@@ -434,7 +434,7 @@ CStream CCTPEndpointGNB::UncompressStream(CStream &stmCompressed)
 {
 	CStream stmUncompressed;
 #ifdef USE_PACKET_COMPRESSION
-	unsigned short nUncompressedSize;
+	ushort nUncompressedSize;
 	stmUncompressed.Reset();
 	bool bIsCompressed;
 	stmCompressed.Read(bIsCompressed);

@@ -87,7 +87,7 @@ protected:
 	//list of edges...can be shared from another shadow vol object
 	IStencilShadowConnectivity* m_pEdgeConnectivity;						//!< stored edge connectivity for fast shadow edge extraction, could be 0, call ->Release() to free it
 
-	TFixedArray<unsigned short>		m_arrIndices;										//!<
+	TFixedArray<ushort>		m_arrIndices;										//!<
 	unsigned											m_nNumVertices;									//!< number of vertices in SystemBuffer
 
 	//!

@@ -1815,7 +1815,7 @@ bool CCGPShader_D3D::mfSet(bool bEnable, SShaderPassHW* slw, int nFlags)
 		rd->m_RP.m_CurPS = this;
 		if (!mfActivate())
 		{
-			m_Insts[Type].m_pHandle = nullptr;
+			m_Insts[Type].m_pHandle = (void*)-1;
 			return false;
 		}
 		m_LastVP = nullptr;
@@ -1850,7 +1850,7 @@ bool CCGPShader_D3D::mfSet(bool bEnable, SShaderPassHW* slw, int nFlags)
 void CCGPShader_D3D::mfBind()
 {
 	SCGInstance& inst = m_Insts[m_CurInst];
-	if (!inst.m_pHandle)
+	if (!inst.m_pHandle || inst.m_pHandle == (void*)-1)
 		return;
 
 	HRESULT hr = gcpRendD3D->mfGetD3DDevice()->SetPixelShader((IDirect3DPixelShader9*)inst.m_pHandle);

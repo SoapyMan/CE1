@@ -50,7 +50,7 @@ void CNETServerSnooper::Release()
 }
 
 //------------------------------------------------------------------------------------------------- 
-void CNETServerSnooper::Update(unsigned int dwTime)
+void CNETServerSnooper::Update(uint dwTime)
 {
 	if (m_hmServerTable.empty())
 	{
@@ -101,7 +101,7 @@ void CNETServerSnooper::Update(unsigned int dwTime)
 	}
 }
 
-void CNETServerSnooper::OnReceivingPacket(const unsigned char inPacketID, CStream& stmPacket, CIPAddress& ip)
+void CNETServerSnooper::OnReceivingPacket(const uchar inPacketID, CStream& stmPacket, CIPAddress& ip)
 {
 
 }
@@ -201,8 +201,8 @@ void CNETServerSnooper::ProcessTimeout()
 	NETSnooperServer* pServer = 0;
 	HMServerTableItor it = m_hmServerTable.begin();
 
-	unsigned int dwRetry = NET_SNOOPER_RETRY;
-	unsigned int dwTimeDelta = NET_SNOOPER_TIMEOUT;
+	uint dwRetry = NET_SNOOPER_RETRY;
+	uint dwTimeDelta = NET_SNOOPER_TIMEOUT;
 
 	if (cl_snoopretries && cl_snoopretries->GetIVal() > 0)
 	{
@@ -211,7 +211,7 @@ void CNETServerSnooper::ProcessTimeout()
 
 	if (cl_snooptimeout && cl_snooptimeout->GetFVal() > 0)
 	{
-		dwTimeDelta = (unsigned int)(cl_snooptimeout->GetFVal() * 1000.0f);
+		dwTimeDelta = (uint)(cl_snooptimeout->GetFVal() * 1000.0f);
 	}
 
 	while (it != m_hmServerTable.end())
@@ -259,10 +259,10 @@ bool CNETServerSnooper::ProcessNext()
 	NETSnooperServer* pServer = 0;
 	HMServerTableItor it = m_hmServerTable.begin();
 
-	unsigned int dwTimeDelta = NET_SNOOPER_TIMEOUT;
+	uint dwTimeDelta = NET_SNOOPER_TIMEOUT;
 	if (cl_snooptimeout && cl_snooptimeout->GetFVal() > 0)
 	{
-		dwTimeDelta = (unsigned int)(cl_snooptimeout->GetFVal() * 1000.0f);
+		dwTimeDelta = (uint)(cl_snooptimeout->GetFVal() * 1000.0f);
 	}
 
 	while (it != m_hmServerTable.end())

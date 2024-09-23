@@ -11,15 +11,15 @@ public:
 	bool Init(IServerSnooperSink* pSink);
 public:
 	//IServerSnooper
-	void SearchForLANServers(unsigned int nTime);
-	void Update(unsigned int nTime);
+	void SearchForLANServers(uint nTime);
+	void Update(uint nTime);
 	void Release() { delete this; }
 protected:
 	void ProcessPacket(CStream& stmPacket, CIPAddress& ip);
 private:
 	CDatagramSocket m_socket;
-	unsigned int m_nStartTime;
-	unsigned int m_nCurrentTime;
+	uint m_nStartTime;
+	uint m_nCurrentTime;
 	IServerSnooperSink* m_pSink;
 };
 

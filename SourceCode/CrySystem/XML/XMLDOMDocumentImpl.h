@@ -49,7 +49,7 @@ public:
 	XDOM::IXMLDOMNode *createNode(XDOM::_DOMNodeType Type,const char *name);
 	const XMLCHAR *getXML();
 	const XMLCHAR *getErrorString();
-	unsigned short getCheckSum();
+	ushort getCheckSum();
 
 public:
 	xml_string m_sText;
@@ -62,7 +62,7 @@ public:
 private:
 	int m_nRef;
 	string m_sXml;
-	unsigned short m_wCheckSum;
+	ushort m_wCheckSum;
 };
 
 #endif // !defined(AFX_XMLDOMDOCUMENTIMPL_H__EC6A1661_AC49_4D84_8EEE_6FD7B25AAC0F__INCLUDED_)

@@ -75,14 +75,14 @@ public:
 	};
 
 public:
-	CRERandom(unsigned int ulSeed = INITIAL_SEED) : m_ulIndex(0)
+	CRERandom(uint ulSeed = INITIAL_SEED) : m_ulIndex(0)
 	{
 		SetSeed(ulSeed);
 	}
 
 	~CRERandom() {};
 
-	void SetSeed(unsigned int ulSeed)
+	void SetSeed(uint ulSeed)
 	{
 		m_ulState[0] = (ulSeed | 1) & 0xFFFFFFFFU;
 		for (m_ulIndex = 1; m_ulIndex < N; ++m_ulIndex)
@@ -91,14 +91,14 @@ public:
 		}
 	}
 
-	unsigned int GetInteger()
+	uint GetInteger()
 	{
 		if (N == m_ulIndex)
 		{
 			Reload();
 		}
 
-		unsigned int ulY = m_ulState[m_ulIndex++];
+		uint ulY = m_ulState[m_ulIndex++];
 		ulY ^= TemperingShiftU(ulY);
 		ulY ^= TemperingShiftS(ulY) & TEMPERING_MASK_B;
 		ulY ^= TemperingShiftT(ulY) & TEMPERING_MASK_C;
@@ -138,7 +138,7 @@ public:
 	}
 
 private:
-	enum EMersenneTwisterConstants : unsigned int
+	enum EMersenneTwisterConstants : uint
 	{
 		GENERATOR = 69069U,
 
@@ -155,9 +155,9 @@ private:
 
 	void Reload()
 	{
-		const unsigned int c_ulMag01[2] = { 0x0, MATRIX_A };
+		const uint c_ulMag01[2] = { 0x0, MATRIX_A };
 
-		unsigned int ulY;
+		uint ulY;
 		for (m_ulIndex = 0; m_ulIndex < N - M; ++m_ulIndex)
 		{
 			ulY = (m_ulState[m_ulIndex] & UPPER_MASK) |
@@ -180,30 +180,30 @@ private:
 		m_ulIndex = 0;
 	}
 
-	unsigned int TemperingShiftU(unsigned int ulX)
+	uint TemperingShiftU(uint ulX)
 	{
 		return(ulX >> 11);
 	}
 
-	unsigned int TemperingShiftS(unsigned int ulX)
+	uint TemperingShiftS(uint ulX)
 	{
 		return(ulX << 7);
 	}
 
-	unsigned int TemperingShiftT(unsigned int ulX)
+	uint TemperingShiftT(uint ulX)
 	{
 		return(ulX << 15);
 	}
 
-	unsigned int TemperingShiftL(unsigned int ulX)
+	uint TemperingShiftL(uint ulX)
 	{
 		return(ulX >> 18);
 	}
 
 private:
-	unsigned int m_ulIndex;
+	uint m_ulIndex;
 
-	unsigned int m_ulState[N];
+	uint m_ulState[N];
 };
 
 //=============================================================================
@@ -238,7 +238,7 @@ public:
 	void LinkVisSectors(float fSize);
 	float GetWaterZElevation(float fX, float fY);
 
-	void PostLoad(unsigned int ulSeed, float fWindDirection, float fWindSpeed, float fWaveHeight, float fDirectionalDependence, float fChoppyWavesFactor, float fSuppressSmallWavesFactor);
+	void PostLoad(uint ulSeed, float fWindDirection, float fWindSpeed, float fWaveHeight, float fDirectionalDependence, float fChoppyWavesFactor, float fSuppressSmallWavesFactor);
 	void Update(float fTime);
 	void UpdateTexture(void);
 	void PrepareHMap();
@@ -248,7 +248,7 @@ private:
 	float m_fGravity;
 	float m_fDepth;
 
-	TArray <unsigned short> m_pIndices[NUM_LODS];
+	TArray <ushort> m_pIndices[NUM_LODS];
 
 private:
 	float* mfFillAdditionalBuffer(SOceanSector* os, int nSplashes, SSplash* pSplashes[], int& nCurSize, int nLod, float fSize);
@@ -310,7 +310,7 @@ private:
 	TArray<SOceanSector*> m_VisOceanSectors;
 	float m_fSectorSize;
 
-	TArray<unsigned short> m_DWQIndices;
+	TArray<ushort> m_DWQIndices;
 	TArray<struct_VERTEX_FORMAT_P3F_COL4UB> m_DWQVertices;
 
 	float m_H0X[OCEANGRID + 1][OCEANGRID + 1];

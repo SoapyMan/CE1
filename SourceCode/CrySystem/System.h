@@ -532,9 +532,9 @@ public:
 	virtual const SFileVersion& GetFileVersion();
 	virtual const SFileVersion& GetProductVersion();
 
-	bool WriteCompressedFile(char* filename, void* data, unsigned int bitlen);
-	unsigned int ReadCompressedFile(char* filename, void* data, unsigned int maxbitlen);
-	unsigned int GetCompressedFileSize(char* filename);
+	bool WriteCompressedFile(char* filename, void* data, uint bitlen);
+	uint ReadCompressedFile(char* filename, void* data, uint maxbitlen);
+	uint GetCompressedFileSize(char* filename);
 	void InitVTuneProfiler();
 
 	void OpenBasicPaks();

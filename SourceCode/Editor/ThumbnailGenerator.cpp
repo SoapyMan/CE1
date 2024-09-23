@@ -132,7 +132,7 @@ void CThumbnailGenerator::GenerateForDirectory( const CString &path )
 		IStatObj *obj = engine->MakeObject( file );
 		if (obj)
 		{
-			obj->MakeObjectPicture( (unsigned char*)image.GetData(),thumbSize );
+			obj->MakeObjectPicture( (uchar*)image.GetData(),thumbSize );
 			
 			CImageUtil::SaveBitmap( bmpFile,image,false );
 			SetThumbFileTime( bmpFile,ft1 );
@@ -169,7 +169,7 @@ void CThumbnailGenerator::GenerateForFile( const CString &fileName )
 	IStatObj *obj = engine->MakeObject( fileName,NULL,evs_ShareAndSortForCache );
 	if (obj)
 	{
-		obj->MakeObjectPicture( (unsigned char*)image.GetData(),thumbSize );
+		obj->MakeObjectPicture( (uchar*)image.GetData(),thumbSize );
 		
 		CImageUtil::SaveBitmap( bmpFile,image,false );
 		SetThumbFileTime( bmpFile,ft1 );

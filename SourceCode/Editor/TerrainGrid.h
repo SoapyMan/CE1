@@ -36,7 +36,7 @@ public:
 
 public:
 	//! Id of surface texture.
-	unsigned int textureId;
+	uint textureId;
 };
 
 /** Manages grid of terrain sectors.

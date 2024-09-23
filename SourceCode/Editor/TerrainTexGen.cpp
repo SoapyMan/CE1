@@ -506,7 +506,7 @@ bool CTerrainTexGen::GenerateSectorTexture( CPoint sector,const CRect &rect,int 
 				continue;
 
 			// Set the write pointer (will be incremented) for the surface data
-			unsigned int *pTex = pSurface;
+			uint *pTex = pSurface;
 
 			uint layerWidth = pLayer->GetTextureWidth();
 			uint layerHeight = pLayer->GetTextureHeight();
@@ -524,7 +524,7 @@ bool CTerrainTexGen::GenerateSectorTexture( CPoint sector,const CRect &rect,int 
 						// Get the color of the tiling texture at this position
             // WAT_EDIT
 						*pTex++ = pLayer->GetTexturePixel( layerX,layerY );
-            //unsigned int tmp = pLayer->GetTexturePixel( layerX,layerY );
+            //uint tmp = pLayer->GetTexturePixel( layerX,layerY );
             //*pTex = (tmp & 0xff00ff00) | ((tmp & 0x000000ff) << 16) | ((tmp & 0x00ff0000) >> 16);
             //pTex++;
 					}
@@ -1583,7 +1583,7 @@ void CTerrainTexGen::GenerateShadowmap( CPoint sector,CByteImage &shadowmap,floa
 		m_bNotValid = true;
 		return;
 	}
-	unsigned char *sectorImage2 = (unsigned char*)mem.GetBuffer();
+	uchar *sectorImage2 = (uchar*)mem.GetBuffer();
 
 	Vec3 wp = GetIEditor()->GetHeightmap()->GetTerrainGrid()->SectorToWorld( sector );
 	GetIEditor()->Get3DEngine()->MakeSectorLightMap( wp.x+0.1f,wp.y+0.1f,sectorImage2,sectorTexSize2 );
@@ -2059,14 +2059,14 @@ bool CTerrainTexGen::RefreshAccessibility( const LightingSettings *inpLSettings,
 			return false;
 		}
 
-		const unsigned short *src=calc.GetSamplePtr();
-		unsigned char *dst=m_SkyAccessiblity.GetData();
+		const ushort *src=calc.GetSamplePtr();
+		uchar *dst=m_SkyAccessiblity.GetData();
 
 		// copy intermediate to result
 		for(DWORD i=0;i<w*h;i++)
 		{
-			unsigned short in = *src++;
-			unsigned char out = (unsigned char) crymin( ((in+0x88)>>8), 255 );
+			ushort in = *src++;
+			uchar out = (uchar) crymin( ((in+0x88)>>8), 255 );
 
 			*dst++ = out;		// from 8.8 fixpoint to 8bit
 		}
@@ -2097,14 +2097,14 @@ bool CTerrainTexGen::RefreshAccessibility( const LightingSettings *inpLSettings,
 			return false;
 		}
 
-		const unsigned short *src=calc.GetSamplePtr();
-		unsigned char *dst=m_SunAccessiblity.GetData();
+		const ushort *src=calc.GetSamplePtr();
+		uchar *dst=m_SunAccessiblity.GetData();
 
 		// copy intermediate to result
 		for(DWORD i=0;i<w*h;i++)
 		{
-			unsigned short in = *src++;
-			unsigned char out = (unsigned char) crymin( ((in+0x88)>>8), 255 );
+			ushort in = *src++;
+			uchar out = (uchar) crymin( ((in+0x88)>>8), 255 );
 
 			*dst++ = out;		// from 8.8 fixpoint to 8bit
 		}

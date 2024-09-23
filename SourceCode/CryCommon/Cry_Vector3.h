@@ -191,8 +191,8 @@ public:
 	ILINE f32	NormalizeFast() {
 		f32 fLen = x * x + y * y + z * z;
 		//CRYASSERT(fLen>0.00001f);
-		unsigned int* n1 = (unsigned int*)&fLen;
-		unsigned int n = 0x5f3759df - (*n1 >> 1);
+		uint* n1 = (uint*)&fLen;
+		uint n = 0x5f3759df - (*n1 >> 1);
 		f32* n2 = (f32*)&n;
 		fLen = (1.5f - (fLen * 0.5f) * *n2 * *n2) * *n2;
 		x *= fLen; y *= fLen; z *= fLen;

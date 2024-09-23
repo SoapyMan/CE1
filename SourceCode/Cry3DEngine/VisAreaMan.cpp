@@ -1360,7 +1360,7 @@ void CVisAreaManager::Preceche(CObjManager* pObjManager)
 	//loop over all sectors and place a light in the middle of the sector  
 	for (int v = 0; v < m_lstVisAreas.Count(); v++)
 	{
-		unsigned short* pPtr2FrameID = (unsigned short*)GetRenderer()->EF_Query(EFQ_Pointer2FrameID);
+		ushort* pPtr2FrameID = (ushort*)GetRenderer()->EF_Query(EFQ_Pointer2FrameID);
 		if (pPtr2FrameID)
 			(*pPtr2FrameID)++;
 

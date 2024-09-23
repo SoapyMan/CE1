@@ -38,7 +38,7 @@ public:
 	struct SPaintBrush
 	{
 		EBrushType type;
-		unsigned char color;	//!< Painting color.
+		uchar color;	//!< Painting color.
 		int radius;						//!< Inner radius.
 		float hardness;				//!< 0-1 hardness of brush.
 	};

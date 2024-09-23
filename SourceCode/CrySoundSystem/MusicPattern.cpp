@@ -154,7 +154,7 @@ bool CMusicPattern::Open(const char* pszFilename)
 		signed long* pDataLength = new signed long[m_nSamples];
 		signed long* pData = pDat;
 		IMusicPatternDecoderInstance* pTempInstance = m_pDecoder->CreateInstance();
-		unsigned int c = m_nSamples;
+		uint c = m_nSamples;
 		pTempInstance->GetPCMData(pDataLength, m_nSamples);
 		pTempInstance->Seek0();
 

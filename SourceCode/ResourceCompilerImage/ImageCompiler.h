@@ -103,7 +103,7 @@ private:
 	LPDIRECT3D9								m_pd3d;								//!<
 	LPDIRECT3DBASETEXTURE9		m_ptexOrig;						//!<
 	//LPDIRECT3DBASETEXTURE9		m_ptexNew;						//!<
-	//unsigned char *						m_pPalette;
+	//uchar *						m_pPalette;
 	ImageObject *							m_pNewImage;
 	int												m_iOrigPixelFormatNo;	//!<
 	DWORD											m_dwOrigWidth;				//!<

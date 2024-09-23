@@ -122,11 +122,11 @@ void CMemoryBlock::Compress( CMemoryBlock &toBlock ) const
 {
 	// Cannot compress to itself.
 	assert( this != &toBlock );
-	unsigned long destSize = m_size*2+128;
+	ulong destSize = m_size*2+128;
 	CMemoryBlock temp;
 	temp.Allocate( destSize );
 
-	compress( (unsigned char*)temp.GetBuffer(),&destSize,(unsigned char*)GetBuffer(),m_size );
+	compress( (uchar*)temp.GetBuffer(),&destSize,(uchar*)GetBuffer(),m_size );
 
 	toBlock.Allocate( destSize );
 	toBlock.Copy( temp.GetBuffer(),destSize );
@@ -139,8 +139,8 @@ void CMemoryBlock::Uncompress( CMemoryBlock &toBlock ) const
 	assert( this != &toBlock );
 	toBlock.Allocate( m_uncompressedSize );
 	toBlock.m_uncompressedSize = 0;
-	unsigned long destSize = m_uncompressedSize;
-	int result = uncompress( (unsigned char*)toBlock.GetBuffer(),&destSize,(unsigned char*)GetBuffer(),GetSize() );
+	ulong destSize = m_uncompressedSize;
+	int result = uncompress( (uchar*)toBlock.GetBuffer(),&destSize,(uchar*)GetBuffer(),GetSize() );
 	assert( result == Z_OK );
 	assert( destSize == m_uncompressedSize );
 }

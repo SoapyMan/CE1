@@ -109,33 +109,33 @@ static double measure_clock_speed(double& SecondsPerCycle)
 }
 
 /* TODO: Alpha AXP */
-static unsigned long __stdcall DetectProcessor(void* arg)
+static ulong __stdcall DetectProcessor(void* arg)
 {
-	const unsigned char hex_chars[16] =
+	const uchar hex_chars[16] =
 	{
 	  '0', '1', '2', '3', '4', '5', '6', '7',
 	  '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
 	};
-	unsigned long signature = 0;
-	unsigned long cache_temp;
-	unsigned long cache_eax;
-	unsigned long cache_ebx;
-	unsigned long cache_ecx;
-	unsigned long cache_edx;
-	unsigned long features_ebx = 0;
-	unsigned long features_ecx = 0;
-	unsigned long features_edx = 0;
-	unsigned long serial_number[3];
-	unsigned short  fp_status;
-	unsigned char cpu_type;
-	unsigned char fpu_type;
-	unsigned char CPUID_flag = 0;
-	unsigned char celeron_flag = 0;
-	unsigned char pentiumxeon_flag = 0;
-	unsigned char amd3d_flag = 0;
-	unsigned char name_flag = 0;
-	unsigned char cyrix_flag = 0;
-	unsigned char v86_flag;
+	ulong signature = 0;
+	ulong cache_temp;
+	ulong cache_eax;
+	ulong cache_ebx;
+	ulong cache_ecx;
+	ulong cache_edx;
+	ulong features_ebx = 0;
+	ulong features_ecx = 0;
+	ulong features_edx = 0;
+	ulong serial_number[3];
+	ushort  fp_status;
+	uchar cpu_type;
+	uchar fpu_type;
+	uchar CPUID_flag = 0;
+	uchar celeron_flag = 0;
+	uchar pentiumxeon_flag = 0;
+	uchar amd3d_flag = 0;
+	uchar name_flag = 0;
+	uchar cyrix_flag = 0;
+	uchar v86_flag;
 	char  vendor[13];
 	char  name[49];
 	char* serial;
@@ -957,12 +957,12 @@ void CCpuFeatures::Detect(void)
 	DWORD_PTR system_affinity_mask;
 #endif
 	HANDLE      thread;
-	unsigned long thread_id;
+	ulong thread_id;
 	int current_processor;
 	uint  current_processor_element;
 	DWORD_PTR process_affinity_mask;
 	uint  thread_processor_mask;
-	unsigned char c;
+	uchar c;
 
 	/* get the system info to derive the number of processors within the system. */
 #if !defined(_XBOX) && !defined(LINUX)

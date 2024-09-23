@@ -39,10 +39,7 @@ ItShadowVolume* CStatObj::MakeConnectivityInfo(CIndexedMesh* pMesh, const Vec3d&
 			cf->m_Vecs[v].x = pMesh->m_pVerts[pMesh->m_pFaces[i].v[v]].x;
 			cf->m_Vecs[v].y = pMesh->m_pVerts[pMesh->m_pFaces[i].v[v]].y;
 			cf->m_Vecs[v].z = pMesh->m_pVerts[pMesh->m_pFaces[i].v[v]].z;
-		} //v					
-
-		//calc plane equation
-		cf->m_Plane.CalcPlane(cf->m_Vecs[2], cf->m_Vecs[1], cf->m_Vecs[0]);
+		} //v
 	} //i
 
 	//set the same light area geometry
@@ -253,7 +250,7 @@ bool CShadowVolObject::CreateConnectivityInfo(void)
 			continue;
 
 		// with welding
-		unsigned short a = cf->v[0], b = cf->v[1], c = cf->v[2];
+		ushort a = cf->v[0], b = cf->v[1], c = cf->v[2];
 		iBuilder->AddTriangleWelded(a, b, c, pVert[a], pVert[b], pVert[c]);
 	}
 

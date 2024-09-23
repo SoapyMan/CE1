@@ -49,9 +49,9 @@ inline bool GuidUtil::IsEmpty( REFGUID guid )
 inline const char* GuidUtil::ToString( REFGUID guid )
 {
 	static char guidString[64];
-	//unsigned short Data4 = *((unsigned short*)guid.Data4);
-	//unsigned long Data5 = *((unsigned long*)&guid.Data4[2]);
-	//unsigned short Data6 = *((unsigned short*)&guid.Data4[6]);
+	//ushort Data4 = *((ushort*)guid.Data4);
+	//ulong Data5 = *((ulong*)&guid.Data4[2]);
+	//ushort Data6 = *((ushort*)&guid.Data4[6]);
 	sprintf( guidString,"{%.8X-%.4X-%.4X-%.2X%.2X-%.2X%.2X%.2X%.2X%.2X%.2X}",guid.Data1,guid.Data2,guid.Data3, guid.Data4[0],guid.Data4[1],
 				guid.Data4[2],guid.Data4[3],guid.Data4[4],guid.Data4[5],guid.Data4[6],guid.Data4[7] );
 	return guidString;
@@ -61,7 +61,7 @@ inline const char* GuidUtil::ToString( REFGUID guid )
 inline GUID GuidUtil::FromString( const char *guidString )
 {
 	GUID guid;
-	unsigned int d[8];
+	uint d[8];
 	memset( &d,0,sizeof(guid) );
 	guid.Data1 = 0;
 	guid.Data2 = 0;

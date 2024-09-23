@@ -444,7 +444,7 @@ public:
 	}
 
 	// Save/Load
-	void SaveToBuffer(const unsigned char* pBuffer, int& nPos)
+	void SaveToBuffer(const uchar* pBuffer, int& nPos)
 	{
 		// copy size of element
 		int nSize = sizeof(T);
@@ -466,7 +466,7 @@ public:
 		}
 	}
 
-	void LoadFromBuffer(const unsigned char* pBuffer, int& nPos)
+	void LoadFromBuffer(const uchar* pBuffer, int& nPos)
 	{
 		Reset();
 

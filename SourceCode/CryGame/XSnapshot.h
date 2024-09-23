@@ -51,7 +51,7 @@ public:
 	void AddEntity(IEntity *pEntity);
 	bool RemoveEntity(IEntity *pEntity);
 
-	void SetClientBitsPerSecond(unsigned int rate);
+	void SetClientBitsPerSecond(uint rate);
 
 	void BuildAndSendSnapshot();
 	void Cleanup()
@@ -62,8 +62,8 @@ public:
 	//! \return absolute time when BuildAndSendSnapshot was called
 	float GetLastUpdate() const;
 
-	unsigned int			m_nMaxSnapshotBitSize;		//!< in bits, used for statistics only
-	unsigned int			m_nLastSnapshotBitSize;		//!< in bits, used for statistics only
+	uint			m_nMaxSnapshotBitSize;		//!< in bits, used for statistics only
+	uint			m_nLastSnapshotBitSize;		//!< in bits, used for statistics only
 	NetEntityList			m_lstNetEntities;					//!<
 
 private: // -------------------------------------------------------------------
@@ -79,7 +79,7 @@ private: // -------------------------------------------------------------------
 	float							m_fLastUpdate;						//!< absolute timer
 	CStream						m_stmReliable;						//!<
 	CStream						m_stmUnreliable;					//!<
-	unsigned int			m_clientMaxBitsPerSecond;	//!<
+	uint			m_clientMaxBitsPerSecond;	//!<
 	int								m_iCarryOverBps;					//!< in bits per second (negative or prositive)
 };
 

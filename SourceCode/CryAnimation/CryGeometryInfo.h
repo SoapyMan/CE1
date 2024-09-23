@@ -38,7 +38,7 @@ public:
 	~CryGeometryInfo();
 
 	// number of elements in the m_rDupVertToNorVert array
-	//unsigned int m_nNumDupVerts;
+	//uint m_nNumDupVerts;
 
 	void PrepareLinks(int numVertices);
 
@@ -55,7 +55,7 @@ public:
 
 	// the primitive groups and the indices, as they appear in the vertex buffer
 	std::vector<CCFMaterialGroup> m_arrPrimGroups;
-	std::vector<unsigned short> m_arrIndices;
+	std::vector<ushort> m_arrIndices;
 	// the triples for each face, internal indexation
 
 	typedef std::vector<GeomFace> FaceArray;
@@ -240,7 +240,7 @@ public:
 	void initExtUVs(const CryUV* pUVs, unsigned numUVs);
 
 	// initializes the ext-to-int map
-	void initExtToIntMap(const unsigned short* pExtToIntMap, unsigned numEntries);
+	void initExtToIntMap(const ushort* pExtToIntMap, unsigned numEntries);
 
 
 	// after strip-generation of the mesh, rearranges the geometry info to match the sequence of vertices

@@ -51,7 +51,7 @@ public:
 
 class CPCMDecoderInstance : public IMusicPatternDecoderInstance
 {
-	static const unsigned int scuiEncodedBlockSize = 2048;	//block size for static allocation
+	static const uint scuiEncodedBlockSize = 2048;	//block size for static allocation
 
 protected:
 	CPCMDecoder* m_pDecoder;
@@ -62,7 +62,7 @@ protected:
 private:
 	bool SeekBytes(int nBytes);
 protected:
-	unsigned int   m_aEncodedBlock[scuiEncodedBlockSize];			//static allocated encoded block, only needed for 22 kHz mode
+	uint   m_aEncodedBlock[scuiEncodedBlockSize];			//static allocated encoded block, only needed for 22 kHz mode
 	//! fills a dest buffer with uncompressed data
 	const bool FillPCMBuffer22KHz(signed long* pBuffer, int nSamples);
 

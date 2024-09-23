@@ -449,7 +449,7 @@ void CLipSync::StreamOnComplete(IReadStream* pStream, unsigned nError)
 		for (int i = 0; i < nPatterns; i++)
 		{
 			SSyncPattern& Pattern = m_vecPatterns[i];
-			unsigned char c;
+			uchar c;
 			m_pPak->FRead(&c, 1, 1, pFile);
 			Pattern.sName.resize(c + 1);
 			m_pPak->FRead(&(Pattern.sName[0]), c, 1, pFile);
@@ -570,11 +570,11 @@ bool CLipSync::PlayDialog(bool bUnloadWhenDone)
 	// if there is an AI conversation table, set timer for the next conversation
 	if (m_pAITable != nullptr)
 	{
-		m_pSystem->GetILog()->Log("\002 Now adding a conversation timer at time %d for the duration of %d seconds", (unsigned long)(m_pTimer->GetCurrTime() * 1000), (unsigned long)(m_pSound->GetLengthMs()));
+		m_pSystem->GetILog()->Log("\002 Now adding a conversation timer at time %d for the duration of %d seconds", (ulong)(m_pTimer->GetCurrTime() * 1000), (ulong)(m_pSound->GetLengthMs()));
 
 		// Far Cry specific code...
 #ifndef _ISNOTFARCRY
-		GetIXGame(m_pSystem->GetIGame())->AddTimer(m_pAITable, (unsigned long)(m_pTimer->GetCurrTime() * 1000), (unsigned long)(m_pSound->GetLengthMs()), nullptr, false);
+		GetIXGame(m_pSystem->GetIGame())->AddTimer(m_pAITable, (ulong)(m_pTimer->GetCurrTime() * 1000), (ulong)(m_pSound->GetLengthMs()), nullptr, false);
 #endif
 		m_pAITable = nullptr;
 	}

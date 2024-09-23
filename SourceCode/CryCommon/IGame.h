@@ -8,7 +8,7 @@
 //  History:
 //  - 08/08/2001: Created by Alberto Demichelis
 //  - 09/24/2001: Modified by Petar Kotevski
-//  - 12/14/2003: MartinM made ClassID from unsigned char(8bit) to EntityClassId (16bit))
+//  - 12/14/2003: MartinM made ClassID from uchar(8bit) to EntityClassId (16bit))
 //  - 27/04/2004: First cleanup by Mathieu Pinard
 //
 //////////////////////////////////////////////////////////////////////
@@ -44,7 +44,7 @@
 #define SYNCHED2DTABLE_CLASS_ID		205			//
 
 //////////////////////////////////////////////////////////////////////////
-typedef unsigned short EntityClassId;			//< unique identifier for the entity class (defined in ClassRegistry.lua)
+typedef ushort EntityClassId;			//< unique identifier for the entity class (defined in ClassRegistry.lua)
 
 //////////////////////////////////////////////////////////////////////////
 struct	I3DEngine;

@@ -143,7 +143,7 @@ struct IConsole
 	/*! Dump all console-variables to a callback-interface
 		@param Callback callback-interface which needs to be called for each element
 	*/
-	virtual void DumpCVars(ICVarDumpSink* pCallback, unsigned int nFlagsFilter = 0) = 0;
+	virtual void DumpCVars(ICVarDumpSink* pCallback, uint nFlagsFilter = 0) = 0;
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		/*! Bind a console command to a key

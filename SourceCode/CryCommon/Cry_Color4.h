@@ -68,19 +68,19 @@ template <class T> struct color4
 	inline bool operator == (const color4& v) const;
 	inline bool operator != (const color4& v) const;
 
-	inline unsigned char pack_rgb332();
-	inline unsigned short pack_argb4444();
-	inline unsigned short pack_rgb555();
-	inline unsigned short pack_rgb565();
-	inline unsigned int pack_rgb888();
-	inline unsigned int pack_argb8888();
+	inline uchar pack_rgb332();
+	inline ushort pack_argb4444();
+	inline ushort pack_rgb555();
+	inline ushort pack_rgb565();
+	inline uint pack_rgb888();
+	inline uint pack_argb8888();
 
-	inline unsigned int pack8() { return pack_rgb332(); }
-	inline unsigned int pack12() { return pack_argb4444(); }
-	inline unsigned int pack15() { return pack_rgb555(); }
-	inline unsigned int pack16() { return pack_rgb565(); }
-	inline unsigned int pack24() { return pack_rgb888(); }
-	inline unsigned int pack32() { return pack_argb8888(); }
+	inline uint pack8() { return pack_rgb332(); }
+	inline uint pack12() { return pack_argb4444(); }
+	inline uint pack15() { return pack_rgb555(); }
+	inline uint pack16() { return pack_rgb565(); }
+	inline uint pack24() { return pack_rgb888(); }
+	inline uint pack32() { return pack_argb8888(); }
 
 	inline void clamp(T bottom = 0.0f, T top = 1.0f);
 
@@ -254,176 +254,176 @@ inline color4<T> operator * (T s, const color4<T>& v)
 
 ///////////////////////////////////////////////
 template <class T>
-inline unsigned char color4<T>::pack_rgb332()
+inline uchar color4<T>::pack_rgb332()
 {
-	unsigned char cr;
-	unsigned char cg;
-	unsigned char cb;
-	if (sizeof(r) == 1) // char and unsigned char
+	uchar cr;
+	uchar cg;
+	uchar cb;
+	if (sizeof(r) == 1) // char and uchar
 	{
 		cr = r;
 		cg = g;
 		cb = b;
 	}
-	else if (sizeof(r) == 2) // short and unsigned short
+	else if (sizeof(r) == 2) // short and ushort
 	{
-		cr = (unsigned short)(r) >> 8;
-		cg = (unsigned short)(g) >> 8;
-		cb = (unsigned short)(b) >> 8;
+		cr = (ushort)(r) >> 8;
+		cg = (ushort)(g) >> 8;
+		cb = (ushort)(b) >> 8;
 	}
 	else // float or double
 	{
-		cr = (unsigned char)(r * 255.0f);
-		cg = (unsigned char)(g * 255.0f);
-		cb = (unsigned char)(b * 255.0f);
+		cr = (uchar)(r * 255.0f);
+		cg = (uchar)(g * 255.0f);
+		cb = (uchar)(b * 255.0f);
 	}
 	return ((cr >> 5) << 5) | ((cg >> 5) << 2) | (cb >> 5);
 }
 
 ///////////////////////////////////////////////
 template <class T>
-inline unsigned short color4<T>::pack_argb4444()
+inline ushort color4<T>::pack_argb4444()
 {
-	unsigned char cr;
-	unsigned char cg;
-	unsigned char cb;
-	unsigned char ca;
-	if (sizeof(r) == 1) // char and unsigned char
+	uchar cr;
+	uchar cg;
+	uchar cb;
+	uchar ca;
+	if (sizeof(r) == 1) // char and uchar
 	{
 		cr = r;
 		cg = g;
 		cb = b;
 		ca = a;
 	}
-	else if (sizeof(r) == 2) // short and unsigned short
+	else if (sizeof(r) == 2) // short and ushort
 	{
-		cr = (unsigned short)(r) >> 8;
-		cg = (unsigned short)(g) >> 8;
-		cb = (unsigned short)(b) >> 8;
-		ca = (unsigned short)(a) >> 8;
+		cr = (ushort)(r) >> 8;
+		cg = (ushort)(g) >> 8;
+		cb = (ushort)(b) >> 8;
+		ca = (ushort)(a) >> 8;
 	}
 	else // float or double
 	{
-		cr = (unsigned char)(r * 255.0f);
-		cg = (unsigned char)(g * 255.0f);
-		cb = (unsigned char)(b * 255.0f);
-		ca = (unsigned char)(a * 255.0f);
+		cr = (uchar)(r * 255.0f);
+		cg = (uchar)(g * 255.0f);
+		cb = (uchar)(b * 255.0f);
+		ca = (uchar)(a * 255.0f);
 	}
 	return ((ca >> 4) << 12) | ((cr >> 4) << 8) | ((cg >> 4) << 4) | (cb >> 4);
 }
 
 ///////////////////////////////////////////////
 template <class T>
-inline unsigned short color4<T>::pack_rgb555()
+inline ushort color4<T>::pack_rgb555()
 {
-	unsigned char cr;
-	unsigned char cg;
-	unsigned char cb;
-	if (sizeof(r) == 1) // char and unsigned char
+	uchar cr;
+	uchar cg;
+	uchar cb;
+	if (sizeof(r) == 1) // char and uchar
 	{
 		cr = r;
 		cg = g;
 		cb = b;
 	}
-	else if (sizeof(r) == 2) // short and unsigned short
+	else if (sizeof(r) == 2) // short and ushort
 	{
-		cr = (unsigned short)(r) >> 8;
-		cg = (unsigned short)(g) >> 8;
-		cb = (unsigned short)(b) >> 8;
+		cr = (ushort)(r) >> 8;
+		cg = (ushort)(g) >> 8;
+		cb = (ushort)(b) >> 8;
 	}
 	else // float or double
 	{
-		cr = (unsigned char)(r * 255.0f);
-		cg = (unsigned char)(g * 255.0f);
-		cb = (unsigned char)(b * 255.0f);
+		cr = (uchar)(r * 255.0f);
+		cg = (uchar)(g * 255.0f);
+		cb = (uchar)(b * 255.0f);
 	}
 	return ((cr >> 3) << 10) | ((cg >> 3) << 5) | (cb >> 3);
 }
 
 ///////////////////////////////////////////////
 template <class T>
-inline unsigned short color4<T>::pack_rgb565()
+inline ushort color4<T>::pack_rgb565()
 {
-	unsigned char cr;
-	unsigned char cg;
-	unsigned char cb;
-	if (sizeof(r) == 1) // char and unsigned char
+	uchar cr;
+	uchar cg;
+	uchar cb;
+	if (sizeof(r) == 1) // char and uchar
 	{
 		cr = r;
 		cg = g;
 		cb = b;
 	}
-	else if (sizeof(r) == 2) // short and unsigned short
+	else if (sizeof(r) == 2) // short and ushort
 	{
-		cr = (unsigned short)(r) >> 8;
-		cg = (unsigned short)(g) >> 8;
-		cb = (unsigned short)(b) >> 8;
+		cr = (ushort)(r) >> 8;
+		cg = (ushort)(g) >> 8;
+		cb = (ushort)(b) >> 8;
 	}
 	else // float or double
 	{
-		cr = (unsigned char)(r * 255.0f);
-		cg = (unsigned char)(g * 255.0f);
-		cb = (unsigned char)(b * 255.0f);
+		cr = (uchar)(r * 255.0f);
+		cg = (uchar)(g * 255.0f);
+		cb = (uchar)(b * 255.0f);
 	}
 	return ((cr >> 3) << 11) | ((cg >> 2) << 5) | (cb >> 3);
 }
 
 ///////////////////////////////////////////////
 template <class T>
-inline unsigned int color4<T>::pack_rgb888()
+inline uint color4<T>::pack_rgb888()
 {
-	unsigned char cr;
-	unsigned char cg;
-	unsigned char cb;
-	if (sizeof(r) == 1) // char and unsigned char
+	uchar cr;
+	uchar cg;
+	uchar cb;
+	if (sizeof(r) == 1) // char and uchar
 	{
 		cr = r;
 		cg = g;
 		cb = b;
 	}
-	else if (sizeof(r) == 2) // short and unsigned short
+	else if (sizeof(r) == 2) // short and ushort
 	{
-		cr = (unsigned short)(r) >> 8;
-		cg = (unsigned short)(g) >> 8;
-		cb = (unsigned short)(b) >> 8;
+		cr = (ushort)(r) >> 8;
+		cg = (ushort)(g) >> 8;
+		cb = (ushort)(b) >> 8;
 	}
 	else // float or double
 	{
-		cr = (unsigned char)(r * 255.0f);
-		cg = (unsigned char)(g * 255.0f);
-		cb = (unsigned char)(b * 255.0f);
+		cr = (uchar)(r * 255.0f);
+		cg = (uchar)(g * 255.0f);
+		cb = (uchar)(b * 255.0f);
 	}
 	return (cr << 16) | (cg << 8) | cb;
 }
 
 ///////////////////////////////////////////////
 template <class T>
-inline unsigned int color4<T>::pack_argb8888()
+inline uint color4<T>::pack_argb8888()
 {
-	unsigned char cr;
-	unsigned char cg;
-	unsigned char cb;
-	unsigned char ca;
-	if (sizeof(r) == 1) // char and unsigned char
+	uchar cr;
+	uchar cg;
+	uchar cb;
+	uchar ca;
+	if (sizeof(r) == 1) // char and uchar
 	{
 		cr = r;
 		cg = g;
 		cb = b;
 		ca = a;
 	}
-	else if (sizeof(r) == 2) // short and unsigned short
+	else if (sizeof(r) == 2) // short and ushort
 	{
-		cr = (unsigned short)(r) >> 8;
-		cg = (unsigned short)(g) >> 8;
-		cb = (unsigned short)(b) >> 8;
-		ca = (unsigned short)(a) >> 8;
+		cr = (ushort)(r) >> 8;
+		cg = (ushort)(g) >> 8;
+		cb = (ushort)(b) >> 8;
+		ca = (ushort)(a) >> 8;
 	}
 	else // float or double
 	{
-		cr = (unsigned char)(r * 255.0f);
-		cg = (unsigned char)(g * 255.0f);
-		cb = (unsigned char)(b * 255.0f);
-		ca = (unsigned char)(a * 255.0f);
+		cr = (uchar)(r * 255.0f);
+		cg = (uchar)(g * 255.0f);
+		cb = (uchar)(b * 255.0f);
+		ca = (uchar)(a * 255.0f);
 	}
 	return (ca << 24) | (cr << 16) | (cg << 8) | cb;
 }

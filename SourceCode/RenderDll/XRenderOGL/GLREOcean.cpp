@@ -230,9 +230,9 @@ void CREOcean::UpdateTexture()
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		r->SetTexture(0, eTT_Base);
 	}
-	for (unsigned int y = 0; y < OCEANGRID; y++)
+	for (uint y = 0; y < OCEANGRID; y++)
 	{
-		for (unsigned int x = 0; x < OCEANGRID; x++)
+		for (uint x = 0; x < OCEANGRID; x++)
 		{
 			data[y][x][0] = m_Normals[y][x].x;
 			data[y][x][1] = m_Normals[y][x].y;
@@ -296,8 +296,8 @@ static _inline float sCalcSplash(SSplash* spl, float fX, float fY)
 	float fSqDist = vDelt[0] * vDelt[0] + vDelt[1] * vDelt[1];
 
 	// Inverse square root
-	unsigned int* n1 = (unsigned int*)&fSqDist;
-	unsigned int nn = 0x5f3759df - (*n1 >> 1);
+	uint* n1 = (uint*)&fSqDist;
+	uint nn = 0x5f3759df - (*n1 >> 1);
 	float* n2 = (float*)&nn;
 	float fDistSplash = 1.0f / ((1.5f - (fSqDist * 0.5f) * *n2 * *n2) * *n2);
 
@@ -713,7 +713,7 @@ void CREOcean::mfDrawOceanScreenLod()
 	if (!nScreenYP || !nScreenXP)
 		return;
 
-	unsigned short nIdx = 0;
+	ushort nIdx = 0;
 	int y_size = int(float(nScreenY) / (nScreenYP)+1.f);
 
 	const Vec3d vCamPos = r->GetCamera().GetPos();
@@ -832,10 +832,10 @@ void CREOcean::mfDrawOceanScreenLod()
 
 			if (x < nScreenX / (nScreenXP) * (nScreenXP) && y < nScreenY / (nScreenYP) * (nScreenYP) && fabs(p.z - fWaterLevel) < 1)
 			{
-				unsigned short nIdx2 = nIdx + y_size;
+				ushort nIdx2 = nIdx + y_size;
 
-				unsigned short _nIdx = nIdx + 1;
-				unsigned short _nIdx2 = (nIdx + y_size) + 1;
+				ushort _nIdx = nIdx + 1;
+				ushort _nIdx2 = (nIdx + y_size) + 1;
 
 				m_DWQIndices.Add(_nIdx);
 				m_DWQIndices.Add(nIdx);

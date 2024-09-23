@@ -173,7 +173,7 @@ void CTopRendererWnd::UpdateSurfaceTexture( int flags )
 			
 			// Fill in the surface data into the array. Apply lighting and water, use
 			// the settings from the document
-			//bReturn = cSurfaceTexture.GenerateSurface( (unsigned long*)m_terrainTexture.GetData(),m_textureSize.cx,m_textureSize.cy,GEN_USE_LIGHTING|GEN_SHOW_WATER|GEN_ABGR );
+			//bReturn = cSurfaceTexture.GenerateSurface( (ulong*)m_terrainTexture.GetData(),m_textureSize.cx,m_textureSize.cy,GEN_USE_LIGHTING|GEN_SHOW_WATER|GEN_ABGR );
 			//texGen.GenerateSurfaceTexture( ETTG_LIGHTING|ETTG_SHOW_WATER|ETTG_ABGR,m_terrainTexture );
 			CTerrainTexGen texGen;
 			texGen.GenerateSurfaceTexture( ETTG_LIGHTING|ETTG_SHOW_WATER|ETTG_FAST_LLIGHTING|ETTG_ABGR,m_terrainTexture );
@@ -250,7 +250,7 @@ void CTopRendererWnd::ResetSurfaceTexture()
 	// Create a surface texture that consists entirely of water
 	////////////////////////////////////////////////////////////////////////
 
-	unsigned int i, j;
+	uint i, j;
 	DWORD *pSurfaceTextureData = NULL;
 	DWORD *pPixData = NULL, *pPixDataEnd = NULL;
 	CBitmap bmpLoad;
@@ -304,16 +304,16 @@ void CTopRendererWnd::Draw( DisplayContext &dc )
 		//GL_BGRA_EXT
 		if (m_terrainTexture.IsValid())
 		{
-			m_terrainTextureId = m_renderer->DownLoadToVideoMemory( (unsigned char*)m_terrainTexture.GetData(),m_textureSize.cx,m_textureSize.cy,eTF_8888,eTF_8888,0,0,0 );
+			m_terrainTextureId = m_renderer->DownLoadToVideoMemory( (uchar*)m_terrainTexture.GetData(),m_textureSize.cx,m_textureSize.cy,eTF_8888,eTF_8888,0,0,0 );
 			//m_terrainTexture.Release();
 		}
 	}
 
 	if (m_terrainTextureId && m_terrainTexture.IsValid())
 	{
-		m_renderer->UpdateTextureInVideoMemory( m_terrainTextureId,(unsigned char*)m_terrainTexture.GetData(),0,0,m_textureSize.cx,m_textureSize.cy,eTF_8888 );
+		m_renderer->UpdateTextureInVideoMemory( m_terrainTextureId,(uchar*)m_terrainTexture.GetData(),0,0,m_textureSize.cx,m_textureSize.cy,eTF_8888 );
 		//m_renderer->RemoveTexture( m_terrainTextureId );
-		//m_terrainTextureId = m_renderer->DownLoadToVideoMemory( (unsigned char*)m_terrainTexture.GetData(),m_textureSize.cx,m_textureSize.cy,eTF_8888,eTF_8888,0,0,0 );
+		//m_terrainTextureId = m_renderer->DownLoadToVideoMemory( (uchar*)m_terrainTexture.GetData(),m_textureSize.cx,m_textureSize.cy,eTF_8888,eTF_8888,0,0,0 );
 		m_terrainTexture.Release();
 	}
 
@@ -327,13 +327,13 @@ void CTopRendererWnd::Draw( DisplayContext &dc )
 			uint *tex = m_vegetationTexture.GetData();
 			if (!m_vegetationTextureId)
 			{
-				m_vegetationTextureId = m_renderer->DownLoadToVideoMemory( (unsigned char*)tex,w,h,eTF_8888,eTF_RGBA,0,0,FILTER_NONE );
+				m_vegetationTextureId = m_renderer->DownLoadToVideoMemory( (uchar*)tex,w,h,eTF_8888,eTF_RGBA,0,0,FILTER_NONE );
 			}
 			else
 			{
 				int px = m_vegetationTexturePos.x;
 				int py = m_vegetationTexturePos.y;
-				m_renderer->UpdateTextureInVideoMemory( m_vegetationTextureId,(unsigned char*)tex,px,py,w,h,eTF_8888 );
+				m_renderer->UpdateTextureInVideoMemory( m_vegetationTextureId,(uchar*)tex,px,py,w,h,eTF_8888 );
 			}
 			m_vegetationTexture.Release();
 		}

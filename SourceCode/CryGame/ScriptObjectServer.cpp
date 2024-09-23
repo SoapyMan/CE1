@@ -126,7 +126,7 @@ int CScriptObjectServer::Unban(IFunctionHandler *pH)
 		}
 		else if (iBanNumber < m_pServer->m_vBannedIDList.size() + m_pServer->m_vBannedIPList.size())
 		{
-			unsigned int Banned = m_pServer->m_vBannedIPList[iBanNumber-m_pServer->m_vBannedIDList.size()];
+			uint Banned = m_pServer->m_vBannedIPList[iBanNumber-m_pServer->m_vBannedIDList.size()];
 
 			m_pServer->UnbanIP(Banned);
 
@@ -851,7 +851,7 @@ int CScriptObjectServer::BroadcastCommand(IFunctionHandler *pH)
 		if(!pH->GetParam(5,iUserByte))
 			return pH->EndFunction();
 
-		m_pServer->BroadcastCommand(sString,vPos,vNormal,(EntityId)Id,(unsigned char)iUserByte);
+		m_pServer->BroadcastCommand(sString,vPos,vNormal,(EntityId)Id,(uchar)iUserByte);
 	}
 	return pH->EndFunction();
 }

@@ -366,7 +366,7 @@ HRESULT SaveCompessedMipmapLevel(void* data, int miplevel, DWORD size, int width
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
-unsigned int CLMSerializationManager2::Save(const char* pszFilePath, LMGenParam rParam, const bool cbAppend)
+uint CLMSerializationManager2::Save(const char* pszFilePath, LMGenParam rParam, const bool cbAppend)
 {
 	// ---------------------------------------------------------------------------------------------
 	// Store the lightmap data added in pszFileName
@@ -382,7 +382,7 @@ unsigned int CLMSerializationManager2::Save(const char* pszFilePath, LMGenParam 
 	ICryArchive_AutoPtr pPak = GetPak()->OpenArchive(strPakName.c_str(), ICryArchive::FLAGS_RELATIVE_PATHS_ONLY);
 	if (!pPak)
 		return NSAVE_RESULT::EPAK_FILE_OPEN_FAIL;
-	unsigned int uiStartIndex = 0;
+	uint uiStartIndex = 0;
 	if (cbAppend)
 	{
 		//seek to the right file
@@ -979,7 +979,7 @@ unsigned GenerateDDSMips(CTempFile& dds, int wdt, int hgt)
 
 
 static CTempFile* g_pDDSTarget;
-static unsigned int g_numMips;
+static uint g_numMips;
 static bool DDSCompressCallback(void* data, int miplevel, DWORD size)
 {
 	g_pDDSTarget->WriteData(data, size);

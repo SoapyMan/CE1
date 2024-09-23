@@ -33,11 +33,11 @@
 #include "StdAfx.h"
 //#include <math.h>
 
-unsigned int drand_z_hi = ((0x9DC59E12) & ((1<<27)-1)); // 8456922526314162853725694434834
-unsigned int drand_z_lo = ((0x7E46BBD3) & ((1<<25)-1)) * 4l + 1l; // 462159607207911770990826022692
+uint drand_z_hi = ((0x9DC59E12) & ((1<<27)-1)); // 8456922526314162853725694434834
+uint drand_z_lo = ((0x7E46BBD3) & ((1<<25)-1)) * 4l + 1l; // 462159607207911770990826022692
 double drand()
 {
-	unsigned int   i_x;
+	uint   i_x;
 	double              d_x;
 
 	union ux {
@@ -46,10 +46,10 @@ double drand()
 		 } x;
 
 	x.d = (double)(drand_z_lo) * 59760077.0;  x.i[3] -= 0X01b0;
-	i_x = (unsigned int)x.d;
+	i_x = (uint)x.d;
 	drand_z_hi = (drand_z_hi * 59760077L + drand_z_lo * 20737779L + i_x) & 0X07FFFFFFL;
 	d_x = x.d -= (double)i_x;            x.i[3] += 0X01b0;
-	drand_z_lo = (unsigned int)x.d;
+	drand_z_lo = (uint)x.d;
 	x.d = (double)drand_z_hi + d_x;           x.i[3] -= 0X01b0;
 
 	CRYASSERT (x.d > 0 && x.d < 1);

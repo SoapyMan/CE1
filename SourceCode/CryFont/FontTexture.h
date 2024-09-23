@@ -46,7 +46,7 @@
 
 typedef struct CTextureSlot
 {
-	unsigned int	dwUsage;
+	uint	dwUsage;
 	wchar_t				cCurrentChar;
 
 	int						iTextureSlot;
@@ -84,7 +84,7 @@ public:
 	~CFontTexture();
 
 	int CreateFromFile(const string& szFileName, int iWidth, int iHeight, int iSmoothMethod, int iSmoothAmount, float fSizeRatio = 0.8f, int iWidthCharCount = 16, int iHeightCharCount = 16);
-	int CreateFromMemory(unsigned char* pFileData, int iDataSize, int iWidth, int iHeight, int iSmoothMethod, int iSmoothAmount, float fSizeRatio = 0.875f, int iWidthCharCount = 16, int iHeightCharCount = 16);
+	int CreateFromMemory(uchar* pFileData, int iDataSize, int iWidth, int iHeight, int iSmoothMethod, int iSmoothAmount, float fSizeRatio = 0.875f, int iWidthCharCount = 16, int iHeightCharCount = 16);
 	int Create(int iWidth, int iHeight, int iSmoothMethod, int iSmoothAmount, float fSizeRatio = 0.8f, int iWidthCharCount = 16, int iHeightCharCount = 16);
 	int Release();
 
@@ -104,9 +104,9 @@ public:
 	float GetTextureCellHeight() { return m_fTextureCellHeight; };
 
 #ifdef FONT_USE_32BIT_TEXTURE
-	unsigned int* GetBuffer() { return m_pBuffer; };
+	uint* GetBuffer() { return m_pBuffer; };
 #else
-	unsigned char* GetBuffer() { return m_pBuffer; };
+	uchar* GetBuffer() { return m_pBuffer; };
 #endif
 
 	wchar_t			GetSlotChar(int iSlot);
@@ -129,7 +129,7 @@ private:
 	int				CreateSlotList(int iListSize);
 	int				ReleaseSlotList();
 
-	int				UpdateSlot(int iSlot, unsigned int dwUsage, wchar_t cChar);
+	int				UpdateSlot(int iSlot, uint dwUsage, wchar_t cChar);
 
 	int				m_iWidth;
 	int				m_iHeight;
@@ -154,11 +154,11 @@ private:
 
 
 #ifdef FONT_USE_32BIT_TEXTURE
-	unsigned int* m_pBuffer;
+	uint* m_pBuffer;
 #else
-	unsigned char* m_pBuffer;
+	uchar* m_pBuffer;
 #endif
 
-	unsigned int	m_dwUsage;
+	uint	m_dwUsage;
 };
 

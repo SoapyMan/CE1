@@ -48,7 +48,7 @@ bool ZipDir::FindData::MatchWildcard(const char* szName)
 
 	// no extension sign - add it
 	char szAlias[_MAX_PATH + 2];
-	unsigned int nLength = static_cast<unsigned int>(p - szName);
+	uint nLength = static_cast<uint>(p - szName);
 	if (nLength > _MAX_PATH)
 		nLength = _MAX_PATH;
 	memcpy(szAlias, szName, nLength);
@@ -65,7 +65,7 @@ ZipDir::FileEntry* ZipDir::FindFile::FindExact(const char* szPath)
 
 	FileEntry* pFileEntry = m_pDirHeader->FindFileEntry(m_szWildcard);
 	if (pFileEntry)
-		m_nFileEntry = static_cast<unsigned int>(pFileEntry - m_pDirHeader->GetFileEntry(0));
+		m_nFileEntry = static_cast<uint>(pFileEntry - m_pDirHeader->GetFileEntry(0));
 	else
 		m_pDirHeader = nullptr; // we didn't find it, fail the search
 

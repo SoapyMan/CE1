@@ -1,7 +1,5 @@
-////////////////////////////////////////////////////////////////////////////
-//
-//  Crytek Engine Source File.
-//  Copyright (C), Crytek Studios, 2004.
+// Copyright 2001-2016 Crytek GmbH / Crytek Group. All rights reserved.
+
 // -------------------------------------------------------------------------
 //  File name:   Linux32Specific.h
 //  Version:     v1.00
@@ -15,379 +13,453 @@
 #ifndef _CRY_COMMON_LINUX_SPECIFIC_HDR_
 #define _CRY_COMMON_LINUX_SPECIFIC_HDR_
 
-#include <stdint.h>
+#include <stdlib.h>
+#include <time.h>
 #include <pthread.h>
 #include <math.h>
 #include <string.h>
 #include <errno.h>
 #include <ctype.h>
+#include <algorithm>
+#include <signal.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <stdio.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <vector>
+#include <string>
 
-typedef unsigned int				DWORD;
-typedef unsigned int* LPDWORD;
 typedef void* LPVOID;
-#define VOID            		void
-#define PVOID								void*
+#define VOID  void
+#define PVOID void*
 
-//#define PHYSICS_EXPORTS
+typedef uint UINT;
+typedef char         CHAR;
+typedef float        FLOAT;
 
-#ifdef __cplusplus
-// checks if the heap is valid in debug; in release, this function shouldn't be called
-// returns non-0 if it's valid and 0 if not valid
-inline int IsHeapValid()
-{
-	return true;
-}
-#endif //__cplusplus
-
-// MSVC compiler-specific keywords
-#define __forceinline inline
-#define _inline inline
+#define PHYSICS_EXPORTS
+//! Disable livecreate on Linux.
+#define NO_LIVECREATE
+// MSVC compiler-specific keywords.
 #define __cdecl
+#define _cdecl
 #define __stdcall
 #define _stdcall
 #define __fastcall
+#define _fastcall
 #define IN
 #define OUT
 
-// Safe memory freeing
-#ifndef SAFE_DELETE
-#define SAFE_DELETE(p)			{ if(p) { delete (p);		(p)=nullptr; } }
+//#if !defined(_LIB)
+//# define _LIB 1
+//#endif
+
+#ifdef _LIB
+	#if !defined(USE_STATIC_NAME_TABLE)
+		#define USE_STATIC_NAME_TABLE 1
+	#endif
 #endif
 
-#ifndef SAFE_DELETE_ARRAY
-#define SAFE_DELETE_ARRAY(p)	{ if(p) { delete[] (p);		(p)=nullptr; } }
+// Enable memory address tracing code.
+#if !defined(MM_TRACE_ADDRS) // && !defined(NDEBUG)
+	#define MM_TRACE_ADDRS 1
 #endif
 
-#ifndef SAFE_RELEASE
-#define SAFE_RELEASE(p)			{ if(p) { (p)->Release();	(p)=nullptr; } }
-#endif
-
-#ifndef SAFE_RELEASE_FORCE
-#define SAFE_RELEASE_FORCE(p)			{ if(p) { (p)->Release(1);	(p)=nullptr; } }
-#endif
-
-#define MAKEWORD(a, b)      ((WORD)(((BYTE)((DWORD_PTR)(a) & 0xff)) | ((WORD)((BYTE)((DWORD_PTR)(b) & 0xff))) << 8))
-#define MAKELONG(a, b)      ((LONG)(((WORD)((DWORD_PTR)(a) & 0xffff)) | ((DWORD)((WORD)((DWORD_PTR)(b) & 0xffff))) << 16))
-#define LOWORD(l)           ((WORD)((DWORD_PTR)(l) & 0xffff))
-#define HIWORD(l)           ((WORD)((DWORD_PTR)(l) >> 16))
-#define LOBYTE(w)           ((BYTE)((DWORD_PTR)(w) & 0xff))
-#define HIBYTE(w)           ((BYTE)((DWORD_PTR)(w) >> 8))
+#define MAKEWORD(a, b) ((WORD)(((BYTE)((DWORD_PTR)(a) & 0xff)) | ((WORD)((BYTE)((DWORD_PTR)(b) & 0xff))) << 8))
+#define MAKELONG(a, b) ((LONG)(((WORD)((DWORD_PTR)(a) & 0xffff)) | ((DWORD)((WORD)((DWORD_PTR)(b) & 0xffff))) << 16))
+#define LOWORD(l)      ((WORD)((DWORD_PTR)(l) & 0xffff))
+#define HIWORD(l)      ((WORD)((DWORD_PTR)(l) >> 16))
+#define LOBYTE(w)      ((BYTE)((DWORD_PTR)(w) & 0xff))
+#define HIBYTE(w)      ((BYTE)((DWORD_PTR)(w) >> 8))
 
 #define CALLBACK
 #define WINAPI
-#define WINAPIV
-#define APIENTRY
-#define TEXT
 
 #ifndef __cplusplus
-#ifndef _WCHAR_T_DEFINED
-typedef unsigned short wchar_t;
-#define TCHAR wchar_t;
-#define _WCHAR_T_DEFINED
+	#ifndef _WCHAR_T_DEFINED
+typedef ushort wchar_t;
+		#define TCHAR wchar_t;
+		#define _WCHAR_T_DEFINED
+	#endif
 #endif
-#endif
-typedef wchar_t WCHAR;    // wc,   16-bit UNICODE character
-typedef WCHAR* PWCHAR;
-typedef WCHAR* LPWCH, * PWCH;
-typedef const WCHAR* LPCWCH, * PCWCH;
-typedef WCHAR* NWPSTR;
-typedef WCHAR* LPWSTR, * PWSTR;
-typedef WCHAR* LPUWSTR, * PUWSTR;
+typedef wchar_t                  WCHAR; //!< wc, 16-bit UNICODE character.
+typedef WCHAR*                   PWCHAR;
+typedef WCHAR* LPWCH, *          PWCH;
+typedef const WCHAR* LPCWCH, *   PCWCH;
+typedef WCHAR*                   NWPSTR;
+typedef WCHAR* LPWSTR, *         PWSTR;
+typedef WCHAR* LPUWSTR, *        PUWSTR;
 
-typedef const WCHAR* LPCWSTR, * PCWSTR;
+typedef const WCHAR* LPCWSTR, *  PCWSTR;
 typedef const WCHAR* LPCUWSTR, * PCUWSTR;
 
-#define MAKEFOURCC(ch0, ch1, ch2, ch3)                              \
-            ((DWORD)(BYTE)(ch0) | ((DWORD)(BYTE)(ch1) << 8) |       \
-            ((DWORD)(BYTE)(ch2) << 16) | ((DWORD)(BYTE)(ch3) << 24 ))
-#define FILE_ATTRIBUTE_NORMAL               0x00000080
+#define MAKEFOURCC(ch0, ch1, ch2, ch3)              \
+  ((DWORD)(BYTE)(ch0) | ((DWORD)(BYTE)(ch1) << 8) | \
+   ((DWORD)(BYTE)(ch2) << 16) | ((DWORD)(BYTE)(ch3) << 24))
+#define FILE_ATTRIBUTE_NORMAL 0x00000080
 
-typedef int							BOOL;
-typedef int							LONG;
-typedef unsigned int 		ULONG;
-typedef int 						HRESULT;
+typedef int      BOOL;
+typedef int32_t  LONG;
+typedef uint32_t ULONG;
+typedef int      HRESULT;
 
-typedef unsigned long int threadID;
+typedef int32    __int32;
+typedef uint32   __uint32;
+typedef int64    __int64;
+#if !defined(__clang__)
+typedef uint64   __uint64;
+#endif
 
-#define TRUE 1
+#define THREADID_NULL 0
+typedef ulong int threadID;
+
+#define TRUE  1
 #define FALSE 0
 
 #ifndef MAX_PATH
-#define MAX_PATH 256
+	#define MAX_PATH 256
 #endif
 #ifndef _MAX_PATH
-#define _MAX_PATH MAX_PATH
+	#define _MAX_PATH MAX_PATH
 #endif
 
-#define _A_RDONLY (0x01)
-#define _A_SUBDIR (0x10)
-#define _A_HIDDEN (0x02)
-
-//////////////////////////////////////////////////////////////////////////
-// Win32 FileAttributes.
-//////////////////////////////////////////////////////////////////////////
-#define FILE_ATTRIBUTE_READONLY             0x00000001
-
-//-------------------------------------socket stuff------------------------------------------
-#define SOCKET int
-#define INVALID_SOCKET (-1)
-#define SOCKET_ERROR (-1)
+#define _PTRDIFF_T_DEFINED 1
 
 typedef struct in_addr_windows
 {
 	union
 	{
-		struct { unsigned char s_b1, s_b2, s_b3, s_b4; } S_un_b;
-		struct { unsigned short s_w1, s_w2; } S_un_w;
-		unsigned int S_addr;
+		struct { uchar s_b1, s_b2, s_b3, s_b4; } S_un_b;
+		struct { ushort s_w1, s_w2; }            S_un_w;
+		uint S_addr;
 	} S_un;
 }in_addr_windows;
 
-#define WSAEINTR EINTR
-#define WSAEBADF EBADF
-#define WSAEACCES EACCES
-#define WSAEFAULT EFAULT
-#define WSAEACCES EACCES
-#define WSAEFAULT EFAULT
-#define WSAEINVAL EINVAL
-#define WSAEMFILE EMFILE
-#define WSAEWOULDBLOCK EAGAIN
-#define WSAEINPROGRESS EINPROGRESS
-#define WSAEALREADY EALREADY
-#define WSAENOTSOCK ENOTSOCK 
-#define WSAEDESTADDRREQ EDESTADDRREQ
-#define WSAEMSGSIZE EMSGSIZE
-#define WSAEPROTOTYPE EPROTOTYPE
-#define WSAENOPROTOOPT ENOPROTOOPT
+#define WSAEINTR           EINTR
+#define WSAEBADF           EBADF
+#define WSAEACCES          EACCES
+#define WSAEFAULT          EFAULT
+#define WSAEACCES          EACCES
+#define WSAEFAULT          EFAULT
+#define WSAEINVAL          EINVAL
+#define WSAEMFILE          EMFILE
+#define WSAEWOULDBLOCK     EAGAIN
+#define WSAEINPROGRESS     EINPROGRESS
+#define WSAEALREADY        EALREADY
+#define WSAENOTSOCK        ENOTSOCK
+#define WSAEDESTADDRREQ    EDESTADDRREQ
+#define WSAEMSGSIZE        EMSGSIZE
+#define WSAEPROTOTYPE      EPROTOTYPE
+#define WSAENOPROTOOPT     ENOPROTOOPT
 #define WSAEPROTONOSUPPORT EPROTONOSUPPORT
 #define WSAESOCKTNOSUPPORT ESOCKTNOSUPPORT
-#define WSAEOPNOTSUPP EOPNOTSUPP
-#define WSAEPFNOSUPPORT EPFNOSUPPORT
-#define WSAEAFNOSUPPORT EAFNOSUPPORT
-#define WSAEADDRINUSE EADDRINUSE
-#define WSAEADDRNOTAVAIL EADDRNOTAVAIL
-#define WSAENETDOWN ENETDOWN
-#define WSAENETUNREACH ENETUNREACH
-#define WSAENETRESET ENETRESET
-#define WSAECONNABORTED ECONNABORTED
-#define WSAECONNRESET ECONNRESET
-#define WSAENOBUFS ENOBUFS
-#define WSAEISCONN EISCONN
-#define WSAENOTCONN ENOTCONN
-#define WSAESHUTDOWN ESHUTDOWN
-#define WSAETOOMANYREFS ETOOMANYREFS
-#define WSAETIMEDOUT ETIMEDOUT
-#define WSAECONNREFUSED ECONNREFUSED
-#define WSAELOOP ELOOP
-#define WSAENAMETOOLONG ENAMETOOLONG
-#define WSAEHOSTDOWN EHOSTDOWN
-#define WSAEHOSTUNREACH EHOSTUNREACH
-#define WSAENOTEMPTY ENOTEMPTY
-#define WSAEPROCLIM EPROCLIM
-#define WSAEUSERS EUSERS
-#define WSAEDQUOT EDQUOT
-#define WSAESTALE ESTALE
-#define WSAEREMOTE EREMOTE
+#define WSAEOPNOTSUPP      EOPNOTSUPP
+#define WSAEPFNOSUPPORT    EPFNOSUPPORT
+#define WSAEAFNOSUPPORT    EAFNOSUPPORT
+#define WSAEADDRINUSE      EADDRINUSE
+#define WSAEADDRNOTAVAIL   EADDRNOTAVAIL
+#define WSAENETDOWN        ENETDOWN
+#define WSAENETUNREACH     ENETUNREACH
+#define WSAENETRESET       ENETRESET
+#define WSAECONNABORTED    ECONNABORTED
+#define WSAECONNRESET      ECONNRESET
+#define WSAENOBUFS         ENOBUFS
+#define WSAEISCONN         EISCONN
+#define WSAENOTCONN        ENOTCONN
+#define WSAESHUTDOWN       ESHUTDOWN
+#define WSAETOOMANYREFS    ETOOMANYREFS
+#define WSAETIMEDOUT       ETIMEDOUT
+#define WSAECONNREFUSED    ECONNREFUSED
+#define WSAELOOP           ELOOP
+#define WSAENAMETOOLONG    ENAMETOOLONG
+#define WSAEHOSTDOWN       EHOSTDOWN
+#define WSAEHOSTUNREACH    EHOSTUNREACH
+#define WSAENOTEMPTY       ENOTEMPTY
+#define WSAEPROCLIM        EPROCLIM
+#define WSAEUSERS          EUSERS
+#define WSAEDQUOT          EDQUOT
+#define WSAESTALE          ESTALE
+#define WSAEREMOTE         EREMOTE
 
-//-------------------------------------end socket stuff------------------------------------------
+#define WSAHOST_NOT_FOUND  (1024 + 1)
+#define WSATRY_AGAIN       (1024 + 2)
+#define WSANO_RECOVERY     (1024 + 3)
+#define WSANO_DATA         (1024 + 4)
+#define WSANO_ADDRESS      (WSANO_DATA)
+
+//end socket stuff
 
 //#define __TIMESTAMP__ __DATE__" "__TIME__
 
 // function renaming
-#define _finite __finite
-#define _snprintf snprintf
-#define _isnan isnan
-#define stricmp strcasecmp
-#define _stricmp strcasecmp
-#define strnicmp strncasecmp
+#define _finite   __finite
+#define _isnan    isnan
+#define stricmp   strcasecmp
+#define _stricmp  strcasecmp
+#define strnicmp  strncasecmp
+#define _strnicmp strncasecmp
+#define wcsicmp   wcscasecmp
+#define wcsnicmp  wcsncasecmp
 
-#define _vsnprintf vsnprintf
-#define _wtof( str ) wcstod( str, 0 )
+#define _wtof(str) wcstod(str, 0)
 
-/*static unsigned char toupper(unsigned char c)
-{
-  return c & ~0x40;
-}
-*/
+/*static uchar toupper(uchar c)
+   {
+   return c & ~0x40;
+   }
+ */
 typedef union _LARGE_INTEGER
 {
 	struct
 	{
 		DWORD LowPart;
-		LONG HighPart;
+		LONG  HighPart;
 	};
 	struct
 	{
 		DWORD LowPart;
-		LONG HighPart;
-	} u;
+		LONG  HighPart;
+	}         u;
 	long long QuadPart;
+
 } LARGE_INTEGER;
 
-
 // stdlib.h stuff
-#define _MAX_DRIVE  3   // max. length of drive component
-#define _MAX_DIR    256 // max. length of path component
-#define _MAX_FNAME  256 // max. length of file name component
-#define _MAX_EXT    256 // max. length of extension component
+#define _MAX_DRIVE 3    // max. length of drive component
+#define _MAX_DIR   256  // max. length of path component
+#define _MAX_FNAME 256  // max. length of file name component
+#define _MAX_EXT   256  // max. length of extension component
 
 // fcntl.h
-#define _O_RDONLY       0x0000  /* open for reading only */
-#define _O_WRONLY       0x0001  /* open for writing only */
-#define _O_RDWR         0x0002  /* open for reading and writing */
-#define _O_APPEND       0x0008  /* writes done at eof */
-#define _O_CREAT        0x0100  /* create and open file */
-#define _O_TRUNC        0x0200  /* open and truncate */
-#define _O_EXCL         0x0400  /* open only if file doesn't already exist */
-#define _O_TEXT         0x4000  /* file mode is text (translated) */
-#define _O_BINARY       0x8000  /* file mode is binary (untranslated) */
-#define _O_RAW  _O_BINARY
-#define _O_NOINHERIT    0x0080  /* child process doesn't inherit file */
-#define _O_TEMPORARY    0x0040  /* temporary file bit */
-#define _O_SHORT_LIVED  0x1000  /* temporary storage file, try not to flush */
-#define _O_SEQUENTIAL   0x0020  /* file access is primarily sequential */
-#define _O_RANDOM       0x0010  /* file access is primarily random */
+#define _O_RDONLY      0x0000   /* open for reading only */
+#define _O_WRONLY      0x0001   /* open for writing only */
+#define _O_RDWR        0x0002   /* open for reading and writing */
+#define _O_APPEND      0x0008   /* writes done at eof */
+#define _O_CREAT       0x0100   /* create and open file */
+#define _O_TRUNC       0x0200   /* open and truncate */
+#define _O_EXCL        0x0400   /* open only if file doesn't already exist */
+#define _O_TEXT        0x4000   /* file mode is text (translated) */
+#define _O_BINARY      0x8000   /* file mode is binary (untranslated) */
+#define _O_RAW         _O_BINARY
+#define _O_NOINHERIT   0x0080   /* child process doesn't inherit file */
+#define _O_TEMPORARY   0x0040   /* temporary file bit */
+#define _O_SHORT_LIVED 0x1000   /* temporary storage file, try not to flush */
+#define _O_SEQUENTIAL  0x0020   /* file access is primarily sequential */
+#define _O_RANDOM      0x0010   /* file access is primarily random */
 
+// curses.h stubs for PDcurses keys
+#define PADENTER KEY_MAX + 1
+#define CTL_HOME KEY_MAX + 2
+#define CTL_END  KEY_MAX + 3
+#define CTL_PGDN KEY_MAX + 4
+#define CTL_PGUP KEY_MAX + 5
+
+// stubs for virtual keys, isn't used on Linux
+#define VK_UP      0
+#define VK_DOWN    0
+#define VK_RIGHT   0
+#define VK_LEFT    0
+#define VK_CONTROL 0
+#define VK_SCROLL  0
 
 // io.h stuff
-typedef unsigned int _fsize_t;
+typedef uint _fsize_t;
+
+#define _flushall()
 
 struct _OVERLAPPED;
 
-typedef void (*LPOVERLAPPED_COMPLETION_ROUTINE)(DWORD dwErrorCode, DWORD dwNumberOfBytesTransfered, struct _OVERLAPPED* lpOverlapped);
+typedef void (* LPOVERLAPPED_COMPLETION_ROUTINE)(DWORD dwErrorCode, DWORD dwNumberOfBytesTransfered, struct _OVERLAPPED* lpOverlapped);
 
 typedef struct _OVERLAPPED
 {
-	void* pCaller;//this is orginally reserved for internal purpose, we store the Caller pointer here
-	LPOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine; ////this is orginally ULONG_PTR InternalHigh and reserved for internal purpose
-	union {
-		struct {
+	//! This is orginally reserved for internal purpose, we store the Caller pointer here.
+	void* pCaller;
+
+	//!< This is orginally ULONG_PTR InternalHigh and reserved for internal purpose.
+	LPOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine;
+
+	union
+	{
+		struct
+		{
 			DWORD Offset;
 			DWORD OffsetHigh;
 		};
 		PVOID Pointer;
 	};
-	DWORD dwNumberOfBytesTransfered;	//additional member temporary speciying the number of bytes to be read
-	/*HANDLE*/void* hEvent;
+
+	//! Additional member temporary speciying the number of bytes to be read.
+	DWORD            dwNumberOfBytesTransfered;
+	/*HANDLE*/ void* hEvent;
 } OVERLAPPED, * LPOVERLAPPED;
 
 typedef struct _SECURITY_ATTRIBUTES
 {
-	DWORD nLength;
+	DWORD  nLength;
 	LPVOID lpSecurityDescriptor;
-	BOOL bInheritHandle;
+	BOOL   bInheritHandle;
 } SECURITY_ATTRIBUTES, * PSECURITY_ATTRIBUTES, * LPSECURITY_ATTRIBUTES;
 
-typedef struct _FILETIME {
-	DWORD dwLowDateTime;
-	DWORD dwHighDateTime;
-} FILETIME, * PFILETIME, * LPFILETIME;
-
-#pragma pack(push, 1) // Disable padding for the following structure
-
-typedef struct
-{
-	uint16_t bfType;       // File type. Should be set to 'BM'.
-	uint32_t bfSize;       // Size of the BMP file in bytes.
-	uint16_t bfReserved1;  // Reserved; set to 0.
-	uint16_t bfReserved2;  // Reserved; set to 0.
-	uint32_t bfOffBits;    // Offset from the beginning of the file to the bitmap data.
-} BITMAPFILEHEADER, * PBITMAPFILEHEADER, * LPBITMAPFILEHEADER;
-
-typedef struct
-{
-	uint32_t biSize;          // Size of the header (in bytes).
-	int32_t  biWidth;         // Width of the image (in pixels).
-	int32_t  biHeight;        // Height of the image (in pixels).
-	uint16_t biPlanes;        // Number of color planes (must be 1).
-	uint16_t biBitCount;      // Number of bits per pixel.
-	uint32_t biCompression;   // Compression type (0 for uncompressed).
-	uint32_t biSizeImage;     // Size of the image data (in bytes).
-	int32_t  biXPelsPerMeter; // Horizontal resolution (pixels per meter).
-	int32_t  biYPelsPerMeter; // Vertical resolution (pixels per meter).
-	uint32_t biClrUsed;       // Number of colors used (0 for full color images).
-	uint32_t biClrImportant;  // Number of important colors (0 when every color is important).
-} BITMAPINFOHEADER, * PBITMAPINFOHEADER, * LPBITMAPINFOHEADER;
-
-#pragma pack(pop) // Re-enable default padding settings
-
 #ifdef __cplusplus
-static pthread_mutex_t mutex_t;
-template<typename T>
-const volatile T InterlockedIncrement(volatile T* pT)
+extern bool QueryPerformanceCounter(LARGE_INTEGER*);
+
+	#if 0
+template<typename S, typename T>
+inline const S& min(const S& rS, const T& rT)
 {
-	pthread_mutex_lock(&mutex_t);
-	++(*pT);
-	pthread_mutex_unlock(&mutex_t);
-	return *pT;
+	return (rS <= rT) ? rS : rT;
 }
 
-template<typename T>
-const volatile T InterlockedDecrement(volatile T* pT)
+template<typename S, typename T>
+inline const S& max(const S& rS, const T& rT)
 {
-	pthread_mutex_lock(&mutex_t);
-	--(*pT);
-	pthread_mutex_unlock(&mutex_t);
-	return *pT;
+	return (rS >= rT) ? rS : rT;
+}
+	#endif
+
+template<typename S, typename T>
+inline S __min(const S& rS, const T& rT)
+{
+	return std::min(rS, rT);
 }
 
-typedef enum { INVALID_HANDLE_VALUE = -1l }INVALID_HANDLE_VALUE_ENUM;
-//for compatibility reason we got to create a class which actually contains an int rather than a void* and make sure it does not get mistreated
-template <class T, T U>//U is default type for invalid handle value, T the encapsulated handle type to be used instead of void* (as under windows and never linux)
+template<typename S, typename T>
+inline S __max(const S& rS, const T& rT)
+{
+	return std::max(rS, rT);
+}
+
+typedef enum {INVALID_HANDLE_VALUE = -1l} INVALID_HANDLE_VALUE_ENUM;
+//! For compatibility reason we got to create a class which actually contains an int rather than a void* and make sure it does not get mistreated.
+//! U is default type for invalid handle value, T the encapsulated handle type to be used instead of void* (as under windows and never linux).
+template<class T, T U>
 class CHandle
 {
 public:
-	typedef T			HandleType;
-	typedef void* PointerType;	//for compatibility reason to encapsulate a void* as an int
+	typedef T     HandleType;
+	typedef void* PointerType;          //!< For compatibility reason to encapsulate a void* as an int.
 
 	static const HandleType sciInvalidHandleValue = U;
 
-	CHandle(const CHandle<T, U>& cHandle) : m_Value(cHandle.m_Value) {}
-	CHandle(const HandleType cHandle = U) : m_Value(cHandle) {}
-	CHandle(const PointerType cpHandle) : m_Value(reinterpret_cast<HandleType>(cpHandle)) {}
-	CHandle(INVALID_HANDLE_VALUE_ENUM) : m_Value(U) {}//to be able to use a common value for all InvalidHandle - types
-#if defined(LINUX64)
-	//treat __null tyope also as invalid handle type
-	CHandle(typeof(__null)) : m_Value(U) {}//to be able to use a common value for all InvalidHandle - types
-#endif
-	operator HandleType() { return m_Value; }
-	bool operator!() const { return m_Value == sciInvalidHandleValue; }
-	const CHandle& operator =(const CHandle& crHandle) { m_Value = crHandle.m_Value; return *this; }
-	const CHandle& operator =(const PointerType cpHandle) { m_Value = reinterpret_cast<HandleType>(cpHandle); return *this; }
-	const bool operator ==(const CHandle& crHandle)		const { return m_Value == crHandle.m_Value; }
-	const bool operator ==(const HandleType cHandle)	const { return m_Value == cHandle; }
-	const bool operator ==(const PointerType cpHandle)const { return m_Value == reinterpret_cast<HandleType>(cpHandle); }
-	const bool operator !=(const HandleType cHandle)	const { return m_Value != cHandle; }
-	const bool operator !=(const CHandle& crHandle)		const { return m_Value != crHandle.m_Value; }
-	const bool operator !=(const PointerType cpHandle)const { return m_Value != reinterpret_cast<HandleType>(cpHandle); }
-	const bool operator <	(const CHandle& crHandle)		const { return m_Value < crHandle.m_Value; }
-	HandleType Handle()const { return m_Value; }
+	CHandle(const CHandle<T, U>& cHandle) : m_Value(cHandle.m_Value){}
+	CHandle(const HandleType cHandle = U) : m_Value(cHandle){}
+	CHandle(const PointerType cpHandle) : m_Value(reinterpret_cast<HandleType>(cpHandle)){}
+	CHandle(INVALID_HANDLE_VALUE_ENUM) : m_Value(U){}        //!< To be able to use a common value for all InvalidHandle - types.
+	#if (CRY_PLATFORM_LINUX && CRY_PLATFORM_64BIT) && !defined(__clang__)
+	//! Treat __null tyope also as invalid handle type.
+	//! To be able to use a common value for all InvalidHandle - types.
+	CHandle(__typeof__(__null)) : m_Value(U){}
+	#endif
+	operator HandleType(){ return m_Value; }
+	bool           operator!() const                            { return m_Value == sciInvalidHandleValue; }
+	const CHandle& operator=(const CHandle& crHandle)           { m_Value = crHandle.m_Value; return *this; }
+	const CHandle& operator=(const PointerType cpHandle)        { m_Value = (HandleType) reinterpret_cast<UINT_PTR>(cpHandle); return *this; }
+	const bool     operator==(const CHandle& crHandle)   const  { return m_Value == crHandle.m_Value; }
+	const bool     operator==(const HandleType cHandle)  const  { return m_Value == cHandle; }
+	const bool     operator==(const PointerType cpHandle) const { return m_Value == (HandleType) reinterpret_cast<UINT_PTR>(cpHandle); }
+	const bool     operator!=(const HandleType cHandle)  const  { return m_Value != cHandle; }
+	const bool     operator!=(const CHandle& crHandle)   const  { return m_Value != crHandle.m_Value; }
+	const bool     operator!=(const PointerType cpHandle) const { return m_Value != (HandleType) reinterpret_cast<UINT_PTR>(cpHandle); }
+	const bool     operator<(const CHandle& crHandle)   const   { return m_Value < crHandle.m_Value; }
+	HandleType     Handle() const                               { return m_Value; }
 
 private:
-	HandleType m_Value;	//the actual value, remember that file descriptors are ints under linux
+	//! The actual value, remember that file descriptors are ints under linux.
+	HandleType m_Value;
 
-	typedef void	ReferenceType;//for compatibility reason to encapsulate a void* as an int
-	//forbid these function which would actually not work on an int
-	PointerType operator->();
-	PointerType operator->() const;
+	//! For compatibility reason to encapsulate a void* as an int.
+	typedef void ReferenceType;
+
+	//! Forbid these function which would actually not work on an int.
+	PointerType   operator->();
+	PointerType   operator->() const;
 	ReferenceType operator*();
 	ReferenceType operator*() const;
 	operator PointerType();
 };
 
-typedef CHandle<int, (int)-1l> HANDLE;
+typedef CHandle<int, (int) - 1l> HANDLE;
 
-typedef HANDLE EVENT_HANDLE;
-typedef pid_t THREAD_HANDLE;
+typedef HANDLE                   EVENT_HANDLE;
+typedef pid_t                    THREAD_HANDLE;
 
 #endif //__cplusplus
+
+inline int   _CrtCheckMemory() { return 1; };
+
+inline char* _fullpath(char* absPath, const char* relPath, size_t maxLength)
+{
+	char path[PATH_MAX];
+
+	if (realpath(relPath, path) == NULL)
+		return NULL;
+	const size_t len = std::min(strlen(path), maxLength - 1);
+	memcpy(absPath, path, len);
+	absPath[len] = 0;
+	return absPath;
+}
 
 typedef void* HGLRC;
 typedef void* HDC;
 typedef void* PROC;
 typedef void* PIXELFORMATDESCRIPTOR;
 
-typedef void* DEVMODE;
-typedef void* HINSTANCE;
+// General overloads of bitwise operators for enum types.
+// This makes the type of expressions like "eFoo_Flag1 | eFoo_Flag2" to be of type EFoo, instead of int.
 
-#endif //_CRY_COMMON_LINUX_SPECIFIC_HDR_
+namespace Detail
+{
+template<typename T>
+struct SIsFlagEnum : std::false_type {};
+}
+
+#define DEFINE_ENUM_FLAG_OPERATORS(TEnum) \
+  namespace Detail { template<> struct SIsFlagEnum<TEnum> : std::true_type {}; }
+
+template<typename TEnum>
+inline constexpr typename std::enable_if<Detail::SIsFlagEnum<TEnum>::value, TEnum>::type operator~(TEnum rhs)
+{
+	return static_cast<TEnum>(~static_cast<typename std::underlying_type<TEnum>::type>(rhs));
+}
+
+template<typename TEnum>
+inline constexpr typename std::enable_if<Detail::SIsFlagEnum<TEnum>::value, TEnum>::type operator|(TEnum lhs, TEnum rhs)
+{
+	return static_cast<TEnum>(static_cast<typename std::underlying_type<TEnum>::type>(lhs) | static_cast<typename std::underlying_type<TEnum>::type>(rhs));
+}
+
+template<typename TEnum>
+inline constexpr typename std::enable_if<Detail::SIsFlagEnum<TEnum>::value, TEnum>::type operator&(TEnum lhs, TEnum rhs)
+{
+	return static_cast<TEnum>(static_cast<typename std::underlying_type<TEnum>::type>(lhs) & static_cast<typename std::underlying_type<TEnum>::type>(rhs));
+}
+
+template<typename TEnum>
+inline constexpr typename std::enable_if<Detail::SIsFlagEnum<TEnum>::value, TEnum>::type operator^(TEnum lhs, TEnum rhs)
+{
+	return static_cast<TEnum>(static_cast<typename std::underlying_type<TEnum>::type>(lhs) ^ static_cast<typename std::underlying_type<TEnum>::type>(rhs));
+}
+
+template<typename TEnum>
+inline constexpr typename std::enable_if<Detail::SIsFlagEnum<TEnum>::value, TEnum&>::type operator|=(TEnum& lhs, TEnum rhs)
+{
+	return (lhs = static_cast<TEnum>(static_cast<typename std::underlying_type<TEnum>::type>(lhs) | static_cast<typename std::underlying_type<TEnum>::type>(rhs)));
+}
+
+template<typename TEnum>
+inline constexpr typename std::enable_if<Detail::SIsFlagEnum<TEnum>::value, TEnum&>::type operator&=(TEnum& lhs, TEnum rhs)
+{
+	return (lhs = static_cast<TEnum>(static_cast<typename std::underlying_type<TEnum>::type>(lhs) & static_cast<typename std::underlying_type<TEnum>::type>(rhs)));
+}
+
+template<typename TEnum>
+inline constexpr typename std::enable_if<Detail::SIsFlagEnum<TEnum>::value, TEnum&>::type operator^=(TEnum& lhs, TEnum rhs)
+{
+	return (lhs = static_cast<TEnum>(static_cast<typename std::underlying_type<TEnum>::type>(lhs) ^ static_cast<typename std::underlying_type<TEnum>::type>(rhs)));
+}
+
+#endif

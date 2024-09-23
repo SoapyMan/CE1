@@ -32,7 +32,7 @@ public:
 
 	string GetClassName();
 
-	LRESULT Update(unsigned int iMessage, WPARAM wParam, LPARAM lParam);	//AMD Port
+	LRESULT Update(uint iMessage, WPARAM wParam, LPARAM lParam);	//AMD Port
 	int Draw(int iPass);
 
 	int SetText(const wstring &szText);

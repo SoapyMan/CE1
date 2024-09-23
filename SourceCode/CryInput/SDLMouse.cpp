@@ -425,7 +425,7 @@ float CSDLMouse::GetVScreenY()
 	return m_fVScreenY + 0.5f;
 }
 
-void CSDLMouse::PostEvent(int key, SInputEvent::EType type, float value, unsigned int timestamp)
+void CSDLMouse::PostEvent(int key, SInputEvent::EType type, float value, uint timestamp)
 {
 	// Post Input events.
 	SInputEvent event;

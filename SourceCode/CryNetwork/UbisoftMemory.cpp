@@ -12,8 +12,8 @@
 
 extern "C"
 {
-	void* __stdcall ExtAlloc_Malloc(unsigned int lSize) { return malloc(lSize); };
+	void* __stdcall ExtAlloc_Malloc(uint lSize) { return malloc(lSize); };
 	void __stdcall ExtAlloc_Free(void* ptr) { free(ptr); };
-	void* __stdcall ExtAlloc_Realloc(void* ptr, unsigned int uiSize) { return realloc(ptr, uiSize); };
+	void* __stdcall ExtAlloc_Realloc(void* ptr, uint uiSize) { return realloc(ptr, uiSize); };
 }
 #endif // NOT_USE_UBICOM_SDK

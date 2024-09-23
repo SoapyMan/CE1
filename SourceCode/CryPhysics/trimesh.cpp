@@ -149,7 +149,7 @@ CTriMesh* CTriMesh::CreateTriMesh(strided_pointer<const vectorf> pVertices, inde
 	else
 		m_pVertices = strided_pointer<vectorf>((vectorf*)pVertices.data, pVertices.iStride); // removes const modifier
 
-	unsigned char* pValency = new unsigned char[m_nVertices];
+	uchar* pValency = new uchar[m_nVertices];
 	memset(pValency, 0, m_nVertices);
 	for (i = nTris * 3 - 1; i >= 0; i--) pValency[pIndices[i]]++;
 	for (m_nMaxVertexValency = i = 0; i < m_nVertices; i++)
@@ -161,7 +161,7 @@ CTriMesh* CTriMesh::CreateTriMesh(strided_pointer<const vectorf> pVertices, inde
 		if (pIds) {
 			m_pIds = new short[m_nTris];
 			if (flags & mesh_uchar_ids)
-				for (i = 0; i < nTris; i++) m_pIds[i] = ((unsigned char*)pIds)[i];
+				for (i = 0; i < nTris; i++) m_pIds[i] = ((uchar*)pIds)[i];
 			else
 				memcpy(m_pIds, pIds, m_nTris * sizeof(short));
 		}
@@ -448,17 +448,17 @@ int CTriMesh::PrepareForIntersectionTest(geometry_under_test* pGTest, CGeometry*
 void CTriMesh::CleanupAfterIntersectionTest(geometry_under_test* pGTest)
 {
 	m_pTree->CleanupAfterIntersectionTest(pGTest);
-	if ((unsigned int)((indexed_triangle*)pGTest->primbuf - g_IdxTriBuf) > (unsigned int)(sizeof(g_IdxTriBuf) / sizeof(g_IdxTriBuf[0])))
+	if ((uint)((indexed_triangle*)pGTest->primbuf - g_IdxTriBuf) > (uint)(sizeof(g_IdxTriBuf) / sizeof(g_IdxTriBuf[0])))
 		delete[] pGTest->primbuf;
-	if ((unsigned int)((indexed_triangle*)pGTest->primbuf1 - g_IdxTriBuf) > (unsigned int)(sizeof(g_IdxTriBuf) / sizeof(g_IdxTriBuf[0])))
+	if ((uint)((indexed_triangle*)pGTest->primbuf1 - g_IdxTriBuf) > (uint)(sizeof(g_IdxTriBuf) / sizeof(g_IdxTriBuf[0])))
 		delete[] pGTest->primbuf1;
-	if ((unsigned int)(pGTest->iFeature_buf - g_iFeatureBuf) > (unsigned int)(sizeof(g_iFeatureBuf) / sizeof(g_iFeatureBuf[0])))
+	if ((uint)(pGTest->iFeature_buf - g_iFeatureBuf) > (uint)(sizeof(g_iFeatureBuf) / sizeof(g_iFeatureBuf[0])))
 		delete[] pGTest->iFeature_buf;
-	if ((unsigned int)(pGTest->idbuf - g_IdBuf) > (unsigned int)(sizeof(g_IdBuf) / sizeof(g_IdBuf[0])))
+	if ((uint)(pGTest->idbuf - g_IdBuf) > (uint)(sizeof(g_IdBuf) / sizeof(g_IdBuf[0])))
 		delete[] pGTest->idbuf;
-	if ((unsigned int)(pGTest->surfaces - g_SurfaceDescBuf) > (unsigned int)(sizeof(g_SurfaceDescBuf) / sizeof(g_SurfaceDescBuf[0])))
+	if ((uint)(pGTest->surfaces - g_SurfaceDescBuf) > (uint)(sizeof(g_SurfaceDescBuf) / sizeof(g_SurfaceDescBuf[0])))
 		delete[] pGTest->surfaces;
-	if ((unsigned int)(pGTest->edges - g_EdgeDescBuf) > (unsigned int)(sizeof(g_EdgeDescBuf) / sizeof(g_EdgeDescBuf[0])))
+	if ((uint)(pGTest->edges - g_EdgeDescBuf) > (uint)(sizeof(g_EdgeDescBuf) / sizeof(g_EdgeDescBuf[0])))
 		delete[] pGTest->edges;
 }
 
@@ -1451,7 +1451,7 @@ int CTriMesh::FindClosestPoint(geom_world_data* pgwd, int& iPrim, int& iFeature,
 	ptres[0].Set(1E10f, 1E10f, 1E10f);
 	vector2_w_enforcer<float> wdiv(ptres[1], ptres[0], ptdstw);
 
-	if ((unsigned int)iPrim < (unsigned int)m_nTris) do {
+	if ((uint)iPrim < (uint)m_nTris) do {
 		if ((iFeature & 0x60) == 0x40) { // face
 			pt[0] = pgwd->R * m_pVertices[m_pIndices[iPrim * 3 + 0]] * pgwd->scale + pgwd->offset;
 			pt[1] = pgwd->R * m_pVertices[m_pIndices[iPrim * 3 + 1]] * pgwd->scale + pgwd->offset;
@@ -1706,7 +1706,7 @@ void CTriMesh::HashTrianglesToPlane(const coord_plane& hashplane, const vector2d
 		isz.x = float2int(sz.x * rcellsize + 0.5f);
 		isz.y = float2int(sz.y * rcellsize + 0.5f);
 	}
-	if ((unsigned int)(isz.x * isz.y) > 4096u) {
+	if ((uint)(isz.x * isz.y) > 4096u) {
 		isz.x = min(64, max(1, isz.x)); isz.y = min(64, max(1, isz.y));
 	}
 	else if (isz.x * isz.y == 0)
@@ -1818,7 +1818,7 @@ int CTriMesh::Intersect(IGeometry* pCollider, geom_world_data* pdata1, geom_worl
 			bStopAtFirstTri = false;
 		}
 
-		if ((unsigned int)pdata1->iStartNode - 1u < (unsigned int)m_nTris) {
+		if ((uint)pdata1->iStartNode - 1u < (uint)m_nTris) {
 			atri.n = m_pNormals[pdata1->iStartNode - 1];
 			atri.pt[0] = m_pVertices[m_pIndices[(pdata1->iStartNode - 1) * 3 + 0]];
 			atri.pt[1] = m_pVertices[m_pIndices[(pdata1->iStartNode - 1) * 3 + 1]];

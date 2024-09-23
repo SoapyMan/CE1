@@ -120,7 +120,7 @@ ZipDir::ErrorEnum ZipDir::Cache::ReadFile(FileEntry* pFileEntry, void* pCompress
 		}
 		else
 		{
-			unsigned long nSizeUncompressed = pFileEntry->desc.lSizeUncompressed;
+			ulong nSizeUncompressed = pFileEntry->desc.lSizeUncompressed;
 			if (Z_OK != ZipRawUncompress(m_pHeap, pUncompressed, &nSizeUncompressed, pBuffer, pFileEntry->desc.lSizeCompressed))
 				return ZD_ERROR_CORRUPTED_DATA;
 		}

@@ -63,7 +63,7 @@ void FillSafeBofder(char* p)
 		p[i] = (char)(g_cFillConst + i);
 }
 #endif
-static void* F_CALLBACKAPI CrySound_Alloc(unsigned int size)
+static void* F_CALLBACKAPI CrySound_Alloc(uint size)
 {
 #if CS_SAFEBORDER
 	unsigned* pN = (unsigned*)malloc(size + 2 * CS_SAFEBORDER + sizeof(unsigned));
@@ -92,7 +92,7 @@ static void F_CALLBACKAPI CrySound_Free(void* ptr)
 #endif
 }
 
-static void* F_CALLBACKAPI CrySound_Realloc(void* ptr, unsigned int size)
+static void* F_CALLBACKAPI CrySound_Realloc(void* ptr, uint size)
 {
 #if CS_SAFEBORDER
 	char* pOld = ((char*)ptr) - CS_SAFEBORDER;
@@ -308,7 +308,7 @@ CSoundSystem::CSoundSystem(ISystem* pSystem, HWND hWnd) : CSoundSystemCommon(pSy
 
 		if (m_pCVarCapsCheck->GetIVal() > 0) //caps checking is slow	
 		{
-			unsigned int caps = 0;
+			uint caps = 0;
 			FSOUND_GetDriverCaps(i, &caps);
 
 			if (caps & FSOUND_CAPS_HARDWARE)
@@ -1862,8 +1862,8 @@ void CSoundSystem::RemoveBuffer(SSoundBufferProps& sn)
 void	CSoundSystem::GetSoundMemoryUsageInfo(size_t& nCurrentMemory, size_t& nMaxMemory)
 {
 	GUARD_HEAP;
-	unsigned int tmpnCurrentMemory = nCurrentMemory;
-	unsigned int tmpnMaxMemory = nMaxMemory;
+	uint tmpnCurrentMemory = nCurrentMemory;
+	uint tmpnMaxMemory = nMaxMemory;
 	FSOUND_GetMemoryStats(&tmpnCurrentMemory, &tmpnMaxMemory);
 	nCurrentMemory = tmpnCurrentMemory;
 	nMaxMemory = tmpnMaxMemory;
@@ -1934,8 +1934,8 @@ void CSoundSystem::GetMemoryUsage(class ICrySizer* pSizer)
 		SIZER_COMPONENT_NAME(pSizer, "FMOD");
 		size_t nCurrentAlloced;
 		size_t nMaxAlloced;
-		unsigned int tmpnCurrentMemory;
-		unsigned int tmpnMaxMemory;
+		uint tmpnCurrentMemory;
+		uint tmpnMaxMemory;
 		FSOUND_GetMemoryStats(&tmpnCurrentMemory, &tmpnMaxMemory);
 		nCurrentAlloced = tmpnCurrentMemory;
 		nMaxAlloced = tmpnMaxMemory;

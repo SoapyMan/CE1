@@ -42,7 +42,7 @@ public:
 	bool IsFinished();
 
 	// returns the number of bytes read so far (the whole buffer size if IsFinished())
-	unsigned int GetBytesRead(bool bWait);
+	uint GetBytesRead(bool bWait);
 
 	// returns the buffer into which the data has been or will be read
 	// at least GetBytesRead() bytes in this buffer are guaranteed to be already read

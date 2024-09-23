@@ -42,7 +42,7 @@ public:
 
 	// returns the pointer to the indices in the index buffer to fill in
 	// the indices refer to the vertices in the vertex buffer returned by getVertexBuffer ()
-	unsigned short* getIndexBuffer() { return &m_arrIndices[0]; }
+	ushort* getIndexBuffer() { return &m_arrIndices[0]; }
 
 	// assuming the calculation of the shadow volume is finished, submits it to the renderer
 	void submit(const SRendParams* rParams, IShader* pShadowCull);
@@ -70,7 +70,7 @@ protected:
 	CRETriMeshShadow* m_pMesh;
 
 	//! shadow volume indices
-	TFixedArray<unsigned short> m_arrIndices;
+	TFixedArray<ushort> m_arrIndices;
 
 	//! shadow volume memory vertex buffer
 	//! TODO: get rid of it; rewrite the shadow code so that we don't keep it in every character

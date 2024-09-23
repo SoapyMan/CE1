@@ -56,7 +56,7 @@ inline void CADPCMDecoder::CloseFileHandle(FILE*& pFile)
 	}
 }
 
-inline void CADPCMDecoder::SetFileInfo(const unsigned int cuiSampleCount, const bool cbIs44KHz)
+inline void CADPCMDecoder::SetFileInfo(const uint cuiSampleCount, const bool cbIs44KHz)
 {
 	m_FileInfo.nSamples = cuiSampleCount;//already doubled up
 	m_b44KHz = cbIs44KHz;
@@ -121,13 +121,13 @@ inline int CADPCMDecoder::AdpcmDecode(int c, MsState& rState, int sample1, int s
 	return(sample);
 }
 
-void CADPCMDecoder::AdpcmBlockExpandI(int nCoef, const short* iCoef, const unsigned char* ibuff, short* obuff, int n)
+void CADPCMDecoder::AdpcmBlockExpandI(int nCoef, const short* iCoef, const uchar* ibuff, short* obuff, int n)
 {
 	MsState state[2]; // One decompressor state for each channel
 
 	// Read the four-byte header for each channel
-	const unsigned char* ip(ibuff);
-	unsigned char bpred(*ip++);
+	const uchar* ip(ibuff);
+	uchar bpred(*ip++);
 	state[0].sCoef0 = iCoef[(int)bpred * 2 + 0];
 	state[0].sCoef1 = iCoef[(int)bpred * 2 + 1];
 	bpred = (*ip++);
@@ -151,7 +151,7 @@ void CADPCMDecoder::AdpcmBlockExpandI(int nCoef, const short* iCoef, const unsig
 	{
 		while (op < top)
 		{
-			unsigned char b(*ip++);
+			uchar b(*ip++);
 			short* tmp(op);
 			*op++ = AdpcmDecode(b >> 4, state[0], tmp[-2], tmp[-2 * 2]);
 			tmp = op;
@@ -214,7 +214,7 @@ inline bool CADPCMDecoderInstance::Seek0(int nDelay)
 	return true;
 }
 
-inline const unsigned int CADPCMDecoderInstance::Samples()
+inline const uint CADPCMDecoderInstance::Samples()
 {
 	return m_uiNumSamples;
 }
@@ -274,15 +274,15 @@ const bool CADPCMDecoderInstance::InitStreamWAV()
 	}
 	pPak.FRead(m_aCoefs, 1, m_sCoefs/*7*/ * 2/*stereo->2 channels*/ * sizeof(short), m_pFile);
 	//now seek to start position (next to "data")
-	unsigned int uiDataLeft = 0;
+	uint uiDataLeft = 0;
 	for (;;)
 	{
 		char pcMagic[4];
-		pPak.FRead(pcMagic, 1, sizeof(unsigned char) * 4, m_pFile);
+		pPak.FRead(pcMagic, 1, sizeof(uchar) * 4, m_pFile);
 
 		if (0 != pPak.FEof(m_pFile))
 			return  false;
-		pPak.FRead(&uiDataLeft, 1, sizeof(unsigned int), m_pFile);
+		pPak.FRead(&uiDataLeft, 1, sizeof(uint), m_pFile);
 		if (0 == strncmp("data", pcMagic, 4))
 			break;
 		pPak.FSeek(m_pFile, uiDataLeft, SEEK_CUR);
@@ -378,19 +378,19 @@ bool CADPCMDecoderInstance::GetPCMData(signed long* pDataOut, int nSamples, bool
 }
 
 // AdpcmReadBlock - Grab and decode complete block of samples
-inline unsigned short CADPCMDecoderInstance::AdpcmReadBlock(short* pDest)
+inline ushort CADPCMDecoderInstance::AdpcmReadBlock(short* pDest)
 {
 	//read block
-	unsigned short bytesRead((unsigned short)m_pDecoder->m_pPak->FRead(m_aEncodedBlock, 1, m_uiCurrentBlockSize, m_pFile));
+	ushort bytesRead((ushort)m_pDecoder->m_pPak->FRead(m_aEncodedBlock, 1, m_uiCurrentBlockSize, m_pFile));
 	m_iFilePos += bytesRead;	//internal file pos counter, counted from m_uiDataStartPos on
-	unsigned int samplesThisBlock = m_uiCurrentSamplesPerBlock;
+	uint samplesThisBlock = m_uiCurrentSamplesPerBlock;
 	if (bytesRead < m_uiCurrentBlockSize)
 	{
 		//this shouldnt be the case, but handle it just in case (most programs do block align)
 		samplesThisBlock = 0;
-		unsigned int m = bytesRead;
+		uint m = bytesRead;
 		//more data found than just coefs
-		if (m >= (unsigned int)(scuiNumberOfCoefs * 2))
+		if (m >= (uint)(scuiNumberOfCoefs * 2))
 		{
 			samplesThisBlock = m - scuiNumberOfCoefs * 2 + 2;// bytes beyond block-header
 		}
@@ -408,15 +408,15 @@ inline unsigned short CADPCMDecoderInstance::AdpcmReadBlock(short* pDest)
 const bool CADPCMDecoderInstance::FillPCMBuffer(signed long* pBuffer, int nSamples)
 {
 	//since there get always complete blocks read, fill buffer with already compressed samples
-	const unsigned int cuiModulo = m_nPos % m_uiCurrentSamplesPerBlock;
+	const uint cuiModulo = m_nPos % m_uiCurrentSamplesPerBlock;
 	if (cuiModulo != 0 && m_iFilePos > 0)//to not let break anything 
 	{	//we are not on a block boundary
-		unsigned int uiLeft = crymin((unsigned int)nSamples, (m_uiCurrentSamplesPerBlock - cuiModulo));
+		uint uiLeft = crymin((uint)nSamples, (m_uiCurrentSamplesPerBlock - cuiModulo));
 		if (uiLeft != 0)//read as many sampels as left decompressed and not more than requested
 		{
 			//copy decompressed data
 			signed long* pslDecompressed = reinterpret_cast<signed long*>(m_aDecodedBlock) + cuiModulo;
-			for (unsigned int i = 0; i < uiLeft; i++)
+			for (uint i = 0; i < uiLeft; i++)
 			{
 				*pBuffer++ = *pslDecompressed++;
 			}
@@ -442,7 +442,7 @@ const bool CADPCMDecoderInstance::FillPCMBuffer(signed long* pBuffer, int nSampl
 			else
 			{
 				//decompress to static buffer
-				unsigned int uiReadSamples = AdpcmReadBlock();
+				uint uiReadSamples = AdpcmReadBlock();
 				if (uiReadSamples != m_uiCurrentSamplesPerBlock)
 				{
 					//we are supposed to be on the end of the file, fill with 0's
@@ -475,16 +475,16 @@ const bool CADPCMDecoderInstance::FillPCMBuffer22KHz(signed long* pBuffer, int n
 		uStartPos++;
 	}
 	//since there get always complete blocks read, fill buffer with already compressed samples
-	const unsigned int cuiModulo = uStartPos % m_uiCurrentSamplesPerBlock;
-	unsigned int uiLeft = 0;
+	const uint cuiModulo = uStartPos % m_uiCurrentSamplesPerBlock;
+	uint uiLeft = 0;
 	if (cuiModulo != 0 && m_iFilePos > 0)//to not let break anything 
 	{	//we are not on a block boundary
-		uiLeft = crymin((unsigned int)nSamples / 2, (m_uiCurrentSamplesPerBlock - cuiModulo));/*22KHz*/
+		uiLeft = crymin((uint)nSamples / 2, (m_uiCurrentSamplesPerBlock - cuiModulo));/*22KHz*/
 		signed long* pslDecompressed = reinterpret_cast<signed long*>(m_aDecodedBlock) + cuiModulo;
 		if (uiLeft != 0)//read as many sampels as left decompressed and not more than requested
 		{
 			//copy decompressed data
-			for (unsigned int i = 0; i < uiLeft; i++)
+			for (uint i = 0; i < uiLeft; i++)
 			{
 				*pBuffer++ = *pslDecompressed;/*22KHz*/
 				*pBuffer++ = *pslDecompressed++;
@@ -518,7 +518,7 @@ const bool CADPCMDecoderInstance::FillPCMBuffer22KHz(signed long* pBuffer, int n
 				pBuffer = reinterpret_cast<signed long*>(pCurrentDest);
 				signed long* pDecoded = reinterpret_cast<signed long*>(m_aDecodedBlock);
 				//if for bad reason not enough samples have been read, it will get automatically filled with 0's
-				for (unsigned int i = 0; i < m_uiCurrentSamplesPerBlock; i++)
+				for (uint i = 0; i < m_uiCurrentSamplesPerBlock; i++)
 				{
 					*pBuffer++ = *pDecoded;
 					*pBuffer++ = *pDecoded++;
@@ -529,7 +529,7 @@ const bool CADPCMDecoderInstance::FillPCMBuffer22KHz(signed long* pBuffer, int n
 			else
 			{
 				//decompress to static buffer
-				unsigned int uiReadSamples = AdpcmReadBlock();
+				uint uiReadSamples = AdpcmReadBlock();
 				if (uiReadSamples != m_uiCurrentSamplesPerBlock)
 				{
 					//we are supposed to be on the end of the file, fill with 0's

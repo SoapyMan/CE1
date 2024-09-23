@@ -67,7 +67,7 @@ int alphadec;					/* biased by 10 bits */
 /* Types and Global Variables
    -------------------------- */
    
-static unsigned char *thepicture;		/* the input image itself */
+static uchar *thepicture;		/* the input image itself */
 static int lengthcount;				/* lengthcount = H*W*3 */
 
 static int samplefac;				/* sampling factor 1..30 */
@@ -86,7 +86,7 @@ static int radpower[initrad];			/* radpower for precomputation */
 /* Initialise network in range (0,0,0) to (255,255,255) and set parameters
    ----------------------------------------------------------------------- */
 
-void initnet(unsigned char *thepic, int len, int sample)	
+void initnet(uchar *thepic, int len, int sample)	
 {
 	register int i;
 	register int *p;
@@ -127,7 +127,7 @@ void unbiasnet()
 /* Output colour map
    ----------------- */
 
-void writecolourmap(unsigned char *p)
+void writecolourmap(uchar *p)
 {
 	int i,j;
 
@@ -335,8 +335,8 @@ void learn()
 {
 	register int i,j,b,g,r;
 	int radius,rad,alpha,step,delta,samplepixels;
-	register unsigned char *p;
-	unsigned char *lim;
+	register uchar *p;
+	uchar *lim;
 
 	alphadec = 30 + ((samplefac-1)/3);
 	p = thepicture;

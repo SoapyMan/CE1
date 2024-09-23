@@ -76,7 +76,7 @@ void CToolBarTab::ResizeAllContainers()
 	// Center all containers in the tab control
 	////////////////////////////////////////////////////////////////////////
 	
-	unsigned int i;
+	uint i;
 	TCITEM tci;
 	RECT rcClient;
 	RECT rcWndOldClient;

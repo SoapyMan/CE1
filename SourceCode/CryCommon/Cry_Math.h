@@ -219,30 +219,30 @@ inline int sgn(int x) {
 }
 
 inline int isneg(double x) {
-	union { float f; unsigned int i; } u;
+	union { float f; uint i; } u;
 	u.f = (float)x; return (int)(u.i >> 31);
 }
 
 inline int isneg(float x) {
-	union { float f; unsigned int i; } u;
+	union { float f; uint i; } u;
 	u.f = x; return (int)(u.i >> 31);
 }
 
 inline int isneg(int x) {
-	return (int)((unsigned int)x >> 31);
+	return (int)((uint)x >> 31);
 }
 
 inline int isnonneg(double x) {
-	union { float f; unsigned int i; } u;
+	union { float f; uint i; } u;
 	u.f = (float)x; return (int)(u.i >> 31 ^ 1);
 }
 
 inline int isnonneg(float x) {
-	union { float f; unsigned int i; } u;
+	union { float f; uint i; } u;
 	u.f = x; return (int)(u.i >> 31 ^ 1);
 }
 inline int isnonneg(int x) {
-	return (int)((unsigned int)x >> 31 ^ 1);
+	return (int)((uint)x >> 31 ^ 1);
 }
 
 inline int iszero(double x) {
@@ -302,11 +302,11 @@ template<class F> int idxmin3(F* pdata) {
 
 
 
-inline int getexp(float x) { return (int)(*(unsigned int*)&x >> 23 & 0x0FF) - 127; }
-inline int getexp(double x) { return (int)(*((unsigned int*)&x + 1) >> 20 & 0x7FF) - 1023; }
+inline int getexp(float x) { return (int)(*(uint*)&x >> 23 & 0x0FF) - 127; }
+inline int getexp(double x) { return (int)(*((uint*)&x + 1) >> 20 & 0x7FF) - 1023; }
 
-inline float& setexp(float& x, int iexp) { (*(unsigned int*)&x &= ~(0x0FF << 23)) |= (iexp + 127) << 23; return x; }
-inline double& setexp(double& x, int iexp) { (*((unsigned int*)&x + 1) &= ~(0x7FF << 20)) |= (iexp + 1023) << 20; return x; }
+inline float& setexp(float& x, int iexp) { (*(uint*)&x &= ~(0x0FF << 23)) |= (iexp + 127) << 23; return x; }
+inline double& setexp(double& x, int iexp) { (*((uint*)&x + 1) &= ~(0x7FF << 20)) |= (iexp + 1023) << 20; return x; }
 
 
 
@@ -318,14 +318,14 @@ public:
 	unused_marker& operator,(float& x) { *(int*)&x = 0xFFBFFFFF; return *this; }
 	unused_marker& operator,(double& x) { *((int*)&x + 1) = 0xFFF7FFFF; return *this; }
 	unused_marker& operator,(int& x) { x = 1 << 31; return *this; }
-	unused_marker& operator,(unsigned int& x) { x = 1u << 31; return *this; }
+	unused_marker& operator,(uint& x) { x = 1u << 31; return *this; }
 	template<class ref> unused_marker& operator,(ref*& x) { x = (ref*)-1; return *this; }
 	template<class F> unused_marker& operator,(Vec3_tpl<F>& x) { return *this, x.x; }
 	template<class F> unused_marker& operator,(Quaternion_tpl<F>& x) { return *this, x.w; }
 };
 inline bool is_unused(const float& x) { return (*(int*)&x & 0xFFA00000) == 0xFFA00000; }
 inline bool is_unused(int x) { return x == 1 << 31; }
-inline bool is_unused(unsigned int x) { return x == 1u << 31; }
+inline bool is_unused(uint x) { return x == 1u << 31; }
 template<class ref> bool is_unused(ref* x) { return x == (ref*)-1; }
 template<class F> bool is_unused(const Vec3_tpl<F>& x) { return is_unused(x.x); }
 template<class F> bool is_unused(const Quaternion_tpl<F>& x) { return is_unused(x.w); }
@@ -430,14 +430,14 @@ template<class F> inline F min_safe(F op1, F op2) { return op1 < op2 ? op1 : op2
 
 typedef struct VALUE16 {
 	union {
-		struct { unsigned char a, b; } c;
-		unsigned short ab;
+		struct { uchar a, b; } c;
+		ushort ab;
 	};
 } VALUE16;
 
-inline unsigned short SWAP16(unsigned short l) {
+inline ushort SWAP16(ushort l) {
 	VALUE16 l16;
-	unsigned char a, b;
+	uchar a, b;
 	l16.ab = l;
 	a = l16.c.a;  b = l16.c.b;
 	l16.c.a = b; 	l16.c.b = a;
@@ -448,16 +448,16 @@ inline unsigned short SWAP16(unsigned short l) {
 
 typedef struct VALUE32 {
 	union {
-		struct { unsigned char a, b, c, d; } c;
+		struct { uchar a, b, c, d; } c;
 		float FLOAT;
-		unsigned long abcd;
+		ulong abcd;
 		const void* ptr;
 	};
 } VALUE32;
 
-inline unsigned long SWAP32(unsigned long l) {
+inline ulong SWAP32(ulong l) {
 	VALUE32 l32;
-	unsigned char a, b, c, d;
+	uchar a, b, c, d;
 	l32.abcd = l;
 	a = l32.c.a;  b = l32.c.b;  c = l32.c.c;  d = l32.c.d;
 	l32.c.a = d;	l32.c.b = c; 	l32.c.c = b; 	l32.c.d = a;
@@ -466,7 +466,7 @@ inline unsigned long SWAP32(unsigned long l) {
 
 inline const void* SWAP32(const void* l) {
 	VALUE32 l32;
-	unsigned char a, b, c, d;
+	uchar a, b, c, d;
 	l32.ptr = l;
 	a = l32.c.a;  b = l32.c.b;  c = l32.c.c;  d = l32.c.d;
 	l32.c.a = d;	l32.c.b = c; 	l32.c.c = b; 	l32.c.d = a;
@@ -476,7 +476,7 @@ inline const void* SWAP32(const void* l) {
 
 inline float FSWAP32(float f) {
 	VALUE32 l32;
-	unsigned char a, b, c, d;
+	uchar a, b, c, d;
 	l32.FLOAT = f;
 	a = l32.c.a;  b = l32.c.b;  c = l32.c.c;  d = l32.c.d;
 	l32.c.a = d;	l32.c.b = c; 	l32.c.c = b; 	l32.c.d = a;

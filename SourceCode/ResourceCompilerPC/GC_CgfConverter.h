@@ -212,7 +212,7 @@ protected:
 	void writeArray(const std::vector<T>& arrData)
 	{
 		if (!arrData.empty()) {
-			unsigned long a0 = arrData.size();
+			ulong a0 = arrData.size();
 			write(&arrData[0], arrData.size());
 
 		}

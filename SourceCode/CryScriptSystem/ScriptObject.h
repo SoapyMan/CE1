@@ -54,7 +54,7 @@ public:
 	virtual bool GetValue(const char* sKey, IScriptObject* pObj);
 	virtual bool GetValue(const char* sKey, HSCRIPTFUNCTION& funcVal);
 	virtual bool GetUDValue(const char* sKey, USER_DATA& nValue, int& nCookie);	//AMD Port
-	virtual bool GetFuncData(const char* sKey, unsigned int*& pCode, int& iSize);
+	virtual bool GetFuncData(const char* sKey, uint*& pCode, int& iSize);
 	virtual bool BeginSetGetChain();
 	virtual bool GetValueChain(const char* sKey, int& nVal);
 	virtual bool GetValueChain(const char* sKey, float& fVal);
@@ -94,7 +94,7 @@ public:
 	virtual bool GetCurrent(const char*& sVal);
 	virtual bool GetCurrent(IScriptObject* pObj);
 	virtual bool GetCurrentPtr(const void*& pObj);
-	virtual bool GetCurrentFuncData(unsigned int*& pCode, int& iSize);
+	virtual bool GetCurrentFuncData(uint*& pCode, int& iSize);
 	virtual bool GetCurrentKey(int& nKey);
 	virtual bool GetCurrentKey(const char*& sKey);
 	virtual ScriptVarType GetCurrentType();
@@ -145,8 +145,8 @@ private: // -------------------------------------------------------------------
 
 	//////////////////////////////////////////////////////////////////////////
 	// Flags.
-	unsigned int					m_bDeleted;			//!<
-	unsigned int					m_bAttached;		//!<
+	uint					m_bDeleted;			//!<
+	uint					m_bAttached;		//!<
 
 #ifdef _DEBUG
 public:

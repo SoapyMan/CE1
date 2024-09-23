@@ -148,7 +148,7 @@ struct IXGame : public IGame
 	virtual void ReloadScripts() = 0;
 
 	// sets a timer for a generic script object table
-	virtual int AddTimer(IScriptObject* pTable, unsigned int nStartTimer, unsigned int nTimer, IScriptObject* pUserData, bool bUpdateDuringPause) = 0;
+	virtual int AddTimer(IScriptObject* pTable, uint nStartTimer, uint nTimer, IScriptObject* pUserData, bool bUpdateDuringPause) = 0;
 
 	virtual CXServer* GetServer() = 0;
 

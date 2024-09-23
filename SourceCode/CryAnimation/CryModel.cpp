@@ -627,7 +627,7 @@ bool CryModel::loadCCGBoneGeom(IGeomManager* pGeomManager, unsigned nLOD, float 
 	const char* pDataEnd = (const char*)pHeader + nSize;
 	const Vec3d* pVertices = (const Vec3d*)(pHeader + 1);
 	const CCFIntFace* pFaces = (const CCFIntFace*)(pVertices + pHeader->numVertices);
-	const unsigned char* pMaterials = (const unsigned char*)(pFaces + pHeader->numFaces);
+	const uchar* pMaterials = (const uchar*)(pFaces + pHeader->numFaces);
 
 	const char* pRequiredDataEnd = (const char*)(pMaterials + pHeader->numFaces);
 
@@ -786,16 +786,16 @@ bool CryModel::loadCCGLOD(unsigned nLOD, const CCFAnimGeomInfo* pHeader, unsigne
 			break;
 
 		case CCF_GI_INDEX_BUFFER:
-			if (Reader.GetDataSize() < pHeader->numIndices * sizeof(unsigned short))
+			if (Reader.GetDataSize() < pHeader->numIndices * sizeof(ushort))
 				return false;
 			pLOD->m_arrIndices.resize(pHeader->numIndices);
-			memcpy(&pLOD->m_arrIndices[0], Reader.GetData(), pHeader->numIndices * sizeof(unsigned short));
+			memcpy(&pLOD->m_arrIndices[0], Reader.GetData(), pHeader->numIndices * sizeof(ushort));
 			break;
 
 		case CCF_GI_EXT_TO_INT_MAP:
-			if (Reader.GetDataSize() < pHeader->numExtTangents * sizeof(unsigned short))
+			if (Reader.GetDataSize() < pHeader->numExtTangents * sizeof(ushort))
 				return false;
-			pLOD->initExtToIntMap((const unsigned short*)Reader.GetData(), pHeader->numExtTangents);
+			pLOD->initExtToIntMap((const ushort*)Reader.GetData(), pHeader->numExtTangents);
 			break;
 
 		case CCF_GI_EXT_UVS:
@@ -980,7 +980,7 @@ void CryModel::ExportModelsASC()
 		fprintf(f, "Exporting %s %d/%d lod\n", getFilePathCStr(), n, numLODs());
 		getGeometryInfo(n)->exportASC(f);
 		fprintf(f, "Index buffer:\n");
-		list2<unsigned short>* pIndices = m_pDefaultModelState->GetCryModelSubmesh(0)->m_pLeafBuffers[n]->m_pIndicesPreStrip;
+		list2<ushort>* pIndices = m_pDefaultModelState->GetCryModelSubmesh(0)->m_pLeafBuffers[n]->m_pIndicesPreStrip;
 		for (unsigned nIndex = 0; nIndex < pIndices->size(); nIndex += 3)
 		{
 			fprintf(f, "0x%04x, 0x%04x, 0x%04x, //0x%04x  //0x%04x\n\t", (*pIndices)[nIndex], (*pIndices)[nIndex + 1], (*pIndices)[nIndex + 2], nIndex, nIndex / 3);

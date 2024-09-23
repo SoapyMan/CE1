@@ -105,18 +105,18 @@ typedef struct IAISystem
 	virtual const ObstacleData GetObstacle(int nIndex) = 0;
 
 	//! Create an ai representation for an object
-	virtual IAIObject* CreateAIObject(unsigned short type, void* pAssociation) = 0;
+	virtual IAIObject* CreateAIObject(ushort type, void* pAssociation) = 0;
 
 	virtual IGoalPipe* CreateGoalPipe(const char* pName) = 0;
 	virtual IGoalPipe* OpenGoalPipe(const char* pName) = 0;
 
-	virtual IAIObject* GetAIObjectByName(unsigned short type, const char* pName) = 0;
+	virtual IAIObject* GetAIObjectByName(ushort type, const char* pName) = 0;
 
-	virtual IAIObject* GetNearestObjectOfType(const Vec3& pos, unsigned int type, float fRadius, IAIObject* pSkip = nullptr) = 0;
+	virtual IAIObject* GetNearestObjectOfType(const Vec3& pos, uint type, float fRadius, IAIObject* pSkip = nullptr) = 0;
 
-	virtual IAIObject* GetNearestObjectOfType(IAIObject* pObject, unsigned int type, float fRadius, int nOption = 0) = 0;
+	virtual IAIObject* GetNearestObjectOfType(IAIObject* pObject, uint type, float fRadius, int nOption = 0) = 0;
 
-	virtual IAIObject* GetNearestToObject(IAIObject* pRef, unsigned short nType, float fRadius) = 0;
+	virtual IAIObject* GetNearestToObject(IAIObject* pRef, ushort nType, float fRadius) = 0;
 
 	virtual void Release() = 0;
 
@@ -133,7 +133,7 @@ typedef struct IAISystem
 
 	virtual void DeletePath(const char* szPathName) = 0;
 
-	virtual void SendSignal(unsigned char cFilter, int nSignalId, const char* szText, IAIObject* pSenderObject) = 0;
+	virtual void SendSignal(uchar cFilter, int nSignalId, const char* szText, IAIObject* pSenderObject) = 0;
 
 	virtual void SendAnonimousSignal(int nSignalId, const char* szText, const Vec3& pos, float fRadius, IAIObject* pSenderObject) = 0;
 
@@ -141,7 +141,7 @@ typedef struct IAISystem
 
 	virtual int GetGroupCount(int groupID) = 0;
 
-	virtual void SetAssesmentMultiplier(unsigned short type, float fMultiplier) = 0;
+	virtual void SetAssesmentMultiplier(ushort type, float fMultiplier) = 0;
 
 	virtual void SetSpeciesThreatMultiplier(int nSpeciesID, float fMultiplier) = 0;
 

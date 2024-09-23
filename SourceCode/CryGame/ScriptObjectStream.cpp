@@ -84,7 +84,7 @@ int CScriptObjectStream::WriteByte(IFunctionHandler *pH)
 {
 	CHECK_PARAMETERS(1);
 	int n;
-	unsigned char uc;
+	uchar uc;
 	pH->GetParam(1,n);
 	uc=n;
 	m_pStm->Write(uc);
@@ -154,7 +154,7 @@ int CScriptObjectStream::ReadShort(IFunctionHandler *pH)
 int CScriptObjectStream::ReadByte(IFunctionHandler *pH)
 {
 	CHECK_PARAMETERS(0);
-	unsigned char c;
+	uchar c;
 
 	if(!m_pStm->Read(c))
 		return pH->EndFunctionNull();
@@ -198,7 +198,7 @@ int CScriptObjectStream::ReadBool(IFunctionHandler *pH)
 int CScriptObjectStream::ReadNumberInBits(IFunctionHandler *pH)
 {
 	CHECK_PARAMETERS(1);
-	unsigned int n;
+	uint n;
 	int nNumOfBits;
 	pH->GetParam(1,nNumOfBits);
 

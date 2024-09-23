@@ -533,7 +533,7 @@ const bool CRadMesh::FillInValues(IEntityRender *pIEtyRend, const CBrushObject *
 
 	// Get indices and vertices
 	int iIdxCnt = 0;
-	unsigned short *pIndices = pLB->GetIndices(&iIdxCnt);
+	ushort *pIndices = pLB->GetIndices(&iIdxCnt);
 	int iVtxStride = 0;
 	Vec3d *pVertices = reinterpret_cast<Vec3d *> (pLB->GetPosPtr(iVtxStride));
 
@@ -897,8 +897,8 @@ const bool CRadPoly::SmoothVertex(CRadVertex &outVertex, const Vec3d &inPosition
 	{ 
 		CRadPoly* pSharedPoly = (*sharedIter).first;
 		//fetch vertex index which are shared and make sure that the nearest vertex index(ciNearestVertexIndex) is contained in that shared edge
-		const unsigned int cuiIndex0 = ((*sharedIter).second) & 0x000000FF;
-		const unsigned int cuiIndex1 = (((*sharedIter).second) & 0x0000FF00)>>8;
+		const uint cuiIndex0 = ((*sharedIter).second) & 0x000000FF;
+		const uint cuiIndex1 = (((*sharedIter).second) & 0x0000FF00)>>8;
 		const bool cbOnlyOneVertexShared = (cuiIndex1 == scuiOneVertexShareFlag);
 		if(!cbOnlyOneVertexShared && (ciNearestVertexIndex != cuiIndex0 && ciNearestVertexIndex != cuiIndex1))
 			continue;//wrong shared edge

@@ -154,7 +154,7 @@ void CryCharRenderElement::assignMaterial(unsigned nMaterial, IShader* pShader, 
 	}
 }
 
-void CryCharRenderElement::updateIndices(const unsigned short* pIndices, unsigned numIndices)
+void CryCharRenderElement::updateIndices(const ushort* pIndices, unsigned numIndices)
 {
 	getLeafBuffer()->UpdateVidIndices(pIndices, (int)numIndices);
 	getLeafBuffer()->m_NumIndices = numIndices;

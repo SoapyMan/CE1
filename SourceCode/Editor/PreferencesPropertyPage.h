@@ -61,8 +61,8 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	// CVariable helper functions.
 	//////////////////////////////////////////////////////////////////////////
-	void AddVariable( CVariableBase &var,const char *varName,unsigned char dataType=IVariable::DT_SIMPLE );
-	void AddVariable( CVariableArray &table,CVariableBase &var,const char *varName,unsigned char dataType=IVariable::DT_SIMPLE );
+	void AddVariable( CVariableBase &var,const char *varName,uchar dataType=IVariable::DT_SIMPLE );
+	void AddVariable( CVariableArray &table,CVariableBase &var,const char *varName,uchar dataType=IVariable::DT_SIMPLE );
 
 	template <class T>
 	void CopyVar( CVariable<T> &var,T &value,bool bSet )

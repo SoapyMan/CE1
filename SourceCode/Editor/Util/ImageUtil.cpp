@@ -33,7 +33,7 @@ bool CImageUtil::SaveBitmap( const CString &szFileName, CImage &inImage,bool inv
 
 	HANDLE hfile;
 	DWORD dwBytes;
-	unsigned int i;
+	uint i;
 	DWORD *pLine1 = NULL;
 	DWORD *pLine2 = NULL;
 	DWORD *pTemp = NULL;
@@ -122,8 +122,8 @@ bool CImageUtil::SaveJPEG( const CString &strFileName,CImage &inImage )
 
 	bool bSuccess = true;
 	JPEG_CORE_PROPERTIES Image;
-	unsigned char *pImageData = NULL;
-	unsigned char *pImageDataStart = NULL;
+	uchar *pImageData = NULL;
+	uchar *pImageDataStart = NULL;
 
 	CLogFile::FormatLine("Saving data to JPEG... %s", (const char*)strFileName);
 
@@ -134,7 +134,7 @@ bool CImageUtil::SaveJPEG( const CString &strFileName,CImage &inImage )
 
 	// Convert from RGBA to RGB
 	// Allocate memory for the converted image
-	pImageData = new unsigned char[dwWidth * dwHeight * 3];
+	pImageData = new uchar[dwWidth * dwHeight * 3];
 
 	// Set the loop pointer
 	pImageDataStart = pImageData;
@@ -292,7 +292,7 @@ bool CImageUtil::LoadJPEG( const CString &strFileName,CImage &outImage )
 						memSize/(1024*1024),(const char*)strFileName );
     return false;
 	}
-	unsigned char *src = pImageData;
+	uchar *src = pImageData;
 	if (src && trg)
 	{
 		for (int i = 0; i < Image.JPGHeight*Image.JPGWidth; i++)
@@ -425,7 +425,7 @@ static inline ushort us_endian (const byte* ptr)
   return n;
 }
 
-static inline unsigned long ul_endian (const byte* ptr)
+static inline ulong ul_endian (const byte* ptr)
 {
   long n;
   memcpy(&n, ptr, sizeof(n));
@@ -748,7 +748,7 @@ bool CImageUtil::SaveImage( const CString &fileName, CImage &image )
 void CImageUtil::ScaleToFit( const CByteImage &srcImage,CByteImage &trgImage )
 {
 	uint x,y,u,v;
-  unsigned char *destRow,*dest,*src,*sourceRow;
+  uchar *destRow,*dest,*src,*sourceRow;
 
 	uint srcW = srcImage.GetWidth();
 	uint srcH = srcImage.GetHeight();
@@ -782,7 +782,7 @@ void CImageUtil::ScaleToFit( const CByteImage &srcImage,CByteImage &trgImage )
 void CImageUtil::ScaleToFit( const CImage &srcImage,CImage &trgImage )
 {
 	uint x,y,u,v;
-  unsigned int *destRow,*dest,*src,*sourceRow;
+  uint *destRow,*dest,*src,*sourceRow;
 
 	uint srcW = srcImage.GetWidth();
 	uint srcH = srcImage.GetHeight();
@@ -850,7 +850,7 @@ void CImageUtil::SmoothImage( CByteImage &image,int numSteps )
 	}
 }
 
-unsigned char CImageUtil::GetBilinearFilteredAt( const int iniX256, const int iniY256, const CByteImage &image )
+uchar CImageUtil::GetBilinearFilteredAt( const int iniX256, const int iniY256, const CByteImage &image )
 {
 //	assert(image.IsValid());		if(!image.IsValid())return(0);		// this shouldn't be 
 
@@ -869,6 +869,6 @@ unsigned char CImageUtil::GetBilinearFilteredAt( const int iniX256, const int in
 	DWORD bottom =(DWORD)image.ValueAt((int)x  ,(int)y+1)*(256-rx)				// left bottom
 							 +(DWORD)image.ValueAt((int)x+1,(int)y+1)*rx;							// right bottom
 
-	return (unsigned char)((top*(256-ry) + bottom*ry)>>16);
+	return (uchar)((top*(256-ry) + bottom*ry)>>16);
 }
 

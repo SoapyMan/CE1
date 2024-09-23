@@ -603,14 +603,14 @@ void GC_CGFConvertor::writeBGBone(unsigned nLOD, unsigned nBone, CryChunkedFile:
 
 
 	// immediately, write the faces followed by the materials
-	std::vector<unsigned char> arrMtls;
+	std::vector<uchar> arrMtls;
 	arrMtls.resize(bgb.numFaces);
 	std::vector<CCFIntFace> arrFaces;
 	arrFaces.resize(bgb.numFaces);
 
 
 
-	std::vector<unsigned char> arrMtls_GC;
+	std::vector<uchar> arrMtls_GC;
 	arrMtls_GC.resize(bgb.numFaces);
 	std::vector<CCFIntFace> arrFaces_GC;
 	arrFaces_GC.resize(bgb.numFaces);
@@ -657,9 +657,9 @@ void GC_CGFConvertor::WriteGeometryInfo(unsigned nLOD)
 		// material index in the original indexation of CGF
 		unsigned nMaterial;
 		// the first index in the final index buffer
-		unsigned short nIndexBase;
+		ushort nIndexBase;
 		// number of indices in the final index buffer
-		unsigned short numIndices;
+		ushort numIndices;
 	};*/
 
 
@@ -685,7 +685,7 @@ void GC_CGFConvertor::WriteGeometryInfo(unsigned nLOD)
 	SubChunks.AddChunk(CCF_GI_INDEX_BUFFER);
 	int ic = rRendMesh.m_arrIndices.size();
 	for (int x = 0; x < ic; x++) {
-		unsigned short index;
+		ushort index;
 		index = SWAP16(rRendMesh.m_arrIndices[x]);
 		write(index);
 	}
@@ -695,7 +695,7 @@ void GC_CGFConvertor::WriteGeometryInfo(unsigned nLOD)
 	SubChunks.AddChunk(CCF_GI_EXT_TO_INT_MAP);
 	int xic = rRendMesh.m_arrExtTangMap.size();
 	for (int x = 0; x < xic; x++) {
-		unsigned short index;
+		ushort index;
 		index = SWAP16(rRendMesh.m_arrExtTangMap[x]);
 		write(index);
 	}

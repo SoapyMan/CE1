@@ -54,7 +54,7 @@ bool CImage::SaveGrayscale16Tiff( const CString &fileName )
 	for (int row = 0; row < Height; row++)
 	{
 		TIFFReadScanline(tif, buf, row);
-		unsigned char *pBuf = (unsigned char*)buf;
+		uchar *pBuf = (uchar*)buf;
 		for (int x = 0; x < Width*bytes; x += bytes)
 		{
 			ValueAt( x,row ) = (*(uint*)buf) & mask;

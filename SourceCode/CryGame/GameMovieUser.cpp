@@ -66,7 +66,7 @@ void CMovieUser::ResetCutSceneParams()
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CMovieUser::BeginCutScene(unsigned long dwFlags,bool bResetFx)
+void CMovieUser::BeginCutScene(ulong dwFlags,bool bResetFx)
 {
 	if (m_InCutSceneCounter > 0)
 	{

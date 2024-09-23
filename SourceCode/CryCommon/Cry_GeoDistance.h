@@ -37,7 +37,7 @@ namespace Distance {
 		Vec3_tpl<F> b = t.v1;
 		Vec3_tpl<F> c = t.v2;
 		//check if (0,0,0) is inside or in fron of any triangle sides.
-		u32 flag = ((a.x * (a.y - b.y) - a.y * (a.x - b.x)) < 0) | (((b.x * (b.y - c.y) - b.y * (b.x - c.x)) < 0) << 1) | (((c.x * (c.y - a.y) - c.y * (c.x - a.x)) < 0) << 2);
+		uint32 flag = ((a.x * (a.y - b.y) - a.y * (a.x - b.x)) < 0) | (((b.x * (b.y - c.y) - b.y * (b.x - c.x)) < 0) << 1) | (((c.x * (c.y - a.y) - c.y * (c.x - a.x)) < 0) << 2);
 		switch (flag) {
 		case 0:	return Vec3_tpl<F>(0, 0, a.z); //center is inside of triangle
 		case 1:	if ((a | (b - a)) > 0.0f) flag = 5;	else if ((b | (a - b)) > 0.0f) flag = 3;	break;

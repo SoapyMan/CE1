@@ -903,8 +903,8 @@ bool CGraph::ProcessRearrange(GraphNode* node1, GraphNode* node2, ListNodes& nod
 	float			dValue2 = node2->GetDegeneracyValue();
 	GraphNode	tmpNode;
 	ObstacleData	obst[4];
-	unsigned int	other1VertexIdx;
-	unsigned int	other2VertexIdx;
+	uint	other1VertexIdx;
+	uint	other2VertexIdx;
 
 		if(dValue1>dValue2)
 			dValue1 = dValue2;

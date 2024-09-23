@@ -103,8 +103,8 @@ public:
 		int dwProgressBarRange;
 		XDOM::IXMLDOMDocumentPtr pLevelDataXML;
 		XDOM::IXMLDOMDocumentPtr pMissionXML;
-		unsigned int m_dwLevelDataCheckSum;
-		unsigned int m_dwMissionCheckSum;
+		uint m_dwLevelDataCheckSum;
+		uint m_dwMissionCheckSum;
 
 		void SetLevelFolder( const char *szLevelPath );
 	};
@@ -126,7 +126,7 @@ public:
 	}
 	bool IsLevelEntity(EntityId id){EntityIdSet::iterator it=m_setLevelEntities.find(id); return it!=m_setLevelEntities.end(); }
 	bool EntityExists(WORD id);
-	unsigned short GetLevelDataCheckSum(){return m_wCheckSum;}
+	ushort GetLevelDataCheckSum(){return m_wCheckSum;}
 	virtual void OnSpawn(IEntity *ent, CEntityDesc & ed);
 	virtual void OnSpawnContainer( CEntityDesc &ed,IEntity *pEntity );
 	virtual void OnRemove(IEntity *ent);
@@ -198,7 +198,7 @@ protected:
 	EntityIdSet										m_setLevelEntities;			//!< 
 	TeamsMap											m_mapTeams;							//!< 
 	IConsole *										m_pConsole;							//!< 
-	unsigned short 								m_wCheckSum;						//!< level data checksum
+	ushort 								m_wCheckSum;						//!< level data checksum
 	EntitiesSet 									m_setPlayerEntities;		//!< 
 	CEntityStreamDataList					m_lstStreamEntities;		//!< 
 };

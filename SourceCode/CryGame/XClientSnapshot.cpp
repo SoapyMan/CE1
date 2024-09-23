@@ -37,9 +37,9 @@ bool CXClientSnapshot::IsTimeToSend(float fFrameTimeInSec)
 	int iServerMax = sv_maxcmdrate->GetIVal();
 	int iSendPerSecond = crymin(iServerMax,(int)m_cSendPerSecond);
 
-	unsigned int	nTimeToUpdate = 1000/iSendPerSecond;
+	uint	nTimeToUpdate = 1000/iSendPerSecond;
 
-	m_nTimer += (unsigned int)(fFrameTimeInSec*1000.0f);
+	m_nTimer += (uint)(fFrameTimeInSec*1000.0f);
 	
 	if(m_nTimer >= nTimeToUpdate)
 		return true;

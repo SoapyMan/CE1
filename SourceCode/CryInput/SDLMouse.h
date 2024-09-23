@@ -73,7 +73,7 @@ public:
 private:
 	int XKEY2IDX(int nKey);
 
-	void PostEvent(int key, SInputEvent::EType type, float value = 0, unsigned int timestamp = 0);
+	void PostEvent(int key, SInputEvent::EType type, float value = 0, uint timestamp = 0);
 
 	//smooth movement & mouse accel
 	void CapDeltas(float cap);
@@ -93,8 +93,8 @@ private:
 
 	float						m_DeltasInertia[2];
 	float						m_kInertia;
-	unsigned char		m_Events[XMOUSE_MAX_MOUSE_EVENTS];
-	unsigned char		m_oldEvents[XMOUSE_MAX_MOUSE_EVENTS];
+	uchar		m_Events[XMOUSE_MAX_MOUSE_EVENTS];
+	uchar		m_oldEvents[XMOUSE_MAX_MOUSE_EVENTS];
 	float						m_fLastRelease[XMOUSE_MAX_MOUSE_EVENTS];
 	bool						m_bDblClick[XMOUSE_MAX_MOUSE_EVENTS];
 

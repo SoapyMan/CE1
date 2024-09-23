@@ -38,7 +38,7 @@ void print(const char* insTxt, ...);
 std::string IntToString(int nNumber);
 
 //! returns hexadecimal string representation of the given dword
-std::string UIntToHexString(unsigned long dwNumber);
+std::string UIntToHexString(ulong dwNumber);
 
 const char* Strip(const char* inszText);
 

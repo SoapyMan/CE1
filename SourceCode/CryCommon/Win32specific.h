@@ -1,7 +1,5 @@
-////////////////////////////////////////////////////////////////////////////
-//
-//  Crytek Engine Source File.
-//  Copyright (C), Crytek Studios, 2002.
+// Copyright 2001-2016 Crytek GmbH / Crytek Group. All rights reserved.
+
 // -------------------------------------------------------------------------
 //  File name:   Win32specific.h
 //  Version:     v1.00
@@ -12,45 +10,67 @@
 //  History:
 //
 ////////////////////////////////////////////////////////////////////////////
-#ifndef _CRY_COMMON_WIN32_SPECIFIC_HDR_
-#define _CRY_COMMON_WIN32_SPECIFIC_HDR_
 
-#ifdef __cplusplus
-#ifdef _DEBUG
-#include <crtdbg.h>
-#endif
-// checks if the heap is valid in debug; in release, this function shouldn't be called
-// returns non-0 if it's valid and 0 if not valid
-inline int IsHeapValid()
-{
-#if defined(_DEBUG) && !defined(RELEASE_RUNTIME)
-	return _CrtCheckMemory();
+#pragma once
+
+#define RC_EXECUTABLE "rc.exe"
+#define SIZEOF_PTR    4
+
+//////////////////////////////////////////////////////////////////////////
+// Standard includes.
+//////////////////////////////////////////////////////////////////////////
+#include <malloc.h>
+#include <io.h>
+#include <new.h>
+#include <direct.h>
+#include <fcntl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <time.h>
+#include <float.h>
+//////////////////////////////////////////////////////////////////////////
+
+// Special intrinsics
+#include <intrin.h> // moved here to prevent assert from being redefined when included elsewhere
+#include <process.h>
+
+//////////////////////////////////////////////////////////////////////////
+// Define platform independent types.
+//////////////////////////////////////////////////////////////////////////
+#include "BaseTypes.h"
+
+#define THREADID_NULL 0
+
+typedef uchar BYTE;
+typedef uint  threadID;
+typedef ulong DWORD;
+typedef double        real;  //!< Biggest float-type on this machine.
+typedef long          LONG;
+
+#if CRY_PLATFORM_64BIT
+typedef __int64 INT_PTR, *               PINT_PTR;
+typedef unsigned __int64 UINT_PTR, *     PUINT_PTR;
+
+typedef __int64 LONG_PTR, *              PLONG_PTR;
+typedef unsigned __int64 ULONG_PTR, *    PULONG_PTR;
+
+typedef ULONG_PTR DWORD_PTR, *           PDWORD_PTR;
 #else
-	return true;
+typedef __w64 int INT_PTR, *             PINT_PTR;
+typedef __w64 uint UINT_PTR, *   PUINT_PTR;
+
+typedef __w64 long LONG_PTR, *           PLONG_PTR;
+typedef __w64 ulong ULONG_PTR, * PULONG_PTR;
+
+typedef ULONG_PTR DWORD_PTR, *           PDWORD_PTR;
 #endif
-}
+
+typedef void* THREAD_HANDLE;
+typedef void* EVENT_HANDLE;
+
+#ifndef FILE_ATTRIBUTE_NORMAL
+	#define FILE_ATTRIBUTE_NORMAL 0x00000080
 #endif
 
-typedef signed char         int8;
-typedef signed short        int16;
-typedef signed int					int32;
-typedef signed __int64			int64;
-typedef unsigned char				uint8;
-typedef unsigned short			uint16;
-typedef unsigned int				uint32;
-typedef unsigned __int64		uint64;
-
-typedef float               f32;
-typedef double              f64;
-
-// old-style (will be removed soon)
-typedef signed char         s8;
-typedef signed short        s16;
-typedef signed int         s32;
-typedef signed __int64			s64;
-typedef unsigned char				u8;
-typedef unsigned short			u16;
-typedef unsigned int				u32;
-typedef unsigned __int64		u64;
-
-#endif //_CRY_COMMON_WIN32_SPECIFIC_HDR_
+#define FP16_TERRAIN
+#define TARGET_DEFAULT_ALIGN (0x4U)

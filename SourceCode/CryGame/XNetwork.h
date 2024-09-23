@@ -22,7 +22,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////
 // Server to client messages
 
-typedef unsigned char XSERVERMSG;
+typedef uchar XSERVERMSG;
 
 #define XSERVERMSG_UPDATEENTITY				((XSERVERMSG)(0))
 #define XSERVERMSG_ADDENTITY					((XSERVERMSG)(1))
@@ -63,7 +63,7 @@ typedef unsigned char XSERVERMSG;
 //////////////////////////////////////////////////////////////////////////////////////////////
 // Client to server messages
 
-typedef unsigned char XCLIENTMSG;
+typedef uchar XCLIENTMSG;
 
 #define XCLIENTMSG_UNKNOWN							((XCLIENTMSG)(0))
 #define XCLIENTMSG_PLAYERPROCESSINGCMD	((XCLIENTMSG)(1))
@@ -112,8 +112,8 @@ struct TextMessage
 	}
 	
 	BYTE								cMessageType;			//!<
-	unsigned short			uiSender;					//!<
-	unsigned short			uiTarget;					//!<
+	ushort			uiSender;					//!<
+	ushort			uiTarget;					//!<
   float								fLifeTime;				//!<
 //	CStream							stmPayload;
 	string							m_sText;					//!<
@@ -131,19 +131,19 @@ struct TextMessage
 		else
 		{
 			stm.Write(true);
-			unsigned char temp;
-			temp = (unsigned char) (fLifeTime * 10.0f);
+			uchar temp;
+			temp = (uchar) (fLifeTime * 10.0f);
 			stm.Write(temp);
 		}
 		return stm.Write(m_sText);
-//		stm.Write((unsigned short)stmPayload.GetSize());
+//		stm.Write((ushort)stmPayload.GetSize());
 //		return stm.Write(stmPayload);
 	}
 
 	//!
 	bool Read(CStream &stm)
 	{
-//		unsigned short usSize;
+//		ushort usSize;
 		bool b;
 
 		if(!stm.Read(cMessageType))
@@ -161,8 +161,8 @@ struct TextMessage
 		}
 		else
 		{
-			unsigned char temp;
-			temp = (unsigned char) (fLifeTime * 10.0f);
+			uchar temp;
+			temp = (uchar) (fLifeTime * 10.0f);
 			stm.Read(temp);
 			fLifeTime = temp / 10.0f;
 		}
@@ -216,7 +216,7 @@ struct SXServerInfos
 // Game context (sent to the client when connecting to a server)
 struct SXGameContext
 {
-	unsigned char		ucServerInfoVersion;	//!< SERVERINFO_FORMAT_VERSION (needed to prevent connects from old clients)
+	uchar		ucServerInfoVersion;	//!< SERVERINFO_FORMAT_VERSION (needed to prevent connects from old clients)
 	string					strMapFolder;					//!<
 	string					strMod;								//!< e.g. "FarCry", "Counterstrike" current TCM(Total Conversion Mod), specified with -MOD ...
 	string					strGameType;					//!< e.g. "ASSAULT", "FFA", "TDM"

@@ -139,7 +139,7 @@ bool CHighMap::IsPointOccludedByTerrain(const Vec3d& _vPoint, float fDist, const
 bool CHighMap::LoadHighMap(const char* file_name, ICryPak* pCryPak)
 { // Terrain Land dimensions = file dimensions + 1
 	int nArraySize = (CTerrain::GetTerrainSize() / CTerrain::GetHeightMapUnitSize()) * (CTerrain::GetTerrainSize() / CTerrain::GetHeightMapUnitSize());
-	unsigned short* pTmpBuff = new unsigned short[nArraySize];
+	ushort* pTmpBuff = new ushort[nArraySize];
 	if (!pTmpBuff)
 		return 0;
 

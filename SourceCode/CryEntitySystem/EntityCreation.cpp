@@ -59,7 +59,7 @@
 
 //load an object at a specified position with a spcified scale
 //////////////////////////////////////////////////////////////////////
-bool CEntity::LoadObject(unsigned int slot, const char* fileName, float scale, const char* geomName)
+bool CEntity::LoadObject(uint slot, const char* fileName, float scale, const char* geomName)
 {
 	// [marco] empty filename should not be a warning nor an
 	// assertion since it is completely possible in the editor
@@ -125,7 +125,7 @@ bool CEntity::LoadObject(unsigned int slot, const char* fileName, float scale, c
 
 
 
-bool CEntity::GetObjectPos(unsigned int slot, Vec3d& pos)
+bool CEntity::GetObjectPos(uint slot, Vec3d& pos)
 {
 	if (m_objects.size() > slot)
 	{
@@ -135,7 +135,7 @@ bool CEntity::GetObjectPos(unsigned int slot, Vec3d& pos)
 	return false;
 }
 
-bool CEntity::SetObjectPos(unsigned int slot, const Vec3d& pos)
+bool CEntity::SetObjectPos(uint slot, const Vec3d& pos)
 {
 	if (m_objects.size() > slot)
 	{
@@ -164,7 +164,7 @@ bool CEntity::SetObjectPos(unsigned int slot, const Vec3d& pos)
 	return false;
 }
 
-bool CEntity::GetObjectAngles(unsigned int slot, Vec3d& ang)
+bool CEntity::GetObjectAngles(uint slot, Vec3d& ang)
 {
 	if (m_objects.size() > slot)
 	{
@@ -175,7 +175,7 @@ bool CEntity::GetObjectAngles(unsigned int slot, Vec3d& ang)
 	return false;
 }
 
-bool CEntity::SetObjectAngles(unsigned int slot, const Vec3d& ang)
+bool CEntity::SetObjectAngles(uint slot, const Vec3d& ang)
 {
 	if (m_objects.size() > slot)
 	{
@@ -203,7 +203,7 @@ bool CEntity::SetObjectAngles(unsigned int slot, const Vec3d& ang)
 
 //draw a specified entity's object
 //////////////////////////////////////////////////////////////////////
-void CEntity::DrawObject(unsigned int slot, int mode)
+void CEntity::DrawObject(uint slot, int mode)
 {
 	if (slot >= m_objects.size())
 		return;
@@ -658,7 +658,7 @@ bool CEntity::CreateLivingEntity(float mass, float height, float eye_height, flo
 	m_physic->SetParams(&dim);
 	m_physic->SetParams(&dyn);
 
-	for (unsigned int i = 0; i < m_objects.size(); i++)
+	for (uint i = 0; i < m_objects.size(); i++)
 	{
 		IStatObj* pObj = m_objects[i].object;
 
@@ -1204,7 +1204,7 @@ bool CEntity::LoadVehicle(const char* objfile, pe_cargeomparams* pparts, pe_para
 
 	I3DEngine* p3DEngine = m_pISystem->GetI3DEngine();
 
-	unsigned int idx = 0, widx = 0, sidx;
+	uint idx = 0, widx = 0, sidx;
 	int bHasProxies = 0, ihullvis = -1;
 	IStatObj* cobj, * cobj_proxy;
 	char geom_name[64];
@@ -1575,8 +1575,8 @@ bool CEntity::CreateStaticEntity(float mass, int surface_idx, int slotToUse, boo
 	temp.q.SetRotationXYZ(vectorf(m_angles * (gf_PI / 180.0f)));
 	m_physic->SetParams(&temp);
 
-	unsigned int firstObjIdx;
-	unsigned int lastObjIdx;
+	uint firstObjIdx;
+	uint lastObjIdx;
 	if (slotToUse < 0)
 	{
 		firstObjIdx = 0;
@@ -1590,8 +1590,8 @@ bool CEntity::CreateStaticEntity(float mass, int surface_idx, int slotToUse, boo
 			return false;
 	}
 
-	//	for (unsigned int i=0;i<m_objects.size();i++)
-	for (unsigned int i = firstObjIdx; i < lastObjIdx; i++)
+	//	for (uint i=0;i<m_objects.size();i++)
+	for (uint i = firstObjIdx; i < lastObjIdx; i++)
 	{
 		IStatObj* pObj = m_objects[i].object;
 
@@ -1704,7 +1704,7 @@ bool CEntity::CreateSoftEntity(float mass, float density, bool bCloth, IPhysical
 }
 
 //////////////////////////////////////////////////////////////////////////
-bool CEntity::RegisterInAISystem(unsigned short type, const AIObjectParameters& params)
+bool CEntity::RegisterInAISystem(ushort type, const AIObjectParameters& params)
 {
 
 	IAISystem* pSystem = m_pISystem->GetAISystem();

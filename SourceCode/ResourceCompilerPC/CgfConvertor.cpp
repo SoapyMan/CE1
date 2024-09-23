@@ -662,7 +662,7 @@ void CGFConvertor::writeBGBone(unsigned nLOD, unsigned nBone, CryChunkedFile::Me
 	writeArray(arrVertices);
 
 	// immediately, write the faces followed by the materials
-	std::vector<unsigned char> arrMtls;
+	std::vector<uchar> arrMtls;
 	std::vector<CCFIntFace> arrFaces;
 	arrFaces.resize(bgb.numFaces);
 	arrMtls.resize(bgb.numFaces);

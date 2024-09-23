@@ -86,7 +86,7 @@ typedef enum
 	EWARNING_LIGHT_FRUSTUM			//!< spotlight has invalid frustum
 }EWARNING_TYPE;
 
-static const unsigned int scuiWarningTextAllocation = 300;//number of chars allocated on stack for warning string
+static const uint scuiWarningTextAllocation = 300;//number of chars allocated on stack for warning string
 
 static inline const bool IsNormalized(const float cfSqLen)
 {
@@ -100,19 +100,19 @@ static inline const bool IsNormalized(const float cfSqLen)
 class CAASettings
 {
 protected:
-	unsigned int	m_uiScale;
+	uint	m_uiScale;
 	float			m_fInvScale;
 public:
 	bool m_bEnabled;
 	CAASettings() :m_bEnabled(false), m_uiScale(1), m_fInvScale(1.0f) {}
-	void SetScale(const unsigned int cuiScale)
+	void SetScale(const uint cuiScale)
 	{
 		assert(cuiScale != 0);
 		m_uiScale = cuiScale;
 		m_fInvScale = 1.0f / (float)cuiScale;
 	}
 	const float GetInvScale()const { return m_fInvScale; }
-	const unsigned int GetScale()const { return m_uiScale; }
+	const uint GetScale()const { return m_uiScale; }
 	const float RetrieveRealSamplePos(const real cfOrig)
 	{
 		switch (m_uiScale)
@@ -134,7 +134,7 @@ public:
 		}
 	}
 	//returns the middle index, or tells whether this is the one or not
-	const bool IsMiddle(const unsigned int cuiX, const unsigned int cuiY)
+	const bool IsMiddle(const uint cuiX, const uint cuiY)
 	{
 		switch (m_uiScale)
 		{
@@ -164,7 +164,7 @@ typedef std::list<CLightPatch*>::iterator lightpatchit;
 typedef std::list<CRadMesh*> radmeshlist;
 typedef std::list<CRadMesh*>::iterator radmeshit;
 
-typedef std::vector<std::pair<CRadPoly*, unsigned int> >::iterator SharedIter;
+typedef std::vector<std::pair<CRadPoly*, uint> >::iterator SharedIter;
 typedef std::vector<CRadVertex*> radpvertexlist;
 typedef std::vector<CRadVertex*>::iterator radpvertexit;
 
@@ -198,8 +198,8 @@ typedef struct SComplexOSDot3Texel
 	CRadPoly* pSourcePatch;		//!< pointer to triangle where tangent space comes from, is always on this patch
 	float fAlpha;				//!< barycentric alpha value
 	float fBeta;				//!< barycentric beta value
-	unsigned int uiLightMask;	//!< lightmask				
-	unsigned int bNotHit;		//!< true if this was a snapped texel
+	uint uiLightMask;	//!< lightmask				
+	uint bNotHit;		//!< true if this was a snapped texel
 	SComplexOSDot3Texel() :vDot3Light(), pSourcePatch(NULL), fAlpha(0.f), fBeta(0.f), uiLightMask(0), bNotHit(false) {}
 	const Vec3d TransformIntoTS(Vec3d& rSource)const;
 }SComplexOSDot3Texel;
@@ -238,9 +238,9 @@ __inline int CalcPlaneType2(const Vec3d& n)
 const float DistToLine(const Vec3d& rX0, const Vec3d& rX1, const Vec3d& rPoint);
 const Vec3d ProjectOntoEdge(const Vec3d& rX0, const Vec3d& rX1, const Vec3d& rPoint, const float cfDistLV);
 
-inline const unsigned int RoundFromFloat(const float cfTex)
+inline const uint RoundFromFloat(const float cfTex)
 {
-	unsigned int uiNumber = (unsigned int)cfTex;
+	uint uiNumber = (uint)cfTex;
 	if (cfTex - (float)uiNumber >= 0.5f)
 		uiNumber++;
 	return uiNumber;
@@ -281,16 +281,16 @@ struct RadSubSampling
 		SAFE_DELETE_ARRAY(pfColours);
 	}
 
-	unsigned int*			puiIndicator = nullptr;		//!< index of each pixel whether a value has been set or not
+	uint*			puiIndicator = nullptr;		//!< index of each pixel whether a value has been set or not
 	SComplexOSDot3Texel*	pSubSamples = nullptr;		//!< subsamples for one texel
 	SOcclusionMapTexel*		pOcclSamples = nullptr;		//!< subsamples for occl map texel	
 	float*					pfColours = nullptr;		//!< colours
-	unsigned int			uiSampleCount = 1;			//!< subsample count for one single texel
+	uint			uiSampleCount = 1;			//!< subsample count for one single texel
 };
 
 struct RadSceneState
 {
-	using WarnInfoMap = std::multimap<unsigned int, std::string>;
+	using WarnInfoMap = std::multimap<uint, std::string>;
 
 	RadSceneState(const LMGenParam& genParam, int	meshIdx, CRadMesh* pMesh, IStatObj* pIGeom, const Vec3d vMinBB,const Vec3d vMaxBB)
 		: genParam(genParam), meshIdx(meshIdx), pMesh(pMesh), pIGeom(pIGeom), vMinBB(vMinBB), vMaxBB(vMaxBB)
@@ -321,7 +321,7 @@ private:
 	const float PointInTriangle(const Vec3d& point, const int ciIndex0, const int ciIndex1);
 
 public:
-	static const unsigned int scuiOneVertexShareFlag = 0x7F;
+	static const uint scuiOneVertexShareFlag = 0x7F;
 	//calculates the tangent space from the face information and applies it
 	void CalculateTangentSpace(SUV uv[3]);
 
@@ -356,7 +356,7 @@ public:
 	bool IsTextureUniform(const int nTreshold);
 
 	//! compress patch to 1x1 if constant value
-	void Compress(const unsigned int cuiMinBlockSize);
+	void Compress(const uint cuiMinBlockSize);
 
 	//! gather all subsamples for on etexel and sets the new value
 	//! /param cuiX x-coord for texel to subsample
@@ -368,13 +368,13 @@ public:
 	//! /param ruiMaxComponent current max of colour patch components
 #ifdef APPLY_COLOUR_FIX
 	void GatherSubSamples(
-		const unsigned int cuiX, const unsigned int cuiY, const unsigned int cuiSubSamples,
-		const unsigned int* cpaIndicator, const float* cpfColours, const SComplexOSDot3Texel* pDot3,
-		unsigned int& ruiMaxComponent, const SOcclusionMapTexel* cpfOccl, const GLMOcclLightInfo& rOcclInfo);
+		const uint cuiX, const uint cuiY, const uint cuiSubSamples,
+		const uint* cpaIndicator, const float* cpfColours, const SComplexOSDot3Texel* pDot3,
+		uint& ruiMaxComponent, const SOcclusionMapTexel* cpfOccl, const GLMOcclLightInfo& rOcclInfo);
 #else
 	void GatherSubSamples(
-		const unsigned int cuiX, const unsigned int cuiY, const unsigned int cuiSubSamples,
-		const unsigned int* cpaIndicator, const float* cpfColours, const SComplexOSDot3Texel* pDot3, const SOcclusionMapTexel* cpfOccl, const GLMOcclLightInfo& rOcclInfo);
+		const uint cuiX, const uint cuiY, const uint cuiSubSamples,
+		const uint* cpaIndicator, const float* cpfColours, const SComplexOSDot3Texel* pDot3, const SOcclusionMapTexel* cpfOccl, const GLMOcclLightInfo& rOcclInfo);
 #endif
 	//!
 	//! /return true=polygon has 3 vertices - calculation is ok, false=its not a triangle (degenerated - or wrong vertex count) calculation failed
@@ -390,9 +390,9 @@ public:
 	void AddWarningBorders(void);
 
 #ifndef DISPLAY_MORE_INFO
-	const unsigned int CalcExtent(RadSceneState& sceneState, const CString& rGLMName, const CString& rCGFName, bool bOriginal, const float fGridSize, const UINT iMinBlockSize, const UINT iMaxBlockSize, unsigned int& rHugePatchFoundNumber);
+	const uint CalcExtent(RadSceneState& sceneState, const CString& rGLMName, const CString& rCGFName, bool bOriginal, const float fGridSize, const UINT iMinBlockSize, const UINT iMaxBlockSize, uint& rHugePatchFoundNumber);
 #else
-	const unsigned int CalcExtent(RadSceneState& sceneState, const CString& rGLMName, const CString& rCGFName, bool bOriginal, const float fGridSize, const UINT iMinBlockSize, const UINT iMaxBlockSize);
+	const uint CalcExtent(RadSceneState& sceneState, const CString& rGLMName, const CString& rCGFName, bool bOriginal, const float fGridSize, const UINT iMinBlockSize, const UINT iMaxBlockSize);
 #endif
 
 	//!
@@ -440,10 +440,10 @@ public:
 	//! /param r 0.. , is automatic clamped to 0..255, usual lightmap color
 	//! /param g 0.. , is automatic clamped to 0..255, usual lightmap color
 	//! /param b 0.. , is automatic clamped to 0..255, usual lightmap color
-	void SetSimpleLightmapTexel(const float infX, const float infY, const int lr, const int lg, const int lb, unsigned char iDP3Fac);
+	void SetSimpleLightmapTexel(const float infX, const float infY, const int lr, const int lg, const int lb, uchar iDP3Fac);
 	//! stores the world space dot3 light vector and calls SetSimpleLightmapTexel
 #ifdef APPLY_COLOUR_FIX
-	const unsigned int SetDot3LightmapTexel(const CRadVertex& rVertex,
+	const uint SetDot3LightmapTexel(const CRadVertex& rVertex,
 		const float fColorRLamb, const float fColorGLamb, const float fColorBLamb,
 		Vec3d& inLightDir, const float cfLM_DP3LerpFactor,
 		SComplexOSDot3Texel& rDot3Texel, const SOcclusionMapTexel& rTexel, bool bHDR);
@@ -455,12 +455,12 @@ public:
 #endif
 	//! stores the tangent space light vector as colour
 #ifdef APPLY_COLOUR_FIX
-	void SetDot3TSLightmapTexel(const unsigned int cuiX, const unsigned int cuiY, const unsigned int cuiColourFixAlpha, const float cfColourScale);
+	void SetDot3TSLightmapTexel(const uint cuiX, const uint cuiY, const uint cuiColourFixAlpha, const float cfColourScale);
 #else
-	void SetDot3TSLightmapTexel(const unsigned int cuiX, const unsigned int cuiY);
+	void SetDot3TSLightmapTexel(const uint cuiX, const uint cuiY);
 #endif
-	//unsigned int consists of 4 chars as follows:  [0]=1st shared vertex of this [1]=2nd shared vertex of this [2]=1st shared vertex of shared triangle  [3]=2nd shared vertex of shared triangle
-	std::vector<std::pair<CRadPoly*, unsigned int> >  m_SharingPolygons;	//!< vertex sharing polygons
+	//uint consists of 4 chars as follows:  [0]=1st shared vertex of this [1]=2nd shared vertex of this [2]=1st shared vertex of shared triangle  [3]=2nd shared vertex of shared triangle
+	std::vector<std::pair<CRadPoly*, uint> >  m_SharingPolygons;	//!< vertex sharing polygons
 
 	radpolylist				m_lstMerged;								//!< only patches merge		
 
@@ -485,8 +485,8 @@ public:
 	uint8					m_dwFlags;									//!<
 
 	Vec3* m_pHDRLightmapData;					//! RGBE8 Lightmap
-	unsigned char* m_pLightmapData;							//! Lightmap / or colormap when using dot3
-	unsigned char* m_pDominantDirData;						//!< used for Dot3Lightmaps (normalized tangent space direction to the dominant lightsource, dot3 factor in alpha channel)
+	uchar* m_pLightmapData;							//! Lightmap / or colormap when using dot3
+	uchar* m_pDominantDirData;						//!< used for Dot3Lightmaps (normalized tangent space direction to the dominant lightsource, dot3 factor in alpha channel)
 	SComplexOSDot3Texel* m_pWSDominantDirData;						//!< used for Dot3Lightmaps, stores the world space vector and where the tangent space comes from	
 	SOcclusionMapTexel* m_pOcclMapData;							//!< used for occlusionmap data
 
@@ -532,13 +532,13 @@ public:
 
 	bool												m_bReceiveLightmap;				//!< indicates whether an object will receive lightmaps or not
 
-	unsigned int										m_uiFlags;						//!< flags, currently used during normal check and triangle initialisation		
+	uint										m_uiFlags;						//!< flags, currently used during normal check and triangle initialisation		
 
 	float												m_fMaxVariance;					//!< variance in normal length (purely for information)
 
 	IVariable* pLightmapQualityVar;			//!< lightmap quality variable to adjust it if necessary
 
-	unsigned int										m_uiTexCoordsRequired;			//!< required texture coordinates by engine, should always match number of indices
+	uint										m_uiTexCoordsRequired;			//!< required texture coordinates by engine, should always match number of indices
 
 	GLMOcclLightInfo									m_OcclInfo;						//!< required information what light corresponds to which colour channel
 
@@ -548,7 +548,7 @@ public:
 		m_dwHashValue(0), m_pClusterRC(NULL), m_bReceiveLightmap(true), m_uiFlags(0), m_uiTexCoordsRequired(0) {}
 
 private:
-	unsigned int										m_uiCoarseTexelCount;			//!< texel count required (simple summation over all patches after CalcExtent)
+	uint										m_uiCoarseTexelCount;			//!< texel count required (simple summation over all patches after CalcExtent)
 
 	DWORD												m_dwHashValue;					//!< for selective recomputation
 
@@ -586,9 +586,9 @@ public:
 	int					m_nWidth, m_nHeight;				//!<
 	std::string			m_szFilename;					//!<
 
-	unsigned char* m_pHDRLightmapImage;		//!< HDR Lightmap texture (in Dot3Lightmaps this is used for the non dominant light sources)
-	unsigned char* m_pLightmapImage;			//!< Lightmap texture (in Dot3Lightmaps this is used for the non dominant light sources)
-	unsigned char* m_pDominantDirImage;		//!< only used for Dot3Lightmaps (normalized worldspace direction to the dominant lightsource)
+	uchar* m_pHDRLightmapImage;		//!< HDR Lightmap texture (in Dot3Lightmaps this is used for the non dominant light sources)
+	uchar* m_pLightmapImage;			//!< Lightmap texture (in Dot3Lightmaps this is used for the non dominant light sources)
+	uchar* m_pDominantDirImage;		//!< only used for Dot3Lightmaps (normalized worldspace direction to the dominant lightsource)
 	SOcclusionMapTexel* m_pOcclMapImage;			//!< used for occlusionmap data
 };
 
@@ -611,7 +611,7 @@ public:
 		bool& rErrorsOccured);
 
 	radmeshlist				m_lstRadMeshes;				//!< this class is the owner of these objects (delete is called)
-	unsigned int			m_uiCurrentPatchNumber;		//!< to number the current lightmap
+	uint			m_uiCurrentPatchNumber;		//!< to number the current lightmap
 	CLightPatch*			m_pCurrentPatch;			//!<
 	LMGenParam				m_sParam;
 
@@ -633,7 +633,7 @@ public:
 		return m_LogInfo;
 	}
 
-	std::multimap<unsigned int, std::string>& GetWarningInfo()
+	std::multimap<uint, std::string>& GetWarningInfo()
 	{
 		return m_WarningInfo;
 	}
@@ -642,31 +642,31 @@ protected:
 	void DoLightCalculation(
 		RadSceneState& sceneState,
 		CRadPoly* pSource,
-		unsigned int& ruiMaxColourComp,
+		uint& ruiMaxColourComp,
 		const std::vector<LMCompLight*>& vLights,
 		const std::vector<LMCompLight*>& vOcclLights,
 		SComplexOSDot3Texel& dot3Texel,
 		const CRadVertex& Vert,
 		const bool cbFirstPass,
-		const unsigned int cuiSubSampleIndex = 0) const;
+		const uint cuiSubSampleIndex = 0) const;
 	void CheckLight(LMCompLight& rLight, const int iCurLightIdx);
 	void GenerateTexCoords(const CRadMesh& rRadMesh, LMAssignQueueItem& rNewGLMQueueItm);
 	void SelectObjectLMReceiverAndShadowCasterForChanges(
 		std::vector<std::pair<IEntityRender*, CBrushObject*> >& vNodes,
 		const std::vector<AABB>& vAABBs,
 		const Matrix33& rMatSunBasis,
-		const std::vector<unsigned int>& rvNodeRadMeshIndices,
+		const std::vector<uint>& rvNodeRadMeshIndices,
 		const ELMMode Mode);
 	void SelectObjectsFromChangedLMShadowCaster(
 		std::vector<std::pair<IEntityRender*, CBrushObject*> >& vNodes,
 		const std::vector<AABB>& vAABBs,
 		const Matrix33& rMatSunBasis,
-		const std::vector<unsigned int>& rvNodeRadMeshIndices);
-	void ComputeSmoothingInformation(RadSceneState& sceneState, const unsigned int uiSmoothAngle = 45, const bool cbTSGeneratedByLM = false) const;	//computes the sharing information and stores it into the respective per polygon vectors
+		const std::vector<uint>& rvNodeRadMeshIndices);
+	void ComputeSmoothingInformation(RadSceneState& sceneState, const uint uiSmoothAngle = 45, const bool cbTSGeneratedByLM = false) const;	//computes the sharing information and stores it into the respective per polygon vectors
 	void MergeTangentSpace(CRadVertex& rVertex1, CRadVertex& rVertex2) const;	//merges two tangent spaces according to normal
-	const unsigned int CheckNormals(float& rfMaxVariance, const CRadMesh* const pMesh) const;//returns true if some normals are not normalized, rfMaxVariance is the max variance encountered
+	const uint CheckNormals(float& rfMaxVariance, const CRadMesh* const pMesh) const;//returns true if some normals are not normalized, rfMaxVariance is the max variance encountered
 
-	bool Create(const IndoorBaseInterface& pInterface, const Vec3d& vMinBB, const Vec3d& vMaxBB, volatile SSharedLMEditorData* pSharedData, const ELMMode Mode, const unsigned int cuiMeshesToProcessCount);
+	bool Create(const IndoorBaseInterface& pInterface, const Vec3d& vMinBB, const Vec3d& vMaxBB, volatile SSharedLMEditorData* pSharedData, const ELMMode Mode, const uint cuiMeshesToProcessCount);
 
 	void FlushAssignQueue();
 #ifdef APPLY_COLOUR_FIX
@@ -675,7 +675,7 @@ protected:
 		CRadPoly* pSource,
 		const std::vector<LMCompLight*>& vLights,
 		const std::vector<LMCompLight*>& vOcclLights,
-		unsigned int uiMaxComponent) const;
+		uint uiMaxComponent) const;
 #else
 	void PerformAdaptiveSubSampling(
 		RadSceneState& sceneState,
@@ -685,12 +685,12 @@ protected:
 #endif
 	void SetSubSampleDot3LightmapTexel(
 		RadSubSampling& subSampling,
-		const unsigned int cuiSubSampleIndex,
+		const uint cuiSubSampleIndex,
 		const float fColorRLamb, const float fColorGLamb, const float fColorBLamb,
 		Vec3d& inLightDir, const float cfLM_DP3LerpFactor,
 		SComplexOSDot3Texel& rDot3Texel,
 		const SOcclusionMapTexel& rOcclTexel, bool bHDR) const;
-	void GatherSubSampleTexel(const CRadPoly* pSource, const int ciX, const int ciY, std::set<std::pair<unsigned int, unsigned int> >& rvSubTexels) const;
+	void GatherSubSampleTexel(const CRadPoly* pSource, const int ciX, const int ciY, std::set<std::pair<uint, uint> >& rvSubTexels) const;
 	const bool FlushAndSave(volatile SSharedLMEditorData* pSharedData, const ELMMode Mode);
 	void Reset()
 	{
@@ -712,11 +712,11 @@ protected:
 		GlobalMemoryStatus(&sStats);
 		m_uiStartMemoryConsumption = ((sStats.dwTotalVirtual - sStats.dwAvailVirtual) / 1024 / 1024);
 	}
-	const unsigned int GetUsedMemory()
+	const uint GetUsedMemory()
 	{
 		MEMORYSTATUS sStats;
 		GlobalMemoryStatus(&sStats);
-		const unsigned int cuiCurrentTotal((sStats.dwTotalVirtual - sStats.dwAvailVirtual) / 1024 / 1024);
+		const uint cuiCurrentTotal((sStats.dwTotalVirtual - sStats.dwAvailVirtual) / 1024 / 1024);
 		if (cuiCurrentTotal <= m_uiStartMemoryConsumption)
 			return 0;
 		return (cuiCurrentTotal - m_uiStartMemoryConsumption);
@@ -759,9 +759,9 @@ protected:
 		return bCastLightmap;
 	}
 
-	void InitSubSampling(RadSubSampling& subSampling, const unsigned int cuiSampleCount) const
+	void InitSubSampling(RadSubSampling& subSampling, const uint cuiSampleCount) const
 	{
-		subSampling.puiIndicator = new unsigned int[cuiSampleCount];
+		subSampling.puiIndicator = new uint[cuiSampleCount];
 		subSampling.pSubSamples = new SComplexOSDot3Texel[cuiSampleCount];
 		subSampling.pfColours = new float[cuiSampleCount * 4/*4 colour components*/];
 		if (m_sParam.m_bGenOcclMaps)
@@ -771,14 +771,14 @@ protected:
 	}
 
 private:
-	std::multimap<unsigned int, std::string>	m_WarningInfo;				//!< will contain warning summary for logfile
+	std::multimap<uint, std::string>	m_WarningInfo;				//!< will contain warning summary for logfile
 	std::vector<CString>						m_LogInfo;						//!< will contain some logging info
 
 	struct ILMSerializationManager*				m_pISerializationManager;
 	std::list<GLMCluster>						m_lstClusters;
 	CRasterCubeManager							m_RasterCubeManager;
 
-	unsigned int								m_uiStartMemoryConsumption;
+	uint								m_uiStartMemoryConsumption;
 
 	IndoorBaseInterface							m_IndInterface;
 

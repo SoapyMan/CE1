@@ -129,7 +129,7 @@ public:
 	/*! SetMasterVolume
 	@param nVol volume (0-255)
 	*/
-	void	SetMasterVolume(unsigned char nVol)
+	void	SetMasterVolume(uchar nVol)
 	{
 		GUARD_HEAP;
 		FSOUND_SetSFXMasterVolume(nVol);

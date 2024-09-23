@@ -98,7 +98,7 @@ int CIconManager::GetIconTexture( const CString &iconName )
 	// Load icon.
 	if (CImageUtil::LoadImage( iconName,image ))
 	{
-		id = GetIEditor()->GetRenderer()->DownLoadToVideoMemory( (unsigned char*)image.GetData(),image.GetWidth(),image.GetHeight(),eTF_8888,eTF_8888,0,0,0 );
+		id = GetIEditor()->GetRenderer()->DownLoadToVideoMemory( (uchar*)image.GetData(),image.GetWidth(),image.GetHeight(),eTF_8888,eTF_8888,0,0,0 );
 	}
 	return id;
 }

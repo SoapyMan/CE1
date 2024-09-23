@@ -780,7 +780,7 @@ float sDistPointToSegment(Vec3d& P, Vec3d& SP0, Vec3d& SP1)
 
 void CREOcLeaf::mfGenerateIndicesForAttenuation(SLightIndicies* li, CDLight* pDLight)
 {
-	TArray<unsigned short> NewInds;
+	TArray<ushort> NewInds;
 	int i;
 	CLeafBuffer* lb = m_pBuffer;
 	byte* pD = (byte*)lb->m_pSecVertBuffer->m_VS[VSF_GENERAL].m_VData;
@@ -1013,7 +1013,7 @@ SLightIndicies* CREOcLeaf::mfGetIndiciesForLight(CDLight* pDLight)
 				vDelt.NormalizeFast();
 				if ((vDelt | mf->m_Normal) > -0.5f)
 				{
-					unsigned short* face = &pInds[i + nOffs];
+					ushort* face = &pInds[i + nOffs];
 					li->m_pIndicies.AddElem(face[0]);
 					li->m_pIndicies.AddElem(face[1]);
 					li->m_pIndicies.AddElem(face[2]);
@@ -1025,7 +1025,6 @@ SLightIndicies* CREOcLeaf::mfGetIndiciesForLight(CDLight* pDLight)
 		case R_PRIMV_MULTI_GROUPS:
 		{
 			int nOffs = mi->nFirstIndexId;
-			unsigned int n;
 			for (j = 0; j < mi->m_dwNumSections; j++)
 			{
 				SPrimitiveGroup* g = &mi->m_pPrimitiveGroups[j];
@@ -1042,7 +1041,7 @@ SLightIndicies* CREOcLeaf::mfGetIndiciesForLight(CDLight* pDLight)
 				}
 				int nf = g->nFirstFace;
 				int offs = g->offsIndex + nOffs;
-				for (n = 0; n < g->numIndices - 2; n += incr)
+				for (int n = 0; n < g->numIndices - 2; n += incr)
 				{
 					int i0, i1, i2;
 					switch (g->type)

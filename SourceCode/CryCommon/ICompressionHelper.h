@@ -10,9 +10,9 @@ class CStream;
 struct ICompressionHelper
 {
 	//!
-	virtual bool Write(CStream& outStream, const unsigned char inChar) = 0;
+	virtual bool Write(CStream& outStream, const uchar inChar) = 0;
 	//!
-	virtual bool Read(CStream& inStream, unsigned char& outChar) = 0;
+	virtual bool Read(CStream& inStream, uchar& outChar) = 0;
 	//!
 	virtual bool Write(CStream& outStream, const char* inszString) = 0;
 	//!

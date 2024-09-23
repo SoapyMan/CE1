@@ -42,7 +42,7 @@ private:
 	
 	FILE *m_pFile;
 	
-	unsigned long m_nFileSize;
+	ulong m_nFileSize;
 	float m_fCurrTime;
 	float m_fGameTime;
 	

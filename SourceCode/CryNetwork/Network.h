@@ -9,6 +9,7 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+#include "BaseTypes.h"
 #include "CompressionHelper.h"			// CCompressionHelper
 #include "TimeValue.h"
 
@@ -116,7 +117,7 @@ public:
 	void OnCCPPunkBusterMsg(CIPAddress& ipAddress, CStream& stm);
 
 	CTimeValue GetCurrentTime();
-	u32 GetStringHash(const char* szString);
+	uint32 GetStringHash(const char* szString);
 	int GetLogLevel();
 	int GetCheatProtectionLevel();
 	bool CheckPBPacket(CStream& stmPacket, CIPAddress& ip);
@@ -153,7 +154,7 @@ private: // --------------------------------------------------------------------
 	MapServers							m_mapServers;							//!<
 	ERROR_MAP								m_mapErrors;							//!<
 	static CryNetError			m_neNetErrors[];					//!<
-	static unsigned int		m_nCryNetInitialized;			//!<
+	static uint		m_nCryNetInitialized;			//!<
 	DWORD										m_dwLocalIP;							//!< default: 0.0.0.0 local IPAddress (needed if we have several servers on one machine)
 	CDefenceWall* m_pDefenceWall;						//!<
 	IClient* m_pClient;								//!< pointer to the active client, otherwise 0 if there is not client active

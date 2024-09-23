@@ -21,21 +21,21 @@ public:
 
 /* Header definition. */
 struct SImageHeader {
-	unsigned char IDLength;		/* length of Identifier String */
-	unsigned char CoMapType;		/* 0 = no map */
-	unsigned char ImgType;		/* image type (see below for values) */
-	unsigned char Index_lo, Index_hi;	/* index of first color map entry */
-	unsigned char Length_lo, Length_hi;	/* number of entries in color map */
-	unsigned char CoSize;		/* size of color map entry (15,16,24,32) */
-	unsigned char X_org_lo, X_org_hi;	/* x origin of image */
-	unsigned char Y_org_lo, Y_org_hi;	/* y origin of image */
-	unsigned char Width_lo, Width_hi;	/* width of image */
-	unsigned char Height_lo, Height_hi;	/* height of image */
-	unsigned char PixelSize;		/* pixel size (8,16,24,32) */
-	unsigned char AttBits;		/* 4 bits, number of attribute bits per pixel */
-	unsigned char Rsrvd;		/* 1 bit, reserved */
-	unsigned char OrgBit;		/* 1 bit, origin: 0=lower left, 1=upper left */
-	unsigned char IntrLve;		/* 2 bits, interleaving flag */
+	uchar IDLength;		/* length of Identifier String */
+	uchar CoMapType;		/* 0 = no map */
+	uchar ImgType;		/* image type (see below for values) */
+	uchar Index_lo, Index_hi;	/* index of first color map entry */
+	uchar Length_lo, Length_hi;	/* number of entries in color map */
+	uchar CoSize;		/* size of color map entry (15,16,24,32) */
+	uchar X_org_lo, X_org_hi;	/* x origin of image */
+	uchar Y_org_lo, Y_org_hi;	/* y origin of image */
+	uchar Width_lo, Width_hi;	/* width of image */
+	uchar Height_lo, Height_hi;	/* height of image */
+	uchar PixelSize;		/* pixel size (8,16,24,32) */
+	uchar AttBits;		/* 4 bits, number of attribute bits per pixel */
+	uchar Rsrvd;		/* 1 bit, reserved */
+	uchar OrgBit;		/* 1 bit, origin: 0=lower left, 1=upper left */
+	uchar IntrLve;		/* 2 bits, interleaving flag */
 };
 
 typedef char ImageIDField[256];

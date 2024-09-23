@@ -265,10 +265,10 @@ struct CCFBGBone
 #pragma pack(push,2)
 struct CCFIntFace
 {
-	unsigned short v[3];
+	ushort v[3];
 	CCFIntFace() {}
 
-	CCFIntFace(const unsigned short* p)
+	CCFIntFace(const ushort* p)
 	{
 		v[0] = p[0]; v[1] = p[1]; v[2] = p[2];
 	}
@@ -280,7 +280,7 @@ struct CCFIntFace
 	}
 };
 #pragma pack(pop)
-typedef unsigned char CCFIntFaceMtlID;
+typedef uchar CCFIntFaceMtlID;
 
 // this structure appears in the CCF_HEADER_CCG chunk at the top of the CCG file
 // and contains general information about the model being loaded
@@ -317,9 +317,9 @@ struct CCFMaterialGroup
 	// material index in the original indexation of CGF
 	unsigned nMaterial;
 	// the first index in the final index buffer
-	unsigned short nIndexBase;
+	ushort nIndexBase;
 	// number of indices in the final index buffer
-	unsigned short numIndices;
+	ushort numIndices;
 };
 
 

@@ -11,7 +11,7 @@ struct SByteColor
 
 struct SLongColor
 {
-	unsigned int r, g, b, a;
+	uint r, g, b, a;
 };
 
 

@@ -18,12 +18,12 @@ private:
 
 public:
 
-	unsigned int GetIndexCount() const
+	uint GetIndexCount() const
 	{
 		return mIndexCount;
 	}
 
-	StaticIB(const LPDIRECT3DDEVICE9 pD3D, const unsigned int& theIndexCount)
+	StaticIB(const LPDIRECT3DDEVICE9 pD3D, const uint& theIndexCount)
 	{
 		mpIB = 0;
 		mbLocked = false;
@@ -37,7 +37,7 @@ public:
 
 	LPDIRECT3DINDEXBUFFER9 GetInterface() const { return mpIB; }
 
-	IndexType* Lock(const unsigned int& theLockCount, unsigned int& theStartIndex)
+	IndexType* Lock(const uint& theLockCount, uint& theStartIndex)
 	{
 		// Ensure there is enough space in the IB for this data
 		CRYASSERT(theLockCount <= mIndexCount);
@@ -82,7 +82,7 @@ public:
 
 };
 
-typedef StaticIB< unsigned short > StaticIB16;
-typedef StaticIB< unsigned int > StaticIB32;
+typedef StaticIB< ushort > StaticIB16;
+typedef StaticIB< uint > StaticIB32;
 
 #endif  _STATICIB_H_

@@ -77,8 +77,8 @@ struct CNPServerVariables
 		stm.Read(nDataStreamTimeout);
 	}
 
-	unsigned int nDataStreamTimeout;			//!< time elapsed without any data packet
-	unsigned int nPublicKey;
+	uint nDataStreamTimeout;			//!< time elapsed without any data packet
+	uint nPublicKey;
 };
 ///////////////////////////////////////////////////////////////
 struct CNP
@@ -175,15 +175,15 @@ struct CQP :public CNP
 	virtual ~CQP() {}
 
 	bool		m_bControlBits[6];				// control bits, must be all 1
-	unsigned char m_cControlBytes[2];	// control bytes, must be all 0xff;
+	uchar m_cControlBytes[2];	// control bytes, must be all 0xff;
 
 	virtual void Save(CStream& stm)
 	{
 		CNP::Save(stm);
 		for (int i = 0; i < 6; i++) // write 6 control bits
 			stm.Write(true);
-		stm.Write((unsigned char)0xff); // write the two control bytes
-		stm.Write((unsigned char)0xff);
+		stm.Write((uchar)0xff); // write the two control bytes
+		stm.Write((uchar)0xff);
 	}
 
 	virtual void Load(CStream& stm)
@@ -352,7 +352,7 @@ struct CQPRConCommand :public CQP
 		m_sRConCommand = sTemp;
 	}
 
-	unsigned int m_nRConPasswordCode[4];
+	uint m_nRConPasswordCode[4];
 	string m_sRConCommand;			//!<
 };
 ///////////////////////////////////////////////////////////////
@@ -433,10 +433,10 @@ struct CCPSetup :public CCPPayload
 	BYTE m_cProtocolVersion;
 	string m_sPlayerPassword;
 	// What version client is running.
-	unsigned int m_nClientFlags;
+	uint m_nClientFlags;
 	// What OS client is running.
-	unsigned int m_nClientOSMinor;
-	unsigned int m_nClientOSMajor;
+	uint m_nClientOSMinor;
+	uint m_nClientOSMajor;
 	//string m_sSpectatorPassword;
 	virtual void Save(CStream& stm)
 	{
@@ -507,7 +507,7 @@ struct CCPConnectResp :public CCPPayload
 	CStream m_stmAuthorizationID;
 	virtual void Save(CStream& stm)
 	{
-		unsigned int uiSize;
+		uint uiSize;
 
 		CCPPayload::Save(stm);
 		stm.Write(m_cResponse);
@@ -518,7 +518,7 @@ struct CCPConnectResp :public CCPPayload
 	}
 	virtual void Load(CStream& stm)
 	{
-		unsigned int uiSize;
+		uint uiSize;
 		CCPPayload::Load(stm);
 		stm.Read(m_cResponse);
 		stm.Read(uiSize);
@@ -539,15 +539,15 @@ struct CCPContextSetup :public CCPPayload
 	CStream m_stmData;
 	virtual void Save(CStream& stm)
 	{
-		unsigned short usSize;
-		usSize = (unsigned short)m_stmData.GetSize();
+		ushort usSize;
+		usSize = (ushort)m_stmData.GetSize();
 		CCPPayload::Save(stm);
 		stm.Write(usSize);
 		stm.Write(m_stmData);
 	}
 	virtual void Load(CStream& stm)
 	{
-		unsigned short usSize;
+		ushort usSize;
 		CCPPayload::Load(stm);
 		stm.Read(usSize);
 		m_stmData.Reset();
@@ -566,15 +566,15 @@ struct CCPContextReady :public CCPPayload
 	CStream m_stmData;
 	virtual void Save(CStream& stm)
 	{
-		unsigned short usSize;
-		usSize = (unsigned short)m_stmData.GetSize();
+		ushort usSize;
+		usSize = (ushort)m_stmData.GetSize();
 		CCPPayload::Save(stm);
 		stm.Write(usSize);
 		stm.Write(m_stmData);
 	}
 	virtual void Load(CStream& stm)
 	{
-		unsigned short usSize;
+		ushort usSize;
 		CCPPayload::Load(stm);
 		stm.Read(usSize);
 		m_stmData.Reset();
@@ -630,15 +630,15 @@ struct CCPSecurityQuery :public CCPPayload
 	CStream m_stmData;
 	virtual void Save(CStream& stm)
 	{
-		unsigned short usSize;
-		usSize = (unsigned short)m_stmData.GetSize();
+		ushort usSize;
+		usSize = (ushort)m_stmData.GetSize();
 		CCPPayload::Save(stm);
 		stm.Write(usSize);
 		stm.Write(m_stmData);
 	}
 	virtual void Load(CStream& stm)
 	{
-		unsigned short usSize;
+		ushort usSize;
 		CCPPayload::Load(stm);
 		stm.Read(usSize);
 		m_stmData.Reset();
@@ -676,11 +676,11 @@ struct CTPData :public CTP
 	virtual ~CTPData() {}
 	CStream m_stmData;
 	bool m_bCompressed; // Compressed data.
-	unsigned short m_nUncompressedSize;
+	ushort m_nUncompressedSize;
 	virtual void Save(CStream& stm)
 	{
-		unsigned short usSize;
-		usSize = (unsigned short)m_stmData.GetSize();
+		ushort usSize;
+		usSize = (ushort)m_stmData.GetSize();
 		CTP::Save(stm);
 		stm.Write(m_bCompressed);
 		if (m_bCompressed)
@@ -690,7 +690,7 @@ struct CTPData :public CTP
 	}
 	virtual void Load(CStream& stm)
 	{
-		unsigned short usSize;
+		ushort usSize;
 		CTP::Load(stm);
 		stm.Read(m_bCompressed);
 		if (m_bCompressed)
@@ -746,7 +746,7 @@ struct CTPPong :public CTP
 		m_nTimestamp = 0;
 	}
 	virtual ~CTPPong() {}
-	unsigned int m_nTimestamp;
+	uint m_nTimestamp;
 	virtual void Save(CStream& stm)
 	{
 		CTP::Save(stm);

@@ -136,7 +136,7 @@ void CObjManager::RenderObjectVegetationNonCastersNoFogVolume(IEntityRender* pEn
 	float fEntDistance = pEntInfo->m_fEntDistance;
 
 	// do not draw if marked to be not drawn
-	unsigned int nRenderFlags = pEntityRS->GetRndFlags();
+	uint nRenderFlags = pEntityRS->GetRndFlags();
 
 	// set only x strongest light bits and do frustum test
 	Vec3d vLightIntensity(0, 0, 0);
@@ -336,7 +336,7 @@ void CObjManager::RenderObject(IEntityRender* pEntityRS,
 
 
 	// do not draw if marked to be not drawn
-	unsigned int nRenderFlags = pEntityRS->GetRndFlags();
+	uint nRenderFlags = pEntityRS->GetRndFlags();
 	if (nRenderFlags & ERF_HIDDEN || pEntityRS->m_dwRndFlags & ERF_MERGED)
 		return;
 
@@ -579,7 +579,7 @@ void CObjManager::RenderObject(IEntityRender* pEntityRS,
 		return;
 
 	// find cases when lighting need to be rendered in separate pass
-	if (pEntityRS->GetShadowFrame(m_nRenderStackLevel) != (unsigned short)GetFrameID())
+	if (pEntityRS->GetShadowFrame(m_nRenderStackLevel) != (ushort)GetFrameID())
 		if (pCVars->e_stencil_shadows && pStrongestShadowLight && fEntRadius && !GetCVars()->e_debug_lights)
 		{ // make list of entities for each light casting shadow volume
 			uint nNewMask = DrawParams.nDLightMask;

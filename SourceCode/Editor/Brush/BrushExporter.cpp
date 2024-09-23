@@ -59,9 +59,9 @@ void CBrushExporter::SaveObject( CBrushObject *obj )
 	CLeafBuffer *buf = geom->GetLeafBuffer();
 	int numVerts = buf->m_SecVertCount;
 	int posStride,normalStride,uvStride;
-	unsigned char *verts = buf->GetPosPtr( posStride );
-	unsigned char *normals = buf->GetNormalPtr( normalStride );
-	unsigned char *uvs = buf->GetUVPtr( uvStride );
+	uchar *verts = buf->GetPosPtr( posStride );
+	uchar *normals = buf->GetNormalPtr( normalStride );
+	uchar *uvs = buf->GetUVPtr( uvStride );
 
   int numTris;
 	ushort *pInds = buf->GetIndices(&numTris);

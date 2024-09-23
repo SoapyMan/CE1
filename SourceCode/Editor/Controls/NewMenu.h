@@ -92,7 +92,7 @@
 //#endif
 //
 //#ifndef ULONG_PTR
-//typedef unsigned long ULONG_PTR, *PULONG_PTR;
+//typedef ulong ULONG_PTR, *PULONG_PTR;
 //#endif
 //
 //#ifndef LONG_PTR

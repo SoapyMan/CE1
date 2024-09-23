@@ -34,7 +34,7 @@ CImageTgaFile::CImageTgaFile(byte* ptr, long filesize) : CImageFile()
 	(void)filesize;
 	struct SImageHeader tga_head;
 	int i;
-	unsigned int temp1, temp2;
+	uint temp1, temp2;
 	int rows, cols, row, col, realrow, truerow, baserow;
 	int maxval;
 	SRGBPixel* pixels;
@@ -238,7 +238,7 @@ static void get_pixel(byte*& ptr, SRGBPixel* dest, int Size)
 {
 	static int Red, Grn, Blu, Alpha;
 	byte j, k;
-	static unsigned int l;
+	static uint l;
 
 	if (Size != 32)
 		Alpha = 255;
@@ -278,7 +278,7 @@ static void get_pixel(byte*& ptr, SRGBPixel* dest, int Size)
 	case 15:			/* Watch byte order. */
 		j = getbyte(ptr);
 		k = getbyte(ptr);
-		l = ((unsigned int)k << 8) + j;
+		l = ((uint)k << 8) + j;
 		Red = (k & 0x7C) >> 2;
 		Grn = ((k & 0x03) << 3) + ((j & 0xE0) >> 5);
 		Blu = j & 0x1F;
@@ -325,14 +325,14 @@ static byte getbyte(byte*& ptr)
 static FILE* sFileData;
 static int src_bits_per_pixel;
 
-static void bwrite(unsigned char data)
+static void bwrite(uchar data)
 {
 	fputc(data, sFileData);
 }
 
-void wwrite(unsigned short data)
+void wwrite(ushort data)
 {
-	unsigned char h, l;
+	uchar h, l;
 
 	l = data & 0xFF;
 	h = data >> 8;
@@ -341,7 +341,7 @@ void wwrite(unsigned short data)
 }
 
 
-static void WritePixel(int depth, unsigned long a, unsigned long r, unsigned long g, unsigned long b)
+static void WritePixel(int depth, ulong a, ulong r, ulong g, ulong b)
 {
 	DWORD color16;
 
@@ -371,12 +371,12 @@ static void WritePixel(int depth, unsigned long a, unsigned long r, unsigned lon
 
 		color16 = (r << 10) | (g << 5) | b;
 
-		wwrite((unsigned short)color16);
+		wwrite((ushort)color16);
 		break;
 	}
 }
 
-static void GetPixel(unsigned char* data, int depth, unsigned long& a, unsigned long& r, unsigned long& g, unsigned long& b)
+static void GetPixel(uchar* data, int depth, ulong& a, ulong& r, ulong& g, ulong& b)
 {
 	switch (depth)
 	{
@@ -402,7 +402,7 @@ static void GetPixel(unsigned char* data, int depth, unsigned long& a, unsigned 
 
 void WriteTGA8(byte* data8, int width, int height, char* filename)
 {
-	unsigned char* data32 = new unsigned char[width * height * 4];
+	uchar* data32 = new uchar[width * height * 4];
 	for (int i = 0; i < width * height; i++)
 	{
 		data32[i * 4 + 0] = data8[i];
@@ -419,7 +419,7 @@ void WriteTGA(byte* data, int width, int height, char* filename, int dest_bits_p
 {
 #ifndef PS2
 	int i;
-	unsigned long r, g, b, a;
+	ulong r, g, b, a;
 
 	src_bits_per_pixel = 32;
 
@@ -454,8 +454,8 @@ void WriteTGA(byte* data, int width, int height, char* filename, int dest_bits_p
 
 	wwrite(x_org);
 	wwrite(y_org);
-	wwrite((unsigned short)width);
-	wwrite((unsigned short)height);
+	wwrite((ushort)width);
+	wwrite((ushort)height);
 
 	bwrite(dest_bits_per_pixel);
 
@@ -493,7 +493,7 @@ void WriteTGA(byte* data, int width, int height, char* filename, int dest_bits_p
 			cryMemcpy(dest, src, width * sizeof(DWORD));
 		}
 		// use the swapped area in further processing & to write out the data
-		data = (unsigned char*)swap;
+		data = (uchar*)swap;
 	}
 
 	UINT src_bytes_per_pixel = src_bits_per_pixel / 8;

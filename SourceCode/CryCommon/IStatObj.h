@@ -231,7 +231,7 @@ struct IStatObj : public IBindable
 	//DOC-IGNORE-END
 
 		// Summary: Unsupported. Should not be used.
-	virtual bool MakeObjectPicture(unsigned char* pRGBAData, int nWidth) = 0;
+	virtual bool MakeObjectPicture(uchar* pRGBAData, int nWidth) = 0;
 
 	// Summary:
 	//     Get the shadow volume object

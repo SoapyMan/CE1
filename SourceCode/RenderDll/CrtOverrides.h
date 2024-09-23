@@ -15,10 +15,10 @@ inline int stricmp(const char* dst, const char* src)
 	int f, l;
 	do
 	{
-		if (((f = (unsigned char)(*(dst++))) >= 'A') && (f <= 'Z'))
+		if (((f = (uchar)(*(dst++))) >= 'A') && (f <= 'Z'))
 			f -= ('A' - 'a');
 
-		if (((l = (unsigned char)(*(src++))) >= 'A') && (l <= 'Z'))
+		if (((l = (uchar)(*(src++))) >= 'A') && (l <= 'Z'))
 			l -= ('A' - 'a');
 	} while (f && (f == l));
 
@@ -34,10 +34,10 @@ inline int strnicmp(const char* first, const char* last, size_t count)
 	{
 		do
 		{
-			if (((f = (unsigned char)(*(first++))) >= 'A') && (f <= 'Z'))
+			if (((f = (uchar)(*(first++))) >= 'A') && (f <= 'Z'))
 				f -= 'A' - 'a';
 
-			if (((l = (unsigned char)(*(last++))) >= 'A') && (l <= 'Z'))
+			if (((l = (uchar)(*(last++))) >= 'A') && (l <= 'Z'))
 				l -= 'A' - 'a';
 		} while (--count && f && (f == l));
 
@@ -67,7 +67,7 @@ inline char* strdup(const char* str)
 #ifndef strlwr
 inline char* strlwr(char* str)
 {
-	unsigned char* dst = nullptr;  /* destination string */
+	uchar* dst = nullptr;  /* destination string */
 	char* cp;               /* traverses string for C locale conversion */
 
 	for (cp = str; *cp; ++cp)

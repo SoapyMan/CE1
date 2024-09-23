@@ -58,7 +58,7 @@ extern "C"
 void NewUbisoftClient::CopyIDToString(const CDKeyIDVector& stVector, string& strString)
 {
 	strString = "";
-	for (unsigned int i = 0; i < stVector.size(); i++)
+	for (uint i = 0; i < stVector.size(); i++)
 	{
 		char szChar[10];
 		sprintf(szChar, "%.2X", stVector[i]);
@@ -67,10 +67,10 @@ void NewUbisoftClient::CopyIDToString(const CDKeyIDVector& stVector, string& str
 }
 
 void NewUbisoftClient::CopyIDToVector(CDKeyIDVector& stVector, const GSubyte* pubArray,
-	unsigned int uiSize)
+	uint uiSize)
 {
 	stVector.clear();
-	for (unsigned int i = 0; i < uiSize; i++)
+	for (uint i = 0; i < uiSize; i++)
 	{
 		stVector.push_back(pubArray[i]);
 	}
@@ -529,10 +529,10 @@ void NewUbisoftClient::SaveCDKey(const GSchar* szCDKey)
 {
 	if (szCDKey && (((strlen(szCDKey) + 1) % 8) == 0))
 	{
-		unsigned char szEncCDKey[128] = { 0 };
-		unsigned int Key[4] = { 1337, 1337 * 2, 1337 * 4, 1337 * 8 };
+		uchar szEncCDKey[128] = { 0 };
+		uint Key[4] = { 1337, 1337 * 2, 1337 * 4, 1337 * 8 };
 
-		TEA_ENCODE((unsigned int*)szCDKey, (unsigned int*)szEncCDKey, strlen(szCDKey) + 1, Key);
+		TEA_ENCODE((uint*)szCDKey, (uint*)szEncCDKey, strlen(szCDKey) + 1, Key);
 
 		char szCDKeyHex[256] = { 0 };
 
@@ -580,10 +580,10 @@ bool NewUbisoftClient::LoadCDKey(GSchar* szCDKey)
 				}
 
 				// decrypt it
-				unsigned char szDecCDKey[128] = { 0 };
-				unsigned int Key[4] = { 1337, 1337 * 2, 1337 * 4, 1337 * 8 };
+				uchar szDecCDKey[128] = { 0 };
+				uint Key[4] = { 1337, 1337 * 2, 1337 * 4, 1337 * 8 };
 
-				TEA_DECODE((unsigned int*)szEncCDKey, (unsigned int*)szDecCDKey, CDKEY_SIZE + 1, Key);
+				TEA_DECODE((uint*)szEncCDKey, (uint*)szDecCDKey, CDKEY_SIZE + 1, Key);
 
 				strncpy(szCDKey, (char*)szDecCDKey, min(strlen((char*)szDecCDKey), CDKEY_SIZE));
 				szCDKey[CDKEY_SIZE] = 0;

@@ -540,7 +540,7 @@ public:
 
 private:
 	//////////////////////////////////////////////////////////////////////////
-  void AddVariable( CVariableArray &varArray,CVariableBase &var,const char *varName,unsigned char dataType=IVariable::DT_SIMPLE )
+  void AddVariable( CVariableArray &varArray,CVariableBase &var,const char *varName,uchar dataType=IVariable::DT_SIMPLE )
 	{
 		var.AddRef(); // Variables are local and must not be released by CVarBlock.
 		if (varName)
@@ -551,7 +551,7 @@ private:
 		varArray.AddChildVar(&var);
 	}
 	//////////////////////////////////////////////////////////////////////////
-  void AddVariable( CVarBlock *vars,CVariableBase &var,const char *varName,unsigned char dataType=IVariable::DT_SIMPLE )
+  void AddVariable( CVarBlock *vars,CVariableBase &var,const char *varName,uchar dataType=IVariable::DT_SIMPLE )
 	{
 		var.AddRef(); // Variables are local and must not be released by CVarBlock.
 		if (varName)

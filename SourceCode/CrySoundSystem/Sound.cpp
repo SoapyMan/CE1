@@ -146,7 +146,7 @@ bool CSound::Preload()
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CSound::SetSoundPriority(unsigned char nSoundPriority)
+void CSound::SetSoundPriority(uchar nSoundPriority)
 {
 	m_nSoundPriority = nSoundPriority;
 
@@ -1003,7 +1003,7 @@ int CSound::GetLength()
 
 //////////////////////////////////////////////////////////////////////
 //! retrieves the currently played sample-pos, in milliseconds or bytes
-unsigned int CSound::GetCurrentSamplePos(bool bMilliSeconds)
+uint CSound::GetCurrentSamplePos(bool bMilliSeconds)
 {
 	GUARD_HEAP;
 	if (m_pSound->NotLoaded())
@@ -1019,24 +1019,24 @@ unsigned int CSound::GetCurrentSamplePos(bool bMilliSeconds)
 		{
 			int nFreq;
 			FSOUND_Sample_GetDefaults(m_pSound->GetSample(), &nFreq, nullptr, nullptr, nullptr);
-			return (unsigned int)((float)FSOUND_GetCurrentPosition(m_nChannel) / (float)nFreq * 1000.0f);
+			return (uint)((float)FSOUND_GetCurrentPosition(m_nChannel) / (float)nFreq * 1000.0f);
 		}
 		else
 		{
-			return ((unsigned int)FSOUND_GetCurrentPosition(m_nChannel));
+			return ((uint)FSOUND_GetCurrentPosition(m_nChannel));
 		}
 	case btSTREAM:
 		if (bMilliSeconds)
-			return ((unsigned int)FSOUND_Stream_GetTime(m_pSound->GetStream()));
+			return ((uint)FSOUND_Stream_GetTime(m_pSound->GetStream()));
 		else
-			return ((unsigned int)FSOUND_Stream_GetPosition(m_pSound->GetStream()));
+			return ((uint)FSOUND_Stream_GetPosition(m_pSound->GetStream()));
 	}
 	return (0);
 }
 
 //! set the currently played sample-pos in bytes or milliseconds
 //////////////////////////////////////////////////////////////////////
-void CSound::SetCurrentSamplePos(unsigned int nPos, bool bMilliSeconds)
+void CSound::SetCurrentSamplePos(uint nPos, bool bMilliSeconds)
 {
 	GUARD_HEAP;
 	if (m_pSound->NotLoaded())
@@ -1050,7 +1050,7 @@ void CSound::SetCurrentSamplePos(unsigned int nPos, bool bMilliSeconds)
 	case btSAMPLE:
 		if (bMilliSeconds)
 		{
-			unsigned int nSample = (unsigned int)(((float)nPos / 1000.0f) * (float)m_pSound->GetBaseFreq());
+			uint nSample = (uint)(((float)nPos / 1000.0f) * (float)m_pSound->GetBaseFreq());
 			if (IsPlayingOnChannel())
 				FSOUND_SetCurrentPosition(m_nChannel, nSample);
 			else

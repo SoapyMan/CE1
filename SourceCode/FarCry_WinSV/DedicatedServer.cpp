@@ -34,9 +34,9 @@ void AuthCheckFunction(void* data)
 {
 	// Data assumed to be 32 bytes.
 	int key1[4] = { 389623487,373673863,657846392,378467832 };
-	TEA_DECODE((unsigned int*)data, (unsigned int*)data, 32, (unsigned int*)key1);
+	TEA_DECODE((uint*)data, (uint*)data, 32, (uint*)key1);
 	int key2[4] = { 1982697467,3278962783,278963782,287678311 };
-	TEA_ENCODE((unsigned int*)data, (unsigned int*)data, 32, (unsigned int*)key2);
+	TEA_ENCODE((uint*)data, (uint*)data, 32, (uint*)key2);
 }
 
 void print(const char* insTxt, ...)
@@ -67,7 +67,7 @@ std::string IntToString(int nNumber)
 }
 
 // returns hexadecimal string representation of the given dword
-std::string UIntToHexString(unsigned long dwNumber)
+std::string UIntToHexString(ulong dwNumber)
 {
 	char szNumber[24];
 

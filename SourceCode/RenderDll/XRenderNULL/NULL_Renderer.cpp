@@ -66,13 +66,13 @@ void CNULLRenderer::BeginFrame()
 }
 
 //////////////////////////////////////////////////////////////////////
-bool CNULLRenderer::ChangeDisplay(unsigned int width, unsigned int height, unsigned int bpp)
+bool CNULLRenderer::ChangeDisplay(uint width, uint height, uint bpp)
 {
 	return false;
 }
 
 //////////////////////////////////////////////////////////////////////
-void CNULLRenderer::ChangeViewport(unsigned int x, unsigned int y, unsigned int width, unsigned int height)
+void CNULLRenderer::ChangeViewport(uint x, uint y, uint width, uint height)
 {
 }
 
@@ -372,7 +372,7 @@ void CNULLRenderer::ClearColorBuffer(const Vec3d vColor)
 {
 }
 
-void CNULLRenderer::ReadFrameBuffer(unsigned char* pRGB, int nSizeX, int nSizeY, bool bBackBuffer, bool bRGBA, int nScaledX, int nScaledY)
+void CNULLRenderer::ReadFrameBuffer(uchar* pRGB, int nSizeX, int nSizeY, bool bBackBuffer, bool bRGBA, int nScaledX, int nScaledY)
 {
 }
 
@@ -413,7 +413,7 @@ void CNULLRenderer::MakeMatrix(const Vec3d& pos, const Vec3d& angles, const Vec3
 
 namespace ATL
 {
-	int __cdecl _AtlInitializeCriticalSectionEx(struct _RTL_CRITICAL_SECTION*, unsigned long, unsigned long)
+	int __cdecl _AtlInitializeCriticalSectionEx(struct _RTL_CRITICAL_SECTION*, ulong, ulong)
 	{
 		return 0;
 	}

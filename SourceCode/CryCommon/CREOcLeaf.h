@@ -9,7 +9,7 @@ struct SLightIndicies
 	TArray<ushort> m_pIndicies;
 	TArray<ushort> m_pIndiciesAttenFrustr;
 	SVertexStream m_IndexBuffer;            // used for DirectX only
-	unsigned short* GetIndices(int& nInds)
+	ushort* GetIndices(int& nInds)
 	{
 		if (m_AssociatedLight.m_NumCM & 2)
 		{

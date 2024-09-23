@@ -1069,7 +1069,7 @@ bool CGraph::PointInTriangle(const Vec3d& pos, GraphNode* pNode)
 	if (cross > 0)
 		bSide = true;
 
-	for (unsigned int i = 1; i < pNode->vertex.size(); i++)
+	for (uint i = 1; i < pNode->vertex.size(); i++)
 	{
 		Vec3d vI = m_pAISystem->m_VertexList.GetVertex(pNode->vertex[i]).vPos;
 		edge = m_pAISystem->m_VertexList.GetVertex(pNode->vertex[i - 1]).vPos - vI;
@@ -2203,8 +2203,8 @@ void CGraph::ResolveLinkData(GraphNode* pOne, GraphNode* pTwo)
 	int iOneEdge1 = -1, iOneEdge2 = -1;
 	int iTwoEdge1 = -1, iTwoEdge2 = -1;
 
-	for (unsigned int i = 0; i < pOne->vertex.size(); i++)
-		for (unsigned int j = 0; j < pTwo->vertex.size(); j++)
+	for (uint i = 0; i < pOne->vertex.size(); i++)
+		for (uint j = 0; j < pTwo->vertex.size(); j++)
 		{
 			/*		if ( (fabs(pOne->vertex[i].vPos.x - pTwo->vertex[j].vPos.x) < 0.0001f) &&
 						 (fabs(pOne->vertex[i].vPos.y - pTwo->vertex[j].vPos.y) < 0.0001f) &&
@@ -2441,7 +2441,7 @@ void CGraph::FillGraphNodeData(GraphNode* pNode)
 
 }
 
-void CGraph::SetCurrentHeuristic(unsigned int heuristic_type)
+void CGraph::SetCurrentHeuristic(uint heuristic_type)
 {
 	if (m_pHeuristic)
 	{

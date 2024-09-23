@@ -125,7 +125,7 @@ void CTextureCompression::CompressDXT1( CFile &toFile,CImage &image,bool bHiQual
 	m_numMips = 0;
 
 	bool bUseHW = !bHiQuality;
-	GetIEditor()->GetRenderer()->DXTCompress( (unsigned char*)image.GetData(),image.GetWidth(),image.GetHeight(),eTF_DXT1,bUseHW,true,4,SaveCompessedMipmapLevel );
+	GetIEditor()->GetRenderer()->DXTCompress( (uchar*)image.GetData(),image.GetWidth(),image.GetHeight(),eTF_DXT1,bUseHW,true,4,SaveCompessedMipmapLevel );
 
 	int len = m_pFile->GetLength();
 	toFile.Write( m_pFile->Detach(),len );
@@ -142,7 +142,7 @@ void CTextureCompression::CompressDDS( CFile &toFile,CImage &image,bool bHiQuali
 	m_numMips = 0;
 
 	bool bUseHW = !bHiQuality;
-	GetIEditor()->GetRenderer()->DXTCompress( (unsigned char*)image.GetData(),image.GetWidth(),image.GetHeight(),eTF_DXT1,bUseHW,true,4,SaveCompessedMipmapLevel );
+	GetIEditor()->GetRenderer()->DXTCompress( (uchar*)image.GetData(),image.GetWidth(),image.GetHeight(),eTF_DXT1,bUseHW,true,4,SaveCompessedMipmapLevel );
 
 	int size = m_pFile->GetLength();
 	WriteDDS( toFile,m_pFile->Detach(),image.GetWidth(),image.GetHeight(),size,eIF_DXT1,m_numMips );
@@ -151,7 +151,7 @@ void CTextureCompression::CompressDDS( CFile &toFile,CImage &image,bool bHiQuali
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CTextureCompression::WriteDDS( CFile &file,unsigned char *dat, int w,int h,int Size, EImFormat eF, int NumMips )
+void CTextureCompression::WriteDDS( CFile &file,uchar *dat, int w,int h,int Size, EImFormat eF, int NumMips )
 {
 	DWORD dwMagic;
 	DDS_HEADER ddsh;

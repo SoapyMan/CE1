@@ -896,7 +896,7 @@ bool CEntitySystem::IsIDUsed(EntityId nID)
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CEntitySystem::ReleaseMark(unsigned int id)
+void CEntitySystem::ReleaseMark(uint id)
 {
 	m_EntityIDGenerator.Remove(id);
 }
@@ -953,7 +953,7 @@ void CEntitySystem::GetMemoryStatistics(ICrySizer* pSizer)
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CEntitySystem::OnBind(EntityId id, EntityId child, unsigned char param)
+void CEntitySystem::OnBind(EntityId id, EntityId child, uchar param)
 {
 	if (!m_lstSinks.empty())
 	{
@@ -963,7 +963,7 @@ void CEntitySystem::OnBind(EntityId id, EntityId child, unsigned char param)
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CEntitySystem::OnUnbind(EntityId id, EntityId child, unsigned char param)
+void CEntitySystem::OnUnbind(EntityId id, EntityId child, uchar param)
 {
 	if (!m_lstSinks.empty())
 	{

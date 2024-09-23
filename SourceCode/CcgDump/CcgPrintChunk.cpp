@@ -108,7 +108,7 @@ void printChunkVertices(const char* pData, unsigned nSize)
 
 std::vector<CryBoneDesc> g_arrBones;
 
-const char* getBoneName(unsigned int i)
+const char* getBoneName(uint i)
 {
 	if (i < g_arrBones.size())
 		return g_arrBones[i].getNameCStr();

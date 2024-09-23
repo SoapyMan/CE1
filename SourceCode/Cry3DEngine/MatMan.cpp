@@ -216,7 +216,7 @@ IMatInfo* CMatMan::LoadMaterial(XmlNodeRef node, const char* sLibraryName, IMatI
 {
 	XmlString name, mtlName, shaderName, texmap, file;
 	int mtlFlags = 0;
-	unsigned int nShaderGenMask = 0;
+	uint nShaderGenMask = 0;
 	SInputShaderResources sr;
 	SLightMaterial lm;
 
@@ -399,7 +399,7 @@ enum EMtlFlagsFromXml
 };
 
 //////////////////////////////////////////////////////////////////////////
-bool CMatMan::LoadMaterialShader(IMatInfo* pMtl, const char* sShader, int mtlFlags, unsigned int nShaderGenMask, SInputShaderResources& sr, SLightMaterial& lm, XmlNodeRef& publicsNode)
+bool CMatMan::LoadMaterialShader(IMatInfo* pMtl, const char* sShader, int mtlFlags, uint nShaderGenMask, SInputShaderResources& sr, SLightMaterial& lm, XmlNodeRef& publicsNode)
 {
 	// Mark material invalid by default.
 	pMtl->SetFlags(pMtl->GetFlags() | MIF_INVALID);
@@ -440,7 +440,7 @@ bool CMatMan::LoadMaterialShader(IMatInfo* pMtl, const char* sShader, int mtlFla
 			// Parse public parameters, and assign them to source shader resources.
 			ParsePublicParams(params, publicsNode);
 			sr.m_ShaderParams.Reserve(params.size());
-			for (unsigned int i = 0; i < params.size(); i++)
+			for (uint i = 0; i < params.size(); i++)
 			{
 				sr.m_ShaderParams.push_back(params[i]);
 			}
@@ -492,7 +492,7 @@ void CMatMan::ParsePublicParams(TArray<SShaderParam>& params, XmlNodeRef paramsN
 	if (params.empty())
 		return;
 
-	for (unsigned int i = 0; i < params.size(); i++)
+	for (uint i = 0; i < params.size(); i++)
 	{
 		SShaderParam* pParam = &params[i];
 		switch (pParam->m_Type)

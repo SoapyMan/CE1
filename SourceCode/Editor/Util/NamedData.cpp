@@ -160,15 +160,15 @@ void CNamedData::Serialize(CArchive& ar)
 			CString key = it->first;
 			DataBlock* pBlock = it->second;
 
-			unsigned int nOriginalSize;
-			unsigned int nSizeFlags;
-			unsigned int flags = 0;
+			uint nOriginalSize;
+			uint nSizeFlags;
+			uint flags = 0;
 
 			if (pBlock->bCompressed)
 			{
 				nOriginalSize = pBlock->compressedData.GetUncompressedSize();
 				// Compressed data.
-				unsigned long destSize = pBlock->compressedData.GetSize();
+				ulong destSize = pBlock->compressedData.GetSize();
 				void *dest = pBlock->compressedData.GetBuffer();
 				nSizeFlags = destSize | (1<<31);
 
@@ -202,10 +202,10 @@ void CNamedData::Serialize(CArchive& ar)
 		for(int i = 0; i < iSize; i++)
 		{	
 			CString key;
-			unsigned int nSizeFlags = 0;
-			unsigned int nSize = 0;
-			unsigned int nOriginalSize = 0;
-			unsigned int flags = 0;
+			uint nSizeFlags = 0;
+			uint nSize = 0;
+			uint nOriginalSize = 0;
+			uint flags = 0;
 			bool bCompressed = false;
 
 			DataBlock *pBlock = new DataBlock;

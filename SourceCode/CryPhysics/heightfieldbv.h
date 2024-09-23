@@ -26,7 +26,7 @@ public:
 	vector2di m_PatchStart;
 	vector2di m_PatchSize;
 	float m_minHeight, m_maxHeight;
-	unsigned int* m_pUsedTriMap;
+	uint* m_pUsedTriMap;
 
 	static BVheightfield g_BVhf;
 };

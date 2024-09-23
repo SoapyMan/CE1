@@ -128,7 +128,7 @@ int CScriptObjectServerSlot::SendCommand(IFunctionHandler *pH)
 		if(!pH->GetParam(5,iUserByte))
 			return pH->EndFunction();
 
-		m_pSS->SendCommand(sString,vPos,vNormal,(EntityId)Id,(unsigned char)iUserByte);
+		m_pSS->SendCommand(sString,vPos,vNormal,(EntityId)Id,(uchar)iUserByte);
 	}
 
 

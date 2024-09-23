@@ -414,7 +414,7 @@ public:
 	// compresses the raw data into raw data. The buffer for compressed data itself with the heap passed. Uses method 8 (deflate)
 	// returns one of the Z_* errors (Z_OK upon success)
 	// MT-safe
-	int RawCompress(const void* pUncompressed, unsigned long* pDestSize, void* pCompressed, unsigned long nSrcSize, int nLevel = -1);
+	int RawCompress(const void* pUncompressed, ulong* pDestSize, void* pCompressed, ulong nSrcSize, int nLevel = -1);
 
 	// Uncompresses raw (without wrapping) data that is compressed with method 8 (deflated) in the Zip file
 	// returns one of the Z_* errors (Z_OK upon success)
@@ -422,7 +422,7 @@ public:
 	// with 2 differences: there are no 16-bit checks, and 
 	// it initializes the inflation to start without waiting for compression method byte, as this is the 
 	// way it's stored into zip file
-	int RawUncompress(void* pUncompressed, unsigned long* pDestSize, const void* pCompressed, unsigned long nSrcSize);
+	int RawUncompress(void* pUncompressed, ulong* pDestSize, const void* pCompressed, ulong nSrcSize);
 
 	//////////////////////////////////////////////////////////////////////////
 	// Files opening recorder.

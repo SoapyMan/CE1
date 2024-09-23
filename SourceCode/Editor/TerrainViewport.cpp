@@ -314,7 +314,7 @@ void CTerrainViewport::UpdateContent( int flags )
 
 		// Fill in the surface data into the array. Apply lighting and water, use
 		// the settings from the document
-		bReturn = cSurfaceTexture.GenerateSurface( (unsigned long*)m_textureData,m_textureSize.cx,m_textureSize.cy,true,true,m_waterLevel,true);
+		bReturn = cSurfaceTexture.GenerateSurface( (ulong*)m_textureData,m_textureSize.cx,m_textureSize.cy,true,true,m_waterLevel,true);
 	}
 	else
 	{

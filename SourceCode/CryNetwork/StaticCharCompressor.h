@@ -18,10 +18,10 @@ public:
 	void InitFromStatistics(const DWORD indwPriority[256]);
 
 	//! \return stream error
-	bool Write(CStream& outStream, const unsigned char inChar);
+	bool Write(CStream& outStream, const uchar inChar);
 
 	//! \return stream error
-	bool Read(CStream& inStream, unsigned char& outChar);
+	bool Read(CStream& inStream, uchar& outChar);
 
 
 private: // ---------------------------------------------------------
@@ -29,7 +29,7 @@ private: // ---------------------------------------------------------
 	struct SNode
 	{
 		//! constructor for a leaf
-		SNode(const unsigned char inValue)
+		SNode(const uchar inValue)
 			:m_Value(inValue)
 		{
 			m_dwIndexZero = 0xffffffff; m_dwIndexOne = 0xffffffff;		// unused
@@ -45,7 +45,7 @@ private: // ---------------------------------------------------------
 		DWORD							m_dwIndexZero;			//!< 0xffffffff or index to the subtree for bit = 0
 		DWORD							m_dwIndexOne;				//!< 0xffffffff or index to the subtree for bit = 1
 
-		unsigned char			m_Value;						//!< is only valid for Leafes
+		uchar			m_Value;						//!< is only valid for Leafes
 
 		bool IsLeaf()
 		{
@@ -83,8 +83,8 @@ private: // ---------------------------------------------------------
 			m_Bitfield = 0; m_BitCount = 0;
 		}
 
-		unsigned short			m_Bitfield;					//!<
-		unsigned short			m_BitCount;					//!<
+		ushort			m_Bitfield;					//!<
+		ushort			m_BitCount;					//!<
 	};
 
 	// ------------------------------------------------------------------
@@ -93,6 +93,6 @@ private: // ---------------------------------------------------------
 	std::vector<SNode>		m_Nodes;						//!<
 	SBitToChar						m_CharToBit[256];		//!<
 
-	bool GetCharFromBits_slow(const unsigned char inVal, const DWORD indwIndex, SBitToChar& outDat);
+	bool GetCharFromBits_slow(const uchar inVal, const DWORD indwIndex, SBitToChar& outDat);
 };
 

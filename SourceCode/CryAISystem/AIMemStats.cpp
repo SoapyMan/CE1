@@ -139,10 +139,10 @@ void CAISystem::GetMemoryStatistics(ICrySizer* pSizer)
 	pSizer->AddObject(&m_mapSpecialAreas, size);
 
 
-	size = m_mapSpecies.size() * (sizeof(unsigned short) + sizeof(CAIObject*));
+	size = m_mapSpecies.size() * (sizeof(ushort) + sizeof(CAIObject*));
 	pSizer->AddObject(&m_mapSpecies, size);
 
-	size = m_mapGroups.size() * (sizeof(unsigned short) + sizeof(CAIObject*));
+	size = m_mapGroups.size() * (sizeof(ushort) + sizeof(CAIObject*));
 	pSizer->AddObject(&m_mapGroups, size);
 
 	{

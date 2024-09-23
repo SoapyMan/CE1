@@ -217,7 +217,7 @@ void CLightPatch::CreateDot3Lightmap(int nSizeX, int nSizeY, const bool cbGenera
 void CRadMesh::PrepareLightmaps(RadSceneState& sceneState, bool bMergePolys, const float fGridSize, const Vec3d& vMinBB, const Vec3d& vMaxBB)
 {
 #ifndef DISPLAY_MORE_INFO
-	unsigned int uiHugePatchFoundNumber = 0;
+	uint uiHugePatchFoundNumber = 0;
 #endif
 	sceneState.lstScenePolys.clear();
 
@@ -308,7 +308,7 @@ void CRadMesh::PrepareLightmaps(RadSceneState& sceneState, bool bMergePolys, con
 	if (((m_uiFlags & ONLY_SUNLIGHT) == 0) && (m_uiCoarseTexelCount > genParam.m_iTextureResolution * genParam.m_iTextureResolution))
 	{
 		//how often do i need to halve the resolution?
-		unsigned int uiIterations = (m_uiCoarseTexelCount / (genParam.m_iTextureResolution * genParam.m_iTextureResolution));
+		uint uiIterations = (m_uiCoarseTexelCount / (genParam.m_iTextureResolution * genParam.m_iTextureResolution));
 		//too may texels, halve resolution
 		// If the function returns false, we ran out of lightmap space while processing the GLM.
 		// We already couldn't fit it in last time, object won't fit into our LM size at all
@@ -559,13 +559,13 @@ static CFColor sNormalizeColor(const float fColorRLamb, const float fColorGLamb,
 
 #ifdef APPLY_COLOUR_FIX
 void CRadPoly::GatherSubSamples(
-	const unsigned int cuiX, const unsigned int cuiY, const unsigned int cuiSubSamples,
-	const unsigned int* cpaIndicator, const float* cpfColours, const SComplexOSDot3Texel* pDot3,
-	unsigned int& ruiMaxComponent, const SOcclusionMapTexel* cpfOccl, const GLMOcclLightInfo& rOcclInfo)
+	const uint cuiX, const uint cuiY, const uint cuiSubSamples,
+	const uint* cpaIndicator, const float* cpfColours, const SComplexOSDot3Texel* pDot3,
+	uint& ruiMaxComponent, const SOcclusionMapTexel* cpfOccl, const GLMOcclLightInfo& rOcclInfo)
 #else
 void CRadPoly::GatherSubSamples(
-	const unsigned int cuiX, const unsigned int cuiY, const unsigned int cuiSubSamples,
-	const unsigned int* cpaIndicator, const float* cpfColours, const SComplexOSDot3Texel* pDot3, const SOcclusionMapTexel* cpfOccl, const GLMOcclLightInfo& rOcclInfo)
+	const uint cuiX, const uint cuiY, const uint cuiSubSamples,
+	const uint* cpaIndicator, const float* cpfColours, const SComplexOSDot3Texel* pDot3, const SOcclusionMapTexel* cpfOccl, const GLMOcclLightInfo& rOcclInfo)
 #endif
 {
 	assert(cpaIndicator);	assert(cpfColours);		assert(pDot3);
@@ -579,7 +579,7 @@ void CRadPoly::GatherSubSamples(
 		pHDRCenterColour = &m_pHDRLightmapData[cuiY * m_nW + cuiX];
 
 	//first check how many valid samples we did gather
-	unsigned int uiValidCount = 1;//center is always assumed to be valid
+	uint uiValidCount = 1;//center is always assumed to be valid
 	for (int v = 0; v < cuiSubSamples; v++)
 	{
 		if (cpaIndicator[v] != 0)
@@ -617,7 +617,7 @@ void CRadPoly::GatherSubSamples(
 	//do occl map stuff
 	if (cpfOccl && m_pOcclMapData)
 	{
-		unsigned int uiVisibilitySum[4] = { 0,0,0,0 };//count all 4 channels independently
+		uint uiVisibilitySum[4] = { 0,0,0,0 };//count all 4 channels independently
 		for (int v = 0; v < cuiSubSamples; v++)
 		{
 			if (cpaIndicator[v] == 0)
@@ -644,10 +644,10 @@ void CRadPoly::GatherSubSamples(
 	//set new values
 #ifdef APPLY_COLOUR_FIX
 	//keep same clamping range, get max for later colour scale
-	const unsigned int uiR = __min(512, (unsigned int)r);
-	const unsigned int uiG = __min(512, (unsigned int)g);
-	const unsigned int uiB = __min(512, (unsigned int)b);
-	const unsigned int cuiMax = __max(uiR, __max(uiG, uiB));
+	const uint uiR = __min(512, (uint)r);
+	const uint uiG = __min(512, (uint)g);
+	const uint uiB = __min(512, (uint)b);
+	const uint cuiMax = __max(uiR, __max(uiG, uiB));
 	ruiMaxComponent = __max(cuiMax, ruiMaxComponent);
 
 	*pCenterColour++ = (unsigned char)(__min(255, uiR));
@@ -804,9 +804,9 @@ void CRadPoly::CopyData(CLightPatch* inpDestLightPatch, int dw)
 
 //estimate the size of the polygon
 #ifndef DISPLAY_MORE_INFO
-const unsigned int CRadPoly::CalcExtent(RadSceneState& sceneState, const CString& rGLMName, const CString& rCGFName, bool bOriginal, const float fGridSize, const UINT iMinBlockSize, const UINT iMaxBlockSize, unsigned int& rHugePatchFoundNumber)
+const uint CRadPoly::CalcExtent(RadSceneState& sceneState, const CString& rGLMName, const CString& rCGFName, bool bOriginal, const float fGridSize, const UINT iMinBlockSize, const UINT iMaxBlockSize, uint& rHugePatchFoundNumber)
 #else
-const unsigned int CRadPoly::CalcExtent(RadSceneState& sceneState, const CString& rGLMName, const CString& rCGFName, bool bOriginal, const float fGridSize, const UINT iMinBlockSize, const UINT iMaxBlockSize)
+const uint CRadPoly::CalcExtent(RadSceneState& sceneState, const CString& rGLMName, const CString& rCGFName, bool bOriginal, const float fGridSize, const UINT iMinBlockSize, const UINT iMaxBlockSize)
 #endif
 {
 	int type = CalcPlaneType2(m_Plane.n);
@@ -976,7 +976,7 @@ inline void CRadPoly::SynchronizeLightmaps()
 ///////////////////////////////////////////////////
 void CRadPoly::AllocateDot3Lightmap(const bool cbGenerateHDRMaps, const bool cbGenerateOcclMaps)
 {
-	unsigned int cuiLMSize = m_nW * m_nH;
+	uint cuiLMSize = m_nW * m_nH;
 	m_pLightmapData = new unsigned char[cuiLMSize * 4];
 	memset(m_pLightmapData, 0, cuiLMSize * 4);									//clear the image
 	m_pWSDominantDirData = new SComplexOSDot3Texel[cuiLMSize];
@@ -1055,7 +1055,7 @@ void CRadPoly::SetSimpleLightmapTexel(const float infX, const float infY,
 	const int r, const int g, const int b, unsigned char iDP3Fac)
 {
 	assert(m_pLightmapData);
-	const unsigned int cuiIndex = RoundFromFloat(infY) * m_nW + RoundFromFloat(infX);
+	const uint cuiIndex = RoundFromFloat(infY) * m_nW + RoundFromFloat(infX);
 	assert(cuiIndex < m_nW * m_nH);
 	unsigned char* dataptr = &m_pLightmapData[cuiIndex * 4];
 
@@ -1069,7 +1069,7 @@ void CRadPoly::SetHDRLightmapTexel(const float infX, const float infY,
 	const float r, const float g, const float b)
 {
 	assert(m_pHDRLightmapData);
-	const unsigned int cuiIndex = RoundFromFloat(infY) * m_nW + RoundFromFloat(infX);
+	const uint cuiIndex = RoundFromFloat(infY) * m_nW + RoundFromFloat(infX);
 	assert(cuiIndex < m_nW * m_nH);
 	Vec3* dataptr = &m_pHDRLightmapData[cuiIndex];
 	dataptr->x = r;
@@ -1080,13 +1080,13 @@ void CRadPoly::SetHDRLightmapTexel(const float infX, const float infY,
 inline void CRadPoly::SetOcclLightmapTexel(const float infX, const float infY, const SOcclusionMapTexel& rTexel)
 {
 	if (!m_pOcclMapData)return;//not used
-	const unsigned int cuiIndex = RoundFromFloat(infY) * m_nW + RoundFromFloat(infX);
+	const uint cuiIndex = RoundFromFloat(infY) * m_nW + RoundFromFloat(infX);
 	assert(cuiIndex < m_nW * m_nH);
 	m_pOcclMapData[cuiIndex] = rTexel;
 }
 
 #ifdef APPLY_COLOUR_FIX
-const unsigned int CRadPoly::SetDot3LightmapTexel(const CRadVertex& rVertex,
+const uint CRadPoly::SetDot3LightmapTexel(const CRadVertex& rVertex,
 	const float fColorRLamb, const float fColorGLamb, const float fColorBLamb,
 	Vec3d& inLightDir, const float cfLM_DP3LerpFactor,
 	SComplexOSDot3Texel& rDot3Texel, const SOcclusionMapTexel& rTexel, bool bHDR)
@@ -1110,10 +1110,10 @@ void CRadPoly::SetDot3LightmapTexel(const CRadVertex& rVertex,
 
 #ifdef APPLY_COLOUR_FIX
 	//keep same clamping range, get max for later colour scale
-	const unsigned int uiR = __min(512, (unsigned int)(col.r * 255.0f));
-	const unsigned int uiG = __min(512, (unsigned int)(col.g * 255.0f));
-	const unsigned int uiB = __min(512, (unsigned int)(col.b * 255.0f));
-	const unsigned int cuiMax = __max(uiR, __max(uiG, uiB));
+	const uint uiR = __min(512, (uint)(col.r * 255.0f));
+	const uint uiG = __min(512, (uint)(col.g * 255.0f));
+	const uint uiB = __min(512, (uint)(col.b * 255.0f));
+	const uint cuiMax = __max(uiR, __max(uiG, uiB));
 
 	const unsigned char r = (unsigned char)(__min(255, uiR));
 	const unsigned char g = (unsigned char)(__min(255, uiG));
@@ -1139,7 +1139,7 @@ void CRadPoly::SetDot3LightmapTexel(const CRadVertex& rVertex,
 	//set complex information
 	assert(rDot3Texel.fAlpha >= 0.f && rDot3Texel.fBeta >= 0.f && rDot3Texel.fBeta + rDot3Texel.fAlpha <= 1.1f);
 	rDot3Texel.vDot3Light = inLightDir;
-	const unsigned int cuiLMIndex = RoundFromFloat(fInfY) * m_nW + RoundFromFloat(fInfX);
+	const uint cuiLMIndex = RoundFromFloat(fInfY) * m_nW + RoundFromFloat(fInfX);
 	m_pWSDominantDirData[cuiLMIndex] = rDot3Texel;
 #ifdef APPLY_COLOUR_FIX
 	return cuiMax;
@@ -1147,13 +1147,13 @@ void CRadPoly::SetDot3LightmapTexel(const CRadVertex& rVertex,
 }
 
 #ifdef APPLY_COLOUR_FIX
-void CRadPoly::SetDot3TSLightmapTexel(const unsigned int cuiX, const unsigned int cuiY, const unsigned int cuiColourFixAlpha, const float cfColourScale)
+void CRadPoly::SetDot3TSLightmapTexel(const uint cuiX, const uint cuiY, const uint cuiColourFixAlpha, const float cfColourScale)
 #else
-void CRadPoly::SetDot3TSLightmapTexel(const unsigned int cuiX, const unsigned int cuiY)
+void CRadPoly::SetDot3TSLightmapTexel(const uint cuiX, const uint cuiY)
 #endif
 {
 	assert(m_pDominantDirData);		assert(m_pWSDominantDirData);
-	const unsigned int cuiLMIndex = cuiY * m_nW + cuiX;
+	const uint cuiLMIndex = cuiY * m_nW + cuiX;
 #ifdef USE_DOT3_ALPHA
 	unsigned char* domlightdir = &m_pDominantDirData[cuiLMIndex * 4];
 #else
@@ -1199,7 +1199,7 @@ void CRadPoly::SetDot3TSLightmapTexel(const unsigned int cuiX, const unsigned in
 }
 
 // compress patch to 1x1 if constant value
-void CRadPoly::Compress(const unsigned int cuiMinBlockSize = 4)
+void CRadPoly::Compress(const uint cuiMinBlockSize = 4)
 {
 	assert(m_pDominantDirData);
 	assert(m_pLightmapData);

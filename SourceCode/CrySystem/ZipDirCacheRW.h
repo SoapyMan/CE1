@@ -118,7 +118,7 @@ protected:
 
 	// offset to the start of CDR in the file,even if there's no CDR there currently
 	// when a new file is added, it can start from here, but this value will need to be updated then
-	ZipFile::ulong m_lCDROffset;
+	ulong m_lCDROffset;
 
 	enum
 	{

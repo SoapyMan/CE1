@@ -67,7 +67,7 @@ private:
 	HINTERNET					m_hINET;
 	HINTERNET					m_hUrl;
 
-	unsigned char* m_pBuffer;
+	uchar* m_pBuffer;
 	int								m_iFileSize;
 
 	volatile int			m_iState;

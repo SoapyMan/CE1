@@ -28,9 +28,9 @@ typedef HRESULT (*MIPcallback)(void * data, int miplevel, DWORD size);
    Compresses an image with a user supplied callback with the data for each MIP level created
    Only supports input of RGB 24 or ARGB 32 bpp
 */
-HRESULT nvDXTcompress(unsigned char * raw_data, // pointer to data (24 or 32 bit)
-                unsigned long w, // width in texels
-                unsigned long h, // height in texels
+HRESULT nvDXTcompress(uchar * raw_data, // pointer to data (24 or 32 bit)
+                ulong w, // width in texels
+                ulong h, // height in texels
                 DWORD TextureFormat, // list below
                 bool bGenMipMaps,    // auto gen MIP maps
                 bool bDither,
@@ -51,7 +51,7 @@ HRESULT nvDXTcompress(unsigned char * raw_data, // pointer to data (24 or 32 bit
   rowBytes - pitch
 
 */
-unsigned char * nvDXTdecompress(int & w, int & h, int & depth, int & total_width, int & rowBytes);
+uchar * nvDXTdecompress(int & w, int & h, int & depth, int & total_width, int & rowBytes);
 
 
 // see examples

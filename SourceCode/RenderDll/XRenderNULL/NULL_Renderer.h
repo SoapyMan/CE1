@@ -43,9 +43,9 @@ public:
   ~CNULLRenderer();
   
 #ifndef PS2 
-  virtual WIN_HWND Init(int x,int y,int width,int height,unsigned int cbpp, int zbpp, int sbits, bool fullscreen,WIN_HINSTANCE hinst, WIN_HWND Glhwnd=0, WIN_HDC Glhdc=0, WIN_HGLRC hGLrc=0, bool bReInit=false);
+  virtual WIN_HWND Init(int x,int y,int width,int height,uint cbpp, int zbpp, int sbits, bool fullscreen,WIN_HINSTANCE hinst, WIN_HWND Glhwnd=0, WIN_HDC Glhdc=0, WIN_HGLRC hGLrc=0, bool bReInit=false);
 #else //PS2
-  virtual bool Init(int x,int y,int width,int height,unsigned int cbpp, int zbpp, int sbits, bool fullscreen, bool bReInit=false);
+  virtual bool Init(int x,int y,int width,int height,uint cbpp, int zbpp, int sbits, bool fullscreen, bool bReInit=false);
 #endif  //endif 
   virtual WIN_HWND GetHWND();
   virtual bool SetCurrentContext(WIN_HWND hWnd);
@@ -130,8 +130,8 @@ public:
   virtual void  SetCamera(const CCamera &cam);
   virtual void  SetViewport(int x=0, int y=0, int width=0, int height=0);
   virtual void  SetScissor(int x=0, int y=0, int width=0, int height=0);
-  virtual bool  ChangeDisplay(unsigned int width,unsigned int height,unsigned int cbpp);
-  virtual void  ChangeViewport(unsigned int x,unsigned int y,unsigned int width,unsigned int height);
+  virtual bool  ChangeDisplay(uint width,uint height,uint cbpp);
+  virtual void  ChangeViewport(uint x,uint y,uint width,uint height);
   virtual void  SetPerspective(const CCamera &cam);
 
   // draw helper functions
@@ -154,11 +154,11 @@ public:
   virtual char*	GetPixelProfile(bool bSupported) {return "NONE";}
 
   // basic textures operations
-  virtual unsigned int DownLoadToVideoMemory(unsigned char *data,int w, int h, ETEX_Format eTFSrc, ETEX_Format eTFDst, int nummipmap, bool repeat=true, int filter=FILTER_BILINEAR, int Id=0, char *szCacheName=nullptr, int flags=0);
-  virtual void  UpdateTextureInVideoMemory(uint tid, unsigned char *data,int posx,int posy,int w,int h,ETEX_Format eTF=eTF_0888);
-  virtual void  RemoveTexture(unsigned int TextureId);
+  virtual uint DownLoadToVideoMemory(uchar *data,int w, int h, ETEX_Format eTFSrc, ETEX_Format eTFDst, int nummipmap, bool repeat=true, int filter=FILTER_BILINEAR, int Id=0, char *szCacheName=nullptr, int flags=0);
+  virtual void  UpdateTextureInVideoMemory(uint tid, uchar *data,int posx,int posy,int w,int h,ETEX_Format eTF=eTF_0888);
+  virtual void  RemoveTexture(uint TextureId);
   virtual void  RemoveTexture(ITexPic * pTexPic);
-  virtual uint  LoadTexture(const char * filename,int *tex_type=nullptr,unsigned int def_tid=0,bool compresstodisk=true,bool bWarn=true);
+  virtual uint  LoadTexture(const char * filename,int *tex_type=nullptr,uint def_tid=0,bool compresstodisk=true,bool bWarn=true);
   virtual void  SetTexture(int tnum, ETexType eTT=eTT_Base);  
   virtual void  SetTexture3D(int tid3d);
   virtual int   LoadAnimatedTexture(const char * format,const int nCount);
@@ -183,7 +183,7 @@ public:
   virtual void  ScreenShot(const char *filename=nullptr);
   virtual void  ClearDepthBuffer();
   virtual void  ClearColorBuffer(const Vec3d vColor);
-  virtual void  ReadFrameBuffer(unsigned char * pRGB, int nSizeX, int nSizeY, bool bBackBuffer, bool bRGBA, int nScaledX=-1, int nScaledY=-1);  
+  virtual void  ReadFrameBuffer(uchar * pRGB, int nSizeX, int nSizeY, bool bBackBuffer, bool bRGBA, int nScaledX=-1, int nScaledY=-1);  
   virtual void  SetMaterialColor(float r, float g, float b, float a);
   virtual char *GetStatusText(ERendStats type);
   
@@ -194,7 +194,7 @@ public:
   virtual void  FontReleaseTexture(class CFBitmap *pBmp);
   virtual void  FontSetTexture(class CFBitmap*, int nFilterMode);
   virtual void  FontSetTexture(int nTexId, int nFilterMode) {};
-  virtual void  FontSetRenderingState(unsigned long nVirtualScreenWidth, unsigned long nVirtualScreenHeight);
+  virtual void  FontSetRenderingState(ulong nVirtualScreenWidth, ulong nVirtualScreenHeight);
   virtual void  FontSetBlending(int src, int dst);
   virtual void  FontRestoreRenderingState();
   virtual void  FontSetState(bool bRestore);

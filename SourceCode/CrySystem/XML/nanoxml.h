@@ -13,7 +13,7 @@ struct NanoXMLSink
 	virtual void Data(wchar_t *name)=0;
 	virtual void Attribute(wchar_t *name,wchar_t *value)=0;
 	virtual void EndDocument(const char *error)=0;
-	virtual unsigned int GetByte()=0;
+	virtual uint GetByte()=0;
 };
 
 struct NanoXML

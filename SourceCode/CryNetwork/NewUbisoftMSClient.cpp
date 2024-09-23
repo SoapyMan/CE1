@@ -82,11 +82,11 @@ bool NewUbisoftClient::Client_AutoLogin()
 		char szUsername[256] = { 0 };
 		char szPassword[256] = { 0 };
 
-		DecodeHex((unsigned char*)szEncUsername, (unsigned char*)szHexUsername.c_str());
-		DecodeHex((unsigned char*)szEncPassword, (unsigned char*)szHexPassword.c_str());
+		DecodeHex((uchar*)szEncUsername, (uchar*)szHexUsername.c_str());
+		DecodeHex((uchar*)szEncPassword, (uchar*)szHexPassword.c_str());
 
-		DecryptString((unsigned char*)szUsername, (unsigned char*)szEncUsername);
-		DecryptString((unsigned char*)szPassword, (unsigned char*)szEncPassword);
+		DecryptString((uchar*)szUsername, (uchar*)szEncUsername);
+		DecryptString((uchar*)szPassword, (uchar*)szEncPassword);
 
 		m_strUsername = szUsername;
 		m_strPassword = szPassword;
@@ -121,7 +121,7 @@ bool NewUbisoftClient::Client_Login(const GSchar* szUsername, const GSchar* szPa
 #ifndef EXCLUDE_UBICOM_CLIENT_SDK
 	// Go through numbered IP and Ports in the ini
 	char szIPAddress[50];
-	unsigned short usClientPort, usRegServerPort;
+	ushort usClientPort, usRegServerPort;
 	int iIndex = 0;
 
 	if (GetRouterAddress(iIndex, szIPAddress, &usClientPort, &usRegServerPort))
@@ -316,7 +316,7 @@ bool NewUbisoftClient::Client_CreateAccount(const char* szUsername, const char* 
 
 #ifndef EXCLUDE_UBICOM_CLIENT_SDK
 	char szIPAddress[50];
-	unsigned short usClientPort, usRegServerPort;
+	ushort usClientPort, usRegServerPort;
 	int iIndex = 0;
 
 	if (GetRouterAddress(iIndex, szIPAddress, &usClientPort, &usRegServerPort))

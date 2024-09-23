@@ -87,13 +87,13 @@ struct DXImageVol : DXImage
 
 struct P8Image : ImageObject
 {
-	unsigned char *m_pPalette;
-	unsigned char **m_ppIndices;
+	uchar *m_pPalette;
+	uchar **m_ppIndices;
 	int m_nWidth, m_nHeight, m_nMips;
 	
 	P8Image(int w, int h, int m) : m_pPalette(NULL), m_nWidth(w), m_nHeight(h), m_nMips(m)
 	{
-		m_ppIndices = new unsigned char *[m];
+		m_ppIndices = new uchar *[m];
 		for(int i = 0; i<m_nMips; i++) m_ppIndices[i] = NULL;
 	};
 	
@@ -105,7 +105,7 @@ struct P8Image : ImageObject
 	
 	bool Save(const char *filename);	
 	void SavePaletizedTextureHeader(FILE *fh);
-	void SavePaletizedTextureMip(FILE *fh, unsigned char *buf, int mip);
+	void SavePaletizedTextureMip(FILE *fh, uchar *buf, int mip);
 	
 	HRESULT Convert(LPDIRECT3DSURFACE9 psurfSrc, int mip, int filter, D3DCUBEMAP_FACES facetype, LPDIRECT3DDEVICE9 pd3ddev);	
 

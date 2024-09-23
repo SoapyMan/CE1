@@ -801,8 +801,8 @@ void CFrameProfileSystem::UpdateOfflineHistory(CFrameProfiler* pProfiler)
 	pProfiler->m_pOfflineHistory->m_selfTime.resize(newCount);
 	pProfiler->m_pOfflineHistory->m_count.resize(newCount);
 
-	unsigned int micros = FtoI(CFrameProfilerTimer::TicksToMilliseconds(pProfiler->m_selfTime) * 1000);
-	unsigned short count = pProfiler->m_count;
+	uint micros = FtoI(CFrameProfilerTimer::TicksToMilliseconds(pProfiler->m_selfTime) * 1000);
+	ushort count = pProfiler->m_count;
 	for (int i = prevCont; i < newCount; i++)
 	{
 		pProfiler->m_pOfflineHistory->m_selfTime[i] = micros;

@@ -32,11 +32,11 @@ inline float AngleMod(float a)
 	return a;
 }
 
-inline unsigned short Degr2Word(float f)
+inline ushort Degr2Word(float f)
 {
-	return (unsigned short)(AngleMod(f) / 360.0f * 65536.0f);
+	return (ushort)(AngleMod(f) / 360.0f * 65536.0f);
 }
-inline float Word2Degr(unsigned short s)
+inline float Word2Degr(ushort s)
 {
 	return (float)s / 65536.0f * 360.0f;
 }
@@ -315,8 +315,8 @@ inline bool QQinvertMatrixf(float* out, const float* m)
 
 inline float cryISqrtf(float fVal)
 {
-	unsigned int* n1 = (unsigned int*)&fVal;
-	unsigned int n = 0x5f3759df - (*n1 >> 1);
+	uint* n1 = (uint*)&fVal;
+	uint n = 0x5f3759df - (*n1 >> 1);
 	float* n2 = (float*)&n;
 	fVal = (1.5f - (fVal * 0.5f) * *n2 * *n2) * *n2;
 	return fVal;
@@ -705,8 +705,8 @@ inline void cryMemcpy(void* inDst, const void* inSrc, int nCount, int nFlags)
 	int i;
 	int cnt;
 	INT_PTR nAlign16;
-	unsigned char* Src = (unsigned char*)inSrc;
-	unsigned char* Dst = (unsigned char*)inDst;
+	uchar* Src = (uchar*)inSrc;
+	uchar* Dst = (uchar*)inDst;
 	if (nCount < 32 || (nCount < 128 && !(nFlags & 4)))
 	{
 		memcpy(Dst, Src, nCount);

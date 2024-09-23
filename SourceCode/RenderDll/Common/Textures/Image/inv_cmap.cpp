@@ -13,15 +13,15 @@
 static int bcenter, gcenter, rcenter;
 static long gdist, rdist, cdist;
 static long cbinc, cginc, crinc;
-static unsigned long* gdp, * rdp, * cdp;
-static unsigned char* grgbp, * rrgbp, * crgbp;
+static ulong* gdp, * rdp, * cdp;
+static uchar* grgbp, * rrgbp, * crgbp;
 static long gstride, rstride;
 static long rx, gx, bx;
 static long rxsqr, gxsqr, bxsqr;
 static long rcolormax, gcolormax, bcolormax;
 static int cindex;
 
-static void maxfill(unsigned long*, long, long, long);
+static void maxfill(ulong*, long, long, long);
 static int redloop(void);
 static int greenloop(int);
 static int blueloop(int);
@@ -136,7 +136,7 @@ static int blueloop(int);
  */
 
 void shInverseColormap(int colors, SRGBPixel* colormap,
-	int rbits, int gbits, int bbits, byte*& rgbmap, unsigned long* dist_buf)
+	int rbits, int gbits, int bbits, byte*& rgbmap, ulong* dist_buf)
 {
 	int rnbits = 8 - rbits;
 	int gnbits = 8 - gbits;
@@ -160,7 +160,7 @@ void shInverseColormap(int colors, SRGBPixel* colormap,
 	if (!dist_buf)
 	{
 		free_dist_buf = true;
-		dist_buf = new unsigned long[rcolormax * gcolormax * bcolormax];
+		dist_buf = new ulong[rcolormax * gcolormax * bcolormax];
 	}
 	maxfill(dist_buf, rcolormax, gcolormax, bcolormax);
 
@@ -263,8 +263,8 @@ static int greenloop(int restart)
 	long txsqr = gxsqr + gxsqr;
 	static int here, min, max;
 	static long ginc, gxx, gcdist;        /* "gc" variables maintain correct */
-	static unsigned long* gcdp;           /* values for bcenter position, */
-	static unsigned char* gcrgbp;         /* despite modifications by blueloop */
+	static ulong* gcdp;           /* values for bcenter position, */
+	static uchar* gcrgbp;         /* despite modifications by blueloop */
 
 	/* to gdist, gdp, grgbp. */
 
@@ -337,9 +337,9 @@ static int greenloop(int restart)
 static int blueloop(int restart)
 {
 	int detect;
-	register unsigned long* dp;
-	register unsigned char* rgbp;
-	register unsigned long bdist, bxx;
+	register ulong* dp;
+	register uchar* rgbp;
+	register ulong bdist, bxx;
 	register int b, i = cindex;
 	register long txsqr = bxsqr + bxsqr;
 	register int lim;
@@ -443,11 +443,11 @@ static int blueloop(int restart)
 	return detect;
 }
 
-static void maxfill(unsigned long* buffer, long rside, long gside, long bside)
+static void maxfill(ulong* buffer, long rside, long gside, long bside)
 {
-	register unsigned long maxv = ~0UL;
+	register ulong maxv = ~0UL;
 	register long i;
-	register unsigned long* bp;
+	register ulong* bp;
 
 	for (i = rside * gside * bside, bp = buffer; i > 0; i--, bp++)
 		*bp = maxv;

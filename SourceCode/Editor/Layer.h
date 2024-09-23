@@ -38,8 +38,8 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	// Layer Mask
 	//////////////////////////////////////////////////////////////////////////
-	unsigned char GetLayerMaskPoint( uint x,uint y ) { return m_layerMask.ValueAt(x,y); }
-	void SetLayerMaskPoint( uint x,uint y,unsigned char c ) { m_layerMask.ValueAt(x,y) = c; }
+	uchar GetLayerMaskPoint( uint x,uint y ) { return m_layerMask.ValueAt(x,y); }
+	void SetLayerMaskPoint( uint x,uint y,uchar c ) { m_layerMask.ValueAt(x,y) = c; }
 
 	//////////////////////////////////////////////////////////////////////////
 	// Update current mask.
@@ -215,7 +215,7 @@ private:
 	//////////////////////////////////////////////////////////////////////////
 	// Layer Sectors.
 	//////////////////////////////////////////////////////////////////////////
-	std::vector<unsigned char> m_maskGrid;
+	std::vector<uchar> m_maskGrid;
 	int m_numSectors;
 };
 

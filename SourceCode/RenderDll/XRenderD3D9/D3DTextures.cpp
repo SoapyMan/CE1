@@ -4695,14 +4695,14 @@ STexPic* CD3D9Renderer::EF_MakePhongTexture(int Exp)
 
 	float shininess = (float)Exp;
 	int imgsize = 256;
-	unsigned char* img = new unsigned char[imgsize * imgsize * 4];
-	unsigned char* ip = img;
+	uchar* img = new uchar[imgsize * imgsize * 4];
+	uchar* ip = img;
 	for (int j = 0; j < imgsize; j++)
 	{
-		unsigned char a = (unsigned char)(255.99 * pow(j / (imgsize - 1.0), (double)shininess));
+		uchar a = (uchar)(255.99 * pow(j / (imgsize - 1.0), (double)shininess));
 		for (int i = 0; i < imgsize; i++)
 		{
-			byte b = (unsigned char)(255.99 * (i / (imgsize - 1.0)));
+			byte b = (uchar)(255.99 * (i / (imgsize - 1.0)));
 			*ip++ = b;
 			*ip++ = b;
 			*ip++ = b;
@@ -5095,8 +5095,8 @@ HRESULT CFurNormalMap::Initialize()
 				if (len > 1.0)
 					vec /= len;
 				*p++ = 0;
-				*p++ = (unsigned char)(128 + 127 * vec.y);
-				*p++ = (unsigned char)(128 + 127 * vec.x);
+				*p++ = (uchar)(128 + 127 * vec.y);
+				*p++ = (uchar)(128 + 127 * vec.x);
 				*p++ = 0;
 			}
 		m_pTexClamp = gcpRendD3D->m_TexMan->CreateTexture("$FurTexClamp", size, size, 1, FT_CLAMP | FT_NOMIPS, 0, pixels, eTT_Base);
@@ -5121,9 +5121,9 @@ HRESULT CFurNormalMap::Initialize()
 				if (len > 1.0) n /= len;
 				n.z = 1.0;
 				D3DXVec3Normalize(&n, &n);
-				*p++ = (unsigned char)(128 + 127 * n.z);
-				*p++ = (unsigned char)(128 + 127 * n.y);
-				*p++ = (unsigned char)(128 + 127 * n.x);
+				*p++ = (uchar)(128 + 127 * n.z);
+				*p++ = (uchar)(128 + 127 * n.y);
+				*p++ = (uchar)(128 + 127 * n.x);
 				*p++ = 0;
 			}
 
@@ -5392,8 +5392,8 @@ void CD3D9TexMan::GenerateFurLightMap()
 				float specular = powf(1 - HN * HN, 0.5f * spec_power);
 				float shadow = powf(cosf(D3DX_PI / 2 * CLAMP(-0.2f - 1.4f * Lz, 0.0f, 1.0f)), 4);
 
-				*p++ = (unsigned char)(255 * CLAMP(diffuse, 0.0f, 1.0f));
-				*p++ = (unsigned char)(255 * CLAMP(specular * shadow, 0.0f, 1.0f));
+				*p++ = (uchar)(255 * CLAMP(diffuse, 0.0f, 1.0f));
+				*p++ = (uchar)(255 * CLAMP(specular * shadow, 0.0f, 1.0f));
 			}
 
 	gRenDev->m_TexMan->m_Text_FurLightMap = CreateTexture("$FurLightMap", s_size, t_size, r_size, FT_CLAMP | FT_NOMIPS, FT2_NODXT, pixels, eTT_3D, -1, -1, 0, nullptr, 0, eTF_0088);
@@ -5573,8 +5573,8 @@ void CD3D9TexMan::GenerateNoiseVolumeMap()
 
 VOID WINAPI FillAttenuationTexture(D3DXVECTOR4* pOut, const D3DXVECTOR2* pTexCoord, const D3DXVECTOR2* pTexelSize, LPVOID pData)
 {
-	const unsigned int index = unsigned int(pTexCoord->y * float(NUM_ATTENUATION_FUNCTIONS) * float(BILERP_PROTECTION));
-	const unsigned int matNum = index / BILERP_PROTECTION;
+	const uint index = uint(pTexCoord->y * float(NUM_ATTENUATION_FUNCTIONS) * float(BILERP_PROTECTION));
+	const uint matNum = index / BILERP_PROTECTION;
 
 	if (matNum <= AF_LINEAR)
 	{

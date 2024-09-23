@@ -48,7 +48,7 @@ void	CXArea::ClearPoints()
 {
 	a2DSegment*	carSegment;
 
-	for(unsigned int sIdx=0; sIdx<m_vpSegments.size(); sIdx++)
+	for(uint sIdx=0; sIdx<m_vpSegments.size(); sIdx++)
 	{
 		carSegment = m_vpSegments[sIdx];
 		delete carSegment;
@@ -139,7 +139,7 @@ float	CXArea::CalcDistToPoint(const a2DPoint& point) const
 	proximityBox.min.x = point.x - m_Proximity;
 	proximityBox.min.y = point.y - m_Proximity;
 
-	for(unsigned int sIdx=0; sIdx<m_vpSegments.size(); sIdx++)
+	for(uint sIdx=0; sIdx<m_vpSegments.size(); sIdx++)
 	{
 		a2DSegment *curSg = m_vpSegments[sIdx];
 
@@ -242,7 +242,7 @@ bool	CXArea::IsPointWithin(const Vec3d& point3d) const
 
 		int	cntr=0;	
 
-		for(unsigned int sIdx=0; sIdx<m_vpSegments.size(); sIdx++)
+		for(uint sIdx=0; sIdx<m_vpSegments.size(); sIdx++)
 		{
 			if(m_vpSegments[sIdx]->isHorizontal)
 				continue;
@@ -274,7 +274,7 @@ float	dist;
 	if( m_BBox.PointOutBBox2D( point ) )
 		return -1;
 
-	for(unsigned int sIdx=0; sIdx<m_vpSegments.size(); sIdx++)
+	for(uint sIdx=0; sIdx<m_vpSegments.size(); sIdx++)
 	{
 		if(m_vpSegments[sIdx]->isHorizontal)
 			continue;
@@ -322,7 +322,7 @@ void	CXArea::CalcBBox( )
 	m_BBox.min.y = m_vpSegments[0]->bbox.min.y;
 	m_BBox.max.x = m_vpSegments[0]->bbox.max.x;
 	m_BBox.max.y = m_vpSegments[0]->bbox.max.y;
-	for(unsigned int sIdx=1; sIdx<m_vpSegments.size(); sIdx++)
+	for(uint sIdx=1; sIdx<m_vpSegments.size(); sIdx++)
 	{
 		if( m_BBox.min.x>m_vpSegments[sIdx]->bbox.min.x )
 			m_BBox.min.x = m_vpSegments[sIdx]->bbox.min.x;
@@ -353,7 +353,7 @@ void	CXArea::AddEntity( const char* const clsName )
 //////////////////////////////////////////////////////////////////////////
 void	CXArea::AddEntites( const std::vector<string> &names )
 {
-	for(unsigned int i=0; i<names.size(); i++)
+	for(uint i=0; i<names.size(); i++)
 		AddEntity(names[i].c_str());
 }
 
@@ -366,7 +366,7 @@ void	CXArea::AddEntity( const EntityId entId )
 //////////////////////////////////////////////////////////////////////////
 void	CXArea::AddEntites( const std::vector<EntityId> &entIDs )
 {
-	for(unsigned int i=0; i<entIDs.size(); i++)
+	for(uint i=0; i<entIDs.size(); i++)
 		AddEntity(entIDs[i]);
 }
 
@@ -386,7 +386,7 @@ void	CXArea::UpdateIDs( ISystem * pSystem )
 {
 IEntity* pEntity;
 
-	for( unsigned int eIdx=0; eIdx<m_vEntityID.size(); eIdx++ )
+	for( uint eIdx=0; eIdx<m_vEntityID.size(); eIdx++ )
 	{
 		//char* tmp_name = (char *)m_vsEntityName[eIdx].c_str();
 		pEntity = pSystem->GetIEntitySystem()->GetEntity(m_vEntityID[eIdx]);
@@ -422,7 +422,7 @@ void	CXArea::EnterArea( CXAreaUser& user )
 	m_PrevFade = -1;
 	m_bIsActive = true;
 	UpdateIDs( user.m_pGame->GetSystem() );
-	for( unsigned int eIdx=0; eIdx<m_vEntityID.size(); eIdx++ )
+	for( uint eIdx=0; eIdx<m_vEntityID.size(); eIdx++ )
 	{
 		pEntity = user.m_pGame->GetSystem()->GetIEntitySystem()->GetEntity(m_vEntityID[eIdx]);
 //		CRYASSERT(pEntity);
@@ -445,7 +445,7 @@ void	CXArea::EnterArea( IEntity* const pEntity, ISystem *pSystem )
 	m_PrevFade = -1;
 	m_bIsActive = true;
 	UpdateIDs( pSystem );
-	for( unsigned int eIdx=0; eIdx<m_vEntityID.size(); eIdx++ )
+	for( uint eIdx=0; eIdx<m_vEntityID.size(); eIdx++ )
 	{
 		pAreaAttachedEntity = pSystem->GetIEntitySystem()->GetEntity(m_vEntityID[eIdx]);
 //		CRYASSERT(pEntity);
@@ -470,7 +470,7 @@ void	CXArea::LeaveArea( CXAreaUser& user )
 		return;
 
 	UpdateIDs( user.m_pGame->GetSystem() );
-	for( unsigned int eIdx=0; eIdx<m_vEntityID.size(); eIdx++ )
+	for( uint eIdx=0; eIdx<m_vEntityID.size(); eIdx++ )
 	{
 		pEntity = user.m_pGame->GetSystem()->GetIEntitySystem()->GetEntity(m_vEntityID[eIdx]);
 //		CRYASSERT(pEntity);
@@ -593,7 +593,7 @@ void	CXArea::ProceedFade( CXAreaUser& user, const float fadeCoeff )
 	UpdateIDs( user.m_pGame->GetSystem() );
 
 	IEntity* pEntity;
-	for( unsigned int eIdx=0; eIdx<m_vEntityID.size(); eIdx++ )
+	for( uint eIdx=0; eIdx<m_vEntityID.size(); eIdx++ )
 	{
 		pEntity = user.m_pGame->GetSystem()->GetIEntitySystem()->GetEntity(m_vEntityID[eIdx]);
 //		CRYASSERT(pEntity);
@@ -623,7 +623,7 @@ void	CXArea::Draw(const ISystem * const pSystem, const int idx)
 	if(m_AreaType != ATP_SHAPE)
 		return;
 
-	for(unsigned int sIdx=0; sIdx<m_vpSegments.size(); sIdx++)
+	for(uint sIdx=0; sIdx<m_vpSegments.size(); sIdx++)
 	{
 		if( m_vpSegments[sIdx]->k<0 )
 		{
@@ -694,7 +694,7 @@ void CXAreaMgr::Clear()
 {
 CXArea	*carArea;
 
-	for(unsigned int sIdx=0; sIdx<m_vpAreas.size(); sIdx++)
+	for(uint sIdx=0; sIdx<m_vpAreas.size(); sIdx++)
 	{
 		carArea = m_vpAreas[sIdx];
 		delete carArea;
@@ -840,7 +840,7 @@ CXArea*	CXAreaMgr::AddArea(const Vec3d* const vPoints, const int count, const st
 //////////////////////////////////////////////////////////////////////////
 CXArea*	CXAreaMgr::GetArea(const int nBuilding, const int nSectorId, const EntityId entityID)
 {
-	for(unsigned int aIdx=0; aIdx<m_vpAreas.size(); aIdx++)
+	for(uint aIdx=0; aIdx<m_vpAreas.size(); aIdx++)
 	{
 		CXArea*	curArea = m_vpAreas[aIdx];
 		if( curArea->GetAreaType() == CXArea::ATP_SECTOR )
@@ -864,7 +864,7 @@ CXArea*	CXAreaMgr::GetArea( const Vec3d& point )
 	float		closeDist=-1;
 	CXArea*	closeArea=nullptr;
 
-	for(unsigned int aIdx=0; aIdx<m_vpAreas.size(); aIdx++)
+	for(uint aIdx=0; aIdx<m_vpAreas.size(); aIdx++)
 	{
 		if( m_vpAreas[aIdx]->GetAreaType() == CXArea::ATP_SHAPE )
 		{
@@ -885,7 +885,7 @@ CXArea*	CXAreaMgr::GetArea( const Vec3d& point )
 //////////////////////////////////////////////////////////////////////////
 void	CXAreaMgr::DeleteArea( const IXArea* aPtr )
 {
-	for(unsigned int aIdx=0; aIdx<m_vpAreas.size(); aIdx++)
+	for(uint aIdx=0; aIdx<m_vpAreas.size(); aIdx++)
 		if( m_vpAreas[aIdx]== aPtr)
 		{
 			delete aPtr;
@@ -902,7 +902,7 @@ void	CXAreaMgr::UpdatePlayer(CXAreaUser& user)
 
 	FUNCTION_PROFILER( GetISystem(),PROFILE_GAME );
 
-	unsigned int aIdx;
+	uint aIdx;
 //	int	building=0, sector=0;
 //	IVisArea *sector=nullptr;
 
@@ -923,7 +923,7 @@ void	CXAreaMgr::UpdatePlayer(CXAreaUser& user)
 	m_sCurStep++;
 
 	// check all the areas player is in already
-	for(unsigned int inIdx=0; inIdx<user.m_HostedAreasIdx.size(); inIdx++)
+	for(uint inIdx=0; inIdx<user.m_HostedAreasIdx.size(); inIdx++)
 	{
 		aIdx = user.m_HostedAreasIdx[inIdx];
 		//safecheck for editor
@@ -952,7 +952,7 @@ void	CXAreaMgr::UpdatePlayer(CXAreaUser& user)
 
 	//
 	//update fade. For all hosted areas
-	for(unsigned int inIdx=0; inIdx<user.m_HostedAreasIdx.size(); inIdx++)
+	for(uint inIdx=0; inIdx<user.m_HostedAreasIdx.size(); inIdx++)
 	{
 		aIdx = user.m_HostedAreasIdx[inIdx];
 		//safecheck for editor
@@ -971,7 +971,7 @@ void	CXAreaMgr::UpdatePlayer(CXAreaUser& user)
 //	checks for areas in the same group, if entered area is lower priority (areaID) - return false 
 //	(don't do enreArea for it)
 //////////////////////////////////////////////////////////////////////////
-void	CXAreaMgr::ProceedExclusiveUpdate( CXAreaUser& user, unsigned int curIdx )
+void	CXAreaMgr::ProceedExclusiveUpdate( CXAreaUser& user, uint curIdx )
 {
 int	maxArea=FindHighestHostedArea( user.m_HostedAreasIdx, curIdx );
 CXArea *firstArea=m_vpAreas[curIdx];
@@ -1011,9 +1011,9 @@ CXArea *firstArea=m_vpAreas[curIdx];
 
 	// mark all the areas of this group as updated
 	int curGroup = m_vpAreas[curIdx]->GetGroup();
-	for(unsigned int inIdx=0; inIdx<user.m_HostedAreasIdx.size(); inIdx++)
+	for(uint inIdx=0; inIdx<user.m_HostedAreasIdx.size(); inIdx++)
 	{
-		unsigned int aIdx = user.m_HostedAreasIdx[inIdx];
+		uint aIdx = user.m_HostedAreasIdx[inIdx];
 		//safecheck for editor
 		if( aIdx>=m_vpAreas.size() )
 			continue;
@@ -1026,7 +1026,7 @@ CXArea *firstArea=m_vpAreas[curIdx];
 //	checks for areas in the same group, if entered area is lower priority (areaID) - return false 
 //	(don't do enreArea for it)
 //////////////////////////////////////////////////////////////////////////
-bool	CXAreaMgr::ProceedExclusiveEnter( CXAreaUser& user, unsigned int curIdx )
+bool	CXAreaMgr::ProceedExclusiveEnter( CXAreaUser& user, uint curIdx )
 {
 int	maxArea=FindHighestHostedArea( user.m_HostedAreasIdx, curIdx );
 
@@ -1042,7 +1042,7 @@ int	maxArea=FindHighestHostedArea( user.m_HostedAreasIdx, curIdx );
 //	checks for areas in the same group, if entered area is lower priority (areaID) - return false 
 //	(don't do enreArea for it)
 //////////////////////////////////////////////////////////////////////////
-bool	CXAreaMgr::ProceedExclusiveLeave( CXAreaUser& user, unsigned int curIdx )
+bool	CXAreaMgr::ProceedExclusiveLeave( CXAreaUser& user, uint curIdx )
 {
 int	maxArea=FindHighestHostedArea( user.m_HostedAreasIdx, curIdx );
 
@@ -1065,9 +1065,9 @@ int	maxArea=FindHighestHostedArea( user.m_HostedAreasIdx, curIdx );
 
 //	find hosted area with highest priority withing the group of curIdx area
 //////////////////////////////////////////////////////////////////////////
-int	CXAreaMgr::FindHighestHostedArea( intVector& hostedAreas, unsigned int curIdx )
+int	CXAreaMgr::FindHighestHostedArea( intVector& hostedAreas, uint curIdx )
 {
-unsigned int aIdx;
+uint aIdx;
 int	maxID=-1;
 int	maxArea=-1;
 int curGroup = m_vpAreas[curIdx]->GetGroup();
@@ -1076,7 +1076,7 @@ int curGroup = m_vpAreas[curIdx]->GetGroup();
 	{
 		return maxArea;
 	}
-	for(unsigned int inIdx=0; inIdx<hostedAreas.size(); inIdx++)
+	for(uint inIdx=0; inIdx<hostedAreas.size(); inIdx++)
 	{
 		aIdx = hostedAreas[inIdx];
 		if( aIdx == curIdx )
@@ -1106,9 +1106,9 @@ void	CXAreaMgr::ExitAllAreas(CXAreaUser& user)
 		return;
 
 	// check all the areas player is in already
-	for(unsigned int inIdx=0; inIdx<user.m_HostedAreasIdx.size(); inIdx++)
+	for(uint inIdx=0; inIdx<user.m_HostedAreasIdx.size(); inIdx++)
 	{
-	unsigned int aIdx;
+	uint aIdx;
 		aIdx = user.m_HostedAreasIdx[inIdx];
 		// was inside, now is out - do OnLeaveArea
 		if(aIdx<m_vpAreas.size())
@@ -1123,7 +1123,7 @@ void	CXAreaMgr::ExitAllAreas(CXAreaUser& user)
 //////////////////////////////////////////////////////////////////////////
 void	CXAreaMgr::DrawAreas(const ISystem * const pSystem) 
 {
-	for(unsigned int aIdx=0; aIdx<m_vpAreas.size(); aIdx++)
+	for(uint aIdx=0; aIdx<m_vpAreas.size(); aIdx++)
 		m_vpAreas[aIdx]->Draw( pSystem, aIdx );
 }
 
@@ -1132,7 +1132,7 @@ unsigned CXAreaMgr::MemStat()
 {
 	unsigned memSize = sizeof *this;
 
-	for(unsigned int aIdx=0; aIdx<m_vpAreas.size(); aIdx++)
+	for(uint aIdx=0; aIdx<m_vpAreas.size(); aIdx++)
 		memSize += m_vpAreas[aIdx]->MemStat();
 
 	return memSize;
@@ -1143,7 +1143,7 @@ void CXAreaMgr::ReTriggerArea(IEntity* pEntity, const Vec3d &vPos,bool bIndoor)
 {
 intVector	hostedAreasIdx;
 intVector	updatedID;
-unsigned int aIdx;
+uint aIdx;
 
 
 	hostedAreasIdx.clear();
@@ -1169,7 +1169,7 @@ unsigned int aIdx;
 
 
 /*
-unsigned int aIdx;
+uint aIdx;
 int	sector = 0;		//(int)player->GetGame()->GetSystem()->GetI3DEngine()->GetVisAreaFromPos(pos);
 int	building = 0;	 
 	// check all the rest areas (player is outside of them)

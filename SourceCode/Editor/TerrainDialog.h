@@ -42,7 +42,7 @@ public:
 protected:
 	void Flatten(float fFactor);
 	void UpdateBorderCaption();
-	float ExpCurve(float v, unsigned int iCover, float fSharpness);
+	float ExpCurve(float v, uint iCover, float fSharpness);
 	void Refresh();
 
 	// Generated message map functions

@@ -112,8 +112,8 @@ public:
 	void CacheObject(const string& name);
 
 	//! retrieve number of weapon classes
-	unsigned int	GetNumWeaponClasses() const	{	return (unsigned)m_vWeaponClasses.size();	}
-	CWeaponClass*	GetWeaponClass(unsigned int index) const;
+	uint	GetNumWeaponClasses() const	{	return (unsigned)m_vWeaponClasses.size();	}
+	CWeaponClass*	GetWeaponClass(uint index) const;
 
 private:
 	//! expose the enums above to the script

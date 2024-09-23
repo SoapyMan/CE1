@@ -193,7 +193,7 @@ protected:
 
 	//////////////////////////////////////////////////////////////////////////
 	void OnEventTargetEvent( CBaseObject *target,int event );
-	void ResolveEventTarget( CBaseObject *object,unsigned int index );
+	void ResolveEventTarget( CBaseObject *object,uint index );
 	void ReleaseEventTargets();
 	void UpdateMaterialInfo();
 

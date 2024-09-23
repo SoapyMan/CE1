@@ -77,7 +77,7 @@ void CScriptObjectScript::Debug_Full_recursive(IScriptObject* pCurrent, string& 
 		}
 		else if (type == svtFunction)		// svtNull,svtFunction,svtString,svtNumber,svtUserData,svtObject
 		{
-			unsigned int* pCode = 0;
+			uint* pCode = 0;
 			int iSize = 0;
 
 			if (pCurrent->GetCurrentFuncData(pCode, iSize))
@@ -152,7 +152,7 @@ DWORD CScriptObjectScript::Debug_Buckets_recursive(IScriptObject* pCurrent, stri
 		}
 		/*		else if(type==svtFunction)		// svtNull,svtFunction,svtString,svtNumber,svtUserData,svtObject
 				{
-					unsigned int *pCode=0;
+					uint *pCode=0;
 					int iSize=0;
 
 					if(pCurrent->GetCurrentFuncData(pCode,iSize))

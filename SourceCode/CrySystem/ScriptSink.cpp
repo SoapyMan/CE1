@@ -56,7 +56,7 @@ void CScriptSink::Init()
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CScriptSink::OnLoadSource(const char* sSourceName, unsigned char* sSource, long nSourceSize)
+void CScriptSink::OnLoadSource(const char* sSourceName, uchar* sSource, long nSourceSize)
 {
 }
 

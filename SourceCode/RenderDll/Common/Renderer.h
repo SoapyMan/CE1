@@ -153,7 +153,7 @@ public:
 	uint m_CurStencRef;
 	int m_CurStencilSide;
 
-	unsigned short m_GammaTable[256];
+	ushort m_GammaTable[256];
 	float m_fLastGamma;
 	float m_fLastBrightness;
 	float m_fLastContrast;
@@ -163,9 +163,9 @@ public:
 	virtual ~CRenderer();
 
 #ifndef PS2
-	virtual WIN_HWND Init(int x, int y, int width, int height, unsigned int cbpp, int zbpp, int sbits, bool fullscreen, WIN_HINSTANCE hinst, WIN_HWND Glhwnd = 0, WIN_HDC Glhdc = 0, WIN_HGLRC hGLrc = 0, bool bReInit = false) = 0;
+	virtual WIN_HWND Init(int x, int y, int width, int height, uint cbpp, int zbpp, int sbits, bool fullscreen, WIN_HINSTANCE hinst, WIN_HWND Glhwnd = 0, WIN_HDC Glhdc = 0, WIN_HGLRC hGLrc = 0, bool bReInit = false) = 0;
 #else	//PS2
-	virtual bool Init(int x, int y, int width, int height, unsigned int cbpp, int zbpp, int sbits, bool fullscreen, bool bReInit = false) = 0;
+	virtual bool Init(int x, int y, int width, int height, uint cbpp, int zbpp, int sbits, bool fullscreen, bool bReInit = false) = 0;
 #endif	//PS2
 	virtual bool SetCurrentContext(WIN_HWND hWnd) = 0;
 	virtual bool CreateContext(WIN_HWND hWnd, bool bAllowFSAA = false) = 0;
@@ -255,23 +255,23 @@ public:
 	virtual	void	EnableTMU(bool enable) = 0;
 	virtual void	SelectTMU(int tnum) = 0;
 
-	virtual bool	ChangeDisplay(unsigned int width, unsigned int height, unsigned int cbpp) = 0;
-	virtual void  ChangeViewport(unsigned int x, unsigned int y, unsigned int width, unsigned int height) = 0;
+	virtual bool	ChangeDisplay(uint width, uint height, uint cbpp) = 0;
+	virtual void  ChangeViewport(uint x, uint y, uint width, uint height) = 0;
 
-	virtual	bool	SaveTga(unsigned char* sourcedata, int sourceformat, int w, int h, const char* filename, bool flip);
+	virtual	bool	SaveTga(uchar* sourcedata, int sourceformat, int w, int h, const char* filename, bool flip);
 
 	//download an image to video memory. 0 in case of failure
-	virtual	unsigned int DownLoadToVideoMemory(unsigned char* data, int w, int h, ETEX_Format eTFSrc, ETEX_Format eTFDst, int nummipmap, bool repeat = true, int filter = FILTER_BILINEAR, int Id = 0, char* szCacheName = nullptr, int flags = 0) = 0;
-	virtual	void UpdateTextureInVideoMemory(uint tnum, unsigned char* newdata, int posx, int posy, int w, int h, ETEX_Format eTF = eTF_0888) = 0;
+	virtual	uint DownLoadToVideoMemory(uchar* data, int w, int h, ETEX_Format eTFSrc, ETEX_Format eTFDst, int nummipmap, bool repeat = true, int filter = FILTER_BILINEAR, int Id = 0, char* szCacheName = nullptr, int flags = 0) = 0;
+	virtual	void UpdateTextureInVideoMemory(uint tnum, uchar* newdata, int posx, int posy, int w, int h, ETEX_Format eTF = eTF_0888) = 0;
 
-	virtual unsigned int LoadTexture(const char* filename, int* tex_type = nullptr, unsigned int def_tid = 0, bool compresstodisk = true, bool bWarn = true) = 0;
+	virtual uint LoadTexture(const char* filename, int* tex_type = nullptr, uint def_tid = 0, bool compresstodisk = true, bool bWarn = true) = 0;
 	virtual bool DXTCompress(byte* raw_data, int nWidth, int nHeight, ETEX_Format eTF, bool bUseHW, bool bGenMips, int nSrcBytesPerPix, MIPDXTcallback callback = 0);
 	virtual bool DXTDecompress(byte* srcData, byte* dstData, int nWidth, int nHeight, ETEX_Format eSrcTF, bool bUseHW, int nDstBytesPerPix);
-	//virtual unsigned int MakeTexture(const char * filename,int *tex_type=nullptr/*,unsigned int def_tid=0*/)=0;
+	//virtual uint MakeTexture(const char * filename,int *tex_type=nullptr/*,uint def_tid=0*/)=0;
 
 	virtual	bool	SetGammaDelta(const float fGamma) = 0;
 
-	virtual	void	RemoveTexture(unsigned int TextureId) = 0;
+	virtual	void	RemoveTexture(uint TextureId) = 0;
 	virtual	void	RemoveTexture(ITexPic* pTexPic) = 0;
 
 
@@ -399,7 +399,7 @@ public:
 
 	virtual void ClearDepthBuffer() = 0;
 	virtual void ClearColorBuffer(const Vec3 vColor) = 0;
-	virtual void ReadFrameBuffer(unsigned char* pRGB, int nSizeX, int nSizeY, bool bBackBuffer, bool bRGBA, int nScaledX = -1, int nScaledY = -1) = 0;
+	virtual void ReadFrameBuffer(uchar* pRGB, int nSizeX, int nSizeY, bool bBackBuffer, bool bRGBA, int nScaledX = -1, int nScaledY = -1) = 0;
 
 	//misc
 	virtual void TransformTextureMatrix(float x, float y, float angle, float scale) = 0;
@@ -416,8 +416,8 @@ public:
 	virtual char* GetPixelProfile(bool bSupportedProfile) = 0;
 	virtual void	SetType(char type) { m_type = type; }
 
-	virtual unsigned int MakeSprite(float object_scale, int tex_size, float angle, IStatObj* pStatObj, uchar* pTmpBuffer, uint def_tid) = 0;
-	virtual unsigned int Make3DSprite(int nTexSize, float fAngleStep, IStatObj* pStatObj) = 0;
+	virtual uint MakeSprite(float object_scale, int tex_size, float angle, IStatObj* pStatObj, uchar* pTmpBuffer, uint def_tid) = 0;
+	virtual uint Make3DSprite(int nTexSize, float fAngleStep, IStatObj* pStatObj) = 0;
 
 	virtual void Set2DMode(bool enable, int ortox, int ortoy) = 0;
 
@@ -852,7 +852,7 @@ public:
 	virtual	void FontReleaseTexture(class CFBitmap* pBmp) = 0;
 	virtual void FontSetTexture(class CFBitmap*, int nFilterMode) = 0;
 	virtual void FontSetTexture(int nTexId, int nFilterMode) = 0;
-	virtual void FontSetRenderingState(unsigned long nVirtualScreenWidth, unsigned long nVirtualScreenHeight) = 0;
+	virtual void FontSetRenderingState(ulong nVirtualScreenWidth, ulong nVirtualScreenHeight) = 0;
 	virtual void FontSetBlending(int src, int dst) = 0;
 	virtual void FontRestoreRenderingState() = 0;
 

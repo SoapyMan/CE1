@@ -56,7 +56,7 @@ public:
 	~CFontRenderer();
 
 	int			LoadFromFile(const string& szFileName);
-	int			LoadFromMemory(unsigned char* pBuffer, int iBufferSize);
+	int			LoadFromMemory(uchar* pBuffer, int iBufferSize);
 	int			Release();
 
 	int			SetGlyphBitmapSize(int iWidth, int iHeight);

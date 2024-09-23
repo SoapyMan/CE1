@@ -248,7 +248,7 @@ int CParticleEntity::GetStateSnapshot(CStream& stm, float time_back, int flags)
 		//EULER_IVO
 		//Vec3 TempAng; m_qspin.GetEulerAngles_XYZ( TempAng );
 		vectorf angles = Ang3::GetAnglesXYZ(matrix3x3f(m_qspin));
-		for(int i=0;i<3;i++) stm.Write((unsigned short)float2int((angles[i]+pi)*(65535.0/2/pi)));
+		for(int i=0;i<3;i++) stm.Write((ushort)float2int((angles[i]+pi)*(65535.0/2/pi)));
 	}
 	if (m_wspin.len2()==0) stm.Write(false);
 	else {
@@ -313,7 +313,7 @@ int CParticleEntity::SetStateFromSnapshot(CStream& stm, int flags)
 		}
 	}
 	/*stm.Read(bnz); if (bnz) {
-		unsigned short tmp; int i; vectorf axis(zero);
+		ushort tmp; int i; vectorf axis(zero);
 		for(i=0,m_qspin.SetIdentity(); i<3; i++) {
 			axis[i] = 1;
 			//stm.Read(tmp); m_qspin*=quaternionf(tmp*(2*pi/65535.0)-pi, axis);

@@ -27,7 +27,7 @@
 #include "Brush.h"
 #include "IEntitySystem.h"
 
-void CBrush::SetLightmap(RenderLMData* pLMData, float* pTexCoords, UINT iNumTexCoords, const unsigned char cucOcclIDCount, const std::vector<std::pair<EntityId, EntityId> >& aIDs)
+void CBrush::SetLightmap(RenderLMData* pLMData, float* pTexCoords, UINT iNumTexCoords, const uchar cucOcclIDCount, const std::vector<std::pair<EntityId, EntityId> >& aIDs)
 {
 	CRYASSERT(cucOcclIDCount <= 4);
 

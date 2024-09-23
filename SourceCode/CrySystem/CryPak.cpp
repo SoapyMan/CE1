@@ -309,7 +309,7 @@ const char* CCryPak::AdjustFileName(const char* src, char* dst, unsigned nFlags,
 		*++pEnd = '\0';
 	}
 
-	unsigned int nLength = unsigned int(pEnd - dst);
+	uint nLength = uint(pEnd - dst);
 
 	if (bFoundInPak)
 		*bFoundInPak = false;
@@ -1386,7 +1386,7 @@ size_t CZipPseudoFile::FRead(void* pDest, size_t nSize, size_t nCount, FILE* hFi
 	}
 	else
 	{
-		unsigned char* pSrc = (unsigned char*)GetFile()->GetData();
+		uchar* pSrc = (uchar*)GetFile()->GetData();
 		if (!pSrc)
 			return 0;
 		pSrc += m_nCurSeek;
@@ -1395,15 +1395,15 @@ size_t CZipPseudoFile::FRead(void* pDest, size_t nSize, size_t nCount, FILE* hFi
 			memcpy(pDest, pSrc, nTotal);
 		else
 		{
-			unsigned char* itDest = (unsigned char*)pDest;
-			unsigned char* itSrc = pSrc, * itSrcEnd = pSrc + nTotal;
+			uchar* itDest = (uchar*)pDest;
+			uchar* itSrc = pSrc, * itSrcEnd = pSrc + nTotal;
 			for (; itSrc != itSrcEnd; ++itSrc)
 			{
 				if (*itSrc != 0xd)
 					*(itDest++) = *itSrc;
 			}
 			m_nCurSeek += nTotal;
-			return itDest - (unsigned char*)pDest;
+			return itDest - (uchar*)pDest;
 		}
 		m_nCurSeek += nTotal;
 	}
@@ -2089,7 +2089,7 @@ ICryArchive* CCryPak::FindArchive(const char* szFullPath)
 // compresses the raw data into raw data. The buffer for compressed data itself with the heap passed. Uses method 8 (deflate)
 // returns one of the Z_* errors (Z_OK upon success)
 // MT-safe
-int CCryPak::RawCompress(const void* pUncompressed, unsigned long* pDestSize, void* pCompressed, unsigned long nSrcSize, int nLevel)
+int CCryPak::RawCompress(const void* pUncompressed, ulong* pDestSize, void* pCompressed, ulong nSrcSize, int nLevel)
 {
 	return ZipDir::ZipRawCompress(g_pBigHeap, pUncompressed, pDestSize, pCompressed, nSrcSize, nLevel);
 }
@@ -2100,7 +2100,7 @@ int CCryPak::RawCompress(const void* pUncompressed, unsigned long* pDestSize, vo
 // with 2 differences: there are no 16-bit checks, and
 // it initializes the inflation to start without waiting for compression method byte, as this is the
 // way it's stored into zip file
-int CCryPak::RawUncompress(void* pUncompressed, unsigned long* pDestSize, const void* pCompressed, unsigned long nSrcSize)
+int CCryPak::RawUncompress(void* pUncompressed, ulong* pDestSize, const void* pCompressed, ulong nSrcSize)
 {
 	return ZipDir::ZipRawUncompress(g_pBigHeap, pUncompressed, pDestSize, pCompressed, nSrcSize);
 }

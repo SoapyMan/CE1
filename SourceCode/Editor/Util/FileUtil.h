@@ -39,7 +39,7 @@ public:
 	struct FileDesc
 	{
 		CString filename;
-		unsigned int attrib;
+		uint attrib;
 		time_t  time_create;    //! -1 for FAT file systems
 		time_t  time_access;    //! -1 for FAT file systems
 		time_t  time_write;

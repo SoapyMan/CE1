@@ -222,7 +222,7 @@ void CLayer::Serialize( CXmlArchive &xmlAr )
 				if (xmlAr.pNamedData->GetDataBlock( CString("LayerMask_")+m_strLayerName,pData,nSize ))
 				{
 					CByteImage mask;
-					mask.Attach( (unsigned char*)pData,maskWidth,maskHeight );
+					mask.Attach( (uchar*)pData,maskWidth,maskHeight );
 					if (maskWidth == DEFAULT_MASK_RESOLUTION)
 					{
 						m_layerMask.Allocate(m_maskResolution,m_maskResolution);
@@ -573,8 +573,8 @@ bool CLayer::LoadMask( const CString &strFileName )
 	CByteImage mask;
 	mask.Allocate( maskRGBA.GetWidth(),maskRGBA.GetHeight() );
 
-	unsigned char *dest = mask.GetData();
-	unsigned int *src = maskRGBA.GetData();
+	uchar *dest = mask.GetData();
+	uint *src = maskRGBA.GetData();
 	int size = maskRGBA.GetWidth()*maskRGBA.GetHeight();
 	for (int i = 0; i < size; i++)
 	{
@@ -646,7 +646,7 @@ void CLayer::UpdateLayerMask16(float *pHeightmapPixels,
 	uchar *pArrayEnd = NULL;
 	DWORD *pPreviewData = NULL;
 	DWORD *pPreviewDataStart = NULL;
-	unsigned int i, j;
+	uint i, j;
 	long iCurPos;
 	float hVal = 0.0f;
 	FILE *hLayerFile = NULL;
@@ -745,7 +745,7 @@ void CLayer::UpdateLayerMask16(float *pHeightmapPixels,
 		// Modify it by a random value
 		if (*pData && m_bNoise)
 		{
-			*pData -= (unsigned char) (FloatToIntRet((float) rand() / (float) RAND_MAX * iBlendFactor));
+			*pData -= (uchar) (FloatToIntRet((float) rand() / (float) RAND_MAX * iBlendFactor));
 		}
 		*/
 
@@ -800,7 +800,7 @@ void CLayer::GenerateWaterLayer16(float *pHeightmapPixels, UINT iHeightmapWidth,
 	uchar *pLayerEnd = NULL;
 	uchar *pLayer = NULL;
 	long iCurPos;
-	unsigned int i, j;
+	uint i, j;
 
 	m_bAutoGen = false;
 
@@ -1269,8 +1269,8 @@ void CLayer::AutogenLayerMask( const CRect &rc,const CFloatImage &hmap,CByteImag
 	int MaxSlope = RoundFloatToInt(m_maxSlope*256);
 
 	// Scan the heightmap for pixels that belong to this layer
-	unsigned int x,y,pos;
-	unsigned int hw = resolution;
+	uint x,y,pos;
+	uint hw = resolution;
 	float hVal = 0.0f;
 
 	for (y = rect.top; y < rect.bottom; y++)
@@ -1320,7 +1320,7 @@ void CLayer::AutogenLayerMask( const CRect &rc,const CFloatImage &hmap,CByteImag
 			// Modify it by a random value
 			if (*pData && m_bNoise)
 			{
-			*pData -= (unsigned char) (FloatToIntRet((float) rand() / (float) RAND_MAX * iBlendFactor));
+			*pData -= (uchar) (FloatToIntRet((float) rand() / (float) RAND_MAX * iBlendFactor));
 			}
 			*/
 		}
@@ -1399,7 +1399,7 @@ int CLayer::GetSize() const
 	size += m_layerMask.GetSize();
 	size += m_scaledMask.GetSize();
 	size += m_compressedMask.GetSize();
-	size += m_maskGrid.size()*sizeof(unsigned char);
+	size += m_maskGrid.size()*sizeof(uchar);
 	return size;
 }
 
@@ -1464,7 +1464,7 @@ void CLayer::ImportBlock( CXmlArchive &xmlAr,CPoint offset )
 	if (xmlAr.pNamedData->GetDataBlock( CString("LayerMask_")+m_strLayerName, pData,nSize ))
 	{
 		CByteImage subImage;
-		subImage.Attach( (unsigned char*)pData,subRc.Width(),subRc.Height() );
+		subImage.Attach( (uchar*)pData,subRc.Width(),subRc.Height() );
 		m_layerMask.SetSubImage( subRc.left+offset.x,subRc.top+offset.y,subImage );
 	}
 }

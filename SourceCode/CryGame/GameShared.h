@@ -22,7 +22,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////
 // Actions
 
-typedef unsigned char ACTIONTYPE;
+typedef uchar ACTIONTYPE;
 
 #define ACTION_MOVE_LEFT			1
 //#define ACTIONFLAG_MOVE_LEFT		(1<<ACTION_MOVE_LEFT)

@@ -156,7 +156,7 @@ int CSectorInfo::MakeSectorTextureDDS(int sec_id, int nMipMapLevelToLoad, bool b
 	return (nTexID);
 }
 /*
-void CSectorInfo::UpdateSectorTexture(unsigned char * pTexData, int nSizeOffTexData)
+void CSectorInfo::UpdateSectorTexture(uchar * pTexData, int nSizeOffTexData)
 {
   int nTexSize = m_pTerrain->m_nSectorTextureReadedSize;
 

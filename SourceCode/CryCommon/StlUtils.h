@@ -254,9 +254,9 @@ namespace stl
 
 		size_t operator()(const Key& key) const
 		{
-			unsigned int h = 0;
+			uint h = 0;
 			const char* s = constchar_cast(key);
-			for (; *s; ++s) h = 5 * h + *(unsigned char*)s;
+			for (; *s; ++s) h = 5 * h + *(uchar*)s;
 			return size_t(h);
 
 		};
@@ -279,9 +279,9 @@ namespace stl
 
 		size_t operator()(const Key& key) const
 		{
-			unsigned int h = 0;
+			uint h = 0;
 			const char* s = constchar_cast(key);
-			for (; *s; ++s) h = 5 * h + tolower(*(unsigned char*)s);
+			for (; *s; ++s) h = 5 * h + tolower(*(uchar*)s);
 			return size_t(h);
 
 		};

@@ -51,7 +51,7 @@ class BannedID
 {
 public:
 	BannedID() { memset(vBanID, 0, 64); bSize = 0; };
-	BannedID(const unsigned char *vByteArr, unsigned char bArrSize, const string &szPlayerName) { memset(vBanID, 0, 64); memcpy(vBanID, vByteArr, crymin(bArrSize, 64)); szName = szPlayerName; bSize = bArrSize; };
+	BannedID(const uchar *vByteArr, uchar bArrSize, const string &szPlayerName) { memset(vBanID, 0, 64); memcpy(vBanID, vByteArr, crymin(bArrSize, 64)); szName = szPlayerName; bSize = bArrSize; };
 	BannedID(const BannedID &NewBannedID) { szName = NewBannedID.szName; memset(vBanID, 0, 64); memcpy(vBanID, NewBannedID.vBanID, NewBannedID.bSize); bSize = NewBannedID.bSize; };
 	virtual ~BannedID() {};
 
@@ -66,8 +66,8 @@ public:
 		return (memcmp(arg.vBanID, vBanID, bSize) != 0);
 	}
 
-	unsigned char	vBanID[64];
-	unsigned char bSize;
+	uchar	vBanID[64];
+	uchar bSize;
 	string				szName;
 };
 
@@ -75,7 +75,7 @@ public:
 typedef std::vector<BannedID>					BannedIDList;
 typedef BannedIDList::iterator				BannedIDListItor;
 
-typedef std::vector<unsigned int>			BannedIPList;
+typedef std::vector<uint>			BannedIPList;
 typedef BannedIPList::iterator				BannedIPListItor;
 
 
@@ -118,7 +118,7 @@ public:
 	}
 
 	//! /return pointer to the ServerSlot or 0 if there is no server slot for this id
-	CXServerSlot *GetServerSlotByIP( unsigned int clientIP ) const;
+	CXServerSlot *GetServerSlotByIP( uint clientIP ) const;
 
 	// IServerSlotFactory /////////////////////////////////
 	virtual bool CreateServerSlot(IServerSlot *pIServerSlot);
@@ -133,11 +133,11 @@ public:
 	void OnSpawnContainer( CEntityDesc &ed,IEntity *pEntity );
 	void OnSpawn(IEntity *ent,  CEntityDesc &ed);
 	void OnRemove(IEntity *ent);
-	void OnBind(EntityId id,EntityId child,unsigned char param)
+	void OnBind(EntityId id,EntityId child,uchar param)
 	{
 		BindEntity(id,child,param);
 	}
-	void OnUnbind(EntityId id,EntityId child,unsigned char param)
+	void OnUnbind(EntityId id,EntityId child,uchar param)
 	{
 		UnbindEntity(id,child,param);
 	}
@@ -164,10 +164,10 @@ public:
 
 	void BroadcastText(const char *sText, float fLifeTime = DEFAULT_TEXT_LIFETIME);
 	void BroadcastCommand(const char *sCmd);
-	void BroadcastCommand(const char *sCmd, const Vec3 &invPos, const Vec3 &invNormal, const EntityId inId, const unsigned char incUserByte );
+	void BroadcastCommand(const char *sCmd, const Vec3 &invPos, const Vec3 &invNormal, const EntityId inId, const uchar incUserByte );
 
-	void BindEntity(EntityId idParent,EntityId idChild,unsigned char cParam);
-	void UnbindEntity(EntityId idParent,EntityId idChild,unsigned char cParam);
+	void BindEntity(EntityId idParent,EntityId idChild,uchar cParam);
+	void UnbindEntity(EntityId idParent,EntityId idChild,uchar cParam);
 	void SyncVariable(ICVar *p);
 	void SyncAIState(void);
 	XSlotMap &GetSlotsMap(){ return m_mapXSlots; }
@@ -209,9 +209,9 @@ public:
 	//!
 	unsigned MemStats();
 	//!
-	unsigned int GetSchedulingDelay();
+	uint GetSchedulingDelay();
 	//!
-	unsigned int GetMaxUpdateRate() const;
+	uint GetMaxUpdateRate() const;
 	//!
 	void ClearRespawnPoints(){m_vRespawnPoints.clear();}
 	//!
@@ -229,11 +229,11 @@ public:
 
 	// interface IServerSecuritySink -------------------------------------------------------------
 
-	virtual bool IsIPBanned(const unsigned int dwIP);
-	virtual void BanIP(const unsigned int dwIP);
-	virtual void UnbanIP(const unsigned int dwIP);
-	virtual void CheaterFound( const unsigned int dwIP,int type,const char *sMsg );
-	virtual bool GetSlotInfo(  const unsigned int dwIP,SSlotInfo &info , int nameOnly );
+	virtual bool IsIPBanned(const uint dwIP);
+	virtual void BanIP(const uint dwIP);
+	virtual void UnbanIP(const uint dwIP);
+	virtual void CheaterFound( const uint dwIP,int type,const char *sMsg );
+	virtual bool GetSlotInfo(  const uint dwIP,SSlotInfo &info , int nameOnly );
 
 	// -------------------------------------------------------------------------------------------
 

@@ -270,9 +270,9 @@ public:
 class COPLocate : public CGoalOp
 {
 	string m_sName;
-	unsigned int m_nObjectType;
+	uint m_nObjectType;
 public:
-	COPLocate(const char* szName, unsigned int ot = 0) { if (szName) m_sName = szName; m_nObjectType = ot; }
+	COPLocate(const char* szName, uint ot = 0) { if (szName) m_sName = szName; m_nObjectType = ot; }
 	~COPLocate() {}
 
 	bool Execute(CPipeUser* pOperand);
@@ -291,7 +291,7 @@ class COPTrace : public CGoalOp
 	float m_fDistance;
 	float m_fTotalDistance;
 	bool	m_bSingleStep;
-	unsigned char m_nTicker;
+	uchar m_nTicker;
 	Vec3d m_vNextTarget;
 
 public:
@@ -334,11 +334,11 @@ class COPSignal : public CGoalOp
 {
 	int m_nSignalID;
 	string m_sSignal;
-	unsigned char m_cFilter;
+	uchar m_cFilter;
 	CAIObject* m_pTarget;
 	bool m_bSent;
 public:
-	COPSignal(int param, const char* szSignal, unsigned char cFilter) { m_bSent = false; m_nSignalID = param; m_pTarget = 0; m_cFilter = cFilter; m_sSignal = szSignal; }
+	COPSignal(int param, const char* szSignal, uchar cFilter) { m_bSent = false; m_nSignalID = param; m_pTarget = 0; m_cFilter = cFilter; m_sSignal = szSignal; }
 	~COPSignal() {}
 
 	bool Execute(CPipeUser* pOperand);

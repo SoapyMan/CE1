@@ -173,7 +173,7 @@ public:
 	//! Set new XML Node attribute (or override attribute with same key).
 	void setAttr( const char* key,const char* value );
 	void setAttr( const char* key,int value );
-	void setAttr( const char* key,unsigned int value );
+	void setAttr( const char* key,uint value );
 	void setAttr( const char* key,float value );
 	void setAttr( const char* key,const Vec3 &value );
 	void setAttr( const char* key,const Quat &value );
@@ -185,7 +185,7 @@ public:
 
 	//! Get attribute value of node.
 	bool getAttr( const char *key,int &value ) const;
-	bool getAttr( const char *key,unsigned int &value ) const;
+	bool getAttr( const char *key,uint &value ) const;
 	bool getAttr( const char *key,float &value ) const;
 	bool getAttr( const char *key,Vec3 &value ) const;
 	bool getAttr( const char *key,Quat &value ) const;

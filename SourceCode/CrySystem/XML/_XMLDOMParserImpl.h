@@ -28,7 +28,7 @@ class _XMLDOMParserImpl /* : public NanoXMLSink */
 public:
 	_XMLDOMParserImpl(XDOM::IXMLDOMDocument *pDoc);
 	virtual ~_XMLDOMParserImpl();
-	bool parse( std::vector<unsigned char> &buffer,string &errorString );
+	bool parse( std::vector<uchar> &buffer,string &errorString );
 
 	void OnStartElement( const char *name, const char **atts );
 	void OnEndElement( const char *name );
@@ -40,12 +40,12 @@ protected:
 	void Data( const char *name);
 	void Attribute( const char *name,const char *value);
 	void EndDocument(const char *error);
-	unsigned int GetByte();
+	uint GetByte();
 
 	// First node will become root node.
 	std::vector<XDOM::IXMLDOMNode *> nodeStack;
 	int m_nFilePos;
-	std::vector<unsigned char> *m_pBuffer;
+	std::vector<uchar> *m_pBuffer;
 	bool m_bUnicode;
 	bool m_bErrorState;
 	XDOM::IXMLDOMDocument *m_pDoc;

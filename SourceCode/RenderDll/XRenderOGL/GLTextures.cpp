@@ -127,14 +127,14 @@ void CGLTexMan::MakePhongLookupTexture(float shininess, STexPic* ti)
 {
 	int specular_size = 256;
 	int diffuse_size = 256;
-	unsigned char* img = new unsigned char[specular_size * diffuse_size * 4];
-	unsigned char* ip = img;
+	uchar* img = new uchar[specular_size * diffuse_size * 4];
+	uchar* ip = img;
 	for (int j = 0; j < specular_size; j++)
 	{
-		unsigned char a = (unsigned char)(255.99 * pow(double(j / (specular_size - 1.0)), (double)shininess));
+		uchar a = (uchar)(255.99 * pow(double(j / (specular_size - 1.0)), (double)shininess));
 		for (int i = 0; i < diffuse_size; i++)
 		{
-			byte b = (unsigned char)(255.99 * (i / (diffuse_size - 1.0)));
+			byte b = (uchar)(255.99 * (i / (diffuse_size - 1.0)));
 			*ip++ = b;
 			*ip++ = b;
 			*ip++ = b;
@@ -4247,7 +4247,7 @@ void CGLTexMan::DrawToTextureForGlare(int Id)
 		  gRenDev->Set2DMode(false, 1, 1);
 
 		  // copy 4 pixels
-		  static unsigned char pBits[3*2*2];
+		  static uchar pBits[3*2*2];
 		  glReadPixels(0, 0, 2, 2, GL_RGB, GL_UNSIGNED_BYTE, pBits);
 
 		  //// get pixels luminosity
@@ -5035,7 +5035,7 @@ void CGLTexMan::EndScreenTexMap()
 	STexPic* tx = gRenDev->m_TexMan->m_Text_ScreenMap;
 	SetTexture(tx->m_Bind, eTT_Rectangle);
 
-	unsigned int nTargetType;
+	uint nTargetType;
 
 	if (SUPPORTS_GL_NV_texture_rectangle || SUPPORTS_GL_EXT_texture_rectangle)
 		nTargetType = GL_TEXTURE_RECTANGLE_NV;

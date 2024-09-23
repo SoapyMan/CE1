@@ -50,14 +50,14 @@ public:
 		b = cols[2];
 		a = cols[3];
 	}
-	CFColor(unsigned int c)
+	CFColor(uint c)
 	{
 		r = (c & 0xff) / 255.0f;
 		g = ((c >> 8) & 0xff) / 255.0f;
 		b = ((c >> 16) & 0xff) / 255.0f;
 		a = ((c >> 24) & 0xff) / 255.0f;
 	}
-	CFColor(unsigned char c[4])
+	CFColor(uchar c[4])
 	{
 		r = c[0] / 255.0f;
 		g = c[1] / 255.0f;
@@ -171,15 +171,15 @@ public:
 
 	float* operator * () { return (&r); }
 
-	unsigned int GetTrue()
+	uint GetTrue()
 	{
 		union
 		{
 			struct
 			{
-				unsigned char R, G, B, A;
+				uchar R, G, B, A;
 			};
-			unsigned int D;
+			uint D;
 		}C;
 		C.R = uchar(r * 255.0f);
 		C.G = uchar(g * 255.0f);
@@ -188,15 +188,15 @@ public:
 		return C.D;
 	}
 
-	unsigned int GetTrueInv()
+	uint GetTrueInv()
 	{
 		union
 		{
 			struct
 			{
-				unsigned char R, G, B, A;
+				uchar R, G, B, A;
 			};
-			unsigned int D;
+			uint D;
 		}C;
 		C.R = uchar(255.0f - r * 255.0f);
 		C.G = uchar(255.0f - g * 255.0f);
@@ -205,15 +205,15 @@ public:
 		return C.D;
 	}
 
-	unsigned int GetTrueCol()
+	uint GetTrueCol()
 	{
 		union
 		{
 			struct
 			{
-				unsigned char R, G, B, A;
+				uchar R, G, B, A;
 			};
-			unsigned int D;
+			uint D;
 		}C;
 		//    C.R = r * 255.0f; C.G = g * 255.0f; C.B = b * 255.0f; C.A = 255;
 		C.R = uchar(r * 255.0f);

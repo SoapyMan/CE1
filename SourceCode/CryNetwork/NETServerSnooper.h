@@ -35,12 +35,12 @@ public:
 
 	// interface INetworkPacketSink --------------------------------------
 
-	virtual void OnReceivingPacket(const unsigned char inPacketID, CStream& stmPacket, CIPAddress& ip);
+	virtual void OnReceivingPacket(const uchar inPacketID, CStream& stmPacket, CIPAddress& ip);
 
 	// interface INETServerSnooper ----------------------------------------
 
 	virtual void Release();
-	virtual void Update(unsigned int dwTime);
+	virtual void Update(uint dwTime);
 	virtual void AddServer(const CIPAddress& ip);
 	virtual void AddServerList(const std::vector<CIPAddress>& vIP);
 	virtual void ClearList();
@@ -54,7 +54,7 @@ private: 	// ------------------------------------------------------------
 
 	ISystem* m_pSystem;						//!<
 
-	unsigned int							m_dwCurrentTime;			//!<
+	uint							m_dwCurrentTime;			//!<
 	int												m_iWaitingCount;			//!<
 
 	INETServerSnooperSink* m_pSink;							//!<

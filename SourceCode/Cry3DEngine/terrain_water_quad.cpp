@@ -189,7 +189,7 @@ void CWaterOcean::DrawWaterQuad(const int nRecursionLevel)
 	if(!nScreenYP || !nScreenXP)
 		return;
 
-  unsigned short nIdx = 0;
+  ushort nIdx = 0;
   int y_size = int(float(nScreenY)/(nScreenYP)+1.f);
 
   const Vec3d vCamPos = GetViewCamera().GetPos();
@@ -215,9 +215,9 @@ void CWaterOcean::DrawWaterQuad(const int nRecursionLevel)
   }
 
   struct_VERTEX_FORMAT_P3F_COL4UB vert;
-  vert.r = (unsigned char)(255);
-  vert.g = (unsigned char)(255);
-  vert.b = (unsigned char)(255);
+  vert.r = (uchar)(255);
+  vert.g = (uchar)(255);
+  vert.b = (uchar)(255);
 
 //  if(pCoverageBuffer)
   for(int x=0; x<=nScreenX/(nScreenXP)*(nScreenXP); x+=int(nScreenXP))
@@ -270,7 +270,7 @@ void CWaterOcean::DrawWaterQuad(const int nRecursionLevel)
 	fAlpha *= m_fWaterTranspRatio;
 	fAlpha += t*0.002f;
 	fAlpha = CLAMP(fAlpha, 0.0f, 1.0f);
-	vert.a = (unsigned char)(fAlpha*255);
+	vert.a = (uchar)(fAlpha*255);
 
   //  vert.z = (vert.z + fWaterLevel*9)*0.1f;
 ///    if( x==nScreenX/(nScreenXP)*(nScreenXP) || y==nScreenY/(nScreenYP)*(nScreenYP) || x==0 || y==0 )
@@ -282,10 +282,10 @@ void CWaterOcean::DrawWaterQuad(const int nRecursionLevel)
 	if(y<nScreenY/(nScreenYP)*(nScreenYP))
 	if(fabs(p.z-fWaterLevel)<1)
 	{
-	  unsigned short nIdx2 = nIdx+y_size;
+	  ushort nIdx2 = nIdx+y_size;
 
-	  unsigned short _nIdx = nIdx+1;
-	  unsigned short _nIdx2 = (nIdx+y_size)+1;
+	  ushort _nIdx = nIdx+1;
+	  ushort _nIdx2 = (nIdx+y_size)+1;
 
 	  Indices_DWQ.Add(_nIdx);
 	  Indices_DWQ.Add(nIdx);
@@ -514,7 +514,7 @@ void CWaterOcean::Render(const int nRecursionLevel)
 				fAlpha += r2 * 0.0125f * fScale2;
 				fAlpha = CLAMP(fAlpha, 0.0f, crymin(1.f, m_fWaterTranspRatio + fTranspPlus2));
 				fAlpha += r2 * fScale2 * fFresnel;
-				tmp.color.bcolor[3] = (unsigned char)fastftol_positive(crymin(255, fAlpha * fA));
+				tmp.color.bcolor[3] = (uchar)fastftol_positive(crymin(255, fAlpha * fA));
 
 				Indices_DWQ.Add(Verts_DWQ.Count());
 				Verts_DWQ.Add(tmp);
@@ -530,7 +530,7 @@ void CWaterOcean::Render(const int nRecursionLevel)
 				fAlpha += r1 * 0.0125f * fScale1;
 				fAlpha = CLAMP(fAlpha, 0.0f, crymin(1.f, m_fWaterTranspRatio + fTranspPlus1));
 				fAlpha += r1 * fScale1 * fFresnel;
-				tmp.color.bcolor[3] = (unsigned char)fastftol_positive(crymin(255, fAlpha * fA));
+				tmp.color.bcolor[3] = (uchar)fastftol_positive(crymin(255, fAlpha * fA));
 
 				Indices_DWQ.Add(Verts_DWQ.Count());
 				Verts_DWQ.Add(tmp);

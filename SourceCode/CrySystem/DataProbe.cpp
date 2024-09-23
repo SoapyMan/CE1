@@ -61,10 +61,10 @@ const char test_name[] = "Cannot find attached entity.\0....";
 
 
 /* ========================================================================= */
-static unsigned int ADLER_32(unsigned int adler, const char* buf, unsigned int len)
+static uint ADLER_32(uint adler, const char* buf, uint len)
 {
-	unsigned int s1 = adler & 0xFFFF;
-	unsigned int s2 = (adler >> 16) & 0xFFFF;
+	uint s1 = adler & 0xFFFF;
+	uint s2 = (adler >> 16) & 0xFFFF;
 	int k;
 
 	if (!buf)
@@ -95,18 +95,18 @@ static unsigned int ADLER_32(unsigned int adler, const char* buf, unsigned int l
 //////////////////////////////////////////////////////////////////////////
 // Calculate CRC32 of buffer.
 //////////////////////////////////////////////////////////////////////////
-static unsigned int CRC_32(const char* buf, unsigned int len)
+static uint CRC_32(const char* buf, uint len)
 {
-	static unsigned int Table[256];
+	static uint Table[256];
 	static int init = 0;
-	unsigned int code = 0xFFFFFFFF;
+	uint code = 0xFFFFFFFF;
 
 	if (!init) {
 		int i;
 		init = 1;
 		for (i = 0; i <= 255; i++) {
 			int j;
-			unsigned int part = i;
+			uint part = i;
 			for (j = 0; j < 8; j++) {
 				if (part & 1)
 					part = (part >> 1) ^ AUTODIN_IIREV;
@@ -118,8 +118,8 @@ static unsigned int CRC_32(const char* buf, unsigned int len)
 	}
 	while (len--)
 	{
-		unsigned int temp1 = code >> 8;
-		unsigned int temp2 = Table[(code ^ (unsigned int)*buf) & 0xff];
+		uint temp1 = code >> 8;
+		uint temp2 = Table[(code ^ (uint)*buf) & 0xff];
 		code = temp1 ^ temp2;
 		buf += 1;
 	}
@@ -129,7 +129,7 @@ static unsigned int CRC_32(const char* buf, unsigned int len)
 //////////////////////////////////////////////////////////////////////////
 // Calculate CRC64 of buffer.
 //////////////////////////////////////////////////////////////////////////
-static uint64 CRC_64(const char* buf, unsigned int len)
+static uint64 CRC_64(const char* buf, uint len)
 {
 	static uint64 Table[256];
 	uint64 code = 0;
@@ -216,7 +216,7 @@ bool CDataProbe::GetDataCode(char* pBuf, int nSize, SDataProbeContext& ctx)
 	break;
 	case DATAPROBE_ADLER32:
 	{
-		unsigned int code = ADLER_32(0L, 0, 0);
+		uint code = ADLER_32(0L, 0, 0);
 		nCode = ADLER_32(1, pBuf, ctx.nSize);
 		nCode = nCode | ((~nCode) << 32);
 	}
@@ -242,8 +242,8 @@ bool CDataProbe::GetDataCode(char* pBuf, int nSize, SDataProbeContext& ctx)
 	}
 	}
 	// scramble code not to look like crc or alike.
-	unsigned int tkey[4] = { 2985634234,378634893,387681212,436851212 };
-	TEA_ENCODE((unsigned int*)&nCode, (unsigned int*)&nCode, 8, (unsigned int*)tkey);
+	uint tkey[4] = { 2985634234,378634893,387681212,436851212 };
+	TEA_ENCODE((uint*)&nCode, (uint*)&nCode, 8, (uint*)tkey);
 	ctx.nCode = nCode;
 	return true;
 }
@@ -276,7 +276,7 @@ bool CDataProbe::GetCode(SDataProbeContext& ctx)
 	if (file)
 	{
 		fseek(file, 0, SEEK_END);
-		unsigned int nFileSize = ftell(file);
+		uint nFileSize = ftell(file);
 		if (ctx.nOffset >= nFileSize)
 		{
 			fclose(file);
@@ -312,7 +312,7 @@ bool CDataProbe::GetCode(SDataProbeContext& ctx)
 		CCryFile cryfile;
 		if (cryfile.Open(ctx.sFilename.c_str(), "rb"))
 		{
-			unsigned int nFileSize = cryfile.GetLength();
+			uint nFileSize = cryfile.GetLength();
 			if (ctx.nOffset >= nFileSize)
 			{
 				return false;
@@ -426,8 +426,8 @@ bool CDataProbe::CheckLoader(void* pFunc)
 	typedef void (*AuthFunction)(void* data);
 	AuthFunction pCheckFunc = (AuthFunction)pFunc;
 
-	unsigned int data1[8];
-	unsigned int data2[8];
+	uint data1[8];
+	uint data2[8];
 	memcpy(data1, sKey, 8);
 
 #ifdef FARCRY_EXE_CRC_CHECK
@@ -447,7 +447,7 @@ bool CDataProbe::CheckLoader(void* pFunc)
 	// if it fails, we possibly running from the not authorized loader.
 
 	// set of keys (one for farcry.exe second for dedicated server).
-	unsigned int keys[6][4] = {
+	uint keys[6][4] = {
 		{1873613783,235688123,812763783,1745863682},
 		{1897178562,734896899,156436554,902793442},
 		{1178362782,223786232,371615531,90884141},
@@ -465,9 +465,9 @@ bool CDataProbe::CheckLoader(void* pFunc)
 	//////////////////////////////////////////////////////////////////////////
 	// First try... key0,key1
 	//////////////////////////////////////////////////////////////////////////
-	TEA_ENCODE(data1, data2, 32, (unsigned int*)keys[0]);
+	TEA_ENCODE(data1, data2, 32, (uint*)keys[0]);
 	pCheckFunc(data2);
-	TEA_DECODE(data2, data2, 32, (unsigned int*)keys[1]);
+	TEA_DECODE(data2, data2, 32, (uint*)keys[1]);
 
 	// Now check data1 and data2.
 	if (memcmp(data1, data2, 32) == 0)
@@ -479,9 +479,9 @@ bool CDataProbe::CheckLoader(void* pFunc)
 	//////////////////////////////////////////////////////////////////////////
 	// Second try... key2,key3
 	//////////////////////////////////////////////////////////////////////////
-	TEA_ENCODE(data1, data2, 32, (unsigned int*)keys[2]);
+	TEA_ENCODE(data1, data2, 32, (uint*)keys[2]);
 	pCheckFunc(data2);
-	TEA_DECODE(data2, data2, 32, (unsigned int*)keys[3]);
+	TEA_DECODE(data2, data2, 32, (uint*)keys[3]);
 
 	// Now check data1 and data2.
 	if (memcmp(data1, data2, 32) == 0)
@@ -493,9 +493,9 @@ bool CDataProbe::CheckLoader(void* pFunc)
 	//////////////////////////////////////////////////////////////////////////
 	// Third try... key4,key5
 	//////////////////////////////////////////////////////////////////////////
-	TEA_ENCODE(data1, data2, 32, (unsigned int*)keys[4]);
+	TEA_ENCODE(data1, data2, 32, (uint*)keys[4]);
 	pCheckFunc(data2);
-	TEA_DECODE(data2, data2, 32, (unsigned int*)keys[5]);
+	TEA_DECODE(data2, data2, 32, (uint*)keys[5]);
 
 	// Now check data1 and data2.
 	if (memcmp(data1, data2, 32) == 0)
@@ -529,11 +529,11 @@ bool CDataProbe::CheckLoaderFC()
 	int nStrLen = strlen(test_name) + 1;
 	CryLogAlways("Len=%d", nStrLen);
 	//nStrLen = TEST_NAME_END;
-	unsigned int nStoredCode = 0;
+	uint nStoredCode = 0;
 	memcpy(&nStoredCode, test_name + nStrLen, sizeof(nStoredCode));
 
 	bool bFound = false;
-	unsigned int nCode = 0;
+	uint nCode = 0;
 
 	for (int i = 0; i < nLen - nStrLen - 32; i++)
 	{
@@ -557,7 +557,7 @@ bool CDataProbe::CheckLoaderFC()
 	if (!GetCode(ctx))
 		return false;
 
-	unsigned int nCurrentCode = ctx.nCode; // Invert of CRC32
+	uint nCurrentCode = ctx.nCode; // Invert of CRC32
 
 	nCurrentCode = ~nCurrentCode; // Invert of CRC32
 
@@ -573,18 +573,18 @@ bool CDataProbe::CheckLoaderFC()
 }
 
 //////////////////////////////////////////////////////////////////////////
-int CDataProbe::Compress(void* dest, unsigned int& destLen, const void* source, unsigned int sourceLen, int level)
+int CDataProbe::Compress(void* dest, uint& destLen, const void* source, uint sourceLen, int level)
 {
-	unsigned long dlen = destLen;
+	ulong dlen = destLen;
 	int res = ::compress2((Bytef*)dest, &dlen, (const Bytef*)source, sourceLen, level);
 	destLen = dlen;
 	return res;
 }
 
 //////////////////////////////////////////////////////////////////////////
-int CDataProbe::Uncompress(void* dest, unsigned int& destLen, const void* source, unsigned int sourceLen)
+int CDataProbe::Uncompress(void* dest, uint& destLen, const void* source, uint sourceLen)
 {
-	unsigned long dlen = destLen;
+	ulong dlen = destLen;
 	int res = ::uncompress((Bytef*)dest, &dlen, (const Bytef*)source, sourceLen);
 	destLen = dlen;
 	return res;
@@ -721,7 +721,7 @@ bool CDataProbe::GetRandomModuleProbe(SDataProbeContext& ctx)
 	fwrite( pBuf,ctx.nSize,1,file );
 	fclose(file);
 
-	unsigned int nCode = CRC_32( pBuf,ctx.nSize );
+	uint nCode = CRC_32( pBuf,ctx.nSize );
 	CryLog( "Code CRC32=%u, offset=%d,size=%d",nCode,ctx.nOffset,ctx.nSize );
 	free(pBuf);
 	//////////////////////////////////////////////////////////////////////////
@@ -775,7 +775,7 @@ bool CDataProbe::GetModuleProbe(SDataProbeContext& ctx)
 	fwrite( pBuf,ctx.nSize,1,file );
 	fclose(file);
 
-	unsigned int nCode = CRC_32( pBuf,ctx.nSize );
+	uint nCode = CRC_32( pBuf,ctx.nSize );
 	CryLog( "Code CRC32=%u, offset=%d,size=%d",nCode,ctx.nOffset,ctx.nSize );
 	free(pBuf);
 	//////////////////////////////////////////////////////////////////////////
@@ -817,8 +817,8 @@ void CDataProbe::GetMD5(const char* pSrcBuffer, int nSrcSize, char signatureMD5[
 	//#if !defined(LINUX)
 	struct MD5Context md5c;
 	MD5Init(&md5c);
-	MD5Update(&md5c, (unsigned char*)pSrcBuffer, nSrcSize);
-	MD5Final((unsigned char*)signatureMD5, &md5c);
+	MD5Update(&md5c, (uchar*)pSrcBuffer, nSrcSize);
+	MD5Final((uchar*)signatureMD5, &md5c);
 	//#endif
 }
 

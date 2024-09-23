@@ -353,8 +353,8 @@ bool SBrush::BuildRenderElements()
 
 		int numv = srcBuf->m_SecVertCount;
 		int stride1,stride2;
-		unsigned char *src = srcBuf->GetPosPtr( stride1 );
-		unsigned char *trg = trgBuf->GetPosPtr( stride2 );
+		uchar *src = srcBuf->GetPosPtr( stride1 );
+		uchar *trg = trgBuf->GetPosPtr( stride2 );
 		for (int i = 0; i < numv; i++)
 		{
 			Vec3 &sv = *(Vec3*)src;
@@ -2134,8 +2134,8 @@ CIndexedMesh* SBrush::CreateGeometry()
 
 		int numv = srcBuf->m_SecVertCount;
 		int stride1,stride2;
-		unsigned char *src = srcBuf->GetPosPtr( stride1 );
-		unsigned char *trg = trgBuf->GetPosPtr( stride2 );
+		uchar *src = srcBuf->GetPosPtr( stride1 );
+		uchar *trg = trgBuf->GetPosPtr( stride2 );
 		for (int i = 0; i < numv; i++)
 		{
 			Vec3 &sv = *(Vec3*)src;

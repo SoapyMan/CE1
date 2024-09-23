@@ -22,7 +22,7 @@ bool struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F::operator == (struct_VERTEX_FORMAT_
 		(color.dcolor & 0xffffff) == (other.color.dcolor & 0xffffff);
 }
 
-int CLeafBuffer::FindInBuffer(struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F& opt, SPipTangents& origBasis, uint nMatInfo, uint* uiInfo, struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F* _vbuff, SPipTangents* _vbasis, int _vcount, list2<unsigned short>* pHash, TArray<uint>& ShareNewInfo)
+int CLeafBuffer::FindInBuffer(struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F& opt, SPipTangents& origBasis, uint nMatInfo, uint* uiInfo, struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F* _vbuff, SPipTangents* _vbasis, int _vcount, list2<ushort>* pHash, TArray<uint>& ShareNewInfo)
 {
 	for (int i = 0; i < pHash->Count(); i++)
 	{
@@ -44,7 +44,7 @@ int CLeafBuffer::FindInBuffer(struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F& opt, SPip
 	return -1;
 }
 
-void CLeafBuffer::CompactBuffer(struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F* _vbuff, SPipTangents* _tbuff, int* _vcount, TArray<unsigned short>* pindices, bool bShareVerts[128], uint* uiInfo)
+void CLeafBuffer::CompactBuffer(struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F* _vbuff, SPipTangents* _tbuff, int* _vcount, TArray<ushort>* pindices, bool bShareVerts[128], uint* uiInfo)
 {
 	//CRYASSERT(*_vcount);
 	if (!*_vcount)
@@ -57,18 +57,18 @@ void CLeafBuffer::CompactBuffer(struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F* _vbuff,
 
 	struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F* tmp_vbuff = new struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F[*_vcount];
 	SPipTangents* tmp_tbuff = new SPipTangents[*_vcount];
-	unsigned int tmp_count = 0;
+	uint tmp_count = 0;
 	pindices->Free();
 	TArray<uint> ShareNewInfo;
 
-	list2<unsigned short> hash_table[256];//[256];
+	list2<ushort> hash_table[256];//[256];
 
-	for (unsigned int v = 0; v < (unsigned int)(*_vcount); v++)
+	for (uint v = 0; v < (uint)(*_vcount); v++)
 	{
-		int nHashInd = (unsigned char)(_vbuff[v].xyz.x * 100);
+		int nHashInd = (uchar)(_vbuff[v].xyz.x * 100);
 		uint nMInfo = uiInfo[v];
 		uint nMatId = nMInfo & 255;
-		int find = bShareVerts[nMatId] ? FindInBuffer(_vbuff[v], _tbuff[v], nMInfo, uiInfo, tmp_vbuff, tmp_tbuff, tmp_count, &hash_table[nHashInd], ShareNewInfo/*[(unsigned char)(_vbuff[v].pos.y*100)]*/) : -1;
+		int find = bShareVerts[nMatId] ? FindInBuffer(_vbuff[v], _tbuff[v], nMInfo, uiInfo, tmp_vbuff, tmp_tbuff, tmp_count, &hash_table[nHashInd], ShareNewInfo/*[(uchar)(_vbuff[v].pos.y*100)]*/) : -1;
 		if (find < 0)
 		{ // not found
 			tmp_vbuff[tmp_count] = _vbuff[v];
@@ -76,7 +76,7 @@ void CLeafBuffer::CompactBuffer(struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F* _vbuff,
 			pindices->AddElem(tmp_count);
 			ShareNewInfo.AddElem(uiInfo[v]);
 
-			hash_table[(unsigned char)(_vbuff[v].xyz.x * 100)]/*[(unsigned char)(_vbuff[v].pos.y*100)]*/.Add(tmp_count);
+			hash_table[(uchar)(_vbuff[v].xyz.x * 100)]/*[(uchar)(_vbuff[v].pos.y*100)]*/.Add(tmp_count);
 
 			tmp_count++;
 		}

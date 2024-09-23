@@ -143,7 +143,7 @@ public:
 	// integers defining the triangular faces, counterclockwise order)
 	// The size of the vertex buffer must be at least numVertices()
 	// The size of the index buffer must be at least numIndices()
-	virtual void meshShadowVolume(Vec3d vLight, float fFactor, Vec3d* outpVertexBuf, unsigned short* pIndexBuf);
+	virtual void meshShadowVolume(Vec3d vLight, float fFactor, Vec3d* outpVertexBuf, ushort* pIndexBuf);
 
 protected:
 	const CStencilShadowConnectivity* m_pConnectivity;						//!<

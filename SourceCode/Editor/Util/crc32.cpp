@@ -11,7 +11,7 @@ void Crc32Gen::init_CRC32_Table()
 {
 	// This is the official polynomial used by CRC-32
 	// in PKZip, WinZip and Ethernet.
-	unsigned int ulPolynomial = 0x04c11db7;
+	uint ulPolynomial = 0x04c11db7;
 	
 	// 256 values representing ASCII character codes.
 	for(int i = 0; i <= 0xFF; i++)
@@ -23,9 +23,9 @@ void Crc32Gen::init_CRC32_Table()
 	}
 }
 
-unsigned int Crc32Gen::reflect(unsigned int ref, char ch)
+uint Crc32Gen::reflect(uint ref, char ch)
 {// Used only by Init_CRC32_Table().
-	unsigned int value = 0;
+	uint value = 0;
 	
 	// Swap bit 0 for bit 7
 	// bit 1 for bit 6, etc.
@@ -38,7 +38,7 @@ unsigned int Crc32Gen::reflect(unsigned int ref, char ch)
 	return value;
 }
 
-unsigned int Crc32Gen::get_CRC32( const char *data, int size, unsigned int ulCRC )
+uint Crc32Gen::get_CRC32( const char *data, int size, uint ulCRC )
 {// Pass a text string to this function and it will return the CRC.
 	
 	// Once the lookup table has been filled in by the two functions above,
@@ -48,13 +48,13 @@ unsigned int Crc32Gen::get_CRC32( const char *data, int size, unsigned int ulCRC
 	
 	// Start out with all bits set high.
 	int len; 
-	unsigned char* buffer;
+	uchar* buffer;
 	
 	// Get the length. 
 	len = size; 
 	
   // Save the text in the buffer. 
-	buffer = (unsigned char*)data; 
+	buffer = (uchar*)data; 
 	// Perform the algorithm on each character in the string, using the lookup table values. 
 	
 	while(len--) 
@@ -63,13 +63,13 @@ unsigned int Crc32Gen::get_CRC32( const char *data, int size, unsigned int ulCRC
 	return ulCRC ^ 0xffffffff; 
 } 
 
-unsigned int Crc32Gen::GetCRC32( const char *text )
+uint Crc32Gen::GetCRC32( const char *text )
 {
 	int len = strlen(text);
 	return GetCRC32( text,len,0xffffffff );
 }
 
-unsigned int Crc32Gen::GetCRC32( const char *data, int size, unsigned int ulCRC )
+uint Crc32Gen::GetCRC32( const char *data, int size, uint ulCRC )
 {
 	static Crc32Gen stdCrc32Generator;
 	return stdCrc32Generator.get_CRC32( data,size,ulCRC );

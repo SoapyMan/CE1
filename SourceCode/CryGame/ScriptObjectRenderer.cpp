@@ -98,7 +98,7 @@ int CScriptObjectRenderer::PushQuad(IFunctionHandler *pH)
 		}
 	}
 	_Vtx vtx[4];
-	unsigned short base=m_vBuffer.size();
+	ushort base=m_vBuffer.size();
 
 	vtx[0].x=x;
 	vtx[0].y=y;
@@ -128,10 +128,10 @@ int CScriptObjectRenderer::PushQuad(IFunctionHandler *pH)
 
 	for(int i=0;i<4;i++)
 	{
-		vtx[i].cc[0]=(unsigned char)(r*255.0f);
-		vtx[i].cc[1]=(unsigned char)(g*255.0f);
-		vtx[i].cc[2]=(unsigned char)(b*255.0f);
-		vtx[i].cc[3]=(unsigned char)(a*255.0f);
+		vtx[i].cc[0]=(uchar)(r*255.0f);
+		vtx[i].cc[1]=(uchar)(g*255.0f);
+		vtx[i].cc[2]=(uchar)(b*255.0f);
+		vtx[i].cc[3]=(uchar)(a*255.0f);
 		m_vBuffer.push_back(vtx[i]);
 	}
 

@@ -268,7 +268,7 @@ public:
 	bool IsAlive() const { return (m_stats.health>0); }
 	
 	//! Process player commands.
-	virtual void ProcessCmd(unsigned int nPing,CXEntityProcessingCmd &ProcessingCmd);
+	virtual void ProcessCmd(uint nPing,CXEntityProcessingCmd &ProcessingCmd);
 
 	//! Local for players.
 	virtual void ProcessAngles(CXEntityProcessingCmd &ProcessingCmd);
@@ -733,7 +733,7 @@ protected:
 		eDimCrouch,
 		eDimProne
 	};
-	unsigned char m_currDimensions;
+	uchar m_currDimensions;
 
 	IScriptObject *m_pScriptObject;
 	IScriptSystem *m_pScriptSystem;

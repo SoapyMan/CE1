@@ -110,9 +110,9 @@ public:
 		m_nCount++;
 	}
 
-	void InsertBefore(const T& p, const unsigned int nBefore)
+	void InsertBefore(const T& p, const uint nBefore)
 	{
-		CRYASSERT(nBefore >= 0 && nBefore <= (unsigned int)m_nCount);
+		CRYASSERT(nBefore >= 0 && nBefore <= (uint)m_nCount);
 		T tmp; Add(tmp); // add empty object to increase memory buffer
 		memmove(&(m_pElements[nBefore + 1]), &(m_pElements[nBefore]), sizeof(T) * (m_nCount - nBefore - 1));
 		m_pElements[nBefore] = p;
@@ -170,7 +170,7 @@ public:
 	}
 
 	inline int Count() const { return m_nCount; }
-	inline unsigned int Size() const { return m_nCount; }
+	inline uint Size() const { return m_nCount; }
 
 	inline int IsEmpty() const { return m_nCount == 0; }
 
@@ -247,7 +247,7 @@ public:
 	}
 
 	// Save/Load
-	void SaveToBuffer(const unsigned char* pBuffer, int& nPos)
+	void SaveToBuffer(const uchar* pBuffer, int& nPos)
 	{
 		// copy size of element
 		int nSize = sizeof(T);
@@ -269,7 +269,7 @@ public:
 		}
 	}
 
-	void LoadFromBuffer(const unsigned char* pBuffer, int& nPos)
+	void LoadFromBuffer(const uchar* pBuffer, int& nPos)
 	{
 		Reset();
 

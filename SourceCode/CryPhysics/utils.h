@@ -224,8 +224,8 @@ int DrawRayOnGrid(primitives::grid* pgrid, vectorf& origin, vectorf& dir, CellCh
 }
 
 
-int bin2ascii(const unsigned char* pin, int sz, unsigned char* pout);
-int ascii2bin(const unsigned char* pin, int sz, unsigned char* pout);
+int bin2ascii(const uchar* pin, int sz, uchar* pout);
+int ascii2bin(const uchar* pin, int sz, uchar* pout);
 
 template<class T> inline T* _align16(T* ptr) { return (T*)(((INT_PTR)ptr - 1 & ~15) + 16); }
 #if !defined(LINUX)
@@ -233,7 +233,7 @@ template<class dtype> bool is_valid(const dtype& op) { return is_valid(op | op);
 
 inline bool is_valid(float op) { return op * op >= 0 && op * op < 1E30f; }
 inline bool is_valid(int op) { return true; }
-inline bool is_valid(unsigned int op) { return true; }
+inline bool is_valid(uint op) { return true; }
 #endif
 
 void WritePacked(CStream& stm, int num);
@@ -272,7 +272,7 @@ inline void WriteCompressedFloat(CStream& stm, float f, const float maxval, cons
 }
 inline void ReadCompressedFloat(CStream& stm, float& f, const float maxval, const int nBits) {
 	const int imax = (1 << nBits - 1) - 1;
-	unsigned int num;
+	uint num;
 	stm.ReadNumberInBits(num, nBits);
 	f = ((int)num | ((int)num << 32 - nBits & 1 << 31) >> 31 - nBits) * (maxval / imax);
 }

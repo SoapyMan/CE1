@@ -186,9 +186,9 @@ namespace stl
 
 		size_t operator()( const Key& key ) const
 		{
-			unsigned long h = 0; 
+			ulong h = 0; 
 			const char *s = constchar_cast(key);
-			for (; *s; ++s) h = 5*h + *(unsigned char*)s;
+			for (; *s; ++s) h = 5*h + *(uchar*)s;
 			return size_t(h);
 
 		};
@@ -210,9 +210,9 @@ namespace stl
 
 		size_t operator()( const Key& key ) const
 		{
-			unsigned long h = 0; 
+			ulong h = 0; 
 			const char *s = constchar_cast(key);
-			for (; *s; ++s) h = 5*h + *(unsigned char*)s;
+			for (; *s; ++s) h = 5*h + *(uchar*)s;
 			return size_t(h);
 
 		};

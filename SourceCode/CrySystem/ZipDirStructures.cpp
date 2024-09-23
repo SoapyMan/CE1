@@ -31,7 +31,7 @@ ZipDir::FileEntry::FileEntry(const CDRFileHeader& header)
 // with 2 differences: there are no 16-bit checks, and 
 // it initializes the inflation to start without waiting for compression method byte, as this is the 
 // way it's stored into zip file
-int ZipDir::ZipRawUncompress(CMTSafeHeap* pHeap, void* pUncompressed, unsigned long* pDestSize, const void* pCompressed, unsigned long nSrcSize)
+int ZipDir::ZipRawUncompress(CMTSafeHeap* pHeap, void* pUncompressed, ulong* pDestSize, const void* pCompressed, ulong nSrcSize)
 {
 	z_stream stream;
 	int err;
@@ -67,7 +67,7 @@ int ZipDir::ZipRawUncompress(CMTSafeHeap* pHeap, void* pUncompressed, unsigned l
 
 // compresses the raw data into raw data. The buffer for compressed data itself with the heap passed. Uses method 8 (deflate)
 // returns one of the Z_* errors (Z_OK upon success)
-int ZipDir::ZipRawCompress(CMTSafeHeap* pHeap, const void* pUncompressed, unsigned long* pDestSize, void* pCompressed, unsigned long nSrcSize, int nLevel)
+int ZipDir::ZipRawCompress(CMTSafeHeap* pHeap, const void* pUncompressed, ulong* pDestSize, void* pCompressed, ulong nSrcSize, int nLevel)
 {
 	z_stream stream;
 	int err;
@@ -221,7 +221,7 @@ ZipDir::ErrorEnum ZipDir::WriteLocalHeader(FILE* f, FileEntry* pFileEntry, const
 	h.nLastModDate = pFileEntry->nLastModDate;
 	h.nLastModTime = pFileEntry->nLastModTime;
 	h.desc = pFileEntry->desc;
-	h.nFileNameLength = (unsigned short)strlen(szRelativePath);
+	h.nFileNameLength = (ushort)strlen(szRelativePath);
 	h.nExtraFieldLength = 0;
 
 	pFileEntry->nFileDataOffset = pFileEntry->nFileHeaderOffset + sizeof(h) + h.nFileNameLength;
@@ -241,7 +241,7 @@ ZipDir::ErrorEnum ZipDir::WriteLocalHeader(FILE* f, FileEntry* pFileEntry, const
 
 
 // conversion routines for the date/time fields used in Zip
-ZipFile::ushort ZipDir::DOSDate(tm* t)
+ushort ZipDir::DOSDate(tm* t)
 {
 	return
 		((t->tm_year - 80) << 9)
@@ -249,7 +249,7 @@ ZipFile::ushort ZipDir::DOSDate(tm* t)
 		| t->tm_mday;
 }
 
-ZipFile::ushort ZipDir::DOSTime(tm* t)
+ushort ZipDir::DOSTime(tm* t)
 {
 	return
 		((t->tm_hour) << 11)
@@ -279,14 +279,14 @@ void ZipDir::FileEntry::OnNewFileData(void* pUncompressed, unsigned nSize, unsig
 }
 
 
-const char* ZipDir::DOSTimeCStr(ZipFile::ushort nTime)
+const char* ZipDir::DOSTimeCStr(ushort nTime)
 {
 	static char szBuf[16];
 	sprintf(szBuf, "%02d:%02d.%02d", (nTime >> 11), ((nTime & ((1 << 11) - 1)) >> 5), ((nTime & ((1 << 5) - 1)) << 1));
 	return szBuf;
 }
 
-const char* ZipDir::DOSDateCStr(ZipFile::ushort nTime)
+const char* ZipDir::DOSDateCStr(ushort nTime)
 {
 	static char szBuf[32];
 	sprintf(szBuf, "%02d.%02d.%04d", (nTime & 0x1F), (nTime >> 5) & 0xF, (nTime >> 9) + 1980);

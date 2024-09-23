@@ -32,7 +32,7 @@
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
-unsigned int CNetwork::m_nCryNetInitialized = 0;
+uint CNetwork::m_nCryNetInitialized = 0;
 
 struct CryNetError CNetwork::m_neNetErrors[] =
 {
@@ -488,7 +488,7 @@ CTimeValue CNetwork::GetCurrentTime()
 }
 
 //////////////////////////////////////////////////////////////////////////
-u32 CNetwork::GetStringHash(const char* szString)
+uint32 CNetwork::GetStringHash(const char* szString)
 {
 #if defined(LINUX)
 	return 0;
@@ -726,7 +726,7 @@ void CNetwork::LogNetworkInfo()
 					(int)(temp.sin_addr.S_un.S_un_b.s_b2),
 					(int)(temp.sin_addr.S_un.S_un_b.s_b3),
 					(int)(temp.sin_addr.S_un.S_un_b.s_b4));
-				//		(int)temp.sin_port,(unsigned int)temp.sin_family);
+				//		(int)temp.sin_port,(uint)temp.sin_family);
 #endif
 				i++;
 			}

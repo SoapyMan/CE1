@@ -53,7 +53,7 @@ CUISystem::~CUISystem()
 //------------------------------------------------------------------------------------------------- 
 //------------------------------------------------------------------------------------------------- 
 // if message processed, return 1, else return 0
-LRESULT CUISystem::DefaultUpdate(CUIWidget *pWidget, unsigned int iMessage, WPARAM wParam, LPARAM lParam)
+LRESULT CUISystem::DefaultUpdate(CUIWidget *pWidget, uint iMessage, WPARAM wParam, LPARAM lParam)
 {
 	switch (iMessage)
 	{
@@ -403,8 +403,8 @@ void CUISystem::Update()
 
 	IMouse *pMouse = m_pInput->GetIMouse();
 
-	unsigned int	dwPackedMouseXY = UIM_PACK_COORD(vMouseXY.x, vMouseXY.y);
-	unsigned int	dwPackedOldMouseXY = UIM_PACK_COORD(m_vMouseXY.x, m_vMouseXY.y);
+	uint	dwPackedMouseXY = UIM_PACK_COORD(vMouseXY.x, vMouseXY.y);
+	uint	dwPackedOldMouseXY = UIM_PACK_COORD(m_vMouseXY.x, m_vMouseXY.y);
 	CUIWidget		*pMouseOver = FindWidgetAt(vMouseXY.x, vMouseXY.y);
 	bool			bMouseMoved = dwPackedMouseXY != dwPackedOldMouseXY;
 	bool			bLMouseDown = pMouse->MouseDown(XKEY_MOUSE1);
@@ -523,10 +523,10 @@ void CUISystem::Update()
 		float fY;
 
 		GetRelativeXY(&fX, &fY, vMouseXY.x, vMouseXY.y, pMouseOver);
-		unsigned int dwPackedMouseRelativeXY = UIM_PACK_COORD(fX, fY);
+		uint dwPackedMouseRelativeXY = UIM_PACK_COORD(fX, fY);
 
 		GetRelativeXY(&fX, &fY, m_vMouseXY.x, m_vMouseXY.y, pMouseOver);
-		unsigned int dwPackedOldMouseRelativeXY = UIM_PACK_COORD(fX, fY);
+		uint dwPackedOldMouseRelativeXY = UIM_PACK_COORD(fX, fY);
 
 		SendMessage(pMouseOver, UIM_MOUSEOVER, dwPackedOldMouseRelativeXY, dwPackedMouseRelativeXY);
 

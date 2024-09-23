@@ -237,8 +237,8 @@ void CRenderMeshBuilder::buildIndexBuffer()
 			continue;
 
 		PrimitiveGroup* pGroup = nullptr;
-		unsigned short numGroups = 0;
-		GenerateStrips((unsigned short*)&arrFaces[0], arrFaces.size() * 3, &pGroup, &numGroups);
+		ushort numGroups = 0;
+		GenerateStrips((ushort*)&arrFaces[0], arrFaces.size() * 3, &pGroup, &numGroups);
 
 		for (unsigned nGroup = 0; nGroup < numGroups; ++nGroup)
 			appendNvidiaStrip(pGroup[nGroup], nMaterial);
@@ -340,7 +340,7 @@ void CRenderMeshBuilder::appendNvidiaStrip(const struct PrimitiveGroup& rGroup, 
 	for (int nIndex = 0; nIndex < (int)rGroup.numIndices - 2; )
 	{
 		int v[3];
-		unsigned short* src = rGroup.indices + nIndex;
+		ushort* src = rGroup.indices + nIndex;
 		switch (rGroup.type)
 		{
 		case PT_LIST:

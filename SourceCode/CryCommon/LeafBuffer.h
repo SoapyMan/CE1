@@ -298,8 +298,8 @@ struct CLeafBuffer
 	bool	IsEmpty() { return !m_SecVertCount || !m_pSecVertBuffer || !m_SecIndices.Num(); }
 
 	// compact buffer
-	int		FindInBuffer(struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F& opt, SPipTangents& origBasis, uint nMatInfo, uint* uiInfo, struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F* _vbuff, SPipTangents* _vbasis, int _vcount, list2<unsigned short>* pHash, TArray<uint>& ShareNewInfo);
-	void	CompactBuffer(struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F* _vbuff, SPipTangents* _tbuff, int* _vcount, TArray<unsigned short>* pindices, bool bShareVerts[128], uint* uiInfo);
+	int		FindInBuffer(struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F& opt, SPipTangents& origBasis, uint nMatInfo, uint* uiInfo, struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F* _vbuff, SPipTangents* _vbasis, int _vcount, list2<ushort>* pHash, TArray<uint>& ShareNewInfo);
+	void	CompactBuffer(struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F* _vbuff, SPipTangents* _tbuff, int* _vcount, TArray<ushort>* pindices, bool bShareVerts[128], uint* uiInfo);
 
 	void	SaveTexCoords(byte* pD, SBufInfoTable* pOffs, int Size);
 	void	SaveColors(byte* pD, SBufInfoTable* pOffs, int Size);
@@ -332,7 +332,7 @@ struct CLeafBuffer
 
 	virtual void AddRenderElements(CCObject* pObj = 0, int DLightMask = 0, int nTemplate = -1, int nFogVolumeID = 0, int nSortId = 0, IMatInfo* pIMatInfo = nullptr);
 
-	virtual unsigned short* GetIndices(int* pIndicesCount);
+	virtual ushort* GetIndices(int* pIndicesCount);
 	virtual void DestroyIndices();
 
 	virtual void UpdateVidIndices(const ushort* pNewInds, int nInds);

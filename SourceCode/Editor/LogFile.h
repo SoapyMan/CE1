@@ -86,7 +86,7 @@ private:
 	static void LogLine(const char * pszLine,bool onlyFile=false);
 	static int CheckVerbosity( const char * pText );
 	static void AboutSystem();
-	static unsigned int GetCPUSpeed();
+	static uint GetCPUSpeed();
 	static void GetCPUModel(char szType[]);
 
 	static void OpenFile();

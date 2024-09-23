@@ -252,9 +252,9 @@ void CPhysicalWorld::SetupEntityGrid(int axisz, vectorf org, int nx, int ny, flo
 }
 
 
-int CPhysicalWorld::SetSurfaceParameters(int surface_idx, float bounciness, float friction, unsigned int flags)
+int CPhysicalWorld::SetSurfaceParameters(int surface_idx, float bounciness, float friction, uint flags)
 {
-	if ((unsigned int)surface_idx >= (unsigned int)NSURFACETYPES)
+	if ((uint)surface_idx >= (uint)NSURFACETYPES)
 		return 0;
 	m_BouncinessTable[surface_idx] = bounciness;
 	m_FrictionTable[surface_idx] = friction;
@@ -262,9 +262,9 @@ int CPhysicalWorld::SetSurfaceParameters(int surface_idx, float bounciness, floa
 	m_SurfaceFlagsTable[surface_idx] = flags;
 	return 1;
 }
-int CPhysicalWorld::GetSurfaceParameters(int surface_idx, float& bounciness, float& friction, unsigned int& flags)
+int CPhysicalWorld::GetSurfaceParameters(int surface_idx, float& bounciness, float& friction, uint& flags)
 {
-	if ((unsigned int)surface_idx >= (unsigned int)NSURFACETYPES)
+	if ((uint)surface_idx >= (uint)NSURFACETYPES)
 		return 0;
 	bounciness = m_BouncinessTable[surface_idx];
 	friction = m_FrictionTable[surface_idx];
@@ -466,7 +466,7 @@ int CPhysicalWorld::DestroyPhysicalEntity(IPhysicalEntity* _pent, int mode)
 	m_pEntBeingDeleted = 0;
 
 	pent->AlertNeighbourhoodND();
-	if ((unsigned int)pent->m_iPrevSimClass < 8u && pent->m_iSimClass >= 0) {
+	if ((uint)pent->m_iPrevSimClass < 8u && pent->m_iSimClass >= 0) {
 		if (pent->m_next) pent->m_next->m_prev = pent->m_prev;
 		(pent->m_prev ? pent->m_prev->m_next : m_pTypedEnts[pent->m_iPrevSimClass]) = pent->m_next;
 		if (pent == m_pTypedEntsPerm[pent->m_iPrevSimClass])
@@ -520,8 +520,8 @@ int CPhysicalWorld::DestroyPhysicalEntity(IPhysicalEntity* _pent, int mode)
 int CPhysicalWorld::SetPhysicalEntityId(IPhysicalEntity* _pent, int id, int bReplace)
 {
 	CPhysicalPlaceholder* pent = (CPhysicalPlaceholder*)_pent;
-	unsigned int previd = (unsigned int)pent->m_id;
-	if (previd < (unsigned int)m_nIdsAlloc) {
+	uint previd = (uint)pent->m_id;
+	if (previd < (uint)m_nIdsAlloc) {
 		m_pEntsById[previd] = 0;
 		if (previd == m_iNextId - 1)
 			for (; m_iNextId > 0 && m_pEntsById[m_iNextId - 1] == 0; m_iNextId--);
@@ -556,7 +556,7 @@ int CPhysicalWorld::GetPhysicalEntityId(IPhysicalEntity* pent)
 
 IPhysicalEntity* CPhysicalWorld::GetPhysicalEntityById(int id)
 {
-	if ((unsigned int)id < (unsigned int)m_nIdsAlloc)
+	if ((uint)id < (uint)m_nIdsAlloc)
 		return m_pEntsById[id] ? m_pEntsById[id]->GetEntity() : 0;
 	else
 		return id == -1 ? m_pHeightfield : 0;
@@ -1013,7 +1013,7 @@ void CPhysicalWorld::DetachEntityGridThunks(CPhysicalPlaceholder* pobj)
 void CPhysicalWorld::RepositionEntity(CPhysicalPlaceholder* pobj, int flags)
 {
 	int i, j, igx[2], igy[2], n, ix, iy;
-	if ((unsigned int)pobj->m_iSimClass >= 7u) return; // entity is frozen
+	if ((uint)pobj->m_iSimClass >= 7u) return; // entity is frozen
 
 	if (flags & 1 && m_pEntGrid) {
 		for (i = 0; i < 2; i++) {
@@ -1072,7 +1072,7 @@ void CPhysicalWorld::RepositionEntity(CPhysicalPlaceholder* pobj, int flags)
 	if (flags & 2) {
 		CPhysicalEntity* pent = (CPhysicalEntity*)pobj;
 		if (pent->m_iPrevSimClass != pent->m_iSimClass) {
-			if ((unsigned int)pent->m_iPrevSimClass < 8u) {
+			if ((uint)pent->m_iPrevSimClass < 8u) {
 				if (pent->m_next) pent->m_next->m_prev = pent->m_prev;
 				(pent->m_prev ? pent->m_prev->m_next : m_pTypedEnts[pent->m_iPrevSimClass]) = pent->m_next;
 				if (pent == m_pTypedEntsPerm[pent->m_iPrevSimClass])
@@ -1127,7 +1127,7 @@ struct entity_grid_checker {
 	geom_world_data gwd;
 	intersection_params ip;
 	int nMaxHits, nThroughHits, nThroughHitsAux, objtypes, nEnts, bCallbackUsed;
-	unsigned int flags, flagsCollider;
+	uint flags, flagsCollider;
 	vector2df org2d, dir2d;
 	float dir2d_len, maxt;
 	ray_hit* phits;
@@ -1249,7 +1249,7 @@ struct entity_grid_checker {
 	}
 };
 
-int CPhysicalWorld::RayWorldIntersection(vectorf org, vectorf dir, int objtypes, unsigned int flags, ray_hit* hits, int nMaxHits,
+int CPhysicalWorld::RayWorldIntersection(vectorf org, vectorf dir, int objtypes, uint flags, ray_hit* hits, int nMaxHits,
 	IPhysicalEntity* pSkipEnt, IPhysicalEntity* pSkipEntAux)
 {
 	FUNCTION_PROFILER(GetISystem(), PROFILE_PHYSICS);

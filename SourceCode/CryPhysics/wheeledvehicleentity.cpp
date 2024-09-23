@@ -251,7 +251,7 @@ int CWheeledVehicleEntity::GetStatus(pe_status* _status)
 		vectorf prevpos, ptc1;
 		quaternionf prevq;
 		iwheel = i - m_nHullParts;
-		if ((unsigned int)iwheel < (unsigned int)m_nParts - m_nHullParts) {
+		if ((uint)iwheel < (uint)m_nParts - m_nHullParts) {
 			prevpos = m_parts[i].pos; prevq = m_parts[i].q;
 			m_parts[i].q =
 				GetRotationAA(m_susp[iwheel].steer, vectorf(0, 0, -1)) * GetRotationAA(m_susp[iwheel].rot, vectorf(-1, 0, 0)) * m_susp[iwheel].q0;
@@ -261,7 +261,7 @@ int CWheeledVehicleEntity::GetStatus(pe_status* _status)
 
 		res = CRigidEntity::GetStatus(_status);
 
-		if ((unsigned int)iwheel < (unsigned int)m_nParts - m_nHullParts) {
+		if ((uint)iwheel < (uint)m_nParts - m_nHullParts) {
 			m_parts[i].pos = prevpos;	m_parts[i].q = prevq;
 		}
 		return res;

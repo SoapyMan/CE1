@@ -269,7 +269,7 @@ void CTerrainTexturePainter::PaintSector( CPoint sector,CPoint texp,CLayer *pLay
 	CRect rect( x1,y1,x2,y2 );
 	m_terrTexGen.GenerateSectorTexture( sector,rect,sectorGenFlags|ETTG_ABGR,image );
 
-	m_renderer->UpdateTextureInVideoMemory( texId,(unsigned char*)image.GetData(),x1,y1,sx,sy,eTF_8888 );
+	m_renderer->UpdateTextureInVideoMemory( texId,(uchar*)image.GetData(),x1,y1,sx,sy,eTF_8888 );
 
 	// Update vegetation on this sector.
 	if (m_brush.bUpdateVegetation)

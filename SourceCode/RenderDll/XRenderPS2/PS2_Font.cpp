@@ -53,7 +53,7 @@ void CPS2Renderer::FontSetTexture(class CFBitmap* pBmp)
   EF_SetColorOp(eCO_MODULATE);
 }
 
-void CPS2Renderer::FontSetRenderingState(unsigned long nVPWidth, unsigned long nVPHeight)
+void CPS2Renderer::FontSetRenderingState(ulong nVPWidth, ulong nVPHeight)
 {
 }
 

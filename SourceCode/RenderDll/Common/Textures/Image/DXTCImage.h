@@ -33,12 +33,12 @@ TiZ: some modification to adapt the code to run under PS2.
 
 struct TimingInfo;		// defined in Image_DXTC.cpp
 
-#define byte 	unsigned char
-#define BYTE 	unsigned char
+#define byte 	uchar
+#define BYTE 	uchar
 //#ifndef PS2
-#define WORD	unsigned short
-#define DWORD	unsigned int
-#define LONG	unsigned int
+#define WORD	ushort
+#define DWORD	uint
+#define LONG	uint
 #define	LPVOID	void*
 #define VOID	void
 #define CHAR	char
@@ -148,8 +148,8 @@ typedef struct _DDSURFACEDESC2 {
 class Image_DXTC
 {
 public:
-	unsigned char* m_pCompBytes;		// compressed image bytes
-	unsigned char* m_pDecompBytes;
+	uchar* m_pCompBytes;		// compressed image bytes
+	uchar* m_pDecompBytes;
 
 	int		m_nCompSize;
 	int		m_nCompLineSz;

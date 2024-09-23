@@ -50,7 +50,7 @@ ZipDir::ErrorEnum ZipDir::CacheRW::UpdateFile(const char* szRelativePath, void* 
 
 	// we'll need the compressed data
 	void* pCompressed;
-	unsigned long nSizeCompressed;
+	ulong nSizeCompressed;
 	int nError;
 
 	switch (nCompressionMethod)
@@ -271,7 +271,7 @@ ZipDir::ErrorEnum ZipDir::CacheRW::ReadFile(FileEntry* pFileEntry, void* pCompre
 		}
 		else
 		{
-			unsigned long nSizeUncompressed = pFileEntry->desc.lSizeUncompressed;
+			ulong nSizeUncompressed = pFileEntry->desc.lSizeUncompressed;
 			if (Z_OK != ZipRawUncompress(m_pHeap, pUncompressed, &nSizeUncompressed, pBuffer, pFileEntry->desc.lSizeCompressed))
 				return ZD_ERROR_CORRUPTED_DATA;
 		}
@@ -460,7 +460,7 @@ bool ZipDir::CacheRW::RelinkZip(FILE* fTmp)
 	if (!WriteZipFiles(queFiles, fTmp))
 		return false;
 
-	ZipFile::ulong lOldCDROffset = m_lCDROffset;
+	ulong lOldCDROffset = m_lCDROffset;
 	// the file data has now been written out. Now write the CDR
 	m_lCDROffset = ftell(fTmp);
 	if (m_lCDROffset >= 0 && WriteCDR(fTmp) && 0 == fflush(fTmp))

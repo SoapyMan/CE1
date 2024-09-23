@@ -72,7 +72,7 @@ bool CRConSystem::Create(ISystem* pSystem)
 }
 
 
-void CRConSystem::Update(unsigned int dwTime, IClient* pClient)
+void CRConSystem::Update(uint dwTime, IClient* pClient)
 {
 	static CStream			stmBuffer;
 	static CIPAddress		ipFrom;
@@ -140,7 +140,7 @@ void CRConSystem::OnServerCreated(IServer* inpServer)
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CRConSystem::GetPassCode(const char* szString, unsigned int* nOutCode)
+void CRConSystem::GetPassCode(const char* szString, uint* nOutCode)
 {
 	//#if !defined(LINUX)
 
@@ -160,7 +160,7 @@ void CRConSystem::GetPassCode(const char* szString, unsigned int* nOutCode)
 		sPass += szString;
 	}
 	int len = sPass.size();
-	const unsigned char *buf = (const unsigned char*)sPass.c_str();
+	const uchar *buf = (const uchar*)sPass.c_str();
 	// calc CRC_64
 	static uint64 Table[256];
 	uint64 code = 0;
@@ -180,7 +180,7 @@ void CRConSystem::GetPassCode(const char* szString, unsigned int* nOutCode)
 			Table[i] = part;
 		}
 	}
-	unsigned int key1[4] = { 123765122,1276327,13482722,29871129};
+	uint key1[4] = { 123765122,1276327,13482722,29871129};
 	while (len--)
 	{
 		uint64 temp1 = code >> 8;
@@ -189,16 +189,16 @@ void CRConSystem::GetPassCode(const char* szString, unsigned int* nOutCode)
 		buf += 1;
 	}
 
-	unsigned int key2[4] = { 53215122,278627227,1762561245,817671221};
+	uint key2[4] = { 53215122,278627227,1762561245,817671221};
 
 	// 8 bytes.
-	TEA_ENCODE( (unsigned int*)&code,nOutCode,8,key1 );
+	TEA_ENCODE( (uint*)&code,nOutCode,8,key1 );
 	code = (~code);
-	TEA_ENCODE( (unsigned int*)&code,(nOutCode+2),8,key2 );
+	TEA_ENCODE( (uint*)&code,(nOutCode+2),8,key2 );
 */
 }
 
-void CRConSystem::OnReceivingPacket(const unsigned char inPacketID, CStream& stmPacket, CIPAddress& ip)
+void CRConSystem::OnReceivingPacket(const uchar inPacketID, CStream& stmPacket, CIPAddress& ip)
 {
 	IConsole* pConsole = m_pSystem->GetIConsole();			CRYASSERT(pConsole);
 
@@ -214,21 +214,21 @@ void CRConSystem::OnReceivingPacket(const unsigned char inPacketID, CStream& stm
 
 
 	// Get code for server password, must match code recieved from client.
-	unsigned int nServerPassCode[4];
+	uint nServerPassCode[4];
 	GetPassCode(sv_RConPassword.c_str(), nServerPassCode);
 
 	if (memcmp(nServerPassCode, pccp.m_nRConPasswordCode, sizeof(nServerPassCode)) != 0
 		&& memcmp(m_nDevPassCode, pccp.m_nRConPasswordCode, sizeof(nServerPassCode)) != 0)
 	{
-		unsigned int dwIP = ip.GetAsUINT();
+		uint dwIP = ip.GetAsUINT();
 
-		std::map<unsigned int, int>::iterator it = m_hmRconAttempts.find(dwIP);
+		std::map<uint, int>::iterator it = m_hmRconAttempts.find(dwIP);
 
 		if (it == m_hmRconAttempts.end())
 		{
 			int iTry = 1;
 
-			m_hmRconAttempts.insert(std::pair<unsigned int, int>(dwIP, iTry));
+			m_hmRconAttempts.insert(std::pair<uint, int>(dwIP, iTry));
 		}
 		else
 		{
@@ -253,7 +253,7 @@ void CRConSystem::OnReceivingPacket(const unsigned char inPacketID, CStream& stm
 	else
 	{
 		// reset the number of tries if password successful
-		std::map<unsigned int, int>::iterator it = m_hmRconAttempts.find(ip.GetAsUINT());
+		std::map<uint, int>::iterator it = m_hmRconAttempts.find(ip.GetAsUINT());
 
 		if (it != m_hmRconAttempts.end())
 		{
@@ -310,7 +310,7 @@ void CRConSystem::ExecuteRConCommand(const char* inszCommand)
 		ip.Set(m_ipServer);
 	}
 
-	unsigned int nClientCode[4];
+	uint nClientCode[4];
 	GetPassCode(sPasswd.c_str(), nClientCode);
 	memcpy(cqpRConCommand.m_nRConPasswordCode, nClientCode, sizeof(nClientCode));
 

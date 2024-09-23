@@ -43,7 +43,7 @@ public:
 	Vec3d GetAngles() const { return m_camera.GetAngles(); };
 
 	//! Set/Get camera FOV.
-	void SetFov(const float& f, const unsigned int iWidth, const unsigned int iHeight) {
+	void SetFov(const float& f, const uint iWidth, const uint iHeight) {
 		m_camera.SetFov(f);
 		m_camera.Init(iWidth, iHeight, f);
 		m_camera.Update();

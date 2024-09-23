@@ -57,9 +57,9 @@ public:
 	void SetLoopMode(bool bLoop);
 
 	//! retrieves the currently played sample-pos, in milliseconds or bytes
-	unsigned int GetCurrentSamplePos(bool bMilliSeconds);
+	uint GetCurrentSamplePos(bool bMilliSeconds);
 	//! set the currently played sample-pos in bytes or milliseconds
-	void SetCurrentSamplePos(unsigned int nPos, bool bMilliSeconds);
+	void SetCurrentSamplePos(uint nPos, bool bMilliSeconds);
 
 	//! sets automatic pitching amount (0-1000)
 	void SetPitching(float fPitching);
@@ -154,7 +154,7 @@ public:
 
 	void	AddToScaleGroup(int nGroup) { m_nSoundScaleGroups |= (1 << nGroup); }
 	void	RemoveFromScaleGroup(int nGroup) { m_nSoundScaleGroups &= ~(1 << nGroup); }
-	void	SetScaleGroup(unsigned int nGroupBits) { m_nSoundScaleGroups = nGroupBits; }
+	void	SetScaleGroup(uint nGroupBits) { m_nSoundScaleGroups = nGroupBits; }
 
 	//! set the maximum distance / the sound will be stopped if the
 	//! distance from the listener and this sound is bigger than this max distance
@@ -167,7 +167,7 @@ public:
 	int GetLength();
 
 	//! set sound priority (0-255)
-	void	SetSoundPriority(unsigned char nSoundPriority);
+	void	SetSoundPriority(uchar nSoundPriority);
 
 	void	ChangeVolume(int nVolume);
 
@@ -207,7 +207,7 @@ public:
 	float m_fChannelPlayTime;
 	float m_fSoundLengthSec;
 
-	unsigned int m_nSoundScaleGroups;
+	uint m_nSoundScaleGroups;
 
 	ESoundActiveState m_State;
 
@@ -253,7 +253,7 @@ public:
 	bool			m_bAutoStop;
 	bool			m_bAlreadyLoaded;
 
-	unsigned char m_nSoundPriority;
+	uchar m_nSoundPriority;
 
 	static int m_PlayingChannels;
 

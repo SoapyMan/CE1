@@ -652,7 +652,7 @@ public:
 	ShadowMapTexInfo* GetShadowMapTexInfo(ShadowMapFrustum* lof);
 
 	void BlurImage(int nSizeX, int nSizeY, int nType, ShadowMapTexInfo* st, int nTexDst);
-	unsigned int GenShadowTexture(int nSize, bool bProjected);
+	uint GenShadowTexture(int nSize, bool bProjected);
 	void PrepareDepthMap(ShadowMapFrustum* lof, bool make_new_tid);
 	void ConfigShadowTexgen(int Num, int rangeMap, ShadowMapFrustum* pFrustum, float* pLightFrustumMatrix, float* pLightViewMatrix, float* ModelVPMatrix);
 	virtual void SetupShadowOnlyPass(int Num, ShadowMapFrustum* pFrustum, Vec3* vShadowTrans, const float fShadowScale, Vec3 vObjTrans = Vec3(0, 0, 0), float fObjScale = 1.f, const Vec3 vObjAngles = Vec3(0, 0, 0), Matrix44* pObjMat = 0);
@@ -720,8 +720,8 @@ private:
 	list2<texture_info> m_texture_registry;
 	int FindTextureInRegistry(const char* filename, int* tex_type);
 	int RegisterTextureInRegistry(const char* filename, int tex_type, int tid, int low_tid);
-	unsigned int MakeTextureREAL(const char* filename, int* tex_type, unsigned int load_low_res);
-	unsigned int CheckTexturePlus(const char* filename, const char* postfix);
+	uint MakeTextureREAL(const char* filename, int* tex_type, uint load_low_res);
+	uint CheckTexturePlus(const char* filename, const char* postfix);
 
 
 public:
@@ -779,7 +779,7 @@ public:
 	int m_nRecurs;
 
 public:
-	virtual WIN_HWND Init(int x, int y, int width, int height, unsigned int cbpp, int zbpp, int sbits, bool fullscreen, WIN_HINSTANCE hinst, WIN_HWND Glhwnd = 0, WIN_HDC Glhdc = 0, WIN_HGLRC hGLrc = 0, bool bReInit = false);
+	virtual WIN_HWND Init(int x, int y, int width, int height, uint cbpp, int zbpp, int sbits, bool fullscreen, WIN_HINSTANCE hinst, WIN_HWND Glhwnd = 0, WIN_HDC Glhdc = 0, WIN_HGLRC hGLrc = 0, bool bReInit = false);
 
 	virtual bool SetCurrentContext(WIN_HWND hWnd);
 	virtual bool CreateContext(WIN_HWND hWnd, bool bAllowFSAA = false);
@@ -792,8 +792,8 @@ public:
 	virtual void  ShareResources(IRenderer* renderer);
 	virtual void	MakeCurrent();
 
-	virtual bool ChangeDisplay(unsigned int width, unsigned int height, unsigned int cbpp);
-	virtual void ChangeViewport(unsigned int x, unsigned int y, unsigned int width, unsigned int height);
+	virtual bool ChangeDisplay(uint width, uint height, uint cbpp);
+	virtual void ChangeViewport(uint x, uint y, uint width, uint height);
 	virtual int	 EnumDisplayFormats(TArray<SDispFormat>& Formats, bool bReset);
 
 	//! Return all supported by video card video AA formats
@@ -823,12 +823,12 @@ public:
 	virtual void SelectTMU(int tnum);
 	virtual void EnableTMU(bool enable);
 	virtual void SetTexture(int tnum, ETexType Type = eTT_Base);
-	virtual unsigned int DownLoadToVideoMemory(unsigned char* data, int w, int h, ETEX_Format eTFSrc, ETEX_Format eTFDst, int nummipmap, bool repeat = true, int filter = FILTER_BILINEAR, int Id = 0, char* szCacheName = nullptr, int flags = 0);
-	virtual	void UpdateTextureInVideoMemory(uint tnum, unsigned char* newdata, int posx, int posy, int w, int h, ETEX_Format eTF = eTF_0888);
-	virtual void RemoveTexture(unsigned int TextureId);
+	virtual uint DownLoadToVideoMemory(uchar* data, int w, int h, ETEX_Format eTFSrc, ETEX_Format eTFDst, int nummipmap, bool repeat = true, int filter = FILTER_BILINEAR, int Id = 0, char* szCacheName = nullptr, int flags = 0);
+	virtual	void UpdateTextureInVideoMemory(uint tnum, uchar* newdata, int posx, int posy, int w, int h, ETEX_Format eTF = eTF_0888);
+	virtual void RemoveTexture(uint TextureId);
 	virtual void RemoveTexture(ITexPic* pTexPic);
-	virtual unsigned int MakeTexture(const char* filename, int* tex_type = nullptr/*,unsigned int def_tid=0*/);
-	virtual unsigned int LoadTexture(const char* filename, int* tex_type = nullptr, unsigned int def_tid = 0, bool compresstodisk = true, bool bWarn = true);
+	virtual uint MakeTexture(const char* filename, int* tex_type = nullptr/*,uint def_tid=0*/);
+	virtual uint LoadTexture(const char* filename, int* tex_type = nullptr, uint def_tid = 0, bool compresstodisk = true, bool bWarn = true);
 
 	virtual void SetCamera(const CCamera& cam);
 	virtual	void SetViewport(int x = 0, int y = 0, int width = 0, int height = 0);
@@ -910,7 +910,7 @@ public:
 
 	virtual void ClearDepthBuffer();
 	virtual void ClearColorBuffer(const Vec3 vColor);
-	virtual void ReadFrameBuffer(unsigned char* pRGB, int nSizeX, int nSizeY, bool bBackBuffer, bool bRGBA, int nScaledX = -1, int nScaledY = -1);
+	virtual void ReadFrameBuffer(uchar* pRGB, int nSizeX, int nSizeY, bool bBackBuffer, bool bRGBA, int nScaledX = -1, int nScaledY = -1);
 
 	//misc	
 	virtual void ScreenShot(const char* filename = nullptr);
@@ -939,7 +939,7 @@ public:
 	virtual	void FontReleaseTexture(class CFBitmap* pBmp);
 	virtual void FontSetTexture(class CFBitmap*, int nFilterMode);
 	virtual void FontSetTexture(int nTexId, int nFilterMode);
-	virtual void FontSetRenderingState(unsigned long nVirtualScreenWidth, unsigned long nVirtualScreenHeight);
+	virtual void FontSetRenderingState(ulong nVirtualScreenWidth, ulong nVirtualScreenHeight);
 	virtual void FontSetBlending(int src, int dst);
 	virtual void FontRestoreRenderingState();
 

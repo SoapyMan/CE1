@@ -19,7 +19,7 @@
 template <class TBonePhysics>
 struct TCryBoneDescData
 {
-	unsigned int m_nControllerID; // unic id of bone (generated from bone name in the max)
+	uint m_nControllerID; // unic id of bone (generated from bone name in the max)
 
 	// [Sergiy] physics info for different lods
 	// lod 0 is the physics of alive body, lod 1 is the physics of a dead body

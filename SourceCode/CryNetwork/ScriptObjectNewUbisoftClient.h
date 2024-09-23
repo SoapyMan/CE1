@@ -92,7 +92,7 @@ public:
 		const char* szIPAddress, const char* szLANIPAddress, int iMaxPlayers, int iNumPlayers);
 	void Client_RequestFinished();
 	void Client_JoinGameServerSuccess(const char* szIPAddress, const char* szLanIPAddress,
-		unsigned short usPort);
+		ushort usPort);
 	void Client_JoinGameServerFail(const char* szText);
 
 	void Client_CreateAccountSuccess();

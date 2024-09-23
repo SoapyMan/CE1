@@ -38,7 +38,7 @@ string CUIButton::GetClassName()
 }
 
 //------------------------------------------------------------------------------------------------- 
-LRESULT CUIButton::Update(unsigned int iMessage, WPARAM wParam, LPARAM lParam)	//AMD Port
+LRESULT CUIButton::Update(uint iMessage, WPARAM wParam, LPARAM lParam)	//AMD Port
 {
 	switch (iMessage)
 	{

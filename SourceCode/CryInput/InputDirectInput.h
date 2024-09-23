@@ -122,8 +122,8 @@ public:
 	inline	bool	JoyButtonPressed(int p_numButton) { return (m_Joystick.IsButtonPressed(p_numButton)); }
 	inline	int		JoyGetDir() { return (m_Joystick.GetDir()); }
 	inline	int		JoyGetHatDir() { return (m_Joystick.GetHatDir()); }
-	inline	Vec3	JoyGetAnalog1Dir(unsigned int joystickID) const { return (m_Joystick.GetAnalog1Dir(joystickID)); }
-	inline	Vec3	JoyGetAnalog2Dir(unsigned int joystickID) const { return (m_Joystick.GetAnalog2Dir(joystickID)); }
+	inline	Vec3	JoyGetAnalog1Dir(uint joystickID) const { return (m_Joystick.GetAnalog1Dir(joystickID)); }
+	inline	Vec3	JoyGetAnalog2Dir(uint joystickID) const { return (m_Joystick.GetAnalog2Dir(joystickID)); }
 	inline  IKeyboard* GetKeyboard() { return (&m_Keyboard); }
 	inline  IMouse* GetMouse() { return (&m_Mouse); }
 	inline	int		GetKeyPressedCode() { return (m_Keyboard.GetKeyPressedCode()); }
@@ -131,7 +131,7 @@ public:
 	inline	int		GetKeyDownCode() { return (m_Keyboard.GetKeyDownCode()); }
 	inline	const char* GetKeyDownName() { return (m_Keyboard.GetKeyDownName()); }
 	inline	void	WaitForKey() { m_Keyboard.WaitForKey(); }
-	inline	unsigned char	GetKeyState(int nKey) { return m_Keyboard.GetKeyState(nKey); };
+	inline	uchar	GetKeyState(int nKey) { return m_Keyboard.GetKeyState(nKey); };
 	//Interface specifics
 	inline  IKeyboard* GetIKeyboard() { return (&m_Keyboard); }
 	inline  IMouse* GetIMouse() { return (&m_Mouse); }
@@ -155,8 +155,8 @@ public:
 	inline	bool	JoyButtonPressed(int p_numButton) { return 0; }
 	inline	int		JoyGetDir() { return 0; }	// never called
 	inline	int		JoyGetHatDir() { return 0; } // never called
-	inline	Vec3	JoyGetAnalog1Dir(unsigned int joystickID) const { return Vec3(); }
-	inline	Vec3	JoyGetAnalog2Dir(unsigned int joystickID) const { return Vec3(); }
+	inline	Vec3	JoyGetAnalog1Dir(uint joystickID) const { return Vec3(); }
+	inline	Vec3	JoyGetAnalog2Dir(uint joystickID) const { return Vec3(); }
 	//inline  CXKeyboard *GetKeyboard()        { return 0; }	//never called
 	inline  CXMouse* GetMouse() { return 0; } //never called
 

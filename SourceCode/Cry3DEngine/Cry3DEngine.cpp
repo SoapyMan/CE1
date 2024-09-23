@@ -58,7 +58,7 @@ I3DEngine* CreateCry3DEngine(ISystem* pSystem, const char* szInterfaceVersion)
 	_time64( &ltime1 );
 
 	int nElemNum = 100000*64/sizeof(float);
-	unsigned short * pShorts = new unsigned short[nElemNum];
+	ushort * pShorts = new ushort[nElemNum];
 	float * pFloats = new float[nElemNum];
 
 	for(int t=0; t<1000; t++)

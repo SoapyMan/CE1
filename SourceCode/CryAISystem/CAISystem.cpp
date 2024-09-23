@@ -1932,7 +1932,7 @@ CGraph* CAISystem::GetGraph()
 	return m_pGraph;
 }
 
-IAIObject* CAISystem::CreateAIObject(unsigned short type, void* pAssociation)
+IAIObject* CAISystem::CreateAIObject(ushort type, void* pAssociation)
 {
 	if (!m_bInitialized)
 	{
@@ -2059,7 +2059,7 @@ CAIObject* CAISystem::GetPlayer()
 	return 0;
 }
 
-IAIObject* CAISystem::GetAIObjectByName(unsigned short type, const char* pName)
+IAIObject* CAISystem::GetAIObjectByName(ushort type, const char* pName)
 {
 	AIObjects::iterator ai;
 
@@ -2741,7 +2741,7 @@ void CAISystem::SoundEvent(int soundid, const Vec3d& pos, float fRadius, float f
 
 
 // Sends a signal using the desired filter to the desired agents
-void CAISystem::SendSignal(unsigned char cFilter, int nSignalId, const char* szText, IAIObject* pSenderObject)
+void CAISystem::SendSignal(uchar cFilter, int nSignalId, const char* szText, IAIObject* pSenderObject)
 {
 
 	CPipeUser* pSender = 0;
@@ -2772,7 +2772,7 @@ void CAISystem::SendSignal(unsigned char cFilter, int nSignalId, const char* szT
 				return;
 		}
 
-		unsigned int groupid = pSender->GetParameters().m_nGroup;
+		uint groupid = pSender->GetParameters().m_nGroup;
 		MapSignalStrings::iterator mi = m_mapAuxSignalsFired.find(groupid);
 		if (mi != m_mapAuxSignalsFired.end())
 		{
@@ -3021,7 +3021,7 @@ void CAISystem::SendSignal(unsigned char cFilter, int nSignalId, const char* szT
 }
 
 // adds an object to a group
-void CAISystem::AddToGroup(CAIObject* pObject, unsigned short nGroup)
+void CAISystem::AddToGroup(CAIObject* pObject, ushort nGroup)
 {
 	AIObjects::iterator gi;
 
@@ -3041,7 +3041,7 @@ void CAISystem::AddToGroup(CAIObject* pObject, unsigned short nGroup)
 }
 
 // adds an object to a species
-void CAISystem::AddToSpecies(CAIObject* pObject, unsigned short nSpecies)
+void CAISystem::AddToSpecies(CAIObject* pObject, ushort nSpecies)
 {
 	AIObjects::iterator gi;
 
@@ -3274,7 +3274,7 @@ void CAISystem::RemoveFromGroup(int nGroupID, CAIObject* pObject)
 void CAISystem::ParseIntoFile(const char* szFileName, CGraph* pGraph, bool bForbidden)
 {
 
-	for (unsigned int index = 0; index < (int)m_vTriangles.size(); index++)
+	for (uint index = 0; index < (int)m_vTriangles.size(); index++)
 	{
 		Tri* tri = m_vTriangles[index];
 		// make vertices know which triangles contain them
@@ -3290,9 +3290,9 @@ void CAISystem::ParseIntoFile(const char* szFileName, CGraph* pGraph, bool bForb
 	pGraph->SetBBox(tbbmin, tbbmax);
 
 	//I3DEngine *pEngine = m_pSystem->GetI3DEngine();
-	unsigned int cnt = 0;
+	uint cnt = 0;
 	std::vector<Tri*>::iterator ti;
-	//for ( unsigned int i=0;i<m_vTriangles.size();i++)
+	//for ( uint i=0;i<m_vTriangles.size();i++)
 
 	for (ti = m_vTriangles.begin(); ti != m_vTriangles.end(); ti++, cnt++)
 	{
@@ -3908,7 +3908,7 @@ void CAISystem::ReleaseFormationPoint(CAIObject* pReserved)
 
 }
 
-IAIObject* CAISystem::GetNearestObjectOfType(const Vec3d& pos, unsigned int nTypeID, float fRadius, IAIObject* pSkip)
+IAIObject* CAISystem::GetNearestObjectOfType(const Vec3d& pos, uint nTypeID, float fRadius, IAIObject* pSkip)
 {
 	AIObjects::iterator ai;
 	ai = m_Objects.find(nTypeID);
@@ -3945,7 +3945,7 @@ IAIObject* CAISystem::GetNearestObjectOfType(const Vec3d& pos, unsigned int nTyp
 	return pRet;
 }
 
-void CAISystem::UpdateBeacon(unsigned short nGroupID, const Vec3d& vPos, CAIObject* pOwner)
+void CAISystem::UpdateBeacon(ushort nGroupID, const Vec3d& vPos, CAIObject* pOwner)
 {
 	Vec3d pos = vPos;
 	ray_hit hit;
@@ -3976,7 +3976,7 @@ void CAISystem::UpdateBeacon(unsigned short nGroupID, const Vec3d& vPos, CAIObje
 	}
 }
 
-CAIObject* CAISystem::GetBeacon(unsigned short nGroupID)
+CAIObject* CAISystem::GetBeacon(ushort nGroupID)
 {
 	BeaconMap::iterator bi;
 	bi = m_mapBeacons.find(nGroupID);
@@ -4008,7 +4008,7 @@ void CAISystem::CancelAnyPathsFor(CPuppet* pRequester)
 	}
 }
 
-void CAISystem::SetAssesmentMultiplier(unsigned short type, float fMultiplier)
+void CAISystem::SetAssesmentMultiplier(ushort type, float fMultiplier)
 {
 	MapMultipliers::iterator mi;
 
@@ -4025,7 +4025,7 @@ void CAISystem::SetAssesmentMultiplier(unsigned short type, float fMultiplier)
 
 
 
-IAIObject* CAISystem::GetNearestToObject(IAIObject* pRef, unsigned short nType, float fRadius)
+IAIObject* CAISystem::GetNearestToObject(IAIObject* pRef, ushort nType, float fRadius)
 {
 	AIObjects::iterator ai;
 	ai = m_Objects.find(nType);
@@ -4168,7 +4168,7 @@ void CAISystem::AddForbiddenAreas(void)
 				for (ListNodes::iterator nI = nodes2refine.begin(); nI != nodes2refine.end() && !bDontOptimize; ++nI)
 				{
 					GraphNode* pNode = (*nI);
-					for (unsigned int vIdx = 0; vIdx < pNode->vertex.size() && !bDontOptimize; ++vIdx)
+					for (uint vIdx = 0; vIdx < pNode->vertex.size() && !bDontOptimize; ++vIdx)
 					{
 						Vec3d vtx = m_VertexList.GetVertex(pNode->vertex[vIdx]).vPos;
 						float dist = PointLineDistance(vStart, vEnd, vtx);
@@ -4287,7 +4287,7 @@ GraphNode* CAISystem::RefineTriangle(GraphNode* pNode, const Vec3d& start, const
 	int EndCutStart = -1, EndCutEnd = -1;
 	int TouchStart = -1, TouchEnd = -1;
 
-	unsigned int index, next_index;
+	uint index, next_index;
 	for (index = 0; index < pNode->vertex.size(); index++)
 	{
 		Vec3d P1, D1;
@@ -4624,7 +4624,7 @@ GraphNode* CAISystem::RefineTriangle(GraphNode* pNode, const Vec3d& start, const
 
 
 
-IAIObject* CAISystem::GetNearestObjectOfType(IAIObject* pObject, unsigned int nTypeID, float fRadius, int nOption)
+IAIObject* CAISystem::GetNearestObjectOfType(IAIObject* pObject, uint nTypeID, float fRadius, int nOption)
 {
 
 	Vec3d pos = pObject->GetPos();
@@ -5346,7 +5346,7 @@ bool CAISystem::TriangleLineIntersection(GraphNode* pNode, const Vec3d& vStart, 
 {
 	Vec3d P0 = vStart;
 	Vec3d D0 = vEnd - vStart;
-	unsigned int index, next_index;
+	uint index, next_index;
 	for (index = 0; index < pNode->vertex.size(); index++)
 	{
 		Vec3d P1, D1;
@@ -5656,7 +5656,7 @@ bool CAISystem::SingleFullUpdate(CPuppet* pPuppet)
 									if (hit_aux[0].dist < 0)
 									{
 										float fBounce, fFriction;
-										unsigned int flags = sf_pierceable_mask;
+										uint flags = sf_pierceable_mask;
 										m_pWorld->GetSurfaceParameters(hit_aux[1].surface_idx, fBounce, fFriction, flags);
 										rwi = 0;
 										if (flags <= 13)
@@ -5819,7 +5819,7 @@ bool CAISystem::SingleFullUpdate(CPuppet* pPuppet)
 	return false;
 }
 
-void CAISystem::CheckVisibility(CPuppet* pPuppet, unsigned short typeToCheck)
+void CAISystem::CheckVisibility(CPuppet* pPuppet, ushort typeToCheck)
 {
 	FUNCTION_PROFILER(m_pSystem, PROFILE_AI);
 	AIObjects::iterator ai;
@@ -6372,7 +6372,7 @@ int CAISystem::RayOcclusionPlaneIntersection(const Vec3d& start, const Vec3d& en
 	return 0;
 }
 
-int CAISystem::GetNumberOfObjects(unsigned short type)
+int CAISystem::GetNumberOfObjects(ushort type)
 {
 	return m_Objects.count(type);
 

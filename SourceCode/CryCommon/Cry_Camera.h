@@ -176,7 +176,7 @@ public:
 	struct IVisArea* m_pPortal; // pointer to portal used to create this camera
 	struct ScissorInfo {
 		ScissorInfo() { x1 = y1 = x2 = y2 = 0; }
-		unsigned short x1, y1, x2, y2;
+		ushort x1, y1, x2, y2;
 	};
 	ScissorInfo m_ScissorInfo;
 	ScissorInfo m_ScissorInfoParent;
@@ -454,7 +454,7 @@ inline void CCamera::Update(int nWidth = -1, int nHeight = -1) {
 * Check if a point lies within camera's frustum
 *
 * Example:
-*  unsigned char InOut=camera.IsPointVisible(point);
+*  uchar InOut=camera.IsPointVisible(point);
 *
 * return values:
 *  CULL_EXCLUSION = point outside of frustum
@@ -481,7 +481,7 @@ inline bool	CCamera::IsPointVisible(const Vec3& p) const {
 * The center of the sphere is assumed to be in world-space.
 *
 * Example:
-*  unsigned char InOut=camera.IsSphereVisibleFast(sphere);
+*  uchar InOut=camera.IsSphereVisibleFast(sphere);
 *
 * return values:
 *  CULL_EXCLUSION = sphere outside of frustum (very fast rejection-test)
@@ -510,7 +510,7 @@ inline bool	CCamera::IsSphereVisibleFast(const Sphere& s) const
 * For hirarchical frustum-culling this function is not perfect.
 *
 * Example:
-*  unsigned char InOut=camera.IsSphereVisibleFast(sphere);
+*  uchar InOut=camera.IsSphereVisibleFast(sphere);
 *
 * return values:
 *  CULL_EXCLUSION = sphere outside of frustum (very fast rejection-test)
@@ -536,7 +536,7 @@ inline bool	CCamera::IsSphereVisibleFast(const Sphere& s) const
  *	The center of Sphere is assumed to be in world-space.
  *
  * Example:
- *  unsigned char InOut=camera.IsSphereVisible_hierarchical(sphere);
+ *  uchar InOut=camera.IsSphereVisible_hierarchical(sphere);
  *
  * return values:
  *  CULL_EXCLUSION   = sphere outside of frustum (very fast rejection-test)
@@ -686,7 +686,7 @@ inline bool CCamera::IsAABBVisible_exact(const AABB& aabb) const
 
 	AABB caabb(aabb.min - m_Position, aabb.max - m_Position);  //caabb in camera-space
 
-	unsigned long front = 0;
+	ulong front = 0;
 	if (caabb.min.x > 0.0f)  front |= 0x01;
 	if (caabb.max.x < 0.0f)  front |= 0x02;
 	if (caabb.min.y > 0.0f)  front |= 0x04;
@@ -711,7 +711,7 @@ inline bool CCamera::IsAABBVisible_exact(const AABB& aabb) const
 	//---------------------------------------------------------------------
 	//---            find the silhouette-vertices of the AABB            ---
 	//---------------------------------------------------------------------
-	unsigned long p0, p1, p2, p3, p4, p5, sideamount;
+	ulong p0, p1, p2, p3, p4, p5, sideamount;
 	p0 = BoxSides[(front << 3) + 0];
 	p1 = BoxSides[(front << 3) + 1];
 	p2 = BoxSides[(front << 3) + 2];
@@ -791,7 +791,7 @@ inline char CCamera::IsAABBVisible_hierarchical(const AABB& aabb, bool* bAllIn =
 
 	/*
 		float dot1,dot2;
-		unsigned long notOverlap = 0x80000000; // will be reset to 0 if there's at least one overlapping
+		ulong notOverlap = 0x80000000; // will be reset to 0 if there's at least one overlapping
 		const Vec3* pAABB=&aabb.min;
 		if (bAllIn)	*bAllIn=false;
 
@@ -821,7 +821,7 @@ inline char CCamera::IsAABBVisible_hierarchical(const AABB& aabb, bool* bAllIn =
 
 
 	float dot1, dot2;
-	unsigned long overlap = false;
+	ulong overlap = false;
 	if (bAllIn)	*bAllIn = false;
 
 	//------------------------------------------------------------------------------
@@ -860,7 +860,7 @@ inline char CCamera::IsAABBVisible_hierarchical(const AABB& aabb, bool* bAllIn =
 	//------------------------------------------------------------------------------
 	AABB AABB(aabb.min - m_Position, aabb.max - m_Position);  //AABB in camera-space
 
-	unsigned long frontx8 = 0; // make the flags using the fact that the upper bit in float is its sign
+	ulong frontx8 = 0; // make the flags using the fact that the upper bit in float is its sign
 	frontx8 |= (unsigned(-(int&)AABB.min.x) >> 5) & (0x01 << 26); //if (AABB.min.x>0.0f)  frontx8|=0x01;
 	frontx8 |= (unsigned((int&)AABB.max.x) >> 4) & (0x02 << 26); //if (AABB.max.x<0.0f)  frontx8|=0x02;
 	frontx8 |= (unsigned(-(int&)AABB.min.y) >> 3) & (0x04 << 26); //if (AABB.min.y>0.0f)  frontx8|=0x04;
@@ -887,7 +887,7 @@ inline char CCamera::IsAABBVisible_hierarchical(const AABB& aabb, bool* bAllIn =
 	//---------------------------------------------------------------------
 	//---            find the silhouette-vertices of the AABB            ---
 	//---------------------------------------------------------------------
-	unsigned long p0, p1, p2, p3, p4, p5, sideamount;
+	ulong p0, p1, p2, p3, p4, p5, sideamount;
 	p0 = BoxSides[frontx8 + 0];
 	p1 = BoxSides[frontx8 + 1];
 	p2 = BoxSides[frontx8 + 2];

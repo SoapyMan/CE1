@@ -493,12 +493,12 @@ int CD3D9Renderer::EnumDisplayFormats(TArray<SDispFormat>& Formats, bool bReset)
   return true;
 }*/
 
-bool CD3D9Renderer::ChangeDisplay(unsigned int width, unsigned int height, unsigned int cbpp)
+bool CD3D9Renderer::ChangeDisplay(uint width, uint height, uint cbpp)
 {
 	return false;
 }
 
-void CD3D9Renderer::ChangeViewport(unsigned int x, unsigned int y, unsigned int width, unsigned int height)
+void CD3D9Renderer::ChangeViewport(uint x, uint y, uint width, uint height)
 {
 	if (m_bDeviceLost)
 		return;
@@ -947,8 +947,8 @@ void CD3D9Renderer::FlushHardware()
 				hr = pTar->LockRect(&lockedRect, &sourceRect, D3DLOCK_READONLY);
 				if (!FAILED(hr))
 				{
-					volatile unsigned long a;
-					memcpy((void*)&a, (unsigned char*)lockedRect.pBits, sizeof(a));
+					volatile ulong a;
+					memcpy((void*)&a, (uchar*)lockedRect.pBits, sizeof(a));
 					hr = pTar->UnlockRect();
 				}
 			}
@@ -1805,7 +1805,7 @@ void CD3D9Renderer::ScreenShot(const char* filename)
 
 	//iLog->Log("wdt: %d, hgt: %d, width: %d, height: %d, WndP.x: %d, WndP.y: %d", wdt, hgt, width, height, WndP.x, WndP.y);
 
-	unsigned char* pic = new unsigned char[width * height * 4];
+	uchar* pic = new uchar[width * height * 4];
 	byte* dst = pic;
 	src += WndP.y * d3dlrSys.Pitch;
 	for (i = 0; i < height; i++)
@@ -1917,7 +1917,7 @@ bool CD3D9Renderer::SetRenderTarget(int nHandle)
 	return true;
 }
 
-void CD3D9Renderer::ReadFrameBuffer(unsigned char* pRGB, int nSizeX, int nSizeY, bool bBackBuffer, bool bRGBA, int nScaledX, int nScaledY)
+void CD3D9Renderer::ReadFrameBuffer(uchar* pRGB, int nSizeX, int nSizeY, bool bBackBuffer, bool bRGBA, int nScaledX, int nScaledY)
 {
 	int i;
 
@@ -2653,7 +2653,7 @@ void CD3D9Renderer::SetPerspective(const CCamera& cam)
 // calculate parameter for an off-center projection matrix.
 // the projection matrix itself is calculated by D3D9.
 //-----------------------------------------------------------------------------
-D3DXMATRIX OffCenterProjection(const CCamera& cam, const Vec3& nv, unsigned short max, unsigned short win_width, unsigned short win_height) {
+D3DXMATRIX OffCenterProjection(const CCamera& cam, const Vec3& nv, ushort max, ushort win_width, ushort win_height) {
 
 	//get the size of near plane 
 	float l = +nv.x;
@@ -2706,8 +2706,8 @@ void CD3D9Renderer::SetCamera(const CCamera& cam)
 	//IVO: code to check, if off-center projection works
 	if (0)
 	{
-		unsigned short win_width = 0xffff;
-		unsigned short win_height = 0xffff;
+		ushort win_width = 0xffff;
+		ushort win_height = 0xffff;
 		//DEBUG_STUFF: Vladimir please remove this
 		if ((GetAsyncKeyState('I') & 0x8000)) { win_width = 0; win_height = 0; }
 		if ((GetAsyncKeyState('O') & 0x8000)) { win_width = 1; win_height = 0; }
@@ -3541,7 +3541,7 @@ int CD3D9Renderer::GenerateAlphaGlowTexture(float k)
 			data[x][y] = (int)(val);
 		}
 
-	return DownLoadToVideoMemory((unsigned char*)data, tex_size, tex_size, eTF_8000, eTF_8000, true, true, FILTER_LINEAR, 0, "$AlphaGlow");
+	return DownLoadToVideoMemory((uchar*)data, tex_size, tex_size, eTF_8000, eTF_8000, true, true, FILTER_LINEAR, 0, "$AlphaGlow");
 }
 
 ///////////////////////////////////////////
@@ -3819,7 +3819,7 @@ void CD3D9Renderer::Set2DMode(bool enable, int ortox, int ortoy)
 	EF_SetCameraInfo();
 }
 
-unsigned int CD3D9Renderer::MakeTexture(const char* _filename, int* _tex_type/*,unsigned int def_tid*/)
+uint CD3D9Renderer::MakeTexture(const char* _filename, int* _tex_type/*,uint def_tid*/)
 {
 	return LoadTexture(_filename, _tex_type);
 }
@@ -3877,7 +3877,7 @@ void CD3D9Renderer::RemoveTexture(ITexPic* pTexPic)
 }
 
 
-void CD3D9Renderer::RemoveTexture(unsigned int TextureId)
+void CD3D9Renderer::RemoveTexture(uint TextureId)
 {
 	CD3D9TexMan* tm = (CD3D9TexMan*)m_TexMan;
 	TTextureMapItor it = tm->m_RefTexs.find(TextureId);
@@ -3901,7 +3901,7 @@ void CD3D9Renderer::RemoveTexture(unsigned int TextureId)
 	}
 }
 
-unsigned int CD3D9Renderer::LoadTexture(const char* _filename, int* tex_type, unsigned int def_tid, bool compresstodisk, bool bWarn)
+uint CD3D9Renderer::LoadTexture(const char* _filename, int* tex_type, uint def_tid, bool compresstodisk, bool bWarn)
 {
 	if (def_tid == 0)
 		def_tid = -1;
@@ -3909,7 +3909,7 @@ unsigned int CD3D9Renderer::LoadTexture(const char* _filename, int* tex_type, un
 	return pPic->IsTextureLoaded() ? pPic->GetTextureID() : 0;
 }
 
-void CD3D9Renderer::UpdateTextureInVideoMemory(uint tnum, unsigned char* newdata, int posx, int posy, int w, int h, ETEX_Format eTFSrc)
+void CD3D9Renderer::UpdateTextureInVideoMemory(uint tnum, uchar* newdata, int posx, int posy, int w, int h, ETEX_Format eTFSrc)
 {
 	if (m_bDeviceLost)
 		return;
@@ -4009,7 +4009,7 @@ void CD3D9Renderer::UpdateTextureInVideoMemory(uint tnum, unsigned char* newdata
 	}
 }
 
-unsigned int CD3D9Renderer::DownLoadToVideoMemory(unsigned char* data, int w, int h, ETEX_Format eTFSrc, ETEX_Format eTFDst, int nummipmap, bool repeat, int filter, int Id, char* szCacheName, int flags)
+uint CD3D9Renderer::DownLoadToVideoMemory(uchar* data, int w, int h, ETEX_Format eTFSrc, ETEX_Format eTFDst, int nummipmap, bool repeat, int filter, int Id, char* szCacheName, int flags)
 {
 	char name[128];
 	if (!szCacheName)
@@ -4098,12 +4098,12 @@ unsigned int CD3D9Renderer::DownLoadToVideoMemory(unsigned char* data, int w, in
 
 	int tnum = Id;
 
-	unsigned char* pData = 0;
+	uchar* pData = 0;
 
 	if (eTFSrc == eTFDst)
 		pData = data;
 	else
-		pData = new unsigned char[w * h * 4];
+		pData = new uchar[w * h * 4];
 
 	if (tnum > TX_FIRSTBIND)
 	{
@@ -4466,7 +4466,7 @@ void* gGet_glReadPixels()
 
 namespace ATL
 {
-	int __cdecl _AtlInitializeCriticalSectionEx(struct _RTL_CRITICAL_SECTION*, unsigned long, unsigned long)
+	int __cdecl _AtlInitializeCriticalSectionEx(struct _RTL_CRITICAL_SECTION*, ulong, ulong)
 	{
 		return 0;
 	}

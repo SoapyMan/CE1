@@ -16,7 +16,7 @@
 
 //#define USE_COMPRESSION
 
-bool CSystem::WriteCompressedFile(char* filename, void* data, unsigned int bitlen)
+bool CSystem::WriteCompressedFile(char* filename, void* data, uint bitlen)
 {
 	FILE* pFile = fxopen(filename, "wb+");
 	if (!pFile)
@@ -36,7 +36,7 @@ bool CSystem::WriteCompressedFile(char* filename, void* data, unsigned int bitle
 	return true;
 };
 
-unsigned int CSystem::GetCompressedFileSize(char* filename)
+uint CSystem::GetCompressedFileSize(char* filename)
 {
 	FILE* pFile = fxopen(filename, "rb");
 	if (!pFile)
@@ -58,7 +58,7 @@ unsigned int CSystem::GetCompressedFileSize(char* filename)
 	if (!pFile)
 		return 0;
 
-	unsigned int bitlen;
+	uint bitlen;
 	gzFile f = gzdopen(fileno(pFile), "rb9");
 	gzread(f, &bitlen, sizeof(int));
 	gzclose(f);
@@ -73,7 +73,7 @@ unsigned int CSystem::GetCompressedFileSize(char* filename)
 		return (0);
 	}
 
-	unsigned int bitlen;
+	uint bitlen;
 	fread(&bitlen, sizeof(int), 1, pFile);
 	fclose(pFile);
 #endif
@@ -81,7 +81,7 @@ unsigned int CSystem::GetCompressedFileSize(char* filename)
 	return bitlen;
 }
 
-unsigned int CSystem::ReadCompressedFile(char* filename, void* data, unsigned int maxbitlen)
+uint CSystem::ReadCompressedFile(char* filename, void* data, uint maxbitlen)
 {
 	FILE* pFile = fxopen(filename, "rb");
 	if (!pFile)
@@ -93,7 +93,7 @@ unsigned int CSystem::ReadCompressedFile(char* filename, void* data, unsigned in
 	fseek(pFile,0,SEEK_SET);
 	*/
 
-	unsigned int bitlen;
+	uint bitlen;
 
 #ifdef USE_COMPRESSION
 	gzFile f = gzdopen(fileno(pFile), "rb9");

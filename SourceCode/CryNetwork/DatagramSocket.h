@@ -88,7 +88,7 @@ public:
 	//!
 	NRESULT Send(BYTE* pBuffer, int nLenBytes, CIPAddress* saAddress = nullptr);
 	//!
-	NRESULT Receive(unsigned char* pBuf/*[MAX_UDP_PACKET_SIZE]*/, int nBufLen, int& nRecvBytes, CIPAddress& pFrom);
+	NRESULT Receive(uchar* pBuf/*[MAX_UDP_PACKET_SIZE]*/, int nBufLen, int& nRecvBytes, CIPAddress& pFrom);
 
 	const char* GetHostName();
 	//!
@@ -104,12 +104,12 @@ private:
 	SOCKET						m_hSocket;										//!<
 	SocketType				m_stSocketType;								//!<
 	CIPAddress				m_saDefaultAddress;						//!< Default target host and port [optional] for Send()
-	unsigned int			m_nStartTick;									//!< tick for bandwitdh computation
+	uint			m_nStartTick;									//!< tick for bandwitdh computation
 
-	unsigned int			m_nSentBytesInThisSec;				//!< is counting up and reseted every second
-	unsigned int			m_nReceivedBytesInThisSec;		//!< is counting up and reseted every second
-	unsigned int			m_nSentPacketsInThisSec;			//!< is counting up and reseted every second
-	unsigned int			m_nReceivedPacketsInThisSec;	//!< is counting up and reseted every second
+	uint			m_nSentBytesInThisSec;				//!< is counting up and reseted every second
+	uint			m_nReceivedBytesInThisSec;		//!< is counting up and reseted every second
+	uint			m_nSentPacketsInThisSec;			//!< is counting up and reseted every second
+	uint			m_nReceivedPacketsInThisSec;	//!< is counting up and reseted every second
 #if defined(LINUX)
 	struct ip_mreq		m_imMulticastReq;							//!< needed for call to IP_DROP_MEMBERSHIP
 #endif
@@ -117,8 +117,8 @@ private:
 public:
 	float							m_fOutgoingKbPerSec;					//!< is updated every second
 	float							m_fIncomingKbPerSec;					//!< is updated every second
-	unsigned int			m_nOutgoingPacketsPerSec;			//!< is updated every second
-	unsigned int			m_nIncomingPacketsPerSec;			//!< is updated every second
+	uint			m_nOutgoingPacketsPerSec;			//!< is updated every second
+	uint			m_nIncomingPacketsPerSec;			//!< is updated every second
 };
 
 

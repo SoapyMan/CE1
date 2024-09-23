@@ -192,7 +192,7 @@ private:
 protected:
 	IAnimNodeCallback* m_callback;
 	IMovieSystem* m_pMovieSystem;
-	unsigned int m_dwSupportedTracks;
+	uint m_dwSupportedTracks;
 	int m_flags;
 };
 

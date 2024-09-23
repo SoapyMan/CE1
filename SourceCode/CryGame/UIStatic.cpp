@@ -66,7 +66,7 @@ int CUIStatic::SetStyle(int iStyle)
 }
 
 //------------------------------------------------------------------------------------------------- 
-LRESULT CUIStatic::Update(unsigned int iMessage, WPARAM wParam, LPARAM lParam)	//AMD Port
+LRESULT CUIStatic::Update(uint iMessage, WPARAM wParam, LPARAM lParam)	//AMD Port
 {
 	switch(iMessage)
 	{

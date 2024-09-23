@@ -118,7 +118,7 @@ public:
 	void Reset();
 
 	// Load a font from a TTF file
-	bool Load(const char* szFile, unsigned long nWidth, unsigned long nHeight, unsigned long nTTFFlags);
+	bool Load(const char* szFile, ulong nWidth, ulong nHeight, ulong nTTFFlags);
 
 	// Load a font from a XML script
 	bool Load(const char* szFile);
@@ -224,7 +224,7 @@ private:
 	VecEffect						m_vEffects;				// Rendering effects
 	SEffect* m_pCurrentEffect;		// Current effect
 	CFontTexture				m_pFontTexture;
-	unsigned char* m_pFontBuffer;						// inmemory image of the font file (needed because of pack files)
+	uchar* m_pFontBuffer;						// inmemory image of the font file (needed because of pack files)
 	int									m_iTextureID;							// texture id
 	struct ISystem* m_pISystem;							// Renderer interface
 	CCryFont* m_pCryFont;

@@ -261,7 +261,7 @@ public:
 	int m_y;
 	int m_width;
 	int m_height;
-	std::vector<unsigned char> m_data;
+	std::vector<uchar> m_data;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -269,9 +269,9 @@ class CFrameProfilerOfflineHistory
 {
 public:
 	//! Self time in microseconds.
-	std::vector<unsigned int> m_selfTime;
+	std::vector<uint> m_selfTime;
 	//! Number of calls.
-	std::vector<unsigned short> m_count;
+	std::vector<ushort> m_count;
 };
 
 //////////////////////////////////////////////////////////////////////////

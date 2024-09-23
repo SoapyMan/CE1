@@ -43,7 +43,7 @@ bool CMailer::SendMessage(const char* subject,
 	MapiFileDesc* attachments = new MapiFileDesc[_attachments.size()];
 
 	int i = 0;
-	for (unsigned int k = 0; k < _attachments.size(); k++)
+	for (uint k = 0; k < _attachments.size(); k++)
 	{
 		FILE* file = fopen(_attachments[k], "r");
 		if (!file)

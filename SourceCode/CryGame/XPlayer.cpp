@@ -530,9 +530,9 @@ void CPlayer::InitWeapons()
 		m_vWeaponSlots[i]=0;
 
 	// init weapon instances
-	unsigned int weaponCount = GetGame()->GetWeaponSystemEx()->GetNumWeaponClasses();
+	uint weaponCount = GetGame()->GetWeaponSystemEx()->GetNumWeaponClasses();
 
-	for (unsigned int i = 0; i < weaponCount; ++i)
+	for (uint i = 0; i < weaponCount; ++i)
 	{
 		CWeaponClass *pWC = GetGame()->GetWeaponSystemEx()->GetWeaponClass(i);
 		CRYASSERT(pWC);
@@ -1315,7 +1315,7 @@ void CPlayer::GetCurrentWeaponParams(WeaponParams& wp)
 /*! Executes the processing commands
 		@param ProcessingCmd structure of commands to process
 */
-void CPlayer::ProcessCmd(unsigned int nPing,CXEntityProcessingCmd &ProcessingCmd)
+void CPlayer::ProcessCmd(uint nPing,CXEntityProcessingCmd &ProcessingCmd)
 {
 	ProcessMovements(ProcessingCmd);
 
@@ -4443,7 +4443,7 @@ bool CPlayer::Write( CStream &stream,EntityCloneState *cs)
 		stream.WritePkd( (BYTE)m_stats.health );
 		stream.WritePkd( (BYTE)m_stats.armor );
 
-		if((unsigned int)(m_stats.ammo_in_clip)>1023)
+		if((uint)(m_stats.ammo_in_clip)>1023)
 		{
 			m_pGame->GetSystem()->GetILog()->LogError("Ammo in clip (%d) is more than 1023, Value will not be restored correctly",m_stats.ammo_in_clip);
 			if(m_stats.ammo_in_clip>0)
@@ -4452,7 +4452,7 @@ bool CPlayer::Write( CStream &stream,EntityCloneState *cs)
 
 		stream.WriteNumberInBits(m_stats.ammo_in_clip,10);
 		
-		if((unsigned int)(m_stats.ammo)>1023)
+		if((uint)(m_stats.ammo)>1023)
 		{
 			m_pGame->GetSystem()->GetILog()->LogError("Ammo (%d) is more than 1023, Value will not be restored correctly",m_stats.ammo);
 			if(m_stats.ammo>0)
@@ -4509,7 +4509,7 @@ bool CPlayer::Write( CStream &stream,EntityCloneState *cs)
 		stream.WritePkd((BYTE)m_stats.weapon);
 	stream.WritePkd((BYTE)m_stats.firemode);
 //	stream.Write( m_stats.onLadder );
-	stream.WriteNumberInBits((unsigned int)m_CurStance,3);
+	stream.WriteNumberInBits((uint)m_CurStance,3);
 	stream.Write( m_stats.jumping );
 
 	// sync player random seed value to the clients
@@ -4550,7 +4550,7 @@ bool CPlayer::Write( CStream &stream,EntityCloneState *cs)
 */
 bool CPlayer::Read( CStream &stream )
 {
-	unsigned short dirty = 0;
+	ushort dirty = 0;
 	PlayerStats &stats=m_stats;
 //	GetPlayerStats( stats );
 	BYTE health,armor,weapon,firemode,staminaBuff;
@@ -4570,10 +4570,10 @@ bool CPlayer::Read( CStream &stream )
 		stats.health=health;
 		stream.ReadPkd( armor );
 		stats.armor=armor;
-		unsigned int ammo_in_clip;
+		uint ammo_in_clip;
 		stream.ReadNumberInBits(ammo_in_clip,10);
 		stats.ammo_in_clip=ammo_in_clip;
-		unsigned int ammo;
+		uint ammo;
 		stream.ReadNumberInBits(ammo,10);
 		stats.ammo=ammo;
 		BYTE b;
@@ -4641,7 +4641,7 @@ bool CPlayer::Read( CStream &stream )
 	//stream.Read(stats.firing);
 //	stream.Read(stats.onLadder);
 	eStance stance;
-	stream.ReadNumberInBits(*((unsigned int *)&stance),3);
+	stream.ReadNumberInBits(*((uint *)&stance),3);
 	
 	// no stances in vehicle
 	if(stance!=m_CurStance && !m_pVehicle)
@@ -7179,7 +7179,7 @@ void CPlayer::LoadAIState(CStream & stm, CScriptObjectStream & scriptStream)
 				{
 					IScriptObject *pActorScriptObject = pActorEntity->GetScriptObject();
 					pActorScriptObject->SetValue("CurrentConversation",pNewConversation);
-					unsigned int funcHandle;
+					uint funcHandle;
 					pNewConversation->GetValue("Join",funcHandle);
 					m_pScriptSystem->BeginCall(funcHandle);
 					m_pScriptSystem->PushFuncParam(pNewConversation);
@@ -7196,7 +7196,7 @@ void CPlayer::LoadAIState(CStream & stm, CScriptObjectStream & scriptStream)
 			pNewConversation->GetValue("Participants",iParticipants);
 			if (iJoined == iParticipants)
 			{
-					unsigned int funcHandle;
+					uint funcHandle;
 					pNewConversation->GetValue("Continue",funcHandle);
 					m_pScriptSystem->BeginCall(funcHandle);
 					m_pScriptSystem->PushFuncParam(pNewConversation);
@@ -7409,7 +7409,7 @@ bool CPlayer::Load_PATCH_1( CStream &stream)
 */
 bool CPlayer::Read_PATCH_1( CStream &stream )
 {
-	unsigned short dirty = 0;
+	ushort dirty = 0;
 	PlayerStats &stats=m_stats;
 	//	GetPlayerStats( stats );
 	BYTE health,armor,weapon,firemode,staminaBuff;
@@ -7429,10 +7429,10 @@ bool CPlayer::Read_PATCH_1( CStream &stream )
 		stats.health=health;
 		stream.ReadPkd( armor );
 		stats.armor=armor;
-		unsigned int ammo_in_clip;
+		uint ammo_in_clip;
 		stream.ReadNumberInBits(ammo_in_clip,10);
 		stats.ammo_in_clip=ammo_in_clip;
-		unsigned int ammo;
+		uint ammo;
 		stream.ReadNumberInBits(ammo,10);
 		stats.ammo=ammo;
 		BYTE b;
@@ -7500,7 +7500,7 @@ bool CPlayer::Read_PATCH_1( CStream &stream )
 	//stream.Read(stats.firing);
 	//	stream.Read(stats.onLadder);
 	eStance stance;
-	stream.ReadNumberInBits(*((unsigned int *)&stance),3);
+	stream.ReadNumberInBits(*((uint *)&stance),3);
 
 	// no stances in vehicle
 	if(stance!=m_CurStance && !m_pVehicle)

@@ -14,7 +14,7 @@
 
 // the simple decal face - each vertex index refers to the 0-based vertex index
 // in the new vertex array
-typedef TFace<unsigned short> CryCharDecalFace;
+typedef TFace<ushort> CryCharDecalFace;
 // this is the simple decal vertex - the index of the original vertex and UV coordinates
 struct CryCharDecalVertex
 {

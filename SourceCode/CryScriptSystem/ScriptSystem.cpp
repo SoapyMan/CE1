@@ -916,7 +916,7 @@ bool CScriptSystem::_ExecuteFile(const char* sFileName, bool bRaiseError)
 	//////////////////////////////////////////////////////////////////////////
 	if (m_bDebug && m_pDebugSink)
 	{
-		m_pDebugSink->OnLoadSource(sFileName, (unsigned char*)pBuffer, nSize);
+		m_pDebugSink->OnLoadSource(sFileName, (uchar*)pBuffer, nSize);
 	}
 
 	//int nRes = lua_dofile(m_pLS, sFileName);
@@ -1039,9 +1039,9 @@ void CScriptSystem::DumpLoadedScripts()
 }
 
 /*
-void CScriptSystem::GetScriptHashFunction( IScriptObject &Current, unsigned int &dwHash)
+void CScriptSystem::GetScriptHashFunction( IScriptObject &Current, uint &dwHash)
 {
-	unsigned int *pCode=0;
+	uint *pCode=0;
 	int iSize=0;
 
 	if(pCurrent.GetCurrentFuncData(pCode,iSize))						// function ?
@@ -1053,7 +1053,7 @@ void CScriptSystem::GetScriptHashFunction( IScriptObject &Current, unsigned int 
 */
 
 
-void CScriptSystem::GetScriptHash(const char* sPath, const char* szKey, unsigned int& dwHash)
+void CScriptSystem::GetScriptHash(const char* sPath, const char* szKey, uint& dwHash)
 {
 	//	IScriptObject *pCurrent;
 

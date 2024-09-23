@@ -51,7 +51,7 @@ bool CXGamepad::Init(ILog *pLog)
 
 void CXGamepad::ShutDown()
 {
-  unsigned int i;
+  uint i;
 
   // Close all opened gamepad handles
   for (i=0; i<sizeof(m_hGamepads) / sizeof(HANDLE); i++)
@@ -67,7 +67,7 @@ void CXGamepad::Update()
 {
 	BOOL bReturn;
 	DWORD dwInsertions = 0, dwRemovals = 0;
-	unsigned int i;
+	uint i;
 #ifdef _DEBUG
 	char szBuffer[10024 /*256*/];
 #endif
@@ -198,7 +198,7 @@ bool CXGamepad::IsDigitalButtonPressed(const eDigitalButton eWhichButton, const 
 	// Returns the status of a digital button
 	//////////////////////////////////////////////////////////////////////
 
-	unsigned int i, iLastController = eWhichController;
+	uint i, iLastController = eWhichController;
 	bool bPressed = false;
 
 	if (!AnyControllersReady())
@@ -268,7 +268,7 @@ float CXGamepad::GetAnalogButtonValue(const eAnalogButton eWhichButton,
 	// Returns the status of an analog button as a value between 0 and 1
 	//////////////////////////////////////////////////////////////////////
 
-	unsigned int i;
+	uint i;
 	float fAccumValue = 0.0f;
 
 	if (!AnyControllersReady())
@@ -309,7 +309,7 @@ void CXGamepad::GetAnalogStickValue(float& fX, float& fY, const eSide eWhichStic
 	// Check the axis of an analog stick, value is between -1 and +1
 	//////////////////////////////////////////////////////////////////////
 
-	unsigned int i;
+	uint i;
 	float fAccumValueX = 0.0f;
 	float fAccumValueY = 0.0f;
 	//float fValX, fValY;

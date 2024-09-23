@@ -40,7 +40,7 @@ string CUICheckBox::GetClassName()
 }
 
 //------------------------------------------------------------------------------------------------- 
-LRESULT CUICheckBox::Update(unsigned int iMessage, WPARAM wParam, LPARAM lParam)	//AMD Port
+LRESULT CUICheckBox::Update(uint iMessage, WPARAM wParam, LPARAM lParam)	//AMD Port
 {
 	switch (iMessage)
 	{

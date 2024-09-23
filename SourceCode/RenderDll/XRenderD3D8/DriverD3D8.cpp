@@ -440,7 +440,7 @@ bool CD3D8Renderer::SetWindow(int width, int height, bool fullscreen, WIN_HWND h
 }
 
 #ifndef PS2
-WIN_HWND CD3D8Renderer::Init(int x,int y,int width,int height,unsigned int cbpp, int zbpp, int sbits, bool fullscreen,WIN_HINSTANCE hinst, WIN_HWND Glhwnd, WIN_HDC Glhdc, WIN_HGLRC hGLrc, bool bReInit)
+WIN_HWND CD3D8Renderer::Init(int x,int y,int width,int height,uint cbpp, int zbpp, int sbits, bool fullscreen,WIN_HINSTANCE hinst, WIN_HWND Glhwnd, WIN_HDC Glhdc, WIN_HGLRC hGLrc, bool bReInit)
 {
   guard(CD3D8Renderer::Init);
 
@@ -543,7 +543,7 @@ WIN_HWND CD3D8Renderer::Init(int x,int y,int width,int height,unsigned int cbpp,
   unguard;
 }
 #else
-bool CD3D8Renderer::Init(int x,int y,int width,int height,unsigned int cbpp, int zbpp, int sbits, bool fullscreen)
+bool CD3D8Renderer::Init(int x,int y,int width,int height,uint cbpp, int zbpp, int sbits, bool fullscreen)
 {
   return false;
 }
@@ -2165,12 +2165,12 @@ trysoft:
   unguardnw;
 } 
 
-bool CD3D8Renderer::ChangeDisplay(unsigned int width,unsigned int height,unsigned int cbpp)
+bool CD3D8Renderer::ChangeDisplay(uint width,uint height,uint cbpp)
 {
   return false;
 }
 
-void CD3D8Renderer::ChangeViewport(unsigned int x,unsigned int y,unsigned int width,unsigned int height)
+void CD3D8Renderer::ChangeViewport(uint x,uint y,uint width,uint height)
 {
   assert(m_CurrContext);
   m_CurrContext->m_X = x;
@@ -4110,7 +4110,7 @@ void CD3D8Renderer::EnableAlphaTest(bool enable,float alphavalue)
   if (enable)
   {
     m_pd3dDevice->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
-    m_pd3dDevice->SetRenderState(D3DRS_ALPHAREF, (unsigned long)(256.0f*alphavalue));
+    m_pd3dDevice->SetRenderState(D3DRS_ALPHAREF, (ulong)(256.0f*alphavalue));
     m_pd3dDevice->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
   }
   else
@@ -4734,7 +4734,7 @@ int CD3D8Renderer::GenerateAlphaGlowTexture(float k)
     data[x*256+y] = (int)(val);
   }
 
-  int nRes = DownLoadToVideoMemory((unsigned char*)data,tex_size,tex_size,eTF_8000,eTF_8000,true,true,FILTER_LINEAR);
+  int nRes = DownLoadToVideoMemory((uchar*)data,tex_size,tex_size,eTF_8000,eTF_8000,true,true,FILTER_LINEAR);
   delete [] data;
 
   return nRes;
@@ -5164,7 +5164,7 @@ int CD3D8Renderer::UnProjectFromScreen( float sx, float sy, float sz, float *px,
   return sUnProject(sx, sy, sz, modelMatrix, projMatrix, viewport, px, py, pz);
 }
 
-void CD3D8Renderer::SetColorMask(unsigned char r,unsigned char g,unsigned char b,unsigned char a)
+void CD3D8Renderer::SetColorMask(uchar r,uchar g,uchar b,uchar a)
 {
   UINT flag = 0;
   if(r)
@@ -5191,7 +5191,7 @@ void CD3D8Renderer::ClearColorBuffer(const Vec3d vColor)
   m_pd3dDevice->Clear(0, NULL, D3DCLEAR_TARGET, D3DRGBA(vColor[0], vColor[1], vColor[2], 1.0f), 1.0f, 0);
 }
 
-void CD3D8Renderer::ReadFrameBuffer(unsigned char * pRGB, int nSizeX, int nSizeY, bool bBackBuffer, bool bRGBA)
+void CD3D8Renderer::ReadFrameBuffer(uchar * pRGB, int nSizeX, int nSizeY, bool bBackBuffer, bool bRGBA)
 {
 	assert(0);
 }
@@ -5234,7 +5234,7 @@ void CD3D8Renderer::EnableStencilTest(bool enable)
   mfGetD3DDevice()->SetRenderState(D3DRS_STENCILENABLE, enable);
 }
 
-void CD3D8Renderer::SetStencilMask(unsigned char value)
+void CD3D8Renderer::SetStencilMask(uchar value)
 {
   assert(0);
 }
@@ -5303,7 +5303,7 @@ void CD3D8Renderer::Set2DMode(bool enable, int ortox, int ortoy)
   }
 }
 
-unsigned int CD3D8Renderer::MakeTexture(const char * _filename,int *_tex_type/*,unsigned int def_tid*/)
+uint CD3D8Renderer::MakeTexture(const char * _filename,int *_tex_type/*,uint def_tid*/)
 {
   return LoadTexture(_filename,_tex_type);
 }
@@ -5354,7 +5354,7 @@ void CD3D8Renderer::RemoveTexture(ITexPic * pTexPic)
 }
 
 
-void CD3D8Renderer::RemoveTexture(unsigned int TextureId)
+void CD3D8Renderer::RemoveTexture(uint TextureId)
 {
   CD3D8TexMan *tm = (CD3D8TexMan *)m_TexMan;
   TTextureMapItor it = tm->m_RefTexs.find(TextureId);
@@ -5368,7 +5368,7 @@ void CD3D8Renderer::RemoveTexture(unsigned int TextureId)
     m_TexMan->RemoveFromHash(TextureId, NULL);
 }
 
-unsigned int CD3D8Renderer::LoadTexture(const char * _filename,int *tex_type,unsigned int def_tid,bool compresstodisk,bool bWarn)
+uint CD3D8Renderer::LoadTexture(const char * _filename,int *tex_type,uint def_tid,bool compresstodisk,bool bWarn)
 {
   if (def_tid == 0)
     def_tid = -1;
@@ -5376,7 +5376,7 @@ unsigned int CD3D8Renderer::LoadTexture(const char * _filename,int *tex_type,uns
   return pPic->IsTextureLoaded() ? pPic->GetTextureID() : 0;
 }
 
-unsigned int CD3D8Renderer::DownLoadToVideoMemory(unsigned char *data,int w, int h, ETEX_Format eTFSrc, ETEX_Format eTFDst, int nummipmap, bool repeat, int filter, int Id)
+uint CD3D8Renderer::DownLoadToVideoMemory(uchar *data,int w, int h, ETEX_Format eTFSrc, ETEX_Format eTFDst, int nummipmap, bool repeat, int filter, int Id)
 {
   char name[128];
   sprintf(name, "$AutoDownload_%d", m_TexGenID++);

@@ -1834,7 +1834,7 @@ void CEntity::PostClone( CBaseObject *pFromObject,CObjectCloneContext &ctx )
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CEntity::ResolveEventTarget( CBaseObject *object,unsigned int index )
+void CEntity::ResolveEventTarget( CBaseObject *object,uint index )
 {
 	// Find targetid.
 	assert( index >= 0 && index < m_eventTargets.size() );

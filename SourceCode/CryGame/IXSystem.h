@@ -85,7 +85,7 @@ struct IXSystem
 	virtual EntitiesSet& GetPlayerEntities() = 0;
 	//! return true if the given entity is in the entity list
 	virtual bool		EntityExists(WORD id) = 0;
-	virtual unsigned short GetLevelDataCheckSum() = 0;
+	virtual ushort GetLevelDataCheckSum() = 0;
 	// parses the properties from XML and fills the corresponding table with the values
 	virtual void SetEntityProperties(IEntity * pEntity,XDOM::IXMLDOMNode * pPropNode) = 0;
 	virtual void OnSpawn(IEntity *ent, CEntityDesc & ed)=0;

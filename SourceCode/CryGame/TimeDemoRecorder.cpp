@@ -56,7 +56,7 @@ struct STimeDemoFrame
 	Vec3 angles;
 	float frametime;
 
-	unsigned int nActionFlags[2];
+	uint nActionFlags[2];
 	float fLeaning;
 	int nPolygonsPerFrame;
 	char reserved[28];

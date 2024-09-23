@@ -473,7 +473,7 @@ bool CGLRenderer::ChangeResolution(int nNewWidth, int nNewHeight, int nNewColDep
 }
 
 //////////////////////////////////////////////////////////////////////
-bool CGLRenderer::ChangeDisplay(unsigned int width, unsigned int height, unsigned int bpp)
+bool CGLRenderer::ChangeDisplay(uint width, uint height, uint bpp)
 {
 
 #ifdef WIN32  
@@ -541,7 +541,7 @@ bool CGLRenderer::ChangeDisplay(unsigned int width, unsigned int height, unsigne
 }
 
 //////////////////////////////////////////////////////////////////////
-void CGLRenderer::ChangeViewport(unsigned int x, unsigned int y, unsigned int width, unsigned int height)
+void CGLRenderer::ChangeViewport(uint x, uint y, uint width, uint height)
 {
 	SetViewport(x, y, width, height);
 	m_width = width;
@@ -1365,9 +1365,9 @@ void CGLRenderer::SetTexClampMode(bool clamp)
 }
 
 //////////////////////////////////////////////////////////////////////
-unsigned int CGLRenderer::DownLoadToVideoMemory(unsigned char* data, int w, int h, ETEX_Format eTFSrc, ETEX_Format eTFDst, int nummipmap, bool repeat, int filter, int Id, char* szCacheName, int flags)
+uint CGLRenderer::DownLoadToVideoMemory(uchar* data, int w, int h, ETEX_Format eTFSrc, ETEX_Format eTFDst, int nummipmap, bool repeat, int filter, int Id, char* szCacheName, int flags)
 {
-	unsigned int tnum;
+	uint tnum;
 
 	/*  char name[128];
 	  sprintf(name, "$Auto_%d", m_TexGenID++);
@@ -1548,7 +1548,7 @@ unsigned int CGLRenderer::DownLoadToVideoMemory(unsigned char* data, int w, int 
 extern int TargetTex[TX_LASTBIND];
 
 //////////////////////////////////////////////////////////////////////
-void CGLRenderer::UpdateTextureInVideoMemory(uint tnum, unsigned char* newdata, int posx, int posy, int w, int h, ETEX_Format eTF)
+void CGLRenderer::UpdateTextureInVideoMemory(uint tnum, uchar* newdata, int posx, int posy, int w, int h, ETEX_Format eTF)
 {
 	ETexType eTT = eTT_Base;
 	if (TargetTex[tnum] == GL_TEXTURE_RECTANGLE_NV)
@@ -1604,7 +1604,7 @@ void CGLRenderer::RemoveTexture(ITexPic* pTexPic)
 	pSTexPic->Release(false);
 }
 
-void CGLRenderer::RemoveTexture(unsigned int nTextureId)
+void CGLRenderer::RemoveTexture(uint nTextureId)
 {
 	if (nTextureId)
 	{
@@ -2435,7 +2435,7 @@ void CGLRenderer::ScreenShot(const char* filename)
 		strcpy(scname, filename);
 
 	iLog->Log("ScreenShot %s\n", scname);
-	unsigned char* pic = new unsigned char[m_width * m_height * 4];
+	uchar* pic = new uchar[m_width * m_height * 4];
 	glReadPixels(0, 0, m_width, m_height, GL_RGBA, GL_UNSIGNED_BYTE, pic);
 	byte* src = pic;
 	byte* dst = new byte[m_width * m_height * 4];
@@ -2450,7 +2450,7 @@ void CGLRenderer::ScreenShot(const char* filename)
 	}
 	::WriteJPG(dst, m_width, m_height, scname);
 	//CImage::SaveTga(pic,FORMAT_24_BIT,m_width,m_height,scname,false); 
-	//unsigned char *pic=new unsigned char [m_width*m_height*FORMAT_8_BIT];
+	//uchar *pic=new uchar [m_width*m_height*FORMAT_8_BIT];
 	//glReadPixels(0, 0, m_width, m_height, GL_ALPHA, GL_UNSIGNED_BYTE, pic);
   //CImage::SaveTga(pic,FORMAT_8_BIT,m_width,m_height,scname,false); 
 	delete[] pic;
@@ -2460,7 +2460,7 @@ void CGLRenderer::ScreenShot(const char* filename)
 int CGLRenderer::ScreenToTexture()
 {
 	// for death effects
-	unsigned char* pic = new unsigned char[m_width * m_height * 3];
+	uchar* pic = new uchar[m_width * m_height * 3];
 	glReadPixels(0, 0, m_width, m_height, GL_RGB, GL_UNSIGNED_BYTE, pic);
 	uint tid;
 	glGenTextures(1, &tid);
@@ -2479,7 +2479,7 @@ int CGLRenderer::ScreenToTexture()
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////
-unsigned int CGLRenderer::LoadTexture(const char* _filename, int* tex_type, unsigned int def_tid, bool compresstodisk, bool bWarn)
+uint CGLRenderer::LoadTexture(const char* _filename, int* tex_type, uint def_tid, bool compresstodisk, bool bWarn)
 {
 	if (def_tid == 0)
 		def_tid = -1;
@@ -2665,7 +2665,7 @@ int CGLRenderer::GenerateAlphaGlowTexture(float k)
 {
 	//  float k = 6;
 	const int tex_size = 256;
-	unsigned char data[tex_size][tex_size];
+	uchar data[tex_size][tex_size];
 
 	for (int x = 0; x < tex_size; x++)
 		for (int y = 0; y < tex_size; y++)
@@ -2682,7 +2682,7 @@ int CGLRenderer::GenerateAlphaGlowTexture(float k)
 			data[x][y] = (int)(val);
 		}
 
-	return DownLoadToVideoMemory((unsigned char*)data, tex_size, tex_size, eTF_8000, eTF_8000, false, false, FILTER_LINEAR);
+	return DownLoadToVideoMemory((uchar*)data, tex_size, tex_size, eTF_8000, eTF_8000, false, false, FILTER_LINEAR);
 }
 
 void CGLRenderer::SetMaterialColor(float r, float g, float b, float a)
@@ -2915,7 +2915,7 @@ void CGLRenderer::ClearColorBuffer(const Vec3d vColor)
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void CGLRenderer::ReadFrameBuffer(unsigned char* pRGB, int nSizeX, int nSizeY, bool bBackBuffer, bool bRGBA, int nScaledX, int nScaledY)
+void CGLRenderer::ReadFrameBuffer(uchar* pRGB, int nSizeX, int nSizeY, bool bBackBuffer, bool bRGBA, int nScaledX, int nScaledY)
 {
 	glFinish();
 
@@ -3129,15 +3129,15 @@ typedef struct MyCrtMemBlockHeader
 	size_t                      nDataSize;
 	int                         nBlockUse;
 	long                        lRequest;
-	unsigned char               gap[nNoMansLandSize];
+	uchar               gap[nNoMansLandSize];
 	/* followed by:
-	*  unsigned char           data[nDataSize];
-	*  unsigned char           anotherGap[nNoMansLandSize];
+	*  uchar           data[nDataSize];
+	*  uchar           anotherGap[nNoMansLandSize];
 	*/
 } MyCrtMemBlockHeader;
 #pragma pack (pop)
 
-#define pbData(pblock) ((unsigned char *)((MyCrtMemBlockHeader *)pblock + 1))
+#define pbData(pblock) ((uchar *)((MyCrtMemBlockHeader *)pblock + 1))
 #define pHdr(pbData) (((MyCrtMemBlockHeader *)pbData)-1)
 
 
@@ -3158,7 +3158,7 @@ void crtdebug(const char* s, ...)
 
 int crtAllocHook(int nAllocType, void* pvData,
 	size_t nSize, int nBlockUse, long lRequest,
-	const unsigned char* szFileName, int nLine)
+	const uchar* szFileName, int nLine)
 {
 	if (nBlockUse == _CRT_BLOCK)
 		return(TRUE);
@@ -3275,7 +3275,7 @@ void DoneCrt() {
 
 namespace ATL
 {
-	int __cdecl _AtlInitializeCriticalSectionEx(struct _RTL_CRITICAL_SECTION*, unsigned long, unsigned long)
+	int __cdecl _AtlInitializeCriticalSectionEx(struct _RTL_CRITICAL_SECTION*, ulong, ulong)
 	{
 		return 0;
 	}

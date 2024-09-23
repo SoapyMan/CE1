@@ -526,7 +526,7 @@ void DebugCallStack::LogCallstack()
 	CryLogAlways("=============================================================================");
 }
 
-INT_PTR CALLBACK ExceptionDialogProc(HWND hwndDlg, unsigned int message, WPARAM wParam, LPARAM lParam)
+INT_PTR CALLBACK ExceptionDialogProc(HWND hwndDlg, uint message, WPARAM wParam, LPARAM lParam)
 {
 	static EXCEPTION_POINTERS* pex;
 
@@ -629,7 +629,7 @@ INT_PTR CALLBACK ExceptionDialogProc(HWND hwndDlg, unsigned int message, WPARAM 
 		if (callStack) {
 			char str[32768];
 			strcpy(str, "");
-			for (unsigned int i = 0; i < funcs.size(); i++) {
+			for (uint i = 0; i < funcs.size(); i++) {
 				char temp[4096];
 				sprintf(temp, "%2d) %s", funcs.size() - i, (const char*)funcs[i].c_str());
 				strcat(str, temp);
@@ -726,7 +726,7 @@ static void PutVersion(char* str)
 {
 	char exe[_MAX_PATH];
 	DWORD dwHandle;
-	unsigned int len;
+	uint len;
 
 	char ver[1024 * 8];
 	GetModuleFileName(nullptr, exe, _MAX_PATH);

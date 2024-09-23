@@ -161,7 +161,7 @@ bool GetTextFromURL(const char* szURL, string& strText)
 	else
 	{
 		// convert string to ip address number
-		unsigned int addr(inet_addr(strServer.c_str()));
+		uint addr(inet_addr(strServer.c_str()));
 		pHost = gethostbyaddr((char*)&addr, 4, AF_INET);
 	}
 
@@ -342,7 +342,7 @@ bool NewUbisoftClient::IsValueOnRegistry(const string& szKeyName, const string& 
 	return true;
 }
 
-bool NewUbisoftClient::EncryptString(unsigned char* szOut, const unsigned char* szIn)
+bool NewUbisoftClient::EncryptString(uchar* szOut, const uchar* szIn)
 {
 	string szInPadded = (char*)szIn;
 
@@ -351,15 +351,15 @@ bool NewUbisoftClient::EncryptString(unsigned char* szOut, const unsigned char* 
 		szInPadded.push_back(0);
 	}
 
-	unsigned int Key[4] = { 31337, 31337 * 2, 31337 * 4, 31337 * 8 };
+	uint Key[4] = { 31337, 31337 * 2, 31337 * 4, 31337 * 8 };
 
-	TEA_ENCODE((unsigned int*)szInPadded.c_str(), (unsigned int*)szOut, szInPadded.size(), Key);
+	TEA_ENCODE((uint*)szInPadded.c_str(), (uint*)szOut, szInPadded.size(), Key);
 	szOut[szInPadded.size()] = 0;
 
 	return true;
 }
 
-bool NewUbisoftClient::DecryptString(unsigned char* szOut, const unsigned char* szIn)
+bool NewUbisoftClient::DecryptString(uchar* szOut, const uchar* szIn)
 {
 	string szInPadded = (char*)szIn;
 
@@ -368,18 +368,18 @@ bool NewUbisoftClient::DecryptString(unsigned char* szOut, const unsigned char* 
 		szInPadded.push_back(0);
 	}
 
-	unsigned int Key[4] = { 31337, 31337 * 2, 31337 * 4, 31337 * 8 };
+	uint Key[4] = { 31337, 31337 * 2, 31337 * 4, 31337 * 8 };
 
-	TEA_DECODE((unsigned int*)szIn, (unsigned int*)szOut, strlen((char*)szIn), Key);
+	TEA_DECODE((uint*)szIn, (uint*)szOut, strlen((char*)szIn), Key);
 
 	return true;
 }
 
-bool NewUbisoftClient::EncodeHex(unsigned char* szOut, const unsigned char* szIn)
+bool NewUbisoftClient::EncodeHex(uchar* szOut, const uchar* szIn)
 {
-	unsigned int len = strlen((char*)szIn);
+	uint len = strlen((char*)szIn);
 
-	for (unsigned int i = 0; i < len; i++)
+	for (uint i = 0; i < len; i++)
 	{
 		sprintf((char*)&szOut[i * 2], "%02x", szIn[i]);
 	}
@@ -387,12 +387,12 @@ bool NewUbisoftClient::EncodeHex(unsigned char* szOut, const unsigned char* szIn
 	return true;
 }
 
-bool NewUbisoftClient::DecodeHex(unsigned char* szOut, const unsigned char* szIn)
+bool NewUbisoftClient::DecodeHex(uchar* szOut, const uchar* szIn)
 {
-	unsigned int len = strlen((char*)szIn) >> 1;
+	uint len = strlen((char*)szIn) >> 1;
 	char szAux[16];
 
-	for (unsigned int i = 0; i < len; i++)
+	for (uint i = 0; i < len; i++)
 	{
 		sprintf(szAux, "0x%c%c", szIn[i * 2 + 0], szIn[i * 2 + 1]);
 		szOut[i] = strtol(szAux, 0, 0);
@@ -514,7 +514,7 @@ bool NewUbisoftClient::DownloadGSini(const char* szUsername)
 		strcpy(connectURL, defURL);
 	}
 
-	const unsigned int cMaxCount = dwBufLen + strlen(szUsername) + strlen(GAME_NAME) + 1;
+	const uint cMaxCount = dwBufLen + strlen(szUsername) + strlen(GAME_NAME) + 1;
 	char* szGSURL = (char*)malloc(cMaxCount); //size of the url + username + gamename
 
 	_snprintf(szGSURL, cMaxCount - 1, connectURL, szUsername, GAME_NAME);
@@ -613,11 +613,11 @@ void NewUbisoftClient::Client_LoginSuccess(const char* szUsername)
 		char szHexUsername[512] = { 0 };
 		char szHexPassword[512] = { 0 };
 
-		EncryptString((unsigned char*)szEncUsername, (unsigned char*)m_strUsername.c_str());
-		EncryptString((unsigned char*)szEncPassword, (unsigned char*)m_strPassword.c_str());
+		EncryptString((uchar*)szEncUsername, (uchar*)m_strUsername.c_str());
+		EncryptString((uchar*)szEncPassword, (uchar*)m_strPassword.c_str());
 
-		EncodeHex((unsigned char*)szHexUsername, (unsigned char*)szEncUsername);
-		EncodeHex((unsigned char*)szHexPassword, (unsigned char*)szEncPassword);
+		EncodeHex((uchar*)szHexUsername, (uchar*)szEncUsername);
+		EncodeHex((uchar*)szHexPassword, (uchar*)szEncPassword);
 
 		WriteStringToRegistry("Ubi.com", "username", szHexUsername);
 		WriteStringToRegistry("Ubi.com", "password", szHexPassword);
@@ -643,7 +643,7 @@ void NewUbisoftClient::Client_RequestFinished()
 {
 	m_pScriptObject->Client_RequestFinished();
 }
-void NewUbisoftClient::Client_JoinGameServerSuccess(const char* szIPAddress, const char* szLanIPAddress, unsigned short usPort)
+void NewUbisoftClient::Client_JoinGameServerSuccess(const char* szIPAddress, const char* szLanIPAddress, ushort usPort)
 {
 	m_pScriptObject->Client_JoinGameServerSuccess(szIPAddress, szLanIPAddress, usPort);
 }
@@ -711,8 +711,8 @@ void NewUbisoftClient::CDKey_ActivationFail(const char* szText)
 
 
 
-bool NewUbisoftClient::GetRouterAddress(int iIndex, char* szIPAddress, unsigned short* pusClientPort,
-	unsigned short* pusRegServerPort)
+bool NewUbisoftClient::GetRouterAddress(int iIndex, char* szIPAddress, ushort* pusClientPort,
+	ushort* pusRegServerPort)
 {
 	char szKey[50];
 	char szPort[50];
@@ -737,7 +737,7 @@ bool NewUbisoftClient::GetRouterAddress(int iIndex, char* szIPAddress, unsigned 
 	return true;
 }
 
-bool NewUbisoftClient::GetCDKeyServerAddress(int iIndex, char* szIPAddress, unsigned short* pusPort)
+bool NewUbisoftClient::GetCDKeyServerAddress(int iIndex, char* szIPAddress, ushort* pusPort)
 {
 	char szKey[50];
 	char szPort[50];

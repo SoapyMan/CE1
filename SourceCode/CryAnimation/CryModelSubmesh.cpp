@@ -203,7 +203,7 @@ void CryModelSubmesh::GenerateRenderArrays(const char* szFileName)
 				{
 					CMatInfo& rMaterial = arrMats[nMaterial];
 					// this is the hack that's required because list2 doesn't construct the elements: to copy the vtable
-					*(unsigned int*)&rMaterial = *(unsigned int*)&defaultMaterial;
+					*(uint*)&rMaterial = *(uint*)&defaultMaterial;
 
 					if (arrMtlUsage[nMaterial])
 					{
@@ -304,7 +304,7 @@ void CryModelSubmesh::GenerateRenderArraysCCG(const char* szTextureDir)
 			{
 				CMatInfo& rMaterial = (*pMats)[nMaterial];
 				// this is the hack that's required because list2 doesn't construct the elements: to copy the vtable
-				*(unsigned int*)&rMaterial = *(unsigned int*)&defaultMaterial;
+				*(uint*)&rMaterial = *(uint*)&defaultMaterial;
 				rMaterial.m_Id = nMaterial;
 
 				CIndexedMesh__LoadMaterial(nullptr, szTextureDir, rMaterial, g_GetIRenderer(), &m_pMesh->getMaterial(nMaterial));
@@ -662,11 +662,11 @@ void CryModelSubmesh::Deform(int nLodToDeform, unsigned nDeformFlags)
 		{
 			DEFINE_PROFILER_SECTION("Reconstruct-VertexBuffer-PUV");
 
-			u32 max = 0;
+			uint32 max = 0;
 			if (!pNormals || nNormalsOffset < 0)
 			{
 				for (unsigned i = 0; i < numVerts; ++i) {
-					u32 index = pExtToIntMap[i];
+					uint32 index = pExtToIntMap[i];
 					//_mm_prefetch( (char*)&pVertices[index], _MM_HINT_NTA );
 					*(Vec3d*)(pVertBuf + i * nVertexFormatSize) = pVertices[index];
 					if (max < index) max = index;

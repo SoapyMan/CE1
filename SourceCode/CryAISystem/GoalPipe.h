@@ -48,7 +48,7 @@ class CGoalPipe : public IGoalPipe
 	GoalQueue			m_qGoalPipe;
 
 
-	unsigned int		m_nPosition;	// position in pipe
+	uint		m_nPosition;	// position in pipe
 	CGoalPipe* m_pSubPipe;
 
 public:

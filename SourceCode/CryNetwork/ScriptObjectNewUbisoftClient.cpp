@@ -105,8 +105,8 @@ int CScriptObjectNewUbisoftClient::Client_GetStoredUsername(IFunctionHandler *pH
 	char szEncUsername[256] = {0};
 	char szUsername[256] = {0};
 
-	m_pUbiSoftClient->DecodeHex((unsigned char *)szEncUsername, (unsigned char *)szHexUsername.c_str());
-	m_pUbiSoftClient->DecryptString((unsigned char *)szUsername, (unsigned char *)szEncUsername);
+	m_pUbiSoftClient->DecodeHex((uchar *)szEncUsername, (uchar *)szHexUsername.c_str());
+	m_pUbiSoftClient->DecryptString((uchar *)szUsername, (uchar *)szEncUsername);
 
 	return pH->EndFunction(szUsername);
 }
@@ -123,8 +123,8 @@ int CScriptObjectNewUbisoftClient::Client_GetStoredPassword(IFunctionHandler *pH
 	char szEncPassword[256] = {0};
 	char szPassword[256] = {0};
 
-	m_pUbiSoftClient->DecodeHex((unsigned char *)szEncPassword, (unsigned char *)szHexPassword.c_str());
-	m_pUbiSoftClient->DecryptString((unsigned char *)szPassword, (unsigned char *)szEncPassword);
+	m_pUbiSoftClient->DecodeHex((uchar *)szEncPassword, (uchar *)szHexPassword.c_str());
+	m_pUbiSoftClient->DecryptString((uchar *)szPassword, (uchar *)szEncPassword);
 
 	return pH->EndFunction(szPassword);
 }
@@ -314,7 +314,7 @@ void CScriptObjectNewUbisoftClient::Client_RequestFinished()
 }
 
 void CScriptObjectNewUbisoftClient::Client_JoinGameServerSuccess(const char* szIPAddress, const char* szLanIPAddress,
-	unsigned short usPort)
+	ushort usPort)
 {
 	m_pScriptSystem->BeginCall("NewUbisoftClient", "Client_JoinGameServerSuccess");
 	m_pScriptSystem->PushFuncParam(GetScriptObject());

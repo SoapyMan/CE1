@@ -38,7 +38,7 @@ bool CBitStream_Compressed::WriteBitStream( CStream &stm, const uint32 Value, co
 			return stm.WritePkd((uint16)Value);
 	}
 
-	return stm.Write((unsigned int)Value);
+	return stm.Write((uint)Value);
 }
 
 bool CBitStream_Compressed::ReadBitStream( CStream &stm, uint32 &Value, const eBitStreamHint eHint )
@@ -68,7 +68,7 @@ bool CBitStream_Compressed::ReadBitStream( CStream &stm, uint32 &Value, const eB
 			return true;
 	}
 
-	return stm.Read((unsigned int&)Value);
+	return stm.Read((uint&)Value);
 }
 
 bool CBitStream_Compressed::WriteBitStream( CStream &stm, const int32 Value, const eBitStreamHint eHint )
@@ -152,7 +152,7 @@ bool CBitStream_Compressed::WriteBitStream( CStream &stm, const Vec3 &Value, con
 				DWORD dwY=(Y)&((1<<g_dwBits)-1);
 				DWORD dwZ=(Z)&((1<<g_dwBits)-1);
 
-				if(!stm.WriteNumberInBits((unsigned int) dwX,g_dwBits))
+				if(!stm.WriteNumberInBits((uint) dwX,g_dwBits))
 					return false;
 
 				if(dwY==0)
@@ -165,11 +165,11 @@ bool CBitStream_Compressed::WriteBitStream( CStream &stm, const Vec3 &Value, con
 					if(!stm.Write(true))	// bNotZero
 						return false;
 
-					if(!stm.WriteNumberInBits((unsigned int) dwY,g_dwBits))
+					if(!stm.WriteNumberInBits((uint) dwY,g_dwBits))
 						return false;
 				}
 
-				if(!stm.WriteNumberInBits((unsigned int) dwZ,g_dwBits))
+				if(!stm.WriteNumberInBits((uint) dwZ,g_dwBits))
 					return false;
 			}
 			return true;
@@ -189,7 +189,7 @@ bool CBitStream_Compressed::ReadBitStream( CStream &stm, Vec3 &Value, const eBit
 
 				DWORD dwX,dwY,dwZ;
 			
-				if(!stm.ReadNumberInBits((unsigned int&) dwX,g_dwBits))
+				if(!stm.ReadNumberInBits((uint&) dwX,g_dwBits))
 					return false;
 
 				bool bNotZero;
@@ -199,12 +199,12 @@ bool CBitStream_Compressed::ReadBitStream( CStream &stm, Vec3 &Value, const eBit
 
 				if(bNotZero)
 				{
-					if(!stm.ReadNumberInBits((unsigned int&) dwY,g_dwBits))
+					if(!stm.ReadNumberInBits((uint&) dwY,g_dwBits))
 						return false;
 				}
 				else dwY=0;
 
-				if(!stm.ReadNumberInBits((unsigned int&) dwZ,g_dwBits))
+				if(!stm.ReadNumberInBits((uint&) dwZ,g_dwBits))
 					return false;
 
 				Value = Vec3(((float)dwX-0.5f)*fScale,((float)dwY-0.5f)*fScale,((float)dwZ-0.5f)*fScale);		// convert

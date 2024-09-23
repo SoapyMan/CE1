@@ -120,7 +120,7 @@ struct SScriptState
 //////////////////////////////////////////////////////////////////////
 #define ENTITY_MAX_OBJECTS	16
 
-typedef std::map<string, unsigned char> EntityStateMap;
+typedef std::map<string, uchar> EntityStateMap;
 typedef EntityStateMap::iterator EntityStateMapItor;
 //////////////////////////////////////////////////////////////////////
 typedef std::multimap<int, int> IntToIntMap;
@@ -207,8 +207,8 @@ public:
 	void SetScriptObject(IScriptObject* pObject);
 	IScriptObject* GetScriptObject() { return m_pScriptObject; }
 
-	void Bind(EntityId id, unsigned char cBind, const bool bClientOnly, const bool bSetPos);
-	void Unbind(EntityId id, unsigned char cBind, const bool bClientOnly);
+	void Bind(EntityId id, uchar cBind, const bool bClientOnly, const bool bSetPos);
+	void Unbind(EntityId id, uchar cBind, const bool bClientOnly);
 	void AttachToBone(EntityId id, const char* boneName);
 	BoneBindHandle AttachObjectToBone(int slot, const char* boneName, bool bMultipleAttachments = false, bool bUseZOffset = false);
 	void DetachObjectToBone(const char* boneName, BoneBindHandle objectBindHandle = -1);
@@ -273,7 +273,7 @@ public:
 	bool CreateSoftEntity(float mass, float density, bool bCloth, IPhysicalEntity* pAttachTo = WORLD_ENTITY, int iAttachToPart = -1);
 
 	//! AI stuff
-	bool RegisterInAISystem(unsigned short type, const AIObjectParameters& params);
+	bool RegisterInAISystem(ushort type, const AIObjectParameters& params);
 	void EnableAI(bool enabled) { if (m_pAIObject) m_pAIObject->IsEnabled(enabled); }
 
 
@@ -287,23 +287,23 @@ public:
 	//! Geometry related.
 	//////////////////////////////////////////////////////////////////////////
 	//! Add geometry object to entity.
-	bool	LoadObject(unsigned int pos, const char* fileName, float scale, const char* geomName = nullptr);
-	bool GetObjectPos(unsigned int slot, Vec3d& pos);
-	bool SetObjectPos(unsigned int slot, const Vec3d& pos);
-	bool GetObjectAngles(unsigned int slot, Vec3d& ang);
-	bool SetObjectAngles(unsigned int slot, const Vec3d& ang);
+	bool	LoadObject(uint pos, const char* fileName, float scale, const char* geomName = nullptr);
+	bool GetObjectPos(uint slot, Vec3d& pos);
+	bool SetObjectPos(uint slot, const Vec3d& pos);
+	bool GetObjectAngles(uint slot, Vec3d& ang);
+	bool SetObjectAngles(uint slot, const Vec3d& ang);
 	//! Load image to entity.
 	//! Check if attached object at specified slot loaded.
-	virtual bool	IsObjectLoaded(unsigned int slot);
+	virtual bool	IsObjectLoaded(uint slot);
 	//! Assign object to specified slot.
-	virtual bool	SetEntityObject(unsigned int slot, const CEntityObject& object);
+	virtual bool	SetEntityObject(uint slot, const CEntityObject& object);
 	//! Get object at specified slot.
-	virtual bool	GetEntityObject(unsigned int slot, CEntityObject& object);
+	virtual bool	GetEntityObject(uint slot, CEntityObject& object);
 	//! Get number of attached objects.
 	virtual int		GetNumObjects() { return m_objects.size(); };
 
 	//! Draw spcific geometry slot.
-	void	DrawObject(unsigned int pos, int mode);
+	void	DrawObject(uint pos, int mode);
 	// Draw all geometry slots.
 	void	DrawObject(int mode);
 
@@ -522,7 +522,7 @@ public:
 	void LoadBreakableObject(const char* pFileName);
 	IAIObject* GetAI();
 	void RotateTo(const Vec3d& angles, bool bUpdatePhysics = true);
-	IStatObj* GetIStatObj(unsigned int pos);
+	IStatObj* GetIStatObj(uint pos);
 
 	Vec3d GetSoundPos();
 	void PlaySound(ISound* pSound, float fSoundScale, Vec3d& Offset);
@@ -557,11 +557,11 @@ public:
 	void CheckEntityLightSourcesInEntityObjects();
 
 	//! return pointer to object and it's transformation
-	virtual IStatObj* GetEntityStatObj(unsigned int nSlot, Matrix44* pMatrix = nullptr, bool bReturnOnlyVisible = false);
+	virtual IStatObj* GetEntityStatObj(uint nSlot, Matrix44* pMatrix = nullptr, bool bReturnOnlyVisible = false);
 	//! set entity object and it's transformation
-	void SetEntityStatObj(unsigned int nSlot, IStatObj* pStatObj, Matrix44* pMatrix = nullptr);
+	void SetEntityStatObj(uint nSlot, IStatObj* pStatObj, Matrix44* pMatrix = nullptr);
 	//! return pointer to object and it's transformation
-	virtual ICryCharInstance* GetEntityCharacter(unsigned int nSlot, Matrix44* pMatrix = nullptr);
+	virtual ICryCharInstance* GetEntityCharacter(uint nSlot, Matrix44* pMatrix = nullptr);
 
 	//! inits structure needed for rendering
 	void InitEntityRenderState();
@@ -695,36 +695,36 @@ private:
 	//////////////////////////////////////////////////////////////////////////
 	// Flags first (Reduce cache misses on access to entity data).
 	//////////////////////////////////////////////////////////////////////////
-	unsigned int m_bUpdate : 1;
-	unsigned int m_bSleeping : 1;
-	unsigned int m_bGarbage : 1;
-	unsigned int m_bIsBound : 1;
-	//	unsigned int m_bForceBBox : 1; // moved into IEntityRender
-	unsigned int m_bRecalcBBox : 1;
-	unsigned int m_bInitialized : 1;						//!< If this entity already Initialized.
-	unsigned int m_netPresence : 1;							//!< Where entity should be present.
-	unsigned int m_bHidden : 1;
-	unsigned int m_bTrackable : 1;							//!< Trackable in MotionTracker...
-	unsigned int m_bHandIK : 1;
-	unsigned int m_bForceBindCalculation : 1;
-	unsigned int m_bSave : 1;										//!< Should be saved on disk(when the level is saved) by default is true
-	unsigned int m_bEntityHasLights : 1;				//!< entity objects has light sources
-	unsigned int m_bEntityLightsOn : 1;					//!< if the entity objects light sources are enabled
-	unsigned int m_bTrackColliders : 1;					//!< If entity want to track collider and generate Enter/Leave events.
-	unsigned int m_bUpdateSounds : 1;						//!< If true will update attached sounds.
-	unsigned int m_bUpdateAI : 1;								//!< If set will update AI objects.
-	unsigned int m_bUpdateEmitters : 1;					//!< Particle emitters present and active.
-	unsigned int m_bUpdateScript : 1;						//!< True if script update function should be called.
-	unsigned int m_bUpdateContainer : 1;				//!< True if container must be updated.
-	unsigned int m_bUpdateCharacters : 1;				//!< True if characters must be updated.
-	unsigned int m_bUpdateCamera : 1;						//!< True if must update entity camera.
-	unsigned int m_bUpdateBinds : 1;						//!< True if must update binded entities.
-	unsigned int m_bUpdateOnContact : 1;				//!< True if must check for OnContact collisions.
-	unsigned int m_bIsADeadBody : 1;						//!< True is entity is a dead body (set in KillCharacter)
-	unsigned int m_bVisible : 1;								//!< Remembers visibility state from the last update
-	unsigned int m_bWasVisible : 1;							//!< Remembers visibility state from the update before the last one
-	unsigned int m_bHasEnvLighting : 1;					//!< 
-	unsigned int m_bStateClientside : 1;				//!< prevents error when state changes on the client and does not sync state changes to the client 
+	uint m_bUpdate : 1;
+	uint m_bSleeping : 1;
+	uint m_bGarbage : 1;
+	uint m_bIsBound : 1;
+	//	uint m_bForceBBox : 1; // moved into IEntityRender
+	uint m_bRecalcBBox : 1;
+	uint m_bInitialized : 1;						//!< If this entity already Initialized.
+	uint m_netPresence : 1;							//!< Where entity should be present.
+	uint m_bHidden : 1;
+	uint m_bTrackable : 1;							//!< Trackable in MotionTracker...
+	uint m_bHandIK : 1;
+	uint m_bForceBindCalculation : 1;
+	uint m_bSave : 1;										//!< Should be saved on disk(when the level is saved) by default is true
+	uint m_bEntityHasLights : 1;				//!< entity objects has light sources
+	uint m_bEntityLightsOn : 1;					//!< if the entity objects light sources are enabled
+	uint m_bTrackColliders : 1;					//!< If entity want to track collider and generate Enter/Leave events.
+	uint m_bUpdateSounds : 1;						//!< If true will update attached sounds.
+	uint m_bUpdateAI : 1;								//!< If set will update AI objects.
+	uint m_bUpdateEmitters : 1;					//!< Particle emitters present and active.
+	uint m_bUpdateScript : 1;						//!< True if script update function should be called.
+	uint m_bUpdateContainer : 1;				//!< True if container must be updated.
+	uint m_bUpdateCharacters : 1;				//!< True if characters must be updated.
+	uint m_bUpdateCamera : 1;						//!< True if must update entity camera.
+	uint m_bUpdateBinds : 1;						//!< True if must update binded entities.
+	uint m_bUpdateOnContact : 1;				//!< True if must check for OnContact collisions.
+	uint m_bIsADeadBody : 1;						//!< True is entity is a dead body (set in KillCharacter)
+	uint m_bVisible : 1;								//!< Remembers visibility state from the last update
+	uint m_bWasVisible : 1;							//!< Remembers visibility state from the update before the last one
+	uint m_bHasEnvLighting : 1;					//!< 
+	uint m_bStateClientside : 1;				//!< prevents error when state changes on the client and does not sync state changes to the client 
 
 	//////////////////////////////////////////////////////////////////////////
 	//! As long as this counter is not 0, entity will be forced to be updated.
@@ -763,9 +763,9 @@ private:
 	//! Name of current state.
 	string	m_sStateName;
 	EntityStateMap m_mapStates;
-	unsigned char m_cLastStateID;
+	uchar m_cLastStateID;
 
-	unsigned int m_nLastVisibleFrameID;
+	uint m_nLastVisibleFrameID;
 	//@FIXME: In Development!!!
 	SScriptState* m_pClientState;
 	SScriptState* m_pServerState;
@@ -823,7 +823,7 @@ private:
 	enum phystype { PHYS_NONE = 0, PHYS_STATIC = 1, PHYS_RIGID = 2 };
 	int m_iPhysType;
 	PhysData m_PhysData;
-	unsigned char* m_pPhysState;
+	uchar* m_pPhysState;
 	int m_iPhysStateSize;
 
 	CEntitySystem* m_pEntitySystem;
@@ -930,7 +930,7 @@ private:
 	Vec3	m_realcenter;
 	Ang3 m_realangles;
 	EntityId m_idBoundTo;	// these are transmitted by the server to clients
-	unsigned char m_cBind;
+	uchar m_cBind;
 
 	Vec3	m_vBoxMin, m_vBoxMax;
 	Vec3  m_vForceBBoxMin, m_vForceBBoxMax;

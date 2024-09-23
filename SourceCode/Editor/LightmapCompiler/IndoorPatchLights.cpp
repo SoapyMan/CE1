@@ -127,7 +127,7 @@ CLightScene::~CLightScene()
 }
 
 //check normals to be normalized, trace a warning to tell that this is not correct
-const unsigned int CLightScene::CheckNormals(float& rfMaxVariance, const CRadMesh* const pMesh) const
+const uint CLightScene::CheckNormals(float& rfMaxVariance, const CRadMesh* const pMesh) const
 {
 	const bool bNotNormalized = ((pMesh->m_uiFlags & NOT_NORMALIZED_NORMALS_FLAG) == 0) ? false : true;
 	if (bNotNormalized)
@@ -135,7 +135,7 @@ const unsigned int CLightScene::CheckNormals(float& rfMaxVariance, const CRadMes
 	else
 		rfMaxVariance = 0.f;
 	const bool bWrongNormals = ((pMesh->m_uiFlags & WRONG_NORMALS_FLAG) == 0) ? false : true;
-	unsigned int uiRet = 0;
+	uint uiRet = 0;
 	if (bNotNormalized)
 	{
 		rfMaxVariance = sqrtf(rfMaxVariance);//to retrieve real variance, not the squared one
@@ -160,7 +160,7 @@ inline void CLightScene::MergeTangentSpace(CRadVertex& rVertex1, CRadVertex& rVe
 	  they are mapped into the vertex sharing polygons to produce the right, smooth value
 	- this function computes the hash_map and sets the hash indices into the respective polygons
 */
-void CLightScene::ComputeSmoothingInformation(RadSceneState& sceneState, const unsigned int uiSmoothAngle, const bool cbTSGeneratedByLM) const
+void CLightScene::ComputeSmoothingInformation(RadSceneState& sceneState, const uint uiSmoothAngle, const bool cbTSGeneratedByLM) const
 {
 	assert(uiSmoothAngle <= 90);
 	//will only smmoth an edge if it really is one, otherwise normals are treated differently
@@ -256,10 +256,10 @@ void CLightScene::ComputeSmoothingInformation(RadSceneState& sceneState, const u
 									pPatchInner->m_dwFlags |= SHARED_FLAG; //mark as not to compress due to some sharing polygons
 									//both triangles share two vertices
 									//prepare second pair values
-									const unsigned int uiSecondOuter = ((iFirstFoundIndexOuter | (k1 << 8)) | ((iFirstFoundIndexInner | (k2 << 8)) << 16));
-									const unsigned int uiSecondInner = ((iFirstFoundIndexInner | (k2 << 8)) | ((iFirstFoundIndexOuter | (k1 << 8)) << 16));
-									rPolyOuter.m_SharingPolygons.push_back(std::pair<CRadPoly*, unsigned int>(&rPolyInner, uiSecondOuter));	//add this polygon to the respective list and vice versa
-									rPolyInner.m_SharingPolygons.push_back(std::pair<CRadPoly*, unsigned int>(&rPolyOuter, uiSecondInner));
+									const uint uiSecondOuter = ((iFirstFoundIndexOuter | (k1 << 8)) | ((iFirstFoundIndexInner | (k2 << 8)) << 16));
+									const uint uiSecondInner = ((iFirstFoundIndexInner | (k2 << 8)) | ((iFirstFoundIndexOuter | (k1 << 8)) << 16));
+									rPolyOuter.m_SharingPolygons.push_back(std::pair<CRadPoly*, uint>(&rPolyInner, uiSecondOuter));	//add this polygon to the respective list and vice versa
+									rPolyInner.m_SharingPolygons.push_back(std::pair<CRadPoly*, uint>(&rPolyOuter, uiSecondInner));
 									bShareCond = true;
 								}
 								if (bShareCond)
@@ -275,10 +275,10 @@ void CLightScene::ComputeSmoothingInformation(RadSceneState& sceneState, const u
 								pPatchInner->m_dwFlags |= SHARED_FLAG; //mark as not to compress due to some sharing polygons
 								//both triangles share at least one vertex
 								//prepare second pair values
-								const unsigned int uiSecondOuter = ((iFirstFoundIndexOuter | (CRadPoly::scuiOneVertexShareFlag << 8)) | ((iFirstFoundIndexInner | (CRadPoly::scuiOneVertexShareFlag << 8)) << 16));
-								const unsigned int uiSecondInner = ((iFirstFoundIndexInner | (CRadPoly::scuiOneVertexShareFlag << 8)) | ((iFirstFoundIndexOuter | (CRadPoly::scuiOneVertexShareFlag << 8)) << 16));
-								rPolyOuter.m_SharingPolygons.push_back(std::pair<CRadPoly*, unsigned int>(&rPolyInner, uiSecondOuter));	//add this polygon to the respective list and vice versa
-								rPolyInner.m_SharingPolygons.push_back(std::pair<CRadPoly*, unsigned int>(&rPolyOuter, uiSecondInner));
+								const uint uiSecondOuter = ((iFirstFoundIndexOuter | (CRadPoly::scuiOneVertexShareFlag << 8)) | ((iFirstFoundIndexInner | (CRadPoly::scuiOneVertexShareFlag << 8)) << 16));
+								const uint uiSecondInner = ((iFirstFoundIndexInner | (CRadPoly::scuiOneVertexShareFlag << 8)) | ((iFirstFoundIndexOuter | (CRadPoly::scuiOneVertexShareFlag << 8)) << 16));
+								rPolyOuter.m_SharingPolygons.push_back(std::pair<CRadPoly*, uint>(&rPolyInner, uiSecondOuter));	//add this polygon to the respective list and vice versa
+								rPolyInner.m_SharingPolygons.push_back(std::pair<CRadPoly*, uint>(&rPolyOuter, uiSecondInner));
 							}
 						}//outer lightmap mesh polygon per vertex iteration		
 					}//inner lightmap mesh polygon iteration
@@ -602,7 +602,7 @@ void CLightScene::SelectObjectsFromChangedLMShadowCaster(
 	std::vector<std::pair<IEntityRender*, CBrushObject*> >& vNodes,
 	const std::vector<AABB>& vAABBs,
 	const Matrix33& rMatSunBasis,
-	const std::vector<unsigned int>& rvNodeRadMeshIndices)
+	const std::vector<uint>& rvNodeRadMeshIndices)
 {
 	//find out all objects which need to be detected due to receiving shadows from hash changed objects
 	int iMeshCounter = -1;
@@ -674,7 +674,7 @@ void CLightScene::SelectObjectLMReceiverAndShadowCasterForChanges(
 	std::vector<std::pair<IEntityRender*, CBrushObject*> >& vNodes,
 	const std::vector<AABB>& vAABBs,
 	const Matrix33& rMatSunBasis,
-	const std::vector<unsigned int>& rvNodeRadMeshIndices,
+	const std::vector<uint>& rvNodeRadMeshIndices,
 	const ELMMode Mode)
 {
 	//gets called in case of not rebuildALL
@@ -771,7 +771,7 @@ void CLightScene::CheckLight(LMCompLight& rLight, const int iCurLightIdx)
 
 		char text[scuiWarningTextAllocation];
 		sprintf(text, "Light: %s has little or no contribution to the scene\r\n", (const char*)rLight.m_Name);
-		m_WarningInfo.insert(std::pair<unsigned int, std::string>(EWARNING_LIGHT_INTENSITY, std::string(text)));
+		m_WarningInfo.insert(std::pair<uint, std::string>(EWARNING_LIGHT_INTENSITY, std::string(text)));
 	}
 
 	// Radius invalid ?
@@ -781,7 +781,7 @@ void CLightScene::CheckLight(LMCompLight& rLight, const int iCurLightIdx)
 		rLight.fRadius = 0.001f;
 		char text[scuiWarningTextAllocation];
 		sprintf(text, "Light: %s has negative or unreasonable small radius\r\n", (const char*)rLight.m_Name);
-		m_WarningInfo.insert(std::pair<unsigned int, std::string>(EWARNING_LIGHT_RADIUS, std::string(text)));
+		m_WarningInfo.insert(std::pair<uint, std::string>(EWARNING_LIGHT_RADIUS, std::string(text)));
 	}
 
 	// Frustum invalid ?
@@ -793,7 +793,7 @@ void CLightScene::CheckLight(LMCompLight& rLight, const int iCurLightIdx)
 			rLight.fLightFrustumAngleDegree = 89.9f;
 			char text[scuiWarningTextAllocation];
 			sprintf(text, "Spotlight: %s has an invalid frustum (%f°)\r\n", (const char*)rLight.m_Name, rLight.fLightFrustumAngleDegree);
-			m_WarningInfo.insert(std::pair<unsigned int, std::string>(EWARNING_LIGHT_FRUSTUM, std::string(text)));
+			m_WarningInfo.insert(std::pair<uint, std::string>(EWARNING_LIGHT_FRUSTUM, std::string(text)));
 		}
 	}
 }
@@ -834,7 +834,7 @@ bool CLightScene::CreateFromEntity(const IndoorBaseInterface& pInterface, LMGenP
 	assert(m_pISerializationManager != NULL);
 
 	bool bReturn = true;
-	unsigned int uiMeshesToProcess = 0;
+	uint uiMeshesToProcess = 0;
 
 	_TRACE(m_LogInfo, true, "Parameters:\r\n", m_sParam.m_fTexelSize);
 	_TRACE(m_LogInfo, true, "Code Version = 4.0\r\n");
@@ -875,7 +875,7 @@ bool CLightScene::CreateFromEntity(const IndoorBaseInterface& pInterface, LMGenP
 		_TRACE(m_LogInfo, true, "ERROR: Exporting of lightsources to '%s' failed !\r\n", strLMExportFile.c_str());
 		char text[scuiWarningTextAllocation];
 		sprintf(text, "Exporting of lightsources to '%s' failed !\r\n", strLMExportFile.c_str());
-		m_WarningInfo.insert(std::pair<unsigned int, std::string>(EWARNING_LIGHT_EXPORT_FAILED, std::string(text)));
+		m_WarningInfo.insert(std::pair<uint, std::string>(EWARNING_LIGHT_EXPORT_FAILED, std::string(text)));
 	}
 
 	if (sParam.m_bOnlyExportLights)
@@ -915,7 +915,7 @@ bool CLightScene::CreateFromEntity(const IndoorBaseInterface& pInterface, LMGenP
 	_TRACE(m_LogInfo, true, "Preparing meshes (tangents, AABBs, plane equations, local lightsources, etc.)... ");
 	std::vector<AABB> vAABBs;
 	vAABBs.reserve(vNodes.size());
-	std::vector<unsigned int> vNodeRadMeshIndices;	vNodeRadMeshIndices.reserve(vNodes.size());//saves per added mesh the node index
+	std::vector<uint> vNodeRadMeshIndices;	vNodeRadMeshIndices.reserve(vNodes.size());//saves per added mesh the node index
 	int iNodeIndex = -1;
 	for (itEty = vNodes.begin(); itEty != vNodes.end(); itEty++)
 	{
@@ -1038,7 +1038,7 @@ bool CLightScene::CreateFromEntity(const IndoorBaseInterface& pInterface, LMGenP
 			Vec3 min, max;
 			pIEtyRend->GetBBox(min, max);
 			vAABBs.push_back(MakeSafeAABB(min, max));
-			vNodeRadMeshIndices.push_back((unsigned int)iNodeIndex);
+			vNodeRadMeshIndices.push_back((uint)iNodeIndex);
 		}
 	}
 	// Create light space transform for sun light
@@ -1381,8 +1381,8 @@ bool CLightScene::CreateFromEntity(const IndoorBaseInterface& pInterface, LMGenP
 
 	if (bReturn)
 	{
-		unsigned int uiSec = (GetTickCount() - dwStartTime + 499) / 1000;
-		const unsigned int cuiMinutes = uiSec / 60;
+		uint uiSec = (GetTickCount() - dwStartTime + 499) / 1000;
+		const uint cuiMinutes = uiSec / 60;
 		uiSec -= cuiMinutes * 60;
 		_TRACE(m_LogInfo, true, "Total computation time was %i min  %i s\r\n", cuiMinutes, uiSec);
 		_TRACE(m_LogInfo, true, "Lightmap compiler successfully finished\r\n");
@@ -1650,10 +1650,10 @@ void CLightScene::WriteLogInfo()
 	fwrite(sSummary.c_str(), 1, sSummary.size(), pErrorFile);		//write encoded data
 	if (m_WarningInfo.size() != 0)
 	{
-		unsigned int uiLastType = (m_WarningInfo.begin())->first;
-		for (std::multimap<unsigned int, std::string>::const_iterator iter = m_WarningInfo.begin(); iter != m_WarningInfo.end(); ++iter)
+		uint uiLastType = (m_WarningInfo.begin())->first;
+		for (std::multimap<uint, std::string>::const_iterator iter = m_WarningInfo.begin(); iter != m_WarningInfo.end(); ++iter)
 		{
-			const unsigned int cuiCurrentType = iter->first;
+			const uint cuiCurrentType = iter->first;
 			if (cuiCurrentType != uiLastType)
 			{
 				fwrite("\r\n", 1, 2, pErrorFile);
@@ -1680,13 +1680,13 @@ float RadSceneState::ComputeHalvedLightmapQuality(const float fOldValue) const
 void CLightScene::DoLightCalculation(
 	RadSceneState& sceneState,
 	CRadPoly* pSource,
-	unsigned int& ruiMaxColourComp,
+	uint& ruiMaxColourComp,
 	const std::vector<LMCompLight*>& vLights,
 	const std::vector<LMCompLight*>& vOcclLights,
 	SComplexOSDot3Texel& dot3Texel,
 	const CRadVertex& Vert,
 	const bool cbFirstPass,
-	const unsigned int cuiSubSampleIndex) const
+	const uint cuiSubSampleIndex) const
 {
 	Vec3d vLightDir = Vec3d(0, 0, 0);
 	float fColorRLamb = 0.0f, fColorGLamb = 0.0f, fColorBLamb = 0.0f;
@@ -1858,7 +1858,7 @@ void CLightScene::ProcessMesh(RadSceneState& sceneState) const
 		pSource->AllocateDot3Lightmap(m_sParam.m_bHDR, m_sParam.m_bGenOcclMaps);//for subsampling world space light vector is used
 		//iterate all texels of the current patch grid
 #ifdef APPLY_COLOUR_FIX
-		unsigned int uiMaxColourComp = 0;
+		uint uiMaxColourComp = 0;
 #endif
 		for (int y = 0; y < pSource->m_nH; y++)
 			for (int x = 0; x < pSource->m_nW; x++)
@@ -1884,7 +1884,7 @@ void CLightScene::ProcessMesh(RadSceneState& sceneState) const
 	} // i
 }
 
-bool CLightScene::Create(const IndoorBaseInterface& pInterface, const Vec3d& vMinBB, const Vec3d& vMaxBB, volatile SSharedLMEditorData* pSharedData, const ELMMode Mode, const unsigned int cuiMeshesToProcessCount)
+bool CLightScene::Create(const IndoorBaseInterface& pInterface, const Vec3d& vMinBB, const Vec3d& vMaxBB, volatile SSharedLMEditorData* pSharedData, const ELMMode Mode, const uint cuiMeshesToProcessCount)
 {
 	//for logging stuff
 	static char sTraceString[1024];
@@ -1931,7 +1931,7 @@ bool CLightScene::Create(const IndoorBaseInterface& pInterface, const Vec3d& vMi
 
 	//display first GLM processing messages
 
-	unsigned int uiStartIndex = 0;
+	uint uiStartIndex = 0;
 
 	//seek to the first relevant GLM
 	radmeshit itRadMesh = m_lstRadMeshes.begin();
@@ -1989,7 +1989,7 @@ bool CLightScene::Create(const IndoorBaseInterface& pInterface, const Vec3d& vMi
 		//alter some display things
 		if (pSharedData != NULL)
 		{
-			const unsigned char cucProgress = static_cast<unsigned int>(static_cast<float>(iCurMesh) / static_cast<float>(cuiMeshesToProcessCount + 1) * 100.0f);
+			const unsigned char cucProgress = static_cast<uint>(static_cast<float>(iCurMesh) / static_cast<float>(cuiMeshesToProcessCount + 1) * 100.0f);
 			if (cucProgress != ucLastProgress)
 				::SendMessage(pSharedData->hwnd, pSharedData->uiProgressMessage, cucProgress, 0);//update progress bar
 			::SendMessage(pSharedData->hwnd, pSharedData->uiMemUsageMessage, crymin(GetUsedMemory(), 1000), 0);//update progress bar
@@ -2066,7 +2066,7 @@ bool CLightScene::Create(const IndoorBaseInterface& pInterface, const Vec3d& vMi
 					}
 					char text[scuiWarningTextAllocation];
 					sprintf(text, "GLM: %s did not fit into a single lightmap, nLightmapQuality has been changed from %f to %f\r\n", (const char*)pMesh->m_sGLMName, fOldValue, fCurrentValue);
-					m_WarningInfo.insert(std::pair<unsigned int, std::string>(EWARNING_NO_FIT, std::string(text)));
+					m_WarningInfo.insert(std::pair<uint, std::string>(EWARNING_NO_FIT, std::string(text)));
 				}
 
 				assert(m_pCurrentPatch != NULL);
@@ -2108,7 +2108,7 @@ bool CLightScene::Create(const IndoorBaseInterface& pInterface, const Vec3d& vMi
 	//signal completion
 	if (pSharedData != NULL)
 	{
-		const unsigned char cuiProgress = (bSerialize == true) ? static_cast<unsigned int>(static_cast<float>(cuiMeshesToProcessCount) / static_cast<float>(cuiMeshesToProcessCount + 1) * 100.0f) : 0;
+		const unsigned char cuiProgress = (bSerialize == true) ? static_cast<uint>(static_cast<float>(cuiMeshesToProcessCount) / static_cast<float>(cuiMeshesToProcessCount + 1) * 100.0f) : 0;
 		::SendMessage(pSharedData->hwnd, pSharedData->uiProgressMessage, cuiProgress, 0);
 		::SendMessage(pSharedData->hwnd, pSharedData->uiMemUsageMessage, crymin(GetUsedMemory(), 1000), 0);//update progress bar
 		::SendMessage(pSharedData->hwnd, pSharedData->uiMemUsageStatic, crymin(GetUsedMemory(), 1000), 0);//update progress bar static element
@@ -2159,7 +2159,7 @@ void CLightScene::GenerateTexCoords(const CRadMesh& rRadMesh, LMAssignQueueItem&
 		UINT iCurTri = 0;
 		for (iCurTri = 0; iCurTri < cCurMat.nNumIndices / 3; iCurTri++)
 		{
-			const unsigned int iBaseIdx = cCurMat.nFirstIndexId + iCurTri * 3;
+			const uint iBaseIdx = cCurMat.nFirstIndexId + iCurTri * 3;
 			CRadPoly* pPoly = (*itPoly);
 			assert(pPoly->m_lstOriginals.size() == 3);
 			rNewGLMQueueItm.vSortedTexCoords[pIndices[iBaseIdx]] =
@@ -2189,26 +2189,26 @@ const bool CLightScene::FlushAndSave(volatile SSharedLMEditorData* pSharedData, 
 	// Export all LM data to LM_EXPORT_FILE_NAME in the directory of the level
 	string strLMExportFile = m_IndInterface.m_p3dEngine->GetFilePath(LM_EXPORT_FILE_NAME);
 	_TRACE(m_LogInfo, true, "Exporting lightmap data to '%s'\r\n", strLMExportFile.c_str());
-	unsigned int res = m_pISerializationManager->Save(strLMExportFile.c_str(), m_sParam, Mode != ELMMode_ALL);
+	uint res = m_pISerializationManager->Save(strLMExportFile.c_str(), m_sParam, Mode != ELMMode_ALL);
 	switch (res)
 	{
 	case NSAVE_RESULT::ESUCCESS:
 		break;
 	case NSAVE_RESULT::EPAK_FILE_UPDATE_FAIL:
 		_TRACE(m_LogInfo, true, "Could not update lightmap pak-file. Exporting failed!\r\n");
-		m_WarningInfo.insert(std::pair<unsigned int, std::string>(EWARNING_EXPORT_FAILED, std::string("Could not update lightmap pak-file. Exporting failed!\r\n")));
+		m_WarningInfo.insert(std::pair<uint, std::string>(EWARNING_EXPORT_FAILED, std::string("Could not update lightmap pak-file. Exporting failed!\r\n")));
 		return false;
 	case NSAVE_RESULT::EDXT_COMPRESS_FAIL:
 		_TRACE(m_LogInfo, true, "DXT compression for lightmaps failed. Exporting failed!\r\n");
-		m_WarningInfo.insert(std::pair<unsigned int, std::string>(EWARNING_EXPORT_FAILED, std::string("DXT compression for lightmaps failed. Exporting failed!\r\n")));
+		m_WarningInfo.insert(std::pair<uint, std::string>(EWARNING_EXPORT_FAILED, std::string("DXT compression for lightmaps failed. Exporting failed!\r\n")));
 		return false;
 	case NSAVE_RESULT::EPAK_FILE_OPEN_FAIL:
 		_TRACE(m_LogInfo, true, "Could not open lightmap pak-file. Exporting failed!\r\n");
-		m_WarningInfo.insert(std::pair<unsigned int, std::string>(EWARNING_EXPORT_FAILED, std::string("Could not open lightmap pak-file. Exporting failed!\r\n")));
+		m_WarningInfo.insert(std::pair<uint, std::string>(EWARNING_EXPORT_FAILED, std::string("Could not open lightmap pak-file. Exporting failed!\r\n")));
 		return false;
 	default:
 		_TRACE(m_LogInfo, true, "Exporting failed!\r\n");
-		m_WarningInfo.insert(std::pair<unsigned int, std::string>(EWARNING_EXPORT_FAILED, std::string("Exporting of lightmaps failed!\r\n")));
+		m_WarningInfo.insert(std::pair<uint, std::string>(EWARNING_EXPORT_FAILED, std::string("Exporting of lightmaps failed!\r\n")));
 		return false;
 	}
 
@@ -2289,18 +2289,18 @@ void CLightScene::FlushAssignQueue()
 	m_pCurrentPatch = NULL;
 }
 
-void CLightScene::GatherSubSampleTexel(const CRadPoly* pSource, const int ciX, const int ciY, std::set<std::pair<unsigned int, unsigned int> >& rvSubTexels) const
+void CLightScene::GatherSubSampleTexel(const CRadPoly* pSource, const int ciX, const int ciY, std::set<std::pair<uint, uint> >& rvSubTexels) const
 {
 	//if triangle was not hit properly(needed a snap), subsample
 	const SComplexOSDot3Texel* pWSDominantDirData = pSource->m_pWSDominantDirData;
-	const unsigned int cuiPatchWidth = pSource->m_nW;
-	const unsigned int cuiPatchHeight = pSource->m_nH;
+	const uint cuiPatchWidth = pSource->m_nW;
+	const uint cuiPatchHeight = pSource->m_nH;
 	const SComplexOSDot3Texel& rDot3Texel = pWSDominantDirData[ciY * cuiPatchWidth + ciX];
 	const unsigned char* pTexelColour = &(pSource->m_pLightmapData[4 * (ciY * cuiPatchWidth + ciX)]);
 	const unsigned char* pHDRTexelColour = NULL;
-	static const unsigned int scuiMaxDiff = 30; //default coarse max value 
+	static const uint scuiMaxDiff = 30; //default coarse max value 
 	static const float scfMaxDot3Diff = 0.86f;	//default coarse max value cosine for dot product check
-	static const unsigned int scuiNotHitMaxDiff = 17;	//finer value if a texel has not been hit the patch
+	static const uint scuiNotHitMaxDiff = 17;	//finer value if a texel has not been hit the patch
 	static const float scfNotHitMaxDot3Diff = 0.9f;	//finer value if a texel has not been hit the patch
 	bool bVertexInserted = false;
 	//check all neighbour texels
@@ -2316,7 +2316,7 @@ void CLightScene::GatherSubSampleTexel(const CRadPoly* pSource, const int ciX, c
 				if (!bVertexInserted)
 				{
 					bVertexInserted = true;
-					rvSubTexels.insert(std::pair<unsigned int, unsigned int>(ciX, ciY));
+					rvSubTexels.insert(std::pair<uint, uint>(ciX, ciY));
 					return;
 				}
 			}
@@ -2330,7 +2330,7 @@ void CLightScene::GatherSubSampleTexel(const CRadPoly* pSource, const int ciX, c
 					if (!bVertexInserted)
 					{
 						bVertexInserted = true;
-						rvSubTexels.insert(std::pair<unsigned int, unsigned int>(ciX, ciY));
+						rvSubTexels.insert(std::pair<uint, uint>(ciX, ciY));
 						return;
 					}
 				}
@@ -2346,7 +2346,7 @@ void CLightScene::GatherSubSampleTexel(const CRadPoly* pSource, const int ciX, c
 				if (!bVertexInserted)
 				{
 					bVertexInserted = true;
-					rvSubTexels.insert(std::pair<unsigned int, unsigned int>(ciX, ciY));
+					rvSubTexels.insert(std::pair<uint, uint>(ciX, ciY));
 					return;
 				}
 			}
@@ -2355,7 +2355,7 @@ void CLightScene::GatherSubSampleTexel(const CRadPoly* pSource, const int ciX, c
 
 void CLightScene::SetSubSampleDot3LightmapTexel(
 	RadSubSampling& subSampling,
-	const unsigned int cuiSubSampleIndex,
+	const uint cuiSubSampleIndex,
 	const float fColorRLamb, const float fColorGLamb, const float fColorBLamb,
 	Vec3d& inLightDir, const float cfLM_DP3LerpFactor,
 	SComplexOSDot3Texel& rDot3Texel, const SOcclusionMapTexel& rOcclTexel, bool bHDR) const
@@ -2371,7 +2371,7 @@ void CLightScene::SetSubSampleDot3LightmapTexel(
 }
 
 #ifdef APPLY_COLOUR_FIX
-void CLightScene::PerformAdaptiveSubSampling(RadSceneState& sceneState, CRadPoly* pSource, const std::vector<LMCompLight*>& vLights, const std::vector<LMCompLight*>& vOcclLights, unsigned int uiMaxComponent) const
+void CLightScene::PerformAdaptiveSubSampling(RadSceneState& sceneState, CRadPoly* pSource, const std::vector<LMCompLight*>& vLights, const std::vector<LMCompLight*>& vOcclLights, uint uiMaxComponent) const
 #else
 void CLightScene::PerformAdaptiveSubSampling(RadSceneState& sceneState, CRadPoly* pSource, const std::vector<LMCompLight*>& vLights, const std::vector<LMCompLight*>& vOcclLights) const
 #endif
@@ -2390,7 +2390,7 @@ void CLightScene::PerformAdaptiveSubSampling(RadSceneState& sceneState, CRadPoly
 	{
 		assert(subSamling.puiIndicator);	//enough to ensure others are valid as well
 		//now check which texel an accurater sampling scheme need
-		std::set<std::pair<unsigned int, unsigned int> > vSubTexels;	//set containing all (unique) texel indices requiring subsampling
+		std::set<std::pair<uint, uint> > vSubTexels;	//set containing all (unique) texel indices requiring subsampling
 		//always check the neighbour texels for any differences
 		for (int y = 0; y < pSource->m_nH; y++)//supersample
 			for (int x = 0; x < pSource->m_nW; x++)//supersample
@@ -2399,13 +2399,13 @@ void CLightScene::PerformAdaptiveSubSampling(RadSceneState& sceneState, CRadPoly
 		if (vSubTexels.size() > 1)
 			pSource->m_dwFlags |= DO_NOT_COMPRESS_FLAG;//optimization
 
-		unsigned int uiMaxColourComp = 0; //not needed here but to be able to share a function
+		uint uiMaxColourComp = 0; //not needed here but to be able to share a function
 		//now subsample for all these texels
-		for (std::set<std::pair<unsigned int, unsigned int> >::const_iterator iter = vSubTexels.begin(); iter != vSubTexels.end(); ++iter)
+		for (std::set<std::pair<uint, uint> >::const_iterator iter = vSubTexels.begin(); iter != vSubTexels.end(); ++iter)
 		{
 			int uiSubSampleIndex = -1;//index to access subsample storage arrays
-			memset(subSamling.puiIndicator, 0, subSamling.uiSampleCount * sizeof(unsigned int));	// clear indicator
-			const unsigned int cuiX = iter->first;	const unsigned int cuiY = iter->second;
+			memset(subSamling.puiIndicator, 0, subSamling.uiSampleCount * sizeof(uint));	// clear indicator
+			const uint cuiX = iter->first;	const uint cuiY = iter->second;
 			for (int y = cuiY * gAASettings.GetScale(); y < (cuiY + 1) * gAASettings.GetScale(); y++)//supersample
 				for (int x = cuiX * gAASettings.GetScale(); x < (cuiX + 1) * gAASettings.GetScale(); x++)//supersample
 				{
@@ -2442,7 +2442,7 @@ void CLightScene::PerformAdaptiveSubSampling(RadSceneState& sceneState, CRadPoly
 #endif
 #ifdef APPLY_COLOUR_FIX
 	const float cfColourScale = (uiMaxComponent > 3) ? 255.f / (float)uiMaxComponent : 1.f;//prevent any zero calculation
-	const unsigned int cuiColourFixAlpha = (const unsigned char)crymin(255.0f, 128.f / cfColourScale);
+	const uint cuiColourFixAlpha = (const unsigned char)crymin(255.0f, 128.f / cfColourScale);
 #endif
 	//now set the tangent space values
 	for (int y = 0; y < pSource->m_nH; y++)

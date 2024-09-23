@@ -85,7 +85,7 @@ public:
 	virtual void OnXData(CStream &stm);
 	virtual void OnXServerTimeout();
 	virtual void OnXServerRessurect();
-	virtual unsigned int GetTimeoutCompensation();
+	virtual uint GetTimeoutCompensation();
 	virtual void MarkForDestruct();
 	virtual bool DestructIfMarked();
 
@@ -94,8 +94,8 @@ public:
 	void OnSpawnContainer( CEntityDesc &ed,IEntity *pEntity );
 	void OnSpawn(IEntity *ent,CEntityDesc & ed);
 	void OnRemove(IEntity *ent);
-	void OnBind(EntityId id,EntityId child,unsigned char param){}
-	void OnUnbind(EntityId id,EntityId child,unsigned char param){}
+	void OnBind(EntityId id,EntityId child,uchar param){}
+	void OnUnbind(EntityId id,EntityId child,uchar param){}
 
 	IClient* GetNetworkClient() const { return m_pIClient; };
 
@@ -121,14 +121,14 @@ public:
 	void UpdateClientNetwork();
 
 #ifdef PS2
-	unsigned int GetCurrentTime()
+	uint GetCurrentTime()
 	{
-		return (unsigned int)(m_pTimer->GetCurrTime()*1000.f);
+		return (uint)(m_pTimer->GetCurrTime()*1000.f);
 	}
 #else	
-	inline unsigned int GetCurrentTime()
+	inline uint GetCurrentTime()
 	{
-		return (unsigned int)(m_pTimer->GetCurrTime()*1000.f);
+		return (uint)(m_pTimer->GetCurrTime()*1000.f);
 	}
 #endif
 
@@ -148,11 +148,11 @@ public:
 	//!
 	void SendCommand(const char *sCmd);
 	//!
-	void SendScriptHashResponse( const unsigned int dwHash );
+	void SendScriptHashResponse( const uint dwHash );
 	//!
-	void SetBitsPerSecond( const unsigned int dwBitsPerSecond );
+	void SetBitsPerSecond( const uint dwBitsPerSecond );
 	//!
-	void SetUpdateRate( const unsigned int dwUpdatesPerSec );
+	void SetUpdateRate( const uint dwUpdatesPerSec );
 	//!
 	void AddHudMessage(const char *sMessage,float lifetime,bool bHighPriority=false);
   //!
@@ -399,7 +399,7 @@ public: // -------------------------------------------------------------
 	short								m_nGameLastTime;					//!< in seconds
 	float								m_fGameLastTimeReceived;	//!<
 
-	unsigned int				m_nDiscardedPackets;			//!<
+	uint				m_nDiscardedPackets;			//!<
 	
 	CXClientSnapshot		m_Snapshot;								//!< Snapshot
 	bool								m_bSelfDestruct;					//!< usually false, to make sure the client is only released in one place

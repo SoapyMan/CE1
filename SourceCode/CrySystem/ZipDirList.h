@@ -73,7 +73,7 @@ public:
 	ZipStats GetStats()const;
 
 	// puts the CDR into the given block of mem
-	size_t MakeZipCDR(ZipFile::ulong lCDROffset, void*p)const;
+	size_t MakeZipCDR(ulong lCDROffset, void*p)const;
 
 	void Backup(std::vector<FileEntry>&arrFiles)const;
 	void Restore(const std::vector<FileEntry>&arrFiles);

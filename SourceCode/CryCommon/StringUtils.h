@@ -296,7 +296,7 @@ namespace CryStringUtils
 		const char* findSubstringIn (const char* szBuffer, int nBufLength);
 	protected:
 		string m_strPattern;
-		unsigned char m_arrDelta[0x100];
+		uchar m_arrDelta[0x100];
 	};
 
 	CBMGSubstring::CBMGSubstring (const char* szPattern):
@@ -309,7 +309,7 @@ namespace CryStringUtils
 		memset(m_arrDelta, nPatternLength, sizeof(m_arrDelta));
 
 		for (int i = 0; i < nPatternLength; ++i)
-			m_arrDelta[((const unsigned char *)szPattern)[i]] = nPatternLength - i - 1;
+			m_arrDelta[((const uchar *)szPattern)[i]] = nPatternLength - i - 1;
 	}
 
 	// searchees for the substring in the given text buffer
@@ -326,9 +326,9 @@ namespace CryStringUtils
 
 		for (;;)
 		{
-			// the following (unsigned char *) type casts save a
+			// the following (uchar *) type casts save a
 			// few clocks by freeing us from some XCHGs
-			while ((inc = m_arrDelta[((unsigned char *)buffer)[k]]) &&
+			while ((inc = m_arrDelta[((uchar *)buffer)[k]]) &&
 				((k += inc) < buflen))
 				;
 			if (k >= buflen)

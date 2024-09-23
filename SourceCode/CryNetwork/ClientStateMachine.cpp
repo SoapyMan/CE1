@@ -39,7 +39,7 @@ void CClientStateMachine::_Trace(char* s)
 	//::OutputDebugString(s);
 }
 
-void CClientStateMachine::_TraceStatus(unsigned int dwStatus)
+void CClientStateMachine::_TraceStatus(uint dwStatus)
 {
 	switch (dwStatus) {
 	case STATUS_IDLE:
@@ -69,7 +69,7 @@ void CClientStateMachine::_TraceStatus(unsigned int dwStatus)
 	}
 }
 
-unsigned int CClientStateMachine::HandleANY(unsigned int dwIncomingSignal, DWORD_PTR dwParam)
+uint CClientStateMachine::HandleANY(uint dwIncomingSignal, DWORD_PTR dwParam)
 {
 	ANY_SIGNAL_EXCEPT(STATUS_DISCONNECTED);
 	BEGIN_ANY_SIGNAL_HANDLER(dwIncomingSignal)
@@ -88,7 +88,7 @@ unsigned int CClientStateMachine::HandleANY(unsigned int dwIncomingSignal, DWORD
 		END_ANY_SIGNAL_HANDLER()
 }
 
-void CClientStateMachine::HandleIDLE(unsigned int dwIncomingSignal, DWORD_PTR dwParam)
+void CClientStateMachine::HandleIDLE(uint dwIncomingSignal, DWORD_PTR dwParam)
 {
 	BEGIN_SIGNAL_HANDLER(dwIncomingSignal)
 		/////////////////////////////////////////////////////////////////////
@@ -101,7 +101,7 @@ void CClientStateMachine::HandleIDLE(unsigned int dwIncomingSignal, DWORD_PTR dw
 		END_SIGNAL_HANDLER()
 }
 
-void CClientStateMachine::HandleWAIT_FOR_CONNECT(unsigned int dwIncomingSignal, DWORD_PTR dwParam)
+void CClientStateMachine::HandleWAIT_FOR_CONNECT(uint dwIncomingSignal, DWORD_PTR dwParam)
 {
 	BEGIN_SIGNAL_HANDLER(dwIncomingSignal)
 		/////////////////////////////////////////////////////////////////////
@@ -120,7 +120,7 @@ void CClientStateMachine::HandleWAIT_FOR_CONNECT(unsigned int dwIncomingSignal, 
 		END_SIGNAL_HANDLER()
 }
 
-void CClientStateMachine::HandleCONNECTED(unsigned int dwIncomingSignal, DWORD_PTR dwParam)
+void CClientStateMachine::HandleCONNECTED(uint dwIncomingSignal, DWORD_PTR dwParam)
 {
 	BEGIN_SIGNAL_HANDLER(dwIncomingSignal)
 		/////////////////////////////////////////////////////////////////////
@@ -132,7 +132,7 @@ void CClientStateMachine::HandleCONNECTED(unsigned int dwIncomingSignal, DWORD_P
 		END_SIGNAL_HANDLER()
 }
 
-void CClientStateMachine::HandlePROCESSING_CONTEXT(unsigned int dwIncomingSignal, DWORD_PTR dwParam)
+void CClientStateMachine::HandlePROCESSING_CONTEXT(uint dwIncomingSignal, DWORD_PTR dwParam)
 {
 	BEGIN_SIGNAL_HANDLER(dwIncomingSignal)
 		/////////////////////////////////////////////////////////////////////
@@ -150,7 +150,7 @@ void CClientStateMachine::HandlePROCESSING_CONTEXT(unsigned int dwIncomingSignal
 		END_SIGNAL_HANDLER()
 }
 
-void CClientStateMachine::HandleWAIT_FOR_SERVER_READY(unsigned int dwIncomingSignal, DWORD_PTR dwParam)
+void CClientStateMachine::HandleWAIT_FOR_SERVER_READY(uint dwIncomingSignal, DWORD_PTR dwParam)
 {
 	BEGIN_SIGNAL_HANDLER(dwIncomingSignal)
 		/////////////////////////////////////////////////////////////////////
@@ -175,7 +175,7 @@ void CClientStateMachine::HandleWAIT_FOR_SERVER_READY(unsigned int dwIncomingSig
 
 }
 
-void CClientStateMachine::HandleREADY(unsigned int dwIncomingSignal, DWORD_PTR dwParam)
+void CClientStateMachine::HandleREADY(uint dwIncomingSignal, DWORD_PTR dwParam)
 {
 	BEGIN_SIGNAL_HANDLER(dwIncomingSignal)
 		/////////////////////////////////////////////////////////////////////
@@ -187,7 +187,7 @@ void CClientStateMachine::HandleREADY(unsigned int dwIncomingSignal, DWORD_PTR d
 		END_SIGNAL_HANDLER()
 }
 
-void CClientStateMachine::HandleDISCONNECTED(unsigned int dwIncomingSignal, DWORD_PTR dwParam)
+void CClientStateMachine::HandleDISCONNECTED(uint dwIncomingSignal, DWORD_PTR dwParam)
 {
 	//the machine can't leave this status
 }
@@ -198,7 +198,7 @@ void CClientStateMachine::Init(_IClientServices* pParent)
 	m_pParent = pParent;
 }
 
-void CClientStateMachine::OnSignal(unsigned int dwOutgoingSignal, DWORD_PTR dwParam)
+void CClientStateMachine::OnSignal(uint dwOutgoingSignal, DWORD_PTR dwParam)
 {
 	switch (dwOutgoingSignal) {
 	case SIG_SEND_SETUP:

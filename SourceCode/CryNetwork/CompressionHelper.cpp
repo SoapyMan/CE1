@@ -98,12 +98,12 @@ CCompressionHelper::~CCompressionHelper()
 }
 
 
-bool CCompressionHelper::Write(CStream& outStream, const unsigned char inChar)
+bool CCompressionHelper::Write(CStream& outStream, const uchar inChar)
 {
 	return m_CharCompressor.Write(outStream, inChar);
 }
 
-bool CCompressionHelper::Read(CStream& inStream, unsigned char& outChar)
+bool CCompressionHelper::Read(CStream& inStream, uchar& outChar)
 {
 	return m_CharCompressor.Read(inStream, outChar);
 }
@@ -112,7 +112,7 @@ bool CCompressionHelper::Write(CStream& outStream, const char* inszString)
 {
 	CRYASSERT(inszString);
 
-	const unsigned char* p = (unsigned char*)inszString;
+	const uchar* p = (uchar*)inszString;
 
 #ifdef GATHER_CHARSTATISTICS
 	DWORD dwOldSize = outStream.GetSize();
@@ -120,7 +120,7 @@ bool CCompressionHelper::Write(CStream& outStream, const char* inszString)
 
 	while (*p)
 	{
-		unsigned char c = *p++;
+		uchar c = *p++;
 #ifdef GATHER_CHARSTATISTICS
 		m_dwCharStats[c]++;
 		m_dwWriteBitsUncompressed += 8;
@@ -129,7 +129,7 @@ bool CCompressionHelper::Write(CStream& outStream, const char* inszString)
 			return false;
 	}
 
-	bool bRet = Write(outStream, (unsigned char)0);
+	bool bRet = Write(outStream, (uchar)0);
 
 #ifdef GATHER_CHARSTATISTICS
 	m_dwCharStats[0]++;							// zero termination
@@ -147,7 +147,7 @@ bool CCompressionHelper::Read(CStream& inStream, char* outszString, const DWORD 
 
 	for (DWORD i = 0; i < indwStringSize; i++)
 	{
-		unsigned char c;
+		uchar c;
 
 		if (!Read(inStream, c))
 			return false;

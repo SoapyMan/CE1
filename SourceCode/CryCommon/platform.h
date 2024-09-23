@@ -125,16 +125,6 @@ typedef std::wstring wstring;
 #define DEFINE_ALIGNED_DATA_CONST( type, name, alignment ) const _declspec(align(alignment)) type name;
 #endif
 
-
-///////////////////////////////////////////////////////////////////////////////
-// common Typedef                                                                   //
-///////////////////////////////////////////////////////////////////////////////
-typedef double real;
-typedef int index_t;
-typedef int                 INT;
-typedef unsigned int        UINT;
-typedef unsigned int* PUINT;
-
 #if defined(WIN64) || defined(LINUX)
 #ifdef __cplusplus
 inline int64 GetTicks()

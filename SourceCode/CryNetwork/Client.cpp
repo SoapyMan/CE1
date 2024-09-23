@@ -72,7 +72,7 @@ bool CClient::Init(IClientSink* pSink)
 // _IClientServices
 //////////////////////////////////////////////////////////////////////
 #if (defined(PS2) || defined(LINUX))
-#define FAILED(value) (((unsigned int)(value))&0x80000000)
+#define FAILED(value) (((uint)(value))&0x80000000)
 #endif
 
 
@@ -275,7 +275,7 @@ void CClient::OnCCPDisconnect(const char* szCause)
 //////////////////////////////////////////////////////////////////////
 
 
-void CClient::Connect(const char* szIP, WORD wPort, const BYTE* pbAuthorizationID, unsigned int uiAuthorizationSize)
+void CClient::Connect(const char* szIP, WORD wPort, const BYTE* pbAuthorizationID, uint uiAuthorizationSize)
 {
 	CRYASSERT(pbAuthorizationID);
 	CRYASSERT(uiAuthorizationSize > 0);
@@ -327,7 +327,7 @@ void CClient::ContextReady(CStream& stm)
 
 
 
-bool CClient::Update(unsigned int nTime)
+bool CClient::Update(uint nTime)
 {
 #ifdef _INTERNET_SIMULATOR
 
@@ -391,7 +391,7 @@ bool CClient::Update(unsigned int nTime)
 
 	m_ccpEndpoint.Update(m_nCurrentTime, 0, nullptr);
 	m_smCCPMachine.Update();
-	unsigned int CurrState = m_smCCPMachine.GetCurrentStatus();
+	uint CurrState = m_smCCPMachine.GetCurrentStatus();
 	if (CurrState == STATUS_READY || CurrState == STATUS_WAIT_FOR_SERVER_READY)
 	{
 		static char szCause[] = "@ServerTimeout";
@@ -505,7 +505,7 @@ bool CClient::ProcessPacket(CStream& stmPacket, CIPAddress& ip)
 }
 
 
-unsigned int CClient::GetPing()
+uint CClient::GetPing()
 {
 	return m_ctpEndpoint.GetPing();
 }
@@ -548,7 +548,7 @@ void CClient::OnCDKeyAuthorization(BYTE* pbAuthorizationID)
 	}
 
 	char* sSemicolon;
-	unsigned short port = 0;
+	ushort port = 0;
 	char temp[256];
 	strncpy(temp, m_sServerIP.c_str(), 256);
 

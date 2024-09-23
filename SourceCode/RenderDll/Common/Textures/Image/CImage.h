@@ -21,10 +21,10 @@ struct SRGBPixel
 	uchar blue, green, red, alpha;
 	SRGBPixel() /* : red(0), green(0), blue(0), alpha(255) {} */
 	{
-		*(unsigned long*)this = (unsigned long)~RGB_MASK;
+		*(ulong*)this = (ulong)~RGB_MASK;
 	}
 	SRGBPixel(int r, int g, int b) : red(r), green(g), blue(b), alpha(255) {}
-	bool eq(const SRGBPixel& p) const { return ((*(unsigned long*)this) & RGB_MASK) == ((*(unsigned long*)&p) & RGB_MASK); }
+	bool eq(const SRGBPixel& p) const { return ((*(ulong*)this) & RGB_MASK) == ((*(ulong*)&p) & RGB_MASK); }
 	/// Get the pixel intensity
 	int Intensity() { return (red + green + blue) / 3; }
 };

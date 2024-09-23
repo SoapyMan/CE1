@@ -28,7 +28,7 @@ __forceinline int __stdcall FloatToIntRet(float  x)
 }
 
 // Casting floats to unsigned chars is also very expensive, just
-// NEVER cast with (unsigned char)
+// NEVER cast with (uchar)
 __forceinline BYTE __stdcall FloatToByte(float  x) 
 { 
 	float  t = x + (float) 0xC00000;
@@ -37,7 +37,7 @@ __forceinline BYTE __stdcall FloatToByte(float  x)
 
 // Fast floor() for (x >= 0) && (x < 2^31). MUCH faster than the normal
 // floor()
-__forceinline unsigned int __stdcall ifloor(float  x)
+__forceinline uint __stdcall ifloor(float  x)
 {
 	DWORD e = (0x7F + 31) - ((* (DWORD *) &x & 0x7F800000) >> 23);
 	DWORD m = 0x80000000 | (* (DWORD *) &x << 8);
@@ -74,7 +74,7 @@ __forceinline int __stdcall FloatToIntRet(float  x)
 }
  
 // Casting floats to unsigned chars is also very expensive, just
-// NEVER cast with (unsigned char)
+// NEVER cast with (uchar)
 __forceinline BYTE __stdcall FloatToByte(float  x) 
 { 
 	float  t = x + (float) 0xC00000;
@@ -83,7 +83,7 @@ __forceinline BYTE __stdcall FloatToByte(float  x)
 
 // Fast floor() for (x >= 0) && (x < 2^31). MUCH faster than the normal
 // floor()
-__forceinline unsigned int __stdcall ifloor(float  x)
+__forceinline uint __stdcall ifloor(float  x)
 {
 	DWORD e = (0x7F + 31) - ((* (DWORD *) &x & 0x7F800000) >> 23);
 	DWORD m = 0x80000000 | (* (DWORD *) &x << 8);

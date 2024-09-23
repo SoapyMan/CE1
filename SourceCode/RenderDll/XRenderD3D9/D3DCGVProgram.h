@@ -691,7 +691,7 @@ public:
 
 	void mfDelInst()
 	{
-		if (m_Insts[m_CurInst].m_pHandle)
+		if (m_Insts[m_CurInst].m_pHandle && m_Insts[m_CurInst].m_pHandle != (void*)-1)
 		{
 			SAFE_DELETE(m_Insts[m_CurInst].m_BindConstants);
 			SAFE_DELETE(m_Insts[m_CurInst].m_BindVars);

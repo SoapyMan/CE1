@@ -88,18 +88,18 @@ protected:
 		Vec3d& tangent, Vec3d& binormal, Vec3d& tnormal, Vec3d& face_normal);
 
 	void CompactBuffer(struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F* _vbuff, int* _vcount,
-		list2<unsigned short>* pindices, bool bShareVerts[128], uint* uiInfo, CBasis* pBasises);
+		list2<ushort>* pindices, bool bShareVerts[128], uint* uiInfo, CBasis* pBasises);
 
-	list2<unsigned short>* m_pIndices, * m_pIndicesPreStrip;
+	list2<ushort>* m_pIndices, * m_pIndicesPreStrip;
 	void* m_pD3DIndBuf;
-	list2<unsigned short>& GetIndices() { return *m_pIndices; }
+	list2<ushort>& GetIndices() { return *m_pIndices; }
 	CVertexBuffer* m_pSecVertBuffer;
 	void StripifyMesh(int StripType, CBasis* pTangNonStrip);
 	void CalcFaceNormals();
 	bool CreateTangBuffer(CBasis* pBasises);
 	Vec3d* m_pLoadedColors;
 	Vec3d m_vBoxMin, m_vBoxMax;
-	int FindInBuffer(struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F& opt, CBasis& origBasis, uint nMatInfo, uint* uiInfo, struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F* _vbuff, CBasis* _vbasis, int _vcount, list2<unsigned short>* pHash, TArray<uint>& ShareNewInfo);
+	int FindInBuffer(struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F& opt, CBasis& origBasis, uint nMatInfo, uint* uiInfo, struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F* _vbuff, CBasis* _vbasis, int _vcount, list2<ushort>* pHash, TArray<uint>& ShareNewInfo);
 	uint* m_arrVertStripMap;
 	int m_nPrimetiveType;
 	bool PrepareTexSpaceBasis();
@@ -289,7 +289,7 @@ protected:
 	list2<int>   m_lstProxyInds[3];
 	Vec3d        m_vProxyBoxMin[3];
 	Vec3d        m_vProxyBoxMax[3];
-	list2<unsigned char> m_lstProxyFaceMaterials[3];
+	list2<uchar> m_lstProxyFaceMaterials[3];
 
 	Vec3d m_vBoxMin, m_vBoxMax;
 

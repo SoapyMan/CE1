@@ -57,10 +57,10 @@ namespace primitives {
 			return itype | ((idelta - 1) >> 31 ^ idelta >> 31);
 		}
 
-		unsigned short* pdata;
+		ushort* pdata;
 		float heightscale;
-		unsigned short* pflags;
-		unsigned short typemask;
+		ushort* pflags;
+		ushort typemask;
 		int typehole;
 		int typepower;
 	};
@@ -99,7 +99,7 @@ struct prim_inters {
 	prim_inters() { minPtDist2 = 0.0f; }
 	vectorf pt[2];
 	vectorf n;
-	unsigned char iFeature[2][2];
+	uchar iFeature[2][2];
 	float minPtDist2;
 	short id[2];
 	int iNode[2];
@@ -113,7 +113,7 @@ struct contact {
 	real t, taux;
 	vectorf pt;
 	vectorf n;
-	unsigned int iFeature[2];
+	uint iFeature[2];
 };
 
 const int NPRIMS = 8;

@@ -158,7 +158,7 @@ class D3DDataFormat_Q8W8V8U8 : public D3DDataFormat_32Bit
 		signed char green = (signed char)vecScaled.y;
 		signed char blue = (signed char)vecScaled.z;
 		signed char alpha = 0;
-		DWORD dwData = (DWORD)(((DWORD)(unsigned char)alpha << 24) | ((DWORD)(unsigned char)blue << 16) | ((DWORD)(unsigned char)green << 8) | ((DWORD)(unsigned char)red << 0));
+		DWORD dwData = (DWORD)(((DWORD)(uchar)alpha << 24) | ((DWORD)(uchar)blue << 16) | ((DWORD)(uchar)green << 8) | ((DWORD)(uchar)red << 0));
 		SetData(LockData, i, j, dwData);
 	}
 
@@ -183,7 +183,7 @@ class D3DDataFormat_X8L8V8U8 : public D3DDataFormat_32Bit
 		signed char green = (signed char)vecScaled.y;
 		signed char blue = (signed char)vecScaled.z;
 		signed char alpha = 0;
-		DWORD dwData = (DWORD)(((DWORD)(unsigned char)alpha << 24) | ((DWORD)(unsigned char)blue << 16) | ((DWORD)(unsigned char)green << 8) | ((DWORD)(unsigned char)red << 0));
+		DWORD dwData = (DWORD)(((DWORD)(uchar)alpha << 24) | ((DWORD)(uchar)blue << 16) | ((DWORD)(uchar)green << 8) | ((DWORD)(uchar)red << 0));
 		SetData(LockData, i, j, dwData);
 	}
 
@@ -206,7 +206,7 @@ class D3DDataFormat_D3DHS : public D3DDataFormat_32Bit
 		D3DXVECTOR3 vecScaled = inVector * 32767.0f;
 		signed short h = (signed short)vecScaled.x;
 		signed short l = (signed short)vecScaled.y;
-		DWORD dwData = (((DWORD)(unsigned short)h << 16) | ((DWORD)(unsigned short)l << 0));
+		DWORD dwData = (((DWORD)(ushort)h << 16) | ((DWORD)(ushort)l << 0));
 		SetData(LockData, i, j, dwData);
 	}
 
@@ -215,8 +215,8 @@ class D3DDataFormat_D3DHS : public D3DDataFormat_32Bit
 		DWORD dwData;
 		GetData(LockData, i, j, dwData);
 
-		outVector.x = (float)(unsigned short)((dwData >> 16) & 0xFFFF);
-		outVector.y = (float)(unsigned short)((dwData) & 0xFFFF);
+		outVector.x = (float)(ushort)((dwData >> 16) & 0xFFFF);
+		outVector.y = (float)(ushort)((dwData) & 0xFFFF);
 		outVector.z = 1.0f;
 		outVector /= 32767.0f;
 	}
@@ -763,13 +763,13 @@ public:
 
 				pCubeTexture->LockRect((D3DCUBEMAP_FACES)i, dwLevel, &Locked, nullptr, 0);
 
-				for (unsigned int y = 0; y < ddsdDesc.Height; y++)
+				for (uint y = 0; y < ddsdDesc.Height; y++)
 				{
 					h = (float)y / ((float)(ddsdDesc.Height - 1));
 					h *= 2.0f;
 					h -= 1.0f;
 
-					for (unsigned int x = 0; x < ddsdDesc.Width; x++)
+					for (uint x = 0; x < ddsdDesc.Width; x++)
 					{
 						w = (float)x / ((float)(ddsdDesc.Width - 1));
 						w *= 2.0f;

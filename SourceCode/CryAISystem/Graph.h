@@ -284,7 +284,7 @@ public:
 	size_t MemStats();
 
 	bool DbgCheckList(ListNodes& nodesList)	const;
-	void SetCurrentHeuristic(unsigned int heuristic_type);
+	void SetCurrentHeuristic(uint heuristic_type);
 	void ResolveTotalLinkData(void);
 	bool CanReuseLastPath(GraphNode* pBegin);
 	GraphNode* GetThirdNode(const Vec3d& vFirst, const Vec3d& vSecond, const Vec3d& vThird);

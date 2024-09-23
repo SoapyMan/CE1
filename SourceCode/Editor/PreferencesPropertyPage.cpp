@@ -65,7 +65,7 @@ BOOL CPreferencesPropertyPage::Create( const CRect &rc,CWnd *pParentWnd )
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CPreferencesPropertyPage::AddVariable( CVariableBase &var,const char *varName,unsigned char dataType )
+void CPreferencesPropertyPage::AddVariable( CVariableBase &var,const char *varName,uchar dataType )
 {
 	var.AddRef(); // Variables are local and must not be released by CVarBlock.
 	if (varName)
@@ -75,7 +75,7 @@ void CPreferencesPropertyPage::AddVariable( CVariableBase &var,const char *varNa
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CPreferencesPropertyPage::AddVariable( CVariableArray &table,CVariableBase &var,const char *varName,unsigned char dataType )
+void CPreferencesPropertyPage::AddVariable( CVariableArray &table,CVariableBase &var,const char *varName,uchar dataType )
 {
 	var.AddRef(); // Variables are local and must not be released by CVarBlock.
 	if (varName)

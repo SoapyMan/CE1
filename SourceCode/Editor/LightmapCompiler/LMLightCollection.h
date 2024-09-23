@@ -128,7 +128,7 @@ public:
 	CLMLightCollection():m_uiOcclLightSize(0){};
 	std::vector<LMCompLight>& GetLights() { return m_vLights; }
 	std::vector<CDLight *>& GetSrcLights() { return m_vSrcLights; };
-	const unsigned int OcclLightSize() {return m_uiOcclLightSize;}
+	const uint OcclLightSize() {return m_uiOcclLightSize;}
 	//!
 	void Release() { delete this; };
 
@@ -176,7 +176,7 @@ public:
 protected:
 	std::vector<LMCompLight> m_vLights;				//!< lightmap lights
 	std::vector<CDLight *> m_vSrcLights;			//!< source entity
-	unsigned int	m_uiOcclLightSize;				//!< number of occlusion map light source types
+	uint	m_uiOcclLightSize;				//!< number of occlusion map light source types
 };
 
 #endif

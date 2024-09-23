@@ -901,8 +901,8 @@ void SRendItem::mfCalcLightAttenuation(int type, byte* Dst, int StrideDst)
 			const Vec3d* tx = (Vec3d*)binormals;
 			const Vec3d* tz = (Vec3d*)tnormals;
 
-			uchar d = (unsigned char)((0.5f * (tz->x * lo->x + tz->y * lo->y + tz->z * lo->z) + 0.5f) * 255);
-			dst[3] = (unsigned char)(d > 128 ? attenuation * 255 : 0); // att
+			uchar d = (uchar)((0.5f * (tz->x * lo->x + tz->y * lo->y + tz->z * lo->z) + 0.5f) * 255);
+			dst[3] = (uchar)(d > 128 ? attenuation * 255 : 0); // att
 		}
 	}
 	else
@@ -933,7 +933,7 @@ void SRendItem::mfCalcLightAttenuation(int type, byte* Dst, int StrideDst)
 				const Vec3d* tx = (Vec3d*)binormals;
 				const Vec3d* tz = (Vec3d*)tnormals;
 
-				uchar d = (unsigned char)((0.5f * (tz->x * lo->x + tz->y * lo->y + tz->z * lo->z) + 0.5f) * 255);
+				uchar d = (uchar)((0.5f * (tz->x * lo->x + tz->y * lo->y + tz->z * lo->z) + 0.5f) * 255);
 
 				dst[0] = (d > 128 ? attenuation : 0); // att
 			}

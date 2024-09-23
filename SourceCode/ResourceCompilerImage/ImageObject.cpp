@@ -26,7 +26,7 @@ HRESULT P8Image::Convert(LPDIRECT3DSURFACE9 psurfSrc, int mip, int filter, D3DCU
 	hr = D3DXLoadSurfaceFromSurface(psurfTarget, NULL, NULL, psurfSrc, NULL, NULL, D3DX_FILTER_TRIANGLE, 0);
 	if(FAILED(hr)) return hr;
 
-	unsigned char *pic = (unsigned char*)malloc(3*sd.Width*sd.Height+1);
+	uchar *pic = (uchar*)malloc(3*sd.Width*sd.Height+1);
 	assert(pic);
 
 	{
@@ -35,7 +35,7 @@ HRESULT P8Image::Convert(LPDIRECT3DSURFACE9 psurfSrc, int mip, int filter, D3DCU
 		if(FAILED(hr)) return hr;
 		
 		DWORD* pdwRowTarg = (DWORD*)lrTarg.pBits;
-		unsigned char *p = pic;
+		uchar *p = pic;
 
 		for (DWORD yp = 0; yp < sd.Height; yp++)
 		{
@@ -61,22 +61,22 @@ HRESULT P8Image::Convert(LPDIRECT3DSURFACE9 psurfSrc, int mip, int filter, D3DCU
 		learn();
 		unbiasnet();
 		
-		m_pPalette = (unsigned char *)malloc(256*3);
+		m_pPalette = (uchar *)malloc(256*3);
 		writecolourmap(m_pPalette);
 
 		inxbuild();
 	};
 	
 	{		
-		unsigned char *d = (unsigned char*)malloc(sd.Width*sd.Height);
+		uchar *d = (uchar*)malloc(sd.Width*sd.Height);
 		assert(d);
 		m_ppIndices[mip] = d;
 
-		unsigned char *p = pic;
+		uchar *p = pic;
 
-		for (unsigned int yp = 0; yp < sd.Height; yp++)
+		for (uint yp = 0; yp < sd.Height; yp++)
 		{
-			for (unsigned int xp = 0; xp < sd.Width; xp++)
+			for (uint xp = 0; xp < sd.Width; xp++)
 			{
 				*d++ = inxsearch(p[0], p[1], p[2]);
 				p += 3;	
@@ -102,7 +102,7 @@ bool P8Image::Save(const char *name)
 	SavePaletizedTextureHeader(fh);
 
 /*
-	for(unsigned int mip = 0; mip<tex->GetLevelCount(); mip++)
+	for(uint mip = 0; mip<tex->GetLevelCount(); mip++)
 	{
 		LPDIRECT3DSURFACE9 psurf = NULL;
 		DXERRORCHECK(tex->GetSurfaceLevel(mip, &psurf));
@@ -112,7 +112,7 @@ bool P8Image::Save(const char *name)
 		D3DLOCKED_RECT lr;
 		DXERRORCHECK(psurf->LockRect(&lr, NULL, 0));
 		
-		SavePaletizedTextureMip(fh, (unsigned char *)lr.pBits, sd.Width, sd.Height, lr.Pitch, mip);
+		SavePaletizedTextureMip(fh, (uchar *)lr.pBits, sd.Width, sd.Height, lr.Pitch, mip);
 
 		psurf->UnlockRect();
 
@@ -145,7 +145,7 @@ void P8Image::SavePaletizedTextureHeader(FILE *fh)
 	};
 	*/
 
-	unsigned char tgaheader[] =
+	uchar tgaheader[] =
 	{
 		0, 1, 1,
 		0, 0, 0, 1,
@@ -161,7 +161,7 @@ void P8Image::SavePaletizedTextureHeader(FILE *fh)
 	
 };
 
-void P8Image::SavePaletizedTextureMip(FILE *fh, unsigned char *buf, int mip)
+void P8Image::SavePaletizedTextureMip(FILE *fh, uchar *buf, int mip)
 {
 	// if this line is commented, it will save an "extended TGA" with mipmaps following the main picture
 	//if(mip) return;
@@ -192,8 +192,8 @@ IDirect3DTexture9 *P8Image::CopyToXRGB(LPDIRECT3DDEVICE9 pd3ddev)
 		for(int x = 0; x<m_nHeight; x++)
 		{
 			int index = *(m_ppIndices[0]+y*m_nWidth+x);
-			unsigned char *rgb = m_pPalette+index*3;
-			unsigned char *dest = ((unsigned char *)lrd.pBits)+y*lrd.Pitch+x*4;
+			uchar *rgb = m_pPalette+index*3;
+			uchar *dest = ((uchar *)lrd.pBits)+y*lrd.Pitch+x*4;
 			dest[0] = rgb[0];						
 			dest[1] = rgb[1];						
 			dest[2] = rgb[2];						

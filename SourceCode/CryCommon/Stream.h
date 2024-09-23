@@ -54,7 +54,7 @@ class CStream;
 #define STREAM_VERIFY_TYPE_READ(a)	{																																\
 		if((GetISystem()->GetStreamEngine()->GetStreamCompressionMask()&0x80)!=0)													\
 		{																																																	\
-			unsigned char t1=0,t2=(a); _Read(t1);																														\
+			uchar t1=0,t2=(a); _Read(t1);																														\
 			if(t1!=t2)																																											\
 			{																																																\
 				char str[256];																																								\
@@ -68,7 +68,7 @@ class CStream;
 #define STREAM_VERIFY_TYPE_WRITE(a)	{																																\
 		if((GetISystem()->GetStreamEngine()->GetStreamCompressionMask()&0x80)!=0)													\
 		{																																																	\
-			unsigned char t=(a); _Write(t);																																	\
+			uchar t=(a); _Write(t);																																	\
 		}}
 #else	// !STREAM_ACTIVETYPECHECK
 #define STREAM_VERIFY_TYPE_READ(a) {}
@@ -213,19 +213,19 @@ public:
 	bool ReadBits(BYTE* pBits, size_t nSize);
 	//! write a number into the bitsream using nSize bits
 	bool WriteNumberInBits(int n, size_t nSize);
-	bool WriteNumberInBits(unsigned int n, size_t nSize);
+	bool WriteNumberInBits(uint n, size_t nSize);
 	//! read a number into the bitsream using nSize bits
 	bool ReadNumberInBits(int& n, size_t nSize);
-	bool ReadNumberInBits(unsigned int& n, size_t nSize);
+	bool ReadNumberInBits(uint& n, size_t nSize);
 	//! read a nSize bits from nPos in the bitstream
 	bool GetBits(BYTE* pBits, size_t nPos, size_t nSize);
 	//! write a nSize bits from nPos in the bitstream
 	bool SetBits(BYTE* pBits, size_t nPos, size_t nSize);
 	//! read a variable from the bitstream an increament the read position
 	//@{
-	bool Read(unsigned char& uc);
-	bool Read(unsigned short& us);
-	bool Read(unsigned int& ui);
+	bool Read(uchar& uc);
+	bool Read(ushort& us);
+	bool Read(uint& ui);
 	bool Read(char& c);
 	bool Read(short& s);
 	bool Read(int& i);
@@ -237,22 +237,22 @@ public:
 	//!read all remaining data in the stream starting from the read pos
 	bool Read(CStream& stm);
 	//!read packed
-	bool ReadPkd(unsigned char& uc);
-	bool ReadPkd(unsigned short& us);
-	bool ReadPkd(unsigned int& ui);
+	bool ReadPkd(uchar& uc);
+	bool ReadPkd(ushort& us);
+	bool ReadPkd(uint& ui);
 	bool ReadPkd(char& c);
 	bool ReadPkd(short& c);
 	bool ReadPkd(int& i);
 	//! packed, inType specifies the compression mode
 	bool ReadPkd(IStreamData& outData);
 	//@}
-	bool _Read(unsigned char& uc);			// not typechecked
+	bool _Read(uchar& uc);			// not typechecked
 
 	//! write a variable from the bitstream an increament the read position
 	//@{
-	bool Write(unsigned char uc);
-	bool Write(unsigned short us);
-	bool Write(unsigned int ui);
+	bool Write(uchar uc);
+	bool Write(ushort us);
+	bool Write(uint ui);
 	bool Write(char c);
 	bool Write(short c);
 	bool Write(int i);
@@ -262,11 +262,11 @@ public:
 	bool Write(const string& str);
 	bool Write(CStream& stm);
 	bool Write(const Vec3& v);
-	bool _Write(unsigned char c);			// not typechecked
+	bool _Write(uchar c);			// not typechecked
 
-	bool WritePkd(unsigned char uc);
-	bool WritePkd(unsigned short us);
-	bool WritePkd(unsigned int ui);
+	bool WritePkd(uchar uc);
+	bool WritePkd(ushort us);
+	bool WritePkd(uint ui);
 	bool WritePkd(char c);
 	bool WritePkd(short c);
 	bool WritePkd(int i);
@@ -274,14 +274,14 @@ public:
 	//! /param v is modified to the reconstruction of the compressed value
 	bool WritePkd(const IStreamData& inData);
 
-	bool WritePacked(unsigned int ui);
+	bool WritePacked(uint ui);
 #if defined(WIN64)
 	// Win64 defines size_t as 64-bit integer and there's an ambiguity between converting it to long or int automatically
 	// if we need to save/restore it really as a 64-bit int, care must be taken to match the write/read functions in 32-bit version
-	bool WritePacked(size_t sz) { return WritePacked((unsigned int)sz); }
-	bool ReadPacked(size_t& sz) { return ReadPacked((unsigned int&)sz); }
+	bool WritePacked(size_t sz) { return WritePacked((uint)sz); }
+	bool ReadPacked(size_t& sz) { return ReadPacked((uint&)sz); }
 #endif
-	bool ReadPacked(unsigned int& ui);
+	bool ReadPacked(uint& ui);
 	//@}
 
 		//! write data to stream.
@@ -348,7 +348,7 @@ public:
 	//! cleanup the buffer ans reset size and read pointer to 0
 	void Reset();
 	//only for debug
-	//	unsigned int TUNING_EvaluateRLE();
+	//	uint TUNING_EvaluateRLE();
 	void SetCheckPoint() { m_nCheckPoint = m_dwReadBitPos; }
 
 	void AlignRead() { /*m_dwReadBitPos = (m_dwReadBitPos+7)&~7;*/ };
@@ -376,14 +376,14 @@ public:
 
 private: // -----------------------------------------------------------------------
 
-	unsigned int __htonl(unsigned int n) {
-		return (unsigned int)(((n & 0xFF000000) >> 24) |
+	uint __htonl(uint n) {
+		return (uint)(((n & 0xFF000000) >> 24) |
 			((n & 0x00FF0000) >> 8) |
 			((n & 0x0000FF00) << 8) |
 			((n & 0x000000FF) << 24));
 	}
-	unsigned int __ntohl(unsigned int n) {
-		return (unsigned int)(((n & 0xFF000000) >> 24) |
+	uint __ntohl(uint n) {
+		return (uint)(((n & 0xFF000000) >> 24) |
 			((n & 0x00FF0000) >> 8) |
 			((n & 0x0000FF00) << 8) |
 			((n & 0x000000FF) << 24));
@@ -566,11 +566,11 @@ inline bool CStream::ReadBits(BYTE* pBits, size_t nSize)
 	return true;
 }
 
-inline bool CStream::WriteNumberInBits(unsigned int n, size_t nSize)
+inline bool CStream::WriteNumberInBits(uint n, size_t nSize)
 {
 	STREAM_VERIFY_TYPE_WRITE(50);
 	CRYASSERT(nSize > 0 && nSize <= 32);
-	unsigned int nSwapped;
+	uint nSwapped;
 	if (nSize > 32)
 	{
 		CryError("CStream:WriteNumberinBits");
@@ -581,11 +581,11 @@ inline bool CStream::WriteNumberInBits(unsigned int n, size_t nSize)
 	return WriteBits((BYTE*)&nSwapped, nSize);
 }
 
-inline bool CStream::ReadNumberInBits(unsigned int& n, size_t nSize)
+inline bool CStream::ReadNumberInBits(uint& n, size_t nSize)
 {
 	STREAM_VERIFY_TYPE_READ(50);
 	CRYASSERT(nSize > 0 && nSize <= 32);
-	unsigned int nSwapped;
+	uint nSwapped;
 	if (nSize > 32)
 	{
 		CryError("CStream:ReadNumberinBits ulong %d>32", (int)nSize);
@@ -601,14 +601,14 @@ inline bool CStream::WriteNumberInBits(int n, size_t nSize)
 {
 	STREAM_VERIFY_TYPE_WRITE(51);
 	CRYASSERT(nSize > 0 && nSize <= 32);
-	unsigned int nSwapped;
+	uint nSwapped;
 	if (nSize > 32)
 	{
 		CryError("CStream:WriteNumberinBits");
 		return false;
 	}
 	n = n << (32 - nSize);
-	nSwapped = __htonl((unsigned int)n);
+	nSwapped = __htonl((uint)n);
 	return WriteBits((BYTE*)&nSwapped, nSize);
 }
 
@@ -616,14 +616,14 @@ inline bool CStream::ReadNumberInBits(int& n, size_t nSize)
 {
 	STREAM_VERIFY_TYPE_READ(51);
 	CRYASSERT(nSize > 0 && nSize <= 32);
-	unsigned int nSwapped = 0;
+	uint nSwapped = 0;
 	if (nSize > 32)
 	{
 		CryError("CStream:ReadNumberinBits int %d>32", (int)nSize);
 		return false;
 	}
 	if (!ReadBits((BYTE*)&nSwapped, (nSize)))return false;
-	n = __ntohl((unsigned int)nSwapped);
+	n = __ntohl((uint)nSwapped);
 	n = (n >> (32 - nSize)) & (0xFFFFFFFF >> (32 - nSize));
 
 	return true;
@@ -642,9 +642,9 @@ inline void CStream::Reset()
 // *************************************
 
 // not typechecked
-inline bool CStream::_Read(unsigned char& uc)
+inline bool CStream::_Read(uchar& uc)
 {
-	return ReadBits((BYTE*)&uc, BYTES2BITS(sizeof(unsigned char)));
+	return ReadBits((BYTE*)&uc, BYTES2BITS(sizeof(uchar)));
 }
 
 
@@ -653,7 +653,7 @@ inline bool CStream::Read(bool& b)
 {
 	STREAM_VERIFY_TYPE_READ(9);
 	static bool bRet;
-	static unsigned char cTemp;
+	static uchar cTemp;
 	cTemp = 0;
 	bRet = GetBit(m_dwReadBitPos, b);
 	if (bRet)
@@ -661,23 +661,23 @@ inline bool CStream::Read(bool& b)
 	return bRet;
 }
 
-inline bool CStream::Read(unsigned char& uc)
+inline bool CStream::Read(uchar& uc)
 {
 	STREAM_VERIFY_TYPE_READ(10);
-	return ReadBits((BYTE*)&uc, BYTES2BITS(sizeof(unsigned char)));
+	return ReadBits((BYTE*)&uc, BYTES2BITS(sizeof(uchar)));
 }
 
 
-inline bool CStream::Read(unsigned short& us)
+inline bool CStream::Read(ushort& us)
 {
 	STREAM_VERIFY_TYPE_READ(11);
-	return ReadBits((BYTE*)&us, BYTES2BITS(sizeof(unsigned short)));
+	return ReadBits((BYTE*)&us, BYTES2BITS(sizeof(ushort)));
 }
 
-inline bool CStream::Read(unsigned int& ul)
+inline bool CStream::Read(uint& ul)
 {
 	STREAM_VERIFY_TYPE_READ(12);
-	return ReadBits((BYTE*)&ul, BYTES2BITS(sizeof(unsigned int)));
+	return ReadBits((BYTE*)&ul, BYTES2BITS(sizeof(uint)));
 }
 
 inline bool CStream::Read(char& c)
@@ -757,9 +757,9 @@ inline bool CStream::Read(CStream& stm)
 // *************************************
 
 // not typechecked
-inline bool CStream::_Write(unsigned char uc)
+inline bool CStream::_Write(uchar uc)
 {
-	return WriteBits((BYTE*)&uc, BYTES2BITS(sizeof(unsigned char)));
+	return WriteBits((BYTE*)&uc, BYTES2BITS(sizeof(uchar)));
 }
 
 
@@ -773,23 +773,23 @@ inline bool CStream::Write(bool b)
 	return bRet;
 }
 
-inline bool CStream::Write(unsigned char uc)
+inline bool CStream::Write(uchar uc)
 {
 	STREAM_VERIFY_TYPE_WRITE(10);
-	return WriteBits((BYTE*)&uc, BYTES2BITS(sizeof(unsigned char)));
+	return WriteBits((BYTE*)&uc, BYTES2BITS(sizeof(uchar)));
 }
 
 
-inline bool CStream::Write(unsigned short us)
+inline bool CStream::Write(ushort us)
 {
 	STREAM_VERIFY_TYPE_WRITE(11);
-	return WriteBits((BYTE*)&us, BYTES2BITS(sizeof(unsigned short)));
+	return WriteBits((BYTE*)&us, BYTES2BITS(sizeof(ushort)));
 }
 
-inline bool CStream::Write(unsigned int ul)
+inline bool CStream::Write(uint ul)
 {
 	STREAM_VERIFY_TYPE_WRITE(12);
-	return WriteBits((BYTE*)&ul, BYTES2BITS(sizeof(unsigned int)));
+	return WriteBits((BYTE*)&ul, BYTES2BITS(sizeof(uint)));
 }
 
 inline bool CStream::Write(char c)
@@ -855,7 +855,7 @@ inline bool CStream::Write(const Vec3& v)
 
 
 ///////////////////////////////////////////////////////
-inline bool CStream::WritePkd(unsigned char uc)
+inline bool CStream::WritePkd(uchar uc)
 {
 	STREAM_VERIFY_TYPE_WRITE(40);
 	if (uc <= 0x0F)
@@ -866,12 +866,12 @@ inline bool CStream::WritePkd(unsigned char uc)
 	}
 	else {
 		Write(false);
-		return WriteBits((BYTE*)&uc, BYTES2BITS(sizeof(unsigned char)));
+		return WriteBits((BYTE*)&uc, BYTES2BITS(sizeof(uchar)));
 	}
 
 }
 
-inline bool CStream::WritePkd(unsigned short us)
+inline bool CStream::WritePkd(ushort us)
 {
 	STREAM_VERIFY_TYPE_WRITE(41);
 	if (us <= 0xFF)
@@ -881,21 +881,21 @@ inline bool CStream::WritePkd(unsigned short us)
 	}
 	else {
 		Write(false);
-		return WriteBits((BYTE*)&us, BYTES2BITS(sizeof(unsigned short)));
+		return WriteBits((BYTE*)&us, BYTES2BITS(sizeof(ushort)));
 	}
 }
 
-inline bool CStream::WritePkd(unsigned int ul)
+inline bool CStream::WritePkd(uint ul)
 {
 	STREAM_VERIFY_TYPE_WRITE(42);
 	if (ul <= 0xFFFF)
 	{
 		Write(true);
-		return Write((unsigned short)ul);
+		return Write((ushort)ul);
 	}
 	else {
 		Write(false);
-		return WriteBits((BYTE*)&ul, BYTES2BITS(sizeof(unsigned int)));
+		return WriteBits((BYTE*)&ul, BYTES2BITS(sizeof(uint)));
 	}
 }
 
@@ -927,7 +927,7 @@ inline bool CStream::WritePkd(int i)
 	{
 		Write(true);
 		Write(i < 0);
-		return Write((unsigned short)abs(i));
+		return Write((ushort)abs(i));
 	}
 	else {
 		Write(false);
@@ -938,7 +938,7 @@ inline bool CStream::WritePkd(int i)
 
 ///////////////////////////////////////////////////////
 
-inline bool CStream::ReadPkd(unsigned char& uc)
+inline bool CStream::ReadPkd(uchar& uc)
 {
 	STREAM_VERIFY_TYPE_READ(40);
 	bool comp;
@@ -952,12 +952,12 @@ inline bool CStream::ReadPkd(unsigned char& uc)
 		uc = b;
 	}
 	else {
-		ret = ReadBits((BYTE*)&uc, BYTES2BITS(sizeof(unsigned char)));
+		ret = ReadBits((BYTE*)&uc, BYTES2BITS(sizeof(uchar)));
 	}
 	return ret;
 }
 
-inline bool CStream::ReadPkd(unsigned short& us)
+inline bool CStream::ReadPkd(ushort& us)
 {
 	STREAM_VERIFY_TYPE_READ(41);
 	bool comp;
@@ -970,24 +970,24 @@ inline bool CStream::ReadPkd(unsigned short& us)
 		us = b;
 	}
 	else {
-		ret = ReadBits((BYTE*)&us, BYTES2BITS(sizeof(unsigned short)));
+		ret = ReadBits((BYTE*)&us, BYTES2BITS(sizeof(ushort)));
 	}
 	return ret;
 }
 
-inline bool CStream::ReadPkd(unsigned int& ul)
+inline bool CStream::ReadPkd(uint& ul)
 {
 	STREAM_VERIFY_TYPE_READ(42);
 	bool ret;
 	bool comp;
 	ret = Read(comp);
 	if (comp) {
-		unsigned short us;
+		ushort us;
 		ret = Read(us);
 		ul = us;
 	}
 	else {
-		ret = ReadBits((BYTE*)&ul, BYTES2BITS(sizeof(unsigned int)));
+		ret = ReadBits((BYTE*)&ul, BYTES2BITS(sizeof(uint)));
 	}
 	return ret;
 }
@@ -1027,7 +1027,7 @@ inline bool CStream::ReadPkd(int& i)
 	Read(comp);
 	if (comp)
 	{
-		unsigned short b;
+		ushort b;
 		Read(sign);
 		ret = Read(b);
 		i = sign ? -b : b;
@@ -1052,7 +1052,7 @@ inline bool CStream::WritePkd(const IStreamData& inData)
 
 
 
-inline bool CStream::WritePacked(unsigned int ul)
+inline bool CStream::WritePacked(uint ul)
 {
 	STREAM_VERIFY_TYPE_WRITE(91);
 	int i;
@@ -1066,7 +1066,7 @@ inline bool CStream::WritePacked(unsigned int ul)
 	return res;
 }
 
-inline bool CStream::ReadPacked(unsigned int& ul)
+inline bool CStream::ReadPacked(uint& ul)
 {
 	STREAM_VERIFY_TYPE_READ(91);
 	int i;

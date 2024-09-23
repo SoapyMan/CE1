@@ -19,18 +19,18 @@ struct SMusicPatternFileInfo
 struct SWaveHdr
 {
 	char RIFF[4];									// "RIFF" tag
-	unsigned long dwSize;					// Size of data to follow
+	ulong dwSize;					// Size of data to follow
 	char WAVE[4];									// "WAVE" tag
 	char fmt_[4];									// "fmt " tag
-	unsigned long dw16;						// 16
-	unsigned short wOne_0;				// 1
-	unsigned short wChnls;				// Number of Channels
-	unsigned long dwSRate;				// Sample Rate
-	unsigned long BytesPerSec;		// Bytes per second
-	unsigned short wBlkAlign;			// Block align
-	unsigned short BitsPerSample; // Sample size
+	ulong dw16;						// 16
+	ushort wOne_0;				// 1
+	ushort wChnls;				// Number of Channels
+	ulong dwSRate;				// Sample Rate
+	ulong BytesPerSec;		// Bytes per second
+	ushort wBlkAlign;			// Block align
+	ushort BitsPerSample; // Sample size
 	char DATA[4];									// "DATA"
-	unsigned long dwDSize;				// Number of Samples
+	ulong dwDSize;				// Number of Samples
 };
 
 enum EWaveFormatIDs

@@ -130,7 +130,7 @@ void CNetEntityInfo::Update(Vec3d v3dViewer)
 
 
 	/////////////////////////////////////////////////
-	unsigned char cState=(unsigned char)m_pEntity->GetStateIdx();
+	uchar cState=(uchar)m_pEntity->GetStateIdx();
 
 	if(!m_pEntity->IsStateClientside()			// state changes need sync
 		&& m_cState!=cState)										// state has changed
@@ -192,7 +192,7 @@ void CNetEntityInfo::Update(Vec3d v3dViewer)
 		if(fDistance2>fVisibleRadius2)
 			m_nPriority=100;		// almost no udate
 		else
-			m_nPriority+=(unsigned int)cry_sqrtf(fVisibleRadius2-fDistance2);
+			m_nPriority+=(uint)cry_sqrtf(fVisibleRadius2-fDistance2);
 	}
 
 	// container gets the change to change the m_nPriority

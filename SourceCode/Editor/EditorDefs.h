@@ -47,10 +47,6 @@
 //////////////////////////////////////////////////////////////////////////
 // Simple type definitions.
 //////////////////////////////////////////////////////////////////////////
-typedef unsigned char		uchar;
-typedef unsigned int		uint;
-typedef unsigned short	ushort;
-typedef unsigned __int64	uint64;
 
 // Which ini file to use.
 #define EDITOR_INI_FILE	"Editor.ini"

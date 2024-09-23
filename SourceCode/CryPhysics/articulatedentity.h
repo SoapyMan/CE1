@@ -76,7 +76,7 @@ struct ae_joint {
 	quaternionf prev_qrot;
 	vectorf q0;
 
-	unsigned int flags;
+	uint flags;
 	quaternionf quat0;
 	vectorf limits[2];
 	vectorf bounciness;

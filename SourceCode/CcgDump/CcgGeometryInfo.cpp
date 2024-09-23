@@ -44,8 +44,8 @@ const char* g_pGIData = NULL;
 // the faces inside this GI
 const CCFIntFace* g_pGIFaces;
 // the indices
-const unsigned short* g_pGIIndices;
-const unsigned short* g_pGIExtToInt;
+const ushort* g_pGIIndices;
+const ushort* g_pGIExtToInt;
 
 extern void printChunkStencilShadowConnectivity(const char* pData, unsigned nSize);
 extern void printChunkVertices(const char* pData, unsigned nSize);
@@ -63,7 +63,7 @@ using namespace CryStringUtils;
 
 void printChunkGIIntColors(const char* pData, unsigned nSize)
 {
-	if (!validArrSize<DWORD>(nSize, g_GI.numVertices))
+	if (!validArrSize<uint>(nSize, g_GI.numVertices))
 		return;
 
 	if (g_bDumpMeshVertCols)
@@ -122,7 +122,7 @@ void printChunkGIExtTangents(const char* pData, unsigned nSize)
 
 void printChunkGIExtToIntMap(const char* pData, unsigned nSize)
 {
-	if (!validArrSize<unsigned short>(nSize, g_GI.numExtTangents))
+	if (!validArrSize<ushort>(nSize, g_GI.numExtTangents))
 		return;
 
 	if (!g_GI.numExtTangents)
@@ -131,7 +131,7 @@ void printChunkGIExtToIntMap(const char* pData, unsigned nSize)
 		return;
 	}
 
-	const unsigned short* pExtToInt = (const unsigned short*)pData;
+	const ushort* pExtToInt = (const ushort*)pData;
 	g_pGIExtToInt = pExtToInt;
 
 	if (g_bDumpIndexMaps)
@@ -165,7 +165,7 @@ void printChunkGIExtToIntMap(const char* pData, unsigned nSize)
 	for (i = 0; i < g_GI.numExtTangents; ++i)
 	{
 		// internal vertex index
-		unsigned short nInt = pExtToInt[i];
+		ushort nInt = pExtToInt[i];
 		if (nInt > g_GI.numVertices)
 			setIntInvalid.insert(nInt);
 		else
@@ -229,7 +229,7 @@ void printChunkGIExtToIntMap(const char* pData, unsigned nSize)
 
 	/*	if (g_bDumpMeshIndices)
 		{
-			unsigned short* pVertices=(unsigned short*)pData;
+			ushort* pVertices=(ushort*)pData;
 			for (int x=0; x<1710; x++) {
 				dump("vert: %04d %04d",x,pVertices[x]);
 			}
@@ -265,10 +265,10 @@ void printChunkGIExtUVs(const char* pData, unsigned nSize)
 
 void printChunkGIIndexBuffer(const char* pData, unsigned nSize)
 {
-	if (!validArrSize<unsigned short>(nSize, g_GI.numIndices))
+	if (!validArrSize<ushort>(nSize, g_GI.numIndices))
 		return;
 
-	const unsigned short* pIndices = (const unsigned short*)pData;
+	const ushort* pIndices = (const ushort*)pData;
 	g_pGIIndices = pIndices;
 	unsigned numOutOfRange = 0;
 	for (unsigned i = 0; i < g_GI.numIndices; ++i)
@@ -377,7 +377,7 @@ void printChunkGIIntFaces(const char* pData, unsigned nSize)
 		const CCFIntFace Face = pFaces[nFace];
 		for (int v = 0; v < 3; ++v)
 		{
-			unsigned short nVertex = Face.v[v];
+			ushort nVertex = Face.v[v];
 			if (nVertex > g_GI.numVertices)
 			{
 				setOutOfRange.insert(nVertex);
@@ -442,13 +442,13 @@ void printChunkSkinVertices(const char* pData, unsigned nSize)
 		Stat.numSkipBones, Stat.numBones, Stat.numVertices, Stat.numAuxInts,
 		isGIFullVertexRange(Stat.setDests) ? "ALL" : toString(Stat.setDests, "%u").c_str());
 
-	/*unsigned long* pVertices=(unsigned long*)pData;
+	/*ulong* pVertices=(ulong*)pData;
 		for (int x=0; x<1500; x++) {
 			dump("vert: %08x %08x",x,pVertices[x]);
 		}*/
 
 		/*	float*         pfVertices=(float*)pData;
-			unsigned long* plVertices=(unsigned long*)pData;
+			ulong* plVertices=(ulong*)pData;
 			for (int x=0; x<966*3; x++) {
 				dump("vert: %04d %08x %f",x,plVertices[x],pfVertices[x]);
 			}*/
@@ -523,7 +523,7 @@ void printGIFaceSummary2()
 		CCFIntFace Face = g_pGIFaces[nFace], FaceInd;
 		FaceEqualEnum nFaceEqual = nNotFound;
 		unsigned nIndFace;
-		const unsigned short* pInd = NULL;
+		const ushort* pInd = NULL;
 		for (nIndFace = 0; nIndFace < g_GI.numFaces * 3 - 2 && nFaceEqual == nNotFound; nIndFace += 3)
 		{
 			pInd = g_pGIIndices + nIndFace;

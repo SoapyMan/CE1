@@ -37,7 +37,7 @@ public:
 private: // ------------------------------------------------------------------------------
 
 	BYTE						m_cSendPerSecond;			//!< can be changed with cl_cmdrate
-	unsigned int		m_nTimer;							//!< in ms
+	uint		m_nTimer;							//!< in ms
 	CStream					m_ReliableStream;			//!<
 	CStream					m_UnreliableStream;		//!<
 	ICVar *					sv_maxcmdrate;				//!< is limiting the commandrate of the clients

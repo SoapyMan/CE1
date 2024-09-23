@@ -105,7 +105,7 @@ void CXServer::OnRemove(IEntity *ent)
 
 
 ///////////////////////////////////////////////
-unsigned int CXServer::GetMaxUpdateRate() const
+uint CXServer::GetMaxUpdateRate() const
 {
 	CRYASSERT(sv_maxupdaterate);
 
@@ -166,7 +166,7 @@ CXServer::CXServer(CXGame *pGame, WORD nPort, const char *szName, bool listen)
 		m_bOK = true;
   
 	m_pIServer->SetSecuritySink(this);
-	m_pIServer->SetVariable(cnvDataStreamTimeout,(unsigned int)timeout);
+	m_pIServer->SetVariable(cnvDataStreamTimeout,(uint)timeout);
 	
 	m_ServerInfos.nPort = nPort;
 	m_ServerInfos.VersionInfo = GetISystem()->GetFileVersion();
@@ -1046,7 +1046,7 @@ void CXServer::OnClientMsgText(EntityId sender,CStream &stm)
 	m_ServerRules.OnClientMsgText(sender,tm);
 }
 
-void CXServer::BindEntity(EntityId idParent,EntityId idChild,unsigned char cParam)
+void CXServer::BindEntity(EntityId idParent,EntityId idChild,uchar cParam)
 {
 	IEntity *pChild=m_pISystem->GetEntity(idChild);
 	IEntity *pParent=m_pISystem->GetEntity(idParent);
@@ -1060,7 +1060,7 @@ void CXServer::BindEntity(EntityId idParent,EntityId idChild,unsigned char cPara
 	BroadcastReliable(XSERVERMSG_BINDENTITY,stm,false);
 }
 
-void CXServer::UnbindEntity(EntityId idParent,EntityId idChild,unsigned char cParam)
+void CXServer::UnbindEntity(EntityId idParent,EntityId idChild,uchar cParam)
 {
 	IEntity *pChild=m_pISystem->GetEntity(idChild);
 	IEntity *pParent=m_pISystem->GetEntity(idParent);
@@ -1206,7 +1206,7 @@ void CXServer::BroadcastCommand(const char *sCmd)
 }
 
 void CXServer::BroadcastCommand(const char *sCmd, const Vec3 &invPos, const Vec3 &invNormal, 
-															 const EntityId inId, const unsigned char incUserByte )
+															 const EntityId inId, const uchar incUserByte )
 {
 	// now... broadcast !
 	XSlotMap::iterator i;
@@ -1277,7 +1277,7 @@ void CXServer::SyncAIState(void )
 }
 
 //////////////////////////////////////////////////////////////////////////
-unsigned int CXServer::GetSchedulingDelay()
+uint CXServer::GetSchedulingDelay()
 {
 	CRYASSERT(sv_min_scheduling_delay);
 	CRYASSERT(sv_max_scheduling_delay);
@@ -1288,8 +1288,8 @@ unsigned int CXServer::GetSchedulingDelay()
 		return 100;
 	}
 
-	unsigned int nDelay=sv_min_scheduling_delay->GetIVal();
-	unsigned int nMaxDelay=sv_max_scheduling_delay->GetIVal();
+	uint nDelay=sv_min_scheduling_delay->GetIVal();
+	uint nMaxDelay=sv_max_scheduling_delay->GetIVal();
 
 	XSlotMap::iterator i = m_mapXSlots.begin();
 
@@ -1305,7 +1305,7 @@ unsigned int CXServer::GetSchedulingDelay()
 }
 
 //////////////////////////////////////////////////////////////////////////
-CXServerSlot* CXServer::GetServerSlotByIP( unsigned int clientIP ) const
+CXServerSlot* CXServer::GetServerSlotByIP( uint clientIP ) const
 {
 	for(XSlotMap::const_iterator itor=m_mapXSlots.begin();itor!=m_mapXSlots.end();++itor)
 	{
@@ -1357,7 +1357,7 @@ void CXServer::UnbanID(const BannedID &ID)
 }
 
 //------------------------------------------------------------------------------------------------- 
-bool CXServer::IsIPBanned(const unsigned int dwIP)
+bool CXServer::IsIPBanned(const uint dwIP)
 {
 	for (BannedIPListItor it = m_vBannedIPList.begin(); it != m_vBannedIPList.end(); ++it)
 	{
@@ -1371,7 +1371,7 @@ bool CXServer::IsIPBanned(const unsigned int dwIP)
 }
 
 //------------------------------------------------------------------------------------------------- 
-void CXServer::BanIP(const unsigned int dwIP)
+void CXServer::BanIP(const uint dwIP)
 {
 	if (!IsIPBanned(dwIP))
 	{
@@ -1382,7 +1382,7 @@ void CXServer::BanIP(const unsigned int dwIP)
 }
 
 //------------------------------------------------------------------------------------------------- 
-void CXServer::UnbanIP(const unsigned int dwIP)
+void CXServer::UnbanIP(const uint dwIP)
 {
 	for (BannedIPListItor it = m_vBannedIPList.begin(); it != m_vBannedIPList.end(); ++it)
 	{
@@ -1397,7 +1397,7 @@ void CXServer::UnbanIP(const unsigned int dwIP)
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CXServer::CheaterFound( const unsigned int dwIP,int type,const char *sMsg )
+void CXServer::CheaterFound( const uint dwIP,int type,const char *sMsg )
 {
 	CXServerSlot *pSlot = GetServerSlotByIP(dwIP);
 	if (pSlot)
@@ -1418,7 +1418,7 @@ void CXServer::CheaterFound( const unsigned int dwIP,int type,const char *sMsg )
 }
 
 //////////////////////////////////////////////////////////////////////////
-bool CXServer::GetSlotInfo(  const unsigned int dwIP,SSlotInfo &info , int nameOnly )
+bool CXServer::GetSlotInfo(  const uint dwIP,SSlotInfo &info , int nameOnly )
 {
 	memset ( &info , 0 , sizeof ( info ) ) ;
 	CXServerSlot *pSlot = GetServerSlotByIP(dwIP);

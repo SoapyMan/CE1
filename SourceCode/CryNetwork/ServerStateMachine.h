@@ -98,18 +98,18 @@ public:  // --------------------------------------------------------------------
 private: // ---------------------------------------------------------------------
 
 	//status handlers
-	void HandleIDLE(unsigned int dwIncomingSignal, DWORD_PTR dwParam);
-	void HandleWAIT_FOR_CONNECT_RESP(unsigned int dwIncomingSignal, DWORD_PTR dwParam);
-	void HandleCONNECTED(unsigned int dwIncomingSignal, DWORD_PTR dwParam);
-	void HandleWAIT_FOR_CONTEXT_READY(unsigned int dwIncomingSignal, DWORD_PTR dwParam);
-	void HandleREADY(unsigned int dwIncomingSignal, DWORD_PTR dwParam);
-	void HandleDISCONNECTED(unsigned int dwIncomingSignal, DWORD_PTR dwParam);
+	void HandleIDLE(uint dwIncomingSignal, DWORD_PTR dwParam);
+	void HandleWAIT_FOR_CONNECT_RESP(uint dwIncomingSignal, DWORD_PTR dwParam);
+	void HandleCONNECTED(uint dwIncomingSignal, DWORD_PTR dwParam);
+	void HandleWAIT_FOR_CONTEXT_READY(uint dwIncomingSignal, DWORD_PTR dwParam);
+	void HandleREADY(uint dwIncomingSignal, DWORD_PTR dwParam);
+	void HandleDISCONNECTED(uint dwIncomingSignal, DWORD_PTR dwParam);
 
-	void OnSignal(unsigned int dwOutgoingSignal, DWORD_PTR dwParam);
+	void OnSignal(uint dwOutgoingSignal, DWORD_PTR dwParam);
 
 	//tracing
 	void _Trace(char* s);
-	void _TraceStatus(unsigned int dwStatus);
+	void _TraceStatus(uint dwStatus);
 
 	_IServerSlotServices* m_pParent;		//!< pointer to the parent object (is not released), is 0 is you forgot to call Init()
 };

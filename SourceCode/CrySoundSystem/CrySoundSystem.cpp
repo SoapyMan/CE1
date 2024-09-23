@@ -21,8 +21,8 @@ struct CryModuleMemoryInfo
 #ifdef WIN32
 extern "C" __declspec(dllexport) void CryModuleGetMemoryInfo(CryModuleMemoryInfo* pMemInfo)
 {
-	unsigned int nCurrentAlloced;
-	unsigned int nMaxAlloced;
+	uint nCurrentAlloced;
+	uint nMaxAlloced;
 
 	FSOUND_GetMemoryStats(&nCurrentAlloced, &nMaxAlloced);
 	pMemInfo->allocated = nMaxAlloced;

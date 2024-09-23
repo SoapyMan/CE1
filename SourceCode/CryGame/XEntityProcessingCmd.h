@@ -26,10 +26,10 @@ public:
 	void Release() { delete this; }
 	
 	// Flag management... mouarf
-	void AddAction(unsigned int nFlags);
-	void RemoveAction(unsigned int nFlags);
+	void AddAction(uint nFlags);
+	void RemoveAction(uint nFlags);
 	void Reset();
-	bool CheckAction(unsigned int nFlags);
+	bool CheckAction(uint nFlags);
 
 	// Angles...
 	Vec3& GetDeltaAngles();
@@ -84,14 +84,14 @@ public:
 	
 public: // ------------------------------------------------------------------
 
-	unsigned int			m_nActionFlags[2];	//!< Timedemo recorded needs access to these.
+	uint			m_nActionFlags[2];	//!< Timedemo recorded needs access to these.
 
 private: 	// ------------------------------------------------------------------
 
 	int								m_iPhysicalTime;		//!<
 	Ang3							m_vDeltaAngles;			//!<
 	float							m_fTimeSlices[32];	//!<
-	unsigned char			m_nTimeSlices;			//!<
+	uchar			m_nTimeSlices;			//!<
 
 	// non serialized variables -----------------------------------------
 

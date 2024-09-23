@@ -481,7 +481,7 @@ private:
 		//! Returns the index of the animation in the set, -1 if there's no such animation
 		virtual int Find(const char* szAnimationName)
 		{
-			for (unsigned int i = 0; i < obj->m_animations.size(); i++)
+			for (uint i = 0; i < obj->m_animations.size(); i++)
 			{
 				if (stricmp(obj->m_animations[i]->name.c_str(), szAnimationName) == 0)
 				{

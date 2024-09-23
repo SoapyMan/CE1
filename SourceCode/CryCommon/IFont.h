@@ -93,7 +93,7 @@ struct IFFont
 	virtual void Release() = 0;
 
 	//! Load a font from a TTF file
-	virtual bool Load(const char* szFile, unsigned long nWidth, unsigned long nHeight, unsigned long nTTFFlags) = 0;
+	virtual bool Load(const char* szFile, ulong nWidth, ulong nHeight, ulong nTTFFlags) = 0;
 
 	//! Load a font from a XML file
 	virtual bool Load(const char* szFile) = 0;

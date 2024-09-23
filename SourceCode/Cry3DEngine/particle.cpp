@@ -398,7 +398,7 @@ bool CParticle::Update(const PartProcessParams& PPP)
 	{
 		//float fTailLength = (m_pParams->fTailLenght/m_nTailSteps) /  m_fScale; // Here we must divide by scale because speed is scaled.
 		//m_fTrailCurPos += min(1.f, PPP.fFrameTime/fTailLength);
-		//m_pArrvPosHistory[ ((unsigned int)FtoI(m_fTrailCurPos))%m_nTailSteps ] = m_vPos;
+		//m_pArrvPosHistory[ ((uint)FtoI(m_fTrailCurPos))%m_nTailSteps ] = m_vPos;
 
 		/*
 		float t = PPP.fCurTime-m_fLastTailPosTime;

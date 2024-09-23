@@ -687,10 +687,10 @@ HWND								g_WndOut = nullptr;													//!<
 
 WNDPROC								g_pfOldWindowProcOfWndIn(0);
 
-const unsigned long					g_dwInnerWidth = 800;
-const unsigned long					g_dwInnerHeight = 600;
-const unsigned long					g_dwEditLineHeight = 16;
-const unsigned long					g_dwLineHeight = 16;
+const ulong					g_dwInnerWidth = 800;
+const ulong					g_dwInnerHeight = 600;
+const ulong					g_dwEditLineHeight = 16;
+const ulong					g_dwLineHeight = 16;
 
 
 
@@ -703,7 +703,7 @@ public:
 	//! destructor
 	virtual ~COutputPrintSink() {};
 
-	unsigned int m_dwFirstLine;						//!< used to be able to scroll the window with the Page up/down keys 
+	uint m_dwFirstLine;						//!< used to be able to scroll the window with the Page up/down keys 
 
 	// interface IOutputPrintSink ------------------------
 
@@ -741,8 +741,8 @@ public:
 			const char* szInitString = "Initializing...";
 			const int szInitStringLen = (const int)strlen(szInitString);
 
-			unsigned long x = ((rect.right - rect.left) - szInitStringLen * metric.tmMaxCharWidth) >> 1;
-			unsigned long y = ((rect.bottom - rect.top) - metric.tmHeight) >> 1;
+			ulong x = ((rect.right - rect.left) - szInitStringLen * metric.tmMaxCharWidth) >> 1;
+			ulong y = ((rect.bottom - rect.top) - metric.tmHeight) >> 1;
 
 			TextOut(inHdc, x, y, szInitString, szInitStringLen);
 
@@ -754,10 +754,10 @@ public:
 		IConsole* pConsole = GetISystem()->GetIConsole();
 		CRYASSERT(pConsole);
 
-		unsigned long dwLineNo = m_dwFirstLine;
+		ulong dwLineNo = m_dwFirstLine;
 
 		char szBuffer[256];
-		unsigned long y = g_dwInnerHeight - g_dwEditLineHeight - 2;
+		ulong y = g_dwInnerHeight - g_dwEditLineHeight - 2;
 
 		while (pConsole->GetLineNo(dwLineNo++, szBuffer, 256))
 		{
@@ -779,7 +779,7 @@ COutputPrintSink g_Output;
 
 
 
-bool OnWinInKeyDown(unsigned int uiChar, unsigned int uiRepCnt, unsigned int uiFlags)
+bool OnWinInKeyDown(uint uiChar, uint uiRepCnt, uint uiFlags)
 {
 	IConsole* pConsole((0 != GetISystem()) ? GetISystem()->GetIConsole() : 0);
 
@@ -818,7 +818,7 @@ bool OnWinInKeyDown(unsigned int uiChar, unsigned int uiRepCnt, unsigned int uiF
 		}
 		case VK_PRIOR:
 		{
-			if (g_Output.m_dwFirstLine + 1 < (unsigned long)pConsole->GetLineCount())
+			if (g_Output.m_dwFirstLine + 1 < (ulong)pConsole->GetLineCount())
 			{
 				++g_Output.m_dwFirstLine;
 				g_Output.Redraw();
@@ -870,7 +870,7 @@ bool OnWinInKeyDown(unsigned int uiChar, unsigned int uiRepCnt, unsigned int uiF
 }
 
 bool
-OnWinInChar(unsigned int uiChar, unsigned int uiRepCnt, unsigned int uiFlags)
+OnWinInChar(uint uiChar, uint uiRepCnt, uint uiFlags)
 {
 	switch (uiChar)
 	{
@@ -894,14 +894,14 @@ WndInWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_KEYDOWN:
 	{
-		if (false != OnWinInKeyDown((unsigned int)wParam, (unsigned int)LOWORD(lParam), (unsigned int)HIWORD(lParam)))
+		if (false != OnWinInKeyDown((uint)wParam, (uint)LOWORD(lParam), (uint)HIWORD(lParam)))
 		{
 			return(0);
 		}
 	}
 	case WM_CHAR:
 	{
-		if (false != OnWinInChar((unsigned int)wParam, (unsigned int)LOWORD(lParam), (unsigned int)HIWORD(lParam)))
+		if (false != OnWinInChar((uint)wParam, (uint)LOWORD(lParam), (uint)HIWORD(lParam)))
 		{
 			return(0);
 		}

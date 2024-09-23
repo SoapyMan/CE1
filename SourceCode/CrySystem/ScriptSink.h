@@ -37,7 +37,7 @@ public:
 	//! Called every frame to handle ScriptSystem needs..
 	void Update(bool bNoLuaGC = false);
 
-	void OnLoadSource(const char* sSourceName, unsigned char* sSource, long nSourceSize);
+	void OnLoadSource(const char* sSourceName, uchar* sSource, long nSourceSize);
 	void OnExecuteLine(ScriptDebugInfo& sdiDebugInfo);
 	///////////////////////////////////////////////////////////////////////////
 		//! @name IScriptSytemSink implementation

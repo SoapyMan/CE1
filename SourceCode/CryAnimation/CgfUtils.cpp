@@ -481,7 +481,7 @@ const char* getMtlType(unsigned nMtlType)
 	}
 }
 
-const char* getTexType(unsigned char nTexType)
+const char* getTexType(uchar nTexType)
 {
 	switch (nTexType)
 	{

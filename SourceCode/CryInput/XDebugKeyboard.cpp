@@ -31,7 +31,7 @@ inline MapVirtualKey(int x, int y)
 	return x;
 }
 
-inline ToAscii(unsigned long vKeyCode, int k, unsigned char sKState[], unsigned short ascii[], int val )
+inline ToAscii(ulong vKeyCode, int k, uchar sKState[], ushort ascii[], int val )
 {
 	return vKeyCode;
 }
@@ -145,7 +145,7 @@ void CXDebugKeyboard::SetExclusive(bool value,void *hwnd)
 
 
 //////////////////////////////////////////////////////////////////////////
-unsigned short CXDebugKeyboard::DIK2XKEY(unsigned char cCode )
+ushort CXDebugKeyboard::DIK2XKEY(uchar cCode )
 {
 
    switch(cCode)
@@ -277,7 +277,7 @@ unsigned short CXDebugKeyboard::DIK2XKEY(unsigned char cCode )
 }
 
 //////////////////////////////////////////////////////////////////////////
-unsigned char CXDebugKeyboard::XKEY2DIK(unsigned short nCode )
+uchar CXDebugKeyboard::XKEY2DIK(ushort nCode )
 {
    switch (nCode)
    {
@@ -518,9 +518,9 @@ unsigned char CXDebugKeyboard::XKEY2DIK(unsigned short nCode )
 }
 
 //////////////////////////////////////////////////////////////////////////
-unsigned char CXDebugKeyboard::XKEY2ASCII(unsigned short nCode)
+uchar CXDebugKeyboard::XKEY2ASCII(ushort nCode)
 {
-        unsigned char dik = 0;
+        uchar dik = 0;
 
         char startchar = 'a';
         if(KeyDown(XKEY_LSHIFT) || KeyDown(XKEY_RSHIFT))
@@ -612,10 +612,10 @@ void CXDebugKeyboard::SetupKeyNames()
 		memset(m_AsciiTable[k].uc,0,sizeof(m_AsciiTable[k].uc));
 	}
 	
-	unsigned char sKState[256];
-	unsigned short ascii[2];
+	uchar sKState[256];
+	ushort ascii[2];
 	int nResult;
-	unsigned int vKeyCode;
+	uint vKeyCode;
 	for (k=0;k<256;k++)
 	{
 		memset(sKState,0,sizeof(sKState));
@@ -650,7 +650,7 @@ void CXDebugKeyboard::Update()
 {
   //BOOL bReturn;
   DWORD dwInsertions = 0, dwRemovals = 0;
-	unsigned int i;
+	uint i;
   char szBuffer[10240];
   DWORD dwReturn;
 
@@ -910,7 +910,7 @@ bool CXDebugKeyboard::KeyPressed(int p_key)
 
   return ((m_cKeysState[p_key]) != 0 && m_cOldKeysState[p_key] == 0);
   /*
-	unsigned char cDik=XKEY2DIK(p_key);
+	uchar cDik=XKEY2DIK(p_key);
 
 #ifndef PS2
 	if(((m_cKeysState[cDik] & 0x80) != 0) && ((m_cOldKeysState[cDik] & 0x80) == 0))
@@ -940,7 +940,7 @@ bool CXDebugKeyboard::KeyReleased(int p_key)
 {
   return ((m_cKeysState[p_key] ) == 0) && ((m_cOldKeysState[p_key] ) != 0);
   /*
-	unsigned char cDik=XKEY2DIK(p_key);
+	uchar cDik=XKEY2DIK(p_key);
 
 #ifndef PS2
 	return ((m_cKeysState[cDik] & 0x80) == 0) && ((m_cOldKeysState[cDik] & 0x80) != 0);
@@ -968,7 +968,7 @@ void CXDebugKeyboard::ClearKey(int p_key)
   m_cOldKeysState[p_key]=m_cKeysState[p_key];
   m_cKeysState[p_key] = 0;
   /*
-	unsigned char cDik=XKEY2DIK(p_key);
+	uchar cDik=XKEY2DIK(p_key);
 #ifndef PS2
 	m_cOldKeysState[cDik]=m_cKeysState[cDik];
 	m_cKeysState[cDik]=nullptr;

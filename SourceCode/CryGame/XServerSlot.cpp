@@ -102,7 +102,7 @@ bool CXServerSlot::IsEntityOffSync(EntityId id)
 
 
 ///////////////////////////////////////////////
-void CXServerSlot::OnXServerSlotConnect(const BYTE *pbAuthorizationID, unsigned int uiAuthorizationSize)
+void CXServerSlot::OnXServerSlotConnect(const BYTE *pbAuthorizationID, uint uiAuthorizationSize)
 {
 	NET_TRACE("<<NET>>CXServerSlot::OnConnect");
 
@@ -112,7 +112,7 @@ void CXServerSlot::OnXServerSlotConnect(const BYTE *pbAuthorizationID, unsigned 
 
 ///////////////////////////////////////////////
 void CXServerSlot::OnXPlayerAuthorization( bool bAllow, const char *szError, const BYTE *pGlobalID,
-	unsigned int uiGlobalIDSize )
+	uint uiGlobalIDSize )
 {
 	//TODO: save the GlobalID
 	if (!bAllow)
@@ -208,7 +208,7 @@ void CXServerSlot::BanByID()
 
 void CXServerSlot::BanByIP()
 {
-  unsigned int dwIP = GetIServerSlot()->GetClientIP();
+  uint dwIP = GetIServerSlot()->GetClientIP();
 
 	m_pParent->BanIP(dwIP);
 }
@@ -228,7 +228,7 @@ bool CXServerSlot::IsLocalHost()
 	return m_bLocalHost; 
 }
 
-unsigned int CXServerSlot::GetPing()
+uint CXServerSlot::GetPing()
 { 
 	return m_pISSlot->GetPing(); 
 }
@@ -466,7 +466,7 @@ void CXServerSlot::SendCommand(const char *sCmd)
 }
 
 void CXServerSlot::SendCommand(const char *sCmd, const Vec3 &_invPos, const Vec3 &_invNormal, 
-	const EntityId inId, const unsigned char incUserByte )
+	const EntityId inId, const uchar incUserByte )
 {
 	Vec3 invPos=_invPos;
 	Vec3 invNormal=_invNormal;
@@ -819,7 +819,7 @@ void CXServerSlot::OnClientMsgKill(CStream &stm)
 
 void CXServerSlot::OnClientMsgRate(CStream &stm)
 {
-	unsigned char cVar;
+	uchar cVar;
 
 	stm.Read(cVar);
 
@@ -827,7 +827,7 @@ void CXServerSlot::OnClientMsgRate(CStream &stm)
 	{
 		case 0:
 			{
-				unsigned int dwBitsPerSecond;
+				uint dwBitsPerSecond;
 
 				stm.Read(dwBitsPerSecond);
 
@@ -837,7 +837,7 @@ void CXServerSlot::OnClientMsgRate(CStream &stm)
 
 		case 1:
 			{
-				unsigned int dwUpdatesPerSec;
+				uint dwUpdatesPerSec;
 				stm.Read(dwUpdatesPerSec);
 
 				m_Snapshot.SetSendPerSecond(dwUpdatesPerSec);
@@ -1223,7 +1223,7 @@ void CXServerSlot::OnClientMsgPlayerProcessingCmd(CStream &stm)
 		stm.Read(bInRange);
 		if (bInRange)
 		{
-			unsigned int num;
+			uint num;
 			stm.ReadNumberInBits(num,16); posClient.x = num*(1.0f/16);
 			stm.ReadNumberInBits(num,16); posClient.y = num*(1.0f/16);
 			stm.ReadNumberInBits(num,13); posClient.z = num*(1.0f/16);
@@ -1368,7 +1368,7 @@ void CXServerSlot::OnClientMsgCmd(CStream &stm)
 //////////////////////////////////////////////
 void CXServerSlot::OnClientOffSyncEntityList(CStream &stm)
 {
-	unsigned char nEnts;
+	uchar nEnts;
 	EntityId id;
 
 	stm.Read(nEnts);
@@ -1385,7 +1385,7 @@ void CXServerSlot::OnClientReturnScriptHash(CStream &stm)
 {
 	IBitStream *pBitStream = m_pParent->m_pGame->GetIBitStream();
 
-	u32 dwHash;
+	uint32 dwHash;
 
 	pBitStream->ReadBitStream(stm,dwHash,eDoNotCompress);			// returned hash
 

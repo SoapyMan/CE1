@@ -38,8 +38,8 @@ public:
 	virtual void SetupEntityGrid(int axisz, vectorf org, int nx, int ny, float stepx, float stepy);
 	virtual void SetHeightfieldData(const heightfield* phf);
 	virtual int GetHeightfieldData(heightfield* phf);
-	virtual int SetSurfaceParameters(int surface_idx, float bounciness, float friction, unsigned int flags = 0);
-	virtual int GetSurfaceParameters(int surface_idx, float& bounciness, float& friction, unsigned int& flags);
+	virtual int SetSurfaceParameters(int surface_idx, float bounciness, float friction, uint flags = 0);
+	virtual int GetSurfaceParameters(int surface_idx, float& bounciness, float& friction, uint& flags);
 	virtual PhysicsVars* GetPhysVars() { return &m_vars; }
 
 	virtual IPhysicalEntity* CreatePhysicalEntity(pe_type type, pe_params* params = 0, void* pForeignData = 0, int iForeignData = 0, int id = -1)
@@ -55,7 +55,7 @@ public:
 	virtual IPhysicalEntity* GetPhysicalEntityById(int id);
 	int IsPlaceholder(CPhysicalPlaceholder* pent) {
 		if (!pent) return 0;
-		int iChunk; for (iChunk = 0; iChunk < m_nPlaceholderChunks && (unsigned int)(pent - m_pPlaceholders[iChunk]) >= (unsigned int)PLACEHOLDER_CHUNK_SZ; iChunk++);
+		int iChunk; for (iChunk = 0; iChunk < m_nPlaceholderChunks && (uint)(pent - m_pPlaceholders[iChunk]) >= (uint)PLACEHOLDER_CHUNK_SZ; iChunk++);
 		return iChunk < m_nPlaceholderChunks ? (iChunk << PLACEHOLDER_CHUNK_SZLG2 | pent - m_pPlaceholders[iChunk]) + 1 : 0;
 	}
 	void SetCurrentEntityHost(CPhysicalPlaceholder* pHost) { m_pCurEntityHost = pHost; }
@@ -78,7 +78,7 @@ public:
 		m_iTimeSnapshot[iType] = itime_snapshot; m_timeSnapshot[iType] = itime_snapshot * m_vars.timeGranularity;
 	}
 
-	virtual int RayWorldIntersection(vectorf org, vectorf dir, int objtypes, unsigned int flags, ray_hit* hits, int nmaxhits,
+	virtual int RayWorldIntersection(vectorf org, vectorf dir, int objtypes, uint flags, ray_hit* hits, int nmaxhits,
 		IPhysicalEntity* pSkipEnt = 0, IPhysicalEntity* pSkipEntAux = 0);
 
 	virtual void SimulateExplosion(vectorf epicenter, vectorf epicenterImp, float rmin, float rmax, float r, float impulsive_pressure_at_r,
@@ -174,7 +174,7 @@ public:
 	float m_BouncinessTable[NSURFACETYPES];
 	float m_FrictionTable[NSURFACETYPES];
 	float m_DynFrictionTable[NSURFACETYPES];
-	unsigned int m_SurfaceFlagsTable[NSURFACETYPES];
+	uint m_SurfaceFlagsTable[NSURFACETYPES];
 };
 
 extern int g_nPhysWorlds;

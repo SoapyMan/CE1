@@ -185,7 +185,7 @@ private:
 
 inline	int	concatBitarray( CBitArray &b1,CBitArray &b2,CBitArray &test,CBitArray &res )
 {
-	unsigned int b,any;
+	uint b,any;
 	any = 0;
 	for (int i = 0; i < b1.size(); i++)	{
 		b = b1.bits[i] & b2.bits[i];

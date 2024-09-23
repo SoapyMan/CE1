@@ -108,10 +108,10 @@ protected:
 
 	// this represents the contiguous subarray of vertices and indices
 	struct MeshInfo {
-		unsigned short numIndices, numVertices;
+		ushort numIndices, numVertices;
 	};
 	struct SubmeshInfo : public MeshInfo {
-		unsigned short nFirstIndex, nFirstVertex;
+		ushort nFirstIndex, nFirstVertex;
 		int nTextureId;
 	};
 

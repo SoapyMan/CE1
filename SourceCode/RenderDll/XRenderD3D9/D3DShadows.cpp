@@ -296,7 +296,7 @@ void CD3D9Renderer::BlurImage(int nSizeX, int nSizeY, int nType, ShadowMapTexInf
 	SAFE_RELEASE(pIRGBTargetSurf);
 }
 
-unsigned int CD3D9Renderer::GenShadowTexture(int nSize, bool bProjected)
+uint CD3D9Renderer::GenShadowTexture(int nSize, bool bProjected)
 {
 	char name[128];
 	sprintf(name, "$AutoShadowMaps_%d", m_TexGenID++);
@@ -1128,8 +1128,8 @@ void CD3D9Renderer::ConfigShadowTexgen(int Num, int rangeMap, ShadowMapFrustum* 
 		if (m_RP.m_ObjFlags & FOB_TRANS_MASK)
 		{
 			float fLen = m_RP.m_pCurObject->m_Matrix(0, 0) * m_RP.m_pCurObject->m_Matrix(0, 0) + m_RP.m_pCurObject->m_Matrix(0, 1) * m_RP.m_pCurObject->m_Matrix(0, 1) + m_RP.m_pCurObject->m_Matrix(0, 2) * m_RP.m_pCurObject->m_Matrix(0, 2);
-			unsigned int* n1 = (unsigned int*)&fLen;
-			unsigned int n = 0x5f3759df - (*n1 >> 1);
+			uint* n1 = (uint*)&fLen;
+			uint n = 0x5f3759df - (*n1 >> 1);
 			float* n2 = (float*)&n;
 			float fISqrt = (1.5f - (fLen * 0.5f) * *n2 * *n2) * *n2;
 			fRadius = m_RP.m_pCurLight->m_fRadius * fISqrt;

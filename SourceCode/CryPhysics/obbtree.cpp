@@ -383,7 +383,7 @@ void COBBTree::CleanupAfterIntersectionTest(geometry_under_test* pGTest)
 {
 	if (!pGTest->pUsedNodesMap)
 		return;
-	if ((unsigned int)(pGTest->pUsedNodesMap - g_UsedNodesMap) > (unsigned int)sizeof(g_UsedNodesMap) / sizeof(g_UsedNodesMap[0])) {
+	if ((uint)(pGTest->pUsedNodesMap - g_UsedNodesMap) > (uint)sizeof(g_UsedNodesMap) / sizeof(g_UsedNodesMap[0])) {
 		delete[] pGTest->pUsedNodesMap; return;
 	}
 	if (pGTest->nUsedNodes < pGTest->nMaxUsedNodes - 1) {

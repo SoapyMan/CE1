@@ -29,8 +29,6 @@ public:
 						   const int iniXLeft, const int iniXRight, const int iniY )=0;
 	};
 
-	typedef unsigned long DWORD;
-
 	// -----------------------------------------------------
 
 	//! implementation sink sample

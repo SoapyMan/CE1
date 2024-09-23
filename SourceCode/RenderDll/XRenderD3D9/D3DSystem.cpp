@@ -736,7 +736,7 @@ COMPRESSOR_ERROR(*CompressTextureATI)(DWORD width,
 #define PROJECT_COMPILE_PLATFORM_STR		QUOTE(PROJECT_COMPILE_PLATFORM)
 #define PROJECT_COMPILE_CONFIGURATION_STR	QUOTE(PROJECT_COMPILE_CONFIGURATION)
 
-WIN_HWND CD3D9Renderer::Init(int x, int y, int width, int height, unsigned int cbpp, int zbpp, int sbits, bool fullscreen, WIN_HINSTANCE hinst, WIN_HWND Glhwnd, WIN_HDC Glhdc, WIN_HGLRC hGLrc, bool bReInit)
+WIN_HWND CD3D9Renderer::Init(int x, int y, int width, int height, uint cbpp, int zbpp, int sbits, bool fullscreen, WIN_HINSTANCE hinst, WIN_HWND Glhwnd, WIN_HDC Glhdc, WIN_HGLRC hGLrc, bool bReInit)
 {
 	if (m_IsDedicated)
 	{

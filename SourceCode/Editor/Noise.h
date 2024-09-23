@@ -14,14 +14,14 @@ class CDynamicArray2D;
 // Parameter structures
 struct SNoiseParams
 {
-	unsigned int iWidth;
-	unsigned int iHeight;
-	unsigned int iCover;
-	unsigned int iPasses;
+	uint iWidth;
+	uint iHeight;
+	uint iCover;
+	uint iPasses;
 	float fFrequencyStep;
 	float fFrequency;
-	unsigned int iSmoothness;
-	unsigned int iRandom;
+	uint iSmoothness;
+	uint iRandom;
 	float fFade;
 	float iSharpness;
 	bool bBlueSky;

@@ -418,7 +418,7 @@ void CWeaponSystemEx::CacheObject(const string& name)
 
 bool CWeaponSystemEx::IsProjectileClass( const EntityClassId clsid )
 {
-	for (unsigned int i=0;i<m_vProjectileClasses.size();i++)
+	for (uint i=0;i<m_vProjectileClasses.size();i++)
 	{
 		if (m_vProjectileClasses[i]->m_ClassID == clsid)
 			return true;
@@ -426,7 +426,7 @@ bool CWeaponSystemEx::IsProjectileClass( const EntityClassId clsid )
 	return false;
 }
 
-CWeaponClass* CWeaponSystemEx::GetWeaponClass(unsigned int index) const
+CWeaponClass* CWeaponSystemEx::GetWeaponClass(uint index) const
 {
 	if (index < m_vWeaponClasses.size())
 		return m_vWeaponClasses[index];

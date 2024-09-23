@@ -65,7 +65,7 @@ unsigned size;
 		size += sizeof( ActionInfo );
 		ActionInfo *curA = &(aItr->second);
 		size += curA->sDesc.capacity();
-		for(unsigned int i=0; i< curA->vecSetToActionMap.size(); i++)
+		for(uint i=0; i< curA->vecSetToActionMap.size(); i++)
 			size += curA->vecSetToActionMap[i].capacity();
 	}
 	pSizer->AddObject( &m_mapActionsEnum, size);

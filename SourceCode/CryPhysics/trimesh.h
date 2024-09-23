@@ -50,7 +50,7 @@ public:
 	virtual CBVTree* GetBVTree() { return m_pTree; }
 	virtual int GetPrimitiveCount() { return m_nTris; }
 	virtual int GetPrimitive(int iPrim, primitive* pprim) {
-		if ((unsigned int)iPrim >= (unsigned int)m_nTris)
+		if ((uint)iPrim >= (uint)m_nTris)
 			return 0;
 		((triangle*)pprim)->pt[0] = m_pVertices[m_pIndices[iPrim * 3 + 0]];
 		((triangle*)pprim)->pt[1] = m_pVertices[m_pIndices[iPrim * 3 + 1]];

@@ -112,7 +112,7 @@ public:
 	}
 
 	//////////////////////////////////////////////////////////////////////////
-	void Fill( unsigned char c )
+	void Fill( uchar c )
 	{
 		if (IsValid())
 			memset( GetData(),c,GetSize() );
@@ -229,7 +229,7 @@ void	TImage<T>::Serialize( CXmlArchive &ar )
 };
 
 //////////////////////////////////////////////////////////////////////////
-class CImage : public TImage<unsigned int>
+class CImage : public TImage<uint>
 {
 public:
 	bool LoadGrayscale16Tiff( const CString &file );
@@ -243,8 +243,8 @@ public:
 //////////////////////////////////////////////////////////////////////////
 typedef TImage<bool> CBoolImage;
 typedef TImage<float> CFloatImage;
-typedef TImage<unsigned char> CByteImage;
-typedef TImage<unsigned short> CWordImage;
-typedef TImage<unsigned int> CIntImage;
+typedef TImage<uchar> CByteImage;
+typedef TImage<ushort> CWordImage;
+typedef TImage<uint> CIntImage;
 
 #endif // __Image_h__

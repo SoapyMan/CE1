@@ -462,15 +462,15 @@ void CryModelState::ProcessAnimations(float fDeltaTimeSec, bool bUpdateBones, Cr
 		if (g_YLine==16.0f) {
 
 				extern std::vector<String> AnimStrings;
-				extern std::vector<u32> FrameID;
-				extern std::vector<u32> LayerID;
+				extern std::vector<uint32> FrameID;
+				extern std::vector<uint32> LayerID;
 
-				u32 size=AnimStrings.size();
+				uint32 size=AnimStrings.size();
 				float fColor[4] = {0,1,0,1};
 
-				u32 Counter=0;
+				uint32 Counter=0;
 				if (size>20) Counter=size-20;
-				for (u32 x=Counter; x<size; x++) {
+				for (uint32 x=Counter; x<size; x++) {
 					g_pIRenderer->Draw2dLabel( 1,g_YLine, 1.3f, fColor, false,"Valerie: FrameID: %04x LayerID: %04x  %s", FrameID[x], LayerID[x],AnimStrings[x] );
 					g_YLine+=16.0f;
 				}
@@ -491,7 +491,7 @@ void CryModelState::ProcessAnimations(float fDeltaTimeSec, bool bUpdateBones, Cr
 					g_pIRenderer->Draw2dLabel( 1,g_YLine, 1.3f, fColor, false,"model: %1x %s",bUpdateBones, ModelName );
 					g_YLine+=16.0f;
 
-					u32 NumLayer=g_arrActiveLayers.size();
+					uint32 NumLayer=g_arrActiveLayers.size();
 					g_pIRenderer->Draw2dLabel( 1,g_YLine, 1.3f, fColor, false,"g_arrActiveLayers %d %s",g_arrActiveLayers.size(),m_pMesh->getAnimationInfo(0)->strName );
 					g_YLine+=0x10;
 
@@ -525,7 +525,7 @@ void CryModelState::UpdateBones(const ActiveLayerArray& arrActiveLayers)
 {
 	FUNCTION_PROFILER(g_GetISystem(), PROFILE_ANIMATION);
 
-	/*	u32 NumLayer=arrActiveLayers.size();
+	/*	uint32 NumLayer=arrActiveLayers.size();
 		float fColor[4] = {0,1,0,1};
 		g_pIRenderer->Draw2dLabel( 1,g_YLine, 1.3f, fColor, false,"arrActiveLayers %d %s",arrActiveLayers.size(),m_pMesh->getAnimationInfo(0)->strName );
 	//	g_pIRenderer->Draw2dLabel( 1,g_YLine, 1.3f, fColor, false,"arrActiveLayers %d %s",arrActiveLayers.size(),m_pMesh->Animation->getGeometryInfo()-> );
@@ -535,7 +535,7 @@ void CryModelState::UpdateBones(const ActiveLayerArray& arrActiveLayers)
 		for (ActiveLayerArray::const_iterator it = arrActiveLayers.begin(); it != arrActiveLayers.end(); ++it)
 		{
 			float fColor[4] = {1,1,1,1};
-			u32 id=it->nAnimId;
+			uint32 id=it->nAnimId;
 			const CAnimationLayerInfo& rLayer = *it;
 			g_pIRenderer->Draw2dLabel( 1,g_YLine, 1.3f, fColor, false,"arrActiveLayers.nAnimId %d %s",it->nAnimId, m_pMesh->GetName(it->nAnimId) );
 			g_YLine+=0x10;

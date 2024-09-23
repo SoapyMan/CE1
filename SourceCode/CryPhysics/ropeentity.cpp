@@ -279,7 +279,7 @@ int CRopeEntity::Action(pe_action* _action)
 		}
 		else
 			return 0;
-		if ((unsigned int)i > (unsigned int)m_nSegs)
+		if ((uint)i > (uint)m_nSegs)
 			return 0;
 		m_segs[i].vel_ext += action->impulse * ((m_nSegs + 1) / m_mass);
 		m_bAwake = 1; m_nSlowFrames = 0;
@@ -493,7 +493,7 @@ int CRopeEntity::Step(float time_interval)
 						if (dist2 < sqr(m_collDist * 0.85f)) { // reinforce the distance
 							t = (iDir >> 31 & 1) + m_segs[i].tcontact * iDir; // 1.0-t for iDir==-1
 							j = isneg(t - 0.1f); t += j; j = -j & iDir;
-							if ((unsigned int)i - j <= (unsigned int)m_nSegs) {
+							if ((uint)i - j <= (uint)m_nSegs) {
 								rotax = (m_segs[i + iDir - j].pt - m_segs[i - j].pt ^ n).normalized();
 								angle = (m_collDist - sqrt_tpl(dist2)) / (t * seglen);
 								m_segs[i + iDir - j].pt = m_segs[i + iDir - j].pt.rotated(m_segs[i - j].pt, rotax, cos_tpl(angle), sin_tpl(angle));
@@ -534,13 +534,13 @@ int CRopeEntity::Step(float time_interval)
 							diff = m_segs[iseg].tcontact = (pcontact->pt - aray.m_ray.origin).len();
 							m_segs[iseg].tcontact = m_segs[iseg].tcontact * iDir - seglen * (iDir >> 31); // flip tcontact when iDir is -1
 							iend = -iseg >> 31 & 1;
-							if ((unsigned int)(iseg - 1) >= (unsigned int)(m_nSegs - 2) && m_pTiedTo[iend] && isneg(m_segs[iseg].tcontact * rseglen - 0.5f) ^ iend)
+							if ((uint)(iseg - 1) >= (uint)(m_nSegs - 2) && m_pTiedTo[iend] && isneg(m_segs[iseg].tcontact * rseglen - 0.5f) ^ iend)
 								continue; // ignore collisions too close to tied ends
 							(m_segs[iseg].pContactEnt = checkParts[j].pent)->AddRef();
 							m_segs[iseg].iContactPart = checkParts[j].ipart;
 							rotax = checkParts[j].R * -pcontact->dir;
 							if (m_collDist > diff * 0.25f) {
-								if ((unsigned int)(i - iDir) > (unsigned int)m_nSegs)
+								if ((uint)(i - iDir) > (uint)m_nSegs)
 									continue;
 								// the contact is too close to the segment start (requires >15 deg. gap unproj), rotate start point to get the safe gap
 								float tgap = m_collDist / seglen;

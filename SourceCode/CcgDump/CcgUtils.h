@@ -92,7 +92,7 @@ inline void dumpPlus(const CryIRGB& color)
 	dumpPlus("(%d,%d,%d)", (int)color.r, (int)color.g, (int)color.b);
 }
 
-inline bool isFaceEqual(const unsigned short* n, const unsigned short* m)
+inline bool isFaceEqual(const ushort* n, const ushort* m)
 {
 	return
 		(n[0] == m[0] && n[1] == m[1] && n[2] == m[2])
@@ -100,7 +100,7 @@ inline bool isFaceEqual(const unsigned short* n, const unsigned short* m)
 		|| (n[0] == m[2] && n[1] == m[0] && n[2] == m[1]);
 }
 
-inline bool isFaceReverse(const unsigned short* n, const unsigned short* m)
+inline bool isFaceReverse(const ushort* n, const ushort* m)
 {
 	return
 		(n[0] == m[2] && n[1] == m[1] && n[2] == m[0])

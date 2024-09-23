@@ -258,7 +258,7 @@ bool CBrush::IsStatic() const
 	return true;
 }
 
-struct IStatObj* CBrush::GetEntityStatObj(unsigned int nSlot, Matrix44* pMatrix, bool bReturnOnlyVisible)
+struct IStatObj* CBrush::GetEntityStatObj(uint nSlot, Matrix44* pMatrix, bool bReturnOnlyVisible)
 {
 	if (nSlot != 0 || m_nObjectTypeID < 0)
 		return 0;
@@ -269,7 +269,7 @@ struct IStatObj* CBrush::GetEntityStatObj(unsigned int nSlot, Matrix44* pMatrix,
 	return m_lstBrushTypes[m_nObjectTypeID];
 }
 
-struct ICryCharInstance* CBrush::GetEntityCharacter(unsigned int nSlot, Matrix44* pMatrix)
+struct ICryCharInstance* CBrush::GetEntityCharacter(uint nSlot, Matrix44* pMatrix)
 {
 	return 0;
 }
@@ -1462,7 +1462,7 @@ int CBrush::GetMemoryUsage()
 	return sizeof(*this) + m_pEntityRenderState ? sizeof(*m_pEntityRenderState) : 0;
 }
 
-void CBrush::SetEntityStatObj(unsigned int nSlot, IStatObj* pStatObj, Matrix44* pMatrix)
+void CBrush::SetEntityStatObj(uint nSlot, IStatObj* pStatObj, Matrix44* pMatrix)
 {
 	if (!pStatObj)
 	{

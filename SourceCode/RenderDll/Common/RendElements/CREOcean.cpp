@@ -356,7 +356,7 @@ void CREOcean::LinkVisSectors(float fSize)
 	}
 }
 
-void CREOcean::PostLoad(unsigned int ulSeed, float fWindDirection, float fWindSpeed, float fWaveHeight, float fDirectionalDependence, float fChoppyWavesFactor, float fSuppressSmallWavesFactor)
+void CREOcean::PostLoad(uint ulSeed, float fWindDirection, float fWindSpeed, float fWaveHeight, float fDirectionalDependence, float fChoppyWavesFactor, float fSuppressSmallWavesFactor)
 {
 	m_fWindX = cry_cosf(fWindDirection);
 	m_fWindY = cry_sinf(fWindDirection);
@@ -566,7 +566,7 @@ void CREOcean::Update(float fTime)
 		{
 			int x = i + OCEANGRID / 2;
 			int y = j + OCEANGRID / 2;
-			unsigned int val = (int)(m_aAngularFreq[y][x] * 1024.0f / (PI * 2) * fTime);
+			uint val = (int)(m_aAngularFreq[y][x] * 1024.0f / (PI * 2) * fTime);
 			float fSin = gRenDev->m_RP.m_tSinTable[val & 0x3ff];
 			float fCos = gRenDev->m_RP.m_tSinTable[(val + 512) & 0x3ff];
 

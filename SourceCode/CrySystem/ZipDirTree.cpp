@@ -109,8 +109,8 @@ size_t ZipDir::FileEntryTree::GetSizeSerialized()const
 // serializes into the memory
 size_t ZipDir::FileEntryTree::Serialize(DirHeader* pDirHeader)const
 {
-	pDirHeader->numDirs = (ZipFile::ushort)m_mapDirs.size();
-	pDirHeader->numFiles = (ZipFile::ushort)m_mapFiles.size();
+	pDirHeader->numDirs = (ushort)m_mapDirs.size();
+	pDirHeader->numFiles = (ushort)m_mapFiles.size();
 	DirEntry* pDirEntries = (DirEntry*)(pDirHeader + 1);
 	FileEntry* pFileEntries = (FileEntry*)(pDirEntries + pDirHeader->numDirs);
 	char* pNamePool = (char*)(pFileEntries + pDirHeader->numFiles);

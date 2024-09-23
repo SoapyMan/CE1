@@ -349,9 +349,9 @@ struct ISystem
 	virtual const SFileVersion& GetProductVersion() = 0;
 
 	// Compressed file read & write
-	virtual bool WriteCompressedFile(char* filename, void* data, unsigned int bitlen) = 0;
-	virtual unsigned int ReadCompressedFile(char* filename, void* data, unsigned int maxbitlen) = 0;
-	virtual unsigned int GetCompressedFileSize(char* filename) = 0;
+	virtual bool WriteCompressedFile(char* filename, void* data, uint bitlen) = 0;
+	virtual uint ReadCompressedFile(char* filename, void* data, uint maxbitlen) = 0;
+	virtual uint GetCompressedFileSize(char* filename) = 0;
 
 	// Sample:  char str[256];	bool bRet=GetSSFileInfo("C:\\mastercd\\materials\\compound_indoor.xml",str,256);
 	// get info about the last SourceSafe action for a specifed file (Name,Comment,Date)

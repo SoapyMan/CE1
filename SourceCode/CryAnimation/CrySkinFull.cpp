@@ -51,8 +51,8 @@ void CrySkinFull::skin(const Matrix44* pBones, Vec3d* pDest)
 		const Matrix44* pBone = pBones + m_numSkipBones;
 		const Matrix44* pBonesEnd = pBones + m_numBones;
 
-		u32 s = 0;
-		u32 t = 0;
+		uint32 s = 0;
+		uint32 t = 0;
 
 #ifdef _DEBUG
 		TFixedArray<float> arrW;
@@ -65,8 +65,8 @@ void CrySkinFull::skin(const Matrix44* pBones, Vec3d* pDest)
 			Matrix34 m34 = Matrix34(GetTransposed44(*pBone));
 
 			// first process the rigid vertices
-			u32 a0 = m_arrAux[t];
-			for (u32 i = 0; i < a0; i++)
+			uint32 a0 = m_arrAux[t];
+			for (uint32 i = 0; i < a0; i++)
 			{
 				//_mm_prefetch( (char*)&m_arrVertices[s+20].pt, _MM_HINT_T0 );
 				pDest[m_arrVertices[s].nDest] = m34 * m_arrVertices[s].pt;
@@ -80,8 +80,8 @@ void CrySkinFull::skin(const Matrix44* pBones, Vec3d* pDest)
 			t++;
 
 			// process the smooth1 vertices that were the first time met
-			u32 a1 = m_arrAux[t]; t++;
-			for (u32 i = 0; i < a1; i++)
+			uint32 a1 = m_arrAux[t]; t++;
+			for (uint32 i = 0; i < a1; i++)
 			{
 				//_mm_prefetch( (char*)&m_arrVertices[s+20].pt, _MM_HINT_T0 );
 				pDest[m_arrAux[t]] = (m34 * m_arrVertices[s].pt) * m_arrVertices[s].fWeight;
@@ -95,8 +95,8 @@ void CrySkinFull::skin(const Matrix44* pBones, Vec3d* pDest)
 			}
 
 			// process the smooth vertices that were the first time met
-			u32 a2 = m_arrAux[t]; t++;
-			for (u32 i = 0; i < a2; i++)
+			uint32 a2 = m_arrAux[t]; t++;
+			for (uint32 i = 0; i < a2; i++)
 			{
 				//_mm_prefetch( (char*)&m_arrVertices[s+20].pt, _MM_HINT_T0 );
 				pDest[m_arrAux[t]] += (m34 * m_arrVertices[s].pt) * m_arrVertices[s].fWeight;

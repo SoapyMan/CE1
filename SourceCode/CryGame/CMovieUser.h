@@ -26,7 +26,7 @@ public:
 
 	// interface IMovieUser
 	void SetActiveCamera(const SCameraParams &Params);
-	void BeginCutScene(unsigned long dwFlags,bool bResetFX);
+	void BeginCutScene(ulong dwFlags,bool bResetFX);
 	void EndCutScene();
 	void SendGlobalEvent(const char *pszEvent);
 	void PlaySubtitles( ISound *pSound );

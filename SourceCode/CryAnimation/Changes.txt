@@ -35,7 +35,7 @@ Made infrastructure for the CCG format
 Made enumeration for the morph targets
 [3/7/03]
 SetMorphTime()
-Now the face info is stored in an array GeomFace  and array of unsigned char for materials instead of array of CryFace, for better memory utilization
+Now the face info is stored in an array GeomFace  and array of uchar for materials instead of array of CryFace, for better memory utilization
 [3/10/03]
 Stopping routines for morph
 [3/17/03]

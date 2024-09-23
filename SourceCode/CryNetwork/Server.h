@@ -53,15 +53,15 @@ public:
 	virtual void GetBandwidth(float& fIncomingKbPerSec, float& fOutgoingKbPerSec, DWORD& nIncomingPackets, DWORD& nOutgoingPackets);
 	virtual const char* GetHostName();
 	virtual void Release();
-	virtual void SetVariable(enum CryNetworkVarible eVarName, unsigned int nValue);
-	virtual void Update(unsigned int nTime);
-	virtual void RegisterPacketSink(const unsigned char inPacketID, INetworkPacketSink* inpSink);
+	virtual void SetVariable(enum CryNetworkVarible eVarName, uint nValue);
+	virtual void Update(uint nTime);
+	virtual void RegisterPacketSink(const uchar inPacketID, INetworkPacketSink* inpSink);
 	virtual void SetSecuritySink(IServerSecuritySink* pSecuritySink);
 	virtual IServerSecuritySink* GetSecuritySink();
-	virtual bool IsIPBanned(const unsigned int dwIP);
-	virtual void BanIP(const unsigned int dwIP);
-	virtual void UnbanIP(const unsigned int dwIP);
-	virtual IServerSlot* GetServerSlotbyID(const unsigned char ucId) const;
+	virtual bool IsIPBanned(const uint dwIP);
+	virtual void BanIP(const uint dwIP);
+	virtual void UnbanIP(const uint dwIP);
+	virtual IServerSlot* GetServerSlotbyID(const uchar ucId) const;
 	virtual uint8 GetMaxClientID() const;
 	virtual EMPServerType GetServerType() const;
 
@@ -105,13 +105,13 @@ private:
 	//!
 	void ProcessMulticastPacket(CStream& stmPacket, CIPAddress& ip);
 	//!
-	unsigned char GenerateNewClientID();
+	uchar GenerateNewClientID();
 
 
-	typedef std::map<unsigned char, INetworkPacketSink*> TPacketSinks;
+	typedef std::map<uchar, INetworkPacketSink*> TPacketSinks;
 
 
-	unsigned char							m_cLastClientID;				//!<
+	uchar							m_cLastClientID;				//!<
 	CDatagramSocket						m_socketMain;						//!<
 	CDatagramSocket						m_socketMulticast;			//!<
 	bool											m_bMulticastSocket;			//!<
@@ -123,7 +123,7 @@ protected:
 private:
 	CNPServerVariables				m_ServerVariables;			//!<
 
-	unsigned int							m_nCurrentTime;					//!<
+	uint							m_nCurrentTime;					//!<
 	CNetwork* m_pNetwork;							//!<
 	WORD											m_wPort;								//!<
 	bool											m_bListen;							//!<

@@ -17,8 +17,8 @@ struct StatObj
 	USHORT iX;
 	USHORT iY;
 	//float scale;
-	unsigned char iStatObjTypeIndex;
-	unsigned char brightness;
+	uchar iStatObjTypeIndex;
+	uchar brightness;
 };
 
 #pragma pack(push,1)
@@ -26,10 +26,10 @@ struct StatObj
 struct StatObjInstance
 {
 	//static_obj_info_struct() {}
-	//  static_obj_info_struct(unsigned short _x, unsigned short _y, unsigned char _id)
+	//  static_obj_info_struct(ushort _x, ushort _y, uchar _id)
 	//{ x=_x; y=_y; id=_id; }
-	//  unsigned short x,y;
-	//unsigned char id;
+	//  ushort x,y;
+	//uchar id;
 	/*
 	float GetX() { return float(x)*WORLD_SIZE/65536.f; }
 	float GetY() { return float(y)*WORLD_SIZE/65536.f; }
@@ -67,7 +67,7 @@ struct StatObjInstance
 	*/
 
 protected:
-	unsigned short x,y,z;
+	ushort x,y,z;
 	uchar id;
 	uchar brightness;
 	float scale;

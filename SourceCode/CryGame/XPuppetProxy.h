@@ -149,11 +149,11 @@ public:
 	void SetBehaviourFunc(HSCRIPTFUNCTION pFunc);
 	void SetMotorFunc(HSCRIPTFUNCTION pFunc);
 
-	bool QueryProxy(unsigned char type, void **pProxy);
+	bool QueryProxy(uchar type, void **pProxy);
 
 	void GetDimensions(int bodypos, float &eye_height, float &height);
 
-	bool CheckStatus(unsigned char status);
+	bool CheckStatus(uchar status);
 
 protected:
 

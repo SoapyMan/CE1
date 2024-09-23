@@ -569,7 +569,7 @@ bool CryModelState::AddImpact(const int partid, vectorf point, vectorf impact, f
 {
 	if (m_pCharPhysics)
 	{
-		if ((unsigned int)partid >= (unsigned int)numBones())
+		if ((uint)partid >= (uint)numBones())
 		{
 			//GetLog()->LogToFile("*ERROR* CryModelState::AddImpact: part id %u is out of range [0..%u]", partid, numBones());
 			// sometimes out of range value (like -1) is passed to indicate that no impulse should be added to character
@@ -625,7 +625,7 @@ bool CryModelState::AddImpact(const int partid, vectorf point, vectorf impact, f
 
 int CryModelState::TranslatePartIdToDeadBody(int partid)
 {
-	if ((unsigned int)partid >= (unsigned int)numBones())
+	if ((uint)partid >= (uint)numBones())
 		return -1;
 
 	int nLod = crymin(numLODs() - 1, 1);

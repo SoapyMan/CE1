@@ -535,7 +535,7 @@ void CSectorInfo::RenderSector(CCObject* pTerrainCCObject)
 	/*
 	  CArrayInfo * pArrayInfo = &m_ArrayInfo;
 	  CRYASSERT(m_pLeafBuffer->m_Indices.Count() >= pArrayInfo->idx_array.Count());
-	  memcpy(&m_pLeafBuffer->m_Indices[0], &pArrayInfo->idx_array[0], m_pLeafBuffer->m_Indices.Count()*sizeof(unsigned short));
+	  memcpy(&m_pLeafBuffer->m_Indices[0], &pArrayInfo->idx_array[0], m_pLeafBuffer->m_Indices.Count()*sizeof(ushort));
 	  */
 
 	  //  CArrayInfo * pArrayInfo = &m_ArrayInfo;
@@ -548,7 +548,7 @@ void CSectorInfo::RenderSector(CCObject* pTerrainCCObject)
 
 void CSectorInfo::AddLowResSectorIndex(int _x, int _y, int _step, int _lod)
 {
-	unsigned short id = _x / _step * (CTerrain::GetTerrainSize() / _step + 1) + _y / _step;
+	ushort id = _x / _step * (CTerrain::GetTerrainSize() / _step + 1) + _y / _step;
 
 	m_nLowResTerrainIdxRange[_lod][0] = crymin(m_nLowResTerrainIdxRange[_lod][0], id);
 	m_nLowResTerrainIdxRange[_lod][1] = crymax(m_nLowResTerrainIdxRange[_lod][1], id);

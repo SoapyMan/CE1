@@ -427,7 +427,7 @@ ITexPic* SShader::GetBaseTexture(int* nPass, int* nTU)
 	return nullptr;
 }
 
-unsigned int SShader::GetUsedTextureTypes(void)
+uint SShader::GetUsedTextureTypes(void)
 {
 	uint nMask = 0;
 	int i, j, n;

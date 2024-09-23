@@ -31,7 +31,7 @@ typedef Vec2_tpl<long>	 vector2l;
 typedef Vec2_tpl<float> vector2df;
 typedef Vec2_tpl<real> vector2d;
 typedef Vec2_tpl<int> vector2di;
-typedef Vec2_tpl<unsigned int> vector2dui;
+typedef Vec2_tpl<uint> vector2dui;
 
 
 

@@ -19,10 +19,7 @@ CStatCGFShadVol::CStatCGFShadVol(ILog* pLog, CIndexedMesh* pIndexedMesh)
 			cf->m_Vecs[v].x = pIndexedMesh->m_pVerts[pIndexedMesh->m_pFaces[i].v[v]].x;
 			cf->m_Vecs[v].y = pIndexedMesh->m_pVerts[pIndexedMesh->m_pFaces[i].v[v]].y;
 			cf->m_Vecs[v].z = pIndexedMesh->m_pVerts[pIndexedMesh->m_pFaces[i].v[v]].z;
-		} //v					
-
-		//calc plane equation
-		cf->m_Plane.CalcPlane(cf->m_Vecs[2], cf->m_Vecs[1], cf->m_Vecs[0]);
+		} //v
 	} //i
 
 	//precalc edges
@@ -58,7 +55,7 @@ void CShadowVolObject::CreateConnectivityInfo(CIndexedMesh* pIndexedMesh, ILog* 
 			continue;
 
 		// with welding
-		unsigned short a = cf->v[0], b = cf->v[1], c = cf->v[2];
+		ushort a = cf->v[0], b = cf->v[1], c = cf->v[2];
 		iBuilder->AddTriangleWelded(a, b, c, pVert[a], pVert[b], pVert[c]);
 	}
 

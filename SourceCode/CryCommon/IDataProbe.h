@@ -28,10 +28,10 @@ struct SDataProbeContext
 	string sFilename;
 	void* pBuffer;
 	void* pModuleBaseAddress;
-	unsigned int nOffset;
-	unsigned int nSize;
+	uint nOffset;
+	uint nSize;
 	// Algorithm used fo code.
-	unsigned int nCodeInfo;
+	uint nCodeInfo;
 	// Resulting code.
 	uint64 nCode;
 
@@ -74,9 +74,9 @@ struct IDataProbe
 	virtual void RandomAlloc() = 0;
 
 	// Compress block of data with zlib.
-	virtual int Compress(void* dest, unsigned int& destLen, const void* source, unsigned int sourceLen, int level = 6) = 0;
+	virtual int Compress(void* dest, uint& destLen, const void* source, uint sourceLen, int level = 6) = 0;
 	// Uncompress block of data with zlib.
-	virtual int Uncompress(void* dest, unsigned int& destLen, const void* source, unsigned int sourceLen) = 0;
+	virtual int Uncompress(void* dest, uint& destLen, const void* source, uint sourceLen) = 0;
 
 	//////////////////////////////////////////////////////////////////////////
 	// MD5 Digest.

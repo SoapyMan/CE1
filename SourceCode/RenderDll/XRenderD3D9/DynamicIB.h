@@ -26,7 +26,7 @@ public:
 		m_nOffs = 0;
 	}
 
-	DynamicIB(const LPDIRECT3DDEVICE9 pD3D, const unsigned int& theElementsCount)
+	DynamicIB(const LPDIRECT3DDEVICE9 pD3D, const uint& theElementsCount)
 	{
 		m_pIB = 0;
 
@@ -42,7 +42,7 @@ public:
 
 	LPDIRECT3DVERTEXBUFFER9 GetInterface() const { return m_pIB; }
 
-	Type* Lock(const unsigned int& theLockCount, int& nOffs)
+	Type* Lock(const uint& theLockCount, int& nOffs)
 	{
 		if (theLockCount > m_Count)
 		{

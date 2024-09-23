@@ -19,7 +19,7 @@
 
 typedef struct CCacheSlot
 {
-	unsigned int	dwUsage;
+	uint	dwUsage;
 	int				iCacheSlot;
 	wchar_t			cCurrentChar;
 
@@ -64,7 +64,7 @@ public:
 	int Release();
 
 	int LoadFontFromFile(const string& szFileName);
-	int LoadFontFromMemory(unsigned char* pFileBuffer, int iDataSize);
+	int LoadFontFromMemory(uchar* pFileBuffer, int iDataSize);
 	int ReleaseFont();
 
 	int SetEncoding(FT_Encoding pEncoding) { return m_pFontRenderer.SetEncoding(pEncoding); };
@@ -100,5 +100,5 @@ private:
 
 	CFontRenderer	m_pFontRenderer;
 
-	unsigned int	m_dwUsage;
+	uint	m_dwUsage;
 };

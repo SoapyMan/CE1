@@ -2877,7 +2877,7 @@ bool CCGVProgram_D3D::mfSet(bool bStat, SShaderPassHW* slw, int nFlags)
 void CCGVProgram_D3D::mfBind()
 {
 	SCGInstance& inst = m_Insts[m_CurInst];
-	if (!inst.m_pHandle)
+	if (!inst.m_pHandle || inst.m_pHandle == (void*)-1)
 		return;
 
 	HRESULT hr = gcpRendD3D->mfGetD3DDevice()->SetVertexShader((IDirect3DVertexShader9*)inst.m_pHandle);

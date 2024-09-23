@@ -260,7 +260,7 @@ bool CServer::Init(IServerSlotFactory* pFactory, WORD wPort, bool listen)
 #endif
 
 
-void CServer::Update(unsigned int nTime)
+void CServer::Update(uint nTime)
 {
 	//------------------------------------------------------------------------------------------------- 
 	// ASE Update
@@ -369,7 +369,7 @@ void CServer::GetBandwidth(float& fIncomingKbPerSec, float& fOutgoinKbPerSec, DW
 	nOutgoingPackets = m_socketMain.m_nOutgoingPacketsPerSec;
 }
 
-void CServer::SetVariable(enum CryNetworkVarible eVarName, unsigned int nValue)
+void CServer::SetVariable(enum CryNetworkVarible eVarName, uint nValue)
 {
 	switch (eVarName)
 	{
@@ -591,7 +591,7 @@ void CServer::ProcessPacket(CStream& stmPacket, CIPAddress& ip)
 	};
 }
 
-void CServer::RegisterPacketSink(const unsigned char inID, INetworkPacketSink* inpSink)
+void CServer::RegisterPacketSink(const uchar inID, INetworkPacketSink* inpSink)
 {
 	CRYASSERT(m_PacketSinks.count(inID) == 0);
 
@@ -609,7 +609,7 @@ IServerSecuritySink* CServer::GetSecuritySink()
 	return m_pSecuritySink;
 }
 
-bool CServer::IsIPBanned(const unsigned int dwIP)
+bool CServer::IsIPBanned(const uint dwIP)
 {
 	if (m_pSecuritySink)
 	{
@@ -619,7 +619,7 @@ bool CServer::IsIPBanned(const unsigned int dwIP)
 	return false;
 }
 
-void CServer::BanIP(const unsigned int dwIP)
+void CServer::BanIP(const uint dwIP)
 {
 	if (m_pSecuritySink)
 	{
@@ -627,7 +627,7 @@ void CServer::BanIP(const unsigned int dwIP)
 	}
 }
 
-void CServer::UnbanIP(const unsigned int dwIP)
+void CServer::UnbanIP(const uint dwIP)
 {
 	if (m_pSecuritySink)
 	{
@@ -733,7 +733,7 @@ void CServer::ProcessSetup(CNP& cnp, CStream& stmStream, CIPAddress& ip)
 
 bool CServer::IsLANIP(const CIPAddress& ip)
 {
-	unsigned char ipb[4];
+	uchar ipb[4];
 #if defined(LINUX)
 	ipb[0] = ip.m_Address.sin_addr_win.S_un.S_un_b.s_b1;
 	ipb[1] = ip.m_Address.sin_addr_win.S_un.S_un_b.s_b2;
@@ -904,7 +904,7 @@ void CServer::ProcessInfoXMLRequest(CStream& stmIn, CIPAddress& ip)
 }
 
 //////////////////////////////////////////////////////////////////////////
-IServerSlot* CServer::GetServerSlotbyID(const unsigned char ucId) const
+IServerSlot* CServer::GetServerSlotbyID(const uchar ucId) const
 {
 	for (SLOTS_MAP::const_iterator it = m_mapSlots.begin(); it != m_mapSlots.end(); ++it)
 	{
@@ -917,9 +917,9 @@ IServerSlot* CServer::GetServerSlotbyID(const unsigned char ucId) const
 
 
 //////////////////////////////////////////////////////////////////////////
-unsigned char CServer::GenerateNewClientID()
+uchar CServer::GenerateNewClientID()
 {
-	for (unsigned char id = 1; id < 0xFF; id++)				// find a free client id
+	for (uchar id = 1; id < 0xFF; id++)				// find a free client id
 	{
 		bool bFree = true;
 

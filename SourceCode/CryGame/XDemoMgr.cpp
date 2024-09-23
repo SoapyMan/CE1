@@ -77,8 +77,8 @@ bool CXDemoMgr::StartRecord(const char *sFileName, CStream &stm)
 // Stores a chunk of demo-data on disk.
 bool CXDemoMgr::AddChunk(float fTimestamp, CStream &stm, IEntity *player)
 {
-	unsigned int nStreamSizeInBytes=BITS2BYTES(stm.GetSize());
-	unsigned int nStreamSizeInBits=stm.GetSize();
+	uint nStreamSizeInBytes=BITS2BYTES(stm.GetSize());
+	uint nStreamSizeInBits=stm.GetSize();
 	
 	if(nStreamSizeInBits==0)
 		return false;
@@ -186,8 +186,8 @@ bool CXDemoMgr::PlayChunk(float fCurrentTime, CXClient *pClient)
 // Reads a demo-chunk from disk.
 bool CXDemoMgr::ReadChunk(CStream &stm, float &fTimestamp, Vec3d &angles)
 {
-	unsigned int nStreamSizeInBytes;
-	unsigned int nStreamSizeInBits;
+	uint nStreamSizeInBytes;
+	uint nStreamSizeInBits;
 	
 	if(m_pFile==nullptr)
 		return false;

@@ -68,7 +68,7 @@ public:
 	//! clear the key (pressed) state
 	void ClearKeyState();
 	//! get the key state
-	unsigned char GetKeyState(int nKey);
+	uchar GetKeyState(int nKey);
 	//! return the name (ascii name mapped to the virtual keyboard layout) of the key specified in kKeyCode
 	//!
 	void Update();
@@ -78,9 +78,9 @@ public:
 private:
 	static XAsciiKey m_AsciiTable[256];
 public:	
-	unsigned short DIK2XKEY(unsigned char cCode);
-	unsigned char XKEY2DIK(unsigned short nCode);
-	unsigned char XKEY2ASCII(unsigned short nCode,int modifiers);
+	ushort DIK2XKEY(uchar cCode);
+	uchar XKEY2DIK(ushort nCode);
+	uchar XKEY2ASCII(ushort nCode,int modifiers);
 	bool GetOSKeyName(int nKey, wchar_t *szwKeyName, int iBufSize);
 
 	void FeedVirtualKey(int nVirtualKey,long lParam,bool bDown);
@@ -89,10 +89,10 @@ protected:
 	bool	Acquire();
 	bool	UnAcquire();
 	void	SetupKeyNames();
-	void	ProcessKey(int nKey,bool bPressed,unsigned char *cTempKeys);
-	unsigned char		m_cKeysState[256];
-	unsigned char		m_cOldKeysState[256];	
-	unsigned char		m_cTempKeys[256];	
+	void	ProcessKey(int nKey,bool bPressed,uchar *cTempKeys);
+	uchar		m_cKeysState[256];
+	uchar		m_cOldKeysState[256];	
+	uchar		m_cTempKeys[256];	
 	CInputDirectInput*	m_pInput;
 #ifdef WIN32	
 	LPDIRECTINPUTDEVICE8 m_pKeyboard;	

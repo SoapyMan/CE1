@@ -169,7 +169,7 @@ bool CEntity::DrawEntity(const SRendParams& _EntDrawParams)
 		rParms.dwFObjFlags |= FOB_NOSCISSOR;
 
 	// draw static components
-	for (unsigned int k = 0; k < m_objects.size(); k++)
+	for (uint k = 0; k < m_objects.size(); k++)
 	{
 		CEntityObject* cb = &m_objects[k];
 		IStatObj* obj = cb->object;
@@ -278,7 +278,7 @@ void CEntity::DrawEntityDebugInfo(const SRendParams& rParms)
 			GetBBox(mins, maxs);
 			m_pISystem->GetIRenderer()->Draw3dBBox(mins, maxs);
 
-			/*for (unsigned int k=0;k<m_objects.size();k++)
+			/*for (uint k=0;k<m_objects.size();k++)
 				{
 					CEntityObject *cb =  &m_objects[k];
 					IStatObj * obj = cb->object;
@@ -341,7 +341,7 @@ void CEntity::CheckEntityLightSourcesInEntityObjects()
 	m_bEntityHasLights = false;
 
 	// Static objects
-	for (unsigned int k = 0; k < m_objects.size(); k++)
+	for (uint k = 0; k < m_objects.size(); k++)
 	{
 		CEntityObject* cb = &m_objects[k];
 		IStatObj* obj = cb->object;
@@ -386,7 +386,7 @@ void CEntity::ProcessEntityLightSources()
 	int nLightId = 0;
 
 	// Static objects
-	for (unsigned int k = 0; k < m_objects.size(); k++)
+	for (uint k = 0; k < m_objects.size(); k++)
 	{
 		CEntityObject* cb = &m_objects[k];
 		IStatObj* obj = cb->object;
@@ -448,7 +448,7 @@ void CEntity::ProcessEntityLightSources()
 	}
 }
 
-void CEntity::SetEntityStatObj(unsigned int nSlot, IStatObj* pStatObj, Matrix44* pMatrix)
+void CEntity::SetEntityStatObj(uint nSlot, IStatObj* pStatObj, Matrix44* pMatrix)
 {
 	if (nSlot >= 0 /*&& nSlot<m_objects.size()*/)		//PETAR: changed to be able to SET entity objects, not just replace them
 	{
@@ -471,7 +471,7 @@ void CEntity::SetEntityStatObj(unsigned int nSlot, IStatObj* pStatObj, Matrix44*
 	}
 }
 
-IStatObj* CEntity::GetEntityStatObj(unsigned int nSlot, Matrix44* pMatrix, bool bReturnOnlyVisible)
+IStatObj* CEntity::GetEntityStatObj(uint nSlot, Matrix44* pMatrix, bool bReturnOnlyVisible)
 {
 	if (nSlot >= 0 && nSlot < m_objects.size() && (!bReturnOnlyVisible || m_objects[nSlot].flags & ETY_OBJ_INFO_DRAW))
 	{
@@ -501,7 +501,7 @@ IStatObj* CEntity::GetEntityStatObj(unsigned int nSlot, Matrix44* pMatrix, bool 
 	return 0;
 }
 
-ICryCharInstance* CEntity::GetEntityCharacter(unsigned int nSlot, Matrix44* pMatrix)
+ICryCharInstance* CEntity::GetEntityCharacter(uint nSlot, Matrix44* pMatrix)
 {
 	if (nSlot >= 0 && nSlot < MAX_ANIMATED_MODELS)
 	{
@@ -528,7 +528,7 @@ bool CEntity::IsEntityHasSomethingToRender()
 	bool bItHas = false;
 
 	// test static component 
-	for (unsigned int k = 0; k < m_objects.size(); k++)
+	for (uint k = 0; k < m_objects.size(); k++)
 	{
 		CEntityObject* cb = &m_objects[k];
 		IStatObj* obj = cb->object;
@@ -809,7 +809,7 @@ void CEntity::PreloadInstanceResources(Vec3d vPrevPortalPos, float fPrevPortalDi
 	float fMaxViewDist = GetMaxViewDist();
 	if (fDistance < fMaxViewDist && fDistance < m_pISystem->GetViewCamera().GetZMax())
 	{
-		for (unsigned int k = 0; k < m_objects.size(); k++)
+		for (uint k = 0; k < m_objects.size(); k++)
 		{
 			CEntityObject* cb = &m_objects[k];
 			IStatObj* obj = cb->object;

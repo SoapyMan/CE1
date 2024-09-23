@@ -571,7 +571,7 @@ struct IActionMapManager
 	virtual bool CheckActionMap(XACTIONID nActionID) = 0;
 	virtual bool CheckActionMap(const char* sActionName) = 0;
 	virtual void Reset() = 0;
-	virtual void Update(unsigned int nTimeMSec) = 0;
+	virtual void Update(uint nTimeMSec) = 0;
 	virtual void Release() = 0;
 
 	virtual void Enable() = 0;
@@ -580,7 +580,7 @@ struct IActionMapManager
 };
 //////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////
-typedef unsigned char INPUTACTIONID;
+typedef uchar INPUTACTIONID;
 
 //@{ Helper macros to implement the action triggers callback interface
 #define BEGIN_INPUTACTIONTRIGGERS() void OnAction(INPUTACTIONID nActionID, float fValue) { switch(nActionID) {
@@ -673,8 +673,8 @@ enum eSide
 	eRight,
 };
 
-const unsigned int MAX_XBOX_CONTROLLERS = 4;
-const unsigned int XBOX_ANALOGSTICK_DEADZONE = 8000;
+const uint MAX_XBOX_CONTROLLERS = 4;
+const uint XBOX_ANALOGSTICK_DEADZONE = 8000;
 //@}
 
 
@@ -719,7 +719,7 @@ struct SInputEvent
 	//! @see KeyCodes
 	int key;
 	//! Timestamp of the event, (GetTickCount compatable).
-	unsigned int timestamp;
+	uint timestamp;
 
 	//! Key modifiers enabled at the time of this event.
 	//! @see EKeyModifiersFlags
@@ -846,8 +846,8 @@ struct IInput
 	//! check the joy hat direction
 	virtual int		JoyGetHatDir() = 0;
 
-	virtual Vec3	JoyGetAnalog1Dir(unsigned int joystickID) const = 0;
-	virtual Vec3	JoyGetAnalog2Dir(unsigned int joystickID) const = 0;
+	virtual Vec3	JoyGetAnalog1Dir(uint joystickID) const = 0;
+	virtual Vec3	JoyGetAnalog2Dir(uint joystickID) const = 0;
 
 	//! return the keyboard interface 
 	virtual IKeyboard* GetIKeyboard() = 0;
@@ -893,7 +893,7 @@ struct IInput
 	//! clear key states of all devices
 	virtual void ClearKeyState() = 0;
 
-	virtual unsigned char GetKeyState(int nKey) = 0;
+	virtual uchar GetKeyState(int nKey) = 0;
 };
 
 

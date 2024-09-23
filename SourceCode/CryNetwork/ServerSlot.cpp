@@ -85,7 +85,7 @@ bool CServerSlotImpl::ContextSetup(CStream& stm)
 	return true;
 }
 
-unsigned int CServerSlotImpl::GetUnreliablePacketsLostCount()
+uint CServerSlotImpl::GetUnreliablePacketsLostCount()
 {
 	return m_ctpEndpoint.GetUnreliableLostPackets();
 }
@@ -110,7 +110,7 @@ void CServerSlotImpl::SendUnreliable(CStream& stm)
 }
 
 
-void CServerSlotImpl::Update(unsigned int nTime, CNP* pCNP, CStream* pStream)
+void CServerSlotImpl::Update(uint nTime, CNP* pCNP, CStream* pStream)
 {
 	m_nCurrentTime = nTime;
 
@@ -151,7 +151,7 @@ bool CServerSlotImpl::IsReady()
 }
 
 
-unsigned int CServerSlotImpl::GetPing()
+uint CServerSlotImpl::GetPing()
 {
 	return m_ctpEndpoint.GetPing();
 }
@@ -159,7 +159,7 @@ unsigned int CServerSlotImpl::GetPing()
 //_IServerSlotServices
 //////////////////////////////////////////////////////////////////////
 
-void CServerSlotImpl::Start(unsigned char cClientID, CIPAddress& ip)
+void CServerSlotImpl::Start(uchar cClientID, CIPAddress& ip)
 {
 	m_ipAddress = ip;
 	m_bActive = true;
@@ -312,7 +312,7 @@ void CServerSlotImpl::OnCCPSetup(CStream& stm)
 
 void CServerSlotImpl::OnCCPConnectResp(CStream& stm)
 {
-	unsigned int uiSize = stm.GetSize();
+	uint uiSize = stm.GetSize();
 
 	if (uiSize)
 	{
@@ -340,7 +340,7 @@ void CServerSlotImpl::OnCCPDisconnect(const char* szCause)
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 
-void CServerSlotImpl::ProcessPacket(unsigned char cFrameType, bool bSTC, CStream* pStream)
+void CServerSlotImpl::ProcessPacket(uchar cFrameType, bool bSTC, CStream* pStream)
 {
 	switch (cFrameType)
 	{
@@ -554,7 +554,7 @@ void CServerSlotLocal::GetMemoryStatistics(ICrySizer* pSizer)
 
 void CServerSlotLocal::OnCCPConnectResp(CStream& stm)
 {
-	unsigned int uiSize;
+	uint uiSize;
 
 	stm.Read(uiSize);
 	if (uiSize)
@@ -583,7 +583,7 @@ void CServerSlotLocal::OnCCPConnectResp(CStream& stm)
 
 
 void CServerSlot::OnPlayerAuthorization(bool bAllow, const char* szError, const BYTE* pGlobalID,
-	unsigned int uiGlobalIDSize)
+	uint uiGlobalIDSize)
 {
 	m_pSink->OnXPlayerAuthorization(bAllow, szError, pGlobalID, uiGlobalIDSize);
 	m_pbGlobalID = new BYTE[uiGlobalIDSize];

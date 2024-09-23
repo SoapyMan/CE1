@@ -426,7 +426,7 @@ int CWeaponClass::GetNextFireMode(int oldMode, bool isAI) const
 	if (isAI)
 		return GetAIFireMode();
 
-	for (unsigned int i = 0; i < m_vFireModes.size(); ++i)
+	for (uint i = 0; i < m_vFireModes.size(); ++i)
 	{
 		int nextMode = (oldMode + i + 1) % m_vFireModes.size();
 		if (m_vFireModes[nextMode]->bAIMode == false)

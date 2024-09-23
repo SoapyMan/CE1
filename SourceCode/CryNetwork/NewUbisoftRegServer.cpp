@@ -22,7 +22,7 @@ static const char GUESTPASSWORD[17] = "testtest";
 static DWORD g_dwKeepalifeCreateServer = 60;		// in seconds
 
 
-bool NewUbisoftClient::Server_CreateServer(const char* szServerName, unsigned int uiMaxPlayer)
+bool NewUbisoftClient::Server_CreateServer(const char* szServerName, uint uiMaxPlayer)
 {
 	//	m_pLog->Log("Ubi.com: DEBUG NewUbisoftClient::Server_CreateServer() 1");
 
@@ -51,7 +51,7 @@ bool NewUbisoftClient::Server_CreateServer(const char* szServerName, unsigned in
 	return Server_RecreateServer();
 }
 
-void NewUbisoftClient::Server_SetGamePort(unsigned short usGamePort)
+void NewUbisoftClient::Server_SetGamePort(ushort usGamePort)
 {
 	m_usGamePort = usGamePort;
 }
@@ -82,7 +82,7 @@ bool NewUbisoftClient::Server_RecreateServer()
 
 	// Go through numbered IP and Ports in the ini
 	char szIPAddress[50];
-	unsigned short usClientPort, usRegServerPort;
+	ushort usClientPort, usRegServerPort;
 	int iIndex = 0;
 
 	if (GetRouterAddress(iIndex, szIPAddress, &usClientPort, &usRegServerPort))
@@ -104,7 +104,7 @@ bool NewUbisoftClient::Server_RecreateServer()
 	return true;
 }
 
-bool NewUbisoftClient::Server_UpdateServer(unsigned int uiMaxPlayers, unsigned short usPort)
+bool NewUbisoftClient::Server_UpdateServer(uint uiMaxPlayers, ushort usPort)
 {
 	if (RegServerSend_UpdateGroupSettings(m_iServerRoomID, -1, -1, -1, uiMaxPlayers, -1, nullptr, nullptr, -1, nullptr, -1, nullptr, -1, usPort))
 		return true;

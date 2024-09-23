@@ -319,7 +319,7 @@ CryChunkedFile::MeshDesc::MeshDesc(const MESH_CHUNK_DESC* pChunk, unsigned nSize
 			}
 			else {
 
-				u32 size = arrLinks.size();
+				uint32 size = arrLinks.size();
 
 				if (!EatRawData(&arrLinks[0], arrLinks.size(), pRawData, nSize))
 					throw Error("Truncated vertex link array");
@@ -327,13 +327,13 @@ CryChunkedFile::MeshDesc::MeshDesc(const MESH_CHUNK_DESC* pChunk, unsigned nSize
 				//---------------------------------------------------
 				//changes to optimize skinning added by ivo
 				//---------------------------------------------------
-				for (u32 x = 0; x < size; x++) {
-					for (u32 y = x + 1; y < size; y++) {
+				for (uint32 x = 0; x < size; x++) {
+					for (uint32 y = x + 1; y < size; y++) {
 						if (arrLinks[x].BoneID == arrLinks[y].BoneID) {
 							//add blending of same bone to 1st found bone in list;			
 							arrLinks[x].Blending += arrLinks[y].Blending;
 							//remove link from the list;			
-							for (u32 z = y; z < size; z++) arrLinks[z] = arrLinks[z + 1];
+							for (uint32 z = y; z < size; z++) arrLinks[z] = arrLinks[z + 1];
 							arrLinks.pop_back();
 							size = arrLinks.size();
 							y--;
@@ -347,7 +347,7 @@ CryChunkedFile::MeshDesc::MeshDesc(const MESH_CHUNK_DESC* pChunk, unsigned nSize
 				else
 				{
 					//loop over all vertices and check for "minimal" blending vlaues			
-					for (u32 i = 0; i < size; i++)
+					for (uint32 i = 0; i < size; i++)
 					{
 						float minval = 0.12f;
 						float f = arrLinks[i].Blending;
@@ -355,12 +355,12 @@ CryChunkedFile::MeshDesc::MeshDesc(const MESH_CHUNK_DESC* pChunk, unsigned nSize
 						if (f > (1.0f - minval)) arrLinks[i].Blending = 1.0f;
 					}
 
-					for (u32 x = 0; x < size; x++)
+					for (uint32 x = 0; x < size; x++)
 					{
 						if (arrLinks[x].Blending == 0.0f)
 						{
 							//remove link from the list;			
-							for (u32 z = x; z < size; z++) arrLinks[z] = arrLinks[z + 1];
+							for (uint32 z = x; z < size; z++) arrLinks[z] = arrLinks[z + 1];
 							arrLinks.pop_back();
 							size = arrLinks.size();
 							x--;
@@ -369,16 +369,16 @@ CryChunkedFile::MeshDesc::MeshDesc(const MESH_CHUNK_DESC* pChunk, unsigned nSize
 
 					float t = 0;
 					//sum up all blending values
-					for (u32 i = 0; i < size; i++)	t += arrLinks[i].Blending;
+					for (uint32 i = 0; i < size; i++)	t += arrLinks[i].Blending;
 					//normalized blending
-					for (u32 i = 0; i < size; i++)	arrLinks[i].Blending /= t;
+					for (uint32 i = 0; i < size; i++)	arrLinks[i].Blending /= t;
 				}
 
 				//-------------------------------------------------------------------------
 
 				//check if summed blending of all bones is 1.0f
 				float Blending = 0;
-				for (u32 i = 0; i < size; i++)	Blending += arrLinks[i].Blending;
+				for (uint32 i = 0; i < size; i++)	Blending += arrLinks[i].Blending;
 
 				CRYASSERT(fabsf(Blending - 1.0f) < 0.005f);
 

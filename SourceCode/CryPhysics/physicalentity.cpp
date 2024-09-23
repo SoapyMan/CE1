@@ -356,7 +356,7 @@ int CPhysicalEntity::GetStatus(pe_status* _status)
 		if (ipart >= m_nParts)
 			return 0;
 		phys_geometry* pgeom = status->bUseProxy ? m_parts[ipart].pPhysGeomProxy : m_parts[ipart].pPhysGeom;
-		if ((unsigned int)status->iPrim >= (unsigned int)pgeom->pGeom->GetPrimitiveCount() ||
+		if ((uint)status->iPrim >= (uint)pgeom->pGeom->GetPrimitiveCount() ||
 			pgeom->pGeom->GetType() == GEOM_TRIMESH && status->iFeature > 2)
 			return 0;
 		status->id = pgeom->pGeom->GetPrimitiveId(status->iPrim, status->iFeature);
@@ -601,11 +601,11 @@ int CPhysicalEntity::GetStateSnapshotTxt(char* txtbuf, int szbuf, float time_bac
 {
 	CStream stm;
 	GetStateSnapshot(stm, time_back);
-	int size = bin2ascii(stm.GetPtr(), (stm.GetSize() - 1 >> 3) + 1, (unsigned char*)txtbuf);
+	int size = bin2ascii(stm.GetPtr(), (stm.GetSize() - 1 >> 3) + 1, (uchar*)txtbuf);
 	/*
 		// debugging
 		static char test[1024*16];
-		int testsize=ascii2bin((const unsigned char*)txtbuf,size,(unsigned char*)test);
+		int testsize=ascii2bin((const uchar*)txtbuf,size,(uchar*)test);
 		if(memcmp(test,stm.GetPtr(),testsize)!=0)
 		{
 			char str[256];
@@ -622,6 +622,6 @@ int CPhysicalEntity::GetStateSnapshotTxt(char* txtbuf, int szbuf, float time_bac
 void CPhysicalEntity::SetStateFromSnapshotTxt(const char* txtbuf, int szbuf)
 {
 	CStream stm;
-	stm.SetSize(ascii2bin((const unsigned char*)txtbuf, szbuf, stm.GetPtr()) * 8);
+	stm.SetSize(ascii2bin((const uchar*)txtbuf, szbuf, stm.GetPtr()) * 8);
 	SetStateFromSnapshot(stm);
 }

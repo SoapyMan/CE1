@@ -37,10 +37,10 @@ void printChunkBGBone(const char* pData, unsigned nSize)
 	const char* pDataEnd = pData + nSize;
 	const CCFBGBone* pDesc = (const CCFBGBone*)pData;
 
-	unsigned long i0 = pDesc->nBone;
-	unsigned long i1 = g_arrBones.size();
-	unsigned long i2 = pDesc->numVertices;
-	unsigned long i3 = pDesc->numFaces;
+	ulong i0 = pDesc->nBone;
+	ulong i1 = g_arrBones.size();
+	ulong i2 = pDesc->numVertices;
+	ulong i3 = pDesc->numFaces;
 
 	dump("Bone %d \"%s\", %d verts, %d faces", pDesc->nBone, pDesc->nBone >= g_arrBones.size() ? "#OUT OF RANGE#" : g_arrBones[pDesc->nBone].getNameCStr(), pDesc->numVertices, pDesc->numFaces);
 
@@ -63,7 +63,7 @@ void printChunkBGBone(const char* pData, unsigned nSize)
 
 	const Vec3d* pVertices = (const Vec3d*)(pDesc + 1);
 	const CCFIntFace* pFaces = (const CCFIntFace*)(pVertices + pDesc->numVertices);
-	const unsigned char* pMaterials = (const unsigned char*)(pFaces + pDesc->numFaces);
+	const uchar* pMaterials = (const uchar*)(pFaces + pDesc->numFaces);
 
 	const char* pRequiredDataEnd = (const char*)(pMaterials + pDesc->numFaces);
 

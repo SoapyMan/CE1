@@ -17,7 +17,7 @@ struct IScriptObject;
 struct ISystem;
 
 using HSCRIPT = void*;
-using HSCRIPTFUNCTION = unsigned int;
+using HSCRIPTFUNCTION = uint;
 using HTAG = int;
 using USER_DATA = ULONG_PTR;
 
@@ -318,7 +318,7 @@ struct IScriptSystem
 	//!	@param sPath zero terminated path to the variable (e.g. _localplayer.cnt), max 255 characters
 	//!	@param szKey zero terminated name of the variable (e.g. luaFunc), max 255 characters
 	//! @param dwHash is used as input and output
-	virtual void GetScriptHash(const char* sPath, const char* szKey, unsigned int& dwHash) = 0;
+	virtual void GetScriptHash(const char* sPath, const char* szKey, uint& dwHash) = 0;
 
 	//////////////////////////////////////////////////////////////////////////
 	// Called one time after initialization of system to register script system console vars.
@@ -425,7 +425,7 @@ struct IScriptObject
 	inline bool GetUDValue(const char* sKey, INT_PTR& nValue, int& nCookie) { return GetUDValue(sKey, (USER_DATA&)nValue, nCookie); }		//## AMD Port
 	//#endif
 		//! used to create a hash value out of a lua function (for cheat protection)
-	virtual bool GetFuncData(const char* sKey, unsigned int*& pCode, int& iSize) = 0;
+	virtual bool GetFuncData(const char* sKey, uint*& pCode, int& iSize) = 0;
 	//##@}
 
 	/*! Get the value of a memeber varible
@@ -436,7 +436,7 @@ struct IScriptObject
 	//##@{
 	virtual bool BeginSetGetChain() = 0;
 	virtual bool GetValueChain(const char* sKey, int& nVal) = 0;
-	//virtual bool GetValueChain(const char *sKey, unsigned int &nVal) = 0;
+	//virtual bool GetValueChain(const char *sKey, uint &nVal) = 0;
 	virtual bool GetValueChain(const char* sKey, float& fVal) = 0;
 	virtual bool GetValueChain(const char* sKey, bool& bVal) = 0;
 	virtual bool GetValueChain(const char* sKey, const char*& sVal) = 0;
@@ -506,7 +506,7 @@ struct IScriptObject
 	//! used to get a unique identifier for the table (to iterate without problems with cycles)
 	virtual bool GetCurrentPtr(const void*& pObj) = 0;
 	//! used to create a hash value out of a lua function (for cheat protection)
-	virtual bool GetCurrentFuncData(unsigned int*& pCode, int& iSize) = 0;
+	virtual bool GetCurrentFuncData(uint*& pCode, int& iSize) = 0;
 	virtual bool GetCurrentKey(const char*& sVal) = 0;
 
 	inline bool GetCurrentKey(char*& sVal) { return GetCurrentKey((const char*&)sVal); }
@@ -647,7 +647,7 @@ struct ScriptDebugInfo {
 
 //! under development
 struct IScriptDebugSink {
-	virtual void OnLoadSource(const char* sSourceName, unsigned char* sSource, long nSourceSize) = 0;
+	virtual void OnLoadSource(const char* sSourceName, uchar* sSource, long nSourceSize) = 0;
 	virtual void OnExecuteLine(ScriptDebugInfo& sdiDebugInfo) = 0;
 };
 //DOC-IGNORE-END

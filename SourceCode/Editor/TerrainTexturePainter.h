@@ -122,7 +122,7 @@ private:
 	//! Size of whole terrain texture.
 	int m_surfaceTextureSize;
 
-	std::vector<unsigned char> m_texBlock;
+	std::vector<uchar> m_texBlock;
 	
 	// Cache often used interfaces.
 	I3DEngine *m_3DEngine;

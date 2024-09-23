@@ -126,7 +126,7 @@ void CGoalPipe::PushGoal(const string& Name, bool bBlocking, GoalParameters& par
 	else if (Name == AIOP_SIGNAL)
 	{
 		int nParam = (int)params.fValue;
-		unsigned char cFilter = (unsigned char)params.nValue;
+		uchar cFilter = (uchar)params.nValue;
 		newgoal.pGoalOp = new COPSignal(nParam, params.szString.c_str(), cFilter);
 	}
 	else if (Name == AIOP_DEVALUE)

@@ -263,7 +263,7 @@ void add_route_follower(int iBody, int iFollower) {
 }
 
 void update_level(int iBody, int iNewLevel) {
-	if ((unsigned int)g_infos[iBody].iLevel >= (unsigned int)iNewLevel)
+	if ((uint)g_infos[iBody].iLevel >= (uint)iNewLevel)
 		g_infos[iBody].iLevel = max(g_infos[iBody].iLevel, iNewLevel); // -1 or >=new level
 	else {
 		g_infos[iBody].iLevel = iNewLevel;
@@ -678,7 +678,7 @@ void InvokeContactSolver(float time_interval, SolverSettings* pss)
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////
 	if (bBounced && pss->nMaxLCPCGiters > 0) { // use several iterations of CG solver, solving only for non-separating contacts
-		unsigned int iClass;
+		uint iClass;
 		int cgiter, bStateChanged, n1dofContacts, n2dofContacts, nAngContacts, nFric0Contacts, nFricInfContacts,
 			nContacts, iSortedContacts[6], flags, bNoImprovement;
 		entity_contact* pContacts[sizeof(g_pContacts) / sizeof(g_pContacts[0])];

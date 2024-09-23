@@ -239,7 +239,7 @@ public:
 	~CUISystem();
 
 	//------------------------------------------------------------------------------------------------- 
-	static LRESULT DefaultUpdate(CUIWidget *pWidget, unsigned int iMessage, WPARAM wParam, LPARAM lParam);
+	static LRESULT DefaultUpdate(CUIWidget *pWidget, uint iMessage, WPARAM wParam, LPARAM lParam);
 
 	//------------------------------------------------------------------------------------------------- 
 	int	Create(IGame *pGame, ISystem *pSystem, IScriptSystem *pScriptSystem, const string &szScriptFileName, bool bRunScriptFile = true);

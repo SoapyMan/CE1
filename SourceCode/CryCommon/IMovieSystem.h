@@ -182,7 +182,7 @@ struct SCameraParams
 		fFOV = 0.0f;
 	}
 	IAnimNode* cameraNode;
-	unsigned short nCameraId;
+	ushort nCameraId;
 	float fFOV;
 };
 
@@ -192,7 +192,7 @@ struct IMovieUser
 	//! Called when movie system requests a camera-change.
 	virtual void SetActiveCamera(const SCameraParams& Params) = 0;
 	//! Called when movie system enters into cut-scene mode.
-	virtual void BeginCutScene(unsigned long dwFlags, bool bResetFX) = 0;
+	virtual void BeginCutScene(ulong dwFlags, bool bResetFX) = 0;
 	//! Called when movie system exits from cut-scene mode.
 	virtual void EndCutScene() = 0;
 	//! Called when movie system wants to send a global event.
@@ -251,7 +251,7 @@ public:
 	IRefCountBase() { m_refCount = 0; };
 
 	//! Add new refrence to this object.
-	unsigned long AddRef()
+	ulong AddRef()
 	{
 		m_refCount++;
 		return m_refCount;
@@ -259,7 +259,7 @@ public:
 
 	//! Release refrence to this object.
 	//! when reference count reaches zero, object is deleted.
-	unsigned long Release()
+	ulong Release()
 	{
 		int refs = --m_refCount;
 		if (m_refCount <= 0)

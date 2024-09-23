@@ -136,7 +136,7 @@ bool SXGameContext::Write(CStream &stm)
 	if(!stm.Write(strGameType))
 		return false;
 
-	if(!stm.Write((unsigned int)dwNetworkVersion))
+	if(!stm.Write((uint)dwNetworkVersion))
 		return false;
 
 	if(!stm.Write(strMission))
@@ -159,7 +159,7 @@ bool SXGameContext::Write(CStream &stm)
 
 bool SXGameContext::IsVersionOk() const
 {
-	return dwNetworkVersion==NETWORK_FORMAT_VERSION && ucServerInfoVersion==(unsigned char)SERVERINFO_FORMAT_VERSION;
+	return dwNetworkVersion==NETWORK_FORMAT_VERSION && ucServerInfoVersion==(uchar)SERVERINFO_FORMAT_VERSION;
 }
 
 
@@ -178,7 +178,7 @@ bool SXGameContext::Read(CStream &stm)
 	if(!stm.Read(strGameType))
 		return false;
 
-	if(!stm.Read((unsigned int&)dwNetworkVersion))
+	if(!stm.Read((uint&)dwNetworkVersion))
 		return false;
 
 	if(!stm.Read(strMission))

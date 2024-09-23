@@ -5,7 +5,7 @@
 vector2df g_BoolPtBuf[4096];
 int g_BoolIdBuf[4096];
 int g_BoolGrid[4096];
-unsigned int g_BoolHash[8192];
+uint g_BoolHash[8192];
 struct inters2d {
 	vector2df pt;
 	int iedge[2];
@@ -59,7 +59,7 @@ inline int check_if_inside(int iobj, vector2di& ipt, const vector2di& isz, const
 	int bInside, i, bStop = 0;
 	vector2df pt0, pt1, dp;
 	quotientf ycur;
-	if ((unsigned int)ipt.x >= (unsigned int)isz.x || ipt.y < 0)
+	if ((uint)ipt.x >= (uint)isz.x || ipt.y < 0)
 		return 0;
 
 	for (bInside = 0; ipt.y <= isz.y && !bStop; ipt.y++)

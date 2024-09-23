@@ -23,7 +23,7 @@ void CAIPlayer::ParseParameters(const AIObjectParameters& params)
 	m_pProxy = params.pProxy;
 }
 
-bool CAIPlayer::CanBeConvertedTo(unsigned short type, void** pConverted)
+bool CAIPlayer::CanBeConvertedTo(ushort type, void** pConverted)
 {
 	if (type == AIOBJECT_PLAYER)
 	{

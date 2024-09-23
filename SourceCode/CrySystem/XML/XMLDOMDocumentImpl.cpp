@@ -39,7 +39,7 @@ bool CXMLDOMDocumentImpl::load(const XMLCHAR* sSource)
 {
 	m_sErrorString = "";
 	_XMLDOMParserImpl xml(this);
-	std::vector<unsigned char> buf;
+	std::vector<uchar> buf;
 	FILE* file = GetISystem()->GetIPak()->FOpen(sSource, _T("rb"));
 	if (file) {
 		GetISystem()->GetIPak()->FSeek(file, 0, SEEK_END);
@@ -51,7 +51,7 @@ bool CXMLDOMDocumentImpl::load(const XMLCHAR* sSource)
 		//calculate the checksum of the file
 		//that's used by to verify that a clien has the same level data
 		m_wCheckSum = 0;
-		for (std::vector<unsigned char>::iterator itr = buf.begin(); itr != buf.end(); ++itr)
+		for (std::vector<uchar>::iterator itr = buf.begin(); itr != buf.end(); ++itr)
 		{
 			m_wCheckSum += (*itr);
 		}
@@ -72,7 +72,7 @@ bool CXMLDOMDocumentImpl::loadXML(const char* szString)
 {
 	m_sErrorString = "";
 	_XMLDOMParserImpl xml(this);
-	std::vector<unsigned char> vBuf;
+	std::vector<uchar> vBuf;
 	vBuf.resize(strlen(szString));
 	memcpy(&vBuf[0], szString, strlen(szString));
 	if (!xml.parse(vBuf, m_sErrorString))
@@ -179,7 +179,7 @@ const XMLCHAR* CXMLDOMDocumentImpl::getErrorString()
 	return m_sErrorString.c_str();
 }
 
-unsigned short CXMLDOMDocumentImpl::getCheckSum()
+ushort CXMLDOMDocumentImpl::getCheckSum()
 {
 	return m_wCheckSum;
 }

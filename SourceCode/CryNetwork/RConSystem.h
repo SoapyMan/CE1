@@ -14,12 +14,12 @@ public:
 
 	// interface INetworkPacketSink ------------------------------------------
 
-	virtual void OnReceivingPacket(const unsigned char inPacketID, CStream& stmPacket, CIPAddress& ip);
+	virtual void OnReceivingPacket(const uchar inPacketID, CStream& stmPacket, CIPAddress& ip);
 
 	// interface IRConSystem -------------------------------------------------
 
 	virtual void Release() { delete this; }
-	virtual void Update(unsigned int dwTime, IClient* pClient = nullptr);
+	virtual void Update(uint dwTime, IClient* pClient = nullptr);
 	virtual void ExecuteRConCommand(const char* inszCommand);
 	virtual void OnServerCreated(IServer* inpServer);
 
@@ -44,13 +44,13 @@ private: 	// -------------------------------------------------------------------
 	ISystem* m_pSystem;										//!< pointer to the system interface (is zero when not initialized)
 	IServer* m_pIServer;										//!< 
 	CDatagramSocket									m_sSocket;										//!<
-	std::map<unsigned int, int>			m_hmRconAttempts;							//! hash map that maps ip -> rcon attempts, for security.
+	std::map<uint, int>			m_hmRconAttempts;							//! hash map that maps ip -> rcon attempts, for security.
 	std::list<SDeferredCommand>			m_DeferredConsoleCommands;		//!< to execute commands at a defined point in the update loop
-	unsigned int										m_nDevPassCode[4];
+	uint										m_nDevPassCode[4];
 	CIPAddress											m_ipServer;
 
 	//! Get 128bit code from string. (4 ints)
-	void GetPassCode(const char* szString, unsigned int* nOutCode);
+	void GetPassCode(const char* szString, uint* nOutCode);
 
 	friend class CRConConsoleSink;
 };

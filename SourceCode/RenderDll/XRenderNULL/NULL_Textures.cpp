@@ -220,13 +220,13 @@ void CNULLRenderer::SetTexture3D(int tid3d)
 {
 }
 
-uint CNULLRenderer::DownLoadToVideoMemory(unsigned char* data, int w, int h, ETEX_Format eTFSrc, ETEX_Format eTFDst, int nummipmap, bool repeat, int filter, int Id, char* szCacheName, int flags)
+uint CNULLRenderer::DownLoadToVideoMemory(uchar* data, int w, int h, ETEX_Format eTFSrc, ETEX_Format eTFDst, int nummipmap, bool repeat, int filter, int Id, char* szCacheName, int flags)
 {
 	return 0;
 }
 
 //////////////////////////////////////////////////////////////////////
-void CNULLRenderer::UpdateTextureInVideoMemory(uint tnum, unsigned char* newdata, int posx, int posy, int w, int h, ETEX_Format eTF)
+void CNULLRenderer::UpdateTextureInVideoMemory(uint tnum, uchar* newdata, int posx, int posy, int w, int h, ETEX_Format eTF)
 {
 }
 
@@ -239,7 +239,7 @@ void CNULLRenderer::RemoveTexture(ITexPic* pTexPic)
 	pSTexPic->Release(false);
 }
 
-void CNULLRenderer::RemoveTexture(unsigned int nTextureId)
+void CNULLRenderer::RemoveTexture(uint nTextureId)
 {
 	if (nTextureId)
 	{
@@ -250,7 +250,7 @@ void CNULLRenderer::RemoveTexture(unsigned int nTextureId)
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
-uint CNULLRenderer::LoadTexture(const char* _filename, int* tex_type, unsigned int def_tid, bool compresstodisk, bool bWarn)
+uint CNULLRenderer::LoadTexture(const char* _filename, int* tex_type, uint def_tid, bool compresstodisk, bool bWarn)
 {
 	return m_TexMan->m_Text_NoTexture->GetTextureID();
 }

@@ -22,10 +22,10 @@ typedef struct _CrtMemBlockHeader
 	size_t                      nDataSize;
 	int                         nBlockUse;
 	long                        lRequest;
-	unsigned char               gap[nNoMansLandSize];
+	uchar               gap[nNoMansLandSize];
 	/* followed by:
-	 *  unsigned char           data[nDataSize];
-	 *  unsigned char           anotherGap[nNoMansLandSize];
+	 *  uchar           data[nDataSize];
+	 *  uchar           anotherGap[nNoMansLandSize];
 	 */
 } _CrtMemBlockHeader;
 

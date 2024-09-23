@@ -76,7 +76,7 @@ CScriptObjectGame::~CScriptObjectGame()
 		m_psoVector->Release();
 	
 	//! Release players pool.
-	for (unsigned int i = 0; i < m_pPlayersPool.size(); i++)
+	for (uint i = 0; i < m_pPlayersPool.size(); i++)
 	{
 		if (m_pPlayersPool[i])
 			m_pPlayersPool[i]->Release();
@@ -485,7 +485,7 @@ int CScriptObjectGame::SetTimer(IFunctionHandler *pH)
 		pParam=nullptr;
 	}
 	ITimer *pTimer=m_pGame->GetSystem()->GetITimer();
-	return pH->EndFunction(m_pGame->m_pScriptTimerMgr->AddTimer(pTable,(unsigned int)(pTimer->GetCurrTime()*1000),(unsigned int)(fMilliseconds),pParam,true));
+	return pH->EndFunction(m_pGame->m_pScriptTimerMgr->AddTimer(pTable,(uint)(pTimer->GetCurrTime()*1000),(uint)(fMilliseconds),pParam,true));
 }
 
 /*! snooze a timer event
@@ -1214,10 +1214,10 @@ int CScriptObjectGame::LoadLevelMPServer(IFunctionHandler *pH)
 */
 int CScriptObjectGame::GetVersion(IFunctionHandler *pH)
 {
-	unsigned int		dwVersion = GAME_VERSION;
-	unsigned char		bPrimary = (GAME_VERSION & 0xff000000) >> 24;
-	unsigned char		bSecond = (GAME_VERSION & 0xff0000) >> 16;
-	unsigned short	wBuild = (GAME_VERSION & 0xffff);
+	uint		dwVersion = GAME_VERSION;
+	uchar		bPrimary = (GAME_VERSION & 0xff000000) >> 24;
+	uchar		bSecond = (GAME_VERSION & 0xff0000) >> 16;
+	ushort	wBuild = (GAME_VERSION & 0xffff);
 
 	char szVersionString[128] = {0};
 
@@ -1249,7 +1249,7 @@ int CScriptObjectGame::GetVersionString(IFunctionHandler *pH)
 	char *szDay = szDate + 4;
 	char *szYear = szDate + 9;
 
-	unsigned int dwMonth = 0;
+	uint dwMonth = 0;
 	switch(*((int *)szMonth))
 	{
 	case ' naJ':
@@ -1305,11 +1305,11 @@ int CScriptObjectGame::GetVersionString(IFunctionHandler *pH)
 
 	string szFileName(szLocalCmdLine+1, p);
 
-	unsigned int dwVersionSize = GetFileVersionInfoSize((char *)szFileName.c_str(), 0);
+	uint dwVersionSize = GetFileVersionInfoSize((char *)szFileName.c_str(), 0);
 
 	if (dwVersionSize)
 	{
-		unsigned char *pData = new unsigned char [dwVersionSize+1];
+		uchar *pData = new uchar [dwVersionSize+1];
 
 		if (!pData)
 		{
@@ -1319,8 +1319,8 @@ int CScriptObjectGame::GetVersionString(IFunctionHandler *pH)
 		{
 			char							szQueryInfoString[256] = {0};
 			char							*szFileVersionInfo = 0;
-			unsigned int			dwSize;
-			PUINT pVersionBuffer = nullptr;
+			uint			dwSize;
+			uint* pVersionBuffer = nullptr;
 
 			if (GetFileVersionInfo((char *)szFileName.c_str(), 0, dwVersionSize, pData))
 			{
@@ -2002,7 +2002,7 @@ int CScriptObjectGame::GetPlayerEntitiesInRadius(IFunctionHandler *pH)
   IEntityContainer *pCnt;
   CPlayer *pPlayer;
   int nCount=1;
-  unsigned int playerIndex = 0;
+  uint playerIndex = 0;
 
   if (psetPlayers->empty())
   {
@@ -2151,10 +2151,10 @@ int CScriptObjectGame::DrawHalfCircleGauge(IFunctionHandler *pH)
 	struct _vtx_
 	{
 		float x,y,z;
-		unsigned int c;
+		uint c;
 		float u,v;
 	};
-	unsigned int dwColor=((unsigned int)(a*255.0f)<<24) | ((unsigned int)(b*255.0f)<<16) | ((unsigned int)(g*255.0f)<<8) | (unsigned int)(r*255.0f);
+	uint dwColor=((uint)(a*255.0f)<<24) | ((uint)(b*255.0f)<<16) | ((uint)(g*255.0f)<<8) | (uint)(r*255.0f);
 	const _vtx_ vtxpos[6]={
 		{x+1     , y  , 0.0f, dwColor, u        , v   },
 		{x+1     , y+h, 0.0f, dwColor, u        , v+vh},
@@ -2749,8 +2749,8 @@ int CScriptObjectGame::GetSaveGameList(IFunctionHandler *pH)
 					stm.Read(szLevelName);
 					stm.Read(szMissionName);
 
-					unsigned char bHour, bMinute, bSecond, bDay, bMonth;
-					unsigned short wYear;
+					uchar bHour, bMinute, bSecond, bDay, bMonth;
+					ushort wYear;
 					stm.Read(bHour);	// hour
 					stm.Read(bMinute);	// minute
 					stm.Read(bSecond);	// minute

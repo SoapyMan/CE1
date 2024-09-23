@@ -21,24 +21,24 @@ struct grid {
 	vector_tpl<int> ax;
 	vectorf org;
 	vector2df step, stepr;
-	vector2d_tpl<unsigned int> sz;
+	vector2d_tpl<uint> sz;
 	float parity;
 	float scale;
-	unsigned short* pflags;
-	unsigned short holeflag;
+	ushort* pflags;
+	ushort holeflag;
 	int holepower;
 
-	int inrange(unsigned int ix, unsigned int iy) {
+	int inrange(uint ix, uint iy) {
 		return ix < sz.x && iy < sz.y;
 	}
 	int inrange(int ix, int iy) {
-		return (unsigned int)ix < sz.x && (unsigned int)iy < sz.y;
+		return (uint)ix < sz.x && (uint)iy < sz.y;
 	}
-	int getcell(unsigned int ix, unsigned int iy) {
+	int getcell(uint ix, uint iy) {
 		return ix < sz.x && iy < sz.y ? iy * sz.x + ix : sz.x * sz.y;
 	}
 	int getcell(int ix, int iy) {
-		return (unsigned int)ix < sz.x && (unsigned int)iy < sz.y ? iy * sz.x + ix : sz.x * sz.y;
+		return (uint)ix < sz.x && (uint)iy < sz.y ? iy * sz.x + ix : sz.x * sz.y;
 	}
 };
 

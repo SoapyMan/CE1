@@ -49,7 +49,7 @@ public:
 	* returns number of sampels per texel, sorted to make reuse possible
 	* @return number of samples
 	*/
-	const unsigned int NumberOfSamples() const
+	const uint NumberOfSamples() const
 	{
 		return m_vSamples.size();
 	}

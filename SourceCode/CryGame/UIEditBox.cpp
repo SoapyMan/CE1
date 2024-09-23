@@ -60,7 +60,7 @@ string CUIEditBox::GetClassName()
 }
 
 //------------------------------------------------------------------------------------------------- 
-LRESULT CUIEditBox::Update(unsigned int iMessage, WPARAM wParam, LPARAM lParam)		//AMD Port
+LRESULT CUIEditBox::Update(uint iMessage, WPARAM wParam, LPARAM lParam)		//AMD Port
 {
 	switch (iMessage)
 	{
@@ -451,10 +451,10 @@ int CUIEditBox::PasteFromClipboard()
 				break;
 			}
 
-			if (CheckChar((wchar_t)((unsigned char)pString[i])))
+			if (CheckChar((wchar_t)((uchar)pString[i])))
 			{
 				++iLength;
-				*p++ = (unsigned char)pString[i];
+				*p++ = (uchar)pString[i];
 			}
 		}		
 
@@ -773,7 +773,7 @@ int CUIEditBox::InsertChar(wchar_t cChar)
 }
 
 //------------------------------------------------------------------------------------------------- 
-int CUIEditBox::ProcessInput(unsigned int iMessage, int iKeyCode, char *szKeyName)
+int CUIEditBox::ProcessInput(uint iMessage, int iKeyCode, char *szKeyName)
 {
 	bool bProcess = 1;
 	// selection stuff
@@ -885,9 +885,9 @@ int CUIEditBox::ProcessInput(unsigned int iMessage, int iKeyCode, char *szKeyNam
 			Delete();
 		}
 
-		if (CheckChar((unsigned char)*szKeyName))
+		if (CheckChar((uchar)*szKeyName))
 		{
-			//InsertChar((iKeyCode == XKEY_SPACE ? L' ' : (unsigned char)*szKeyName));
+			//InsertChar((iKeyCode == XKEY_SPACE ? L' ' : (uchar)*szKeyName));
 			if (iKeyCode == XKEY_SPACE)
 			{
 				InsertChar( L' ' );

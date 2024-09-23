@@ -432,7 +432,7 @@ const char* CXConsole::FindKeyBind(const char* sCmd)
 /*! Dump all console-variables to a callback-interface
 	@param Callback callback-interface which needs to be called for each element
 */
-void CXConsole::DumpCVars(ICVarDumpSink* pCallback, unsigned int nFlagsFilter)
+void CXConsole::DumpCVars(ICVarDumpSink* pCallback, uint nFlagsFilter)
 {
 	ConsoleVariablesMapItor It = m_mapVariables.begin();
 	while (It != m_mapVariables.end())
@@ -1359,7 +1359,7 @@ void CXConsole::ExecuteCommand(XConsoleCommand& cmd, string& str, bool bIgnoreDe
 	if (pp != string::npos)
 	{
 		string list = "";
-		for (unsigned int i = 1; i < args.size(); i++)
+		for (uint i = 1; i < args.size(); i++)
 		{
 			list += "\"" + args[i] + "\"";
 			if (i < args.size() - 1) list += ",";
@@ -1379,7 +1379,7 @@ void CXConsole::ExecuteCommand(XConsoleCommand& cmd, string& str, bool bIgnoreDe
 	}
 	else
 	{
-		for (unsigned int i = 1; i <= args.size(); i++)
+		for (uint i = 1; i <= args.size(); i++)
 		{
 			char pat[10];
 			sprintf(pat, "%%%d", i);
@@ -2005,7 +2005,7 @@ const char* CXConsole::AutoCompletePrev(const char* substr)
 	if (strlen(substr) == 0 && cmds.size() > 0)
 		return cmds[cmds.size() - 1];
 
-	for (unsigned int i = 0; i < cmds.size(); i++)
+	for (uint i = 0; i < cmds.size(); i++)
 	{
 		if (stricmp(substr, cmds[i]) == 0)
 		{

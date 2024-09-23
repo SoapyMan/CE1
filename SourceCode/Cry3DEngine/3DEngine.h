@@ -61,7 +61,7 @@ public:
 
 private:
 	IMatInfo* LoadMaterial(XmlNodeRef mtlNode, const char* sLibraryName, IMatInfo* pParent);
-	bool LoadMaterialShader(IMatInfo* pMtl, const char* sShader, int mtlFlags, unsigned int nShaderGenMask, SInputShaderResources& sr, SLightMaterial& lm, XmlNodeRef& publicsNode);
+	bool LoadMaterialShader(IMatInfo* pMtl, const char* sShader, int mtlFlags, uint nShaderGenMask, SInputShaderResources& sr, SLightMaterial& lm, XmlNodeRef& publicsNode);
 	void ParsePublicParams(TArray<SShaderParam>& params, XmlNodeRef paramsNode);
 
 	typedef std::set<_smart_ptr<IMatInfo> > MtlSet;
@@ -227,7 +227,7 @@ public:
 	virtual bool IsCharacterFile(const char* szCGFileName);
 	virtual bool IsPointInWater(Vec3d vPos); // todo: remove it
 	virtual Vec3d GetSunPosition(bool bMoveUp = true);
-	virtual ICryCharInstance* MakeCharacter(const char* cid_file_name, unsigned int dwFlags = 0);
+	virtual ICryCharInstance* MakeCharacter(const char* cid_file_name, uint dwFlags = 0);
 	virtual void RemoveCharacter(ICryCharInstance* pCryCharInstance);
 	virtual Vec3d GetWorldColor(bool bScaled = true);
 	virtual void SetWorldColor(Vec3d vColor);
@@ -252,7 +252,7 @@ public:
 	virtual void AddDynamicLightSource(const class CDLight& LSource, IEntityRender* pEnt, int nEntityLightId = -1, const Matrix44* pMatrix = nullptr);
 	virtual void ApplyForceToEnvironment(Vec3d vPos, float fRadius, float fAmountOfForce);
 	virtual bool UnRegisterInAllSectors(IEntityRender* pEntityRS);
-	virtual bool MakeSectorLightMap(int nSectorOriginX, int nSectorOriginY, unsigned char* pImage, int nImageSize);
+	virtual bool MakeSectorLightMap(int nSectorOriginX, int nSectorOriginY, uchar* pImage, int nImageSize);
 	virtual void SetMaxViewDistance(float fMaxViewDistance);
 	virtual float GetMaxViewDistance();
 	virtual void SetFogColor(const Vec3d& vFogColor);
@@ -381,7 +381,7 @@ public:
 	C3DEngine(ISystem* pSystem);
 	~C3DEngine();
 
-	void	RenderScene(unsigned int dwDrawFlags);
+	void	RenderScene(uint dwDrawFlags);
 	CDLight* CheckDistancesToLightSources(uint& nDLightMask, const Vec3d vObjPos, const float fObjRadius, IEntityRender* pEntityRender = 0, int nMaxLightBitsNum = 8, CDLight** pSelectedLights = nullptr, int nMaxSelectedLights = 0, Vec3d* pvSummLightAmmount = nullptr);
 	uint GetFullLightMask();
 	bool IsOutdoorVisible();

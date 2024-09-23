@@ -103,7 +103,7 @@ private:
 
 public:
 
-	const char* GetSectionName(unsigned int n)
+	const char* GetSectionName(uint n)
 	{
 		if (n >= m_sections.size())
 			return(nullptr);

@@ -18,7 +18,7 @@ public:
 	//void CompressCTU( PSTR pszTexturePath,bool bHiQuality );
 	void CompressDXT1( CFile &toFile,CImage &image,bool bHiQuality );
 	void CompressDDS( CFile &toFile,CImage &image,bool bHiQuality );
-	void WriteDDS( CFile &toFile,unsigned char *dat, int w,int h,int Size, EImFormat eF, int NumMips );
+	void WriteDDS( CFile &toFile,uchar *dat, int w,int h,int Size, EImFormat eF, int NumMips );
 
 private:
 	static HRESULT SaveCompessedMipmapLevel(void * data, int miplevel, DWORD size, int width, int height, void * user_data);

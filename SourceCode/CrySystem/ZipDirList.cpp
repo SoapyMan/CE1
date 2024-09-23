@@ -52,7 +52,7 @@ ZipDir::FileRecordList::ZipStats ZipDir::FileRecordList::GetStats()const
 }
 
 // puts the CDR into the given block of mem
-size_t ZipDir::FileRecordList::MakeZipCDR(ZipFile::ulong lCDROffset, void* pBuffer)const
+size_t ZipDir::FileRecordList::MakeZipCDR(ulong lCDROffset, void* pBuffer)const
 {
 	char* pCur = (char*)pBuffer;
 	for (const_iterator it = begin(); it != end(); ++it)
@@ -67,7 +67,7 @@ size_t ZipDir::FileRecordList::MakeZipCDR(ZipFile::ulong lCDROffset, void* pBuff
 		h.nLastModTime = it->pFileEntry->nLastModTime;
 		h.nLastModDate = it->pFileEntry->nLastModDate;
 		h.desc = it->pFileEntry->desc;
-		h.nFileNameLength = (ZipFile::ushort)it->strPath.length();
+		h.nFileNameLength = (ushort)it->strPath.length();
 		h.nExtraFieldLength = 0;
 		h.nFileCommentLength = 0;
 		h.nDiskNumberStart = 0;
@@ -83,8 +83,8 @@ size_t ZipDir::FileRecordList::MakeZipCDR(ZipFile::ulong lCDROffset, void* pBuff
 	e.lSignature = e.SIGNATURE;
 	e.nDisk = 0;
 	e.nCDRStartDisk = 0;
-	e.numEntriesOnDisk = (ZipFile::ushort)this->size();
-	e.numEntriesTotal = (ZipFile::ushort)this->size();
+	e.numEntriesOnDisk = (ushort)this->size();
+	e.numEntriesTotal = (ushort)this->size();
 	e.lCDRSize = pCur - (char*)pBuffer;
 	e.lCDROffset = lCDROffset;
 	e.nCommentLength = 0;

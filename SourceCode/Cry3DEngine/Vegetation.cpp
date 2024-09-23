@@ -425,7 +425,7 @@ float CStatObjInst::GetRenderRadius(void) const
 	return 0;
 }
 
-IStatObj* CStatObjInst::GetEntityStatObj(unsigned int nSlot, Matrix44* pMatrix, bool bReturnOnlyVisible)
+IStatObj* CStatObjInst::GetEntityStatObj(uint nSlot, Matrix44* pMatrix, bool bReturnOnlyVisible)
 {
 	if (pMatrix)
 	{
@@ -581,19 +581,19 @@ int CStatObjInst::GetMemoryUsage()
 	return sizeof(*this) + (m_pEntityRenderState ? sizeof(*m_pEntityRenderState) : 0);
 }
 
-unsigned int CStatObjInst::GetRndFlags()
+uint CStatObjInst::GetRndFlags()
 {
 	CRYASSERT(m_nObjectTypeID >= 0 && m_nObjectTypeID < m_pObjManager->m_lstStaticTypes.Count());
 	return m_pObjManager->m_lstStaticTypes[m_nObjectTypeID].m_dwRndFlags;
 }
 
-void CStatObjInst::SetRndFlags(unsigned int dwFlags)
+void CStatObjInst::SetRndFlags(uint dwFlags)
 {
 	CRYASSERT(m_nObjectTypeID >= 0 && m_nObjectTypeID < m_pObjManager->m_lstStaticTypes.Count());
 	m_pObjManager->m_lstStaticTypes[m_nObjectTypeID].m_dwRndFlags = dwFlags;
 }
 
-void CStatObjInst::SetRndFlags(unsigned int dwFlags, bool bEnable)
+void CStatObjInst::SetRndFlags(uint dwFlags, bool bEnable)
 {
 	CRYASSERT(m_nObjectTypeID >= 0 && m_nObjectTypeID < m_pObjManager->m_lstStaticTypes.Count());
 

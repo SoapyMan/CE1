@@ -76,13 +76,13 @@ bool CEntity::Write(CStream& stm, EntityCloneState* cs)
 		{
 			_VERIFY(stm.Write(true));
 			// x
-			stm.Write((unsigned short)((v3Angles.x * 0xFFFF) * (1.f / 360.f)));
+			stm.Write((ushort)((v3Angles.x * 0xFFFF) * (1.f / 360.f)));
 			// y
 			stm.Write(bSyncYAngle);
 			if (bSyncYAngle)
-				stm.Write((unsigned short)((v3Angles.y * 0xFFFF) * (1.f / 360.f))); // this component can be skipped for players
+				stm.Write((ushort)((v3Angles.y * 0xFFFF) * (1.f / 360.f))); // this component can be skipped for players
 			// z
-			stm.Write((unsigned short)((v3Angles.z * 0xFFFF) * (1.f / 360.f)));
+			stm.Write((ushort)((v3Angles.z * 0xFFFF) * (1.f / 360.f)));
 		}
 		else
 		{
@@ -216,13 +216,13 @@ bool CEntity::Write(CStream& stm, EntityCloneState* cs)
 			_VERIFY(stm.Write(true));				// angles on
 
 			// x
-			stm.Write((unsigned short)((v3Angles.x * 0xFFFF) * (1.f / 360.f)));
+			stm.Write((ushort)((v3Angles.x * 0xFFFF) * (1.f / 360.f)));
 			// y
 			stm.Write(bSyncYAngle);
 			if (bSyncYAngle)
-				stm.Write((unsigned short)((v3Angles.y * 0xFFFF) * (1.f / 360.f))); // this component can be skipped for players
+				stm.Write((ushort)((v3Angles.y * 0xFFFF) * (1.f / 360.f))); // this component can be skipped for players
 			// z
-			stm.Write((unsigned short)((v3Angles.z * 0xFFFF) * (1.f / 360.f)));
+			stm.Write((ushort)((v3Angles.z * 0xFFFF) * (1.f / 360.f)));
 		}
 		else
 		{
@@ -274,7 +274,7 @@ bool CEntity::Read(CStream& stm, bool bNoUpdate)
 	if (bBound)
 	{
 		EntityId idBoundTo;
-		unsigned char cBind;
+		uchar cBind;
 
 		stm.Read(idBoundTo);
 		stm.Read(cBind);
@@ -320,9 +320,9 @@ bool CEntity::Read(CStream& stm, bool bNoUpdate)
 			Vec3d vec;
 			//_VERIFY(stm.Read(vec));
 			bool bSyncYAngle;
-			unsigned short x;
-			unsigned short y = 0;
-			unsigned short z;
+			ushort x;
+			ushort y = 0;
+			ushort z;
 			stm.Read(x);
 			stm.Read(bSyncYAngle);
 			if (bSyncYAngle)
@@ -443,9 +443,9 @@ bool CEntity::Read(CStream& stm, bool bNoUpdate)
 			Vec3d vec;
 			//_VERIFY(stm.Read(vec));
 			bool bSyncYAngle;
-			unsigned short x;
-			unsigned short y = 0;
-			unsigned short z;
+			ushort x;
+			ushort y = 0;
+			ushort z;
 			stm.Read(x);
 			stm.Read(bSyncYAngle);
 			if (bSyncYAngle)

@@ -87,11 +87,11 @@ public:
 	void SetSink(IEntitySystemSink* pSink);
 	void RemoveSink(IEntitySystemSink* pSink);
 
-	void OnBind(EntityId id, EntityId child, unsigned char param);
-	void OnUnbind(EntityId id, EntityId child, unsigned char param);
+	void OnBind(EntityId id, EntityId child, uchar param);
+	void OnUnbind(EntityId id, EntityId child, uchar param);
 
-	//void SetMyPlayer(unsigned short id ){ m_wPlayerID = id;}
-	//unsigned short GetMyPlayer() const {return m_wPlayerID;}
+	//void SetMyPlayer(ushort id ){ m_wPlayerID = id;}
+	//ushort GetMyPlayer() const {return m_wPlayerID;}
 
 	IScriptSystem* GetScriptSystem() { return m_pScriptSystem; }
 
@@ -140,7 +140,7 @@ public:
 
 	virtual bool IsIDUsed(EntityId nID);
 
-	void ReleaseMark(unsigned int id);
+	void ReleaseMark(uint id);
 	void ResetEntities(void);
 
 	virtual void SetDynamicEntityIdMode(const bool bActivate);
@@ -175,7 +175,7 @@ private:
 	//[kirill] - need this one to get visible entities on update of some entity - so we don't depend on update's order 
 	EntityVector						m_vEntitiesInFrustrumPrevFrame;
 
-	//	unsigned short	m_wPlayerID;
+	//	ushort	m_wPlayerID;
 	IScriptSystem* m_pScriptSystem;
 
 	//////////////////////////////////////////////////////////////////////////

@@ -69,7 +69,7 @@ bool CLeafBuffer::Serialize(int& nPos, uchar* pSerBuf, bool bSave, char* _szFold
 	m_NumIndices = m_SecIndices.Num();
 
 	if ((*((int*)&pSerBuf[nPos])) && !m_pIndicesPreStrip)
-		m_pIndicesPreStrip = new list2<unsigned short>;
+		m_pIndicesPreStrip = new list2<ushort>;
 
 	m_pIndicesPreStrip->LoadFromBuffer(pSerBuf, nPos);
 	LoadBuffer(&m_nPrimetiveType, sizeof(m_nPrimetiveType), pSerBuf, nPos);

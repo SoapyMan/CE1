@@ -31,7 +31,7 @@ class CHemisphereSink_Solid
 {
 public:
 
-	typedef	unsigned short	SampleType;			//!< 8.8 fix point
+	typedef	ushort	SampleType;			//!< 8.8 fix point
 
 	// ---------------------------------------------------------------------------------
 
@@ -42,7 +42,7 @@ public:
 		// to scale the input to the intermediate range
 
 		m_fScale=		 256.0f													// 256 for 8bit fix point, 
-								*255.0f													// 255 for max unsigned char
+								*255.0f													// 255 for max uchar
 								/((float)indwAngleSteps)				// AddToIntermediate is called indwAngleSteps times
 								/(float)(gf_PI_DIV_2*gf_PI_DIV_2);				// scale form [0..PI/2[ * [0..PI/2[  to  1
 	}
@@ -140,7 +140,7 @@ class CHeightmapAccessibility
 {
 public:
 	//typedef typename THemisphereSink::SampleType SampleType;
-	typedef	unsigned short	SampleType;			//!< 8.8 fix point
+	typedef	ushort	SampleType;			//!< 8.8 fix point
 
 	//! constructor
 	//! \param indwAngleSteps try 10 for average quality or more for better quality

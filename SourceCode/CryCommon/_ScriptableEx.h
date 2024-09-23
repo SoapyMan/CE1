@@ -66,7 +66,7 @@ public:
 		string *strVal;
 		IScriptObject *oVal;
 		}v;*/
-		unsigned int val;
+		uint val;
 	};
 
 	UINT_PTR m_nBase;
@@ -177,7 +177,7 @@ public:
 			CryError("Scriptable EX:Insert Property");
 	}
 
-	static void RegisterProperty(const char* sName, PropertyType t, unsigned int offset)
+	static void RegisterProperty(const char* sName, PropertyType t, uint offset)
 	{
 		Property prop;
 		prop.nType = t;
@@ -360,7 +360,7 @@ protected:
 	//PropertiesVec *m_pvPropertiesVector;
 	//IScriptObject *m_pProperties;
 
-	//unsigned long m_nFuncNum;
+	//ulong m_nFuncNum;
 	IScriptObject* m_pScriptThis;
 	IScriptSystem* m_pScriptSystem;
 

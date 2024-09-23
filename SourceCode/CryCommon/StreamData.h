@@ -98,9 +98,9 @@ public:	// --------------------------
 
 		DWORD x = 0, y = 0, z = 0;
 
-		if (!inStream.ReadNumberInBits((unsigned int&)x, (size_t)20)) return false;
-		if (!inStream.ReadNumberInBits((unsigned int&)y, (size_t)20)) return false;
-		if (!inStream.ReadNumberInBits((unsigned int&)z, (size_t)18)) return false;
+		if (!inStream.ReadNumberInBits((uint&)x, (size_t)20)) return false;
+		if (!inStream.ReadNumberInBits((uint&)y, (size_t)20)) return false;
+		if (!inStream.ReadNumberInBits((uint&)z, (size_t)18)) return false;
 
 		m_vData = Vec3((float)x, (float)y, (float)z) * 0.002f;		// 2mm units
 
@@ -128,9 +128,9 @@ public:	// --------------------------
 
 		if (!inStream.Write(true)) return false;								// compressed
 
-		if (!inStream.WriteNumberInBits((unsigned int)x, 20)) return false;
-		if (!inStream.WriteNumberInBits((unsigned int)y, 20)) return false;
-		if (!inStream.WriteNumberInBits((unsigned int)z, 18)) return false;
+		if (!inStream.WriteNumberInBits((uint)x, 20)) return false;
+		if (!inStream.WriteNumberInBits((uint)y, 20)) return false;
+		if (!inStream.WriteNumberInBits((uint)z, 18)) return false;
 
 		return true;
 	}
@@ -183,7 +183,7 @@ public:	// --------------------------
 
 		DWORD dwWord = 0;
 
-		if (!inStream.ReadNumberInBits((unsigned int&)dwWord, (size_t)16)) return false;
+		if (!inStream.ReadNumberInBits((uint&)dwWord, (size_t)16)) return false;
 
 		DWORD dwDominantDirection = dwWord % 6;
 		DWORD dwIntermediate = dwWord / 6;	// 6 sides
@@ -250,7 +250,7 @@ public:	// --------------------------
 
 		DWORD dwWord = iDominantDirection + 6 * (dwX + 104 * dwY);	// 104 values on a cube size
 
-		if (!inStream.WriteNumberInBits((unsigned int)dwWord, 16)) return false;
+		if (!inStream.WriteNumberInBits((uint)dwWord, 16)) return false;
 
 		return true;
 	}

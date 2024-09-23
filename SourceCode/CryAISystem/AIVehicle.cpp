@@ -182,7 +182,7 @@ void CAIVehicle::Reset(void)
 //
 //---------------------------------------------------------------------------------------------------------
 // Steers the hevicle outdoors and makes it avoid the immediate obstacles
-void CAIVehicle::Event(unsigned short eType, SAIEVENT* pEvent)
+void CAIVehicle::Event(ushort eType, SAIEVENT* pEvent)
 {
 	switch (eType)
 	{
@@ -398,7 +398,7 @@ void CAIVehicle::SetParameters(AgentParameters& sParams)
 
 //
 //---------------------------------------------------------------------------------------------------------
-bool CAIVehicle::CanBeConvertedTo(unsigned short type, void** pConverted)
+bool CAIVehicle::CanBeConvertedTo(ushort type, void** pConverted)
 {
 
 	if (type == AIOBJECT_VEHICLE)
@@ -641,7 +641,7 @@ void CAIVehicle::Unbind()
 //
 //---------------------------------------------------------------------------------------------------------
 /*
-void CAIVehicle::Event(unsigned short eType, SAIEVENT *pEvent)
+void CAIVehicle::Event(ushort eType, SAIEVENT *pEvent)
 {
 	switch (eType)
 	{
@@ -700,7 +700,7 @@ void CAIVehicle::UpdateThread()
 //
 //---------------------------------------------------------------------------------------------------------
 /*
-void CAIVehicle::Event(unsigned short eType, SAIEVENT *pEvent)
+void CAIVehicle::Event(ushort eType, SAIEVENT *pEvent)
 {
 	switch (eType)
 	{

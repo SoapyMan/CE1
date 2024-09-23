@@ -210,13 +210,13 @@ void CXSnapshot::BuildAndSendSnapshot()
 	m_stmUnreliable.Reset();
 
 	
-	unsigned int maxRateBps;		// bits per second
+	uint maxRateBps;		// bits per second
 
 	{
 		if(m_pServer->m_GameContext.bInternetServer)
-			maxRateBps=(unsigned int)m_pServer->sv_maxrate->GetIVal();
+			maxRateBps=(uint)m_pServer->sv_maxrate->GetIVal();
 		 else
-			maxRateBps=(unsigned int)m_pServer->sv_maxrate_lan->GetIVal();
+			maxRateBps=(uint)m_pServer->sv_maxrate_lan->GetIVal();
 
 		maxRateBps=crymin(maxRateBps,m_clientMaxBitsPerSecond);
 	}
@@ -292,7 +292,7 @@ void CXSnapshot::BuildAndSendSnapshot()
 }
 
 
-void CXSnapshot::SetClientBitsPerSecond(unsigned int rate)
+void CXSnapshot::SetClientBitsPerSecond(uint rate)
 {
 	m_clientMaxBitsPerSecond=rate;
 }

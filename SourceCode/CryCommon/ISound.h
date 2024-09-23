@@ -123,32 +123,32 @@ enum {
 
 struct SoundReverbProperties
 {
-	unsigned int Environment;            // 0     , 25    , 0      , sets all listener properties (WIN32/PS2 only) */
-	float        EnvSize;                // 1.0   , 100.0 , 7.5    , environment size in meters (WIN32 only) */
-	float        EnvDiffusion;           // 0.0   , 1.0   , 1.0    , environment diffusion (WIN32/XBOX) */
-	int          Room;                   // -10000, 0     , -1000  , room effect level (at mid frequencies) (WIN32/XBOX/PS2) */
-	int          RoomHF;                 // -10000, 0     , -100   , relative room effect level at high frequencies (WIN32/XBOX) */
-	int          RoomLF;                 // -10000, 0     , 0      , relative room effect level at low frequencies (WIN32 only) */
-	float        DecayTime;              // 0.1   , 20.0  , 1.49   , reverberation decay time at mid frequencies (WIN32/XBOX) */
-	float        DecayHFRatio;           // 0.1   , 2.0   , 0.83   , high-frequency to mid-frequency decay time ratio (WIN32/XBOX) */
-	float        DecayLFRatio;           // 0.1   , 2.0   , 1.0    , low-frequency to mid-frequency decay time ratio (WIN32 only) */
-	int          Reflections;            // -10000, 1000  , -2602  , early reflections level relative to room effect (WIN32/XBOX) */
-	float        ReflectionsDelay;       // 0.0   , 0.3   , 0.007  , initial reflection delay time (WIN32/XBOX) */
-	Vec3         ReflectionsPan;         //       ,       , [0,0,0], early reflections panning vector (WIN32 only) */
-	int          Reverb;                 // -10000, 2000  , 200    , late reverberation level relative to room effect (WIN32/XBOX) */
-	float        ReverbDelay;            // 0.0   , 0.1   , 0.011  , late reverberation delay time relative to initial reflection (WIN32/XBOX) */
-	Vec3         ReverbPan;              //       ,       , [0,0,0], late reverberation panning vector (WIN32 only) */
-	float        EchoTime;               // .075  , 0.25  , 0.25   , echo time (WIN32/PS2 only.  PS2 = Delay time for ECHO/DELAY modes only) */
-	float        EchoDepth;              // 0.0   , 1.0   , 0.0    , echo depth (WIN32/PS2 only.  PS2 = Feedback level for ECHO mode only) */
-	float        ModulationTime;         // 0.04  , 4.0   , 0.25   , modulation time (WIN32 only) */
-	float        ModulationDepth;        // 0.0   , 1.0   , 0.0    , modulation depth (WIN32 only) */
-	float        AirAbsorptionHF;        // -100  , 0.0   , -5.0   , change in level per meter at high frequencies (WIN32 only) */
-	float        HFReference;            // 1000.0, 20000 , 5000.0 , reference high frequency (hz) (WIN32/XBOX) */
-	float        LFReference;            // 20.0  , 1000.0, 250.0  , reference low frequency (hz) (WIN32 only) */
-	float        RoomRolloffFactor;      // 0.0   , 10.0  , 0.0    , like FSOUND_3D_SetRolloffFactor but for room effect (WIN32/XBOX) */
-	float        Diffusion;              // 0.0   , 100.0 , 100.0  , Value that controls the echo density in the late reverberation decay. (XBOX only) */
-	float        Density;                // 0.0   , 100.0 , 100.0  , Value that controls the modal density in the late reverberation decay (XBOX only) */
-	unsigned int Flags;                  // FSOUND_REVERB_FLAGS - modifies the behavior of above properties (WIN32/PS2 only) */
+	uint		Environment;            // 0     , 25    , 0      , sets all listener properties (WIN32/PS2 only) */
+	float       EnvSize;                // 1.0   , 100.0 , 7.5    , environment size in meters (WIN32 only) */
+	float       EnvDiffusion;           // 0.0   , 1.0   , 1.0    , environment diffusion (WIN32/XBOX) */
+	int         Room;                   // -10000, 0     , -1000  , room effect level (at mid frequencies) (WIN32/XBOX/PS2) */
+	int         RoomHF;                 // -10000, 0     , -100   , relative room effect level at high frequencies (WIN32/XBOX) */
+	int         RoomLF;                 // -10000, 0     , 0      , relative room effect level at low frequencies (WIN32 only) */
+	float       DecayTime;              // 0.1   , 20.0  , 1.49   , reverberation decay time at mid frequencies (WIN32/XBOX) */
+	float       DecayHFRatio;           // 0.1   , 2.0   , 0.83   , high-frequency to mid-frequency decay time ratio (WIN32/XBOX) */
+	float       DecayLFRatio;           // 0.1   , 2.0   , 1.0    , low-frequency to mid-frequency decay time ratio (WIN32 only) */
+	int         Reflections;            // -10000, 1000  , -2602  , early reflections level relative to room effect (WIN32/XBOX) */
+	float       ReflectionsDelay;       // 0.0   , 0.3   , 0.007  , initial reflection delay time (WIN32/XBOX) */
+	Vec3        ReflectionsPan;         //       ,       , [0,0,0], early reflections panning vector (WIN32 only) */
+	int         Reverb;                 // -10000, 2000  , 200    , late reverberation level relative to room effect (WIN32/XBOX) */
+	float       ReverbDelay;            // 0.0   , 0.1   , 0.011  , late reverberation delay time relative to initial reflection (WIN32/XBOX) */
+	Vec3        ReverbPan;              //       ,       , [0,0,0], late reverberation panning vector (WIN32 only) */
+	float       EchoTime;               // .075  , 0.25  , 0.25   , echo time (WIN32/PS2 only.  PS2 = Delay time for ECHO/DELAY modes only) */
+	float       EchoDepth;              // 0.0   , 1.0   , 0.0    , echo depth (WIN32/PS2 only.  PS2 = Feedback level for ECHO mode only) */
+	float       ModulationTime;         // 0.04  , 4.0   , 0.25   , modulation time (WIN32 only) */
+	float       ModulationDepth;        // 0.0   , 1.0   , 0.0    , modulation depth (WIN32 only) */
+	float       AirAbsorptionHF;        // -100  , 0.0   , -5.0   , change in level per meter at high frequencies (WIN32 only) */
+	float       HFReference;            // 1000.0, 20000 , 5000.0 , reference high frequency (hz) (WIN32/XBOX) */
+	float       LFReference;            // 20.0  , 1000.0, 250.0  , reference low frequency (hz) (WIN32 only) */
+	float       RoomRolloffFactor;      // 0.0   , 10.0  , 0.0    , like FSOUND_3D_SetRolloffFactor but for room effect (WIN32/XBOX) */
+	float       Diffusion;              // 0.0   , 100.0 , 100.0  , Value that controls the echo density in the late reverberation decay. (XBOX only) */
+	float       Density;                // 0.0   , 100.0 , 100.0  , Value that controls the modal density in the late reverberation decay (XBOX only) */
+	uint		Flags;                  // FSOUND_REVERB_FLAGS - modifies the behavior of above properties (WIN32/PS2 only) */
 };
 
 //! Sound events sent to callback that can registered to every sound.
@@ -209,7 +209,7 @@ struct ISoundSystem
 	/*! SetMasterVolume
 	@param nVol volume (0-255)
 	*/
-	virtual void	SetMasterVolume(unsigned char nVol) = 0;
+	virtual void	SetMasterVolume(uint8 nVol) = 0;
 
 	/*! Set the volume scale for all sounds with FLAG_SOUND_SCALABLE
 	@param fScale volume scale (default 1.0)
@@ -350,9 +350,9 @@ struct ISound
 	virtual bool	Preload() = 0;
 
 	//! retrieves the currently played sample-pos, in milliseconds or bytes
-	virtual unsigned int GetCurrentSamplePos(bool bMilliSeconds = false) = 0;
+	virtual uint GetCurrentSamplePos(bool bMilliSeconds = false) = 0;
 	//! set the currently played sample-pos in bytes or milliseconds
-	virtual void	SetCurrentSamplePos(unsigned int nPos, bool bMilliSeconds) = 0;
+	virtual void	SetCurrentSamplePos(uint nPos, bool bMilliSeconds) = 0;
 
 	//! sets automatic pitching amount (0-1000)
 	virtual void	SetPitching(float fPitching) = 0;
@@ -387,7 +387,7 @@ struct ISound
 	//! Remove sound from specific sound-scale-group (0-31)
 	virtual void	RemoveFromScaleGroup(int nGroup) = 0;
 	//! Set sound-scale-groups by bitfield.
-	virtual void	SetScaleGroup(unsigned int nGroupBits) = 0;
+	virtual void	SetScaleGroup(uint nGroupBits) = 0;
 
 	//! Set sound volume.
 	//! Range: 0-100
@@ -440,7 +440,7 @@ struct ISound
 	virtual int		GetLength() = 0;
 
 	//! set sound priority (0-255)
-	virtual void	SetSoundPriority(unsigned char nSoundPriority) = 0;
+	virtual void	SetSoundPriority(uint8 nSoundPriority) = 0;
 };
 
 struct ISoundStreamCallback

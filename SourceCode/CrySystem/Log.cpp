@@ -24,7 +24,7 @@
 #include <time.h>
 #endif
 
-static const unsigned int s_nMaxVerbosity = 8;
+static const uint s_nMaxVerbosity = 8;
 
 
 //////////////////////////////////////////////////////////////////////
@@ -568,7 +568,7 @@ const char* CLog::CheckAgainstVerbosity(const char* pText, bool& logtofile, bool
 		return 0;
 	}
 
-	if ((unsigned char)pText[0] >= ' ')
+	if ((uchar)pText[0] >= ' ')
 	{
 		// verbosity is not defined in the text
 		pStartText = pText;
@@ -578,7 +578,7 @@ const char* CLog::CheckAgainstVerbosity(const char* pText, bool& logtofile, bool
 	{
 		// verbosity is defined in the text
 		pStartText = pText + 1;
-		textVerbosity = (unsigned char)pText[0];
+		textVerbosity = (uchar)pText[0];
 	}
 
 	logtoconsole = (nLogVerbosity >= textVerbosity);
@@ -593,7 +593,7 @@ int CLog::CheckVerbosity( const char * pText )
 {
 	RETURN;
 	// the max verbosity (most detailed level)
-	const unsigned char nMaxVerbosity = 5;
+	const uchar nMaxVerbosity = 5;
 
 	// set message verbosity for error and warning messages
 	char sBuff[256];
@@ -605,7 +605,7 @@ int CLog::CheckVerbosity( const char * pText )
 	if(strstr(pText,"warning"))
 		return 3;
 
-	int textVerbosity = (unsigned char)pText[0];
+	int textVerbosity = (uchar)pText[0];
 	if (textVerbosity > nMaxVerbosity)
 	{
 		return nMaxVerbosity;

@@ -58,7 +58,7 @@ int CUIVideoPanel::LoadVideo(const string& szFileName, bool bSound)
 }
 
 ////////////////////////////////////////////////////////////////////// 
-LRESULT CUIVideoPanel::Update(unsigned int iMessage, WPARAM wParam, LPARAM lParam)	//AMD Port
+LRESULT CUIVideoPanel::Update(uint iMessage, WPARAM wParam, LPARAM lParam)	//AMD Port
 {
 	FUNCTION_PROFILER(m_pUISystem->GetISystem(), PROFILE_GAME);
 

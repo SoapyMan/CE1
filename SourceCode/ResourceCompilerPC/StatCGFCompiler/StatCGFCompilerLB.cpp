@@ -33,8 +33,8 @@
 CSimpleLeafBuffer::CSimpleLeafBuffer(IRCLog* pLog, CIndexedMesh* pIndexedMesh, bool bStripifyAndShareVerts, bool bKeepRemapTable)
 {
 	memset(this, 0, sizeof(CSimpleLeafBuffer));
-	m_pIndices = new list2<unsigned short>;
-	m_pIndicesPreStrip = new list2<unsigned short>;
+	m_pIndices = new list2<ushort>;
+	m_pIndicesPreStrip = new list2<ushort>;
 	m_pLog = pLog;
 
 	CreateLeafBuffer(pIndexedMesh, bStripifyAndShareVerts, bStripifyAndShareVerts, bKeepRemapTable);
@@ -396,7 +396,7 @@ void CSimpleLeafBuffer::CreateLeafBuffer(CIndexedMesh* pTriData, int Stripify, b
 
 
 void CSimpleLeafBuffer::CompactBuffer(struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F* _vbuff, int* _vcount,
-	list2<unsigned short>* pindices, bool bShareVerts[128], uint* uiInfo,
+	list2<ushort>* pindices, bool bShareVerts[128], uint* uiInfo,
 	CBasis* pBasises)
 {
 	CRYASSERT(*_vcount);
@@ -408,18 +408,18 @@ void CSimpleLeafBuffer::CompactBuffer(struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F* _
 	CBasis* tmp_basis = new CBasis[*_vcount];
 	SMRendTexVert* tmp_lmtc = nullptr;
 	struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F* tmp_buff = new struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F[*_vcount];
-	unsigned int tmp_count = 0;
+	uint tmp_count = 0;
 	pindices->Clear();
 	TArray<uint> ShareNewInfo;
 
-	list2<unsigned short> hash_table[256];//[256];
+	list2<ushort> hash_table[256];//[256];
 
-	for (unsigned int v = 0; v < (unsigned int)(*_vcount); v++)
+	for (uint v = 0; v < (uint)(*_vcount); v++)
 	{
-		int nHashInd = (unsigned char)(_vbuff[v].xyz.x * 100);
+		int nHashInd = (uchar)(_vbuff[v].xyz.x * 100);
 		uint nMInfo = uiInfo[v];
 		uint nMatId = nMInfo & 255;
-		int find = bShareVerts[nMatId] ? FindInBuffer(_vbuff[v], pBasises[v], nMInfo, uiInfo, tmp_buff, tmp_basis, tmp_count, &hash_table[nHashInd], ShareNewInfo/*[(unsigned char)(_vbuff[v].pos.y*100)]*/) : -1;
+		int find = bShareVerts[nMatId] ? FindInBuffer(_vbuff[v], pBasises[v], nMInfo, uiInfo, tmp_buff, tmp_basis, tmp_count, &hash_table[nHashInd], ShareNewInfo/*[(uchar)(_vbuff[v].pos.y*100)]*/) : -1;
 		if (find < 0)
 		{ // not found
 			tmp_buff[tmp_count] = _vbuff[v];
@@ -427,7 +427,7 @@ void CSimpleLeafBuffer::CompactBuffer(struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F* _
 			pindices->Add(tmp_count);
 			ShareNewInfo.AddElem(uiInfo[v]);
 
-			hash_table[(unsigned char)(_vbuff[v].xyz.x * 100)]/*[(unsigned char)(_vbuff[v].pos.y*100)]*/.Add(tmp_count);
+			hash_table[(uchar)(_vbuff[v].xyz.x * 100)]/*[(uchar)(_vbuff[v].pos.y*100)]*/.Add(tmp_count);
 
 			tmp_count++;
 		}
@@ -454,7 +454,7 @@ void CSimpleLeafBuffer::CompactBuffer(struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F* _
 void CSimpleLeafBuffer::StripifyMesh(int StripType, CBasis* pTangNonStrip)
 {
 	int i;
-	unsigned int n;
+	uint n;
 
 	//Log("Stripify mesh...");
 
@@ -509,7 +509,7 @@ void CSimpleLeafBuffer::StripifyMesh(int StripType, CBasis* pTangNonStrip)
 		if (!mi->pRE)
 			continue;
 		PrimitiveGroup* pOldPG;
-		GenerateStrips(&GetIndices()[mi->nFirstIndexId], mi->nNumIndices, &pOldPG, (unsigned short*)&mi->m_dwNumSections);
+		GenerateStrips(&GetIndices()[mi->nFirstIndexId], mi->nNumIndices, &pOldPG, (ushort*)&mi->m_dwNumSections);
 
 		//remap!
 		PrimitiveGroup* pg;
@@ -530,7 +530,7 @@ void CSimpleLeafBuffer::StripifyMesh(int StripType, CBasis* pTangNonStrip)
 			mi->m_pPrimitiveGroups[groupCtr].numIndices = pg[groupCtr].numIndices;
 			mi->m_pPrimitiveGroups[groupCtr].offsIndex = nFirstIndex;
 			mi->m_pPrimitiveGroups[groupCtr].numTris = 0;
-			for (unsigned int indexCtr = 0; indexCtr < mi->m_pPrimitiveGroups[groupCtr].numIndices; indexCtr++)
+			for (uint indexCtr = 0; indexCtr < mi->m_pPrimitiveGroups[groupCtr].numIndices; indexCtr++)
 			{
 				//grab old index
 				int oldVertex = pOldPG[groupCtr].indices[indexCtr];
@@ -631,7 +631,7 @@ void CSimpleLeafBuffer::CalcFaceNormals()
 			int nOffs = mi->nFirstIndexId;
 			for (j = 0; j < mi->nNumIndices - 2; j += 3)
 			{
-				unsigned short* face = &GetIndices()[j + nOffs];
+				ushort* face = &GetIndices()[j + nOffs];
 
 				struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F* p0 = &pV[face[0]];
 				struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F* p1 = &pV[face[1]];
@@ -652,7 +652,7 @@ void CSimpleLeafBuffer::CalcFaceNormals()
 	{
 		//    CRYASSERT(0);
 
-		unsigned int n;
+		uint n;
 		for (i = 0; i < m_pMats->Count(); i++)
 		{
 			CMatInfo* mi = m_pMats->Get(i);
@@ -770,7 +770,7 @@ bool struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F::operator == (struct_VERTEX_FORMAT_
 		(color.dcolor & 0xffffff) == (other.color.dcolor & 0xffffff);
 }
 
-int CSimpleLeafBuffer::FindInBuffer(struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F& opt, CBasis& origBasis, uint nMatInfo, uint* uiInfo, struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F* _vbuff, CBasis* _vbasis, int _vcount, list2<unsigned short>* pHash, TArray<uint>& ShareNewInfo)
+int CSimpleLeafBuffer::FindInBuffer(struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F& opt, CBasis& origBasis, uint nMatInfo, uint* uiInfo, struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F* _vbuff, CBasis* _vbasis, int _vcount, list2<ushort>* pHash, TArray<uint>& ShareNewInfo)
 {
 	for (int i = 0; i < pHash->Count(); i++)
 	{

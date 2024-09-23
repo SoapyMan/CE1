@@ -125,7 +125,7 @@ void CDefenceWall::FillStdServerProbes()
 	IDataProbe* pProbe = GetISystem()->GetIDataProbe();
 	ICryPak::PakInfo* pPakInfo = m_pSystem->GetIPak()->GetPakInfo();
 
-	unsigned int i;
+	uint i;
 	//////////////////////////////////////////////////////////////////////////
 	// Collect PAK files.
 	//////////////////////////////////////////////////////////////////////////
@@ -254,7 +254,7 @@ void CDefenceWall::FirstTimeClientValidation(ClientInfo* pClientInfo)
 {
 	CStream outstream;
 
-	for (unsigned int i = 0; i < m_stdServerProbes.size(); i++)
+	for (uint i = 0; i < m_stdServerProbes.size(); i++)
 	{
 		SClientCheckContext& ctx = m_stdServerProbes[i];
 		if (ctx.bExecutableCode && pClientInfo->b64bit != m_b64bit) // Cannot compare clients with 32/64bit difference.
@@ -269,7 +269,7 @@ void CDefenceWall::FirstTimeClientValidation(ClientInfo* pClientInfo)
 void CDefenceWall::RandomClientValidation(ClientInfo* pClientInfo)
 {
 	CStream outstream;
-	unsigned int n = 0;
+	uint n = 0;
 
 	// Ignore if no standart probes yet.
 	if (m_stdServerProbes.empty())
@@ -432,7 +432,7 @@ void CDefenceWall::GetRelativeFilename(string& sFilename)
 //////////////////////////////////////////////////////////////////////////
 void CDefenceWall::EncryptStream(CStream& stm)
 {
-	unsigned int* pBuffer = (unsigned int*)stm.GetPtr();
+	uint* pBuffer = (uint*)stm.GetPtr();
 	int len = stm.GetSize() / 8;
 	if (len >= 8)
 	{
@@ -443,7 +443,7 @@ void CDefenceWall::EncryptStream(CStream& stm)
 //////////////////////////////////////////////////////////////////////////
 void CDefenceWall::DecryptStream(CStream& stm)
 {
-	unsigned int* pBuffer = (unsigned int*)stm.GetPtr();
+	uint* pBuffer = (uint*)stm.GetPtr();
 	int len = stm.GetSize() / 8;
 	if (len >= 8)
 	{
@@ -601,7 +601,7 @@ void CDefenceWall::OnValidateClientContext(SClientCheckContext& ctx)
 		// Find out which filename to check.
 		ICryPak::PakInfo* pPakInfo = m_pSystem->GetIPak()->GetPakInfo();
 		ctx.nNumOpenedPaks = pPakInfo->numOpenPaks;
-		for (unsigned int i = 0; i < pPakInfo->numOpenPaks; i++)
+		for (uint i = 0; i < pPakInfo->numOpenPaks; i++)
 		{
 #ifdef LOGEVENTS
 			if (m_bLog) CryLog("<DefenceWall> PAK: %s", pPakInfo->arrPaks[i].szFilePath);
@@ -609,7 +609,7 @@ void CDefenceWall::OnValidateClientContext(SClientCheckContext& ctx)
 
 			string file = pPakInfo->arrPaks[i].szFilePath;
 			GetRelativeFilename(file);
-			u32 nFilenameHash = m_pNetwork->GetStringHash(file.c_str());
+			uint32 nFilenameHash = m_pNetwork->GetStringHash(file.c_str());
 			if (nFilenameHash == ctx.nFilenameHash)
 			{
 				// Refering to the same file.
@@ -622,7 +622,7 @@ void CDefenceWall::OnValidateClientContext(SClientCheckContext& ctx)
 	break;
 	case DEFWALL_CHECK_PROTECTED_FILE:
 	{
-		for (unsigned int i = 0; i < m_protectedFiles.size(); i++)
+		for (uint i = 0; i < m_protectedFiles.size(); i++)
 		{
 			ProtectedFile& pf = m_protectedFiles[i];
 			if (pf.nFilenameHash == ctx.nFilenameHash)
@@ -648,7 +648,7 @@ void CDefenceWall::OnValidateClientContext(SClientCheckContext& ctx)
 			_makepath(sModule, 0, 0, fname, ext);
 			strlwr(sModule);
 
-			u32 nFilenameHash = m_pSystem->GetIDataProbe()->GetHash(sModule);
+			uint32 nFilenameHash = m_pSystem->GetIDataProbe()->GetHash(sModule);
 			if (ctx.nFilenameHash == nFilenameHash)
 			{
 				ctx.probe.sFilename = sModule;
@@ -666,7 +666,7 @@ void CDefenceWall::OnValidateClientContext(SClientCheckContext& ctx)
 	}
 
 	// initialize code to be random.
-	ctx.probe.nCode = ((u64)rand()) | (((u64)rand()) << 16) | (((u64)rand()) << 32) | (((u64)rand()) << 48);
+	ctx.probe.nCode = ((uint64)rand()) | (((uint64)rand()) << 16) | (((uint64)rand()) << 32) | (((uint64)rand()) << 48);
 
 	// Calc hash code of this file.
 	if (bGotProbe && m_pSystem->GetIDataProbe()->GetCode(ctx.probe))
@@ -823,7 +823,7 @@ void CDefenceWall::ServerUpdate()
 	//////////////////////////////////////////////////////////////////////////
 	{
 		// If any client not responding.
-		for (unsigned int i = 0; i < notRespondingClients.size(); i++)
+		for (uint i = 0; i < notRespondingClients.size(); i++)
 		{
 			PunkDetected(notRespondingClients[i], IServerSecuritySink::CHEAT_NOT_RESPONDING);
 		}

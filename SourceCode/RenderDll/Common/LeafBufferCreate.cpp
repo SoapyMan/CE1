@@ -1063,11 +1063,11 @@ bool CLeafBuffer::CreateBuffer(struct VertexBufferSource* pSource)
 				m_vBoxMin.CheckMin(vMinVtx);
 				m_vBoxMax.CheckMax(vMaxVtx);
 			}
-			unsigned short nMinVtx = pSource->pIndices[pg.nIndexBase];
-			unsigned short nMaxVtx = nMinVtx;
+			ushort nMinVtx = pSource->pIndices[pg.nIndexBase];
+			ushort nMaxVtx = nMinVtx;
 			for (unsigned nIndex = pg.nIndexBase + 1; nIndex < nIndexEnd; ++nIndex)
 			{
-				unsigned short nVertex = pSource->pIndices[nIndex];
+				ushort nVertex = pSource->pIndices[nIndex];
 				const Vec3d& vVertex = pSource->pVertices[nVertex];
 				vMinVtx.CheckMin(vVertex);
 				vMaxVtx.CheckMax(vVertex);
@@ -1114,7 +1114,7 @@ bool CLeafBuffer::CreateBuffer(struct VertexBufferSource* pSource)
 void CLeafBuffer::StripifyMesh(int StripType)
 {
 	int i;
-	unsigned int n;
+	uint n;
 
 	//iLog->Log("Stripify mesh...");
 
@@ -1170,7 +1170,7 @@ void CLeafBuffer::StripifyMesh(int StripType)
 		if (!mi->pRE)
 			continue;
 		PrimitiveGroup* pOldPG;
-		GenerateStrips(&GetIndices(nullptr)[mi->nFirstIndexId], mi->nNumIndices, &pOldPG, (unsigned short*)&mi->m_dwNumSections);
+		GenerateStrips(&GetIndices(nullptr)[mi->nFirstIndexId], mi->nNumIndices, &pOldPG, (ushort*)&mi->m_dwNumSections);
 
 		//remap!
 		PrimitiveGroup* pg;
@@ -1194,7 +1194,7 @@ void CLeafBuffer::StripifyMesh(int StripType)
 			mi->m_pPrimitiveGroups[groupCtr].numIndices = pg[groupCtr].numIndices;
 			mi->m_pPrimitiveGroups[groupCtr].offsIndex = nFirstIndex;
 			mi->m_pPrimitiveGroups[groupCtr].numTris = 0;
-			for (unsigned int indexCtr = 0; indexCtr < mi->m_pPrimitiveGroups[groupCtr].numIndices; indexCtr++)
+			for (uint indexCtr = 0; indexCtr < mi->m_pPrimitiveGroups[groupCtr].numIndices; indexCtr++)
 			{
 				//grab old index
 				int oldVertex = pOldPG[groupCtr].indices[indexCtr];
@@ -1291,7 +1291,7 @@ void CLeafBuffer::CalcFaceNormals()
 			int nOffs = mi->nFirstIndexId;
 			for (j = 0; j < mi->nNumIndices - 2; j += 3)
 			{
-				unsigned short* face = &pInds[j + nOffs];
+				ushort* face = &pInds[j + nOffs];
 
 				struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F* p0 = &pV[face[0]];
 				struct_VERTEX_FORMAT_P3F_N_COL4UB_TEX2F* p1 = &pV[face[1]];
@@ -1310,7 +1310,7 @@ void CLeafBuffer::CalcFaceNormals()
 	}
 	else
 	{
-		unsigned int n;
+		uint n;
 		for (i = 0; i < m_pMats->Count(); i++)
 		{
 			CMatInfo* mi = m_pMats->Get(i);
@@ -1986,7 +1986,7 @@ void CLeafBuffer::FreeSystemBuffer()
 	SAFE_DELETE_ARRAY(m_arrVtxMap);
 }
 
-unsigned short* CLeafBuffer::GetIndices(int* pIndicesCount)
+ushort* CLeafBuffer::GetIndices(int* pIndicesCount)
 {
 	if (pIndicesCount)
 		*pIndicesCount = m_NumIndices;

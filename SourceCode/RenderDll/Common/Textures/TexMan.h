@@ -595,7 +595,7 @@ struct STexPic : ITexPic
 	{
 		free(ptr);
 	}
-	static bool SaveTga(unsigned char* sourcedata, int sourceformat, int w, int h, const char* filename, bool flip);
+	static bool SaveTga(uchar* sourcedata, int sourceformat, int w, int h, const char* filename, bool flip);
 };
 
 struct STexGrid

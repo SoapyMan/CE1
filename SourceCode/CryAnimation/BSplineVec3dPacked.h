@@ -26,7 +26,7 @@
 
 // interface to all representations of the packed spline
 class IBSpline3Packed :
-	public _reference_target<unsigned short> // we don't need the alignment of 4 bytes here
+	public _reference_target<ushort> // we don't need the alignment of 4 bytes here
 {
 public:
 	// apply the given scale to the spline (multiply the spline by scale
@@ -87,7 +87,7 @@ struct TBSplineVec3dPackedBase
 {
 public:
 	// fixed-point values.
-	// may be unsigned short or unsigned char ONLY
+	// may be ushort or uchar ONLY
 	typedef FixedPointType fixed;
 
 	enum
@@ -189,7 +189,7 @@ public:
 //////////////////////////////////////////////////////////////////////////
 // This is the descriptor of class TBSplineVec3dPacked.
 // it's used to plainly pack/unpack the spline and reuse this structure
-template <bool isOpen = true, typename FixedPointType = unsigned char>
+template <bool isOpen = true, typename FixedPointType = uchar>
 struct TBSplineVec3dPackedDesc :
 	public IBSpline3Packed,
 	public TBSplineVec3dPackedBase<isOpen, FixedPointType>
@@ -246,7 +246,7 @@ struct TBSplineVec3dPackedDesc :
 
 ////////////////////////////////////////////////////////////////////////
 // The spline packed implementation
-template <bool isOpen = true, typename FixedPointType = unsigned char>
+template <bool isOpen = true, typename FixedPointType = uchar>
 class TBSplineVec3dPacked :
 	public TBSplineVec3dPackedDesc<isOpen, FixedPointType>
 {
@@ -693,5 +693,5 @@ void TBSplineVec3dPackedDesc<isOpen, FixedPointType>::scale(float fScale)
 	this->m_PosScale[2].scale(fScale);
 }
 
-typedef TBSplineVec3dPacked<true, unsigned char> BSplineVec3dPackedOpen;
-typedef TBSplineVec3dPacked<false, unsigned char> BSplineVec3dPackedClosed;
+typedef TBSplineVec3dPacked<true, uchar> BSplineVec3dPackedOpen;
+typedef TBSplineVec3dPacked<false, uchar> BSplineVec3dPackedClosed;

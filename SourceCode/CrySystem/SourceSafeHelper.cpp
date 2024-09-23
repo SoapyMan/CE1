@@ -19,7 +19,7 @@
 
 // 
 bool _GetSSFileInfo(const char* inszSourceSafePath, const char* inszSSProject, const char* inszDirProject, const char* inszFileName,
-	char* outszName, char* outszComment, char* outszDate, const unsigned int innBufferSize)
+	char* outszName, char* outszComment, char* outszDate, const uint innBufferSize)
 {
 	CRYASSERT(innBufferSize > 0);
 

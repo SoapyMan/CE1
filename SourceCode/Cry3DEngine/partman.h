@@ -78,7 +78,7 @@ public:
 	Vec3  m_vRotation;
 	//int m_nDynLightMask;
 	//int m_nFogVolumeId;
-	unsigned int m_cAmbientColor;
+	uint m_cAmbientColor;
 	//! Override material for this emitter.
 	IMatInfo* m_pMaterial;
 	//! Entity who controls this emitter.
@@ -93,7 +93,7 @@ public:
 
 	// For patricles with tail, keeps history of previous positions.
 	Vec3* m_pArrvPosHistory;
-	unsigned char m_nTailSteps;
+	uchar m_nTailSteps;
 	char m_reserved[3]; // Fill to 32 byte.
 
 	CParticle()
@@ -130,17 +130,17 @@ public:
 	void FillBuffer(const PartProcessParams& PPP);
 	void DeActivateParticle(IPhysicalWorld* pPhysicalWorld);
 	void Physicalize(ParticleParams& Params, IPhysicalWorld* pPhysicalWorld);
-	unsigned int Vec2Color(const Vec3& v)
+	uint Vec2Color(const Vec3& v)
 	{
-		unsigned int r = (FtoI(v.x * 255.0f)), g = FtoI(v.y * 255.0f), b = FtoI(v.z * 255.0f);
+		uint r = (FtoI(v.x * 255.0f)), g = FtoI(v.y * 255.0f), b = FtoI(v.z * 255.0f);
 		return r | (g << 8) | (b << 16);
 	}
-	Vec3 Color2Vec(unsigned int c)
+	Vec3 Color2Vec(uint c)
 	{
 		return Vec3(
-			((unsigned char)(c)) * 0.00392156f,
-			((unsigned char)(c >> 8)) * 0.00392156f,
-			((unsigned char)(c >> 16)) * 0.00392156f);
+			((uchar)(c)) * 0.00392156f,
+			((uchar)(c >> 8)) * 0.00392156f,
+			((uchar)(c >> 16)) * 0.00392156f);
 	}
 };
 

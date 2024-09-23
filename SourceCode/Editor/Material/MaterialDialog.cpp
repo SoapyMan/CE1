@@ -336,7 +336,7 @@ private:
     textures[id].etcmvmovetype.SetEnumList( &enumTexModVMoveType );
 	}
 	//////////////////////////////////////////////////////////////////////////
-  void AddVariable( CVariableArray &varArray,CVariableBase &var,const char *varName,unsigned char dataType=IVariable::DT_SIMPLE )
+  void AddVariable( CVariableArray &varArray,CVariableBase &var,const char *varName,uchar dataType=IVariable::DT_SIMPLE )
 	{
 		var.AddRef(); // Variables are local and must not be released by CVarBlock.
 		if (varName)
@@ -347,7 +347,7 @@ private:
 		varArray.AddChildVar(&var);
 	}
 	//////////////////////////////////////////////////////////////////////////
-  void AddVariable( CVarBlock *vars,CVariableBase &var,const char *varName,unsigned char dataType=IVariable::DT_SIMPLE )
+  void AddVariable( CVarBlock *vars,CVariableBase &var,const char *varName,uchar dataType=IVariable::DT_SIMPLE )
 	{
 		var.AddRef(); // Variables are local and must not be released by CVarBlock.
 		if (varName)
@@ -958,7 +958,7 @@ void CMaterialDialog::OnUpdateProperties( IVariable *var )
 	//////////////////////////////////////////////////////////////////////////
 	if (m_shaderGenParamsVarsItem != NULL && m_shaderGenParamsVars != NULL && !bShaderChanged)
 	{
-		unsigned int mask = mtl->GetShaderGenMask();
+		uint mask = mtl->GetShaderGenMask();
 		mtl->SetShaderGenParamsVars(m_shaderGenParamsVars);
 		if (mask != mtl->GetShaderGenMask())
 		{

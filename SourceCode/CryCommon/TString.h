@@ -72,7 +72,7 @@ public:
 
 	CryBasicString(const char* szBegin, const char* szEnd)
 	{
-		m_pString = strdup(szBegin, (unsigned int)(szEnd - szBegin));
+		m_pString = strdup(szBegin, (uint)(szEnd - szBegin));
 	}
 
 	CryBasicString(const char* szBegin, unsigned nLength)
@@ -114,7 +114,7 @@ public:
 	void assign(const char* szBegin, const char* szEnd)
 	{
 		free(m_pString);
-		m_pString = strdup(szBegin, (unsigned int)(szEnd - szBegin));
+		m_pString = strdup(szBegin, (uint)(szEnd - szBegin));
 	}
 
 	void assign(const char* szBegin, unsigned nLength)

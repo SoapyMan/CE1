@@ -41,7 +41,7 @@ void CStatObj::CreateModelFarImages(int nTexRes)
 	GetRenderer()->ResetToDefault();
 }
 
-bool CStatObj::MakeObjectPicture(unsigned char* pRGBAData, int nWidth)
+bool CStatObj::MakeObjectPicture(uchar* pRGBAData, int nWidth)
 {
 	int nTid = GetRenderer()->MakeSprite(m_vBoxMax.z, nWidth, 45, this, pRGBAData, 0);
 	return nTid > 0;

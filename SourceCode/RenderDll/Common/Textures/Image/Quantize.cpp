@@ -34,7 +34,7 @@
 #endif
 
 
-// Compute masks for effectively separating R,G and B components from a unsigned long.
+// Compute masks for effectively separating R,G and B components from a ulong.
 // For a little-endian machine they are respectively
 // 0x000000f8, 0x0000fc00 and 0x00f80000
 // For a big-endian machine they are respectively
@@ -42,7 +42,7 @@
 #define R_MASK		((HIST_R_MAX - 1) << (R_BIT + 8 - HIST_R_BITS))
 #define G_MASK		((HIST_G_MAX - 1) << (G_BIT + 8 - HIST_G_BITS))
 #define B_MASK		((HIST_B_MAX - 1) << (B_BIT + 8 - HIST_B_BITS))
-// The following macro extract the respective color components from a unsigned long
+// The following macro extract the respective color components from a ulong
 // and transform them into a index in the histogram.
 #define INDEX_R(l)	((l & R_MASK) >> (R_BIT + 8 - HIST_R_BITS))
 #define INDEX_G(l)	((l & G_MASK) >> (G_BIT + 8 - HIST_G_BITS - HIST_R_BITS))
@@ -302,13 +302,13 @@ void shQuantizeCount(SRGBPixel* image, int pixels, SRGBPixel* transp)
 	hist_pixels += pixels;
 
 	// Now, count all colors in image
-	unsigned long* src = (unsigned long*)image;
+	ulong* src = (ulong*)image;
 	if (transp)
 	{
-		unsigned long tc = (*(unsigned long*)transp) & RGB_MASK;
+		ulong tc = (*(ulong*)transp) & RGB_MASK;
 		while (pixels--)
 		{
-			unsigned long pix = *src++;
+			ulong pix = *src++;
 			if (tc != (pix & RGB_MASK))
 			{
 				ushort& pa = hist[INDEX_R(pix) + INDEX_G(pix) + INDEX_B(pix)];
@@ -320,7 +320,7 @@ void shQuantizeCount(SRGBPixel* image, int pixels, SRGBPixel* transp)
 	else
 		while (pixels--)
 		{
-			unsigned long pix = *src++;
+			ulong pix = *src++;
 			ushort& pa = hist[INDEX_R(pix) + INDEX_G(pix) + INDEX_B(pix)];
 			// do not permit overflow here; stick to MAX_ushort
 			if (!++pa) --pa;
@@ -344,10 +344,10 @@ void shQuantizeBias(SRGBPixel* colors, int count, int weight)
 		return;
 
 	// Now, count all colors in image
-	unsigned long* src = (unsigned long*)colors;
+	ulong* src = (ulong*)colors;
 	while (count--)
 	{
-		unsigned long pix = *src++;
+		ulong pix = *src++;
 		ushort& pa = hist[INDEX_R(pix) + INDEX_G(pix) + INDEX_B(pix)];
 		// do not permit overflow here; stick to MAX_ushort
 		if (unsigned(pa) + delta > 0xffff) pa = 0xffff; else pa += delta;
@@ -554,16 +554,16 @@ void shQuantizeRemap(SRGBPixel* image, int pixels,
 	// Allocate the picture and the palette
 	if (!outimage) outimage = new byte[pixels];
 
-	unsigned long* src = (unsigned long*)image;
+	ulong* src = (ulong*)image;
 	byte* dst = outimage;
 	count = pixels;
 
 	if (transp)
 	{
-		unsigned long tc = (*(unsigned long*)transp) & RGB_MASK;
+		ulong tc = (*(ulong*)transp) & RGB_MASK;
 		while (count--)
 		{
-			unsigned long pix = *src++;
+			ulong pix = *src++;
 			if (tc == (pix & RGB_MASK))
 				*dst++ = 0;
 			else
@@ -573,7 +573,7 @@ void shQuantizeRemap(SRGBPixel* image, int pixels,
 	else
 		while (count--)
 		{
-			unsigned long pix = *src++;
+			ulong pix = *src++;
 			*dst++ = icmap[INDEX_R(pix) + INDEX_G(pix) + INDEX_B(pix)];
 		}
 }
@@ -616,7 +616,7 @@ void shQuantizeRemapDither(SRGBPixel* image, int pixels, int pixperline,
 	int* fserr = (int*)malloc(2 * 3 * (pixperline + 2) * sizeof(int));
 	memset(fserr, 0, 3 * (pixperline + 2) * sizeof(int));
 	// odd/even row
-	unsigned char odd = 0;
+	uchar odd = 0;
 	while (count > 0)
 	{
 		// The alogorithm implements the widely-known and used Floyd-Steinberg

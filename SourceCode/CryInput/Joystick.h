@@ -74,8 +74,8 @@ public:
 	int		GetHatDir();
 
 	// get analog direction (two analog sticks)
-	Vec3	GetAnalog1Dir(unsigned int joystickID) const;
-	Vec3	GetAnalog2Dir(unsigned int joystickID) const;
+	Vec3	GetAnalog1Dir(uint joystickID) const;
+	Vec3	GetAnalog2Dir(uint joystickID) const;
 
 private:
 
@@ -85,11 +85,11 @@ private:
 	int		m_numbuttons;
 	float	m_joytime;
 
-	unsigned char m_buttons[8];
-	unsigned char m_dirs[4];
-	unsigned char m_hatdirs[4];
+	uchar m_buttons[8];
+	uchar m_dirs[4];
+	uchar m_hatdirs[4];
 
-	unsigned int	m_numjoysticks;	//!<	Number of available joysticks
+	uint	m_numjoysticks;	//!<	Number of available joysticks
 	// this is for returning analog controller directional input. Input is in the range -1..1 for the x and y axis. z unused
 	Vec3* m_vAnalog1Dir;
 	Vec3* m_vAnalog2Dir;
@@ -113,19 +113,19 @@ public:
 
 
 	bool DigitalCrossDirection(int Type);
-	unsigned char LeftStickX();
-	unsigned char LeftStickY();
-	unsigned char RightStickX();
-	unsigned char RightStickY();
+	uchar LeftStickX();
+	uchar LeftStickY();
+	uchar RightStickX();
+	uchar RightStickY();
 
 
 
 	//PS2 "INTERNAL" UTILITY 
 private:
 
-	void GetAnalog(unsigned char* pData);
-	void GetDigital(unsigned char* pData);
-	void GetButton(unsigned char* pData);
+	void GetAnalog(uchar* pData);
+	void GetDigital(uchar* pData);
+	void GetButton(uchar* pData);
 
 	//Convert the PS2 pad information in PC style format(used by the interface).
 	void ConvertPadInformation();
@@ -136,11 +136,11 @@ private:
 
 
 	//For analogic stick
-	unsigned char m_RightX;
-	unsigned char m_RightY;
+	uchar m_RightX;
+	uchar m_RightY;
 
-	unsigned char m_LeftX;
-	unsigned char m_LeftY;
+	uchar m_LeftX;
+	uchar m_LeftY;
 
 	//For digital stick
 	bool m_Left;

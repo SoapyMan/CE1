@@ -71,7 +71,7 @@ protected:
 
 	char * StripZero(char pszOutputBuffer[32], float fNumber);
 
-	template <class T> unsigned long GetArrayIdx(std::vector<T> *pVector, T *pNewElement)
+	template <class T> ulong GetArrayIdx(std::vector<T> *pVector, T *pNewElement)
 	{
 		//////////////////////////////////////////////////////////////////////
 		// Search the passed vector pVector for the occurence of the element
@@ -79,7 +79,7 @@ protected:
 		// in the container
 		//////////////////////////////////////////////////////////////////////
 
-		unsigned long iCnt = 0;
+		ulong iCnt = 0;
 		long i;
 
 		// Search through the vector

@@ -67,7 +67,7 @@ private:
 		float frameTime; // Immidiate frame rate, for this frame.
 		
 		// Snapshot of current processing command.
-		unsigned int nActionFlags[2];
+		uint nActionFlags[2];
 		float fLeaning;
 		int nPolygons; // Polys rendered in this frame.
 	};

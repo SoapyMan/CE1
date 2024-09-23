@@ -133,10 +133,10 @@ struct TextureMap
 {
 	char	path[128];	// Name and path of file.
 
-	unsigned char	type;		// Mapping type.
-	unsigned char flags;	// Texture map flags.
-	unsigned char	ammount;// Ammopunt of blending (0-100).
-	unsigned char	reserved[32];	// Some reserved variables.
+	uchar	type;		// Mapping type.
+	uchar flags;	// Texture map flags.
+	uchar	ammount;// Ammopunt of blending (0-100).
+	uchar	reserved[32];	// Some reserved variables.
 
 	//tiling and mirror
 	bool	utile;
@@ -188,10 +188,10 @@ struct TextureMap2
 {
 	char	name[32];	// Name of file.
 
-	unsigned char	type;	  // Mapping type.
-	unsigned char	flags;	// Mapping type.
-	unsigned char Amount;
-	unsigned char Reserved[1];
+	uchar	type;	  // Mapping type.
+	uchar	flags;	// Mapping type.
+	uchar Amount;
+	uchar Reserved[1];
 
 	//tiling and mirror
 	bool	utile;
@@ -226,10 +226,10 @@ struct TextureMap3
 {
 	char	name[128];	// Name of file.
 
-	unsigned char	type;	  // Mapping type.
-	unsigned char	flags;	// Mapping type.
-	unsigned char Amount;
-	unsigned char Reserved[32];
+	uchar	type;	  // Mapping type.
+	uchar	flags;	// Mapping type.
+	uchar Amount;
+	uchar Reserved[32];
 
 	//tiling and mirror
 	bool	utile;
@@ -309,7 +309,7 @@ struct CryLinkOrderByBlending
 
 struct CryIRGB
 {
-	unsigned char r, g, b;
+	uchar r, g, b;
 };
 
 struct CryFRGB
@@ -406,7 +406,7 @@ struct BONE_ENTITY
 	int		nChildren;
 
 	// Id of controller (CRC32 From name of bone).
-	unsigned int	ControllerID;
+	uint	ControllerID;
 
 	char	prop[32];	// do not forget to update strncpy len // [Sergiy] why not use sizeof??? :)
 	BONE_PHYSICS_COMP phys;
@@ -1090,8 +1090,8 @@ struct CONTROLLER_CHUNK_DESC_0826
 	CtrlTypes		type;		//one ot the CtrlTypes values
 	int				nKeys;		// # of keys this controller has; toatl # of knots (positional and orientational) in the case of B-Spline
 
-	//unsigned short nSubCtrl;	// # of sub controllers; not used now/reserved
-	unsigned int nFlags;		// Flags of controller.
+	//ushort nSubCtrl;	// # of sub controllers; not used now/reserved
+	uint nFlags;		// Flags of controller.
 	//int				nSubCtrl;	// # of sub controllers; not used now/reserved
 
 	unsigned nControllerId; // unique generated in exporter id based on crc32 of bone name

@@ -102,20 +102,20 @@ public: // ---------------------------------------------------------------------
 private: // --------------------------------------------------------------------------
 
 	//status handlers
-	void HandleIDLE(unsigned int dwIncomingSignal, DWORD_PTR dwParam);
-	void HandleWAIT_FOR_CONNECT(unsigned int dwIncomingSignal, DWORD_PTR dwParam);
-	void HandleCONNECTED(unsigned int dwIncomingSignal, DWORD_PTR dwParam);
-	void HandlePROCESSING_CONTEXT(unsigned int dwIncomingSignal, DWORD_PTR dwParam);
-	void HandleWAIT_FOR_SERVER_READY(unsigned int dwIncomingSignal, DWORD_PTR dwParam);
-	void HandleREADY(unsigned int dwIncomingSignal, DWORD_PTR dwParam);
-	void HandleDISCONNECTED(unsigned int dwIncomingSignal, DWORD_PTR dwParam);
-	virtual unsigned int HandleANY(unsigned int dwIncomingSignal, DWORD_PTR dwParam);
+	void HandleIDLE(uint dwIncomingSignal, DWORD_PTR dwParam);
+	void HandleWAIT_FOR_CONNECT(uint dwIncomingSignal, DWORD_PTR dwParam);
+	void HandleCONNECTED(uint dwIncomingSignal, DWORD_PTR dwParam);
+	void HandlePROCESSING_CONTEXT(uint dwIncomingSignal, DWORD_PTR dwParam);
+	void HandleWAIT_FOR_SERVER_READY(uint dwIncomingSignal, DWORD_PTR dwParam);
+	void HandleREADY(uint dwIncomingSignal, DWORD_PTR dwParam);
+	void HandleDISCONNECTED(uint dwIncomingSignal, DWORD_PTR dwParam);
+	virtual uint HandleANY(uint dwIncomingSignal, DWORD_PTR dwParam);
 
-	void OnSignal(unsigned int dwOutgoingSignal, DWORD_PTR dwParam);
+	void OnSignal(uint dwOutgoingSignal, DWORD_PTR dwParam);
 
 	// tracing
 	void _Trace(char* s);
-	void _TraceStatus(unsigned int dwStatus);
+	void _TraceStatus(uint dwStatus);
 
 	_IClientServices* m_pParent;		//!<
 };

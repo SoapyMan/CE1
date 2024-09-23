@@ -14,39 +14,21 @@
 #ifndef _IRENDERER_H
 #define _IRENDERER_H
 
-//#if defined(LINUX)
-//	#include "Splash.h"
-//#else
+//DOC-IGNORE-BEGIN
+#include "BaseTypes.h"
+#include "ColorDefs.h"
+#include "Tarray.h"
+#include "Cry_Math.h"
+#include "IFont.h"
+
+//DOC-IGNORE-END
+
 enum eSplashType
 {
 	EST_Water,
 };
-//#endif
-
 
 typedef HRESULT(*MIPDXTcallback)(void* data, int miplevel, DWORD size, int width, int height, void* user_data);
-
-// Global typedefs.
-//////////////////////////////////////////////////////////////////////
-typedef const char* cstr;
-#if !defined(LINUX)
-typedef unsigned long       DWORD;
-#endif //LINUX
-#ifndef BOOL
-typedef int                 BOOL;
-#endif
-typedef unsigned char       BYTE;
-typedef unsigned short      WORD;
-typedef float               FLOAT;
-typedef int                 INT;
-typedef unsigned int        UINT;
-
-#ifndef uchar
-typedef unsigned char		uchar;
-typedef unsigned int		uint;
-typedef unsigned short	ushort;
-#endif
-
 
 //forward declarations.
 //////////////////////////////////////////////////////////////////////
@@ -91,21 +73,14 @@ struct RenderLMData;
 struct CLeafBuffer;
 
 //////////////////////////////////////////////////////////////////////
-typedef unsigned char bvec4[4];
+typedef uchar bvec4[4];
 typedef float vec4_t[4];
-typedef unsigned char byte;
+typedef uchar byte;
 typedef float vec2_t[2];
 
 //////////////////////////////////////////////////////////////////////
 //Vladimir's list
 template	<class T> class list2;
-
-//DOC-IGNORE-BEGIN
-#include "ColorDefs.h"
-#include "Tarray.h"
-
-#include <IFont.h>
-//DOC-IGNORE-END
 
 //////////////////////////////////////////////////////////////////////
 #define R_CULL_DISABLE  0 
@@ -383,42 +358,25 @@ struct SCryRenderInterface
 //////////////////////////////////////////////////////////////////////
 struct tLmInfo
 {
-	float						fS[3], fT[3];
-	unsigned short	nTextureIdLM;     // general color light map
-	unsigned short	nTextureIdLM_LD;  // lights direction texture for DOT3 LM
+	float fS[3], fT[3];
+	ushort	nTextureIdLM;     // general color light map
+	ushort	nTextureIdLM_LD;  // lights direction texture for DOT3 LM
 };
 
 //////////////////////////////////////////////////////////////////////
 struct CObjFace
 {
 	CObjFace() { memset(this, 0, sizeof(CObjFace)); }
-	~CObjFace()
-	{
-		/*		if (m_lInfo)
-				{
-					delete m_lInfo;
-					m_lInfo=nullptr;
-				}*/
-	}
 
-	unsigned short v[3];
-	unsigned short t[3];
-	unsigned short n[3];
-	unsigned short b[3];
-	unsigned short shader_id;
+	ushort	v[3];
+	ushort	t[3];
+	ushort	n[3];
+	ushort	b[3];
+	ushort	shader_id;
+	uchar	m_dwFlags;
+	bool	m_bLit;				//! tell if this surface is lit by the light (for dynamic lights)
 
-	//	tLmInfo		*m_lInfo;
-
-	//  Vec3 m_vCenter;
-
-		//! tell if this surface is lit by the light (for dynamic lights)
-	bool	m_bLit;
-	//! plane equation for this surface (for dynamic lights)
-	Plane m_Plane;
-	Vec3 m_Vecs[3];
-
-	uchar m_dwFlags;
-	float m_fArea;
+	Vec3	m_Vecs[3];
 };
 
 #define VBF_DYNAMIC 1
@@ -518,7 +476,7 @@ public:
 	uint m_bFenceSet : 1;
 	uint m_bDynamic : 1;
 	int		m_vertexformat;
-	unsigned int m_fence;
+	uint m_fence;
 	int   m_NumVerts;
 	//## MM unused?	void *pPS2Buffer;
 
@@ -535,7 +493,7 @@ enum ERendStats
 //////////////////////////////////////////////////////////////////////
 /*struct IndexedVertexBuffer
 {
-  list2<unsigned short> indices;
+  list2<ushort> indices;
   CVertexBuffer * pVertexBuffer;
   int strip_step;
   Vec3 vBoxMin,vBoxMax;
@@ -683,7 +641,7 @@ struct SDrawTextInfo
 struct IRenderer//: public IRendererCallbackServer
 {
 	//! Init the renderer, params are self-explanatory
-	virtual WIN_HWND Init(int x, int y, int width, int height, unsigned int cbpp, int zbpp, int sbits, bool fullscreen, WIN_HINSTANCE hinst, WIN_HWND Glhwnd = 0, WIN_HDC Glhdc = 0, WIN_HGLRC hGLrc = 0, bool bReInit = false) = 0;
+	virtual WIN_HWND Init(int x, int y, int width, int height, uint cbpp, int zbpp, int sbits, bool fullscreen, WIN_HINSTANCE hinst, WIN_HWND Glhwnd = 0, WIN_HDC Glhdc = 0, WIN_HGLRC hGLrc = 0, bool bReInit = false) = 0;
 
 	virtual bool SetCurrentContext(WIN_HWND hWnd) = 0;
 	virtual bool CreateContext(WIN_HWND hWnd, bool bAllowFSAA = false) = 0;
@@ -786,13 +744,13 @@ struct IRenderer//: public IRendererCallbackServer
 	virtual	bool	SetGammaDelta(const float fGamma) = 0;
 
 	//! Change display size
-	virtual bool	ChangeDisplay(unsigned int width, unsigned int height, unsigned int cbpp) = 0;
+	virtual bool	ChangeDisplay(uint width, uint height, uint cbpp) = 0;
 
 	//! Chenge viewport size
-	virtual void  ChangeViewport(unsigned int x, unsigned int y, unsigned int width, unsigned int height) = 0;
+	virtual void  ChangeViewport(uint x, uint y, uint width, uint height) = 0;
 
 	//! Save source data to a Tga file (NOTE: Should not be here)	
-	virtual	bool	SaveTga(unsigned char* sourcedata, int sourceformat, int w, int h, const char* filename, bool flip) = 0;
+	virtual	bool	SaveTga(uchar* sourcedata, int sourceformat, int w, int h, const char* filename, bool flip) = 0;
 
 	//! Set the current binded texture
 	virtual	void	SetTexture(int tnum, ETexType Type = eTT_Base) = 0;
@@ -881,7 +839,7 @@ struct IRenderer//: public IRendererCallbackServer
 	virtual	void FontReleaseTexture(class CFBitmap* pBmp) = 0;
 	virtual void FontSetTexture(class CFBitmap*, int nFilterMode) = 0;
 	virtual void FontSetTexture(int nTexId, int nFilterMode) = 0;
-	virtual void FontSetRenderingState(unsigned long nVirtualScreenWidth, unsigned long nVirtualScreenHeight) = 0;
+	virtual void FontSetRenderingState(ulong nVirtualScreenWidth, ulong nVirtualScreenHeight) = 0;
 	virtual void FontSetBlending(int src, int dst) = 0;
 	virtual void FontRestoreRenderingState() = 0;
 
@@ -1066,12 +1024,12 @@ struct IRenderer//: public IRendererCallbackServer
 	virtual void	PopMatrix() = 0;
 	virtual	void	EnableTMU(bool enable) = 0;
 	virtual void	SelectTMU(int tnum) = 0;
-	virtual	unsigned int DownLoadToVideoMemory(unsigned char* data, int w, int h, ETEX_Format eTFSrc, ETEX_Format eTFDst, int nummipmap, bool repeat = true, int filter = FILTER_BILINEAR, int Id = 0, char* szCacheName = nullptr, int flags = 0) = 0;
-	virtual	void UpdateTextureInVideoMemory(uint tnum, unsigned char* newdata, int posx, int posy, int w, int h, ETEX_Format eTFSrc = eTF_0888) = 0;
-	virtual unsigned int LoadTexture(const char* filename, int* tex_type = nullptr, unsigned int def_tid = 0, bool compresstodisk = true, bool bWarn = true) = 0;
+	virtual	uint DownLoadToVideoMemory(uchar* data, int w, int h, ETEX_Format eTFSrc, ETEX_Format eTFDst, int nummipmap, bool repeat = true, int filter = FILTER_BILINEAR, int Id = 0, char* szCacheName = nullptr, int flags = 0) = 0;
+	virtual	void UpdateTextureInVideoMemory(uint tnum, uchar* newdata, int posx, int posy, int w, int h, ETEX_Format eTFSrc = eTF_0888) = 0;
+	virtual uint LoadTexture(const char* filename, int* tex_type = nullptr, uint def_tid = 0, bool compresstodisk = true, bool bWarn = true) = 0;
 	virtual bool DXTCompress(byte* raw_data, int nWidth, int nHeight, ETEX_Format eTF, bool bUseHW, bool bGenMips, int nSrcBytesPerPix, MIPDXTcallback callback = 0) = 0;
 	virtual bool DXTDecompress(byte* srcData, byte* dstData, int nWidth, int nHeight, ETEX_Format eSrcTF, bool bUseHW, int nDstBytesPerPix) = 0;
-	virtual	void	RemoveTexture(unsigned int TextureId) = 0;
+	virtual	void	RemoveTexture(uint TextureId) = 0;
 	virtual	void	RemoveTexture(ITexPic* pTexPic) = 0;
 	virtual void TextToScreen(float x, float y, const char* format, ...) = 0;
 	virtual void TextToScreenColor(int x, int y, float r, float g, float b, float a, const char* format, ...) = 0;
@@ -1096,7 +1054,7 @@ struct IRenderer//: public IRendererCallbackServer
 	virtual void DrawQuad(float dy, float dx, float dz, float x, float y, float z) = 0;
 	virtual void ClearDepthBuffer() = 0;
 	virtual void ClearColorBuffer(const Vec3 vColor) = 0;
-	virtual void ReadFrameBuffer(unsigned char* pRGB, int nSizeX, int nSizeY, bool bBackBuffer, bool bRGBA, int nScaledX = -1, int nScaledY = -1) = 0;
+	virtual void ReadFrameBuffer(uchar* pRGB, int nSizeX, int nSizeY, bool bBackBuffer, bool bRGBA, int nScaledX = -1, int nScaledY = -1) = 0;
 	virtual void SetFogColor(float* color) = 0;
 	virtual void TransformTextureMatrix(float x, float y, float angle, float scale) = 0;
 	virtual void ResetTextureMatrix() = 0;
@@ -1104,8 +1062,8 @@ struct IRenderer//: public IRendererCallbackServer
 	virtual char* GetVertexProfile(bool bSupportedProfile) = 0;
 	virtual char* GetPixelProfile(bool bSupportedProfile) = 0;
 	virtual void	SetType(char type) = 0;
-	virtual unsigned int  MakeSprite(float object_scale, int tex_size, float angle, IStatObj* pStatObj, uchar* pTmpBuffer, uint def_tid) = 0;
-	virtual unsigned int  Make3DSprite(int nTexSize, float fAngleStep, IStatObj* pStatObj) = 0;
+	virtual uint  MakeSprite(float object_scale, int tex_size, float angle, IStatObj* pStatObj, uchar* pTmpBuffer, uint def_tid) = 0;
+	virtual uint  Make3DSprite(int nTexSize, float fAngleStep, IStatObj* pStatObj) = 0;
 	virtual void MakeShadowMapFrustum(ShadowMapFrustum& lof, ShadowMapLightSource* pLs, const Vec3& obj_pos, IStatObj* pStatObject, int shadow_type) = 0;
 	virtual void Set2DMode(bool enable, int ortox, int ortoy) = 0;
 	virtual int ScreenToTexture() = 0;
@@ -1205,8 +1163,8 @@ struct SRendParams
 	float				fBending;				//! amount of bending animations for vegetations
 
 	int					nShaderTemplate;		//! shader template to use
-	unsigned int		nDLightMask;			//! light mask to specifiy which light to use on the object
-	unsigned int		nStrongestDLightMask;	//! strongest light affecting the object
+	uint		nDLightMask;			//! light mask to specifiy which light to use on the object
+	uint		nStrongestDLightMask;	//! strongest light affecting the object
 	int					nFogVolumeID;			//! fog volume id
 
 	Vec3				vAmbientColor;			//! Ambient color for the object

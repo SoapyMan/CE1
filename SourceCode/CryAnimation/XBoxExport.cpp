@@ -39,15 +39,15 @@ void exportTestModel(CryGeometryInfo* pGeometry, CLeafBuffer* pLeafBuffer)
 	//---	 write vertices
 	//---------------------------------------------------------------------------
 
-	unsigned long numVertices = pGeometry->numExtTangents();
+	ulong numVertices = pGeometry->numExtTangents();
 
-	unsigned long numExtTangents = pGeometry->numExtTangents();
+	ulong numExtTangents = pGeometry->numExtTangents();
 	TangData* pExtTangents = pGeometry->getExtTangents();
 
-	unsigned long numExtUVs = pGeometry->numExtUVs();
+	ulong numExtUVs = pGeometry->numExtUVs();
 	CryUV* pExtUVs = pGeometry->getExtUVs();
 
-	for (unsigned long x = 0; x < numVertices; x++) {
+	for (ulong x = 0; x < numVertices; x++) {
 
 		unsigned nIntVert = pGeometry->getExtToIntMapEntry(x);
 		Vec3* pVertex = &pGeometry->getVertex(nIntVert);
@@ -66,8 +66,8 @@ void exportTestModel(CryGeometryInfo* pGeometry, CLeafBuffer* pLeafBuffer)
 	//---------------------------------------------------------------------------
 	//---	 write indices for Leafbuffers
 	//---------------------------------------------------------------------------
-	//unsigned int numIndices				= pLeafBuffer->GetIndices().Count();
-	unsigned short* pIndices = pLeafBuffer->GetIndices(nullptr);
+	//uint numIndices				= pLeafBuffer->GetIndices().Count();
+	ushort* pIndices = pLeafBuffer->GetIndices(nullptr);
 
 	int mcount = pLeafBuffer->m_pMats->Count();
 

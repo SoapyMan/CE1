@@ -308,7 +308,7 @@ CVarObject::~CVarObject()
 {}
 
 //////////////////////////////////////////////////////////////////////////
-void CVarObject::AddVariable( CVariableBase &var,const CString &varName,VarOnSetCallback cb,unsigned char dataType )
+void CVarObject::AddVariable( CVariableBase &var,const CString &varName,VarOnSetCallback cb,uchar dataType )
 {
 	if (!m_vars)
 		m_vars = new CVarBlock;
@@ -321,7 +321,7 @@ void CVarObject::AddVariable( CVariableBase &var,const CString &varName,VarOnSet
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CVarObject::AddVariable( CVariableBase &var,const CString &varName,const CString &varHumanName,VarOnSetCallback cb,unsigned char dataType )
+void CVarObject::AddVariable( CVariableBase &var,const CString &varName,const CString &varHumanName,VarOnSetCallback cb,uchar dataType )
 {
 	if (!m_vars)
 		m_vars = new CVarBlock;
@@ -450,7 +450,7 @@ void main()
 	double d;
 	int i;
 	short s;
-	unsigned char c;
+	uchar c;
 	Vec3 vec;
 
 	std::stringstream ss;

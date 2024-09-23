@@ -1922,7 +1922,7 @@ public:
 	virtual TArray<SShaderParam>& GetPublicParams() = 0;
 	virtual int GetTexId() = 0;
 	virtual ITexPic* GetBaseTexture(int* nPass, int* nTU) = 0;
-	virtual unsigned int GetUsedTextureTypes(void) = 0;
+	virtual uint GetUsedTextureTypes(void) = 0;
 	virtual int GetVertexFormat(void) = 0;
 	virtual int Size(int Flags) = 0;
 	virtual uint64 GetGenerationMask() = 0;
@@ -2185,7 +2185,7 @@ struct CMatInfo : public IMatInfo
 		CRYASSERT(pMtl);
 		if (pSubMtls)
 		{
-			for (unsigned int i = 0; i < pSubMtls->size(); i++)
+			for (uint i = 0; i < pSubMtls->size(); i++)
 			{
 				if ((*pSubMtls)[i] == pMtl)
 				{

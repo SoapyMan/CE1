@@ -469,13 +469,13 @@ void CryCharDecalManager::RefreshVertexBufferIndices()
 	// now we know the number of indices required
 	if (g_MeshInfo.numIndices)
 	{
-		TElementaryArray<unsigned short> arrIndices;
+		TElementaryArray<ushort> arrIndices;
 		arrIndices.reinit(g_MeshInfo.numIndices);
-		unsigned short* pIndex = &arrIndices[0];
+		ushort* pIndex = &arrIndices[0];
 
 		// for each face, put the 3 indices referring to the vertex in the char decal manager
 		// vertex array
-		unsigned short nBaseVertexIndex = 0;
+		ushort nBaseVertexIndex = 0;
 
 		// scan through decals and add necessary indices (faces) to the index array
 		for (unsigned i = 0; i < m_arrDecals.size(); ++i)

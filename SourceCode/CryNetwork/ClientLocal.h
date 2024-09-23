@@ -25,19 +25,19 @@ public:
 
 	// interface IClient --------------------------------------------------------------------
 
-	virtual void Connect(const char* szIP, WORD wPort, const BYTE* pbAuthorizationID, unsigned int iAuthorizationSize);
+	virtual void Connect(const char* szIP, WORD wPort, const BYTE* pbAuthorizationID, uint iAuthorizationSize);
 	virtual void Disconnect(const char* szCause);
 	virtual void SendReliable(CStream& stm);
 	virtual void SendUnreliable(CStream& stm);
 	virtual void ContextReady(CStream& stm);
 	virtual bool IsReady();
-	virtual bool Update(unsigned int nTime);
+	virtual bool Update(uint nTime);
 	virtual void GetBandwidth(float& fIncomingKbPerSec, float& fOutgoinKbPerSec, DWORD& nIncomingPackets, DWORD& nOutgoingPackets);
 	virtual void Release();
-	virtual unsigned int GetPing() { return 0; }
-	virtual unsigned int GetRemoteTimestamp(unsigned int nTime) { return nTime; }
-	virtual unsigned int GetPacketsLostCount() { return 0; }
-	virtual unsigned int GetUnreliablePacketsLostCount() { return 0; }
+	virtual uint GetPing() { return 0; }
+	virtual uint GetRemoteTimestamp(uint nTime) { return nTime; }
+	virtual uint GetPacketsLostCount() { return 0; }
+	virtual uint GetUnreliablePacketsLostCount() { return 0; }
 	virtual void OnCDKeyAuthorization(BYTE* pbAuthorizationID);
 	virtual void SetServerIP(const char* szServerIP);
 	virtual void InitiateCDKeyAuthorization(const bool inbCDAuthorization);

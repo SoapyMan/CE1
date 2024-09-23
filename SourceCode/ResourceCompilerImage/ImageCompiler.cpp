@@ -1117,7 +1117,7 @@ bool CImageCompiler::BlitTo( HWND inHWND, RECT &inRect, const float infOffsetX, 
 			assert(pTexture);
 
 			// for all mipmaps
-			for(unsigned int mip = 0; mip<pTexture->GetLevelCount(); mip++)
+			for(uint mip = 0; mip<pTexture->GetLevelCount(); mip++)
 			{
 				IDirect3DSurface9 *pSurfaceLevel=0;
 

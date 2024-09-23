@@ -32,7 +32,7 @@
 struct _SOCKADDR_IN
 {
 	short sin_family;
-	unsigned short sin_port;
+	ushort sin_port;
 #if defined(LINUX)
 	union
 	{
@@ -65,7 +65,7 @@ class CStream;
 #ifndef PS2
 struct _SOCKADDR_IN{
    short sin_family;
-   unsigned short sin_port;
+   ushort sin_port;
    struct in_addr sin_addr;
    char sin_zero[8];
 };
@@ -77,9 +77,9 @@ struct _SOCKADDR_IN{
 #endif
 */
 
-inline unsigned short __ntohs(unsigned short us)
+inline ushort __ntohs(ushort us)
 {
-	unsigned short nTemp = (us >> 8) | (us << 8);
+	ushort nTemp = (us >> 8) | (us << 8);
 	return nTemp;
 }
 /* NOTE FOR PS2 PROGRAMMERS ABOUT THIS CLASS
@@ -121,7 +121,7 @@ public:
 			pHostEntry = gethostbyname(sAddress);
 
 			if (pHostEntry)
-				m_Address.ADDR = *(unsigned int*)pHostEntry->h_addr_list[0];
+				m_Address.ADDR = *(uint*)pHostEntry->h_addr_list[0];
 			else
 				m_Address.ADDR = 0;
 		}
@@ -291,7 +291,7 @@ inline const CIPAddress& CIPAddress::operator =(const CIPAddress& xa)
 
 inline bool CIPAddress::Load(CStream& s)
 {
-	if (!s.Read((unsigned int&)(m_Address.ADDR)))
+	if (!s.Read((uint&)(m_Address.ADDR)))
 		return false;
 	if (!s.Read(m_Address.sin_port))
 		return false;
@@ -300,7 +300,7 @@ inline bool CIPAddress::Load(CStream& s)
 
 inline bool CIPAddress::Save(CStream& s)
 {
-	if (!s.Write((unsigned int&)m_Address.ADDR))
+	if (!s.Write((uint&)m_Address.ADDR))
 		return false;
 	if (!s.Write(m_Address.sin_port))
 		return false;

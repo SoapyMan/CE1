@@ -415,7 +415,7 @@ void CMaterial::SetShaderGenParamsVars( CVarBlock *pBlock )
 }
 
 //////////////////////////////////////////////////////////////////////////
-unsigned int CMaterial::GetTexmapUsageMask() const
+uint CMaterial::GetTexmapUsageMask() const
 {
 	int mask = 0;
 	if (m_shaderItem.m_pShader)

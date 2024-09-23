@@ -12,7 +12,7 @@
 #include "GLPBuffer.h"
 
 
-CPBuffer::CPBuffer(int w, int h, unsigned int mode) : m_Width(w), m_Height(h), m_Mode(mode), m_MyDC(nullptr), m_MyGLctx(nullptr), m_Buffer(nullptr)
+CPBuffer::CPBuffer(int w, int h, uint mode) : m_Width(w), m_Height(h), m_Mode(mode), m_MyDC(nullptr), m_MyGLctx(nullptr), m_Buffer(nullptr)
 {
 }
 
@@ -124,7 +124,7 @@ bool CPBuffer::mfInitialize(bool bShare)
 
 	int format;
 	int pformat[MAX_PFORMATS];
-	unsigned int nformats;
+	uint nformats;
 	if (!wglChoosePixelFormatARB(hdc, iattributes, fattributes, MAX_PFORMATS, pformat, &nformats))
 	{
 		iLog->Log("Warning: PBuffer creation error:  Couldn't find a suitable pixel format.\n");

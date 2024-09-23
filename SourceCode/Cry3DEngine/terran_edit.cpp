@@ -239,7 +239,7 @@ info->m_vBoxMax.z = max(info->m_vBoxMax.z, fElev);*/
 	m_bHightMapModified = false;
 }
 /*
-void CTerrain::SetTerainSectorTexture(int nSectorOroginX, int nSectorOroginY, unsigned char * pTexData, int nSizeOffTexData)
+void CTerrain::SetTerainSectorTexture(int nSectorOroginX, int nSectorOroginY, uchar * pTexData, int nSizeOffTexData)
 {
   if(
 	nSectorOroginX/CTerrain::GetSectorSize() < 0 ||

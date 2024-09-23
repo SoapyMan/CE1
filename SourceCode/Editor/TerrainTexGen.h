@@ -198,9 +198,9 @@ private:
 	bool m_bNotValid;
 
 	//! Target texture resolution.
-	unsigned int m_resolution;
+	uint m_resolution;
 	//! (1 << m_resolutionShift) == m_resolition.
-	unsigned int m_resolutionShift;
+	uint m_resolutionShift;
 	//! Resolution of sector.
 	int m_sectorResolution;
 	//! Number of sectors per side.

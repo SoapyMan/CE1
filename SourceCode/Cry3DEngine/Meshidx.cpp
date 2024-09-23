@@ -378,7 +378,7 @@ bool CIndexedMesh::LoadCGF(const char* szFileName, const char* szGeomName, bool 
 		  pFace->m_lInfo->nTextureIdLM_LD = 0;
 
 					//read datas from memory
-					fp->FRead(&pFace->m_lInfo->nTextureIdLM,sizeof(unsigned short),1);
+					fp->FRead(&pFace->m_lInfo->nTextureIdLM,sizeof(ushort),1);
 					//convert to the correct one
 					if (pFace->m_lInfo->nTextureIdLM!=65535)
 		  {
@@ -424,7 +424,7 @@ bool CIndexedMesh::LoadCGF(const char* szFileName, const char* szGeomName, bool 
 				{
 					if (!bFacesWithInvalidMatIdFoundInThisFile)
 					{
-						if (m_pFaces[c + m_nFaceCount].shader_id == (unsigned short)-1)
+						if (m_pFaces[c + m_nFaceCount].shader_id == (ushort)-1)
 						{
 #if !defined(LINUX)
 							m_pSystem->GetILog()->Log(

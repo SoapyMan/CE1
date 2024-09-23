@@ -319,7 +319,7 @@ void CryGeometryInfo::MakeIntFaces(const CryFace* pCryFaces, unsigned numFaces)
 	for (unsigned nFace = 0; nFace < numFaces; ++nFace)
 		for (unsigned v = 0; v < 3; ++v)
 		{
-			m_arrFaces[nFace][v] = (unsigned short)pCryFaces[nFace][v];
+			m_arrFaces[nFace][v] = (ushort)pCryFaces[nFace][v];
 			m_arrFaceMtl[nFace] = (GeomMtlID)pCryFaces[nFace].MatID;
 		}
 }
@@ -1085,7 +1085,7 @@ void CryGeometryInfo::selfValidate()
 */
 
 // initializes the ext-to-int map
-void CryGeometryInfo::initExtToIntMap(const unsigned short* pExtToIntMap, unsigned numEntries)
+void CryGeometryInfo::initExtToIntMap(const ushort* pExtToIntMap, unsigned numEntries)
 {
 	m_arrExtToIntMap.resize(numEntries);
 	for (unsigned i = 0; i < numEntries; ++i)

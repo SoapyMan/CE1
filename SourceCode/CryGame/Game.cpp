@@ -758,7 +758,7 @@ bool CXGame::Run(bool &bRelaunch)
 #include ".\game.h"
 #pragma comment (lib , "Winmm.lib")
 #else
-#define GetCurrentTime() ((unsigned int)(GetSystem()->GetITimer()->GetCurrTime() * 1000.f))
+#define GetCurrentTime() ((uint)(GetSystem()->GetITimer()->GetCurrTime() * 1000.f))
 #endif
 
 //////////////////////////////////////////////////////////////////////////
@@ -1052,7 +1052,7 @@ bool CXGame::Update()
 	
 	//update script timers
 	if(m_pScriptTimerMgr)
-		m_pScriptTimerMgr->Update( (unsigned long)(pTimer->GetCurrTime()*1000) );
+		m_pScriptTimerMgr->Update( (ulong)(pTimer->GetCurrTime()*1000) );
 	
 	pTimer->MeasureTime("ScrTimerUp");
 

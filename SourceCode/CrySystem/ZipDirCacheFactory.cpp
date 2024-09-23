@@ -403,7 +403,7 @@ void ZipDir::CacheFactory::Validate(const FileEntry& fileEntry)
 
 	Read(pCompressed, fileEntry.desc.lSizeCompressed);
 
-	unsigned long nDestSize = fileEntry.desc.lSizeUncompressed;
+	ulong nDestSize = fileEntry.desc.lSizeUncompressed;
 	int nError = Z_OK;
 	if (fileEntry.nMethod)
 	{
@@ -442,7 +442,7 @@ void ZipDir::CacheFactory::Validate(const FileEntry& fileEntry)
 // extracts the file path from the file header with subsequent information
 // may, or may not, put all letters to lower-case (depending on whether the system is to be case-sensitive or not)
 // it's the responsibility of the caller to ensure that the file name is in readable valid memory
-string ZipDir::CacheFactory::GetFilePath(const char* pFileName, ZipFile::ushort nFileNameLength)
+string ZipDir::CacheFactory::GetFilePath(const char* pFileName, ushort nFileNameLength)
 {
 	// create lower-case path from the zip entry
 	/*
@@ -462,7 +462,7 @@ string ZipDir::CacheFactory::GetFilePath(const char* pFileName, ZipFile::ushort 
 }
 
 // seeks in the file relative to the starting position
-void ZipDir::CacheFactory::Seek(ZipFile::ulong nPos, int nOrigin) // throw
+void ZipDir::CacheFactory::Seek(ulong nPos, int nOrigin) // throw
 {
 	if (fseek(m_f, nPos, nOrigin))
 		THROW_ZIPDIR_ERROR(ZD_ERROR_IO_FAILED, "Cannot fseek() to the new position in the file. This is unexpected error and should not happen under any circumstances. Perhaps some network or disk failure error has caused this");

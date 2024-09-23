@@ -31,7 +31,7 @@ class CClient;
 struct SClientCheckContext
 {
 	// Sequential id of request.
-	unsigned int nRequestId;
+	uint nRequestId;
 	// Time of last request.
 	CTimeValue requestTime;
 	// how many times this check was tried.
@@ -39,17 +39,17 @@ struct SClientCheckContext
 	// Ip of the client we are requesting.
 	CIPAddress clientIP;
 	// Hash of the filename to check.
-	unsigned int nFilenameHash;
+	uint nFilenameHash;
 	// Request code (what check to do).
-	unsigned char nRequestCode;
+	uchar nRequestCode;
 	// Number of opened pack files.
-	unsigned int nNumOpenedPaks;
+	uint nNumOpenedPaks;
 	// Probe data.
 	SDataProbeContext probe;
 	//! True if it is code request (it depends on 32/64bit versions)
 	bool bExecutableCode;
 	//! Various flags recieved from client.
-	unsigned int nClientStatusFlags;
+	uint nClientStatusFlags;
 
 	SClientCheckContext()
 	{
@@ -143,7 +143,7 @@ private:
 	typedef std::list<SClientCheckContext*> PendingChecks;
 	PendingChecks m_pendingChecks;
 	CNetwork* m_pNetwork;
-	unsigned int m_nNextRequestId;
+	uint m_nNextRequestId;
 
 	ISystem* m_pSystem;
 	CServer* m_pServer;
@@ -152,7 +152,7 @@ private:
 	bool m_bServer;
 	bool m_b64bit; // Running in 64bit version.
 	bool m_bLog;
-	unsigned int m_nEncryptKey[4];
+	uint m_nEncryptKey[4];
 
 	// Output Stream.
 	CStream m_clientOutputStream;
@@ -160,7 +160,7 @@ private:
 	struct ProtectedFile
 	{
 		string filename;
-		u32 nFilenameHash;
+		uint32 nFilenameHash;
 		uint64 nHashCode;
 	};
 	// List of protected files.

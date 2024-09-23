@@ -614,14 +614,14 @@ float gSinTable[1024] = {
 typedef union FastSqrtUnion
 {
 	float f;
-	unsigned int i;
+	uint i;
 } FastSqrtUnion;
 
-unsigned int gFastSqrtTable[0x10000];  // declare table of square roots 
+uint gFastSqrtTable[0x10000];  // declare table of square roots 
 
 void  build_sqrt_table()
 {
-	unsigned int i;
+	uint i;
 	FastSqrtUnion s;
 
 	for (i = 0; i <= 0x7FFF; i++)

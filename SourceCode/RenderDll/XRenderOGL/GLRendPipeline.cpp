@@ -7461,7 +7461,7 @@ bool CGLRenderer::EF_RenderWarpZone(STWarpZone* wp)
 	I3DEngine* eng = (I3DEngine*)iSystem->GetI3DEngine();
 	eng->DrawLowDetail(DLD_TERRAIN_WATER | DLD_DETAIL_TEXTURES | DLD_DETAIL_OBJECTS | DLD_FAR_SPRITES | DLD_ENTITIES | DLD_STATIC_OBJECTS);
 
-	/*unsigned char *pic=new unsigned char [m_width*m_height*4];
+	/*uchar *pic=new uchar [m_width*m_height*4];
 	glReadPixels(0, 0, m_width, m_height, GL_RGBA, GL_UNSIGNED_BYTE, pic);
 	WriteTGA(pic, m_width, m_height,"Warp.tga");
 	delete [] pic;*/
