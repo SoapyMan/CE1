@@ -12,13 +12,6 @@
 
 #include <direct.h>
 
-enum CGprofilePS : int
-{
-	CG_PROFILE_PS_2_0,
-	CG_PROFILE_PS_2_X,
-	CG_PROFILE_PS_3_0
-};
-
 #define CG_FP_CACHE_VER    3.4
 
 #define GL_OFFSET_TEXTURE_2D_MATRIX_NV      0x86E1
@@ -224,7 +217,6 @@ public:
 		m_InputParmsScript = nullptr;
 		m_SubroutinesScript = nullptr;
 		m_DeclarationsScript = nullptr;
-		m_bCGType = true;
 	}
 
 	void mfBind();

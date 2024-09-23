@@ -15,6 +15,20 @@
 #include <vector>
 #include "../Defs.h"
 
+enum CGprofilePS : int
+{
+	CG_PROFILE_PS_2_0,
+	CG_PROFILE_PS_2_X,
+	CG_PROFILE_PS_3_0
+};
+
+enum CGprofileVS : int
+{
+	CG_PROFILE_VS_2_0,
+	CG_PROFILE_VS_2_X,
+	CG_PROFILE_VS_3_0
+};
+
 
 // Shader.h
 // Shader pipeline common declarations.
@@ -523,8 +537,7 @@ public:
 	FILETIME m_WriteTime;
 	ShaderMacro m_Macros;
 	string m_Name;
-	bool m_bCGType;
-	int m_CGProfileType;
+	CGprofileVS m_CGProfileType;
 
 public:
 	CVProgram()
@@ -619,8 +632,7 @@ public:
 	ShaderMacro m_Macros;
 	string m_Name;
 	bool m_bActive;
-	bool m_bCGType;
-	int m_CGProfileType;
+	CGprofilePS m_CGProfileType;
 
 public:
 	CPShader()

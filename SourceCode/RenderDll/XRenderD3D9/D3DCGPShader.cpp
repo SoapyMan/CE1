@@ -1871,7 +1871,7 @@ void CCGPShader_D3D::mfUnbind()
 
 char* CCGPShader_D3D::mfLoadCG_Int(char* prog_text)
 {
-	CGprofilePS pr = (CGprofilePS)m_CGProfileType;
+	CGprofilePS pr = m_CGProfileType;
 
 	char* sz2AProfile = (gRenDev->GetFeatures() & RFT_HW_MASK) == RFT_HW_GFFX ? "ps_2_a" : "ps_2_b";
 

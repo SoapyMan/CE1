@@ -19,8 +19,6 @@
 #endif
 
 
-
-
 TArray<CVProgram*> CVProgram::m_VPrograms;
 vec4_t CCGVProgram_D3D::m_CurParams[256];
 int CCGVProgram_D3D::m_nResetDeviceFrame = -1;
@@ -912,7 +910,7 @@ SCGScript* CCGVProgram_D3D::mfGenerateScriptVP(CVProgram* pPosVP)
 	{
 		strcpy(str, szInputParms);
 		szInputParms = str;
-		if (pPosVP && pPosVP->m_bCGType)
+		if (pPosVP)
 		{
 			CCGVProgram_D3D* pVPD3D = (CCGVProgram_D3D*)pPosVP;
 			for (int i = 0; i < pVPD3D->m_ParamsNoObj.Num(); i++)
@@ -2345,7 +2343,7 @@ bool CCGVProgram_D3D::mfActivate(CVProgram* pPosVP)
 	LPDIRECT3DDEVICE9 dv = r->mfGetD3DDevice();
 	if (!m_Insts[m_CurInst].m_pHandle)
 	{
-		int VS20Profile = CG_PROFILE_VS_2_0;
+		CGprofileVS VS20Profile = CG_PROFILE_VS_2_0;
 		if ((gRenDev->GetFeatures() & RFT_HW_MASK) == RFT_HW_GFFX || (gRenDev->GetFeatures() & RFT_HW_MASK) == RFT_HW_NV4X)
 			VS20Profile = CG_PROFILE_VS_2_X;
 
@@ -2751,7 +2749,7 @@ void CCGVProgram_D3D::mfSetVariables(TArray<SCGParam4f>* Vars)
 
 void CCGVProgram_D3D::mfSetVariables(bool bObj, TArray<SCGParam4f>* Parms)
 {
-	if (m_Insts[m_CurInst].m_pHandle == 0 || (INT_PTR)m_Insts[m_CurInst].m_pHandle == -1)
+	if (!m_Insts[m_CurInst].m_pHandle)
 		return;
 
 	//PROFILE_FRAME(Shader_VShadersParms);
@@ -2824,7 +2822,7 @@ bool CCGVProgram_D3D::mfSet(bool bStat, SShaderPassHW* slw, int nFlags)
 			pVP = rd->m_RP.m_LastVP;
 		else if (rd->m_RP.m_pShader->m_DefaultVProgram)
 			pVP = rd->m_RP.m_pShader->m_DefaultVProgram;
-		if (pVP && pVP->m_bCGType)
+		if (pVP)
 		{
 			pPosVP = pVP;
 			if (pVP->m_Flags & VPFI_NOISE)
@@ -2913,7 +2911,7 @@ void CCGVProgram_D3D::mfUnbind()
 
 char* CCGVProgram_D3D::mfLoadCG(const char* prog_text)
 {
-	CGprofileVS pr = (CGprofileVS)m_CGProfileType;
+	CGprofileVS pr = m_CGProfileType;
 	char* Buf = fxReplaceInText((char*)prog_text, "vertout OUT", "vertout OUT = (vertout)0");
 
 	char* szPr;

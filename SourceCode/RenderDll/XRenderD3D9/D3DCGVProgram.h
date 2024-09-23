@@ -12,13 +12,6 @@
 
 #include <direct.h>
 
-enum CGprofileVS : int
-{
-	CG_PROFILE_VS_2_0,
-	CG_PROFILE_VS_2_X,
-	CG_PROFILE_VS_3_0
-};
-
 #define CG_VP_CACHE_VER    3.4
 
 #define VSCONST_0_025_05_1 28
@@ -181,7 +174,6 @@ public:
 		m_InputParmsScript = nullptr;
 		m_PosScript = nullptr;
 		m_DeclarationsScript = nullptr;
-		m_bCGType = true;
 	}
 	void mfFree();
 

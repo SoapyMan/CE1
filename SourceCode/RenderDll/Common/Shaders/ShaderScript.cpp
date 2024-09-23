@@ -51,16 +51,8 @@ void CPShader::mfReload(int nFlags)
 	char name[256];
 	char dir[256];
 
-	if (!m_bCGType)
-	{
-		sprintf(dir, "%sDeclarations/PShaders/", gRenDev->m_cEF.m_HWPath);
-		sprintf(name, "%s.cryps", m_Name.c_str());
-	}
-	else
-	{
-		sprintf(dir, "%sDeclarations/CGPShaders/", gRenDev->m_cEF.m_HWPath);
-		sprintf(name, "%s.crycg", m_Name.c_str());
-	}
+	sprintf(dir, "%sDeclarations/CGPShaders/", gRenDev->m_cEF.m_HWPath);
+	sprintf(name, "%s.crycg", m_Name.c_str());
 	mfReloadScript(dir, name, nFlags, m_nMaskGen);
 }
 
@@ -78,14 +70,13 @@ void CPShader::mfReloadScript(const char* szPath, const char* szName, int nFlags
 		sprintf(name1, "%sDeclarations/CGPShaders/", gRenDev->m_cEF.m_HWPath);
 		bCG = true;
 	}
+	else if (!stricmp(ext, ".cryps"))
+	{
+		sprintf(name1, "%sDeclarations/PShaders/", gRenDev->m_cEF.m_HWPath);
+		bCG = false;
+	}
 	else
-		if (!stricmp(ext, ".cryps"))
-		{
-			sprintf(name1, "%sDeclarations/PShaders/", gRenDev->m_cEF.m_HWPath);
-			bCG = false;
-		}
-		else
-			return;
+		return;
 
 	strcpy(name2, szPath);
 	ConvertDOSToUnixName(name1, name1);
