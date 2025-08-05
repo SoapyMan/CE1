@@ -25,6 +25,17 @@
 //#define USE_CRY_MEMORY_MANAGER
 #endif
 
+// checks if the heap is valid in debug; in release, this function shouldn't be called
+// returns non-0 if it's valid and 0 if not valid
+inline int IsHeapValid()
+{
+#if defined(_DEBUG) && !defined(LINUX) && !defined(__SANITIZE_ADDRESS__)
+	return _CrtCheckMemory();
+#else
+	return true;
+#endif
+}
+
 #ifdef USE_CRY_MEMORY_MANAGER
 
 #ifdef WIN32

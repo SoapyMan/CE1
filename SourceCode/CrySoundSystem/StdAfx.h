@@ -83,13 +83,13 @@ _inline void __cdecl __CRYTEKDLL_TRACE(const char* sFormat, ...)
 
 #endif //_DEBUG
 
+#ifdef _DEBUG
+
 class CHeapGuardian
 {
 public: CHeapGuardian() { CRYASSERT(IsHeapValid()); } ~CHeapGuardian() { CRYASSERT(IsHeapValid()); }
 };
-
-#ifdef _DEBUG
-#define GUARD_HEAP //CHeapGuardian __heap_guardian
+#define GUARD_HEAP CHeapGuardian __heap_guardian
 #else
 #define GUARD_HEAP
 #endif
