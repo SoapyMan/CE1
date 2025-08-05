@@ -113,7 +113,8 @@ float CSDLMouse::GetDeltaZ()
 void CSDLMouse::Update(bool bPrevFocus)
 {
 	SDL_Event event;
-	std::vector<SDL_Event> events;
+	static std::vector<SDL_Event> events;
+	events.reserve(256);
 
 	memset(m_Deltas, 0, sizeof(m_Deltas));
 	memcpy(m_oldEvents, m_Events, sizeof(m_Events));
@@ -161,9 +162,7 @@ void CSDLMouse::Update(bool bPrevFocus)
 	}
 
 	for (SDL_Event ev : events)
-	{
 		SDL_PushEvent(&ev);
-	}
 	events.clear();
 
 	m_Deltas[0] = mouseDelta[0];

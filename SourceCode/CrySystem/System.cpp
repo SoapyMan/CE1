@@ -1065,7 +1065,9 @@ void CSystem::PollWindowEvents()
 	FRAME_PROFILER("SysUpdate:PeekMessage", this, PROFILE_SYSTEM);
 
 	SDL_Event event;
-	std::vector<SDL_Event> events;
+	static std::vector<SDL_Event> events;
+	events.reserve(256);
+
 	while (SDL_PollEvent(&event))
 	{
 		switch (event.type)
@@ -1097,10 +1099,11 @@ void CSystem::PollWindowEvents()
 			break;
 		}
 	}
+
 	for (SDL_Event ev : events)
 		SDL_PushEvent(&ev);
-
 	events.clear();
+
 #endif
 }
 

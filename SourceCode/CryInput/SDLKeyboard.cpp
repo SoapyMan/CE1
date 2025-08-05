@@ -451,7 +451,8 @@ void CSDLKeyboard::Update()
 {
 	SDL_Event event;
 	ushort xkey;
-	std::vector<SDL_Event> events;
+	static std::vector<SDL_Event> events;
+	events.reserve(256);
 
 	while (SDL_PollEvent(&event))
 	{
@@ -478,10 +479,9 @@ void CSDLKeyboard::Update()
 	}
 
 	for (SDL_Event ev : events)
-	{
 		SDL_PushEvent(&ev);
-	}
 	events.clear();
+
 	memcpy(m_cOldKeysState, m_cKeysState, sizeof(m_cOldKeysState));
 	memcpy(m_cKeysState, m_cTempKeys, sizeof(m_cKeysState));
 }
